@@ -152,7 +152,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.financialChecklistAction}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus"
+								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus,financialChecklistsupplier"
 								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -165,7 +165,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus"
+								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus,financialChecklistsupplier"
 								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 						</p:selectOneMenu>
 						<h:outputText
