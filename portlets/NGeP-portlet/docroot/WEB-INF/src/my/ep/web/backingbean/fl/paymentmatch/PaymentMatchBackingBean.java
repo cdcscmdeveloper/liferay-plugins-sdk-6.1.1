@@ -364,6 +364,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
+		//check is normal invoice or tax invoice
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		IInvoiceSO invoiceSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+		reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
+		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
+		getManagedBean().setTaxInvoice(resDTO.isTaxable());
 	}
 	
 	/**
