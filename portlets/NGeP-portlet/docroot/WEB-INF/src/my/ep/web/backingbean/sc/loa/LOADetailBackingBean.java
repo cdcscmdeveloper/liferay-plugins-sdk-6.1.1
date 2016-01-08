@@ -493,18 +493,29 @@ public class LOADetailBackingBean extends
 
 				editLOAAction(scLoa);
 			}
-			getManagedBean().setEditFlag(false);
+			getManagedBean().setEditFlag(Boolean.FALSE);
+			
+			
+		/*	// TODO QT Proposal validity expired
+			if(!checkProposalValidityDateReachByQt(getManagedBean().getScQt())){
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils
+								.getMessage(
+										"QT Proposal validity Expired!",
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}*/
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_PAGE);
-		} catch (Exception e) {
-			handleException(e);
+			
+		} finally{
+			
 		}
 	}
-	
-	
-	
-
 	
 	/**
 	 * View loa.
@@ -1369,7 +1380,7 @@ public class LOADetailBackingBean extends
 	/**
 	 * Show verify button.
 	 */
-	public void showVeriryButton() {
+	public void showVerifyButton() {
 	       
 		if(getManagedBean().isVerifyBtnFlag()){
 			getManagedBean().setVerifyBtnFlag(false);
@@ -1542,7 +1553,7 @@ public class LOADetailBackingBean extends
 
 		String issueDate = "";
 		if (scLoa.getIssueDate() != null) {
-			issueDate = DateUtils.getLocalizeDate(scLoa.getIssueDate(), myLocale);
+			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
 		}
 		context.put("issueDate", issueDate);
 
@@ -1614,12 +1625,15 @@ public class LOADetailBackingBean extends
 			bondAmt = amountDF.format(scLoa.getBondAmt());
 		}
 		context.put("bondAmt", bondAmt);
-		context.put("bondAmtText", bondAmt); 
+		
 
 		String bondPercentage = "";
+		String bondPercentageText = "";
 		if (scLoa.getBondPercentage() != null) {
 			bondPercentage = percentageDF.format(scLoa.getBondPercentage());
+			bondPercentageText  = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
 		}
+		context.put("bondPercentageText", bondPercentageText); 
 		context.put("bondPercentage", bondPercentage);
 		
 		String bondExpDate = "";
@@ -1628,7 +1642,7 @@ public class LOADetailBackingBean extends
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(scLoa.getContractExpDate());
 			cal.add(Calendar.YEAR, 1); //add one year
-			bondExpDate = DateUtils.getLocalizeDate(cal.getTime(), myLocale);
+			bondExpDate = getLocalizeDate(cal.getTime(), myLocale);
 		} 
 		context.put("bondExpDate", bondExpDate); 
 
@@ -5024,6 +5038,20 @@ public class LOADetailBackingBean extends
 			days  = Integer.valueOf(configRuleValue.getRuleValue());
 		}
 		return days;
+	}
+	
+	/**
+	 * Localize date.
+	 *
+	 * @param date the date
+	 * @param locale the locale
+	 * @return the string
+	 */
+	public static String getLocalizeDate(Date date, Locale locale) { 
+		String DEFAULT_DATE_FORMAT_WITH_MONTH_NAME = "dd MMMM yyyy";
+	    SimpleDateFormat localDateFormate = new SimpleDateFormat(DEFAULT_DATE_FORMAT_WITH_MONTH_NAME, locale);       
+	    
+	    return localDateFormate.format(date);
 	}
 
 	public boolean isFlag() {
