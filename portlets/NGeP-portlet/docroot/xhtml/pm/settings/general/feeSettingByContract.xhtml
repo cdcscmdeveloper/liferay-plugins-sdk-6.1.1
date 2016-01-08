@@ -30,6 +30,7 @@
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.contract.no']}" />
+				<ac:iconTooltip value="#{lbl['lbl.pm.settings.fee.by.contract.tooltip']}" />
 			</f:facet>
 			<ac:lov id="lovContract" lovId="CT_CONTRACT_FOR_FEE" readonly="true" disabled="#{!(feeObj.brandNew)}"
 				label="#{lbl['lbl.pm.contract.no']}" size="20" headerText="Contract"
