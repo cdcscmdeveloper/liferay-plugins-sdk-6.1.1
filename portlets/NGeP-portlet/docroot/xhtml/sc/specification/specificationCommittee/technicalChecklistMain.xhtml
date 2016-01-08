@@ -168,7 +168,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scoreView,uploadtech,technicalSpecificationStatus"
+								update="scoreView,uploadtech,technicalSpecificationStatus,technicalChecklistsupplier"
 								listener="#{specificationBackingBean.technicalChecklistDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="actionTitleActionnullType1"
@@ -185,7 +185,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.PTJUploadDropDownActionValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scoreView,uploadtech,technicalSpecificationStatus"
+								update="scoreView,uploadtech,technicalSpecificationStatus,technicalChecklistsupplier"
 								listener="#{specificationBackingBean.technicalChecklistDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 
