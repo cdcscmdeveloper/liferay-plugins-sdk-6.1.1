@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -253,8 +254,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			if (isZonal) {
 				this.getManagedBean().setBiddingZoneDetails(
 						new ArrayList<TplSpecZoneDtl>());
-				this.getManagedBean().setScQtRecommendsByZone(
-						new LinkedHashMap<Long, List<ScQtRecommend>>());
 				this.getManagedBean().setBidSchedulesByZone(
 						new LinkedHashMap<Long, List<ScBidSchedule>>());
 				this.getManagedBean().setBidPackageBeansByZone(
@@ -269,6 +268,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				Map<Long,TplSpecZoneDtl> zoneMap = getManagedBean().getZoneMap();
 				if (zoneMap == null) {
 					zoneMap = new LinkedHashMap<Long,TplSpecZoneDtl>();
+					getManagedBean().setZoneMap(zoneMap);
 				}
 				
 				List<TplSpecZoneDtl> biddingZoneDetails = new ArrayList<TplSpecZoneDtl>();
@@ -296,6 +296,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 						scQtRecommendsByZone.put(specZoneDtl.getSpecZoneId(), scQtRecommends);
 					}
 				}
+				this.getManagedBean().setScQtRecommendsByZone(
+										  scQtRecommendsByZone);
 				if (CollectionUtils.isNotEmpty(biddingZoneDetails)) {
 					this.getManagedBean().setBiddingZoneDetails(biddingZoneDetails);
 					this.getManagedBean().setSelectedZone(biddingZoneDetails.get(0));
@@ -406,10 +408,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 		getManagedBean().setBidItemSuppliers(null);
 	}
 	
-	private void onZoneTabChangeAction(Long zoneTabIndex) {
-		TplSpecZoneDtl selectedZone = this.getManagedBean().getZoneMap().get(zoneTabIndex);
-		this.getManagedBean().setSelectedZone(selectedZone);
-		this.getManagedBean().setZoneActiveIndex(zoneTabIndex.intValue());
+	private void onZoneTabChangeAction(TplSpecZoneDtl specZoneDtl) {
+		boolean isItemized = getManagedBean().isItemized();
+		this.getManagedBean().setSelectedZone(specZoneDtl);
+		this.getManagedBean().setZoneActiveIndex(specZoneDtl.getZoneTabIndex());
+		
+		if (isItemized) {
+			getManagedBean().setBidItemSuppliers(null);
+		} else {
+			getManagedBean().setBiddingPackagePriceList(null);
+		}
+		
+		retrieveBiddingSummary();
 	}	
 
 	/**
@@ -720,8 +730,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		getManagedBean().setSelectedBiddingItem(bidItem);
 		
 		boolean isZonal = getManagedBean().getScQt().isZonal();
-		List<ScQtEvaluationResultDtl> shortlistedSuppliers 
-					= getManagedBean().getShortlistedSuppliers();
+		List<ScQtEvaluationResultDtl> shortlistedSuppliers = null;
 		Map<Long,List<ScQtEvaluationResultDtl>> itemShortlistedSuppliers 
 					= getManagedBean().getItemShortlistedSuppliers();
 		Map<Long,Map<Long,List<ScQtEvaluationResultDtl>>> itemShortlistedSuppliersByZone
@@ -776,12 +785,23 @@ public class SupplierFinalizationBiddingBackingBean extends
 				shortlistedSuppliers = resDTO.getShortlistedSuppliers();
 				
 				if (isZonal) {
-					Map<Long,List<ScQtEvaluationResultDtl>> shortlistedSuppliersMap
-							= new HashMap<Long,List<ScQtEvaluationResultDtl>>();
-					shortlistedSuppliersMap.put(bidItem.getBidItemId(), 
+					Map<Long,List<ScQtEvaluationResultDtl>> shortlistedSuppliersMap = null;
+					shortlistedSuppliersMap = itemShortlistedSuppliersByZone
+												.get(selectedZoneId);
+					if (itemShortlistedSuppliersByZone
+								.containsKey(selectedZoneId)) {
+						if (MapUtils.isEmpty(shortlistedSuppliersMap)) {
+							shortlistedSuppliersMap
+								= new HashMap<Long,List<ScQtEvaluationResultDtl>>();
+						}
+					} else {
+						shortlistedSuppliersMap
+								= new HashMap<Long,List<ScQtEvaluationResultDtl>>();
+					}
+					shortlistedSuppliersMap.put(bidItem.getBidItemId(),
 												shortlistedSuppliers);
 					itemShortlistedSuppliersByZone.put(
-							selectedZoneId, shortlistedSuppliersMap);
+							selectedZoneId, shortlistedSuppliersMap);					
 				} else {
 					itemShortlistedSuppliers.put(
 							bidItem.getBidItemId(), shortlistedSuppliers);
@@ -876,7 +896,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			List<ScQtRecommend> recommendedItems = null;
 			if (isZonal) {
-				TplSpecZoneDtl selectedZoneId = getManagedBean().getSelectedZone();
+				Long selectedZoneId = getManagedBean().getSelectedZone().getSpecZoneId();
 				recommendedItems = getManagedBean().getScQtRecommendsByZone().get(selectedZoneId);
 			} else {
 				recommendedItems = scQtFinalization.getScQtRecommends();
@@ -1702,9 +1722,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			if (isZonal) {
 				if (MapUtils.isNotEmpty(
 						getManagedBean().getItemShortlistedSuppliersByZone())) {
-					Set<Map<Long,List<ScQtEvaluationResultDtl>>> itemsShortlistedSuppliersByZone 
-									= (Set<Map<Long,List<ScQtEvaluationResultDtl>>>) getManagedBean()
-											.getItemShortlistedSuppliersByZone().values();
+					Collection<Map<Long,List<ScQtEvaluationResultDtl>>> itemsShortlistedSuppliersByZone 
+									= getManagedBean().getItemShortlistedSuppliersByZone().values();
 					for (Map<Long,List<ScQtEvaluationResultDtl>> itemShortlistedSuppliers
 								: itemsShortlistedSuppliersByZone) {
 						if (MapUtils.isNotEmpty(itemShortlistedSuppliers)) {
@@ -1995,7 +2014,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			zoneDtl = getManagedBean().getZoneMap().get(zoneDtl.getSpecZoneId());
 			this.getManagedBean().setZoneActiveIndex(
 					zoneDtl.getZoneTabIndex());
-			onZoneTabChangeAction(Long.valueOf(zoneDtl.getZoneTabIndex()));
+			onZoneTabChangeAction(getManagedBean()
+					.getZoneMap().get(zoneDtl.getSpecZoneId()));
 		}
 	}
 	
