@@ -1875,6 +1875,14 @@ public class TemplateSpecBackingBean extends
 									true));
 				}
 				
+				if (StringUtils.isNotBlank(getManagedBean().getSearchSpecDesc())) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("specDesc",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getManagedBean().getSearchSpecDesc(),
+									true));
+				}
+				
 				if (StringUtils.isNotBlank(getManagedBean().getSearchTemplateTypeUser())) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("createdUser.userName",
@@ -1938,6 +1946,7 @@ public class TemplateSpecBackingBean extends
 	public void reset() {
 
 		this.getManagedBean().setSearchSpecName(null);
+		this.getManagedBean().setSearchSpecDesc(null);
 		this.getManagedBean().setSearchOrgProfile(new PmOrgProfile());
 		this.getManagedBean().setSearchTemplateTypeCode(null);
 		this.getManagedBean().setSearchTemplateTypeUser(null);
