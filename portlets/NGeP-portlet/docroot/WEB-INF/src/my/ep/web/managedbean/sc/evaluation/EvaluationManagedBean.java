@@ -478,6 +478,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int currentTime=0;
 	private boolean isComplianceReEvaluateRequired;
 	private boolean isTechnicalOrFinancialReEvaluateRequired;
+	private boolean isTechnicalUserScoringSchema;
+	private boolean isFinancialUserScoringSchema;
 	
 	
 
@@ -3283,6 +3285,34 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setTechnicalOrFinancialReEvaluateRequired(
 			boolean isTechnicalOrFinancialReEvaluateRequired) {
 		this.isTechnicalOrFinancialReEvaluateRequired = isTechnicalOrFinancialReEvaluateRequired;
+	}
+
+	/**
+	 * @return the isTechnicalUserScoringSchema
+	 */
+	public boolean isTechnicalUserScoringSchema() {
+		return isTechnicalUserScoringSchema;
+	}
+
+	/**
+	 * @param isTechnicalUserScoringSchema the isTechnicalUserScoringSchema to set
+	 */
+	public void setTechnicalUserScoringSchema(boolean isTechnicalUserScoringSchema) {
+		this.isTechnicalUserScoringSchema = isTechnicalUserScoringSchema;
+	}
+
+	/**
+	 * @return the isFinancialUserScoringSchema
+	 */
+	public boolean isFinancialUserScoringSchema() {
+		return isFinancialUserScoringSchema;
+	}
+
+	/**
+	 * @param isFinancialUserScoringSchema the isFinancialUserScoringSchema to set
+	 */
+	public void setFinancialUserScoringSchema(boolean isFinancialUserScoringSchema) {
+		this.isFinancialUserScoringSchema = isFinancialUserScoringSchema;
 	}
 
 	
