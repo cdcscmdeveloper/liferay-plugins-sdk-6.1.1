@@ -15,6 +15,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -36,8 +37,9 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private String searchSpecName;
 	 
 	private Long searchProcurementCategoryId;
-	private Long searchTemplateTypeId;
-	private Long searchOrgProfileId;
+	private String searchTemplateTypeCode;
+	private PmOrgProfile searchOrgProfile = new PmOrgProfile();
+	private String searchTemplateTypeUser;
 	private Long searchItemTypeId;
 	private Long searchSpecTypeId;
 	
@@ -78,31 +80,45 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the searchTemplateTypeId
+	 * @return the searchTemplateTypeCode
 	 */
-	public Long getSearchTemplateTypeId() {
-		return searchTemplateTypeId;
+	public String getSearchTemplateTypeCode() {
+		return searchTemplateTypeCode;
 	}
 
 	/**
-	 * @param searchTemplateTypeId the searchTemplateTypeId to set
+	 * @param searchTemplateTypeCode the searchTemplateTypeCode to set
 	 */
-	public void setSearchTemplateTypeId(Long searchTemplateTypeId) {
-		this.searchTemplateTypeId = searchTemplateTypeId;
+	public void setSearchTemplateTypeCode(String searchTemplateTypeCode) {
+		this.searchTemplateTypeCode = searchTemplateTypeCode;
 	}
 
 	/**
-	 * @return the searchOrgProfileId
+	 * @return the searchOrgProfile
 	 */
-	public Long getSearchOrgProfileId() {
-		return searchOrgProfileId;
+	public PmOrgProfile getSearchOrgProfile() {
+		return searchOrgProfile;
 	}
 
 	/**
-	 * @param searchOrgProfileId the searchOrgProfileId to set
+	 * @param searchOrgProfile the searchOrgProfile to set
 	 */
-	public void setSearchOrgProfileId(Long searchOrgProfileId) {
-		this.searchOrgProfileId = searchOrgProfileId;
+	public void setSearchOrgProfile(PmOrgProfile searchOrgProfile) {
+		this.searchOrgProfile = searchOrgProfile;
+	}
+
+	/**
+	 * @return the searchTemplateTypeUser
+	 */
+	public String getSearchTemplateTypeUser() {
+		return searchTemplateTypeUser;
+	}
+
+	/**
+	 * @param searchTemplateTypeUser the searchTemplateTypeUser to set
+	 */
+	public void setSearchTemplateTypeUser(String searchTemplateTypeUser) {
+		this.searchTemplateTypeUser = searchTemplateTypeUser;
 	}
 
 	/**
