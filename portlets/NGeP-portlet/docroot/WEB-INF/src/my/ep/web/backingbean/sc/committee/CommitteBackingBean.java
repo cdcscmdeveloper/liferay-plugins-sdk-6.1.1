@@ -893,8 +893,7 @@ public class CommitteBackingBean extends
 				this.getManagedBean().setScCommitteeRemarksList(
 						committeeRemarks);
 
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} finally {
 			}
 			showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
@@ -970,8 +969,7 @@ public class CommitteBackingBean extends
 				
 				this.getManagedBean().setCommitteeQTDataModel(
 						new committeeQTPagingDataModel("qtDetailsId", getManagedBean().getScCommittee()));
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} finally {
 			}
 			showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
@@ -1011,8 +1009,7 @@ public class CommitteBackingBean extends
 				}
 				this.getManagedBean().setQtCommittee(qtCommitte);
 				this.getManagedBean().setScCommittee(qtCommitte.getScCommittee());
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} finally {
 			}
 			// showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
