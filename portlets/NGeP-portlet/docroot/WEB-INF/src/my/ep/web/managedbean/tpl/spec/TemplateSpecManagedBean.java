@@ -35,7 +35,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private String searchSpecName;
-	 
+	private String searchSpecDesc; 
 	private Long searchProcurementCategoryId;
 	private String searchTemplateTypeCode;
 	private PmOrgProfile searchOrgProfile = new PmOrgProfile();
@@ -63,6 +63,20 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchSpecName(String searchSpecName) {
 		this.searchSpecName = searchSpecName;
+	}
+
+	/**
+	 * @return the searchSpecDesc
+	 */
+	public String getSearchSpecDesc() {
+		return searchSpecDesc;
+	}
+
+	/**
+	 * @param searchSpecDesc the searchSpecDesc to set
+	 */
+	public void setSearchSpecDesc(String searchSpecDesc) {
+		this.searchSpecDesc = searchSpecDesc;
 	}
 
 	/**

@@ -20,8 +20,12 @@
 			<table style="width:100%">
 				<tr>
 					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.title']}" /></td>
-					<td class="TableFieldRight" colspan="3">
+					<td class="TableFieldRight">
 						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.searchSpecName}" />
+					</td>
+					<td class="TableFieldLeft"><p:outputLabel value="#{lbl['lbl.tpl.spec.description']}" /></td>
+					<td class="TableFieldRight">
+						<p:inputText style="width:280px" value="#{templateSpecBackingBean.managedBean.searchSpecDesc}" />
 					</td>
 				</tr>
 				<tr>
