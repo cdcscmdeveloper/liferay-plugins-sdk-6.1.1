@@ -11,6 +11,7 @@ public class MasterDataVendor {
 	private String agencyId;
 	private String vendorIdCode;
 	private String entityCode;
+	private String epNo;
 
 	private List<CompanyBranch> companyBranchs;
 
@@ -49,6 +50,14 @@ public class MasterDataVendor {
 
 	public void setEntityCode(String entityCode) {
 		this.entityCode = entityCode;
+	}
+
+	public String getEpNo() {
+		return epNo;
+	}
+
+	public void setEpNo(String epNo) {
+		this.epNo = epNo;
 	}
 
 	public String getSapVendorCode() {
