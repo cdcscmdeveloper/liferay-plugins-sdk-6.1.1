@@ -512,16 +512,17 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				getSupplierGst(getManagedBean().getInvoice());
 			}
 			validateAdvancedPayment();
-			//TODO
-			reqDTO.setInvoice(getManagedBean().getInvoice());
-			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
-			getManagedBean().setTaxInvoice(resDTO.isTaxable());
+			
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
-		} 
+		}
+		//check is normal invoice or tax invoice
+		reqDTO.setInvoice(getManagedBean().getInvoice());
+		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
+		getManagedBean().setTaxInvoice(resDTO.isTaxable());
 	}
 	
 	/**
