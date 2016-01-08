@@ -23,16 +23,20 @@
 		<ui:param name="isQtZonalAndRecommendTypeAny"
 			value="#{scheduleBiddingBB.managedBean.scQt.zonal}" />
 		<ui:param name="qtValidityDaysExpired"
-     value="#{scheduleBiddingBB.checkProposalValidityDateReach(scheduleBiddingBB.managedBean.scQt.proposalValidityEndDate)}" />
+			value="#{scheduleBiddingBB.checkProposalValidityDateReach(scheduleBiddingBB.managedBean.scQt.proposalValidityEndDate)}" />
 
-
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<div align="right" style="width: 100%">
 			<ui:repeat var="bpmAction"
 				value="#{scheduleBiddingBB.managedBean.outComes}">
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton id="submitBtn" value="#{lbl[buttonLabel]}"
-					update="@form" styleClass="ui-button" rendered="#{qtValidityDaysExpired}"
+					update="@form" styleClass="ui-button"
+					rendered="#{qtValidityDaysExpired}" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()"
 					action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
 			</ui:repeat>
 		</div>
@@ -161,8 +165,7 @@
 					partialSubmit="true" oncomplete="contactPersonDelete.show();"
 					update="@([id$=contactPersonDeleteId])" />
 
-				<ui:param name="contactPersonDeleteId"
-					value="contactPersonDeleteId"></ui:param>
+				<ui:param name="contactPersonDeleteId" value="contactPersonDeleteId"></ui:param>
 
 				<ac:confirmationPopup id="#{contactPersonDeleteId}"
 					widget="contactPersonDelete" width="400" height="200"
