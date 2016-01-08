@@ -16,21 +16,23 @@
 			closable="true" showSummary="false" severity="error, info" />
 
 		<h:panelGroup id="pollPanelGroup"
-			rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.pendingBidding or onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
+			rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.pendingBidding or onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress or onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidPaused}">
 			<p:poll id="pollCOmponent" interval="#{onlineBiddingBB.interval}"
 				listener="#{onlineBiddingBB.pollListener}"
 				update="itemWiseBidListOB,packageRankingPanelOB,onlineBiddingNotification" />
 		</h:panelGroup>
 
-		<ui:include src="/xhtml/sc/bidding/onlineBidding/onlineBiddingHeader.xhtml" />
+		<ui:include
+			src="/xhtml/sc/bidding/onlineBidding/onlineBiddingHeader.xhtml" />
 		<p:panel id="onLineBiddingPanel"
 			header="#{lbl['lbl.sc.bidding.bid.price.details']}" toggleable="true">
-			<p:spacer height="5" />
-			<ui:include src="/xhtml/sc/bidding/onlineBidding/onlineBiddingTimers.xhtml" />
+
+			<ui:include
+				src="/xhtml/sc/bidding/onlineBidding/onlineBiddingTimers.xhtml" />
 			<h:panelGrid rendered="#{onlineBiddingBB.scBidSchedule eq null}">
 				<h:outputText style="font-size : 25px;" styleClass="lastUpdated"
 					value="#{lbl['lbl.sc.bid.bidding.notification']}" />
-				
+
 			</h:panelGrid>
 			<p:dataTable id="itemWiseBidListOB"
 				style="word-wrap: break-word ; table-layout: fixed "
@@ -150,18 +152,18 @@
 				</p:column>
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
-                   <h:panelGroup id="spinnerPG">
-					<ac:spinner style="width : 65%" maxlength="10"
-						value="#{bidPriceItem.newPrice}" id="spinner"
-						min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
-						max="#{bidPriceItem.bidPrice - bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
-						label="#{lbl['lbl.sc.new.bid']}"
-						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
-						update=":form:itemWiseBidListOB"
-						postUpdateListener="onlineBiddingBB.decrementAmountValueChangeListener">
-						<f:attribute name="scBidPrice" value="#{bidPriceItem}" />
-					</ac:spinner>
+					<h:panelGroup id="spinnerPG">
+						<ac:spinner style="width : 65%" maxlength="10"
+							value="#{bidPriceItem.newPrice}" id="spinner"
+							min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+							max="#{bidPriceItem.bidPrice - bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+							label="#{lbl['lbl.sc.new.bid']}"
+							stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+							update=":form:itemWiseBidListOB"
+							postUpdateListener="onlineBiddingBB.decrementAmountValueChangeListener">
+							<f:attribute name="scBidPrice" value="#{bidPriceItem}" />
+						</ac:spinner>
 					</h:panelGroup>
 					<p:spacer width="3"></p:spacer>
 					<h:panelGroup id="submitButton" style="width : 35%">
