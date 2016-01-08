@@ -389,15 +389,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			reqDTO.setScBidAction(this.getManagedBean().getBidAction());
 			BiddingResDTO resDTO = biddingSO.updateBidAction(reqDTO);
 			if (resDTO.isSuccessful()) {
-				if (BiddingConst.BID_ACTION_TYPE_RESUME.equals(resDTO
-						.getScBidAction().getActionType())) {
-
-					SchedulerManagerBackingBean smBackingBean = new SchedulerManagerBackingBean();
-					EpSchedulerHelper.runBuildJobNow(smBackingBean.getJobKey(
-							SchedulerConstants.SC_DAILY_JOB,
-							SchedulerConstants.SC_JOB_GROUP));
-
-				}
+				log.info("resume Or Rebid Action successful");
 			}
 
 		}
