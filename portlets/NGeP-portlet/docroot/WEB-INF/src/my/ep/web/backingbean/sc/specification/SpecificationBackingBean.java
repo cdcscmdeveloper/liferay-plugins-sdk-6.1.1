@@ -1849,6 +1849,9 @@ public class SpecificationBackingBean extends
 			calculateRecommendationPackageAndItemScores(this.getManagedBean()
 					.getRecommendationPackageScore(), this.getManagedBean()
 					.getRecommendationScore());
+			setTechncialChecklistEvaluationStatus(this.getManagedBean().getScQtCheckSt2techProposal());
+			setFinancialChecklistEvaluationStatus(this.getManagedBean()
+					.getScQtCheckSt2financeProposalList());
 		}
 
 		// this.getManagedBean().setActiveIndex(0);
@@ -2923,11 +2926,10 @@ public class SpecificationBackingBean extends
 				techWeightageSum();
 				techScoreSum();
 			}
-			
+
 			if (null != this.getManagedBean().getTechnicalScoring()
 					&& !this.getManagedBean().getTechnicalScoring().isEmpty()) {
-				this.getManagedBean().setTechnicalUserScoringSchema(
-						false);
+				this.getManagedBean().setTechnicalUserScoringSchema(false);
 				for (ScQtCheckList technicalScoringChecklist : this
 						.getManagedBean().getTechnicalScoring()) {
 					if (null != technicalScoringChecklist.getPmStatus()
@@ -3216,8 +3218,7 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2financeProposalList()
 					&& !this.getManagedBean()
 							.getScQtCheckSt2financeProposalList().isEmpty()) {
-				this.getManagedBean().setFinancialUserScoringSchema(
-						false);
+				this.getManagedBean().setFinancialUserScoringSchema(false);
 				for (ScQtCheckList financialScoringChecklist : this
 						.getManagedBean().getScQtCheckSt2financeProposalList()) {
 					if (financialScoringChecklist.isScoringReq()
@@ -11697,23 +11698,22 @@ public class SpecificationBackingBean extends
 					sample = true;
 
 				}
-				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-						.equalsIgnoreCase(checkList.getDefinationType()
-								.getParameterCode())
-						&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
-								.equalsIgnoreCase(checkList.getDefinationType()
-										.getParameterCode())) {
-					if (!checkList.isScoringReq()) {
-						StatusReqDTO statusreq = new StatusReqDTO();
-						statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-						StatusResDTO statusres = statussO
-								.retrieveStatusByStatusId(statusreq);
-
-						checkList.setPmEvalStatus(statusres.getPmStatus());
-					}
-
-				}
-
+				/*
+				 * if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+				 * .equalsIgnoreCase(checkList.getDefinationType()
+				 * .getParameterCode()) &&
+				 * !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+				 * .equalsIgnoreCase(checkList.getDefinationType()
+				 * .getParameterCode())) { if (!checkList.isScoringReq()) {
+				 * StatusReqDTO statusreq = new StatusReqDTO();
+				 * statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+				 * StatusResDTO statusres = statussO
+				 * .retrieveStatusByStatusId(statusreq);
+				 * 
+				 * checkList.setPmEvalStatus(statusres.getPmStatus()); }
+				 * 
+				 * }
+				 */
 			}
 			scQt.setDemoRequired(demo);
 			scQt.setSampleReq(sample);
@@ -11722,26 +11722,25 @@ public class SpecificationBackingBean extends
 		}
 
 		if (CollectionUtils.isNotEmpty(financialCheckList)) {
-			for (ScQtCheckList financialcheckList : financialCheckList) {
-				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-						.equalsIgnoreCase(financialcheckList
-								.getDefinationType().getParameterCode())
-						&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
-								.equalsIgnoreCase(financialcheckList
-										.getDefinationType().getParameterCode())) {
-					if (!financialcheckList.isScoringReq()) {
-						StatusReqDTO statusreq = new StatusReqDTO();
-						statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-						StatusResDTO statusres = statussO
-								.retrieveStatusByStatusId(statusreq);
-
-						financialcheckList.setPmEvalStatus(statusres
-								.getPmStatus());
-					}
-
-				}
-
-			}
+			/*
+			 * for (ScQtCheckList financialcheckList : financialCheckList) { if
+			 * (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+			 * .equalsIgnoreCase(financialcheckList
+			 * .getDefinationType().getParameterCode()) &&
+			 * !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+			 * .equalsIgnoreCase(financialcheckList
+			 * .getDefinationType().getParameterCode())) { if
+			 * (!financialcheckList.isScoringReq()) { StatusReqDTO statusreq =
+			 * new StatusReqDTO();
+			 * statusreq.setStatusId(QTStatusConst.TS_COMPLETED); StatusResDTO
+			 * statusres = statussO .retrieveStatusByStatusId(statusreq);
+			 * 
+			 * financialcheckList.setPmEvalStatus(statusres .getPmStatus()); }
+			 * 
+			 * }
+			 * 
+			 * }
+			 */
 			localChecklist.addAll(financialCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
@@ -16738,5 +16737,63 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getScQt()
 					.setFinancialUserScoringSchemaAttachment(null);
 		}
+	}
+
+	private void setTechncialChecklistEvaluationStatus(
+			List<ScQtCheckList> technicalCheckList) {
+		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+			IStatusSO statussO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IStatusSO.class);
+			for (ScQtCheckList checkList : technicalCheckList) {
+				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode())
+						&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+								.equalsIgnoreCase(checkList.getDefinationType()
+										.getParameterCode())) {
+					if (!checkList.isScoringReq()) {
+						StatusReqDTO statusreq = new StatusReqDTO();
+						statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+						StatusResDTO statusres = statussO
+								.retrieveStatusByStatusId(statusreq);
+
+						checkList.setPmEvalStatus(statusres.getPmStatus());
+					}
+
+				}
+			}
+		}
+
+	}
+
+	private void setFinancialChecklistEvaluationStatus(
+			List<ScQtCheckList> financialCheckList) {
+		if (null != financialCheckList && !financialCheckList.isEmpty()) {
+			IStatusSO statussO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IStatusSO.class);
+			for (ScQtCheckList financialcheckList : financialCheckList) {
+				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+						.equalsIgnoreCase(financialcheckList
+								.getDefinationType().getParameterCode())
+						&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+								.equalsIgnoreCase(financialcheckList
+										.getDefinationType().getParameterCode())) {
+					if (!financialcheckList.isScoringReq()) {
+						StatusReqDTO statusreq = new StatusReqDTO();
+						statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+						StatusResDTO statusres = statussO
+								.retrieveStatusByStatusId(statusreq);
+
+						financialcheckList.setPmEvalStatus(statusres
+								.getPmStatus());
+					}
+
+				}
+
+			}
+		}
+
 	}
 }
