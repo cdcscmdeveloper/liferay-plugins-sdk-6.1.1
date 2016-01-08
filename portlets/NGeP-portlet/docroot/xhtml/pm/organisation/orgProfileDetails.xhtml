@@ -42,7 +42,7 @@
 										value="#{organisationBackingBean.getAllOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
 								</p:selectOneMenu>
 							</ui:remove>
-							<p:inputText id="orgtypeId" disabled="true" size="50" value="#{organisationBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes,organisationBackingBean.managedBean.orgType)}">
+							<p:inputText id="orgtypeId" disabled="true" size="30" value="#{organisationBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes,organisationBackingBean.managedBean.orgType)}">
 							</p:inputText>
 						</c:when>
 						<c:otherwise>
@@ -84,7 +84,7 @@
 						value="#{lbl['lbl.pm.organisation.orgCode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>				
 						<td><p:inputText id="orgCode" disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
-								label="#{lbl['lbl.pm.organisation.orgCode']}" size="50"
+								label="#{lbl['lbl.pm.organisation.orgCode']}" size="45"
 								styleClass="ppDisplayTextL"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}"
 								maxlength="20" required="#{!empty param['disableValidation']}" /></td>
@@ -103,8 +103,8 @@
 				<ui:fragment
 						rendered="#{!organisationBackingBean.managedBean.orgProfile.brandNew and (ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType )}">
 				<td></td>
-				<td width="5%"></td>
-				<td><h:outputText
+				<td width="2%"></td>
+				<td><h:outputLabel
 								value="#{lbl['lbl.pm.org.cost.center']}" /></td>
 						<td><p:selectBooleanCheckbox id="isCostCenterChkBoxId"
 								value="#{organisationBackingBean.managedBean.orgProfile.costCenter}">
@@ -121,14 +121,14 @@
 						<td><p:inputText id="orgName" disabled="#{ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType or organisationBackingBean.managedBean.orgType eq 'FJA'}"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
-								required="#{!empty param['disableValidation']}" size="50" styleClass="ppDisplayTextL"
+								required="#{!empty param['disableValidation']}" size="45" styleClass="ppDisplayTextL"
 								maxlength="99" /></td>
 						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>	
 						
 				<ui:fragment
 					rendered="#{!organisationBackingBean.managedBean.orgProfile.brandNew and (ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType )}">
 					<td colspan="2"></td>
-					<td><h:outputText
+					<td><h:outputLabel
 							value="#{lbl['lbl.pm.organisation.govSeller']}" /></td>
 					<td><p:selectBooleanCheckbox id="isGovtSellerCheckBoxId"
 							disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}"
@@ -166,7 +166,7 @@
 				<p:inputText id="gstRegNoId" 
 						label="#{lbl['lbl.pm.org.gst.reg.no']}"
 						value="#{organisationBackingBean.managedBean.gstSupplier.gstRegNo}"
-						size="50" styleClass="ppDisplayTextL"
+						size="45" styleClass="ppDisplayTextL"
 						maxlength="12" >						
 				</p:inputText>				
 				</ui:fragment>	
@@ -175,14 +175,14 @@
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.gst.reg.no']}"
 						value="#{lbl['lbl.pm.org.gst.na']}"
-						size="50" styleClass="ppDisplayTextL"
+						size="45" styleClass="ppDisplayTextL"
 						/>
 				</ui:fragment>				
 				</td>
 				<td><p:message id="gstRegNoIdMsg" for="gstRegNoId" display="icon" /></td>
 				<td><ac:iconTooltip value="#{lbl['lbl.pm.org.gst.reg.no.tooltip']}" /></td>
-				<td width="5%"></td>
-				<td><h:outputText
+				<td width="2%"></td>
+				<td><h:outputLabel
 							value="#{lbl['lbl.pm.org.bpk']}" /></td>
 				<td><p:selectBooleanCheckbox id="isBpkChkBoxId"
 							value="#{organisationBackingBean.managedBean.orgProfile.bpk}">
@@ -216,7 +216,7 @@
 				<ac:iconTooltip value="#{lbl['lbl.pm.org.gst.eff.date.tooltip']}" />
 				</td>
 				<td colspan="2"></td>
-				<td width="5%"></td>
+				<td width="2%"></td>
 				<td><h:outputLabel
 						value="#{lbl['lbl.pm.org.registration.zone']}" /> </td>
 				<td>
@@ -256,7 +256,7 @@
 						/></td>
 				</ui:fragment>
 				<td colspan="2"></td>
-				<td width="5%"></td>
+				<td width="2%"></td>
 				<td><h:outputLabel
 						value="#{lbl['lbl.pm.org.auth.type']}" /></td>
 				<td>
