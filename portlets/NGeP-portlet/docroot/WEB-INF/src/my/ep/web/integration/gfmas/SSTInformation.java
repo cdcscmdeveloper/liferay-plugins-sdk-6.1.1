@@ -1,5 +1,6 @@
 package my.ep.web.integration.gfmas;
 
+import java.math.BigDecimal;
 
 public class SSTInformation {
 
@@ -9,6 +10,9 @@ public class SSTInformation {
 	private String sapVendorCode;
 	private String kumpPtj;
 	private String sstAcknowledgeDate;
+	private BigDecimal sstAmountwithoutGST;
+	private BigDecimal sstAmountwithGST;
+	private String perihalSST;
 
 	public int getRecordType() {
 		return recordType;
@@ -56,6 +60,30 @@ public class SSTInformation {
 
 	public void setSstAcknowledgeDate(String sstAcknowledgeDate) {
 		this.sstAcknowledgeDate = sstAcknowledgeDate;
+	}
+
+	public BigDecimal getSstAmountwithoutGST() {
+		return sstAmountwithoutGST;
+	}
+
+	public void setSstAmountwithoutGST(BigDecimal sstAmountwithoutGST) {
+		this.sstAmountwithoutGST = sstAmountwithoutGST;
+	}
+
+	public BigDecimal getSstAmountwithGST() {
+		return sstAmountwithGST;
+	}
+
+	public void setSstAmountwithGST(BigDecimal sstAmountwithGST) {
+		this.sstAmountwithGST = sstAmountwithGST;
+	}
+
+	public String getPerihalSST() {
+		return perihalSST;
+	}
+
+	public void setPerihalSST(String perihalSST) {
+		this.perihalSST = perihalSST;
 	}
 
 }
