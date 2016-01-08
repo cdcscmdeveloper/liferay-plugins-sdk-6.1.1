@@ -23,7 +23,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			
  	</script>
 	<p:panel id="opPlanEpT" header="#{lbl['lbl.pp.plan.details.t']}" toggleable="true">
-	<br/>
+	
 		<p:inputText style="display:none" id="hiddenGtBudgetAmtT" styleClass="hiddenGtBudgetAmtT" value="#{pPlanBackingBean.managedBean.epTotalBudgetT}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
@@ -253,8 +253,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:row>
 			</p:columnGroup>
 		</p:dataTable>
-		<br/>
-       	<br/>
 		<div class="ppRightBtn">
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanT" 
 		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
