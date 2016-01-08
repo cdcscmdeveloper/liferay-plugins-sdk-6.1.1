@@ -10,7 +10,6 @@ public class CompanyBranch {
 
 	private int recordType;
 	private String name;
-	private String name2;
 	private String address;
 	private String address2;
 	private String address3;
@@ -28,7 +27,6 @@ public class CompanyBranch {
 	private int bankAccountInfoCount;
 	private int status;
 	private String mobileNo;
-	// version 2.7
 	private String indicatorCode;
 	private String accountActionIndicator;
 	private String referenceNoGST;
@@ -49,14 +47,6 @@ public class CompanyBranch {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getName2() {
-		return name2;
-	}
-
-	public void setName2(String name2) {
-		this.name2 = name2;
 	}
 
 	public String getAddress() {
