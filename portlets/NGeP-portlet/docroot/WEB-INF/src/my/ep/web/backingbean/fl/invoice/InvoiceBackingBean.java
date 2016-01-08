@@ -114,8 +114,6 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.InvoiceChargeLineLvl2VO;
-import my.ep.web.vo.InvoiceChargeLineLvl3VO;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
 
@@ -860,120 +858,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 * call this method  as user click on summary menu
 	 * <p>to calculate invoice summary.
 	 */
-	public void calInvSummary1() {
-		IFeeExemptionSO feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
-		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-		FeeExemptionResDTO resDTO = new FeeExemptionResDTO();
-		if(!getManagedBean().isTaxInvoice()){
-			if (null == getManagedBean().getChargeLineItemRoot()) {
-				populateChargeLineData();
-			}
-		}else{
-			if(null == getManagedBean().getTaxSectionItemRoot() || null == getManagedBean().getOutOfScopeSectionItemRoot()){
-				populateTaxAbleChargeLineData();
-			}
-		}
-		
-		
-		TreeNode root = getManagedBean().getChargeLineItemRoot();
-		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
-		BigDecimal orderTotalAmount = new BigDecimal(0);
-		BigDecimal gstTotalAmount = new BigDecimal(0);
-		
-		for (TreeNode lv1 : root.getChildren()) {
-			for(TreeNode lv2 : lv1.getChildren()){
-				InvoiceChargeLineLvl2VO dataLv2 = (InvoiceChargeLineLvl2VO) lv2.getData();
-				invoiceTotalAmount = invoiceTotalAmount.add(dataLv2.getInvoiceAmt());
-				orderTotalAmount = orderTotalAmount.add(dataLv2.getOrderedAmt());
-				for(TreeNode lv3 : lv2.getChildren()) {
-					InvoiceChargeLineLvl3VO dataLv3 = (InvoiceChargeLineLvl3VO) lv3.getData();
-					if(dataLv3.getGstFlag().equalsIgnoreCase(GSFType.STANDARD.value())) {
-						gstTotalAmount = gstTotalAmount.add(dataLv3.getInvoiceAmt());
-					}
-				}
-			}
-		}
-		
-		if(gstTotalAmount.doubleValue()>0) {
-			BigDecimal divideRate = getManagedBean().getInvoice().getFlRequest().getGstRate().add(BigDecimal.valueOf(100));
-			BigDecimal gstAmount = getManagedBean().getInvoice().getFlRequest().getGstRate().multiply(gstTotalAmount).divide(divideRate, CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE ,RoundingMode.HALF_UP);
-			getManagedBean().setGstAmount(gstAmount);
-		} else {
-			getManagedBean().setGstAmount(BigDecimal.ZERO);
-		}
-		getManagedBean().setInvoiceAmountWithoutGST(invoiceTotalAmount.subtract(getManagedBean().getGstAmount()));
-		
-		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
-		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
-		
-		BigDecimal serviceFee = new BigDecimal(0);
-		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
-			IRuleSO ruleSO = (IRuleSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			RuleReqDTO req = new RuleReqDTO();
-			req.setRuleType(RuleTypeConst.TRANSACTION_FEE_ONE_OFF);
-			ruleSO.getRuleValuesByTypeInCurrentDate(req);
-			serviceFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(req).getRuleValueList().get(0).getRuleValue());
-		} else {
-			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
-		}
-		
-		if(getManagedBean().getInvoice().getFlRequest().getProcurementType()!=null && getManagedBean().getInvoice().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-			serviceFee = new BigDecimal(0);
-		}
-		
-		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
-		reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
-		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
-			reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
-		}
-		resDTO = feeExemptionSO.checkForFeeExceptionFirstLevel(reqDTO);
-		if(resDTO.getFeeExemptionResult()!=null && resDTO.getFeeExemptionResult().booleanValue()) {
-			serviceFee = new BigDecimal(0);
-		}
-		
-		//check item whther is exempted for this supplier.
-		if(serviceFee.doubleValue()>0){
-			for (TreeNode lv1 : root.getChildren()) {
-				for(TreeNode lv2 : lv1.getChildren()){
-					for(TreeNode lv3 : lv2.getChildren()){
-						InvoiceChargeLineLvl3VO dataLv3 = (InvoiceChargeLineLvl3VO) lv3.getData();
-						if(dataLv3.getCmItemId()!=null) {
-							reqDTO.setItemId(dataLv3.getCmItemId());
-						} 
-						reqDTO.setRequestItemId(dataLv3.getItemId());
-						reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
-						if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
-							reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
-						}
-						resDTO = feeExemptionSO.checkForFeeException(reqDTO);
-
-						if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
-							nonExemptedItemList.add(dataLv3.getInvoiceAmt());
-						}
-					}
-				}
-			}
-		}
-		
-		BigDecimal nonExemptedItem = new BigDecimal(0);
-		if(!nonExemptedItemList.isEmpty()){
-			for(BigDecimal normalItemAmt : nonExemptedItemList){
-				nonExemptedItem = nonExemptedItem.add(normalItemAmt);
-			}
-		}
-		
-		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
-		BigDecimal percentage = new BigDecimal(100);
-		BigDecimal invMulty = new BigDecimal(0.0);
-		BigDecimal feeAmount = new BigDecimal(0.0);
-		invMulty = nonExemptedItem.multiply(serviceFee);
-		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
-		getManagedBean().getInvoice().setFeeAmt(feeAmount);
-		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
-		getManagedBean().getInvoice().setServiceFee(serviceFee);
-		getTaxinvoice();
-	}
-	
 	public void calInvSummary(){
 		IFeeExemptionSO feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
