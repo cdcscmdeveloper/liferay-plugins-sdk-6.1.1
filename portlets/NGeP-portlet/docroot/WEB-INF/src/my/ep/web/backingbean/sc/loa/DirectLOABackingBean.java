@@ -4026,7 +4026,7 @@ public class DirectLOABackingBean extends
 	/**
 	 * Show verify button.
 	 */
-	public void showVeriryButton() {
+	public void showVerifyButton() {
 
 		if (getManagedBean().isVerifyBtnFlag()) {
 			getManagedBean().setVerifyBtnFlag(false);
