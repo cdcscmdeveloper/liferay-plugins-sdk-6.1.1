@@ -1,5 +1,6 @@
 package my.ep.web.integration.gfmas;
 
+import java.util.Date;
 import java.util.List;
 
 /*
@@ -27,9 +28,11 @@ public class CompanyBranch {
 	private int bankAccountInfoCount;
 	private int status;
 	private String mobileNo;
-	private String indicatorCode;
+	private Long indicatorCode;
 	private String accountActionIndicator;
 	private String referenceNoGST;
+	private Date GSTEffectiveDate;
+	private Date GSTEffectiveEndDate;
 
 	List<BankAccountInformation> bankAccountInfoList;
 
@@ -185,11 +188,11 @@ public class CompanyBranch {
 		this.mobileNo = mobileNo;
 	}
 
-	public String getIndicatorCode() {
+	public Long getIndicatorCode() {
 		return indicatorCode;
 	}
 
-	public void setIndicatorCode(String indicatorCode) {
+	public void setIndicatorCode(Long indicatorCode) {
 		this.indicatorCode = indicatorCode;
 	}
 
@@ -207,6 +210,22 @@ public class CompanyBranch {
 
 	public void setReferenceNoGST(String referenceNoGST) {
 		this.referenceNoGST = referenceNoGST;
+	}
+
+	public Date getGSTEffectiveDate() {
+		return GSTEffectiveDate;
+	}
+
+	public void setGSTEffectiveDate(Date gSTEffectiveDate) {
+		GSTEffectiveDate = gSTEffectiveDate;
+	}
+
+	public Date getGSTEffectiveEndDate() {
+		return GSTEffectiveEndDate;
+	}
+
+	public void setGSTEffectiveEndDate(Date gSTEffectiveEndDate) {
+		GSTEffectiveEndDate = gSTEffectiveEndDate;
 	}
 
 	public List<BankAccountInformation> getBankAccountInfoList() {
