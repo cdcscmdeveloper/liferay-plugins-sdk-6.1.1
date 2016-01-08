@@ -63,7 +63,8 @@ public class PhoneValidator implements Validator {
 						.isNumeric(phoneNoVal))) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "Phone No Error",
-					SmCommonUtil.getMessage("lbl.txt.invalid.digit", null)));
+					SmCommonUtil.getMessage("lbl.sm.phone.number.format.error",
+							new String[] { labelNameVal })));
 		} else if (isMobileVal.equals("Y")
 				&& StringUtils.isNotBlank(telcoIdVal)) {
 			if (StringUtils.isBlank(phoneNoVal)) {
