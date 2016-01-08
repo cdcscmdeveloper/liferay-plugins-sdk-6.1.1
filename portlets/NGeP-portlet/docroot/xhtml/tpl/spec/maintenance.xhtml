@@ -70,11 +70,11 @@
 					</td>
 				</tr>		
 				<tr>
-					<td class="TableFieldLeft" width="12%">
+					<td class="TableFieldLeft" width="250px">
 						<p:outputLabel value="#{lbl['lbl.sc.item.type']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td class="TableFieldRight" width="20%">
+					<td class="TableFieldRight" width="350px">
 						<p:selectOneMenu id="itemType" style="width:289px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.itemTypeCode.parameterId}"
 							required="true"
@@ -84,7 +84,7 @@
 						</p:selectOneMenu>
 						<p:message id="itemTypeMsg" for="itemType" display="icon" />
 					</td>
-					<td class="TableFieldLeft" width="12%">
+					<td class="TableFieldLeft" width="250px">
 						<p:outputLabel value="#{lbl['lbl.tpl.spec.specification.type']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
@@ -130,7 +130,7 @@
 									headerText="#{lbl['lbl.sc.notice.board.ministry.search']}" 
 									saveObject="templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile"
 									value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile.orgName}"
-									size="38" readonly="true"
+									size="32" readonly="true"
 									required="true" label="#{lbl['lbl.tpl.spec.ministry']}" />
 							</c:when>
 							<c:when test="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.templateTypeCode.parameterCode == ParameterConst.templateTypePtj}">
@@ -138,7 +138,7 @@
 									headerText="#{lbl['lbl.sc.notice.board.ptj.search']}"
 									saveObject="templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile"
 									value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.orgProfile.orgName}"
-									size="38" readonly="true"
+									size="32" readonly="true"
 									required="true" label="#{lbl['lbl.tpl.spec.ministry']}" />
 							</c:when>
 							</c:choose>
