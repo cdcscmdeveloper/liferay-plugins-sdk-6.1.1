@@ -59,7 +59,51 @@
 						 : lbl['lbl.txt.na']}"/>
 					<p:message id="equiPerNationalMsg" for="equiPerNational"
 						showSummary="true" showDetail="false" display="icon" /></td>
-
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td>
+					<p:selectOneMenu id="equiPerSalutation"
+							label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
+							value="#{backingBean.managedBean.selectedShareHolder.title.salutationId}"
+							style="width: 207px;margin-bottom: 5px;" required="true">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems
+								value="#{backingBean.managedBean.salutationSelectItems}" />
+						</p:selectOneMenu>
+						<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.latestPersonnel}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.title.salutationId}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.title.salutationId}" 
+						alertValue="#{(not empty backingBean.managedBean.latestPersonnel and 
+						 not empty backingBean.managedBean.latestPersonnel.title) ?
+						 backingBean.getLabelFromSelectItems(backingBean.managedBean.latestPersonnel.title.salutationId,backingBean.managedBean.salutationSelectItems) 
+						 : lbl['lbl.txt.na']}"/>
+						<p:message id="equiPerSalutationMsg" for="equiPerSalutation"
+							showSummary="true" showDetail="false" display="icon" />
+				</td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.race']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu label="#{lbl['lbl.sm.person.race']}"
+						id="equiPerRace" required="true"
+						value="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="select"
+							value="#{backingBean.managedBean.raceSelectItems}"
+							itemLabel="select.label" itemValue="select.value" />
+						<p:ajax event="change" process="@this"/>
+					</p:selectOneMenu> 
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.latestPersonnel}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.pmRace.raceId}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}" 
+						alertValue="#{backingBean.getRaceLabel(backingBean.managedBean.latestPersonnel.pmRace.raceId)}"/>
+					<p:message id="equiPerRaceMsg" for="equiPerRace"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
@@ -326,28 +370,6 @@
 						alertValue="#{backingBean.managedBean.latestPersonnel.muslimFlg eq '1' ? 
 							lbl['lbl.sm.person.religion.muslim'] : lbl['lbl.sm.person.religion.non.muslim']}"/>
 				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.race']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu label="#{lbl['lbl.sm.person.race']}"
-						id="equiPerRace" required="true"
-						value="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="select"
-							value="#{backingBean.managedBean.raceSelectItems}"
-							itemLabel="select.label" itemValue="select.value" />
-						<p:ajax event="change" process="@this"/>
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestPersonnel.pmRace.raceId}" 
-						currValue="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}" 
-						alertValue="#{backingBean.getRaceLabel(backingBean.managedBean.latestPersonnel.pmRace.raceId)}"/>
-					<p:message id="equiPerRaceMsg" for="equiPerRace"
-						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>

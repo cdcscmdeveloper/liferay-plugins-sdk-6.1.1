@@ -78,6 +78,24 @@
 							<p:message id="basicBUNameMsg" for="basicBUName"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="basicBUSalutation"
+							label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
+							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.title.salutationId}"
+							style="width: 207px;margin-bottom: 5px;" required="true">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems
+								value="#{smPersonnelBackingBean.managedBean.salutationItems}" />
+						</p:selectOneMenu>
+						<p:message id="basicBUSalutationMsg" for="basicBUSalutation"
+							showSummary="true" showDetail="false" display="icon" /></td>
+
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -93,7 +111,6 @@
 						<p:message id="basicBUCountryMsg" for="basicBUCountry"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
-
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.identificationtype']}" /> <p:outputLabel

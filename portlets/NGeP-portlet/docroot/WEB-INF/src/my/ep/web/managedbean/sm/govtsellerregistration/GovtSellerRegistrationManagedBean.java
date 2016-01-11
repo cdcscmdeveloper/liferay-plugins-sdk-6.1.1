@@ -37,6 +37,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	public List<SelectItem> branchCompanyStates;
 	public List<SelectItem> branchCompanyDistricts;
 	public List<SelectItem> branchCompanyCities;
+	public List<SelectItem> salutationItems;
 	public List<SmSupplierBranch> selectedBranches;
 	public SmSupplierBranch selectedBranch;
 	private boolean showParentMsg;
@@ -205,6 +206,14 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 
 	public void setAgencyName(String agencyName) {
 		this.agencyName = agencyName;
+	}
+
+	public List<SelectItem> getSalutationItems() {
+		return salutationItems;
+	}
+
+	public void setSalutationItems(List<SelectItem> salutationItems) {
+		this.salutationItems = salutationItems;
 	}
 
 }
