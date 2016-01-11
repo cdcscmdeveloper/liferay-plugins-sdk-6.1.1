@@ -19,9 +19,6 @@ public class BankAccountInformation {
 	private String status;
 	private String bankName;
 
-	// for APOVE
-	private String AccountHolderName;
-
 	public String getSwiftCode() {
 		return swiftCode;
 	}
@@ -94,14 +91,6 @@ public class BankAccountInformation {
 		this.currency = currency;
 	}
 
-	public String getAccountHolderName() {
-		return AccountHolderName;
-	}
-
-	public void setAccountHolderName(String accountHolderName) {
-		AccountHolderName = accountHolderName;
-	}
-
 	public String getBankActionIndicator() {
 		return bankActionIndicator;
 	}
@@ -117,22 +106,23 @@ public class BankAccountInformation {
 	public void setKodBankIndicator(int kodBankIndicator) {
 		this.kodBankIndicator = kodBankIndicator;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-	    if(obj instanceof ItemType)
-	    {
-	    	BankAccountInformation temp = (BankAccountInformation) obj;
-	        if(this.bankKey.equalsIgnoreCase(temp.bankKey) && this.bankAccount.equalsIgnoreCase(temp.bankAccount))
-	            return true;
-	    }
-	    return false;
+		if (obj instanceof ItemType) {
+			BankAccountInformation temp = (BankAccountInformation) obj;
+			if (this.bankKey.equalsIgnoreCase(temp.bankKey)
+					&& this.bankAccount.equalsIgnoreCase(temp.bankAccount))
+				return true;
+		}
+		return false;
 
 	}
+
 	@Override
 	public int hashCode() {
 
-	    return (this.bankKey.hashCode()+this.bankAccount.hashCode());        
+		return (this.bankKey.hashCode() + this.bankAccount.hashCode());
 	}
 
 }
