@@ -105,6 +105,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -1941,4 +1942,34 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return DateUtils.isDateGreater(proposalValidityEndDate, new Date());
 		
 	}
+	
+	/**
+	 * Get the PTJ Organization Profile By Login User
+	 * 
+	 * @return	the PmOrgProfile instance
+	 */
+	public PmOrgProfile getPTJOrgProfileByLoginUser() {
+		IOrgProfileSO orgProfileSO = null;
+		PmOrgProfile pmOrgProfile = null;
+		try {
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+			if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+				pmOrgProfile = pmOrgProfiles.get(0);
+			}
+
+		} finally {
+			orgProfileSO = null;
+		}
+		
+		return pmOrgProfile;
+	}
+	
 }
