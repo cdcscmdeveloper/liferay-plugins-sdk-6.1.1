@@ -509,7 +509,7 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	public void addBusinessOwner() {
 		debugLogger("addBusinessOwner");
-		getManagedBean().getUserSearchBusinessOwnerDataModel().reloadData();
+		getManagedBean().getUserSearchBusinessOwnerDataModel().resetData();
 		// Search Criteria
 		getManagedBean().getUserBusineeOwnerSearchBean().setName(null);
 		getManagedBean().getUserBusineeOwnerSearchBean().setIdentificationType(
