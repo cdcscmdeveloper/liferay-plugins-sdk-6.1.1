@@ -82,6 +82,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -1524,6 +1525,26 @@ public class SmApplicationBackingBean extends
 	public String getLabelFromSelectItems(Object objId, String paramType) {
 		String retVal = "";
 		List<SelectItem> items = Arrays.asList(getDropdownValues(paramType));
+		if (!SmCommonUtil.isCollectionEmpty(items) && objId != null) {
+			for (SelectItem item : items) {
+				if (item.getValue() != null
+						&& item.getValue().toString().equals(objId.toString())) {
+					retVal = item.getLabel();
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Get select item label from select items by value
+	 * 
+	 * @param Object
+	 *            objId
+	 * @return String
+	 */
+	public String getLabelFromSelectItems(Object objId, List<SelectItem> items) {
+		String retVal = "";
 		if (!SmCommonUtil.isCollectionEmpty(items) && objId != null) {
 			for (SelectItem item : items) {
 				if (item.getValue() != null
@@ -4415,6 +4436,16 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedShareHolder().setSmAppl(
 				getManagedBean().getSmAppl());
 		if (validShrHldr) {
+			if (getManagedBean().getSelectedShareHolder().getPmRace() != null
+					&& getManagedBean().getSelectedShareHolder().getPmRace()
+							.getRaceId() == null) {
+				getManagedBean().getSelectedShareHolder().setPmRace(null);
+			}
+			if (getManagedBean().getSelectedShareHolder().getTitle() != null
+					&& getManagedBean().getSelectedShareHolder().getTitle()
+							.getSalutationId() == null) {
+				getManagedBean().getSelectedShareHolder().setTitle(null);
+			}
 			SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
 					.getSelectedShareHolder(), getManagedBean().getSmAppl()
 					.getSmPersonnels());
@@ -4602,6 +4633,10 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSelectedShareHolder().getPmRace() == null) {
 			getManagedBean().getSelectedShareHolder().setPmRace(new PmRace());
+		}
+		if (getManagedBean().getSelectedShareHolder().getTitle() == null) {
+			getManagedBean().getSelectedShareHolder().setTitle(
+					new PmSalutation());
 		}
 		if (getManagedBean().getSelectedShareHolder().getEpRole() == null) {
 			getManagedBean().getSelectedShareHolder().setEpRole("");
@@ -6963,7 +6998,7 @@ public class SmApplicationBackingBean extends
 			String actionDesc = "";
 			if (res.equalsIgnoreCase("SITE_VISIT")
 					|| res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
-//				SmApplicationUtil.siteVisitDataUpdate(getManagedBean());
+				// SmApplicationUtil.siteVisitDataUpdate(getManagedBean());
 				SmApplicationUtil.setSiteVisitData(getManagedBean());
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 				reqDTO.setSvTask(getManagedBean().getSvTask());
@@ -8024,6 +8059,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmPersonnel object
 	 */
 	private void setDefaultPersonnelValues(SmPersonnel shr) {
+		shr.setTitle(new PmSalutation());
 		shr.setRevNo(1);
 		shr.setSmAppl(getManagedBean().getSmAppl());
 		shr.setBumiFlg(1);

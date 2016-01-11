@@ -37,6 +37,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -292,6 +293,7 @@ public class SmPersonnelBackingBean extends
 		SmPersonnel smPersonnel = new SmPersonnel();
 		getManagedBean().setAccountStatus(1);
 		smPersonnel.setPmCountry(resDTO.getPmCountry());
+		smPersonnel.setTitle(new PmSalutation());
 
 		resDTO = SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO);
 		SmAddress mailAddress = new SmAddress();
@@ -746,6 +748,9 @@ public class SmPersonnelBackingBean extends
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
 		this.getManagedBean().setBasicSmPersonnel(smPersonnel);
 		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
+		if (smPersonnel.getTitle() == null) {
+			smPersonnel.setTitle(new PmSalutation());
+		}
 
 		if (getManagedBean().isViewOnlyPersonnel()) {
 			setPersonnelViewOnlyAddresses(smPersonnel);
@@ -1085,6 +1090,10 @@ public class SmPersonnelBackingBean extends
 	 * @throws Exception
 	 */
 	public void updateUser(SmPersonnel smPersonnel) throws Exception {
+		if (smPersonnel.getTitle() != null
+				&& smPersonnel.getTitle().getSalutationId() == null) {
+			smPersonnel.setTitle(null);
+		}
 		PersonnelResDTO resDTO = updatePersonnel(smPersonnel);
 		log.info("Result:" + resDTO.isSuccessful());
 		if (resDTO.isSuccessful()) {
@@ -1194,6 +1203,10 @@ public class SmPersonnelBackingBean extends
 	 */
 	private void validatePersonnelBeforeSave(SmPersonnel smPersonnel) {
 
+		if (smPersonnel.getTitle() != null
+				&& smPersonnel.getTitle().getSalutationId() == null) {
+			smPersonnel.setTitle(null);
+		}
 		if (smPersonnel.getIdentificationType().getParameterCode()
 				.equalsIgnoreCase("I")) {
 			if (smPersonnel.getIdentificationNo().length() != 12) {

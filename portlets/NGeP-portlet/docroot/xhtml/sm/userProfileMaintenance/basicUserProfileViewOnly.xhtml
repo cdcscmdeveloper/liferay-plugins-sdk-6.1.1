@@ -47,10 +47,16 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" styleClass="outputLabel-view-label"/></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.name}" /></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" styleClass="outputLabel-view-label"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.title}"
+							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.title.salutationName}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.nationality']}" styleClass="outputLabel-view-label" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmCountry.countryName}" /></td>
 				</tr>
-
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" styleClass="outputLabel-view-label"/></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.selectedPersonnelIdentificationType}" /></td>
