@@ -65,6 +65,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private SmAddress tempAddress;
 	private List<SelectItem> roleList;
 	private List<SelectItem> searchRoleList;
+	private List<SelectItem> salutationItems;
 	private boolean disableAddNewUser;
 	private int accountStatus;
 	private SelectItem[] idTypes;
@@ -620,6 +621,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setLogoutUrl(String logoutUrl) {
 		this.logoutUrl = logoutUrl;
+	}
+
+	public List<SelectItem> getSalutationItems() {
+		return salutationItems;
+	}
+
+	public void setSalutationItems(List<SelectItem> salutationItems) {
+		this.salutationItems = salutationItems;
 	}
 
 }
