@@ -81,18 +81,6 @@ public class SvcSiteAssignBackingBean extends
 		getWorkFlowInfo(getManagedBean().getAppId());
 	}
 	
-/*	*//**
-	 * set PO Remark and populate
-	 * @param List<SmApplSectionReview> secReviews
-	 *//*
-	public void setPoRemarkToSVC(List<SmApplSectionReview> secReviews){
-		for(SmApplSectionReview rev : secReviews){
-			if(rev.getRoleType() != null && rev.getRoleType().equalsIgnoreCase(
-					SupplierManagementConst.SECTION_REV_ROLE_PO)){
-				getManagedBean().setPoRmrkToSvc((rev.getSitevisitRemark()!=null) ? rev.getSitevisitRemark():"");
-			}
-		}
-	}*/
 	
 	/**
 	 * Submit Site Visi Assignment
