@@ -11119,40 +11119,53 @@ public class SpecificationBackingBean extends
 					}
 
 					// Filter By - ministry orgProfileId
-					IOrgProfileSO orgProfileSO = null;
-					try {
-						orgProfileSO = BusinessDelegate.getInstance()
-								.getServiceObject(
-										ModuleCodeConst.PROFILE_MANAGEMENT,
-										IOrgProfileSO.class);
-
-						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-						orgProfileReqDTO.setOrgProfileId(getManagedBean()
-								.getScQt().getPmOrgProfile().getOrgProfileId());
-						PmOrgProfile ministryOrgProfile = orgProfileSO
-								.retrieveMinistryByOrgProfileId(
-										orgProfileReqDTO).getPmOrgProfile();
-						if (ministryOrgProfile != null) {
-							searchBean
-									.getDataFilterBeans()
-									.add(new SearchMultiFilterBean(
-											new SearchFilterBean(
-													"orgProfile.orgProfileId",
-													SearchOperator.OPERATOR_EQUALS
-															.value(),
-													ministryOrgProfile
-															.getOrgProfileId()),
-											new SearchFilterBean(
-													"orgProfile.orgProfileId",
-													SearchOperator.OPERATOR_IS_NULL
-															.value(),
-													null,
-													SearchCondition.CONDITION_OR
-															.value())));
-						}
-					} finally {
-						orgProfileSO = null;
+					ScQt scQt = getManagedBean().getScQt();
+					List<String> templeteTypes = new ArrayList<String>();
+					templeteTypes.add(ParameterConst.TEMPLATE_TYPE_MINISTRY);
+					templeteTypes.add(ParameterConst.TEMPLATE_TYPE_PTJ);
+					
+					List<Long> orgProfileIds = getMinistryPTJOrgIds(scQt.getPmOrgProfile());
+					List<Long> ownerOrgProfileIds = getMinistryPTJOrgIds(scQt.getPmOrgProfile());
+					
+					if (ownerOrgProfileIds != null && ownerOrgProfileIds.size() > 0) {
+						orgProfileIds.addAll(ownerOrgProfileIds);
 					}
+					
+					SearchMultiFilterBean orgFilterBean = new SearchMultiFilterBean(
+							new SearchFilterBean(
+									"templateTypeCode.parameterCode",
+									SearchOperator.OPERATOR_IN.value(),
+									templeteTypes),
+							new SearchFilterBean(
+									"orgProfile.orgProfileId",
+									SearchOperator.OPERATOR_IN.value(),
+									orgProfileIds));
+					
+					SearchMultiFilterBean ownFilterBean = new SearchMultiFilterBean(
+							new SearchFilterBean(
+									"templateTypeCode.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									ParameterConst.TEMPLATE_TYPE_OWN),
+							SearchCondition.CONDITION_OR.value(),
+							new SearchFilterBean(
+									"createdBy",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									new FacesScopes().getUserSessionBean().getUserId()));
+					
+					SearchMultiFilterBean allFilterBean = new SearchMultiFilterBean(
+							new SearchFilterBean(
+									"templateTypeCode.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									ParameterConst.TEMPLATE_TYPE_ALL),
+							SearchCondition.CONDITION_OR.value(),
+							new SearchFilterBean(
+									"orgProfile.orgProfileId",
+									SearchOperator.OPERATOR_IS_NULL.value(),
+									null));
+					
+					searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
+							new SearchMultiFilterBean(orgFilterBean, ownFilterBean),
+							allFilterBean));
 
 					qtTemplateReqDTO.setOrderByBlankTemplate(true);
 
@@ -11196,14 +11209,13 @@ public class SpecificationBackingBean extends
 
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("processType",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getStandardTemplate(),
-									true));
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getStandardTemplate()));
 				}
 
 				if (null != getManagedBean().getSearchItemTypeId()) {
 					SearchFilterBean itemSearchBean = new SearchFilterBean(
-							SearchOperator.OPERATOR_LIKE.value());
+							SearchOperator.OPERATOR_EQUALS.value());
 					itemSearchBean.setSearchField("itemTypeCode.parameterId");
 					itemSearchBean.setSearchValue(getManagedBean()
 							.getSearchItemTypeId());
@@ -11212,7 +11224,7 @@ public class SpecificationBackingBean extends
 
 				if (null != getManagedBean().getSearchProcurementId()) {
 					SearchFilterBean procurementSearchBean = new SearchFilterBean(
-							SearchOperator.OPERATOR_LIKE.value());
+							SearchOperator.OPERATOR_EQUALS.value());
 					procurementSearchBean
 							.setSearchField("procurementCategory.parameterId");
 					procurementSearchBean.setSearchValue(getManagedBean()
@@ -11222,7 +11234,7 @@ public class SpecificationBackingBean extends
 
 				if (null != specTypeCode) {
 					SearchFilterBean qtnoSearchBean = new SearchFilterBean(
-							SearchOperator.OPERATOR_LIKE.value());
+							SearchOperator.OPERATOR_EQUALS.value());
 					qtnoSearchBean.setSearchField("specTypeCode.parameterCode");
 					qtnoSearchBean.setSearchValue(specTypeCode);
 
@@ -11246,6 +11258,37 @@ public class SpecificationBackingBean extends
 			return null;
 		}
 
+	}
+	
+	private List<Long> getMinistryPTJOrgIds(PmOrgProfile pmOrgProfile) {
+		List<Long> orgProfileIds = new ArrayList<Long>();
+		
+		if (pmOrgProfile != null) {
+			IOrgProfileSO orgProfileSO = null;
+			try {
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+
+				Long orgProfileId = pmOrgProfile.getOrgProfileId();
+
+				orgProfileIds.add(orgProfileId);
+				
+				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+				orgProfileReqDTO.setOrgProfileId(orgProfileId);				
+				PmOrgProfile ministryOrgProfile = orgProfileSO
+						.retrieveMinistryByOrgProfileId(
+								orgProfileReqDTO).getPmOrgProfile();
+				if (ministryOrgProfile != null) {
+					orgProfileIds.add(ministryOrgProfile.getOrgProfileId());
+				}
+			} finally {
+				orgProfileSO = null;
+			}
+		}
+		
+		return orgProfileIds;
 	}
 
 	/**
