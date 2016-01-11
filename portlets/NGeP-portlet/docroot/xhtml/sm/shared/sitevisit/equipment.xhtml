@@ -22,9 +22,11 @@
 						#{lbl['lbl.sm.availableLbl']}
 					</f:facet>
 					
+					<div align="center">
 					<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}" disabled="#{viewFlag}">
 						<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipMaint)}" update="dtlEquipMainQtySetId"></p:ajax>
 					</p:selectBooleanCheckbox>
+					</div>
 					
 			</p:column>
 			
@@ -58,11 +60,11 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.availableLbl']}
 					</f:facet>
-					
+					<div align="center">
 					<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}" disabled="#{viewFlag}">
 						<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipBinding)}" update="dtlEquipBeatingQtySetId"></p:ajax>
 					</p:selectBooleanCheckbox>
-					
+					</div>
 			</p:column>
 			
 			<p:column>
