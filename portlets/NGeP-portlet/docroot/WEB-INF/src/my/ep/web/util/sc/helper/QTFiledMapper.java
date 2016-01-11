@@ -47,11 +47,13 @@ public class QTFiledMapper {
 
 	/**
 	 * Constant for Maintance Flow Fileds
+	 * 
+	 * Add the filed names which needs to be editable on the screen upon QT status
 	 */
 	enum QTMaintanaceEnableFields implements IEnumType {
-
+		
+		// Pending QT Submission
 		QT_PENDING_QT_SUBMISSION(QTStatusConst.QT_PENDING_QT_SUBMISSION,
-
 		new String[] { QTFieldConst.FILED_QT_FILE_NO,
 				QTFieldConst.FILED_QT_ESTMT_AMT, QTFieldConst.FILED_QT_TITLE,
 				QTFieldConst.FILED_QT_SUPPQUALIFICATION,
@@ -64,14 +66,18 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION, }),
-
+						
+		// Pending QT Schedule & Document
 		QT_PENDING_SCHEDULE_DOCUMENT(
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }), QT_PENDING_PUBLICATION_APPROVAL(
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }),
+						
+         // Pending QT publication Approval
+		QT_PENDING_PUBLICATION_APPROVAL(
 				QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL, new String[] {
 
 				QTFieldConst.FILED_QT_TITLE,
@@ -80,49 +86,42 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS }),
-
+						
+        // Pending QT Publication
 		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
 				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }), QT_PROPOSAL_PREPARATION(
-				QTStatusConst.QT_PROPOSAL_PREPARATION, new String[] {
-						QTFieldConst.FILED_QT_ESTMT_AMT,
-						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-
-						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
-						QTFieldConst.FILED_QT_DOCUMENTS }),
-
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }),
+						
+        //Proposal Preparation 
+		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
+				new String[] { QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }),
+						
+        // Briefing/Site visit
 		QT_BRIEFING_SITE_VISIT(QTStatusConst.QT_BRIEFING_SITE_VISIT,
-				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
-						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_TITLE,
+				new String[] { QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-
-						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
-						QTFieldConst.FILED_QT_DOCUMENTS,
 						QTFieldConst.FILED_QT_PUB_APPROVAL }),
+						
+		// QT Closed				
+		QT_CLOSED(QTStatusConst.QT_CLOSED,
+				new String[] { QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
 
-		QT_CLOSED(QTStatusConst.QT_CLOSED, new String[] {
-				QTFieldConst.FILED_QT_ESTMT_AMT,
+		// Evaluation Proposal		
+		QT_EVALUATION_PROPOSAL(QTStatusConst.QT_EVALUATION_PROPOSAL,
+				new String[] { QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
+        // Re Evaluation
+		QT_RE_EVALUATION(QTStatusConst.QT_RE_EVALUATION, new String[] {
 				QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
 
-		QT_EVALUATION_PROPOSAL(QTStatusConst.QT_EVALUATION_PROPOSAL,
-				new String[] {
-
-				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
-
-		QT_RE_EVALUATION(QTStatusConst.QT_RE_EVALUATION, new String[] {
-				QTFieldConst.FILED_QT_ESTMT_AMT,
-
-				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
-
+		// Supplier Finalization
 		QT_SUPPLIER_FINALIZATION(QTStatusConst.QT_SUPPLIER_FINALIZATION,
-				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
-
-				QTFieldConst.FILED_QT_VALIDITY_PERIOD });
+				new String[] { QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD });
 
 		private Long statusId;
 		private String[] toBeEnableFields;
