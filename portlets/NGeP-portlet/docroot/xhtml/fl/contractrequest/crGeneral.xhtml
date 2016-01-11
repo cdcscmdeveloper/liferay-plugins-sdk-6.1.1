@@ -153,7 +153,6 @@
 						readonlyInput="true"
 						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
-						mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}" 
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect"
 							listener="#{contractRequestBackingBean.updateDeliveryDate}"
