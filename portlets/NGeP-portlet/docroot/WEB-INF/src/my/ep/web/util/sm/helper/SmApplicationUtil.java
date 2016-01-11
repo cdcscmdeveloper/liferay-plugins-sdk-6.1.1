@@ -4815,6 +4815,7 @@ public class SmApplicationUtil {
 	public static void setSiteVisitData(SmApplicationManagedBean bean) {
 		if (!SmCommonUtil.isCollectionEmpty(bean.getSiteVisitFacVOList())) {
 			bean.setSvTaskList(new ArrayList<SmSvTask>());
+			bean.getSmAppl().setSmSvTasks(new ArrayList<SmSvTask>());
 			SmSvTask svTask = null;
 			PmParameter bumiType = SmCommonUtil.retrieveParameterByTypeAndCode(
 					ParameterTypeConst.CATEGORY_TYPE,
@@ -4879,7 +4880,8 @@ public class SmApplicationUtil {
 
 		// SmSvCategories
 		setSmSvCategories(svTask, facVO.getSuppCategories());
-
+		
+		bean.getSmAppl().getSmSvTasks().add(svTask);
 		bean.getSvTaskList().add(svTask);
 	}
 
