@@ -155,12 +155,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/** The flag. */
 	private boolean flag;
 	
-	/** The pm digi sign. */
-	private PmDigiSign pmDigiSign;
-	
-	/** The text before sign. */
-	private String textBeforeSign;
-	
 	/** The Constant ZONE_SEPARATOR. */
 	public static final String ZONE_SEPARATOR = "_";
 	
@@ -960,12 +954,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	/**
 	 * Update bpm task.
-	 * Authenticating gpki before update bpm
+	 *
 	 * @param outcome the outcome
-	 * @param digiSign the digi sign
 	 * @return the request note res dto
 	 */
-	private RequestNoteResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
+	private RequestNoteResDTO updateBPMTask(String outcome) {
 		debugLogger("updateBPMTask");
 		RequestNoteResDTO requestNoteResDTO = null;
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -978,11 +971,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
 			
-			if (null != digiSign) {
-				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_REQUEST_NOTE, 
-						requestNote.getRequestNoteId(), requestNote.getRequestNoteNo());
-			}
-			
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
@@ -991,7 +979,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 			requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			requestNoteReqDTO.setOutcome(outcome);
-			requestNoteReqDTO.setDigiSignData(digiSign);
 			
 			requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 			
@@ -1046,21 +1033,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
-		
-		getDirectPurchaseSO().validateRNBeforeSubmitting(requestNoteReqDTO);
 
-		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			// validate RN
-			validateRequestNote(scRequestNote);
-			
-			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}	
-		} else {
-			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			updateBPMTask(outcome, null);
-		}	
+		getDirectPurchaseSO().validateRNBeforeSubmitting(requestNoteReqDTO);
+		
+		updateBPMTask(outcome);
 	}
 
 	/**
@@ -3505,64 +3481,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
-	
-	/**
-	 * Gpki sign action.
-	 * Authenticating gpki before update bpm.
-	 * @param digiSign the digi sign
-	 */
-	public void gpkiSignAction(PmDigiSign digiSign) {
-		updateBPMTask(this.getManagedBean().getAction(), digiSign);
-	}
-	
-	/**
-	 * Gpki cancel action.
-	 */
-	public void gpkiCancelAction() {
-		getManagedBean().setAutoUpdate(Boolean.TRUE);
-		RequestContext.getCurrentInstance().update("@form");
-	}
 
-	/**
-	 * Gets the pm digi sign.
-	 *
-	 * @return the pm digi sign
-	 */
-	public PmDigiSign getPmDigiSign() {
-		return pmDigiSign;
-	}
-
-	/**
-	 * Sets the pm digi sign.
-	 *
-	 * @param pmDigiSign the new pm digi sign
-	 */
-	public void setPmDigiSign(PmDigiSign pmDigiSign) {
-		this.pmDigiSign = pmDigiSign;
-	}
-
-	/**
-	 * Gets the text before sign.
-	 * prepare sign in data for gpki authentication.
-	 * @return the text before sign
-	 */
-	public String getTextBeforeSign() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getManagedBean().getRequestNote().getRequestNoteNo());
-		sb.append(new FacesScopes().getUserSessionBean().getUserId());
-		textBeforeSign = sb.toString();
-		return textBeforeSign;
-	}
-
-	/**
-	 * Sets the text before sign.
-	 *
-	 * @param textBeforeSign the new text before sign
-	 */
-	public void setTextBeforeSign(String textBeforeSign) {
-		this.textBeforeSign = textBeforeSign;
-	}	
-	
 	/**
 	 * Method get approver group and approver List.
 	 */
