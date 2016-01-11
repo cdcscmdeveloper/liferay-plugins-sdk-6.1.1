@@ -136,6 +136,7 @@ public class FileUtility extends InitializeSO{
 					line.append(formatStringField(mDataVendor.getAgencyId(), 6,	"L"));
 					line.append(formatStringField(mDataVendor.getVendorIdCode(), 20, "L"));
 					line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
+					line.append(formatStringField(mDataVendor.getEpNo(),20, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 						
@@ -145,7 +146,6 @@ public class FileUtility extends InitializeSO{
 							branchLine = new StringBuffer();
 							branchLine.append(formatIntegerField(companyBranch.getRecordType(),	1, "R"));
 							branchLine.append(formatStringField(companyBranch.getName(), 100,"L"));
-//							branchLine.append(formatStringField(companyBranch.getName2(), 35,"L"));
 							branchLine.append(formatStringField(companyBranch.getAddress(), 35,"L"));
 							branchLine.append(formatStringField(companyBranch.getAddress2(),35, "L"));
 							branchLine.append(formatStringField(companyBranch.getAddress3(),35, "L"));
@@ -163,9 +163,14 @@ public class FileUtility extends InitializeSO{
 							branchLine.append(formatIntegerField(companyBranch.getBankAccountInfoCount(), 3, "R"));
 							branchLine.append(formatIntegerField(companyBranch.getStatus(), 1,"R"));
 							branchLine.append(formatStringField(companyBranch.getMobileNo(), 15,"L"));
-							branchLine.append(formatStringField(companyBranch.getIndicatorCode(), 3, "R"));
+							if(companyBranch.getIndicatorCode()==0)
+								branchLine.append(formatStringField(IntegrationConstants.HQ_INDICATOR_CODE, 20,"L"));
+							else
+								branchLine.append(formatLong(companyBranch.getIndicatorCode(), 20));
 							branchLine.append(formatStringField(companyBranch.getAccountActionIndicator(), 1,"R"));
 							branchLine.append(formatStringField(companyBranch.getReferenceNoGST(), 20,"L"));
+							branchLine.append(formatDate(companyBranch.getGSTEffectiveDate()));
+							branchLine.append(formatDate(companyBranch.getGSTEffectiveEndDate()));
 							branchLine.append(System.getProperty("line.separator"));
 							writer.write(branchLine.toString());
 							
@@ -225,9 +230,13 @@ public class FileUtility extends InitializeSO{
 					line.append(formatStringField(sstInfo.getSapVendorCode(),10, "L"));
 					line.append(formatStringField(sstInfo.getKumpPtj(), 8, "L"));
 					line.append(formatStringField(sstInfo.getSstAcknowledgeDate(), 8, "L"));
+					line.append(formatBigDecimalField(sstInfo.getSstAmountwithoutGST(), 13));
+					line.append(formatBigDecimalField(sstInfo.getSstAmountwithGST(), 13));
+					line.append(formatStringField(sstInfo.getPerihalSST(), 500, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 				}
+				writer.close();
 				log.info("local fie create....");
 				
 				reqDTO.setProcessId(PROCESS_ID);
@@ -256,7 +265,6 @@ public class FileUtility extends InitializeSO{
 	}
 	
 
-	//two channges done one for mobile no and bank account 15 ,18
 	public List<MasterDataVendor> masterDataVendorFileInPutStream(String filePath) {
 			Path path = Paths.get(filePath);
 		    String line;
@@ -291,6 +299,7 @@ public class FileUtility extends InitializeSO{
 			    		  masterDataVendor.getCompanyBranch().setCurrency(getValue(line,421 ,5 ));
 			    		  masterDataVendor.getCompanyBranch().setPaymentTerm(getValue(line,426 ,4 ));
 			    		  masterDataVendor.getCompanyBranch().setMobileNo(getValue(line,430 ,10 ));
+			    		  masterDataVendor.getCompanyBranch().setIndicatorCode(new Long(getValue(line,440 ,20 )));
 			    	  }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
 			    		  bankAccountInformation = new BankAccountInformation();
 			    		  bankAccountInformation.setRecordType(Integer.parseInt(getValue(line,0 ,1 )));
@@ -298,7 +307,6 @@ public class FileUtility extends InitializeSO{
 			    		  bankAccountInformation.setBankCountry(getValue(line,4 ,2 ));
 			    		  bankAccountInformation.setBankKey(getValue(line,6 ,15 ));
 			    		  bankAccountInformation.setBankAccount(getValue(line,21 ,12 ));
-//			    		  bankAccountInformation.setAccountHolderName(getValue(line,39 ,60 ));
 			    		  if(!bankAccountInformationList.contains(bankAccountInformation))
 			    			  bankAccountInformationList.add(bankAccountInformation);
 			    		  masterDataVendor.setBankAccountInfoList(bankAccountInformationList);
@@ -1357,24 +1365,8 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
 			
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE04.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE04.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			 
 			 log.info("createEquiytyOwner end");
@@ -1490,23 +1482,7 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
 			
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE01.value(),fileName, transId));
-			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE01.value(),fileName, transId));
 				
 			setValuesToPmInterface(reqDTO);
 			
@@ -1523,6 +1499,26 @@ public class FileUtility extends InitializeSO{
 
 				}
 			}
+		}
+	}
+
+	/**
+	 * @param fileName
+	 * @param transId 
+	 * @return
+	 */
+	public int constructQueueMessage(String serviceCode, String fileName, String transId) {
+		JMSReqDTO jmsReqDTO = new JMSReqDTO();
+		jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+		jmsReqDTO.setTextMessage(true);
+		jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(serviceCode,fileName, transId));
+		
+		JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+		
+		if(jmsResDTO.isSuccessful()){
+			return 1;
+		}else{
+			return 0;
 		}
 	}
 
@@ -1573,23 +1569,8 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE07.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE07.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			log.info("createAuthorizedSignatory end");
 
@@ -1684,24 +1665,8 @@ public class FileUtility extends InitializeSO{
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE06.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE06.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			
 			log.info("createManagementPersonnel end");
@@ -1788,24 +1753,8 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE05.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE05.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			
 			log.info("createBoardOfDirector end");
@@ -1880,24 +1829,8 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE08.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE08.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			
 			log.info("createBranchCompany end");
@@ -1963,24 +1896,8 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE09.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE09.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			
 			log.info("createRegisteredCategory end");
@@ -2055,24 +1972,8 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE10.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE10.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			
 			log.info("createGovernmentProject end");
@@ -2135,24 +2036,8 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE11.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE11.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			
 			log.info("createDeletedCompany end");
@@ -2192,6 +2077,9 @@ public class FileUtility extends InitializeSO{
 				line.append(formatString(companyOwner.getmOFNo(),20));
 				
 				line.append(formatString(companyOwner.getCompanyName(),100));
+				line.append(formatString(companyOwner.getCompanyRegistrationNo(),20));
+				line.append(formatString(companyOwner.getOtherRegistrationNo(),30));
+				line.append(formatString(companyOwner.getRegistrationAuthority(),4));
 				line.append(formatString(companyOwner.getCompanyOwnerSSMNO(),20));
 				line.append(formatString(companyOwner.getCompanyOwnerMOFNo(),20));
 				line.append(formatBigDecimal(companyOwner.getShareholdingAmount()));
@@ -2234,24 +2122,8 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE03.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE03.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			
 			log.info("createCompanyOwner end");
@@ -2332,24 +2204,8 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			JMSReqDTO jmsReqDTO = new JMSReqDTO();
-			jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
-			jmsReqDTO.setTextMessage(true);
-			jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(ServiceCode.EPE02.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE02.value(),fileName, transId));
 			
-			JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
-			
-			System.out.println("jmsResDTO :"+jmsResDTO.isSuccessful());
-			
-			if(jmsResDTO.isSuccessful()){
-				//Insert Record into pm_interface_log for success to put message into Queue
-				reqDTO.setQueueMsgStatus(1);
-
-			}else{
-				//Insert record into pm_interface_log for fail to put message into Queue
-				reqDTO.setQueueMsgStatus(0);
-			}
-				
 			setValuesToPmInterface(reqDTO);
 			
 			log.info("createAssociatedCompany end");
@@ -2800,9 +2656,9 @@ public class FileUtility extends InitializeSO{
 				 }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
 					 errorDesc = new ErrorDesc();
 					 errorDesc.setRecordType(IntegrationConstants.RECORD_TYPE_ONE);
-					 errorDesc.setReferenceNo(getValue(line, 1, 15));
-					 errorDesc.setErrorCode(getValue(line, 16, 6));
-					 errorDesc.setErrorDescription(getValue(line, 22, 255));
+					 errorDesc.setReferenceNo(getValue(line, 1, 20));
+					 errorDesc.setErrorCode(getValue(line, 21, 6));
+					 errorDesc.setErrorDescription(getValue(line, 27, 255));
 					 errorDescList.add(errorDesc);
 					 
 					 if(gfmasError.getTotalRecordCount()==errorDescList.size()){
@@ -2882,8 +2738,7 @@ public class FileUtility extends InitializeSO{
 				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 				reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL+fileName);
 
-				encryption.encryptPhis(reqDTO);
-
+				setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 			}
 		} catch (IOException e) {
 
@@ -2931,7 +2786,10 @@ public class FileUtility extends InitializeSO{
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
 				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-				encryption.encryptPhis(reqDTO);
+			
+//				encryption.encryptPhis(reqDTO);
+				
+				setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 
 			}
 		} catch (IOException e) {
@@ -2981,7 +2839,8 @@ public class FileUtility extends InitializeSO{
 				reqDTO.setServiceCode(SERVICE_CODE);
 				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
 				
-				encryption.encryptPhis(reqDTO);
+//				encryption.encryptPhis(reqDTO);
+				setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 
 			}
 		} catch (IOException e) {
@@ -3031,7 +2890,8 @@ public class FileUtility extends InitializeSO{
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
 				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-				encryption.encryptPhis(reqDTO);
+//				encryption.encryptPhis(reqDTO);
+				setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 
 			}
 		} catch (IOException e) {
@@ -3081,7 +2941,8 @@ public class FileUtility extends InitializeSO{
 				reqDTO.setFileName(fileName);
 				reqDTO.setServiceCode(SERVICE_CODE);
 				reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-				encryption.encryptPhis(reqDTO);
+//				encryption.encryptPhis(reqDTO);
+				setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 			}
 		} catch (IOException e) {
 
@@ -3127,7 +2988,8 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-			encryption.encryptPhis(reqDTO);
+//			encryption.encryptPhis(reqDTO);
+			setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -3174,7 +3036,8 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-			encryption.encryptPhis(reqDTO);
+//			encryption.encryptPhis(reqDTO);
+			setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 			
 		} catch (IOException e) {
 
@@ -3219,7 +3082,8 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-			encryption.encryptPhis(reqDTO);
+//			encryption.encryptPhis(reqDTO);
+			setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 		} catch (IOException e) {
 
 		} finally {
@@ -3264,7 +3128,8 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-			encryption.encryptPhis(reqDTO);
+//			encryption.encryptPhis(reqDTO);
+			setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 		} catch (IOException e) {
 
 		} finally {
@@ -3310,7 +3175,8 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-			encryption.encryptPhis(reqDTO);
+//			encryption.encryptPhis(reqDTO);
+			setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 
 		} catch (IOException e) {
 
@@ -3358,7 +3224,8 @@ public class FileUtility extends InitializeSO{
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);
 			reqDTO.setEncryptFilePath(IntegrationConstants.PHIS_UPLOAD_DIR_LOCAL);
-			encryption.encryptPhis(reqDTO);
+//			encryption.encryptPhis(reqDTO);
+			setValuesToPmInterface(encryption.encryptPhis(reqDTO));
 
 		} catch (IOException e) {
 
