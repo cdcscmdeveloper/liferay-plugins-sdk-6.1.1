@@ -278,9 +278,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-		reqDTO.setAppId(this.getManagedBean().getAppId());
+		//reqDTO.setAppId(this.getManagedBean().getAppId());
+		reqDTO.setSvTaskId(getManagedBean().getSvTaskId());
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
-		SiteVisitResDTO resDTO = reqSO.retrieveSiteVisitInfoByAppId(reqDTO);
+		SiteVisitResDTO resDTO = reqSO.retrieveSiteVisitInfoBySvTaskId(reqDTO);
 
 		if(resDTO.getSmSvTask() != null){
 			this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
