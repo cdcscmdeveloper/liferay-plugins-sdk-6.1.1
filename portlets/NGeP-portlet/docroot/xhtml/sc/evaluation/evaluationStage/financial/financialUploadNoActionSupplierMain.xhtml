@@ -41,7 +41,7 @@
 			header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
 			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 		</p:panel>
-		
+		<ui:param name="financialCheckListScoreType" value="#{evaluationBackingBean.managedBean.userScoreSchemaType}"></ui:param>
 		<ui:include
 			src="financialUserScoringSchema.xhtml" />
 

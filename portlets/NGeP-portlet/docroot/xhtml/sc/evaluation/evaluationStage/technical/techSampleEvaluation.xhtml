@@ -13,17 +13,18 @@
 
 	<ui:define name="contentSection">
 		<h:panelGroup>
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
-		</p:blockUI>
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+			</p:blockUI>
 			<p:messages id="sampleEvaluationmsgId" autoUpdate="true"
 				closable="true" showDetail="true" showSummary="false"
 				severity="error,info"></p:messages>
 			<ui:include src="samplebuttons.xhtml"></ui:include>
 
 			<h:panelGroup id="sampleComplianceid">
-				<p:panel header="#{lbl['lbl.sc.compliance.list']}" id="EvaluationStageTechnicalsampleComplianceChecklistHeeaderNameIds" toggleable="true"
-					collapsed="true">
+				<p:panel header="#{lbl['lbl.sc.compliance.list']}"
+					id="EvaluationStageTechnicalsampleComplianceChecklistHeeaderNameIds"
+					toggleable="true" collapsed="true">
 					<h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
 						escape="false" />
@@ -42,7 +43,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 							<h:commandLink immediate="true"
-								action="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}" >
+								action="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}">
 								<h:graphicImage value="/css/images/design/icon_txt.png" />
 							</h:commandLink>
 						</p:column>
@@ -58,6 +59,12 @@
 				<ui:include src="sampleItemList.xhtml"></ui:include>
 
 			</h:panelGroup>
+			<ui:param name="technicalNoofContractsCheckListScoreType"
+				value="#{evaluationBackingBean.managedBean.userScoreSchemaType}"></ui:param>
+			<ui:param name="technicalNoofYearsCheckListScoreType"
+				value="#{evaluationBackingBean.managedBean.dummyScoreType}"></ui:param>
+
+			<ui:include src="technicalUserScoringSchema.xhtml" />
 		</h:panelGroup>
 	</ui:define>
 </ui:composition>

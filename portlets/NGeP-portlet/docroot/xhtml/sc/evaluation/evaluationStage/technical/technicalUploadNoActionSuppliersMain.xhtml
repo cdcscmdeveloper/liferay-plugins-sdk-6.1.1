@@ -41,7 +41,9 @@
 			toggleable="true">
 			<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 		</p:panel>
-
+	<ui:param name="technicalNoofContractsCheckListScoreType" value="#{evaluationBackingBean.managedBean.userScoreSchemaType}"></ui:param>
+	<ui:param name="technicalNoofYearsCheckListScoreType" value="#{evaluationBackingBean.managedBean.dummyScoreType}"></ui:param>
+	
 <ui:include
 			src="technicalUserScoringSchema.xhtml" />
 
