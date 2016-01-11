@@ -334,6 +334,24 @@ public class ReportsGenerateBean {
 	/** The sm company name view. */
 	private boolean smCompanyNameView = false;
 
+	/** The sm der sm receipt no view. */
+	private boolean smDERSmReceiptNoView = false;
+
+	/** The sm ec mandatory supplier type view. */
+	private boolean smECMandatorySupplierTypeView = false;
+
+	/** The sm lp company name view. */
+	private boolean smLPCompanyNameView = false;
+
+	/** The sm ar mof reg no view. */
+	private boolean smARMofRegNoView = false;
+
+	/** The sm pp company name view. */
+	private boolean smPPCompanyNameView = false;
+
+	/** The sm doh company name view. */
+	private boolean smDOHCompanyNameView = false;
+
 	/** The sm application no view. */
 	private boolean smApplicationNoView = false;
 
@@ -346,6 +364,15 @@ public class ReportsGenerateBean {
 	/** The sm supplier type view. */
 	private boolean smSupplierTypeView = false;
 
+	/** The sm la application no view. */
+	private boolean smLAApplicationNoView = false;
+
+	/** The sm la registration no view. */
+	private boolean smLARegistrationNoView = false;
+
+	/** The sm pr mandatory supplier type view. */
+	private boolean smPRMandatorySupplierTypeView = false;
+
 	/** The sm mandatory doc supplier type view. */
 	private boolean smMandatoryDOCSupplierTypeView = false;
 
@@ -354,6 +381,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mof reg no view. */
 	private boolean smMofRegNoView = false;
+
+	/** The sm pr mandatory mof reg no view. */
+	private boolean smPRMandatoryMofRegNoView = false;
 
 	/** The sm ep mof reg no view. */
 	private boolean smEpMofRegNoView = false;
@@ -365,15 +395,19 @@ public class ReportsGenerateBean {
 	private boolean smNoOfCategoryView = false;
 
 	/** The sm main category view. */
-	private boolean smMainCategoryView = false;	
-	
+	private boolean smMainCategoryView = false;
+
 	/** The sm gen company name view. */
-	private boolean smGenCompanyNameView=false;
-	
+	private boolean smGenCompanyNameView = false;
+
 	/** The sm supp company name view. */
-	private boolean smSuppCompanyNameView=false;
-	
-	
+	private boolean smSuppCompanyNameView = false;
+
+	/** The sm lc bus company registration status view. */
+	private boolean smLCBusCompanyRegistrationStatusView = false;
+
+	/** The sm lc mandatory supplier type view. */
+	private boolean smLCMandatorySupplierTypeView = false;
 	/** The sm mandatory gen supplier type view. */
 	private boolean smMandatoryGenSupplierTypeView;
 
@@ -410,11 +444,20 @@ public class ReportsGenerateBean {
 	/** The sm state view. */
 	private boolean smStateView = false;
 
+	/** The sm sup state view. */
+	private boolean smSupStateView = false;
+
 	/** The sm district view. */
 	private boolean smDistrictView = false;
 
 	/** The sm report type view. */
 	private boolean smReportTypeView = false;
+
+	/** The sm qr all supplier type view. */
+	private boolean smQRAllSupplierTypeView = false;
+
+	/** The sm sl bus company type view. */
+	private boolean smSLBusCompanyTypeView = false;
 
 	/** The sm mandatory recipt transaction report type view. */
 	private boolean smMandatoryReciptTransactionReportTypeView = false;
@@ -427,20 +470,24 @@ public class ReportsGenerateBean {
 
 	/** The sm application status view. */
 	private boolean smApplicationStatusView = false;
-	
+
 	/** The Sm gen application status view. */
-	private boolean SmGenApplicationStatusView=false;
-	
+	private boolean SmGenApplicationStatusView = false;
+
 	/** The sm mandatory doh supplier type view. */
-	private boolean smMandatoryDOHSupplierTypeView=false;	
-	
+	private boolean smMandatoryDOHSupplierTypeView = false;
+
 	/** The sm gen identification number view. */
-	private boolean smGenIdentificationNumberView=false;
-	
+	private boolean smGenIdentificationNumberView = false;
+
 	/** The sm ps identification number view. */
-	private boolean smPSIdentificationNumberView=false;	
-	
-	private boolean smGenDistrictView=false;
+	private boolean smPSIdentificationNumberView = false;
+
+	/** The sm gen district view. */
+	private boolean smGenDistrictView = false;
+
+	/** The sm sa application no view. */
+	private boolean smSAApplicationNoView = false;
 
 	/** The sm extra two column view. */
 	private boolean smExtraTwoColumnView = false;
@@ -456,12 +503,39 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory supplier type view. */
 	private boolean smMandatorySupplierTypeView = false;
-	
+
+	/** The sm com supplier type view. */
+	private boolean smComSupplierTypeView = false;
+
+	/** The sm scp supplier type view. */
+	private boolean smSCPSupplierTypeView = false;
+
+	/** The sm th mandatory supplier type view. */
+	private boolean smTHMandatorySupplierTypeView = false;
+
+	/** The sm gst supplier type view. */
+	private boolean smGSTSupplierTypeView = false;
+
+	/** The sm doh mandatory supplier type view. */
+	private boolean smDOHMandatorySupplierTypeView = false;
+
+	/** The sm do company name view. */
+	private boolean smDOCompanyNameView = false;
+
 	/** The sm bus company registration status view. */
-	private boolean smBusCompanyRegistrationStatusView=false;
+	private boolean smBusCompanyRegistrationStatusView = false;
 
 	/** The sm mandatory all supplier type view. */
 	private boolean smMandatoryAllSupplierTypeView = false;
+
+	/** The sm del application no view. */
+	private boolean smDelApplicationNoView = false;
+
+	/** The sm mof mandatory supplier type view. */
+	private boolean smMOFMandatorySupplierTypeView = false;
+
+	/** The sm sv mandatory application no view. */
+	private boolean smSVMandatoryApplicationNoView = false;
 
 	/** The sm mandatory application date view. */
 	private boolean smMandatoryApplicationDateView = false;
@@ -480,9 +554,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory mof reg no view. */
 	private boolean smMandatoryMofRegNoView = false;
-	
+
 	/** The sm bus company type view. */
-	private boolean smBusCompanyTypeView=false;
+	private boolean smBusCompanyTypeView = false;
 
 	/** The sm mandatory expiry date view. */
 	private boolean smMandatoryExpiryDateView = false;
@@ -495,20 +569,33 @@ public class ReportsGenerateBean {
 
 	/** The sm non mandatory category view. */
 	private boolean smNonMandatoryCategoryView = false;
-	
+
+	/** The sm main cat mandatory category view. */
+	private boolean smMainCatMandatoryCategoryView = false;
+
 	/** The sm category by supplier type view. */
-	private boolean smCategoryBySupplierTypeView=false;
-	
-	private boolean smDailyReceiptNoView=false;	
+	private boolean smCategoryBySupplierTypeView = false;
+
+	/** The sm daily receipt no view. */
+	private boolean smDailyReceiptNoView = false;
 
 	/** The sm mandatory from date view. */
 	private boolean smMandatoryFromDateView = false;
+
+	/** The sm tn mandatory report type view. */
+	private boolean smTNMandatoryReportTypeView = false;
+
+	/** The sm tn application date view. */
+	private boolean smTNApplicationDateView = false;
 
 	/** The sm virtual cert date view. */
 	private boolean smVirtualCertDateView = false;
 
 	/** The sm mandatory state view. */
 	private boolean smMandatoryStateView = false;
+
+	/** The sm sv mandatory state view. */
+	private boolean smSVMandatoryStateView = false;
 
 	/** The sm mandatory district view. */
 	private boolean smMandatoryDistrictView = false;
@@ -540,8 +627,14 @@ public class ReportsGenerateBean {
 	/** The sm static state view. */
 	private boolean smStaticStateView = false;
 
+	/** The sm da registration type view. */
+	private boolean smDARegistrationTypeView = false;
+
 	/** The sm mandatory application no view. */
 	private boolean smMandatoryApplicationNoView = false;
+
+	/** The sm sv mandatory district view. */
+	private boolean smSVMandatoryDistrictView = false;
 
 	/** The sm svo user view. */
 	private boolean smSVOUserView = false;
@@ -657,6 +750,9 @@ public class ReportsGenerateBean {
 	/** The sm non mandatory transaction date view. */
 	private boolean smNonMandatoryTransactionDateView = false;
 
+	/** The sm cp supplier name view. */
+	private boolean smCPSupplierNameView = false;
+
 	/** The sm payment date view. */
 	private boolean smPaymentDateView = false;
 
@@ -669,11 +765,29 @@ public class ReportsGenerateBean {
 	/** The sm ep no view. */
 	private boolean smEpNoView = false;
 
+	/** The sm of application no view. */
+	private boolean smOFApplicationNoView = false;
+
 	/** The sm registration no view. */
 	private boolean smRegistrationNoView = false;
 
+	/** The sm la mof reg no view. */
+	private boolean smLAMofRegNoView = false;
+
 	/** The sm supporting document mode view. */
 	private boolean smSupportingDocumentModeView = false;
+
+	/** The sm mandatory supporting document mode view. */
+	private boolean smMandatorySupportingDocumentModeView = false;
+
+	/** The sm cd mandatory all supplier type view. */
+	private boolean smCDMandatoryAllSupplierTypeView = false;
+
+	/** The sm de mandatory all supplier type view. */
+	private boolean smDEMandatoryAllSupplierTypeView = false;
+
+	/** The sm cd company name view. */
+	private boolean smCDCompanyNameView = false;
 
 	/** The sm supporting document status view. */
 	private boolean smSupportingDocumentStatusView = false;
@@ -682,22 +796,28 @@ public class ReportsGenerateBean {
 	private boolean smMofRegNoFromView = false;
 
 	/** The sm mof reg no to view. */
-	private boolean smMofRegNoToView = false;	
-	
+	private boolean smMofRegNoToView = false;
+
+	/** The sm lc mof reg no from view. */
+	private boolean smLCMofRegNoFromView = false;
+
+	/** The sm lcmof registered date view. */
+	private boolean smLCMOFRegisteredDateView = false;
+
 	/** The sm bus company paid up accumlated share view. */
-	private boolean smBusCompanyPaidUpAccumlatedShareView=false;
-	
+	private boolean smBusCompanyPaidUpAccumlatedShareView = false;
+
 	/** The sm paid up cptl sel view. */
-	private boolean smPaidUpCptlSelView=false;
-	
+	private boolean smPaidUpCptlSelView = false;
+
 	/** The sm accmltd cptl sel view. */
-	private boolean smAccmltdCptlSelView=false;	
-	
+	private boolean smAccmltdCptlSelView = false;
+
 	/** The sm accmltd share sel view. */
-	private boolean smAccmltdShareSelView=false;	
-	
+	private boolean smAccmltdShareSelView = false;
+
 	/** The sm paid accmltd share cptl sel view. */
-	private boolean smPaidAccmltdShareCptlSelView=false;
+	private boolean smPaidAccmltdShareCptlSelView = false;
 
 	/** The sm paid up capital frm view. */
 	private boolean smPaidUpCapitalFrmView = false;
@@ -735,11 +855,17 @@ public class ReportsGenerateBean {
 	/** The sm cancellation by view. */
 	private boolean smCancellationByView = false;
 
+	/** The sm can application date view. */
+	private boolean smCanApplicationDateView = false;
+
 	/** The sm mof reg no two view. */
 	private boolean smMofRegNoTwoView = false;
 
 	/** The sm registration type two view. */
 	private boolean smRegistrationTypeTwoView = false;
+
+	/** The sm dr mof reg no two view. */
+	private boolean smDRMofRegNoTwoView = false;
 
 	/** The sm active submissive from date view. */
 	private boolean smActiveSubmissiveFromDateView = false;
@@ -777,11 +903,17 @@ public class ReportsGenerateBean {
 	/** The sm supplier view. */
 	private boolean smSupplierView = false;
 
+	/** The sm th registration type view. */
+	private boolean smTHRegistrationTypeView = false;
+
 	/** The sm company name dropdown view. */
 	private boolean smCompanyNameDropdownView = false;
 
 	/** The sm from and to year view. */
 	private boolean smFromAndToYearView = false;
+
+	/** The sm threshold val year from view. */
+	private boolean smThresholdValYearFromView = false;
 
 	/** The sm user name view. */
 	private boolean smUserNameView = false;
@@ -804,6 +936,9 @@ public class ReportsGenerateBean {
 	/** The sm all supplier type view. */
 	private boolean smAllSupplierTypeView = false;
 
+	/** The sm ps supplier type view. */
+	private boolean smPSSupplierTypeView = false;
+
 	/** The sm profile status view. */
 	private boolean smProfileStatusView = false;
 
@@ -821,6 +956,15 @@ public class ReportsGenerateBean {
 
 	/** The sm gst registration no view. */
 	private boolean smGSTRegistrationNoView = false;
+
+	/** The sm gst registration type view. */
+	private boolean smGSTRegistrationTypeView = false;
+
+	/** The sm can mandatory supplier type view. */
+	private boolean smCanMandatorySupplierTypeView = false;
+
+	/** The sm gs registration no view. */
+	private boolean smGSRegistrationNoView = false;
 
 	/** The sm gst registered status view. */
 	private boolean smGSTRegisteredStatusView = false;
@@ -3630,18 +3774,18 @@ public class ReportsGenerateBean {
 
 	/** The sm cancellation by var. */
 	private String smCancellationByVar = ReportConst.EMPTY_VAL;
-	
+
 	/** The sm bus comp type registration status by var. */
-	private String smBusCompTypeRegistrationStatusByVar=ReportConst.EMPTY_VAL;
-	
+	private String smBusCompTypeRegistrationStatusByVar = ReportConst.EMPTY_VAL;
+
 	/** The sm bus company type by var. */
-	private String smBusCompanyTypeByVar=ReportConst.EMPTY_VAL;
-	
+	private String smBusCompanyTypeByVar = ReportConst.EMPTY_VAL;
+
 	/** The sm bus paid up capital frm by var. */
-	private String smBusPaidUpCapitalFrmByVar=ReportConst.EMPTY_VAL;
-	
+	private String smBusPaidUpCapitalFrmByVar = ReportConst.EMPTY_VAL;
+
 	/** The sm bus paid up capital to by var. */
-	private String smBusPaidUpCapitalToByVar=ReportConst.EMPTY_VAL;	
+	private String smBusPaidUpCapitalToByVar = ReportConst.EMPTY_VAL;
 
 	/** The sm processing officer name var. */
 	private String smProcessingOfficerNameVar = ReportConst.EMPTY_VAL;
@@ -15772,6 +15916,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is sm ps identification number view.
+	 * 
 	 * @return the smPSIdentificationNumberView
 	 */
 	public boolean isSmPSIdentificationNumberView() {
@@ -15779,13 +15925,19 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smPSIdentificationNumberView the smPSIdentificationNumberView to set
+	 * Sets the sm ps identification number view.
+	 * 
+	 * @param smPSIdentificationNumberView
+	 *            the smPSIdentificationNumberView to set
 	 */
-	public void setSmPSIdentificationNumberView(boolean smPSIdentificationNumberView) {
+	public void setSmPSIdentificationNumberView(
+			boolean smPSIdentificationNumberView) {
 		this.smPSIdentificationNumberView = smPSIdentificationNumberView;
 	}
 
 	/**
+	 * Checks if is sm gen district view.
+	 * 
 	 * @return the smGenDistrictView
 	 */
 	public boolean isSmGenDistrictView() {
@@ -15793,13 +15945,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smGenDistrictView the smGenDistrictView to set
+	 * Sets the sm gen district view.
+	 * 
+	 * @param smGenDistrictView
+	 *            the smGenDistrictView to set
 	 */
 	public void setSmGenDistrictView(boolean smGenDistrictView) {
 		this.smGenDistrictView = smGenDistrictView;
 	}
 
 	/**
+	 * Checks if is sm category by supplier type view.
+	 * 
 	 * @return the smCategoryBySupplierTypeView
 	 */
 	public boolean isSmCategoryBySupplierTypeView() {
@@ -15807,13 +15964,19 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smCategoryBySupplierTypeView the smCategoryBySupplierTypeView to set
+	 * Sets the sm category by supplier type view.
+	 * 
+	 * @param smCategoryBySupplierTypeView
+	 *            the smCategoryBySupplierTypeView to set
 	 */
-	public void setSmCategoryBySupplierTypeView(boolean smCategoryBySupplierTypeView) {
+	public void setSmCategoryBySupplierTypeView(
+			boolean smCategoryBySupplierTypeView) {
 		this.smCategoryBySupplierTypeView = smCategoryBySupplierTypeView;
 	}
 
 	/**
+	 * Checks if is sm daily receipt no view.
+	 * 
 	 * @return the smDailyReceiptNoView
 	 */
 	public boolean isSmDailyReceiptNoView() {
@@ -15821,9 +15984,938 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param smDailyReceiptNoView the smDailyReceiptNoView to set
+	 * Sets the sm daily receipt no view.
+	 * 
+	 * @param smDailyReceiptNoView
+	 *            the smDailyReceiptNoView to set
 	 */
 	public void setSmDailyReceiptNoView(boolean smDailyReceiptNoView) {
 		this.smDailyReceiptNoView = smDailyReceiptNoView;
+	}
+
+	/**
+	 * Checks if is sm doh company name view.
+	 * 
+	 * @return the smDOHCompanyNameView
+	 */
+	public boolean isSmDOHCompanyNameView() {
+		return smDOHCompanyNameView;
+	}
+
+	/**
+	 * Sets the sm doh company name view.
+	 * 
+	 * @param smDOHCompanyNameView
+	 *            the smDOHCompanyNameView to set
+	 */
+	public void setSmDOHCompanyNameView(boolean smDOHCompanyNameView) {
+		this.smDOHCompanyNameView = smDOHCompanyNameView;
+	}
+
+	/**
+	 * Checks if is sm ps supplier type view.
+	 * 
+	 * @return the smPSSupplierTypeView
+	 */
+	public boolean isSmPSSupplierTypeView() {
+		return smPSSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm ps supplier type view.
+	 * 
+	 * @param smPSSupplierTypeView
+	 *            the smPSSupplierTypeView to set
+	 */
+	public void setSmPSSupplierTypeView(boolean smPSSupplierTypeView) {
+		this.smPSSupplierTypeView = smPSSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm com supplier type view.
+	 * 
+	 * @return the smComSupplierTypeView
+	 */
+	public boolean isSmComSupplierTypeView() {
+		return smComSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm com supplier type view.
+	 * 
+	 * @param smComSupplierTypeView
+	 *            the smComSupplierTypeView to set
+	 */
+	public void setSmComSupplierTypeView(boolean smComSupplierTypeView) {
+		this.smComSupplierTypeView = smComSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm doh mandatory supplier type view.
+	 * 
+	 * @return the smDOHMandatorySupplierTypeView
+	 */
+	public boolean isSmDOHMandatorySupplierTypeView() {
+		return smDOHMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm doh mandatory supplier type view.
+	 * 
+	 * @param smDOHMandatorySupplierTypeView
+	 *            the smDOHMandatorySupplierTypeView to set
+	 */
+	public void setSmDOHMandatorySupplierTypeView(
+			boolean smDOHMandatorySupplierTypeView) {
+		this.smDOHMandatorySupplierTypeView = smDOHMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm gst supplier type view.
+	 * 
+	 * @return the smGSTSupplierTypeView
+	 */
+	public boolean isSmGSTSupplierTypeView() {
+		return smGSTSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm gst supplier type view.
+	 * 
+	 * @param smGSTSupplierTypeView
+	 *            the smGSTSupplierTypeView to set
+	 */
+	public void setSmGSTSupplierTypeView(boolean smGSTSupplierTypeView) {
+		this.smGSTSupplierTypeView = smGSTSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm mof mandatory supplier type view.
+	 * 
+	 * @return the smMOFMandatorySupplierTypeView
+	 */
+	public boolean isSmMOFMandatorySupplierTypeView() {
+		return smMOFMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm mof mandatory supplier type view.
+	 * 
+	 * @param smMOFMandatorySupplierTypeView
+	 *            the smMOFMandatorySupplierTypeView to set
+	 */
+	public void setSmMOFMandatorySupplierTypeView(
+			boolean smMOFMandatorySupplierTypeView) {
+		this.smMOFMandatorySupplierTypeView = smMOFMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm sv mandatory application no view.
+	 * 
+	 * @return the smSVMandatoryApplicationNoView
+	 */
+	public boolean isSmSVMandatoryApplicationNoView() {
+		return smSVMandatoryApplicationNoView;
+	}
+
+	/**
+	 * Sets the sm sv mandatory application no view.
+	 * 
+	 * @param smSVMandatoryApplicationNoView
+	 *            the smSVMandatoryApplicationNoView to set
+	 */
+	public void setSmSVMandatoryApplicationNoView(
+			boolean smSVMandatoryApplicationNoView) {
+		this.smSVMandatoryApplicationNoView = smSVMandatoryApplicationNoView;
+	}
+
+	/**
+	 * Checks if is sm sv mandatory state view.
+	 * 
+	 * @return the smSVMandatoryStateView
+	 */
+	public boolean isSmSVMandatoryStateView() {
+		return smSVMandatoryStateView;
+	}
+
+	/**
+	 * Sets the sm sv mandatory state view.
+	 * 
+	 * @param smSVMandatoryStateView
+	 *            the smSVMandatoryStateView to set
+	 */
+	public void setSmSVMandatoryStateView(boolean smSVMandatoryStateView) {
+		this.smSVMandatoryStateView = smSVMandatoryStateView;
+	}
+
+	/**
+	 * Checks if is sm scp supplier type view.
+	 * 
+	 * @return the smSCPSupplierTypeView
+	 */
+	public boolean isSmSCPSupplierTypeView() {
+		return smSCPSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm scp supplier type view.
+	 * 
+	 * @param smSCPSupplierTypeView
+	 *            the smSCPSupplierTypeView to set
+	 */
+	public void setSmSCPSupplierTypeView(boolean smSCPSupplierTypeView) {
+		this.smSCPSupplierTypeView = smSCPSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm pp company name view.
+	 * 
+	 * @return the smPPCompanyNameView
+	 */
+	public boolean isSmPPCompanyNameView() {
+		return smPPCompanyNameView;
+	}
+
+	/**
+	 * Sets the sm pp company name view.
+	 * 
+	 * @param smPPCompanyNameView
+	 *            the smPPCompanyNameView to set
+	 */
+	public void setSmPPCompanyNameView(boolean smPPCompanyNameView) {
+		this.smPPCompanyNameView = smPPCompanyNameView;
+	}
+
+	/**
+	 * Checks if is sm pr mandatory mof reg no view.
+	 * 
+	 * @return the smPRMandatoryMofRegNoView
+	 */
+	public boolean isSmPRMandatoryMofRegNoView() {
+		return smPRMandatoryMofRegNoView;
+	}
+
+	/**
+	 * Sets the sm pr mandatory mof reg no view.
+	 * 
+	 * @param smPRMandatoryMofRegNoView
+	 *            the smPRMandatoryMofRegNoView to set
+	 */
+	public void setSmPRMandatoryMofRegNoView(boolean smPRMandatoryMofRegNoView) {
+		this.smPRMandatoryMofRegNoView = smPRMandatoryMofRegNoView;
+	}
+
+	/**
+	 * Checks if is sm pr mandatory supplier type view.
+	 * 
+	 * @return the smPRMandatorySupplierTypeView
+	 */
+	public boolean isSmPRMandatorySupplierTypeView() {
+		return smPRMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm pr mandatory supplier type view.
+	 * 
+	 * @param smPRMandatorySupplierTypeView
+	 *            the smPRMandatorySupplierTypeView to set
+	 */
+	public void setSmPRMandatorySupplierTypeView(
+			boolean smPRMandatorySupplierTypeView) {
+		this.smPRMandatorySupplierTypeView = smPRMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm th registration type view.
+	 * 
+	 * @return the smTHRegistrationTypeView
+	 */
+	public boolean isSmTHRegistrationTypeView() {
+		return smTHRegistrationTypeView;
+	}
+
+	/**
+	 * Sets the sm th registration type view.
+	 * 
+	 * @param smTHRegistrationTypeView
+	 *            the smTHRegistrationTypeView to set
+	 */
+	public void setSmTHRegistrationTypeView(boolean smTHRegistrationTypeView) {
+		this.smTHRegistrationTypeView = smTHRegistrationTypeView;
+	}
+
+	/**
+	 * Checks if is sm main cat mandatory category view.
+	 * 
+	 * @return the smMainCatMandatoryCategoryView
+	 */
+	public boolean isSmMainCatMandatoryCategoryView() {
+		return smMainCatMandatoryCategoryView;
+	}
+
+	/**
+	 * Sets the sm main cat mandatory category view.
+	 * 
+	 * @param smMainCatMandatoryCategoryView
+	 *            the smMainCatMandatoryCategoryView to set
+	 */
+	public void setSmMainCatMandatoryCategoryView(
+			boolean smMainCatMandatoryCategoryView) {
+		this.smMainCatMandatoryCategoryView = smMainCatMandatoryCategoryView;
+	}
+
+	/**
+	 * Checks if is sm mandatory supporting document mode view.
+	 * 
+	 * @return the smMandatorySupportingDocumentModeView
+	 */
+	public boolean isSmMandatorySupportingDocumentModeView() {
+		return smMandatorySupportingDocumentModeView;
+	}
+
+	/**
+	 * Sets the sm mandatory supporting document mode view.
+	 * 
+	 * @param smMandatorySupportingDocumentModeView
+	 *            the smMandatorySupportingDocumentModeView to set
+	 */
+	public void setSmMandatorySupportingDocumentModeView(
+			boolean smMandatorySupportingDocumentModeView) {
+		this.smMandatorySupportingDocumentModeView = smMandatorySupportingDocumentModeView;
+	}
+
+	/**
+	 * Checks if is sm ar mof reg no view.
+	 * 
+	 * @return the smARMofRegNoView
+	 */
+	public boolean isSmARMofRegNoView() {
+		return smARMofRegNoView;
+	}
+
+	/**
+	 * Sets the sm ar mof reg no view.
+	 * 
+	 * @param smARMofRegNoView
+	 *            the smARMofRegNoView to set
+	 */
+	public void setSmARMofRegNoView(boolean smARMofRegNoView) {
+		this.smARMofRegNoView = smARMofRegNoView;
+	}
+
+	/**
+	 * Checks if is sm del application no view.
+	 * 
+	 * @return the smDelApplicationNoView
+	 */
+	public boolean isSmDelApplicationNoView() {
+		return smDelApplicationNoView;
+	}
+
+	/**
+	 * Sets the sm del application no view.
+	 * 
+	 * @param smDelApplicationNoView
+	 *            the smDelApplicationNoView to set
+	 */
+	public void setSmDelApplicationNoView(boolean smDelApplicationNoView) {
+		this.smDelApplicationNoView = smDelApplicationNoView;
+	}
+
+	/**
+	 * Checks if is sm th mandatory supplier type view.
+	 * 
+	 * @return the smTHMandatorySupplierTypeView
+	 */
+	public boolean isSmTHMandatorySupplierTypeView() {
+		return smTHMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm th mandatory supplier type view.
+	 * 
+	 * @param smTHMandatorySupplierTypeView
+	 *            the smTHMandatorySupplierTypeView to set
+	 */
+	public void setSmTHMandatorySupplierTypeView(
+			boolean smTHMandatorySupplierTypeView) {
+		this.smTHMandatorySupplierTypeView = smTHMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm ec mandatory supplier type view.
+	 * 
+	 * @return the smECMandatorySupplierTypeView
+	 */
+	public boolean isSmECMandatorySupplierTypeView() {
+		return smECMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm ec mandatory supplier type view.
+	 * 
+	 * @param smECMandatorySupplierTypeView
+	 *            the smECMandatorySupplierTypeView to set
+	 */
+	public void setSmECMandatorySupplierTypeView(
+			boolean smECMandatorySupplierTypeView) {
+		this.smECMandatorySupplierTypeView = smECMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm sup state view.
+	 * 
+	 * @return the smSupStateView
+	 */
+	public boolean isSmSupStateView() {
+		return smSupStateView;
+	}
+
+	/**
+	 * Sets the sm sup state view.
+	 * 
+	 * @param smSupStateView
+	 *            the smSupStateView to set
+	 */
+	public void setSmSupStateView(boolean smSupStateView) {
+		this.smSupStateView = smSupStateView;
+	}
+
+	/**
+	 * Checks if is sm cd mandatory all supplier type view.
+	 * 
+	 * @return the smCDMandatoryAllSupplierTypeView
+	 */
+	public boolean isSmCDMandatoryAllSupplierTypeView() {
+		return smCDMandatoryAllSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm cd mandatory all supplier type view.
+	 * 
+	 * @param smCDMandatoryAllSupplierTypeView
+	 *            the smCDMandatoryAllSupplierTypeView to set
+	 */
+	public void setSmCDMandatoryAllSupplierTypeView(
+			boolean smCDMandatoryAllSupplierTypeView) {
+		this.smCDMandatoryAllSupplierTypeView = smCDMandatoryAllSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm cd company name view.
+	 * 
+	 * @return the smCDCompanyNameView
+	 */
+	public boolean isSmCDCompanyNameView() {
+		return smCDCompanyNameView;
+	}
+
+	/**
+	 * Sets the sm cd company name view.
+	 * 
+	 * @param smCDCompanyNameView
+	 *            the smCDCompanyNameView to set
+	 */
+	public void setSmCDCompanyNameView(boolean smCDCompanyNameView) {
+		this.smCDCompanyNameView = smCDCompanyNameView;
+	}
+
+	/**
+	 * Checks if is sm der sm receipt no view.
+	 * 
+	 * @return the smDERSmReceiptNoView
+	 */
+	public boolean isSmDERSmReceiptNoView() {
+		return smDERSmReceiptNoView;
+	}
+
+	/**
+	 * Sets the sm der sm receipt no view.
+	 * 
+	 * @param smDERSmReceiptNoView
+	 *            the smDERSmReceiptNoView to set
+	 */
+	public void setSmDERSmReceiptNoView(boolean smDERSmReceiptNoView) {
+		this.smDERSmReceiptNoView = smDERSmReceiptNoView;
+	}
+
+	/**
+	 * Checks if is sm de mandatory all supplier type view.
+	 * 
+	 * @return the smDEMandatoryAllSupplierTypeView
+	 */
+	public boolean isSmDEMandatoryAllSupplierTypeView() {
+		return smDEMandatoryAllSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm de mandatory all supplier type view.
+	 * 
+	 * @param smDEMandatoryAllSupplierTypeView
+	 *            the smDEMandatoryAllSupplierTypeView to set
+	 */
+	public void setSmDEMandatoryAllSupplierTypeView(
+			boolean smDEMandatoryAllSupplierTypeView) {
+		this.smDEMandatoryAllSupplierTypeView = smDEMandatoryAllSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm la application no view.
+	 * 
+	 * @return the smLAApplicationNoView
+	 */
+	public boolean isSmLAApplicationNoView() {
+		return smLAApplicationNoView;
+	}
+
+	/**
+	 * Sets the sm la application no view.
+	 * 
+	 * @param smLAApplicationNoView
+	 *            the smLAApplicationNoView to set
+	 */
+	public void setSmLAApplicationNoView(boolean smLAApplicationNoView) {
+		this.smLAApplicationNoView = smLAApplicationNoView;
+	}
+
+	/**
+	 * Checks if is sm la registration no view.
+	 * 
+	 * @return the smLARegistrationNoView
+	 */
+	public boolean isSmLARegistrationNoView() {
+		return smLARegistrationNoView;
+	}
+
+	/**
+	 * Sets the sm la registration no view.
+	 * 
+	 * @param smLARegistrationNoView
+	 *            the smLARegistrationNoView to set
+	 */
+	public void setSmLARegistrationNoView(boolean smLARegistrationNoView) {
+		this.smLARegistrationNoView = smLARegistrationNoView;
+	}
+
+	/**
+	 * Checks if is sm la mof reg no view.
+	 * 
+	 * @return the smLAMofRegNoView
+	 */
+	public boolean isSmLAMofRegNoView() {
+		return smLAMofRegNoView;
+	}
+
+	/**
+	 * Sets the sm la mof reg no view.
+	 * 
+	 * @param smLAMofRegNoView
+	 *            the smLAMofRegNoView to set
+	 */
+	public void setSmLAMofRegNoView(boolean smLAMofRegNoView) {
+		this.smLAMofRegNoView = smLAMofRegNoView;
+	}
+
+	/**
+	 * Checks if is sm lc mof reg no from view.
+	 * 
+	 * @return the smLCMofRegNoFromView
+	 */
+	public boolean isSmLCMofRegNoFromView() {
+		return smLCMofRegNoFromView;
+	}
+
+	/**
+	 * Sets the sm lc mof reg no from view.
+	 * 
+	 * @param smLCMofRegNoFromView
+	 *            the smLCMofRegNoFromView to set
+	 */
+	public void setSmLCMofRegNoFromView(boolean smLCMofRegNoFromView) {
+		this.smLCMofRegNoFromView = smLCMofRegNoFromView;
+	}
+
+	/**
+	 * Checks if is sm lcmof registered date view.
+	 * 
+	 * @return the smLCMOFRegisteredDateView
+	 */
+	public boolean isSmLCMOFRegisteredDateView() {
+		return smLCMOFRegisteredDateView;
+	}
+
+	/**
+	 * Sets the sm lcmof registered date view.
+	 * 
+	 * @param smLCMOFRegisteredDateView
+	 *            the smLCMOFRegisteredDateView to set
+	 */
+	public void setSmLCMOFRegisteredDateView(boolean smLCMOFRegisteredDateView) {
+		this.smLCMOFRegisteredDateView = smLCMOFRegisteredDateView;
+	}
+
+	/**
+	 * Checks if is sm lc bus company registration status view.
+	 * 
+	 * @return the smLCBusCompanyRegistrationStatusView
+	 */
+	public boolean isSmLCBusCompanyRegistrationStatusView() {
+		return smLCBusCompanyRegistrationStatusView;
+	}
+
+	/**
+	 * Sets the sm lc bus company registration status view.
+	 * 
+	 * @param smLCBusCompanyRegistrationStatusView
+	 *            the smLCBusCompanyRegistrationStatusView to set
+	 */
+	public void setSmLCBusCompanyRegistrationStatusView(
+			boolean smLCBusCompanyRegistrationStatusView) {
+		this.smLCBusCompanyRegistrationStatusView = smLCBusCompanyRegistrationStatusView;
+	}
+
+	/**
+	 * Checks if is sm lc mandatory supplier type view.
+	 * 
+	 * @return the smLCMandatorySupplierTypeView
+	 */
+	public boolean isSmLCMandatorySupplierTypeView() {
+		return smLCMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm lc mandatory supplier type view.
+	 * 
+	 * @param smLCMandatorySupplierTypeView
+	 *            the smLCMandatorySupplierTypeView to set
+	 */
+	public void setSmLCMandatorySupplierTypeView(
+			boolean smLCMandatorySupplierTypeView) {
+		this.smLCMandatorySupplierTypeView = smLCMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm da registration type view.
+	 * 
+	 * @return the smDARegistrationTypeView
+	 */
+	public boolean isSmDARegistrationTypeView() {
+		return smDARegistrationTypeView;
+	}
+
+	/**
+	 * Sets the sm da registration type view.
+	 * 
+	 * @param smDARegistrationTypeView
+	 *            the smDARegistrationTypeView to set
+	 */
+	public void setSmDARegistrationTypeView(boolean smDARegistrationTypeView) {
+		this.smDARegistrationTypeView = smDARegistrationTypeView;
+	}
+
+	/**
+	 * Checks if is sm dr mof reg no two view.
+	 * 
+	 * @return the smDRMofRegNoTwoView
+	 */
+	public boolean isSmDRMofRegNoTwoView() {
+		return smDRMofRegNoTwoView;
+	}
+
+	/**
+	 * Sets the sm dr mof reg no two view.
+	 * 
+	 * @param smDRMofRegNoTwoView
+	 *            the smDRMofRegNoTwoView to set
+	 */
+	public void setSmDRMofRegNoTwoView(boolean smDRMofRegNoTwoView) {
+		this.smDRMofRegNoTwoView = smDRMofRegNoTwoView;
+	}
+
+	/**
+	 * Checks if is sm do company name view.
+	 * 
+	 * @return the smDOCompanyNameView
+	 */
+	public boolean isSmDOCompanyNameView() {
+		return smDOCompanyNameView;
+	}
+
+	/**
+	 * Sets the sm do company name view.
+	 * 
+	 * @param smDOCompanyNameView
+	 *            the smDOCompanyNameView to set
+	 */
+	public void setSmDOCompanyNameView(boolean smDOCompanyNameView) {
+		this.smDOCompanyNameView = smDOCompanyNameView;
+	}
+
+	/**
+	 * Checks if is sm gst registration type view.
+	 * 
+	 * @return the smGSTRegistrationTypeView
+	 */
+	public boolean isSmGSTRegistrationTypeView() {
+		return smGSTRegistrationTypeView;
+	}
+
+	/**
+	 * Sets the sm gst registration type view.
+	 * 
+	 * @param smGSTRegistrationTypeView
+	 *            the smGSTRegistrationTypeView to set
+	 */
+	public void setSmGSTRegistrationTypeView(boolean smGSTRegistrationTypeView) {
+		this.smGSTRegistrationTypeView = smGSTRegistrationTypeView;
+	}
+
+	/**
+	 * Checks if is sm gs registration no view.
+	 * 
+	 * @return the smGSRegistrationNoView
+	 */
+	public boolean isSmGSRegistrationNoView() {
+		return smGSRegistrationNoView;
+	}
+
+	/**
+	 * Sets the sm gs registration no view.
+	 * 
+	 * @param smGSRegistrationNoView
+	 *            the smGSRegistrationNoView to set
+	 */
+	public void setSmGSRegistrationNoView(boolean smGSRegistrationNoView) {
+		this.smGSRegistrationNoView = smGSRegistrationNoView;
+	}
+
+	/**
+	 * Checks if is sm can mandatory supplier type view.
+	 * 
+	 * @return the smCanMandatorySupplierTypeView
+	 */
+	public boolean isSmCanMandatorySupplierTypeView() {
+		return smCanMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm can mandatory supplier type view.
+	 * 
+	 * @param smCanMandatorySupplierTypeView
+	 *            the smCanMandatorySupplierTypeView to set
+	 */
+	public void setSmCanMandatorySupplierTypeView(
+			boolean smCanMandatorySupplierTypeView) {
+		this.smCanMandatorySupplierTypeView = smCanMandatorySupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm can application date view.
+	 * 
+	 * @return the smCanApplicationDateView
+	 */
+	public boolean isSmCanApplicationDateView() {
+		return smCanApplicationDateView;
+	}
+
+	/**
+	 * Sets the sm can application date view.
+	 * 
+	 * @param smCanApplicationDateView
+	 *            the smCanApplicationDateView to set
+	 */
+	public void setSmCanApplicationDateView(boolean smCanApplicationDateView) {
+		this.smCanApplicationDateView = smCanApplicationDateView;
+	}
+
+	/**
+	 * Checks if is sm of application no view.
+	 * 
+	 * @return the smOFApplicationNoView
+	 */
+	public boolean isSmOFApplicationNoView() {
+		return smOFApplicationNoView;
+	}
+
+	/**
+	 * Sets the sm of application no view.
+	 * 
+	 * @param smOFApplicationNoView
+	 *            the smOFApplicationNoView to set
+	 */
+	public void setSmOFApplicationNoView(boolean smOFApplicationNoView) {
+		this.smOFApplicationNoView = smOFApplicationNoView;
+	}
+
+	/**
+	 * Checks if is sm lp company name view.
+	 * 
+	 * @return the smLPCompanyNameView
+	 */
+	public boolean isSmLPCompanyNameView() {
+		return smLPCompanyNameView;
+	}
+
+	/**
+	 * Sets the sm lp company name view.
+	 * 
+	 * @param smLPCompanyNameView
+	 *            the smLPCompanyNameView to set
+	 */
+	public void setSmLPCompanyNameView(boolean smLPCompanyNameView) {
+		this.smLPCompanyNameView = smLPCompanyNameView;
+	}
+
+	/**
+	 * Checks if is sm sv mandatory district view.
+	 * 
+	 * @return the smSVMandatoryDistrictView
+	 */
+	public boolean isSmSVMandatoryDistrictView() {
+		return smSVMandatoryDistrictView;
+	}
+
+	/**
+	 * Sets the sm sv mandatory district view.
+	 * 
+	 * @param smSVMandatoryDistrictView
+	 *            the smSVMandatoryDistrictView to set
+	 */
+	public void setSmSVMandatoryDistrictView(boolean smSVMandatoryDistrictView) {
+		this.smSVMandatoryDistrictView = smSVMandatoryDistrictView;
+	}
+
+	/**
+	 * Checks if is sm sa application no view.
+	 * 
+	 * @return the smSAApplicationNoView
+	 */
+	public boolean isSmSAApplicationNoView() {
+		return smSAApplicationNoView;
+	}
+
+	/**
+	 * Sets the sm sa application no view.
+	 * 
+	 * @param smSAApplicationNoView
+	 *            the smSAApplicationNoView to set
+	 */
+	public void setSmSAApplicationNoView(boolean smSAApplicationNoView) {
+		this.smSAApplicationNoView = smSAApplicationNoView;
+	}
+
+	/**
+	 * Checks if is sm qr all supplier type view.
+	 * 
+	 * @return the smQRAllSupplierTypeView
+	 */
+	public boolean isSmQRAllSupplierTypeView() {
+		return smQRAllSupplierTypeView;
+	}
+
+	/**
+	 * Sets the sm qr all supplier type view.
+	 * 
+	 * @param smQRAllSupplierTypeView
+	 *            the smQRAllSupplierTypeView to set
+	 */
+	public void setSmQRAllSupplierTypeView(boolean smQRAllSupplierTypeView) {
+		this.smQRAllSupplierTypeView = smQRAllSupplierTypeView;
+	}
+
+	/**
+	 * Checks if is sm sl bus company type view.
+	 * 
+	 * @return the smSLBusCompanyTypeView
+	 */
+	public boolean isSmSLBusCompanyTypeView() {
+		return smSLBusCompanyTypeView;
+	}
+
+	/**
+	 * Sets the sm sl bus company type view.
+	 * 
+	 * @param smSLBusCompanyTypeView
+	 *            the smSLBusCompanyTypeView to set
+	 */
+	public void setSmSLBusCompanyTypeView(boolean smSLBusCompanyTypeView) {
+		this.smSLBusCompanyTypeView = smSLBusCompanyTypeView;
+	}
+
+	/**
+	 * Checks if is sm threshold val year from view.
+	 * 
+	 * @return the smThresholdValYearFromView
+	 */
+	public boolean isSmThresholdValYearFromView() {
+		return smThresholdValYearFromView;
+	}
+
+	/**
+	 * Sets the sm threshold val year from view.
+	 * 
+	 * @param smThresholdValYearFromView
+	 *            the smThresholdValYearFromView to set
+	 */
+	public void setSmThresholdValYearFromView(boolean smThresholdValYearFromView) {
+		this.smThresholdValYearFromView = smThresholdValYearFromView;
+	}
+
+	/**
+	 * Checks if is sm tn mandatory report type view.
+	 * 
+	 * @return the smTNMandatoryReportTypeView
+	 */
+	public boolean isSmTNMandatoryReportTypeView() {
+		return smTNMandatoryReportTypeView;
+	}
+
+	/**
+	 * Sets the sm tn mandatory report type view.
+	 * 
+	 * @param smTNMandatoryReportTypeView
+	 *            the smTNMandatoryReportTypeView to set
+	 */
+	public void setSmTNMandatoryReportTypeView(
+			boolean smTNMandatoryReportTypeView) {
+		this.smTNMandatoryReportTypeView = smTNMandatoryReportTypeView;
+	}
+
+	/**
+	 * Checks if is sm tn application date view.
+	 * 
+	 * @return the smTNApplicationDateView
+	 */
+	public boolean isSmTNApplicationDateView() {
+		return smTNApplicationDateView;
+	}
+
+	/**
+	 * Sets the sm tn application date view.
+	 * 
+	 * @param smTNApplicationDateView
+	 *            the smTNApplicationDateView to set
+	 */
+	public void setSmTNApplicationDateView(boolean smTNApplicationDateView) {
+		this.smTNApplicationDateView = smTNApplicationDateView;
+	}
+
+	/**
+	 * Checks if is sm cp supplier name view.
+	 * 
+	 * @return the smCPSupplierNameView
+	 */
+	public boolean isSmCPSupplierNameView() {
+		return smCPSupplierNameView;
+	}
+
+	/**
+	 * Sets the sm cp supplier name view.
+	 * 
+	 * @param smCPSupplierNameView
+	 *            the smCPSupplierNameView to set
+	 */
+	public void setSmCPSupplierNameView(boolean smCPSupplierNameView) {
+		this.smCPSupplierNameView = smCPSupplierNameView;
 	}
 }
