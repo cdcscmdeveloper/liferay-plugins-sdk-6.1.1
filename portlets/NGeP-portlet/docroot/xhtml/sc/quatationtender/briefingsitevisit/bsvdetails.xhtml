@@ -75,7 +75,7 @@
 			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:5%;white-space: normal;text-align: center;">
 				<p:commandLink
-					rendered="#{QTStatusConst.BSV_COMPLETED ne briefingdtls.bsvStatus.statusId}"
+					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
 					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 					<h:graphicImage
@@ -182,7 +182,7 @@
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:5%;white-space: normal;text-align: center;">
 						<p:commandLink
-							rendered="#{QTStatusConst.BSV_COMPLETED ne sitevisitdtls.bsvStatus.statusId}"
+							rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
 							partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 							<h:graphicImage
