@@ -11973,7 +11973,18 @@ public class ReportBackingBean extends
 							this.getSmCreatedToYear());
 				}
 			}
-
+			
+			if (this.getReportValue() != null
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL))) {
+				if ((this.getSmMofRegNo()==null || this.getSmMofRegNo().isEmpty())){					
+					//throw new EpException("MOF No. is mandatory.");
+					throw new EpException(MessageConst.ERROR_REPORT_780029); 
+				}
+			}
+			
+			
+			
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
 					|| this.getModuleValue().equalsIgnoreCase(
