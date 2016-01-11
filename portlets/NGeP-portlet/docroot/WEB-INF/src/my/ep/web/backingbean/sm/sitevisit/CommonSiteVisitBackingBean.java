@@ -65,8 +65,9 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 			log.info("------Complete Site Visit Report-------------" + svObj.getDocumentId());
 			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
 			svoBB.renewSesionObject();
-			
-			svoBB.getManagedBean().setAppId(svObj.getDocumentId());
+
+			//svoBB.getManagedBean().setAppId(svObj.getDocumentId());
+			svoBB.getManagedBean().setSvTaskId(Long.valueOf(svObj.getSvoTaskId()));
 			svoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svoBB.getManagedBean().setTaskId(taskId);
 			//svoBB.getManagedBean().setAppType(svObj.getAppType());
