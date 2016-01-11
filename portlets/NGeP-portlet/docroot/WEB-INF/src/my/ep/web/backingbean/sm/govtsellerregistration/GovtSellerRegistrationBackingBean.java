@@ -24,6 +24,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -79,6 +80,7 @@ public class GovtSellerRegistrationBackingBean extends
 		assignValReqdToFalse();
 		getManagedBean().setShowGst(true);
 		getManagedBean().setShowBranchPointOfContact(false);
+		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/govtSellerRegistration/govtSellerBasePage.xhtml",
 				"", null);
@@ -710,6 +712,7 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().getSmAppl().getSmSupplierBanks());
 		getManagedBean().getSmAppl().getSmCompanyBasic().setWithFederal(true);
 		SmPersonnel personnel = new SmPersonnel();
+		personnel.setTitle(new PmSalutation());
 		personnel
 				.setPmCountry(SmCommonUtil
 						.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
@@ -1092,6 +1095,10 @@ public class GovtSellerRegistrationBackingBean extends
 		smPersonnel
 				.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		smPersonnel.setClerical(true);
+		if (smPersonnel.getTitle() != null
+				&& smPersonnel.getTitle().getSalutationId() == null) {
+			smPersonnel.setTitle(null);
+		}
 
 		String trimmedName = smPersonnel.getName().trim();
 		smPersonnel.setName(trimmedName);
