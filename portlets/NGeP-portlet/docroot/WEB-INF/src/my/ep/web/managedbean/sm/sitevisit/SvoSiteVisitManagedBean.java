@@ -109,6 +109,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private boolean viewMode;
 	
 	private SmSvAdtMachine oriAdtMachine;
+	private Long svTaskId;
 
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
@@ -612,6 +613,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setOriAdtMachine(SmSvAdtMachine oriAdtMachine) {
 		this.oriAdtMachine = oriAdtMachine;
+	}
+
+	public Long getSvTaskId() {
+		return svTaskId;
+	}
+
+	public void setSvTaskId(Long svTaskId) {
+		this.svTaskId = svTaskId;
 	}
 
 }
