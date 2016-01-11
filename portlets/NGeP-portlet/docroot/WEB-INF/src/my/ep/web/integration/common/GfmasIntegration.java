@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import my.ep.biz.service.integration.common.JAXBUtility;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -229,6 +230,9 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				sstInformation.setSapVendorCode(scLoa.getScLoiLoa().getSmSupplier().getSapVendorCode());
 				sstInformation.setKumpPtj(scLoa.getScLoiLoa().getPmOrgProfile().getPmOrgValidity().getOrgCode());
 				sstInformation.setSstAcknowledgeDate(fileUtility.formatDate(scLoa.getAckDate()));
+				sstInformation.setSstAmountwithGST(scLoa.getLoaAmt().add(scLoa.getGstAmt()));
+				sstInformation.setSstAmountwithoutGST(scLoa.getLoaAmt());
+				sstInformation.setPerihalSST(scLoa.getScQt().getQtTitle());
 				if (null != scLoa.getScLoiLoa().getFileNo())
 					sstInformations.add(sstInformation);
 			}
@@ -281,84 +285,175 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				dataVendor.setAgencyId(IntegrationConstants.AGENSI_ID_ePerolehan);  
 				dataVendor.setVendorIdCode(smSupplier.getRegNo());
 				dataVendor.setEntityCode(getEntityType(smSupplier.getBusinessType())); //default set to SSM   
+				dataVendor.setEpNo(smSupplier.getEpNo());
 				
-					// HQ- Branch Information
-						
-					if (null != smSupplier.getSmAppl().getSmCompanyBasic()) {
-						
-						log.info("HQ Branch available...");
-						companyBranch = new CompanyBranch();
-								
-						companyBranch.setRecordType(IntegrationConstants.RECORD_TYPE_ONE);
+				// HQ- Branch Information
+				
+				if (null != smSupplier.getSmAppl().getSmCompanyBasic()) {
+					
+					log.info("HQ Branch available...");
+					companyBranch = new CompanyBranch();
+							
+					companyBranch.setRecordType(IntegrationConstants.RECORD_TYPE_ONE);
 
-						companyBranch.setName(smSupplier.getSmAppl().getSmCompanyBasic().getCompanyName());
+					companyBranch.setName(smSupplier.getSmAppl().getSmCompanyBasic().getCompanyName());
+					
+					companyBranch.setEmailAddress(smSupplier.getSmAppl().getSmCompanyBasic().getWebsite());  
+					companyBranch.setGlReconAccount(IntegrationConstants.GL_RECON_NO);
+					companyBranch.setCurrency(IntegrationConstants.CURRENCY_CODE_RM);
+					companyBranch.setIncoTerm(IntegrationConstants.EMPTY_TRING);
+					companyBranch.setPaymentTerm(IntegrationConstants.EMPTY_TRING);
+					companyBranch.setStatus(smSupplier.getRecordStatusFlg());
+					companyBranch.setMobileNo(smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
+							
+					companyBranch.setIndicatorCode(0L);
+					companyBranch.setAccountActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
+					if(smSupplier.getSmGstSuppliers()!=null){
+						 for(SmGstSupplier gstSupplier : smSupplier.getSmGstSuppliers()){
+							 companyBranch.setReferenceNoGST(gstSupplier.getGstRegNo());
+							 companyBranch.setGSTEffectiveDate(gstSupplier.getGstEffDate());
+							 companyBranch.setGSTEffectiveEndDate(gstSupplier.getGstEndDate());
+						 }
+					}else{
+						companyBranch.setReferenceNoGST(IntegrationConstants.EMPTY_TRING);
+						companyBranch.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
+						companyBranch.setGSTEffectiveEndDate(IntegrationConstants.DEFAULT_DATE);
+					}
+							
+					for(SmCompanyAddress companyAddress:smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
 						
-						if(null!=smSupplier.getSmAppl().getSmPersonnels())
-							companyBranch.setEmailAddress(smSupplier.getSmAppl().getSmPersonnels().get(0).getEmail());  // Need to confirm
+						if(companyAddress.getAddressType().equalsIgnoreCase(IntegrationConstants.COMPANY_ADDRESS)){
+							companyBranch.setAddress(companyAddress.getSmAddress().getAddress1());
+							companyBranch.setAddress2(companyAddress.getSmAddress().getAddress2());
+							companyBranch.setAddress3(companyAddress.getSmAddress().getAddress3());
+							companyBranch.setPostCode(companyAddress.getSmAddress().getPostcode());
+							companyBranch.setCity(companyAddress.getSmAddress().getPmCity().getCityName());
+							companyBranch.setRegion(companyAddress.getSmAddress().getPmState().getStateCode());
+							companyBranch.setCountry(companyAddress.getSmAddress().getPmCountry().getCountryCode());
+							companyBranch.setTelephoneNo(smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
+							if(null!=smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo())
+								companyBranch.setFaxNo(smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo());
+							else
+								companyBranch.setFaxNo(IntegrationConstants.EMPTY_TRING);
+									
+						}else{
+							companyBranch.setAddress(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setAddress2(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setAddress3(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setPostCode(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setCity(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setRegion(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setCountry(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setTelephoneNo(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setFaxNo(IntegrationConstants.EMPTY_TRING);
+								}
+							}
+					
+					// HQ Bank Information
+					
+					if (null != smSupplier.getSmAppl().getSmSupplierBanks()	&& !smSupplier.getSmAppl().getSmSupplierBanks().isEmpty()) {
+						
+						accountInformations = new ArrayList<BankAccountInformation>();
+
+						companyBranch.setBankAccountInfoCount(smSupplier.getSmAppl().getSmSupplierBanks().size());
+						log.info("size of accounts :"+smSupplier.getSmAppl().getSmSupplierBanks().size());
+						int i = 1;
+						for (SmSupplierBank smSupplierBank : smSupplier.getSmAppl().getSmSupplierBanks()) {
+							accountInformation = new BankAccountInformation();
+							accountInformation.setRecordType(IntegrationConstants.RECORD_TYPE_TWO);
+							accountInformation.setBankAccount(smSupplierBank.getAccountNo());
+							accountInformation.setBankCountry(smSupplierBank.getPmFinancialOrg().getPmCountry().getCountryCode());
+							accountInformation.setCurrency(IntegrationConstants.CURRENCY_CODE_RM);
+							accountInformation.setBankActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
+							
+							if (null != smSupplierBank.getPmFinancialOrg()) {
+								log.info("getFinancialOrgId :"+smSupplierBank.getPmFinancialOrg().getFinancialOrgId());
+								if (null != smSupplierBank.getPmFinancialOrg().getPmFinancialSvcs()){
+									for(PmFinancialSvc pmFinancialSvc :smSupplierBank.getPmFinancialOrg().getPmFinancialSvcs()){
+										if(pmFinancialSvc.getBankCode()!=null)
+											accountInformation.setBankKey(pmFinancialSvc.getBankCode());
+									    }
+									accountInformation.setRecordNumber(i);
+									if(!accountInformations.contains(accountInformation))
+										accountInformations.add(accountInformation);
+									companyBranch.setBankAccountInfoList(accountInformations);
+									i++;
+								}
+							}
+						}
+					}
+					
+					if(!companyBranchs.contains(companyBranch))
+						companyBranchs.add(companyBranch);
+				}
+				
+				// Branch Company Information
+				
+				if (null != smSupplier.getSmAppl().getSmSupplierBranches() && smSupplier.getSmAppl().getSmSupplierBranches().size()>0) {
+					
+					for(SmSupplierBranch smSupplierBranch:smSupplier.getSmAppl().getSmSupplierBranches()){
+						
+						companyBranch = new CompanyBranch();
+						companyBranch.setRecordType(IntegrationConstants.RECORD_TYPE_ONE);
+						
+						companyBranch.setName(smSupplierBranch.getBranchName());
+							
+						if(null!=smSupplierBranch.getSmPersonnel())
+							companyBranch.setEmailAddress(smSupplierBranch.getSmPersonnel().getEmail()); 
 						else
-							companyBranch.setEmailAddress(IntegrationConstants.EMPTY_TRING);  
+							companyBranch.setEmailAddress(IntegrationConstants.EMPTY_TRING);
 						
 						companyBranch.setGlReconAccount(IntegrationConstants.GL_RECON_NO);
 						companyBranch.setCurrency(IntegrationConstants.CURRENCY_CODE_RM);
 						companyBranch.setIncoTerm(IntegrationConstants.EMPTY_TRING);
 						companyBranch.setPaymentTerm(IntegrationConstants.EMPTY_TRING);
-						companyBranch.setStatus(smSupplier.getRecordStatusFlg());
-						companyBranch.setMobileNo(smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
-								
-						// Added newly in version 2.9
-						companyBranch.setIndicatorCode(IntegrationConstants.HQ_INDICATOR_CODE);
-						companyBranch.setAccountActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
-						if(smSupplier.getSmGstSuppliers()!=null){
-							 for(SmGstSupplier gstSupplier : smSupplier.getSmGstSuppliers()){
-								 companyBranch.setReferenceNoGST(gstSupplier.getGstRegNo());
-							 }
-						}else{
-							companyBranch.setReferenceNoGST(IntegrationConstants.EMPTY_TRING);
-						}
-								
-						for(SmCompanyAddress companyAddress:smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
+						companyBranch.setStatus(smSupplierBranch.getRecordStatusFlg());
+						companyBranch.setMobileNo(smSupplierBranch.getPhoneNo());   
 							
-							if(companyAddress.getAddressType().equalsIgnoreCase(IntegrationConstants.COMPANY_ADDRESS)){
-								companyBranch.setAddress(companyAddress.getSmAddress().getAddress1());
-								companyBranch.setAddress2(companyAddress.getSmAddress().getAddress2());
-								companyBranch.setAddress3(companyAddress.getSmAddress().getAddress3());
-								companyBranch.setPostCode(companyAddress.getSmAddress().getPostcode());
-								companyBranch.setCity(companyAddress.getSmAddress().getPmCity().getCityName());
-								companyBranch.setRegion(companyAddress.getSmAddress().getPmState().getStateCode());
-								companyBranch.setCountry(companyAddress.getSmAddress().getPmCountry().getCountryCode());
-								companyBranch.setTelephoneNo(smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
-								if(null!=smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo())
-									companyBranch.setFaxNo(smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo());
-								else
-									companyBranch.setFaxNo(IntegrationConstants.EMPTY_TRING);
-										
-							}else{
-								companyBranch.setAddress(IntegrationConstants.EMPTY_TRING);
-								companyBranch.setAddress2(IntegrationConstants.EMPTY_TRING);
-								companyBranch.setAddress3(IntegrationConstants.EMPTY_TRING);
-								companyBranch.setPostCode(IntegrationConstants.EMPTY_TRING);
-								companyBranch.setCity(IntegrationConstants.EMPTY_TRING);
-								companyBranch.setRegion(IntegrationConstants.EMPTY_TRING);
-								companyBranch.setCountry(IntegrationConstants.EMPTY_TRING);
-								companyBranch.setTelephoneNo(IntegrationConstants.EMPTY_TRING);
+						companyBranch.setIndicatorCode(smSupplierBranch.getSupplierBranchId());
+						companyBranch.setAccountActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
+						companyBranch.setReferenceNoGST(IntegrationConstants.EMPTY_TRING);
+						companyBranch.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
+						companyBranch.setGSTEffectiveEndDate(IntegrationConstants.DEFAULT_DATE);
+							
+						if(null!=smSupplierBranch.getSmAddress()){
+							companyBranch.setAddress(smSupplierBranch.getSmAddress().getAddress1());
+							companyBranch.setAddress2(smSupplierBranch.getSmAddress().getAddress2());
+							companyBranch.setAddress3(smSupplierBranch.getSmAddress().getAddress3());
+							companyBranch.setPostCode(smSupplierBranch.getSmAddress().getPostcode());
+							companyBranch.setCity(smSupplierBranch.getSmAddress().getPmCity().getCityName());
+							companyBranch.setRegion(smSupplierBranch.getSmAddress().getPmState().getStateCode());
+							companyBranch.setCountry(smSupplierBranch.getSmAddress().getPmCountry().getCountryCode());
+							companyBranch.setTelephoneNo(smSupplierBranch.getPhoneNo());
+							if(null!=smSupplierBranch.getFaxNo())
+								companyBranch.setFaxNo(smSupplierBranch.getFaxNo());
+							else
 								companyBranch.setFaxNo(IntegrationConstants.EMPTY_TRING);
-									}
-								}
+							}else{
+							companyBranch.setAddress(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setAddress2(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setAddress3(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setPostCode(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setCity(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setRegion(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setCountry(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setTelephoneNo(IntegrationConstants.EMPTY_TRING);
+							companyBranch.setFaxNo(IntegrationConstants.EMPTY_TRING);
+							}
+							
+						// Branch Account Information
 						
-						// HQ Bank Information
-						
-						if (null != smSupplier.getSmAppl().getSmSupplierBanks()	&& !smSupplier.getSmAppl().getSmSupplierBanks().isEmpty()) {
+						if (null != smSupplierBranch.getSmSupplierBanks()	&& !smSupplierBranch.getSmSupplierBanks().isEmpty()) {
 							
 							accountInformations = new ArrayList<BankAccountInformation>();
 
-							companyBranch.setBankAccountInfoCount(smSupplier.getSmAppl().getSmSupplierBanks().size());
+							companyBranch.setBankAccountInfoCount(smSupplierBranch.getSmSupplierBanks().size());
 							log.info("size of accounts :"+smSupplier.getSmAppl().getSmSupplierBanks().size());
 							int i = 1;
-							for (SmSupplierBank smSupplierBank : smSupplier.getSmAppl().getSmSupplierBanks()) {
+							for (SmSupplierBank smSupplierBank : smSupplierBranch.getSmSupplierBanks()) {
 								accountInformation = new BankAccountInformation();
 								accountInformation.setRecordType(IntegrationConstants.RECORD_TYPE_TWO);
 								accountInformation.setBankAccount(smSupplierBank.getAccountNo());
-								accountInformation.setAccountHolderName(smSupplier.getCompanyName());
 								accountInformation.setBankCountry(smSupplierBank.getPmFinancialOrg().getPmCountry().getCountryCode());
 								accountInformation.setCurrency(IntegrationConstants.CURRENCY_CODE_RM);
 								accountInformation.setBankActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
@@ -379,108 +474,15 @@ public class GfmasIntegration extends InitializeUtilityClz{
 								}
 							}
 						}
-						
 						if(!companyBranchs.contains(companyBranch))
 							companyBranchs.add(companyBranch);
-						}
-					
-						// Branch Company Information
-						
-					if (null != smSupplier.getSmAppl().getSmSupplierBranches() && smSupplier.getSmAppl().getSmSupplierBranches().size()>0) {
-						
-						for(SmSupplierBranch smSupplierBranch:smSupplier.getSmAppl().getSmSupplierBranches()){
-							
-							companyBranch = new CompanyBranch();
-							companyBranch.setRecordType(IntegrationConstants.RECORD_TYPE_ONE);
-							
-							companyBranch.setName(smSupplierBranch.getBranchName());
-								
-							if(null!=smSupplier.getSmAppl().getSmPersonnels().get(0).getEmail())
-								companyBranch.setEmailAddress(smSupplier.getSmAppl().getSmPersonnels().get(0).getEmail()); // Need to confirm
-							else
-								companyBranch.setEmailAddress(IntegrationConstants.EMPTY_TRING);
-							companyBranch.setGlReconAccount(IntegrationConstants.GL_RECON_NO);
-							companyBranch.setCurrency(IntegrationConstants.CURRENCY_CODE_RM);
-							companyBranch.setIncoTerm(IntegrationConstants.EMPTY_TRING);
-							companyBranch.setPaymentTerm(IntegrationConstants.EMPTY_TRING);
-							companyBranch.setStatus(smSupplier.getRecordStatusFlg());
-							companyBranch.setMobileNo(smSupplierBranch.getPhoneNo());    // need to confirm
-								
-							companyBranch.setIndicatorCode(IntegrationConstants.BRANCH_INDICATOR_CODE);
-							companyBranch.setAccountActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
-//							companyBranch.setReferenceNoGST(smSupplierBranch.getGstRegistrationNo());
-							companyBranch.setReferenceNoGST(IntegrationConstants.EMPTY_TRING);
-								
-							if(null!=smSupplierBranch.getSmAddress()){
-								
-									companyBranch.setAddress(smSupplierBranch.getSmAddress().getAddress1());
-									companyBranch.setAddress2(smSupplierBranch.getSmAddress().getAddress2());
-									companyBranch.setAddress3(smSupplierBranch.getSmAddress().getAddress3());
-									companyBranch.setPostCode(smSupplierBranch.getSmAddress().getPostcode());
-									companyBranch.setCity(smSupplierBranch.getSmAddress().getPmCity().getCityName());
-									companyBranch.setRegion(smSupplierBranch.getSmAddress().getPmState().getStateCode());
-									companyBranch.setCountry(smSupplierBranch.getSmAddress().getPmCountry().getCountryCode());
-									companyBranch.setTelephoneNo(smSupplierBranch.getPhoneNo());
-									if(null!=smSupplierBranch.getFaxNo())
-										companyBranch.setFaxNo(smSupplierBranch.getFaxNo());
-									else
-										companyBranch.setFaxNo(IntegrationConstants.EMPTY_TRING);
-									}else{
-									companyBranch.setAddress(IntegrationConstants.EMPTY_TRING);
-									companyBranch.setAddress2(IntegrationConstants.EMPTY_TRING);
-									companyBranch.setAddress3(IntegrationConstants.EMPTY_TRING);
-									companyBranch.setPostCode(IntegrationConstants.EMPTY_TRING);
-									companyBranch.setCity(IntegrationConstants.EMPTY_TRING);
-									companyBranch.setRegion(IntegrationConstants.EMPTY_TRING);
-									companyBranch.setCountry(IntegrationConstants.EMPTY_TRING);
-									companyBranch.setTelephoneNo(IntegrationConstants.EMPTY_TRING);
-									companyBranch.setFaxNo(IntegrationConstants.EMPTY_TRING);
-									}
-							
-							// Branch Account Information
-							
-							if (null != smSupplierBranch.getSmSupplierBanks()	&& !smSupplierBranch.getSmSupplierBanks().isEmpty()) {
-								
-								accountInformations = new ArrayList<BankAccountInformation>();
-
-								companyBranch.setBankAccountInfoCount(smSupplierBranch.getSmSupplierBanks().size());
-								log.info("size of accounts :"+smSupplier.getSmAppl().getSmSupplierBanks().size());
-								int i = 1;
-								for (SmSupplierBank smSupplierBank : smSupplierBranch.getSmSupplierBanks()) {
-									accountInformation = new BankAccountInformation();
-									accountInformation.setRecordType(IntegrationConstants.RECORD_TYPE_TWO);
-									accountInformation.setBankAccount(smSupplierBank.getAccountNo());
-									accountInformation.setAccountHolderName(smSupplier.getCompanyName());
-									accountInformation.setBankCountry(smSupplierBank.getPmFinancialOrg().getPmCountry().getCountryCode());
-									accountInformation.setCurrency(IntegrationConstants.CURRENCY_CODE_RM);
-									accountInformation.setBankActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
-									
-									if (null != smSupplierBank.getPmFinancialOrg()) {
-										log.info("getFinancialOrgId :"+smSupplierBank.getPmFinancialOrg().getFinancialOrgId());
-										if (null != smSupplierBank.getPmFinancialOrg().getPmFinancialSvcs()){
-											for(PmFinancialSvc pmFinancialSvc :smSupplierBank.getPmFinancialOrg().getPmFinancialSvcs()){
-												if(pmFinancialSvc.getBankCode()!=null)
-													accountInformation.setBankKey(pmFinancialSvc.getBankCode());
-											    }
-											accountInformation.setRecordNumber(i);
-											if(!accountInformations.contains(accountInformation))
-												accountInformations.add(accountInformation);
-											companyBranch.setBankAccountInfoList(accountInformations);
-											i++;
-										}
-									}
-								}
 							}
-							if(!companyBranchs.contains(companyBranch))
-								companyBranchs.add(companyBranch);
-								}
-							}
-					
-						dataVendor.setCompanyBranchs(companyBranchs);
-						if(!dataVendors.contains(dataVendor))
-							dataVendors.add(dataVendor);
-						
 					}
+				dataVendor.setCompanyBranchs(companyBranchs);
+				if(!dataVendors.contains(dataVendor))
+					dataVendors.add(dataVendor);
+						
+				}
 			BatchReqDTO<MasterDataVendor> batchReqDTO = new BatchReqDTO<MasterDataVendor>();
 			batchReqDTO.setFilePath(IntegrationConstants.FILE_PATH_LOCAL);
 			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
@@ -1855,5 +1857,25 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	
 	fileUtility.setValuesToPmInterface(reqDTO);
 	
+	}
+	
+	public void masterDataVendorInboundService() {
+		String transId = UUID.randomUUID().toString();
+		JAXBUtility jaxbUtility = new JAXBUtility();
+		jaxbUtility.getMarshalMessageInbound(ServiceCode.APOVE.value(), null, transId);
+		
+		BatchReqDTO<MasterDataVendor> batchReqDTO = new BatchReqDTO<MasterDataVendor>();
+//		batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
+//	    batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
+		batchReqDTO.setProcessId(ProcessCode.APOVE.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setFileName(null);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
+		
+		batchReqDTO.setQueueMsgStatus(fileUtility.constructQueueMessage(ServiceCode.APOVE.value(), null, transId));
+		   
+		fileUtility.setValuesToPmInterface(batchReqDTO);
+		
 	}
 }
