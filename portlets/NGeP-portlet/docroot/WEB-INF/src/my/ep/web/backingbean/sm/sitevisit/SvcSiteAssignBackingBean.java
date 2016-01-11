@@ -108,7 +108,7 @@ public class SvcSiteAssignBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteAssignSO.class);
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			
-			reqDTO.setSmSvTaskLs(new ArrayList<SmSvTask>());
+			reqDTO.setSvTaskList(new ArrayList<SmSvTask>());
 			for(SmSvcAssignmentVO svcTaskVO : getManagedBean().getSvcTaskVOLs()){
 				SmSvTask svTask = svcTaskVO.getSmSvTask();
 				svTask.setSmSvOfficers(new ArrayList<SmSvOfficer>());
