@@ -307,6 +307,16 @@ public class SmFieldChangeUtil {
 						.compareTo(
 								latestPersonnel.getPmCountry().getCountryId()) != 0) {
 			currPersonnel.setChangedFieldStatus("U");
+		} else if ((currPersonnel.getTitle() != null && latestPersonnel
+				.getTitle() == null)
+				|| (currPersonnel.getTitle() == null && latestPersonnel
+						.getTitle() != null)
+				|| (currPersonnel.getTitle() != null
+						&& latestPersonnel.getTitle() != null && currPersonnel
+						.getTitle()
+						.getSalutationId()
+						.compareTo(latestPersonnel.getTitle().getSalutationId()) != 0)) {
+			currPersonnel.setChangedFieldStatus("U");
 		} else if ((currPersonnel.getPmRace() != null && latestPersonnel
 				.getPmRace() == null)
 				|| (currPersonnel.getPmRace() == null && latestPersonnel
@@ -323,8 +333,8 @@ public class SmFieldChangeUtil {
 						"prevApprovedDirector", "prevApprovedEquityOwner",
 						"disableRowSelection", "freeSoftCert",
 						"softcertRejectReason", "pmCountry", "pmUser",
-						"pmRace", "identificationType", "identityResponseCode",
-						"tempPassword" })) {
+						"pmRace", "title", "identificationType",
+						"identityResponseCode", "tempPassword" })) {
 			currPersonnel.setChangedFieldStatus("U");
 		}
 	}
