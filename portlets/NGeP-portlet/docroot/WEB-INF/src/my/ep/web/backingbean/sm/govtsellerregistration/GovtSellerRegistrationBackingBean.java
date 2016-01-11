@@ -941,20 +941,18 @@ public class GovtSellerRegistrationBackingBean extends
 				addr.setPmCity(addrType.getPmAddress().getPmCity());
 				addr.setPostcode(addrType.getPmAddress().getPostcode());
 
-				if (!SmCommonUtil.isCollectionEmpty(addrType.getPmContacts())) {
-					compBasic.setPhoneCountry(addrType.getPmContacts().get(0)
-							.getPhoneCountry());
-					compBasic.setPhoneArea(addrType.getPmContacts().get(0)
-							.getPhoneArea());
-					compBasic.setPhoneNo(addrType.getPmContacts().get(0)
-							.getPhoneNo());
-					compBasic.setFaxCountry(addrType.getPmContacts().get(0)
-							.getFaxCountry());
-					compBasic.setFaxArea(addrType.getPmContacts().get(0)
-							.getFaxArea());
-					compBasic.setFaxNo(addrType.getPmContacts().get(0)
-							.getFaxNo());
-				}
+				compBasic.setPhoneCountry(addrType.getPmAddress()
+						.getPhoneCountry());
+				compBasic.setPhoneArea(addrType.getPmAddress()
+						.getPhoneArea());
+				compBasic.setPhoneNo(addrType.getPmAddress()
+						.getPhoneNo());
+				compBasic.setFaxCountry(addrType.getPmAddress()
+						.getFaxCountry());
+				compBasic.setFaxArea(addrType.getPmAddress()
+						.getFaxArea());
+				compBasic.setFaxNo(addrType.getPmAddress()
+						.getFaxNo());
 			}
 		}
 		compAddr.setSmAddress(addr);
