@@ -1106,24 +1106,31 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setScheduleIndex(11);
 		getManagedBean().setPaymentTracking(11);
 		getManagedBean().setSettingIndex(11);
+		getManagedBean().setAgencyIndex(111);
 		
 	  	if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(0);
 		}
 	  	
-	  	if(outputTab.equalsIgnoreCase(ContractConst.AGENCY_DETAIL)) {
+		if (ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ZONAL_DETAIL)) {
 	  		getManagedBean().setSelectedTabIndex(1);
 	  	}
-	  
+		
+		if(!ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.AGENCY_DETAIL)) {
+	  		getManagedBean().setSelectedTabIndex(1);
+	  		getManagedBean().setAgencyIndex(1);
+	  	}
+	  	
+	  	if(ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.AGENCY_DETAIL)) {
+	  		getManagedBean().setSelectedTabIndex(2);
+	  		getManagedBean().setAgencyIndex(2);
+	  	}
+	  	
 	  	if (!ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 	  		getManagedBean().setSelectedTabIndex(2);
 	  		getManagedBean().setItemIndex(2);
 	  	}
-	  
-	  	if (ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ZONAL_DETAIL)) {
-	  		getManagedBean().setSelectedTabIndex(2);
-	  	}
-	  	
+	
 	  	if (ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing() && outputTab.equalsIgnoreCase(ContractConst.ITEM_DETAIL)) {
 	  		getManagedBean().setSelectedTabIndex(3);
 	  		getManagedBean().setItemIndex(3);
