@@ -1,9 +1,6 @@
 package my.ep.web.backingbean.sm.sitevisit;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -13,6 +10,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
@@ -24,7 +22,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmRemark;
-import my.ep.persistence.entity.sm.SmSvAddress;
+import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -38,6 +36,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmSvcAssignmentVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -70,14 +69,15 @@ public class SvcSiteAssignBackingBean extends
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		SiteAssignResDTO resDTO = reqSO.retrieveSiteVisitByApplId(reqDTO);
 		
-		retrieveSVOList(resDTO.getSmSvTask().getSmAppl());	
-		if(resDTO.getSmSvTask().getSmAppl().getSmApplSectionReviews() != null){
-			setPoRemarkToSVC(resDTO.getSmSvTask().getSmAppl().getSmApplSectionReviews());
+		constructSvTaskWithSVOList(resDTO.getSmAppl());	
+		if(resDTO.getSmAppl().getSmApplSectionReviews() != null){
+			setPoRemarkToSVC(resDTO.getSmAppl().getSmApplSectionReviews());
 		}
-		this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
-		this.getManagedBean().setSmRemark(new SmRemark());
+		//this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
+		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		
 		setSiteVisitAddressesFacilityName();
+		getAllCategoryCode();
 		getWorkFlowInfo(getManagedBean().getAppId());
 	}
 	
@@ -102,42 +102,45 @@ public class SvcSiteAssignBackingBean extends
 	public String submitSiteVisitAssignment(String action){
 		log.info("----------------------submitSiteVisitAssignment start----------------");
 		
-		try{
+		//try{
 			SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 			ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", ISiteAssignSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteAssignSO.class);
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-
-			SmSvTask svTask = this.getManagedBean().getSmSvTask();
-			svTask.setSmSvOfficers(new ArrayList<SmSvOfficer>());
-
-			for(PmUser pmUsr : this.getManagedBean().getSvoUserList().getTarget()){
-				SmSvOfficer svOfficer = new SmSvOfficer();
-				svOfficer.setSmSvTask(svTask);
-				svOfficer.setPmUser(pmUsr);
-				svTask.getSmSvOfficers().add(svOfficer);
+			
+			reqDTO.setSmSvTaskLs(new ArrayList<SmSvTask>());
+			for(SmSvcAssignmentVO svcTaskVO : getManagedBean().getSvcTaskVOLs()){
+				SmSvTask svTask = svcTaskVO.getSmSvTask();
+				svTask.setSmSvOfficers(new ArrayList<SmSvOfficer>());
+				
+				for(PmUser pmUser : svcTaskVO.getSvoUserList().getTarget()){
+					SmSvOfficer svOfficer = new SmSvOfficer();
+					svOfficer.setSmSvTask(svTask);
+					svOfficer.setPmUser(pmUser);
+					svTask.getSmSvOfficers().add(svOfficer);
+				}
 			}
-			log.info("Task ID>>>>>" + this.getManagedBean().getSmSvTask().getSvTaskId());
-			//System.out.println("****************** submitSiteVisitAssignment *****" + svTask.getSmSvOfficers().get(0).getPmUser());
-			this.getManagedBean().getSmRemark().setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVC);
-			this.getManagedBean().getSmRemark().setDocId(this.getManagedBean().getSmSvTask().getSvTaskId());
 			
 			reqDTO.setOutcome(action);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-			reqDTO.setSmSvTask(svTask);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setBpmPojo(getManagedBean().getBpmPojo());
+			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setToken(token);
-			reqDTO.setSmRemark(this.getManagedBean().getSmRemark());
+			
+			System.out.println("<<<<<reqDTO.setSmAppl>>>>" + reqDTO.getSmAppl().getApplNo());
+			System.out.println("<<<<<reqDTO.setSmAppl>>>>" + reqDTO.getSmAppl().getApplId());
 			reqDTO.setTrackingDairyVO(
 					SmCommonUtil.assignTrackingDiaryValues(SupplierManagementConst.SVC_ASSIGN_SITEVISIT, 
-							this.getManagedBean().getSmSvTask().getSmAppl().getApplId(), this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getUserRole()));
+							this.getManagedBean().getSmAppl().getApplId(), this.getManagedBean().getSmAppl().getApplNo(), getUserRole()));
+			
 			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 
+			
 			if (resDTO.isSuccessful()) {
 				log.info("Submission is success>>>>>>>>"); 
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-				MessageUtils.getMessage(MessageConst.INFO_721201,new String[] {getManagedBean().getSmSvTask().getSmAppl().getApplNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				MessageUtils.getMessage(MessageConst.INFO_721201,new String[] {getManagedBean().getSmAppl().getApplNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
@@ -145,10 +148,11 @@ public class SvcSiteAssignBackingBean extends
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				throw new EpException(MessageConst.ERROR_721202);
 			}
-		}catch(Exception ex){
+		/*}catch(Exception ex){
+			log.info("submitSiteVisitAssignment>>>>>" + ex.getMessage());
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-			throw new EpException(ex.getMessage());
-		}
+			throw new EpException(MessageConst.ERROR_721202);
+		}*/
 
 	}
 	
@@ -157,29 +161,51 @@ public class SvcSiteAssignBackingBean extends
 	 * Populate the SVO List on screen for SVC to pick up
 	 * @param SmAppl smAppl - SmAppl Object
 	 */
-	private void retrieveSVOList(SmAppl smAppl){
+	private void constructSvTaskWithSVOList(SmAppl smAppl){
 		SiteAssignReqDTO userListReqDTO = new SiteAssignReqDTO();
 		ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteAssignSO.class);
 		
 		userListReqDTO.setSmAppl(smAppl);
 		SiteAssignResDTO userListResDTO = reqSO.retrieveSVOListBySupplierTypeAndZone(userListReqDTO);
 		
-		this.getManagedBean().setSourceSVO(new ArrayList<PmUser>());
-		this.getManagedBean().setSelectedSVO(new ArrayList<PmUser>());
+		List<PmUser> sourceLs = new ArrayList<PmUser>();
+		List<PmUser> selectedLs = new ArrayList<PmUser>();
 		
 		log.info("********PM SVO********" + userListResDTO.getPmUsers().size());
 		if(userListResDTO.getPmUsers().size() > 0){
-			this.getManagedBean().setSourceSVO(userListResDTO.getPmUsers());
+			sourceLs = userListResDTO.getPmUsers();
+		}
+		
+		getManagedBean().setSvcTaskVOLs(new ArrayList<SmSvcAssignmentVO>());
+		
+		for(SmSvTask svTask : smAppl.getSmSvTasks()){
+			SmRemark remark = new SmRemark();
+			remark.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVC);
+			remark.setDocId(svTask.getSvTaskId());
+			svTask.setSmRemark(remark);
+			
+			SmSvcAssignmentVO svcAssignmentVO = new SmSvcAssignmentVO();
+			svcAssignmentVO.setSmSvTask(svTask);
+			svcAssignmentVO.setSvoUserList(new DualListModel<PmUser>(sourceLs, selectedLs));
+			getManagedBean().getSvcTaskVOLs().add(svcAssignmentVO);
 		}
 
-		this.getManagedBean().setSvoUserList(new DualListModel<PmUser>(this.getManagedBean().getSourceSVO(), this.getManagedBean().getSelectedSVO()));
 	}
 	
 	/**
 	 * Validation - to ensure at least 2 SVO being selected
 	 */
 	public void validateForm(){
-		if(this.getManagedBean().getSvoUserList().getTarget().size() < 2){
+		boolean invalid = true;
+		
+		for(SmSvcAssignmentVO svcAssignmentVO : getManagedBean().getSvcTaskVOLs()){
+			if(svcAssignmentVO.getSvoUserList().getTarget().size() < 2){
+			  invalid = false;
+			  break;
+			}
+		}
+		
+		if(!invalid){
 			throw new EpException(MessageConst.ERROR_721201);
 		}else{
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
@@ -214,7 +240,7 @@ public class SvcSiteAssignBackingBean extends
 
 	//for local testing purpose
 	public void preRenderView(){
-		if(this.getManagedBean().getSmSvTask() == null){
+		if(this.getManagedBean().getSmAppl() == null){
 			retrieveSiteAssignInfo();
 		}
 	}
@@ -236,21 +262,20 @@ public class SvcSiteAssignBackingBean extends
 	private void setSiteVisitAddressesFacilityName() {
 		SmFacility smFacility = null;
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-		if (getManagedBean().getSmSvTask() != null
-				&& getManagedBean().getSmSvTask().getSmSvAddresses() != null
-				&& !getManagedBean().getSmSvTask().getSmSvAddresses().isEmpty()) {
-			for (SmSvAddress svAddress : getManagedBean().getSmSvTask()
-					.getSmSvAddresses()) {
-				if (svAddress.getSmAddress() != null) {
-					reqDTO.setSmAddressId(svAddress.getSmAddress()
-							.getAddressId());
-					smFacility = SmServiceLookup.getSiteVisitSO()
-							.retrieveSmFacilityByAddressId(reqDTO)
-							.getSmFacility();
-					svAddress.setFacilityName(smFacility == null ? ""
-							: smFacility.getFacilityName());
-					if(smFacility != null && smFacility.getFacilityType() != null){
-						svAddress.setFacilityType(smFacility.getFacilityType());
+		if (getManagedBean().getSmAppl().getSmSvTasks().size() > 0) {
+			for (SmSvTask svTask : getManagedBean().getSmAppl().getSmSvTasks()) {
+				log.info("*********smAppl.getSmSvTasks()**********" + svTask.getSmSvAddress().getSmAddress().getAddressId());
+				if (svTask.getSmSvAddress() != null) {
+					if(svTask.getSmSvAddress().getSmAddress() != null){
+						reqDTO.setSmAddressId(svTask.getSmSvAddress().getSmAddress().getAddressId());
+						smFacility = SmServiceLookup.getSiteVisitSO()
+								.retrieveSmFacilityByAddressId(reqDTO)
+								.getSmFacility();
+						svTask.getSmSvAddress().setFacilityName(smFacility == null ? ""
+								: smFacility.getFacilityName());
+						if(smFacility != null && smFacility.getFacilityType() != null){
+							svTask.getSmSvAddress().setFacilityType(smFacility.getFacilityType());
+						}
 					}
 				}
 			}
@@ -263,7 +288,7 @@ public class SvcSiteAssignBackingBean extends
 	 * Sort smSvAddress by facility type
 	 */
 	private void sortSmSvAddressByFacilityType(){
-		if(getManagedBean().getSmSvTask().getSmSvAddresses().size() > 0){
+		/*if(getManagedBean().getSmSvTask().getSmSvAddresses().size() > 0){
 			 Collections.sort(getManagedBean().getSmSvTask().getSmSvAddresses(), new Comparator<SmSvAddress>(){
 				@Override
 				public int compare(SmSvAddress arg0, SmSvAddress arg1) {
@@ -291,7 +316,7 @@ public class SvcSiteAssignBackingBean extends
 				    return result;
 				}
 			 });
-		}
+		}*/
 	}
 	
 	private void getWorkFlowInfo(Long applId){
@@ -318,6 +343,18 @@ public class SvcSiteAssignBackingBean extends
 				getManagedBean().setProcessingOfficerName(processingOfficer.getUserName());
 			}
 		}
-
+	}
+	
+	private void getAllCategoryCode(){
+		SmAppl smAppl = getManagedBean().getSmAppl();
+		
+		getManagedBean().setCategoryLs(new ArrayList<SmSvCategory>());
+		for(SmSvTask svTask : smAppl.getSmSvTasks()){
+			if(svTask.getSmSvCategories().size() > 0){
+				for(SmSvCategory svCategory : svTask.getSmSvCategories()){
+					getManagedBean().getCategoryLs().add(svCategory);
+				}
+			}
+		}
 	}
 }
