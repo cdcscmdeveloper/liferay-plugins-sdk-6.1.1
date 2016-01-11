@@ -127,101 +127,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	/**
-	 * sort Site visit address by site visit template
-	 *//*
-	private void populateSmSvAddresses(){
-		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
-		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-		SiteVisitResDTO resDTO = new SiteVisitResDTO();
-		getManagedBean().setSmSvFacilityMap(new HashMap<String, SmFacility>());
-		
-		Map<String, SmFacility> facilityMap = new HashMap<String,SmFacility>();
-		
-		Map<String, ArrayList<String>> categoryFacilityMap = new HashMap<String,ArrayList<String>>();
-		
-		//get facility by category
-		for(SmSvCategory category :  getManagedBean().getSmSvTask().getSmSvCategories()){
-			if(categoryFacilityMap.get(category.getPmCategoryL3().getCategoryTypeCode().getParameterCode()) == null){
-				categoryFacilityMap.put(category.getPmCategoryL3().getCategoryTypeCode().getParameterCode(), new ArrayList<String>());
-			}
-			
-			categoryFacilityMap.get(category.getPmCategoryL3().getCategoryTypeCode().getParameterCode()).add(category.getPmCategoryL3().getFacilityType());
-			
-			//categoryFacilityMap.put(category.getPmCategoryL3().getCategoryTypeCode().getParameterCode(), category.getPmCategoryL3().getFacilityType());
-		}
-		
-		getManagedBean().setSmSvAddressMap(new HashMap<String, List<SmSvAddress>>());
-		for(SmSvAddress smSvAddress : getManagedBean().getSmSvTask().getSmSvAddresses()){
-			reqDTO.setSmAddressId(smSvAddress.getSmAddress().getAddressId());
-			resDTO = reqSO.retrieveSmFacilityByAddressId(reqDTO);
-			
-			// to group the related facility by template
-			if(resDTO.getSmFacility() != null && resDTO.getSmFacilityType() != null){
-				
-				//store all facilities. use it when no matched facility
-				facilityMap.put(resDTO.getSmFacilityType(), resDTO.getSmFacility());
-				
-				for(Map.Entry<String, SmSvTemplate> svTemplate : getManagedBean().getSmSvTemplateMap().entrySet()){
-					if(getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()) == null){
-						getManagedBean().getSmSvAddressMap().put(svTemplate.getKey(), new ArrayList<SmSvAddress>());
-					}			
-					
-					//find the matched facility address and put in the MAP by template type
-					if(categoryFacilityMap.get(svTemplate.getKey()) != null){
-						
-						for(String fac : categoryFacilityMap.get(svTemplate.getKey())){
-							if(resDTO.getSmFacilityType().equalsIgnoreCase(fac)){
-								log.info("**************fac*************" + fac);
-								log.info("******Address Map******" + getManagedBean().getSmSvAddressMap().size());
-								
-								getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(smSvAddress);
-								
-								if(svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
-										svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING) || 
-										svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
-									//set the 
-									if(getManagedBean().getSmSvFacilityMap().get(svTemplate.getKey()) == null){
-										getManagedBean().getSmSvFacilityMap().put(svTemplate.getKey(), resDTO.getSmFacility());
-									}
-								}
-							}
-						}
-					}
-					
-					if(resDTO.getSmFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) || 
-							resDTO.getSmFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)){
-						int count = 0;
-						for(SmSvAddress svAddress : getManagedBean().getSmSvAddressMap().get(svTemplate.getKey())){
-							if(svAddress.getSvAddressId() == smSvAddress.getSvAddressId()){
-								count++;
-							}
-						}
-						
-						if(count < 1){
-							getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(smSvAddress);
-						}
-					}
-				
-					if(svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_BUMIPUTERA)){
-						getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(smSvAddress);
-					}
-				}
-				
-			}
-		}
-		
-	}*/
-	
-/*	*//**
-	 * @deprecated
-	 * set the selectedSvTemplate Address
-	 *//*
-	private void setSelectedSvTemplateAddresses(String templateType){
-		List<SmSvAddress> selectedAddress = getManagedBean().getSmSvAddressMap().get(templateType);
-		getManagedBean().getSmSvTask().setSmSvAddresses(selectedAddress);
-	}*/
-	
-	/**
 	 * set the selectedSmSvFacility by template type
 	 * @param templateType
 	 */
@@ -277,14 +182,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
-		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-		//reqDTO.setAppId(this.getManagedBean().getAppId());
-		reqDTO.setSvTaskId(getManagedBean().getSvTaskId());
-		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
-		SiteVisitResDTO resDTO = reqSO.retrieveSiteVisitInfoBySvTaskId(reqDTO);
+		SmSvTask svoTask = retrieveSiteVisitInfoByViewMode(viewMode);
 
-		if(resDTO.getSmSvTask() != null){
-			this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
+		if(svoTask != null){
+			this.getManagedBean().setSmSvTask(svoTask);
 			SmSvTask smSvTask = this.getManagedBean().getSmSvTask();
 			//		this.getManagedBean().getSmSvTask().getsm
 			log.info("*****this.getManagedBean().getSmSvTask().getSmSvFinChecklists().size()" + smSvTask.getSmSvFinChecklists().size());
@@ -2451,5 +2352,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			getManagedBean().getSmSvTask().getSmSvOffice().setShareWithRemark(null);
 		}
+	}
+	
+	private SmSvTask retrieveSiteVisitInfoByViewMode(String viewMode){
+		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
+		SiteVisitResDTO resDTO = new SiteVisitResDTO();
+		
+		if(viewMode.equalsIgnoreCase("V")){
+			reqDTO.setAppId(this.getManagedBean().getAppId());
+			resDTO = reqSO.retrieveSiteVisitInfoByAppId(reqDTO);
+		}else{
+			reqDTO.setSvTaskId(getManagedBean().getSvTaskId());
+			resDTO = reqSO.retrieveSiteVisitInfoBySvTaskId(reqDTO);
+		}
+		
+		return resDTO.getSmSvTask();
 	}
 }
