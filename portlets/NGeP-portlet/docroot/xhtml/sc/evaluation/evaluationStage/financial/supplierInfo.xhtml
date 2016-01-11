@@ -44,6 +44,9 @@
 
 		<ui:include
 			src="/xhtml/sc/evaluation/evaluationStage/evaluationScoring.xhtml"></ui:include>
+			<ui:param name="financialCheckListScoreType" value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+		<ui:include
+			src="financialUserScoringSchema.xhtml" />
 	</h:panelGroup>
 
 

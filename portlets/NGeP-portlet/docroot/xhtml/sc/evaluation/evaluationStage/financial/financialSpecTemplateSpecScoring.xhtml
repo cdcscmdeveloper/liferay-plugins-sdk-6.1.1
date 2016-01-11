@@ -100,6 +100,9 @@
 					</p:dataTable>
 				</p:panel>
 			</h:panelGroup>
+			<ui:param name="financialCheckListScoreType"
+				value="#{evaluationBackingBean.managedBean.userScoreSchemaType}"></ui:param>
+			<ui:include src="financialUserScoringSchema.xhtml" />
 		</h:panelGroup>
 	</ui:define>
 </ui:composition>

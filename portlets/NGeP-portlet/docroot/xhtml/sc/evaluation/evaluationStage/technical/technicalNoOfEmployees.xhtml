@@ -13,7 +13,14 @@
 			value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
 		<ui:param name="scoringPnlName"
 			value="#{lbl['lbl.sc.scoring.tot.employees']}"></ui:param>
-		<ui:include src="/xhtml/sc/evaluation/evaluationStage/evaluationScoring.xhtml"></ui:include>
+		<ui:include
+			src="/xhtml/sc/evaluation/evaluationStage/evaluationScoring.xhtml"></ui:include>
+		<ui:param name="technicalNoofContractsCheckListScoreType"
+			value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+		<ui:param name="technicalNoofYearsCheckListScoreType"
+			value="#{evaluationBackingBean.managedBean.dummyScoreType}"></ui:param>
+
+		<ui:include src="technicalUserScoringSchema.xhtml" />
 	</h:panelGroup>
 
 
