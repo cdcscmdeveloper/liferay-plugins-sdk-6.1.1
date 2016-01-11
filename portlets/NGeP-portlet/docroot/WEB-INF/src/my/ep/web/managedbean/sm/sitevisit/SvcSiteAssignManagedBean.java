@@ -10,9 +10,11 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.SmSvcAssignmentVO;
 
 import org.primefaces.model.DualListModel;
 
@@ -26,18 +28,17 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private String[] bpmAction;
 	private String taskId;
 	private SMSiteVisitDataType bpmPojo;
-	//private List<PmUser> svoUserList;
 	private DualListModel<PmUser> svoUserList;  
-	private List<PmUser> sourceSVO;
-	private List<PmUser> selectedSVO;
 	private String currDate;
-	private SmRemark smRemark;
 	private String poRmrkToSvc;
 	
 	private String processingOfficerName;
 	private String businessRegNo;
 	private String siteVisitStatus;
 	
+	private SmAppl smAppl;
+	private List<SmSvcAssignmentVO> svcTaskVOLs;
+	private List<SmSvCategory> categoryLs;
 
 	public String getPoRmrkToSvc() {
 		return poRmrkToSvc;
@@ -95,22 +96,6 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 		this.svoUserList = svoUserList;
 	}
 
-	public List<PmUser> getSourceSVO() {
-		return sourceSVO;
-	}
-
-	public void setSourceSVO(List<PmUser> sourceSVO) {
-		this.sourceSVO = sourceSVO;
-	}
-
-	public List<PmUser> getSelectedSVO() {
-		return selectedSVO;
-	}
-
-	public void setSelectedSVO(List<PmUser> selectedSVO) {
-		this.selectedSVO = selectedSVO;
-	}
-
 	public String getCurrDate() {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date();
@@ -121,14 +106,6 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 
 	public void setCurrDate(String currDate) {
 		this.currDate = currDate;
-	}
-
-	public SmRemark getSmRemark() {
-		return smRemark;
-	}
-
-	public void setSmRemark(SmRemark smRemark) {
-		this.smRemark = smRemark;
 	}
 
 	public String getProcessingOfficerName() {
@@ -153,6 +130,30 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 
 	public void setSiteVisitStatus(String siteVisitStatus) {
 		this.siteVisitStatus = siteVisitStatus;
+	}
+
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
+	}
+
+	public List<SmSvcAssignmentVO> getSvcTaskVOLs() {
+		return svcTaskVOLs;
+	}
+
+	public void setSvcTaskVOLs(List<SmSvcAssignmentVO> svcTaskVOLs) {
+		this.svcTaskVOLs = svcTaskVOLs;
+	}
+
+	public List<SmSvCategory> getCategoryLs() {
+		return categoryLs;
+	}
+
+	public void setCategoryLs(List<SmSvCategory> categoryLs) {
+		this.categoryLs = categoryLs;
 	}
 
 }

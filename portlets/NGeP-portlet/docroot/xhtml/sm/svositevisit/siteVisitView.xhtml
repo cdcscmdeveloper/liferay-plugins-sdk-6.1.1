@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.category']}" toggleable="true">
 		<p:dataTable var="cType"
-			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
 				<ui:param name="lblCategoryDesc"
@@ -47,25 +47,25 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" toggleable="true">
-		<p:dataTable var="addr"
-			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}"
+		<p:dataTable var="svTask"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			
 			<p:column headerText="#{lbl['lbl.sm.facility.facilityType']}">
-				<h:outputText  value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, addr.smAddress.smFacilities[0].facilityType)}" />
+				<h:outputText  value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svTask.smSvAddress.smAddress.smFacilities[0].facilityType)}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.address']}"
 				style="width: 50%;white-space: normal;">
 				<h:outputText
-					value="#{svoSiteVisitBackingBean.getSMFullAddress(addr.smAddress)}"
+					value="#{svoSiteVisitBackingBean.getSMFullAddress(svTask.smSvAddress.smAddress)}"
 					escape="false" style="float : left" />
 			</p:column>
 
 
 			<p:column
 				headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}">
-				<h:outputText value="#{addr.scheduleDate}">
+				<h:outputText value="#{svTask.scheduleDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>

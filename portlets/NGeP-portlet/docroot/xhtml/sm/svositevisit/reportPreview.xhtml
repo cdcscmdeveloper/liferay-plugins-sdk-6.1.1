@@ -30,7 +30,7 @@
 <!-- 	<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" /> -->
 	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}" toggleable="true">
 		<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="dtlTemplate"
-		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" var="template">
+		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate}" var="template">
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
 				#{svoSiteVisitBackingBean.getParameterDesc(template.pmParameter)}
 			</p:column>

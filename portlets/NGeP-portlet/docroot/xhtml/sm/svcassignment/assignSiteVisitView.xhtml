@@ -9,22 +9,21 @@
 
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_SiteVisit_WAR_NGePportlet').find('.portlet-title-text')
-					.html("#{lbl['lbl.sm.sitevist.header']}");
+			$('#portlet_SiteVisit_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.sitevist.header']}");
 		</script>
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<ui:remove><f:event listener="#{svcSiteAssignBackingBean.preRenderView}" type="preRenderView" /></ui:remove>
 		<ui:param name="supplierName"
-			value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smSupplier.companyName}" />
+			value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo"
-			value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.applNo}" />
+			value="#{svcSiteAssignBackingBean.managedBean.smAppl.applNo}" />
 		<ui:param name="applType"
-			value="#{svcSiteAssignBackingBean.getsupplierApplTypeDesc(svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.applType)}" />
+			value="#{svcSiteAssignBackingBean.getsupplierApplTypeDesc(svcSiteAssignBackingBean.managedBean.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100"
-			width="500">
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.sitevisit.want.proceed.qmark']}	
    			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
@@ -49,14 +48,14 @@
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.business.company.regno']}" /></td>
-				<td><h:outputText value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smSupplier.regNo}" /></td>
+				<td><h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.regNo}" /></td>
 			</tr>
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.siteassign.company.address']}" /></td>
 				<td>
 				<h:outputText escape="false"
-				value="#{svcSiteAssignBackingBean.getSMFullAddress(svcSiteAssignBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}" />
+				value="#{svcSiteAssignBackingBean.getSMFullAddress(svcSiteAssignBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}" />
 				</td>
 			</tr>
 		
@@ -67,7 +66,7 @@
 		</table>
 		
 		<p:panel header="#{lbl['lbl.sm.siteassign.catcode.req.site.visit']}">
-			<p:dataTable value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smSvCategories}" var="catApp" rowIndexVar="index">
+			<p:dataTable value="#{svcSiteAssignBackingBean.managedBean.categoryLs}" var="catApp" rowIndexVar="index">
 				<ui:param name="catCode" value="#{catApp.pmCategoryL1.categoryL1Code}#{catApp.pmCategoryL2.categoryL2Code}#{catApp.pmCategoryL3.categoryL3Code}" />
 				<p:column headerText="No.">
 					#{index + 1}
@@ -85,75 +84,66 @@
 
 		<p:panel header="#{lbl['lbl.sm.siteassign.pnl.siteassign']}">
 			<p:dataTable var="svc"
-				value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smSvAddresses}"
-				rowIndexVar="rowIndex">
+				value="#{svcSiteAssignBackingBean.managedBean.svcTaskVOLs}" rowIndexVar="rowIndex">
 				
 				<p:column headerText="#{lbl['lbl.sm.facility.type']}">
-					#{svcSiteAssignBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svc.facilityType)}
+					#{svcSiteAssignBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svc.smSvTask.smSvAddress.facilityType)}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.facility.name']}"
 					style="width: 30%;white-space: normal;">
-					#{svc.facilityName}
+ 					#{svc.smSvTask.smSvAddress.facilityName}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.address']}"
 					style="width: 40%;white-space: normal;">
 					<h:outputText
-						value="#{svcSiteAssignBackingBean.getSMFullAddress(svc.smAddress)}"
+						value="#{svcSiteAssignBackingBean.getSMFullAddress(svc.smSvTask.smSvAddress.smAddress)}"
 						escape="false" style="float : left" />
 				</p:column>
 
-
+				<ui:remove>
 				<p:column
 					headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
 					style="width: 30%;white-space: normal;">
+					<p:outputLabel value="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"></p:outputLabel>
 					<h:outputText value="*"
 						styleClass="mandatory" />&#160;&#160;
 					<p:calendar id="scheduleDateId" navigator="true" required="true"
 						label="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
-						value="#{svc.scheduleDate}"
+						value="#{svc.smSvTask.scheduleDate}"
 						mindate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						size="30" showOn="button" />
 				</p:column>
+				</ui:remove>
+				
+				<p:column headerText="Site Visit Officer(s)">
+					<h:outputText value="#{lbl['lbl.sm.siteassign.expected.visiting.date']}" />
+					<h:outputText value="*"
+						styleClass="mandatory" />&#160;&#160;
+					<p:calendar id="scheduleDateId" navigator="true" required="true"
+						label="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
+						value="#{svc.smSvTask.scheduleDate}"
+						mindate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						size="30" showOn="button" /><br />
+					<p:pickList id="pickList"
+							value="#{svc.svoUserList}"
+							var="off" itemLabel="#{off.userName}" itemValue="#{off}"
+							converter="svoListConverter" />
+				</p:column>
+				
+				<p:column width="20%">
+						<p:inputTextarea rows="8" cols="60" style="width:auto;"
+										maxlength="500" autoResize="false" id="Remark" label="#{lbl['lbl.sm.svc.remark']}"
+										value="#{svc.smSvTask.smRemark.remark}">
+										<f:validateLength maximum="500" />
+						</p:inputTextarea>
+				</p:column>
 			</p:dataTable>
 			<p:separator id="customSeparator" />
 
-			<table class="customTbl">
-				<tr>
-					<td valign="top" style="width: 15%"><p:outputLabel
-							value="#{lbl['lbl.sm.siteassign.sitevisitofficer']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td valign="top" style="width: 35%"><p:pickList id="pickList"
-							value="#{svcSiteAssignBackingBean.managedBean.svoUserList}"
-							var="off" itemLabel="#{off.userName}" itemValue="#{off}"
-							converter="svoListConverter" /></td>
-					<td colspan="2" style="width: 50%">
-						<table style="width: 100%; vertical-align: top;">
-							<tr>
-								<td valign="top" style="width: 20%; padding-bottom: 30px;"><p:outputLabel
-										value="#{lbl['lbl.sm.po.remark']}" /></td>
-								<td valign="top"><p:outputLabel
-										style="white-space: normal;" styleClass="outputLabel-view"
-										value="#{svcSiteAssignBackingBean.managedBean.poRmrkToSvc}" /></td>
-							</tr>
-							<tr>
-								<td valign="top" style="width: 20%"><p:outputLabel
-										value="#{lbl['lbl.sm.svc.remark']}" /></td>
-								<td valign="top">
-									<p:inputTextarea rows="5" cols="60" style="width:auto;"
-										maxlength="2500" autoResize="false" id="Remark" label="#{lbl['lbl.sm.svc.remark']}"
-										value="#{svcSiteAssignBackingBean.managedBean.smRemark.remark}">
-										<f:validateLength maximum="2500" />
-									</p:inputTextarea>
-									</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<br />
 		</p:panel>
 
 	</ui:define>

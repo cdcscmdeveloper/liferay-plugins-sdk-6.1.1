@@ -45,42 +45,38 @@
     	</tr>
     	-->
     	
-    	#if($svAddresses.size() > 0)
-    		#foreach($svAdd in $svAddresses)
-	    		<tr>
-			        <td width="35%"><b>Site Visit Address $velocityCount. </b></td>
-			        <td>$addressFormatter.getAddress($svAdd.smAddress)</td>
-		    	</tr>
+ 
+	    <tr>
+			 <td width="35%"><b>Site Visit Address $velocityCount. </b></td>
+			 <td>$addressFormatter.getAddress($svAddress.smAddress)</td>
+		</tr>
 		    	
-		        <tr>
-			        <td width="35%"><b>Postal Code</b></td>
-			        <td>$svAdd.smAddress.postcode</td>
-		    	</tr>
+		<tr>
+			 <td width="35%"><b>Postal Code</b></td>
+			 <td>$svAddress.smAddress.postcode</td>
+		</tr>
 		    	
-		    	<tr>
-			        <td width="35%"><b>Town/City</b></td>
-			        <td>$svAdd.smAddress.pmCity.cityName</td>
-		    	</tr>
+		<tr>
+			 <td width="35%"><b>Town/City</b></td>
+			 <td>$svAddress.smAddress.pmCity.cityName</td>
+		</tr>
 		    	
-		    	<tr>
-			        <td width="35%"><b>State</b></td>
-			        <td>$svAdd.smAddress.pmState.stateName</td>
-		    	</tr>
+		<tr>
+			 <td width="35%"><b>State</b></td>
+			 <td>$svAddress.smAddress.pmState.stateName</td>
+		 </tr>
 		    	
-		    	<tr>
-		    		<td><b>Schedule Date of Visit</b></td>
-		    		<td>$smVmUtil.formatDate($svAdd.scheduleDate)</td>
-		    	</tr>
+		 <tr>
+		    <td><b>Schedule Date of Visit</b></td>
+		    <td>$smVmUtil.formatDate($svAdd.scheduleDate)</td>
+		 </tr>
 		    	
-		    	<tr>
-	        		<td width="30%"><b>Visiting Date</b></td>
-	        		<td></td>
-    			</tr>
-		    	<tr><td><br /></td></tr>
-	    	#end
-    	#end
-    	
-    	
+		 <tr>
+	        <td width="30%"><b>Visiting Date</b></td>
+	    	 <td></td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	 
    	    <tr>
 	        <td width="35%"><b>Telephone No.</b></td>
 	        <td>$telNo</td>
