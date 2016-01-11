@@ -32,6 +32,10 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class ProcurementPlanManagedBean extends BaseManagedBean{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ProcurementPlanSearchBean planSearchBean;
 	private String filterOrgCondition;
 	private PmOrgProfile currentActiveOrg;
@@ -94,6 +98,11 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private List<SelectItem> searchOptions;
 	private String searchValue;
 	private PmOrgProfile selectedPTJ;
+	private PmOrgProfile selectedKumpulanPTJ;
+	private PmOrgProfile selectedMinistry;
+	private boolean isDisabledMinistryLov = false;
+	private boolean isDisabledKumpulanPTJLov = false;
+	private boolean isDisabledPTJLov = false;
 
 	/**
 	 * @return the epItemsB
@@ -932,6 +941,76 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 */
 	public void setSearchValue(String searchValue) {
 		this.searchValue = searchValue;
+	}
+
+	/**
+	 * @return the selectedKumpulanPTJ
+	 */
+	public PmOrgProfile getSelectedKumpulanPTJ() {
+		return selectedKumpulanPTJ;
+	}
+
+	/**
+	 * @param selectedKumpulanPTJ the selectedKumpulanPTJ to set
+	 */
+	public void setSelectedKumpulanPTJ(PmOrgProfile selectedKumpulanPTJ) {
+		this.selectedKumpulanPTJ = selectedKumpulanPTJ;
+	}
+
+	/**
+	 * @return the selectedMinistry
+	 */
+	public PmOrgProfile getSelectedMinistry() {
+		return selectedMinistry;
+	}
+
+	/**
+	 * @param selectedMinistry the selectedMinistry to set
+	 */
+	public void setSelectedMinistry(PmOrgProfile selectedMinistry) {
+		this.selectedMinistry = selectedMinistry;
+	}
+
+	/**
+	 * @return the isDisabledMinistryLov
+	 */
+	public boolean isDisabledMinistryLov() {
+		return isDisabledMinistryLov;
+	}
+
+	/**
+	 * @param isDisabledMinistryLov the isDisabledMinistryLov to set
+	 */
+	public void setDisabledMinistryLov(boolean isDisabledMinistryLov) {
+		this.isDisabledMinistryLov = isDisabledMinistryLov;
+	}
+
+	/**
+	 * @return the isDisabledKumpulanPTJLov
+	 */
+	public boolean isDisabledKumpulanPTJLov() {
+		return isDisabledKumpulanPTJLov;
+	}
+
+	/**
+	 * @param isDisabledKumpulanPTJLov the isDisabledKumpulanPTJLov to set
+	 */
+	public void setDisabledKumpulanPTJLov(boolean isDisabledKumpulanPTJLov) {
+		this.isDisabledKumpulanPTJLov = isDisabledKumpulanPTJLov;
+	}
+
+	/**
+	 * @return the isDisabledPTJLov
+	 */
+	public boolean isDisabledPTJLov() {
+		return isDisabledPTJLov;
+	}
+
+	/**
+	 * @param isDisabledPTJLov the isDisabledPTJLov to set
+	 */
+	public void setDisabledPTJLov(boolean isDisabledPTJLov) {
+		this.isDisabledPTJLov = isDisabledPTJLov;
 	}
 
 }
