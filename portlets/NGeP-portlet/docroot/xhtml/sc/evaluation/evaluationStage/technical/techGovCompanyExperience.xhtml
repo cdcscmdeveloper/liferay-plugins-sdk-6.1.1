@@ -77,5 +77,10 @@
 				</p:dataTable>
 			</p:panel>
 		</h:panelGroup>
+		<ui:param name="technicalNoofContractsCheckListScoreType" value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+	<ui:param name="technicalNoofYearsCheckListScoreType" value="#{evaluationBackingBean.managedBean.companyScoreType}"></ui:param>
+	
+<ui:include
+			src="technicalUserScoringSchema.xhtml" />
 	</h:panelGroup>
 </ui:composition>

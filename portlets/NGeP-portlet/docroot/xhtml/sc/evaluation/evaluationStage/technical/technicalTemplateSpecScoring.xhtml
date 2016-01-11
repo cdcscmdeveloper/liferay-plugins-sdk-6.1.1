@@ -12,7 +12,7 @@
 
 
 	<ui:define name="contentSection">
-<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<p:messages id="technicalEvaluationmsgId" autoUpdate="true"
@@ -29,7 +29,12 @@
 			templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
 
 
+		<ui:param name="technicalNoofContractsCheckListScoreType"
+			value="#{evaluationBackingBean.managedBean.userScoreSchemaType}"></ui:param>
+		<ui:param name="technicalNoofYearsCheckListScoreType"
+			value="#{evaluationBackingBean.managedBean.dummyScoreType}"></ui:param>
 
+		<ui:include src="technicalUserScoringSchema.xhtml" />
 
 
 	</ui:define>
