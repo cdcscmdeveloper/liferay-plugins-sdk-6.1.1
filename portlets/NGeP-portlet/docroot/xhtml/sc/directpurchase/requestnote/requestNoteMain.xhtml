@@ -26,10 +26,6 @@
 			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval}" />
 
 		<p:outputPanel id="requestNoteId">
-			<ac:gpkiPopup
-				textBeforeSign="#{requestNoteBackingBean.textBeforeSign}"
-				postSignAction="#{requestNoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
-				postCancelAction="#{requestNoteBackingBean.gpkiCancelAction}" />
 			<ui:include
 				src="/xhtml/sc/directpurchase/requestnote/requestNoteButtons.xhtml" />
 			<ui:include
@@ -54,7 +50,8 @@
 			<ui:include
 				src="/xhtml/sc/directpurchase/requestnote/justificationPopup.xhtml" />
 			<!-- Pricing PopUp -->
-			<ui:include src="/xhtml/sc/directpurchase/requestnote/pricingPopup.xhtml" />
+			<ui:include
+				src="/xhtml/sc/directpurchase/requestnote/pricingPopup.xhtml" />
 			<!-- Supplier Details PopUp -->
 			<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 		</p:outputPanel>
