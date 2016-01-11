@@ -80,7 +80,7 @@
 			<p:commandButton
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
 				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-				styleClass="ui-button" update="@([id$=loaButtonsId])"
+				styleClass="ui-button" update="@form"
 				onclick="printBtn.jq.click();"
 				actionListener="#{lOADetailBackingBean.showVerifyButton()}"
 				rendered="#{isPendingVerification}" />
