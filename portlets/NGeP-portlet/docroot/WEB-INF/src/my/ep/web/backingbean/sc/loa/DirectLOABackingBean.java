@@ -1999,13 +1999,15 @@ public class DirectLOABackingBean extends
 		renewSesionObject();
 
 		retriveLoaDetails(null);
-		this.getManagedBean().getScQt()
-				.setPmOrgProfile(ptjOrgProfileByLoginUser());
+		ScQt scQt = getManagedBean().getScQt();
+		PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
+		scQt.setPmOrgProfile(pmOrgProfile);
+		scQt.setOwnerOrgProfile(pmOrgProfile);
 		this.getManagedBean()
 				.getScLoa()
 				.getScLoiLoa()
 				.setPmOrgProfile(
-						this.getManagedBean().getScQt().getPmOrgProfile());
+						pmOrgProfile);
 		populateMinistryBasedOnLoginUser();
 		getApprovalUsers();
 		prepareSignerInfo();
