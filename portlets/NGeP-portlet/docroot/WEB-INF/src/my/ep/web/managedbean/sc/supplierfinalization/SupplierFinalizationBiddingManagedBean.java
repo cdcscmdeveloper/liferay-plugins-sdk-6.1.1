@@ -104,7 +104,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	
 	private BigDecimal estimatedCost;
 	
-	private boolean isBumiAndNonBumiCombination = false;
+	private boolean nonBumiAvailable = false;
 	
 	private int ZoneActiveIndex;
 	private MenuModel zoneMenuModel;
@@ -722,20 +722,20 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the isBumiAndNonBumiCombination
+	 * @return the nonBumiAvailable
 	 */
-	public boolean isBumiAndNonBumiCombination() {
-		return isBumiAndNonBumiCombination;
+	public boolean isNonBumiAvailable() {
+		return nonBumiAvailable;
 	}
-	
+
 	/**
-	 * @param isBumiAndNonBumiCombination 
-	 * 				the isBumiAndNonBumiCombination to set
+	 * @param nonBumiAvailable 
+	 * 				the nonBumiAvailable to set
 	 */
-	public void setBumiAndNonBumiCombination(boolean isBumiAndNonBumiCombination) {
-		this.isBumiAndNonBumiCombination = isBumiAndNonBumiCombination;
+	public void setNonBumiAvailable(boolean nonBumiAvailable) {
+		this.nonBumiAvailable = nonBumiAvailable;
 	}
-	
+
 	/**
 	 * @return the zoneActiveIndex
 	 */

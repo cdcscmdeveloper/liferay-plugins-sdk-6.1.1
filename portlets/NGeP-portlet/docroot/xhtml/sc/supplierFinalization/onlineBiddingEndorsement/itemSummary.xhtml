@@ -40,7 +40,7 @@
 		<p:dataTable id="supplierItemTbl" var="itemSupplier"
 			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
 			rows="10"
-			rowKey="#{itemSupplier.supplierId}" rowIndexVar="rowIndex" 
+			rowKey="#{itemSupplier}" rowIndexVar="rowIndex" 
 			selection="#{suppFinalBiddingBackingBean.managedBean.selectedBidItemBean}">
 			<ac:paginator for="supplierItemTbl" />
 			
@@ -79,12 +79,11 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</div>
-
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-				<h:outputText style="float: right;" rendered="#{itemSupplier.bumi and (itemSupplier.startingPrice ne itemSupplier.bidPrice) 
-																 and (not empty suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice)}" 
+				<h:outputText style="float: right;" rendered="#{itemSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable 
+																and (itemSupplier.startingPrice ne itemSupplier.bidPrice)}" 
 					value="#{suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice - 
 										suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.bidPrice)}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />

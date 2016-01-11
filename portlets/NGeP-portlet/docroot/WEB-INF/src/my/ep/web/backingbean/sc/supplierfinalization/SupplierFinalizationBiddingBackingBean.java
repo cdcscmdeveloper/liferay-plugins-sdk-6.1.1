@@ -606,10 +606,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 		BigDecimal bumiSuppLowestOfferedPrice = null;
 		BigDecimal lowestNonBumiOfferedPrice = null;
 		
+		List<BigDecimal> bumiPriceList = new ArrayList<BigDecimal>();
+		List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
+		
 		// Set lowest non-bumi offered price
 		if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
-			List<BigDecimal> bumiPriceList = new ArrayList<BigDecimal>();
-			List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
 			for (BidPackageBean packageBean : biddingPackagePriceList) {
 				SmSupplier smSupplier = packageBean.getScBidSupplier().getSmSupplier();
 				
@@ -653,9 +654,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 		getManagedBean().setBumiSuppLowestOfferedPrice(bumiSuppLowestOfferedPrice);
 		getManagedBean().setLowestNonBumiOfferedPrice(lowestNonBumiOfferedPrice);
 		
-		if (bumiSuppLowestOfferedPrice != null && 
-					lowestNonBumiOfferedPrice != null) {
-			getManagedBean().setBumiAndNonBumiCombination(true);
+		if (CollectionUtils.isNotEmpty(nonBumiPriceList)) {
+			getManagedBean().setNonBumiAvailable(true);
 		}		
 	}
 	
