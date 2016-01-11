@@ -108,6 +108,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int paymentTracking = 99;
 	public int itemIndex = 99;
 	public int settingIndex = 101;
+	public int agencyIndex = 102;
 	private int index;
 	private boolean trackingDiarySearch;
 	
@@ -793,6 +794,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
+	}
+
+	/**
+	 * @return the agencyIndex
+	 */
+	public int getAgencyIndex() {
+		return agencyIndex;
+	}
+
+	/**
+	 * @param agencyIndex the agencyIndex to set
+	 */
+	public void setAgencyIndex(int agencyIndex) {
+		this.agencyIndex = agencyIndex;
 	}
 
 	/**
