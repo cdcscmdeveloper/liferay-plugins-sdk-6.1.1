@@ -274,6 +274,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> shrHldrResdDistricts;
 	private List<SelectItem> shrHldrResdCities;
 
+	private List<SelectItem> salutationSelectItems;
+
 	private List<PmState> persnlPermStates;
 	private List<PmDistrict> persnlPermDistricts;
 	private List<PmCity> persnlPermCities;
@@ -622,6 +624,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		myCountryId = SmCommonUtil.getMyCountryId();
 		selectedGst = new SmGstSupplier();
 		companyBasicGst = new SmGstSupplier();
+		salutationSelectItems = SmCommonUtil.getSalutationItems();
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -3122,5 +3125,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSvTaskList(List<SmSvTask> svTaskList) {
 		this.svTaskList = svTaskList;
+	}
+
+	public List<SelectItem> getSalutationSelectItems() {
+		return salutationSelectItems;
+	}
+
+	public void setSalutationSelectItems(List<SelectItem> salutationSelectItems) {
+		this.salutationSelectItems = salutationSelectItems;
 	}
 }

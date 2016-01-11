@@ -111,6 +111,7 @@ import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -144,6 +145,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -2047,6 +2049,26 @@ public class SmCommonUtil {
 			countryList.add(si);
 		}
 		return countryList;
+	}
+
+	/**
+	 * Get salutation for select item drop down
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getSalutationItems() {
+		List<PmSalutation> salutationList = PmCommonUtil
+				.retrievePmSalutationList();
+		List<SelectItem> salutationSelectItems = new ArrayList<SelectItem>();
+		if (!SmCommonUtil.isCollectionEmpty(salutationList)) {
+			for (PmSalutation salutation : salutationList) {
+				SelectItem item = new SelectItem();
+				item.setLabel(salutation.getSalutationName());
+				item.setValue(salutation.getSalutationId());
+				salutationSelectItems.add(item);
+			}
+		}
+		return salutationSelectItems;
 	}
 
 	/**
