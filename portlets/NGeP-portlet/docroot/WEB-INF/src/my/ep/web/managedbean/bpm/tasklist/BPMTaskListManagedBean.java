@@ -22,6 +22,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -78,6 +79,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private String taskDescGroup;
 	
 	private Boolean claim;
+	
+	private PmStatusDesc selectedStatusDesc;
 	
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -648,6 +651,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setClaim(Boolean claim) {
 		this.claim = claim;
+	}
+
+	public PmStatusDesc getSelectedStatusDesc() {
+		return selectedStatusDesc;
+	}
+
+	public void setSelectedStatusDesc(PmStatusDesc selectedStatusDesc) {
+		this.selectedStatusDesc = selectedStatusDesc;
 	}
 	
 	
