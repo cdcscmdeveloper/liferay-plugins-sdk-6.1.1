@@ -6963,7 +6963,8 @@ public class SmApplicationBackingBean extends
 			String actionDesc = "";
 			if (res.equalsIgnoreCase("SITE_VISIT")
 					|| res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
-				SmApplicationUtil.siteVisitDataUpdate(getManagedBean());
+//				SmApplicationUtil.siteVisitDataUpdate(getManagedBean());
+				SmApplicationUtil.setSiteVisitData(getManagedBean());
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_ASSIGNMENT);
 				reqDTO.setSvTask(getManagedBean().getSvTask());
 				reqDTO.setSvTaskList(getManagedBean().getSvTaskList());
