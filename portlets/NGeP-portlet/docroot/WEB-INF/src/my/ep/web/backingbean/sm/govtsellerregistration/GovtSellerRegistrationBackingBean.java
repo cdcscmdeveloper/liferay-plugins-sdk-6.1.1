@@ -203,9 +203,17 @@ public class GovtSellerRegistrationBackingBean extends
 						}
 					}
 				} else {
-					// Unknown problem occurred. Invalid or missing data. Please
-					// contact administrator.
-					throw new EpException(MessageConst.ERROR_722505);
+					if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
+						// Selected agency already had account. Please login
+						// into ePerolehan system using existing login ID
+						// and password
+						throw new EpException(MessageConst.ERROR_722623);
+					} else {
+						// Unknown problem occurred. Invalid or missing data.
+						// Please
+						// contact administrator.
+						throw new EpException(MessageConst.ERROR_722505);
+					}
 				}
 			}
 		} else {
