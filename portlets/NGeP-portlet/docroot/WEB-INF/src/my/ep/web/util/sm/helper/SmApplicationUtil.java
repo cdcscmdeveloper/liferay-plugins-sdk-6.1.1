@@ -4813,89 +4813,89 @@ public class SmApplicationUtil {
 	 *            - SmApplicationManagedBean object
 	 */
 	public static void siteVisitDataUpdate(SmApplicationManagedBean managedBean) {
-		SmSvTask svTask = new SmSvTask();
-		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
-		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
-		svTask.setSmAppl(managedBean.getSmAppl());
-		SmSvOffice svOff = new SmSvOffice();
-		svOff.setSmSvTask(svTask);
-		svOff.setSmFacility(managedBean.getBasicCompanyFacility());
-		svTask.setSmSvOffice(svOff);
-		for (SmFacility fac : managedBean.getSelectedFactoryFacilities()) {
-			SmSvAddress facAddr = new SmSvAddress();
-			facAddr.setSmSvTask(svTask);
-			facAddr.setSmAddress(fac.getSmAddress());
-			addrList.add(facAddr);
-		}
-		for (SmSupplierBranch br : managedBean.getSelectedBranches()) {
-
-			SmSvAddress brAddr = new SmSvAddress();
-			brAddr.setSmSvTask(svTask);
-			brAddr.setSmAddress(br.getSmAddress());
-			addrList.add(brAddr);
-		}
-		for (SmAssociateCompany assoc : managedBean.getSelectedAssocCompanies()) {
-			SmSvAddress asocAddr = new SmSvAddress();
-			asocAddr.setSmSvTask(svTask);
-			asocAddr.setSmAddress(assoc.getSmAddress());
-			addrList.add(asocAddr);
-		}
-		svTask.setSmSvAddresses(addrList);
-		List<PmParameter> catParam = new ArrayList<PmParameter>();
-		for (SmSupplierCategory cat : managedBean.getSelectedCategories()) {
-			if (!catParam.contains(cat.getPmCategoryL3().getCategoryTypeCode())) {
-				catParam.add(cat.getPmCategoryL3().getCategoryTypeCode());
-
-			}
-			SmSvCategory svCat = new SmSvCategory();
-			svCat.setSmSvTask(svTask);
-			svCat.setPmCategoryL1(cat.getPmCategoryL1());
-			svCat.setPmCategoryL2(cat.getPmCategoryL2());
-			svCat.setPmCategoryL3(cat.getPmCategoryL3());
-			smSvCategories.add(svCat);
-
-		}
-		svTask.setSmSvCategories(smSvCategories);
-		List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
-		for (PmParameter param : catParam) {
-			if (param.getParameterCode().equalsIgnoreCase(
-					SupplierManagementConst.CAT_TYPE_TRANSPORTATION)
-					|| param.getParameterCode().equalsIgnoreCase(
-							SupplierManagementConst.CAT_TYPE_WORKSHOP)
-					|| param.getParameterCode().equalsIgnoreCase(
-							SupplierManagementConst.CAT_TYPE_INSURANCE)
-					|| param.getParameterCode().equalsIgnoreCase(
-							SupplierManagementConst.CAT_TYPE_DOCKYARD)
-					|| param.getParameterCode().equalsIgnoreCase(
-							SupplierManagementConst.CAT_TYPE_MANUFACTURING)
-					|| param.getParameterCode().equalsIgnoreCase(
-							SupplierManagementConst.CAT_TYPE_PRINTING)
-					|| param.getParameterCode().equalsIgnoreCase(
-							SupplierManagementConst.CAT_TYPE_TRAVEL)
-					|| param.getParameterCode()
-							.equalsIgnoreCase(
-									SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA)) {
-				SmSvTemplate temp = new SmSvTemplate();
-				temp.setPmParameter(param);
-				temp.setSmSvTask(svTask);
-				templates.add(temp);
-			}
-		}
-
-		if (managedBean.getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-			PmParameter applType = SmCommonUtil.retrieveParameterByTypeAndCode(
-					ParameterTypeConst.CATEGORY_TYPE,
-					SupplierManagementConst.CAT_TYPE_BUMIPUTERA,
-					new FacesScopes().getUserLocale().getLanguage());
-			SmSvTemplate temp = new SmSvTemplate();
-			temp.setPmParameter(applType);
-			temp.setSmSvTask(svTask);
-			templates.add(temp);
-		}
-		svTask.setSmSvTemplates(templates);
-		managedBean.setSvTaskList(new ArrayList<SmSvTask>());
-		managedBean.getSvTaskList().add(svTask);
+//		SmSvTask svTask = new SmSvTask();
+//		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
+//		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
+//		svTask.setSmAppl(managedBean.getSmAppl());
+//		SmSvOffice svOff = new SmSvOffice();
+//		svOff.setSmSvTask(svTask);
+//		svOff.setSmFacility(managedBean.getBasicCompanyFacility());
+//		svTask.setSmSvOffice(svOff);
+//		for (SmFacility fac : managedBean.getSelectedFactoryFacilities()) {
+//			SmSvAddress facAddr = new SmSvAddress();
+//			facAddr.setSmSvTask(svTask);
+//			facAddr.setSmAddress(fac.getSmAddress());
+//			addrList.add(facAddr);
+//		}
+//		for (SmSupplierBranch br : managedBean.getSelectedBranches()) {
+//
+//			SmSvAddress brAddr = new SmSvAddress();
+//			brAddr.setSmSvTask(svTask);
+//			brAddr.setSmAddress(br.getSmAddress());
+//			addrList.add(brAddr);
+//		}
+//		for (SmAssociateCompany assoc : managedBean.getSelectedAssocCompanies()) {
+//			SmSvAddress asocAddr = new SmSvAddress();
+//			asocAddr.setSmSvTask(svTask);
+//			asocAddr.setSmAddress(assoc.getSmAddress());
+//			addrList.add(asocAddr);
+//		}
+//		svTask.setSmSvAddresses(addrList);
+//		List<PmParameter> catParam = new ArrayList<PmParameter>();
+//		for (SmSupplierCategory cat : managedBean.getSelectedCategories()) {
+//			if (!catParam.contains(cat.getPmCategoryL3().getCategoryTypeCode())) {
+//				catParam.add(cat.getPmCategoryL3().getCategoryTypeCode());
+//
+//			}
+//			SmSvCategory svCat = new SmSvCategory();
+//			svCat.setSmSvTask(svTask);
+//			svCat.setPmCategoryL1(cat.getPmCategoryL1());
+//			svCat.setPmCategoryL2(cat.getPmCategoryL2());
+//			svCat.setPmCategoryL3(cat.getPmCategoryL3());
+//			smSvCategories.add(svCat);
+//
+//		}
+//		svTask.setSmSvCategories(smSvCategories);
+//		List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
+//		for (PmParameter param : catParam) {
+//			if (param.getParameterCode().equalsIgnoreCase(
+//					SupplierManagementConst.CAT_TYPE_TRANSPORTATION)
+//					|| param.getParameterCode().equalsIgnoreCase(
+//							SupplierManagementConst.CAT_TYPE_WORKSHOP)
+//					|| param.getParameterCode().equalsIgnoreCase(
+//							SupplierManagementConst.CAT_TYPE_INSURANCE)
+//					|| param.getParameterCode().equalsIgnoreCase(
+//							SupplierManagementConst.CAT_TYPE_DOCKYARD)
+//					|| param.getParameterCode().equalsIgnoreCase(
+//							SupplierManagementConst.CAT_TYPE_MANUFACTURING)
+//					|| param.getParameterCode().equalsIgnoreCase(
+//							SupplierManagementConst.CAT_TYPE_PRINTING)
+//					|| param.getParameterCode().equalsIgnoreCase(
+//							SupplierManagementConst.CAT_TYPE_TRAVEL)
+//					|| param.getParameterCode()
+//							.equalsIgnoreCase(
+//									SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA)) {
+//				SmSvTemplate temp = new SmSvTemplate();
+//				temp.setPmParameter(param);
+//				temp.setSmSvTask(svTask);
+//				templates.add(temp);
+//			}
+//		}
+//
+//		if (managedBean.getSmAppl().getApplType()
+//				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+//			PmParameter applType = SmCommonUtil.retrieveParameterByTypeAndCode(
+//					ParameterTypeConst.CATEGORY_TYPE,
+//					SupplierManagementConst.CAT_TYPE_BUMIPUTERA,
+//					new FacesScopes().getUserLocale().getLanguage());
+//			SmSvTemplate temp = new SmSvTemplate();
+//			temp.setPmParameter(applType);
+//			temp.setSmSvTask(svTask);
+//			templates.add(temp);
+//		}
+//		svTask.setSmSvTemplates(templates);
+//		managedBean.setSvTaskList(new ArrayList<SmSvTask>());
+//		managedBean.getSvTaskList().add(svTask);
 		// return updateSiteVisitTask(svTask);
 
 	}
@@ -4987,14 +4987,14 @@ public class SmApplicationUtil {
 		} else {
 			template.setPmParameter(bumiType);
 		}
-		// svTask.setSmSvTemplate(template);
+		svTask.setSmSvTemplate(template);
 	}
 
 	private static void setSmSvAddress(SmAddress addr, SmSvTask svTask) {
 		SmSvAddress smSvAddress = new SmSvAddress();
 		smSvAddress.setSmSvTask(svTask);
 		smSvAddress.setSmAddress(addr);
-		// svTask.setSmSvAddress(smSvAddress);
+		svTask.setSmSvAddress(smSvAddress);
 	}
 
 	private static void setSmSvOffice(SmApplicationManagedBean bean, SmSvTask svTask) {
