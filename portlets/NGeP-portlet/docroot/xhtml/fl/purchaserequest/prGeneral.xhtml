@@ -158,13 +158,11 @@
 				</p:inputText>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" /></td>
 			</tr>
-			<ui:remove>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
 				<td><p:calendar mode="popup" readonlyInput="true"
 						showOn="button"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
 						<p:ajax event="dateSelect"
@@ -185,7 +183,6 @@
 							listener="#{purchaseRequestBackingBean.updateDeliveryEndDate}" />
 					</p:calendar></td>
 			</tr>
-			</ui:remove>
 		</table>
 		<table>
 		<tr>
