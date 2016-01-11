@@ -30,7 +30,6 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private SMSiteVisitDataType bpmPojo;
 	private DualListModel<PmUser> svoUserList;  
 	private String currDate;
-	private String poRmrkToSvc;
 	
 	private String processingOfficerName;
 	private String businessRegNo;
@@ -39,14 +38,6 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private SmAppl smAppl;
 	private List<SmSvcAssignmentVO> svcTaskVOLs;
 	private List<SmSvCategory> categoryLs;
-
-	public String getPoRmrkToSvc() {
-		return poRmrkToSvc;
-	}
-
-	public void setPoRmrkToSvc(String poRmrkToSvc) {
-		this.poRmrkToSvc = poRmrkToSvc;
-	}
 
 	public SmSvTask getSmSvTask() {
 		return smSvTask;
