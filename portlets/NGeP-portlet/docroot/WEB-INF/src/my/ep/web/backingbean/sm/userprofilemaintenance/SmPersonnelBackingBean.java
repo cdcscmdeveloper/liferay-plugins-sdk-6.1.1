@@ -89,6 +89,7 @@ public class SmPersonnelBackingBean extends
 
 		initAuthorizedPersonnels(smSupplier);
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
+		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null);
 	}
 
