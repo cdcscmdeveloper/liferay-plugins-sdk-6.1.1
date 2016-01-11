@@ -4408,7 +4408,7 @@ public class QTDetailBackingBean extends
 									null,
 									MessageUtils
 											.getMessage(
-													MessageConst.INFO_700018,
+													MessageConst.INFO_700031,
 													new String[] {
 															getParameterDesc(
 																	ParameterTypeConst.DOCUMENT_TYPES,
