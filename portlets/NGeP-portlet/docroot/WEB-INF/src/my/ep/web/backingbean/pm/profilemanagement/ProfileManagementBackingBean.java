@@ -33,6 +33,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
@@ -89,6 +90,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -2912,6 +2914,22 @@ public class ProfileManagementBackingBean extends
 			}else if(OrganizationType.FACTORING_COMPANY.value().equals(getManagedBean().getSelectedOrgType().getParameterCode())){
 				orderBean = new SearchOrderBean("pmOrgProfile.pmFinancialOrg.finOrgName", true);
 			}else{
+				Date currentDate = new Date();
+				// Filter By -  effDate
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmOrgProfile.pmOrgValidity.effDate",
+								SearchOperator.OPERATOR_LESS_EQUAL.value(),
+								currentDate));
+
+				// Filter By -  expDate
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"pmOrgProfile.pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								currentDate), new SearchFilterBean(
+								"pmOrgProfile.pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_IS_NULL.value(), null,
+								SearchCondition.CONDITION_OR.value())));
 				orderBean = new SearchOrderBean("pmOrgProfile.pmOrgValidity.orgName", true);
 			}
 		}
