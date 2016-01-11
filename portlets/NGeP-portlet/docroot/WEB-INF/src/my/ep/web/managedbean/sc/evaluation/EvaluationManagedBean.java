@@ -478,8 +478,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int currentTime=0;
 	private boolean isComplianceReEvaluateRequired;
 	private boolean isTechnicalOrFinancialReEvaluateRequired;
-	private boolean isTechnicalUserScoringSchema;
-	private boolean isFinancialUserScoringSchema;
+	private String userScoreSchemaType;
+	private String dummyScoreType;
+	
 	
 	
 
@@ -3288,39 +3289,31 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the isTechnicalUserScoringSchema
+	 * @return the userScoreSchemaType
 	 */
-	public boolean isTechnicalUserScoringSchema() {
-		return isTechnicalUserScoringSchema;
+	public String getUserScoreSchemaType() {
+		return userScoreSchemaType;
 	}
 
 	/**
-	 * @param isTechnicalUserScoringSchema the isTechnicalUserScoringSchema to set
+	 * @param userScoreSchemaType the userScoreSchemaType to set
 	 */
-	public void setTechnicalUserScoringSchema(boolean isTechnicalUserScoringSchema) {
-		this.isTechnicalUserScoringSchema = isTechnicalUserScoringSchema;
+	public void setUserScoreSchemaType(String userScoreSchemaType) {
+		this.userScoreSchemaType = userScoreSchemaType;
 	}
 
 	/**
-	 * @return the isFinancialUserScoringSchema
+	 * @return the dummyScoreType
 	 */
-	public boolean isFinancialUserScoringSchema() {
-		return isFinancialUserScoringSchema;
+	public String getDummyScoreType() {
+		return dummyScoreType;
 	}
 
 	/**
-	 * @param isFinancialUserScoringSchema the isFinancialUserScoringSchema to set
+	 * @param dummyScoreType the dummyScoreType to set
 	 */
-	public void setFinancialUserScoringSchema(boolean isFinancialUserScoringSchema) {
-		this.isFinancialUserScoringSchema = isFinancialUserScoringSchema;
+	public void setDummyScoreType(String dummyScoreType) {
+		this.dummyScoreType = dummyScoreType;
 	}
-
-	
-
-	
-
-	
-
-	
 
 }
