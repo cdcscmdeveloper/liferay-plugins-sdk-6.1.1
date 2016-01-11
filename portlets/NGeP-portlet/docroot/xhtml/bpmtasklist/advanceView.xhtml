@@ -27,7 +27,7 @@
 
 			</tr>
 			<tr>
-				<td width="10%"><p:outputLabel value="PTJ :" /></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.ptj']} :" /></td>
 				<td width="40%"><ac:lov id="lovMinistry1"
 						lovId="PM_ORG_PROFILE" size="56" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -35,7 +35,7 @@
 						saveObject="bpmTasklistBackingBean.managedBean.selectedOrgProfileGroup"
 						conditionField="recordStatus^1|orgTypeCode.parameterId^73" /></td>
 
-				<td width="10%"></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.status']} :" /></td>
 				<td width="40%"></td>
 			</tr>
 
@@ -100,7 +100,7 @@
 			value="#{bpmTasklistBackingBean.managedBean.taskListGroupDataModel}"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
 			rowIndexVar="rowIndex" rows="10" id="taskListGroupId"
-			style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+			style="width:100%;" var="tasks" widgetVar="taskListAdvanceTableWidget">
 			<ac:paginator for="taskListGroupId"></ac:paginator>
 
 			<p:column width="5%;">
@@ -131,7 +131,7 @@
 				</p:commandLink>
 
 			</p:column>
-			<p:column width="12%;">
+			<p:column width="10%">
 				<f:facet name="header">
 					#{lbl['lbl.bpm.created.date']}
 				</f:facet>
@@ -141,7 +141,7 @@
 				</h:outputText>
 
 			</p:column>
-			<p:column width="12%;">
+			<p:column width="10%">
 				<f:facet name="header">
 					#{lbl['lbl.bpm.due.date']}
 				</f:facet>
@@ -163,7 +163,7 @@
 			</p:column>
 
 
-			<p:column width="2%">
+			<p:column width="8%">
 				<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>

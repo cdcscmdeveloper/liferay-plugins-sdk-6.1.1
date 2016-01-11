@@ -940,5 +940,23 @@ public class BPMTaskListBackingBean extends
 	
 	
 	
+	public String constructCondition(){
+		
+		
+		StringBuilder sb = new StringBuilder();
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		
+		sb.append("languageCode^"+languageCode);
+		
+		sb.append("|pmStatus.docType^");
+		sb.append("CM,CD");
+		sb.append("^9");
+		
+		System.out.println("sb.toString()"+sb.toString());
+		return sb.toString();
+	}
+	
+	
+	
 
 }
