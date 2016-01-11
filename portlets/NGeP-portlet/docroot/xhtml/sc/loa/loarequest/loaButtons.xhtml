@@ -13,64 +13,74 @@
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
 
+	<h:panelGroup rendered="#{isTrackingDairyView}">
+		<table style="width: 100%">
+			<tr>
+				<td><p:commandButton immediate="true" style="width: 71px;"
+						value="#{lbl['lbl.btn.back']}"
+						action="#{lOADetailBackingBean.backToPrevious}" /></td>
+
+				<td style="vertical-align: bottom;"><p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+						action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(lOADetailBackingBean.managedBean.dpObj)}"
+						immediate="true" /></td>
+			</tr>
+		</table>
+	</h:panelGroup>
+
 	<div class="ppRightBtn">
-		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
-			rendered="#{lOADetailBackingBean.managedBean.editFlag or isTrackingDairyView}"
-			style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
-		<ui:decorate
-			template="/WEB-INF/facelets/templates/claim_template.xhtml">
-			<ui:define name="outComeSection">
+		<h:panelGroup rendered="#{!isTrackingDairyView}">
+			<c:if test="#{empty lOADetailBackingBean.managedBean.taskId}">
 
-				<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-					style="float:right;" rendered="#{isTrackingDairyView}"
-					action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(lOADetailBackingBean.managedBean.dpObj)}"
-					immediate="true" />
+				<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+					rendered="#{lOADetailBackingBean.managedBean.editFlag}"
+					style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
+				<p:commandButton value="#{lbl['lbl.btn.save']}"
+					action="#{lOADetailBackingBean.saveAction}"
+					rendered="#{isEditableStatus}" process="@form" update="@form"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
-				<h:panelGroup id="loaButtonsId" rendered="#{!isTrackingDairyView}">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					rendered="#{isPendingSubmissionStatus}"
+					action="#{lOADetailBackingBean.submitAction}" process="@form"
+					update="@form" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
 
-					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						action="#{lOADetailBackingBean.saveAction}"
-						rendered="#{isEditableStatus}" process="@form" update="@form"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+			</c:if>
 
-					<c:choose>
-						<c:when test="#{isPendingSubmissionStatus}">
-							<p:commandButton value="#{lbl['lbl.btn.submit']}"
-								action="#{lOADetailBackingBean.submitAction}" process="@form"
-								update="@form" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" />
-						</c:when>
-						<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
-							<ui:repeat var="bpmAction"
-								value="#{lOADetailBackingBean.managedBean.outComes}">
-								<ui:param name="buttonLabel"
-									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-								<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
+			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
+				<ui:decorate
+					template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<ui:repeat var="bpmAction"
+							value="#{lOADetailBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" onstart="blockWidget.show();"
-									rendered="#{!isPendingVerification and validityDaysExpiredQt}"
-									oncomplete="blockWidget.hide();"
-									action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
-									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								rendered="#{!isPendingVerification and validityDaysExpiredQt}"
+								oncomplete="blockWidget.hide();"
+								action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+								update="#{isReject ? '@this' : '@form'}" />
 
 
-								<p:commandButton value="#{lbl['lbl.btn.verify']}"
-									styleClass="ui-button" onstart="blockWidget.show();"
-									rendered="#{isPendingVerification and validityDaysExpiredQt}"
-									oncomplete="blockWidget.hide();"
-									disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-									action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
-									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
+							<p:commandButton value="#{lbl['lbl.btn.verify']}"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								rendered="#{isPendingVerification and validityDaysExpiredQt}"
+								oncomplete="blockWidget.hide();"
+								disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
+								action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+								update="#{isReject ? '@this' : '@form'}" />
 
-							</ui:repeat>
-						</c:when>
-					</c:choose>
+						</ui:repeat>
+					</ui:define>
+				</ui:decorate>
+			</c:if>
+		</h:panelGroup>
 
-				</h:panelGroup>
-			</ui:define>
-		</ui:decorate>
 	</div>
 </ui:composition>
