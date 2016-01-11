@@ -29,7 +29,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -1254,22 +1253,19 @@ public class QTBusinessOwnerBackingBean extends
 		super.renewSesionObject();
 		this.getManagedBean().setEditable(false);
 
-		IQTDetailSO detailSO = null;
 		try {
 
 			ScQt scQt = new ScQt();
-			scQt.setPmOrgProfile(new PmOrgProfile());
+			
+			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
+			if (pmOrgProfile != null) {
+				scQt.setPmOrgProfile(pmOrgProfile);
+				scQt.setOwnerOrgProfile(pmOrgProfile);
+			}
+			
 			scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			scQt.setMinistrySpecSecrataryId(new PmUser());
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			/*
-			 * QuationTenderReqDTO quationTenderReqDTO = new
-			 * QuationTenderReqDTO();
-			 * quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			 * QuationTenderResDTO dto = detailSO
-			 * .retriveQTDetails(quationTenderReqDTO);
-			 */
+			
 			ScQtCommittee qtCommitte = new ScQtCommittee();
 			qtCommitte.setScQt(scQt);
 			setUserDetails(qtCommitte);
@@ -1318,7 +1314,6 @@ public class QTBusinessOwnerBackingBean extends
 					.handleNavigation(fc, null, QTConstants.BO_MAINTANANCE_PAGE);
 
 		} finally {
-			detailSO = null;
 		}
 	}
 
