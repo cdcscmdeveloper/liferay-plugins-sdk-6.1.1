@@ -70,9 +70,9 @@ public class SvcSiteAssignBackingBean extends
 		SiteAssignResDTO resDTO = reqSO.retrieveSiteVisitByApplId(reqDTO);
 		
 		constructSvTaskWithSVOList(resDTO.getSmAppl());	
-		if(resDTO.getSmAppl().getSmApplSectionReviews() != null){
+		/*if(resDTO.getSmAppl().getSmApplSectionReviews() != null){
 			setPoRemarkToSVC(resDTO.getSmAppl().getSmApplSectionReviews());
-		}
+		}*/
 		//this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
 		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		
@@ -81,10 +81,10 @@ public class SvcSiteAssignBackingBean extends
 		getWorkFlowInfo(getManagedBean().getAppId());
 	}
 	
-	/**
+/*	*//**
 	 * set PO Remark and populate
 	 * @param List<SmApplSectionReview> secReviews
-	 */
+	 *//*
 	public void setPoRemarkToSVC(List<SmApplSectionReview> secReviews){
 		for(SmApplSectionReview rev : secReviews){
 			if(rev.getRoleType() != null && rev.getRoleType().equalsIgnoreCase(
@@ -92,7 +92,7 @@ public class SvcSiteAssignBackingBean extends
 				getManagedBean().setPoRmrkToSvc((rev.getSitevisitRemark()!=null) ? rev.getSitevisitRemark():"");
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * Submit Site Visi Assignment
