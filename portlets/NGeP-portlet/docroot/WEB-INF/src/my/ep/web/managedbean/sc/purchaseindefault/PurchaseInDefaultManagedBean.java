@@ -15,6 +15,7 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -114,6 +115,21 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	
 	/** The tracking dairy view. */
 	private boolean trackingDairyView;
+	
+	/** The approver List by group */
+	private List<PmUser> approverList;
+	
+	/** The user group list. */
+	private List<PmUserGroup> userGroupList;
+	
+	/** The selected approver id. */
+	private Long selectedApproverId;
+	
+	/** The user group id. */
+	private Long userGroupId;
+	
+	/** The back up approvers */
+	private List<PmUser> backupApprovers;
 
 	/**
 	 * Instantiates a new purchase in default managed bean.
@@ -580,6 +596,76 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	 */
 	public void setTrackingDairyView(boolean trackingDairyView) {
 		this.trackingDairyView = trackingDairyView;
+	}
+
+	/**
+	 * @return the approverList
+	 */
+	public List<PmUser> getApproverList() {
+		return approverList;
+	}
+
+	/**
+	 * @param approverList the approverList to set
+	 */
+	public void setApproverList(List<PmUser> approverList) {
+		this.approverList = approverList;
+	}
+
+	/**
+	 * @return the userGroupList
+	 */
+	public List<PmUserGroup> getUserGroupList() {
+		return userGroupList;
+	}
+
+	/**
+	 * @param userGroupList the userGroupList to set
+	 */
+	public void setUserGroupList(List<PmUserGroup> userGroupList) {
+		this.userGroupList = userGroupList;
+	}
+
+	/**
+	 * @return the selectedApproverId
+	 */
+	public Long getSelectedApproverId() {
+		return selectedApproverId;
+	}
+
+	/**
+	 * @param selectedApproverId the selectedApproverId to set
+	 */
+	public void setSelectedApproverId(Long selectedApproverId) {
+		this.selectedApproverId = selectedApproverId;
+	}
+
+	/**
+	 * @return the userGroupId
+	 */
+	public Long getUserGroupId() {
+		return userGroupId;
+	}
+
+	/**
+	 * @param userGroupId the userGroupId to set
+	 */
+	public void setUserGroupId(Long userGroupId) {
+		this.userGroupId = userGroupId;
+	}
+
+	/**
+	 * @return the backupApprovers
+	 */
+	public List<PmUser> getBackupApprovers() {
+		return backupApprovers;
+	}
+
+	/**
+	 * @param backupApprovers the backupApprovers to set
+	 */
+	public void setBackupApprovers(List<PmUser> backupApprovers) {
+		this.backupApprovers = backupApprovers;
 	}
 	
 }

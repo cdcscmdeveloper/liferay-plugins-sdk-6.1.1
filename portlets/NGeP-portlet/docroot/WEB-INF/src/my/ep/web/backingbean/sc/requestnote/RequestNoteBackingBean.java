@@ -271,6 +271,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 	    requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 	    requestNoteReqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
+	    
+	    requestNoteReqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 	    requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
 	    Long prInqId = getManagedBean().getPrInquiryId();
@@ -457,7 +459,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			requestNoteReqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
-			
+			requestNoteReqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 			requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
 			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
@@ -732,6 +734,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					Long.valueOf(directPurchaseDataType.getPidId()));
 		}
 		
+		if(directPurchaseDataType.getPidExpiryDate() != null) {
+			getManagedBean().setTaskExpiryDate(directPurchaseDataType.getPidExpiryDate());
+		}
+		
 		requestNoteReqDTO.setRequestNoteId(dpId);
 		RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
@@ -979,6 +985,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 			requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			requestNoteReqDTO.setOutcome(outcome);
+			requestNoteReqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 			
 			requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 			
