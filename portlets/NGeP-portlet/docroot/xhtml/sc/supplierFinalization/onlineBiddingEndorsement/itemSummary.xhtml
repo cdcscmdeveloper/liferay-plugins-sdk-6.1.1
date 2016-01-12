@@ -12,7 +12,7 @@
 			value="#{suppFinalBiddingBackingBean.managedBean.biddingItemList}"
 			rows="10"
 			selection="#{suppFinalBiddingBackingBean.managedBean.selectedBiddingItem}"
-			rowKey="#{item.bidItemId}" rowIndexVar="rowIndex" style="width:100%"
+			rowKey="#{item}" rowIndexVar="rowIndex" style="width:100%"
 			selectionMode="single">
 			<ac:paginator for="itemListTbl" />
 
@@ -32,15 +32,26 @@
 													item.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.bidding.schedule.status']}">
+				<ui:param name="isCancelled" value="#{item.scBidSchedule.pmStatus.statusId 
+															== BidStatusConst.bidCancelled}"/>
+				
+				<h:outputText value="#{suppFinalBiddingBackingBean.getStatusDescById(
+												item.scBidSchedule.pmStatus.statusId)}" 
+							  style="color: red;" rendered="#{isCancelled}" />
+				<h:outputText value="#{suppFinalBiddingBackingBean.getStatusDescById(
+												item.scBidSchedule.pmStatus.statusId)}" 
+							  rendered="#{!isCancelled}" />	
+			</p:column>	
+					
 		</p:dataTable>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
-		
 		<p:dataTable id="supplierItemTbl" var="itemSupplier"
 			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
-			rows="10"
-			rowKey="#{itemSupplier}" rowIndexVar="rowIndex" 
+			rows="10" rowKey="#{itemSupplier}" rowIndexVar="rowIndex" 
 			selection="#{suppFinalBiddingBackingBean.managedBean.selectedBidItemBean}">
 			<ac:paginator for="supplierItemTbl" />
 			
@@ -98,6 +109,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
+					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
 					  disabledSelection="#{(suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
