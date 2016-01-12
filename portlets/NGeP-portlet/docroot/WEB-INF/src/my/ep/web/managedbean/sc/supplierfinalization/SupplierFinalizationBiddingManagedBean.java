@@ -127,6 +127,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private boolean zonal;
 	private boolean isItemized;
 	private boolean onlineBiddingEscalation;
+	private boolean disableSupplierSelection;
 	private int meetingActiveIndex;
 	private String committeeTabLabel;
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
@@ -1064,8 +1065,25 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 * @param onlineBiddingEscalation 
 	 * 				the onlineBiddingEscalation to set
 	 */
-	public void setOnlineBiddingEscalation(boolean onlineBiddingEscalation) {
+	public void setOnlineBiddingEscalation(
+						boolean onlineBiddingEscalation) {
 		this.onlineBiddingEscalation = onlineBiddingEscalation;
+	}
+
+	/**
+	 * @return the disableSupplierSelection
+	 */
+	public boolean isDisableSupplierSelection() {
+		return disableSupplierSelection;
+	}
+
+	/**
+	 * @param disableSupplierSelection 
+	 * 				the disableSupplierSelection to set
+	 */
+	public void setDisableSupplierSelection(
+						boolean disableSupplierSelection) {
+		this.disableSupplierSelection = disableSupplierSelection;
 	}
 
 	/**
