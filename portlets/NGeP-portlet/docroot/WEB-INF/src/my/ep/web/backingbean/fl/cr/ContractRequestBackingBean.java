@@ -29,6 +29,18 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -183,18 +195,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Contract Order
@@ -3944,6 +3944,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						today.add(Calendar.DATE, days);
 						if(today.getTime().after(expDate)) {
 							throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
+						}
+					}
+					// Unable to approve CR if no service tax flag is identified in Contract Management
+					if(getManagedBean().getFlRequest().getGstRegNo()!=null && getManagedBean().getFlRequest().getGstEffectiveDate().compareTo(DateUtils.getCurrentDateWithoutTime())>=0) {
+						// Only applicable for Procurement Type category=Service & LOA signed before 1/4/2015
+						Date gstEffDate = new Date();
+						try {
+							gstEffDate = DateUtils.convertStringToDate("dd-MM-yyyy", "01-04-2015");
+						} catch (Exception e) {
+							log.error(e);
+						}
+						if(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE) 
+							&& getManagedBean().getFlRequest().getCtContract().getLoa().getAckDate().compareTo(gstEffDate)<=0 
+							&& getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceTaxValue()==null) {
+							throw new EpException(MessageConst.ERROR_740015);
 						}
 					}
 				} else {
