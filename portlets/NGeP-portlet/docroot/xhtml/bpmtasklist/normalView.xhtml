@@ -184,6 +184,10 @@
 
 					<f:param name="taskId" value="#{tasks.taskId}" />
 				</p:commandButton>
+				
+				<h:panelGroup rendered="#{!tasks.claimed}">
+				<div style="height:30px"></div>
+				</h:panelGroup>
 
 			</p:column>
 

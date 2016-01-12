@@ -35,8 +35,13 @@
 						saveObject="bpmTasklistBackingBean.managedBean.selectedOrgProfileGroup"
 						conditionField="recordStatus^1|orgTypeCode.parameterId^73" /></td>
 
-				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.status']} :" /></td>
-				<td width="40%"></td>
+					<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.status']} :" /></td>
+				<td width="40%"><ac:lov id="lovStatusDescAdvance"
+						lovId="PM_STATUS_DESC" size="56" readonly="true"
+						headerText="#{lbl['lbl.bpm.status']}"
+						value="#{bpmTasklistBackingBean.managedBean.selectedStatusDescAdvance.statusName}"
+						saveObject="bpmTasklistBackingBean.managedBean.selectedStatusDescAdvance"
+						conditionField="recordStatus^1|#{bpmTasklistBackingBean.constructCondition()}" /></td>
 			</tr>
 
 
