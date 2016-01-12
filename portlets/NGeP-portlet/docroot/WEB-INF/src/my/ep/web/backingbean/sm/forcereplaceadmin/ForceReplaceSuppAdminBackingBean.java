@@ -210,7 +210,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 			for (SmPersonnel smPersonnel : latestActivePersonnels) {
 				if (smPersonnel.getIdentificationNo() != null
 						&& StringUtils.isNotBlank(smPersonnel
-								.getIdentificationNo())) {
+								.getIdentificationNo())
+						&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 
 					if (smPersonnel.getSmAppl() != null) {
 						// already mof
