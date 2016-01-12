@@ -642,7 +642,7 @@ public class ApprovalBackingBean extends
 		Date sampleClosingDate = scQt.getSampleClosingDate();
 		if (sampleClosingDate != null) {
 			scQt.setSampleClosingDate(DateUtils
-					.setDefaultDateTime(sampleClosingDate));
+					.setDefaultDateTime(closingDate));
 		}
 	}
 
