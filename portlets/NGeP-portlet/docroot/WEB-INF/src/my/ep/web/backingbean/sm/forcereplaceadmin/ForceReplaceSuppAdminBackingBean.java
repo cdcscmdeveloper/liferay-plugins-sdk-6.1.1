@@ -158,9 +158,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 	private void setShowOrHideEmail() {
 		getManagedBean().getReactivateBasic().setShowEmailInput(false);
 		if (getManagedBean().getNewAdmin() != null
-				&& getManagedBean().getNewAdmin().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 				&& StringUtils.isBlank(getManagedBean().getNewAdmin()
-						.getEmail())) {
+						.getEmail())
+				&& getManagedBean().getNewAdmin().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 			getManagedBean().getReactivateBasic().setShowEmailInput(true);
 		}
 	}
