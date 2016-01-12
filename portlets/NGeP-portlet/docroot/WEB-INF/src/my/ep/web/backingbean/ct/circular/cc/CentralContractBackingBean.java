@@ -76,7 +76,6 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -536,7 +535,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
-			
+			reqDTO.setUpdateAction(getManagedBean().isUpdateAction());
 			if(getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
@@ -1158,15 +1157,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			this.getManagedBean().setPmDigiSign(pmDigiSign);			
 		}
 		return saveCircular(getManagedBean().getAction());
-	}
-		
-	public String getStatusDesc(CtCircularVer circularVer) {
-		if(circularVer.getCtCircular()!= null && circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
-			return getStatusDescById(ContractStatusConst.CR_APPROVED);
-		}
-		else {
-			return getStatusDescById(circularVer.getStatus().getStatusId());
-		}
 	}
 	
 	 /**
