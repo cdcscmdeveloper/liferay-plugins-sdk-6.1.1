@@ -1,9 +1,7 @@
 package my.ep.web.backingbean.sm.personnelrequestactivation;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -11,7 +9,8 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.managedbean.sm.personnelrequestactivation.SmPersonnelRequestActivationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -19,19 +18,30 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 
 @ManagedBean(name = "smPersonnelRequestActivationBackingBean")
 @ViewScoped
-public class SmPersonnelRequestActivationBackingBean {
-	private SmSupplier smSupplier;
-	private SmPersonnel selectedExpiredActivationPersonnel;
-	private List<SmPersonnel> expiredActivationPersonnels;
+public class SmPersonnelRequestActivationBackingBean extends
+		BaseBackingBean<SmPersonnelRequestActivationManagedBean> {
 
 	/**
-	 * Initialized reactivation information
+	 * Pre-render request activation email
 	 */
-	@PostConstruct
-	public void init() {
-		smSupplier = SmApplicationUtil.getCurrentSupplier();
+	public void preRenderRequestActivation() {
+		renewSesionObject();
+		getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
 		initExpiredPersonnels();
+		getManagedBean().setTargetPage("1");
 		SmCommonUtil.setMDCUserId();
+		SmCommonUtil
+				.redirectToPage("requestActivationBasePage.xhtml", "", null);
+	}
+
+	/**
+	 * Navigate to page
+	 * 
+	 * @param String
+	 *            page
+	 */
+	public void navigateToPage(String page) {
+		getManagedBean().setTargetPage(page);
 	}
 
 	/**
@@ -44,11 +54,12 @@ public class SmPersonnelRequestActivationBackingBean {
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		reqDTO.setSmPersonnelList(new ArrayList<SmPersonnel>());
-		reqDTO.getSmPersonnelList().add(selectedExpiredActivationPersonnel);
+		reqDTO.getSmPersonnelList().add(
+				getManagedBean().getSelectedExpiredActivationPersonnel());
 		SmServiceLookup.getPersonnelSO().resendPersonnelActivationEmail(reqDTO);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/userProfileMaintenance/outputMsg",
-				MessageConst.INFO_721032,null);
+				MessageConst.INFO_721032, null);
 	}
 
 	/**
@@ -56,44 +67,21 @@ public class SmPersonnelRequestActivationBackingBean {
 	 */
 	private void initExpiredPersonnels() {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
+		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrieveExpiredPendingActivationApprovedPersonnels(reqDTO);
 		if (resDTO.getSmPersonnelList() != null
 				&& !resDTO.getSmPersonnelList().isEmpty()) {
-			expiredActivationPersonnels = resDTO.getSmPersonnelList();
+			getManagedBean().setExpiredActivationPersonnels(
+					resDTO.getSmPersonnelList());
 		} else {
-			expiredActivationPersonnels = new ArrayList<SmPersonnel>();
+			getManagedBean().setExpiredActivationPersonnels(
+					new ArrayList<SmPersonnel>());
 		}
-		SmCommonUtil.setRoleName(smSupplier.getSmAppl().getSupplierType(),
-				expiredActivationPersonnels);
+		SmCommonUtil.setRoleName(getManagedBean().getSmSupplier().getSmAppl()
+				.getSupplierType(), getManagedBean()
+				.getExpiredActivationPersonnels());
 
-	}
-
-	public List<SmPersonnel> getExpiredActivationPersonnels() {
-		return expiredActivationPersonnels;
-	}
-
-	public void setExpiredActivationPersonnels(
-			List<SmPersonnel> expiredActivationPersonnels) {
-		this.expiredActivationPersonnels = expiredActivationPersonnels;
-	}
-
-	public SmSupplier getSmSupplier() {
-		return smSupplier;
-	}
-
-	public void setSmSupplier(SmSupplier smSupplier) {
-		this.smSupplier = smSupplier;
-	}
-
-	public SmPersonnel getSelectedExpiredActivationPersonnel() {
-		return selectedExpiredActivationPersonnel;
-	}
-
-	public void setSelectedExpiredActivationPersonnel(
-			SmPersonnel selectedExpiredActivationPersonnel) {
-		this.selectedExpiredActivationPersonnel = selectedExpiredActivationPersonnel;
 	}
 
 }
