@@ -501,7 +501,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
-			
+			reqDTO.setUpdateAction(getManagedBean().isUpdateAction());
 			//gpki
 			if (this.getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
@@ -2162,19 +2162,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		return savePanelCircular(getManagedBean().getAction());
-	}
-	
-	/**
-	 * Method to retrieve current status of circular details
-	 * Return string type variable
-	 */
-	public String getStatusDesc(CtCircularVer circularVer) {
-		if(circularVer.getCtCircular() != null && circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
-			return getStatusDescById(ContractStatusConst.CR_APPROVED);
-		}
-		else {
-			return getStatusDescById(circularVer.getStatus().getStatusId());
-		}
 	}
 	
 	/**

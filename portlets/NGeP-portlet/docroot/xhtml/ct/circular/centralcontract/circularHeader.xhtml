@@ -49,7 +49,7 @@
 					<p:outputLabel value="#{lbl['lbl.ct.status']} " />
 				</td>
 				<td class="header-info-text">
-					#{centralContractBackingBean.getStatusDesc(centralContractBackingBean.managedBean.circularVer)}
+					#{centralContractBackingBean.getStatusDescById(centralContractBackingBean.managedBean.circularVer.status.statusId)}
 				</td>
 			</tr>
 		</table>
