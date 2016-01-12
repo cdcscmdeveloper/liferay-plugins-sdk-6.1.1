@@ -600,10 +600,13 @@ public class PurchaseInDefaultBackingBean extends
 			if (isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
-			} else if (isDigiSigningRequired(RoleCode.BPK_APPROVER.value())) {
+			} else if (isDigiSigningRequired(RoleCode.BPK_PCA.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
-			} else if (isDigiSigningRequired(RoleCode.CT_APPROVER.value())) {
+			} else if (isDigiSigningRequired(RoleCode.BPK_CCA.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				
+			} else if (isDigiSigningRequired(RoleCode.MIN_CONTRACT_ADMIN.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
 		} else {
@@ -1355,9 +1358,6 @@ public class PurchaseInDefaultBackingBean extends
 	 */
 	public SelectItem[] getUserGroupDropdown() {
 		SelectItem[] items = null;
-		if(getManagedBean().getPurchaseInDefault().getPmUserGroup()==null) {
-			getManagedBean().getPurchaseInDefault().setPmUserGroup(new PmUserGroup());
-		}
 		if(!CollectionUtils.isEmpty(getManagedBean().getUserGroupList())) {
 			items = new SelectItem[getManagedBean().getUserGroupList().size()];
 			int i = 0;
