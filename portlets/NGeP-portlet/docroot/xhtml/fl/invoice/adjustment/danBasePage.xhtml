@@ -58,9 +58,10 @@
 					<p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
 						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,danBackingBean.managedBean.adjustment.adjustmentId,danBackingBean.managedBean.adjustment.status.statusId)}"
-						immediate="true" />
-					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
-								action="#{flDocumentBackingBean.generateReport(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,flDocumentManagedBean.taxable)}" />
+						immediate="true" />&#160;&#160;
+					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
+						<p:fileDownload value="#{flDocumentBackingBean.generateReport(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,flDocumentManagedBean.taxable)}" />
+					</p:commandLink>
 					</td>		
 				</c:if>	
 			</tr>
