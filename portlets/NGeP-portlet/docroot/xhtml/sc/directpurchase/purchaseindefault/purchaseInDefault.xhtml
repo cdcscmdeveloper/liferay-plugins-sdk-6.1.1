@@ -467,20 +467,34 @@
 
 		<table>
 			<tr>
-				<td><p:pickList id="approver" label="#{lbl['lbl.sc.approver']}"
+				<td><h:outputText value="* "
+						styleClass="mandatory" /> <h:outputLabel
+						value="#{lbl['lbl.sc.ptj.approver.group']}" /></td>
+				<td><p:selectOneMenu style="width:300px; margin-bottom:5px;"
 						disabled="#{!isPendingSubmissionStatus}"
-						value="#{purchaseInDefaultBackingBean.managedBean.approvalUsers}"
-						var="approverUser" showTargetControls="true"
-						itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
-						converter="approverPickListConverter">
-						<f:facet name="sourceCaption">#{lbl['lbl.sc.available.approver']}</f:facet>
-						<f:facet name="targetCaption">#{lbl['lbl.sc.selected.approvers']}</f:facet>
-						<p:ajax event="transfer" partialSubmit="true" process="@this"
-							update="@this" />
-					</p:pickList></td>
-				<td
-					style="vertical-align: top; padding-right: 1px; text-align: right;">
-				</td>
+						value="#{purchaseInDefaultBackingBean.managedBean.userGroupId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<p:ajax event="change" process="@this" update="approversId"
+							listener="#{purchaseInDefaultBackingBean.userGroupChangeListener()}" />
+						<f:selectItems
+							value="#{purchaseInDefaultBackingBean.getUserGroupDropdown()}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel
+						value="#{lbl['lbl.sc.approverName']}" /></td>
+				<td><p:selectOneMenu id="approverDropdown" required="true"
+				        label="#{lbl['lbl.sc.approverName']}"
+						disabled="#{!isPendingSubmissionStatus}"
+						value="#{purchaseInDefaultBackingBean.managedBean.selectedApproverId}"
+						style="width:300px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems
+							value="#{purchaseInDefaultBackingBean.managedBean.approverList}"
+							var="user" itemLabel="#{user.userName}"
+							itemValue="#{user.userId}"/>
+							<p:ajax event="change" update="approversId" />
+					</p:selectOneMenu></td>
 			</tr>
 		</table>
 	</p:panel>
