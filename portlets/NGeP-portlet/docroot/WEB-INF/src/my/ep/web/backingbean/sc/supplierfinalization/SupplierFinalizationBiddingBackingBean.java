@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,6 +34,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -506,7 +506,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IScheduleBiddingSO.class);
 				ScheduleBiddingResDTO resDTO = scheduleBiddingSO
-						.retrieveBiddingScheduleByDocId(reqDTO);
+									.retrieveBiddingScheduleByDocId(reqDTO);
 				List<ScBidSchedule> bidScheduleList = resDTO
 						.getBidSchedules();	
 				biddingSO = BusinessDelegate.getInstance().getServiceObject(
@@ -569,18 +569,24 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	private void processPackageBidSchedules(List<ScBidSchedule> bidScheduleList, 
 						List<BidPackageBean> biddingPackagePriceList) {
+		disableSupplierSelection(false);
 		getManagedBean().setSelectedPackageBean(null);
-		
 		Map<Long,BidPackageBean> selectedPackageBeans 
 					= getManagedBean().getSelectedPackageBeans();		
 		BigDecimal estimatedCost = new BigDecimal(0);
-		if (CollectionUtils.isNotEmpty(
-				bidScheduleList.get(0).getScBidItems())) {
-			for (ScBidItem bidItem : bidScheduleList.get(0).getScBidItems()) {
-				if (bidItem.getEstimatedCost() != null) {
-					estimatedCost = estimatedCost.add(bidItem.getEstimatedCost());
-				}
+		if (CollectionUtils.isNotEmpty(bidScheduleList)) {
+			if (BidStatusConst.BID_CANCELLED.equals(
+					bidScheduleList.get(0).getPmStatus().getStatusId())) {
+				disableSupplierSelection(true);
 			}
+			if (CollectionUtils.isNotEmpty(
+					bidScheduleList.get(0).getScBidItems())) {
+				for (ScBidItem bidItem : bidScheduleList.get(0).getScBidItems()) {
+					if (bidItem.getEstimatedCost() != null) {
+						estimatedCost = estimatedCost.add(bidItem.getEstimatedCost());
+					}
+				}
+			}			
 		}
 		
 		List<ScQtEvaluationResultDtl> shortlistedSuppliers 
@@ -722,12 +728,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * 			selection event object
 	 */
 	public void selectBiddingItem(SelectEvent event) {
+		disableSupplierSelection(false);
 		getManagedBean().setSelectedBidItemBean(null);
 		getManagedBean().setLowestNonBumiOfferedPrice(null);
 		
 		IBiddingSO biddingSO = null;
 		ScBidItem bidItem = (ScBidItem) event.getObject();
 		getManagedBean().setSelectedBiddingItem(bidItem);
+		
+		if (BidStatusConst.BID_CANCELLED.equals(
+				bidItem.getScBidSchedule().getPmStatus().getStatusId())) {
+			disableSupplierSelection(true);
+		}
 		
 		boolean isZonal = getManagedBean().getScQt().isZonal();
 		List<ScQtEvaluationResultDtl> shortlistedSuppliers = null;
@@ -959,6 +971,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 				}
 			}
 		}		
+	}
+	
+	private void disableSupplierSelection(boolean disable) {
+		getManagedBean().setDisableSupplierSelection(disable);
 	}
 	
 	/**
@@ -1835,7 +1851,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 		debugLogger("submitBiddingEndorsement");
 		
 		validateBiddingSubmission();
-		
+		if (true) {
+			return;
+		}
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
 		if (StringUtils.isNotBlank(committeeType) && 
@@ -1975,10 +1993,43 @@ public class SupplierFinalizationBiddingBackingBean extends
 		ScQtFinalization scQtFinalization 
 					= getManagedBean().getScQtFinalization();
 		List<String> awardedRecommendDtlIds = new ArrayList<String>();
-		for (ScQtRecommend item 
-				: scQtFinalization.getScQtRecommends()) {
-			if (!item.isCancelled() && 
-					CollectionUtils.isNotEmpty(item.getRecommendDtls())) {
+		Map<Long,List<Long>> cancelledBidScheduleItemsMap = null;
+		IScheduleBiddingSO scheduleBiddingSO = null;
+		
+		try {
+			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+			reqDTO.setQtID(getManagedBean().getScQt().getQtId());
+			reqDTO.setBidScheduleStatusId(BidStatusConst.BID_CANCELLED);
+			
+			scheduleBiddingSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IScheduleBiddingSO.class);
+			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
+								.retrieveItemsByBidScheduleStatus(reqDTO);
+			cancelledBidScheduleItemsMap = resDTO.getItemsMap();
+		} finally {
+			scheduleBiddingSO = null;
+		}
+		
+		for (ScQtRecommend item :
+					scQtFinalization.getScQtRecommends()) {
+			boolean itemNotExistsInCancelledBidSchedule = true;
+			Long specZoneDtlId = null;
+			if (item.getTplSpecZoneDtl() == null) {
+				specZoneDtlId = 0L;
+			} else {
+				specZoneDtlId = item.getTplSpecZoneDtl().getSpecZoneId();
+			}
+			
+			if (MapUtils.isNotEmpty(cancelledBidScheduleItemsMap) && 
+					cancelledBidScheduleItemsMap.containsKey(specZoneDtlId) && 
+					cancelledBidScheduleItemsMap.get(specZoneDtlId).contains(
+								item.getRequestItem().getRequestNoteItemId())) {
+				itemNotExistsInCancelledBidSchedule = false;
+			}
+			
+			if (!item.isCancelled() && itemNotExistsInCancelledBidSchedule &&
+						CollectionUtils.isNotEmpty(item.getRecommendDtls()) ) {
 				boolean isSupplierSelected = false;
 				for (ScQtRecommendDtl recommendDtl 
 							: item.getRecommendDtls()) {
@@ -2002,6 +2053,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				}
 			}
 		}
+		
 		getManagedBean().setAwardedRecommendDtlIds(awardedRecommendDtlIds);
 	}
 

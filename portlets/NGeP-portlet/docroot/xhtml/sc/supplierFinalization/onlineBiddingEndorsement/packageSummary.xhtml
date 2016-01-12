@@ -7,8 +7,15 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true"> 
 		
+		<p:outputLabel value="#{lbl['lbl.sc.bidding.schedule.status']} : " 
+					  rendered="#{suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
+					  styleClass="leftMargin"/>
+		<h:outputText style="color:red;" value="#{lbl['lbl.sc.cancelled']}" 
+					  rendered="#{suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
+					  styleClass="leftMargin"/>
+		<br/>			  
 		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" 
 					 var="price" rowKey="#{price}" rowIndexVar="rowIndex" 
 					 selection="#{suppFinalBiddingBackingBean.managedBean.selectedPackageBean}">
@@ -90,6 +97,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
+					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}"
 					  disabledSelection="#{(suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 

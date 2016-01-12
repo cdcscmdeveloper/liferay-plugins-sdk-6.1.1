@@ -9,24 +9,34 @@
 	
 	<style type="text/css">
 		<c:if test="#{suppFinalBiddingBackingBean.managedBean.scQt.zonal}">
-			.tdWidth: { 80%; }
+			.tdWidth { 
+				width: 80%; 
+			}
+			.leftMargin {
+				float:left; 
+				margin-left:20%;"
+			}
 		</c:if>
 		<c:if test="#{!suppFinalBiddingBackingBean.managedBean.scQt.zonal}">
-			.tdWidth: { 100%; }
+			.tdWidth { 
+				width: 100%; 
+			}
+			.leftMargin {
+				float:left; 
+			}			
 		</c:if>		
 	</style>	
 	
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	
-	<h:panelGrid border="0" cellpadding="0" cellspacing="0" style="width:100%;" styleClass="header-spacing">
+	<h:panelGrid style="width:100%;" styleClass="header-spacing">
 		<h:column>
-			<p:outputLabel value="#{lbl['lbl.sc.recomend.type']}" style="float:left; margin-left:15%;"/>
-			<p:spacer width="4px"/>
+			<p:outputLabel value="#{lbl['lbl.sc.recomend.type']} : " styleClass="leftMargin" />
 			<h:outputText value="#{suppFinalBiddingBackingBean.getParameterDesc(
-									suppFinalBiddingBackingBean.managedBean.scQtFinalization.recommendedTypeId)}"/>			
+									suppFinalBiddingBackingBean.managedBean.scQtFinalization.recommendedTypeId)}" />			
 		</h:column>
 	</h:panelGrid>
-	
+
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
