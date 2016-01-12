@@ -1446,6 +1446,7 @@ public class SimpleQuoteBackingBean extends
 					.getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 
 			// ReQuote
 			reqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
@@ -2216,6 +2217,7 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 
 			// ReQuote
 			reqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
@@ -4359,6 +4361,10 @@ public class SimpleQuoteBackingBean extends
 		if (directPurchaseDataType.getPidId() != null) {
 			purchaseInDefaultId = Long.valueOf(directPurchaseDataType
 					.getPidId());
+		}
+		
+		if(directPurchaseDataType.getPidExpiryDate() != null) {
+			getManagedBean().setTaskExpiryDate(directPurchaseDataType.getPidExpiryDate());
 		}
 
 		quoteReqDTO.setQuoteId(quoteId);

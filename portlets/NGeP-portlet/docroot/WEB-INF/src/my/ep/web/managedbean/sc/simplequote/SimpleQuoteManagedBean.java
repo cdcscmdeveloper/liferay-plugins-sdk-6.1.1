@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.simplequote;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -380,6 +381,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	
 	/** The tracking dairy view. */
 	private boolean trackingDairyView;
+	
+	/** The task expiry date */
+	private Calendar taskExpiryDate;
 	
 
 	/**
@@ -2460,6 +2464,20 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setTrackingDairyView(boolean trackingDairyView) {
 		this.trackingDairyView = trackingDairyView;
+	}
+
+	/**
+	 * @return the taskExpiryDate
+	 */
+	public Calendar getTaskExpiryDate() {
+		return taskExpiryDate;
+	}
+
+	/**
+	 * @param taskExpiryDate the taskExpiryDate to set
+	 */
+	public void setTaskExpiryDate(Calendar taskExpiryDate) {
+		this.taskExpiryDate = taskExpiryDate;
 	}
 	
 }

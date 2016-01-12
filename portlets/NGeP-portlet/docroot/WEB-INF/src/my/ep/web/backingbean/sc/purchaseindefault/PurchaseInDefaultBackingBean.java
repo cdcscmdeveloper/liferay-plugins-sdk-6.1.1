@@ -1,5 +1,5 @@
 /**
- * Copyright � 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 // TODO: Auto-generated Javadoc
 package my.ep.web.backingbean.sc.purchaseindefault;
@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -26,6 +27,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -46,6 +48,8 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
@@ -56,6 +60,8 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -73,6 +79,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -82,6 +89,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -264,7 +272,8 @@ public class PurchaseInDefaultBackingBean extends
 		getManagedBean().setConditionField(sb.toString());
 		getManagedBean().setvCmSupplierItem(vCmSupplierItem);
 
-		initialInformation(scPurchaseInDefault);
+//		initialInformation(scPurchaseInDefault);
+		initializeApproverGroup();
 		scPurchaseInDefault.setCreatedBy(user.getUserId());
 
 		// by default value as cheaper price
@@ -441,6 +450,7 @@ public class PurchaseInDefaultBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+			reqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 			// reqDTO.setConditionField(getManagedBean().getConditionField());
 			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO
 					.submitPurchaseInDefault(reqDTO);
@@ -476,7 +486,7 @@ public class PurchaseInDefaultBackingBean extends
 		}
 
 		// approver validation
-		if(null == scPurchaseInDefault.getApprovalUsers() || scPurchaseInDefault.getApprovalUsers().isEmpty()){
+		if(null == scPurchaseInDefault.getApprover()){
 			throw new EpException(
 					MessageConst.ERROR_760315,
 					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
@@ -607,23 +617,27 @@ public class PurchaseInDefaultBackingBean extends
 	 *
 	 * @param purchaseInDefault the purchase in default
 	 */
-	private void formApprover(
-			ScPurchaseInDefault purchaseInDefault) {
-		List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
-		List<PmUser> selectedApprovers = getManagedBean().getApprovalUsers().getTarget();
-		if (selectedApprovers != null && selectedApprovers.size() > 0) {
-			for (PmUser pmUser : selectedApprovers) {
-				ScPIDApprovalUser approver = new ScPIDApprovalUser();
-				approver.setPmUser(pmUser);
-				approver.setPurchaseInDefault(purchaseInDefault);
-				results.add(approver);
-			}
-		}else{
-			purchaseInDefault.setApprovalUsers(null);
-		}
+	private void formApprover(ScPurchaseInDefault purchaseInDefault){
+		Long selectedApproverId = getManagedBean().getSelectedApproverId();
+		if(selectedApproverId != null) {
+			List<PmUser> backupApprovers = new ArrayList<PmUser>();
+			if(getManagedBean().getApproverList() != null) {
+				List<PmUser> approverList = getManagedBean().getApproverList();
 
-		if(!results.isEmpty()){
-			purchaseInDefault.setApprovalUsers(results);
+				for (PmUser user : approverList) {
+					if(selectedApproverId.equals(user.getUserId())){
+						ScPIDApprovalUser approver = new ScPIDApprovalUser();
+						approver.setPmUser(user);
+						approver.setPurchaseInDefault(purchaseInDefault);
+						purchaseInDefault.setApprover(user);
+					} else{
+						backupApprovers.add(user);
+					}
+				}
+			}
+			getManagedBean().setBackupApprovers(backupApprovers);
+		}  else{
+			purchaseInDefault.setApprover(null);
 		}
 	}
 
@@ -836,7 +850,7 @@ public class PurchaseInDefaultBackingBean extends
 	 * 
 	 * @param purchaseInDefault
 	 *            the purchase in default
-	 */
+	 *//*
 	public void initialInformation(ScPurchaseInDefault purchaseInDefault) {
 		DualListModel<PmUser> approvalUsers;
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
@@ -874,6 +888,40 @@ public class PurchaseInDefaultBackingBean extends
 			approvalUsers = new DualListModel<PmUser>(availableApprover,
 					selectedApprover);
 			getManagedBean().setApprovalUsers(approvalUsers);
+		}
+	}*/
+	
+	/**
+	 * Method get approver group and approver List.
+	 */
+	public void initializeApproverGroup() {
+		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+		RequestNoteResDTO resDTO = new RequestNoteResDTO();
+		try {
+			ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+			if(purchaseInDefault != null && purchaseInDefault.getPmOrgProfile() != null){
+				Long orgProfileId = purchaseInDefault.getPmOrgProfile().getOrgProfileId();
+				reqDTO.setOrgProfileId(orgProfileId);
+				resDTO = getDirectPurchaseSO().retrieveGroupListByOrgId(reqDTO);
+				if(resDTO.getUserGroupList().size()>0) {
+					getManagedBean().setUserGroupList(resDTO.getUserGroupList());
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_745070, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				if(purchaseInDefault.getPmUserGroup() != null){
+					getManagedBean().setUserGroupId(purchaseInDefault.getPmUserGroup().getUserGroupId());
+				}
+				if(purchaseInDefault.getApprover() != null){
+					getManagedBean().setSelectedApproverId(purchaseInDefault.getApprover().getUserId());
+				}
+				userGroupChangeListener();
+			}
+		} catch (Exception e) {
+			//e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
 		}
 	}
 
@@ -947,7 +995,8 @@ public class PurchaseInDefaultBackingBean extends
 				purchaseInDefault.getCurrentStatus(),
 				purchaseInDefault.getRemarks(), ScPIDRemark.class));
 
-		initialInformation(purchaseInDefault);
+//		initialInformation(purchaseInDefault);
+		initializeApproverGroup();
 		retrieveReasonDescListByCategory(Boolean.TRUE);
 		justificationTypeEvent();
 		// title checker
@@ -1013,7 +1062,8 @@ public class PurchaseInDefaultBackingBean extends
 				}
 
 				getManagedBean().setPurchaseInDefault(purchaseInDefault);
-				initialInformation(purchaseInDefault);
+//				initialInformation(purchaseInDefault);
+				initializeApproverGroup();
 				retrieveReasonDescListByCategory(true);
 				justificationTypeEvent();
 
@@ -1298,6 +1348,68 @@ public class PurchaseInDefaultBackingBean extends
 	}
 	
 	/**
+	 * Gets the user group dropdown.
+	 *
+	 * @return the user group dropdown
+	 * 
+	 */
+	public SelectItem[] getUserGroupDropdown() {
+		SelectItem[] items = null;
+		if(getManagedBean().getPurchaseInDefault().getPmUserGroup()==null) {
+			getManagedBean().getPurchaseInDefault().setPmUserGroup(new PmUserGroup());
+		}
+		if(!CollectionUtils.isEmpty(getManagedBean().getUserGroupList())) {
+			items = new SelectItem[getManagedBean().getUserGroupList().size()];
+			int i = 0;
+			for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
+				items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName().replaceAll("\\s+", " ").trim());
+			}
+		} else {
+			items = new SelectItem[0];
+		}
+		
+	    return items;
+	}
+	
+	/**
+	 * User group change listener.
+	 */
+	public void userGroupChangeListener() {
+		debugLogger("userGroupChangeListener");
+		RequestNoteResDTO resDTO = null;
+		
+		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+		Long userGroupId = getManagedBean().getUserGroupId();
+		
+		
+		if(userGroupId != null && getManagedBean().getUserGroupList() != null) {
+			for (PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
+				if(userGroupId.equals(pmUserGroup.getUserGroupId())){
+					purchaseInDefault.setPmUserGroup(pmUserGroup);
+				}
+			}
+		}
+
+		List<PmUser> approvers  = new ArrayList<PmUser>();
+		
+		if(purchaseInDefault.getPmUserGroup() != null) {
+			RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+			reqDTO.setGroupId(purchaseInDefault.getPmUserGroup().getUserGroupId());
+			reqDTO.setOrgProfileId(purchaseInDefault.getPmOrgProfile().getOrgProfileId());
+			resDTO = getDirectPurchaseSO().retrieveApproverListByGroupId(reqDTO);
+			List<PmUserGroupUser> groupUsers = resDTO.getApproverGroupUserList();
+
+			if(!CollectionUtils.isEmpty(groupUsers)) {
+				for(PmUserGroupUser groupUser : groupUsers) {
+					approvers.add(groupUser.getPmUser());
+				}
+			}
+		}
+		
+		getManagedBean().setApproverList(approvers);
+	}
+	
+	/**
 	 * Gets the faces scopes.
 	 *
 	 * @return the faces scopes
@@ -1305,5 +1417,14 @@ public class PurchaseInDefaultBackingBean extends
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
+	}
+	
+	/**
+	 * Gets the direct purchase so.
+	 *
+	 * @return the direct purchase so	
+	 */
+	private IDirectPurchaseSO getDirectPurchaseSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 	}
 }
