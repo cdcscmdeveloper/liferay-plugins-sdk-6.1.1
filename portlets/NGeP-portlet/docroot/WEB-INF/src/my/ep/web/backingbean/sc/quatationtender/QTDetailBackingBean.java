@@ -999,7 +999,7 @@ public class QTDetailBackingBean extends
 			Date sampleClosingDate = scQt.getSampleClosingDate();
 			if (sampleClosingDate != null) {
 				scQt.setSampleClosingDate(DateUtils
-						.setDefaultDateTime(sampleClosingDate));
+						.setDefaultDateTime(closingDate));
 			}
 
 			// Setting Sample Submission to qtDetails.
