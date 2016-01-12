@@ -214,18 +214,24 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 					if (smPersonnel.getSmAppl() != null) {
 						// already mof
-						if (smPersonnel.getSmAppl().getApplNo() != null
-								&& StringUtils.isNotBlank(smPersonnel
-										.getSmAppl().getApplNo())) {
-							if (smPersonnel.getEpRole().equals(
-									RoleCode.MOF_SUPPLIER_USER.value())) {
+						if (StringUtils.isNotBlank(smPersonnel.getSmAppl()
+								.getApplType())
+								&& !smPersonnel
+										.getSmAppl()
+										.getApplType()
+										.equals(SupplierManagementConst.ACC_BASIC)) {
+							if (StringUtils.isNotBlank(smPersonnel.getEpRole())
+									&& smPersonnel.getEpRole().equals(
+											RoleCode.MOF_SUPPLIER_USER.value())) {
 								getManagedBean().setHasSupplierUser(true);
 							}
 						}
 						// basic
 						else {
-							if (smPersonnel.getEpRole().equals(
-									RoleCode.BASIC_SUPPLIER_USER.value())) {
+							if (StringUtils.isNotBlank(smPersonnel.getEpRole())
+									&& smPersonnel.getEpRole().equals(
+											RoleCode.BASIC_SUPPLIER_USER
+													.value())) {
 								getManagedBean().setHasSupplierUser(true);
 							}
 						}
