@@ -111,7 +111,7 @@
 						rendered="#{!contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!='View'}"/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
-				rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
+				rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View' and contractRequestBackingBean.managedBean.flRequest.phisNo==null }"
 				update="addManualDelAddrPnl,@(.orderSummaryChange) " process="@this"
 				title="#{lbl['lbl.fl.tooltip.other.address']}"
 				oncomplete="addManualDeliveryAddr.show();" >
