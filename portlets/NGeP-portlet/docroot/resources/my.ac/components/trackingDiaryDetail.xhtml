@@ -20,6 +20,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{cc.attrs.action}" rendered="#{cc.attrs.showBackButton}" />
 			</div>
 		</div>
+		<ui:include src="trackingDiaryHeaderPage.xhtml" />
 	<p:panel header="#{cc.attrs.pannelHeaderTitle}" id="#{cc.attrs.id}" toggleable="true" >
 
 		<p:dataTable id="trackingDiaryTableID" lazy="true"  value="#{cc.attrs.dataTable}" 
