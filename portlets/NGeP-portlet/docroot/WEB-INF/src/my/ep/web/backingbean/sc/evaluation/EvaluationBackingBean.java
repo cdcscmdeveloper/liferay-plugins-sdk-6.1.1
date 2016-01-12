@@ -2618,7 +2618,7 @@ public class EvaluationBackingBean extends
 				this.getManagedBean()
 						.setEvaluationCheckListType(
 								ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
-				//retriveTemplateSpecScoring(checklist);
+				// retriveTemplateSpecScoring(checklist);
 				this.getManagedBean()
 						.setComplianceTechnicalProposalCheckListDM(
 								new ComplianceSupplierPagingDataModel(
@@ -3219,7 +3219,7 @@ public class EvaluationBackingBean extends
 						}
 					}
 				}
-				//retriveTemplateSpecScoring(checklist);
+				// retriveTemplateSpecScoring(checklist);
 				EvaluationResDTO speczone = evaluationSo
 						.retrieveFinSpecDetailsByCheckListId(specDtls);
 
@@ -3501,7 +3501,7 @@ public class EvaluationBackingBean extends
 					.equalsIgnoreCase(proposalCheckList.getScQtCheckList()
 							.getDefinationType().getParameterCode())) {
 				this.getManagedBean().setSampleItemSpecifications(null);
-				if(proposalCheckList.getScQtCheckList().isScoringReq()){
+				if (proposalCheckList.getScQtCheckList().isScoringReq()) {
 					this.getManagedBean().setUserScoreSchemaType("2");
 				}
 				this.getManagedBean().setUserScores(
@@ -4082,7 +4082,7 @@ public class EvaluationBackingBean extends
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		this.getManagedBean().setQtProposalChecklist(proposalCheckList);
 		this.getManagedBean().setCheckListType(checkListType);
-		
+
 		String proposalPage = null;
 		String evaluationPage = null;
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
@@ -4234,7 +4234,7 @@ public class EvaluationBackingBean extends
 								scoringList);
 					}
 				}
-                retriveTemplateSpecScoring(proposalCheckList.getScQtCheckList());
+				retriveTemplateSpecScoring(proposalCheckList.getScQtCheckList());
 				return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecTemplateSpecScoring.xhtml";
 			}
 
@@ -8174,6 +8174,42 @@ public class EvaluationBackingBean extends
 				generateOverallTechnicalResultPdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_USER_SCORE_SCHEMA
+					.equals(docDefinitionKey)) {
+				if (null != getManagedBean().getScQt()
+						.getTechnicalUserScoringSchemaAttachment()) {
+					filename = new StringBuilder();
+					filename.append(getManagedBean().getScQt()
+							.getTechnicalUserScoringSchemaAttachment()
+							.getFileName().replaceAll("\\s", "_"));
+					// filename.append(".pdf");
+					scQtEvaluationReportAttachment.setFileName(filename
+							.toString());
+					scQtEvaluationReportAttachment.setFilePath(getManagedBean()
+							.getScQt()
+							.getTechnicalUserScoringSchemaAttachment()
+							.getFilePath());
+				}
+				// downloadFile(scQtEvaluationReportAttachment);
+				// downloadLocalFile(scQtEvaluationReportAttachment);
+			} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_USER_SCORE_SCHEMA
+					.equals(docDefinitionKey)) {
+				if (null != getManagedBean().getScQt()
+						.getFinancialUserScoringSchemaAttachment()) {
+					filename = new StringBuilder();
+					filename.append(getManagedBean().getScQt()
+							.getFinancialUserScoringSchemaAttachment()
+							.getFileName().replaceAll("\\s", "_"));
+					// filename.append(".pdf");
+					scQtEvaluationReportAttachment.setFileName(filename
+							.toString());
+					scQtEvaluationReportAttachment.setFilePath(getManagedBean()
+							.getScQt()
+							.getFinancialUserScoringSchemaAttachment()
+							.getFilePath());
+				}
+				// downloadFile(scQtEvaluationReportAttachment);
+				// downloadLocalFile(scQtEvaluationReportAttachment);
 			}
 			scQtEvaluationReport
 					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
@@ -11143,39 +11179,36 @@ public class EvaluationBackingBean extends
 				.retrieveSupplierFinalizationForReEvaluation(supplierFinalizationReqDTO);
 		return supplierFinalizationResDTO.getScQtFinalization();
 	}
-	
-	private void retriveTemplateSpecScoring(ScQtCheckList checklist){
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.COMMON_COMPONENT,
+
+	private void retriveTemplateSpecScoring(ScQtCheckList checklist) {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		specReqDTO.setSpecMaster(checklist.getScQtDoc()
-				.getTplSpecMaster());
-		specReqDTO
-				.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+		specReqDTO.setSpecMaster(checklist.getScQtDoc().getTplSpecMaster());
+		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 		TemplateSpecResDTO resDTO = templateSpecSO
 				.getTemplateMaster(specReqDTO);
 		List<TplSpecQuestion> questions = resDTO.getSpecMaster()
 				.getTplSpecQuestions();
 		for (TplSpecQuestion specQuestion : questions) {
-			log.info("===specQuestion name===="+specQuestion.getClItem());
+			log.info("===specQuestion name====" + specQuestion.getClItem());
 			if (null != specQuestion.getScoreTypeCode()
-					&& specQuestion.getScoreTypeCode()
-							.getParameterCode().equalsIgnoreCase("U")) {
-			this.getManagedBean().setUserScoreSchemaType("2");
+					&& specQuestion.getScoreTypeCode().getParameterCode()
+							.equalsIgnoreCase("U")) {
+				this.getManagedBean().setUserScoreSchemaType("2");
 
 				break;
 			} else {
 				if (null != specQuestion.getScoreTypeCode()
-						&& specQuestion.getScoreTypeCode()
-								.getParameterCode()
+						&& specQuestion.getScoreTypeCode().getParameterCode()
 								.equalsIgnoreCase("A")) {
 
 				}
 			}
 		}
-		
+
 	}
+
 
 }
