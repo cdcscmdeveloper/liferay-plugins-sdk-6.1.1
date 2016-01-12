@@ -819,6 +819,8 @@ public class BPMTaskListBackingBean extends
 		this.getManagedBean().setDocNoGroup("");
 		this.getManagedBean().setTaskDesc("");
 		this.getManagedBean().setTaskDescGroup("");
+		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
+		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
 		//this.getManagedBean().setAssignment("ALL");
 
 		HttpServletRequest servletRequest = PortalUtil

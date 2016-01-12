@@ -81,6 +81,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private Boolean claim;
 	
 	private PmStatusDesc selectedStatusDesc;
+	private PmStatusDesc selectedStatusDescAdvance;
 	
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -659,6 +660,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setSelectedStatusDesc(PmStatusDesc selectedStatusDesc) {
 		this.selectedStatusDesc = selectedStatusDesc;
+	}
+
+	public PmStatusDesc getSelectedStatusDescAdvance() {
+		return selectedStatusDescAdvance;
+	}
+
+	public void setSelectedStatusDescAdvance(PmStatusDesc selectedStatusDescAdvance) {
+		this.selectedStatusDescAdvance = selectedStatusDescAdvance;
 	}
 	
 	
