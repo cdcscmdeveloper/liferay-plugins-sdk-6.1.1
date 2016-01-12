@@ -72,9 +72,10 @@
 					<p:commandLink 
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
 						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteId,receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId)}"
-						immediate="true" />
-						<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false" rendered="#{receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId==FulfilmentStatusCont.fnAcknowledged}"
-								action="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo,flDocumentManagedBean.taxable)}" />
+						immediate="true" />&#160;&#160;
+					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false" rendered="#{receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId==FulfilmentStatusCont.fnAcknowledged}">
+						<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo,flDocumentManagedBean.taxable)}" />
+					</p:commandLink>
 					</td>		
 				</c:if>				
 				</td>
