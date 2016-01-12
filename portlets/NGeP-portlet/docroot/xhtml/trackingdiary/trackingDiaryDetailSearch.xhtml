@@ -14,7 +14,6 @@
 		<h:outputStylesheet library="ep/css" name="ep.css" />
 	</h:head>
 	<ui:define name="contentSection">
-		<ui:include src="trackingDiaryHeaderPage.xhtml" />
 		<h:panelGroup id="trackingDiarySearchID" autoUpdate="true">
 			<ac:trackingDiaryDetail action="#{trackingDiarySearchBackingBean.backToPrev}" 
 									dataTable="#{trackingDiarySearchBackingBean.searchTrackingDiaryDataModel}"  /> 
