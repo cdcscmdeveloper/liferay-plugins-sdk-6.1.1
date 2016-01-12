@@ -771,6 +771,14 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().getSmAppl().getSmSupplierBanks());
 
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		// set company name from company basic to supplier
+		getManagedBean()
+				.getSmAppl()
+				.getSmSupplier()
+				.setCompanyName(
+						getManagedBean().getSmAppl().getSmSupplier()
+								.getSmAppl().getSmCompanyBasic()
+								.getCompanyName());
 		reqDTO.setSmSupp(getManagedBean().getSmAppl().getSmSupplier());
 		try {
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
@@ -943,16 +951,12 @@ public class GovtSellerRegistrationBackingBean extends
 
 				compBasic.setPhoneCountry(addrType.getPmAddress()
 						.getPhoneCountry());
-				compBasic.setPhoneArea(addrType.getPmAddress()
-						.getPhoneArea());
-				compBasic.setPhoneNo(addrType.getPmAddress()
-						.getPhoneNo());
-				compBasic.setFaxCountry(addrType.getPmAddress()
-						.getFaxCountry());
-				compBasic.setFaxArea(addrType.getPmAddress()
-						.getFaxArea());
-				compBasic.setFaxNo(addrType.getPmAddress()
-						.getFaxNo());
+				compBasic.setPhoneArea(addrType.getPmAddress().getPhoneArea());
+				compBasic.setPhoneNo(addrType.getPmAddress().getPhoneNo());
+				compBasic
+						.setFaxCountry(addrType.getPmAddress().getFaxCountry());
+				compBasic.setFaxArea(addrType.getPmAddress().getFaxArea());
+				compBasic.setFaxNo(addrType.getPmAddress().getFaxNo());
 			}
 		}
 		compAddr.setSmAddress(addr);
