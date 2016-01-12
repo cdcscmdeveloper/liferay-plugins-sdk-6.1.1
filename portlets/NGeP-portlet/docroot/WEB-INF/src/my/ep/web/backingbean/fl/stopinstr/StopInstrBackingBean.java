@@ -212,6 +212,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 				getManagedBean().getStopInstr().setGstDeclaredDate(gstResDTO.getSmGstSupplier().getGstDeclaredDate());
 				getManagedBean().getStopInstr().setGstRegNo(gstResDTO.getSmGstSupplier().getGstRegNo());
 			}
+			
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
@@ -345,8 +346,10 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	 *
 	 * @return true, if is fl fulfilment approver
 	 */
-	private boolean isFlFulfilmentApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
+	
+	public boolean isFlFulfilmentApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	
 	/**
