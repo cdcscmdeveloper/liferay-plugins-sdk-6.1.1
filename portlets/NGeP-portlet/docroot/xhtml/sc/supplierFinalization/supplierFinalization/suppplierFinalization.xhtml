@@ -11,16 +11,15 @@
 			float: left;
 			vertical-align: bottom;
 		}
-		
 		.label .ui-outputlabel { 
 			text-align: left; 
 		}
 		
 		<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.zonal}">
-			.tdWidth: { 80%; }
+			.tdWidth { width: 80%; }
 		</c:if>
 		<c:if test="#{!suppFinalizationBackingBean.managedBean.scQt.zonal}">
-			.tdWidth: { 100%; }
+			.tdWidth { width: 100%; }
 		</c:if>		
 	</style>
 
