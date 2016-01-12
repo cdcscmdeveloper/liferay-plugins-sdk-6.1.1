@@ -1851,9 +1851,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		debugLogger("submitBiddingEndorsement");
 		
 		validateBiddingSubmission();
-		if (true) {
-			return;
-		}
+		
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
 		if (StringUtils.isNotBlank(committeeType) && 
