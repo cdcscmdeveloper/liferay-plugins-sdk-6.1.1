@@ -92,6 +92,7 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	public void preRenderGovtSellerMaintenance() {
 		renewSesionObject();
+		SmCommonUtil.setMDCUserId();
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier()
 				.getSupplierId());
