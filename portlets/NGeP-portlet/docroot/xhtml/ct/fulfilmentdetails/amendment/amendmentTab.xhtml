@@ -88,15 +88,17 @@
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq null}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'AD')}" update=":form" />
 	
+	 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()"  oncomplete="blockWidget.hide()" 
+		    rendered="#{(amendmentBackingBean.managedBean.ackFA eq null and ctBackingBean.managedBean.contractVer.ctContract.zonalPricing and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
+		   ctBackingBean.managedBean.contractVer.ctAmendment. itemPriceChange)) or (amendmentBackingBean.managedBean.ackFA eq null and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and ctBackingBean.managedBean.contractVer.ctContract.zonalPricing)}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
+		
+	 
 	    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.agency']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and amendmentBackingBean.managedBean.ackFA eq null}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'AG')}" update=":form" />
 	      
-		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()"  oncomplete="blockWidget.hide()" 
-		    rendered="#{(amendmentBackingBean.managedBean.ackFA eq null and ctBackingBean.managedBean.contractVer.ctContract.zonalPricing and (ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
-		   ctBackingBean.managedBean.contractVer.ctAmendment. itemPriceChange)) or (amendmentBackingBean.managedBean.ackFA eq null and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and ctBackingBean.managedBean.contractVer.ctContract.zonalPricing)}"
-			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
 			 
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -187,13 +189,15 @@
 					<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 				</p:outputPanel>
 				
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.zone'] }">
+					<ui:include src="/xhtml/ct/common/zone.xhtml" />
+				</p:outputPanel>
+				
+				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.agency'] }">
 					<ui:include src="/xhtml/ct/common/agency.xhtml" />
 				</p:outputPanel>
 	
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.zone'] }">
-					<ui:include src="/xhtml/ct/common/zone.xhtml" />
-				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.item'] }">
 					<ui:include src="item.xhtml" />

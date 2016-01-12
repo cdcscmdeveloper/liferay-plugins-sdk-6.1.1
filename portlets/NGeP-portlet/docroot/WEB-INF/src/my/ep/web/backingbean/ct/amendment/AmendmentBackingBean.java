@@ -1617,18 +1617,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 		if (getManagedBean().getAckFA() == null) {
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
-				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAgency);
-			}
-			
-			if (ctBackingBean.getManagedBean().getContractVer() != null && ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
+		
+			if (ctBackingBean.getManagedBean().getContractVer() != null 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
 					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())) {
-				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithZone);
-				}
-				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);
-			}
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())) {
+				   
+				           if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+					            getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithZone);
+				          
+				           } if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+								getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAgency);
+						   }
+				   getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);
+			  }
 			
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuDeduction);
@@ -1750,21 +1753,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    	} 
 	  /*Menu for other started*/
 		 else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
-			 if (outputValue.equalsIgnoreCase("AG")) {
-	 	       		getManagedBean().setSelectedTabIndex(2);
-	        	}
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-				if (outputValue.equalsIgnoreCase("ZO")) {
-	 	       		getManagedBean().setSelectedTabIndex(3);
-	        	}
-				  if (outputValue.equalsIgnoreCase("IT")) {
+			   if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+				   if (outputValue.equalsIgnoreCase("ZO")) {
+	 	       	     	getManagedBean().setSelectedTabIndex(2);
+	           	   } else if (outputValue.equalsIgnoreCase("AG")) {
+	 	       		   getManagedBean().setSelectedTabIndex(3);
+	        	   } else if (outputValue.equalsIgnoreCase("IT")) {
 		        		getManagedBean().setSelectedTabIndex(4);
-		        	}
-		 	  	} else if(outputValue.equalsIgnoreCase("IT")) {
-		 	  		getManagedBean().setSelectedTabIndex(3);
+		           }
+		 	  	} else {
+		 	  		if (outputValue.equalsIgnoreCase("AG")) {
+		 	       		   getManagedBean().setSelectedTabIndex(2);
+		 	  		}else if(outputValue.equalsIgnoreCase("IT")) {
+		 	  		     getManagedBean().setSelectedTabIndex(3);
+		 	  	    }
 		 	  	}
-			
-			if (outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
+			   if (outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 		  		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
 		  			getManagedBean().setSelectedTabIndex(5);
 		  		} else {
