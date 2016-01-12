@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.requestnote;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -290,6 +291,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The tracking dairy view. */
 	private boolean trackingDairyView;
+	
+	/** The task expiry date */
+	private Calendar taskExpiryDate;
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1724,6 +1728,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setTrackingDairyView(boolean trackingDairyView) {
 		this.trackingDairyView = trackingDairyView;
+	}
+
+	/**
+	 * @return the taskExpiryDate
+	 */
+	public Calendar getTaskExpiryDate() {
+		return taskExpiryDate;
+	}
+
+	/**
+	 * @param taskExpiryDate the taskExpiryDate to set
+	 */
+	public void setTaskExpiryDate(Calendar taskExpiryDate) {
+		this.taskExpiryDate = taskExpiryDate;
 	}
 	
 }
