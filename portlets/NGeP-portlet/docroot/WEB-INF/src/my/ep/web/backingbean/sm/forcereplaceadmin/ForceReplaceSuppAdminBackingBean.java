@@ -128,7 +128,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().setAgreeTnc(false);
 		getManagedBean().setExistingUser(false);
 		getManagedBean().getReactivateBasic().setShowEmailInput(false);
-		getManagedBean().getReactivateBasic().setEmail(null);
 		getManagedBean().setNewAdmin(null);
 		getManagedBean().setOldAdmin(null);
 		return "forceReplaceAdmin.xhtml";
@@ -183,9 +182,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-		reqDTO.setEmail(getManagedBean().getReactivateBasic()
-				.isShowEmailInput() ? getManagedBean().getReactivateBasic()
-				.getEmail() : null);
 		return reqDTO;
 	}
 

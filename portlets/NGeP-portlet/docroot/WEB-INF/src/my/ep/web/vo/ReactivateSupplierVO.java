@@ -10,7 +10,6 @@ public class ReactivateSupplierVO implements Serializable {
 	private static final long serialVersionUID = 2425257792270440147L;
 	private String identificationNo;
 	private Long identificationType;
-	private String email;
 	private Date establishDate;
 	private String regNo;
 	private String newName;
@@ -24,14 +23,6 @@ public class ReactivateSupplierVO implements Serializable {
 
 	public void setIdentificationNo(String identificationNo) {
 		this.identificationNo = identificationNo;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public Date getEstablishDate() {
