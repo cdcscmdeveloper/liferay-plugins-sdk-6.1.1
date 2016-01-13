@@ -4880,7 +4880,7 @@ public class SmApplicationUtil {
 
 		// SmSvCategories
 		setSmSvCategories(svTask, facVO.getSuppCategories());
-		
+
 		bean.getSmAppl().getSmSvTasks().add(svTask);
 		bean.getSvTaskList().add(svTask);
 	}
@@ -4904,7 +4904,8 @@ public class SmApplicationUtil {
 		svTask.setSmSvAddress(smSvAddress);
 	}
 
-	private static void setSmSvOffice(SmApplicationManagedBean bean, SmSvTask svTask) {
+	private static void setSmSvOffice(SmApplicationManagedBean bean,
+			SmSvTask svTask) {
 		SmSvOffice svOff = new SmSvOffice();
 		svOff.setSmSvTask(svTask);
 		svOff.setSmFacility(bean.getBasicCompanyFacility());
@@ -5331,7 +5332,11 @@ public class SmApplicationUtil {
 					if (facVO.getFacilities() == null) {
 						facVO.setFacilities(new ArrayList<SmFacility>());
 					}
-					facVO.getFacilities().add(hq);
+					if (SmCommonUtil.getObjectByPropertiesFromList(hq,
+							facVO.getFacilities(),
+							new String[] { "facilityId" }, null) == null) {
+						facVO.getFacilities().add(hq);
+					}
 					facVO.setAssocCompanies(bean.getSmAppl()
 							.getSmAssociateCompanies());
 					facVO.setSuppBranches(bean.getSmAppl()
