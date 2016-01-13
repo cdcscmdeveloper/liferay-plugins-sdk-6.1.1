@@ -76,7 +76,7 @@
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 130px;" rowspan="4" valign="top"><p:outputLabel
+				<td style="width: 150px;" rowspan="4" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td style="width: 350px;" rowspan="4"><p:inputTextarea
 						id="delAddrText1" cols="55" rows="7" maxlength="500"
@@ -84,7 +84,7 @@
 						autoResize="false"
 						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.pmAddress)}" />
 				</td>
-				<td style="width: 180px;"><p:outputLabel
+				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.fl.frn.dl.ordered.date']}" /></td>
 
 				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.createdDate}">
