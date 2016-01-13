@@ -214,6 +214,7 @@ BaseBackingBean<DpTrackingDiaryManagedBean> {
 	 * @return the string
 	 */
 	public void goToTrackingDiarySearch(Object[] dpObj) {
+		log.info("goToTrackingDiarySearch");
 		getManagedBean().setDpObj(dpObj);
 		searchTrackingDiaryDataModel.reloadData();
 		FacesContext fc = FacesContext.getCurrentInstance();
