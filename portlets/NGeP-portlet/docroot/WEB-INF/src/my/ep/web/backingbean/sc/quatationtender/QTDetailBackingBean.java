@@ -1957,6 +1957,7 @@ public class QTDetailBackingBean extends
 					qt.setScQtSampleSubmission(this.getManagedBean()
 							.getScQtSampleSubmissionList());
 					qt.setClosingDate(getManagedBean().getQt().getClosingDate());
+					qt.setSampleClosingDate(qt.getClosingDate());
 				} else {
 					retrieveScheduleTabDtl();
 					qt.setClosingDate(getManagedBean().getQt().getClosingDate());
