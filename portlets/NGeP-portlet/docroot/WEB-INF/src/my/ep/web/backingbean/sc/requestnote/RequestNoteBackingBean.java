@@ -78,7 +78,6 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -185,6 +184,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 *  to search request note and for the page nation.
 	 */
 	public void searchAction(){
+		debugLogger("searchAction");
 		getManagedBean().getReqNoteDataModel().reloadData();
 	}
 	
@@ -210,6 +210,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return the string
 	 */
 	public void viewRequestNote(long requestNoteId) {
+		debugLogger("viewRequestNote");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNoteId(requestNoteId);
 		RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
@@ -233,6 +234,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return the string
 	 */
 	public String saveAction(String outcome) {
+		debugLogger("saveAction");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		String [] outcomes = getManagedBean().getOutComes();
@@ -331,6 +333,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNote the request note
 	 */
 	private void reloadRequestNote(ScRequestNote requestNote){
+		debugLogger("reloadRequestNote");
 		getManagedBean().setRequestNote(requestNote);
 		boolean itemSearchBackBtn = Boolean.TRUE;	
 		getManagedBean().setAutoUpdate(true);
@@ -506,6 +509,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * show alert only but allow to proceed with submission of Request note.
 	 */
 	public void submitAction(String outcome) {
+		debugLogger("submitAction");
 		getManagedBean().setAction(outcome);
 		boolean isDeliveryTermPrompt = Boolean.FALSE;
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
@@ -717,6 +721,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return void
 	 */
 	public void preRenderView() {
+		debugLogger("preRenderView");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
 		Long dpId = null;
@@ -759,37 +764,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// page nav. to common request note
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
 	}
-	
-	/**
-	 * Request note view.
-	 * 
-	 * @param requestNoteId
-	 *            the request note id
-	 */
-	/*
-	 * public void requestNoteView(Long requestNoteId) { RequestNoteReqDTO
-	 * requestNoteReqDTO = new RequestNoteReqDTO(); ScRequestNote requestNote =
-	 * null; getManagedBean().setViewOnly(true);
-	 * requestNoteReqDTO.setRequestNoteId(requestNoteId); RequestNoteResDTO
-	 * requestNoteResDTO =
-	 * getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
-	 * if(requestNoteResDTO.getRequestNoteDetail() != null){ requestNote =
-	 * requestNoteResDTO.getRequestNoteDetail(); }
-	 * 
-	 * if(requestNote != null){ if (requestNote.getScRNZone() != null) {
-	 * getManagedBean().setScRNZone(requestNote.getScRNZone()); } else {
-	 * getManagedBean().setScRNZone(new ScRNZone()); }
-	 * 
-	 * retrieveRequestNoteDetails(requestNote,requestNote.getCurrentStatus().
-	 * getPmStatus().getStatusId(), false); } // title checker
-	 * getManagedBean().setTitleChecker(Boolean.FALSE); FacesContext fc =
-	 * FacesContext.getCurrentInstance();
-	 * getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-	 * 
-	 * // page nav. to common request note
-	 * fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
-	 * REQUEST_NOTE_PAGE); }
-	 */
 
 	/**
 	 * Retrieve request note details.
@@ -955,7 +929,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				ScRequestNoteRemark.class));
 
 		initializeApproverGroup();
-//		initialInformation(requestNote);
+       //initialInformation(requestNote);
 	}
 
 	/**
@@ -1397,93 +1371,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		return result;
 	}
-	
-	/*
-	 * private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
-	 * IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO)
-	 * BusinessDelegate
-	 * .getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
-	 * IZoneMaintenanceSO.class); ZoneMaintenanceReqDTO reqDTO = new
-	 * ZoneMaintenanceReqDTO(); TplSpecZoneDtl specZoneDtl = null;
-	 * if(supplierZone != null && supplierZone.getSuppZoneId() >0) {
-	 * 
-	 * reqDTO.setCmSupplierZoneId(supplierZone.getSuppZoneId());
-	 * ZoneMaintenanceResDTO resDTO =
-	 * zoneMaintenanceSO.getSupplierZoneById(reqDTO); CmSupplierZone
-	 * CmSupplierZone = resDTO.getSelectedCmSupplierZone();
-	 * 
-	 * if(CmSupplierZone.getCmSupplierZoneDtls() != null &&
-	 * CmSupplierZone.getCmSupplierZoneDtls().size()>0) {
-	 * 
-	 * Map<String, TplSpecZoneDtl> zoneDtlMap =
-	 * getManagedBean().getZoneDtlMap(); StringBuilder zoneKey = new
-	 * StringBuilder(); String suppZoneName = CmSupplierZone.getSuppZoneName();
-	 * ScRequestNote scRequestNote = getManagedBean().getRequestNote();
-	 * 
-	 * zoneKey.append(CmSupplierZone.getSuppZoneId());
-	 * zoneKey.append(ZONE_SEPARATOR); zoneKey.append(suppZoneName);
-	 * 
-	 * if (zoneDtlMap == null) { zoneDtlMap = new HashMap<String,
-	 * TplSpecZoneDtl>();
-	 * 
-	 * if (!scRequestNote.isBrandNew()) { putDBSpecZoneDtlsIntoMap(zoneDtlMap);
-	 * }
-	 * 
-	 * getManagedBean().setZoneDtlMap(zoneDtlMap); }
-	 * 
-	 * specZoneDtl = zoneDtlMap.get(zoneKey.toString());
-	 * 
-	 * if (specZoneDtl == null) { specZoneDtl = new TplSpecZoneDtl();
-	 * specZoneDtl.setZoneName(suppZoneName);
-	 * specZoneDtl.setSupplierZone(CmSupplierZone);
-	 * 
-	 * ScRNZone zone = getManagedBean().getScRNZone();
-	 * 
-	 * if (zone.isBrandNew()) { zone.setScRequestNote(scRequestNote);
-	 * scRequestNote.setScRNZone(zone); } specZoneDtl.setTplSpecZone(zone);
-	 * 
-	 * List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
-	 * for(CmSupplierZoneDTL zoneDtl : CmSupplierZone.getCmSupplierZoneDtls()) {
-	 * TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-	 * specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
-	 * specZoneLoc.setPmState(zoneDtl.getPmState());
-	 * specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
-	 * specZoneLoc.setTplSpecZoneDtl(specZoneDtl); zoneLocs.add(specZoneLoc); }
-	 * specZoneDtl.setTplSpecZoneLocs(zoneLocs);
-	 * 
-	 * zoneDtlMap.put(zoneKey.toString(), specZoneDtl); }
-	 * 
-	 * } } return specZoneDtl; }
-	 * 
-	 * private void putDBSpecZoneDtlsIntoMap(Map<String, TplSpecZoneDtl>
-	 * zoneDtlMap) { ISpecZoneLocSO specZoneLocSO = null;
-	 * 
-	 * try { specZoneLocSO =
-	 * BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst
-	 * .COMMON_COMPONENT, ISpecZoneLocSO.class);
-	 * 
-	 * ScRNZone zone = getManagedBean().getScRNZone();
-	 * 
-	 * SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
-	 * reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
-	 * reqDTO.setDocId(zone.getDocId()); //reqDTO.setDocId(3391L);
-	 * SpecZoneLocResDTO resDTO =
-	 * specZoneLocSO.retrieveZoneDtlListByDocIdNType(reqDTO);
-	 * 
-	 * StringBuilder dbZoneKey = null; List<TplSpecZoneDtl> dbSpecZoneDtls =
-	 * resDTO.getZonesList();
-	 * 
-	 * for (TplSpecZoneDtl dbSpecZoneDtl : dbSpecZoneDtls) { dbZoneKey = new
-	 * StringBuilder();
-	 * dbZoneKey.append(dbSpecZoneDtl.getSupplierZone().getSuppZoneId());
-	 * dbZoneKey.append(ZONE_SEPARATOR);
-	 * dbZoneKey.append(dbSpecZoneDtl.getZoneName());
-	 * 
-	 * zoneDtlMap.put(dbZoneKey.toString(), dbSpecZoneDtl); } } finally {
-	 * specZoneLocSO = null; }
-	 * 
-	 * }
-	 */
 
 	/**
 	 * Gets the price type drop list values.
@@ -1831,7 +1718,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		initializeApproverGroup();
 		
-//		initialInformation(requestNote);
+       //initialInformation(requestNote);
 		getManagedBean().setRequestNote(requestNote);
 	
 		try {
