@@ -36,12 +36,13 @@
 			<br />
 			
 			<table>
-				<tr>
-					<td colspan="2">
-						<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email.msg']}" 
-							styleClass="instruction" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}"/>
-					</td>
-				</tr>
+				<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
+					<tr>
+						<td colspan="2">
+							<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email.msg']}" styleClass="instruction" />
+						</td>
+					</tr>
+				</p:outputPanel>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" styleClass="outputLabel-view-label"/></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.name}" /></td>
