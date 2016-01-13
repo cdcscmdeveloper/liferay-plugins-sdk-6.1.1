@@ -7,7 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:param name="isRequire" value="#{!qTDetailBB.isAuditor()}"></ui:param>
-	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true"
+		id="scheduleDetalsPublishingClosing">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 235px;"><p:outputLabel
@@ -27,7 +28,7 @@
 										maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}">
 										<p:ajax event="dateSelect" process="@this"
 											listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate()}"
-											update="proposalvalidityid, closingDate, publishId,sampleclsdate" />
+											update="proposalvalidityid, closingDate, publishId,scheduleDetalsPublishingClosing" />
 									</p:calendar> <p:inputText value="12:00 PM" disabled="true" size="4"
 										style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /></td>
 								<td><p:message id="noticePublishMsg" for="noticePublish"
@@ -71,6 +72,7 @@
 						style="width: 65px;margin-top: 5px;margin-bottom: 0px;" /> <ac:iconTooltip
 						value="#{lbl['lbl.sc.closing.date.tooltip']}" /></td>
 			</tr>
+
 			<c:if
 				test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
 				<tr>
@@ -82,7 +84,8 @@
 								<td><p:inputText
 										label="#{lbl['lbl.sc.sample.closingdate']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}"
-										id="sampleclsdate" readonly="true" disabled="true" style="width: 111px;margin-top:5px">
+										id="sampleclsdate" readonly="true" disabled="true"
+										style="width: 111px;margin-top:5px">
 										<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 									</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <p:inputText
@@ -96,6 +99,7 @@
 						</table>
 					</td>
 				</tr>
+
 			</c:if>
 			<tr>
 				<td><p:outputLabel
