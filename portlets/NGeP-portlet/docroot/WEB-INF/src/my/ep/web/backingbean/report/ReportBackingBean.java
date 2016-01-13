@@ -1105,6 +1105,10 @@ public class ReportBackingBean extends
 	/** The pm physical loa no. */
 	private String pmPhysicalLOANo;
 
+	private String pmZone;
+
+	private String pmProfileStatus;
+
 	/** The selected all. */
 	private boolean selectedAll;
 
@@ -7396,6 +7400,36 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * @return the pmZone
+	 */
+	public String getPmZone() {
+		return pmZone;
+	}
+
+	/**
+	 * @param pmZone
+	 *            the pmZone to set
+	 */
+	public void setPmZone(String pmZone) {
+		this.pmZone = pmZone;
+	}
+
+	/**
+	 * @return the pmProfileStatus
+	 */
+	public String getPmProfileStatus() {
+		return pmProfileStatus;
+	}
+
+	/**
+	 * @param pmProfileStatus
+	 *            the pmProfileStatus to set
+	 */
+	public void setPmProfileStatus(String pmProfileStatus) {
+		this.pmProfileStatus = pmProfileStatus;
+	}
+
+	/**
 	 * Gets the sm bus company type.
 	 * 
 	 * @return the smBusCompanyType
@@ -7925,7 +7959,7 @@ public class ReportBackingBean extends
 	public List<PmCategoryL1> retrievCategoryListBySupplierType(
 			String supplierType) {
 		log.info("ReportBackingBean-retrievCategoryListBySupplierType");
-		
+
 		// to clear the category drop down values
 		this.setSupplierParentCatList(new ArrayList<PmCategoryL1>());
 		for (SmSupplierCategory cat : this.getSelectedCatList()) {
@@ -8069,7 +8103,7 @@ public class ReportBackingBean extends
 		log.info("ReportBackingBean-supplierTypeConsultant");
 		if ((null != this.getReportValue())
 				&& (this.getReportValue()
-						.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {			
+						.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
 			if (null != this.getSmSupplierType()) {
 				if (this.getSmSupplierType().equalsIgnoreCase(
 						ReportConst.SUPPL_CONSULT_TYPE)) {
@@ -9096,7 +9130,6 @@ public class ReportBackingBean extends
 			return null;
 		}
 	}
-
 
 	/**
 	 * Select all categories.
@@ -11973,18 +12006,17 @@ public class ReportBackingBean extends
 							this.getSmCreatedToYear());
 				}
 			}
-			
+
 			if (this.getReportValue() != null
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL))) {
-				if ((this.getSmMofRegNo()==null || this.getSmMofRegNo().isEmpty())){					
-					//throw new EpException("MOF No. is mandatory.");
-					throw new EpException(MessageConst.ERROR_REPORT_780029); 
+				if ((this.getSmMofRegNo() == null || this.getSmMofRegNo()
+						.isEmpty())) {
+					// throw new EpException("MOF No. is mandatory.");
+					throw new EpException(MessageConst.ERROR_REPORT_780029);
 				}
 			}
-			
-			
-			
+
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
 					|| this.getModuleValue().equalsIgnoreCase(
@@ -14465,7 +14497,12 @@ public class ReportBackingBean extends
 
 				|| ((this.getPmOrgCode() != null) && (this.getPmOrgCode() != ReportConst.EMPTY_VAL))
 
-				|| ((this.getPmOrgName() != null) && (this.getPmOrgName() != ReportConst.EMPTY_VAL))) {
+				|| ((this.getPmOrgName() != null) && (this.getPmOrgName() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmZone() != null) && (this.getPmZone() != ReportConst.EMPTY_VAL))
+
+				|| ((this.getPmProfileStatus() != null) && (this
+						.getPmProfileStatus() != ReportConst.EMPTY_VAL))) {
 
 			if ((this.getPmServiceType() != null)
 					&& (this.getPmServiceType() != ReportConst.EMPTY_VAL)) {
@@ -14598,6 +14635,21 @@ public class ReportBackingBean extends
 						.setPmPhysicalLOANoVar(ReportConst.AMP_PM_CONTRACT_NO_EQ
 								+ this.getPmPhysicalLOANo());
 			}
+			
+			if ((this.getPmZone() != null)
+					&& (this.getPmZone() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPmZoneVar(ReportConst.AMP_PM_SUPP_ZONE_EQ
+								+ this.getPmZone());
+			}
+			
+			if ((this.getPmProfileStatus() != null)
+					&& (this.getPmProfileStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPmProfileStatusVar(ReportConst.AMP_PM_SUPP_PROFILE_STATUS_EQ
+								+ this.getPmProfileStatus());
+			}
+			
 
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
@@ -14624,6 +14676,8 @@ public class ReportBackingBean extends
 						+ rptGenBean.getPmPhysicalContractNoVar()
 						+ rptGenBean.getPmLOANoVar()
 						+ rptGenBean.getPmPhysicalLOANoVar()
+						+ rptGenBean.getPmZoneVar()
+						+ rptGenBean.getPmProfileStatusVar()
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
@@ -15074,6 +15128,8 @@ public class ReportBackingBean extends
 		this.setPmPhysicalContractNo(null);
 		this.setPmLOANo(null);
 		this.setPmPhysicalLOANo(null);
+		this.setPmZone(null);
+		this.setPmProfileStatus(null);
 		// changeReportType();
 		retrieveDates();
 		applicationStatusDateChange();
@@ -15889,7 +15945,7 @@ public class ReportBackingBean extends
 	public void changeSupplierTypeAndGetRegStatus() {
 		if (this.getReportValue().equalsIgnoreCase(
 				ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)) {
-		
+
 			if (this.getSmSupplierType() != null) {
 				if (this.getSmSupplierType().equalsIgnoreCase(
 						ReportConst.SUPPL_CONSULT_TYPE)) {
