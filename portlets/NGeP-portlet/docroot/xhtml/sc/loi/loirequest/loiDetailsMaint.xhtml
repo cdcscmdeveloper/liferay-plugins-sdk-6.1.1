@@ -12,16 +12,25 @@
 		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 
+		<ui:param name="isZonal"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
+
 		<ui:param name="isPendingSubmissionStatus"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUBMISSION}" />
 		<ui:param name="isPendingApprovalStatus"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_APPROVAL}" />
 		<ui:param name="isPendingRevisionStatus"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_REVISION}" />
-		
-		
+
 		<ui:param name="isPendingNegotiation"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_NEGOTIATION}" />
+
+		<ui:param name="isCompleted"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_COMPLETED}" />
+
+		<ui:param name="isLoiNegoCompleted"
+			value="#{isCompleted || isPendingNegotiation}" />
+
 		<ui:param name="isEditableStatus"
 			value="#{isPendingSubmissionStatus || ((isPendingApprovalStatus|| isPendingRevisionStatus || isPendingNegotiation) and !empty lOIDetailBackingBean.managedBean.taskId)}" />
 		<ui:param name="isSupplierAckStatus"
@@ -29,20 +38,58 @@
 		<ui:param name="afterNegotiation"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId > QTStatusConst.LOI_PENDING_NEGOTIATION}" />
 
-     	<ui:param name="isFulfilmentTypeScheduled"
+		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
 
 		<ui:include src="loiButtons.xhtml" />
 
 		<ui:include src="loiDetailsHeader.xhtml" />
 
-	  <ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
+		<ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
 			postSignAction="#{lOIDetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
+		<!--  before nego -->
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%;" valign="top" class="sidemenutd">
-				  <p:tabMenu
+				<!-- prepare, edit and view LOI -->
+				<p:tabMenu
+						rendered="#{!isLoiNegoCompleted}"
+						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+						styleClass="sidemenu">
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.nego.details']}"
+							rendered="#{!isPendingNegotiation and !isCompleted}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="3" />
+						</p:menuitem>
+					</p:tabMenu> 
+					
+					<!-- nego edit and view LOI -->
+					<p:tabMenu rendered="#{isLoiNegoCompleted}"
 						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 						styleClass="sidemenu">
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
@@ -53,65 +100,59 @@
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-						   update="@form">
+							update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
-						</p:menuitem>
-
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.nego.details']}"
-							rendered="#{!isPendingNegotiation}" update="@form">
-							<f:setPropertyActionListener
-								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="2" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
 							update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="#{!isPendingNegotiation ? 3 : 2}" />
+								value="2" />
 						</p:menuitem>
-						
+
 						<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
-							update="@form" 	rendered="#{isPendingNegotiation}" >
+							update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
-					</p:tabMenu>			
-					</td>
+					</p:tabMenu></td>
 				<td width="80%" valign="top"><h:panelGroup>
 						<c:if
-							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 0}">
 							<ui:include src="loiDetailsMenu.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == '1'}">
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 1}">
 							<ui:include src="loiAwardDetailsMenu.xhtml" />
 						</c:if>
-						
+
 						<c:if
-							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == '2' and not isPendingNegotiation}">
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 2 and not isLoiNegoCompleted}">
 							<ui:include src="loiNegotiationDetailsMenu.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == (isPendingNegotiation ? 2 : 3)}">
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == (isLoiNegoCompleted ? 2 : 3)}">
 							<ui:include src="loiApprovalMenu.xhtml" />
 						</c:if>
-						
-						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 3 and isPendingNegotiation}">
-							<ui:include src="loiAfterNegoMenu.xhtml"/>
+
+						<c:if
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 3 and isLoiNegoCompleted}">
+							<ui:include src="loiAfterNegoMenu.xhtml" />
 						</c:if>
 					</h:panelGroup></td>
 			</tr>
 		</table>
-		<p:dialog id="loiSuppAttmPopup" widgetVar="loiSuppAttmPopupDlg" 
-			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
-			header="#{lbl['lbl.txt.choose.files']}">
-			
+
+		<p:dialog id="loiSuppAttmPopup" widgetVar="loiSuppAttmPopupDlg"
+			modal="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
 			<p:ajax event="close" />
 			<p:fileUpload style="display:inline;"
 				fileUploadListener="#{lOIDetailBackingBean.handleSuppDocFileUpload}"
@@ -124,5 +165,9 @@
 		</p:dialog>
 
 		<ui:include src="loiPreviewLetterPopup.xhtml" />
+
+		<c:if test="#{isZonal}">
+			<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
+		</c:if>
 	</ui:define>
 </ui:composition>

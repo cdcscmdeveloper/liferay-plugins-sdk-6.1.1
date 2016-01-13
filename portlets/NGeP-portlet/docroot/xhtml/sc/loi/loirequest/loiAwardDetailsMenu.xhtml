@@ -6,7 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-    <ui:param name="isZonal" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
 	<ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
     <ui:param name="isRefinalizedBidding" value="#{lOIDetailBackingBean.managedBean.refinalizedBidding}" />
      
@@ -162,8 +161,4 @@
 		</p:dataTable>
 
 	</p:panel>
-
-	<c:if test="#{isZonal}">
-		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
-	</c:if>
 </ui:composition>
