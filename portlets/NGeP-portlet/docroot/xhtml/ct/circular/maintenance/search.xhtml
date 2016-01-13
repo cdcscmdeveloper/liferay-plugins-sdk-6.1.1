@@ -86,9 +86,11 @@
 							onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();"
 							rendered="#{!circularBackingBean.managedBean.trackingDiarySearch and data.ctCircular.recordStatusFlg == 1 and
 							         ((circularBackingBean.isPanelAdmin() and (data.status.statusId == CtStatusConst.pqApproved or data.status.statusId == CtStatusConst.pqUpdateApproved
-									 or data.status.statusId == CtStatusConst.pqUpdateRejected or data.status.statusId == CtStatusConst.pqUpdateCancelled)) or 
+									 or data.status.statusId == CtStatusConst.pqUpdateRejected or data.status.statusId == CtStatusConst.pqUpdateCancelled
+									 or data.status.statusId == CtStatusConst.pqCancelRequestRejected)) or 
 									     (circularBackingBean.isCentralContractAdmin() and (data.status.statusId == CtStatusConst.cqApproved or data.status.statusId == CtStatusConst.cqUpdateApproved
-									 or data.status.statusId == CtStatusConst.cqUpdateRejected or data.status.statusId == CtStatusConst.cqUpdateCancelled))) }"
+									 or data.status.statusId == CtStatusConst.cqUpdateRejected or data.status.statusId == CtStatusConst.cqUpdateCancelled
+									 or data.status.statusId == CtStatusConst.cqCancelRequestRejected))) }"
 							action="#{circularBackingBean.gotoPage('update', data.ctCircular.latestCircularVer.circularVerId)}">
 						</p:menuitem>
 					</p:menuButton>
