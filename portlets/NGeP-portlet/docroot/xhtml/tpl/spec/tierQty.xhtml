@@ -47,7 +47,7 @@
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"/>
 			</f:facet>
 			<p:inputText id="toQty" value="#{tplSpecTierQty.toQty}" style="width:65%; text-align:right;" 
-				required="true" maxlength="14"
+				required="#{rowIndex lt templateSpecBean.selectedSpecQuestion.tplSpecTierQties.size()-1}" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"
 				disabled="#{!editable or (isSpecificationReq and !isSpecTypeTechnical)}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
