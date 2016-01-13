@@ -1366,8 +1366,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} else {
 			result.setItemPrice(new BigDecimal(0));
 		}
-		result.setFromQty(pricing.getFromQty());
-		result.setToQty(pricing.getToQty());
+		
+		if (pricing.getFromQty() != null) {
+			result.setFromQty(new BigDecimal(pricing.getFromQty()));	
+		}
+		
+		if (pricing.getToQty() != null) {
+			result.setToQty(new BigDecimal(pricing.getToQty()));	
+		}
 
 		return result;
 	}
