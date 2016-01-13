@@ -20,7 +20,7 @@
 		<p:messages id="messages" autoUpdate="true" closable="true" />
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td width="40%" valign="top">
+				<td width="42%" valign="top">
 					<table width="100%">
 						<tr>
 							<td style="text-align: left; vertical-align: middle;"><p:commandLink
@@ -63,7 +63,7 @@
 									</p:column>
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
-							#{notify.sender.userName} <br />
+										#{notify.sender.userName} <br />
 										<p:commandLink id="btnNotifyLink"
 											action="#{notifyBackingBean.selectedNotify}"
 											update=":form:pnldetail,:form:notifyTable">
@@ -74,7 +74,7 @@
 										</p:commandLink>
 									</p:column>
 									<p:column headerText="#{lbl['lbl.portal.notify.datetime']}"
-										style="text-align: right;width:2%;">
+										style="text-align: right;width:10%; padding:5px!important; ">
 										<h:outputText value="#{notify.changedDate}">
 											<f:convertDateTime pattern="dd-MM-yyyy" />
 										</h:outputText>
@@ -90,7 +90,7 @@
 						</tr>
 					</table>
 				</td>
-				<td width="3%"><p:spacer width="3" /></td>
+				<td width="1%"><p:spacer width="3" /></td>
 				<td width="57%" valign="top"><p:panel id="pnldetail"
 						style="border-width:1px 1px; border:1px solid #ddd!important;padding:10px!important; background:transparent !important; "
 						toggleable="true">
