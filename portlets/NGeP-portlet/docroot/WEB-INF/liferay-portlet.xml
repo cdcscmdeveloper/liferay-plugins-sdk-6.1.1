@@ -2201,6 +2201,18 @@
 		<css-class-wrapper>keywordMaintenance-portlet</css-class-wrapper>
 	</portlet>
 	
+	
+	<portlet>
+		<portlet-name>itemCodeSearchPortal</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>itemCodeSearchPortal-portlet</css-class-wrapper>
+	</portlet>
+	
 	<portlet>
 		<portlet-name>scManualSourcingSupplierResponse</portlet-name>
 		<icon>/icon.png</icon>
