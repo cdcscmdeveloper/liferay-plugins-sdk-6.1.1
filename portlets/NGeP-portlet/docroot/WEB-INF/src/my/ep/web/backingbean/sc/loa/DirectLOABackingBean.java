@@ -6045,7 +6045,7 @@ public class DirectLOABackingBean extends
 	public boolean checkAgreementMandatory() {
 		boolean isAgreementMandatory = Boolean.FALSE;
 		ScLoa loa = getManagedBean().getScLoa();
-		BigDecimal overallContractAmtOrLoaAmt = loa.getOverallContractAmt();
+		BigDecimal overallContractAmtOrLoaAmt = getManagedBean().getOverallContractAmt();
 		
 		if (null != loa.getScLoiLoa().getFulfilmentTypeCode()) {
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode()
