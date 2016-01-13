@@ -4156,6 +4156,12 @@ public class ReportsGenerateBean {
 	/** The pm physical loa no var. */
 	private String pmPhysicalLOANoVar = ReportConst.EMPTY_VAL;
 
+	/** The pm zone var. */
+	private String pmZoneVar = ReportConst.EMPTY_VAL;
+
+	/** The pm profile status var. */
+	private String pmProfileStatusVar = ReportConst.EMPTY_VAL;
+
 	/** The Pm mandatory org category type view. */
 	private boolean pmMandatoryOrgCategoryTypeView = false;
 
@@ -4215,6 +4221,12 @@ public class ReportsGenerateBean {
 
 	/** The pm physical loa no view. */
 	private boolean pmPhysicalLOANoView = false;
+
+	/** The pm mandatory zone view. */
+	private boolean pmMandatoryZoneView = false;
+
+	/** The pm profile status vie view. */
+	private boolean pmProfileStatusView = false;
 
 	/** The ct termination type var. */
 	private String ctTerminationTypeVar = ReportConst.EMPTY_VAL;
@@ -16917,5 +16929,81 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmCPSupplierNameView(boolean smCPSupplierNameView) {
 		this.smCPSupplierNameView = smCPSupplierNameView;
+	}
+
+	/**
+	 * Checks if is pm mandatory zone view.
+	 * 
+	 * @return the pmMandatoryZoneView
+	 */
+	public boolean isPmMandatoryZoneView() {
+		return pmMandatoryZoneView;
+	}
+
+	/**
+	 * Sets the pm mandatory zone view.
+	 * 
+	 * @param pmMandatoryZoneView
+	 *            the pmMandatoryZoneView to set
+	 */
+	public void setPmMandatoryZoneView(boolean pmMandatoryZoneView) {
+		this.pmMandatoryZoneView = pmMandatoryZoneView;
+	}
+
+	/**
+	 * Checks if is pm profile status vie view.
+	 * 
+	 * @return the pmProfileStatusVieView
+	 */
+	public boolean isPmProfileStatusView() {
+		return pmProfileStatusView;
+	}
+
+	/**
+	 * Sets the pm profile status vie view.
+	 * 
+	 * @param pmProfileStatusVieView
+	 *            the pmProfileStatusVieView to set
+	 */
+	public void setPmProfileStatusView(boolean pmProfileStatusView) {
+		this.pmProfileStatusView = pmProfileStatusView;
+	}
+
+	/**
+	 * Gets the pm zone var.
+	 * 
+	 * @return the pmZoneVar
+	 */
+	public String getPmZoneVar() {
+		return pmZoneVar;
+	}
+
+	/**
+	 * Sets the pm zone var.
+	 * 
+	 * @param pmZoneVar
+	 *            the pmZoneVar to set
+	 */
+	public void setPmZoneVar(String pmZoneVar) {
+		this.pmZoneVar = pmZoneVar;
+	}
+
+	/**
+	 * Gets the pm profile status var.
+	 * 
+	 * @return the pmProfileStatusVar
+	 */
+	public String getPmProfileStatusVar() {
+		return pmProfileStatusVar;
+	}
+
+	/**
+	 * Sets the pm profile status var.
+	 * 
+	 * @param pmProfileStatusVar
+	 *            the pmProfileStatusVar to set
+	 */
+	public void setPmProfileStatusVar(String pmProfileStatusVar) {
+		this.pmProfileStatusVar = pmProfileStatusVar;
 	}
 }
