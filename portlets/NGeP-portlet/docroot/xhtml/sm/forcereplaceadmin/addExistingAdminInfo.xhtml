@@ -35,9 +35,22 @@
 			
 			<br />
 			
-			<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
-				<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email.msg']}" styleClass="instruction" />
-				<table>
+			<table>
+				<tr>
+					<td colspan="2">
+						<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email.msg']}" 
+							styleClass="instruction" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}"/>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" styleClass="outputLabel-view-label"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.name}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.idenNum']}" styleClass="outputLabel-view-label"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.identificationNo}" /></td>
+				</tr>
+				<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}" /> <p:outputLabel
@@ -52,8 +65,8 @@
 							<p:message id="newAdminEmailMsg" for="newAdminEmail"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
-				</table>
-			</p:outputPanel>
+				</p:outputPanel>
+			</table>
 			
 			<br />
 			<table>
