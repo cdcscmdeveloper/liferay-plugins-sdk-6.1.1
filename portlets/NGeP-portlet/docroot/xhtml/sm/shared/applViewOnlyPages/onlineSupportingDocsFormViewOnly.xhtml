@@ -25,17 +25,7 @@
 				</tr>
 			</table>
 		</c:if>
-		<br />
 		
-		<table style="width: 100%">
-
-			<tr>
-				<td><h:outputText style="float:left"
-						value="#{lbl['lbl.sm.suppDoc.online.notes']}" escape="false" /></td>
-
-			</tr>
-
-		</table>
 		<p:spacer height="10px" />
 		<p:dataTable var="table" id="onSdList"
 			value="#{viewSmApplBackingBean.managedBean.smAppl.smApplSupportDocs}" rowIndexVar="index">
