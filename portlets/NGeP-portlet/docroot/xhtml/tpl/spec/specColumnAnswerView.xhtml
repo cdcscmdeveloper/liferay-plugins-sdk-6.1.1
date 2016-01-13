@@ -17,9 +17,9 @@
 					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
 					</h:outputText>
-					<h:outputText value=" - " rendered="#{isQuestionTypeItem}">
-					</h:outputText> 
-					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem}">
+					<h:outputText value=" #{lbl['lbl.sc.qty.and.above']}" rendered="#{isQuestionTypeItem and empty tplSpecAnswer.tplSpecTierQty.toQty}" />
+					<h:outputText value=" - " rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}" />
+					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem and !empty tplSpecAnswer.tplSpecTierQty.toQty}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
 					</h:outputText>
 				</h:panelGroup>
