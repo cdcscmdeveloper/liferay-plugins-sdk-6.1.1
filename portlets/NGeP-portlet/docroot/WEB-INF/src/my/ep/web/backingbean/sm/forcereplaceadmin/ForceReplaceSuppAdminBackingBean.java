@@ -291,7 +291,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 			// check if replace with user that don't have role in ep not allowed
 			// if have active supplier user
-			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())) {
+			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())
+					&& getManagedBean().isHasSupplierUser()) {
 				throw new EpException(MessageConst.ERROR_722630);
 			}
 		}
