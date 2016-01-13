@@ -272,6 +272,21 @@ public class ForceReplaceSuppAdminBackingBean extends
 					&& getManagedBean().isHasSupplierUser()) {
 				throw new EpException(MessageConst.ERROR_722595);
 			}
+
+			// check if replace with pending activation user not allowed if have
+			// supplier user
+			if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
+					.getEpRole())
+					&& getManagedBean().getNewAdmin().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+					&& getManagedBean().isHasSupplierUser()) {
+				throw new EpException(MessageConst.ERROR_722629);
+			}
+
+			// check if replace with user that don't have role in ep not allowed
+			// if have supplier user
+			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())) {
+				throw new EpException(MessageConst.ERROR_722630);
+			}
 		}
 
 	}
