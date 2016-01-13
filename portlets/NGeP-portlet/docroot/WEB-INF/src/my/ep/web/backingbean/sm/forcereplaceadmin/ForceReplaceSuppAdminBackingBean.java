@@ -189,8 +189,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Validate before proceed to force replace admin
 	 */
 	private void validate() {
-		List<SmPersonnel> latestActivePersonnels = getManagedBean()
-				.getSmSupplier().getSmAppl().getSmPersonnels();
 
 		// check if new admin identificationNo same as existing admin
 		// identificationNo
@@ -202,7 +200,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 			throw new EpException(MessageConst.ERROR_722600);
 		}
 
-		if (latestActivePersonnels != null && !latestActivePersonnels.isEmpty()) {
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		List<SmPersonnel> latestActivePersonnels = SmServiceLookup
+				.getPersonnelSO()
+				.retrieveLatestApprovedPersonnelBySupplierId(reqDTO)
+				.getSmPersonnelList();
+
+		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
 			for (SmPersonnel smPersonnel : latestActivePersonnels) {
 				if (smPersonnel.getIdentificationNo() != null
 						&& StringUtils.isNotBlank(smPersonnel
@@ -217,18 +222,24 @@ public class ForceReplaceSuppAdminBackingBean extends
 										.getSmAppl()
 										.getApplType()
 										.equals(SupplierManagementConst.ACC_BASIC)) {
+							// check if already had active mof supplier user
+							// account
 							if (StringUtils.isNotBlank(smPersonnel.getEpRole())
 									&& smPersonnel.getEpRole().equals(
-											RoleCode.MOF_SUPPLIER_USER.value())) {
+											RoleCode.MOF_SUPPLIER_USER.value())
+									&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 								getManagedBean().setHasSupplierUser(true);
 							}
 						}
 						// basic
 						else {
+							// check if already had active basic supplier user
+							// account
 							if (StringUtils.isNotBlank(smPersonnel.getEpRole())
 									&& smPersonnel.getEpRole().equals(
 											RoleCode.BASIC_SUPPLIER_USER
-													.value())) {
+													.value())
+									&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 								getManagedBean().setHasSupplierUser(true);
 							}
 						}
@@ -260,7 +271,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (getManagedBean().isExistingUser()
 				&& getManagedBean().getNewAdmin() != null) {
 
-			// check if replace with catalogue user not allowed if have supplier
+			// check if replace with catalog user not allowed if have active
+			// supplier
 			// user
 			if (getManagedBean().getNewAdmin().getEpRole() != null
 					&& getManagedBean().getNewAdmin().getEpRole()
@@ -270,7 +282,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 
 			// check if replace with pending activation user not allowed if have
-			// supplier user
+			// active supplier user
 			if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
 					.getEpRole())
 					&& getManagedBean().getNewAdmin().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
@@ -279,7 +291,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 
 			// check if replace with user that don't have role in ep not allowed
-			// if have supplier user
+			// if have active supplier user
 			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())) {
 				throw new EpException(MessageConst.ERROR_722630);
 			}
