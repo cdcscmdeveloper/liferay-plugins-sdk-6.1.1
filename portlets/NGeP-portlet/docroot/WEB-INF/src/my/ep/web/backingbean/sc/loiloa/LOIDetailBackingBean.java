@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -118,6 +119,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
@@ -248,6 +250,9 @@ public class LOIDetailBackingBean extends
 
 			retrieveLOIList(sourceId);
 
+			// QT Proposal validity expired
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
@@ -345,8 +350,10 @@ public class LOIDetailBackingBean extends
 				//check wheather refinalization bidding or not
 				checkReFinalizationBidding(finalization, scQt);
 				
+				// QT Proposal validity expired
+				getQtProposalValidExpiredMessage(scQt);
+				
 				//generateDeclarationFromVelocity(scLoi, scQt);
-
 			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -449,6 +456,10 @@ public class LOIDetailBackingBean extends
 					evaluationDataType.getCommitteeType(),
 					evaluationDataType.getGroupkeyMa());
 			getManagedBean().setMultipleLoiFlag(Boolean.TRUE);
+			
+			// QT Proposal validity expired
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
@@ -815,6 +826,7 @@ public class LOIDetailBackingBean extends
 					reqDTO);
 
 			getManagedBean().setLoiLoas(resDTO.getLoiLoas());
+			getManagedBean().setScQt(resDTO.getScQt());
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
@@ -1484,7 +1496,8 @@ public class LOIDetailBackingBean extends
 	 *            the sc loi
 	 */
 	public void editLOI(ScLoi scLoi, boolean isEditFlag) {
-		// getManagedBean().setScLoi(scLoi);
+		debugLogger("editLOI");
+		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
 			renewSessionWithPreviousValues();
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -1494,25 +1507,28 @@ public class LOIDetailBackingBean extends
 
 			populateLOIDetails(resDTO);
 
+			if (isEditFlag) {
+				getManagedBean().setButtonFlag(Boolean.TRUE);
+			} else {
+				getManagedBean().setButtonFlag(Boolean.FALSE);
+			}
+
+			getManagedBean().setEditFlag(Boolean.TRUE);
+
+			if (getManagedBean().getBackToPreviousPage() == null
+					|| getManagedBean().getBackToPreviousPage().isEmpty()) {
+				getManagedBean()
+				.setBackToPreviousPage(fc.getViewRoot().getViewId());
+			}
+			getManagedBean().setSelectedTabIndex(0);
+			// QT Proposal validity expired
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+
 		} finally {
 		}
 
-		if (isEditFlag) {
-			getManagedBean().setButtonFlag(Boolean.TRUE);
-		} else {
-			getManagedBean().setButtonFlag(Boolean.FALSE);
-		}
-
-		getManagedBean().setEditFlag(Boolean.TRUE);
-		FacesContext fc = FacesContext.getCurrentInstance();
-		if (getManagedBean().getBackToPreviousPage() == null
-				|| getManagedBean().getBackToPreviousPage().isEmpty()) {
-			getManagedBean()
-					.setBackToPreviousPage(fc.getViewRoot().getViewId());
-		}
-		getManagedBean().setSelectedTabIndex(0);
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
+		.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
 
 	/**
@@ -1676,6 +1692,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setBranchName(scLoi.getSupplierBranch());
 		getManagedBean()
 				.setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
+		getManagedBean().setScQt(resDTO.getScQt());
 
 		if (scLoi.isBrandNew()) {
 			setUserDetails(scLoi);
@@ -5144,6 +5161,36 @@ public class LOIDetailBackingBean extends
 		}
 		return days;
 	}
+	
+	/**
+	 * Gets the qt proposal valid expired message.
+	 *
+	 * @param scQt the sc qt
+	 * @return the qt proposal valid expired message
+	 */
+	private void getQtProposalValidExpiredMessage(ScQt scQt){
+		if(scQt != null && scQt.getProposalValidityEndDate() != null){
+			if(!checkProposalValidityDateReach(scQt.getProposalValidityEndDate())){
+				StringBuilder qtProposalExpiredMsg = new StringBuilder();
+				SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String proposalValidityEndDate = sdf.format(scQt.getProposalValidityEndDate());
+				Locale locale = new FacesScopes().getUserLocale();
+				qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage("lbl.sc.qt.proposal.val.expired",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+				qtProposalExpiredMsg.append(" ");
+				qtProposalExpiredMsg.append(proposalValidityEndDate);
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+								.getMessage(
+										qtProposalExpiredMsg.toString(),
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		}
+	}
+
 	
 	/**
 	 * The Class NegotiationRecommendationReportDTO.
