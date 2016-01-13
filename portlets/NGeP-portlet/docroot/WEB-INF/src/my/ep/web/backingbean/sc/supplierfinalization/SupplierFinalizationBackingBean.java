@@ -1328,7 +1328,7 @@ public class SupplierFinalizationBackingBean extends
 					alreadyExists = true;
 					
 					if (!(detail.getRecordStatusFlg().equals(
-							DbValueConst.RECORD_STATUS_CANCELLED))) {
+							DbValueConst.RECORD_STATUS_REJECTED))) {
 						detail.setRecordStatus(true);
 						detail.setRecordStatusFlg(
 								DbValueConst.RECORD_STATUS_ACTIVE);
@@ -1390,7 +1390,7 @@ public class SupplierFinalizationBackingBean extends
 						|| recommendDtl.getLoiLoaCount() > 0) {
 				if (isReset && 
 						!recommendDtl.getRecordStatusFlg()
-							.equals(DbValueConst.RECORD_STATUS_CANCELLED)) {
+							.equals(DbValueConst.RECORD_STATUS_REJECTED)) {
 					recommendDtl.setRecordStatus(false);
 					recommendDtl.setRecordStatusFlg(
 							DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -3400,7 +3400,7 @@ public class SupplierFinalizationBackingBean extends
 										.getSmSupplier().getSupplierId()
 								&& specZoneId == evaZoneId
 								&& (recommendDtl.getRecordStatusFlg().equals(
-											DbValueConst.RECORD_STATUS_CANCELLED))) {
+											DbValueConst.RECORD_STATUS_REJECTED))) {
 
 							evalResDtl.setAwareded(false);
 							evalResDtl.setShortListed(false);
@@ -3457,7 +3457,7 @@ public class SupplierFinalizationBackingBean extends
 											.getSupplierId()
 									&& specZoneId == evaZoneId
 									&& (recommendDtl.getRecordStatusFlg().equals(
-												DbValueConst.RECORD_STATUS_CANCELLED))) {
+												DbValueConst.RECORD_STATUS_REJECTED))) {
 
 								evalResultDtl.setSuppSelectionDisabled(true);
 								evalResultDtl.setAwareded(false);
@@ -4480,7 +4480,7 @@ public class SupplierFinalizationBackingBean extends
 				for (ScQtRecommendDtl recommendDtl 
 							: selectedItemList.get(0).getRecommendDtls()) {
 					if (recommendDtl.getRecordStatusFlg()
-							== DbValueConst.RECORD_STATUS_CANCELLED) {
+							== DbValueConst.RECORD_STATUS_REJECTED) {
 						rejectedSupplierIds.add(recommendDtl.getSupplier().getSupplierId());
 					}
 				}
@@ -4497,7 +4497,7 @@ public class SupplierFinalizationBackingBean extends
 						for (ScQtRecommendDtl recommendDtl 
 									: scQtRecommend.getRecommendDtls()) {
 							if (recommendDtl.getRecordStatusFlg()
-									== DbValueConst.RECORD_STATUS_CANCELLED) {
+									== DbValueConst.RECORD_STATUS_REJECTED) {
 								rejectedSupplierIds.add(recommendDtl.getSupplier().getSupplierId());
 							}
 						}
@@ -6290,7 +6290,7 @@ public class SupplierFinalizationBackingBean extends
 								alreadyExists = true;
 								
 								if (!(detail.getRecordStatusFlg().equals(
-										DbValueConst.RECORD_STATUS_CANCELLED))) {
+										DbValueConst.RECORD_STATUS_REJECTED))) {
 									detail.setRecordStatus(true);
 									detail.setRecordStatusFlg(
 											DbValueConst.RECORD_STATUS_ACTIVE);
