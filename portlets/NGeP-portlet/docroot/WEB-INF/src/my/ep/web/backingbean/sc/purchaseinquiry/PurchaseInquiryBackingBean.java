@@ -1457,10 +1457,10 @@ public class PurchaseInquiryBackingBean extends
 		getManagedBean().setZoneDtlMap(zoneDtlMap);
 
 		if (pricing.getFromQty() != null) {
-			result.setFromQty(pricing.getFromQty());
+			result.setFromQty(new BigDecimal(pricing.getFromQty()));
 		}
 		if (pricing.getToQty() != null) {
-			result.setToQty(pricing.getToQty());
+			result.setToQty(new BigDecimal(pricing.getToQty()));
 		}
 		result.setScRequestSupplierItem(scRequestSupplierItem);
 		result.setPricing(pricing);
