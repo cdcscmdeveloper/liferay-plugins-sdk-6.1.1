@@ -172,6 +172,9 @@ public class SimpleQuoteBackingBean extends
 
 	/** The text before sign. */
 	private String textBeforeSign;
+	
+	/** The simple quote page nav. */
+	private String SIMPLE_QUOTE_PAGE_NAV = "simpleQuoteMain";
 
 	/**
 	 * Instantiates a new simple quote backing bean.
@@ -372,7 +375,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			
 			// page navigation to simple quote
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuoteMain");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 
 		} finally {
 
@@ -414,7 +417,6 @@ public class SimpleQuoteBackingBean extends
 		}
 		return addable;
 	} 
-
 
 	/**
 	 * add panel or contract and non contract to simple quote from search
@@ -738,7 +740,7 @@ public class SimpleQuoteBackingBean extends
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
 
-		return "simpleQuoteMain";
+		return SIMPLE_QUOTE_PAGE_NAV;
 	}
 
 	/**
@@ -1011,7 +1013,7 @@ public class SimpleQuoteBackingBean extends
 		PmUom uom = null;
 		String ItemName = "";
 		String itemSpec = "";
-		// TODO check flag for panel item or non contract item
+		// check flag for panel item or non contract item
 		if (ctPanelItem != null) {
 			if (ctPanelItem.getScRequestItem() != null) {
 				ScRequestItem scRequestItem = ctPanelItem.getScRequestItem();
@@ -1042,7 +1044,7 @@ public class SimpleQuoteBackingBean extends
 			uom = cmSupplierItem.getPmUom();
 		}
 
-		// TODO checking two digits in itemCode whether service or product
+		// checking two digits in itemCode whether service or product
 		ScQuote scQuote = getManagedBean().getScQuote();
 		List<ScQuoteDoc>  quoteDocs = null;
 		if(scQuote != null) {
@@ -1939,7 +1941,7 @@ public class SimpleQuoteBackingBean extends
 
 		// to get country id
 		CountryReqDTO reqDTO = new CountryReqDTO();
-		reqDTO.setCountryCode("MY");
+		reqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICountrySO.class);
@@ -1960,7 +1962,7 @@ public class SimpleQuoteBackingBean extends
 		ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "simpleQuoteMain");
+				.handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 	}
 
 	/**
@@ -4583,7 +4585,7 @@ public class SimpleQuoteBackingBean extends
 		}
 		// country id
 		CountryReqDTO countryReqDTO = new CountryReqDTO();
-		countryReqDTO.setCountryCode("MY");
+		countryReqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICountrySO.class);
@@ -4637,7 +4639,7 @@ public class SimpleQuoteBackingBean extends
 		// page navigation to simple quote
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "simpleQuoteMain");
+				.handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 	}
 
 	/**
@@ -4989,7 +4991,7 @@ public class SimpleQuoteBackingBean extends
 	 * @return the string
 	 */
 	public String updateSupplierResponse(PmDigiSign pmDigiSign) {
-		debugLogger("supplierSubmit");
+		debugLogger("updateSupplierResponse");
 		try {
 			FacesScopes facesScopes = new FacesScopes();
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
@@ -5435,7 +5437,7 @@ public class SimpleQuoteBackingBean extends
 		}
 		// to get country id
 		CountryReqDTO reqDTO = new CountryReqDTO();
-		reqDTO.setCountryCode("MY");
+		reqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICountrySO.class);
@@ -5785,7 +5787,6 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private List<Long> checkZoneExistsOrNot(TplSpecZoneDtl tplSpecZoneDtl) {
 		List<Long> results = new ArrayList<Long>();
-		// if (index < 0 || isEditZone) {
 		List<ZonesBean> list = getManagedBean().getBeans();
 		if (list != null && list.size() > 0) {
 
@@ -5805,7 +5806,6 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
-		// }
 		return results;
 	}
 
@@ -6023,7 +6023,6 @@ public class SimpleQuoteBackingBean extends
 		} finally {
 			supplierGstSo = null;
 		}
-
 	}
 	
 	/**
@@ -6077,7 +6076,7 @@ public class SimpleQuoteBackingBean extends
 	public String retrieveSupplierGstDates(Date date) {
 		String gstDate = "";
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
+			SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			if (null != date) {
 				gstDate = dateFormat.format(date);
 			}
@@ -6115,9 +6114,6 @@ public class SimpleQuoteBackingBean extends
 				attachment = new ScQuoteAttachment();
 				attachment.setScQuote(scQuote);
 			}
-			
-			
-
 			attachment.setDocNo(scQuote.getQuoteNo());
 			attachment
 					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
