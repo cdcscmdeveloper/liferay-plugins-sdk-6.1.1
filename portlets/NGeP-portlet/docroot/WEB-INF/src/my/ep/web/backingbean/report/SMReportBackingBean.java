@@ -485,12 +485,14 @@ public class SMReportBackingBean extends
 			 * rptGenBean.setSmMandatoryDateView(true);
 			 */
 			break;
+			//This Report Moved to PM_008
 		case ReportConst.SM_BPK_USER_PROFILE_RPT_VAL:
 			rptGenBean.setSmCommonZoneView(true);
 			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 			// rptGenBean.setSmMandatoryZoneView(true);
 			rptGenBean.setSmExtraTwoColumnView(true);
 			break;
+			//This Report Moved to PM_009
 		case ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL:
 			rptGenBean.setSmCommonZoneView(true);
 			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
