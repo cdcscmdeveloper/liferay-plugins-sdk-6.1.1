@@ -318,7 +318,6 @@ public class LOADetailBackingBean extends
 		} finally {
 			//qtAwardSO = null;
 		}
-
 		return QTConstants.LOA_PAGE;
 	}
 	
@@ -440,10 +439,13 @@ public class LOADetailBackingBean extends
 				getManagedBean().setSelectedContractAgency(scLoa.getContractAgency().getOrgTypeCode().getParameterCode());
 			}
 			
-			generateDeclarationFromVelocity(scLoa,scQt);
+			generateDeclarationFromVelocity(scLoa, scQt);
 			
 			// Filter skop kerja dan perkhidmatan repo.
 			filterSkopKerjaDanPerkhidmatanRepo(scLoa);
+			
+			// QT Proposal validity expired
+			getQtProposalValidExpiredMessage(scQt);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -495,18 +497,8 @@ public class LOADetailBackingBean extends
 			}
 			getManagedBean().setEditFlag(Boolean.FALSE);
 			
-			
-		/*	// TODO QT Proposal validity expired
-			if(!checkProposalValidityDateReachByQt(getManagedBean().getScQt())){
-
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils
-								.getMessage(
-										"QT Proposal validity Expired!",
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}*/
+			// QT Proposal validity expired
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -5047,11 +5039,41 @@ public class LOADetailBackingBean extends
 	 * @param locale the locale
 	 * @return the string
 	 */
-	public static String getLocalizeDate(Date date, Locale locale) { 
+	private static String getLocalizeDate(Date date, Locale locale) { 
 		String DEFAULT_DATE_FORMAT_WITH_MONTH_NAME = "dd MMMM yyyy";
 	    SimpleDateFormat localDateFormate = new SimpleDateFormat(DEFAULT_DATE_FORMAT_WITH_MONTH_NAME, locale);       
 	    
 	    return localDateFormate.format(date);
+	}
+	
+
+	/**
+	 * Gets the qt proposal valid expired message.
+	 *
+	 * @param scQt the sc qt
+	 * @return the qt proposal valid expired message
+	 */
+	private void getQtProposalValidExpiredMessage(ScQt scQt){
+		if(scQt != null && scQt.getProposalValidityEndDate() != null){
+			if(!checkProposalValidityDateReachByQt(scQt)){
+				StringBuilder qtProposalExpiredMsg = new StringBuilder();
+				SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String proposalValidityEndDate = sdf.format(scQt.getProposalValidityEndDate());
+				Locale locale = new FacesScopes().getUserLocale();
+				qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage("lbl.sc.qt.proposal.val.expired",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+				qtProposalExpiredMsg.append(" ");
+				qtProposalExpiredMsg.append(proposalValidityEndDate);
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+								.getMessage(
+										qtProposalExpiredMsg.toString(),
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		}
 	}
 
 	public boolean isFlag() {
