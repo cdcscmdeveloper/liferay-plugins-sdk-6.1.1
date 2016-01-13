@@ -888,6 +888,9 @@ public class ApprovalBackingBean extends
 													.getOriginalValue()));
 									qt.setClosingDate(DateUtils.addDays(
 											qt.getClosingDate(), days));
+									if(qt.isSampleReq()){
+										qt.setSampleClosingDate(qt.getClosingDate());
+									}
 									break;
 								} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 										.equalsIgnoreCase(approvalType)) {
