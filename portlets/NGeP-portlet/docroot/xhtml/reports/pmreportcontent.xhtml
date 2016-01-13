@@ -46,7 +46,8 @@
 							<p:column>
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel style="margin-right:-20px;"
+										<td style="width: 160px;"><p:outputLabel
+												style="margin-right:-20px;"
 												value="#{lbl['lbl.rpt.org.category']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -56,14 +57,15 @@
 								<table style="width: 100%">
 									<tr>
 										<td style="width: 84%"><p:selectOneMenu
-												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg" 
+												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg"
 												value="#{reportBackingBean.pmOrgCategory}"
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.federal']}"
 													itemValue="1"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}"
 													itemValue="2"></f:selectItem>
-												<p:ajax event="change" partialSubmit="true"  update="@form" process="@form" />
+												<p:ajax event="change" partialSubmit="true" update="@form"
+													process="@form" />
 											</p:selectOneMenu></td>
 										<td><p:message id="rptOrgCatgMsg" for="orgCatg"
 												display="icon" showDetail="false" /></td>
@@ -76,7 +78,8 @@
 							<p:column>
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel style="margin-right:-16px;"
+										<td style="width: 160px;"><p:outputLabel
+												style="margin-right:-16px;"
 												value="#{lbl['lbl.rpt.org.type']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -105,7 +108,8 @@
 							<p:column>
 								<table style="width: 182px;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel style="margin-right:-20px;"
+										<td style="width: 160px;"><p:outputLabel
+												style="margin-right:-20px;"
 												value="#{lbl['lbl.rpt.orgName']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -267,6 +271,60 @@
 							test="#{pmReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
 							<p:outputLabel value="" style="margin-top:5px;width:162px;" />
 							<p:outputLabel value="" style="margin-top:5px;width:290px;" />
+						</c:if>
+
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryZoneView}">
+							<p:column>
+								<table style="width: 182px;">
+									<tr style="width: 100%;">
+										<td style="width: 160px;"><p:outputLabel
+												style="margin-right: -16px;" value="#{lbl['lbl.rpt.zone']}" />
+											<p:outputLabel  value="*"
+												styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:selectOneMenu
+												label="#{lbl['lbl.rpt.zone']}" id="Zone"
+												value="#{reportBackingBean.pmZone}"
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}"
+													itemValue="#{lbl['lbl.rpt.semenanjung']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}"
+													itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
+													itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
+												<p:ajax event="change" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:selectOneMenu></td>
+										<td><p:message id="rptZoneMsg" for="Zone" display="icon"
+												showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmProfileStatusView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}"
+								style="margin-top:5px;width:295px;" />
+							<p:selectOneMenu value="#{reportBackingBean.pmProfileStatus}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}"
+									itemValue="#{lbl['lbl.rpt.active']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}"
+									itemValue="#{lbl['lbl.rpt.inactive']}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
 						</c:if>
 
 					</h:panelGrid></td>

@@ -288,6 +288,8 @@ public class ReportConst {
 	public static final String PM_LIST_OF_EXEMPTED_ITEMS_BY_SUPPLIER_RPT_VAL = "PM_005";
 	public static final String PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL = "PM_006";
 	public static final String PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL = "PM_007";
+	public static final String PM_BPK_USER_PROFILE_RPT_VAL = "PM_008";
+	public static final String PM_BPK_ADMIN_PROFILE_RPT_VAL = "PM_009";
 
 	// JSP
 	public static final String FL_NGEP_PURCHASE_ORDER = "FL_NGEP_PURCHASE_ORDER.jsp";
@@ -551,7 +553,7 @@ public class ReportConst {
 	public static final String KAMA = ",";
 	public static final String SUPPL_CONSULT_TYPE = "J";
 	public static final String SUPPL_CONTRACT_TYPE = "K";
-	public static final String SUPPL_ALL_TYPE = "All";	
+	public static final String SUPPL_ALL_TYPE = "All";
 	public static final String SUPPL_CONSULT_MOF_NO = "465-";
 	public static final String SUPPL_CONTRACT_MOF_NO = "357-";
 
@@ -781,9 +783,11 @@ public class ReportConst {
 	public static final String AMP_PM_PHYSICAL_CONTRACT_NO_EQ = "&PPHYSICALCON=";
 	public static final String AMP_PM_LOA_NO_EQ = "&PLOA =";
 	public static final String AMP_PM_PHYSICAL_LOA_NO_EQ = "&PPHYSICALLOA=";
-	public static final String FEDERAL_GOVT="1";
-	public static final String OTHERS="2";
+	public static final String AMP_PM_SUPP_ZONE_EQ = "&PSUPPZONE=";
+	public static final String AMP_PM_SUPP_PROFILE_STATUS_EQ = "&PPRSTAT=";
 	
+	public static final String FEDERAL_GOVT = "1";
+	public static final String OTHERS = "2";
 
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
