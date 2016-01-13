@@ -1,6 +1,6 @@
 /**
 
- * Copyright © 2013 Archisoft. All rights reserved.
+q * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.fl.cr;
 
@@ -1532,7 +1532,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			BigDecimal prevSumAmt = itemSummarySO.retrieveContractAgencyAccumulatedAmount(reqDTO);
 			checkCeilingAmt = prevSumAmt.add(sumOrderedAmt);
 
-			if(checkCeilingAmt.intValue() >  ctResDTO.getAgencyCeilingAmount().intValue()){
+			if(checkCeilingAmt.doubleValue() >  ctResDTO.getAgencyCeilingAmount().doubleValue()){
 				throw new EpException(MessageConst.ERROR_740032);
 			}
 		}
@@ -1896,7 +1896,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				oriItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				oriItemAddr.setUnitPrice(BigDecimal.ZERO);
 			}
-			if(sumOrderQty.intValue() > 0 && tierResDTO.getItemPrice().intValue() == -1){
+			if(sumOrderQty.doubleValue() > 0 && tierResDTO.getItemPrice().doubleValue() == -1){
 				BigDecimal reCalSumOrderQty = BigDecimal.ZERO;
 				flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
@@ -2029,7 +2029,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				oriItemAddr.setGstAmount(BigDecimal.ZERO);
 				oriItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 			}
-			if(sumOrderQty.intValue() > 0 && tierResDTO.getItemPrice().intValue() == -1){
+			if(sumOrderQty.doubleValue() > 0 && tierResDTO.getItemPrice().doubleValue() == -1){
 				BigDecimal reCalSumOrderQty = BigDecimal.ZERO;
 				flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
@@ -3730,14 +3730,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(ctContractItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
 				if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
 					BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
-					if(flOrederedQty.intValue() >  ctContractItem.getMinimumOrderQty()){
+					if(flOrederedQty.doubleValue() >  ctContractItem.getMinimumOrderQty()){
 						throw new EpException(ctContractItem.getScRequestItem().getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is more than maximum quantity " +ctContractItem.getMinimumOrderQty());
 					}
 				}
 			}else{
 				if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
 					BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
-					if(flOrederedQty.intValue() <  ctContractItem.getMinimumOrderQty()){
+					if(flOrederedQty.doubleValue() <  ctContractItem.getMinimumOrderQty()){
 						throw new EpException(ctContractItem.getScRequestItem().getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is lesser than minimum quantity " +ctContractItem.getMinimumOrderQty());
 					}
 				}
