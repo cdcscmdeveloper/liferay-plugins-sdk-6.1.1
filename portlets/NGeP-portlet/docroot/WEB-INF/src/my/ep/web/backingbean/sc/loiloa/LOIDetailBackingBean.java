@@ -1203,6 +1203,7 @@ public class LOIDetailBackingBean extends
 				if(prevItem.getUnitPrice().doubleValue() < currentItem.getUnitPrice().doubleValue()){
 					throw new EpException(MessageConst.ERROR_700102, 
 							new String[]{
+							currentItem.getTplSpecZoneDtl() != null ? currentItem.getTplSpecZoneDtl().getZoneName() : "",
 							currentItem.getTplSpecTierQty().getFromQty().toString(), 
 							currentItem.getTplSpecTierQty().getToQty().toString(),
 							prevItem.getUnitPrice().toString()}); 
