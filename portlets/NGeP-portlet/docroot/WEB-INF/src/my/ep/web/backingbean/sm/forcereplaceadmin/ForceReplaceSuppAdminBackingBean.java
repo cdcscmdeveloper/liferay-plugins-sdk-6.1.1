@@ -274,7 +274,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 			// check if replace with catalog user not allowed if have active
 			// supplier
 			// user
-			if (getManagedBean().getNewAdmin().getEpRole() != null
+			if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
+					.getEpRole())
 					&& getManagedBean().getNewAdmin().getEpRole()
 							.equals(RoleCode.CM_USER.value())
 					&& getManagedBean().isHasSupplierUser()) {
@@ -283,9 +284,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 			// check if replace with pending activation user not allowed if have
 			// active supplier user
-			if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
-					.getEpRole())
-					&& getManagedBean().getNewAdmin().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+			if (getManagedBean().getNewAdmin().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 					&& getManagedBean().isHasSupplierUser()) {
 				throw new EpException(MessageConst.ERROR_722629);
 			}

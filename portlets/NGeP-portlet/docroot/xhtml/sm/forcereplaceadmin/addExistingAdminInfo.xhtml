@@ -45,11 +45,11 @@
 				</p:outputPanel>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" styleClass="outputLabel-view-label"/></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.name}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.name}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.idenNum']}" styleClass="outputLabel-view-label"/></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.identificationNo}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" /></td>
 				</tr>
 				<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
 					<tr>
@@ -58,7 +58,7 @@
 								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="newAdminEmail"
 								label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}"
-								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.email}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
 								size="40" required="true">
 								<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 								<p:ajax event="blur" process="@this" partialSubmit="true"/>
