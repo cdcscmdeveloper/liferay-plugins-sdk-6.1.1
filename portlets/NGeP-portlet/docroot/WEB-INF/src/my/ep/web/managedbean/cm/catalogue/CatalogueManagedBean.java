@@ -439,6 +439,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	/** The cat type filter bean. */
 	private SearchFilterBean catTypeFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
+	
+	private boolean g2gFlag = false;
 
 	/** The search data model. */
 	private IPagingDataModel<VCmSupplierItem> searchDataModel = new SearchPagingDataModel();
@@ -1036,17 +1038,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					
 					
 				}
-
-				/*if (StringUtils.isNotBlank((String) keyWordFilterBean
-						.getSearchValue())) {
-					System.out
-							.println("(String)keyWordFilterBean.getSearchValue()"
-									+ (String) keyWordFilterBean
-											.getSearchValue());
-					keyWordFilterBean.setSearchField("KEYWORD");
-					keyWordFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(keyWordFilterBean);
-				}*/
+				
 				
 				if (StringUtils.isNotBlank((String) contractTitleFilterBean
 						.getSearchValue())) {
@@ -1237,6 +1229,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 
 				reqDTO.setUserId(userId);
+				System.out.println("******g2gFlag*****"+g2gFlag);
+				reqDTO.setG2gFlag(g2gFlag);
 				log.debug("*********b4***********");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
 				setViewSupplierItemList(resDTO.getViewSuppItemResultBean()
@@ -3793,6 +3787,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setLoaPhysicalNoFilterBean(SearchFilterBean loaPhysicalNoFilterBean) {
 		this.loaPhysicalNoFilterBean = loaPhysicalNoFilterBean;
 	}
+
+	public boolean isG2gFlag() {
+		return g2gFlag;
+	}
+
+	public void setG2gFlag(boolean g2gFlag) {
+		this.g2gFlag = g2gFlag;
+	}
+
+	
 	
 	
 	
