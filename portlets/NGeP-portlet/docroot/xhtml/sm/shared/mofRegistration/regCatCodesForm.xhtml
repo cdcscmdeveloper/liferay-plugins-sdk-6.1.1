@@ -246,14 +246,16 @@
 		message="#{backingBean.managedBean.regCatCodeConfirmMsg}"
 		header="#{backingBean.managedBean.regCatCodeConfirmHeader}"
 		widgetVar="typeConfirmation">
-
-		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
-			process="@this" partialSubmit="true" update="@form"
-			action="#{backingBean.assignApplnCategoryType}"
-			oncomplete="typeConfirmation.hide()" />
-		<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
-			process="@this" partialSubmit="true" update=":form:tt:catCodeInfPan"
-			action="#{backingBean.resetApplnCategoryType}" />
+		
+		<div align="right">
+			<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
+				process="@this" partialSubmit="true" update="@form"
+				action="#{backingBean.assignApplnCategoryType}"
+				oncomplete="typeConfirmation.hide()" />
+			<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
+				process="@this" partialSubmit="true" update=":form:tt:catCodeInfPan"
+				action="#{backingBean.resetApplnCategoryType}" />
+		</div>
 
 	</p:confirmDialog>
 
