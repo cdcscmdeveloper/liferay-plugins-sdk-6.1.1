@@ -1899,7 +1899,16 @@ public class QTDetailBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
 	}
-
+	
+	/**
+	 * Render QT Search screen for QT Search Portlet
+	 */
+	public void preRenderQTSearchView() {
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, QTConstants.SEARCH_PAGE);
+	}
 	/**
 	 * Update bpm task.
 	 * 
