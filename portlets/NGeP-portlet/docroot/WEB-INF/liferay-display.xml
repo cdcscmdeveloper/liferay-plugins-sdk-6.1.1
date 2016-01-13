@@ -139,6 +139,7 @@
 		    <portlet id="scBriefingSiteVisitRegistration"/>
 			<portlet id="scQuoteSearch"></portlet>
 			<portlet id="DirectPurchaseSearch"></portlet>
+			<portlet id="scQuotationTenderSearch"></portlet>
 		    
 		</category>
 
