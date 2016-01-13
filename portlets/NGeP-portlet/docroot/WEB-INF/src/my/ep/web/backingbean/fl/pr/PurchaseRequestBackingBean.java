@@ -1122,7 +1122,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			oriItemAddr.setUnitPrice(purResDTO.getUnitPrice());
 			setGstPrice(oriItemAddr, purResDTO.getUnitPrice().doubleValue());
 			oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-			if(sumOrderQty.intValue() > 0 && purResDTO.getUnitPrice().intValue() == 0){
+			if(sumOrderQty.doubleValue() > 0 && purResDTO.getUnitPrice().doubleValue() == 0){
 				BigDecimal reCalSumOrderQty = new BigDecimal(0);
 				flItemAddr.setOrderedQty(new BigDecimal(0));
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
@@ -1236,7 +1236,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			setGstPrice(oriItemAddr, purResDTO.getUnitPrice().doubleValue());
 			oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			
-			if(sumOrderQty.intValue() > 0 && purResDTO.getUnitPrice().intValue() == 0){
+			if(sumOrderQty.doubleValue() > 0 && purResDTO.getUnitPrice().doubleValue() == 0){
 				BigDecimal reCalSumOrderQty = new BigDecimal(0);
 				flItemAddr.setOrderedQty(new BigDecimal(0));
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
