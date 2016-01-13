@@ -236,23 +236,20 @@ public class QTDetailBackingBean extends
 			getManagedBean().setMinistryProfile(null);
 			getManagedBean().setPtjProfile(null);
 		} else {
-			IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
-			UserReqDTO uReqDTO = new UserReqDTO();
-			uReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			UserResDTO uResDTO = userSO.retrieveUserOrgListByUserId(uReqDTO);
-			PmOrgProfile orgProfile = null;
-			if (null != uResDTO.getUserOrgList() && uResDTO.getUserOrgList().size() > 0) {
-					orgProfile = uResDTO.getUserOrgList().get(0).getPmOrgProfile();
-			}
+			PmOrgProfile ptjOrgProfile = getPTJOrgProfileByLoginUser();
 			if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-				this.getManagedBean().setPtjProfile(orgProfile);
-				this.getManagedBean().setMinistryProfile(orgProfile);
-				/*getManagedBean().setPtjProfile(null);
-				getManagedBean().setMinistryProfile(null);*/
+				this.getManagedBean().setPtjProfile(ptjOrgProfile);
+				if (ptjOrgProfile != null) {
+					this.getManagedBean().setMinistryProfile(
+							retrieveMinistryOrgProfile(ptjOrgProfile.getOrgProfileId()));
+				}
 				getManagedBean().setDeskOfficer(true);
+				
 			} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
 				getManagedBean().setPtjProfile(null);
-				getManagedBean().setMinistryProfile(orgProfile);
+				if(ptjOrgProfile != null){
+					getManagedBean().setMinistryProfile(retrieveMinistryOrgProfile(ptjOrgProfile.getOrgProfileId()));
+				}
 			}
 		}
 	}
@@ -1334,21 +1331,30 @@ public class QTDetailBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
-			PmOrgProfile ministryProfile = getManagedBean().getMinistryProfile();
-			if (ministryProfile != null && ministryProfile.getOrgProfileId() != null) {// Filter By - Ministry
-				SearchFilterBean ministryProfiles = new SearchFilterBean("pmOrgProfile." + "orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), ministryProfile.getOrgProfileId());
-				searchFilterBean.add(ministryProfiles);
-				/*SearchFilterBean ptjOrgProfile = new SearchFilterBean(
-						"pmOrgProfile."
-								+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-						SearchOperator.OPERATOR_EQUALS.value(), ministryId, JoinType.LEFT);
-				searchFilterBean.add(ptjOrgProfile); */
+			if (isAuditor()) {
+				PmOrgProfile ptjProfiles = getManagedBean().getPtjProfile();
+				if (ptjProfiles != null&& ptjProfiles.getOrgProfileId() != null) {// Filter By - PTJ
+					
+					SearchFilterBean ptjProfile = new SearchFilterBean("pmOrgProfile." + "orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),ptjProfiles.getOrgProfileId());
+					searchFilterBean.add(ptjProfile);
+				} else {
+					PmOrgProfile ministryProfile = getManagedBean().getMinistryProfile();
+					if (ministryProfile != null&& ministryProfile.getOrgProfileId() != null) {// Filter By - Ministry
+							
+						SearchFilterBean ministryOrgProfile = new SearchFilterBean(
+								"pmOrgProfile."
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY
+										 .value()),SearchOperator.OPERATOR_EQUALS.value(), ministryProfile.getOrgProfileId());
+						searchFilterBean.add(ministryOrgProfile);
+					}
+				}
+				 // Removed the restriction condition for auditor users.
+				if(CollectionUtils.isNotEmpty(qtSearchBean.getDataFilterMetadatas())){
+					qtSearchBean.getDataFilterMetadatas().clear();
+				}
 			}
-			PmOrgProfile ptjProfiles = getManagedBean().getPtjProfile();
-			if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {// Filter By - PTJ
-				SearchFilterBean ptjProfile = new SearchFilterBean("pmOrgProfile." + "orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), ptjProfiles.getOrgProfileId());
-				searchFilterBean.add(ptjProfile);
-			}
+			
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
