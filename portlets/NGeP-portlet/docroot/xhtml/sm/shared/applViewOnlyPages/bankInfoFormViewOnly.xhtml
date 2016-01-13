@@ -162,7 +162,7 @@
 					
 					<c:if test="#{viewSmApplBackingBean.managedBean.selectedBank.accountPurpose eq 'P' or viewSmApplBackingBean.managedBean.selectedBank.accountPurpose eq 'B'}">
 						<tr>
-							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchLbl" /></td>
+							<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchLbl" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.bankBranchName}" escape="false"/></td>
 						</tr>
 					</c:if>
@@ -171,7 +171,7 @@
 						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.signatureInstruction}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.cheSigns']}" /></td>
+						<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.cheSigns']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.chequeSignPersonnelName}" escape="false" /></td>
 					</tr>
 				</table>
