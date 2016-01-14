@@ -6738,7 +6738,7 @@ public class SmApplicationBackingBean extends
 		log.info("**** assignViewSiteVisitReport *** ");
 		SvoSiteVisitBackingBean svo = new SvoSiteVisitBackingBean();
 		svo.getManagedBean().setAppId(getManagedBean().getSmAppl().getApplId());
-		svo.retrieveSiteVisitInfo("V");
+		svo.reviewSiteVisitReport();
 	}
 
 	/**
