@@ -114,7 +114,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private Long svTaskId;
 	private SmAppl smAppl;
 	private Map<String, List<SmSvTask>> templateTaskMap;
-	private SmSvTask selectedSvTask;
 
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
@@ -642,14 +641,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setTemplateTaskMap(Map<String, List<SmSvTask>> templateTaskMap) {
 		this.templateTaskMap = templateTaskMap;
-	}
-
-	public SmSvTask getSelectedSvTask() {
-		return selectedSvTask;
-	}
-
-	public void setSelectedSvTask(SmSvTask selectedSvTask) {
-		this.selectedSvTask = selectedSvTask;
 	}
 
 }

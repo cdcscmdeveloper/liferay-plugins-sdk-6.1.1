@@ -30,13 +30,13 @@
 <!-- 	<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" /> -->
 	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}" toggleable="true">
 		<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="dtlTemplate"
-		value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate}" var="template">
+		value="#{svoSiteVisitBackingBean.managedBean.smSvTask}" var="svTask">
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
-				#{svoSiteVisitBackingBean.getParameterDesc(template.pmParameter)}
+				#{svoSiteVisitBackingBean.getParameterDesc(svTask.smSvTemplate.pmParameter)}
 			</p:column>
 	
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
-				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(template.pmParameter.parameterCode)}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
 			</p:column>
 			
 			<ui:remove>
