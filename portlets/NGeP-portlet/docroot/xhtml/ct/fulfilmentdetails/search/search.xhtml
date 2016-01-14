@@ -105,12 +105,16 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  
 					      styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
-						<h:outputText value="#{data.circularNo}" style="text-align:left; float:left;" rendered="#{data.ctCircularVer != null and data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}" />
+						<h:outputText value="#{data.circularNo}" style="text-align:left; float:left;" rendered="#{data.ctCircularVer != null and 
+						(data.ctCircularVer.status.statusId != CtStatusConst.cqRejected
+							or data.ctCircularVer.status.statusId != CtStatusConst.cqCancelled)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.circular.status']}" 
 					     styleClass="column-align-center"  style="width:8%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}" 
-						      style="text-align:left; float:left;" rendered="#{data.ctCircularVer != null and data.ctCircularVer.status.statusId != CtStatusConst.cqRejected}"    />
+						      style="text-align:left; float:left;" rendered="#{data.ctCircularVer != null and 
+						      (data.ctCircularVer.status.statusId != CtStatusConst.cqRejected
+						      	or data.ctCircularVer.status.statusId != CtStatusConst.cqCancelled)}"    />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.supplier.name']}" styleClass="column-align-center" style="width:8%; white-space:normal;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
 						<div align="left">
