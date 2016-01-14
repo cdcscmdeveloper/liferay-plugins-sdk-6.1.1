@@ -773,6 +773,8 @@ public class QTDetailBackingBean extends
 			}
 		
 			setScQtTrackingDairyObject(scQt);
+			this.getManagedBean().setViewQtDetails(viewQT);
+			
 		} finally {
 			detailSO = null;
 		}
