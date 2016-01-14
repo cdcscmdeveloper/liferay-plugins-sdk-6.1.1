@@ -65,16 +65,18 @@
 				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.activation.loginid.instruction']}"></h:outputText>
 			</td>
 		</tr>
-		<tr>
-			<td>
-			</td>
-			<td>
-				<ac:captcha id="accaptcha" 
-					label="Captcha" 
-					language="en" 
-					theme="white"/> 
-			</td>
-		</tr>
+		<ui:remove>
+			<tr>
+				<td>
+				</td>
+				<td>
+					<ac:captcha id="accaptcha" 
+						label="Captcha" 
+						language="en" 
+						theme="white"/> 
+				</td>
+			</tr>
+		</ui:remove>
 		<tr>
 			<td>
 				<p:commandButton 
