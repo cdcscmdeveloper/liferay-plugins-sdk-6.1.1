@@ -585,380 +585,371 @@ public class SmApplicationBackingBean extends
 								.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
-		try {
-			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 
-			if (!fromBpm) {
-				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 
-				boolean cannotProceedAlertMsg = false;
+		if (!fromBpm) {
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 
-				if (applicationType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					boolean hasActiveTransactions = SmApplicationUtil
-							.hasActiveTransactions(currSupp);
-					if (hasActiveTransactions) {
-						throw new EpException(MessageConst.ERROR_722565);
-					}
-				} else {
+			boolean cannotProceedAlertMsg = false;
 
-				}
-				cannotProceedAlertMsg = SmApplicationUtil
-						.checkActiveSmApplForSupp(currSupp);
-				if (cannotProceedAlertMsg) {
-					throw new EpException(MessageConst.ERROR_722542);
-				}
-
-				if (applicationType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-
-					// individual registration type cant proceed to upgrade to
-					// MOF
-					if (currSupp != null
-							&& currSupp.getBusinessType().equals("A")) {
-						throw new EpException(MessageConst.ERROR_722607);
-					}
-					if (getManagedBean().getNewSupplierType() == null
-							|| StringUtils.isBlank(getManagedBean()
-									.getNewSupplierType())) {
-						getManagedBean().setNewSupplierType("K");
-					}
-					smAppl.setSupplierType(getManagedBean()
-							.getNewSupplierType());
-				}
-				// else if (applicationType.equalsIgnoreCase("B")) {}
-				else if (applicationType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-						|| applicationType
-								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-						|| applicationType
-								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-						|| applicationType
-								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
-					cannotProceedAlertMsg = SmApplicationUtil
-							.validateBeforeProceed(currSupp.getSupplierId(),
-									applicationType);
-				}
-				if (cannotProceedAlertMsg) {
-					return SmApplicationUtil
-							.setExceptionNavigationForAppl(applicationType);
-				} else {
-					log.info("****** Before Clone supp id *****"
-							+ currSupp.getSupplierId());
-					resDto = cloneSmApplicationDraft(currSupp.getSupplierId(),
-							applicationType, smAppl.getSupplierType());
-					if (resDto.isErrorCaued()) {
-						return SmApplicationUtil
-								.setExceptionNavigationForAppl(applicationType);
-
-					}
-					smApplSupplier = resDto.getSmSupplier();
-					log.info(" *** After clone Supplier Id ******* "
-							+ smApplSupplier.getSupplierId());
-					log.info("**** After clone appl id *** "
-							+ resDto.getSmAppl().getApplId() + " -- "
-							+ resDto.getSmAppl().getApplNo());
-					if (resDto.isErrorCaued()) {
-						return SmApplicationUtil
-								.setExceptionNavigationForAppl(applicationType);
-					}
-					smAppl = resDto.getSmAppl();
-					smAppl.setResubmit(false);
-					smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
-					if (smAppl.getApplType().equalsIgnoreCase(
-							ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-						if (smAppl.getSmCompanyBasic() != null) {
-							smAppl.getSmCompanyBasic().setAnnualRevenue(null);
-						}
-					}
-					log.info("****** After retrieve the appl is ********"
-							+ smAppl.getApplId() + " *** Num ***"
-							+ smAppl.getApplNo() + "*** Bank Size *** "
-							+ smAppl.getSmSupplierBanks().size());
+			if (applicationType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				boolean hasActiveTransactions = SmApplicationUtil
+						.hasActiveTransactions(currSupp);
+				if (hasActiveTransactions) {
+					throw new EpException(MessageConst.ERROR_722565);
 				}
 			} else {
-				log.info("******* This is PO or Approver from BPM ************");
-				smApplSupplier = supp;
-				smAppl = appl;
+
 			}
-			getManagedBean().setSmSupplier(smApplSupplier);
+			cannotProceedAlertMsg = SmApplicationUtil
+					.checkActiveSmApplForSupp(currSupp);
+			if (cannotProceedAlertMsg) {
+				throw new EpException(MessageConst.ERROR_722542);
+			}
+
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-				getManagedBean()
-						.setDisableWithFedralTransaction(
-								SmApplicationUtil
-										.isTransactWithBasicAccountApprovedSoftCert(getManagedBean()
-												.getSmSupplier().getSmAppl()));
-			}
-			if (!applicationType
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-					&& !applicationType
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-					&& !applicationType
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-				SmApplicationUtil
-						.checkEquityOwnerUpdateAllowance(getManagedBean());
-			}
-			retrieveBusinessTypeList();
-			assignSupplierBusinessType(getManagedBean().getSmSupplier());
 
-			if (getManagedBean().isApproverUser()
-					|| getManagedBean().isPoUser()) {
-				if (smAppl.getSmCompanyBasic() == null) {
-					smAppl.setSmCompanyBasic(new SmCompanyBasic());
+				// individual registration type cant proceed to upgrade to
+				// MOF
+				if (currSupp != null
+						&& currSupp
+								.getBusinessType()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
+					throw new EpException(MessageConst.ERROR_722607);
 				}
+				// government seller type cant proceed to upgrade to
+				// MOF
+				if (currSupp != null
+						&& currSupp
+								.getBusinessType()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
+					throw new EpException(MessageConst.ERROR_722628);
+				}
+				if (getManagedBean().getNewSupplierType() == null
+						|| StringUtils.isBlank(getManagedBean()
+								.getNewSupplierType())) {
+					getManagedBean().setNewSupplierType("K");
+				}
+				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
 			}
-
-			if (smAppl.getSmCompanyBasic() != null) {
-				if (smAppl.getSmCompanyBasic().getSmCompanyAddresses() != null
-						&& !smAppl.getSmCompanyBasic().getSmCompanyAddresses()
-								.isEmpty()) {
-					SmCompanyAddress comAdd = smAppl.getSmCompanyBasic()
-							.getSmCompanyAddresses().get(0);
-					SmAddress addr = comAdd.getSmAddress();
-					SmApplicationUtil.setPmStateDropdownValuesForBasicInfo(this
-							.getManagedBean(), addr.getPmCountry()
-							.getCountryId());
-					this.getManagedBean().setBasicCompanyDistricts(
-							SmCommonUtil.getDistrictList(addr.getPmState()
-									.getStateId()));
-					getManagedBean().setPrevBasicStateId(
-							addr.getPmState().getStateId());
-					this.getManagedBean().setBasicCompanyCities(
-							SmCommonUtil.getCityList(addr.getPmDistrict()
-									.getDistrictId()));
-				} else {
-					SmCompanyAddress comAdd = new SmCompanyAddress();
-					SmAddress addr = SmApplicationUtil
-							.setDefaultAddr(getManagedBean().getDefPmCountry());
-					comAdd.setSmAddress(addr);
-					List<SmCompanyAddress> addrs = new ArrayList<SmCompanyAddress>();
-					addrs.add(comAdd);
-					smAppl.getSmCompanyBasic().setSmCompanyAddresses(addrs);
-				}
+			// else if (applicationType.equalsIgnoreCase("B")) {}
+			else if (applicationType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+					|| applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+					|| applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+					|| applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
+				cannotProceedAlertMsg = SmApplicationUtil
+						.validateBeforeProceed(currSupp.getSupplierId(),
+								applicationType);
+			}
+			if (cannotProceedAlertMsg) {
+				return SmApplicationUtil
+						.setExceptionNavigationForAppl(applicationType);
 			} else {
-				log.info("******** My Company Basic is null ********");
-			}
+				log.info("****** Before Clone supp id *****"
+						+ currSupp.getSupplierId());
+				resDto = cloneSmApplicationDraft(currSupp.getSupplierId(),
+						applicationType, smAppl.getSupplierType());
+				if (resDto.isErrorCaued()) {
+					return SmApplicationUtil
+							.setExceptionNavigationForAppl(applicationType);
 
-			getManagedBean().setSmAppl(smAppl);
-
-			if (fromBpm) {
-				SmApplicationUtil.getInstance().setApplAddressTransientValue(
-						getManagedBean().getSmAppl(), false);
-				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
-				if (!(getManagedBean().isApproverUser() || getManagedBean()
-						.isPoUser())) {
-					boolean updateNeeded = SmApplicationUtil
-							.resetDeactivatedPersonnel(getManagedBean());
-					if (updateNeeded)
-						saveOrUpdateAppl();
 				}
-			}
-
-			if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
-				log.info("*** Empty list of staff *****"
-						+ smAppl.getSupplierType());
-				getManagedBean().getSmAppl().setSmStaffTotals(
-						SmApplicationUtil.getStaffList(smAppl));
-			}
-
-			getManagedBean().setTabActiveIndex(0);
-			if (!fromBpm) {
-				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
-
-				if (getManagedBean().getSmAppl().getSupplierType()
-						.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
-					getManagedBean().getSmAppl().getSmCompanyBasic()
-							.setWithFederal(true);
+				smApplSupplier = resDto.getSmSupplier();
+				log.info(" *** After clone Supplier Id ******* "
+						+ smApplSupplier.getSupplierId());
+				log.info("**** After clone appl id *** "
+						+ resDto.getSmAppl().getApplId() + " -- "
+						+ resDto.getSmAppl().getApplNo());
+				if (resDto.isErrorCaued()) {
+					return SmApplicationUtil
+							.setExceptionNavigationForAppl(applicationType);
 				}
-
-				// SmApplicationUtil.getInstance().setApplAddressTransientValue(
-				// getManagedBean().getSmAppl(), false);
-
-			} else {
-				if (!StringUtils.isEmpty(getManagedBean().getCurrentStatus())) {
-					log.info("*** Current Status Value Retrieved from BPM (set in common appl backing bean)****** "
-							+ getManagedBean().getCurrentStatus());
-				} else {
-					SmWorkflowStatus sts = SmCommonUtil
-							.getCurrentActiveWokFlowStatus(smAppl.getApplId());
-					if (sts != null && sts.getPmStatus() != null
-							&& sts.getPmStatus().getStatusId() != null) {
-						log.info("** PM Status retrived from work flow *******");
-						setPmStatusDesc(sts.getPmStatus().getStatusId()
-								.toString());
-						log.info("*** Status ******* "
-								+ getManagedBean().getCurrentStatus());
-					} else {
-						log.info("** PM Status retrived from SM appl only *******");
-						setPmStatusDesc(smAppl.getPmStatus().getStatusId()
-								.toString());
-						log.info("*** SM appl  Status ******* "
-								+ getManagedBean().getCurrentStatus());
+				smAppl = resDto.getSmAppl();
+				smAppl.setResubmit(false);
+				smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+				if (smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+					if (smAppl.getSmCompanyBasic() != null) {
+						smAppl.getSmCompanyBasic().setAnnualRevenue(null);
 					}
 				}
+				log.info("****** After retrieve the appl is ********"
+						+ smAppl.getApplId() + " *** Num ***"
+						+ smAppl.getApplNo() + "*** Bank Size *** "
+						+ smAppl.getSmSupplierBanks().size());
 			}
-			if (fromBpm
-					&& (getManagedBean().isPoUser() || getManagedBean()
-							.isApproverUser())) {
-				setRevUrl();
-				getManagedBean().setMaxReviewCount(
-						assignMaxReviewCount(applicationType, getManagedBean()
-								.getSmAppl().getApplCategoryType(),
-								getManagedBean().getSmAppl().getSupplierType(),
-								getManagedBean().getBusinessTypeVal()));
-				if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
-					smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
-				}
+		} else {
+			log.info("******* This is PO or Approver from BPM ************");
+			smApplSupplier = supp;
+			smAppl = appl;
+		}
+		getManagedBean().setSmSupplier(smApplSupplier);
+		if (applicationType
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			getManagedBean()
+					.setDisableWithFedralTransaction(
+							SmApplicationUtil
+									.isTransactWithBasicAccountApprovedSoftCert(getManagedBean()
+											.getSmSupplier().getSmAppl()));
+		}
+		if (!applicationType
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& !applicationType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+				&& !applicationType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
+		}
+		retrieveBusinessTypeList();
+		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 
-				if (getManagedBean().isPoUser()) {
-					setDefaultPoReviewSection();
-					setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
-				}
-
-				if (getManagedBean().isApproverUser()) {
-					setDefaultApproverReviewSection();
-				}
-
-				if (applicationType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					getManagedBean().setSupplierRemarks(
-							SmApplicationUtil.getSmRemarksByDocTypeAndId(
-									applicationType, getManagedBean()
-											.getSmAppl().getApplId()));
-				}
-
-				// currently is display for ApplType C/DPA
-				getManagedBean().setBasicInfo(
-						SmApplicationUtil.getSmSupplierBasicInfoVO(
-								getManagedBean().getBasicInfo(),
-								getManagedBean().getSmSupplier(),
-								getManagedBean().getSmAppl()));
+		if (getManagedBean().isApproverUser() || getManagedBean().isPoUser()) {
+			if (smAppl.getSmCompanyBasic() == null) {
+				smAppl.setSmCompanyBasic(new SmCompanyBasic());
 			}
+		}
+
+		if (smAppl.getSmCompanyBasic() != null) {
+			if (smAppl.getSmCompanyBasic().getSmCompanyAddresses() != null
+					&& !smAppl.getSmCompanyBasic().getSmCompanyAddresses()
+							.isEmpty()) {
+				SmCompanyAddress comAdd = smAppl.getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0);
+				SmAddress addr = comAdd.getSmAddress();
+				SmApplicationUtil.setPmStateDropdownValuesForBasicInfo(this
+						.getManagedBean(), addr.getPmCountry().getCountryId());
+				this.getManagedBean().setBasicCompanyDistricts(
+						SmCommonUtil.getDistrictList(addr.getPmState()
+								.getStateId()));
+				getManagedBean().setPrevBasicStateId(
+						addr.getPmState().getStateId());
+				this.getManagedBean().setBasicCompanyCities(
+						SmCommonUtil.getCityList(addr.getPmDistrict()
+								.getDistrictId()));
+			} else {
+				SmCompanyAddress comAdd = new SmCompanyAddress();
+				SmAddress addr = SmApplicationUtil
+						.setDefaultAddr(getManagedBean().getDefPmCountry());
+				comAdd.setSmAddress(addr);
+				List<SmCompanyAddress> addrs = new ArrayList<SmCompanyAddress>();
+				addrs.add(comAdd);
+				smAppl.getSmCompanyBasic().setSmCompanyAddresses(addrs);
+			}
+		} else {
+			log.info("******** My Company Basic is null ********");
+		}
+
+		getManagedBean().setSmAppl(smAppl);
+
+		if (fromBpm) {
+			SmApplicationUtil.getInstance().setApplAddressTransientValue(
+					getManagedBean().getSmAppl(), false);
+			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+			if (!(getManagedBean().isApproverUser() || getManagedBean()
+					.isPoUser())) {
+				boolean updateNeeded = SmApplicationUtil
+						.resetDeactivatedPersonnel(getManagedBean());
+				if (updateNeeded)
+					saveOrUpdateAppl();
+			}
+		}
+
+		if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
+			log.info("*** Empty list of staff *****" + smAppl.getSupplierType());
+			getManagedBean().getSmAppl().setSmStaffTotals(
+					SmApplicationUtil.getStaffList(smAppl));
+		}
+
+		getManagedBean().setTabActiveIndex(0);
+		if (!fromBpm) {
+			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
 			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-				getManagedBean().getSmAppl().setApplCategoryType("N");
-			} else if (StringUtils.isEmpty(getManagedBean().getSmAppl()
-					.getApplCategoryType())) {
-				getManagedBean().getSmAppl().setApplCategoryType("N");
+					.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setWithFederal(true);
 			}
-			getManagedBean().setCurrentPageType(
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
-			if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
-					&& !smAppl.getApplType().equalsIgnoreCase(
-							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-				SmFacility fac = new SmFacility();
-				if (smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					fac.setFacilityType("H");
-				}
-				if (fac.getSmAddress() == null
-						|| StringUtils
-								.isBlank(fac.getSmAddress().getAddress1())) {
-					fac.setSmAddress(new SmAddress());
-					SmApplicationUtil.getInstance().cloneAddress(
-							fac.getSmAddress(),
-							getManagedBean().getSmAppl().getSmCompanyBasic()
-									.getSmCompanyAddresses().get(0)
-									.getSmAddress());
-				}
-				fac.setFacilityName(getManagedBean().getSmAppl()
-						.getSmCompanyBasic().getCompanyName());
-				fac.setSmAppl(smAppl);
-				fac.setPurchasePrice(new BigDecimal(0.00));
-				fac.setRentalRate(new BigDecimal(0.00));
-				fac.setRevNo(1);
-				smAppl.getSmFacilities().add(fac);
-				this.getManagedBean().setBasicCompanyFacility(fac);
-				SmApplicationUtil
-						.getInstance()
-						.assignStateDistAndCityForSelVal(
-								getManagedBean(),
-								fac.getSmAddress(),
-								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 
+			// SmApplicationUtil.getInstance().setApplAddressTransientValue(
+			// getManagedBean().getSmAppl(), false);
+
+		} else {
+			if (!StringUtils.isEmpty(getManagedBean().getCurrentStatus())) {
+				log.info("*** Current Status Value Retrieved from BPM (set in common appl backing bean)****** "
+						+ getManagedBean().getCurrentStatus());
 			} else {
-				setApplicationFailities(smAppl.getSmFacilities());
+				SmWorkflowStatus sts = SmCommonUtil
+						.getCurrentActiveWokFlowStatus(smAppl.getApplId());
+				if (sts != null && sts.getPmStatus() != null
+						&& sts.getPmStatus().getStatusId() != null) {
+					log.info("** PM Status retrived from work flow *******");
+					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
+					log.info("*** Status ******* "
+							+ getManagedBean().getCurrentStatus());
+				} else {
+					log.info("** PM Status retrived from SM appl only *******");
+					setPmStatusDesc(smAppl.getPmStatus().getStatusId()
+							.toString());
+					log.info("*** SM appl  Status ******* "
+							+ getManagedBean().getCurrentStatus());
+				}
 			}
+		}
+		if (fromBpm
+				&& (getManagedBean().isPoUser() || getManagedBean()
+						.isApproverUser())) {
+			setRevUrl();
+			getManagedBean().setMaxReviewCount(
+					assignMaxReviewCount(applicationType, getManagedBean()
+							.getSmAppl().getApplCategoryType(),
+							getManagedBean().getSmAppl().getSupplierType(),
+							getManagedBean().getBusinessTypeVal()));
+			if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
+				smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
+			}
+
+			if (getManagedBean().isPoUser()) {
+				setDefaultPoReviewSection();
+				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
+			}
+
+			if (getManagedBean().isApproverUser()) {
+				setDefaultApproverReviewSection();
+			}
+
+			if (applicationType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				getManagedBean().setSupplierRemarks(
+						SmApplicationUtil.getSmRemarksByDocTypeAndId(
+								applicationType, getManagedBean().getSmAppl()
+										.getApplId()));
+			}
+
+			// currently is display for ApplType C/DPA
+			getManagedBean().setBasicInfo(
+					SmApplicationUtil.getSmSupplierBasicInfoVO(getManagedBean()
+							.getBasicInfo(), getManagedBean().getSmSupplier(),
+							getManagedBean().getSmAppl()));
+		}
+
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		} else if (StringUtils.isEmpty(getManagedBean().getSmAppl()
+				.getApplCategoryType())) {
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		}
+		getManagedBean().setCurrentPageType(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+		if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
+				&& !smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			SmFacility fac = new SmFacility();
 			if (smAppl.getApplType().equalsIgnoreCase(
 					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-				SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
-				// set basic info for cancel mof
+				fac.setFacilityType("H");
 			}
-
-			// set previous approved personnels
-			getManagedBean().setPrevApprovedPersonnels(
-					SmApplicationUtil
-							.getPrevApprovedPersonnelDirectorOwner(smAppl));
-
-			// set application header info
-			getManagedBean().setApplStatusInfo(
-					SmApplicationUtil.getSmApplStatusInfoVO(smAppl));
-
-			// set whether allowed to edit company name
-			getManagedBean().setDisabledCompanyName(
-					SmApplicationUtil.isDisableCompanyNameInAppl(
-							getManagedBean().getSmSupplier(), getManagedBean()
-									.getSmAppl()));
-
-			// set whether allowed to edit business type
-			getManagedBean().setDisabledBusinessType(
-					SmApplicationUtil.isDisableBusinessTypeInAppl(
-							getManagedBean().getSmSupplier(), getManagedBean()
-									.getSmAppl()));
-
-			// set whether allowed to change business type from office to
-			// business
-			setBusinessAndHadApprovedSpecialCatcode();
-
-			// set travelling software select items
-			getManagedBean().setTravellingSoftwareItems(
-					SmCommonUtil.getInstance().getTravellingSoftwareItems());
-
-			getManagedBean()
-					.setRegStatusDescList(
-							SmApplicationUtil.getInstance()
-									.retrieveRegistrationStatusList(
-											getManagedBean().getSmAppl()
-													.getSupplierType(),
-											applicationType));
-
-			getManagedBean()
-					.setSupplierParentCatList(
-							SmApplicationUtil
-									.retrieveParentCategoryListForExperiencePage(getManagedBean()));
-			if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
-				SmApplicationUtil
-						.assignNonPersonnelProfBodyList(getManagedBean());
+			if (fac.getSmAddress() == null
+					|| StringUtils.isBlank(fac.getSmAddress().getAddress1())) {
+				fac.setSmAddress(new SmAddress());
+				SmApplicationUtil.getInstance().cloneAddress(
+						fac.getSmAddress(),
+						getManagedBean().getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().get(0).getSmAddress());
 			}
-			List<SmMofAccount> accounts = getManagedBean().getSmSupplier()
-					.getSmMofAccounts();
-			if (accounts != null && !accounts.isEmpty()) {
-				for (SmMofAccount account : accounts) {
-					if (account.getSupplierType().equalsIgnoreCase(
-							getManagedBean().getSmSupplier().getSmAppl()
-									.getSupplierType())
-							&& account.getRecordStatusFlg().compareTo(
-									DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
-						getManagedBean().setMofNumber(account.getMofNo());
-					}
+			fac.setFacilityName(getManagedBean().getSmAppl()
+					.getSmCompanyBasic().getCompanyName());
+			fac.setSmAppl(smAppl);
+			fac.setPurchasePrice(new BigDecimal(0.00));
+			fac.setRentalRate(new BigDecimal(0.00));
+			fac.setRevNo(1);
+			smAppl.getSmFacilities().add(fac);
+			this.getManagedBean().setBasicCompanyFacility(fac);
+			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+					getManagedBean(), fac.getSmAddress(),
+					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+
+		} else {
+			setApplicationFailities(smAppl.getSmFacilities());
+		}
+		if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
+			// set basic info for cancel mof
+		}
+
+		// set previous approved personnels
+		getManagedBean()
+				.setPrevApprovedPersonnels(
+						SmApplicationUtil
+								.getPrevApprovedPersonnelDirectorOwner(smAppl));
+
+		// set application header info
+		getManagedBean().setApplStatusInfo(
+				SmApplicationUtil.getSmApplStatusInfoVO(smAppl));
+
+		// set whether allowed to edit company name
+		getManagedBean().setDisabledCompanyName(
+				SmApplicationUtil.isDisableCompanyNameInAppl(getManagedBean()
+						.getSmSupplier(), getManagedBean().getSmAppl()));
+
+		// set whether allowed to edit business type
+		getManagedBean().setDisabledBusinessType(
+				SmApplicationUtil.isDisableBusinessTypeInAppl(getManagedBean()
+						.getSmSupplier(), getManagedBean().getSmAppl()));
+
+		// set whether allowed to change business type from office to
+		// business
+		setBusinessAndHadApprovedSpecialCatcode();
+
+		// set travelling software select items
+		getManagedBean().setTravellingSoftwareItems(
+				SmCommonUtil.getInstance().getTravellingSoftwareItems());
+
+		getManagedBean().setRegStatusDescList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
+						getManagedBean().getSmAppl().getSupplierType(),
+						applicationType));
+
+		getManagedBean()
+				.setSupplierParentCatList(
+						SmApplicationUtil
+								.retrieveParentCategoryListForExperiencePage(getManagedBean()));
+		if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
+			SmApplicationUtil.assignNonPersonnelProfBodyList(getManagedBean());
+		}
+		List<SmMofAccount> accounts = getManagedBean().getSmSupplier()
+				.getSmMofAccounts();
+		if (accounts != null && !accounts.isEmpty()) {
+			for (SmMofAccount account : accounts) {
+				if (account.getSupplierType().equalsIgnoreCase(
+						getManagedBean().getSmSupplier().getSmAppl()
+								.getSupplierType())
+						&& account.getRecordStatusFlg().compareTo(
+								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+					getManagedBean().setMofNumber(account.getMofNo());
 				}
 			}
-
-			// init GST information
-			initGst();
-
-			// init to show change value compare to previous application
-			SmFieldChangeUtil.initLatestAppl(getManagedBean());
-
-			// set softcert reject reason
-			setPersonnelSoftcertRejectReason();
-
-			return SmApplicationUtil.setNavigationForAppl(applicationType);
-		} finally {
-			// mofRegistrationSO = null;
 		}
+
+		// init GST information
+		initGst();
+
+		// init to show change value compare to previous application
+		SmFieldChangeUtil.initLatestAppl(getManagedBean());
+
+		// set softcert reject reason
+		setPersonnelSoftcertRejectReason();
+
+		return SmApplicationUtil.setNavigationForAppl(applicationType);
+
 	}
 
 	/**
