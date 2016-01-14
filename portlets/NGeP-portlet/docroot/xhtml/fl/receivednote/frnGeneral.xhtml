@@ -148,6 +148,13 @@
 							<p:ajax process="@this" event="change" listener="#{receivedNoteBackingBean.setSelectedAckOfficer}"></p:ajax>
 					</p:selectOneMenu></td>
 			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.fl.receiving.officer.name']}" rendered="#{receivedNoteBackingBean.isFlFulfilmentApprover()}"
+						style="text-align: top" /><p:outputLabel rendered="#{receivedNoteBackingBean.isReceivingOfficer()}" 
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText size="45" disabled="true" value="#{receivedNoteBackingBean.getUsername(receivedNoteBackingBean.managedBean.fulfilmentNote.createdBy)}" rendered="#{receivedNoteBackingBean.isFlFulfilmentApprover()}">
+				</p:inputText></td>
+			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
