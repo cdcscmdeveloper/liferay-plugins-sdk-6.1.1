@@ -1028,6 +1028,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private PmOrgProfile ministryProfile;
 	
+    private Object[] scTdObj;
+    private boolean viewQtDetails;
     
 	/**
 	 * Sets the panel suppliers.
@@ -6553,6 +6555,34 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistryProfile(PmOrgProfile ministryProfile) {
 		this.ministryProfile = ministryProfile;
+	}
+
+	/**
+	 * @return the scTdObj
+	 */
+	public Object[] getScTdObj() {
+		return scTdObj;
+	}
+
+	/**
+	 * @param scTdObj the scTdObj to set
+	 */
+	public void setScTdObj(Object[] scTdObj) {
+		this.scTdObj = scTdObj;
+	}
+
+	/**
+	 * @return the viewQtDetails
+	 */
+	public boolean isViewQtDetails() {
+		return viewQtDetails;
+	}
+
+	/**
+	 * @param viewQtDetails the viewQtDetails to set
+	 */
+	public void setViewQtDetails(boolean viewQtDetails) {
+		this.viewQtDetails = viewQtDetails;
 	}
 
 }
