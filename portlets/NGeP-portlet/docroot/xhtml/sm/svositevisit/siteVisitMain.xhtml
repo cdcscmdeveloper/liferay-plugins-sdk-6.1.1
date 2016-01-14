@@ -44,7 +44,7 @@
 							<f:param name="disableValidation" value="true" />
 						</p:commandButton>
 					</div>
-					<ui:param name="category" value="#{svoSiteVisitBackingBean.managedBean.indexPageMap[svoSiteVisitBackingBean.managedBean.activeIndex]}" />
+					<ui:param name="template" value="#{svoSiteVisitBackingBean.managedBean.indexPageMap[svoSiteVisitBackingBean.managedBean.activeIndex]}" />
 						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
 							<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
 						</c:if>
@@ -61,39 +61,39 @@
 							<ui:include src="/xhtml/sm/svositevisit/officeLocation.xhtml" />
 						</c:if>
 
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_TRANSPORTATION}">
+						<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRANSPORTATION}">
 							<ui:include src="/xhtml/sm/svositevisit/transportation.xhtml" />
 						</c:if>
 
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
+						<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
 							<ui:include src="/xhtml/sm/svositevisit/workshop.xhtml" />
 						</c:if>
 
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_INSURANCE}">
+						<c:if test="#{template.pmParameter.parameterCode  == SupplierManagementConst.CAT_TYPE_INSURANCE}">
 							<ui:include src="/xhtml/sm/svositevisit/insurance.xhtml" />
 						</c:if>
 
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
+						<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
 							<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
 						</c:if>
 
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+						<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
 							<ui:include src="/xhtml/sm/svositevisit/manufacturing.xhtml" />
 						</c:if>
 
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_PRINTING}">
+						<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_PRINTING}">
 							<ui:include src="/xhtml/sm/svositevisit/printing.xhtml" />
 						</c:if>
 
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_TRAVEL}">
+						<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRAVEL}">
 							<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
 						</c:if>
 						
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
+						<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
 							<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" />
 						</c:if>
 
-						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA}">
+						<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA}">
 							<ui:include src="/xhtml/sm/svositevisit/overseaReadingMaterial.xhtml" />
 						</c:if>
 						
