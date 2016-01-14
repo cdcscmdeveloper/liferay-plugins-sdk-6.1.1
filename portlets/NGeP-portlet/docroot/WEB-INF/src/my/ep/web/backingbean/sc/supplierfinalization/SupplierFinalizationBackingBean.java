@@ -3814,109 +3814,6 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	/**
-	 * Set the selected supplier details in managed bean associated with the
-	 * current user session
-	 * 
-	 * @param scQtRecommend
-	 *            the scQtRecommend which holds the item
-	 * @param selectedRecommendDtl
-	 *            the selectedRecommendDtl while holds the recommended supplier
-	 */
-	public void showSupplierDetails(ScQtRecommend scQtRecommend,
-			ScQtRecommendDtl selectedRecommendDtl) {
-		debugLogger("showSuppDetails");
-
-		resetCompanyInfo();
-
-		if (selectedRecommendDtl != null
-				&& selectedRecommendDtl.getShortlistedSupplier() != null) {
-			this.getManagedBean().setShortlistedSupplier(
-					selectedRecommendDtl.getShortlistedSupplier());
-		} else if (scQtRecommend != null) {
-			List<ScQtEvaluationResultDtl> shortlistedItemSupplierList = null;
-			boolean isSuccessful = false;
-			SuppFinalizationResDTO resDTO = null;
-			if (CollectionUtils.isEmpty(scQtRecommend
-					.getShortListedSupplierList())) {
-				resDTO = this.retrieveShortListedSuppliersByItem(scQtRecommend);
-				isSuccessful = resDTO.isSuccessful();
-				shortlistedItemSupplierList = resDTO
-						.getQualifiedByItemSuppliers();
-			} else {
-				isSuccessful = true;
-				shortlistedItemSupplierList = scQtRecommend
-						.getShortListedSupplierList();
-			}
-			if (isSuccessful) {
-				if (CollectionUtils
-						.isNotEmpty(scQtRecommend.getRecommendDtls())) {
-					for (ScQtRecommendDtl scQtRecommendDtl : scQtRecommend
-							.getRecommendDtls()) {
-						if (CollectionUtils
-								.isNotEmpty(shortlistedItemSupplierList)) {
-							for (ScQtEvaluationResultDtl evalResultDtl : shortlistedItemSupplierList) {
-								calculateOfferedPrice(evalResultDtl,
-										scQtRecommend.getRequestItem());
-								SmSupplier smSupplier = evalResultDtl
-										.getQtEvaluationResult()
-										.getScQtProposal().getScQtSupplier()
-										.getSmSupplier();
-								if ((scQtRecommendDtl.getSupplier()
-										.getSupplierId()).equals(smSupplier
-										.getSupplierId())) {
-									scQtRecommendDtl
-											.setShortlistedSupplier(evalResultDtl);
-									getManagedBean().setShortlistedSupplier(
-											evalResultDtl);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		if (getManagedBean().getShortlistedSupplier() != null) {
-			this.getManagedBean().setShortlistedSupplier(
-					getManagedBean().getShortlistedSupplier());
-			SmSupplier smSupplier = getManagedBean().getShortlistedSupplier()
-					.getQtEvaluationResult().getScQtProposal()
-					.getScQtSupplier().getSmSupplier();
-			if (smSupplier != null) {
-				QTSupplierResDTO resDTO = this
-						.retrieveSupplierDetails(smSupplier);
-				smSupplier = resDTO.getSmSupplier();
-				getManagedBean().setSmSupplier(smSupplier);
-				getManagedBean().setSmMofAccount(
-						smSupplier.getSmMofAccounts().get(0));
-
-				SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl()
-						.getSmCompanyBasic();
-				getManagedBean().setSmCompanyBasic(smCompanyBasic);
-
-				List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl()
-						.getSmPersonnels();
-				for (SmPersonnel smPersonnel : smPersonnelList) {
-					if (smPersonnel.isContactPerson()) {
-						getManagedBean().setSmPersonnel(smPersonnel);
-						break;
-					}
-				}
-				for (SmCompanyAddress smCompanyAddress : smCompanyBasic
-						.getSmCompanyAddresses()) {
-					if (AddressType.CONTACT_ADDRESS.value().equals(
-							smCompanyAddress.getAddressType())) {
-						getManagedBean().setSupplierBranch(
-								QTConstants.SUPPLIER_INFO_HQ);
-						getManagedBean().setSupplierAddress(
-								smCompanyAddress.getSmAddress());
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * Method to retrieve Board of Directors Details pop up in supplier finalization
 	 */
 	public void showBoardofDirectors(SmSupplier selectedSupplier) {
@@ -6431,8 +6328,8 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO.setQtZoneCriteriaId(scQtRecommend.getTplSpecZoneDtl()
 						.getSpecZoneId());
 			}
-			reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
-					.getRequestNoteItemId());
+			reqDTO.setRequestItemId(scQtRecommend
+					.getRequestItem().getRequestNoteItemId());
 			reqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
 			
 			boolean isPriceTypeTier = isItemPriceTypeTariffOrTier(scQtRecommend);
