@@ -1222,7 +1222,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		  }
 	}	
 	
-	public List<SelectItem> populateBankAccountList(SmSupplier smSupplier) {		
+	public List<SelectItem> populateBankAccountList(SmSupplier smSupplier, int index) {		
 		 List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
 		 ISupplierSearchSO supplierSearchSO = null;
 	     SupplierSearchReqDTO supplierReqDTO = null;
@@ -1232,6 +1232,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		 supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 	     supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
 	     int counter = 0;
+	     /*Check bank account no incase one valid for select*/
 	     if (supplierResDTO.getSmSupplierBankList() != null) {
 	    	 
 	    	 for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
@@ -1241,22 +1242,38 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    		          populateBankAccountList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));		    
 	    		       }
 	    	      }
-	    	 }
-	         
-	    	 for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
-				   if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					    String account = smSupplierBank.getAccountNo();
-						if (smSupplierBank.getPmFinancialOrg() != null 
-								&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
-							       account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
-						}
-						populateBankAccountList.add(new SelectItem(smSupplierBank.getAccountNo(), account));
-						if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
-						}
-					}
-				}
-			}
+	    	 }/*End*/
+
+	    	 /*If supplier bank have only one valid records*/
+	    		    for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+	    			      if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+	    			    	     String account = smSupplierBank.getAccountNo();
+							     if (smSupplierBank.getPmFinancialOrg() != null 
+									   && smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
+								       account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
+							       }
+							     populateBankAccountList.add(new SelectItem(smSupplierBank.getAccountNo(), account));
+							     if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
+								     getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
+							     }
+							   
+							     if(counter == 1) {
+							
+							    	   if(getManagedBean().isSelectionOfZone()) {
+							               CtPanelSupplier supplier = getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().get(index);
+							               supplier.setBankName(smSupplierBank.getPmFinancialOrg().getFinOrgName());
+							               getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().remove(index);
+							               getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().add(index, supplier); 
+							          } else {
+								           CtPanelSupplier supplier = getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().get(index);
+								           supplier.setBankName(smSupplierBank.getPmFinancialOrg().getFinOrgName());
+								           getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().remove(index);
+								           getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().add(index, supplier); 
+						              }
+					            }
+	    			       }
+	    		      }
+	    	     }
 		return populateBankAccountList;
 	}
 	
