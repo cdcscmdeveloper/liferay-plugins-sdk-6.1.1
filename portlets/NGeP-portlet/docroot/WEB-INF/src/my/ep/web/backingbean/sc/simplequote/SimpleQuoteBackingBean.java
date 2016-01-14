@@ -1223,7 +1223,10 @@ public class SimpleQuoteBackingBean extends
 
 			// validate start date and end date
 			validateStartDateAndEndDate(quote);
-
+			if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
+				throw new EpException("Hours and Minuts are required.");
+			}
+			
 			if (quote.getRequestItems() == null) {
 				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
 				ScRequestItem requestItem = new ScRequestItem();
@@ -3637,14 +3640,15 @@ public class SimpleQuoteBackingBean extends
 	 * prompt(dialogue) that Total time Supplier responds for this Simple Quote
 	 */
 	public void submitPromptAction() {
+		debugLogger("submitPromptAction");
 		ScQuote quote = getManagedBean().getScQuote();
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
-		if (quote.getEndDate() != null) {
-			Date dateOne = new Date();
-			Date dateTwo = quote.getEndDate();
+		if (quote.getEndDate() != null && quote.getStartDate() != null) {
+			Date today = new Date();
+			Date endDate = quote.getEndDate();
 			StringBuilder message = new StringBuilder();
-			if (quote.getEndDate().after(dateOne)) {
-				long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
+			if (endDate.after(today)) {
+				long timeDiff = Math.abs(quote.getStartDate().getTime() - endDate.getTime());
 				String hours = String.format("%d",
 						TimeUnit.MILLISECONDS.toHours(timeDiff));
 				String mins = String
@@ -3666,6 +3670,9 @@ public class SimpleQuoteBackingBean extends
 			}
 			RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
 			getManagedBean().setPromptMessage(message.toString());
+			
+		} else if ( null == quote.getStartDate() ||  null == quote.getEndDate()) {
+			throw new EpException("Hours and Minuts are required.");
 		}
 	}
 
