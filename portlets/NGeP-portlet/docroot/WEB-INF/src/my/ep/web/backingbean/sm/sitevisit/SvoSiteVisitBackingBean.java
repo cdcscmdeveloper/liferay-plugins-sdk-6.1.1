@@ -134,43 +134,47 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	private void setSelectedSmSvFacility(SmSvTemplate svTemplate){
 		//getManagedBean().getSelectedSvTemplate().setSmSvFacility(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getSmFacilities().get(0));
-		log.info("*******setSelectedSmSvFacility*********");
-		
-		if(getManagedBean().getSelectedSvTemplate().getSmSvFacility() == null){
-			SmFacility smFacility = retrieveFacilityByAddress(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress());
-			SmSvFacility smSvFacility = null;
+		log.info("*******setSelectedSmSvFacility*********" + getManagedBean().getSelectedSvTemplate().getSvTemplateId());
 
-			if(smFacility != null){
+		log.info("smFacility 0 - " +getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
+		SmFacility smFacility = retrieveFacilityByAddress(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
+		SmSvFacility smSvFacility = getManagedBean().getSelectedSvTemplate().getSmSvFacility();
+
+		if(smFacility != null){
+			if(smSvFacility == null){
 				smSvFacility = new SmSvFacility();
-				smSvFacility.setOwnershipType(smFacility.getOwnershipType());
-				//				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				//				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
-				if(smFacility.getAreaSquareFeet()!=null){
-					//smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
-					//smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
-
-					smSvFacility.setOverallSqft(smFacility.getAreaSquareFeet().toString());
-					smSvFacility.setEnclosedSqft(smFacility.getAreaSquareFeet().toString());
-					smSvFacility.setEnclosedCapacitySqft(smFacility.getAreaSquareFeet().toString());
-				}
-				if(smFacility.getOwnershipType().equals("R")){
-					smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
-				}else{
-					smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
-				}
-				smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTask().getSmSvTemplate());
-				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
-			}else{
-				//NumberFormat formatter = new DecimalFormat("#0.00");
-				smSvFacility = new SmSvFacility();
-				//smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				//smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
-
-				smSvFacility.setSmSvTemplate(svTemplate);
-				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}
+			
+			smSvFacility.setOwnershipType(smFacility.getOwnershipType());
+			//				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+			//				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+			if(smFacility.getAreaSquareFeet()!=null){
+				//smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
+				//smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
+
+				smSvFacility.setOverallSqft(smFacility.getAreaSquareFeet().toString());
+				smSvFacility.setEnclosedSqft(smFacility.getAreaSquareFeet().toString());
+				smSvFacility.setEnclosedCapacitySqft(smFacility.getAreaSquareFeet().toString());
+			}
+			if(smFacility.getOwnershipType().equals("R")){
+				smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
+			}else{
+				smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
+			}
+			smSvFacility.setSmSvTemplate(svTemplate);
+			getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
+		}else{
+			//NumberFormat formatter = new DecimalFormat("#0.00");
+			smSvFacility = new SmSvFacility();
+			//smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+			//smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+
+			smSvFacility.setSmSvTemplate(svTemplate);
+			getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 		}
 	}
+
+//	}
 
 	
 	/**
@@ -291,6 +295,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			//populateSmSvAddresses();
 			groupCategoryCodeByType(svoTask.getSmSvTemplate());
+			
+			getManagedBean().setSelectedSvTemplate(smSvTask.getSmSvTemplate());
 		}
 	}
 	
@@ -324,7 +330,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//log.info("*******Category pass********" + this.getManagedBean().getSmSvTask().getSmSvCategories().get(0).getPassed()+"****"+ this.getManagedBean().getSmSvTask().getSmSvCategories().get(0).getPmCategoryL3().getCategoryL3Code());
 		//log.info("*******changeActiveIndex CatType********" + catType.length());
 		if(svTemplate != null){
-			this.getManagedBean().setSelectedSvTemplate(getManagedBean().getSmSvTask().getSmSvTemplate());
+//			this.getManagedBean().setSelectedSvTemplate(svTemplate);
 			//SmSvTemplate svTemplate = this.getManagedBean().getSmSvTemplateMap().get(catType);
 			
 			String catCode = svTemplate.getPmParameter().getParameterCode();
@@ -1449,7 +1455,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			//context.put("templateDesc", value);
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
 			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.DOCKYARD_WORKSHOP_LICENSE_INS, templateLangCode);
-			SmFacility smFacility = retrieveFacilityByAddress(svTask.getSmSvAddress().getSmAddress());
+			SmFacility smFacility = retrieveFacilityByAddress(svTask.getSmSvAddress().getSmAddress().getAddressId());
 			String lblOwnerShip = null;
 			if(smFacility != null){
 				if(smFacility.getOwnershipType().equalsIgnoreCase("O")){
@@ -2398,10 +2404,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		retrieveSiteVisitInfo("V");
 	}
 	
-	private SmFacility retrieveFacilityByAddress(SmAddress address){
+	private SmFacility retrieveFacilityByAddress(Long addressId){
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		ISiteVisitSO reqSO = SmServiceLookup.getSiteVisitSO();
 		
+		reqDTO.setSmAddressId(addressId);
 		SiteVisitResDTO resDTO = reqSO.retrieveSmFacilityByAddressId(reqDTO);
 		
 		return resDTO.getSmFacility();
