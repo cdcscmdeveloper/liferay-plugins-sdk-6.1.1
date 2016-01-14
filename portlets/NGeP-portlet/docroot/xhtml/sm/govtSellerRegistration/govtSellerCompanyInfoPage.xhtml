@@ -295,6 +295,14 @@
 						</p:inputText>
 					</td>
 				</tr>
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+					<td class="tdContent">
+						<p:inputText value="#{gstSupplier.gstEndDate}" disabled="true" size="40">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+					</td>
+				</tr>
 			</c:if>
 		</table>
 	</p:panel>
