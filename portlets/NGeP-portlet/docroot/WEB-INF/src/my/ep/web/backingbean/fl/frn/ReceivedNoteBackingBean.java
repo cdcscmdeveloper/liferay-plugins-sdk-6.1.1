@@ -81,6 +81,7 @@ import my.ep.web.managedbean.fl.frn.ReceivedNoteManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -991,6 +992,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		
 	}
 	
+	public boolean isFlFulfilmentApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
 	/**
 	 * Check user login is receiving officer role true or false
 	 *
@@ -1151,4 +1157,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 	}
 	
+	public String getUsername(Long userId) {
+		return PmCommonUtil.retriveUserName(userId);
+	}
+		
 }
