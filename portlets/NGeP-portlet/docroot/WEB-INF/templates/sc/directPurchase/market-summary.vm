@@ -137,7 +137,7 @@
                #end
             </td>
             <td style="text-align:right">
-               #if( $requestNoteVo.toQty != 0 )
+               #if( $requestNoteVo.toQty )
                $requestNoteVo.toQty
                #else
                N/A
@@ -201,7 +201,7 @@
                #end
             </td>
             <td style="text-align:right">
-               #if( $requestNoteVo.toQty != 0 )
+               #if( $requestNoteVo.toQty )
                $requestNoteVo.toQty
                #else
                N/A
@@ -229,7 +229,7 @@
                #end
             </td>
             <td style="text-align:right">
-               #if( $requestNoteVo.toQty != 0 )
+               #if( $requestNoteVo.toQty )
                $requestNoteVo.toQty
                #else
                N/A

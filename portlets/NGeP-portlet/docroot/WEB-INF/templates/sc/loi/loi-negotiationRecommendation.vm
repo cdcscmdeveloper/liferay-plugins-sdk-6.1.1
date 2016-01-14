@@ -185,7 +185,11 @@
 									<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
 									<td class="standard border-bottom left alignRight">
 										#if ($!loiLoaItem.tplSpecTierQty )
-										   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
+										   	#if ($loiLoaItem.tplSpecTierQty.toQty)
+												$loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty 
+											#else
+												$loiLoaItem.tplSpecTierQty.fromQty dan lebih
+											#end
 										#else
 										   $loiLoaItem.qty
 										#end 
@@ -331,7 +335,11 @@
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
 							<td class="standard border-bottom left alignRight">
 								#if ($!loiLoaItem.tplSpecTierQty )
-								   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
+								   	#if ($loiLoaItem.tplSpecTierQty.toQty)
+										$loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty 
+									#else
+										$loiLoaItem.tplSpecTierQty.fromQty dan lebih
+									#end
 								#else
 								   $loiLoaItem.qty
 								#end 
