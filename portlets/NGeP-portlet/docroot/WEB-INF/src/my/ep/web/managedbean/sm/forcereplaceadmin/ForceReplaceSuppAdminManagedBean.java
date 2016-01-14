@@ -31,6 +31,7 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private List<SelectItem> mailStates;
 	private List<SelectItem> mailDistricts;
 	private List<SelectItem> mailCities;
+	private List<SelectItem> salutationItems;
 	private SmSupplier smSupplier;
 	private SmPersonnel newAdmin;
 	private SmPersonnel oldAdmin;
@@ -230,6 +231,14 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 
 	public void setMyCountryId(Long myCountryId) {
 		this.myCountryId = myCountryId;
+	}
+
+	public List<SelectItem> getSalutationItems() {
+		return salutationItems;
+	}
+
+	public void setSalutationItems(List<SelectItem> salutationItems) {
+		this.salutationItems = salutationItems;
 	}
 
 }
