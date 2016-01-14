@@ -22,7 +22,7 @@
 	
 		<p:messages id="defBumiApplPageMsgs" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
-		<p:panel id="bumiTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
+		<p:panel id="forceReplaceTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
 			<p:scrollPanel style="height:100px;border:0;" mode="native">
 				<table style="width: 100%">
 					<tr>
@@ -35,52 +35,65 @@
 			
 			<br />
 			
-			<table>
-				<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
+			<p:panel id="newAdminDetailsPanelId" header="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.details']}">
+				<table>
+					<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
+						<tr>
+							<td colspan="2">
+								<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email.msg']}" styleClass="instruction" />
+							</td>
+						</tr>
+					</p:outputPanel>
 					<tr>
-						<td colspan="2">
-							<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email.msg']}" styleClass="instruction" />
-						</td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" styleClass="outputLabel-view-label"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.name}" /></td>
 					</tr>
-				</p:outputPanel>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" styleClass="outputLabel-view-label"/></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.name}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.idenNum']}" styleClass="outputLabel-view-label"/></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" /></td>
-				</tr>
-				<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText id="newAdminEmail"
-								label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.email']}"
-								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
-								size="40" required="true">
-								<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-								<p:ajax event="blur" process="@this" partialSubmit="true"/>
-								</p:inputText>
-							<p:message id="newAdminEmailMsg" for="newAdminEmail"
-								showSummary="true" showDetail="false" display="icon" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.idenNum']}" styleClass="outputLabel-view-label"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" /></td>
 					</tr>
-				</p:outputPanel>
-			</table>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.designation']}" styleClass="outputLabel-view-label"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.designation}" /></td>
+					</tr>
+					<p:outputPanel rendered="#{!forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.email']}" styleClass="outputLabel-view-label"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}" /></td>
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.showEmailInput}">
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.email']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:inputText id="newAdminEmail"
+									label="#{lbl['lbl.sm.email']}"
+									value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
+									size="40" required="true">
+									<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+									<p:ajax event="blur" process="@this" partialSubmit="true"/>
+									</p:inputText>
+								<p:message id="newAdminEmailMsg" for="newAdminEmail"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+					</p:outputPanel>
+				 </table>
+			 </p:panel>
 			
 			<br />
-			<table>
-				<tr>
-	
-					<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.agreeTnc}">
-							<p:ajax event="change" update="declareBtnId"
-								partialSubmit="true" process="@this" />
-						</p:selectBooleanCheckbox></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
-				</tr>
-			</table>
+				<table>
+					<tr>
+		
+						<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.agreeTnc}">
+								<p:ajax event="change" update="declareBtnId"
+									partialSubmit="true" process="@this" />
+							</p:selectBooleanCheckbox></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+					</tr>
+				</table>
+			<br />
 			
 			<table style="width: 100%;">
 				<tr>
