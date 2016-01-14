@@ -893,7 +893,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			IRuleSO ruleSO = (IRuleSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO req = new RuleReqDTO();
 			req.setRuleType(RuleTypeConst.TRANSACTION_FEE_ONE_OFF);
-			ruleSO.getRuleValuesByTypeInCurrentDate(req);
 			serviceFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(req).getRuleValueList().get(0).getRuleValue());
 		} else {
 			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
