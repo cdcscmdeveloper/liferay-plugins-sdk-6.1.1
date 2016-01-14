@@ -44,6 +44,7 @@
 									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel></td>
 							<td><p:selectOneMenu style="width:120px; margin-bottom:5px;"
 									id="templateSpecItemType"
+									disabled="#{specificationBackingBean.managedBean.scQt.panel}"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
@@ -63,6 +64,7 @@
 							<td style="width: 180px;"><p:outputLabel
 									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel></td>
 							<td><p:selectOneMenu id="sourcingSpecItemType"
+									disabled="#{specificationBackingBean.managedBean.scQt.panel}"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}"
 									style="width:210px;margin-bottom: 5px;">
 									<f:selectItems
