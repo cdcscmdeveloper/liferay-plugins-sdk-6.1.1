@@ -16,6 +16,7 @@ public class ReactivateSupplierVO implements Serializable {
 	private String newIdentificationNo;
 	private Long newIdentificationType;
 	private boolean showEmailInput;
+	private String email;
 
 	public String getIdentificationNo() {
 		return identificationNo;
@@ -79,5 +80,13 @@ public class ReactivateSupplierVO implements Serializable {
 
 	public void setShowEmailInput(boolean showEmailInput) {
 		this.showEmailInput = showEmailInput;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }
