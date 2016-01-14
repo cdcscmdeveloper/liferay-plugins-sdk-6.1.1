@@ -8,12 +8,12 @@ import javax.faces.component.FacesComponent;
 import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIOutput;
 import javax.faces.component.behavior.ClientBehaviorHolder;
+import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 
 import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
-import org.primefaces.component.selectonemenu.SelectOneMenu;
 
 /**
  * Date Time UI Component
@@ -52,8 +52,8 @@ public class DateTimeInput extends UIOutput implements ClientBehaviorHolder {
 			Date dateValue = (Date)dateObj;
 			FacesScopes facesScopes = new FacesScopes();
 			org.primefaces.component.calendar.Calendar dateComponent = ((org.primefaces.component.calendar.Calendar)facesScopes.findComponentById(this, "calDate"));
-			SelectOneMenu hourComponent = ((SelectOneMenu)facesScopes.findComponentById(this, "calHour"));
-			SelectOneMenu minuteComponent = ((SelectOneMenu)facesScopes.findComponentById(this, "calMin"));	
+			HtmlSelectOneMenu hourComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calHour"));
+			HtmlSelectOneMenu minuteComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calMin"));	
 			
 			Calendar c1 = Calendar.getInstance();
 			c1.setTime(dateValue);

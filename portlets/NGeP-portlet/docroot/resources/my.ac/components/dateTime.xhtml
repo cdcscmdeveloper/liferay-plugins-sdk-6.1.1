@@ -24,6 +24,7 @@
 	<h:panelGroup id="#{cc.id}">
 		<p:calendar id="calDate"
 			showOn="button" 
+			size="6"
 			required="#{cc.attrs.required}"
 			disabled="#{cc.attrs.disabled}"
 			readonlyInput="true" 
@@ -35,20 +36,19 @@
 			
 			<cc:insertChildren />
 		</p:calendar>
-		<p:selectOneMenu id="calHour" 
-			required="#{cc.attrs.required}"
+		
+		<h:selectOneMenu id="calHour" style="width: 58px;"
 			disabled="#{cc.attrs.disabled}"
 			label="#{cc.attrs.label}">
 			<f:selectItems value="#{dateTimeBackingBean.hoursDropdownValues}" />
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}SetValue();" />
-		</p:selectOneMenu>
-		<p:selectOneMenu id="calMin" 
-			required="#{cc.attrs.required}"
+		</h:selectOneMenu>
+		<h:selectOneMenu id="calMin" style="width: 70px;"
 			disabled="#{cc.attrs.disabled}"
 			label="#{cc.attrs.label}">
 			<f:selectItems value="#{dateTimeBackingBean.minutesDropdownValues}" />
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this" oncomplete="#{cc.id}SetValue();" />
-		</p:selectOneMenu>
+		</h:selectOneMenu>
 		<p:message id="calDateMsg" for="calDate" display="icon" />
 		
 		<p:remoteCommand name="#{cc.id}SetValue"
