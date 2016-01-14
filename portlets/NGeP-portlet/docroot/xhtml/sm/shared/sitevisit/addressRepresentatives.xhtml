@@ -8,6 +8,7 @@
 
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/categoryCodeByTemplate.xhtml" /> -->
 
+	<ui:remove>
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" id="pnlSvSelectSvAdd" align="left">
 		<p:dataTable var="svAdd" id="dtblSelectedSvAdd" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvAddressMap[svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode]}" 
@@ -49,6 +50,7 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
+	</ui:remove>
 
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/assistingOfficer.xhtml" /> -->
 	
