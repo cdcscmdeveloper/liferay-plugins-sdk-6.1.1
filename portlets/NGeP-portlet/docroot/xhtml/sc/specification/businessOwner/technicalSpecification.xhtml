@@ -53,7 +53,7 @@
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval' or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel)}"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();"
-				title="#{lbl['lbl.sc.spec.create.specification.tooltip']}" />
+				title="#{lbl['lbl.sc.spec.create.specification.tooltip']}" update="@([id$=bocreateSpec])"/>
 		</div>
 
 		<ui:include src="/xhtml/sc/boSctemplatespec/createTemplate.xhtml"></ui:include>
