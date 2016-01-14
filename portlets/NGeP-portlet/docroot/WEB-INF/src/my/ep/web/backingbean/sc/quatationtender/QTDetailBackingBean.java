@@ -771,6 +771,8 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().getQt().getQtStatus().setStatusId(60015L);
 				}
 			}
+		
+			setScQtTrackingDairyObject(scQt);
 		} finally {
 			detailSO = null;
 		}
@@ -4864,7 +4866,23 @@ public class QTDetailBackingBean extends
 		}
 		log.info("handleFileUpload - END");
 	}
-
+     
+	/**
+	 * Set required data for Tracking Dairy info of QT
+	 * 
+	 * @param scQt
+	 */
+	private void setScQtTrackingDairyObject(ScQt scQt){
+		
+		Object[] scTdObj = new Object[7];
+		scTdObj[0] = scQt.getQtId();
+		scTdObj[1] = scQt.getQtNo();
+		scTdObj[2] = scQt.getCreatedDate();
+		scTdObj[3] = ParameterConst.DOCTYPE_QUOTATION;
+		scTdObj[4] = scQt.getQtStatus().getStatusId();
+		scTdObj[5] = scQt.getQtTitle();
+		this.getManagedBean().setScTdObj(scTdObj);
+	}
 	/*
 	 * private void setEstimatedPrice(ScQt scQt) {
 	 * 
