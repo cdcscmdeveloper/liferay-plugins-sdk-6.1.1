@@ -53,7 +53,21 @@
 							label="#{lbl['lbl.sm.userprofile.name']}"/>
 							<p:message id="newAdminNameMsg" for="newAdminName"
 							showSummary="true" showDetail="false" display="icon" /></td>
-	
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="newAdminSalutation"
+							label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.title.salutationId}"
+							style="width: 207px;margin-bottom: 5px;" required="true">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.salutationItems}" />
+						</p:selectOneMenu>
+						<p:message id="newAdminSalutationMsg" for="newAdminSalutation"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -67,6 +81,17 @@
 						</p:selectOneMenu>
 						<p:message id="newAdminNationalityMsg" for="newAdminNationality"
 							showSummary="true" showDetail="false" display="icon" /></td>
+					<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.dob']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:calendar showOn="button" navigator="true"
+							display="inline" required="true" readonlyInput="true"
+							label="#{lbl['lbl.sm.person.dob']}" id="newAdminDob"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+0" maxdate="#{forceReplaceSuppAdminBackingBean.getCurrDate()}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.birthDate}" />
+						<p:message id="newAdminDobMsg" for="newAdminDob"
+								showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -118,21 +143,6 @@
 							</p:inputText>
 						<p:message id="newAdminMobileMsg" for="newAdminMobile"
 							showSummary="true" showDetail="false" display="icon" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.dob']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:calendar showOn="button" navigator="true"
-							display="inline" required="true" readonlyInput="true"
-							label="#{lbl['lbl.sm.person.dob']}" id="newAdminDob"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							yearRange="-99:+0" maxdate="#{forceReplaceSuppAdminBackingBean.getCurrDate()}"
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.birthDate}" />
-						<p:message id="newAdminDobMsg" for="newAdminDob"
-								showSummary="true" showDetail="false" display="icon" /></td>
-					<td></td>
-					<td></td>
 				</tr>
 	
 			</table>
