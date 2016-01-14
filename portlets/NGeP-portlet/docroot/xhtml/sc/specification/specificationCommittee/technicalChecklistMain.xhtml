@@ -295,7 +295,7 @@
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="compilencestageTwo" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				process="@this" styleClass="BtnSpacing"
+				process="@this" styleClass="BtnSpacing" update="@([id$=commiteeCreationSpec])"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
 				disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
