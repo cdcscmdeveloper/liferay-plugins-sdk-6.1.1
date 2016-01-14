@@ -7,10 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div>
-		<table style="width: 100%;">
+		<table style="width: 100%;margin-left:1.1%">
 			<tr>
 				<td width="100%"><h:panelGrid id="pmReportCriteria" columns="4"
-						style="width:85%;">
+						style="width:88%;margin-top:-4%">
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmServiceTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.servicescreen']}"
@@ -44,10 +44,10 @@
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgCategoryTypeView}">
 							<p:column>
-								<table style="width: 182px;">
+								<table style="width: 89%;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
-												style="margin-right:-20px;"
+										<td><p:outputLabel
+												style="margin-right:-13%;"
 												value="#{lbl['lbl.rpt.org.category']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -59,7 +59,7 @@
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg"
 												value="#{reportBackingBean.pmOrgCategory}"
-												style="margin-top:5px;width:300px;">
+												style="width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.federal']}"
 													itemValue="1"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}"
@@ -76,10 +76,10 @@
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgTypeView}">
 							<p:column>
-								<table style="width: 182px;">
+								<table style="width: 88%;">
 									<tr style="width: 100%;">
-										<td style="width: 160px;"><p:outputLabel
-												style="margin-right:-16px;"
+										<td><p:outputLabel
+												style="margin-right:-13%;"
 												value="#{lbl['lbl.rpt.org.type']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 									</tr>
@@ -91,7 +91,7 @@
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.org.type']}" id="orgType"
 												value="#{reportBackingBean.pmOrgType}"
-												style="margin-top:5px;width:300px;">
+												style="width:300px;">
 												<f:selectItems
 													value="#{reportBackingBean.getOrgTypeDropdownValues()}"></f:selectItems>
 												<p:ajax event="change" partialSubmit="true" update="@form" />
@@ -137,7 +137,7 @@
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmOrgCodeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.orgCode']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:2%;width:71%;" />
 							<p:inputText maxlength="30"
 								value="#{reportBackingBean.pmOrgCode}"
 								style="margin-top:5px;width:290px;">
@@ -147,7 +147,7 @@
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmNonMandatoryOrgNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.orgName']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:2%;width:86%;" />
 							<p:inputText maxlength="120"
 								value="#{reportBackingBean.pmOrgName}"
 								style="margin-top:5px;width:290px;">
@@ -253,7 +253,7 @@
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmStatusView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.status']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:2%;width:24%;" />
 							<p:selectOneMenu value="#{reportBackingBean.pmStatus}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
