@@ -10,7 +10,7 @@
 		<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K'}">
 			<table style="width: 50%;table-layout:fixed">
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.roles']}" /></td>
+					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.roles']}" /></td>
 					<td>
 						<table>
 							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.equiOwner']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}" /></td></tr>
@@ -29,7 +29,7 @@
 		<c:otherwise>
 			<table style="width: 50%;table-layout:fixed">
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.roles']}" /></td>
+					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.roles']}" /></td>
 					<td>
 						<table>
 							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.equiOwner']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}" /></td></tr>
