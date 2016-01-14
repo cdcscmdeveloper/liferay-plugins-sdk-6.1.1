@@ -159,7 +159,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (getManagedBean().getNewAdmin() != null
 				&& StringUtils.isBlank(getManagedBean().getNewAdmin()
 						.getEmail())
-				&& getManagedBean().getNewAdmin().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				|| getManagedBean().getNewAdmin().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 			getManagedBean().getReactivateBasic().setShowEmailInput(true);
 		}
 	}
@@ -495,8 +495,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param PersonnelResDTO
 	 *            resDto
 	 */
-	private void redirectToSuccessPage(PersonnelResDTO resDto) {
-		if (resDto.isSuccessful()) {
+	private void redirectToSuccessPage(PersonnelResDTO resDTO) {
+		if (resDTO.isSuccessful()) {
 			if (getManagedBean().getNewAdmin().getPmUser() == null) {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
@@ -505,9 +505,18 @@ public class ForceReplaceSuppAdminBackingBean extends
 								SmRuleHelper.getInstance()
 										.getEmailActivationDays() + "" });
 			} else {
-				SmCommonUtil.redirectToPage(
-						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721036, null);
+				if (getManagedBean().getReactivateBasic().isShowEmailInput()) {
+					SmCommonUtil.redirectToPage(
+							SmApplicationUtil.getApplicationErrorPage(),
+							MessageConst.INFO_721037, new String[] {
+									getManagedBean().getNewAdmin().getEmail(),
+									SmRuleHelper.getInstance()
+											.getEmailActivationDays() + "" });
+				} else {
+					SmCommonUtil.redirectToPage(
+							SmApplicationUtil.getApplicationErrorPage(),
+							MessageConst.INFO_721036, null);
+				}
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
