@@ -1849,7 +1849,8 @@ public class SpecificationBackingBean extends
 			calculateRecommendationPackageAndItemScores(this.getManagedBean()
 					.getRecommendationPackageScore(), this.getManagedBean()
 					.getRecommendationScore());
-			setTechncialChecklistEvaluationStatus(this.getManagedBean().getScQtCheckSt2techProposal());
+			setTechncialChecklistEvaluationStatus(this.getManagedBean()
+					.getScQtCheckSt2techProposal());
 			setFinancialChecklistEvaluationStatus(this.getManagedBean()
 					.getScQtCheckSt2financeProposalList());
 		}
@@ -2356,11 +2357,11 @@ public class SpecificationBackingBean extends
 			ParameterResDTO procurementResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(procurementReqDTO);
 
-			ParameterReqDTO itemTypeReqDTO = new ParameterReqDTO();
+			/*ParameterReqDTO itemTypeReqDTO = new ParameterReqDTO();
 			itemTypeReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
 			itemTypeReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
 			ParameterResDTO itemTypeResDTO = parameterSo
-					.retrieveParameterByTypeAndCode(itemTypeReqDTO);
+					.retrieveParameterByTypeAndCode(itemTypeReqDTO);*/
 
 			PmStatus templateStaus = new PmStatus();
 			templateStaus.setStatusId(60550L);
@@ -2387,7 +2388,7 @@ public class SpecificationBackingBean extends
 			specMaster.setSpecTypeCode(techspecTyperesDTO.getPmParameter());
 			specMaster.setProcurementCategory(procurementResDTO
 					.getPmParameter());
-			specMaster.setItemTypeCode(itemTypeResDTO.getPmParameter());
+			specMaster.setItemTypeCode(panelItem.getItemType());
 			specMaster.setStatus(templateStaus);
 			specMaster.setItemOriginCode(localGoodsResDTO.getPmParameter());
 			setUserDetails(specMaster);
@@ -4234,6 +4235,20 @@ public class SpecificationBackingBean extends
 			getManagedBean().setSearchProcurementId(
 					getManagedBean().getScQt().getPmProcurementCategory()
 							.getParameterId());
+		}
+		if (getManagedBean().getScQt().isPanel()) {
+			ScQtSupplierCriteria supplierCriteria = getManagedBean().getScQt()
+					.getScQtSupplierCriteria();
+			if (null != supplierCriteria
+					&& null != supplierCriteria.getCtPanelItem()) {
+				if (null != supplierCriteria.getCtPanelItem().getItemType()) {
+					this.getManagedBean().setSearchItemTypeId(
+							supplierCriteria.getCtPanelItem().getItemType()
+									.getParameterId());
+				}
+			}
+		} else {
+			this.getManagedBean().setSearchItemTypeId(null);
 		}
 	}
 
@@ -11039,7 +11054,9 @@ public class SpecificationBackingBean extends
 		getManagedBean().setSpecName(null);
 		// getManagedBean().setStandardTemplate(null);
 		// getManagedBean().setSearchProcurementId(null);
-		getManagedBean().setSearchItemTypeId(null);
+		if (!this.getManagedBean().getScQt().isPanel()) {
+			getManagedBean().setSearchItemTypeId(null);
+		}
 		this.getManagedBean().getQtnTendertemplateSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean()
@@ -11123,49 +11140,51 @@ public class SpecificationBackingBean extends
 					List<String> templeteTypes = new ArrayList<String>();
 					templeteTypes.add(ParameterConst.TEMPLATE_TYPE_MINISTRY);
 					templeteTypes.add(ParameterConst.TEMPLATE_TYPE_PTJ);
-					
-					List<Long> orgProfileIds = getMinistryPTJOrgIds(scQt.getPmOrgProfile());
-					List<Long> ownerOrgProfileIds = getMinistryPTJOrgIds(scQt.getPmOrgProfile());
-					
-					if (ownerOrgProfileIds != null && ownerOrgProfileIds.size() > 0) {
+
+					List<Long> orgProfileIds = getMinistryPTJOrgIds(scQt
+							.getPmOrgProfile());
+					List<Long> ownerOrgProfileIds = getMinistryPTJOrgIds(scQt
+							.getPmOrgProfile());
+
+					if (ownerOrgProfileIds != null
+							&& ownerOrgProfileIds.size() > 0) {
 						orgProfileIds.addAll(ownerOrgProfileIds);
 					}
-					
+
 					SearchMultiFilterBean orgFilterBean = new SearchMultiFilterBean(
 							new SearchFilterBean(
 									"templateTypeCode.parameterCode",
 									SearchOperator.OPERATOR_IN.value(),
-									templeteTypes),
-							new SearchFilterBean(
+									templeteTypes), new SearchFilterBean(
 									"orgProfile.orgProfileId",
 									SearchOperator.OPERATOR_IN.value(),
 									orgProfileIds));
-					
+
 					SearchMultiFilterBean ownFilterBean = new SearchMultiFilterBean(
 							new SearchFilterBean(
 									"templateTypeCode.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ParameterConst.TEMPLATE_TYPE_OWN),
 							SearchCondition.CONDITION_OR.value(),
-							new SearchFilterBean(
-									"createdBy",
+							new SearchFilterBean("createdBy",
 									SearchOperator.OPERATOR_EQUALS.value(),
-									new FacesScopes().getUserSessionBean().getUserId()));
-					
+									new FacesScopes().getUserSessionBean()
+											.getUserId()));
+
 					SearchMultiFilterBean allFilterBean = new SearchMultiFilterBean(
 							new SearchFilterBean(
 									"templateTypeCode.parameterCode",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ParameterConst.TEMPLATE_TYPE_ALL),
 							SearchCondition.CONDITION_OR.value(),
-							new SearchFilterBean(
-									"orgProfile.orgProfileId",
+							new SearchFilterBean("orgProfile.orgProfileId",
 									SearchOperator.OPERATOR_IS_NULL.value(),
 									null));
-					
-					searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
-							new SearchMultiFilterBean(orgFilterBean, ownFilterBean),
-							allFilterBean));
+
+					searchBean.getDataFilterBeans().add(
+							new SearchMultiFilterBean(
+									new SearchMultiFilterBean(orgFilterBean,
+											ownFilterBean), allFilterBean));
 
 					qtTemplateReqDTO.setOrderByBlankTemplate(true);
 
@@ -11259,27 +11278,26 @@ public class SpecificationBackingBean extends
 		}
 
 	}
-	
+
 	private List<Long> getMinistryPTJOrgIds(PmOrgProfile pmOrgProfile) {
 		List<Long> orgProfileIds = new ArrayList<Long>();
-		
+
 		if (pmOrgProfile != null) {
 			IOrgProfileSO orgProfileSO = null;
 			try {
 				orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 
 				Long orgProfileId = pmOrgProfile.getOrgProfileId();
 
 				orgProfileIds.add(orgProfileId);
-				
+
 				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				orgProfileReqDTO.setOrgProfileId(orgProfileId);				
+				orgProfileReqDTO.setOrgProfileId(orgProfileId);
 				PmOrgProfile ministryOrgProfile = orgProfileSO
-						.retrieveMinistryByOrgProfileId(
-								orgProfileReqDTO).getPmOrgProfile();
+						.retrieveMinistryByOrgProfileId(orgProfileReqDTO)
+						.getPmOrgProfile();
 				if (ministryOrgProfile != null) {
 					orgProfileIds.add(ministryOrgProfile.getOrgProfileId());
 				}
@@ -11287,7 +11305,7 @@ public class SpecificationBackingBean extends
 				orgProfileSO = null;
 			}
 		}
-		
+
 		return orgProfileIds;
 	}
 
@@ -11733,12 +11751,14 @@ public class SpecificationBackingBean extends
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
 					demo = true;
+					checkList.setScoringReq(true);
 
 				}
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 						.equalsIgnoreCase(checkList.getDefinationType()
 								.getParameterCode())) {
 					sample = true;
+					checkList.setScoringReq(true);
 
 				}
 				/*
@@ -13220,10 +13240,10 @@ public class SpecificationBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE);
-
-		if (this.getManagedBean().getScQt().isPanel()) {
-			recommendList.add(ParameterConst.ITEM_TYPE_SERVICE);
-		}
+		/*
+		 * if (this.getManagedBean().getScQt().isPanel()) {
+		 * recommendList.add(ParameterConst.ITEM_TYPE_SERVICE); }
+		 */
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
