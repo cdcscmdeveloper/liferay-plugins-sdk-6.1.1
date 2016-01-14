@@ -264,13 +264,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					}
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
+					
 					reqDTO.setFulfilmentNoteId(resDTO.getFulfilmentNoteId());
 					resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
-					
-					getManagedBean().setSelectedTabIndex(0);
-					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
-					getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
-					flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+					setFulfilmentNoteField(resDTO);
 				}
 			}
 		} finally {
@@ -729,20 +726,24 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setButtonAction(outcome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+		} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-			sb.append(outcome);
-			getManagedBean().setTextBeforeSign(sb.toString());			
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			getManagedBean().setButtonAction(outcome);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			return null;
-
+			if(getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
+				sb.append(outcome);
+				getManagedBean().setTextBeforeSign(sb.toString());			
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				getManagedBean().setButtonAction(outcome);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			}
+			getManagedBean().setValidated(Boolean.TRUE);
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			return submitAction(outcome);
 		}
 		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			getManagedBean().setValidated(Boolean.FALSE);
@@ -884,7 +885,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			sortItems(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem());
-			getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+			if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0).getFulfilmentNoteItemId() != null){
+				System.out.println("line 894 getFulfilmentNoteItemId: "+getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0).getFulfilmentNoteItemId());
+			}
+			
+		    getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+			
 			selectedItemRow();
 		}
 		
@@ -1093,12 +1099,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				BigDecimal remainQty = new BigDecimal(getRemainingQuantity(getManagedBean().getSelectedItem()));
 				getManagedBean().setRemainingQty(remainQty);
 			}
-			getManagedBean().setItemTypeProduct(false);
-			if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
-				getManagedBean().setItemTypeProduct(true);
-			}else if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
-				getManagedBean().setItemTypeProduct(false);
-			}
 		}
 	}
 	
@@ -1159,6 +1159,60 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	
 	public String getUsername(Long userId) {
 		return PmCommonUtil.retriveUserName(userId);
+	}
+	
+
+	
+	public boolean checkUserAuthority(){
+		boolean userAuthority = false;
+		
+		if(this.getManagedBean().getProcessName() != null){
+			userAuthority = true;
+		}
+		
+		return userAuthority;
+	}
+	
+	private void setFulfilmentNoteField(FulfilmentResDTO resDTO){
+		getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		flBB.getManagedBean().setHideRemarks(false);
+		if(getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+		} else {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getCtContract().getContractNo());
+		}				
+		if(resDTO.getFulfilmentNote()!=null) {
+			flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+		}
+
+		if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
+			getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
+		}
+		getSupplierGst(getManagedBean().getFulfilmentNote());
+	
+		if(getManagedBean().getFulfilmentNote().getApprover() != null){
+			getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApprover().getUserId()); 
+		}
+		getManagedBean().setSelectedTabIndex(0);
+
+		// Set evaluation
+		if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+			getManagedBean().setDisableEvaluation(Boolean.TRUE);
+		}
+		if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
+			retrieveCriteriaList();
+		}
+		if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
+			getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
+		}
+		if(null == getManagedBean().getFulfilmentNote().getCreatedDate()){
+			getManagedBean().getFulfilmentNote().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}		
+		if(null == getManagedBean().getFulfilmentNote().getSubmissionDate() || 
+				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
+			getManagedBean().getFulfilmentNote().setSubmissionDate(DateUtils.getCurrentDateWithoutTime());
+		}		
 	}
 		
 }
