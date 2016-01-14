@@ -79,7 +79,7 @@
 		   <p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}"	style="width:250px;">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchContractStatusDropdown()}" />
 		   </p:selectOneMenu>
-		   <p:outputLabel for="fulfilmentStatus" value="#{lbl['lbl.ct.fulfilment.status']}" />
+		   <p:outputLabel for="fulfilmentStatus" value="#{lbl['lbl.ct.fulfilment.details.status']}" />
 		   <p:selectOneMenu id="fulfilmentStatus" value="#{contractDetailsBackingBean.managedBean.searchFulfilmentStatus}"	style="width:250px;">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchFulfilmentStatusDropdown()}" />
 		   </p:selectOneMenu>
@@ -144,7 +144,7 @@
 					<p:column headerText="#{lbl['lbl.ct.contract.status']}" styleClass="column-align-center"  style="width:8%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.getContractStatusDesc(data.contractStatus)}" style="text-align:left; float:left;"/>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.fulfilment.status']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.fulfilment.details.status']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
 					<div align="left">
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.currentStatusId)}" /></div>
 					</p:column>
