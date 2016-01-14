@@ -117,7 +117,7 @@ Unit Price (RM)
 		    #end
 		    </td>
 		    <td style="text-align:right">
-		     #if( $requestNoteVo.toQty != 0 )
+		     #if( $requestNoteVo.toQty )
 		     	$requestNoteVo.toQty
 		     #end	
 		     </td>
@@ -146,7 +146,7 @@ Unit Price (RM)
 		    #end
 		    </td>
 		    <td style="text-align:right">
-		     #if( $requestNoteVo.toQty != 0 )
+		     #if( $requestNoteVo.toQty )
 		     	$requestNoteVo.toQty
 		     #end	
 		     </td>

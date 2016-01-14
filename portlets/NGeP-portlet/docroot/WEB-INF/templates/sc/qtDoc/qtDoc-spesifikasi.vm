@@ -127,25 +127,14 @@
 				#end
 				<td bgcolor="#f1f1f1" class="standard border-bottom left">$bean.getParameterDesc($tplspecQuestion.clPriceTypeCode)</td>
 				<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left-right">
-					#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "03")
-						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-						#end
-					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "05")
-						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-						#end
-					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "07")
-						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-						#end
-					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "09")
-						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-						#end
-					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "10")
-						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+					#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "03" || $tplspecQuestion.clPriceTypeCode.parameterCode == "07" || $tplspecQuestion.clPriceTypeCode.parameterCode == "09" || $tplspecQuestion.clPriceTypeCode.parameterCode == "10")
+						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties)
+							#if ($tplSpecTierQtie.toQty)
+								$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty 
+							#else
+								$tplSpecTierQtie.fromQty dan lebih
+							#end
+							<br/>
 						#end
 					#else
 						$tplspecQuestion.clQuantity

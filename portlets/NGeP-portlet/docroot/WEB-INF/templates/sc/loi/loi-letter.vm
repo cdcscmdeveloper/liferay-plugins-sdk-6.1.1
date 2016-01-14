@@ -74,9 +74,13 @@
 							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
 							   
 							 #if ($!scLoiLoaItem.tplSpecTierQty )
-								   $scLoiLoaItem.tplSpecTierQty.fromQty - $scLoiLoaItem.tplSpecTierQty.toQty
+							 	#if ($scLoiLoaItem.tplSpecTierQty.toQty)
+									$scLoiLoaItem.tplSpecTierQty.fromQty - $scLoiLoaItem.tplSpecTierQty.toQty 
+								#else
+									$scLoiLoaItem.tplSpecTierQty.fromQty dan lebih
+								#end
 							 #else
-								   $scLoiLoaItem.qty
+								$scLoiLoaItem.qty
 						      #end
 						     </span></td>	
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.uom.uomName</span></td>
