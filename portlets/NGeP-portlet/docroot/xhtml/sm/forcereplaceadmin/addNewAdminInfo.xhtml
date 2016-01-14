@@ -121,28 +121,27 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.phone']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="newAdminPhone"
-							label="#{lbl['lbl.sm.userprofile.phone']}"
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.phoneNo}"
-							size="35" maxlength="12" required="true" 
-							validatorMessage="#{lbl['lbl.sm.userprofile.phone']} - #{lbl['lbl.sm.invalidNo']}">
-							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText>
-						<p:message id="newAdminPhoneMsg" for="newAdminPhone"
-							showSummary="true" showDetail="false" display="icon" /></td>
-	
+					<td>
+						<ac:phone id="newAdminPhone" isMobile="false" label="#{lbl['lbl.sm.userprofile.phone']}"
+							countryCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.phoneCountry}" 
+							areaCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.phoneArea}" 
+							number="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.phoneNo}"  
+							validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" 
+							required="true"/>
+					</td>
+
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.mobile']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="newAdminMobile"
-							label="#{lbl['lbl.sm.userprofile.mobile']}"
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileNo}"
-							size="35" maxlength="12" required="true" 
-							validatorMessage="#{lbl['lbl.sm.userprofile.mobile']} - #{lbl['lbl.sm.invalidNo']}">
-							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText>
-						<p:message id="newAdminMobileMsg" for="newAdminMobile"
-							showSummary="true" showDetail="false" display="icon" /></td>
+					<td>
+						<ac:phone id="newAdminMobile" label="#{lbl['lbl.sm.userprofile.mobile']}"
+							countryCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileCountry}" 
+							areaCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileArea}" 
+							number="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileNo}" 
+							isMobile="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
+							telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" />
+					</td>
 				</tr>
 	
 			</table>
