@@ -1,0 +1,70 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:param name="viewFlag" value="true" />
+	<p:tabMenu activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex" update="outPnlSiteVisitReport">
+		<p:menuitem value="#{lbl['lbl.sm.svo.financial.info']}" update="tabIndex,outPnlSiteVisitReport" actionListener="#{svoSiteVisitBackingBean.viewActiveIndex(0,null)}" />
+	
+		<c:forEach items="#{svoSiteVisitBackingBean.managedBean.indexPageMap}" var="entry">
+	   		<p:menuitem value="#{svoSiteVisitBackingBean.getParameterDesc(entry.value.pmParameter)}"
+					update="tabIndex,outPnlSiteVisitReport" 
+					actionListener="#{svoSiteVisitBackingBean.viewActiveIndex(entry.key,entry.value)}" />
+		</c:forEach>
+		
+		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.recommendation']}" update="tabIndex,outPnlSiteVisitReport" actionListener="#{svoSiteVisitBackingBean.viewActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,null)}" />
+	</p:tabMenu>
+	
+	<p:outputPanel id="outPnlSiteVisitReport">
+			<ui:param name="template" value="#{svoSiteVisitBackingBean.managedBean.indexPageMap[svoSiteVisitBackingBean.managedBean.activeIndex]}" />
+			<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
+				<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
+			</c:if>
+			
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRANSPORTATION}">
+				<ui:include src="/xhtml/sm/svositevisit/transportation.xhtml" />
+			</c:if>
+			
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
+				<ui:include src="/xhtml/sm/svositevisit/workshop.xhtml" />
+			</c:if>
+			
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_INSURANCE}">
+				<ui:include src="/xhtml/sm/svositevisit/insurance.xhtml" />
+			</c:if>
+			
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
+				<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
+			</c:if>
+			
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+				<ui:include src="/xhtml/sm/svositevisit/manufacturing.xhtml" />
+			</c:if>
+			
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_PRINTING}">
+				<ui:include src="/xhtml/sm/svositevisit/printing.xhtml" />
+			</c:if>
+			
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRAVEL}">
+				<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
+			</c:if>
+			
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA}">
+				<ui:include src="/xhtml/sm/svositevisit/overseaReadingMaterial.xhtml" />
+			</c:if>
+
+			<c:if test="#{template.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
+				<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" />
+			</c:if>
+			
+			<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
+				<ui:remove>
+				<ui:include src="/xhtml/sm/shared/sitevisit/view_uploadedSiteVisitReport.xhtml" />
+				</ui:remove>
+				<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
+			</c:if>
+	</p:outputPanel>
+</ui:composition>
