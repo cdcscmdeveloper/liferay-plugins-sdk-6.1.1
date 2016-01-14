@@ -9,11 +9,11 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.payment.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="23%">
+			<td width="18%">
 				<h:outputLabel value="#{lbl['lbl.sc.account.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
 			</td>
-			<td width="82%">
+			<td>
 				<c:if test="#{isSupplierAckStatus}">
 					<p:selectOneMenu id="accountNoId"
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
