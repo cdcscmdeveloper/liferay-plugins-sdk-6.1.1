@@ -17,6 +17,7 @@
 	<cc:attribute name="isMobile" default="false" />
 	<cc:attribute name="validatorMessage" default="#{lbl['lbl.txt.invalid.digit']}" />
 	<cc:attribute name="label" default="#{lbl['lbl.sm.phoneno']}" />
+	<cc:attribute name="disabled" default="false" />
 </cc:interface>
 
 <cc:implementation>
@@ -25,14 +26,14 @@
 
 		+
 		<p:inputText value="#{cc.attrs.countryCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.country.code']}" 
-			required="#{cc.attrs.required}" id="countryCodeCompId" >
+			required="#{cc.attrs.required}" id="countryCodeCompId" disabled="#{cc.attrs.disabled}">
 			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
 		</p:inputText>
 		<p:inputText value="#{cc.attrs.areaCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.area.code']}"
-			required="#{cc.attrs.required}" id="areaCodeCompId" >
+			required="#{cc.attrs.required}" id="areaCodeCompId" disabled="#{cc.attrs.disabled}">
 			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
 		</p:inputText>
-		<p:inputText value="#{cc.attrs.number}" size="10" maxlength="10" 
+		<p:inputText value="#{cc.attrs.number}" size="10" maxlength="10" disabled="#{cc.attrs.disabled}"
 			required="#{cc.attrs.required}" id="phoneNoCompId"  label="#{cc.attrs.label}">
 			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
 			<f:validator validatorId="phoneValidator" />
@@ -45,7 +46,7 @@
 		</p:tooltip>
 		&#160;
 		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
-			style="width: 100px" id="telcoCompId">
+			style="width: 100px" id="telcoCompId" disabled="#{cc.attrs.disabled}">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 		</p:selectOneMenu>
