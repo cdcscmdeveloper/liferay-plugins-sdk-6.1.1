@@ -368,7 +368,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				              </f:facet>
 				               <p:selectOneMenu id="accountId" style="width:250px;margin-bottom: 5px;"
 						           value="#{supVar.bankAccountNo}">
-						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier)}" />
+						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier, index)}" />
 						          <p:ajax event="change" process="@form"
 							          onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							           listener="#{panelBackingBean.changeAccountActionListener(supVar, index)}" />
