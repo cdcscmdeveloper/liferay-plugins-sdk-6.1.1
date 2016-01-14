@@ -22,6 +22,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -60,6 +61,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().setHasSupplierUser(false);
 		getManagedBean().setReactivateBasic(new ReactivateSupplierVO());
 		getManagedBean().setSmSupplier(new SmSupplier());
+		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		initIdentificationTypes();
 		initCountries();
 		initStates();
@@ -274,27 +276,27 @@ public class ForceReplaceSuppAdminBackingBean extends
 			// check if replace with catalog user not allowed if have active
 			// supplier
 			// user
-			if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
-					.getEpRole())
-					&& getManagedBean().getNewAdmin().getEpRole()
-							.equals(RoleCode.CM_USER.value())
-					&& getManagedBean().isHasSupplierUser()) {
-				throw new EpException(MessageConst.ERROR_722595);
-			}
+//			if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
+//					.getEpRole())
+//					&& getManagedBean().getNewAdmin().getEpRole()
+//							.equals(RoleCode.CM_USER.value())
+//					&& getManagedBean().isHasSupplierUser()) {
+//				throw new EpException(MessageConst.ERROR_722595);
+//			}
 
 			// check if replace with pending activation user not allowed if have
 			// active supplier user
-			if (getManagedBean().getNewAdmin().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-					&& getManagedBean().isHasSupplierUser()) {
-				throw new EpException(MessageConst.ERROR_722629);
-			}
+//			if (getManagedBean().getNewAdmin().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+//					&& getManagedBean().isHasSupplierUser()) {
+//				throw new EpException(MessageConst.ERROR_722629);
+//			}
 
 			// check if replace with user that don't have role in ep not allowed
 			// if have active supplier user
-			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())
-					&& getManagedBean().isHasSupplierUser()) {
-				throw new EpException(MessageConst.ERROR_722630);
-			}
+//			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())
+//					&& getManagedBean().isHasSupplierUser()) {
+//				throw new EpException(MessageConst.ERROR_722630);
+//			}
 		}
 
 	}
@@ -470,6 +472,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Set default new personnel values
 	 */
 	private void setDefaultNewAdminPersonnelValues() {
+		getManagedBean().getNewAdmin().setTitle(new PmSalutation());
 		getManagedBean().getNewAdmin().setEpRole(
 				getManagedBean().getOldAdmin().getEpRole());
 		getManagedBean().getNewAdmin().setSmAppl(
