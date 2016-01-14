@@ -1849,6 +1849,10 @@ public class SpecificationBackingBean extends
 			calculateRecommendationPackageAndItemScores(this.getManagedBean()
 					.getRecommendationPackageScore(), this.getManagedBean()
 					.getRecommendationScore());
+			validateTechnicalUserScoringAttachment(this.getManagedBean().isTechnicalUserScoringSchema());
+				
+			validateFinancialUserScoringAttachment(this.getManagedBean()
+					.isFinancialUserScoringSchema());
 			setTechncialChecklistEvaluationStatus(this.getManagedBean()
 					.getScQtCheckSt2techProposal());
 			setFinancialChecklistEvaluationStatus(this.getManagedBean()
@@ -12229,6 +12233,7 @@ public class SpecificationBackingBean extends
 					financialWeightageCalculate();
 					financialItemScoreCalculate(this.getManagedBean()
 							.getFinacialItemScoreSetting());
+					validateFinancialUserScoringAttachment(this.getManagedBean().isFinancialUserScoringSchema());
 					specSO.validateSCScoreSettings(specReqDTO);
 					specSO.validateSpecOfferPrice(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -12268,6 +12273,7 @@ public class SpecificationBackingBean extends
 							.getTechnicalScoreSetting());
 					validateTechnicalDemoPassingScoring(this.getManagedBean()
 							.getDemoScoreSetting());
+					validateTechnicalUserScoringAttachment(this.getManagedBean().isTechnicalUserScoringSchema());
 					technicalWeightageCalculate();
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
@@ -12348,6 +12354,7 @@ public class SpecificationBackingBean extends
 					financialWeightageCalculate();
 					financialItemScoreCalculate(this.getManagedBean()
 							.getFinacialItemScoreSetting());
+					validateFinancialUserScoringAttachment(this.getManagedBean().isFinancialUserScoringSchema());
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -16858,5 +16865,41 @@ public class SpecificationBackingBean extends
 			}
 		}
 
+	}
+	
+	private void validateTechnicalUserScoringAttachment(boolean isTechnicalUserScoringSchema){
+		
+		 if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType()) && this
+							.getManagedBean().getScQt().isTechEvaluationReq())) {
+		           if (isTechnicalUserScoringSchema) {
+		        	   if(null==this.getManagedBean().getScQt().getTechnicalUserScoringSchemaAttachment()){
+		        		   this.getManagedBean().setActiveIndex(4);
+		        		   throw new EpException(MessageConst.ERROR_760378);
+		        	   }
+			
+				}
+		
+	}
+ }
+	private void validateFinancialUserScoringAttachment(boolean isFinancialUserScoringSchema){
+		if(isFinancialUserScoringSchema){
+			 if(null==this.getManagedBean().getScQt().getFinancialUserScoringSchemaAttachment()){
+				 if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType())
+							|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+									.getManagedBean().getScQt().getEvaluationType()) && this
+									.getManagedBean().getScQt().isTechEvaluationReq())) {
+					 this.getManagedBean().setActiveIndex(5);
+					 
+				 }else{
+					 this.getManagedBean().setActiveIndex(4); 
+				 }
+      		   throw new EpException(MessageConst.ERROR_760379);
+      	   }
+		}
+		
 	}
 }
