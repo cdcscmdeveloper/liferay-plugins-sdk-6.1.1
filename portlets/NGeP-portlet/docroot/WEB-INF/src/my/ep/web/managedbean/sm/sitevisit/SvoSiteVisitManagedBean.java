@@ -8,7 +8,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -39,7 +41,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private int activeIndex;
 	private SmSvTask smSvTask;
 	private SmSvAddress selectedSmSvAddress;
-	private Map<String,SmSvTemplate> smSvTemplateMap;
+	//private Map<String,SmSvTemplate> smSvTemplateMap;
 	private Map<String,List<SmSvAddress>> smSvAddressMap;
 	private Map<String,SmFacility> smSvFacilityMap;
 	private SmSvTemplate selectedSvTemplate;
@@ -89,7 +91,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmSvPrintwork[] selectedPrintWorks;
 	
 	private List<SmSupplierCategory> categoryApplicable;
-	private Map<Integer,String> indexPageMap;
+	private Map<Integer,SmSvTemplate> indexPageMap;
 	private SmPersonnel contactPerson;
 	
 	private List<SmSupplierCategory> svTaskCategories;
@@ -110,6 +112,9 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	private SmSvAdtMachine oriAdtMachine;
 	private Long svTaskId;
+	private SmAppl smAppl;
+	private Map<String, List<SmSvTask>> templateTaskMap;
+	private SmSvTask selectedSvTask;
 
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
@@ -167,13 +172,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedSmSvAddress = selectedSmSvAddress;
 	}
 
-	public Map<String, SmSvTemplate> getSmSvTemplateMap() {
+/*	public Map<String, SmSvTemplate> getSmSvTemplateMap() {
 		return smSvTemplateMap;
 	}
 
 	public void setSmSvTemplateMap(Map<String, SmSvTemplate> smSvTemplateMap) {
 		this.smSvTemplateMap = smSvTemplateMap;
-	}
+	}*/
 
 	public SmSvTemplate getSelectedSvTemplate() {
 		return selectedSvTemplate;
@@ -470,11 +475,11 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.categoryApplicable = categoryApplicable;
 	}
 
-	public Map<Integer, String> getIndexPageMap() {
+	public Map<Integer, SmSvTemplate> getIndexPageMap() {
 		return indexPageMap;
 	}
 
-	public void setIndexPageMap(Map<Integer, String> indexPageMap) {
+	public void setIndexPageMap(Map<Integer, SmSvTemplate> indexPageMap) {
 		this.indexPageMap = indexPageMap;
 	}
 
@@ -621,6 +626,30 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setSvTaskId(Long svTaskId) {
 		this.svTaskId = svTaskId;
+	}
+
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
+	}
+
+	public Map<String, List<SmSvTask>> getTemplateTaskMap() {
+		return templateTaskMap;
+	}
+
+	public void setTemplateTaskMap(Map<String, List<SmSvTask>> templateTaskMap) {
+		this.templateTaskMap = templateTaskMap;
+	}
+
+	public SmSvTask getSelectedSvTask() {
+		return selectedSvTask;
+	}
+
+	public void setSelectedSvTask(SmSvTask selectedSvTask) {
+		this.selectedSvTask = selectedSvTask;
 	}
 
 }
