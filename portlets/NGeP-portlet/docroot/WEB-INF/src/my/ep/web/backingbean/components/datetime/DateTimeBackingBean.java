@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.components.datetime;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -8,6 +7,7 @@ import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
@@ -16,7 +16,6 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.component.selectonemenu.SelectOneMenu;
 
 /**
  * Backing Bean For Date Time Component
@@ -71,8 +70,8 @@ public class DateTimeBackingBean {
 		FacesScopes facesScopes = new FacesScopes();
 		org.primefaces.component.calendar.Calendar calDateObj = (org.primefaces.component.calendar.Calendar)facesScopes.findComponentById(component, "calDate");
 		Object dateObj = calDateObj.getValue();
-		Object hourObj = ((SelectOneMenu)facesScopes.findComponentById(component, "calHour")).getValue();
-		Object minuteObj = ((SelectOneMenu)facesScopes.findComponentById(component, "calMin")).getValue();
+		Object hourObj = ((HtmlSelectOneMenu)facesScopes.findComponentById(component, "calHour")).getValue();
+		Object minuteObj = ((HtmlSelectOneMenu)facesScopes.findComponentById(component, "calMin")).getValue();
 		
 		if (dateObj != null && hourObj != null && minuteObj != null) {
 			int hourValue = Integer.parseInt((String)hourObj);

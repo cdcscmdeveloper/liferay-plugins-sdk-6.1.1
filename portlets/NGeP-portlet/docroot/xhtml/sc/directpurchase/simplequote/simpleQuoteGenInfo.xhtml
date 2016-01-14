@@ -84,7 +84,6 @@
 					</table>
 				</td>
 			</tr>
-
 			<tr>
 				<td>
 				<p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -173,44 +172,32 @@
 			</tr>
 			
 			<tr>
-				<td style="width: 15%;">
+				<td>
 				<p:outputLabel value="#{lbl['lbl.sc.start.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td style="width: 30%;">
-					<table><tr><td> 
-							<p:calendar showOn="button" id="startDate"  
+				<td>
+					<ac:dateTime id="startDate"  
 							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
 							        required="true"
-							        size="26"
 							        disabled="#{!isEditable}"
-									label="#{lbl['lbl.sc.start.date']}" 
-									readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-									value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}">
-									<p:ajax event="dateSelect" update="@([id$=endDate])" process="@this" partialSubmit="true"
-										listener="#{simpleQuoteBackingBean.dateListener}" />
-							</p:calendar></td>
-							<td><p:message id="startDateMsg" for="startDate" display="icon" /></td>
-						</tr>
-					</table>
+									label="#{lbl['lbl.sc.start.date']}"
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
+									postUpdateListener="simpleQuoteBackingBean.dateListener"
+									update="@([id$=endDate])">
+							</ac:dateTime>
 				  </td>
-				   <td style="width: 20%;">
+				   <td>
 				     <p:outputLabel value="#{lbl['lbl.sc.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 
-				    <td style="width: 40%;">
-					      <table><tr><td><p:calendar showOn="button" id="endDate"
+				    <td>
+					      <ac:dateTime id="endDate"
 									label="#{lbl['lbl.sc.end.date']}"
 									mindate="#{!empty simpleQuoteBackingBean.managedBean.scQuote.startDate ? simpleQuoteBackingBean.managedBean.scQuote.startDate : simpleQuoteBackingBean.managedBean.today}"
-									readonlyInput="true" required="true"
+									required="true"
 									disabled="#{!isEditable}"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-									value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
-									<p:ajax event="dateSelect" update="durationId" process="@this"
-										partialSubmit="true"
-										listener="#{simpleQuoteBackingBean.dateListener}" />
-								  </p:calendar></td>
-							      <td><p:message id="endDateMsg" for="endDate" display="icon" /></td>
-							 </tr>
-							</table>
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
+									postUpdateListener="simpleQuoteBackingBean.dateListener"
+									update="@([id$=durationId])">
+								  </ac:dateTime>
 					  </td>
 				     </tr>
 					 <tr>
