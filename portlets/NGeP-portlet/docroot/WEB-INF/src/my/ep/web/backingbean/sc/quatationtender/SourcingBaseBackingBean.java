@@ -1812,6 +1812,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
 					totalDuration = duration.divide(new BigDecimal(12), 4,
 							BigDecimal.ROUND_HALF_UP);
+					
+					double ceilingDuration = Math.ceil(totalDuration.doubleValue());
+					
+					totalDuration = BigDecimal.valueOf(ceilingDuration);
 
 					// Total amount to get bond percentage
 					bondPercentageLoaAmt = overallCtAmount.divide(
