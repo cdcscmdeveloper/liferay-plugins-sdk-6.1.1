@@ -70,6 +70,27 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
+							value="#{lbl['lbl.sm.identificationtype']}" /></td>
+					<td><p:selectOneMenu id="newAdminIdType"
+							label="#{lbl['lbl.sm.identificationtype']}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationTypeId}"
+							style="width:200px" disabled="true">
+							<f:selectItems
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.identificationTypes}" />
+						</p:selectOneMenu>
+					</td>
+
+					<td><p:outputLabel value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationType.parameterCode eq 
+							SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.userprofile.idno']}" /></td>
+
+					<td>
+						<p:inputText label="#{lbl['lbl.sm.userprofile.idno']}" id="newAdminIdNo"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}"
+							size="35" disabled="true" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="newAdminNationality"
