@@ -76,7 +76,7 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmExemptedEpNoView(true);
 			rptGenBean.setPmExemptedItemNameView(true);
 			rptGenBean.setPmExemptedItemCodeView(true);
-			rptGenBean.setPmNonMandatoryDateView(true);
+			rptGenBean.setPmNonMandatorySupDateView(true);
 			rptGenBean.setPmFromDateView(true);
 			break;
 
@@ -98,7 +98,7 @@ public class PMReportBackingBean extends
 			rptGenBean.setPmPhysicalLOANoView(true);
 			break;
 		case ReportConst.PM_BPK_USER_PROFILE_RPT_VAL:
-			rptGenBean.setPmMandatoryZoneView(true);
+			rptGenBean.setPmMandatoryZoneViewBPK(true);
 			break;
 		case ReportConst.PM_BPK_ADMIN_PROFILE_RPT_VAL:
 			rptGenBean.setPmMandatoryZoneView(true);

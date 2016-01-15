@@ -276,10 +276,10 @@
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryZoneView}">
 							<p:column>
-								<table style="width: 182px;">
+								<table style="width: 169px;">
 									<tr style="width: 100%;">
 										<td style="width: 160px;"><p:outputLabel
-												style="margin-right: -16px;" value="#{lbl['lbl.rpt.zone']}" />
+												style="margin-right: -19px;" value="#{lbl['lbl.rpt.zone']}" />
 											<p:outputLabel  value="*"
 												styleClass="mandatory" /></td>
 									</tr>
@@ -309,11 +309,49 @@
 								</table>
 							</p:column>
 						</c:if>
+						
+						<c:if
+							test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryZoneViewBPK}">
+							<p:column>
+								<table style="width: 73px;">
+									<tr style="width: 100%;">
+										<td style="width: 160px;"><p:outputLabel
+												style="margin-right: -103px;" value="#{lbl['lbl.rpt.zone']}" />
+											<p:outputLabel  value="*" 	style="margin-right: -67px;"
+												styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:selectOneMenu
+												label="#{lbl['lbl.rpt.zone']}" id="Zone"
+												value="#{reportBackingBean.pmZone}"
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}"
+													itemValue="#{lbl['lbl.rpt.semenanjung']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}"
+													itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
+													itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
+												<p:ajax event="change" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:selectOneMenu></td>
+										<td><p:message id="rptZoneMsg" for="Zone" display="icon"
+												showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+						
 
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmProfileStatusView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}"
-								style="margin-top:5px;width:295px;" />
+								style="margin-top:5px;width:113px;" />
 							<p:selectOneMenu value="#{reportBackingBean.pmProfileStatus}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
@@ -396,6 +434,36 @@
 	<div>
 		<c:if
 			test="#{reportBackingBean.managedBean.rptGenBean.pmNonMandatoryDateView}">
+			<TABLE style="margin-top: 50px; width: 50%;">
+				<TR>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.pmFromDateView}">
+						<TD><p:outputLabel value="#{lbl['lbl.rpt.effDateFrom']}"
+								style="width:198px;" /></TD>
+					</c:if>
+					<TD><p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.fromDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar></TD>
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
+							style="width:50px;" /></TD>
+					<TD><p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.toDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+
+						</p:calendar></TD>
+				</TR>
+			</TABLE>
+		</c:if>
+	</div>
+	
+	<div>
+		<c:if
+			test="#{reportBackingBean.managedBean.rptGenBean.pmNonMandatorySupDateView}">
 			<TABLE style="margin-top: 10px; width: 50%;">
 				<TR>
 					<c:if
@@ -422,4 +490,8 @@
 			</TABLE>
 		</c:if>
 	</div>
+	
+	
+	
+	
 </ui:composition>
