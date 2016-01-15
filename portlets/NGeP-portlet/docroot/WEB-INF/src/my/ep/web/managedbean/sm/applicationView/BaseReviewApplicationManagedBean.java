@@ -30,6 +30,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -156,6 +157,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmFacility> applDockyardFacilities;
 	private List<SmFacility> applWorkShopFacilities;
 	private List<SmFacility> applStoreFacilities;
+	private List<SmMofCert> mofCertLs;
 	private String bumiRecommendationNote;
 	private String roleCode;
 
@@ -1179,6 +1181,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setBankBranchName(String bankBranchName) {
 		this.bankBranchName = bankBranchName;
+	}
+
+	public List<SmMofCert> getMofCertLs() {
+		return mofCertLs;
+	}
+
+	public void setMofCertLs(List<SmMofCert> mofCertLs) {
+		this.mofCertLs = mofCertLs;
 	}
 
 }
