@@ -28,17 +28,17 @@
 				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.uom.uomName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:right;" >
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:right;" rendered="false">
 				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.unitPrice}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:right;" >
+			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:right;" rendered="false">
 				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.gstAmount}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:right;" >
+			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:right;" rendered="false">
 				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.gstUnitPrice}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
