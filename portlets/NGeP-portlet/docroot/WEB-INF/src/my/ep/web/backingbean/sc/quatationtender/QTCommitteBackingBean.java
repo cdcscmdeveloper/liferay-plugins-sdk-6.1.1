@@ -1060,6 +1060,11 @@ public class QTCommitteBackingBean extends
 											MessageUtils
 													.getMessage(
 															MessageConst.ERROR_760150,
+															new String[] { ParameterHelper
+																	.getInstance()
+																	.getParameterDesc(
+																			ParameterTypeConst.SC_COMMITTEE_TYPE,
+																			ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE) },
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
@@ -1159,6 +1164,11 @@ public class QTCommitteBackingBean extends
 											MessageUtils
 													.getMessage(
 															MessageConst.ERROR_760150,
+															new String[] { ParameterHelper
+																	.getInstance()
+																	.getParameterDesc(
+																			ParameterTypeConst.SC_COMMITTEE_TYPE,
+																			ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE) },
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
