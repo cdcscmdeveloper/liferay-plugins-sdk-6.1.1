@@ -144,6 +144,7 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_APPLICATION_REJECTED_RPT_VAL:
 			rptGenBean.setSmCommonZoneView(true);
 			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			rptGenBean.setSmApplicationTypeSixView(true);			
 			rptGenBean.setSmCDCompanyNameView(true);
 			rptGenBean.setSmARMofRegNoView(true);
 			rptGenBean.setSmNonMandatoryDateView(true);
@@ -477,6 +478,7 @@ public class SMReportBackingBean extends
 			break;
 		case ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL:
 			rptGenBean.setSmCDMandatoryAllSupplierTypeView(true);
+			rptGenBean.setSmApplicationTypeFiveView(true);
 			rptGenBean.setSmMandatoryApplicationStatusThreeView(true);
 			rptGenBean.setSmMandatorySupportingDocumentModeView(true);
 			rptGenBean.setSmCDCompanyNameView(true);

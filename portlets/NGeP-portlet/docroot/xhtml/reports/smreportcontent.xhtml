@@ -1765,6 +1765,51 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
+
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationTypeFiveView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.smApplicationType}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.newapp']}"
+									itemValue="N"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.renewapp']}"
+									itemValue="R"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.addcategory']}"
+									itemValue="A"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.bs']}"
+									itemValue="B"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.updateprifile']}"
+									itemValue="U"></f:selectItem>								
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationTypeSixView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.smApplicationType}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.newapp']}" itemValue="N"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.renewapp']}"
+									itemValue="R"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.addcategory']}" itemValue="A"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.bs']}" itemValue="B"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.updateprifile']}" itemValue="U"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.delmof']}" itemValue="C"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+
+
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smReportTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.reportType']}"

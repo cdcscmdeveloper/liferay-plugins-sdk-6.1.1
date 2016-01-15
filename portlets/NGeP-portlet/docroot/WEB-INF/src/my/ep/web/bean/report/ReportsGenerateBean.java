@@ -789,6 +789,12 @@ public class ReportsGenerateBean {
 	/** The sm cd company name view. */
 	private boolean smCDCompanyNameView = false;
 
+	/** The sm application type five view. */
+	private boolean smApplicationTypeFiveView = false;
+
+	/** The sm application type six view. */
+	private boolean smApplicationTypeSixView = false;
+
 	/** The sm supporting document status view. */
 	private boolean smSupportingDocumentStatusView = false;
 
@@ -16962,8 +16968,8 @@ public class ReportsGenerateBean {
 	/**
 	 * Sets the pm profile status vie view.
 	 * 
-	 * @param pmProfileStatusVieView
-	 *            the pmProfileStatusVieView to set
+	 * @param pmProfileStatusView
+	 *            the new pm profile status view
 	 */
 	public void setPmProfileStatusView(boolean pmProfileStatusView) {
 		this.pmProfileStatusView = pmProfileStatusView;
@@ -17005,5 +17011,43 @@ public class ReportsGenerateBean {
 	 */
 	public void setPmProfileStatusVar(String pmProfileStatusVar) {
 		this.pmProfileStatusVar = pmProfileStatusVar;
+	}
+
+	/**
+	 * Checks if is sm application type five view.
+	 * 
+	 * @return the smApplicationTypeFiveView
+	 */
+	public boolean isSmApplicationTypeFiveView() {
+		return smApplicationTypeFiveView;
+	}
+
+	/**
+	 * Sets the sm application type five view.
+	 * 
+	 * @param smApplicationTypeFiveView
+	 *            the smApplicationTypeFiveView to set
+	 */
+	public void setSmApplicationTypeFiveView(boolean smApplicationTypeFiveView) {
+		this.smApplicationTypeFiveView = smApplicationTypeFiveView;
+	}
+
+	/**
+	 * Checks if is sm application type six view.
+	 * 
+	 * @return the smApplicationTypeSixView
+	 */
+	public boolean isSmApplicationTypeSixView() {
+		return smApplicationTypeSixView;
+	}
+
+	/**
+	 * Sets the sm application type six view.
+	 * 
+	 * @param smApplicationTypeSixView
+	 *            the smApplicationTypeSixView to set
+	 */
+	public void setSmApplicationTypeSixView(boolean smApplicationTypeSixView) {
+		this.smApplicationTypeSixView = smApplicationTypeSixView;
 	}
 }
