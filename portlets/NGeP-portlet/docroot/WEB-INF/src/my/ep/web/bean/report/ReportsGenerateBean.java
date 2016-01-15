@@ -4216,6 +4216,9 @@ public class ReportsGenerateBean {
 	/** The pm non mandatory date view. */
 	private boolean pmNonMandatoryDateView = false;
 
+	/** The pm non mandatory sup date view. */
+	private boolean pmNonMandatorySupDateView = false;
+
 	/** The Pm contract no view. */
 	private boolean pmContractNoView = false;
 
@@ -4230,6 +4233,9 @@ public class ReportsGenerateBean {
 
 	/** The pm mandatory zone view. */
 	private boolean pmMandatoryZoneView = false;
+
+	/** The pm mandatory zone view bpk. */
+	private boolean pmMandatoryZoneViewBPK = false;
 
 	/** The pm profile status vie view. */
 	private boolean pmProfileStatusView = false;
@@ -17049,5 +17055,35 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmApplicationTypeSixView(boolean smApplicationTypeSixView) {
 		this.smApplicationTypeSixView = smApplicationTypeSixView;
+	}
+
+	/**
+	 * @return the pmNonMandatorySupDateView
+	 */
+	public boolean isPmNonMandatorySupDateView() {
+		return pmNonMandatorySupDateView;
+	}
+
+	/**
+	 * @param pmNonMandatorySupDateView
+	 *            the pmNonMandatorySupDateView to set
+	 */
+	public void setPmNonMandatorySupDateView(boolean pmNonMandatorySupDateView) {
+		this.pmNonMandatorySupDateView = pmNonMandatorySupDateView;
+	}
+
+	/**
+	 * @return the pmMandatoryZoneViewBPK
+	 */
+	public boolean isPmMandatoryZoneViewBPK() {
+		return pmMandatoryZoneViewBPK;
+	}
+
+	/**
+	 * @param pmMandatoryZoneViewBPK
+	 *            the pmMandatoryZoneViewBPK to set
+	 */
+	public void setPmMandatoryZoneViewBPK(boolean pmMandatoryZoneViewBPK) {
+		this.pmMandatoryZoneViewBPK = pmMandatoryZoneViewBPK;
 	}
 }
