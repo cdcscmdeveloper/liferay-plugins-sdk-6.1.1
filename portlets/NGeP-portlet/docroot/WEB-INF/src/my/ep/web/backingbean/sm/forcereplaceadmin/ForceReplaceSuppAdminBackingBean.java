@@ -98,11 +98,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with new personnel and redirect to success page
 	 */
 	public void replaceWithNewUser() {
-		getManagedBean().getNewAdmin().setIdentificationTypeId(
-				getManagedBean().getReactivateBasic()
-						.getNewIdentificationType());
-		getManagedBean().getNewAdmin().setIdentificationNo(
-				getManagedBean().getReactivateBasic().getNewIdentificationNo());
 		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
@@ -511,6 +506,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Set default new personnel values
 	 */
 	private void setDefaultNewAdminPersonnelValues() {
+		getManagedBean().getNewAdmin().setIdentificationTypeId(
+				getManagedBean().getReactivateBasic()
+						.getNewIdentificationType());
+		getManagedBean().getNewAdmin().setIdentificationNo(
+				getManagedBean().getReactivateBasic().getNewIdentificationNo());
 		getManagedBean().getNewAdmin().setTitle(new PmSalutation());
 		getManagedBean().getNewAdmin().setEpRole(
 				getManagedBean().getOldAdmin().getEpRole());
