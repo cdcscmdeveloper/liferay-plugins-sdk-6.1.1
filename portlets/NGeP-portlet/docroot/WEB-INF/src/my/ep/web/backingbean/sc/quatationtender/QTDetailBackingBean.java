@@ -1667,7 +1667,9 @@ public class QTDetailBackingBean extends
 				committeItem.setUpdate("@this");
 				committeItem.setPartialSubmit(true);
 				committeItem.setProcess("@this");
-
+				// Added as part of Defect fix- 7578
+				committeItem.setTransient(true);
+				
 				if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION
 						.equals(tabBean.getTabType()) && tabBean
 						.getScQtCommittee().getScCommittee()
@@ -1903,16 +1905,8 @@ public class QTDetailBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
 	}
+
 	
-	/**
-	 * Render QT Search screen for QT Search Portlet
-	 */
-	public void preRenderQTSearchView() {
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.SEARCH_PAGE);
-	}
 	/**
 	 * Update bpm task.
 	 * 
