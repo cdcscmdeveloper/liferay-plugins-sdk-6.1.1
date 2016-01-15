@@ -10,7 +10,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td style="text-align: left;">
-					<p:commandButton value="#{lbl['lbl.btn.next']}" action="#{softCertBackingBean.navigateToUploadSuppDocPage}" 
+					<p:commandButton value="#{lbl['lbl.btn.proceed']}" action="#{softCertBackingBean.navigateToUploadSuppDocPage}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
 						style="float:right;" id="proceedBtnId" disabled="#{empty softCertBackingBean.managedBean.softCertSelectList}">
 					</p:commandButton>
