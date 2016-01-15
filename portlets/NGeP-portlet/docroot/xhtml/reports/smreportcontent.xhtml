@@ -67,8 +67,8 @@
 							<p:outputLabel value="" style="margin-top:5px;width:160px;" />
 							<p:selectOneRadio id="reqexpdate" style="width:338px"
 								value="#{reportBackingBean.smRequestExpiryDate}">
-								<f:selectItem itemLabel="Soft Cert Request Date" itemValue="R" />
-								<f:selectItem itemLabel="Soft Cert Expiry Date" itemValue="E" />
+								<f:selectItem itemLabel="#{lbl['lbl.rptsoftcertreqdate']}" itemValue="R" />
+								<f:selectItem itemLabel="#{lbl['lbl.rptsoftexpdate']}" itemValue="E" />
 								<p:ajax event="change"
 									listener="#{reportBackingBean.changeSoftCertSelection}"
 									partialSubmit="true" update="@form" />
