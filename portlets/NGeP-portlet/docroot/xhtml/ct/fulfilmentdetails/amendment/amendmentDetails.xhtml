@@ -137,11 +137,11 @@
 		<h:panelGroup rendered="#{!ctBackingBean.managedBean.disableAmendDetails}">
 		  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
 			<h:panelGrid columns="1" style="float:right;">
-				<p:outputLabel value="#{lbl['lbl.ct.secretary']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}" 
-					label="#{lbl['lbl.ct.secretary']}" style="width:300px;">
+					label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;">
 		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
 		       	</p:selectOneMenu>
 			</h:panelGrid>
