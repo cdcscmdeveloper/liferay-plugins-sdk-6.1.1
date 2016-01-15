@@ -128,6 +128,19 @@
 		</div>
 	</p:outputPanel>
 	
+	<p:confirmDialog id="replaceNewAdminConfirm" closable="true"
+		message="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.nonexist.confirm.msg']}"
+		header="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.nonexist.confirm.header']}" severity="alert"
+		widgetVar="replaceNewAdminConfirm">
+		
+		<div align="right">
+			<p:commandButton id="yes" value="#{lbl['lbl.btn.yes']}" onclick="replaceNewAdminConfirm.hide()" update="@form"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{forceReplaceSuppAdminBackingBean.redirectToNonExistNewAdminPage}"/>
+			<p:commandButton id="no" value="#{lbl['lbl.btn.no']}" onclick="replaceNewAdminConfirm.hide()" />
+		</div>
+
+	</p:confirmDialog>
+	
 	<ui:remove>
 		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/tncPopup.xhtml" />
 	</ui:remove>
