@@ -14,27 +14,31 @@
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractType.parameterCode==ParameterConst.contractTypeMinistry?
 								invoiceBackingBean.retrieveMinistryByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.orgProfileId):''}"
 						disabled="true" /></td>
-				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
-				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.contractPhysicalNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ap59.physical.contr.no']}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loa.loaNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/></td>
+				
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ptj.name']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}"/></td>
-			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
-				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loaPhysicalNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/></td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" /></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loaPhysicalNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.doc.maintain.supp.name']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.smSupplier.companyName}"/></td>
-				
+				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.contract.title']}" /></td>
 				<td><p:inputTextarea rows="4" cols="50" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractName}"
 						style="margin-bottom:5px;" autoResize="false" disabled="true" /></td>
+				<td style="width: 139px;vertical-align: top;"><p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
+				<td style="vertical-align: top;"><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.contractPhysicalNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ap59.physical.contr.no']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
