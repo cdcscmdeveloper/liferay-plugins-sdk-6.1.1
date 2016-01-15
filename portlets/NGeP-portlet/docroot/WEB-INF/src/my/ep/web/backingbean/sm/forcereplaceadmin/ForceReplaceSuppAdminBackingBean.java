@@ -195,7 +195,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 		// validate ic length
 		if (getManagedBean().getIdentificationType().getParameterCode()
-				.equals("I")) {
+				.equals(SupplierManagementConst.NEW_IC)) {
 			if (getManagedBean().getReactivateBasic().getNewIdentificationNo()
 					.length() < 12) {
 				throw new EpException(MessageConst.ERROR_722532,
