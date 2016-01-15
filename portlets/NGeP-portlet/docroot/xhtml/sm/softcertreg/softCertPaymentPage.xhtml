@@ -15,7 +15,7 @@
 						update="@form" action="#{softCertBackingBean.backToUploadPage}" />
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				    <p:commandButton value="#{lbl['lbl.btn.proceed']}" style="float:right;" update="@form"
+				    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" update="@form"
 				    	disabled="#{empty softCertBackingBean.managedBean.softCertPayList}" id="makePaymentBtnId"
 				    	action="#{softCertBackingBean.showConfirmDialog}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
