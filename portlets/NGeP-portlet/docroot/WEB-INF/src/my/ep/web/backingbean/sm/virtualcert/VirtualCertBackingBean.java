@@ -193,7 +193,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	 * @param cert
 	 * @return SmMofCert
 	 */
-	private SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert) {
+	public SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert) {
 		try{
 			String reportUrl = generateReportURL(reportFile, paramMap);
 			log.info("reportUrl>>>>>>>" + reportUrl);
@@ -244,7 +244,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		return null;
 	}
 	
-	private SmMofCert updateMOFCertFilePath(SmMofCert mofCert){
+	public SmMofCert updateMOFCertFilePath(SmMofCert mofCert){
 		IVirtualCertSO virtualCertSO = SmServiceLookup.getVirtualCertSO();
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setMofCert(mofCert);
@@ -254,7 +254,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		return resDTO.getSmMofCert();
 	}
 	
-	private SmMofCert retrieveCurrentMofCert(Long applId){
+	public SmMofCert retrieveCurrentMofCert(Long applId){
 		IVirtualCertSO reqSO = SmServiceLookup.getVirtualCertSO();
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setApplId(applId);
@@ -264,7 +264,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		return resDTO.getSmMofCert();
 	} 
 	
-	private String getReportType(boolean isBumi){
+	public String getReportType(boolean isBumi){
 		if(isBumi){
 			return ReportConst.SM_VIRTUAL_VERIFICATION_BUMI_jsp;
 		}else{
@@ -272,7 +272,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		}
 	}
 	
-	private Map<String, String> getReportParam(SmMofCert cert){
+	public Map<String, String> getReportParam(SmMofCert cert){
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("PAPPLID", cert.getSmAppl().getApplId().toString());
 		
