@@ -1,0 +1,19 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:outputPanel id="virtualCertOutPanelId">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include src="smViewProfileApplnSideMenuItem.xhtml" /></td>
+				<td style="vertical-align: top;"><p:dialog /><ui:include src="/xhtml/sm/shared/applViewOnlyPages/virtualCertInfo.xhtml" /></td>
+			</tr>
+		</table>
+	</p:outputPanel>
+
+</ui:composition>

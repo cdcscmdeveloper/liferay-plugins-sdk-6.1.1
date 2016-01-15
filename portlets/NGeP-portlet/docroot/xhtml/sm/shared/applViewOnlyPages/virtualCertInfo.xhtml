@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="#{lbl['lbl.sm.virtual.cert']}">
+		<p:dataTable id="vcDt" 
+			value="#{viewSmApplBackingBean.managedBean.mofCertLs}"
+			var="mofCert"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+			<p:column headerText="#{lbl['lbl.sm.mofno']}">
+				<h:outputText value="#{mofCert.smMofAccount.mofNo}"/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.certno']}">
+				<h:outputText value="#{mofCert.certSerialNo}"/>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.virtual.cert.type']}">
+				<h:outputText
+					rendered="#{mofCert.smMofAccount.supplierType eq SupplierManagementConst.STYPE_CONSULTANT}"
+					value="#{lbl['lbl.sm.consultant']}" />
+
+				<h:outputText
+					rendered="#{mofCert.smMofAccount.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR}"
+					value="#{lbl['lbl.sm.contractor']}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.virtual.cert.download']}">
+				<div align="center">
+				<p:commandButton
+					value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
+					ajax="false">
+					<p:fileDownload value="#{viewSmApplBackingBean.printVirtualCert(mofCert)}" />
+				</p:commandButton>
+				</div>
+			</p:column>
+		</p:dataTable>
+		
+	</p:panel>
+
+</ui:composition>

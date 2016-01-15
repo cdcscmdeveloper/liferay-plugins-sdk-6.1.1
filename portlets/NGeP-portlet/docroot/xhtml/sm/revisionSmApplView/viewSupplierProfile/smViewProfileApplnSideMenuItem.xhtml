@@ -35,6 +35,9 @@
 			<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 				update=":form" />
+			<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+				update=":form" />
 		</c:if>
 	</p:tabMenu>
 
