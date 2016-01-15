@@ -278,7 +278,9 @@
 								<p:column width="8%" headerText="#{lbl['lbl.cm.contact.no']}"
 									rendered="#{unspscCodeBackingBean.requisitioner}"
 									style="white-space: normal">
-								#{supplierItem.contractNo}
+								<h:outputText value="#{supplierItem.latestContractPhysicalNo}" rendered="#{supplierItem.latestContractPhysicalNo != null}"/>
+								<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{supplierItem.latestContractPhysicalNo != null}"/>
+								<h:outputText value="#{supplierItem.contractNo}" />
 							</p:column>
 
 								<p:column width="8%" headerText="#{lbl['lbl.cm.circular.no']}"
