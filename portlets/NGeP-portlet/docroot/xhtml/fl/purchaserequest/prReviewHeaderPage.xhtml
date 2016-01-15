@@ -12,7 +12,9 @@
 					<h:outputLabel value="#{lbl['lbl.fl.req.note.no']} " />
 				</td>
 				<td class="header-info-text">
-					#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.scPurchaseRequest.requestNote.requestNoteNo}
+					<p:commandLink value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.scPurchaseRequest.requestNote.requestNoteNo}" immediate="true"
+					action="#{purchaseRequestBackingBean.navigateRequestNotePage(purchaseRequestBackingBean.managedBean.fulfilmentRequest.scPurchaseRequest.requestNote.requestNoteId)}"/>
+					
 				</td>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.fl.purchase.request.no']} " />
