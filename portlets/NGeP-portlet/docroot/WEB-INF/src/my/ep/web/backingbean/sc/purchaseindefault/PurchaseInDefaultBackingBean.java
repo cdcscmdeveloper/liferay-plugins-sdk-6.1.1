@@ -88,14 +88,11 @@ import my.ep.web.managedbean.sc.purchaseindefault.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DualListModel;
-
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 
@@ -594,18 +591,14 @@ public class PurchaseInDefaultBackingBean extends
 	public void approverAction(String outcome) {
 		debugLogger("approverAction");
 		this.getManagedBean().setAction(outcome);
-		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)
-				|| BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(outcome)) {
+		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			if (isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-
-			} else if (isDigiSigningRequired(RoleCode.BPK_PCA.value())) {
+			if (isDigiSigningRequired(RoleCode.BPK_PCA.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 			} else if (isDigiSigningRequired(RoleCode.BPK_CCA.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-				
+
 			} else if (isDigiSigningRequired(RoleCode.MIN_CONTRACT_ADMIN.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
