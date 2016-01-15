@@ -42,6 +42,20 @@
 					<p:inputText size="80" value="#{invoiceBackingBean.managedBean.title}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
+			<h:panelGroup id="docPhyContNoSearch">
+				<h:panelGrid columns="4" columnClasses="cmWidth1">
+					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}"
+						style="width: 125px;" />
+					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.physicalContractNo}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docPhyLoaNoSearch">
+				<h:panelGrid columns="4" columnClasses="cmWidth1">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}"
+						style="width: 125px;" />
+					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.physicalLoaNo}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>
 
 			<p:outputPanel id="advanceSearchID" style="width:100%">
 			</p:outputPanel>
@@ -67,11 +81,15 @@
 					<h:outputText value="#{flInvoice.flRequest.flFulfilmentOrder.docNo}"/>
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.fl.contract.no']}">
-					<h:outputText value="#{flInvoice.flRequest.ctContract.contractNo}" />
+					headerText="#{lbl['lbl.fl.contract.no']}" rendered="#{flInvoice.flRequest.ctContract.latestContractVer.contractPhysicalNo != null and flInvoice.flRequest.ctContract.contractNo != null}">
+					<h:outputText value="#{flInvoice.flRequest.ctContract.latestContractVer.contractPhysicalNo}&lt;br/&gt;#{flInvoice.flRequest.ctContract.contractNo }" escape="false"/>
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.fl.contract.no']}" rendered="#{flInvoice.flRequest.ctContract.latestContractVer.contractPhysicalNo == null or flInvoice.flRequest.ctContract.contractNo == null}">
+					<h:outputText value="#{flInvoice.flRequest.ctContract.latestContractVer.contractPhysicalNo} #{flInvoice.flRequest.ctContract.contractNo }" escape="false"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.loa.no']}">
-					<h:outputText value="#{flInvoice.flRequest.ctContract.loa.loaNo}"/>
+					<h:outputText value="#{flInvoice.flRequest.ctContract.loaPhysicalNo} &lt;br/&gt; #{flInvoice.flRequest.ctContract.loa.loaNo}" escape="false"/>
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.ptj.name']}">

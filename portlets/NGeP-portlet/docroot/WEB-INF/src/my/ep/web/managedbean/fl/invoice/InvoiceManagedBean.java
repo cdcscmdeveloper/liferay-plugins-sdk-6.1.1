@@ -63,6 +63,10 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	/** The title. */
 	private String title;
 	
+	private String physicalLoaNo;
+	
+	private String physicalContractNo;
+	
 	/** The is dan. */
 	private boolean isDan = false;
 	
@@ -1247,5 +1251,33 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setTaxInvoice(boolean isTaxInvoice) {
 		this.isTaxInvoice = isTaxInvoice;
+	}
+
+	/**
+	 * @return the physicalLoaNo
+	 */
+	public String getPhysicalLoaNo() {
+		return physicalLoaNo;
+	}
+
+	/**
+	 * @param physicalLoaNo the physicalLoaNo to set
+	 */
+	public void setPhysicalLoaNo(String physicalLoaNo) {
+		this.physicalLoaNo = physicalLoaNo;
+	}
+
+	/**
+	 * @return the physicalContractNo
+	 */
+	public String getPhysicalContractNo() {
+		return physicalContractNo;
+	}
+
+	/**
+	 * @param physicalContractNo the physicalContractNo to set
+	 */
+	public void setPhysicalContractNo(String physicalContractNo) {
+		this.physicalContractNo = physicalContractNo;
 	}
 }
