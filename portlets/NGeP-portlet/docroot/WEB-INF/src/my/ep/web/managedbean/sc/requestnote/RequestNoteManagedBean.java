@@ -295,6 +295,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	/** The task expiry date */
 	private Calendar taskExpiryDate;
 	
+	/** The pid verifiers and approvers */
+	private String pidApprovers;
+	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -1742,6 +1745,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setTaskExpiryDate(Calendar taskExpiryDate) {
 		this.taskExpiryDate = taskExpiryDate;
+	}
+
+	/**
+	 * @return the pidApprovers
+	 */
+	public String getPidApprovers() {
+		return pidApprovers;
+	}
+
+	/**
+	 * @param pidApprovers the pidApprovers to set
+	 */
+	public void setPidApprovers(String pidApprovers) {
+		this.pidApprovers = pidApprovers;
 	}
 	
 }
