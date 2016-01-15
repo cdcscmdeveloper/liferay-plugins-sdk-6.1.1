@@ -16,6 +16,9 @@
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
 
+	<ac:gpkiPopup textBeforeSign="#{lOADetailBackingBean.textBeforeSign}"
+		postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+
 	<div class="ppRightBtn">
 		<ui:decorate
 			template="/WEB-INF/facelets/templates/claim_template.xhtml">
