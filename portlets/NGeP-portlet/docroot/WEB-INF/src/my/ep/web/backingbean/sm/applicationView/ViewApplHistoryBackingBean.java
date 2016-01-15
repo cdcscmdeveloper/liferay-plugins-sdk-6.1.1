@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.applicationView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -97,10 +96,19 @@ public class ViewApplHistoryBackingBean extends
 		return statusDesc;
 	}
 
+	/**
+	 * Perform search supplier application history
+	 */
 	public void search() {
 		getManagedBean().searchSupplier();
 	}
 
+	/**
+	 * Initialized application by application no
+	 * 
+	 * @param String
+	 *            applNo
+	 */
 	public void initSmApplByApplNo(String applNo) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
@@ -110,8 +118,14 @@ public class ViewApplHistoryBackingBean extends
 		initBumiRecommendNote();
 		initVirtualCert();
 	}
-	
-	public void printVirtualCert(SmMofCert cert){
+
+	/**
+	 * Download virtual certificate
+	 * 
+	 * @param SmMofCert
+	 *            cert
+	 */
+	public void printVirtualCert(SmMofCert cert) {
 		try {
 			getInstance().printVirtualCert(cert);
 		} catch (IOException e) {
@@ -119,6 +133,9 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 
+	/**
+	 * Initialized virtual certificate by application Id
+	 */
 	private void initVirtualCert() {
 		boolean isRegenerate = false;
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
@@ -143,15 +160,18 @@ public class ViewApplHistoryBackingBean extends
 				}
 			}
 			if (isRegenerate) {
-				getManagedBean().setMofCertLs(
-						SmServiceLookup.getVirtualCertSO()
-								.retrieveMofCertsByApplId(reqDTO)
-								.getSmMofCerts());
+				mofCerts = SmServiceLookup.getVirtualCertSO()
+						.retrieveMofCertsByApplId(reqDTO).getSmMofCerts();
 			}
 		}
 		getManagedBean().setMofCertLs(mofCerts);
 	}
 
+	/**
+	 * Get VirtualCertBackingBean instance
+	 * 
+	 * @return VirtualCertBackingBean
+	 */
 	public static VirtualCertBackingBean getInstance() {
 		if (instance == null) {
 			instance = new VirtualCertBackingBean();
