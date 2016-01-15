@@ -385,6 +385,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The task expiry date */
 	private Calendar taskExpiryDate;
 	
+	/** The pid verifier and approvers */
+	private String pidApprovers;
+	
 
 	/**
 	 * Gets the spki backing bean.
@@ -2478,6 +2481,20 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setTaskExpiryDate(Calendar taskExpiryDate) {
 		this.taskExpiryDate = taskExpiryDate;
+	}
+
+	/**
+	 * @return the pidApprovers
+	 */
+	public String getPidApprovers() {
+		return pidApprovers;
+	}
+
+	/**
+	 * @param pidApprovers the pidApprovers to set
+	 */
+	public void setPidApprovers(String pidApprovers) {
+		this.pidApprovers = pidApprovers;
 	}
 	
 }
