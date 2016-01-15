@@ -1048,14 +1048,11 @@ public class LOIDetailBackingBean extends
 				if(scLoiLoaItem.getTplSpecZoneDtl() != null){
 					isZonal = Boolean.TRUE;
 				}
-
+				
+				quantity = scLoiLoaItem.getQty();
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
-					// without Tier quantity
-					quantity = scLoiLoaItem.getQty();
 					isCalculateMaxPriceItem = Boolean.TRUE;
 				} else{
-					// Tier - max quantity.
-					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
 					if(filteredMaxPriceItems.contains(scLoiLoaItem)){
 						isCalculateMaxPriceItem = Boolean.TRUE;
 					} else{
@@ -1616,15 +1613,10 @@ public class LOIDetailBackingBean extends
 
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-				
+				quantity = scLoiLoaItem.getQty();
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
-					// without Tier quantity
-					quantity = scLoiLoaItem.getQty();
 					isCalculateMaxPriceItem = Boolean.TRUE;
 				} else{
-
-					// Tier - max quantity.
-					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
 
 					if(filteredItems.contains(scLoiLoaItem)){
 						isCalculateMaxPriceItem = Boolean.TRUE;
@@ -3095,11 +3087,19 @@ public class LOIDetailBackingBean extends
 		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
 				|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId))) {
 
-			// validate negotiation location
-			if (scLoi.getScNegoLocations() == null
-					|| scLoi.getScNegoLocations().isEmpty()) {
-				throw new EpException(MessageConst.ERROR_760274);
+			// online bidding
+			if (scLoi.getRecommendBy() != null) {
+				PmParameter recommendedBy = scLoi.getRecommendBy();
+				if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+						.equals(recommendedBy.getParameterCode())) {
+					// validate negotiation location
+					if (scLoi.getScNegoLocations() == null
+							|| scLoi.getScNegoLocations().isEmpty()) {
+						throw new EpException(MessageConst.ERROR_760274);
+					}
+				}
 			}
+			
 			// validate negotiation Term
 			boolean isSelected = Boolean.TRUE;
 			if (scLoi.getScNegoTerms() != null
@@ -3151,6 +3151,13 @@ public class LOIDetailBackingBean extends
 					}
 				}
 			}
+			
+			// validate negotiation location
+			if (scLoi.getScNegoLocations() == null
+					|| scLoi.getScNegoLocations().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_760274);
+			}
+			
 		}
 
 		if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
@@ -4333,7 +4340,6 @@ public class LOIDetailBackingBean extends
 
 		// calculate max price items only.
 		boolean isCalculateMaxPriceItem = Boolean.TRUE;
-
 		BigDecimal quantity = BigDecimal.valueOf(0d);
 		// calc after nego total
 		if (scLoi.getScLoiLoaItems() != null
@@ -4342,13 +4348,11 @@ public class LOIDetailBackingBean extends
 			BigDecimal totalAmount = BigDecimal.valueOf(0d);
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-
+				quantity = scLoiLoaItem.getQty();
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
 					// with out Tier quantity
-					quantity = scLoiLoaItem.getQty();
+					//quantity = scLoiLoaItem.getQty();
 				} else{
-					// Tier - max quantity.
-					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
 					if(filteredMaxPriceItemsbyQty.contains(scLoiLoaItem)){
 						isCalculateMaxPriceItem = Boolean.TRUE;
 					} else{
