@@ -247,7 +247,7 @@
 					<h:outputText value="#{flDocument.title}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.contract.no']}" style="white-space:normal;">
-					<h:outputText value="#{flDocument.loaPhysicalNo}" rendered="#{flDocument.physicalNo != null}"/>
+					<h:outputText value="#{flDocument.physicalNo}" rendered="#{flDocument.physicalNo != null}"/>
 					<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{flDocument.physicalNo != null}"/>
 					<h:outputText value="#{flDocument.contractNo}" />
 				</p:column>
