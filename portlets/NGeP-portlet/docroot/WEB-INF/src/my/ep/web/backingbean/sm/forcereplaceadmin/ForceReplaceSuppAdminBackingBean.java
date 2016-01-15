@@ -106,6 +106,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
+		validateMyIdentity(getManagedBean().getNewAdmin());
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
 		redirectToSuccessPage(resDto);
@@ -192,6 +193,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	private void validate() {
 
+		// validate ic length
+		if (getManagedBean().getIdentificationType().getParameterCode()
+				.equals("I")) {
+			if (getManagedBean().getReactivateBasic().getNewIdentificationNo()
+					.length() < 12) {
+				throw new EpException(MessageConst.ERROR_722532,
+						new String[] { getManagedBean().getReactivateBasic()
+								.getNewIdentificationNo() });
+			}
+		}
+
 		// check if new admin identificationNo same as existing admin
 		// identificationNo
 		if (getManagedBean()
@@ -276,27 +288,29 @@ public class ForceReplaceSuppAdminBackingBean extends
 			// check if replace with catalog user not allowed if have active
 			// supplier
 			// user
-//			if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
-//					.getEpRole())
-//					&& getManagedBean().getNewAdmin().getEpRole()
-//							.equals(RoleCode.CM_USER.value())
-//					&& getManagedBean().isHasSupplierUser()) {
-//				throw new EpException(MessageConst.ERROR_722595);
-//			}
+			// if (StringUtils.isNotBlank(getManagedBean().getNewAdmin()
+			// .getEpRole())
+			// && getManagedBean().getNewAdmin().getEpRole()
+			// .equals(RoleCode.CM_USER.value())
+			// && getManagedBean().isHasSupplierUser()) {
+			// throw new EpException(MessageConst.ERROR_722595);
+			// }
 
 			// check if replace with pending activation user not allowed if have
 			// active supplier user
-//			if (getManagedBean().getNewAdmin().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-//					&& getManagedBean().isHasSupplierUser()) {
-//				throw new EpException(MessageConst.ERROR_722629);
-//			}
+			// if (getManagedBean().getNewAdmin().getRecordStatusFlg() ==
+			// DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+			// && getManagedBean().isHasSupplierUser()) {
+			// throw new EpException(MessageConst.ERROR_722629);
+			// }
 
 			// check if replace with user that don't have role in ep not allowed
 			// if have active supplier user
-//			if (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())
-//					&& getManagedBean().isHasSupplierUser()) {
-//				throw new EpException(MessageConst.ERROR_722630);
-//			}
+			// if
+			// (StringUtils.isBlank(getManagedBean().getNewAdmin().getEpRole())
+			// && getManagedBean().isHasSupplierUser()) {
+			// throw new EpException(MessageConst.ERROR_722630);
+			// }
 		}
 
 	}
@@ -308,10 +322,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	private void executeDecision() {
 		// replace with new personnel
 		if (!getManagedBean().isExistingUser()) {
-			initDefaultNewAdmin();
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
-					null);
+			RequestContext.getCurrentInstance().execute(
+					"replaceNewAdminConfirm.show()");
 		}
 		// replace with existing personnel
 		else {
@@ -319,6 +331,33 @@ public class ForceReplaceSuppAdminBackingBean extends
 			SmCommonUtil.redirectToPage(
 					"/xhtml/sm/forcereplaceadmin/addExistingAdminInfo.xhtml",
 					"", null);
+		}
+	}
+
+	/**
+	 * Redirect to non exist new admin page
+	 */
+	public void redirectToNonExistNewAdminPage() {
+		initDefaultNewAdmin();
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "", null);
+	}
+
+	/**
+	 * Validate my identity
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 */
+	private void validateMyIdentity(SmPersonnel personnel) {
+		if (personnel != null
+				&& personnel.getIdentificationType().getParameterCode()
+						.equalsIgnoreCase("I")) {
+			if (personnel.getIdentificationNo().length() != 12) {
+				throw new EpException(MessageConst.ERROR_722532,
+						new String[] { personnel.getIdentificationNo() });
+			}
+			SmApplicationUtil.myIdentityVerification(personnel);
 		}
 	}
 
