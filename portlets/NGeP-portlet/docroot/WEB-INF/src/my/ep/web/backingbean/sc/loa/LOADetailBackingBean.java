@@ -1978,14 +1978,11 @@ public class LOADetailBackingBean extends
 				if(scLoiLoaItem.getTplSpecZoneDtl() != null){
 					isZonal = Boolean.TRUE;
 				}
-
+				
+				quantity = scLoiLoaItem.getQty();
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
-					// without Tier quantity
-					quantity = scLoiLoaItem.getQty();
 					isCalculateMaxPriceItem = Boolean.TRUE;
 				} else{
-					// Tier - max quantity.
-					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
 					if(filteredMaxPriceItems.contains(scLoiLoaItem)){
 						isCalculateMaxPriceItem = Boolean.TRUE;
 					} else{
@@ -2464,7 +2461,6 @@ public class LOADetailBackingBean extends
 	 */
 	private AwardSupplierResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
 		debugLogger("updateBPMTask");
-
 		AwardSupplierResDTO resDTO = null;
 		try {
 
@@ -2486,31 +2482,43 @@ public class LOADetailBackingBean extends
 					}
 				}
 			}
-
-			// spki 
+			
 			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
-				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
-				String originalText = prepareOriginalText(scLoa.getScLoiLoa().getSmSupplier());
-				byte[] signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
-				digiSign.setSpkiSignedData(signedData);
+				// gpki for g2g seller
+				if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
+					if (null != digiSign) { 
+						updateSpkiDigiSignData(digiSign,
+								ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaId(), scLoa.getLoaNo(), 
+								prepareOriginalText(scLoa.getScLoiLoa().getSmSupplier(), Boolean.TRUE)); 
+					}
+					RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");
 
-				if (null != digiSign) {
-					updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-							scLoa.getLoaId(), scLoa.getLoaNo(), originalText);
+				} else {
+
+					// spki for normal supplier
+					String originalText = prepareOriginalText(scLoa.getScLoiLoa().getSmSupplier(), Boolean.FALSE);
+					byte[] signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
+					digiSign.setSpkiSignedData(signedData);
+
+					if (null != digiSign) {
+						updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+								scLoa.getLoaId(), scLoa.getLoaNo(), originalText);
+					}
+
+					RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+					RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 				}
-				
-              // Insert reports when supplier accept Loa
+
+				// Insert reports when supplier accept Loa
 				parseReports(scLoa);
-				
 			} else{
-				// gpki
+				// gpki for approver
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 							scLoa.getLoaId(), scLoa.getLoaNo());
 				}
 			}
-			
+
 			validateLOADetails(scLoa, outcome);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -2528,9 +2536,7 @@ public class LOADetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
-
 				String messageCode = null;
-
 				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
 					if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700007;
@@ -2568,8 +2574,6 @@ public class LOADetailBackingBean extends
 		} finally {
 			//qtAwardSO = null;
 		}
-
-		
 		return resDTO;
 	}
 	
@@ -2608,47 +2612,76 @@ public class LOADetailBackingBean extends
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} 
 		} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
-			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+			//gpki for only govt seller
+			if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+			}  else {
+				// spki
+				RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+			}
 
 		} else {
 			updateBPMTask(outcome, null);
 		}	
 	}
 
-
-	 /**
+	/**
 	 * Prepare original text.
 	 *
 	 * @param smSupplier the sm supplier
+	 * @param isGovtSeller the is govt seller
 	 * @return the string
 	 */
-	private String prepareOriginalText(SmSupplier  smSupplier) {
-		  FacesScopes facesScopes = new FacesScopes();
-		  StringBuilder sb = new StringBuilder();
-		  String countryCode ="";
-		  String orginalText = "";
+	private String prepareOriginalText(SmSupplier smSupplier, boolean isGovtSeller) {
+		/*
+		 * The first one is the Government user, it is the combination of IC.No,
+		 * > Organization Code and Country Code. >
+		 * 0000000081102813580400000000000211602001MY > IC No. , Organization
+		 * code, Country code > > The second one is for Supplier, it is the
+		 * combination of IC. No, Reg No and > Country Code. >
+		 * 00000000680427115037000000000KT0143162-VMY > IC No. , Registration
+		 * No., Country code
+		 */
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		String countryCode ="";
+		String orginalText = "";
 
-		  if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null 
-				  && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
-			  List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+		if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null 
+				&& smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
+			List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
 
-			  for (SmCompanyAddress compaAddress : companyAddress) {
-				  if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
-					  countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
-					  break;
-				  }
-			  }
-		  }
-		  sb.append(getManagedBean().getScLoa().getLoaNo())
-		  .append("|")
-		  .append(facesScopes.getUserSessionBean().getIdentificationNo())
-		  .append("|")
-		  .append(smSupplier.getRegNo())
-		  .append("|")
-		  .append(countryCode);
-		  orginalText  = sb.toString();
-		  return orginalText;
-	  }
+			for (SmCompanyAddress compaAddress : companyAddress) {
+				if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+					break;
+				}
+			}
+		}
+
+		sb.append(getManagedBean().getScLoa().getLoaNo()).append("|")
+		.append(facesScopes.getUserSessionBean().getIdentificationNo()).append("|");
+
+		if (isGovtSeller) {
+			UserReqDTO userReqDTO  = new UserReqDTO();
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			PmUser pmUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
+			if(pmUser.getOrgTypeCode() != null){
+				sb.append(pmUser.getOrgTypeCode().getParameterCode());
+			}
+
+		} else {
+			sb.append(smSupplier.getRegNo());
+		}
+
+		sb.append("|").append(countryCode);
+		orginalText  = sb.toString();
+		return orginalText;
+	}
+	
 	/**
 	 * Validate loa details.
 	 *
@@ -4017,13 +4050,12 @@ public class LOADetailBackingBean extends
 		BigDecimal  subTotal = BigDecimal.valueOf(0d);
 		BigDecimal quantity = BigDecimal.valueOf(0d);
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+			quantity = scLoiLoaItem.getQty();
 			if(null == scLoiLoaItem.getTplSpecTierQty() ){
 				// without Tier quantity
-				quantity = scLoiLoaItem.getQty();
+				
 				isCalculateMaxPriceItem = Boolean.TRUE;
 			} else{
-				// Tier - max quantity.
-				quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
 				if(filteredMaxPriceItems.contains(scLoiLoaItem)){
 					isCalculateMaxPriceItem = Boolean.TRUE;
 				} else{
