@@ -7,6 +7,12 @@
 
 	<table style="width:100%">
 	<tr>
+		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+					style="float:right;"
+					action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(qTDetailBB.managedBean.scTdObj)}"
+					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow and qTDetailBB.managedBean.viewQtDetails}"/></td>
+		</tr>
+	<tr>
 		<td align="right">
 			<p:commandButton immediate="true"
 				value="#{lbl['lbl.btn.back']}"
@@ -35,7 +41,13 @@
 					style="float:right;margin-right: 12px;" 
 					rendered="#{!qTDetailBB.managedBean.qt.brandNew}"
 					onclick="cancelBODlg.show()" />
-			</c:if>
+				
+				</c:if>
+				<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+						style="float:right;"
+						action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(qTDetailBB.managedBean.scTdObj)}"
+						immediate="true"
+						rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.managedBean.viewQtDetails}" />
 		</td>
 	</tr>
 	</table>
