@@ -1209,6 +1209,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			if(getManagedBean().getTitle()!=null && getManagedBean().getTitle().length() > 0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getTitle()));
 			}
+			if(getManagedBean().getPhysicalLoaNo()!=null && getManagedBean().getPhysicalLoaNo().length() > 0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPhysicalLoaNo()));
+			}
+			if(getManagedBean().getPhysicalContractNo()!=null && getManagedBean().getPhysicalContractNo().length() > 0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.latestContractVer.contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPhysicalContractNo()));
+			}
+			
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setSearchBean(searchBean);
 			
