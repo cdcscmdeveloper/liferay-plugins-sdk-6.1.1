@@ -11,7 +11,7 @@
 	<ui:define name="contentSection">
 		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
-		<ui:param name="isDeskOfficer" value="#{qTDetailBB.isSourcingDeskOfficer()}"></ui:param>
+		<ui:param name="isAuditor" value="#{qTDetailBB.isAuditor()}"></ui:param>
 		
 		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">
@@ -36,7 +36,7 @@
 								value="#{qTDetailBB.getProcurementModeDropdownValues()}" />
 						</p:selectOneMenu></td>
 				</tr>
-				<h:panelGroup id="orgSearch" rendered="#{!isDeskOfficer}">
+				<h:panelGroup id="orgSearch" rendered="#{isAuditor}">
 				<tr>
 					<td><p:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
@@ -53,7 +53,6 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td>
 						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="25" readonly="true"
-							disabled="#{isDeskOfficer}"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							value="#{qTDetailBB.managedBean.ptjProfile.orgName}"
 							saveObject="qTDetailBB.managedBean.ptjProfile"
@@ -61,7 +60,7 @@
 						</ac:lov></td>
 				</tr>
 				</h:panelGroup>
-				<h:panelGroup id="orgSearchInfo" rendered="#{isDeskOfficer}">
+				<h:panelGroup id="orgSearchInfo" rendered="#{!isAuditor}">
 				<tr>
 					<td><p:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
