@@ -41,11 +41,10 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
 					action="#{lOADetailBackingBean.submitAction}" process="@form"
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-
 			</c:if>
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
@@ -65,7 +64,6 @@
 								action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
 								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 								update="#{isReject ? '@this' : '@form'}" />
-
 
 							<p:commandButton value="#{lbl['lbl.btn.verify']}"
 								styleClass="ui-button" onstart="blockWidget.show();"
