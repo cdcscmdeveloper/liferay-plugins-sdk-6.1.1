@@ -287,6 +287,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean gstRateChange;
 	
 	private boolean hyperLinkPage = false;
+	private boolean pidValidityExpired = false;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
@@ -2688,6 +2689,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedApprover(Long selectedApprover) {
 		this.selectedApprover = selectedApprover;
+	}
+
+	public boolean isPidValidityExpired() {
+		return pidValidityExpired;
+	}
+
+	public void setPidValidityExpired(boolean pidValidityExpired) {
+		this.pidValidityExpired = pidValidityExpired;
 	}
 
 }
