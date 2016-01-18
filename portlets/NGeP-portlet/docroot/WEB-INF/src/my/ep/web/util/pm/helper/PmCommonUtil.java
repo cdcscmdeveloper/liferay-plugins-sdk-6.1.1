@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -1622,5 +1623,11 @@ public class PmCommonUtil {
 
 		return resDTO.getPmDivision();
 	}
+	
+	public static String getUploadFilePath(String path) {
+		return Calendar.getInstance().get(Calendar.YEAR) + path;
+	}
+	
+	
 	
 }
