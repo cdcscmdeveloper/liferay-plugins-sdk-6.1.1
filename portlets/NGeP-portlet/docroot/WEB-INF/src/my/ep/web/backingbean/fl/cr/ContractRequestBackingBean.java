@@ -386,6 +386,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setPmUserOrg(getManagedBean().getPmUserOrg());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
+			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			getSumOrderedQty(flRequest);
 			
 			if(getManagedBean().getPmDigiSign() != null){
@@ -1139,7 +1140,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().getFlRequest().getFlTempItems().add(flTempItem);
 					setFulfilmentItemAddr(getManagedBean().getFlRequest());
 				}
-				
+				// check pid approval days and CR created date
+				int pidValidDays = getManagedBean().getFlRequest().getScPurchaseInDefault().getPidValidDays();
+				Date pidExpiredDate = DateUtils.addDays(getManagedBean().getFlRequest().getCreatedDate(), pidValidDays);
+				if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+					getManagedBean().setPidValidityExpired(true);
+					if(isRequisitioner()) {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_740040, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_740041, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));						
+					}
+				}
 			}
 				
 		}else if(contractId != null){
@@ -3902,6 +3915,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IUserSO userSO =null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+				if(getManagedBean().isPidValidityExpired()) {
+					if(isRequisitioner()) {
+						throw new EpException(MessageConst.ERROR_740040);
+					} else {
+						throw new EpException(MessageConst.ERROR_740041);
+					}
+				}
+			}
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			checkMofAccountExpDate(flRequest);
@@ -3926,7 +3948,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					checkCeilingQty(flRequest);
 					checkMaximumQty(flRequest);
 				}else if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-					checkCircularItemMinQtyAndOrderAmt(flRequest);
+					if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
+						checkCircularItemMinQtyAndOrderAmt(flRequest);
+					}
 					if(flRequest.getCtContract().getLatestContractVer().getCtContractValue().isFollowLoaAmt()){
 						checkContractAmount(flRequest);
 					}
