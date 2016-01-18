@@ -3732,10 +3732,13 @@ public class QTDetailBackingBean extends
 			committeSO.validateAppointCommitteDtls(committeReqDTO);
 			// reqDTO = prepareQTInfo();
 			resDTO = detailSO.saveQTDtl(reqDTO);
+			
+			int committeeTabIndex = this.getManagedBean().getSelectedCommitteeTabIndex();
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setSelectedTabIndex(subTabIndex);
 			// this.getManagedBean().setActiveIndex(0);
+			this.getManagedBean().setSelectedCommitteeTabIndex(committeeTabIndex);
 			retrieveCommitteeAppointmentTabDtl(false);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
