@@ -26,7 +26,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
@@ -50,6 +49,7 @@ import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -67,7 +67,6 @@ import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -172,7 +171,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		initialSearchPlan();
 		this.resetPlanSearchBean();
 		generateSearchOptions();
-		
+		setupOrgProfile();	
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -254,7 +253,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public String redirectToSearchPlan(){
 		log.info("redirectToSearchPlan");
 		try{
-			initialSearchPlan();	
+			initialSearchPlan();
 		}catch (Exception e){
 			log.error(e);
 		}
@@ -3139,7 +3138,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ProcurementPlanSearchBean planSearchBean = this.getManagedBean().getPlanSearchBean();
 			
 		// plan number
-		if(planSearchBean.getPlanNumber()!=null && !StringUtils.isBlank(planSearchBean.getPlanNumber())){
+		if(StringUtils.isNotBlank(planSearchBean.getPlanNumber())){
 			log.info("+ getPlanNumber "  +planSearchBean.getPlanNumber());
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setCaseInsensitive(true);
@@ -3150,15 +3149,30 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			isEmpty = false;
 		}
 		// plan type
-		if(planSearchBean.getPlanType()!=null && planSearchBean.getPlanType().getParameterId()!=null){
-			log.info("+ getPlanType "  +planSearchBean.getPlanType().getParameterId());
+		if(planSearchBean.getPlanType()!=null && planSearchBean.getPlanType().getParameterCode()!=null){
+			log.info("+ getPlanType "  +planSearchBean.getPlanType().getParameterCode());
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("planType.parameterId");
-			bean.setSearchValue(planSearchBean.getPlanType().getParameterId());
+			bean.setSearchField("planType.parameterCode");
+			bean.setSearchValue(planSearchBean.getPlanType().getParameterCode());
 			searchBean.getDataFilterBeans().add(bean);
+			
+			// plan title
+			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planSearchBean.getPlanType().getParameterCode()) 
+					&& StringUtils.isNotBlank(planSearchBean.getPlanTitle())){
+				log.info("+ getPlanTitle "  +planSearchBean.getPlanTitle());
+				bean = new SearchFilterBean();
+				bean.setCaseInsensitive(true);
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchField("ppProcurementItems.procurementTitle");
+				bean.setSearchValue(planSearchBean.getPlanTitle());
+				bean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(bean);				
+			}
+			
 			isEmpty = false;
 		}
+		
 		// ministry
 //		if(planSearchBean.getMinistry()!=null && planSearchBean.getMinistry().getOrgProfileId()!=null){
 //			log.info("+ getMinistry "  +planSearchBean.getMinistry().getOrgProfileId());
@@ -3179,32 +3193,51 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			bean.setSearchValue(planSearchBean.getPtj().getOrgProfileId());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
-		}else{
-			//filter plan by org profile
-			if(!isRoleBPK()){
-				if(isRoleApprover()){
-					log.info("isRoleApprover");
-					searchBean.getDataFilterBeans().add(
-							new SearchMultiFilterBean(
-									new SearchFilterBean(
-											"orgProfile.orgProfileId", 
-											SearchOperator.OPERATOR_EQUALS.value(), 
-											this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()),
-									new SearchFilterBean("orgProfile."+
-											OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()), 
-											SearchOperator.OPERATOR_EQUALS.value(), 
-											this.getManagedBean().getCurrentActiveOrg().getOrgProfileId(), 
-											SearchCondition.CONDITION_OR.value())));
-				}else if(isRoleVerifier() || isRolePlanner()){
-					log.info("isRoleVerifier or isRolePlanner");
-					SearchFilterBean profile = new SearchFilterBean();
-					profile.setSearchField("orgProfile.orgProfileId");
-					profile.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-					profile.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()); // user login active org
-					searchBean.getDataFilterBeans().add(profile);
-				}
-			}
+		}else if(planSearchBean.getKptj()!=null  && planSearchBean.getKptj().getOrgProfileId()!=null){
+			log.info("+ getKptj "  +planSearchBean.getKptj().getOrgProfileId());
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("orgProfile."+
+					OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
+			bean.setSearchValue(retrieveJabatanOrgProfile(planSearchBean.getKptj().getOrgProfileId()).getOrgProfileId());
+			searchBean.getDataFilterBeans().add(bean);
+			isEmpty = false;
+		}else if(planSearchBean.getMinistry()!=null  && planSearchBean.getMinistry().getOrgProfileId()!=null){
+			log.info("+ getMinistry "  +planSearchBean.getMinistry().getOrgProfileId());
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("orgProfile."+
+					OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
+			bean.setSearchValue(retrieveMinistryOrgProfile(planSearchBean.getMinistry().getOrgProfileId()).getOrgProfileId());
+			searchBean.getDataFilterBeans().add(bean);
+			isEmpty = false;
 		}
+//		}else{
+//			//filter plan by org profile
+//			if(!isRoleBPK()){
+//				if(isRoleApprover()){
+//					log.info("isRoleApprover");
+//					searchBean.getDataFilterBeans().add(
+//							new SearchMultiFilterBean(
+//									new SearchFilterBean(
+//											"orgProfile.orgProfileId", 
+//											SearchOperator.OPERATOR_EQUALS.value(), 
+//											this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()),
+//									new SearchFilterBean("orgProfile."+
+//											OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()), 
+//											SearchOperator.OPERATOR_EQUALS.value(), 
+//											this.getManagedBean().getCurrentActiveOrg().getOrgProfileId(), 
+//											SearchCondition.CONDITION_OR.value())));
+//				}else if(isRoleVerifier() || isRolePlanner()){
+//					log.info("isRoleVerifier or isRolePlanner");
+//					SearchFilterBean profile = new SearchFilterBean();
+//					profile.setSearchField("orgProfile.orgProfileId");
+//					profile.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+//					profile.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()); // user login active org
+//					searchBean.getDataFilterBeans().add(profile);
+//				}
+//			}
+//		}
 		// year
 		if(planSearchBean.getYear()!=null && !"".equalsIgnoreCase(planSearchBean.getYear())){
 			log.info("+ getYear "  +planSearchBean.getYear());
@@ -3252,6 +3285,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("resetPlanSearchBean");
 		this.getManagedBean().setSearch(false);
 		this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
+		setupOrgProfile();
 		generateOrgFilter();
 		ppPlanDataModel = new PpPlanDataModel();
 	}
@@ -3271,7 +3305,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			  isEmpty = false;
 		  }else if(this.getManagedBean().getPlanSearchBean().getVotType().getParameterId()!=null){
 			  isEmpty = false;
-		  }else if(this.getManagedBean().getPlanSearchBean().getPtj().getOrgProfileId()!=null){
+		  }else if(this.getManagedBean().getPlanSearchBean().getPtj()!=null 
+				  || this.getManagedBean().getPlanSearchBean().getKptj()!=null
+				  || this.getManagedBean().getPlanSearchBean().getMinistry()!=null){
 			  isEmpty = false;
 		  }
 		  if(isEmpty){
@@ -3560,4 +3596,134 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			return "";
 		}
 	}
+	
+	public String constructMinistryConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DIVISION.value());
+		sb.append("|orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		sb.append("|groupOrgType^");
+		sb.append(ParameterConst.ORG_AUTH_TYPE_MINISTRY);
+		sb.append("|recordStatus^1");
+		return sb.toString();
+	}
+	
+	public String constructKumpulanPTJConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DIVISION.value());
+		sb.append("|orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		sb.append("|recordStatus^1");
+		sb.append("|groupOrgType^");
+		sb.append(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ);
+		sb.append("|");
+		sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
+		sb.append("^");
+		sb.append(retrieveMinistryOrgProfile(getManagedBean().getSelectedMinistry().getOrgProfileId()).getOrgProfileId());
+		return sb.toString();
+	}
+	
+	public String constructPTJConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DIVISION.value());
+		sb.append("|orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		sb.append("|recordStatus^1");
+		sb.append("|groupOrgType^");
+		sb.append(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
+		sb.append("*groupOrgType^null^11");
+		sb.append("|");
+		sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
+		sb.append("^");
+		sb.append(retrieveJabatanOrgProfile(getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId()).getOrgProfileId());		
+		return sb.toString();
+	}
+	
+	public void updateSearchCriteria(BaseEntity entity) {
+		log.info("updateSearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPlanSearchBean()
+				.setPtj(orgProfile);
+	}
+	
+	public void updateKPTJSearchCriteria(BaseEntity entity) {
+		log.info("updateKPTJSearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPlanSearchBean()
+				.setKptj(orgProfile);
+	}
+	
+	public void updateMinistrySearchCriteria(BaseEntity entity) {
+		log.info("updateMinistrySearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPlanSearchBean()
+				.setMinistry(orgProfile);
+	}
+	
+	//ministry, kumpulan ptj and ptj
+	private void setupOrgProfile(){
+		if(getManagedBean().getCurrentActiveOrg() !=null){
+			Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
+			if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
+					&&(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
+							|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
+			   // group org hierarchy
+				if(ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
+					getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().setDisabledMinistryLov(true);
+					getManagedBean().getPlanSearchBean().setMinistry(getManagedBean().getCurrentActiveOrg());
+				}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
+					List<PmOrgProfile> orgProfileList = PpCommonUtil.retrieveOrgProfileListFromGroupOrgType(orgProfileId,
+							OrganizationType.MINISTRY.value(), ParameterConst.ORG_AUTH_TYPE_MINISTRY);
+					if(orgProfileList != null && !orgProfileList.isEmpty()){
+						getManagedBean().setSelectedMinistry(orgProfileList.get(0));
+						getManagedBean().getPlanSearchBean().setMinistry(orgProfileList.get(0));
+					}					
+					getManagedBean().setSelectedKumpulanPTJ(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().setDisabledMinistryLov(true);
+					getManagedBean().setDisabledKumpulanPTJLov(true);
+					getManagedBean().getPlanSearchBean().setKptj(getManagedBean().getCurrentActiveOrg());
+				}
+				
+			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null 
+					|| (getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
+					&& ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
+				// usual org hierarchy 
+				if(isRolePlanner() || isRoleVerifier()){
+					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
+					getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().setDisabledMinistryLov(true);
+					getManagedBean().setDisabledKumpulanPTJLov(true);
+					getManagedBean().setDisabledPTJLov(true);
+				}else if(isRoleApprover()){
+						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+						getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
+						getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
+						getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getCurrentActiveOrg());
+						getManagedBean().setDisabledMinistryLov(true);
+						getManagedBean().setDisabledKumpulanPTJLov(true);
+						getManagedBean().setDisabledPTJLov(true);
+				}
+			}
+			
+			
+		}
+	}
+	
+	public  List<PmParameterDesc> retrievePplanType(){
+		log.info("retrievePplanType");		
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.PLAN_TYPE, null);
+	}
+	
+	public void changeSearchPlanType(String paramCode){
+		if(paramCode != null){
+			this.getManagedBean().getPlanSearchBean().setPlanTitle(null);
+		}
+	}
+
 }

@@ -339,7 +339,7 @@ public class PpCommonUtil {
 			UserResDTO resDTO = new UserResDTO();
 			reqDTO.setOrgProfileId(ptjOrgProfileId);
 			reqDTO.setRoleCode(roleCode);
-			reqDTO.setWithProfileGroup(isWithGroupUser);
+//			reqDTO.setWithProfileGroup(isWithGroupUser);
 			
 			if(excludedUsers!=null && !excludedUsers.isEmpty()){
 				userIds = new ArrayList<Long>();
@@ -350,7 +350,7 @@ public class PpCommonUtil {
 			}
 			
 			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.retrieveUserListWithProfileGroupUserByRole(reqDTO);
+			resDTO = userSO.retrieveUserListFromGroupOrgType(reqDTO);
 			
 			if(resDTO.isSuccessful() && resDTO.getUserList()!=null){
 				pmUsers = resDTO.getUserList();
@@ -779,8 +779,15 @@ public class PpCommonUtil {
 		System.out.println(sb.toString());
 	    return sb.toString();
 	}
-    
 	
-	
+	public static List<PmOrgProfile> retrieveOrgProfileListFromGroupOrgType(Long orgProfileId,String parentOrgType, String groupOrgType){
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setParentOrgType(parentOrgType);
+		reqDTO.setGroupOrgType(groupOrgType);
+		OrgProfileResDTO resDTO = profileSO.retrieveOrgProfileListFromGroupOrgType(reqDTO);
+		return resDTO.getOrgProfileList();
+	}
 	
 }

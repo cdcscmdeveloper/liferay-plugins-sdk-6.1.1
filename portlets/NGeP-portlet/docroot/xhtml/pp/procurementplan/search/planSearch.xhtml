@@ -17,23 +17,49 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td>
 					<p:inputText size="27" styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
 				</td>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pp.ministry']}"/>
+				</td>
+				<td><ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="60" 	
+						disabled="#{pPlanBackingBean.managedBean.disabledMinistryLov}"		        	
+		            	update=":form:pPlanSearch" readonly="true"
+						headerText="#{lbl['lbl.pp.ministry']}"
+						postUpdateListener="pPlanBackingBean.updateMinistrySearchCriteria"
+						value="#{pPlanBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}" 
+						saveObject="pPlanBackingBean.managedBean.selectedMinistry"
+						conditionField="#{pPlanBackingBean.constructMinistryConditionFields()}"/>						
+		         	<p:message id="lovMinistryMsg" for="lovMinistry" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pp.kumpulan.ptj']}"/>
 				</td>
 				<td>
-				 	<p:inputText 
-						size="60"
-						id="opSearchIT" 
-						value="#{pPlanBackingBean.managedBean.selectedPTJ.orgName}" 
-						disabled="true"
-						/>
-					&#160;	
-					<p:commandLink id="ppOrgProfileCl" partialSubmit="true"
-						process="@this"
-						action="#{pPlanBackingBean.resetAction}"
-						oncomplete="dlgPPOrgProfile.show();" >
-						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
-					</p:commandLink>
+					<ac:lov id="lovKumpulanPTJ" lovId="PM_ORG_PROFILE" size="60" 	
+						disabled="#{empty pPlanBackingBean.managedBean.selectedMinistry or pPlanBackingBean.managedBean.disabledKumpulanPTJLov}"		        	
+		            	update=":form:pPlanSearch" readonly="true"
+						headerText="#{lbl['lbl.pp.kumpulan.ptj']}"
+						postUpdateListener="pPlanBackingBean.updateKPTJSearchCriteria"
+						value="#{pPlanBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}" 
+						saveObject="pPlanBackingBean.managedBean.selectedKumpulanPTJ"
+						conditionField="#{pPlanBackingBean.constructKumpulanPTJConditionFields()}"/>						
+		         	<p:message id="lovKumpulanPTJMsg" for="lovKumpulanPTJ" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
+				</td>
+				<td>
+					<ac:lov id="lovPTJ" lovId="PM_ORG_PROFILE" size="60" 	
+					disabled="#{empty pPlanBackingBean.managedBean.selectedKumpulanPTJ or pPlanBackingBean.managedBean.disabledPTJLov}"		        	
+		            	update=":form:pPlanSearch" readonly="true"
+						headerText="#{lbl['lbl.pp.ptj']}"
+						value="#{pPlanBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}" 
+						saveObject="pPlanBackingBean.managedBean.selectedPTJ"
+						postUpdateListener="pPlanBackingBean.updateSearchCriteria"
+						conditionField="#{pPlanBackingBean.constructPTJConditionFields()}"/>						
+		         	<p:message id="lovPTJMsg" for="lovPTJ" display="icon" />
 				</td>
 			</tr>
 			<tr>
@@ -46,13 +72,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						>
 						<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions(false)}"/>
 					</p:selectOneMenu>
-				</td>
-				<th>
-					
-				</th>
-				<td>
-					
-				</td>
+				</td>				
 			</tr>
 			<tr>
 				<th>
@@ -60,19 +80,32 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneMenu id="somPlanType" label="#{lbl['lbl.pp.plan.type']}" 
-						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterId}"
-						>
-						<f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
-						<!-- <p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
-							update="somVotSearch"/> -->
+						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{pPlanBackingBean.retrievePplanType()}"
+							var="parameter" itemLabel="#{parameter.codeName}"
+							itemValue="#{parameter.pmParameter.parameterCode}" />					
+							<!-- <f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
+							<p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
+									update="somVotSearch"/> -->
+						<p:ajax event="change" process="@this" update="ppSearchTitle,@this" 
+							listener="#{pPlanBackingBean.changeSearchPlanType(pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode)}" /> 
 					</p:selectOneMenu>
-				</td>
-				<th>
-					
-				</th>
+				</td>				
+			</tr>
+			<tr>
 				<td>
-
+					<p:outputLabel value="#{lbl['lbl.pp.plan.title']}"/>
 				</td>
+				<td>
+					<p:inputText id="ppSearchTitle" 
+						disabled="#{empty pPlanBackingBean.managedBean.planSearchBean.planType or 
+						ProcurementPlanConst.planTypeProcurement ne pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode}" 
+						size="27" 
+						value="#{pPlanBackingBean.managedBean.planSearchBean.planTitle}"/>
+				</td>				
 			</tr>
 			<ui:remove>
 			<tr>
@@ -102,7 +135,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							process="pPlanSearch"
 							update="dtPlanResult" 
 							action="#{pPlanBackingBean.searchPlan}"
-							/>&#160;
+							/>
 						<p:commandButton id="ppResetBtn" value="#{lbl['lbl.btn.reset']}" action="#{pPlanBackingBean.resetPlanSearchBean}"
 							update="pPlanSearch, dtPlanResult" 
 							/> 
@@ -110,7 +143,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</td>
 			</tr>
 		</table>
-		 <ui:include src="/xhtml/pp/procurementplan/search/ppOrgProfilePopUp.xhtml" />	
+		  <ac:lovPopup />
 	</p:panel>
 
 </ui:composition>
