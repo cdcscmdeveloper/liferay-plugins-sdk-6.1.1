@@ -3646,11 +3646,11 @@ public class SimpleQuoteBackingBean extends
 		ScQuote quote = getManagedBean().getScQuote();
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		if (quote.getEndDate() != null && quote.getStartDate() != null) {
-			Date today = new Date();
+			Date currentDate = new Date();
 			Date endDate = quote.getEndDate();
 			StringBuilder message = new StringBuilder();
-			if (endDate.after(today)) {
-				long timeDiff = Math.abs(quote.getStartDate().getTime() - endDate.getTime());
+			if (endDate.after(currentDate)) {
+				long timeDiff = Math.abs(currentDate.getTime() - endDate.getTime());
 				String hours = String.format("%d",
 						TimeUnit.MILLISECONDS.toHours(timeDiff));
 				String mins = String
