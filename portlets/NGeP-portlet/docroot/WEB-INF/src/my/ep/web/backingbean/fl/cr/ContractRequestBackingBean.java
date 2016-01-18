@@ -29,18 +29,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -68,6 +56,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
@@ -119,6 +108,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -195,6 +186,18 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Contract Order
@@ -3901,6 +3904,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		try {
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			checkMofAccountExpDate(flRequest);
 			validatePreparedOrgAndAgencies();
 			checkContractValidity(getManagedBean().getFlRequest());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
@@ -4021,6 +4025,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);		
 		}finally{
 			fulfilmentRequestSO = null;
+		}
+	}
+	
+	private void checkMofAccountExpDate(FlFulfilmentRequest flRequest) {
+		IMofAccountSO mofAccountSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setSupplierId(flRequest.getSmSupplier().getSupplierId());
+		reqDTO.setSupplierType(flRequest.getSmSupplier().getSmAppl().getSupplierType());
+		MofAccountResDTO resDTO = mofAccountSO.retriveMOFAccountBySupplierIdAndType(reqDTO);
+		
+		if(DateUtils.getCurrentDate().before(resDTO.getMofAccount().getEffDate())){
+			throw new EpException(MessageConst.ERROR_740042);
+		}
+		if(DateUtils.getCurrentDate().after(resDTO.getMofAccount().getExpDate())){
+			throw new EpException(MessageConst.ERROR_740042);
 		}
 	}
 	
