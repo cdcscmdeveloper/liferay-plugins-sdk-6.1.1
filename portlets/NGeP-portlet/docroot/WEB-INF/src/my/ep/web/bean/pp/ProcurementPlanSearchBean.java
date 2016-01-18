@@ -22,6 +22,8 @@ public class ProcurementPlanSearchBean {
 	
 	private PmOrgProfile ministry;
 	
+	private PmOrgProfile kptj;
+	
 	private PmParameter planType;
 	
 	private PmParameter votType;
@@ -148,6 +150,20 @@ public class ProcurementPlanSearchBean {
 	 */
 	public void setPlanTitle(String planTitle) {
 		this.planTitle = planTitle;
+	}
+
+	/**
+	 * @return the kptj
+	 */
+	public PmOrgProfile getKptj() {
+		return kptj;
+	}
+
+	/**
+	 * @param kptj the kptj to set
+	 */
+	public void setKptj(PmOrgProfile kptj) {
+		this.kptj = kptj;
 	}
 	
 }
