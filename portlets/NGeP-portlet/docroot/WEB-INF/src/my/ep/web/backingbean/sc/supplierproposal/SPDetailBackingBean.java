@@ -3252,7 +3252,7 @@ public class SPDetailBackingBean extends
 					.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil
 					.getOriginalServletRequest(servletRequest);
-			String qtId = originalServletRequest.getParameter("qtId");
+			String qtId = originalServletRequest.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
 			super.renewSesionObject();
 
 			retrieveProposalChecklistDtls(Long.parseLong(qtId),

@@ -649,7 +649,7 @@ public class NoticeBoardBackingBean extends
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
-		String qtId = originalServletRequest.getParameter("qtId");
+		String qtId = originalServletRequest.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
 		
 		super.renewSesionObject();
 		
@@ -966,7 +966,7 @@ public class NoticeBoardBackingBean extends
 				StringBuffer proposalURL = new StringBuffer(85);
 				proposalURL.append(EpPropertiesUtils.getInstance().getProperty(
 						EpPropertiesConst.PORTAL_APPLICATION_URL));
-				proposalURL.append(SourcingConstants.SUPPLIER_PROPOSAL_PAGE);
+				proposalURL.append(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL);
 				proposalURL.append(qtId);
 				this.getManagedBean().setProposalURL(proposalURL.toString());
 			}
