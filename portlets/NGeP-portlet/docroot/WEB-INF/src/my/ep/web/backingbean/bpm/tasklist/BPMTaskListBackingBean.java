@@ -88,28 +88,28 @@ public class BPMTaskListBackingBean extends
 
 		// s1 module
 		temp.put(SCProcessNameConst.REVIEW_DIRECT_PURCHASE,
-				"review-directpurchase");
+				SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 		temp.put(SCProcessNameConst.START_DIRECT_PURCHASE_CREATION,
-				"review-directpurchase");
+				SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME,
-				"review-directpurchase");
+				SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 		temp.put(SCProcessNameConst.SUBMIT_DIRECT_PURCHASE,
-				"review-directpurchase");
+				SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 
 		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME,
-				"review-purchase-inq");
+				SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME,
-				"review-purchase-in-default");
+				SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT);
 
 		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION,
-				"review-simple-quote");
+				SourcingConstants.NAV_PAGE_REVIEW_SIMPLE_QUOTE);
 		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION
-				+ SCProcessNameConst.SUBMIT_SIMPLE_QUOTE, "review-simple-quote");
+				+ SCProcessNameConst.SUBMIT_SIMPLE_QUOTE, SourcingConstants.NAV_PAGE_REVIEW_SIMPLE_QUOTE);
 		temp.put(SCProcessNameConst.SIMPLE_QUOTE_PROCESS_NAME,
-				"review-directpurchase");
+				SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 		temp.put(SCProcessNameConst.SIMPLE_QUOTE_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_REQUEST_NOTE,
-				"review-directpurchase");
+				SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 
 		// Contract Management
 		temp.put(
@@ -255,170 +255,170 @@ public class BPMTaskListBackingBean extends
 
 		// Added for qt..
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-				+ SCProcessNameConst.PREPARE_SPECIFICATION, "businessowner");
+				+ SCProcessNameConst.PREPARE_SPECIFICATION, SourcingConstants.NAV_PAGE_PREPARE_SPECIFICATION);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-				+ SCProcessNameConst.CONSOLIDATE_SPECIFICATION, "businessowner");
+				+ SCProcessNameConst.CONSOLIDATE_SPECIFICATION, SourcingConstants.NAV_PAGE_PREPARE_SPECIFICATION);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-				+ SCProcessNameConst.SPECIFICATION_APPROVAL, "businessowner");
+				+ SCProcessNameConst.SPECIFICATION_APPROVAL, SourcingConstants.NAV_PAGE_PREPARE_SPECIFICATION);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-				+ SCProcessNameConst.PREPARE_QT_DETAILS, SourcingConstants.QT_DETAILS_PAGE);
+				+ SCProcessNameConst.PREPARE_QT_DETAILS, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-				+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.QT_DETAILS_PAGE);
+				+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 		temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_BUDGET,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_BPK,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-				+ SCProcessNameConst.UPDATE_SCORING, "specpreparation");
+				+ SCProcessNameConst.UPDATE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-				+ SCProcessNameConst.FINALISE_SCORING, "specpreparation");
+				+ SCProcessNameConst.FINALISE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-				+ SCProcessNameConst.ENDORSE_SCORING, "specpreparation");
+				+ SCProcessNameConst.ENDORSE_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-				+ SCProcessNameConst.SIGNOFF_SCORING, "specpreparation");
+				+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
-				+ SCProcessNameConst.VIEW_SCORING, "specpreparation");
+				+ SCProcessNameConst.VIEW_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 
 		temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_PCB,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 		temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
-				+ SCProcessNameConst.REVISE_PCB, SourcingConstants.QT_DETAILS_PAGE);
+				+ SCProcessNameConst.REVISE_PCB, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
-				+ SCProcessNameConst.REVISE_BPK, SourcingConstants.QT_DETAILS_PAGE);
+				+ SCProcessNameConst.REVISE_BPK, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-				+ SCProcessNameConst.PREPARE_QT_SCHEDULE, SourcingConstants.QT_DETAILS_PAGE);
+				+ SCProcessNameConst.PREPARE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_COMMITTEE,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
-				+ SCProcessNameConst.REVISE_COMMITTEE, SourcingConstants.QT_DETAILS_PAGE);
+				+ SCProcessNameConst.REVISE_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME
 				+ SCProcessNameConst.FINALIZE_ATTANDANCE,
-				"sitevisit-attendance");
+				SourcingConstants.NAV_PAGE_BSV_ATTENDANCE);
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME
-				+ SCProcessNameConst.UPDATE_ATTANDANCE, "sitevisit-attendance");
+				+ SCProcessNameConst.UPDATE_ATTANDANCE, SourcingConstants.NAV_PAGE_BSV_ATTENDANCE);
 		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_LOA,
-				SourcingConstants.LOA_LIST_DP_PAGE);
+				SourcingConstants.NAV_PAGE_DIRECT_PURCHASE_LOA_LIST);
 		temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_LOA,
-				SourcingConstants.LOA_PTJ_PAGE);
+				SourcingConstants.NAV_PAGE_REVIEW_LOA);
 		temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
-				+ SCProcessNameConst.REVISE_LOA, SourcingConstants.LOA_PTJ_PAGE);
+				+ SCProcessNameConst.REVISE_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
 		temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.ACCEPT_LOA,
-				SourcingConstants.LOA_SUPPLIER_PAGE);
+				SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_LOA);
 		temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
-				+ SCProcessNameConst.VERIFY_LOA, SourcingConstants.LOA_PTJ_PAGE);
+				+ SCProcessNameConst.VERIFY_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_PUBLICATION,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-				+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, SourcingConstants.QT_DETAILS_PAGE);
+				+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_EC_MEETING,
-				"coordinate-meeting");
+				SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
 		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_OC_MEETING,
-				"coordinate-meeting");
+				SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
 		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_TEC_MEETING,
-				"coordinate-meeting");
+				SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
 		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_FEC_MEETING,
-				"coordinate-meeting");
+				SourcingConstants.NAV_PAGE_EVALUATION_COORDINATE_MEETING);
 
 		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_EC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.UPDATE_EC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_EC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_EC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_OC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.UPDATE_OC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_OC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_OC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 
 		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_TEC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.UPDATE_TEC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_TEC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_TEC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 
 		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_FEC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.UPDATE_FEC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FEC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_FEC_EVALUATION,
-				"proposal-evaluation");
+				SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
 		
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.CONSOLIDATION_REPORT_PROCESS_NAME,
-				SourcingConstants.CONSOLIDATION_REPORT_PAGE);
+				SourcingConstants.NAV_PAGE_CONSOLIDATION_REPORT);
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_FC_MEETING,
-				SourcingConstants.FC_COORDINATE_MEETING_PAGE);
+				SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.UPDATE_FC_SELECTION,
-				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+				SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_FC_SELECTION,
-				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+				SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_BPK,
-				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+				SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+				SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
-				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);		
+				SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);		
 		temp.put(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+				SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 		temp.put(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
-				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+				SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 		
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.CREATE_BIDDING_DETAILS,
-				SourcingConstants.SCHEDULE_BIDDING_PAGE);
+				SourcingConstants.NAV_PAGE_SCHEDULE_BIDDING);
 		temp.put(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_LOI,
-				SourcingConstants.LOI_LIST_PAGE);
+				SourcingConstants.NAV_PAGE_LOI_LIST);
 		/*
 		 * temp.put(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME +
 		 * SCProcessNameConst.NEGOTIATE_MA,
@@ -426,112 +426,112 @@ public class BPMTaskListBackingBean extends
 		 */
 		temp.put(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.RECOMMEND_MA_SUPPLIER,
-				SourcingConstants.MULTI_LOI_RECOMMENDATION_PAGE);
+				SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
 		temp.put(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-				SourcingConstants.MULTI_LOI_RECOMMENDATION_PAGE);
+				SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
 		temp.put(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
-				SourcingConstants.MULTI_LOI_RECOMMENDATION_PAGE);
+				SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
 		temp.put(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_LOI,
-				SourcingConstants.LOI_LIST_PAGE);
+				SourcingConstants.NAV_PAGE_LOI_LIST);
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_LOI,
-				SourcingConstants.LOI_LIST_PAGE);
+				SourcingConstants.NAV_PAGE_LOI_LIST);
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_LOA,
-				SourcingConstants.LOA_LIST_QT_PAGE);
+				SourcingConstants.NAV_PAGE_QUOTATION_TENDER_LOA_LIST);
 		temp.put(SCProcessNameConst.LOA_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_LOA,
-				SourcingConstants.LOA_PTJ_PAGE);
+				SourcingConstants.NAV_PAGE_REVIEW_LOA);
 		temp.put(SCProcessNameConst.LOA_ACCEPTANCE_PROCESS_NAME
-				+ SCProcessNameConst.REVISE_LOA, SourcingConstants.LOA_PTJ_PAGE);
+				+ SCProcessNameConst.REVISE_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
 		temp.put(SCProcessNameConst.LOA_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.ACCEPT_LOA,
-				SourcingConstants.LOA_SUPPLIER_PAGE);
+				SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_LOA);
 		temp.put(SCProcessNameConst.LOA_ACCEPTANCE_PROCESS_NAME
-				+ SCProcessNameConst.VERIFY_LOA, SourcingConstants.LOA_PTJ_PAGE);
+				+ SCProcessNameConst.VERIFY_LOA, SourcingConstants.NAV_PAGE_REVIEW_LOA);
 
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
+				SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_FC_SELECTION,
-				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
+				SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_LOI,
-				SourcingConstants.LOI_PTJ_PAGE);
+				SourcingConstants.NAV_PAGE_REVIEW_LOI);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.NEGOTIATE_LOI,
-				SourcingConstants.LOI_PTJ_PAGE);
+				SourcingConstants.NAV_PAGE_REVIEW_LOI);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
-				+ SCProcessNameConst.REVISE_LOI, SourcingConstants.LOI_PTJ_PAGE);
+				+ SCProcessNameConst.REVISE_LOI, SourcingConstants.NAV_PAGE_REVIEW_LOI);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.ACCEPT_LOI,
-				SourcingConstants.LOI_SUPPLIER_PAGE);
+				SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_LOI);
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.ESCALATE_BIDDING,
-				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
+				SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
-				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
+				SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_FC_MEETING,
-				SourcingConstants.FC_COORDINATE_MEETING_PAGE);
+				SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
 
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-				+ SCProcessNameConst.ASSIGN_FC_SECRETARY, SourcingConstants.QT_DETAILS_PAGE);
+				+ SCProcessNameConst.ASSIGN_FC_SECRETARY, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ASSIGN_FC_MEMBER, "appoint-fc-committee");
 
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE,
-				SourcingConstants.QT_DETAILS_PAGE);
+				SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_CANCELATION,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_SUPPLIER_ADD,
-				SourcingConstants.QT_ADDITIONAL_ATTANDANCE_PAGE);
+				SourcingConstants.NAV_PAGE_ADDITIONAL_BSV_ATTANDANCE);
 
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 				+ SCProcessNameConst.BPK_APPROVE_QT_CHANGE,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 				+ SCProcessNameConst.FC_APPROVE_QT_CHANGE,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 				+ SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 				+ SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE,
-				SourcingConstants.QT_APPROVAL_PAGE);
+				SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 		temp.put(SCProcessNameConst.START_MANUAL_QT_CREATION
 				+ SCProcessNameConst.SUBMIT_MANUAL_QUOTATION_TENDER,
-				SourcingConstants.DIRECT_LOA_PAGE);
+				SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
 		temp.put(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_MANUAL_LOA,
-				SourcingConstants.DIRECT_LOA_PAGE);
+				SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
 		
 		temp.put(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 				+ SCProcessNameConst.REVISE_MANUAL_LOA,
-				SourcingConstants.DIRECT_LOA_PAGE);
+				SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
 		
 		temp.put(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 				+ SCProcessNameConst.ACCEPT_MANUAL_LOA,
-				SourcingConstants.DIRECT_LOA_SUPPLIER_PAGE);
+				SourcingConstants.NAV_PAGE_SUPPLIER_RESPONSE_DIRECT_LOA);
 		
 		
 		
 		temp.put(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 				+ SCProcessNameConst.VERIFY_MANUAL_LOA,
-				SourcingConstants.DIRECT_LOA_PAGE);
+				SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
 		
 
 		this.getManagedBean().setBpmMap(temp);

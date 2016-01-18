@@ -252,7 +252,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.getExternalContext();
 
 		externalContext.redirect(commonUrl + "/"
-				+ SourcingConstants.SC_BID_PAGE + "bidScheduleId="
+				+ SourcingConstants.NAV_PAGE_ONLINE_BIDDING + SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID + SourcingConstants.NAV_PARAM_SEPARATOR
 				+ bidScheduleId);
 	}
 

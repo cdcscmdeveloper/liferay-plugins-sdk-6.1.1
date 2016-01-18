@@ -4662,7 +4662,7 @@ public class SimpleQuoteBackingBean extends
 		HttpServletRequest servletRequest = new FacesScopes()
 				.getOriginalServletRequest();
 		String quoteIdStr = servletRequest
-				.getParameter(SourcingConstants.SUPPLIER_QUOTE_PARAM_QUOTE_ID);
+				.getParameter(SourcingConstants.NAV_PARAM_SIMPLE_QUOTE_ID);
 		TemplateSpecBean productTplSpecBean = getManagedBean()
 				.getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean()
