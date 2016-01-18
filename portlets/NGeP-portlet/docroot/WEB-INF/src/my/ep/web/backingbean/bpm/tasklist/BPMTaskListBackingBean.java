@@ -105,6 +105,8 @@ public class BPMTaskListBackingBean extends
 				"review-simple-quote");
 		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION
 				+ SCProcessNameConst.SUBMIT_SIMPLE_QUOTE, "review-simple-quote");
+		temp.put(SCProcessNameConst.SIMPLE_QUOTE_PROCESS_NAME,
+				"review-directpurchase");
 		temp.put(SCProcessNameConst.SIMPLE_QUOTE_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_REQUEST_NOTE,
 				"review-directpurchase");
