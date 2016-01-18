@@ -26,6 +26,14 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -135,7 +143,6 @@ import my.ep.type.pm.VotFundType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
@@ -147,14 +154,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -314,6 +313,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
+			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			reqDTO.setTaskDeadLine(getManagedBean().getTaskDeadLine());
 			if(isFlFulfilmentRequisitioner()) {
 				List<Long> backUpApprover = new ArrayList<Long>();
@@ -1388,6 +1388,28 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().getFulfilmentRequest().setGstRate(gstRate);
 						
 			getSupplierGst(getManagedBean().getFulfilmentRequest(), getManagedBean().isGstRateChange());
+			
+			// in case of PID
+			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault()!=null) {
+				int pidValidDays = getManagedBean().getFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
+				Date pidExpiredDate = new Date(); 
+				
+				if(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote()!=null) {
+					pidExpiredDate = DateUtils.addDays(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote().getCreatedDate(), pidValidDays);
+				} else {
+					pidExpiredDate = DateUtils.addDays(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getCreatedDate(), pidValidDays);
+				}
+				if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+					getManagedBean().setPidValidityExpired(true);
+					if(isRequisitioner()) {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_740040, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_740041, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));						
+					}
+				}
+			}
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml");
@@ -2987,12 +3009,19 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
-				if(getManagedBean().getSelectedApprover() == null){
-					throw new EpException(MessageConst.ERROR_750010);
-				}
-			}
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				if(getManagedBean().isPidValidityExpired()) {
+					if(isRequisitioner()) {
+						throw new EpException(MessageConst.ERROR_740040);
+					} else {
+						throw new EpException(MessageConst.ERROR_740041);
+					}
+				}
+				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
+					if(getManagedBean().getSelectedApprover() == null){
+						throw new EpException(MessageConst.ERROR_750010);
+					}
+				}
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}else{
