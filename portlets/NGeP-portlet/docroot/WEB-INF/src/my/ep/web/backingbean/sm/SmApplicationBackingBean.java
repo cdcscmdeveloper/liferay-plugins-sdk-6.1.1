@@ -62,6 +62,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -135,6 +136,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -2494,7 +2496,7 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedBranch(), getManagedBean().getSmAppl()
 				.getSmSupplierBranches());
 		if (getManagedBean().getSelectedBranch().getSupplierBranchId() == null) {
@@ -2534,11 +2536,11 @@ public class SmApplicationBackingBean extends
 				(SmSupplierBranch) SerializationUtils.clone(branchBean));
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestBranch(
-					(SmSupplierBranch) SmCommonUtil
-							.getObjectByPropertiesFromList(branchBean,
+					(SmSupplierBranch) EntityHelper
+							.getEntityByMultiplePropertiesFromList(branchBean,
 									getManagedBean().getLatestAppl()
 											.getSmSupplierBranches(),
-									new String[] { "branchCode" }, null));
+									new String[] { "branchCode" }, null, null));
 		}
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
@@ -2619,7 +2621,7 @@ public class SmApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateAssocToSmAppl() {
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedAssocCompany(), getManagedBean().getSmAppl()
 				.getSmAssociateCompanies());
 		if (getManagedBean().getSelectedAssocCompany().getAssociateCompanyId() == null) {
@@ -2668,11 +2670,11 @@ public class SmApplicationBackingBean extends
 		assignValReqdToTrue();
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestAssocCompany(
-					(SmAssociateCompany) SmCommonUtil
-							.getObjectByPropertiesFromList(assocBean,
+					(SmAssociateCompany) EntityHelper
+							.getEntityByMultiplePropertiesFromList(assocBean,
 									getManagedBean().getLatestAppl()
 											.getSmAssociateCompanies(),
-									new String[] { "regNo" }, null));
+									new String[] { "regNo" }, null, null));
 		}
 		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
@@ -2741,9 +2743,9 @@ public class SmApplicationBackingBean extends
 										.getCertEndDate()) >= 0) {
 			throw new EpException(MessageConst.ERROR_722530);
 		}
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
-				.getSelectedCert(), getManagedBean().getSmAppl()
-				.getSmSupplierCerts());
+		EntityHelper.addOrUpdateEntityToList(
+				getManagedBean().getSelectedCert(), getManagedBean()
+						.getSmAppl().getSmSupplierCerts());
 		if (getManagedBean().getSelectedCert().getSupplierCertId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"suppCertDtWidVar.paginator.endLink.click()");
@@ -2773,12 +2775,12 @@ public class SmApplicationBackingBean extends
 		assignValReqdToTrue();
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestCert(
-					(SmSupplierCert) SmCommonUtil
-							.getObjectByPropertiesFromList(certBean,
+					(SmSupplierCert) EntityHelper
+							.getEntityByMultiplePropertiesFromList(certBean,
 									getManagedBean().getLatestAppl()
 											.getSmSupplierCerts(),
 									new String[] { "certTypeId", "certName" },
-									new String[] { "pmCertBody" }));
+									new String[] { "pmCertBody" }, null));
 		}
 		RequestContext.getCurrentInstance().execute("certDialog.show()");
 	}
@@ -2958,7 +2960,7 @@ public class SmApplicationBackingBean extends
 						.getSmCompanyExperienceCats().isEmpty())) {
 			throw new EpException(MessageConst.ERROR_722550);
 		}
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedCompanyExperience(), getManagedBean().getSmAppl()
 				.getSmCompanyExperiences());
 		if (getManagedBean().getSelectedCompanyExperience()
@@ -3201,7 +3203,7 @@ public class SmApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateEquityCompanyToSmAppl() {
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedEquityCompany(), getManagedBean().getSmAppl()
 				.getSmEquityCompanies());
 		if (getManagedBean().getSelectedEquityCompany().getEquityCompanyId() == null) {
@@ -3233,11 +3235,12 @@ public class SmApplicationBackingBean extends
 				(SmEquityCompany) SerializationUtils.clone(equiCompBean));
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestEquityCompany(
-					(SmEquityCompany) SmCommonUtil
-							.getObjectByPropertiesFromList(equiCompBean,
-									getManagedBean().getLatestAppl()
+					(SmEquityCompany) EntityHelper
+							.getEntityByMultiplePropertiesFromList(
+									equiCompBean, getManagedBean()
+											.getLatestAppl()
 											.getSmEquityCompanies(),
-									new String[] { "regNo" }, null));
+									new String[] { "regNo" }, null, null));
 		}
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("eqiCompDialog.show()");
@@ -3620,9 +3623,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateFactoryToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedFactoryFacility();
-		SmCommonUtil.addOrUpdateGenericCollection(smFac, getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
-		SmCommonUtil.addOrUpdateGenericCollection(smFac, getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplFactoryFacilities());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
@@ -3732,10 +3735,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateDockYardToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedDockyardFacility();
-		SmCommonUtil.addOrUpdateGenericCollection(smFac, getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
-		SmCommonUtil.addOrUpdateGenericCollection(smFac, getManagedBean()
-				.getApplDockyardFacilities());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"smFacilityDockDtWidVar.paginator.endLink.click()");
@@ -3842,9 +3843,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateWorkshopToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
-		SmCommonUtil.addOrUpdateGenericCollection(smFac, getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
-		SmCommonUtil.addOrUpdateGenericCollection(smFac, getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplWorkShopFacilities());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
@@ -3949,9 +3950,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void addOrUpdateStoreToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedStoreFacility();
-		SmCommonUtil.addOrUpdateGenericCollection(smFac, getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
-		SmCommonUtil.addOrUpdateGenericCollection(smFac, getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getApplStoreFacilities());
 		if (smFac.getFacilityId() == null) {
 			RequestContext.getCurrentInstance().execute(
@@ -4065,7 +4066,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedManufacturer(), getManagedBean().getSmAppl()
 				.getSmManufacturingDtls());
 		if (getManagedBean().getSelectedManufacturer().getManufacturingDtlId() == null) {
@@ -4147,7 +4148,7 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateMachineToSmAppl() {
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedMachine(), getManagedBean().getSmAppl()
 				.getSmMachineDtls());
 		if (getManagedBean().getSelectedMachine().getMachineDtlId() == null) {
@@ -4274,7 +4275,7 @@ public class SmApplicationBackingBean extends
 	 * the application.
 	 */
 	public void addOrUpdateSystemToSmAppl() {
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedSystem(), getManagedBean().getSmAppl()
 				.getSmSupplierSystems());
 		if (getManagedBean().getSelectedSystem().getSupplierSystemId() == null) {
@@ -4327,12 +4328,11 @@ public class SmApplicationBackingBean extends
 	 * Reset selected software name when click other software checkbox
 	 */
 	public void onTickOtherSystem() {
-		SmSupplierSystem system = (SmSupplierSystem) SmCommonUtil.getInstance()
-				.getObjectByPropertiesFromList(
-						getManagedBean().getSelectedSystem()
-								.getSupplierSystemId(),
+		SmSupplierSystem system = (SmSupplierSystem) EntityHelper
+				.getEntityByMultiplePropertiesFromList(getManagedBean()
+						.getSelectedSystem().getSupplierSystemId(),
 						getManagedBean().getSmAppl().getSmSupplierSystems(),
-						"supplierSystemId");
+						new String[] { "supplierSystemId" }, null, null);
 		if (system != null) {
 			if (getManagedBean().isOthersSystem()) {
 				getManagedBean().getSelectedSystem().setSystem(null);
@@ -4437,7 +4437,7 @@ public class SmApplicationBackingBean extends
 							.getSalutationId() == null) {
 				getManagedBean().getSelectedShareHolder().setTitle(null);
 			}
-			SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedShareHolder(), getManagedBean().getSmAppl()
 					.getSmPersonnels());
 			if (getManagedBean().getSelectedShareHolder().getPersonnelId() == null) {
@@ -4999,12 +4999,12 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedJobFunction(exp);
 		if (getManagedBean().getLatestPersonnel() != null) {
 			getManagedBean().setLatestJobFunction(
-					(SmStaffExperience) SmCommonUtil
-							.getObjectByPropertiesFromList(exp,
+					(SmStaffExperience) EntityHelper
+							.getEntityByMultiplePropertiesFromList(exp,
 									getManagedBean().getLatestPersonnel()
 											.getSmStaffExperiences(),
 									new String[] { "companyName", "toYear" },
-									null));
+									null, null));
 		}
 		RequestContext.getCurrentInstance().execute(
 				"equiJobFunctionInfo.show()");
@@ -5028,7 +5028,7 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722531);
 
 		}
-		SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedJobFunction(), getManagedBean()
 				.getSelectedShareHolder().getSmStaffExperiences());
 		if (getManagedBean().getSelectedJobFunction().getStaffExperienceId() == null) {
@@ -5100,11 +5100,11 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedRelatedCompany(com);
 		if (getManagedBean().getLatestPersonnel() != null) {
 			getManagedBean().setLatestRelatedCompany(
-					(SmRelatedCompany) SmCommonUtil
-							.getObjectByPropertiesFromList(com,
+					(SmRelatedCompany) EntityHelper
+							.getEntityByMultiplePropertiesFromList(com,
 									getManagedBean().getLatestPersonnel()
 											.getSmRelatedCompanies(),
-									new String[] { "regNo" }, null));
+									new String[] { "regNo" }, null, null));
 		}
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
@@ -5196,13 +5196,13 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getLatestPersonnel() != null) {
 			getManagedBean()
 					.setLatestStaffAcademic(
-							(SmStaffAcademic) SmCommonUtil
-									.getObjectByPropertiesFromList(aca,
+							(SmStaffAcademic) EntityHelper
+									.getEntityByMultiplePropertiesFromList(aca,
 											getManagedBean()
 													.getLatestPersonnel()
 													.getSmStaffAcademics(),
 											null, new String[] { "pmEduField",
-													"pmEduLevel" }));
+													"pmEduLevel" }, null));
 		}
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
@@ -5340,11 +5340,11 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedStfPrfBdy(asb);
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestStfPrfBdy(
-					(SmAssociationBody) SmCommonUtil
-							.getObjectByPropertiesFromList(asb,
+					(SmAssociationBody) EntityHelper
+							.getEntityByMultiplePropertiesFromList(asb,
 									getManagedBean().getLatestAppl()
 											.getSmAssociationBodies(),
-									new String[] { "regNo" }, null));
+									new String[] { "regNo" }, null, null));
 		}
 		RequestContext.getCurrentInstance().execute(
 				"equiShrProfBeanInfo.show()");
@@ -5834,7 +5834,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
-			SmCommonUtil.addOrUpdateGenericCollection(getManagedBean()
+			EntityHelper.addOrUpdateEntityToList(getManagedBean()
 					.getSelectedBank(), getManagedBean().getSmAppl()
 					.getSmSupplierBanks());
 
@@ -5908,12 +5908,13 @@ public class SmApplicationBackingBean extends
 				(SmSupplierBank) SerializationUtils.clone(shareBankBean));
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestBank(
-					(SmSupplierBank) SmCommonUtil
-							.getObjectByPropertiesFromList(shareBankBean,
-									getManagedBean().getLatestAppl()
+					(SmSupplierBank) EntityHelper
+							.getEntityByMultiplePropertiesFromList(
+									shareBankBean, getManagedBean()
+											.getLatestAppl()
 											.getSmSupplierBanks(),
 									new String[] { "accountNo",
-											"accountPurpose" }, null));
+											"accountPurpose" }, null, null));
 		}
 		retrieveBankFinOrgListByType();
 		assignValReqdToTrue();
