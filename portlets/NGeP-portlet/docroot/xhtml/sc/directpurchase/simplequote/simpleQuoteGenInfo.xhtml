@@ -38,9 +38,9 @@
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
 									disabled="#{!isEditable}" required="true" id="title" rows="3"
-									autoResize="false"
-									style="margin-bottom: 5px; width: 585px;" /> <p:message
-									id="titleMsg" for="title" display="icon" /></td>
+									autoResize="false" style="margin-bottom: 5px; width: 585px;">
+									<p:ajax event="blur" partialSubmit="true" process="@this" />
+								</p:inputTextarea> <p:message id="titleMsg" for="title" display="icon" /></td>
 						</tr>
 					</table>
 				</td>
