@@ -2562,8 +2562,8 @@ public class ProfileManagementBackingBean extends
 						.getLanguage());
 				roleReqDTO.setRoleCode(getRoleCode());
 				roleReqDTO.setOrgTypeId(currentOrgTypeId);
-				roleReqDTO.setBpk(getManagedBean().getCurrentActiveOrg().getBpk() != null 
-						? getManagedBean().getCurrentActiveOrg().getBpk() : false);
+				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null 
+						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
 				// roleReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				logger.info("..getFacesScopes().getUserSessionBean().getUserId()="
 								+ getFacesScopes().getUserSessionBean()
