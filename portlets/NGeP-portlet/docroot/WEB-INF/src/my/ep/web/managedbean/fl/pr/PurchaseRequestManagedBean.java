@@ -507,6 +507,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean gstRateChange;
 	
 	private boolean hyperLinkPage = false;
+	private boolean pidValidityExpired = false;
 	
 /**
  * Gets the charge line item root.
@@ -3233,6 +3234,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedApprover(Long selectedApprover) {
 		this.selectedApprover = selectedApprover;
+	}
+
+	public boolean isPidValidityExpired() {
+		return pidValidityExpired;
+	}
+
+	public void setPidValidityExpired(boolean pidValidityExpired) {
+		this.pidValidityExpired = pidValidityExpired;
 	}
 
 }
