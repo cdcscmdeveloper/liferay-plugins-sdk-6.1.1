@@ -4,6 +4,7 @@ import java.util.List;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -69,11 +70,11 @@ public class SmFieldChangeUtil {
 	public static void initPersonnelChangeField(SmApplicationManagedBean bean) {
 		bean.setLatestPersonnel(new SmPersonnel());
 		if (bean.isShowFieldChanges()) {
-			bean.setLatestPersonnel((SmPersonnel) SmCommonUtil
-					.getObjectByPropertiesFromList(bean
+			bean.setLatestPersonnel((SmPersonnel) EntityHelper
+					.getEntityByMultiplePropertiesFromList(bean
 							.getSelectedShareHolder(), bean.getLatestAppl()
 							.getSmPersonnels(),
-							new String[] { "identificationNo" }, null));
+							new String[] { "identificationNo" }, null, null));
 			if (bean.getLatestPersonnel() != null
 					&& bean.getLatestPersonnel().getPersonnelId() != null) {
 				bean.setLatestOffAddr(SmFieldChangeUtil
@@ -113,11 +114,11 @@ public class SmFieldChangeUtil {
 			SmApplicationManagedBean bean) {
 		bean.setLatestCompanyExperience(new SmCompanyExperience());
 		if (bean.isShowFieldChanges()) {
-			bean.setLatestCompanyExperience((SmCompanyExperience) SmCommonUtil
-					.getObjectByPropertiesFromList(bean
+			bean.setLatestCompanyExperience((SmCompanyExperience) EntityHelper
+					.getEntityByMultiplePropertiesFromList(bean
 							.getSelectedCompanyExperience(), bean
 							.getLatestAppl().getSmCompanyExperiences(),
-							new String[] { "clientName", "title" }, null));
+							new String[] { "clientName", "title" }, null, null));
 
 			if (bean.getLatestCompanyExperience() != null
 					&& bean.getLatestCompanyExperience()
@@ -212,10 +213,10 @@ public class SmFieldChangeUtil {
 	 */
 	private static void setCurrPersonnelFieldChange(SmPersonnel currPersonnel,
 			SmAppl latestAppl) {
-		SmPersonnel latestPersonnel = (SmPersonnel) SmCommonUtil
-				.getObjectByPropertiesFromList(currPersonnel,
+		SmPersonnel latestPersonnel = (SmPersonnel) EntityHelper
+				.getEntityByMultiplePropertiesFromList(currPersonnel,
 						latestAppl.getSmPersonnels(),
-						new String[] { "identificationNo" }, null);
+						new String[] { "identificationNo" }, null,null);
 		// personnel
 		setCurrPersonnel(currPersonnel, latestPersonnel);
 
@@ -392,10 +393,10 @@ public class SmFieldChangeUtil {
 					}
 					currBody.setChangedFieldStatus("N");
 				} else {
-					SmAssociationBody latestBody = (SmAssociationBody) SmCommonUtil
-							.getObjectByPropertiesFromList(currBody,
+					SmAssociationBody latestBody = (SmAssociationBody) EntityHelper
+							.getEntityByMultiplePropertiesFromList(currBody,
 									latestAppl.getSmAssociationBodies(),
-									new String[] { "regNo" }, null);
+									new String[] { "regNo" }, null, null);
 					if (latestBody != null
 							&& latestBody.getAssociationBodyId() != null) {
 						if (isHasDifferences(latestBody, currBody,
@@ -470,10 +471,10 @@ public class SmFieldChangeUtil {
 					}
 					currRelComp.setChangedFieldStatus("N");
 				} else {
-					SmRelatedCompany latestRelComp = (SmRelatedCompany) SmCommonUtil
-							.getObjectByPropertiesFromList(currRelComp,
+					SmRelatedCompany latestRelComp = (SmRelatedCompany) EntityHelper
+							.getEntityByMultiplePropertiesFromList(currRelComp,
 									latestPersonnel.getSmRelatedCompanies(),
-									new String[] { "regNo" }, null);
+									new String[] { "regNo" }, null,null);
 					if (latestRelComp != null
 							&& latestRelComp.getRelatedCompanyId() != null) {
 						if (isHasDifferences(latestRelComp, currRelComp,
@@ -548,11 +549,11 @@ public class SmFieldChangeUtil {
 					}
 					currExp.setChangedFieldStatus("N");
 				} else {
-					SmStaffExperience latestExp = (SmStaffExperience) SmCommonUtil
-							.getObjectByPropertiesFromList(currExp,
+					SmStaffExperience latestExp = (SmStaffExperience) EntityHelper
+							.getEntityByMultiplePropertiesFromList(currExp,
 									latestPersonnel.getSmStaffExperiences(),
 									new String[] { "companyName", "toYear" },
-									null);
+									null,null);
 					if (latestExp != null
 							&& latestExp.getStaffExperienceId() != null) {
 						if (isHasDifferences(latestExp, currExp, new String[] {
@@ -624,11 +625,11 @@ public class SmFieldChangeUtil {
 					}
 					currAcad.setChangedFieldStatus("N");
 				} else {
-					SmStaffAcademic latestAcad = (SmStaffAcademic) SmCommonUtil
-							.getObjectByPropertiesFromList(currAcad,
+					SmStaffAcademic latestAcad = (SmStaffAcademic) EntityHelper
+							.getEntityByMultiplePropertiesFromList(currAcad,
 									latestPersonnel.getSmStaffAcademics(),
 									null, new String[] { "pmEduField",
-											"pmEduLevel" });
+											"pmEduLevel" },null);
 					if (latestAcad != null
 							&& latestAcad.getStaffAcademicId() != null) {
 						if (isHasDifferences(latestAcad, currAcad,
@@ -681,10 +682,10 @@ public class SmFieldChangeUtil {
 						new String[] { "addressType" }, null)) {
 					currPersonnel.setChangedFieldStatus("U");
 				} else {
-					SmPersonnelAddress latestAddr = (SmPersonnelAddress) SmCommonUtil
-							.getObjectByPropertiesFromList(currAddr,
+					SmPersonnelAddress latestAddr = (SmPersonnelAddress) EntityHelper
+							.getEntityByMultiplePropertiesFromList(currAddr,
 									latestPersonnel.getSmPersonnelAddresses(),
-									new String[] { "addressType" }, null);
+									new String[] { "addressType" }, null,null);
 					if (latestAddr != null) {
 						if (latestAddr.getSmAddress() != null
 								&& currAddr.getSmAddress() != null
@@ -730,11 +731,11 @@ public class SmFieldChangeUtil {
 							new String[] { "regNo" }, null)) {
 						currAssocCompany.setChangedFieldStatus("N");
 					} else {
-						latestAssocCompany = (SmAssociateCompany) SmCommonUtil
-								.getObjectByPropertiesFromList(
+						latestAssocCompany = (SmAssociateCompany) EntityHelper
+								.getEntityByMultiplePropertiesFromList(
 										currAssocCompany,
 										latestAppl.getSmAssociateCompanies(),
-										new String[] { "regNo" }, null);
+										new String[] { "regNo" }, null, null);
 						if (latestAssocCompany == null
 								|| latestAssocCompany.getAssociateCompanyId() == null) {
 							currAssocCompany.setChangedFieldStatus("N");
@@ -784,11 +785,12 @@ public class SmFieldChangeUtil {
 									"clientName", "title" }, null)) {
 						currCompExp.setChangedFieldStatus("N");
 					} else {
-						latestCompExp = (SmCompanyExperience) SmCommonUtil
-								.getObjectByPropertiesFromList(currCompExp,
+						latestCompExp = (SmCompanyExperience) EntityHelper
+								.getEntityByMultiplePropertiesFromList(
+										currCompExp,
 										latestAppl.getSmCompanyExperiences(),
 										new String[] { "clientName", "title" },
-										null);
+										null, null);
 						if (latestCompExp == null
 								|| latestCompExp.getCompanyExperienceId() == null) {
 							currCompExp.setChangedFieldStatus("N");
@@ -830,11 +832,12 @@ public class SmFieldChangeUtil {
 									"accountNo", "accountPurpose" }, null)) {
 						currBank.setChangedFieldStatus("N");
 					} else {
-						latestBank = (SmSupplierBank) SmCommonUtil
-								.getObjectByPropertiesFromList(currBank,
+						latestBank = (SmSupplierBank) EntityHelper
+								.getEntityByMultiplePropertiesFromList(
+										currBank,
 										latestAppl.getSmSupplierBanks(),
 										new String[] { "accountNo",
-												"accountPurpose" }, null);
+												"accountPurpose" }, null, null);
 						if (latestBank == null
 								|| latestBank.getSupplierBankId() == null) {
 							currBank.setChangedFieldStatus("N");
@@ -895,10 +898,12 @@ public class SmFieldChangeUtil {
 							new String[] { "branchCode" }, null)) {
 						currBranch.setChangedFieldStatus("N");
 					} else {
-						latestBranch = (SmSupplierBranch) SmCommonUtil
-								.getObjectByPropertiesFromList(currBranch,
+						latestBranch = (SmSupplierBranch) EntityHelper
+								.getEntityByMultiplePropertiesFromList(
+										currBranch,
 										latestAppl.getSmSupplierBranches(),
-										new String[] { "branchCode" }, null);
+										new String[] { "branchCode" }, null,
+										null);
 						if (latestBranch == null
 								|| latestBranch.getSupplierBranchId() == null) {
 							currBranch.setChangedFieldStatus("N");
@@ -960,11 +965,11 @@ public class SmFieldChangeUtil {
 							new String[] { "regNo" }, null)) {
 						currEquityCompany.setChangedFieldStatus("N");
 					} else {
-						latestEquityCompany = (SmEquityCompany) SmCommonUtil
-								.getObjectByPropertiesFromList(
+						latestEquityCompany = (SmEquityCompany) EntityHelper
+								.getEntityByMultiplePropertiesFromList(
 										currEquityCompany,
 										latestAppl.getSmEquityCompanies(),
-										new String[] { "regNo" }, null);
+										new String[] { "regNo" }, null,null);
 						if (latestEquityCompany == null
 								|| latestEquityCompany.getEquityCompanyId() == null) {
 							currEquityCompany.setChangedFieldStatus("N");
@@ -1010,12 +1015,12 @@ public class SmFieldChangeUtil {
 							new String[] { "pmCertBody" })) {
 						currCert.setChangedFieldStatus("N");
 					} else {
-						latestCert = (SmSupplierCert) SmCommonUtil
-								.getObjectByPropertiesFromList(
+						latestCert = (SmSupplierCert) EntityHelper
+								.getEntityByMultiplePropertiesFromList(
 										currCert,
 										latestAppl.getSmSupplierCerts(),
 										new String[] { "certTypeId", "certName" },
-										new String[] { "pmCertBody" });
+										new String[] { "pmCertBody" },null);
 						if (latestCert == null
 								|| latestCert.getSupplierCertId() == null) {
 							currCert.setChangedFieldStatus("N");
@@ -1073,10 +1078,10 @@ public class SmFieldChangeUtil {
 							new String[] { "regNo" }, null)) {
 						currBody.setChangedFieldStatus("N");
 					} else {
-						latestBody = (SmAssociationBody) SmCommonUtil
-								.getObjectByPropertiesFromList(currBody,
+						latestBody = (SmAssociationBody) EntityHelper
+								.getEntityByMultiplePropertiesFromList(currBody,
 										latestAppl.getSmAssociationBodies(),
-										new String[] { "regNo" }, null);
+										new String[] { "regNo" }, null,null);
 						if (latestBody == null
 								|| latestBody.getAssociationBodyId() == null) {
 							currBody.setChangedFieldStatus("N");
@@ -1191,10 +1196,10 @@ public class SmFieldChangeUtil {
 			SmCompanyExperienceCat latestCompExpCat = null;
 			for (SmCompanyExperienceCat currExpCat : currCompExp
 					.getSmCompanyExperienceCats()) {
-				latestCompExpCat = (SmCompanyExperienceCat) SmCommonUtil
-						.getObjectByPropertiesFromList(currExpCat,
+				latestCompExpCat = (SmCompanyExperienceCat) EntityHelper
+						.getEntityByMultiplePropertiesFromList(currExpCat,
 								latestcurrCompExp.getSmCompanyExperienceCats(),
-								null, new String[] { "pmCategoryL3" });
+								null, new String[] { "pmCategoryL3" },null);
 				if (latestCompExpCat == null) {
 					currCompExp.setChangedFieldStatus("U");
 					currExpCat.setChangedFieldStatus("N");
@@ -1344,8 +1349,8 @@ public class SmFieldChangeUtil {
 			List<? extends Object> latestList, String[] primitiveProps,
 			String[] nonePrimitiveProps) {
 		boolean retVal = false;
-		Object objRetVal = SmCommonUtil.getObjectByPropertiesFromList(currObj,
-				latestList, primitiveProps, nonePrimitiveProps);
+		Object objRetVal = EntityHelper.getEntityByMultiplePropertiesFromList(
+				currObj, latestList, primitiveProps, nonePrimitiveProps, null);
 		retVal = objRetVal != null ? true : false;
 		return retVal;
 	}

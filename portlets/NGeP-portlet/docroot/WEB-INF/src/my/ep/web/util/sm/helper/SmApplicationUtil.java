@@ -94,6 +94,7 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1106,10 +1107,10 @@ public class SmApplicationUtil {
 			SmSupplierBranch brBank = null;
 			for (SmSupplierBranch brAppl : managedBean.getSmAppl()
 					.getSmSupplierBranches()) {
-				brBank = (SmSupplierBranch) SmCommonUtil
-						.getObjectByPropertiesFromList(brAppl,
+				brBank = (SmSupplierBranch) EntityHelper
+						.getEntityByMultiplePropertiesFromList(brAppl,
 								paymentAccBranch,
-								new String[] { "supplierBranchId" }, null);
+								new String[] { "supplierBranchId" }, null, null);
 				if (brBank == null) {
 					validSave = false;
 					setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -4792,9 +4793,11 @@ public class SmApplicationUtil {
 		boolean valid = true;
 
 		for (SmSiteVisitFacilityVO facVO : managedBean.getSiteVisitFacVOList()) {
-			if (!SmCommonUtil.isListSelected(facVO.getAssocCompanies())
-					&& !SmCommonUtil.isListSelected(facVO.getSuppBranches())
-					&& !SmCommonUtil.isListSelected(facVO.getFacilities())) {
+			if (!EntityHelper.isListGotSelectedValue(facVO.getAssocCompanies())
+					&& !EntityHelper.isListGotSelectedValue(facVO
+							.getSuppBranches())
+					&& !EntityHelper.isListGotSelectedValue(facVO
+							.getFacilities())) {
 				valid = false;
 				throw new EpException(MessageConst.ERROR_722627,
 						new String[] { facVO.getCatTypeLabel() });
@@ -5332,9 +5335,9 @@ public class SmApplicationUtil {
 					if (facVO.getFacilities() == null) {
 						facVO.setFacilities(new ArrayList<SmFacility>());
 					}
-					if (SmCommonUtil.getObjectByPropertiesFromList(hq,
+					if (EntityHelper.getEntityByMultiplePropertiesFromList(hq,
 							facVO.getFacilities(),
-							new String[] { "facilityId" }, null) == null) {
+							new String[] { "facilityId" }, null, null) == null) {
 						facVO.getFacilities().add(hq);
 					}
 					facVO.setAssocCompanies(bean.getSmAppl()
