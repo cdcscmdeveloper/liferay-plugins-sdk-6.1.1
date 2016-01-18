@@ -384,7 +384,10 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_FEC_EVALUATION,
 				"proposal-evaluation");
-
+		
+		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+				+ SCProcessNameConst.CONSOLIDATION_REPORT_PROCESS_NAME,
+				SourcingConstants.CONSOLIDATION_REPORT_PAGE);
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_FC_MEETING,
 				SourcingConstants.FC_COORDINATE_MEETING_PAGE);
