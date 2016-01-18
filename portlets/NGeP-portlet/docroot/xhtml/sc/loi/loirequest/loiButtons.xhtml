@@ -26,19 +26,18 @@
 					oncomplete="blockWidget.hide();"
 					action="#{lOIDetailBackingBean.previewLetter}" />
 
-
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOIDetailBackingBean.saveAction}"
 					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					process="@form" update="@form" />
 
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
+					action="#{lOIDetailBackingBean.submitAction}" process="@form"
+					update="@form" />
+
 				<c:choose>
-					<c:when test="#{isPendingSubmissionStatus}">
-						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							action="#{lOIDetailBackingBean.submitAction}" process="@form"
-							update="@form" />
-					</c:when>
 					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
 						<ui:repeat var="bpmAction"
 							value="#{lOIDetailBackingBean.managedBean.outComes}">
