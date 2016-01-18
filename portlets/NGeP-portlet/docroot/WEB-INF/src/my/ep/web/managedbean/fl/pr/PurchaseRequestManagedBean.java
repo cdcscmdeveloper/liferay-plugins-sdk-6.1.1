@@ -187,6 +187,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private boolean declarationCheck;
 	
+	private String taskDeadLine;
+	
 	//getItems
 	/** The request note with dtls list. */
 	private List<ScRequestNoteDtl> requestNoteWithDtlsList;
@@ -3242,6 +3244,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setPidValidityExpired(boolean pidValidityExpired) {
 		this.pidValidityExpired = pidValidityExpired;
+	}
+
+	/**
+	 * @return the taskDeadLine
+	 */
+	public String getTaskDeadLine() {
+		return taskDeadLine;
+	}
+
+	/**
+	 * @param taskDeadLine the taskDeadLine to set
+	 */
+	public void setTaskDeadLine(String taskDeadLine) {
+		this.taskDeadLine = taskDeadLine;
 	}
 
 }
