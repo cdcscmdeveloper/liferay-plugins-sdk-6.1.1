@@ -43,6 +43,7 @@ import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
+import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
@@ -193,12 +194,20 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	/**
 	 * View doc.
 	 *
-	 * @param docType the doc type
-	 * @param docId the doc id
 	 * @param dpObj the dp obj
 	 */
-	public void viewDoc(String docType, long docId, Object[] dpObj){
+	public void viewDoc(Object[] dpObj){
 		debugLogger("viewDoc");
+		long docId = (long) dpObj[0];
+		String docNo = (String) dpObj[1];
+		String docType = (String) dpObj[3];
+		long statusId = (long) dpObj[4];
+		
+		TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
+		diarySearchBackingBean.getManagedBean().setDocNo(docNo);
+		diarySearchBackingBean.getManagedBean().setDocType(docType);
+		diarySearchBackingBean.getManagedBean().setStatusId(statusId);
+		
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)){
 			RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
 			rnBackingBean.viewRequestNote(docId);
