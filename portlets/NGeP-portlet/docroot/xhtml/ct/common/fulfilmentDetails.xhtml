@@ -65,7 +65,7 @@
 						<p:inputText for="gstAmount" styleClass="ppRightBtn"  
 						     maxlength="18" style="width:130px;"
 						     disabled="#{ctBackingBean.managedBean.viewContract
-						     		or ctBackingBean.managedBean.contractVer.docType eq CtConst.docTypeContractAmendment
+						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableGstAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.gstAmount}" label="#{lbl['lbl.ct.gst.amt']}" >
@@ -187,7 +187,8 @@
 			  </h:panelGrid>
 		   </h:panelGrid>
 		    <h:panelGrid columns="3">
-			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract}" 
+			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract
+			       		or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" 
 			             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
 			              <p:ajax event="change"  update=":form:purchaseInDefaultPanel" process="@this"></p:ajax>
 			         </p:selectBooleanCheckbox>
@@ -196,7 +197,21 @@
 			  	            <h:outputText value="#{lbl['lbl.ct.pid']}"  />
 			  	           <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.pid']}" />
 			  	      </h:panelGrid>
-		 </h:panelGrid>	
+		 </h:panelGrid>		 	
+		   <h:panelGrid columns="3" 
+		     rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
+				 disabled="#{ctBackingBean.managedBean.viewContract
+				 	or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails
+				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement}" style="text-align:top;">
+				 <p:ajax event="change" update="@all" process="@this"></p:ajax>
+			  </p:selectBooleanCheckbox>
+			  <p:spacer width="2" />	
+			  <h:panelGrid columns="2">
+				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
+				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.exemption']}" />
+			  </h:panelGrid>
+		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
 		        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
@@ -222,16 +237,6 @@
 			  <h:panelGrid columns="2">
 				  <h:outputText value="#{lbl['lbl.ct.mto']}"  />
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
-			  </h:panelGrid>
-		   </h:panelGrid>	
-		   <h:panelGrid columns="3" 
-		     rendered="#{!ctBackingBean.managedBean.directPurchase}">
-			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondReq ? false : true}"
-				 disabled="true" style="text-align:top;" />
-			  <p:spacer width="2" />	
-			  <h:panelGrid columns="2">
-				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
-				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>		
 	    </h:panelGrid>
