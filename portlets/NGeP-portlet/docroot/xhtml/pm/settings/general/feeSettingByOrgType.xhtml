@@ -33,7 +33,7 @@
 				
 			</f:facet>
             <p:selectOneMenu id="orgTypeSysParameter" disabled="#{!feeObj.brandNew}"
-						styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.settings.fee.organisation.type']}" style="margin-bottom: 5px;"
+						styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.settings.fee.organisation.type']}" style="margin-bottom: 5px;width : 225px;"
 						value="#{feeObj.orgTypeId.parameterId}">
 						<f:selectItems value="#{ruleCatalogueBackingBean.getOrgTypeDropdownValuesFOR()}" />
 						<p:ajax event="change" process="@this" update="@this" partialSubmit="true" listener="#{ruleCatalogueBackingBean.getParameterObj(feeObj)}" />
