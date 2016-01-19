@@ -66,6 +66,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -968,20 +969,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>(); ;
 		
 		try {
-			SearchFilterBean filterBean = new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT);
-	        filterBean.setCaseInsensitive(true);	
-	        searchBean.getDataFilterBeans().add(filterBean);
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DEDUCTION_TYPE, searchBean);
-			items = new SelectItem[parameterDescs.size() + 1];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			
+			List<String> deductionType = new ArrayList<String>();
+			deductionType.add(ParameterConst.DEDUCTION_TYPE_PENALTY);
+			deductionType.add(ParameterConst.DEDUCTION_TYPE_ROYALTY_FEE);
+			deductionType.add(ParameterConst.DEDUCTION_TYPE_FIXED);
+			deductionType.add(ParameterConst.DEDUCTION_TYPE_NON_FIXED);
+			deductionType.add(ParameterConst.DEDUCTION_TYPE_OTHERS);
+			
+			    searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_IN.value(), deductionType));
+			    List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DEDUCTION_TYPE, searchBean);
+			    items = new SelectItem[parameterDescs.size() + 1];
+		        items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		     
-		    for (PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
-		    }
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
+		        for (PmParameterDesc parameterDesc : parameterDescs) {
+		    	   items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+		        }
+		   } catch (Exception e) {
+			   e.printStackTrace();
+			   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		   }
 	    return items;
 	}
 	
@@ -2326,16 +2333,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    ReasonReqDTO reqDTO = null;
 		    IReasonSO reasonSO = null;
 		    List<PmReasonDesc> list = null;
+		    ReasonResDTO resDTO  = null;
+		    ISearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>(); ;
 		    int i = 1;
 		    try {
-					 reqDTO = new ReasonReqDTO();
-					 reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
-				     FacesScopes facesScopes = new FacesScopes();
-				     reqDTO.setLanguage(facesScopes.getUserLocale().getLanguage());
-					 reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
-					 list = reasonSO.retrieveReasonDescListByCategory(reqDTO).getReasonDescList();
-					 items = new SelectItem[list.size() + 1];
-					 items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+		    	
+		    	    List<String> pmReasonType = new ArrayList<String>();
+			        pmReasonType.add("C");
+			        pmReasonType.add("R");
+			        pmReasonType.add("U");
+			        pmReasonType.add("S");
+			        pmReasonType.add("O");
+			        
+			        reqDTO = new ReasonReqDTO();
+			        FacesScopes facesScopes = new FacesScopes();
+				    reqDTO.setLanguage(facesScopes.getUserLocale().getLanguage());
+			        reqDTO.setSortBy("pmReason.reasonId");
+			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), ReasonCategory.PID_JUSTIFICATION.value()));
+			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCode", SearchOperator.OPERATOR_IN.value(), pmReasonType));
+			        reqDTO.setReasonDescSearchBean(searchBean);
+			        
+			        reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+			        resDTO = reasonSO.retrieveReasonDescBySearchBean(reqDTO);
+			        list = resDTO.getReasonDescResultBean().getResultList();
+		     		items = new SelectItem[list.size() + 1];
+					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()));
 					 for (PmReasonDesc reasonDesc : list) {
 						     items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
@@ -2347,6 +2369,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					 reqDTO = null;
 					 reasonSO = null;
 					 list = null;
+					 searchBean = null;
+					 resDTO = null;
 				 }
 		   return items;
 		}
