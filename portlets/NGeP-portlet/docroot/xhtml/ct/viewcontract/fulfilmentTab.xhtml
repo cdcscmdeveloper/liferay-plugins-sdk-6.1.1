@@ -178,25 +178,21 @@
 				     <!--  <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />  -->
 				</p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId5" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry 
-				                and contractDetailsBackingBean.managedBean.selectedTabIndex eq 1}">
-				      <ui:include src="/xhtml/ct/common/agency.xhtml" />
-				</p:outputPanel>
-				
 				<p:outputPanel id="ctMenuId6" 
-				     rendered="#{(ctBackingBean.managedBean.contractVer.ctContract.zonalPricing and 
-				     ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry and contractDetailsBackingBean.managedBean.selectedTabIndex eq 2) or 
-				     (ctBackingBean.managedBean.contractVer.ctContract.zonalPricing and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral and contractDetailsBackingBean.managedBean.selectedTabIndex eq 1)}" >
+				    rendered="#{ctBackingBean.managedBean.contractVer.ctContract.zonalPricing and contractDetailsBackingBean.managedBean.selectedTabIndex eq 1}" >
 				     <ui:include src="/xhtml/ct/common/zone.xhtml" />
 			    </p:outputPanel>
+				
+				<p:outputPanel id="ctMenuId5"  rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.agencyIndex}">
+				      <ui:include src="/xhtml/ct/common/agency.xhtml" />
+				</p:outputPanel>
 			    
 			    <p:outputPanel id="ctMenuId7" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/item.xhtml" />
 				</p:outputPanel>
 							   
 				<p:outputPanel id="ctMenuId8"
-				     rendered="#{ctBackingBean.managedBean.contractVer.ctDeductions.size() > 0
-				       and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex}">
+				     rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex}">
 					<ui:include src="/xhtml/ct/common/deduction.xhtml" />
 				</p:outputPanel>
 				
