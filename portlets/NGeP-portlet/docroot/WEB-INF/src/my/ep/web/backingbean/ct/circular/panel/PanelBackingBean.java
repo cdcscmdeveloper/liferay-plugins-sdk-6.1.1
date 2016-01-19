@@ -75,6 +75,7 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -680,12 +681,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			       }
 			}
 			
-			if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+			/*if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
 					&& getManagedBean().getCircularVer().getCircularFileName()==null) {
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
+			}*/
 			
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				String circularRemark = getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark();
@@ -741,17 +742,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					
+					if(panelItem.getItemType() == null || panelItem.getItemType().getParameterId()==null) {
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.type", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					
 					if(panelItem.getItemName().length()==0) {
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.name", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					
-					if(panelItem.getItemType() == null || panelItem.getItemType().getParameterId()==null) {
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.type", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					}
 					
 					if(panelItem.getPmUom().getUomId()==null) {
 						throw new EpException(MessageConst.ERROR_100022, 
@@ -2339,13 +2341,28 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    ReasonReqDTO reqDTO = null;
 		    IReasonSO reasonSO = null;
 		    List<PmReasonDesc> list = null;
+		    ReasonResDTO resDTO  = null;
+		    ISearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>();
 		    int i = 1;
 		    try {
+		    	   
+		    	    List<String> pmReasonType = new ArrayList<String>();
+			        pmReasonType.add("C");
+			        pmReasonType.add("R");
+			        pmReasonType.add("U");
+			        pmReasonType.add("S");
+			        pmReasonType.add("O");
+			        
 			        reqDTO = new ReasonReqDTO();
-			        reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
 			        reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+			        reqDTO.setSortBy("pmReason.reasonId");
+			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), ReasonCategory.PID_JUSTIFICATION.value()));
+			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCode", SearchOperator.OPERATOR_IN.value(), pmReasonType));
+			        reqDTO.setReasonDescSearchBean(searchBean);
+			        
 			        reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
-			        list = reasonSO.retrieveReasonDescListByCategory(reqDTO).getReasonDescList();
+			        resDTO = reasonSO.retrieveReasonDescBySearchBean(reqDTO);
+			        list = resDTO.getReasonDescResultBean().getResultList();
 			        items = new SelectItem[list.size() + 1];
 			        items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 				     	"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
@@ -2359,6 +2376,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    	    reqDTO = null;
 				    reasonSO = null;
 				    list = null;
+				    searchBean = null;
+				    resDTO = null;
 		     }
 	    return items;
 	}
