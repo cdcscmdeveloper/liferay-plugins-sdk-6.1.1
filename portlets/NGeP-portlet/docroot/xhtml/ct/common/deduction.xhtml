@@ -42,6 +42,11 @@
 			            
 			              <h:outputText rendered="#{datas.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" 
 			                 value="#{ctBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
+			                 <p:spacer width="5"/>
+			                   <p:inputText  value="#{datas.deductionDesc}"  style="width:400px;float:left;" maxlength="250"
+		                           disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
+		                           rendered="#{ctBackingBean.getParameterCode(datas.deductionType) == ParameterConst.deductionTypeOthers}">
+			                 </p:inputText>  
 			              </p:column> 
 		       
 		              <p:column  headerText="#{lbl['lbl.ct.amount']}" style="width:150px;text-align:right;">
