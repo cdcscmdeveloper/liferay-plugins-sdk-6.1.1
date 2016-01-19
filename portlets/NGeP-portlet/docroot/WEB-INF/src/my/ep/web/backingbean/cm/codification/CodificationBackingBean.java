@@ -690,6 +690,99 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
 	
+	public String goToExtensionSearchPortal(CmUnspsc unspscObj) {
+		log.debug("**********goToExtensionSearch************");
+
+		this.getManagedBean().setMeasurementCriteria(null);
+		this.getManagedBean().setColorCriteria(null);
+		this.getManagedBean().setBrandCriteria(null);
+		this.getManagedBean().setTypeCriteria(null);
+
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
+		CodificationResDTO resDTO = unspscSO
+				.retrieveUNSPSCByCommodityCode(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			CmUnspsc commodity = resDTO.getCommodityObj();
+
+			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscCode(commodity.getUnspscCode());
+			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscTitle(commodity.getUnspscTitle());
+			this.getManagedBean().setSelectedUNSPSCObj(commodity);
+
+			this.getManagedBean().setClassCode(
+					commodity.getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setClassTitle(
+					commodity.getCmUnspsc().getUnspscTitle());
+
+			this.getManagedBean().setFamilyCode(
+					commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setFamilyTitle(
+					commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+
+			this.getManagedBean().setSegmentCode(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
+					.getUnspscCode());
+			this.getManagedBean().setSegmentTitle(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
+					.getUnspscTitle());
+		}
+
+		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
+			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
+				this.getManagedBean()
+				.getBrandCriteria()
+				.add(new SelectItem(brand.getBrandId(), brand
+						.getBrandName()));
+			}
+		}
+
+		for (CmType type : resDTO.getCommodityObj().getCmType()) {
+			if (!StringUtils.isBlank(type.getTypeName()) && type.getRecordStatusFlg() ==1) {
+				this.getManagedBean()
+				.getTypeCriteria()
+				.add(new SelectItem(type.getTypeId(), type
+						.getTypeName()));
+			}
+		}
+
+		for (CmMeasurement measurement : resDTO.getCommodityObj()
+				.getCmMeasurement()) {
+			if (!StringUtils.isBlank(measurement.getMeasurementName()) && measurement.getRecordStatusFlg()==1) {
+				this.getManagedBean()
+				.getMeasurementCriteria()
+				.add(new SelectItem(measurement.getMeasurementId(),
+						measurement.getMeasurementName()));
+			}
+		}
+
+		resDTO = unspscSO.searchColor(reqDTO);
+
+		for (CmColor color : resDTO.getColorList()) {
+			// log.info("color:"+color);
+			// log.info("color:"+color.getColorId());
+			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
+				this.getManagedBean()
+				.getColorCriteria()
+				.add(new SelectItem(color.getColorId(), color
+						.getColorName()));
+			}
+		}
+		
+		this.getManagedBean().getExtensionSearchItemDataModel().resetData();
+		this.getManagedBean().getColorFilterBean().setSearchValue("");
+		this.getManagedBean().getTypeFilterBean().setSearchValue("");
+		this.getManagedBean().getMeasurementFilterBean().setSearchValue("");
+		this.getManagedBean().getBrandFilterBean().setSearchValue("");
+		
+		
+
+		return "extensionSearchPortal?faces-redirect=true";
+	}
+	
 	/**
 	 * Navigate to assign itemcode for contracted item
 	 * 
@@ -1463,6 +1556,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		this.getManagedBean().setRefreshPageNoFlag(true);
 
 		return "codificationView";
+	}
+	
+	public String backToPrevPortal() {
+		
+		this.getManagedBean().setRefreshPageNoFlag(true);
+
+		return "codificationViewPortal";
 	}
 
 	public String backTokeywordView() {
