@@ -1,0 +1,17 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+	
+		<p:messages id="itemCodeSearchMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"></p:messages>
+		<ui:include src="codificationSearchPortal.xhtml" />
+
+	</ui:define>
+</ui:composition>
