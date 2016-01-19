@@ -1,0 +1,105 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+	<h:panelGroup id="codificationPopUpId">
+
+		<table width="100%;">
+
+			<tr>
+				<td width="10%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.popup.segment']} :"></p:outputLabel></td>
+			    <td colspan="1"><h:outputText
+						value="#{codificationBackingBean.managedBean.segmentCode}"
+						size="25"/></td>
+			    <td width="1%"/>
+				<td width="10%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.doc.title.segment']} :"></p:outputLabel></td>
+				<td colspan="1"><h:outputText value="#{codificationBackingBean.managedBean.segmentTitle}" 
+			        	style="white-space:normal!important;"		
+						size="75"/></td>
+			</tr>
+			<tr>
+				<td width="10%"><p:outputLabel  style="font-weight: bold;" value="#{lbl['lbl.cm.popup.family']} :"></p:outputLabel></td>
+				<td colspan="1"><h:outputText id="familyCode"
+						value="#{codificationBackingBean.managedBean.familyCode}"	
+						size="25" disabled="true" />
+					</td>
+			    <td width="1%"/>
+				<td width="10%"><p:outputLabel  style="font-weight: bold;" value="#{lbl['lbl.cm.doc.title.family']} :"></p:outputLabel></td>
+				<td colspan="1"><h:outputText
+						value="#{codificationBackingBean.managedBean.familyTitle}" style="white-space:normal!important;"	
+						size="75" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td width="10%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.popup.class']} :"></p:outputLabel></td>
+				<td colspan="1"><h:outputText id="classCode"
+						value="#{codificationBackingBean.managedBean.classCode}" size="25"
+						disabled="true" />
+					
+				</td>
+				<td width="1%"/>
+				<td width="10%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.doc.title.class']} :"></p:outputLabel></td>
+				<td colspan="1"><h:outputText
+						value="#{codificationBackingBean.managedBean.classTitle}" style="white-space:normal!important;"	
+						size="75" disabled="true" /></td>
+			</tr>
+		</table>
+
+		<div style="padding: 2px;"></div>
+
+
+		<p:dataTable id="unspscTablePopUpId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{codificationBackingBean.managedBean.unspscPopUpList}"
+			var="unspscObj1" width="100%" paginator="true" rows="10"
+			paginatorPosition="bottom"
+			paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
+			currentPageReportTemplate="/ {totalPages}"
+			rowsPerPageTemplate="5,10,15">
+
+			<p:column width="25%" sortBy="#{unspscObj1.unspscCode}">
+				<f:facet name="header">
+					#{lbl['lbl.cm.unspsc.code']}
+				</f:facet>
+
+				<p:commandLink
+					action="#{codificationBackingBean.goToExtensionSearchPortal(unspscObj1)}"
+					rendered="#{codificationBackingBean.productCode(unspscObj1.unspscCode) and (unspscObj1.unspscLevel eq 3)}">
+							#{unspscObj1.unspscCode}
+							</p:commandLink>
+
+				<p:commandLink 	action="#{codificationBackingBean.goToAddServiceConfirmPopUp(unspscObj1)}" disabled="true"
+				rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}"
+					onclick="unspscPopUp.hide()" oncomplete="confirmationPopUp.show()"
+					update=":form:confirmationPopUpId">
+							#{unspscObj1.unspscCode}
+							</p:commandLink>
+
+				<p:commandLink
+					action="#{codificationBackingBean.unspscPopUpSearch(unspscObj1)}"
+					rendered="#{unspscObj1.unspscLevel ne 3}"
+					update=":form:codificationPopUpId">
+							#{unspscObj1.unspscCode}
+							</p:commandLink>
+
+
+			</p:column>
+			<p:column sortBy="#{unspscObj1.unspscTitle}">
+				<f:facet name="header">
+					#{lbl['lbl.cm.unspsc.title']}
+				</f:facet>
+				#{unspscObj1.unspscTitle}
+			</p:column>
+
+		</p:dataTable>
+
+
+	</h:panelGroup>
+
+
+
+
+
+</ui:composition>
