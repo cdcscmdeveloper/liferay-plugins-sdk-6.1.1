@@ -1184,10 +1184,14 @@ public class SPDetailBackingBean extends
 			CriteriaValue acidRatioVal = new CriteriaValue(
 					SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO,
 					scQtPRPAssetLiability.getAcidRatio());
+			
+			CriteriaValue currentRatioVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO,
+					scQtPRPAssetLiability.getCurrentRatio());
 
 			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
 					scQtProposalChecklist, this.getManagedBean()
-							.getScQtProposalScoreList(), acidRatioVal);
+							.getScQtProposalScoreList(), acidRatioVal,currentRatioVal);
 
 			scQtProposalChecklist.setSubmitted(isCompleted);
              List<EncryptDataBean> prpAssetLiabilityList = new ArrayList<EncryptDataBean>();
@@ -2440,11 +2444,17 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setScQtProposalScoreList(
 					resDTO.getProposalScores());
 
-			ScQtProposalScore assetLiabilityScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO);
+			ScQtProposalScore assetLiabilityAcidRatioScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO);
+			ScQtProposalScore assetLiabilityCurrentRatioScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO);
 
-			if (assetLiabilityScore != null) {
+			if (assetLiabilityAcidRatioScore != null) {
 				getManagedBean().getScQtPRPAssetLiability().setAcidRatio(
-						assetLiabilityScore.getCriteriaValue());
+						assetLiabilityAcidRatioScore.getCriteriaValue());
+			}
+			
+			if (assetLiabilityCurrentRatioScore != null) {
+				getManagedBean().getScQtPRPAssetLiability().setCurrentRatio(
+						assetLiabilityCurrentRatioScore.getCriteriaValue());
 			}
 
 			return NAV_TO_ASSET_LIABILITY_PAGE;
@@ -2899,15 +2909,26 @@ public class SPDetailBackingBean extends
 		BigDecimal asset = assetLiability.getCurrentAssets();
 		BigDecimal liabilities = assetLiability.getCurrentLiabilities();
 		BigDecimal acidRatio = null;
+		BigDecimal currentRatio = null;
+	BigDecimal totalCashInHand=	assetLiability.getTotalCashInHand();
+	BigDecimal totalAccountReceivable=	assetLiability.getTotalAccountReceivable();
+		
+		if(null!=totalCashInHand && null!=totalAccountReceivable && null!=liabilities){
+			BigDecimal totalAmount=totalCashInHand.add(totalAccountReceivable);
+			MathContext mc = new MathContext(14);
+			acidRatio = totalAmount.divide(liabilities, mc);
+			assetLiability.setAcidRatio(acidRatio);
+		}
 
 		if (asset != null && liabilities != null && liabilities.intValue() > 0) {
 
 			MathContext mc = new MathContext(14);
 
-			acidRatio = asset.divide(liabilities, mc);
-			assetLiability.setAcidRatio(acidRatio);
+			currentRatio = asset.divide(liabilities, mc);
+			assetLiability.setCurrentRatio(currentRatio);
 		} else {
 			assetLiability.setAcidRatio(new BigDecimal(0));
+			assetLiability.setCurrentRatio(new BigDecimal(0));
 		}
 
 	}

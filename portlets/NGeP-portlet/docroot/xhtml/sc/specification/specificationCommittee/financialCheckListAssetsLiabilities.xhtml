@@ -34,7 +34,9 @@
 						<f:setPropertyActionListener
 							target="#{specificationBackingBean.managedBean.criteriaType}"
 							value="60" />
-
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.otherCriteriaType}"
+							value="61" />
 					</p:commandButton></td>
 			</tr>
 		</table>
@@ -46,25 +48,51 @@
 		<p:panel header="#{lbl['lbl.sc.assest.liabilities']}"
 			toggleable="true">
 			<table>
+
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.current.asset']}" /></td>
-					<td><p:inputText style="text-align:right" disabled="true">
+					<td style="width: 180px;"><p:outputLabel
+							value="#{lbl['lbl.sc.current.asset']}" /></td>
+					<td><p:inputText style="text-align:right;margin-bottom: 5px;"
+							disabled="true">
 
 						</p:inputText></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.current.liability']}" /></td>
-					<td><p:inputText style="text-align:right" disabled="true">
+					<td><p:inputText style="text-align:right;margin-bottom: 5px;"
+							disabled="true">
+
+						</p:inputText></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.total.cash.hand']}" /></td>
+					<td><p:inputText style="text-align:right;margin-bottom: 5px;"
+							disabled="true">
+
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.total.account.receivable']}" /></td>
+					<td><p:inputText style="text-align:right;margin-bottom: 5px;"
+							disabled="true">
 
 						</p:inputText></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.acid.ratio']}" /></td>
-					<td><p:inputText style="text-align:right" id="totalacidratio"
-							readonly="true" disabled="true" /> <ac:iconTooltip
+					<td><p:inputText style="text-align:right;margin-bottom: 5px;"
+							id="totalacidratio" readonly="true" disabled="true" /> <ac:iconTooltip
 							value="#{lbl['lbl.sc.acid.ratio.tooltip']}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.current.ration']}" /></td>
+					<td><p:inputText style="text-align:right" disabled="true">
+
+						</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.current.ration.tooltip']}" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -76,7 +104,7 @@
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
-					<td style="width: 145px;"><ui:fragment
+					<td style="width: 180px;"><ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 							<p:outputLabel value="*" styleClass="mandatory"
 								style="float : left"></p:outputLabel>
@@ -153,7 +181,7 @@
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
-							<td style="width: 145px;"><ui:fragment
+							<td style="width: 180px;"><ui:fragment
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 									<p:outputLabel value="*" styleClass="mandatory"
 										style="float : left"></p:outputLabel>
@@ -173,6 +201,112 @@
 			</h:panelGroup>
 		</p:panel>
 
+		<p:panel id="financialAssetsLiabilitycurrentRatioScoring"
+			header="#{lbl['lbl.sc.spec.asset.score.current.ratio']}"
+			toggleable="true"
+			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
+
+			<table>
+				<tr>
+					<td width="180px"><ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<p:outputLabel value="*" styleClass="mandatory"
+								style="float : left"></p:outputLabel>
+						</ui:fragment> <p:outputLabel style="float : left"
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu required="true"
+							id="financialAssetsLiabilityCurrentrationScore"
+							style="width:180px;margin-bottom: 5px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							label="#{lbl['lbl.sc.spec.asset.score.type']}"
+							value="#{specificationBackingBean.managedBean.companyScoreType}">
+							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
+							<p:ajax event="change"
+								update="financialAssetsLiabilitycurrentRatioScoring,assetLiabilitieCurrentRatioScore"
+								listener="#{specificationBackingBean.companyscoreTypeChange}"></p:ajax>
+						</p:selectOneMenu> <p:message id="financialAssetsLiabilityCurrentrationScoreId"
+							for="financialAssetsLiabilityCurrentrationScore" display="icon"></p:message></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
+				</tr>
+			</table>
+
+			<h:panelGroup id="assetLiabilitieCurrentRatioScore">
+				<h:panelGroup
+					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '1'}">
+					<ui:param name="scoringPnlGroupId"
+						value="currentRatioGroupIdGroupId" />
+					<h:panelGroup id="assetsCurrentRatioGroupId">
+						<ui:param name="scoringList"
+							value="#{specificationBackingBean.managedBean.scoringForYears}" />
+						<ui:param name="selectionList"
+							value="#{specificationBackingBean.managedBean.otherScoreSelected}" />
+
+						<ui:param name="componentName" value="currentRatio" />
+						<ui:param name="scoringPnlId" value="currentRatioId" />
+						<ui:param name="scoringPnlName"
+							value="#{lbl['lbl.sc.spec.asset.score.current.ratio']}"></ui:param>
+						<ui:include
+							src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								styleClass="BtnSpacing"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								process="@this,#{scoringPnlId}" partialSubmit="true"
+								oncomplete="scoreWidget.paginator.endLink.click();"
+								actionListener="#{specificationBackingBean.addScoringyears(61)}"
+								update="#{scoringPnlId}" />
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
+								styleClass="BtnSpacing"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								process="@this" partialSubmit="true"
+								oncomplete="financialAssetLiabilityCurrentRatioDeletePopUp.show();"
+								update="@([id$=#{financialAssetsLiabilityCurrentRatioDeleteId}])">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
+
+						</div>
+						<ui:param name="financialAssetsLiabilityCurrentRatioDeleteId"
+							value="financialAssetsLiabilityCurrentRatioDeleteId"></ui:param>
+
+						<ac:confirmationPopup
+							id="#{financialAssetsLiabilityCurrentRatioDeleteId}"
+							widget="financialAssetLiabilityCurrentRatioDeletePopUp"
+							width="450" height="100"
+							okAction="specificationBackingBean.deleteCheckListScoreYears"
+							title="#{lbl['lbl.sc.spec.asset.score.current.ratio']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=#{scoringPnlId}])" />
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup
+					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '2'}">
+					<table>
+						<tr>
+							<td style="width: 180px;"><ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float : left"></p:outputLabel>
+								</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
+									style="float : left"></p:outputLabel></td>
+							<td><p:inputText id="finAssetsLiaUserScore" required="true"
+									style="text-align:right;"
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
+									value="#{specificationBackingBean.managedBean.scQtContractScore.score}">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+								</p:inputText> <p:message id="finAssetLiabilityMaxScoreUserScore"
+									for="finAssetsLiaUserScore" display="icon"></p:message></td>
+						</tr>
+					</table>
+				</h:panelGroup>
+			</h:panelGroup>
+
+		</p:panel>
 
 	</ui:define>
 </ui:composition>
