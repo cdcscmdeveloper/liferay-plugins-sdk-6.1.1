@@ -449,8 +449,9 @@
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.fee.contract.name" />
-					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="columnWidth" value="100" />
 				</bean>
+				
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="smSupplier.companyName" />
 					<property name="bundleFile"
@@ -458,7 +459,27 @@
 					<property name="bundleKey" value="lbl.pm.fee.supplier.name" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
-
+	            <bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="latestContractVer.contractPhysicalNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.contract.physical.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				 <bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="latestContractVer.ctContractValue.loaNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.contract.loa.referece.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				 <bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="latestContractVer.ctContractValue.loaPhysicalNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.contract.loa.physical.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
 			</list>
 		</property>
 	</bean>
