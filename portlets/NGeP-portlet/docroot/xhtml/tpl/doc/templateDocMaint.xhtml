@@ -152,7 +152,7 @@
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
 						<p:spacer width="5px" />
-						<p:commandLink action="#{templateDocBackingBean.deleteNode}" update=":form">
+						<p:commandLink action="#{templateDocBackingBean.deleteNode}" update=":form" disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}" >
 							<!-- oncomplete="popupsEdit.show();return false;" update=":form:popupsEdit"> -->							 
 							<h:graphicImage value="/css/images/design/delete.png" />
 							<f:setPropertyActionListener value="#{document}"
