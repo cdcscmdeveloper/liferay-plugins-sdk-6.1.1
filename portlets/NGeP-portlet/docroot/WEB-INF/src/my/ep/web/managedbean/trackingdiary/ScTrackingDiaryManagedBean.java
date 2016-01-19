@@ -46,7 +46,8 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	private Date searchDocumentToDuration;
 	private Object[] scObj = new Object[6];
 	private IPagingDataModel<Object[]> scRNDocumentDataModel = new ScDocumentPagingDataModel();
-
+    private String fromPageUrl;
+    
 	private class ScDocumentPagingDataModel extends PagingDataModel<Object[]> {
 		private static final long serialVersionUID = 1L;
 
@@ -174,6 +175,20 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void resetDocumentDataModel() {
 		this.scRNDocumentDataModel = new ScDocumentPagingDataModel();
+	}
+
+	/**
+	 * @return the fromPageUrl
+	 */
+	public String getFromPageUrl() {
+		return fromPageUrl;
+	}
+
+	/**
+	 * @param fromPageUrl the fromPageUrl to set
+	 */
+	public void setFromPageUrl(String fromPageUrl) {
+		this.fromPageUrl = fromPageUrl;
 	}
 
 
