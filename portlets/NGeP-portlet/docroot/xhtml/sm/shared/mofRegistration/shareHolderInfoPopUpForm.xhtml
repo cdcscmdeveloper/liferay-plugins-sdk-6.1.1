@@ -378,8 +378,7 @@
 		<ui:include src="personnelRolesPanel.xhtml" />
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
-		id="shrPrivPanel"
-		rendered="#{!backingBean.managedBean.validSmUserLimit}">
+		id="shrPrivPanel">
 		<table>
 			<p:outputPanel rendered="#{backingBean.managedBean.validSmUserLimit}">
 				<tr><td colspan="3"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" escape="false"/></td></tr>
