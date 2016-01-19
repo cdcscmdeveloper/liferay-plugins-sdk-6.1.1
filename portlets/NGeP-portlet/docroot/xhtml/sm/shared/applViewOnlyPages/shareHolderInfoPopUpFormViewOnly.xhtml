@@ -90,23 +90,24 @@
 					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '0'}" />
 				</td>
 			</tr>
-			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}">
+			<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
 					<td>
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.suppAdmin']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN'}"/>
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.suppUser']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}"/>
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.catUser']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'CM_USER'}"/>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.fluser']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER'}"/>
 					</td>
 				</tr>
-				<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}">
-					<tr>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.justification']}" /></td>
-						<td style="word-wrap: break-word">
-							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}" />
-						</td>
-					</tr>
-				</c:if>
+			</c:if>
+			<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.justification']}" /></td>
+					<td style="word-wrap: break-word">
+						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}" />
+					</td>
+				</tr>
 			</c:if>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.composition.certStatus']}" /></td>

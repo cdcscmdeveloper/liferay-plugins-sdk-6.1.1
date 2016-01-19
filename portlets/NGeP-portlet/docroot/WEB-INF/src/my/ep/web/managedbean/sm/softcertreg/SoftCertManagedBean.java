@@ -55,6 +55,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private SoftCertMaintenanceBackingBean softCertMaintenanceBackingBean = new SoftCertMaintenanceBackingBean();
 	private boolean applySoftcertForOthers;
 	private boolean renderRevokeButton;
+	private boolean allAuthSuppUserAlreadyRequested;
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -292,6 +293,15 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setRenderRevokeButton(boolean renderRevokeButton) {
 		this.renderRevokeButton = renderRevokeButton;
+	}
+
+	public boolean isAllAuthSuppUserAlreadyRequested() {
+		return allAuthSuppUserAlreadyRequested;
+	}
+
+	public void setAllAuthSuppUserAlreadyRequested(
+			boolean allAuthSuppUserAlreadyRequested) {
+		this.allAuthSuppUserAlreadyRequested = allAuthSuppUserAlreadyRequested;
 	}
 
 }

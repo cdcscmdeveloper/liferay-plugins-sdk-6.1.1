@@ -162,7 +162,9 @@ public class SmPersonnelBackingBean extends
 					} else if (smPersonnelTemp.getEpRole().equals(
 							RoleCode.BASIC_SUPPLIER_USER.value())
 							|| smPersonnelTemp.getEpRole().equals(
-									RoleCode.MOF_SUPPLIER_USER.value())) {
+									RoleCode.MOF_SUPPLIER_USER.value())
+							|| smPersonnelTemp.getEpRole().equals(
+									RoleCode.FL_USER.value())) {
 						isHasSupplierUser = true;
 					}
 				}

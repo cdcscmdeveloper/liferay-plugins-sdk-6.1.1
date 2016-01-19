@@ -78,6 +78,8 @@
 						rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER' or personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
 					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
 						rendered="#{personnel.epRole eq 'CM_USER'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.fluser']}"
+						rendered="#{personnel.epRole eq 'FL_USER'}" />
 					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 						rendered="#{personnel.contractSigner}" />
 				</p:column>

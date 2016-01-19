@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -100,9 +102,12 @@ import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -3221,6 +3226,66 @@ public class SmCommonUtil {
 		StatusResDTO resDTO = reqSO.retrieveStatusByStatusId(reqDTO);
 
 		return resDTO.getPmStatus();
+	}
+
+	/**
+	 * Get personnel latest active role in ePerolehan
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 * @return String
+	 */
+	public static String getPersonnelActiveRole(SmPersonnel personnel) {
+		String retVal = "";
+		if (personnel.getPmUser() != null
+				&& personnel.getPmUser().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			PmUserOrg userOrg = getSupplierPmUserOrg(personnel);
+			if (userOrg != null
+					&& userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& !EntityHelper
+							.isCollectionEmpty(userOrg.getPmUserRoles())) {
+				for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						retVal = userRole.getPmRole().getRoleCode();
+						break;
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+
+	private static PmUserOrg getSupplierPmUserOrg(SmPersonnel personnel) {
+		if (personnel != null
+				&& personnel.getPmUser() != null
+				&& !EntityHelper.isCollectionEmpty(personnel.getPmUser()
+						.getPmUserOrgs())) {
+			PmUser pmUser = personnel.getPmUser();
+			List<PmUserOrg> pmUserOrgs = pmUser.getPmUserOrgs();
+			PmUserOrg pmUserOrg = new PmUserOrg();
+			for (PmUserOrg org : pmUserOrgs) {
+				if (org.getPmOrgProfile().getOrgTypeCode().getParameterCode()
+						.equals(ParameterConst.ORG_TYPE_SUPPLIER)
+						|| (org.getPmOrgProfile().isGovtSeller() && (org
+								.getPmOrgProfile()
+								.getOrgTypeCode()
+								.getParameterCode()
+								.equals(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY)
+								|| org.getPmOrgProfile()
+										.getOrgTypeCode()
+										.getParameterCode()
+										.equals(ParameterConst.ORG_TYPE_STATE_GOVT) || org
+								.getPmOrgProfile().getOrgTypeCode()
+								.getParameterCode()
+								.equals(ParameterConst.ORG_TYPE_STATUTORY_BODY)))) {
+					pmUserOrg = org;
+					break;
+				}
+			}
+			return pmUserOrg;
+		} else {
+			return null;
+		}
 	}
 
 }
