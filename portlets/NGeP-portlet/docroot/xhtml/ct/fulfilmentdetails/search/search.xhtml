@@ -160,19 +160,19 @@
 					   	   
                                  <p:menuitem id="menuItemId1" value="#{lbl['lbl.ct.suspend.contract']}"   icon="ui-icon-suspension"
                                       rendered="#{contractDetailsBackingBean.isContractAdmin()
-					 		          and data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"  
+					 		          and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"  
 					 		          action="#{contractDetailsBackingBean.gotoSuspendPage(data.ctContract.contractId)}" 
                                       onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()"></p:menuitem>
 					 		          
 					 		   <p:menuitem id="menuItemId2" value="#{lbl['lbl.ct.termination']}"  icon="ui-icon-termination"
 					 		         rendered="#{contractDetailsBackingBean.isContractAdmin() 
-					 		         and data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"  
+					 		         and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"  
                              	    action="#{contractDetailsBackingBean.gotoTerminatePage(data.ctContract.contractId)}"
 								     onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 							   </p:menuitem>
 								        
 							  <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.amendment.with.supplement']}" icon="ui-icon-amendment" 
-							        rendered="#{contractDetailsBackingBean.isContractAdmin() and data.fdStatus == 1 and data.ctContract.recordStatusFlg ==1 and
+							        rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==1 and
 					 		             data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase 
                              	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}" 
 								    action="#{contractDetailsBackingBean.gotoAmendPage(data.ctContract.contractId, 'update')}"
@@ -180,7 +180,7 @@
 							  </p:menuitem>
 					 		 
 					 		<p:menuitem id="menuItemId4" value="#{(data.agStatus == 1) ? lbl['lbl.ct.amendment.without.supplement'] : lbl['lbl.ct.fulfilment.details.update']}"  icon="ui-icon-update" 
-					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() and data.fdStatus == 1
+					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1
 					 		      			  and data.ctContract.recordStatusFlg==1 and !data.pendingFinalistAgreement
 					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch }"  
                              	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId, data.agStatus)}"
@@ -207,7 +207,7 @@
 					     	</p:menuitem>
 					     	<p:menuitem id="menuItemId12" value="#{lbl['lbl.ct.request.change.bank.acc']}"
 					     		icon="ui-icon-change-bank" 
-                            	rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 
+                            	rendered="#{data.ctStatus == 1 and data.ctContract.recordStatusFlg==1 
                             	 	and !data.pendingFinalistAgreement
                             		and !contractDetailsBackingBean.managedBean.trackingDiarySearch}"
 					   	     	action="#{contractDetailsBackingBean.gotoChangeBankPage(data.ctContract.contractId)}"
