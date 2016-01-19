@@ -5,6 +5,8 @@ public class MainContact {
 	private String contactName;
 	private String mobileNo;
 	private String phoneNo;
+	private String contactEmail;
+
 
 	public String getContactName() {
 		return contactName;
@@ -28,6 +30,14 @@ public class MainContact {
 
 	public void setPhoneNo(String phoneNo) {
 		this.phoneNo = phoneNo;
+	}
+	
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
 	}
 
 }
