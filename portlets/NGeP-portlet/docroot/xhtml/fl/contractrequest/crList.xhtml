@@ -99,10 +99,9 @@
             	<p:rowToggler rendered="#{not empty vCtActiveContract.activeContractSubList}" />
         	</p:column>
 			<p:column headerText="#{lbl['lbl.fl.contract.no']}" style="width:142px;text-align:center">
-					<p:commandLink value="#{vCtActiveContract.physicalNo}" style="float:left;text-align:left;"
-				action="#{contractRequestBackingBean.navigateDocument(vCtActiveContract.contractId)}" 
+					<h:outputText value="#{vCtActiveContract.physicalNo}" style="float:left;text-align:left;" 
 				rendered="#{vCtActiveContract.physicalNo != null}"/>
-				<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{vCtActiveContract.physicalNo != null}"/>
+				<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{vCtActiveContract.physicalNo != null}" />
 					<p:commandLink value="#{vCtActiveContract.contractNo}" style="float:left;text-align:left;"
 				action="#{contractRequestBackingBean.navigateDocument(vCtActiveContract.contractId)}"/>
 				
