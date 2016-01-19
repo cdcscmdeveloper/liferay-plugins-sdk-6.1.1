@@ -253,11 +253,9 @@ public class SmApplicationUtil {
 		reqDTO.setSmSupplierId(supplierId);
 		reqDTO.setApplId(applId);
 		reqDTO.setMof(true);
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
-		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCount(reqDTO);
+
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelCount(reqDTO);
 
 		int authPersLimit = 0;
 

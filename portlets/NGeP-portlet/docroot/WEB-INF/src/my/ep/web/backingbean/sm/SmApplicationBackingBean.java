@@ -4783,8 +4783,40 @@ public class SmApplicationBackingBean extends
 	 * Builds the role list.
 	 */
 	public void buildRoleList(SmPersonnel personnel) {
+		boolean showFlUserRole = false;
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 		SelectItem role = new SelectItem();
+
+		// For latest role is FL_USER, allowed to show FL_USER and other roles
+		// even not yet reach authorized personnel limit
+		if (personnel.getPmUser() != null
+				&& SmCommonUtil.getPersonnelActiveRole(personnel).equals(
+						RoleCode.FL_USER.value())) {
+			showFlUserRole = true;
+		} else {
+			if (getManagedBean().isValidSmUserLimit()) {
+				showFlUserRole = true;
+
+				// For latest role is MOF_SUPPLIER_USER or BASIC_SUPPLIER_USER
+				// not allowed to down grade to FL_USER
+				if (personnel.getPmUser() != null
+						&& (SmCommonUtil.getPersonnelActiveRole(personnel)
+								.equals(RoleCode.MOF_SUPPLIER_USER.value()) || SmCommonUtil
+								.getPersonnelActiveRole(personnel).equals(
+										RoleCode.BASIC_SUPPLIER_USER.value()))) {
+					showFlUserRole = false;
+				}
+			}
+		}
+
+		if (showFlUserRole) {
+			role = new SelectItem();
+			role.setLabel(SmCommonUtil.getMessage(
+					"lbl.sm.person.composition.fluser", null));
+			role.setValue(RoleCode.FL_USER.value());
+			roles.add(role);
+		}
+
 		role = new SelectItem();
 		role.setLabel(SmCommonUtil.getMessage(
 				"lbl.sm.person.composition.suppUser", null));
