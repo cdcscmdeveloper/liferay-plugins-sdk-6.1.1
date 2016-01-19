@@ -21,6 +21,7 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -605,6 +606,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void setPersonnelRowSelection(List<SmPersonnel> personnels) {
 		Long supplierId = getManagedBean().getLoginUserPersonnelInfo()
 				.getSmAppl().getSmSupplier().getSupplierId();
+		getManagedBean().setAllAuthSuppUserAlreadyRequested(true);
 		getManagedBean().setAlreadyHadFreeSoftcert(false);
 		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
 		for (SmPersonnel personnel : personnels) {
@@ -612,7 +614,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					&& personnel.getEpRole().equals(
 							RoleCode.SUPPLIER_TEMP.value())
 					&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
-				personnel.setDisableRowSelection(false);
 				getManagedBean().setSupplierTmpPersonnel(personnel);
 				getManagedBean().setSoftCertSelect(personnel);
 				getManagedBean().getSoftCertSelectList().add(
@@ -627,22 +628,46 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
 				}
 			} else {
+
+				// set rejected or failed softcert request
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
 					SmCommonUtil.setRejectedPersonnelSoftcert(personnel,
 							supplierId);
 				}
-				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
-					if (personnel.getPmUser() == null) {
-						personnel.setDisableRowSelection(true);
+
+				// check if all authorized MOF_SUPPLIER_USER already request
+				// softcert to allowed FL_USER proceed to request
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+					if (!personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
+						getManagedBean().setAllAuthSuppUserAlreadyRequested(
+								false);
 					}
 				}
 			}
 			setPersonnelSoftcertInformation(personnel);
 		}
+		setDisableFlUserRowSelection(personnels);
 		setDisableRowSelectionIfSuppTmpNotRequestSoftCert(personnels);
 		initDisableRevokeButton();
+	}
+
+	/**
+	 * Disable FL_USER to request softcert if still got authorized
+	 * MOF_SUPPLIER_USER that haven't request
+	 * 
+	 * @param List
+	 *            <SmPersonnel> personnels
+	 */
+	private void setDisableFlUserRowSelection(List<SmPersonnel> personnels) {
+		if (!getManagedBean().isAllAuthSuppUserAlreadyRequested()) {
+			for (SmPersonnel personnel : personnels) {
+				if (personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
+					personnel.setDisableRowSelection(true);
+				}
+			}
+		}
 	}
 
 	/**
