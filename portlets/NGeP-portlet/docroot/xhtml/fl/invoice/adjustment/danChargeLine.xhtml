@@ -64,25 +64,25 @@
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center;">
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" style="float:left;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price']}"  style="white-space:normal;text-align:center;">
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}"  style="white-space:normal;text-align:center;" rendered="false">
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.unitPrice}" style="float:right;">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center;">
+			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:center;" rendered="false">
 				<h:outputText rendered="#{danItem.level == 2}" value="#{danItem.flInvoiceItem.gstAmount}" style="float:right;">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}"  style="white-space:normal;text-align:center;">
+			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}"  style="white-space:normal;text-align:center;" rendered="false">
 				<h:outputText rendered="#{danItem.level == 2}" value="#{danItem.flInvoiceItem.gstUnitPrice}" style="float:right;">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.gst.rate']}" style="white-space:normal;text-align:center;">
+			<p:column headerText="#{lbl['lbl.fl.gst.rate']}" style="white-space:normal;text-align:center;" rendered="false">
 				<h:outputText value="#{danItem.flInvoiceItem.gstFlag.parameterCode}" rendered="#{danItem.level == 2}" style="float:right;">
 				</h:outputText>
 			</p:column>			
