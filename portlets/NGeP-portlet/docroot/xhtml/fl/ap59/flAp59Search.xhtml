@@ -23,40 +23,38 @@
 			<h:panelGroup id="defineSearchTbl">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.contract.no']}"
-						style="width: 125px;" />
+						style="width: 280px;" />
 					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.contractNo}"></p:inputText>
-				
-				</h:panelGrid>
-			</h:panelGroup>
-			<h:panelGroup id="docLoaSearch">
-				<h:panelGrid columns="4" columnClasses="cmWidth1">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}"
-						style="width: 125px;" />
-					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.loaNo}"></p:inputText>
-				</h:panelGrid>
-			</h:panelGroup>
-			<h:panelGroup id="docTitleSearch">
-				<h:panelGrid columns="4" columnClasses="cmWidth1">
-					<p:outputLabel value="#{lbl['lbl.fl.ap59.contract.title']}"
-						style="width: 125px;" />
-					<p:inputText size="80" value="#{invoiceBackingBean.managedBean.title}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docPhyContNoSearch">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}"
-						style="width: 125px;" />
+						style="width: 280px;" />
 					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.physicalContractNo}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>			
+			<h:panelGroup id="docLoaSearch">
+				<h:panelGrid columns="4" columnClasses="cmWidth1">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+						style="width: 280px;" />
+					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.loaNo}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docPhyLoaNoSearch">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}"
-						style="width: 125px;" />
+						style="width: 280px;" />
 					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.physicalLoaNo}"></p:inputText>
 				</h:panelGrid>
+			</h:panelGroup>			
+			<h:panelGroup id="docTitleSearch">
+				<h:panelGrid columns="4" columnClasses="cmWidth1">
+					<p:outputLabel value="#{lbl['lbl.fl.ap59.contract.title']}"
+						style="width: 280px;" />
+					<p:inputText size="80" value="#{invoiceBackingBean.managedBean.title}"></p:inputText>
+				</h:panelGrid>
 			</h:panelGroup>
-
 			<p:outputPanel id="advanceSearchID" style="width:100%">
 			</p:outputPanel>
 
