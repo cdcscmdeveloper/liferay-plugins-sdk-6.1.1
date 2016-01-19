@@ -74,10 +74,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private String searchLoaNo;
 	private String searchLoaPhysicalNo;
 	private String searchCtPhysicalNo;
-	private int searchStatus;
-	private Long searchTerminationType;
-	private Long searchFulfilmentStatus;
 	private int searchContractStatus;
+	private Long searchTerminationType;
+	private int searchStatus;
 	private String externalPageUrl;
 	private String warningPercentage;
 	private String textBeforeSign;
@@ -237,19 +236,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchContractStatus(int searchContractStatus) {
 		this.searchContractStatus = searchContractStatus;
-	}
-	/**
-	 * @return the searchFulfilmentStatus
-	 */
-	public Long getSearchFulfilmentStatus() {
-		return searchFulfilmentStatus;
-	}
-
-	/**
-	 * @param searchFulfilmentStatus the searchFulfilmentStatus to set
-	 */
-	public void setSearchFulfilmentStatus(Long searchFulfilmentStatus) {
-		this.searchFulfilmentStatus = searchFulfilmentStatus;
 	}
 
 	/**
@@ -986,10 +972,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					} else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("IS_REMEDY",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					}
-				}
-				if (getSearchFulfilmentStatus() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("CURRENT_STATUS_ID", 
-							SearchOperator.OPERATOR_EQUALS.value(), getSearchFulfilmentStatus()));
 				}
 				if (getSearchContractStatus() > 0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("CONTRACT_STATUS", 
