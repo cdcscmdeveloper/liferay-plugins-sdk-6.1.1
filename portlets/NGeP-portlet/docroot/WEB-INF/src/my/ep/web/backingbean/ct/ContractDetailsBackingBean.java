@@ -706,7 +706,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
 			// Validation for performance bond
-			if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()) {
+			if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
+					&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
 				//In CT Update(bond required): if previously the bond already defined, number of performance bond must be > 0 while submission; 
 				//In CT Update(bond required): if previously no bond defined, system allow submission of FD Update even the number of performance bond entered = 0.
 				if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {

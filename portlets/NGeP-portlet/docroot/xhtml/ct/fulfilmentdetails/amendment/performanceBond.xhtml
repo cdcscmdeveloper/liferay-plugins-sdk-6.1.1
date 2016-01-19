@@ -7,8 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="bondId" toggleable="true"  toggleSpeed="500" 
-		rendered="#{ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq and 
-		!ctBackingBean.managedBean.directPurchase}" >
+		rendered="#{ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq 
+			and !ctBackingBean.managedBean.directPurchase
+			and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}" >
         <f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>

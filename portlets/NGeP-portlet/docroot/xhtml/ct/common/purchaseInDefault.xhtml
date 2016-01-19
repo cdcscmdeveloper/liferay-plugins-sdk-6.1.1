@@ -15,28 +15,31 @@
 	                     rowKey="#{pidObj}" selection="#{ctBackingBean.managedBean.selectedPidReason}">
 				       <ac:paginator for="purchaseInDefaultTable" />
 				       <p:column selectionMode="multiple"
-				             style="width:3%" rendered="#{!ctBackingBean.managedBean.viewContract}">
+				             style="width:3%" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.disableAmendDetails}">
 				        </p:column>
 				        <p:column style="width:50%;" 
 				            headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
 		                        <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" 
-		                          disabled="#{ctBackingBean.managedBean.viewContract}"  style="width:360px;float:left;text-align:left;">
+		                          disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"  style="width:360px;float:left;text-align:left;">
 			                          <f:selectItems value="#{ctBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
 			                          <p:ajax event="change" partialSubmit="true" update="purchaseInDefaultTable"></p:ajax>
 			                    </p:selectOneMenu>
 			          </p:column> 
 		              <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" id="updatePidPurchase"  styleClass="column-align-center" style="width:50%;">
 		                      <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"
-		                           style="width:350px;float:left;text-align:left;"  disabled="#{ctBackingBean.managedBean.viewContract}" 
+		                           style="width:350px;float:left;text-align:left;"  disabled="#{ctBackingBean.managedBean.viewContract
+		                           	or ctBackingBean.managedBean.disableAmendDetails}" 
 		                           rendered="#{ctBackingBean.PidPurchaseTypeOther(pidObj.pmReason.reasonId)}"></p:inputText>  
 		               </p:column>  
 				 </p:dataTable>
 	             <div class="ppRightBtn"> 
 			         <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
 				          partialSubmit="true" action="#{ctBackingBean.addPurchaseInDefault()}" update="purchaseInDefaultTable" 
-				         oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!ctBackingBean.managedBean.viewContract}"/>	
+				         oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!ctBackingBean.managedBean.viewContract
+				         	and !ctBackingBean.managedBean.disableAmendDetails}"/>	
 				     <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" 
-			             onsuccess="delPidPurchaseDlg.show()" rendered="#{!ctBackingBean.managedBean.viewContract}"/>			
+			             onsuccess="delPidPurchaseDlg.show()" rendered="#{!ctBackingBean.managedBean.viewContract
+			             	and !ctBackingBean.managedBean.disableAmendDetails}"/>			
 		        </div>
 		        <p:dialog id="delPidPurchaseDlg"   styleClass="screen-title" 
 		             widgetVar="delPidPurchaseDlg"  modal="true" width="330">  

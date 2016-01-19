@@ -1747,7 +1747,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    		 getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));    
 		    	}
 		    	// Recalculate the performance bond amount
-		    	if (!getManagedBean().isDirectPurchase()) {
+		    	if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
 		    		calculateNewBondAmount();
 		    	}		    	
 		    }

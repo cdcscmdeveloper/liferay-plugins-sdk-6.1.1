@@ -136,7 +136,8 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.prepareLOA 
 			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
-			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq 
+			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
+			 and !ctBackingBean.managedBean.ctContractAmount.bondExempted
 			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'PB')}" update=":form" />
 		 
