@@ -1559,8 +1559,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP);
 			context.put("contractValue", nf.format(lamt) + "");
 			context.put("contractValueText", NumberWordUtil.convert(lamt.toString()));
-			context.put("isBondReq", getManagedBean().getContractVer().getCtContractAmount().isBondReq());
-			if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+			if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+					&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
+				context.put("isBondReq", true);
+			} else {
+				context.put("isBondReq", false);
+			}
+			if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+					&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
 				if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
 					if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
 						context.put("performanceBondValue", nf.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt()) + "");
@@ -2116,7 +2122,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    String supplierEmel = "N/A";
 		    
 		    
-		    if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+		    if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+		    		&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
 				if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
 					if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
 						bondAmount = af.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt());

@@ -169,7 +169,18 @@
 			  	           <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.pid']}" />
 			  	      </h:panelGrid>
 		 </h:panelGrid>	
-		 
+		   
+		   <h:panelGrid columns="3" 
+		     rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
+		     	and agreementBackingBean.managedBean.contractVer.ctContractAmount.bondReq}">
+			 <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}"
+				 disabled="true" style="text-align:top;" />
+			  <p:spacer width="2" />	
+			  <h:panelGrid columns="2">
+				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
+				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.exemption']}" />
+			  </h:panelGrid>
+		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
@@ -206,17 +217,7 @@
 		       		<h:outputText value="#{lbl['lbl.ct.follow.ctvalue']}" />
 		       		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fctvalue']}" />
 			   </h:panelGrid>
-		     </h:panelGrid>  
-		   <h:panelGrid columns="3" 
-		     rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
-			 <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.bondReq ? false : true}"
-				 disabled="true" style="text-align:top;" />
-			  <p:spacer width="2" />	
-			  <h:panelGrid columns="2">
-				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
-				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.exemption']}" />
-			  </h:panelGrid>
-		   </h:panelGrid>	
+		     </h:panelGrid>	
 	    </h:panelGrid>
 		</h:panelGrid>
 		<p:outputPanel id="justificationPanel">

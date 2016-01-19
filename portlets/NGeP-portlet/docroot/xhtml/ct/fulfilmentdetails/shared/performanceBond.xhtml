@@ -11,8 +11,9 @@
 }
 </style>
 	<p:panel id="bondId" toggleable="true" toggleSpeed="500"
-		rendered="#{ctBackingBean.managedBean.ctContractAmount.bondReq and 
-		!ctBackingBean.managedBean.directPurchase}">
+		rendered="#{ctBackingBean.managedBean.ctContractAmount.bondReq
+			and !ctBackingBean.managedBean.directPurchase
+			and !ctBackingBean.managedBean.ctContractAmount.bondExempted}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
@@ -121,7 +122,8 @@
 		<div class="ppRightBtn">
 			
 				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this,tableBond" 
-				  rendered="#{!ctBackingBean.managedBean.viewContract}" 
+				  rendered="#{!ctBackingBean.managedBean.viewContract
+				  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeAmendmentWithoutSupplement}" 
 				     action="#{ctBackingBean.addBondDetails}" update="@all">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
@@ -131,7 +133,8 @@
 		  
 			     <p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" 
 			          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
-				      rendered="#{!ctBackingBean.managedBean.viewContract}" >
+				      rendered="#{!ctBackingBean.managedBean.viewContract
+				      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeAmendmentWithoutSupplement}" >
 					<p:tooltip for="delPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
 					</p:tooltip>
