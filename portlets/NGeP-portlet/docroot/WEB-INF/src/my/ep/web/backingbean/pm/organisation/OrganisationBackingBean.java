@@ -338,23 +338,23 @@ public class OrganisationBackingBean extends
 										SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
 							
 					}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {						
-						// Naik Taraf / Group Org.
-						if(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(orgProfile.getGroupOrgType())){
-							orgProfileSet = new HashSet<Long>(); 							
-							//add current org profile
-							orgProfileSet.add(orgProfile.getOrgProfileId());
-							//loop and add authorized profile (child list)
-							for(PmProfileGroup profileGroup : orgProfile.getMainProfileGroups()){
-								orgProfileSet.add(profileGroup.getAuthorizedOrgProfile().getOrgProfileId());
-							}	
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("orgProfileId",
-												SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
-						}else{
+//						// Naik Taraf / Group Org.
+//						if(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(orgProfile.getGroupOrgType())){
+//							orgProfileSet = new HashSet<Long>(); 							
+//							//add current org profile
+//							orgProfileSet.add(orgProfile.getOrgProfileId());
+//							//loop and add authorized profile (child list)
+//							for(PmProfileGroup profileGroup : orgProfile.getMainProfileGroups()){
+//								orgProfileSet.add(profileGroup.getAuthorizedOrgProfile().getOrgProfileId());
+//							}	
+//							searchBean.getDataFilterBeans().add(
+//									new SearchFilterBean("orgProfileId",
+//												SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
+//						}else{
 							searchBean.getDataFilterBeans().add(
 											new SearchFilterBean("orgProfileId",
 													SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
-						}
+//						}
 					}
 			   }
 			}	
