@@ -126,7 +126,7 @@
 					<p:column style="width:50px;text-align:center;">
 						<f:facet name="header">#{lbl['lbl.td.action']}</f:facet>
 						<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-							partialSubmit="true" process="@this"
+							partialSubmit="true" process="@this" disabled="#{templateDocBackingBean.managedBean.readOnlyFlag}"
 							title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 						<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom">
 				            <p:menuitem value="#{lbl['lbl.tpl.doc.import.section']}" actionListener="#{templateDocBackingBean.initializeImport}" update=":form:popupImportSec" oncomplete="popupImportSec.show();return false;">
