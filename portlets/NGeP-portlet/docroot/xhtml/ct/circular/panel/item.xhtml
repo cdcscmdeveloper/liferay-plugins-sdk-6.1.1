@@ -59,7 +59,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </ac:lov>
 			       </div>
 			   </p:column>
-		 	
+			     <p:column  style="width:11%;white-space:pre-line" styleClass="column-align-center" >
+                   <f:facet name="header">
+			        <h:outputText value="#{lbl['lbl.ct.item.type']}" styleClass="required"/>
+			     </f:facet>
+                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:100%;"
+			      		disabled="#{panelBackingBean.managedBean.viewContract}">
+			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}"/>
+			    </p:selectOneMenu>
+              </p:column>
               <p:column style="width:16%;" styleClass="column-align-center">
                   <f:facet name="header">
 			        <h:outputText value="#{lbl['lbl.ct.item.name']}" styleClass="required"/>
@@ -71,15 +79,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
                   		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"  />
 					</p:commandLink>
-              </p:column>
-              <p:column  style="width:11%;white-space:pre-line" styleClass="column-align-center" >
-                   <f:facet name="header">
-			        <h:outputText value="#{lbl['lbl.ct.item.type']}" styleClass="required"/>
-			     </f:facet>
-                    <p:selectOneMenu value="#{panelItemsVar.itemType.parameterId}" style="width:100%;"
-			      		disabled="#{panelBackingBean.managedBean.viewContract}">
-			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}"/>
-			    </p:selectOneMenu>
               </p:column>
 			  <p:column styleClass="column-align-center" style="width:12%;">
 				  	<f:facet name="header" >
