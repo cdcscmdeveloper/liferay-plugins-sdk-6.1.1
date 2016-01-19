@@ -170,10 +170,19 @@ public class ScTrackingDiaryBackingBean extends
 		}
 	}
 
-	public String goToTrackingDiarySearch(Object[] scObj) {
+	public void goToTrackingDiarySearch(Object[] scObj) {
+		
+		log.info("SC goToTrackingDiarySearch");
 		getManagedBean().setScObj(scObj);
 		searchTrackingDiaryDataModel.reloadData();
-		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
+		TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
+		diarySearchBackingBean.getManagedBean().setDocNo(scObj[1] != null?scObj[1].toString():null);
+		diarySearchBackingBean.getManagedBean().setDocType(scObj[3]!= null?scObj[3].toString():null);
+		diarySearchBackingBean.getManagedBean().setStatusId(scObj[4]!= null?
+				new Long(scObj[4].toString()):null);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "scTrackingDiaryDetailSearch");
 	}
 
 	public void reset(){
@@ -186,9 +195,10 @@ public class ScTrackingDiaryBackingBean extends
 		this.getManagedBean().resetDocumentDataModel();
 	}
 
-	public String backToPrev() {
-
-		return NAV_TO_SC_SEARCH + "?faces-redirect=true";
+	public void backToPrev() {
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getFromPageUrl());
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
