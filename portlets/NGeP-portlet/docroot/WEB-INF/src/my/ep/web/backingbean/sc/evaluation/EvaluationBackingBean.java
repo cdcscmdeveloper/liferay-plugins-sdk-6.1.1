@@ -9532,9 +9532,7 @@ public class EvaluationBackingBean extends
 		}
 
 		// Procurement Category
-		PmParameter procurementCategory = getPmParameter(
-				ParameterTypeConst.PROCUREMENT_CATEGORY,
-				ParameterConst.PROCUREMENT_CATEGORY_OTHERS);
+		PmParameter procurementCategory = scQt.getPmProcurementCategory();
 		tplDocMaster.setProcurementCategory(procurementCategory);
 
 		// Process Type
