@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel
 		header="#{lbl['lbl.sc.eva.financial.user.scoring.schema']}"
-		rendered="#{evaluationBackingBean.managedBean.scQt.financialUserScoringSchemaAttachment ne null and financialCheckListScoreType eq '2'}"
+		rendered="#{evaluationBackingBean.managedBean.scQt.financialUserScoringSchemaAttachment ne null and (financialCheckListScoreType eq '2' or financialCheckListcompanyScore eq '2')}"
 		toggleable="true"
 		id="financialevaluationAllChecklistUserScoringSchemasIds">
 

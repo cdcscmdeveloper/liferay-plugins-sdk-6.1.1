@@ -18,9 +18,43 @@
 							<span class="mandatory">* </span>
 						</ui:fragment>#{lbl['lbl.sc.current.asset']}</LABEL></td>
 				<td colspan="3"><p:inputText id="currentAsset"
-						style="text-align:right" required="true"
+						style="text-align:right;margin-bottom: 5px;" required="true"
 						label="#{lbl['lbl.sc.current.asset']}" disabled="#{statusHide}"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"
+						size="30">
+						<p:ajax event="blur" process="@this"
+							listener="#{supplierProposalDetailBackingBean.totalAcidRatio}"
+							update="@this, @([id$=totalcurrentratio])" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.current.liability']}" /></td>
+				<td colspan="3"><p:inputText id="currentLiabilities"
+						style="text-align:right;margin-bottom: 5px;" required="true" disabled="#{statusHide}"
+						label="#{lbl['lbl.sc.current.liability']}"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"
+						size="30">
+						<f:validateLongRange minimum="1" maximum="99999999999" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax event="blur" process="@this"
+							listener="#{supplierProposalDetailBackingBean.totalAcidRatio}"
+							update="@this, @([id$=totalacidratio],[id$=totalcurrentratio])" />
+					</p:inputText></td>
+			</tr>
+			
+				<tr>
+				<td><LABEL><ui:fragment rendered="#{!statusHide}">
+							<span class="mandatory">* </span>
+						</ui:fragment>#{lbl['lbl.sc.total.cash.hand']}</LABEL></td>
+				<td colspan="3"><p:inputText id="totalCashInHand"
+						style="text-align:right;margin-bottom: 5px;" required="true"
+						label="#{lbl['lbl.sc.total.cash.hand']}" disabled="#{statusHide}"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalCashInHand}"
 						size="30">
 						<p:ajax event="blur" process="@this"
 							listener="#{supplierProposalDetailBackingBean.totalAcidRatio}"
@@ -32,11 +66,11 @@
 			<tr>
 				<td><ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
-					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.current.liability']}" /></td>
-				<td colspan="3"><p:inputText id="currentLiabilities"
-						style="text-align:right" required="true" disabled="#{statusHide}"
-						label="#{lbl['lbl.sc.current.liability']}"
-						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"
+					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.total.account.receivable']}" /></td>
+				<td colspan="3"><p:inputText id="totalAccountReceivable"
+						style="text-align:right;margin-bottom: 5px;" required="true" disabled="#{statusHide}"
+						label="#{lbl['lbl.sc.total.account.receivable']}"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalAccountReceivable}"
 						size="30">
 						<f:validateLongRange minimum="1" maximum="99999999999" />
 						<f:convertNumber
@@ -46,9 +80,10 @@
 							update="@this, @([id$=totalacidratio])" />
 					</p:inputText></td>
 			</tr>
+			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.acid.ratio']}" /></td>
-				<td style="width: 350px;"><p:inputText style="text-align:right"
+				<td style="width: 350px;"><p:inputText style="text-align:right;margin-bottom: 5px;"
 						id="totalacidratio"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.acidRatio}"
 						size="30" readonly="true" disabled="true">
@@ -85,6 +120,46 @@
 						for="financialAssetsAndLiabilityUserScoreId" display="icon">
 					</p:message></td>
 			</tr>
+			
+					<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.current.ration']}" /></td>
+						<td style="width: 350px;"><p:inputText style="text-align:right"
+						id="totalcurrentratio"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentRatio}"
+						size="30" readonly="true" disabled="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+					<td style="width: 120px;"><p:outputLabel
+							value="#{lbl['lbl.tpl.spec.content.system.score']}"
+							rendered="#{companyScoreType eq '1'}" /> <p:outputLabel
+							value="#{lbl['lbl.tpl.spec.content.user.score']}"
+							rendered="#{companyScoreType eq '2'}" /> <ui:fragment
+							rendered="#{companyScoreType eq '2' and !pageDisable}">
+							<p:outputLabel value="* " styleClass="mandatory" />
+
+
+						</ui:fragment></td>
+					<td><p:inputText readonly="true" disabled="true"
+							value="#{noOfYears.autoScore}" style="text-align:right"
+							rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
+							id="financialAssetsLiabilityCurrentRatio" maxlength="18"
+							style="text-align:right" required="true"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}"
+							value="#{noOfYears.userScore}" disabled="#{pageDisable}"
+							rendered="#{companyScoreType eq '2'}">
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="14" integerOnly="true" />
+							<f:attribute name="min" value="0" />
+							<f:attribute name="max" value="#{yearsUserScore}" />
+						</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+							value="/#{yearsUserScore} " rendered="#{companyScoreType eq '2'}" />
+						<p:message id="financialAssetsLiabilityCurrentRatioMessage"
+							for="financialAssetsLiabilityCurrentRatio" display="icon"></p:message>
+					</td>
+				</tr>
 		</table>
 	</p:panel>
 
