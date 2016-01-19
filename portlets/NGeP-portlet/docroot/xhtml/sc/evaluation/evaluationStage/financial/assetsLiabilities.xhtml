@@ -21,7 +21,41 @@
 		<ui:param name="scoringPnlName"
 			value="#{lbl['lbl.sc.spec.asset.score.net.amount']}"></ui:param>
 		<ui:include src="/xhtml/sc/evaluation/evaluationStage/evaluationScoring.xhtml"></ui:include>
+		
+		<h:panelGroup id="currentRationYearsYears">
+			<ui:param name="scoringPnlId" value="currentRationFinancialId" />
+			<ui:param name="scoringList"
+				value="#{evaluationBackingBean.managedBean.technicalGovNoOfYears}"></ui:param>
+			<ui:param name="scoringPnlName"
+				value="#{lbl['lbl.sc.spec.asset.score.current.ratio']}"></ui:param>
+			<p:panel header="#{scoringPnlName}" toggleable="true"
+				id="financialCurrrentRationCheckListIds"
+				rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
+				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
+					value="#{scoringList}" var="checkListScoring"
+					rowKey="#{checkListScoring}">
+					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
+					<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
+					<p:column headerText="#{lbl['lbl.sc.from']}"
+						style="width:40%;text-align:right;"
+						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
+						<h:outputText value="#{checkListScoring.rangeFrom}"></h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.to']}"
+						style="width:30%;text-align:right;"
+						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
+						<h:outputText value="#{checkListScoring.rangeTo}"></h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.score']}"
+						style="width:30%;text-align:right;">
+						<h:outputText value="#{checkListScoring.score}"></h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
 		<ui:param name="financialCheckListScoreType" value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+		<ui:param name="financialCheckListcompanyScore" value="#{evaluationBackingBean.managedBean.companyScoreType}"></ui:param>
 		<ui:include
 			src="financialUserScoringSchema.xhtml" />
 	</h:panelGroup>

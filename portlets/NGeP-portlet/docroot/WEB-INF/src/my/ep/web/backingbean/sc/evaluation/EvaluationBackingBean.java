@@ -4108,6 +4108,8 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setContractScores(null);
 			this.getManagedBean().setNoOfContractsProposalScore(null);
 			this.getManagedBean().setNoOfyearsProposalScore(null);
+			this.getManagedBean().setCompanyScoreType(null);
+			this.getManagedBean().setChecklistScoreType(null);
 			this.getManagedBean().setUserScoreSchemaType("");
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4248,6 +4250,8 @@ public class EvaluationBackingBean extends
 						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setCompanyScoreType(null);
 				this.getManagedBean().setChecklistScoreType(null);
+				this.getManagedBean().setTechnicalGovNoOfYears(
+						new ArrayList<ScQtCheckListScore>());
 				// this.getManagedBean().setNoOfContractsProposalScore(null);
 
 				if (QTConstants.FINANCIAL_GOV_CODE
@@ -4687,6 +4691,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setTechGovProposalScore(
 							new ArrayList<ScQtProposalScore>());
 					List<ScQtCheckListScore> assetLiability = new ArrayList<ScQtCheckListScore>();
+					List<ScQtCheckListScore> noOfYears = new ArrayList<ScQtCheckListScore>();
 					if (resDTO.getScoreResultBean().getTotalRecord() > 0) {
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getScoreResultBean().getResultList()) {
@@ -4717,6 +4722,35 @@ public class EvaluationBackingBean extends
 								}
 
 							}
+							
+							 else if (checklistScore.getCriteriaType() == 61) {
+
+									this.getManagedBean().setCompanyScoreType(
+											String.valueOf(checklistScore
+													.getScoreType().intValue()));
+									if (checklistScore.getScoreType().intValue() == QTConstants.CHECKLIST_USER_SCORE) {
+										if (null != checklistScore.getScore()) {
+											this.getManagedBean()
+													.setContractScores(
+															checklistScore
+																	.getScore()
+																	.toString());
+										}
+									}
+									noOfYears.add(checklistScore);
+									this.getManagedBean().setTechnicalGovNoOfYears(
+											noOfYears);
+									if (null != this.getManagedBean()
+											.getTechnicalGovNoOfYears()
+											&& this.getManagedBean()
+													.getTechnicalGovNoOfYears()
+													.size() > 1) {
+										returnCheckListScores(this.getManagedBean()
+												.getTechnicalGovNoOfYears());
+
+									}
+
+								}
 
 						}
 					}
@@ -4734,6 +4768,16 @@ public class EvaluationBackingBean extends
 												.getManagedBean()
 												.getNoOfContractsProposalScore());
 							}
+							if (proposalScore.getCriteriaType() == 61
+									) {
+								this.getManagedBean()
+										.setNoOfyearsProposalScore(
+												proposalScore);
+								this.getManagedBean()
+										.getTechGovProposalScore()
+										.add(this.getManagedBean()
+												.getNoOfyearsProposalScore());
+							}
 
 						}
 
@@ -4749,6 +4793,18 @@ public class EvaluationBackingBean extends
 								.getTechGovProposalScore()
 								.add(this.getManagedBean()
 										.getNoOfContractsProposalScore());
+						
+						ScQtProposalScore proposalcurrentRatioScore = new ScQtProposalScore();
+						proposalcurrentRatioScore.setProposalChecklist(this
+								.getManagedBean().getQtProposalChecklist());
+						proposalcurrentRatioScore.setCriteriaType(61);
+						setUserDetails(proposalcurrentRatioScore);
+						this.getManagedBean().setNoOfyearsProposalScore(
+								proposalcurrentRatioScore);
+						this.getManagedBean()
+								.getTechGovProposalScore()
+								.add(this.getManagedBean()
+										.getNoOfyearsProposalScore());
 
 					}
 					this.getManagedBean()
