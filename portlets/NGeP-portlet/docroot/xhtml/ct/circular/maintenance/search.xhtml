@@ -20,7 +20,11 @@
 					<f:selectItems value="#{circularBackingBean.getCircularDocTypeValues()}" />
 				</p:selectOneMenu>			
 				<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
-				<p:inputText value="#{circularBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="500" />				
+				 <h:panelGrid columns="3">
+				           <p:inputText value="#{circularBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="500" />	
+				           <p:spacer width="2"/>
+				           <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.maint.name']}" />
+                 </h:panelGrid>		
 				<h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
 				<p:inputText value="#{circularBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="17" />
 				<h:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
