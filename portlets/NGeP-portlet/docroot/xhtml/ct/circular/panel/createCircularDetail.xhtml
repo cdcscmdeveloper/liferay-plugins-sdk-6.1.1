@@ -58,7 +58,7 @@
 			               <p:message for="popupButtonCal" display="icon" />
 			            </h:panelGrid>
 			            
-			            <f:verbatim/>
+			        <p:outputLabel value="#{lbl['lbl.ct.panel.pm']}"/>
 			        <h:panelGrid columns="3">
 			            <p:selectBooleanCheckbox  disabled="#{panelBackingBean.managedBean.viewContract}"
 			                  value="#{panelBackingBean.managedBean.circularVer.directNego}" style="text-align:top;"  > 
@@ -109,7 +109,7 @@
 			  	      </h:panelGrid>    
 			        </h:panelGrid>
 			         <h:panelGrid columns="2" columnClasses="columnWidth200">    
-				          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
+				          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 		                   <h:panelGroup id="uploadCircularPg">
 				   	            <p:commandButton rendered="#{panelBackingBean.managedBean.circularVer.circularFileName == null}"
 						            update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
