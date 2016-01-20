@@ -444,7 +444,7 @@
 						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}"
 						id="persJust" label="#{lbl['lbl.sm.person.justification']}"
 						value="#{backingBean.managedBean.selectedShareHolder.addnlPersonnelJustification}"
-						disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser or backingBean.managedBean.selectedShareHolder.recordStatus}"
+						disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
 			</tr>
 			<p:outputPanel
