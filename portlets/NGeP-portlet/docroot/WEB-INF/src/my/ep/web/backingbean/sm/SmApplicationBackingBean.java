@@ -2296,6 +2296,7 @@ public class SmApplicationBackingBean extends
 			assignSelShareHolderAddress(getManagedBean()
 					.getSelectedShareHolder());
 		}
+		buildRoleList(getManagedBean().getSelectedShareHolder());
 	}
 
 	/**
