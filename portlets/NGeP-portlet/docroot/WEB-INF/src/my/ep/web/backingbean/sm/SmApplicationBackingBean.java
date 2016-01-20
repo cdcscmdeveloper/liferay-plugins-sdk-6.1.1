@@ -8363,7 +8363,7 @@ public class SmApplicationBackingBean extends
 						.getSmAppl().getApplId(), false);
 		getManagedBean().setValidSmUserLimit(
 				countVO.isReachAuthorizedPersonnelLimit());
-		SmApplicationUtil.setPendingActivationFlUserToSuppUser(
+		SmApplicationUtil.setPendingActivationPersonnelRoleBasedOnAuthLimit(
 				getManagedBean().getSmAppl(), getManagedBean()
 						.isValidSmUserLimit());
 
