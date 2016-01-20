@@ -390,9 +390,9 @@
 							value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-							<p:ajax event="change" process="@this"
+							<p:ajax event="change" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:shareHolderAddrDialog,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
-								listener="#{backingBean.assignShareHolderPrivilege}" />
+								listener="#{backingBean.assignShareHolderPrivilege}" partialSubmit="true"/>
 						</p:selectOneRadio></td>
 					<td><p:graphicImage id="tooltip3"
 							value="/css/images/design/tooltips.png"
@@ -424,7 +424,7 @@
 						<f:selectItems
 							value="#{backingBean.managedBean.ePRoleList}" />
 						<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}" 
-							process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							process="@this" 
 							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
