@@ -2279,7 +2279,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
 		log.info("**** Enter Share Holder privilege ******");
-		if (getManagedBean().isValidSmUserLimit()
+		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg()==DbValueConst.RECORD_STATUS_ACTIVE
 				&& StringUtils.isNotBlank(getManagedBean()
 						.getSelectedShareHolder().getEpRole())
 				&& getManagedBean().getSelectedShareHolder().getEpRole()
