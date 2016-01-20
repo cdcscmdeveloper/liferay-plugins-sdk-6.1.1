@@ -424,8 +424,7 @@
 						<f:selectItems
 							value="#{backingBean.managedBean.ePRoleList}" />
 						<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}" 
-							process="@this" 
-							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
+							process="@this" listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
