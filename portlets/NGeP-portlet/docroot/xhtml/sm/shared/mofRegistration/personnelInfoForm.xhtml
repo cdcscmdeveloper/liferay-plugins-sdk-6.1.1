@@ -359,7 +359,8 @@
 			
 			<h:outputText styleClass="instruction" value="#{lbl[lblShareholderInstruction]}" escape="false" />
 			<h:outputText styleClass="instruction" value="#{lbl[lblPersonnelInstruction]}" escape="false" />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" escape="false"/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" 
+				escape="false" rendered="#{backingBean.managedBean.validSmUserLimit}"/>
 			
 			<table style="width: 100%">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
