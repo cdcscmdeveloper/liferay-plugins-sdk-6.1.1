@@ -2286,6 +2286,7 @@ public class SmApplicationBackingBean extends
 						.equals(RoleCode.FL_USER.value())) {
 			getManagedBean().getSelectedShareHolder().setEpRole(
 					RoleCode.MOF_SUPPLIER_USER.value());
+			getManagedBean().setValidSmUserLimit(false);
 		}
 		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
