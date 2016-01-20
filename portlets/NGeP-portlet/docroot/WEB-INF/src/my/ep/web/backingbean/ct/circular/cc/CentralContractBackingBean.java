@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -26,7 +27,7 @@ import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
@@ -44,10 +45,13 @@ import org.primefaces.model.UploadedFile;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
@@ -68,6 +72,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -93,17 +99,23 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -120,12 +132,15 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  * @since 9/10/2013
  */
 @ManagedBean (name = "centralContractBackingBean") 
-@RequestScoped
+@ViewScoped
 public class CentralContractBackingBean extends BaseBackingBean<CentralContractManagedBean>{
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	ContractBackingBean ctBB = null;
+	private PmOrgProfile[] selectedPmOrgProfile;
+	private CtExemptedOrg[] selectedExemptedOrgs;
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+	private IPagingDataModel<PmOrgProfile> exemptedOrgDataModel = new ExemptedOrgDataModel();	
 
 	/**
 		 * This constructor method used to initialize the variable on start up
@@ -588,10 +603,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTAwardSO.class);
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			getManagedBean().setAutoUpdate(true);
-			
-				if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
-					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
-				}
 			
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
@@ -1209,6 +1220,179 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	/**
+	 * The method used for generating a list of available ministry
+	 * for searching exempted as selection.
+	 * 
+	 * @return the selection list of ministry
+	 */
+	public SelectItem[] getMinistryDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		 //   if(getManagedBean().isExmptedMinistryDD()){
+		     IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+		
+		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		    reqDTO.setOrgType(OrganizationType.MINISTRY.value());	
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
+		   
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		    
+		  	for (PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
+			return items;
+		   // }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return null;
+	}
+	
+	/**
+	 * The method used for generating a list of 
+	 * available jabatan for searching exempted organization 
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getJabatanDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    if(getManagedBean().getMinistryProfileId() != null) {
+		         IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				
+			    List<Object[]> list = resDTO.getOrgProfileDDList();
+			    items = new SelectItem[list.size() + 1];
+			    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				
+			     for(Object[] objects : list){
+			         items[i++] = new SelectItem(Long.parseLong(objects[0].toString()), objects[1].toString());
+				}
+			  return items;
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return null;
+	}
+	
+	/**
+	 * The method used for generating a list of available jabatan
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 *//*
+	public SelectItem[] getPtjDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    if(getManagedBean().getJabatanProfileId() != null && getManagedBean().isExmptedMinistryDD()) {
+				    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setParentOrgProfileId(getManagedBean().getJabatanProfileId());
+					reqDTO.setOrgCode(OrganizationType.DIVISION.value());
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+					
+				    List<Object[]> list = resDTO.getOrgProfileDDList();
+				    items = new SelectItem[list.size() + 1];
+				    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					
+				     for(Object[] objects : list){
+				    	items[i++] = new SelectItem(Long.parseLong(objects[0].toString()), objects[1].toString());
+					}return items;
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return null;
+	}*/
+	
+	/**
+	 * Call by ajax listener to set value of
+	 * @param officerProfileId  and jabatanProfileId
+	 * to set value null
+	 */
+	public void settingMinistryListener(){
+		 getManagedBean().setJabatanProfileId(null);
+	}
+	
+	/**
+	 * The method used to reset the search criteria for agency.
+	 */
+	public void resetMinistryDetails() {
+		getManagedBean().setMinistryProfileId(null);
+		getManagedBean().setJabatanProfileId(null);
+		//getManagedBean().setExmptedMinistryDD(true);
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
+		exemptedOrgDataModel.resetData();
+	}
+	
+	public void flushExempMisntry(){
+		getManagedBean().setAutoUpdate(false);
+		getManagedBean().setMinistryProfileId(null);
+		getManagedBean().setJabatanProfileId(null);
+		getManagedBean().setOrgTypeCode(null);
+		exemptedOrgDataModel.resetData();
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
+	}
+	
+	/**
+	 * This method used to retrieve 
+	 * deduction type from database 
+	 * @return menu item, List of deduction types
+	 */
+	public SelectItem[] retrieveParameterDescListByType() {
+		
+		    ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>(); ;
+			List<String> parameterTypeList = new ArrayList<String> ();
+			parameterTypeList.add(OrganizationType.MINISTRY.value());
+			parameterTypeList.add(OrganizationType.DEPARTMENT.value());
+			parameterTypeList.add(OrganizationType.DIVISION.value());
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_IN.value(),
+							parameterTypeList));
+	    return getDropdownCodeValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+	}
+	
+	/**
+	 * The method used to delete the selected signer(s) for agency party.
+	 */
+	public void deleteExemptedOrgMinistry() {
+		try {
+			for (int i = 0; i < selectedExemptedOrgs.length; i++) {
+				  getManagedBean().getCircularVer().getCtExemptedOrgs().remove(selectedExemptedOrgs[i]);
+			} 
+			selectedExemptedOrgs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		
+	}
+	
+	/**
 	 * The method used to set auto update true
 	 * to show the message summary
 	 * */
@@ -1219,5 +1403,203 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public String gotoBackPage() {
 		return getManagedBean().getGotoPreviewPage();
+	}
+	
+	public PmOrgProfile[] getSelectedPmOrgProfile() {
+		return selectedPmOrgProfile;
+	}
+
+	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
+		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+
+	/**
+	 * The method used to reset the search criteria for agency.
+	 */
+	public void resetPtjDetails() {
+		getManagedBean().setMinistryProfileId(null);
+		getManagedBean().setJabatanProfileId(null);
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
+		exemptedOrgDataModel.resetData();
+	}
+	
+/*	*//**
+	 * The method used for
+	 * searching organization details
+	 *//*
+	public void searchMinistryDetails(){
+			try {
+				if(getManagedBean().getOrgTypeCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)){
+				     exemptedOrgDataModel.reloadData();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
+			}
+	}*/
+	/**
+	 * The method used for
+	 * searching organization details
+	 */
+	public void searchPtjDetails() {
+		try {
+			exemptedOrgDataModel.reloadData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
+		}
+	}
+	public IPagingDataModel<PmOrgProfile> getExemptedOrgDataModel() {
+		return exemptedOrgDataModel;
+	}
+
+	public void setExemptedOrgDataModel(
+			IPagingDataModel<PmOrgProfile> exemptedOrgDataModel) {
+		this.exemptedOrgDataModel = exemptedOrgDataModel;
+	}
+
+	/**
+	 * Pagination for available 
+	 * exempted ministry list
+	 */
+	private class ExemptedOrgDataModel extends PagingDataModel<PmOrgProfile> {
+		private static final long serialVersionUID = 1L;
+
+		public ExemptedOrgDataModel() {
+			super("tablePtjCode", false);
+		}
+		
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+	 * .biz.bean.search.ISearchBean)
+	 */
+	@Override
+	public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {			
+		
+		try {
+		
+			   OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			   IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			
+			   // Filter By - parameterType
+			   searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
+					
+			   // Filter Kumpulan Ptj By - Ministry Profile Id
+			   if(getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())  
+				    && getManagedBean().getMinistryProfileId() != null){
+				       reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+				       reqDTO.setOrgCode(OrganizationType.PENGAWAI_PENGAWAL.value());
+				       OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				       List<Object[]> orgName =  resDTO.getOrgProfileDDList();
+				       List<Long> longValue = new ArrayList<Long>();
+				       for(Object[] org : orgName){
+					      BigDecimal decimal =(BigDecimal)org[0];
+					      longValue.add(decimal.longValue());
+				       }
+				       searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(), OrganizationType.PENGAWAI_PENGAWAL.value()), SearchOperator.OPERATOR_IN.value(),longValue));
+				
+			   } if(getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.DIVISION.value())) {
+		          
+						if (getManagedBean().getMinistryProfileId() != null) {
+						          searchBean.getDataFilterBeans().add(
+								  new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+										SearchOperator.OPERATOR_EQUALS.value(),
+										getManagedBean().getMinistryProfileId()));
+						
+						}  if (getManagedBean().getJabatanProfileId() != null) {
+						     searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+										SearchOperator.OPERATOR_EQUALS.value(),
+										getManagedBean().getJabatanProfileId()));
+					     }
+			  }
+			
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getOrgTypeCode()));
+				
+			searchBean.getDataFilterBeans()
+			  .add(new SearchFilterBean("recordStatus",SearchOperator.OPERATOR_LESS_EQUAL.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+
+			Date currentDate = DateUtils.getCurrentDateWithoutTime();
+			// Filter By - Org effDate
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+
+			// Filter By - Org expDate
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(new SearchFilterBean("pmOrgValidity.expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+							currentDate), new SearchFilterBean("pmOrgValidity.expDate",	SearchOperator.OPERATOR_IS_NULL.value(), null,
+							SearchCondition.CONDITION_OR.value())));
+			
+			if (getManagedBean().getPtjCodeName() != null
+					&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
+				if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
+					SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+					filterBean.setCaseInsensitive(true);
+				    searchBean.getDataFilterBeans().add(filterBean);
+				
+				} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
+					SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+					filterBean.setCaseInsensitive(true);
+				    searchBean.getDataFilterBeans().add(filterBean);
+				}
+			}
+			
+			reqDTO.setOrgProfileSearchBean(searchBean);
+			OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
+			if (resDTO.isSuccessful()) {
+				 return resDTO.getOrgProfileResultBean();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	 }
+  }
+	
+	/**
+	 * The method used to add a new exempted organization
+	 * This method will 
+	 * generate a new record in central circular
+	 */
+	public void addExemtedOrgDetails() {
+		
+		if(selectedPmOrgProfile.length == 0){
+			throw new EpException(MessageConst.ERROR_755019);
+		}
+		getManagedBean().setAutoUpdate(true);
+		List<CtExemptedOrg>  orgList = new ArrayList<CtExemptedOrg>();
+		for (int i = 0; i < selectedPmOrgProfile.length; i++) {
+			
+			//Remove if already exist, avoid duplicate
+		  	for (CtExemptedOrg exmptOrg : this.getManagedBean().getCircularVer().getCtExemptedOrgs()) {
+		  		if (exmptOrg.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
+		  			throw new EpException(MessageConst.INFO_758000, new String[]{exmptOrg.getOrgProfile().getOrgName()}); 
+		  		}
+		  	}
+		  	
+		  	CtExemptedOrg org = new CtExemptedOrg();
+	    	org.setOrgProfile(selectedPmOrgProfile[i]);
+			org.setOrgTypeCode(selectedPmOrgProfile[i].getOrgTypeCode().getParameterCode());
+			getManagedBean().setExmptedMinistryDD(false);
+			orgList.add(org);
+		}
+		if (selectedPmOrgProfile.length>0) {
+			this.getManagedBean().getCircularVer().getCtExemptedOrgs().addAll(orgList);
+		}
+		selectedPmOrgProfile = null;
+		RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.hide()");
+	}
+
+	public CtExemptedOrg[] getSelectedExemptedOrgs() {
+		return selectedExemptedOrgs;
+	}
+
+	public void setSelectedExemptedOrgs(CtExemptedOrg[] selectedExemptedOrgs) {
+		this.selectedExemptedOrgs = selectedExemptedOrgs;
 	}
 }
