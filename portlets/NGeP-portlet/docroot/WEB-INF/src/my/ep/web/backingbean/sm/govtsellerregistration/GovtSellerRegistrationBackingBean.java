@@ -720,17 +720,33 @@ public class GovtSellerRegistrationBackingBean extends
 		getInstance().validateBankInfo(
 				this.getManagedBean().getSmAppl().getSmSupplierBanks());
 		getManagedBean().getSmAppl().getSmCompanyBasic().setWithFederal(true);
-		SmPersonnel personnel = new SmPersonnel();
-		personnel.setTitle(new PmSalutation());
-		personnel
-				.setPmCountry(SmCommonUtil
-						.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
-		personnel.setIdentificationTypeId(icNoType.getParameterId());
-		getManagedBean().setSmPersonnel(personnel);
-		getManagedBean().setSmPermenantAdd(
-				(SmAddress) SerializationUtils.clone(defaultAddr));
-		getManagedBean().setSmResAdd(
-				(SmAddress) SerializationUtils.clone(defaultAddr));
+		if (getManagedBean().getSmPersonnel() == null) {
+			getManagedBean().setSmPersonnel(new SmPersonnel());
+		}
+		if (getManagedBean().getSmPersonnel().getTitle() == null) {
+			getManagedBean().getSmPersonnel().setTitle(new PmSalutation());
+		}
+		if (getManagedBean().getSmPersonnel().getPmCountry() == null
+				|| getManagedBean().getSmPersonnel().getPmCountry()
+						.getCountryId() == null) {
+			getManagedBean()
+					.getSmPersonnel()
+					.setPmCountry(
+							SmCommonUtil
+									.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
+		}
+		if (getManagedBean().getSmPersonnel().getIdentificationTypeId() == null) {
+			getManagedBean().getSmPersonnel().setIdentificationTypeId(
+					icNoType.getParameterId());
+		}
+		if (getManagedBean().getSmPermenantAdd() == null) {
+			getManagedBean().setSmPermenantAdd(
+					(SmAddress) SerializationUtils.clone(defaultAddr));
+		}
+		if (getManagedBean().getSmResAdd() == null) {
+			getManagedBean().setSmResAdd(
+					(SmAddress) SerializationUtils.clone(defaultAddr));
+		}
 		initUserPermanentAddressSelectItems(getManagedBean()
 				.getSmPermenantAdd());
 		initUserResidentialAddressSelectItems(getManagedBean().getSmResAdd());
