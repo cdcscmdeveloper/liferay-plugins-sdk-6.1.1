@@ -4800,8 +4800,8 @@ public class SmApplicationBackingBean extends
 
 		// if already reach max authorized personnel
 		if (getManagedBean().isValidSmUserLimit()) {
-			//Show FL_USER if not authorized
-			if(personnel.getAuthorizedFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
+			// Show FL_USER if not authorized
+			if (personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 				showFlUserRole = true;
 			}
 			// if role is MOF_SUPPLIER_USER, show MOF_SUPPLIER_USER
