@@ -52,17 +52,11 @@
         .pmColumn2Class {
       	width: 23.0%;
          } 
-         </c:if>
-         <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmPhysicalContractNoView}">
-        .pmColumn2Class {
-      	margin-top: 36%;
-         } 
-         </c:if>
-       
+         </c:if>              
           <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemView}">         
              <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmFromDateView}">
             .pmColumn2Class {
-           	 margin-top: 36%;
+           	 margin-top: 6px;
          } 
          </c:if>
           </c:if>
@@ -70,19 +64,23 @@
           <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedContractedItemView}">         
              <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmFromDateView}">
             .pmColumn2Class {
-           	 margin-top: 44%;
+           	 margin-top: 4px; 
          } 
          </c:if>
           </c:if>
           
+          .pmColumn4Class {
+	        width: 1%;
+            }
+          
     </style>
     
-    
+   
 	<div>
 		<table style="width: 100%;">
 			<tr>
 				<td><h:panelGrid id="pmReportCriteria" columns="4" columnClasses="pmColumn1Class,pmColumn2Class,pmColumn3Class" 
-						style="width:100%;margin-top:-32px;">
+						style="width:100%;margin-top:7px;">
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmServiceTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.servicescreen']}" />
@@ -233,8 +231,7 @@
 						</c:if>
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmPhysicalContractNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.physicalContractNo']}"
-								 />
+							<p:outputLabel value="#{lbl['lbl.rpt.physicalContractNo']}" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.pmPhysicalContractNo}"
 								style="width:290px;">
@@ -244,8 +241,7 @@
 
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmLOANoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.loaNo']}"
-								 />
+							<p:outputLabel value="#{lbl['lbl.rpt.loaNo']}" />
 							<p:inputText maxlength="100" value="#{reportBackingBean.pmLOANo}"
 								style="width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
@@ -253,8 +249,7 @@
 						</c:if>
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmPhysicalLOANoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.physicalLOANo']}"
-								 />
+							<p:outputLabel value="#{lbl['lbl.rpt.physicalLOANo']}" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.pmPhysicalLOANo}"
 								style="width:290px;">
@@ -437,13 +432,12 @@
 	</div>
 
 	<div>
-		<TABLE style="width: 100%; margin-top:-44px">
+		<TABLE style="width: 100%;">
 			<TR>
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedCompanyNameView}">
-					<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.companyName']}"
-							 /></TD>
-					<TD style="width:1%;"><p:inputText maxlength="100"
+					<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.companyName']}" /></TD>
+					<TD><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmCompanyName}"
 							style="width:289px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
@@ -463,7 +457,7 @@
 				</c:if>
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedEpNoView}">
-					<TD calss="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.epNo']}"
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.epNo']}"
 							style="width:297px;" /></TD>
 					<TD><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmEpNo}"
@@ -477,7 +471,7 @@
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemCodeView}">
 					<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.itemCode']}"
 							 /></TD>
-					<TD><p:inputText maxlength="100"
+					<TD class="pmColumn4Class"><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmItemCode}"
 							style="width:290px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
@@ -485,7 +479,7 @@
 				</c:if>
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemNameView}">
-					<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.itemName']}"
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.itemName']}"
 							 /></TD>
 					<TD><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmItemName}"
@@ -500,12 +494,11 @@
 	<div>
 		<c:if
 			test="#{reportBackingBean.managedBean.rptGenBean.pmNonMandatoryDateView}">
-			<TABLE style="width:100%;">
+			<TABLE style="width:100%;" class="pmColumn2Class">
 				<TR>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.pmFromDateView}">
-						<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.effDateFrom']}"
-								/></TD>
+						<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.effDateFrom']}" /></TD>
 					</c:if>
 					<TD><p:calendar showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
@@ -513,7 +506,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
-					<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
 							/></TD>
 					<TD><p:calendar showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
@@ -534,7 +527,7 @@
 				<TR>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.pmFromDateView}">
-						<TD style="width:15%;"><p:outputLabel value="#{lbl['lbl.rpt.effDateFrom']}"
+						<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.effDateFrom']}"
 								/></TD>
 					</c:if>
 					<TD><p:calendar showOn="button" navigator="true"
@@ -543,7 +536,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
-					<TD style="width:0.1%;"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
 							/></TD>
 					<TD><p:calendar showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
