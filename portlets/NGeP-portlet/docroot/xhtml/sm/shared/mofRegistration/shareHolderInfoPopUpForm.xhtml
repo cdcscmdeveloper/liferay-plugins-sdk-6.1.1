@@ -423,7 +423,8 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
 							value="#{backingBean.managedBean.ePRoleList}" />
-						<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}" process="@this"
+						<p:ajax event="change" update="shrPrivPanel,:#{p:component('emailOutPanelId')},:#{p:component('emailInputPanelId')}" 
+							process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" partialSubmit="true"/>
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
