@@ -358,7 +358,7 @@
 			<ui:param name="lblPersonnelInstruction" value="lbl.sm.personnel.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
 			
 			<h:outputText styleClass="instruction" value="#{lbl[lblShareholderInstruction]}" escape="false" />
-			<h:outputText styleClass="instruction" value="#{lbl[lblPersonnelInstruction]}" escape="false" />
+			<h:outputText styleClass="instruction" value="#{lbl[lblPersonnelInstruction]}" escape="false" /><br />
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" 
 				escape="false" rendered="#{backingBean.managedBean.validSmUserLimit}"/>
 			
