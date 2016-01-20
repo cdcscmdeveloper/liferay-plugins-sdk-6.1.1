@@ -53,10 +53,18 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String searchContractNo;
 	private String searchContractName;
 	private String textBeforeSign;
-	private String taskName;
+	//private String taskName;
 	private String gotoPreviewPage;	
+	private String orgTypeCode;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValues;
 	
 	private int selectedTabIndex;
+	private Long ministryProfileId;
+	private Long officerProfileId;
+	private Long jabatanProfileId;
+	private Long ptjProfileId;
+	private boolean exmptedMinistryDD;
 	
 	private boolean updateAction = false;
 	private boolean viewContract = false;
@@ -583,17 +591,17 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	
 	/**
 	 * @return the taskName
-	 */
+	 *//*
 	public String getTaskName() {
 		return taskName;
 	}
 	
-	/**
+	*//**
 	 * @param updateAction the updateAction to set
-	 */
+	 *//*
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
-	}
+	}*/
 	
 	public String getFileDirectory() {
 		return fileDirectory;
@@ -631,20 +639,103 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.gotoPreviewPage = gotoPreviewPage;
 	}
 
+	/**
+	 * @return the circularExtension
+	 */
 	public boolean isCircularExtension() {
 		return circularExtension;
 	}
 
+	/**
+	 * @param circularExtension the circularExtension to set
+	 */
 	public void setCircularExtension(boolean circularExtension) {
 		this.circularExtension = circularExtension;
 	}
 
+	/**
+	 * @return the chkCentralCircular
+	 */
 	public boolean isChkCentralCircular() {
 		return chkCentralCircular;
 	}
 
+	/**
+	 * @param chkCentralCircular the chkCentralCircular to set
+	 */
 	public void setChkCentralCircular(boolean chkCentralCircular) {
 		this.chkCentralCircular = chkCentralCircular;
 	}
 
+	/**
+	 * @return the orgTypeCode
+	 */
+	public String getOrgTypeCode() {
+		return orgTypeCode;
+	}
+
+	/**
+	 * @param orgTypeCode the orgTypeCode to set
+	 */
+	public void setOrgTypeCode(String orgTypeCode) {
+		this.orgTypeCode = orgTypeCode;
+	}
+
+	
+
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+
+	public Long getPtjProfileId() {
+		return ptjProfileId;
+	}
+
+	public void setPtjProfileId(Long ptjProfileId) {
+		this.ptjProfileId = ptjProfileId;
+	}
+
+	public boolean isExmptedMinistryDD() {
+		return exmptedMinistryDD;
+	}
+
+	public void setExmptedMinistryDD(boolean exmptedMinistryDD) {
+		this.exmptedMinistryDD = exmptedMinistryDD;
+	}
+
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
+	}
+
+	public Long getOfficerProfileId() {
+		return officerProfileId;
+	}
+
+	public void setOfficerProfileId(Long officerProfileId) {
+		this.officerProfileId = officerProfileId;
+	}
 }
