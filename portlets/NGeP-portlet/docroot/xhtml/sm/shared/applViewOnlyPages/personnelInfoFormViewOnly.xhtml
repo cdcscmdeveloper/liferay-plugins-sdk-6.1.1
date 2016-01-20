@@ -331,6 +331,8 @@
 								rendered="#{person.epRole eq 'BASIC_SUPPLIER_USER' or person.epRole eq 'MOF_SUPPLIER_USER'}" />
 							<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
 								rendered="#{person.epRole eq 'CM_USER'}" />
+							<h:outputText value="#{lbl['lbl.sm.person.composition.fluser']}"
+								rendered="#{person.epRole eq 'FL_USER'}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 							<p:commandLink
