@@ -48,6 +48,13 @@
 				<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{personnel.pmCountry.countryName}" />
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}" disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText value="#{lbl['lbl.txt.yes']}"
+						rendered="#{personnel.authorizedFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.txt.no']}"
+						rendered="#{personnel.authorizedFlg eq '0'}" />
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
