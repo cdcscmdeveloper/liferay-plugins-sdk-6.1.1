@@ -640,7 +640,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				// check if all authorized MOF_SUPPLIER_USER already request
 				// softcert to allowed FL_USER proceed to request
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
-					if (!personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
+					if (!personnel.getEpRole().equals(RoleCode.FL_USER.value())
+							&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						getManagedBean().setAllAuthSuppUserAlreadyRequested(
 								false);
 					}

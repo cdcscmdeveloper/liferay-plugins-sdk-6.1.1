@@ -136,7 +136,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -4783,45 +4782,38 @@ public class SmApplicationBackingBean extends
 	 * Builds the role list.
 	 */
 	public void buildRoleList(SmPersonnel personnel) {
+		String epRole = StringUtils.isNotBlank(personnel.getEpRole()) ? personnel
+				.getEpRole() : "";
 		boolean showFlUserRole = false;
+		boolean showSuppUserRole = false;
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 		SelectItem role = new SelectItem();
 
-		// For latest role is FL_USER, allowed to show FL_USER and other roles
-		// even not yet reach authorized personnel limit
-		if (personnel.getPmUser() != null
-				&& SmCommonUtil.getPersonnelActiveRole(personnel).equals(
-						RoleCode.FL_USER.value())) {
+		// if already reach max authorized personnel (FL_USER will always show)
+		if (getManagedBean().isValidSmUserLimit()) {
 			showFlUserRole = true;
-		} else {
-			if (getManagedBean().isValidSmUserLimit()) {
+			// if role is MOF_SUPPLIER_USER, show MOF_SUPPLIER_USER
+			if (epRole.equals(RoleCode.MOF_SUPPLIER_USER.value())) {
+				showSuppUserRole = true;
+			}
+		}
+		// if not reach max authorized limit (MOF_SUPPLIER_USER will always
+		// show)
+		else {
+			showSuppUserRole = true;
+			// if role is FL_USER, show FL_USER
+			if (epRole.equals(RoleCode.FL_USER.value())) {
 				showFlUserRole = true;
-
-				// For latest role is MOF_SUPPLIER_USER or BASIC_SUPPLIER_USER
-				// not allowed to down grade to FL_USER
-				if (personnel.getPmUser() != null
-						&& (SmCommonUtil.getPersonnelActiveRole(personnel)
-								.equals(RoleCode.MOF_SUPPLIER_USER.value()) || SmCommonUtil
-								.getPersonnelActiveRole(personnel).equals(
-										RoleCode.BASIC_SUPPLIER_USER.value()))) {
-					showFlUserRole = false;
-				}
 			}
 		}
 
-		if (showFlUserRole) {
+		if (showSuppUserRole) {
 			role = new SelectItem();
 			role.setLabel(SmCommonUtil.getMessage(
-					"lbl.sm.person.composition.fluser", null));
-			role.setValue(RoleCode.FL_USER.value());
+					"lbl.sm.person.composition.suppUser", null));
+			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
 			roles.add(role);
 		}
-
-		role = new SelectItem();
-		role.setLabel(SmCommonUtil.getMessage(
-				"lbl.sm.person.composition.suppUser", null));
-		role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
-		roles.add(role);
 
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)
@@ -4832,6 +4824,14 @@ public class SmApplicationBackingBean extends
 			role.setLabel(SmCommonUtil.getMessage(
 					"lbl.sm.person.composition.catUser", null));
 			role.setValue(RoleCode.CM_USER.value());
+			roles.add(role);
+		}
+
+		if (showFlUserRole) {
+			role = new SelectItem();
+			role.setLabel(SmCommonUtil.getMessage(
+					"lbl.sm.person.composition.fluser", null));
+			role.setValue(RoleCode.FL_USER.value());
 			roles.add(role);
 		}
 
@@ -4848,6 +4848,7 @@ public class SmApplicationBackingBean extends
 		}
 		getManagedBean().setePRoleList(roles);
 	}
+	
 
 	/**
 	 * Add or create a new SmPersonnel bank object
