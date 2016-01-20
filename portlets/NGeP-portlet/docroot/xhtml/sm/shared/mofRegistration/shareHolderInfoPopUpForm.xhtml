@@ -383,7 +383,7 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.validSmUserLimit}">
 				<tr><td colspan="3"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" escape="false"/></td></tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{!backingBean.managedBean.validSmUserLimit}">
+			<p:outputPanel rendered="#{!backingBean.managedBean.validSmUserLimit or (backingBean.managedBean.validSmUserLimit and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1')}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
 					<td><p:selectOneRadio 
