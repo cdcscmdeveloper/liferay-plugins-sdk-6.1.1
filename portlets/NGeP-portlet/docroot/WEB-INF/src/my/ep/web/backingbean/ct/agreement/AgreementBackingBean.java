@@ -786,7 +786,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		       }
 		  
 		      // Contract Admin cannot submit the finalist agreement if:-
-		      // -fulfilment details status is not complete
+		      // -Performance bond not complete
+		      // -FD Update/FD Creation/Change Bank process still in process. 
 		      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				    && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)) {
 			        
