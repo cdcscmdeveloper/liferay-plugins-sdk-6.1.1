@@ -1271,15 +1271,15 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	public void checkHaveAdvancedPayment(FlPaymentAdvice paymentAdvice){
 		if(paymentAdvice.getFlRequest().getCtContract() != null){
-			if(paymentAdvice.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-				getManagedBean().setShowDeductionTab(true);
-			}
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			BigDecimal deductionAmt = new BigDecimal(0);
 			for(CtDeduction deduction : paymentAdvice.getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				/*if(!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
 					getManagedBean().setShowDeductionTab(true);
 				}*/
+				if(paymentAdvice.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+					getManagedBean().setShowDeductionTab(true);
+				}
 				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
 					getManagedBean().setHaveAdvancedPymt(true);
 					deductionAmt = deductionAmt.add(new BigDecimal(deduction.getAmount()));
