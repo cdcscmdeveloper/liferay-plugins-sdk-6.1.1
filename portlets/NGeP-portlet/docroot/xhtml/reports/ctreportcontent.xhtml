@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
  		
 		         <div>						 
-					 <table style="width:100%;" >
+					 <table style="width:100%;margin-top:-15px;" >
 						  <tr>
 						    <td width="100%">
 							    <h:panelGrid  id="ctReportCriteria" columns="4" style="width:77%;">
@@ -284,16 +284,16 @@
 		       </div>
 		      <div>
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.ctContractFromDateView}">
-						<TABLE style="margin-top:10px;width:50%;">
+						<TABLE style="margin-top:-5px;width:50%;">
 							<TR>
 							   <c:if test="#{reportBackingBean.managedBean.rptGenBean.ctContractEffectiveFromDateLabelView}">
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.contracteffectivedatelabel']}" style="width:203px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.contracteffectivedatelabel']}" style="width:210px;"/>
 								</TD>
 								</c:if>	
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.ctContractOrderFromDateLabelView}">
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.contractorderdatelabel']}" style="width:203px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.contractorderdatelabel']}" style="width:210px;"/>
 								</TD>
 								</c:if>	
 								<TD>
