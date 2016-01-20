@@ -915,7 +915,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}else if((!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)) && (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
 					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
 							|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
-									|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))){
+									|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())
+									|| getUserRole().equalsIgnoreCase(RoleCode.G2G_SUPPLIER_ADMIN.value())
+									|| getUserRole().equalsIgnoreCase(RoleCode.G2G_SUPPLIER_USER.value()))){
 				
 				validateFulfillmentOrder(outcome);
 				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
