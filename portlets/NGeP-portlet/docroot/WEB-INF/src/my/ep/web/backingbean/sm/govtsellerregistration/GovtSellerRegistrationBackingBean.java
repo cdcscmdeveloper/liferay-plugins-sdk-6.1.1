@@ -824,7 +824,9 @@ public class GovtSellerRegistrationBackingBean extends
 					new ArrayList<SelectItem>());
 			for (SelectItem item : Arrays
 					.asList(getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES))) {
-				if (item.getValue() != null && !item.getValue().equals("I")) {
+				if (item.getValue() != null
+						&& !item.getValue().equals(
+								SupplierManagementConst.NEW_IC)) {
 					getManagedBean().getIdentificationTypeItems().add(item);
 				}
 			}
