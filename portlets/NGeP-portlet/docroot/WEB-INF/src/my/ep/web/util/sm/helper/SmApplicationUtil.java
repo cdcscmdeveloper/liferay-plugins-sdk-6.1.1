@@ -6988,7 +6988,7 @@ public class SmApplicationUtil {
 	/**
 	 * Set FL_USER role to MOF_SUPPLIER_USER if not reach maximum authorized
 	 * limit or MOF_SUPPLIER_USER to FL_USER if already reach maximum authorized
-	 * limit and not authorized
+	 * limit and is not authorized
 	 * 
 	 * @param SmAppl
 	 *            appl
@@ -7002,7 +7002,7 @@ public class SmApplicationUtil {
 				if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						&& personnel.getEpRole().equals(
 								RoleCode.MOF_SUPPLIER_USER.value())
-						&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+						&& personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 					personnel.setEpRole(RoleCode.FL_USER.value());
 				}
 			} else {
