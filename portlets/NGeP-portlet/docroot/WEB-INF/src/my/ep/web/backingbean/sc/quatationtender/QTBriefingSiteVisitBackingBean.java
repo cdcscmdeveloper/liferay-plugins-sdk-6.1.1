@@ -753,7 +753,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * Site visit click event.
 	 *
 	 * @param event the event
-	 */
+	 *//*
 	public void siteVisitClickEvent(AjaxBehaviorEvent event) {
 		debugLogger("siteVisitClickEvent");
 		Boolean selectedValue = (Boolean) event.getComponent().getAttributes()
@@ -766,7 +766,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		this.getManagedBean().setBsvDtlBean(zoneBean);
 
-	}
+	}*/
 
 	/**
 	 * Edits the action.
