@@ -213,7 +213,8 @@
 					content="#{lbl['lbl.sc.dialog.confirm.sitevisit.details.dtls']}"
 					update="@([id$=sitevisitdtlid]), @([id$=panelGrpId])" >
 				</ac:confirmationPopup>
-				<h:panelGroup id="panelGrpId" rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
+				<!--  commentd by VidyasagarReddy  -->
+				<!-- <h:panelGroup id="panelGrpId" rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
 					<table style="width: 100%" border="0">
 						<tr>
 							<td style="width: 27px;"><ac:iconTooltip
@@ -242,7 +243,7 @@
 								</h:panelGroup></td>
 						</tr>
 					</table>
-				</h:panelGroup>
+				</h:panelGroup> -->
 			</p:panel>
 		</h:panelGroup>
 	</h:panelGroup>
