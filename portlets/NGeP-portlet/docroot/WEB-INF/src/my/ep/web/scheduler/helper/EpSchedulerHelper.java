@@ -42,8 +42,8 @@ public class EpSchedulerHelper {
 				final CronTrigger cronTrigger = TriggerBuilder
 						.newTrigger()
 						.withSchedule(
-								CronScheduleBuilder.cronSchedule(cronExpression))
-						.build();
+								CronScheduleBuilder
+										.cronSchedule(cronExpression)).build();
 
 				// start scheduler if not started yet
 				if (!EpSchedulerHelper.getScheduler().isStarted()) {
@@ -52,7 +52,8 @@ public class EpSchedulerHelper {
 
 				// schedule the job
 				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
-					EpSchedulerHelper.getScheduler().scheduleJob(job, cronTrigger);
+					EpSchedulerHelper.getScheduler().scheduleJob(job,
+							cronTrigger);
 				}
 
 			} catch (final SchedulerException e) {
@@ -65,14 +66,16 @@ public class EpSchedulerHelper {
 		// specify trigger
 		Trigger trigger;
 		try {
-			trigger = TriggerBuilder
-					.newTrigger()
-					.startNow()
-					.forJob(EpSchedulerHelper.getScheduler().getJobDetail(
-							jobKey)).build();
+			JobDetail job = EpSchedulerHelper.getScheduler().getJobDetail(
+					jobKey);
+			
+			if(job!=null){
+				trigger = TriggerBuilder.newTrigger().startNow().forJob(job)
+						.build();
 
-			// schedule the job
-			EpSchedulerHelper.getScheduler().scheduleJob(trigger);
+				// schedule the job
+				EpSchedulerHelper.getScheduler().scheduleJob(trigger);
+			}
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block
 			log.error(e.getMessage());
