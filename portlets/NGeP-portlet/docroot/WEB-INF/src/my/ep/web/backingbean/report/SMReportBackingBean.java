@@ -503,7 +503,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmExtraTwoColumnView(true);
 			break;
 		case ReportConst.SM_DAILY_EARNING_RECEIPT:
-			rptGenBean.setFromDateView(true);
+			rptGenBean.setSmFromDateView(true);
 			rptGenBean.setSmPaymentMethodView(true);
 			// rptGenBean.setSmProcessingTypeView(true);
 			rptGenBean.setSmDERSmReceiptNoView(true);
@@ -512,7 +512,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmPaymentToView(true);
 			break;
 		case ReportConst.SM_DELETE_PENDING_APPL:
-			rptGenBean.setFromDateView(true);
+			rptGenBean.setSmFromDateView(true);
 			rptGenBean.setSmGenCompanyNameView(true);
 			// rptGenBean.setSmBothMandatorySupplierTypeView(true);
 			rptGenBean.setSmDEMandatoryAllSupplierTypeView(true);
@@ -593,7 +593,7 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_LIST_OF_APPL_STATUS:
 			rptGenBean.setSmLAApplicationNoView(true);
 			rptGenBean.setSmApplicationTypeTwoView(true);
-			rptGenBean.setSmSupplierView(true);
+			//rptGenBean.setSmSupplierView(true);
 			rptGenBean.setSmRegistrationNoView(true);
 			rptGenBean.setSmLAMofRegNoView(true);
 			rptGenBean.setSmNonMandatoryDateView(true);
