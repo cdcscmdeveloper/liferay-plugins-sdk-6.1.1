@@ -458,7 +458,7 @@
 				<c:if
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedEpNoView}">
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.epNo']}"
-							style="width:297px;" /></TD>
+							style="width:43px;" /></TD>
 					<TD><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmEpNo}"
 							style="width:290px;">
@@ -471,7 +471,7 @@
 					test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemCodeView}">
 					<TD class="pmColumn1Class"><p:outputLabel value="#{lbl['lbl.rpt.itemCode']}"
 							 /></TD>
-					<TD class="pmColumn4Class"><p:inputText maxlength="100"
+					<TD><p:inputText maxlength="100"
 							value="#{reportBackingBean.pmItemCode}"
 							style="width:290px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
