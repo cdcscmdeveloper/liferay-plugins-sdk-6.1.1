@@ -255,19 +255,9 @@ public class SmApplicationUtil {
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrievePersonnelCount(reqDTO);
 
-		int authPersLimit = 0;
+		int authPersLimit = SmRuleHelper.getInstance()
+				.getMaxAdditionalMofAuthorizedUser();
 
-		// upgrade from basic to MOF only 5 authorized personnel
-		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-			authPersLimit = SmRuleHelper.getInstance()
-					.getMaxMofAuthorizedUser();
-		}
-		// if supplier already MOF, can have additional authorized personnel
-		// from 6 to 10
-		else {
-			authPersLimit = SmRuleHelper.getInstance()
-					.getMaxAdditionalMofAuthorizedUser();
-		}
 
 		if (resDTO != null && resDTO.getCount() != null) {
 			resultCount = resDTO.getCount().intValue();
