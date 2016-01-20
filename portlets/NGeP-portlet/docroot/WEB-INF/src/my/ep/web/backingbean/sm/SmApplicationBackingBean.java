@@ -4434,6 +4434,12 @@ public class SmApplicationBackingBean extends
 					.getSelectedShareHolder().getName(), email);
 		}
 
+		// if not authorized, clear justification
+		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+			getManagedBean().getSelectedShareHolder()
+					.setAddnlPersonnelJustification("");
+		}
+
 		getManagedBean().getSelectedShareHolder().setSmAppl(
 				getManagedBean().getSmAppl());
 		if (validShrHldr) {
