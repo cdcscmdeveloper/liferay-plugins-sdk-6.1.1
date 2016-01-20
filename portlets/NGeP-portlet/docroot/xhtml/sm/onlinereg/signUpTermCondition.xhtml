@@ -31,6 +31,16 @@
 			</p:scrollPanel>
 			</p:panel>
 			<br />
+			<p:panel id="captchaPanel" >
+				<p:inputText value="#{registrationBackingBean.managedBean.captchaAnswer}" 
+					validator="#{registrationBackingBean.validateCaptcha}"
+					size="10" />
+				<p:graphicImage id="captchaText" value="#{registrationBackingBean.captchaTextImage}" />
+				<p:commandLink update="captchaText" >
+					<p:graphicImage value="/css/images/design/ico-refresh.png" />
+				</p:commandLink>
+			</p:panel>
+			<br />
 			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}" 
 				disabled="#{empty registrationBackingBean.managedBean.applType}">
 				<p:ajax update="btnProceed" partialSubmit="true" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -44,13 +54,15 @@
 			<div class="nav-wrapper" align="justify">
 				<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="float:right;"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				disabled="#{!registrationBackingBean.managedBean.agreeTC}" action="#{registrationBackingBean.proceedToCompanyInfo}" />
+				disabled="#{!registrationBackingBean.managedBean.agreeTC}" action="#{registrationBackingBean.proceedToCompanyInfo}"
+				update="captchaPanel" />
 				
 				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="left;"
 					action="#{registrationBackingBean.returnToSignUp}">
 				</p:commandButton>
 			</div>
 			<div style="clear: both;"></div>
+			
 	</ui:define>
 
 </ui:composition>
