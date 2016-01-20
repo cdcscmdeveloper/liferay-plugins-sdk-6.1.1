@@ -4798,9 +4798,12 @@ public class SmApplicationBackingBean extends
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 		SelectItem role = new SelectItem();
 
-		// if already reach max authorized personnel (FL_USER will always show)
+		// if already reach max authorized personnel
 		if (getManagedBean().isValidSmUserLimit()) {
-			showFlUserRole = true;
+			//Show FL_USER if not authorized
+			if(personnel.getAuthorizedFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
+				showFlUserRole = true;
+			}
 			// if role is MOF_SUPPLIER_USER, show MOF_SUPPLIER_USER
 			if (epRole.equals(RoleCode.MOF_SUPPLIER_USER.value())) {
 				showSuppUserRole = true;
