@@ -394,6 +394,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				getManagedBean().setUploadFinalAgreement(true);
 		    } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
 				getManagedBean().setUploadFinalAgreement(true);
+            } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {
+				getManagedBean().setApproveFinalAgreement(true);
             }
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -777,13 +779,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
 				     && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
 			         if (getManagedBean().getCtContract().getLatestContractVer() == null) { // FD creation in progress
-				         throw new EpException(MessageConst.ERROR_750043);
+				         throw new EpException(MessageConst.ERROR_750041, 
+						    new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			         }		
 		       }
 		  
 		      // Contract Admin cannot submit the finalist agreement if:-
-		      // -Performance bond not complete
-		      // -FD Update/FD Creation/Change Bank process still in process. 
+		      // -fulfilment details status is not complete
 		      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				    && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)) {
 			        
@@ -791,26 +794,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			        ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 			        reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
 			        ContractAgreementResDTO resDTO = agreementSO.validatePendingFinalistApproval(reqDTO);
-			        String agreementTypeStr = "lbl.ct.agreement";
-			        if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
-			           	agreementTypeStr = "lbl.ct.supplemental.agreement";
-			        }
-			
-			       // Validation for pending process
-			       if (resDTO.getPendingProcessType() != null) {
-				        throw new EpException(MessageConst.ERROR_750042, 
-						    new String[]{ResourceBundleUtils.getMessage(agreementTypeStr,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),
-								  getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, resDTO.getPendingProcessType())});
-			        }
-			
-			        // Validation for completion of performance bond
-			        if(!resDTO.isBondComplete()) {
+			        
+			        if(!resDTO.isFdComplete()) {
 				         throw new EpException(MessageConst.ERROR_750041, 
-						    new String[]{ResourceBundleUtils.getMessage(agreementTypeStr, 
+						    new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			        }			
 		     }
+		      
+		   // Contract Approver cannot approve the final agreement if:-
+	       // -Disclaimer is not checked
+	       if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
+			     && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {			
+		         if (!getManagedBean().isAgreementDisclaimer()) {
+			         throw new EpException(MessageConst.ERROR_750042);
+		         }		
+	       }
 	   }
 	
 	/**

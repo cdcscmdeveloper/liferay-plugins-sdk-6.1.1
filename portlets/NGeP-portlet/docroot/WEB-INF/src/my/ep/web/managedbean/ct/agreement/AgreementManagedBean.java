@@ -57,6 +57,8 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private boolean uploadStampedAndSignedPage;
 	private boolean validateWitness;
 	private boolean agencySignerDropDown;
+	private boolean approveFinalAgreement = false;
+	private boolean agreementDisclaimer = false;
 	private boolean autoUpdate = true;
 	private List<CtAgreementParty> ctAgencySigner;
 	private List<CtAgreementParty> ctSupplierSigner;
@@ -663,4 +665,32 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setVarIndex(int varIndex) {
 		this.varIndex = varIndex;
 	}
+
+	/**
+	 * @return the approveFinalAgreement
+	 */
+	public boolean isApproveFinalAgreement() {
+		return approveFinalAgreement;
+	}
+
+	/**
+	 * @param approveFinalAgreement the approveFinalAgreement to set
+	 */
+	public void setApproveFinalAgreement(boolean approveFinalAgreement) {
+		this.approveFinalAgreement = approveFinalAgreement;
+	}
+
+	/**
+	 * @return the agreementDisclaimer
+	 */
+	public boolean isAgreementDisclaimer() {
+		return agreementDisclaimer;
+	}
+
+	/**
+	 * @param agreementDisclaimer the agreementDisclaimer to set
+	 */
+	public void setAgreementDisclaimer(boolean agreementDisclaimer) {
+		this.agreementDisclaimer = agreementDisclaimer;
+	}	
 }

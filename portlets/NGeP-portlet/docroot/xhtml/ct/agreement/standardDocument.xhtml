@@ -174,4 +174,13 @@
 			</p:fileUpload>
 		</p:dialog>				
 	</p:panel>
+	<p:panel id="agreementDisclaimerPnl" header="#{lbl['lbl.ct.disclaimer']}"
+	    toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.approveFinalAgreement}" >
+		<h:panelGrid columns="2">
+			<p:selectBooleanCheckbox id="disclaimerCheckBox"
+				value="#{agreementBackingBean.managedBean.agreementDisclaimer}" />
+			<h:outputText value="#{lbl['lbl.ct.agreement.disclaimer']}" styleClass="required" />
+		</h:panelGrid>
+	</p:panel>
+	
 </ui:composition>
