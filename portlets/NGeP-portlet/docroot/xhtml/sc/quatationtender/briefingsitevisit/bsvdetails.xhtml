@@ -228,9 +228,6 @@
 										itemValue="true" />
 									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}"
 										itemValue="false" />
-									<p:ajax event="click"
-										listener="#{qTBriefingSiteVisitBackingBean.siteVisitClickEvent}"
-										update="@([id$=minSiteVisitAtt])" />
 								</p:selectOneRadio></td>
 							<td><h:panelGroup id="minSiteVisitAtt">
 									<ui:fragment rendered="#{!bsvdtlbean.scQtBsv.allSiteVisitReq}">
