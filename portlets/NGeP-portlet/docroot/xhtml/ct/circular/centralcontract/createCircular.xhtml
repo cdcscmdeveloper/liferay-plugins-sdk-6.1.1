@@ -8,7 +8,7 @@
 
 	<p:panel id="ccc" header="#{lbl['lbl.ct.panel.central.contract.circular']}" toggleable="true" toggleSpeed="500">
 		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer == null
-		or centralContractBackingBean.managedBean.viewContract}">
+		 or centralContractBackingBean.managedBean.viewContract}">
 			<ui:include src="createCircularDetail.xhtml" />
 		</h:panelGroup>
 		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer != null and !centralContractBackingBean.managedBean.viewContract}">
@@ -79,43 +79,137 @@
 	
 	<p:panel id="exemptedOrgPnl" header="#{lbl['lbl.ct.panel.exempted.ministry']}" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="exemptedOrgDt" var="exemptedOrgsVar" value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
-		 	rowKey="#{exemptedOrgsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedExemptedOrgs}">
+		 	rowKey="#{exemptedOrgsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.selectedExemptedOrgs}">
 			<ac:paginator for="exemptedOrgDt" />
-			<p:column selectionMode="multiple" style="width:3%"
+	        <p:column selectionMode="multiple"  style="width:5%"
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.ministry']}">
-				#{exemptedOrgsVar.orgProfile.orgName}
-			</p:column>
-		</p:dataTable>
-		 <div class="ppRightBtn">
-		 	<ac:lov id="ministryId" lovId="PM_ORG_PROFILE_MINSTRY"
-						postUpdateListener="centralContractBackingBean.addExemptedOrg"
-						headerText="#{lbl['lbl.ct.ministry']}" 
-						buttonLabel="#{lbl['lbl.btn.add']}"
-						selectionMode="multiple"
-						saveObject="centralContractBackingBean.managedBean.orgProfiles"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" update="@form"
-						rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
-						  partialSubmit="true" 
-						  onsuccess="delExemptedOrgDlg.show()"
-						  rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-		 </div>
-		<p:dialog id="delExemptedOrgDlg"
-		    styleClass="screen-title" widgetVar="delExemptedOrgDlg"  modal="true" width="330">  
-            <h:panelGrid columns="3">
-              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			  <p:spacer width="10"/>
-              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=exemptedOrgDt])"
-		       process="@all" actionListener="#{centralContractBackingBean.deleteExemptedOrg()}" onclick="delExemptedOrgDlg.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="delExemptedOrgDlg.hide();" type="button" />
-		   </div>
-        </p:dialog>  	
-        
-	</p:panel>
+		     <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.type']}" style="width:30%;">
+		         <p:selectOneMenu id="OrgTypeId" 
+		              style="width:200px" value="#{exemptedOrgsVar.orgTypeCode}" disabled="true">
+            	        <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
+            	  </p:selectOneMenu>
+		     </p:column>
+		      <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.name']}" style="width:65%;">
+		           <h:outputText value="#{exemptedOrgsVar.orgProfile.orgName}"></h:outputText>
+		     </p:column>
+	 </p:dataTable>
+	   <div class="ppRightBtn">
+	       <p:commandButton id="addAgencySignerBtn" value="#{lbl['lbl.btn.add']}"  
+                partialSubmit="true" process="@this" oncomplete="dlgExemptedMinistry.show()"
+       	        action="#{centralContractBackingBean.flushExempMisntry()}">
+       	        </p:commandButton>
+       	        <p:commandButton id="delAgencySignerBtn" process="@form"  
+		          value="#{lbl['lbl.btn.delete']}"   onsuccess="dlgExemptedDel.show()">
+		       </p:commandButton>
+       		
+	    </div>
+	    <p:dialog id="dialogExemptedMinistry"  header="#{lbl['lbl.ct.panel.exempted.org.dlg']}" 
+	          widgetVar="dlgExemptedMinistry" styleClass="pop_up_top" modal="true" width="600" height="500">
+			  <p:messages id="exemptedMsgId" showSummary="false"
+			      showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+		       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.orgtype.menu']}" escape="false"/><br/><br/>
+		         <h:panelGrid columns="3">
+		            <p:selectOneMenu for="orgTypeId"  style="width:150px" disabled="true" >
+            	               <f:selectItem itemLabel="#{lbl['lbl.ct.panel.exempted.type']}" itemValue=""/>
+                            </p:selectOneMenu>
+		              <p:spacer height="1"/>
+		             <p:selectOneMenu id="OrgTypeId"  style="width:200px" required="true"
+		                 label="#{lbl['lbl.ct.panel.exempted.type']}"  value="#{centralContractBackingBean.managedBean.orgTypeCode}">
+            	           <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
+            	           <p:ajax event="change" process="@this"   update="exmptedMinistryId"
+            	             listener="#{centralContractBackingBean.resetMinistryDetails}" ></p:ajax>
+            	     </p:selectOneMenu>
+            	  </h:panelGrid>
+            	     <h:panelGroup  id="exmptedMinistryId">
+                        <h:panelGrid columns="3" 
+                            rendered="#{centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypeJabatan
+                           or centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypePtj}">
+                            <p:selectOneMenu for="ministry"  style="width:150px" disabled="true" >
+            	               <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
+                            </p:selectOneMenu>
+                           <p:spacer height="1"/>
+                           <p:selectOneMenu id="ministry" style="width:300px" required="true" label="#{lbl['lbl.ct.ministry']}"
+                                value="#{centralContractBackingBean.managedBean.ministryProfileId}" >
+            	                <f:selectItems value="#{centralContractBackingBean.getMinistryDropdown()}"/>
+            	               <p:ajax event="change" update=":form:jabatan" partialSubmit="true"
+            	                  process="@this" listener="#{centralContractBackingBean.settingMinistryListener}" />
+                           </p:selectOneMenu>
+                      </h:panelGrid>
+                     
+                     <h:panelGrid columns="3" 
+                           rendered="#{centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypePtj}">
+                          <p:selectOneMenu for="jabatan"  style="width:150px" disabled="true" >
+            	               <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
+                       </p:selectOneMenu>
+                       <p:spacer height="1"/>
+                       <p:selectOneMenu id="jabatan" style="width:300px"
+                           value="#{centralContractBackingBean.managedBean.jabatanProfileId}" >
+            	               <f:selectItems value="#{centralContractBackingBean.getJabatanDropdown()}"/>
+                       </p:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="3" rendered="#{centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypeJabatan
+                           or centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypePtj}">
+                          <p:selectOneMenu for="ptjcodename" 
+                              value="#{centralContractBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
+                              <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
+            	              <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
+            	              <p:ajax process="@this"/>
+                         </p:selectOneMenu>
+				      <p:spacer height="1"/>
+                       <p:inputText id="ptjCodeVaue"  style="width:300px;" 
+                             value="#{centralContractBackingBean.managedBean.ptjCodeNameSearchValues}" >
+                             <p:ajax process="@this"/></p:inputText>
+			         </h:panelGrid>
+			  	     <div class="ppRightBtn">
+       		               <p:commandButton id="PtjSearchId" value="#{lbl['lbl.btn.search']}" 
+       		                  update=":form:tablePtjCode"  disabled="#{centralContractBackingBean.managedBean.orgTypeCode == null}"
+       		                     action="#{centralContractBackingBean.searchPtjDetails}" process="@this" /> 
+			               <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
+			                     action="#{centralContractBackingBean.resetPtjDetails}" 
+			                     disabled="#{centralContractBackingBean.managedBean.orgTypeCode == null}" update=":form:dialogExemptedMinistry"   />
+		                 </div>
+		             </h:panelGroup>
+			   <p:spacer height="2"/>
+              <p:dataTable id="tablePtjCode" var="pmVar" value="#{centralContractBackingBean.exemptedOrgDataModel}" 
+                 rowIndexVar="rowIndex" selection="#{centralContractBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
+                  <ac:paginator for="tablePtjCode"/>
+                    <p:column selectionMode="multiple" style="width:18px;"> 
+                         <f:facet name="header">
+                             <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
+		               </f:facet>
+                    </p:column>       
+                    <p:column headerText="#{lbl['lbl.ct.ptj.code']}" >
+                       	#{pmVar.orgCode}
+					</p:column>
+                    <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
+                      	#{pmVar.orgName}
+					</p:column>
+			 </p:dataTable>
+			 <p:spacer height="2"/>           
+			 <div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.select']}" 
+				   process="@form" update=":form:exemptedOrgDt,:form:exemptedMsgId" 
+				    action="#{centralContractBackingBean.addExemtedOrgDetails()}"/>
+				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" 
+				        onclick="dialogExemptedMinistry.hide();"  action="#{centralContractBackingBean.resetMinistryDetails()}" />
+           </div>
+	</p:dialog>
+	    
+	  
+	       <p:dialog id="dlgExemptedDel" 
+	            widgetVar="dlgExemptedDel" styleClass="screen-title" modal="true" width="330">  
+                <h:panelGrid columns="3">
+                   <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			       <p:spacer width="10"/>
+                   <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+                </h:panelGrid>
+                <div class="ppRightBtn">
+		           <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:exemptedOrgDt" 
+		               process="@form" partialSubmit="true" actionListener="#{centralContractBackingBean.deleteExemptedOrgMinistry()}" onclick="dlgExemptedDel.hide();"/>
+			       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgExemptedDel.hide();" type="button" />
+		        </div>
+             </p:dialog>  
+	 </p:panel>
 	
 	<p:panel id="cancelCircularPnl" header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="cancelCircularDt" var="cancelCircularVar" rowKey="#{cancelCircularVar}" rowIndexVar="index" 
