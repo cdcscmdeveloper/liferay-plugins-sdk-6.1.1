@@ -2279,6 +2279,14 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
 		log.info("**** Enter Share Holder privilege ******");
+		if (getManagedBean().isValidSmUserLimit()
+				&& StringUtils.isNotBlank(getManagedBean()
+						.getSelectedShareHolder().getEpRole())
+				&& getManagedBean().getSelectedShareHolder().getEpRole()
+						.equals(RoleCode.FL_USER.value())) {
+			getManagedBean().getSelectedShareHolder().setEpRole(
+					RoleCode.MOF_SUPPLIER_USER.value());
+		}
 		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
 					DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -4848,7 +4856,6 @@ public class SmApplicationBackingBean extends
 		}
 		getManagedBean().setePRoleList(roles);
 	}
-	
 
 	/**
 	 * Add or create a new SmPersonnel bank object

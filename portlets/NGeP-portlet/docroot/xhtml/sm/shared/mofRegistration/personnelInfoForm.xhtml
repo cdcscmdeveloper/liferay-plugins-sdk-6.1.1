@@ -472,6 +472,8 @@
 								rendered="#{person.epRole eq 'BASIC_SUPPLIER_USER' or person.epRole eq 'MOF_SUPPLIER_USER'}" />
 							<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
 								rendered="#{person.epRole eq 'CM_USER'}" />
+							<h:outputText value="#{lbl['lbl.sm.person.composition.fluser']}"
+								rendered="#{person.epRole eq 'FL_USER'}" />
 							<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 								rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 						</p:column>
