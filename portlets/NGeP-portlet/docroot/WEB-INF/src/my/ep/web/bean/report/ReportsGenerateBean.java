@@ -110,6 +110,154 @@ public class ReportsGenerateBean {
 
 	/** The collector cdc registration chk view. */
 	private boolean collectorCDCRegistrationChkView = false;
+	
+	
+	/** The sm application approved view. */
+	private boolean smApplicationApprovedView=false;
+	
+	/** The sm application rejected view. */
+	private boolean smApplicationRejectedView=false;
+ 
+	/** The sm application verification performance view. */
+	private boolean smApplicationVerificationPerformanceView=false;
+	
+	/** The sm application verification view. */
+	private boolean smApplicationVerificationView=false;
+	
+	/** The sm agency statistical status view. */
+	private boolean smAgencyStatisticalStatusView=false;
+	
+	/** The sm category statistic view. */
+	private boolean smCategoryStatisticView=false;
+	
+	/** The sm category statistic by state view. */
+	private boolean smCategoryStatisticByStateView=false;
+	
+	/** The sm category statistic by year view. */
+	private boolean smCategoryStatisticByYearView=false;
+	
+	/** The sm company address list view. */
+	private boolean smCompanyAddressListView=false;
+	
+	/** The sm daily receipts es view. */
+	private boolean smDailyReceiptsESView=false;
+	
+	/** The sm delete pending application view. */
+	private boolean smDeletePendingApplicationView=false;
+	
+	/** The sm laporan terimaan harian view. */
+	private boolean smLaporanTerimaanHarianView=false;
+	
+	/** The sm list of application view. */
+	private boolean smListOfApplicationView=false;
+	
+	/** The sm list of application pending for sv view. */
+	private boolean smListOfApplicationPendingForSVView=false;
+	
+	/** The sm list of application status view. */
+	private boolean smListOfApplicationStatusView=false;
+	
+	/** The sm list of companies sort alphabet view. */
+	private boolean smListOfCompaniesSortAlphabetView=false;
+	
+	/** The sm list of companies srsc view. */
+	private boolean smListOfCompaniesSRSCView=false;
+	
+	/** The sm list of companies with dohe view. */
+	private boolean smListOfCompaniesWithDOHEView=false;
+	
+	/** The sm list of daily application basic and mof view. */
+	private boolean smListOfDailyApplicationBasicAndMOFView=false;
+	
+	/** The sm list of daily registered application view. */
+	private boolean smListOfDailyRegisteredApplicationView=false;
+	
+	/** The sm list of dohe view. */
+	private boolean smListOfDOHEView=false;
+	
+	/** The sm list of gst reg supplier view. */
+	private boolean smListOfGSTRegSupplierView=false;
+	
+	/** The sm list delete mof account view. */
+	private boolean smListDeleteMOFAccountView=false;
+	
+	/** The sm list of offline sdps view. */
+	private boolean smListOfOfflineSDPSView=false;
+	
+	/** The sm list ps more view. */
+	private boolean smListPSMoreView=false;
+	
+	/** The sm list of expired company view. */
+	private boolean smListOfExpiredCompanyView=false;
+	
+	/** The sm list of svosvl view. */
+	private boolean smListOfSVOSVLView=false;
+	
+	/** The sm list of soa view. */
+	private boolean smListOfSOAView=false;
+	
+	/** The sm list of soppsv view. */
+	private boolean smListOfSOPPSVView=false;
+	
+	/** The sm list of socpba view. */
+	private boolean smListOfSOCPBAView=false;
+	
+	/** The sm list of users scr view. */
+	private boolean smListOfUsersSCRView=false;
+	
+	/** The sm list of pprf view. */
+	private boolean smListOfPPRFView=false;
+	
+	/** The sm monthly report view. */
+	private boolean smMonthlyReportView=false;
+	
+	/** The sm profile reg company view. */
+	private boolean smProfileRegCompanyView=false;
+	
+	/** The sm qrs view. */
+	private boolean smQRSView=false;
+	
+	/** The sm statistic list cbc view. */
+	private boolean smStatisticListCBCView=false;
+	
+	/** The sm supplier performance view. */
+	private boolean smSupplierPerformanceView=false;
+	
+	/** The sm supplier statistic view. */
+	private boolean smSupplierStatisticView=false;
+	
+	/** The sm supplier statistic by category view. */
+	private boolean smSupplierStatisticByCategoryView=false;
+	
+	/** The sm threshold or supplier transaction view. */
+	private boolean smThresholdOrSupplierTransactionView=false;
+	
+	/** The sm threshold year view. */
+	private boolean smThresholdYearView=false;
+	
+	/** The sm total no of daily ar view. */
+	private boolean smTotalNoOfDailyARView=false;
+	
+	/** The sm total no of yearly ar view. */
+	private boolean smTotalNoOfYearlyARView=false;
+	
+	/** The sm virtual certificate relased list view. */
+	private boolean smVirtualCertificateRelasedListView=false;
+	
+	/** The sm collection receipt transation view. */
+	private boolean smCollectionReceiptTransationView=false;
+	
+	/** The sm collection report payment method view. */
+	private boolean smCollectionReportPaymentMethodView=false;
+	
+	/** The sm collection report clasification code view. */
+	private boolean smCollectionReportClasificationCodeView=false;
+	
+	/** The sm revenue collection report view. */
+	private boolean smRevenueCollectionReportView=false;
+	
+	/** The sm list of daily receipt view. */
+	private boolean smListOfDailyReceiptView=false;	
 
 	/** The generate button view. */
 	private boolean generateButtonView = false;
@@ -4197,6 +4345,12 @@ public class ReportsGenerateBean {
 
 	/** The Pm non mandatroy org code view. */
 	private boolean pmNonMandatroyOrgCodeView = false;
+	
+	/** The pm exempted item view. */
+	private boolean pmExemptedItemView=false;
+	
+	/** The pm exempted contracted item view. */
+	private boolean pmExemptedContractedItemView=false;
 
 	/** The Pm company name view. */
 	private boolean pmCompanyNameView = false;
@@ -17058,6 +17212,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is pm non mandatory sup date view.
+	 * 
 	 * @return the pmNonMandatorySupDateView
 	 */
 	public boolean isPmNonMandatorySupDateView() {
@@ -17065,6 +17221,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Sets the pm non mandatory sup date view.
+	 * 
 	 * @param pmNonMandatorySupDateView
 	 *            the pmNonMandatorySupDateView to set
 	 */
@@ -17073,6 +17231,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is pm mandatory zone view bpk.
+	 * 
 	 * @return the pmMandatoryZoneViewBPK
 	 */
 	public boolean isPmMandatoryZoneViewBPK() {
@@ -17080,10 +17240,1000 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Sets the pm mandatory zone view bpk.
+	 * 
 	 * @param pmMandatoryZoneViewBPK
 	 *            the pmMandatoryZoneViewBPK to set
 	 */
 	public void setPmMandatoryZoneViewBPK(boolean pmMandatoryZoneViewBPK) {
 		this.pmMandatoryZoneViewBPK = pmMandatoryZoneViewBPK;
+	}
+
+	/**
+	 * Checks if is sm application approved view.
+	 * 
+	 * @return the smApplicationApprovedView
+	 */
+	public boolean isSmApplicationApprovedView() {
+		return smApplicationApprovedView;
+	}
+
+	/**
+	 * Sets the sm application approved view.
+	 * 
+	 * @param smApplicationApprovedView
+	 *            the smApplicationApprovedView to set
+	 */
+	public void setSmApplicationApprovedView(boolean smApplicationApprovedView) {
+		this.smApplicationApprovedView = smApplicationApprovedView;
+	}
+
+	/**
+	 * Checks if is sm application rejected view.
+	 * 
+	 * @return the smApplicationRejectedView
+	 */
+	public boolean isSmApplicationRejectedView() {
+		return smApplicationRejectedView;
+	}
+
+	/**
+	 * Sets the sm application rejected view.
+	 * 
+	 * @param smApplicationRejectedView
+	 *            the smApplicationRejectedView to set
+	 */
+	public void setSmApplicationRejectedView(boolean smApplicationRejectedView) {
+		this.smApplicationRejectedView = smApplicationRejectedView;
+	}
+
+	/**
+	 * Checks if is sm application verification performance view.
+	 * 
+	 * @return the smApplicationVerificationPerformanceView
+	 */
+	public boolean isSmApplicationVerificationPerformanceView() {
+		return smApplicationVerificationPerformanceView;
+	}
+
+	/**
+	 * Sets the sm application verification performance view.
+	 * 
+	 * @param smApplicationVerificationPerformanceView
+	 *            the smApplicationVerificationPerformanceView to set
+	 */
+	public void setSmApplicationVerificationPerformanceView(
+			boolean smApplicationVerificationPerformanceView) {
+		this.smApplicationVerificationPerformanceView = smApplicationVerificationPerformanceView;
+	}
+
+	/**
+	 * Checks if is sm application verification view.
+	 * 
+	 * @return the smApplicationVerificationView
+	 */
+	public boolean isSmApplicationVerificationView() {
+		return smApplicationVerificationView;
+	}
+
+	/**
+	 * Sets the sm application verification view.
+	 * 
+	 * @param smApplicationVerificationView
+	 *            the smApplicationVerificationView to set
+	 */
+	public void setSmApplicationVerificationView(
+			boolean smApplicationVerificationView) {
+		this.smApplicationVerificationView = smApplicationVerificationView;
+	}
+
+	/**
+	 * Checks if is sm agency statistical status view.
+	 * 
+	 * @return the smAgencyStatisticalStatusView
+	 */
+	public boolean isSmAgencyStatisticalStatusView() {
+		return smAgencyStatisticalStatusView;
+	}
+
+	/**
+	 * Sets the sm agency statistical status view.
+	 * 
+	 * @param smAgencyStatisticalStatusView
+	 *            the smAgencyStatisticalStatusView to set
+	 */
+	public void setSmAgencyStatisticalStatusView(
+			boolean smAgencyStatisticalStatusView) {
+		this.smAgencyStatisticalStatusView = smAgencyStatisticalStatusView;
+	}
+
+	/**
+	 * Checks if is sm category statistic view.
+	 * 
+	 * @return the smCategoryStatisticView
+	 */
+	public boolean isSmCategoryStatisticView() {
+		return smCategoryStatisticView;
+	}
+
+	/**
+	 * Sets the sm category statistic view.
+	 * 
+	 * @param smCategoryStatisticView
+	 *            the smCategoryStatisticView to set
+	 */
+	public void setSmCategoryStatisticView(boolean smCategoryStatisticView) {
+		this.smCategoryStatisticView = smCategoryStatisticView;
+	}
+
+	/**
+	 * Checks if is sm category statistic by state view.
+	 * 
+	 * @return the smCategoryStatisticByStateView
+	 */
+	public boolean isSmCategoryStatisticByStateView() {
+		return smCategoryStatisticByStateView;
+	}
+
+	/**
+	 * Sets the sm category statistic by state view.
+	 * 
+	 * @param smCategoryStatisticByStateView
+	 *            the smCategoryStatisticByStateView to set
+	 */
+	public void setSmCategoryStatisticByStateView(
+			boolean smCategoryStatisticByStateView) {
+		this.smCategoryStatisticByStateView = smCategoryStatisticByStateView;
+	}
+
+	/**
+	 * Checks if is sm category statistic by year view.
+	 * 
+	 * @return the smCategoryStatisticByYearView
+	 */
+	public boolean isSmCategoryStatisticByYearView() {
+		return smCategoryStatisticByYearView;
+	}
+
+	/**
+	 * Sets the sm category statistic by year view.
+	 * 
+	 * @param smCategoryStatisticByYearView
+	 *            the smCategoryStatisticByYearView to set
+	 */
+	public void setSmCategoryStatisticByYearView(
+			boolean smCategoryStatisticByYearView) {
+		this.smCategoryStatisticByYearView = smCategoryStatisticByYearView;
+	}
+
+	/**
+	 * Checks if is sm company address list view.
+	 * 
+	 * @return the smCompanyAddressListView
+	 */
+	public boolean isSmCompanyAddressListView() {
+		return smCompanyAddressListView;
+	}
+
+	/**
+	 * Sets the sm company address list view.
+	 * 
+	 * @param smCompanyAddressListView
+	 *            the smCompanyAddressListView to set
+	 */
+	public void setSmCompanyAddressListView(boolean smCompanyAddressListView) {
+		this.smCompanyAddressListView = smCompanyAddressListView;
+	}
+
+	/**
+	 * Checks if is sm daily receipts es view.
+	 * 
+	 * @return the smDailyReceiptsESView
+	 */
+	public boolean isSmDailyReceiptsESView() {
+		return smDailyReceiptsESView;
+	}
+
+	/**
+	 * Sets the sm daily receipts es view.
+	 * 
+	 * @param smDailyReceiptsESView
+	 *            the smDailyReceiptsESView to set
+	 */
+	public void setSmDailyReceiptsESView(boolean smDailyReceiptsESView) {
+		this.smDailyReceiptsESView = smDailyReceiptsESView;
+	}
+
+	/**
+	 * Checks if is sm delete pending application view.
+	 * 
+	 * @return the smDeletePendingApplicationView
+	 */
+	public boolean isSmDeletePendingApplicationView() {
+		return smDeletePendingApplicationView;
+	}
+
+	/**
+	 * Sets the sm delete pending application view.
+	 * 
+	 * @param smDeletePendingApplicationView
+	 *            the smDeletePendingApplicationView to set
+	 */
+	public void setSmDeletePendingApplicationView(
+			boolean smDeletePendingApplicationView) {
+		this.smDeletePendingApplicationView = smDeletePendingApplicationView;
+	}
+
+	/**
+	 * Checks if is sm laporan terimaan harian view.
+	 * 
+	 * @return the smLaporanTerimaanHarianView
+	 */
+	public boolean isSmLaporanTerimaanHarianView() {
+		return smLaporanTerimaanHarianView;
+	}
+
+	/**
+	 * Sets the sm laporan terimaan harian view.
+	 * 
+	 * @param smLaporanTerimaanHarianView
+	 *            the smLaporanTerimaanHarianView to set
+	 */
+	public void setSmLaporanTerimaanHarianView(boolean smLaporanTerimaanHarianView) {
+		this.smLaporanTerimaanHarianView = smLaporanTerimaanHarianView;
+	}
+
+	/**
+	 * Checks if is sm list of application view.
+	 * 
+	 * @return the smListOfApplicationView
+	 */
+	public boolean isSmListOfApplicationView() {
+		return smListOfApplicationView;
+	}
+
+	/**
+	 * Sets the sm list of application view.
+	 * 
+	 * @param smListOfApplicationView
+	 *            the smListOfApplicationView to set
+	 */
+	public void setSmListOfApplicationView(boolean smListOfApplicationView) {
+		this.smListOfApplicationView = smListOfApplicationView;
+	}
+
+	/**
+	 * Checks if is sm list of application pending for sv view.
+	 * 
+	 * @return the smListOfApplicationPendingForSVView
+	 */
+	public boolean isSmListOfApplicationPendingForSVView() {
+		return smListOfApplicationPendingForSVView;
+	}
+
+	/**
+	 * Sets the sm list of application pending for sv view.
+	 * 
+	 * @param smListOfApplicationPendingForSVView
+	 *            the smListOfApplicationPendingForSVView to set
+	 */
+	public void setSmListOfApplicationPendingForSVView(
+			boolean smListOfApplicationPendingForSVView) {
+		this.smListOfApplicationPendingForSVView = smListOfApplicationPendingForSVView;
+	}
+
+	/**
+	 * Checks if is sm list of application status view.
+	 * 
+	 * @return the smListOfApplicationStatusView
+	 */
+	public boolean isSmListOfApplicationStatusView() {
+		return smListOfApplicationStatusView;
+	}
+
+	/**
+	 * Sets the sm list of application status view.
+	 * 
+	 * @param smListOfApplicationStatusView
+	 *            the smListOfApplicationStatusView to set
+	 */
+	public void setSmListOfApplicationStatusView(
+			boolean smListOfApplicationStatusView) {
+		this.smListOfApplicationStatusView = smListOfApplicationStatusView;
+	}
+
+	/**
+	 * Checks if is sm list of companies sort alphabet view.
+	 * 
+	 * @return the smListOfCompaniesSortAlphabetView
+	 */
+	public boolean isSmListOfCompaniesSortAlphabetView() {
+		return smListOfCompaniesSortAlphabetView;
+	}
+
+	/**
+	 * Sets the sm list of companies sort alphabet view.
+	 * 
+	 * @param smListOfCompaniesSortAlphabetView
+	 *            the smListOfCompaniesSortAlphabetView to set
+	 */
+	public void setSmListOfCompaniesSortAlphabetView(
+			boolean smListOfCompaniesSortAlphabetView) {
+		this.smListOfCompaniesSortAlphabetView = smListOfCompaniesSortAlphabetView;
+	}
+
+	/**
+	 * Checks if is sm list of companies srsc view.
+	 * 
+	 * @return the smListOfCompaniesSRSCView
+	 */
+	public boolean isSmListOfCompaniesSRSCView() {
+		return smListOfCompaniesSRSCView;
+	}
+
+	/**
+	 * Sets the sm list of companies srsc view.
+	 * 
+	 * @param smListOfCompaniesSRSCView
+	 *            the smListOfCompaniesSRSCView to set
+	 */
+	public void setSmListOfCompaniesSRSCView(boolean smListOfCompaniesSRSCView) {
+		this.smListOfCompaniesSRSCView = smListOfCompaniesSRSCView;
+	}
+
+	/**
+	 * Checks if is sm list of companies with dohe view.
+	 * 
+	 * @return the smListOfCompaniesWithDOHEView
+	 */
+	public boolean isSmListOfCompaniesWithDOHEView() {
+		return smListOfCompaniesWithDOHEView;
+	}
+
+	/**
+	 * Sets the sm list of companies with dohe view.
+	 * 
+	 * @param smListOfCompaniesWithDOHEView
+	 *            the smListOfCompaniesWithDOHEView to set
+	 */
+	public void setSmListOfCompaniesWithDOHEView(
+			boolean smListOfCompaniesWithDOHEView) {
+		this.smListOfCompaniesWithDOHEView = smListOfCompaniesWithDOHEView;
+	}
+
+	/**
+	 * Checks if is sm list of daily application basic and mof view.
+	 * 
+	 * @return the smListOfDailyApplicationBasicAndMOFView
+	 */
+	public boolean isSmListOfDailyApplicationBasicAndMOFView() {
+		return smListOfDailyApplicationBasicAndMOFView;
+	}
+
+	/**
+	 * Sets the sm list of daily application basic and mof view.
+	 * 
+	 * @param smListOfDailyApplicationBasicAndMOFView
+	 *            the smListOfDailyApplicationBasicAndMOFView to set
+	 */
+	public void setSmListOfDailyApplicationBasicAndMOFView(
+			boolean smListOfDailyApplicationBasicAndMOFView) {
+		this.smListOfDailyApplicationBasicAndMOFView = smListOfDailyApplicationBasicAndMOFView;
+	}
+
+	/**
+	 * Checks if is sm list of daily registered application view.
+	 * 
+	 * @return the smListOfDailyRegisteredApplicationView
+	 */
+	public boolean isSmListOfDailyRegisteredApplicationView() {
+		return smListOfDailyRegisteredApplicationView;
+	}
+
+	/**
+	 * Sets the sm list of daily registered application view.
+	 * 
+	 * @param smListOfDailyRegisteredApplicationView
+	 *            the smListOfDailyRegisteredApplicationView to set
+	 */
+	public void setSmListOfDailyRegisteredApplicationView(
+			boolean smListOfDailyRegisteredApplicationView) {
+		this.smListOfDailyRegisteredApplicationView = smListOfDailyRegisteredApplicationView;
+	}
+
+	/**
+	 * Checks if is sm list of dohe view.
+	 * 
+	 * @return the smListOfDOHEView
+	 */
+	public boolean isSmListOfDOHEView() {
+		return smListOfDOHEView;
+	}
+
+	/**
+	 * Sets the sm list of dohe view.
+	 * 
+	 * @param smListOfDOHEView
+	 *            the smListOfDOHEView to set
+	 */
+	public void setSmListOfDOHEView(boolean smListOfDOHEView) {
+		this.smListOfDOHEView = smListOfDOHEView;
+	}
+
+	/**
+	 * Checks if is sm list of gst reg supplier view.
+	 * 
+	 * @return the smListOfGSTRegSupplierView
+	 */
+	public boolean isSmListOfGSTRegSupplierView() {
+		return smListOfGSTRegSupplierView;
+	}
+
+	/**
+	 * Sets the sm list of gst reg supplier view.
+	 * 
+	 * @param smListOfGSTRegSupplierView
+	 *            the smListOfGSTRegSupplierView to set
+	 */
+	public void setSmListOfGSTRegSupplierView(boolean smListOfGSTRegSupplierView) {
+		this.smListOfGSTRegSupplierView = smListOfGSTRegSupplierView;
+	}
+
+	/**
+	 * Checks if is sm list delete mof account view.
+	 * 
+	 * @return the smListDeleteMOFAccountView
+	 */
+	public boolean isSmListDeleteMOFAccountView() {
+		return smListDeleteMOFAccountView;
+	}
+
+	/**
+	 * Sets the sm list delete mof account view.
+	 * 
+	 * @param smListDeleteMOFAccountView
+	 *            the smListDeleteMOFAccountView to set
+	 */
+	public void setSmListDeleteMOFAccountView(boolean smListDeleteMOFAccountView) {
+		this.smListDeleteMOFAccountView = smListDeleteMOFAccountView;
+	}
+
+	/**
+	 * Checks if is sm list of offline sdps view.
+	 * 
+	 * @return the smListOfOfflineSDPSView
+	 */
+	public boolean isSmListOfOfflineSDPSView() {
+		return smListOfOfflineSDPSView;
+	}
+
+	/**
+	 * Sets the sm list of offline sdps view.
+	 * 
+	 * @param smListOfOfflineSDPSView
+	 *            the smListOfOfflineSDPSView to set
+	 */
+	public void setSmListOfOfflineSDPSView(boolean smListOfOfflineSDPSView) {
+		this.smListOfOfflineSDPSView = smListOfOfflineSDPSView;
+	}
+
+	/**
+	 * Checks if is sm list ps more view.
+	 * 
+	 * @return the smListPSMoreView
+	 */
+	public boolean isSmListPSMoreView() {
+		return smListPSMoreView;
+	}
+
+	/**
+	 * Sets the sm list ps more view.
+	 * 
+	 * @param smListPSMoreView
+	 *            the smListPSMoreView to set
+	 */
+	public void setSmListPSMoreView(boolean smListPSMoreView) {
+		this.smListPSMoreView = smListPSMoreView;
+	}
+
+	/**
+	 * Checks if is sm list of expired company view.
+	 * 
+	 * @return the smListOfExpiredCompanyView
+	 */
+	public boolean isSmListOfExpiredCompanyView() {
+		return smListOfExpiredCompanyView;
+	}
+
+	/**
+	 * Sets the sm list of expired company view.
+	 * 
+	 * @param smListOfExpiredCompanyView
+	 *            the smListOfExpiredCompanyView to set
+	 */
+	public void setSmListOfExpiredCompanyView(boolean smListOfExpiredCompanyView) {
+		this.smListOfExpiredCompanyView = smListOfExpiredCompanyView;
+	}
+
+	/**
+	 * Checks if is sm list of svosvl view.
+	 * 
+	 * @return the smListOfSVOSVLView
+	 */
+	public boolean isSmListOfSVOSVLView() {
+		return smListOfSVOSVLView;
+	}
+
+	/**
+	 * Sets the sm list of svosvl view.
+	 * 
+	 * @param smListOfSVOSVLView
+	 *            the smListOfSVOSVLView to set
+	 */
+	public void setSmListOfSVOSVLView(boolean smListOfSVOSVLView) {
+		this.smListOfSVOSVLView = smListOfSVOSVLView;
+	}
+
+	/**
+	 * Checks if is sm list of soa view.
+	 * 
+	 * @return the smListOfSOAView
+	 */
+	public boolean isSmListOfSOAView() {
+		return smListOfSOAView;
+	}
+
+	/**
+	 * Sets the sm list of soa view.
+	 * 
+	 * @param smListOfSOAView
+	 *            the smListOfSOAView to set
+	 */
+	public void setSmListOfSOAView(boolean smListOfSOAView) {
+		this.smListOfSOAView = smListOfSOAView;
+	}
+
+	/**
+	 * Checks if is sm list of soppsv view.
+	 * 
+	 * @return the smListOfSOPPSVView
+	 */
+	public boolean isSmListOfSOPPSVView() {
+		return smListOfSOPPSVView;
+	}
+
+	/**
+	 * Sets the sm list of soppsv view.
+	 * 
+	 * @param smListOfSOPPSVView
+	 *            the smListOfSOPPSVView to set
+	 */
+	public void setSmListOfSOPPSVView(boolean smListOfSOPPSVView) {
+		this.smListOfSOPPSVView = smListOfSOPPSVView;
+	}
+
+	/**
+	 * Checks if is sm list of socpba view.
+	 * 
+	 * @return the smListOfSOCPBAView
+	 */
+	public boolean isSmListOfSOCPBAView() {
+		return smListOfSOCPBAView;
+	}
+
+	/**
+	 * Sets the sm list of socpba view.
+	 * 
+	 * @param smListOfSOCPBAView
+	 *            the smListOfSOCPBAView to set
+	 */
+	public void setSmListOfSOCPBAView(boolean smListOfSOCPBAView) {
+		this.smListOfSOCPBAView = smListOfSOCPBAView;
+	}
+
+	/**
+	 * Checks if is sm list of users scr view.
+	 * 
+	 * @return the smListOfUsersSCRView
+	 */
+	public boolean isSmListOfUsersSCRView() {
+		return smListOfUsersSCRView;
+	}
+
+	/**
+	 * Sets the sm list of users scr view.
+	 * 
+	 * @param smListOfUsersSCRView
+	 *            the smListOfUsersSCRView to set
+	 */
+	public void setSmListOfUsersSCRView(boolean smListOfUsersSCRView) {
+		this.smListOfUsersSCRView = smListOfUsersSCRView;
+	}
+
+	/**
+	 * Checks if is sm list of pprf view.
+	 * 
+	 * @return the smListOfPPRFView
+	 */
+	public boolean isSmListOfPPRFView() {
+		return smListOfPPRFView;
+	}
+
+	/**
+	 * Sets the sm list of pprf view.
+	 * 
+	 * @param smListOfPPRFView
+	 *            the smListOfPPRFView to set
+	 */
+	public void setSmListOfPPRFView(boolean smListOfPPRFView) {
+		this.smListOfPPRFView = smListOfPPRFView;
+	}
+
+	/**
+	 * Checks if is sm monthly report view.
+	 * 
+	 * @return the smMonthlyReportView
+	 */
+	public boolean isSmMonthlyReportView() {
+		return smMonthlyReportView;
+	}
+
+	/**
+	 * Sets the sm monthly report view.
+	 * 
+	 * @param smMonthlyReportView
+	 *            the smMonthlyReportView to set
+	 */
+	public void setSmMonthlyReportView(boolean smMonthlyReportView) {
+		this.smMonthlyReportView = smMonthlyReportView;
+	}
+
+	/**
+	 * Checks if is sm profile reg company view.
+	 * 
+	 * @return the smProfileRegCompanyView
+	 */
+	public boolean isSmProfileRegCompanyView() {
+		return smProfileRegCompanyView;
+	}
+
+	/**
+	 * Sets the sm profile reg company view.
+	 * 
+	 * @param smProfileRegCompanyView
+	 *            the smProfileRegCompanyView to set
+	 */
+	public void setSmProfileRegCompanyView(boolean smProfileRegCompanyView) {
+		this.smProfileRegCompanyView = smProfileRegCompanyView;
+	}
+
+	/**
+	 * Checks if is sm qrs view.
+	 * 
+	 * @return the smQRSView
+	 */
+	public boolean isSmQRSView() {
+		return smQRSView;
+	}
+
+	/**
+	 * Sets the sm qrs view.
+	 * 
+	 * @param smQRSView
+	 *            the smQRSView to set
+	 */
+	public void setSmQRSView(boolean smQRSView) {
+		this.smQRSView = smQRSView;
+	}
+
+	/**
+	 * Checks if is sm statistic list cbc view.
+	 * 
+	 * @return the smStatisticListCBCView
+	 */
+	public boolean isSmStatisticListCBCView() {
+		return smStatisticListCBCView;
+	}
+
+	/**
+	 * Sets the sm statistic list cbc view.
+	 * 
+	 * @param smStatisticListCBCView
+	 *            the smStatisticListCBCView to set
+	 */
+	public void setSmStatisticListCBCView(boolean smStatisticListCBCView) {
+		this.smStatisticListCBCView = smStatisticListCBCView;
+	}
+
+	/**
+	 * Checks if is sm supplier performance view.
+	 * 
+	 * @return the smSupplierPerformanceView
+	 */
+	public boolean isSmSupplierPerformanceView() {
+		return smSupplierPerformanceView;
+	}
+
+	/**
+	 * Sets the sm supplier performance view.
+	 * 
+	 * @param smSupplierPerformanceView
+	 *            the smSupplierPerformanceView to set
+	 */
+	public void setSmSupplierPerformanceView(boolean smSupplierPerformanceView) {
+		this.smSupplierPerformanceView = smSupplierPerformanceView;
+	}
+
+	/**
+	 * Checks if is sm supplier statistic view.
+	 * 
+	 * @return the smSupplierStatisticView
+	 */
+	public boolean isSmSupplierStatisticView() {
+		return smSupplierStatisticView;
+	}
+
+	/**
+	 * Sets the sm supplier statistic view.
+	 * 
+	 * @param smSupplierStatisticView
+	 *            the smSupplierStatisticView to set
+	 */
+	public void setSmSupplierStatisticView(boolean smSupplierStatisticView) {
+		this.smSupplierStatisticView = smSupplierStatisticView;
+	}
+
+	/**
+	 * Checks if is sm supplier statistic by category view.
+	 * 
+	 * @return the smSupplierStatisticByCategoryView
+	 */
+	public boolean isSmSupplierStatisticByCategoryView() {
+		return smSupplierStatisticByCategoryView;
+	}
+
+	/**
+	 * Sets the sm supplier statistic by category view.
+	 * 
+	 * @param smSupplierStatisticByCategoryView
+	 *            the smSupplierStatisticByCategoryView to set
+	 */
+	public void setSmSupplierStatisticByCategoryView(
+			boolean smSupplierStatisticByCategoryView) {
+		this.smSupplierStatisticByCategoryView = smSupplierStatisticByCategoryView;
+	}
+
+	/**
+	 * Checks if is sm threshold or supplier transaction view.
+	 * 
+	 * @return the smThresholdOrSupplierTransactionView
+	 */
+	public boolean isSmThresholdOrSupplierTransactionView() {
+		return smThresholdOrSupplierTransactionView;
+	}
+
+	/**
+	 * Sets the sm threshold or supplier transaction view.
+	 * 
+	 * @param smThresholdOrSupplierTransactionView
+	 *            the smThresholdOrSupplierTransactionView to set
+	 */
+	public void setSmThresholdOrSupplierTransactionView(
+			boolean smThresholdOrSupplierTransactionView) {
+		this.smThresholdOrSupplierTransactionView = smThresholdOrSupplierTransactionView;
+	}
+
+	/**
+	 * Checks if is sm threshold year view.
+	 * 
+	 * @return the smThresholdYearView
+	 */
+	public boolean isSmThresholdYearView() {
+		return smThresholdYearView;
+	}
+
+	/**
+	 * Sets the sm threshold year view.
+	 * 
+	 * @param smThresholdYearView
+	 *            the smThresholdYearView to set
+	 */
+	public void setSmThresholdYearView(boolean smThresholdYearView) {
+		this.smThresholdYearView = smThresholdYearView;
+	}
+
+	/**
+	 * Checks if is sm total no of daily ar view.
+	 * 
+	 * @return the smTotalNoOfDailyARView
+	 */
+	public boolean isSmTotalNoOfDailyARView() {
+		return smTotalNoOfDailyARView;
+	}
+
+	/**
+	 * Sets the sm total no of daily ar view.
+	 * 
+	 * @param smTotalNoOfDailyARView
+	 *            the smTotalNoOfDailyARView to set
+	 */
+	public void setSmTotalNoOfDailyARView(boolean smTotalNoOfDailyARView) {
+		this.smTotalNoOfDailyARView = smTotalNoOfDailyARView;
+	}
+
+	/**
+	 * Checks if is sm total no of yearly ar view.
+	 * 
+	 * @return the smTotalNoOfYearlyARView
+	 */
+	public boolean isSmTotalNoOfYearlyARView() {
+		return smTotalNoOfYearlyARView;
+	}
+
+	/**
+	 * Sets the sm total no of yearly ar view.
+	 * 
+	 * @param smTotalNoOfYearlyARView
+	 *            the smTotalNoOfYearlyARView to set
+	 */
+	public void setSmTotalNoOfYearlyARView(boolean smTotalNoOfYearlyARView) {
+		this.smTotalNoOfYearlyARView = smTotalNoOfYearlyARView;
+	}
+
+	/**
+	 * Checks if is sm virtual certificate relased list view.
+	 * 
+	 * @return the smVirtualCertificateRelasedListView
+	 */
+	public boolean isSmVirtualCertificateRelasedListView() {
+		return smVirtualCertificateRelasedListView;
+	}
+
+	/**
+	 * Sets the sm virtual certificate relased list view.
+	 * 
+	 * @param smVirtualCertificateRelasedListView
+	 *            the smVirtualCertificateRelasedListView to set
+	 */
+	public void setSmVirtualCertificateRelasedListView(
+			boolean smVirtualCertificateRelasedListView) {
+		this.smVirtualCertificateRelasedListView = smVirtualCertificateRelasedListView;
+	}
+
+	/**
+	 * Checks if is sm collection receipt transation view.
+	 * 
+	 * @return the smCollectionReceiptTransationView
+	 */
+	public boolean isSmCollectionReceiptTransationView() {
+		return smCollectionReceiptTransationView;
+	}
+
+	/**
+	 * Sets the sm collection receipt transation view.
+	 * 
+	 * @param smCollectionReceiptTransationView
+	 *            the smCollectionReceiptTransationView to set
+	 */
+	public void setSmCollectionReceiptTransationView(
+			boolean smCollectionReceiptTransationView) {
+		this.smCollectionReceiptTransationView = smCollectionReceiptTransationView;
+	}
+
+	/**
+	 * Checks if is sm collection report payment method view.
+	 * 
+	 * @return the smCollectionReportPaymentMethodView
+	 */
+	public boolean isSmCollectionReportPaymentMethodView() {
+		return smCollectionReportPaymentMethodView;
+	}
+
+	/**
+	 * Sets the sm collection report payment method view.
+	 * 
+	 * @param smCollectionReportPaymentMethodView
+	 *            the smCollectionReportPaymentMethodView to set
+	 */
+	public void setSmCollectionReportPaymentMethodView(
+			boolean smCollectionReportPaymentMethodView) {
+		this.smCollectionReportPaymentMethodView = smCollectionReportPaymentMethodView;
+	}
+
+	/**
+	 * Checks if is sm collection report clasification code view.
+	 * 
+	 * @return the smCollectionReportClasificationCodeView
+	 */
+	public boolean isSmCollectionReportClasificationCodeView() {
+		return smCollectionReportClasificationCodeView;
+	}
+
+	/**
+	 * Sets the sm collection report clasification code view.
+	 * 
+	 * @param smCollectionReportClasificationCodeView
+	 *            the smCollectionReportClasificationCodeView to set
+	 */
+	public void setSmCollectionReportClasificationCodeView(
+			boolean smCollectionReportClasificationCodeView) {
+		this.smCollectionReportClasificationCodeView = smCollectionReportClasificationCodeView;
+	}
+
+	/**
+	 * Checks if is sm revenue collection report view.
+	 * 
+	 * @return the smRevenueCollectionReportView
+	 */
+	public boolean isSmRevenueCollectionReportView() {
+		return smRevenueCollectionReportView;
+	}
+
+	/**
+	 * Sets the sm revenue collection report view.
+	 * 
+	 * @param smRevenueCollectionReportView
+	 *            the smRevenueCollectionReportView to set
+	 */
+	public void setSmRevenueCollectionReportView(
+			boolean smRevenueCollectionReportView) {
+		this.smRevenueCollectionReportView = smRevenueCollectionReportView;
+	}
+
+	/**
+	 * Checks if is sm list of daily receipt view.
+	 * 
+	 * @return the smListOfDailyReceiptView
+	 */
+	public boolean isSmListOfDailyReceiptView() {
+		return smListOfDailyReceiptView;
+	}
+
+	/**
+	 * Sets the sm list of daily receipt view.
+	 * 
+	 * @param smListOfDailyReceiptView
+	 *            the smListOfDailyReceiptView to set
+	 */
+	public void setSmListOfDailyReceiptView(boolean smListOfDailyReceiptView) {
+		this.smListOfDailyReceiptView = smListOfDailyReceiptView;
+	}
+
+	/**
+	 * Checks if is pm exempted item view.
+	 * 
+	 * @return the pmExemptedItemView
+	 */
+	public boolean isPmExemptedItemView() {
+		return pmExemptedItemView;
+	}
+
+	/**
+	 * Sets the pm exempted item view.
+	 * 
+	 * @param pmExemptedItemView
+	 *            the pmExemptedItemView to set
+	 */
+	public void setPmExemptedItemView(boolean pmExemptedItemView) {
+		this.pmExemptedItemView = pmExemptedItemView;
+	}
+
+	/**
+	 * Checks if is pm exempted contracted item view.
+	 * 
+	 * @return the pmExemptedContractedItemView
+	 */
+	public boolean isPmExemptedContractedItemView() {
+		return pmExemptedContractedItemView;
+	}
+
+	/**
+	 * Sets the pm exempted contracted item view.
+	 * 
+	 * @param pmExemptedContractedItemView
+	 *            the pmExemptedContractedItemView to set
+	 */
+	public void setPmExemptedContractedItemView(boolean pmExemptedContractedItemView) {
+		this.pmExemptedContractedItemView = pmExemptedContractedItemView;
 	}
 }

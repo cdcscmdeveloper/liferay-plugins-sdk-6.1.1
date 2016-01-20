@@ -81,6 +81,7 @@ public class PMReportBackingBean extends
 			break;
 
 		case ReportConst.PM_LIST_OF_EXEMPTED_ITEMS_RPT_VAL:
+			rptGenBean.setPmExemptedItemView(true);
 			rptGenBean.setPmItemNameView(true);
 			rptGenBean.setPmItmeCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
@@ -88,6 +89,7 @@ public class PMReportBackingBean extends
 			break;
 
 		case ReportConst.PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL:
+			rptGenBean.setPmExemptedContractedItemView(true);			
 			rptGenBean.setPmItemNameView(true);
 			rptGenBean.setPmItmeCodeView(true);
 			rptGenBean.setPmNonMandatoryDateView(true);
