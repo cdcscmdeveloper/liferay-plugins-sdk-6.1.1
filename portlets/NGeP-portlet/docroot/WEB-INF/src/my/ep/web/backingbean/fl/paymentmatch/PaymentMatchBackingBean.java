@@ -1273,13 +1273,25 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		if(paymentAdvice.getFlRequest().getCtContract() != null){
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			BigDecimal deductionAmt = new BigDecimal(0);
+			
+			if(paymentAdvice.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				if(getManagedBean().getTaskId()==null) {
+					if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size()>0) {
+						getManagedBean().setShowDeductionTab(true);
+					} 
+				} else { // on going task
+					if(paymentAdvice.getFlRequest().getCtContract().getLatestContractVer().getCtDeductions().size()>0) { 
+						getManagedBean().setShowDeductionTab(true);
+					} else if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction().size()>0) { // clear payment deduction table if already exist
+						getManagedBean().getPaymentAdvice().getFlPaymentDeduction().clear();
+					} 
+				}
+			}
+			
 			for(CtDeduction deduction : paymentAdvice.getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
 				/*if(!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)){
 					getManagedBean().setShowDeductionTab(true);
 				}*/
-				if(paymentAdvice.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-					getManagedBean().setShowDeductionTab(true);
-				}
 				if(deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT)){
 					getManagedBean().setHaveAdvancedPymt(true);
 					deductionAmt = deductionAmt.add(new BigDecimal(deduction.getAmount()));
@@ -1292,7 +1304,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				ctRes.setPaidAdvancePaymentAmt(new BigDecimal(0));
 			}
 			getManagedBean().setPaidAmt(ctRes.getPaidAdvancePaymentAmt());
-			if(deductionAmt.doubleValue() == 0){
+			if(deductionAmt.doubleValue() == 0){	
 				getManagedBean().setPaidPerc(new BigDecimal(0));
 			}else{
 				getManagedBean().setPaidPerc(ctRes.getPaidAdvancePaymentAmt().divide(deductionAmt,2,RoundingMode.HALF_UP).multiply(new BigDecimal(100)));	
