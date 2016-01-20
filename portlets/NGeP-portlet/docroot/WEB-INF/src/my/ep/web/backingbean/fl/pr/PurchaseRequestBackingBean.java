@@ -3044,7 +3044,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				RuleResDTO roleResDTO = null;
 				ruleReqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
 				roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-				System.out.println("line 3018 getRuleValue: "+roleResDTO.getRuleValueList().get(0).getRuleValue());
 				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 					getManagedBean().setTaskDeadLine(roleResDTO.getRuleValueList().get(0).getRuleValue());
 				}
@@ -3061,6 +3060,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 			reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
+			reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
 			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);			
 			
 		}finally{

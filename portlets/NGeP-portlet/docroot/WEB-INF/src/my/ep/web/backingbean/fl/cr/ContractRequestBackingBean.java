@@ -4027,8 +4027,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			
 			if(isRequisitioner()){
-//				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-//				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
@@ -4046,6 +4044,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 			reqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
+			reqDTO.setPmOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
 			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);		
 		}finally{
 			fulfilmentRequestSO = null;
