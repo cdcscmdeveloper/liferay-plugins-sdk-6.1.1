@@ -1,6 +1,6 @@
 /**
 
-q * Copyright © 2013 Archisoft. All rights reserved.
+\q * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.fl.cr;
 
@@ -1128,7 +1128,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			amendReq.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			ContractAmendmentResDTO amendRes = ctAmendmentSO.checkAgencyAddressExist(amendReq);
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
-			
+			checkMofAccountExpDate(getManagedBean().getFlRequest());
 			if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
 				if(getManagedBean().getFlRequest().getFlTempItems().isEmpty()){
 					ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
@@ -1295,6 +1295,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			amendReq.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			ContractAmendmentResDTO amendRes = ctAmendmentSO.checkAgencyAddressExist(amendReq);
 			getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
+			
+			checkMofAccountExpDate(getManagedBean().getFlRequest());
 		}
 		
 		//Default procurement type category to Supply of Goods in case of null
@@ -3926,7 +3928,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			checkMofAccountExpDate(flRequest);
 			validatePreparedOrgAndAgencies();
 			checkContractValidity(getManagedBean().getFlRequest());
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
@@ -4059,10 +4060,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		MofAccountResDTO resDTO = mofAccountSO.retriveMOFAccountBySupplierIdAndType(reqDTO);
 		
 		if(DateUtils.getCurrentDate().before(resDTO.getMofAccount().getEffDate())){
-			throw new EpException(MessageConst.ERROR_740042);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745012, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
 		if(DateUtils.getCurrentDate().after(resDTO.getMofAccount().getExpDate())){
-			throw new EpException(MessageConst.ERROR_740042);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745012, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
 	}
 	
