@@ -55,21 +55,17 @@
 		<p:panel header="#{lbl['lbl.sc.bid.summary']}" toggleable="true"
 			rendered="#{!empty biddingBB.managedBean.selectedBidItem}">
 
-			
-
 			<div align="center">
 
 				<h4>
-					<B> Bidding Statistic Graph</B>
+					<B>#{lbl['lbl.sc.bidding.statistic.graph']}</B>
 				</h4>
 
 			</div>
 
-			<p:spacer height="2"></p:spacer>
-
 			<div>
 
-				<p:lineChart id="lineChartBMBI"
+				<p:lineChart id="lineChartBMBI" animate="true" yaxisLabel="#{lbl['lbl.sc.bid.price']}" xaxisLabel="#{lbl['lbl.sc.bid.time']}"
 					value="#{biddingBB.managedBean.itemPriceLinearModel}"
 					legendPosition="e" style="height:300px;" />
 
