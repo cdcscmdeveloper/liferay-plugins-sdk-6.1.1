@@ -1833,6 +1833,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			    getManagedBean().getContractVer().getCtContractValue().setAp201FilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			}
 			
+			 /**
+			 * The method used to upload bond exempted file.
+			 * 
+			 * @param  event      the upload event for file upload from screen
+			 * @throws Exception  if an exception occurred
+			 * @see    Exception
+			 */
+			public void uploadBondExemptedFile(FileUploadEvent event) throws Exception {
+				UploadedFile item = event.getFile();
+				AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+					
+				String filePath = getManagedBean().getFileDirectory();
+				File file = new File(filePath);
+				file.mkdirs();
+				filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+				FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+			    fileOuputStream.write(item.getContents());
+			    fileOuputStream.close();
+			    
+			    getManagedBean().getCtContractAmount().setBondExemptedFileName(item.getFileName());
+			    getManagedBean().getCtContractAmount().setBondExemptedFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			}
+			
 			/**
 			 * The method used to select all added performance bond(s).
 		     */

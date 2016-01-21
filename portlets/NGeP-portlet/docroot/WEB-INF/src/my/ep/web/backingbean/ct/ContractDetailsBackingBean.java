@@ -947,6 +947,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
    					new String[] {ResourceBundleUtils.getMessage("lbl.ct.attachment.ap201", 
    							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
+		
+		if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()
+				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+				&& (ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName() == null 
+				|| ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName().equalsIgnoreCase(""))) {
+			throw new EpException(MessageConst.ERROR_100022, 
+   					new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.exempted.letter", 
+   							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
 	}
     
     /**
