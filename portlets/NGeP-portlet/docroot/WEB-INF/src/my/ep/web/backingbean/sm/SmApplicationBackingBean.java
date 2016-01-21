@@ -2631,7 +2631,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedBranches().clear();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Company Branch" });
+					new String[] { SmCommonUtil.getMessage("lbl.sm.branch",
+							null) });
 		}
 		saveOrUpdateAppl();
 	}
