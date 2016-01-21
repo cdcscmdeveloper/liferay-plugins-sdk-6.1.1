@@ -70,7 +70,7 @@
           </c:if>
           
           .pmColumn4Class {
-	        width: 1%;
+	        width: 32.1%;
             }
           
     </style>
@@ -80,7 +80,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td><h:panelGrid id="pmReportCriteria" columns="4" columnClasses="pmColumn1Class,pmColumn2Class,pmColumn3Class" 
-						style="width:100%;margin-top:7px;">
+						style="width:100%;margin-top:32px;">
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmServiceTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.servicescreen']}" />
@@ -451,7 +451,7 @@
 					<TD><p:outputLabel
 							value="#{lbl['lbl.rpt.businessregnoscreen']}"
 							 /></TD>
-					<TD><p:inputText value="#{reportBackingBean.pmBusinessRegNo}"
+					<TD class="pmColumn4Class"><p:inputText value="#{reportBackingBean.pmBusinessRegNo}"
 							style="width:290px;">
 						</p:inputText></TD>
 				</c:if>
