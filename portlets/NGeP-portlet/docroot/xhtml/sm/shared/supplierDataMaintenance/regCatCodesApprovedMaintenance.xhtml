@@ -11,7 +11,7 @@
 	<p:dataTable var="aprvdCatBean"
 		widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
 		value="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}" 
-		selection="#{supplierDataMaintenanceBackingBean.managedBean.deleteApprovedCategories}"
+		selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories}"
 		rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		<ac:paginator for="catApprDt" />
@@ -67,9 +67,10 @@
 	<div align="right">
 
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
-			disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.deleteApprovedCategories}"
-			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.deleteApprovedCategories)}" 
-			update="@([id$=catApprDt])" partialSubmit="true" 
+			disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
+				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories)}" 
+			update=":#{p:component('catcodeMainPanelId')}" partialSubmit="true" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			process="@this">
 		</p:commandButton>

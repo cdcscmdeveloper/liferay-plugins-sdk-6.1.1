@@ -22,6 +22,7 @@ import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -100,6 +101,10 @@ public class SupplierDataMaintenanceBackingBean extends
 					getManagedBean().getSmMofAccount().getExpDate());
 		}
 		getManagedBean().setDeleteApprovedCategories(
+				new ArrayList<SmSupplierCategory>());
+		getManagedBean().setSelectedApprovedCategories(
+				new ArrayList<SmSupplierCategory>());
+		getManagedBean().setSelectedPendingApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 	}
 
@@ -372,9 +377,9 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *            -AjaxBehaviorEvent
 	 */
 	public void unSelectApporvedCategories(AjaxBehaviorEvent e) {
-		if (getManagedBean().getDeleteNewApplCategoryList() != null) {
+		if (getManagedBean().getSelectedPendingApprovedCategories() != null) {
 			Iterator<SmSupplierCategory> iterator = getManagedBean()
-					.getDeleteNewApplCategoryList().iterator();
+					.getSelectedPendingApprovedCategories().iterator();
 			while (iterator.hasNext()) {
 				SmSupplierCategory cat = iterator.next();
 				if (!getManagedBean().isAllowedToDoMaintenance()) {
@@ -451,31 +456,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void hideConfirmDialog() {
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("confirmDialog.hide()");
-	}
-
-	/**
-	 * Get supplier admin by appl
-	 * 
-	 * @param SmAppl
-	 *            smAppl
-	 * @return SmPersonnel
-	 */
-	private SmPersonnel getSupplierAdminByAppl(SmAppl smAppl) {
-		SmPersonnel supplierAdmin = null;
-
-		if (smAppl.getSmPersonnels() != null
-				&& !smAppl.getSmPersonnels().isEmpty()) {
-			for (SmPersonnel personnel : smAppl.getSmPersonnels()) {
-				if (StringUtils.isNotBlank(personnel.getEpRole())
-						&& StringUtils.isNotBlank(personnel.getEmail())
-						&& personnel.getEpRole().equals(
-								RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-					supplierAdmin = personnel;
-					break;
-				}
-			}
-		}
-		return supplierAdmin;
 	}
 
 	/**
@@ -611,7 +591,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
-	 * Set overlapped categories values.Checks if Same owner exist in different
+	 * Set overlapped categories values.Checks if same owner exist in different
 	 * supplier and has same one or more similar categories
 	 */
 	private void setOverLappingCategories() {
@@ -687,8 +667,13 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Category Code" });
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.catCodes.catcode", null) });
 		}
+		getManagedBean().setSelectedApprovedCategories(
+				new ArrayList<SmSupplierCategory>());
+		getManagedBean().setSelectedPendingApprovedCategories(
+				new ArrayList<SmSupplierCategory>());
 	}
 
 	/**
@@ -698,38 +683,26 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *            - List of categories
 	 */
 	private void deleteCatCodes(List<SmSupplierCategory> categories) {
-		for (SmSupplierCategory category : categories) {
-			if (category.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-				getManagedBean().getSmAppl().getSmSupplierCategories()
-						.remove(category);
-			} else if (category.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				setDeletedApprovedCategory(category);
-			}
-		}
-		assignApplActiveAndApprovedCategoryList();
-	}
+		Iterator<SmSupplierCategory> apprCatIt = getManagedBean().getSmAppl()
+				.getSmSupplierCategories().iterator();
 
-	/**
-	 * Set selected deleted categories record status to deleted
-	 * 
-	 * @param SmSupplierCategory
-	 *            deletedApprCategory
-	 */
-	private void setDeletedApprovedCategory(
-			SmSupplierCategory deletedApprCategory) {
-		if (deletedApprCategory.getSupplierCategoryId() != null) {
-			for (SmSupplierCategory apprCat : getManagedBean().getSmAppl()
-					.getSmSupplierCategories()) {
-				if (apprCat.getSupplierCategoryId() != null
-						&& apprCat.getSupplierCategoryId().compareTo(
-								deletedApprCategory.getSupplierCategoryId()) == 0) {
+		while (apprCatIt.hasNext()) {
+			SmSupplierCategory apprCat = apprCatIt.next();
+			SmSupplierCategory delCat = (SmSupplierCategory) EntityHelper
+					.getEntityBySinglePropertyFromList(
+							apprCat.getSupplierCategoryId(), categories,
+							"supplierCategoryId");
+			if (delCat != null) {
+				if (delCat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
+					apprCatIt.remove();
+				} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
 					apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					apprCat.setCancelledDate(new Date());
 					getManagedBean().getDeleteApprovedCategories().add(apprCat);
 				}
 			}
 		}
+		assignApplActiveAndApprovedCategoryList();
 	}
 
 	/**
@@ -801,9 +774,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	private boolean isLoginUserTheApproverForAppl() {
 		boolean retVal = false;
 		PmUser user = new FacesScopes().getUserSessionBean();
-		if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null
-				&& !getManagedBean().getSmAppl().getSmApplSectionReviews()
-						.isEmpty()) {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmApplSectionReviews())) {
 			// if review size equals to 1 means direct approve by PO
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews().size() == 1) {
 				getManagedBean().setApplApprover(
@@ -902,9 +874,8 @@ public class SupplierDataMaintenanceBackingBean extends
 					getManagedBean().getSmMofAccount().getMofNo());
 		}
 		discipline.setSuspend(false);
-		if (supplier.getSmDisciplinaryActions() != null
-				&& !supplier.getSmDisciplinaryActions().isEmpty()) {
-
+		if (!EntityHelper
+				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
 			Collections.sort(supplier.getSmDisciplinaryActions(),
 					new Comparator<SmDisciplinaryAction>() {
 						public int compare(SmDisciplinaryAction o1,
