@@ -158,7 +158,8 @@ public class NoticeBoardBackingBean extends
 	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
 	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml";
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
-	
+	private static final String REGIST_MSG_KEY = "lbl.sc.notice.board.regist.msg";
+	 
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private IPagingDataModel<ScQtCategory> categoryCodesDataModel = new QTCategoryCodesDataModel();
 	private boolean visible;
@@ -682,6 +683,12 @@ public class NoticeBoardBackingBean extends
 		if (smSupplier != null && null != managedBean.getMofNumber()) {
 			managedBean.setCompanyName(smSupplier.getCompanyName());
 			managedBean.setValidMofNo(true);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							null, ResourceBundleUtils.getMessage(
+									REGIST_MSG_KEY, 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
 		} else {
 			managedBean.setValidMofNo(false);
 			FacesContext.getCurrentInstance().addMessage(null,
