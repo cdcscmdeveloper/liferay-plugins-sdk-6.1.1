@@ -60,7 +60,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
-						"",null);
+						"", null);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		initDataForSearchSupplier();
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/cancelRegWithMof/searchSupplierCancelMofPage.xhtml",
-				"",null);
+				"", null);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/cancelRegWithMof/cancelMofRegistrationBySupplierPage.xhtml",
-						"",null);
+						"", null);
 	}
 
 	public void search() {
@@ -255,7 +255,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void backToSearchCancelMof() {
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/cancelRegWithMof/searchSupplierCancelMofPage.xhtml",
-				"",null);
+				"", null);
 	}
 
 	/**
@@ -366,7 +366,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
-	 * Removed un select approved categories from the list.
+	 * Removed selected approved categories from the list.
 	 * 
 	 * @param e
 	 *            -AjaxBehaviorEvent
@@ -377,7 +377,9 @@ public class SupplierDataMaintenanceBackingBean extends
 					.getDeleteNewApplCategoryList().iterator();
 			while (iterator.hasNext()) {
 				SmSupplierCategory cat = iterator.next();
-				if ((cat.getRecordStatusFlg() != null && cat
+				if (!getManagedBean().isAllowedToDoMaintenance()) {
+					iterator.remove();
+				} else if ((cat.getRecordStatusFlg() != null && cat
 						.getRecordStatusFlg().compareTo(
 								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)
 						|| (cat.getApprovedDate() != null)) {
