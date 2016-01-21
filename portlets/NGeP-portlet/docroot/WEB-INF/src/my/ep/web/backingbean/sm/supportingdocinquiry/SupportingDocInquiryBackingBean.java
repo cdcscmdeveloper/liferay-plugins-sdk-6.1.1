@@ -217,15 +217,19 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	
 	private String getUserRole() {
 		FacesScopes facesScopes = new FacesScopes();
-		if(facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){ 
+		if (facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 			return RoleCode.MOF_SUPPLIER_ADMIN.value();
-		}else if(facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
+		} else if (facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			return RoleCode.MOF_SUPPLIER_USER.value();
-		}else if(facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+		} else if (facesScopes.hasRoleUser(RoleCode.FL_USER.value())) {
+			return RoleCode.FL_USER.value();
+		} else if (facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN
+				.value())) {
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
-		}else if(facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
+		} else if (facesScopes
+				.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 			return RoleCode.BASIC_SUPPLIER_USER.value();
-		}else{ 
+		} else {
 			return null;
 		}
 	}

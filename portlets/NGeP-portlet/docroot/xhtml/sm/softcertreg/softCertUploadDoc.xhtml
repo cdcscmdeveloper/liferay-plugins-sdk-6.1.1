@@ -68,6 +68,8 @@
 						rendered="#{upload.personnel.epRole eq 'BASIC_SUPPLIER_USER' or upload.personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
 					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
 						rendered="#{upload.personnel.epRole eq 'CM_USER'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.fluser']}"
+						rendered="#{upload.personnel.epRole eq 'FL_USER'}" />
 					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 						rendered="#{upload.personnel.contractSigner}" />
 				</p:column>
