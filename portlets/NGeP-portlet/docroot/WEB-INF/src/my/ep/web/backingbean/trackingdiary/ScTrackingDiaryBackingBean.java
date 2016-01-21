@@ -44,7 +44,7 @@ public class ScTrackingDiaryBackingBean extends
 		BaseBackingBean<ScTrackingDiaryManagedBean> {
 	private static Logger log = Logger.getLogger(ScTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_SC_SEARCH = "trackingDiary.xhtml";
-	public static final String NAV_TO_DETAIL_SEARCH = "scTrackingDiaryDetailSearch.xhtml";
+	public static final String NAV_TO_DETAIL_SEARCH = "/xhtml/trackingdiary/scTrackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	
 	private FacesScopes getFacesScopes() {
@@ -182,7 +182,7 @@ public class ScTrackingDiaryBackingBean extends
 				new Long(scObj[4].toString()):null);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "scTrackingDiaryDetailSearch");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_DETAIL_SEARCH);
 	}
 
 	public void reset(){
