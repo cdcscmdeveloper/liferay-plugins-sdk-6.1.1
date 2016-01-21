@@ -1944,7 +1944,7 @@ public class QTDetailBackingBean extends
 			// Fix for Other Approval Validations on submit only
 			qt.setOtherApproval(true);
 			
-			if (!ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA
+			if (ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA
 					.equalsIgnoreCase(qt.getPmProcurementCategory().getParameterCode())) {
 				qt.setMitiApproval(true);
 				//qt.setMitiApproval(true);
