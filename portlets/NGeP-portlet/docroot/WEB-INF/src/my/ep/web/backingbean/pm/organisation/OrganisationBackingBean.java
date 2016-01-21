@@ -969,6 +969,8 @@ public class OrganisationBackingBean extends
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.STATUTORY_BODIES.value())
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATUTORY_BODIES_STATE.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.LOCAL_AUTHORITY.value())
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())) {
@@ -2394,6 +2396,7 @@ public class OrganisationBackingBean extends
 			otherOrgTypes.add(OrganizationType.LOCAL_AUTHORITY.value());
 			otherOrgTypes.add(OrganizationType.GOVERNMENT_LINK_COMPANIES.value());
 			otherOrgTypes.add(OrganizationType.STATUTORY_BODIES.value());
+			otherOrgTypes.add(OrganizationType.STATUTORY_BODIES_STATE.value());
 			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("orgTypeCode.parameterCode",
