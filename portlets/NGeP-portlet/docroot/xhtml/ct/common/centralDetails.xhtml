@@ -219,8 +219,8 @@
 		     	rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
 				 disabled="#{ctBackingBean.managedBean.viewContract
-				 	or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails
-				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement}" style="text-align:top;">
+				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}" style="text-align:top;">
 				 <p:ajax event="change" update="@all" process="@this"></p:ajax>
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
@@ -268,6 +268,34 @@
       				or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"></p:inputTextarea>	
    		</h:panelGrid> 
  	</p:outputPanel>
+ 	
+ 	<p:outputPanel>
+	 <h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"
+ 		rendered="#{!ctBackingBean.managedBean.directPurchase 
+ 			and ctBackingBean.managedBean.ctContractAmount.bondReq
+ 			and ctBackingBean.managedBean.ctContractAmount.bondExempted}">
+			<p:outputLabel  value="#{lbl['lbl.ct.bond.exempted.letter']}"  styleClass="required" />
+	  		 <h:panelGroup id="centralUploadBondExemptedPg">
+				 <p:commandButton oncomplete="centralUploadBondExemptedDlg.show();return false;"
+					 update="centralUploadBondExemptedPg" value="#{lbl['lbl.bpm.choose.file']}"
+					 disabled="#{ctBackingBean.managedBean.viewContract
+					 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+					 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}"/>	
+			     <h:commandLink value="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName}" 
+			          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName)}" />					
+			</h:panelGroup>
+	 </h:panelGrid> 
+	</p:outputPanel>
+	<p:dialog id="centralUploadBondExemptedDlg" widgetVar="centralUploadBondExemptedDlg" modal="true" 
+		   	width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;" mode="advanced" 
+				fileUploadListener="#{ctBackingBean.uploadBondExemptedFile}" 
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
+				update="centralUploadBondExemptedPg" >
+			</p:fileUpload> 
+	</p:dialog>
   </p:panel>
 </ui:composition>
 

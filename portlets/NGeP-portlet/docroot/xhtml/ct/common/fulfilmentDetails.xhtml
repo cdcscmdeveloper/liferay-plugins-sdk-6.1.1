@@ -202,8 +202,8 @@
 		     rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
 				 disabled="#{ctBackingBean.managedBean.viewContract
-				 	or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails
-				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement}" style="text-align:top;">
+				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}" style="text-align:top;">
 				 <p:ajax event="change" update="@all" process="@this"></p:ajax>
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
@@ -257,7 +257,9 @@
 	   	           styleClass="required"    rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}"/>
 	   <h:panelGroup id="uploadAp201Pg">
 			 <p:commandButton oncomplete="uploadAp201Dlg.show();return false;"
-				 update="uploadAp201Pg" value="#{lbl['lbl.bpm.choose.file']}" disabled="#{ctBackingBean.managedBean.viewContract}"/>	
+				 update="uploadAp201Pg" value="#{lbl['lbl.bpm.choose.file']}" 
+				 disabled="#{ctBackingBean.managedBean.viewContract
+				 or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"/>	
 		     <h:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName}" 
 		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.ctContractValue.ap201FilePath, ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName)}" />					
 		</h:panelGroup>
@@ -271,6 +273,33 @@
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="uploadAp201Pg" >
+		</p:fileUpload> 
+	</p:dialog>
+	<p:outputPanel>
+	 <h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"
+ 		rendered="#{!ctBackingBean.managedBean.directPurchase 
+ 			and ctBackingBean.managedBean.ctContractAmount.bondReq
+ 			and ctBackingBean.managedBean.ctContractAmount.bondExempted}">
+			<p:outputLabel value="#{lbl['lbl.ct.bond.exempted.letter']}"  styleClass="required"/>
+	  		 <h:panelGroup id="uploadBondExemptedPg">
+			 <p:commandButton oncomplete="uploadBondExemptedDlg.show();return false;"
+				 update="uploadBondExemptedPg" value="#{lbl['lbl.bpm.choose.file']}" 
+				 disabled="#{ctBackingBean.managedBean.viewContract
+				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}"/>	
+		     <h:commandLink value="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName}" 
+		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName)}" />					
+		</h:panelGroup>
+    </h:panelGrid> 
+  </p:outputPanel>
+  <p:dialog id="uploadBondExemptedDlg" widgetVar="uploadBondExemptedDlg" modal="true" 
+	   	width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;" mode="advanced" 
+			fileUploadListener="#{ctBackingBean.uploadBondExemptedFile}" 
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
+			update="uploadBondExemptedPg" >
 		</p:fileUpload> 
 	</p:dialog>
  </p:panel>
