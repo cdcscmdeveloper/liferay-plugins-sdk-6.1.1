@@ -99,7 +99,7 @@
 					<p style="text-align:justify;"><span style="font-family:Arial;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tuan adalah diingatkan bahawa mengikut Syarat-syarat $procurementMode, tuan adalah dikehendaki menyempurnakan perkara berikut:</span></p>
 					#if ( $bondReq == 'true' )
 					   <p style="text-align:justify;"><span style="font-family:Arial;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
-					   * 3.1 mendepositkan dengan Kerajaan, suatu Bon Pelaksanaan dalam bentuk Jaminan Bank/Jaminan Syarikat Kewangan/Jaminan Insurans yang tak boleh batal daripada sebuah Bank/Syarikat Kewangan/Syarikat Insurans yang diluluskan dan didaftarkan di Malaysia dengan jumlah sebanyak RM $bondAmt yang merupakan $bondAmtText peratus ($bondPercentage %) dari jumlah tender / sebut harga dan tempoh sahlaku sehingga $bondExpDate. Dokumen bon Pelaksanaan tersebut hendaklah dikemukakan kepada kerajaan dalam tempoh $bondResDueDays hari dari $issueDate.</span></p>
+					   * 3.1 mendepositkan dengan Kerajaan, suatu Bon Pelaksanaan dalam bentuk Jaminan Bank/Jaminan Syarikat Kewangan/Jaminan Insurans yang tak boleh batal daripada sebuah Bank/Syarikat Kewangan/Syarikat Insurans yang diluluskan dan didaftarkan di Malaysia dengan jumlah sebanyak RM $bondAmt yang merupakan $bondPercentageText peratus ($bondPercentage %) dari jumlah tender / sebut harga dan tempoh sahlaku sehingga $bondExpDate. Dokumen bon Pelaksanaan tersebut hendaklah dikemukakan kepada kerajaan dalam tempoh $bondResDueDays hari dari $issueDate.</span></p>
 					     #set($index3_2 = "3.2")
 					#elseif( $bondReq == 'false' )
   					     #set($index3_2 = "3.1")
