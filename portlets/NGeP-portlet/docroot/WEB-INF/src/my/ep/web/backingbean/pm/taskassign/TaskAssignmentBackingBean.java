@@ -853,17 +853,17 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		if(task==null){
 			throw new EpException(MessageConst.ERROR_770097);
 		}
-		
+		List<String> assigneeUsers = task.getAssignees();
 		//populate assignee user id list
-		List<String> assigneeUsers = new ArrayList<String>();
-		if(StringUtils.isNotBlank(task.getAssigneeUsers())){
-			String[] array = task.getAssigneeUsers().split(",");
-			for (int i = 0; i < array.length; i++){
-				if(array[i].endsWith("(U)") ||  array[i].endsWith("(G)")){
-					assigneeUsers.add(array[i].substring(0,array[i].length() - 3));
-				}
-			}
-		}
+//		List<String> assigneeUsers = new ArrayList<String>();
+//		if(StringUtils.isNotBlank(task.get())){
+//			String[] array = task.getAssigneeUsers().split(",");
+//			for (int i = 0; i < array.length; i++){
+//				if(array[i].endsWith("(U)") ||  array[i].endsWith("(G)")){
+//					assigneeUsers.add(array[i].substring(0,array[i].length() - 3));
+//				}
+//			}
+//		}
 		
 		if(!assigneeUsers.isEmpty()){
 			if(assigneeUsers.contains(pmUser.getLoginId())){
