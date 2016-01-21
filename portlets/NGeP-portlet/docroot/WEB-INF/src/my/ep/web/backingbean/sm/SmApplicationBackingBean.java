@@ -2279,14 +2279,23 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
 		getManagedBean().setValidSmUserLimit(false);
-		int authPersonnel = getCurrAuthPersonnelCount();
-		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-			authPersonnel = authPersonnel - 1;
+		int authFlg = getCurrAuthorizedFlg(getManagedBean()
+				.getSelectedShareHolder());
+		int authPersonnelCount = getCurrAuthPersonnelCount();
+
+		// initially authorized but change to not authorized, so minus
+		// authorized personnel count
+		if (authFlg == DbValueConst.RECORD_STATUS_ACTIVE
+				&& getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+			authPersonnelCount = authPersonnelCount - 1;
 		}
-		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-			authPersonnel = authPersonnel + 1;
+		// initially not authorized but change to authorized, so add authorized
+		// personnel count
+		if (authFlg != DbValueConst.RECORD_STATUS_ACTIVE
+				&& getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			authPersonnelCount = authPersonnelCount + 1;
 		}
-		if (authPersonnel >= SmRuleHelper.getInstance()
+		if (authPersonnelCount >= SmRuleHelper.getInstance()
 				.getMaxAdditionalMofAuthorizedUser()) {
 			getManagedBean().setValidSmUserLimit(true);
 		}
@@ -2312,6 +2321,16 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return count;
+	}
+
+	private int getCurrAuthorizedFlg(SmPersonnel personnel) {
+		int authFlg = 0;
+		SmPersonnel tmp = (SmPersonnel) EntityHelper
+				.getEntityBySinglePropertyFromList(personnel.getPersonnelId(),
+						getManagedBean().getSmAppl().getSmPersonnels(),
+						"personnelId");
+		authFlg = tmp == null ? authFlg : tmp.getAuthorizedFlg();
+		return authFlg;
 	}
 
 	/**
@@ -4603,6 +4622,11 @@ public class SmApplicationBackingBean extends
 			calculateCapital();
 		}
 		getManagedBean().setRedirectToPersonPage(false);
+		getManagedBean().setValidSmUserLimit(false);
+		if (getCurrAuthPersonnelCount() >= SmRuleHelper.getInstance()
+				.getMaxAdditionalMofAuthorizedUser()) {
+			getManagedBean().setValidSmUserLimit(true);
+		}
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
 
