@@ -1242,7 +1242,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		if (shareHolderBean.getEpRole() != null
 				&& (shareHolderBean.getEpRole().equalsIgnoreCase(
-						RoleCode.MOF_SUPPLIER_USER.value())
+						RoleCode.FL_USER.value())
+						|| shareHolderBean.getEpRole().equalsIgnoreCase(
+								RoleCode.MOF_SUPPLIER_USER.value())
 						|| shareHolderBean.getEpRole().equalsIgnoreCase(
 								RoleCode.MOF_SUPPLIER_ADMIN.value()) || shareHolderBean
 						.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))) {

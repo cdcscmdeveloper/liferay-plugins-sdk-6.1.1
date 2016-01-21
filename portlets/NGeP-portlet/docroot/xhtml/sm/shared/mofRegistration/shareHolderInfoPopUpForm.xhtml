@@ -386,7 +386,8 @@
 			<p:outputPanel rendered="#{!backingBean.managedBean.validSmUserLimit or (backingBean.managedBean.validSmUserLimit and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1')}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-					<td><p:selectOneRadio 
+					<td><p:selectOneRadio disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' 
+						or backingBean.managedBean.selectedShareHolder.epRole eq 'SUPPLIER_TEMP'}"
 							value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
@@ -449,7 +450,7 @@
 			</tr>
 			<p:outputPanel
 				rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-							and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')}">
+							and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')}">
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
@@ -460,11 +461,15 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}" /></td>
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+									and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')
+									and backingBean.managedBean.selectedShareHolder.softcertFlg ne '0'}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}">
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+									and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER')
+									and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio>
@@ -480,7 +485,9 @@
 						value="/css/images/design/tooltips.png"
 						style="padding-bottom : 7px;"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}" />
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+									and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' or backingBean.managedBean.selectedShareHolder.epRole eq 'FL_USER') 
+									and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}" />
 					<p:tooltip id="toolinfo5" for="tooltip5">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.equity.owner.authorized.contract.sign']}" />
