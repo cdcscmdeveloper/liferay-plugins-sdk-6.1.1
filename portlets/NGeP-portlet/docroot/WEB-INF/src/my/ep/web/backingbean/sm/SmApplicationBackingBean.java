@@ -2278,9 +2278,17 @@ public class SmApplicationBackingBean extends
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
-		if (getManagedBean().isValidSmUserLimit()
-				&& getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-			getManagedBean().setValidSmUserLimit(false);
+		getManagedBean().setValidSmUserLimit(false);
+		int authPersonnel = getCurrAuthPersonnelCount();
+		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+			authPersonnel = authPersonnel - 1;
+		}
+		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			authPersonnel = authPersonnel + 1;
+		}
+		if (authPersonnel >= SmRuleHelper.getInstance()
+				.getMaxAdditionalMofAuthorizedUser()) {
+			getManagedBean().setValidSmUserLimit(true);
 		}
 		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
@@ -2292,6 +2300,18 @@ public class SmApplicationBackingBean extends
 					.getSelectedShareHolder());
 		}
 		buildRoleList(getManagedBean().getSelectedShareHolder());
+	}
+
+	private int getCurrAuthPersonnelCount() {
+		int count = 0;
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			if ((per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || per
+					.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
+					&& per.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	/**
