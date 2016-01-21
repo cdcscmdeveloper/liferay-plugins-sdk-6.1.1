@@ -4416,7 +4416,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setItemAddButtonShow(true);
 		}
 		if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
-			getManagedBean().setItemAddButtonShow(true);
+			getManagedBean().setItemAddButtonShow(false);
 		}
 	}
 	
