@@ -11,24 +11,24 @@
 		<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
 			value="#{supplierDataMaintenanceBackingBean.managedBean.activeCategoryList}"
 			rowKey="#{catBean}" rowIndexVar="index" id="catDt"
-			selection="#{supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList}"
+			selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catDt" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
 				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
-				update=":form:catCodeInfPan,@([id$=deletedBtnId])"></p:ajax>
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
 			<p:ajax event="rowUnselect"
 				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
-				update=":form:catCodeInfPan,@([id$=deletedBtnId])"></p:ajax>
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
 			<p:ajax event="rowSelectCheckbox"
 				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
-				update=":form:catCodeInfPan,@([id$=deletedBtnId])"></p:ajax>
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
 			<p:ajax event="rowUnselectCheckbox"
 				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
-				update=":form:catCodeInfPan,@([id$=deletedBtnId])"></p:ajax>
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
 			<p:ajax event="rowDblselect"
 				listener="#{supplierDataMaintenanceBackingBean.unSelectApporvedCategories}"
-				update=":form:catCodeInfPan,@([id$=deletedBtnId])"></p:ajax>
+				update=":#{p:component('catCodeInfPan')},@([id$=deletedBtnId])"></p:ajax>
 			<p:columnGroup type="header">
 				<p:row>
 					<!-- 1 -->
@@ -147,12 +147,12 @@
 				categoryType="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applCategoryType}"
 				bumiPercentage="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage}"
 				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}" />
-
+			
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
-				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList or 
+				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories or 
 					!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
-				action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList)}" 
-				update=":form:catCodeInfPan" partialSubmit="true" 
+				action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories)}" 
+				update=":#{p:component('catCodeInfPan')}" partialSubmit="true" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				process="@this">
 			</p:commandButton>

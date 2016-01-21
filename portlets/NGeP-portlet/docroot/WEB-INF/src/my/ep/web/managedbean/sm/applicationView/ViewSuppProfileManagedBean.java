@@ -42,6 +42,8 @@ public class ViewSuppProfileManagedBean extends
 	private boolean editDisciplinaryAction;
 	private PmRegStatus existingRegStatus;
 	private Date existingMofExpiryDate;
+	private List<SmSupplierCategory> selectedApprovedCategories;
+	private List<SmSupplierCategory> selectedPendingApprovedCategories;
 	private List<SmSupplierCategory> deleteApprovedCategories;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
@@ -216,6 +218,24 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setExistingMofExpiryDate(Date existingMofExpiryDate) {
 		this.existingMofExpiryDate = existingMofExpiryDate;
+	}
+
+	public List<SmSupplierCategory> getSelectedApprovedCategories() {
+		return selectedApprovedCategories;
+	}
+
+	public void setSelectedApprovedCategories(
+			List<SmSupplierCategory> selectedApprovedCategories) {
+		this.selectedApprovedCategories = selectedApprovedCategories;
+	}
+
+	public List<SmSupplierCategory> getSelectedPendingApprovedCategories() {
+		return selectedPendingApprovedCategories;
+	}
+
+	public void setSelectedPendingApprovedCategories(
+			List<SmSupplierCategory> selectedPendingApprovedCategories) {
+		this.selectedPendingApprovedCategories = selectedPendingApprovedCategories;
 	}
 
 }

@@ -59,14 +59,16 @@
 		message="#{supplierDataMaintenanceBackingBean.managedBean.regCatCodeConfirmMsg}"
 		header="#{supplierDataMaintenanceBackingBean.managedBean.regCatCodeConfirmHeader}"
 		widgetVar="typeConfirmation">
-
-		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
-			process="@this" partialSubmit="true" update="@form"
-			action="#{supplierDataMaintenanceBackingBean.assignApplnCategoryType}"
-			oncomplete="typeConfirmation.hide()" />
-		<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
-			process="@this" partialSubmit="true" update=":form:catCodeInfPan"
-			action="#{supplierDataMaintenanceBackingBean.resetApplnCategoryType}" />
+		
+		<div align="right">
+			<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
+				process="@this" partialSubmit="true" update="@form"
+				action="#{supplierDataMaintenanceBackingBean.assignApplnCategoryType}"
+				oncomplete="typeConfirmation.hide()" />
+			<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
+				process="@this" partialSubmit="true" update=":form:catCodeInfPan"
+				action="#{supplierDataMaintenanceBackingBean.resetApplnCategoryType}" />
+		</div>
 
 	</p:confirmDialog>
 
