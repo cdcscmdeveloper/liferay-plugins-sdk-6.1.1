@@ -82,6 +82,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -1341,7 +1342,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void resetMinistryDetails() {
 		getManagedBean().setMinistryProfileId(null);
 		getManagedBean().setJabatanProfileId(null);
-		//getManagedBean().setExmptedMinistryDD(true);
 		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		exemptedOrgDataModel.resetData();
@@ -1411,17 +1411,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
-	}
-
-	/**
-	 * The method used to reset the search criteria for agency.
-	 */
-	public void resetPtjDetails() {
-		getManagedBean().setMinistryProfileId(null);
-		getManagedBean().setJabatanProfileId(null);
-		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
-		getManagedBean().setPtjCodeNameSearchValues(null);
-		exemptedOrgDataModel.resetData();
 	}
 	
 /*	*//**
@@ -1592,6 +1581,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			this.getManagedBean().getCircularVer().getCtExemptedOrgs().addAll(orgList);
 		}
 		selectedPmOrgProfile = null;
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
 		RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.hide()");
 	}
 
