@@ -46,12 +46,14 @@
 	<p:panel header="#{lbl['lbl.sc.history.summary']}" toggleable="true">
 		<div align="center">
 			<h5>
-				<B> Bidding Statistic Graph</B>
+				<B>#{lbl['lbl.sc.bidding.statistic.graph']}</B>
 			</h5>
 		</div>
 		<div>
 			<p:lineChart value="#{biddingBB.managedBean.historyPriceLinearModel}"
-				legendPosition="e" style="height:250px; width:750px" />
+				animate="true" yaxisLabel="#{lbl['lbl.sc.bid.price']}"
+				xaxisLabel="#{lbl['lbl.sc.bid.time']}" legendPosition="e"
+				style="height:250px; width:750px" />
 		</div>
 		<div>
 			<p:dataTable id="historySummary"
