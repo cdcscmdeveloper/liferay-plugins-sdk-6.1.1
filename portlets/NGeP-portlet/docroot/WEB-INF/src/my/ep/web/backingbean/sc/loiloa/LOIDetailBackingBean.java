@@ -1571,7 +1571,11 @@ public class LOIDetailBackingBean extends
 			if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(recommendedBy.getParameterCode())) {
 				isBiddingAward = Boolean.TRUE;
-				// remove nego price recommended by - online bidding.
+				// remove nego price for online bidding.
+				removeNegoTermPrice(scLoi);
+			} else if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+					.equals(recommendedBy.getParameterCode())) {
+				// remove nego price for multiple loi
 				removeNegoTermPrice(scLoi);
 			}
 		}
@@ -5191,7 +5195,7 @@ public class LOIDetailBackingBean extends
 								.getMessage(
 										qtProposalExpiredMsg.toString(),
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+										locale)));
 			}
 		}
 	}
