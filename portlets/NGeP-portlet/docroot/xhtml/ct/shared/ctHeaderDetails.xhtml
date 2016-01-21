@@ -253,6 +253,20 @@
 	   		<p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification.ap201']}" />
 			<p:inputTextarea id="justificationLbl" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.justification}"
   				rows="3" style="width:585px;" maxlength="200" autoResize="false" disabled="true" />		         		
+    		<p:outputLabel id="ap201FileId"   value="#{lbl['lbl.ct.upload.ap201']}"  rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName != null}"
+	   	           styleClass="required" />
+			 <h:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName}" 
+			 	  rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName != null}"
+		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.ctContractValue.ap201FilePath, ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName)}" />
+    	</h:panelGrid> 
+    	 <h:panelGrid columns="2" style="width:920px;"  
+	     styleClass="top-aligned-columns" columnClasses="columnWidth200"
+	     	rendered="#{ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
+ 			and ctBackingBean.managedBean.contractVer.ctContractAmount.bondReq
+ 			and ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}">	   		
+	   		<p:outputLabel value="#{lbl['lbl.ct.bond.exempted.letter']}"  styleClass="required" />
+			<h:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.bondExemptedFileName}" 
+		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.contractVer.ctContractAmount.bondExemptedFileName)}" />
     	</h:panelGrid> 
 	</h:panelGrid>
  </p:panel>
