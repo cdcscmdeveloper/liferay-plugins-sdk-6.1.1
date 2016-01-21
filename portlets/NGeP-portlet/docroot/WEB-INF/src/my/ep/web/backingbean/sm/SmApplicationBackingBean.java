@@ -2278,15 +2278,8 @@ public class SmApplicationBackingBean extends
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-				&& StringUtils.isNotBlank(getManagedBean()
-						.getSelectedShareHolder().getEpRole())
-				&& getManagedBean().getSelectedShareHolder().getEpRole()
-						.equals(RoleCode.FL_USER.value())) {
-			getManagedBean().getSelectedShareHolder().setEpRole(
-					RoleCode.MOF_SUPPLIER_USER.value());
-		}
-		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+		if (getManagedBean().isValidSmUserLimit()
+				&& getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 			getManagedBean().setValidSmUserLimit(false);
 		}
 		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
@@ -4799,35 +4792,25 @@ public class SmApplicationBackingBean extends
 	 * Builds the role list.
 	 */
 	public void buildRoleList(SmPersonnel personnel) {
-		String epRole = StringUtils.isNotBlank(personnel.getEpRole()) ? personnel
-				.getEpRole() : "";
-		boolean showFlUserRole = false;
-		boolean showSuppUserRole = false;
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 		SelectItem role = new SelectItem();
 
-		// if already reach max authorized personnel
-		if (getManagedBean().isValidSmUserLimit()) {
-			// Show FL_USER if not authorized
-			if (personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-				showFlUserRole = true;
-			}
-			// if role is MOF_SUPPLIER_USER, show MOF_SUPPLIER_USER
-			if (epRole.equals(RoleCode.MOF_SUPPLIER_USER.value())) {
-				showSuppUserRole = true;
-			}
+		// If authorized and current role is FL_USER, set to MOF_SUPPLIER_USER
+		if (personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& StringUtils.isNotBlank(personnel.getEpRole())
+				&& personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
+			personnel.setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
 		}
-		// if not reach max authorized limit (MOF_SUPPLIER_USER will always
-		// show)
-		else {
-			showSuppUserRole = true;
-			// if role is FL_USER, show FL_USER
-			if (epRole.equals(RoleCode.FL_USER.value())) {
-				showFlUserRole = true;
-			}
+		// If not authorized and current role is MOF_SUPPLIER_USER, set to
+		// FL_USER
+		if (personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+				&& StringUtils.isNotBlank(personnel.getEpRole())
+				&& personnel.getEpRole().equals(
+						RoleCode.MOF_SUPPLIER_USER.value())) {
+			personnel.setEpRole(RoleCode.FL_USER.value());
 		}
 
-		if (showSuppUserRole) {
+		if (personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			role = new SelectItem();
 			role.setLabel(SmCommonUtil.getMessage(
 					"lbl.sm.person.composition.suppUser", null));
@@ -4847,7 +4830,7 @@ public class SmApplicationBackingBean extends
 			roles.add(role);
 		}
 
-		if (showFlUserRole) {
+		if (personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 			role = new SelectItem();
 			role.setLabel(SmCommonUtil.getMessage(
 					"lbl.sm.person.composition.fluser", null));
@@ -8369,9 +8352,6 @@ public class SmApplicationBackingBean extends
 						.getSmAppl().getApplId(), false);
 		getManagedBean().setValidSmUserLimit(
 				countVO.isReachAuthorizedPersonnelLimit());
-		SmApplicationUtil.setPendingActivationPersonnelRoleBasedOnAuthLimit(
-				getManagedBean().getSmAppl(), getManagedBean()
-						.isValidSmUserLimit());
 
 		log.info("*** END calcPersonnelListCount**** ");
 	}
