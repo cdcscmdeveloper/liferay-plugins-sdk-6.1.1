@@ -112,43 +112,37 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 */
 	public void getStatusDescList() {
 		SelectItem[] statusDescs = getManagedBean().getStatusDescs();
-		if(statusDescs == null || statusDescs.length == 0){
-			statusDescs = getStatusDropdownValues(ModuleCodeConst.SUPPLIER_SELECTION
-					.toUpperCase(),ParameterConst.DOCTYPE_BIDDING);
+		if (statusDescs == null || statusDescs.length == 0) {
+			statusDescs = getStatusDropdownValues(
+					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(),
+					ParameterConst.DOCTYPE_BIDDING);
 			getManagedBean().setStatusDescs(statusDescs);
 		}
-				
-			
-		//List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
 
-		/*if (statusDescs == null || statusDescs.size() == 0) {
-			IStatusSO statusSO = null;
+		// List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
 
-			try {
-				statusSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-				String languageCode = new FacesScopes().getUserLocale()
-						.getLanguage();
-
-				StatusReqDTO reqDTO = new StatusReqDTO();
-				reqDTO.setModuleCode(ModuleCodeConst.SUPPLIER_SELECTION
-						.toUpperCase());
-				reqDTO.setDocType(ParameterConst.DOCTYPE_BIDDING);
-				reqDTO.setLanguageCode(languageCode);
-
-				StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
-				if (resDTO.isSuccessful()) {
-					statusDescs = resDTO.getStatusDescList();
-
-					getManagedBean().setStatusDescs(statusDescs);
-				}
-			} finally {
-				statusSO = null;
-			}
-		}
-*/
-		//return statusDescs;
+		/*
+		 * if (statusDescs == null || statusDescs.size() == 0) { IStatusSO
+		 * statusSO = null;
+		 * 
+		 * try { statusSO = BusinessDelegate.getInstance().getServiceObject(
+		 * ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		 * 
+		 * String languageCode = new FacesScopes().getUserLocale()
+		 * .getLanguage();
+		 * 
+		 * StatusReqDTO reqDTO = new StatusReqDTO();
+		 * reqDTO.setModuleCode(ModuleCodeConst.SUPPLIER_SELECTION
+		 * .toUpperCase()); reqDTO.setDocType(ParameterConst.DOCTYPE_BIDDING);
+		 * reqDTO.setLanguageCode(languageCode);
+		 * 
+		 * StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO); if
+		 * (resDTO.isSuccessful()) { statusDescs = resDTO.getStatusDescList();
+		 * 
+		 * getManagedBean().setStatusDescs(statusDescs); } } finally { statusSO
+		 * = null; } }
+		 */
+		// return statusDescs;
 	}
 
 	/**
@@ -560,9 +554,16 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		for (BidPackageBean bidPackage : bidPackageList) {
 
-			chartSeries.set(
-					getCurrentTimeWithoutDate(bidPackage.getLastBidDate()),
-					bidPackage.getBidPriceTotal());
+			if (!bidPackage.getScBidSupplier().getPackageStartPrice()
+					.equals(bidPackage.getBidPriceTotal())) {
+				chartSeries.set(
+						getCurrentTimeWithoutDate(bidPackage.getLastBidDate()),
+						bidPackage.getBidPriceTotal());
+			}
+		}
+
+		if (chartSeries.getData() == null || chartSeries.getData().isEmpty()) {
+			chartSeries.set(getCurrentTimeWithoutDate(new Date()), 0);
 		}
 
 		if (getManagedBean().getBidPriceLinearModel() != null) {
@@ -613,17 +614,20 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		LineChartSeries chartSeries = new LineChartSeries();
 		chartSeries.setLabel("Bid Price");
-
 		for (BidItemBean bidPrice : bidPriceList) {
-
 			if (bidPrice.getBidPrice() != null
-					&& bidPrice.getLastBidDate() != null) {
+					&& bidPrice.getLastBidDate() != null
+					&& !(bidPrice.getBidPrice().equals(bidPrice
+							.getStartingPrice()))) {
 				chartSeries.set(
 						getCurrentTimeWithoutDate(bidPrice.getLastBidDate()),
 						bidPrice.getBidPrice());
 			}
 		}
 
+		if (chartSeries.getData() == null || chartSeries.getData().isEmpty()) {
+			chartSeries.set(getCurrentTimeWithoutDate(new Date()), 0);
+		}
 		if (getManagedBean().getItemPriceLinearModel() != null) {
 
 			getManagedBean().getItemPriceLinearModel().addSeries(chartSeries);
@@ -845,9 +849,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 						bidPrice.getBidPrice());
 			}
 		}
-
+		if (chartSeries.getData() == null || chartSeries.getData().isEmpty()) {
+			chartSeries.set(getCurrentTimeWithoutDate(new Date()), 0);
+		}
 		if (getManagedBean().getItemPriceLinearModel() != null) {
-
 			getManagedBean().getHistoryPriceLinearModel()
 					.addSeries(chartSeries);
 		}

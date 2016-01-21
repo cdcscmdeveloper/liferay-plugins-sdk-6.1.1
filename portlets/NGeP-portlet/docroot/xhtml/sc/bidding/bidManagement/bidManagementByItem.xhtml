@@ -101,7 +101,7 @@
 					</f:facet>
 					<div style="align: right">
 						<p:commandLink id="bidPriceVBI"
-							rendered="#{!((bidPriceItem.startingPrice - bidPriceItem.bidPrice) eq '0')}"
+							rendered="#{!((bidPriceItem.startingPrice - bidPriceItem.bidPrice) == 0)}"
 							value="#{bidPriceItem.bidPriceTotal}" style="float : right"
 							oncomplete="priceHistory.show();"
 							action="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
