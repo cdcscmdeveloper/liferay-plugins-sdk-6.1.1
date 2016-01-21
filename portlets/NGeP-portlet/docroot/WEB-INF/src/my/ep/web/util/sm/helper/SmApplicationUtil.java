@@ -276,6 +276,7 @@ public class SmApplicationUtil {
 		}
 		return countVO;
 	}
+	
 
 	/**
 	 * Validate new category added.Check if at least one new category is added
