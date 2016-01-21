@@ -63,9 +63,9 @@
 
 				<table style="width: 100%;">
 					<tr style="height: 30px;">
-						<td rowspan="10" style="vertical-align: top; width: 30%;"><h:panelGroup
+						<td rowspan="10" style="vertical-align: top; width:25%;"><h:panelGroup
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
-								<div id="slides" style="height: 200px; width: 300px; left: 0px !important; margin-right: 70px; vertical-align: middle; text-align: center;">
+								<div id="slides" style="height: 200px; width: 300px; left:0px !important; margin-right: 70px; vertical-align: middle; text-align: center;">
 
 									<ui:repeat var="cmImage"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
@@ -79,14 +79,14 @@
 							</h:panelGroup> 
 							<h:panelGroup style="vertical-align:middle;"
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 1 }">
-								<div style="height: 200px; width: 300px; left: 0px !important; margin-right: 70px; vertical-align: middle; text-align: center;">
+								<div style="height: 200px; width: 200px; left: 0px !important; margin-right: 70px; vertical-align: middle; text-align: center;padding-left: 50px;">
 
 									<ui:repeat var="cmImage"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
 										<h:panelGroup styleClass="pubCatImageStyle">
 											<img
 												src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"
-												style="height: 170px !important; left: 0px !important; margin-left: auto; margin-right: auto;" />
+												style="height: 200px !important; left: 0px !important; margin-left: auto; margin-right: auto;" />
 										</h:panelGroup>
 									</ui:repeat>
 								</div>
