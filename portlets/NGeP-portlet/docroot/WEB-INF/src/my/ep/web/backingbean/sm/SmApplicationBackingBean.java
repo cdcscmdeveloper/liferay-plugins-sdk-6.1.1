@@ -4598,9 +4598,10 @@ public class SmApplicationBackingBean extends
 			retVal = true;
 		} else if (prevPersonnel != null
 				&& StringUtils.isNotBlank(prevPersonnel.getEpRole())
-				&& prevPersonnel.getEpRole().equals(
-						RoleCode.MOF_SUPPLIER_USER.value())
-				&& prevPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& ((prevPersonnel.getEpRole().equals(
+						RoleCode.MOF_SUPPLIER_USER.value()) || prevPersonnel
+						.getEpRole().equals(RoleCode.FL_USER.value())) && prevPersonnel
+						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
 				&& (prevPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel
 						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 			retVal = true;
@@ -4663,6 +4664,8 @@ public class SmApplicationBackingBean extends
 						RoleCode.SUPPLIER_TEMP.value())
 						|| shareHolderBean.getEpRole().equalsIgnoreCase(
 								RoleCode.MOF_SUPPLIER_USER.value())
+						|| shareHolderBean.getEpRole().equalsIgnoreCase(
+								RoleCode.FL_USER.value())
 						|| shareHolderBean.getEpRole().equalsIgnoreCase(
 								RoleCode.MOF_SUPPLIER_ADMIN.value()) || shareHolderBean
 						.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))) {

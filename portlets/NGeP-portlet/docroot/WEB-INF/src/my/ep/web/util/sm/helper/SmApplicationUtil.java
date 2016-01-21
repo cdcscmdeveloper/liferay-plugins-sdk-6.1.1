@@ -276,7 +276,6 @@ public class SmApplicationUtil {
 		}
 		return countVO;
 	}
-	
 
 	/**
 	 * Validate new category added.Check if at least one new category is added
@@ -5745,6 +5744,8 @@ public class SmApplicationUtil {
 				return RoleCode.BASIC_SUPPLIER_USER.value();
 			} else if (sc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 				return RoleCode.MOF_SUPPLIER_USER.value();
+			} else if (sc.hasRoleUser(RoleCode.FL_USER.value())) {
+				return RoleCode.FL_USER.value();
 			} else {
 				if (managedBean.getSmAppl().getApplType()
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {

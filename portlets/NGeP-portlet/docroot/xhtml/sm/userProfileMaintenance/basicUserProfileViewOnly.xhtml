@@ -90,7 +90,6 @@
 				</tr>
 				<p:outputPanel rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') 
 							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER') 
-							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER') 
 							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER')}">
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isContrSign']}"  rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/></td>		
