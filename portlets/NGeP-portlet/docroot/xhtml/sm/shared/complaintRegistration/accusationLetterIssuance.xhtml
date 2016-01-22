@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="#{lbl['lbl.sm.complaint.accusation.letter']}" toggleable="true" id="pnlAccusationLetter">
+		<p:dataTable value="#{complaintBackingBean.managedBean.accusationLetters}" var="acLetter">
+			<p:column headerText="Document Name">
+				#{acLetter.fileName}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.action']}">
+				<p:commandLink oncomplete="acLetterDeleteDlg.show()" action="#{complaintBackingBean.showDeleteDialog(acLetter)}" 
+						update="@([id$=acLetterDeleteDlg])" 
+						rendered="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.prepareAcLetter}">
+							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+						</p:commandLink>
+						
+				<p:commandLink action="#{complaintBackingBean.attachmentDownload(acLetter)}" ajax="false"
+						update="@([id$=acLetterDeleteDlg])" 
+						rendered="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.prepareAcLetter}">
+							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.btn.download']}" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="acLetterDlg.show();" 
+			rendered="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.prepareAcLetter}" 
+			disabled="#{not empty complaintBackingBean.managedBean.accusationLetters}"/>
+		</div>
+		
+		<table class="customTbl">
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.complaint.date.issuance']}" />
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent">
+				<p:calendar showOn="button" required="#{!empty param['disableValidation']}"
+						readonlyInput="true" disabled="#{acLetterViewFlag}" label="#{lbl['lbl.sm.complaint.date.issuance']}"
+						value="#{complaintBackingBean.managedBean.secondReview.letterIssuedDate}"
+						mindate="#{complaintBackingBean.managedBean.secondReview.createdDate}"
+						maxdate="#{CommonConstants.CURRENT_DATE}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				</td>
+
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.complaint.courier.trckng.no']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td class="tdContent">
+					<p:inputText required="#{!empty param['disableValidation']}" maxlength="30"
+					readonly="#{acLetterViewFlag}" label="#{lbl['lbl.sm.complaint.courier.trckng.no']}"
+					value="#{complaintBackingBean.managedBean.secondReview.trackingNo}" /></td>
+			</tr>
+
+			<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId gt DisciplinaryActionConst.prepareAcLetter}">
+				<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId ne DisciplinaryActionConst.prepareAcLetter and 
+				complaintBackingBean.managedBean.smComplaint.pmStatus.statusId ne DisciplinaryActionConst.prepareAcLetter}">
+					<tr>
+						<td class="tdTitle">
+							<p:outputLabel value="#{lbl['lbl.sm.complaint.received.by.supp']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						
+						<td class="tdContent">
+							<p:calendar showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
+							mindate="#{complaintBackingBean.managedBean.smComplaint.changedDate}"
+							maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
+							disabled="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId ne DisciplinaryActionConst.updateAcReceiveDate}"
+							value="#{complaintBackingBean.managedBean.secondReview.smComplaintResponse.supplierReceivedDate}" />
+						</td>
+					</tr>
+				</c:if>
+			</c:if>
+		</table>
+	</p:panel>
+	
+	<p:dialog id="acLetterDlg" widgetVar="acLetterDlg" appendToBody="false" resizable="false" width="700px"
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload style="display:inline;" multiple="false" fileUploadListener="#{complaintBackingBean.docUpload}"
+			mode="basic" id="scLetterUpload" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="pnlAccusationLetter" 
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			oncomplete="acLetterDlg.hide();return false;">
+		</p:fileUpload>
+	</p:dialog>
+	
+	<p:dialog widgetVar="acLetterDeleteDlg" id="acLetterDeleteDlg" modal="true" height="100" width="500">
+   			#{complaintBackingBean.managedBean.attachmentDeleteMsg}
+   			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" oncomplete="acLetterDeleteDlg.hide()"
+				action="#{complaintBackingBean.removeAttachment}" update="@([id$=pnlAccusationLetter])"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="acLetterDeleteDlg.hide();"></p:commandButton>
+		</div>
+	</p:dialog>
+</ui:composition>
