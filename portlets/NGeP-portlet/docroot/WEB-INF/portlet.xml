@@ -3286,7 +3286,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sm/complaint/lodgeComplaint.xhtml</value>
+			<value>/xhtml/sm/disciplinaryAction/prerenderLodgeComplaint.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
