@@ -4860,8 +4860,8 @@ public class SmApplicationBackingBean extends
 
 		if (personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			role = new SelectItem();
-			role.setLabel(SmCommonUtil.getMessage(
-					"lbl.sm.person.composition.suppUser", null));
+			role.setLabel(getEpRoleDescByRoleCode(RoleCode.MOF_SUPPLIER_USER
+					.value()));
 			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
 			roles.add(role);
 		}
@@ -4872,16 +4872,14 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getSmAppl().getSmCompanyBasic()
 						.isWithFederal()) {
 			role = new SelectItem();
-			role.setLabel(SmCommonUtil.getMessage(
-					"lbl.sm.person.composition.catUser", null));
+			role.setLabel(getEpRoleDescByRoleCode(RoleCode.CM_USER.value()));
 			role.setValue(RoleCode.CM_USER.value());
 			roles.add(role);
 		}
 
 		if (personnel.getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 			role = new SelectItem();
-			role.setLabel(SmCommonUtil.getMessage(
-					"lbl.sm.person.composition.fluser", null));
+			role.setLabel(getEpRoleDescByRoleCode(RoleCode.FL_USER.value()));
 			role.setValue(RoleCode.FL_USER.value());
 			roles.add(role);
 		}
@@ -4892,8 +4890,8 @@ public class SmApplicationBackingBean extends
 						.getEpRole().equalsIgnoreCase(
 								RoleCode.SUPPLIER_TEMP.value()))) {
 			role = new SelectItem();
-			role.setLabel(SmCommonUtil.getMessage(
-					"lbl.sm.person.composition.suppAdmin", null));
+			role.setLabel(getEpRoleDescByRoleCode(RoleCode.MOF_SUPPLIER_ADMIN
+					.value()));
 			role.setValue(personnel.getEpRole());
 			roles.add(role);
 		}
