@@ -1,6 +1,7 @@
 package my.ep.web.util.sm.helper;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -452,5 +453,15 @@ public class SmServiceLookup {
 	public static IComplaintSO getComplaintSO() {
 		return (IComplaintSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IComplaintSO.class);
+	}
+	
+	/**
+	 * Get IRoleSO
+	 * @return IRoleSO
+	 */
+	public static IRoleSO getRoleSO(){
+		return (IRoleSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IRoleSO.class);
 	}
 }
