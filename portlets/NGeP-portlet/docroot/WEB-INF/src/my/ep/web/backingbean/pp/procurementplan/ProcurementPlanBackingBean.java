@@ -3613,7 +3613,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		sb.append("|");
 		sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()));
 		sb.append("^");
-		sb.append(retrieveMinistryOrgProfile(getManagedBean().getSelectedMinistry().getOrgProfileId()).getOrgProfileId());
+		sb.append(getManagedBean().getSelectedMinistry().getOrgProfileId());
 		return sb.toString();
 	}
 	
@@ -3625,7 +3625,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		sb.append("|");
 		sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
 		sb.append("^");
-		sb.append(retrieveJabatanOrgProfile(getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId()).getOrgProfileId());		
+		sb.append(getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId());		
 		return sb.toString();
 	}
 	
