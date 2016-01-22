@@ -298,6 +298,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	/** The pid verifiers and approvers */
 	private String pidApprovers;
 	
+	/** The pid no for request note */
+	private String pidNo;
+	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -1759,6 +1762,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPidApprovers(String pidApprovers) {
 		this.pidApprovers = pidApprovers;
+	}
+
+	/**
+	 * @return the pidNo
+	 */
+	public String getPidNo() {
+		return pidNo;
+	}
+
+	/**
+	 * @param pidNo the pidNo to set
+	 */
+	public void setPidNo(String pidNo) {
+		this.pidNo = pidNo;
 	}
 	
 }
