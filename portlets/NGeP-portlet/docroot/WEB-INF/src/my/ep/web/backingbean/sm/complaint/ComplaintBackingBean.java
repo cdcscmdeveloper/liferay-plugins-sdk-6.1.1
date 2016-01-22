@@ -826,8 +826,14 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 				currentStatus.longValue() == DisciplinaryActionConst.NEW_COMPLAINT_REJECT.longValue() ||
 				currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK.longValue()){
 
-			getManagedBean().setSmComplReview(new SmComplaintReview());
-			getManagedBean().getSmComplReview().setSmComplaint(getManagedBean().getSmComplaint());
+			if(currentStatus.longValue() == DisciplinaryActionConst.NEW_COMPLAINT_REJECT.longValue()){
+				SmComplaintReview complReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.PTPK,
+						DisciplinaryActionConst.PTPK_R1);
+				getManagedBean().setSmComplReview(complReview);
+			}else{
+				getManagedBean().setSmComplReview(new SmComplaintReview());
+				getManagedBean().getSmComplReview().setSmComplaint(getManagedBean().getSmComplaint());
+			}
 
 		}else if(currentStatus.longValue() >= DisciplinaryActionConst.PREPARE_SC_LETTER.longValue()){
 			String committee = null;
