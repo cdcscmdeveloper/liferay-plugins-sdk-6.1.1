@@ -50,6 +50,7 @@ import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.fc.FLFactoringRemoveReqType;
+import my.ep.jaxb.fl.maintenace.cancel.common.order.FLOrderCancelReqType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -474,12 +475,31 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 				flBB.getManagedBean().setHideRemarks(false);
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+			}else if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTO = new FulfilmentResDTO();
+				
+				FLOrderCancelReqType orderCancelReqType = (FLOrderCancelReqType)obj;
+				flReqDTO.setFlOrderId(orderCancelReqType.getOrderDetails().getOrderId());
+				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
+				getManagedBean().setStopRequestId(orderCancelReqType.getOrderDetails().getOrderId().longValue());
+				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+				getManagedBean().setContractRequest(Boolean.TRUE);
 			}else {
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
-				FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
-				flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-				flReqDTO.setFlOrderId(flPurchaseOrd.getOrderDetails().getOrderId());
+				
+				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+					FLOrderCancelReqType orderCancelReqType = (FLOrderCancelReqType)obj;
+					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+					flReqDTO.setFlOrderId(orderCancelReqType.getOrderDetails().getOrderId());
+				}else{
+					FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
+					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+					flReqDTO.setFlOrderId(flPurchaseOrd.getOrderDetails().getOrderId());
+				}
+					
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				if(resDTO.getFlOrder().isFactored()) {

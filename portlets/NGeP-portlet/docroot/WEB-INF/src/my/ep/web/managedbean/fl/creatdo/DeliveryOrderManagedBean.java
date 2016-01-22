@@ -1253,6 +1253,5 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setHyperLinkPage(boolean hyperLinkPage) {
 		this.hyperLinkPage = hyperLinkPage;
 	}
-
 	
 }
