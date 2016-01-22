@@ -205,32 +205,34 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if (resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-					String noteNo = null;
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 						messageId = MessageConst.INFO_700004;
-						noteNo = resDTO.getFulfilmentNoteNo();
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 						messageId = MessageConst.INFO_745002;
-						noteNo = resDTO.getFulfilmentNoteNo();
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 						messageId = MessageConst.INFO_745003;
-						noteNo = resDTO.getFulfilmentNoteNo();
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 						messageId = MessageConst.INFO_700009;
-						noteNo = resDTO.getFulfilmentNoteNo();
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 						messageId = MessageConst.INFO_700008;
-						noteNo = resDTO.getFulfilmentNoteNo();
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 						messageId = MessageConst.INFO_700018;
-						noteNo = resDTO.getFulfilmentNoteNo();
 					}
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(messageId, 
-									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
-									ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+ noteNo}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, 
-									new FacesScopes().getUserLocale())));
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), 
+										" "+ resDTO.getFlDeliveryOrder().getSupplierDoRef()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}else{
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
+										ResourceBundleUtils.getMessage("lbl.fl.frn.product.service",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+ resDTO.getFulfilmentNoteNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}
 				} else {
 					if(getManagedBean().isLastFRNTaxInv()){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
