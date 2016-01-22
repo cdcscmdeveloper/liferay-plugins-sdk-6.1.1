@@ -1,28 +1,21 @@
 package my.ep.web.managedbean.sm.complaint;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
-import org.apache.commons.lang3.StringUtils;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sm.complaint.IComplaintSO;
-import my.ep.constant.sm.DisciplinaryActionStatusConst;
+import my.ep.constant.sm.DisciplinaryActionConst;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.complaint.ComplaintResDTO;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmComplainant;
 import my.ep.persistence.entity.sm.SmComplaint;
-import my.ep.persistence.entity.sm.SmComplaintResponse;
 import my.ep.persistence.entity.sm.SmComplaintReview;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -31,6 +24,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sm.ComplaintSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.lang3.StringUtils;
 
 @ManagedBean(name = "complaintMB")
 @SessionScoped
@@ -63,9 +58,23 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private boolean sameAddress;
 	
 	private List<PmParameter> complaintTypes;
-	
 	private boolean isLazy;
+	
+	private List<SmAttachment> complaintDocs;
+	private SmAttachment selectedAttachment;
+	private String attachmentDeleteMsg;
 
+	private boolean complaintTerm;
+	private List<SmAttachment> ptpkDecisionDocs;
+	private List<SmAttachment> secondPtpkDecisionDocs;
+	private List<SmAttachment> showCauseLetters;
+	private List<SmAttachment> showCauseResponseDocs;
+	private List<SmAttachment> accusationLetters;
+	private List<SmAttachment> accusationResponseDocs;
+	private List<SmAttachment> jkttDecisionDocs;
+	
+	private SmComplaintReview secondReview;
+	private SmComplaintReview jkttReview;
 
 	public SmComplaint getSmComplaint() {
 		return smComplaint;
@@ -254,21 +263,21 @@ public class ComplaintManagedBean extends BaseManagedBean {
 		String searchType = null;
 		
 		switch(type){
-			case DisciplinaryActionStatusConst.SEARCHTYPE_EP_NO :
+			case DisciplinaryActionConst.SEARCHTYPE_EP_NO :
 				searchType = "smSupplier.epNo";
 				break;
 	
-			case DisciplinaryActionStatusConst.SEARCHTYPE_SUPPLIER_NAME :
+			case DisciplinaryActionConst.SEARCHTYPE_SUPPLIER_NAME :
 				searchType = "smSupplier.companyName";
 				break;
 			
-			case DisciplinaryActionStatusConst.SEARCHTYPE_COMPL_NO :
+			case DisciplinaryActionConst.SEARCHTYPE_COMPL_NO :
 				searchType = "complaintNo";	
 				break;
 			
-			case DisciplinaryActionStatusConst.SEARCHTYPE_MOF_NO :
+			case DisciplinaryActionConst.SEARCHTYPE_MOF_NO :
 				searchType = "complaintNo";	
-			case DisciplinaryActionStatusConst.SEARCHTYPE_REG_NO :
+			case DisciplinaryActionConst.SEARCHTYPE_REG_NO :
 				searchType = "smSupplier.regNo";
 				break;
 				
@@ -285,6 +294,108 @@ public class ComplaintManagedBean extends BaseManagedBean {
 			IPagingDataModel<SmComplaint> complaintDataModel) {
 		this.complaintDataModel = complaintDataModel;
 	}
-	
-	
+
+	public List<SmAttachment> getComplaintDocs() {
+		return complaintDocs;
+	}
+
+	public void setComplaintDocs(List<SmAttachment> complaintDocs) {
+		this.complaintDocs = complaintDocs;
+	}
+
+	public SmAttachment getSelectedAttachment() {
+		return selectedAttachment;
+	}
+
+	public void setSelectedAttachment(SmAttachment selectedAttachment) {
+		this.selectedAttachment = selectedAttachment;
+	}
+
+	public String getAttachmentDeleteMsg() {
+		return attachmentDeleteMsg;
+	}
+
+	public void setAttachmentDeleteMsg(String attachmentDeleteMsg) {
+		this.attachmentDeleteMsg = attachmentDeleteMsg;
+	}
+
+	public boolean isComplaintTerm() {
+		return complaintTerm;
+	}
+
+	public void setComplaintTerm(boolean complaintTerm) {
+		this.complaintTerm = complaintTerm;
+	}
+
+	public List<SmAttachment> getPtpkDecisionDocs() {
+		return ptpkDecisionDocs;
+	}
+
+	public void setPtpkDecisionDocs(List<SmAttachment> ptpkDecisionDocs) {
+		this.ptpkDecisionDocs = ptpkDecisionDocs;
+	}
+
+	public List<SmAttachment> getShowCauseLetters() {
+		return showCauseLetters;
+	}
+
+	public void setShowCauseLetters(List<SmAttachment> showCauseLetters) {
+		this.showCauseLetters = showCauseLetters;
+	}
+
+	public List<SmAttachment> getShowCauseResponseDocs() {
+		return showCauseResponseDocs;
+	}
+
+	public void setShowCauseResponseDocs(List<SmAttachment> showCauseResponseDocs) {
+		this.showCauseResponseDocs = showCauseResponseDocs;
+	}
+
+	public List<SmAttachment> getSecondPtpkDecisionDocs() {
+		return secondPtpkDecisionDocs;
+	}
+
+	public void setSecondPtpkDecisionDocs(List<SmAttachment> secondPtpkDecisionDocs) {
+		this.secondPtpkDecisionDocs = secondPtpkDecisionDocs;
+	}
+
+	public SmComplaintReview getSecondReview() {
+		return secondReview;
+	}
+
+	public void setSecondReview(SmComplaintReview secondReview) {
+		this.secondReview = secondReview;
+	}
+
+	public List<SmAttachment> getAccusationLetters() {
+		return accusationLetters;
+	}
+
+	public void setAccusationLetters(List<SmAttachment> accusationLetters) {
+		this.accusationLetters = accusationLetters;
+	}
+
+	public List<SmAttachment> getAccusationResponseDocs() {
+		return accusationResponseDocs;
+	}
+
+	public void setAccusationResponseDocs(List<SmAttachment> accusationResponseDocs) {
+		this.accusationResponseDocs = accusationResponseDocs;
+	}
+
+	public SmComplaintReview getJkttReview() {
+		return jkttReview;
+	}
+
+	public void setJkttReview(SmComplaintReview jkttReview) {
+		this.jkttReview = jkttReview;
+	}
+
+	public List<SmAttachment> getJkttDecisionDocs() {
+		return jkttDecisionDocs;
+	}
+
+	public void setJkttDecisionDocs(List<SmAttachment> jkttDecisionDocs) {
+		this.jkttDecisionDocs = jkttDecisionDocs;
+	}
 }
