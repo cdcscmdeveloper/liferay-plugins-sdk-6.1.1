@@ -3600,11 +3600,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public String constructMinistryConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
-		sb.append(OrganizationType.DIVISION.value());
-		sb.append("|orgTypeCode.parameterType^");
-		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
-		sb.append("|groupOrgType^");
-		sb.append(ParameterConst.ORG_AUTH_TYPE_MINISTRY);
+		sb.append(OrganizationType.MINISTRY.value());
 		sb.append("|recordStatus^1");
 		return sb.toString();
 	}
@@ -3612,14 +3608,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public String constructKumpulanPTJConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
-		sb.append(OrganizationType.DIVISION.value());
-		sb.append("|orgTypeCode.parameterType^");
-		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		sb.append(OrganizationType.DEPARTMENT.value());		
 		sb.append("|recordStatus^1");
-		sb.append("|groupOrgType^");
-		sb.append(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ);
 		sb.append("|");
-		sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
+		sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()));
 		sb.append("^");
 		sb.append(retrieveMinistryOrgProfile(getManagedBean().getSelectedMinistry().getOrgProfileId()).getOrgProfileId());
 		return sb.toString();
@@ -3629,12 +3621,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
 		sb.append(OrganizationType.DIVISION.value());
-		sb.append("|orgTypeCode.parameterType^");
-		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
 		sb.append("|recordStatus^1");
-		sb.append("|groupOrgType^");
-		sb.append(ParameterConst.ORG_AUTH_TYPE_ORG_GROUP);
-		sb.append("*groupOrgType^null^11");
 		sb.append("|");
 		sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
 		sb.append("^");
@@ -3672,20 +3659,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
 			   // group org hierarchy
 				if(ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
-					getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 					getManagedBean().setDisabledMinistryLov(true);
-					getManagedBean().getPlanSearchBean().setMinistry(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().getPlanSearchBean().setMinistry(retrieveMinistryOrgProfile(orgProfileId));
 				}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
-					List<PmOrgProfile> orgProfileList = PpCommonUtil.retrieveOrgProfileListFromGroupOrgType(orgProfileId,
-							OrganizationType.MINISTRY.value(), ParameterConst.ORG_AUTH_TYPE_MINISTRY);
-					if(orgProfileList != null && !orgProfileList.isEmpty()){
-						getManagedBean().setSelectedMinistry(orgProfileList.get(0));
-						getManagedBean().getPlanSearchBean().setMinistry(orgProfileList.get(0));
-					}					
-					getManagedBean().setSelectedKumpulanPTJ(getManagedBean().getCurrentActiveOrg());
+//					List<PmOrgProfile> orgProfileList = PpCommonUtil.retrieveOrgProfileListFromGroupOrgType(orgProfileId,
+//							OrganizationType.MINISTRY.value(), ParameterConst.ORG_AUTH_TYPE_MINISTRY);
+//					if(orgProfileList != null && !orgProfileList.isEmpty()){
+//						getManagedBean().setSelectedMinistry(orgProfileList.get(0));
+//						getManagedBean().getPlanSearchBean().setMinistry(orgProfileList.get(0));
+//					}		
+					getManagedBean().getPlanSearchBean().setMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
 					getManagedBean().setDisabledMinistryLov(true);
 					getManagedBean().setDisabledKumpulanPTJLov(true);
-					getManagedBean().getPlanSearchBean().setKptj(getManagedBean().getCurrentActiveOrg());
+					getManagedBean().getPlanSearchBean().setKptj(retrieveJabatanOrgProfile(orgProfileId));
 				}
 				
 			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null 
