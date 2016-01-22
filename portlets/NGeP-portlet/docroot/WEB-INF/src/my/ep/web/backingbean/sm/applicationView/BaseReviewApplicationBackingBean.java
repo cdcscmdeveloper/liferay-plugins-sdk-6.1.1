@@ -1818,6 +1818,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
+				|| sc.hasRoleUser(RoleCode.FL_USER.value())
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
 			getManagedBean().setSupplierUser(true);
