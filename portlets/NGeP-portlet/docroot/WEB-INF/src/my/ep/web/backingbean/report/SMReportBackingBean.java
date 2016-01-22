@@ -430,6 +430,7 @@ public class SMReportBackingBean extends
 			break;
 		case ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL:
 			//rptGenBean.setSmDOHCompanyNameView(true);
+			rptGenBean.setSmListOfCompaniesSortAlphabetView(true);
 			rptGenBean.setSmComSupplierTypeView(true);
 			rptGenBean.setSmLCMofRegNoFromView(true);
 			rptGenBean.setSmMofRegNoToView(true);
