@@ -12,41 +12,12 @@
 	
 	<ui:define name="resourceSection">
 	
-		<script type='text/javascript'>
-			var $jq = jQuery.noConflict(true);
-		</script>
 	
 	</ui:define>
 
 	<ui:define name="contentSection">
 
-		<h:outputScript library="jquery/slides" name="jquery.slides.js" />
-
-		<h:panelGroup
-			rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-			<script>
-			$(function() {
-				$('#slides').slidesjs({
-					width : 940,
-					height : 528,
-					navigation : {
-						effect : "fade"
-					},
-					pagination : {
-						effect : "fade"
-					},
-					effect : {
-						fade : {
-							speed : 400
-						}
-					}
-				});
-			});
-		</script>
-		</h:panelGroup>
-
-
-
+	
 
 
 		<p:outputPanel id="publicCatalogDetPageId">
@@ -65,17 +36,12 @@
 					<tr style="height: 30px;">
 						<td rowspan="10" style="vertical-align: top; width:25%;"><h:panelGroup
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
-								<div id="slides" style="height: 200px; width: 300px; left:0px !important; margin-right: 70px; vertical-align: middle; text-align: center;">
+								
+			
+								<p:galleria value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}" var="cmImage" panelWidth="300" panelHeight="200">
+  									  <p:graphicImage style="max-height: 100%;max-width: 100%;"  value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"/>
+								</p:galleria>
 
-									<ui:repeat var="cmImage"
-										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-										<h:panelGroup styleClass="pubCatImageStyle">
-											<img
-												src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"
-												style="height: 170px !important; left: 0px !important; margin-left: auto; margin-right: auto;" />
-										</h:panelGroup>
-									</ui:repeat>
-								</div>
 							</h:panelGroup> 
 							<h:panelGroup style="vertical-align:middle;"
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 1 }">
@@ -86,7 +52,7 @@
 										<h:panelGroup styleClass="pubCatImageStyle">
 											<img
 												src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"
-												style="height: 200px !important; left: 0px !important; margin-left: auto; margin-right: auto;" />
+												style=" max-height: 100%;max-width: 100%;" />
 										</h:panelGroup>
 									</ui:repeat>
 								</div>
