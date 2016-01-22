@@ -344,63 +344,34 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	
 	public void updateComplaintInfoByStatus(){
 		//if(getManagedBean().getSmComplaint().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-			Long curStatusId = getManagedBean().getSmComplaint().getPmStatus().getStatusId();
-			
-			if(curStatusId.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK.longValue() || 
-				curStatusId.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP.longValue() || 
-				curStatusId.longValue() == DisciplinaryActionConst.PENDING_REVIEW_RESP_FROM_JKTT.longValue()){
-				
-				Integer round = null;
-				String committee = null;
-				
-				if(curStatusId.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK.longValue()){
-					round = DisciplinaryActionConst.PTPK_R1;
-					committee = DisciplinaryActionConst.PTPK;
-					
-					if(getManagedBean().getSmComplReview().getDecisionTaken().equalsIgnoreCase(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
-						updateComplaintStatus();
-					}else{
-						PmStatus nextStatus = SmCommonUtil.getInstance().retrievePmStatusById(DisciplinaryActionConst.REVIEW_BY_PTPK_REJECT);
-						getManagedBean().getSmComplaint().setPmStatus(nextStatus);
-					}
-					getManagedBean().getSmComplReview().setRoundNo(round);
-					getManagedBean().getSmComplReview().setReviewCommittee(committee);
-					getManagedBean().getSmComplaint().getSmComplaintReviews().add(getManagedBean().getSmComplReview());
-					
-				}else if(curStatusId.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP.longValue()){
-					round = DisciplinaryActionConst.PTPK_R2;
-					committee = DisciplinaryActionConst.PTPK;
-					
-					if(getManagedBean().getSecondReview().getDecisionTaken().equalsIgnoreCase(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
-						updateComplaintStatus();
-					}else{
-						PmStatus nextStatus = SmCommonUtil.getInstance().retrievePmStatusById(DisciplinaryActionConst.REVIEW_SUPP_RESP_REJECT);
-						getManagedBean().getSmComplaint().setPmStatus(nextStatus);
-					}
-					getManagedBean().getSecondReview().setRoundNo(round);
-					getManagedBean().getSecondReview().setReviewCommittee(committee);
-					getManagedBean().getSmComplaint().getSmComplaintReviews().add(getManagedBean().getSecondReview());	
-				}
-				else if(curStatusId.longValue() == DisciplinaryActionConst.PENDING_REVIEW_RESP_FROM_JKTT.longValue()){
-					committee = DisciplinaryActionConst.JKTT;
-					updateComplaintStatus();
-					//getManagedBean().getSecondReview().setRoundNo(round);
-					//getManagedBean().getSecondReview().setReviewCommittee(committee);
-					getManagedBean().getSmComplaint().getSmComplaintReviews().add(getManagedBean().getJkttReview());
-				}
-				
-			}else if(curStatusId.longValue() == DisciplinaryActionConst.NEW_COMPLAINT.longValue()){
-				log.info("DECISION>>>>>>>>>" + getManagedBean().getSmComplaint().getDecision());
-				if(getManagedBean().getSmComplaint().getDecision() == DisciplinaryActionConst.DECISION_INVALID){
-					PmStatus nextStatus = SmCommonUtil.getInstance().retrievePmStatusById(DisciplinaryActionConst.NEW_COMPLAINT_REJECT);
-					getManagedBean().getSmComplaint().setPmStatus(nextStatus);
-				}else{
-					updateComplaintStatus();
-				}
-			}else{
-				updateComplaintStatus();
-			}
-		//}
+		Long curStatusId = getManagedBean().getSmComplaint().getPmStatus().getStatusId();
+
+
+		Integer round = null;
+		String committee = null;
+
+		if(curStatusId.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK.longValue()){
+			round = DisciplinaryActionConst.PTPK_R1;
+			committee = DisciplinaryActionConst.PTPK;
+
+			getManagedBean().getSmComplReview().setRoundNo(round);
+			getManagedBean().getSmComplReview().setReviewCommittee(committee);
+			getManagedBean().getSmComplaint().getSmComplaintReviews().add(getManagedBean().getSmComplReview());
+
+		}else if(curStatusId.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP.longValue()){
+			round = DisciplinaryActionConst.PTPK_R2;
+			committee = DisciplinaryActionConst.PTPK;
+
+			getManagedBean().getSecondReview().setRoundNo(round);
+			getManagedBean().getSecondReview().setReviewCommittee(committee);
+			getManagedBean().getSmComplaint().getSmComplaintReviews().add(getManagedBean().getSecondReview());	
+		}
+		else if(curStatusId.longValue() == DisciplinaryActionConst.PENDING_REVIEW_RESP_FROM_JKTT.longValue()){
+			committee = DisciplinaryActionConst.JKTT;
+			getManagedBean().getSmComplaint().getSmComplaintReviews().add(getManagedBean().getJkttReview());
+		}
+
+		updateComplaintStatus();
 	}
 	
 	
@@ -480,37 +451,46 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		log.info("******DisciplinaryActionConst*****" + DisciplinaryActionConst.NEW_COMPLAINT);
 
 		if(currentStatus.longValue() == DisciplinaryActionConst.NEW_COMPLAINT.longValue()){
-			log.info("******getNextStatus*****" + currentStatus);
-			newStatus = DisciplinaryActionConst.REVIEW_BY_PTPK;
-			
+			if(getManagedBean().getSmComplaint().getDecision() == DisciplinaryActionConst.DECISION_INVALID){
+				newStatus = DisciplinaryActionConst.NEW_COMPLAINT_REJECT;
+			}else{
+				newStatus = DisciplinaryActionConst.REVIEW_BY_PTPK;
+			}
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK.longValue()){
-			newStatus = DisciplinaryActionConst.PREPARE_SC_LETTER;
-			
+			if(getManagedBean().getSmComplReview().getDecisionTaken().equalsIgnoreCase(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
+				newStatus = DisciplinaryActionConst.PREPARE_SC_LETTER;
+			}else{
+				newStatus = DisciplinaryActionConst.REVIEW_BY_PTPK_REJECT;
+			}
+
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.PREPARE_SC_LETTER.longValue()){
 			newStatus = DisciplinaryActionConst.UPDATE_SC_RECEIVE_DATE;
-			
+
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.UPDATE_SC_RECEIVE_DATE.longValue()){
 			newStatus = DisciplinaryActionConst.WAITING_SUPP_SC_RESP;
-			
+
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.WAITING_SUPP_SC_RESP){
 			newStatus = DisciplinaryActionConst.REVIEW_SUPP_RESP;
-			
+
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP.longValue()){
-			newStatus = DisciplinaryActionConst.PREPARE_AC_LETTER;
-			
+			if(getManagedBean().getSmComplReview().getDecisionTaken().equalsIgnoreCase(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
+				newStatus = DisciplinaryActionConst.PREPARE_AC_LETTER;
+			}else{
+				newStatus = DisciplinaryActionConst.REVIEW_SUPP_RESP_REJECT;
+			}
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.PREPARE_AC_LETTER.longValue()){
 			newStatus = DisciplinaryActionConst.UPDATE_AC_RECEIVE_DATE;
-			
+
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.UPDATE_AC_RECEIVE_DATE.longValue()){
 			newStatus = DisciplinaryActionConst.WAITING_SUPP_AC_RESP;
-			
+
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.WAITING_SUPP_AC_RESP.longValue()){
 			newStatus = DisciplinaryActionConst.PENDING_REVIEW_RESP_FROM_JKTT;
-			
+
 		}else if(currentStatus.longValue() == DisciplinaryActionConst.PENDING_REVIEW_RESP_FROM_JKTT.longValue()){
 			newStatus = DisciplinaryActionConst.COMPLAINT_COMPLETED;
 		}
-		
+
 		return newStatus;
 	}
 	
@@ -672,7 +652,11 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 						getManagedBean().setAccusationLetters(new ArrayList<SmAttachment>()); 
 					}
 					
-					getManagedBean().getAccusationLetters().add(attachment);
+					if(getManagedBean().getAccusationLetters().size() > 0){
+						getManagedBean().getAccusationLetters().set(0, attachment);
+					}else{
+						getManagedBean().getAccusationLetters().add(attachment);
+					}
 
 				}else if(pmStatus.getStatusId().longValue() ==  DisciplinaryActionConst.WAITING_SUPP_AC_RESP.longValue()){
 					attachment.setDocType(DisciplinaryActionConst.ACCUSATION_RESP_DOC_TYPE);
@@ -827,8 +811,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 				currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK.longValue()){
 
 			if(currentStatus.longValue() == DisciplinaryActionConst.NEW_COMPLAINT_REJECT.longValue()){
-				SmComplaintReview complReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.PTPK,
-						DisciplinaryActionConst.PTPK_R1);
+				SmComplaintReview complReview = getFirstReview();
 				getManagedBean().setSmComplReview(complReview);
 			}else{
 				getManagedBean().setSmComplReview(new SmComplaintReview());
@@ -836,32 +819,14 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			}
 
 		}else if(currentStatus.longValue() >= DisciplinaryActionConst.PREPARE_SC_LETTER.longValue()){
-			String committee = null;
-			Integer roundNo = null;
 			log.info("****" + currentStatus +"*****");
 
 			if(currentStatus.longValue() >= DisciplinaryActionConst.PREPARE_SC_LETTER.longValue()){
-				committee = DisciplinaryActionConst.PTPK;
-				roundNo = DisciplinaryActionConst.PTPK_R1;
-
-				if(currentStatus.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP){
-					roundNo = DisciplinaryActionConst.PTPK_R1;
-				}else if(currentStatus.longValue() == DisciplinaryActionConst.PENDING_REVIEW_RESP_FROM_JKTT){
-					roundNo = DisciplinaryActionConst.PTPK_R2;
-					committee = DisciplinaryActionConst.PTPK;
-				}
-
 				//for review 1 and JKTT
-				//TODO may rearrange the flow
-				SmComplaintReview complReview = getComplReviewByCommitteeAndRoundNo(committee,roundNo);
-				getManagedBean().setSmComplReview(complReview);
-
-				log.info("complReview roundNo>>>>" + roundNo);
-				log.info("complReview committee>>>>" + committee);
-				log.info("complReview>>>>" + complReview.getComplaintReviewId());
-//				log.info("complReview received date>>>>" + complReview.getSmComplaintResponse().getSupplierReceivedDate());
+				getManagedBean().setSmComplReview(getFirstReview());
 				
-				populateAttachedDocsByReviewIdAndStatus(complReview.getComplaintReviewId(),currentStatus);
+				//populate 1st review doc
+				populateAttachedDocsByReviewIdAndStatus(getManagedBean().getSmComplReview().getComplaintReviewId(), currentStatus);
 				
 				if(currentStatus.longValue() == DisciplinaryActionConst.UPDATE_SC_RECEIVE_DATE.longValue()){
 					getManagedBean().getSmComplReview().setSmComplaintResponse(new SmComplaintResponse());
@@ -870,11 +835,19 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 				
 				if(currentStatus.longValue() >= DisciplinaryActionConst.REVIEW_SUPP_RESP.longValue()){
 					
-					if(currentStatus.longValue() == DisciplinaryActionConst.PREPARE_AC_LETTER.longValue() || 
-							currentStatus.longValue() == DisciplinaryActionConst.UPDATE_AC_RECEIVE_DATE.longValue() || 
-									currentStatus.longValue() == DisciplinaryActionConst.WAITING_SUPP_AC_RESP.longValue()){
+
+					if(currentStatus.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP.longValue()){
+						//getManagedBean().setSmComplReview(complReview);
+						log.info("COmplaint Reponse----"  + getManagedBean().getSmComplReview().getSmComplaintResponse().getSupplierResponseDate());
 						
-						SmComplaintReview secondReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.PTPK,DisciplinaryActionConst.PTPK_R2);
+						getManagedBean().setSecondReview(new SmComplaintReview());
+						getManagedBean().getSecondReview().setRoundNo(DisciplinaryActionConst.PTPK_R2);
+						getManagedBean().getSecondReview().setReviewCommittee(DisciplinaryActionConst.PTPK);
+						getManagedBean().getSecondReview().setSmComplaint(getManagedBean().getSmComplaint());
+					}
+					
+					if(currentStatus.longValue() >= DisciplinaryActionConst.PREPARE_AC_LETTER.longValue()){
+						SmComplaintReview secondReview = getSecondReview();
 						getManagedBean().setSecondReview(secondReview);
 						populateAttachedDocsByReviewIdAndStatus(secondReview.getComplaintReviewId(),currentStatus);
 						
@@ -885,52 +858,31 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 							getManagedBean().getSecondReview().setSmComplaintResponse(new SmComplaintResponse());
 							getManagedBean().getSecondReview().getSmComplaintResponse().setSmComplaintReview(secondReview);
 						}
+						
+						if(currentStatus.longValue() == DisciplinaryActionConst.PENDING_REVIEW_RESP_FROM_JKTT.longValue()){
+							//SmComplaintReview secondReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.PTPK,DisciplinaryActionConst.PTPK_R2);
+							//getManagedBean().setSecondReview(secondReview);
+							//(secondReview.getComplaintReviewId(),currentStatus);
+							
+							log.info("secondReview----" + secondReview.getComplaintReviewId());
+							
+							getManagedBean().setJkttReview(new SmComplaintReview());
+							getManagedBean().getJkttReview().setReviewCommittee(DisciplinaryActionConst.JKTT);
+							getManagedBean().getJkttReview().setSmComplaint(getManagedBean().getSmComplaint());
+						}
+						
+						if(currentStatus.longValue() == DisciplinaryActionConst.COMPLAINT_COMPLETED.longValue()){
+							getManagedBean().setSecondReview(getSecondReview());
+							getManagedBean().setJkttReview(getJKTTReview());
+							populateAttachedDocsByReviewIdAndStatus(getManagedBean().getJkttReview().getComplaintReviewId(),
+									currentStatus.longValue());
+							log.info("secondReview----" + getManagedBean().getSecondReview().getComplaintReviewId());
+							log.info("jkttReview----" + getManagedBean().getJkttReview().getComplaintReviewId());
+						}
 					}
 					
-					if(currentStatus.longValue() == DisciplinaryActionConst.REVIEW_SUPP_RESP.longValue()){
-						roundNo = DisciplinaryActionConst.PTPK_R2;
-						
-						getManagedBean().setSmComplReview(complReview);
-						log.info("COmplaint Reponse----"  + 
-						getManagedBean().getSmComplReview().getSmComplaintResponse().getSupplierResponseDate());
-						
-						getManagedBean().setSecondReview(new SmComplaintReview());
-						getManagedBean().getSecondReview().setRoundNo(roundNo);
-						getManagedBean().getSecondReview().setReviewCommittee(committee);
-						getManagedBean().getSecondReview().setSmComplaint(getManagedBean().getSmComplaint());
-					}
-					
-					if(currentStatus.longValue() == DisciplinaryActionConst.PENDING_REVIEW_RESP_FROM_JKTT.longValue()){
-						SmComplaintReview secondReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.PTPK,DisciplinaryActionConst.PTPK_R2);
-						getManagedBean().setSecondReview(secondReview);
-						populateAttachedDocsByReviewIdAndStatus(secondReview.getComplaintReviewId(),currentStatus);
-						
-						log.info("secondReview----" + secondReview.getComplaintReviewId());
-						
-						getManagedBean().setJkttReview(new SmComplaintReview());
-						getManagedBean().getJkttReview().setReviewCommittee(DisciplinaryActionConst.JKTT);
-						getManagedBean().getJkttReview().setSmComplaint(getManagedBean().getSmComplaint());
-					}
-					
-					if(currentStatus.longValue() == DisciplinaryActionConst.COMPLAINT_COMPLETED.longValue()){
-						SmComplaintReview secondReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.PTPK,DisciplinaryActionConst.PTPK_R2);
-						getManagedBean().setSecondReview(secondReview);
-						populateAttachedDocsByReviewIdAndStatus(secondReview.getComplaintReviewId(),currentStatus);
-						
-						SmComplaintReview jkttReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.JKTT,null);
-						getManagedBean().setJkttReview(jkttReview);
-						populateAttachedDocsByReviewIdAndStatus(jkttReview.getComplaintReviewId(),currentStatus);
-						
-						log.info("secondReview----" + secondReview.getComplaintReviewId());
-						log.info("jkttReview----" + jkttReview.getComplaintReviewId());
-					}
 				}
 			}
-
-			/*else if {
-				committee = DisciplinaryActionConst.JKTT;
-				roundNo = DisciplinaryActionConst.PTPK_R1;
-			}*/
 		}
 		
 		//Complaint DOCs
@@ -968,11 +920,34 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		}
 		else if(statusId.longValue() == DisciplinaryActionConst.COMPLAINT_COMPLETED.longValue()){
 			log.info("review ID = "+reviewId);
-			getManagedBean().setSecondPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.SECOND_PTPK_REVIEW_DOC_TYPE, reviewId));
-			getManagedBean().setAccusationLetters(getDocumentsByTypeAndId(DisciplinaryActionConst.ACCUSATION_LETTER_DOC_TYPE, reviewId));
-			getManagedBean().setAccusationResponseDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.ACCUSATION_RESP_DOC_TYPE, reviewId));
+			
+			//get Second review Info
+			Long secondReviewId = getSecondReview().getComplaintReviewId();
+			getManagedBean().setSecondPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.SECOND_PTPK_REVIEW_DOC_TYPE, secondReviewId));
+			getManagedBean().setAccusationLetters(getDocumentsByTypeAndId(DisciplinaryActionConst.ACCUSATION_LETTER_DOC_TYPE, secondReviewId));
+			getManagedBean().setAccusationResponseDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.ACCUSATION_RESP_DOC_TYPE, secondReviewId));
+
 			getManagedBean().setJkttDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.JKTT_DECISION_DOC_TYPE, reviewId));
 		}
 	}
+	
+	private SmComplaintReview getFirstReview(){
+		SmComplaintReview complReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.PTPK, DisciplinaryActionConst.PTPK_R1);
+		return complReview;
+	}
+	
+	private SmComplaintReview getSecondReview(){
+		SmComplaintReview secondReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.PTPK, DisciplinaryActionConst.PTPK_R2);
+		return secondReview;
+	}
+	
+	private SmComplaintReview getJKTTReview(){
+		SmComplaintReview jkttReview = getComplReviewByCommitteeAndRoundNo(DisciplinaryActionConst.JKTT, null);
+		
+		return jkttReview;
+	}
+	
+	
+	
 }
 	
