@@ -115,6 +115,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.format.AttachmentDateFormat;
@@ -155,6 +156,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
+	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	
 	public ContractBackingBean() {
 		log.debug("ContractBackingBean.constructor()");
@@ -2456,4 +2458,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			   }
 				return false;
 		 }
+	  
+	  /**
+	   * Route to Central Contract Circular Page. 
+	   * @param contractVerId
+	   * @return page url
+	   */
+	  public String gotoCicularPage(Long contractVerId){
+		  CentralContractBackingBean centralBB = new CentralContractBackingBean();
+		  FacesContext fc = FacesContext.getCurrentInstance();
+		  centralBB.getManagedBean().setSelectedCircularContract(null);
+		  centralBB.getManagedBean().setSelectedCircularItem(null);
+		  centralBB.getManagedBean().setSelectedZoneItems(null);
+		  centralBB.getManagedBean().setSelectedTabIndex(0);
+		  centralBB.getManagedBean().setAction("view");
+		  centralBB.getManagedBean().setViewContract(true);
+		  centralBB.getManagedBean().setUpdateAction(false);
+		  centralBB.getManagedBean().setOutComes(new String[]{});
+		  centralBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
+		  centralBB.getManagedBean().setChkCentralCircular(true);
+		  centralBB.gotoCommonPage(contractVerId);
+		  return CENTRAL_CIRCULAR_PAGE;
+	  }	  
+	  
 }
