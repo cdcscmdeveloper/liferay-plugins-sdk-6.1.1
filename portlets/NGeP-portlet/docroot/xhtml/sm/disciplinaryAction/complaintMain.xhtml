@@ -14,7 +14,7 @@
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" 
 			rendered="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.newComplaintReject and 
 			complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.reviewByPtpkReject and 
-			complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.reviewByPtpkReject}"
+			complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.reviewSuppRespReject}"
 			action="#{complaintBackingBean.updateComplaint}">
 			<f:param name="disableValidation" value="true" />	
 		</p:commandButton>
