@@ -29,8 +29,8 @@
 	
 	<managed-bean>
 		  <description>Disciplinary Action Status Constants</description>
-		  <managed-bean-name>DisciplinaryActionStatusConst</managed-bean-name>
-		  <managed-bean-class>my.ep.constant.sm.DisciplinaryActionStatusConst</managed-bean-class>
+		  <managed-bean-name>DisciplinaryActionConst</managed-bean-name>
+		  <managed-bean-class>my.ep.constant.sm.DisciplinaryActionConst</managed-bean-class>
 		  <managed-bean-scope>application</managed-bean-scope>
  	</managed-bean>
 </faces-config>
