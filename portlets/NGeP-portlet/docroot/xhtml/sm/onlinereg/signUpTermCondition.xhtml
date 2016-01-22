@@ -36,9 +36,12 @@
 					validator="#{registrationBackingBean.validateCaptcha}"
 					size="10" />
 				<p:graphicImage id="captchaText" value="#{registrationBackingBean.captchaTextImage}" />
+				&#160;
 				<p:commandLink update="captchaText" >
 					<p:graphicImage value="/css/images/design/ico-refresh.png" />
 				</p:commandLink>
+				<p:messages id="messages" showDetail="true" autoUpdate="true"
+					closable="true" showSummary="false"/>
 			</p:panel>
 			<br />
 			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}" 
