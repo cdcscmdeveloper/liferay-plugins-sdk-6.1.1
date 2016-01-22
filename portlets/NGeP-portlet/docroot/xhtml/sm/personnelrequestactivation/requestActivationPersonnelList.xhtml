@@ -50,16 +50,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
 					style="white-space: normal;">
-					<h:outputText
-						value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
-						rendered="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
-					<h:outputText
-						value="#{lbl['lbl.sm.person.composition.suppUser']}"
-						rendered="#{person.epRole eq 'BASIC_SUPPLIER_USER' or person.epRole eq 'MOF_SUPPLIER_USER'}" />
-					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
-						rendered="#{person.epRole eq 'CM_USER'}" />
-					<h:outputText value="#{lbl['lbl.sm.person.composition.fluser']}"
-						rendered="#{person.epRole eq 'FL_USER'}" />
+					<ac:smRoleDesc backingBean="#{bb}" roleCode="#{person.epRole}"/>
 					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 						rendered="#{person.contractSignerFlg eq 1 and person.smAppl.supplierType ne 'J'}" />
 				</p:column>
