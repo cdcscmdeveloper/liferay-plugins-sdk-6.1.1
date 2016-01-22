@@ -10,16 +10,19 @@
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="#{lbl['lbl.sm.complaint.against.supplier']} * " /></td>
-				<td class="tdContent"><ac:lov id="supplier" lovId="SM_SUPPLIER"
-						headerText="#{lbl['lbl.sm.supplov']}"
+						value="#{lbl['lbl.sm.complaint.against.supplier']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><ac:lov id="supplier" lovId="SM_SUPPLIER" 
+						headerText="#{lbl['lbl.sm.supplov']}" readonly="#{complDtlViewFLag}"
 						saveObject="complaintBackingBean.managedBean.smComplaint.smSupplier"
 						value="#{complaintBackingBean.managedBean.smComplaint.smSupplier.companyName}"
 						conditionField="recordStatus^1" update=":#{p:component('complDtl')}">
-					</ac:lov></td>
+					</ac:lov>
+					<p:message id="businessRegNoMsg" for="businessRegNo" display="icon" />
+				</td>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.businessregno']}" /></td>
-				<td class="tdContent"><p:inputText  readonly="true" value="#{complaintBackingBean.managedBean.smComplaint.smSupplier.regNo}" /></td>
+				<td class="tdContent"><p:inputText  readonly="true" id="businessRegNo" value="#{complaintBackingBean.managedBean.smComplaint.smSupplier.regNo}" /></td>
 				<td>&#160;</td>
 			</tr>
 
@@ -36,43 +39,76 @@
 			<c:if
 				test="#{!complaintBackingBean.managedBean.smComplaint.brandNew}">
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.complaint.type']} * " /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.complaint.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent" colspan="3">
-						<p:selectManyCheckbox id="grid" value="#{complaintBackingBean.managedBean.selectedOffenses}">
+						<p:selectManyCheckbox id="offense" value="#{complaintBackingBean.managedBean.selectedOffenses}" 
+						disabled="#{complaintBackingBean.managedBean.smComplaint.pmStatus != null and 
+						complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.newComplaint}" 
+						required="#{!empty param['disableValidation']}">
 							<f:selectItems value="#{complaintBackingBean.getRadioButtonValues(ParameterTypeConst.complaintType)}" />
 						</p:selectManyCheckbox>
+						<p:message id="offenseMsg" for="offense" display="icon" />
 					</td>
 				</tr>
 			</c:if>
 
 			<tr>
 				<td class="tdTitle" valign="top"><p:outputLabel
-						value="#{lbl['lbl.sm.complaint.details']} * " /></td>
-				<td class="tdContent" colspan="3"><p:inputTextarea
+						value="#{lbl['lbl.sm.complaint.details']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent" colspan="3"><p:inputTextarea required="#{!empty param['disableValidation']}"  
+						label="#{lbl['lbl.sm.complaint.details']}"
 						value="#{complaintBackingBean.managedBean.smComplaint.complaintDesc}"
-						rows="8" cols="100" /></td>
-			</tr>
-
-			<tr>
-				<c:choose>
-					<c:when
-						test="#{complaintBackingBean.managedBean.smComplaint.brandNew}">
-						<td class="tdTitle"><p:outputLabel
-								value="#{lbl['lbl.sm.complaint.upload.docproof']}" /></td>
-						<td class="tdContent" colspan="3"><p:fileUpload mode="simple" /></td>
-					</c:when>
-
-					<c:otherwise>
-						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.complaint.document']}" /></td>
-						<td class="tdContent" colspan="3"><p:commandLink>sampleUploadedDoc
-							</p:commandLink></td>
-					</c:otherwise>
-				</c:choose>
-
-				<!-- 				<td class="tdTitle"></td> -->
-				<!-- 				<td class="tdContent"></td> -->
+						readonly="#{complDtlViewFLag}" id="complDetails"
+						rows="8" cols="100" />
+					<p:message id="complDetailsMsg" for="complDetails" display="icon" />		
+				</td>
 			</tr>
 		</table>
 	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sm.complaint.upload.docproof']}" id="pnlComplDoc" toggleable="true">
+		<p:dataTable value="#{complaintBackingBean.managedBean.complaintDocs}" var="complDoc">
+			<p:column headerText="Document Name">
+				#{complDoc.fileName}
+			</p:column>
+			
+			<p:column headerText="Action">
+				<p:commandLink oncomplete="attachmentDeleteDlg.show()" action="#{complaintBackingBean.showDeleteDialog(complDoc)}" 
+						update="@([id$=attachmentDeleteDlg])" rendered="#{complaintBackingBean.managedBean.smComplaint.brandNew}">
+							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+						</p:commandLink>
+						
+				<p:commandLink action="#{complaintBackingBean.attachmentDownload(complDoc)}" ajax="false"
+						update="@([id$=attachmentDeleteDlg])" rendered="#{!complaintBackingBean.managedBean.smComplaint.brandNew}">
+							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.btn.download']}" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		
+		<div align="right">
+			<p:commandButton value="Upload" onclick="uploadDlg.show();" rendered="#{complaintBackingBean.managedBean.smComplaint.brandNew}" />
+		</div>
+	</p:panel>
+	
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false" resizable="false" width="700px"
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload style="display:inline;" multiple="true" fileUploadListener="#{complaintBackingBean.docUpload}"
+			mode="basic" id="upload" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="pnlComplDoc" 
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			oncomplete="uploadDlg.hide();return false;">
+		</p:fileUpload>
+	</p:dialog>
+	
+	<p:dialog widgetVar="attachmentDeleteDlg" id="attachmentDeleteDlg" modal="true" height="100" width="500">
+   			#{complaintBackingBean.managedBean.attachmentDeleteMsg}
+   			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" oncomplete="attachmentDeleteDlg.hide()"
+				action="#{complaintBackingBean.removeAttachment}" update="@([id$=pnlComplDoc])"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="attachmentDeleteDlg.hide();"></p:commandButton>
+		</div>
+	</p:dialog>
 
 </ui:composition>

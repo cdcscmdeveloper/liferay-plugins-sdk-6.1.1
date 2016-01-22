@@ -5,19 +5,24 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:param name="complainantDtlViewFLag" value="true" />
+	<ui:param name="complDtlViewFLag" value="true" />
 	<ui:include
 		src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
 	<ui:include
 		src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
-
-	<p:panel header="#{lbl['lbl.sm.complaint.urus.setia.decision']}" toggleable="true">
+	
+	<p:panel header="#{lbl['lbl.sm.complaint.urus.setia.decision']}" toggleable="true"
+		rendered="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.newComplaintReject}">
 		<table class="customTbl">
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.decision']}" /></td>
-				<td class="tdContent"><p:selectOneMenu value="#{complaintBackingBean.managedBean.smComplaint.recordStatusFlg}">
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.decision']}" />
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent">
+				<p:selectOneMenu value="#{complaintBackingBean.managedBean.smComplaint.decision}" label="#{lbl['lbl.sm.decision']}" required="true">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.decision.valid']}" itemValue="1" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.decision.invalid']}" itemValue="9" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.decision.valid']}" itemValue="#{DisciplinaryActionConst.decisionValid}" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.decision.invalid']}" itemValue="#{DisciplinaryActionConst.decisionInvalid}" />
 					</p:selectOneMenu></td>
 				<td class="tdTitle"></td>
 				<td class="tdContent"></td>
