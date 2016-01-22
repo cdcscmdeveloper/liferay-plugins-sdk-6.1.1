@@ -94,6 +94,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<Long> agentOrgProfileList;
 	private Long selectedApprover;
 	private List<Long> approverList;
+	private List<PmUserGroupUser> approverGroupUserList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -2697,6 +2698,23 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setPidValidityExpired(boolean pidValidityExpired) {
 		this.pidValidityExpired = pidValidityExpired;
+	}
+
+	/**
+	 * @return the approverGroupUserList
+	 */
+	public List<PmUserGroupUser> getApproverGroupUserList() {
+		if(approverGroupUserList == null){
+			setApproverGroupUserList(new ArrayList<PmUserGroupUser>());
+		}
+		return approverGroupUserList;
+	}
+
+	/**
+	 * @param approverGroupUserList the approverGroupUserList to set
+	 */
+	public void setApproverGroupUserList(List<PmUserGroupUser> approverGroupUserList) {
+		this.approverGroupUserList = approverGroupUserList;
 	}
 
 }

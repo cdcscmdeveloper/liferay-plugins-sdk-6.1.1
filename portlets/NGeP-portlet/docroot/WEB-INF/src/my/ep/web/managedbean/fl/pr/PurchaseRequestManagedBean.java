@@ -503,13 +503,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String gfmasErrorContent;
 	private PmOrgProfile currentChargePtjGroup;
 	private Long selectedApprover;
-	private List<Long> approverList;
+	private List<Long> approverIdList;
 	
 	private boolean selectChargeLineRow=false;
 	private boolean gstRateChange;
 	
 	private boolean hyperLinkPage = false;
 	private boolean pidValidityExpired = false;
+	private List<PmUserGroupUser> approverGroupUserList;
 	
 /**
  * Gets the charge line item root.
@@ -3158,23 +3159,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the approverList
-	 */
-	public List<Long> getApproverList() {
-		if(approverList == null){
-			setApproverList(new ArrayList<Long>());
-		}
-		return approverList;
-	}
-
-	/**
-	 * @param approverList the approverList to set
-	 */
-	public void setApproverList(List<Long> approverList) {
-		this.approverList = approverList;
-	}
-
-	/**
 	 * @return the selectChargeLineRow
 	 */
 	public boolean isSelectChargeLineRow() {
@@ -3258,6 +3242,37 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setTaskDeadLine(String taskDeadLine) {
 		this.taskDeadLine = taskDeadLine;
+	}
+
+	/**
+	 * @return the approverIdList
+	 */
+	public List<Long> getApproverIdList() {
+		return approverIdList;
+	}
+
+	/**
+	 * @param approverIdList the approverIdList to set
+	 */
+	public void setApproverIdList(List<Long> approverIdList) {
+		this.approverIdList = approverIdList;
+	}
+
+	/**
+	 * @return the approverGroupUserList
+	 */
+	public List<PmUserGroupUser> getApproverGroupUserList() {
+		if(approverGroupUserList == null){
+			approverGroupUserList = new ArrayList<PmUserGroupUser>();
+		}
+		return approverGroupUserList;
+	}
+
+	/**
+	 * @param approverGroupUserList the approverGroupUserList to set
+	 */
+	public void setApproverGroupUserList(List<PmUserGroupUser> approverGroupUserList) {
+		this.approverGroupUserList = approverGroupUserList;
 	}
 
 }

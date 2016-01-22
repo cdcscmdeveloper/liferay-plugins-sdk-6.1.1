@@ -28,6 +28,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
@@ -40,6 +41,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -71,6 +73,8 @@ import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -89,6 +93,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -100,10 +105,10 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
@@ -137,7 +142,7 @@ import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "invoiceBackingBean")
 @ViewScoped
-public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
+public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManagedBean> {
 	
 	/** The log. */
 	private static Logger log = Logger.getLogger(InvoiceBackingBean.class);
@@ -158,15 +163,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	
 	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
 	private static final String NAV_FULFILMENTNOTE_PAGE= "/xhtml/fl/receivednote/frnBasePage.xhtml";
-	/**
-	 * get faces scopes.
-	 *
-	 * @return FacesScopes
-	 */
-	private FacesScopes getFacesScopes(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
 
 	/**
 	 * Instantiates a new invoice backing bean.
@@ -191,7 +187,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		try {
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
-			
 			// Need to call this as user may not click on summary menu
 			calInvSummary();
 			// Check is it DAN exist
@@ -211,6 +206,24 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					break;
 				}
 			}
+			List<PmUser> listOfApprover = null;
+			if(reqDTO.isDan()){
+				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
+				reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
+				reqDTO.setApproverLimit(sumItemAmt);
+				try {
+					resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if(resDTO.getApproverGroupUserList().isEmpty()){
+					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
+				}
+				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),getManagedBean().getInvoice().getFlRequest().getApprover());
+			}
+			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setInvoice(invoice);
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -219,13 +232,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			if(flBB.getManagedBean().getRemarkList().size() >0){
 				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
-			
+
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 			if(null != getManagedBean().getPmDigiSign()){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
+				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				// dunno what's the purpose of the above code
 				if(reqDTO.getPmUser()==null) {
@@ -234,8 +250,27 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				if(null != getManagedBean().getInvoice().getSupplierInvoiceRef()){
 					getManagedBean().getInvoice().setSupplierInvoiceRef(getManagedBean().getInvoice().getSupplierInvoiceRef());
 				}
-				
+
 				reqDTO.setInvoice(getManagedBean().getInvoice());
+
+				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
+				reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
+				reqDTO.setApproverLimit(sumItemAmt);
+				try {
+					resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+					if(resDTO.getApproverGroupUserList() ==null || resDTO.getApproverGroupUserList().isEmpty()){
+						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
+					}
+				}
+				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),getManagedBean().getInvoice().getFlRequest().getApprover());
+				reqDTO.setApproverUserList(listOfApprover);
+				
+				
+				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -274,13 +309,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
-					resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
+						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan()) {
 					if(resDTO.getInvoice().getAp59Status()==null || 
-						(resDTO.getInvoice().getAp59Status()!=null && resDTO.getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION)) {
+							(resDTO.getInvoice().getAp59Status()!=null && resDTO.getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION)) {
 						reqDTO.setFlDocNo(resDTO.getFulfilmentNoteNo());
 						invoiceSO.sendCANNotification(reqDTO);
 					}
@@ -299,12 +334,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						}else{
 							commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_INVOICE);
 						}
-						
+
 						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.invoice.supp.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 						commonBackingBean.getManagedBean().setParamMap(paramMap);
 						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 					}
-					
+
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);

@@ -23,6 +23,7 @@ import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
@@ -32,6 +33,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -555,6 +558,14 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	 */
 	public String gpkiSignAction(String outcome){
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.toString());
+			userReqDTO.setOrgProfileId(getManagedBean().getAdjustment().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+			if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.paymentMatchOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
 			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getAdjustment().getDocNo());
