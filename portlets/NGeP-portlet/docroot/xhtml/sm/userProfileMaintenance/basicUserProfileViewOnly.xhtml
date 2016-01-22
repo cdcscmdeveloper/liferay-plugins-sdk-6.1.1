@@ -77,7 +77,7 @@
 				</tr>	
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" styleClass="outputLabel-view-label" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"/></td>
+					<td><ac:smRoleDesc roleCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}" backingBean="#{smPersonnelBackingBean}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" styleClass="outputLabel-view-label"/></td>
 					<td><ac:labelDate styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" /></td>		
 				</tr>
