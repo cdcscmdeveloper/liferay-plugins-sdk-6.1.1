@@ -45,9 +45,11 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -72,6 +74,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1040,6 +1043,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		return profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO).getPmOrgProfile();
+	}
+	
+	/**
+	 * Get eP Role description by role code
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getEpRoleDescByRoleCode(String roleCode) {
+		String retVal = "";
+		RoleReqDTO reqDTO = new RoleReqDTO();
+		reqDTO.setRoleCode(roleCode);
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		PmRoleDesc roleDesc = SmServiceLookup.getRoleSO()
+				.retrieveRoleDescByRoleCode(reqDTO).getPmRoleDesc();
+		if (roleDesc != null && StringUtils.isNotBlank(roleDesc.getRoleName())) {
+			retVal = roleDesc.getRoleName();
+		}
+		return retVal;
 	}
 	
 	/**
