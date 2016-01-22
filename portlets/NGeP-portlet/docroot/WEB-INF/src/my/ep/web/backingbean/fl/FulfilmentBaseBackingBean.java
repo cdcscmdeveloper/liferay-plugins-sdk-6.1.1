@@ -4,24 +4,34 @@
 package my.ep.web.backingbean.fl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -141,4 +151,47 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 	}
 	
+	protected List<PmUser> sortApproverUserList(List<PmUserGroupUser> approverGroupUserList, PmUser approver){
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		ArrayList<String> names = new ArrayList<String>();
+		List<PmUser> list1 = new ArrayList<PmUser>();
+		List<PmUser> list2 = new ArrayList<PmUser>();
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		List<PmUser> pmUserList = new ArrayList<PmUser>();
+		if(approver != null){
+			for(PmUserGroupUser groupUser : approverGroupUserList){
+				names.add(groupUser.getPmUser().getUserName());
+				pmUserList.add(groupUser.getPmUser());
+			}
+			if(!names.contains(approver.getUserName())){
+				names.add(approver.getUserName());
+				pmUserList.add(approver);
+			}
+			Collections.sort(pmUserList, new Comparator<PmUser>() {
+				@Override
+				public int compare(PmUser s1, PmUser s2) {
+					return s1.getUserName().compareToIgnoreCase(s2.getUserName());
+				}
+			});
+			boolean match = false;
+			for(PmUser pmUser : pmUserList){
+				if(pmUser.equals(approver)){
+					match = true;
+				}
+				if(match){
+					list2.add(pmUser);
+				}else{
+					list1.add(pmUser);
+				}
+			}
+			userReqDTO.setLoginId(approver.getLoginId());
+			UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
+			if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+				list2.remove(0);
+			}
+			list2.addAll(list1);
+		}
+		return list2;
+	}
 }
