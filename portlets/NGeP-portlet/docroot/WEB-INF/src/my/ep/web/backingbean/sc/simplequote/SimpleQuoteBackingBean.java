@@ -1819,6 +1819,8 @@ public class SimpleQuoteBackingBean extends
 				scQuote.getRemarks(), ScSQRemark.class));
 
 		getManagedBean().setScQuote(scQuote);
+		// duration calc
+		calculateDuration(scQuote);
 		procurementTypeEvent();
 	}
 
@@ -4372,6 +4374,7 @@ public class SimpleQuoteBackingBean extends
 		if (directPurchaseDataType.getPidId() != null) {
 			purchaseInDefaultId = Long.valueOf(directPurchaseDataType
 					.getPidId());
+			getPurchaseInDefaultExpiredMessage(getManagedBean().getCurrentStatusId());
 		}
 		
 		if(directPurchaseDataType.getPidExpiryDate() != null) {
@@ -6178,6 +6181,27 @@ public class SimpleQuoteBackingBean extends
 	public void deleteUploadFile() {
 		debugLogger("deleteUploadFile");
 		getManagedBean().getScQuote().setScQuoteAttachment(null);
+	}
+	
+
+	/**
+	 * Gets the purchase in default expired message.
+	 *
+	 * @param statusId the status id
+	 * @return the purchase in default expired message
+	 */
+	private void getPurchaseInDefaultExpiredMessage(long statusId){
+		if(DPStatusConstants.PID_EXPIRED.equals(statusId)){
+			Locale locale = new FacesScopes().getUserLocale();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+		}
 	}
 
 	/**

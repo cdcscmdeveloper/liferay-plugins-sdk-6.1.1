@@ -18,8 +18,13 @@
 		<ui:param name="isEditable"
 			value="#{simpleQuoteBackingBean.managedBean.editableFlag}" />
 
-		<ui:include src="/xhtml/sc/directpurchase/simplequote/simpleQuoteButtons.xhtml" />
-		<ui:include src="/xhtml/sc/directpurchase/simplequote/simpleQuoteHeader.xhtml" />
+		<ui:param name="isPidExpired"
+			value="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.PID_EXPIRED}" />
+
+		<ui:include
+			src="/xhtml/sc/directpurchase/simplequote/simpleQuoteButtons.xhtml" />
+		<ui:include
+			src="/xhtml/sc/directpurchase/simplequote/simpleQuoteHeader.xhtml" />
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>

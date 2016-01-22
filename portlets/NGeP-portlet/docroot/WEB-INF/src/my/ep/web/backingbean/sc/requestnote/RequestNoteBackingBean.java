@@ -628,7 +628,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private void validateRequestNote(ScRequestNote requestNote){
 		debugLogger("validateRequestNote");
 		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
-		// show message for first submission skip the message for second time submission
+		// show message for first submission, skip the message for second time submission
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
 
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -809,12 +809,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							getManagedBean().setPrInquiryId(scPrInquiry.getPrInquiryId());	
 						}
 					}
-
-					// check Purchase In Default 
-					if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
-						itemSearchBackBtn = Boolean.FALSE;
-					}
 				}
+				
+				// Purchase In Default -> Request Note
+				if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+					itemSearchBackBtn = Boolean.FALSE;
+					getPurchaseInDefaultExpiredMessage(docStatusId);
+				}
+				
+				// Purchase In Default ->  Simple Quote  -> Request Note
+				if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getQuote() != null){
+					getPurchaseInDefaultExpiredMessage(docStatusId);
+				}
+				
 				if(scRequestNoteDtl.getFulfilmentType() == null){
 					scRequestNoteDtl.setFulfilmentType(getParameterByTypeAndCode(
 							ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
@@ -3480,5 +3487,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		getManagedBean().setApproverList(approvers);
+	}
+	
+	
+	/**
+	 * Gets the purchase in default expired message.
+	 *
+	 * @param statusId the status id
+	 * @return the purchase in default expired message
+	 */
+	private void getPurchaseInDefaultExpiredMessage(long statusId){
+		if(DPStatusConstants.PID_EXPIRED.equals(statusId)){
+			Locale locale = new FacesScopes().getUserLocale();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(
+									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+		}
 	}
 }
