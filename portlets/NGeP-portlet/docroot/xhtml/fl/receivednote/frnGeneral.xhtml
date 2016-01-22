@@ -137,11 +137,11 @@
 				
 			</tr>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.fl.approverUser']}" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
+				<td><h:outputLabel value="#{lbl['lbl.fl.acknowledgeOfficer']}" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
 						style="text-align: top" /><p:outputLabel rendered="#{receivedNoteBackingBean.isReceivingOfficer()}" 
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width:350px; margin-bottom:5px;" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
-						required="true" disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View'}" label="#{lbl['lbl.fl.approverUser']}"
+						required="true" disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View'}" label="#{lbl['lbl.fl.acknowledgeOfficer']}"
 						value="#{receivedNoteBackingBean.managedBean.userLoginId}">
 						<f:selectItems
 							value="#{receivedNoteBackingBean.getAcknowledgeOfficerDropdown()}" />
