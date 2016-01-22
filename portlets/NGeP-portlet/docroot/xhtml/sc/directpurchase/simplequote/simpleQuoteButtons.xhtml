@@ -107,6 +107,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
+				rendered="#{!isPidExpired}"
 				update="@form" process="@all" />
 
 			<ui:repeat var="bpmAction"
