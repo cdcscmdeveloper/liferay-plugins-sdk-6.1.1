@@ -61,7 +61,6 @@
 									rendered="#{!isMultipleLOI and validityDaysExpiredQt}"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
-									disabled="#{!lOADetailBackingBean.managedBean.scLoa.loaAllowReject}"
 									action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="@this" update="@this" />
 							</h:panelGroup>
