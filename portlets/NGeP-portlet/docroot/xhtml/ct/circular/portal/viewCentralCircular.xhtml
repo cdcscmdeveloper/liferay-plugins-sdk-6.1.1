@@ -93,6 +93,9 @@
 		       <p:dataTable id="exemptedOrgDt" var="exemptedOrgsVar" 
 		           value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}">
 			         <ac:paginator for="exemptedOrgDt" />
+			            <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.type']}" style="width:30%;">
+			            	#{centralContractBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, exemptedOrgsVar.orgTypeCode)}
+			            </p:column>			         
 			           <p:column headerText="#{lbl['lbl.ct.ministry']}">
 				             #{exemptedOrgsVar.orgProfile.orgName}
 			           </p:column>
