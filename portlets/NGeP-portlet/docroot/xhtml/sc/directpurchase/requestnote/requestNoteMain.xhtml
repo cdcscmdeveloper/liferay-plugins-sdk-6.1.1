@@ -18,6 +18,8 @@
 			autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info" showSummary="false" />
 
+         <ui:param name="isPidExpired"
+			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.PID_EXPIRED}" />
 		<ui:param name="isPendingSubmissionStatus"
 			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}" />
 		<ui:param name="isPendingRevisionStatus"

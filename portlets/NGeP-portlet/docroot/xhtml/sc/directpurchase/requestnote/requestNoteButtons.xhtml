@@ -16,8 +16,8 @@
 		<table>
 			<tr>
 				<td><h:graphicImage value="/css/images/design/exclamation.png" />
-					<h:outputText escape="false" value="#{lbl['lbl.sc.dialog.confirm.delivery.term']}" />
-				</td>
+					<h:outputText escape="false"
+						value="#{lbl['lbl.sc.dialog.confirm.delivery.term']}" /></td>
 			</tr>
 		</table>
 
@@ -97,6 +97,7 @@
 					</c:if>
 
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						rendered="#{!isPidExpired}"
 						action="#{requestNoteBackingBean.saveAction('Save')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						process="@this" />
