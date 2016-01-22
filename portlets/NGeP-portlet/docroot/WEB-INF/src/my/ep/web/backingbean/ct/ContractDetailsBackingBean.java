@@ -27,6 +27,14 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.bank.IChangeBankAccSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
@@ -80,7 +88,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
-import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
@@ -93,13 +100,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
-import com.liferay.portal.util.PortalUtil;
 /**
  * Backing Bean For Contract Details
  * 
@@ -118,7 +118,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml";
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
-	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final String CHANGE_BANK_ACCOUNT_PAGE = "/xhtml/ct/supplier/bank/changeBankAccount.xhtml?faces-redirect=true";
 	private static final String REQUEST_FACTORING_PAGE = "/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml?faces-redirect=true";
 	
@@ -1422,25 +1421,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
 		return CONTRACT_COMMON_PAGE;
-	}
-	
-	public String gotoCicularPage(Long contractVerId){
-		
-		   CentralContractBackingBean centralBB = new CentralContractBackingBean();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			centralBB.getManagedBean().setSelectedCircularContract(null);
-			centralBB.getManagedBean().setSelectedCircularItem(null);
-			centralBB.getManagedBean().setSelectedZoneItems(null);
-			centralBB.getManagedBean().setSelectedTabIndex(0);
-			centralBB.getManagedBean().setAction("view");
-			centralBB.getManagedBean().setViewContract(true);
-			centralBB.getManagedBean().setUpdateAction(false);
-			centralBB.getManagedBean().setOutComes(new String[]{});
-			centralBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
-			centralBB.getManagedBean().setChkCentralCircular(true);
-			centralBB.gotoCommonPage(contractVerId);
-			
-			return CENTRAL_CIRCULAR_PAGE;
 	}
 	
 	/**
