@@ -21,7 +21,7 @@
 		     value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index"
 		 	rowKey="#{contactPersonsVar}"  selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
 			<ac:paginator for="contactPersonDt" />
-			<p:column selectionMode="multiple" style="width:5%" 
+			<p:column selectionMode="multiple" style="width:5%; text-align:center" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:column style="width:20%;" styleClass="column-align-center">
 			   <f:facet name="header">
@@ -83,7 +83,7 @@
 		       value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
 		 	   rowKey="#{exemptedOrgsVar}"  selection="#{centralContractBackingBean.selectedExemptedOrgs}">
 			        <ac:paginator for="exemptedOrgDt" />
-	                <p:column selectionMode="multiple"  style="width:5%"
+	                <p:column selectionMode="multiple"  style="width:5%; text-align:center"
 				           rendered="#{!centralContractBackingBean.managedBean.viewContract}">
 				     </p:column>
 		            <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.type']}" 
@@ -181,14 +181,14 @@
             	                           <p:ajax process="@this"/>
                                       </p:selectOneMenu>
 				                      <p:spacer height="1"/>
-                                      <p:inputText id="ptjCodeVaue"  style="width:300px;" 
+                                      <p:inputText id="ptjCodeVaue"  style="width:300px;" onkeypress="if (event.keyCode == 13) { orgSearchBtn.jq.click(); return false; }" 
                                              value="#{centralContractBackingBean.managedBean.ptjCodeNameSearchValues}" >
                                             <p:ajax process="@this"/>
                                       </p:inputText>
 			                 </h:panelGrid>
 			  	           
 			  	             <div class="ppRightBtn">
-       		                        <p:commandButton id="PtjSearchId" value="#{lbl['lbl.btn.search']}" 
+       		                        <p:commandButton id="PtjSearchId" value="#{lbl['lbl.btn.search']}" widgetVar="orgSearchBtn" 
        		                              disabled="#{centralContractBackingBean.managedBean.orgTypeCode == null}"
        		                              update=":form:tablePtjCode"  action="#{centralContractBackingBean.searchPtjDetails}" process="@this">
        		                        </p:commandButton> 
@@ -204,7 +204,7 @@
                       <p:dataTable id="tablePtjCode" var="pmVar" value="#{centralContractBackingBean.exemptedOrgDataModel}" 
                               rowIndexVar="rowIndex" selection="#{centralContractBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
                               <ac:paginator for="tablePtjCode"/>
-                              <p:column selectionMode="multiple" style="width:18px;"> 
+                              <p:column selectionMode="multiple" style="width:28px; text-align:center;"> 
                                    <f:facet name="header">
                                        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
 		                           </f:facet>
@@ -232,13 +232,13 @@
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />
-			<p:column selectionMode="multiple" style="width:3%" 
+			<p:column selectionMode="multiple" style="width:5%; text-align:center;" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center">
-				<p:outputLabel value="#{cancelCircularVar.circularVer.circularNo}" style="float:left;"/>
+				<h:outputText value="#{cancelCircularVar.circularVer.circularNo}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center">
-				<p:outputLabel value="#{cancelCircularVar.circularVer.name}" style="float:left;"/>
+				<h:outputText value="#{cancelCircularVar.circularVer.name}" style="float:left;"/>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn"> 
