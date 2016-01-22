@@ -42,7 +42,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.sm.disciplinary.jktt.decision.suspend']}" itemValue="#{DisciplinaryActionConst.jkttDecisionSuspend}" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.disciplinary.jktt.decision.terminate.acc']}" itemValue="#{DisciplinaryActionConst.jkttDecisionTerminate}" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.disciplinary.jktt.decision.close.case']}" itemValue="#{DisciplinaryActionConst.jkttDecisionClose}" />
-						<p:ajax event="change" update="pnlSuspendDT" />
+						<p:ajax event="change" update="pnlJkttDecision" />
 					</p:selectOneMenu></td>
 			</tr>
 
@@ -54,21 +54,22 @@
 						rows="8" cols="100" maxlength="200" required="#{!empty param['disableValidation']}"/></td>
 			</tr>
 		</table>
-	</p:panel>
+		
+		<p:outputPanel id="pnlSuspendDT" rendered="#{complaintBackingBean.managedBean.jkttReview.decisionTaken == DisciplinaryActionConst.jkttDecisionSuspend}">
+				<table class="customTbl">
+					<tr>
+						<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.disciplinary.jktt.start.date']}" /></td>
+						<td class="tdContent"><p:calendar showOn="button" disabled="#{jkTTViewFLag}"
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 	
-	<p:outputPanel id="pnlSuspendDT" rendered="#{complaintBackingBean.managedBean.jkttReview.decisionTaken == DisciplinaryActionConst.jkttDecisionSuspend}">
-			<table class="customTbl">
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.disciplinary.jktt.start.date']}" /></td>
-					<td class="tdContent"><p:calendar showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+						<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.disciplinary.jktt.end.date']}" /></td>
+						<td class="tdContent"><p:calendar showOn="button" disabled="#{jkTTViewFLag}"
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+	</p:panel>
 
-					<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.disciplinary.jktt.end.date']}" /></td>
-					<td class="tdContent"><p:calendar showOn="button"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
-				</tr>
-			</table>
-		</p:outputPanel>
 
 	<p:panel header="#{lbl['lbl.sm.complaint.decision.report']}" id="pnlJkttDecisionReportDoc">
 		<p:dataTable value="#{complaintBackingBean.managedBean.jkttDecisionDocs}" var="jkttDecisionDocs">
