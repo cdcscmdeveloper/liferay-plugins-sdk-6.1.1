@@ -445,6 +445,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
+				|| sc.hasRoleUser(RoleCode.FL_USER.value())
 				|| sc.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 			setSupplierUser(true);
 			if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
