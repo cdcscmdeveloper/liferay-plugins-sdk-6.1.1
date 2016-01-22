@@ -62,14 +62,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.userprofile.eprole']}" />
 					</f:facet>
-					<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
-						rendered="#{upload.personnel.epRole eq 'MOF_SUPPLIER_ADMIN' or upload.personnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or upload.personnel.epRole eq 'SUPPLIER_TEMP'}" />
-					<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
-						rendered="#{upload.personnel.epRole eq 'BASIC_SUPPLIER_USER' or upload.personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
-					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
-						rendered="#{upload.personnel.epRole eq 'CM_USER'}" />
-					<h:outputText value="#{lbl['lbl.sm.person.composition.fluser']}"
-						rendered="#{upload.personnel.epRole eq 'FL_USER'}" />
+					<ac:smRoleDesc backingBean="#{softCertBackingBean}" roleCode="#{upload.personnel.epRole}" />
 					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 						rendered="#{upload.personnel.contractSigner}" />
 				</p:column>
@@ -133,14 +126,7 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.userprofile.eprole']}" />
 					</f:facet>
-					<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
-						rendered="#{offline.personnel.epRole eq 'MOF_SUPPLIER_ADMIN' or offline.personnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or offline.personnel.epRole eq 'SUPPLIER_TEMP'}" />
-					<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
-						rendered="#{offline.personnel.epRole eq 'BASIC_SUPPLIER_USER' or offline.personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
-					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
-						rendered="#{offline.personnel.epRole eq 'CM_USER'}" />
-					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
-						rendered="#{offline.personnel.contractSigner}" />
+					<ac:smRoleDesc backingBean="#{softCertBackingBean}" roleCode="#{offline.personnel.epRole}" />
 				</p:column>
 				
 				<p:column>
