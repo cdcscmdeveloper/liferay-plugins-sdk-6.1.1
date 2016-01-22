@@ -183,7 +183,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				reqDTO.setUserRole(hasRORole());	
 			}else if(getManagedBean().getBpmTaskName()!=null && 
 				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
-				reqDTO.setUserRole(hasApproverRole());	
+				reqDTO.setUserRole(RoleCode.ACKNOWLEDGE_OFFICER.value());	
 			}else{
 				reqDTO.setUserRole(getUserRole());
 			}
@@ -985,14 +985,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	private String hasRORole() {
 		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
 			return RoleCode.RECEIVING_OFFICER.value();
-		}else
-			return null;
-		
-	}
-	
-	private String hasApproverRole() {
-		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
-			return RoleCode.FL_APPROVER.value();
 		}else
 			return null;
 		
