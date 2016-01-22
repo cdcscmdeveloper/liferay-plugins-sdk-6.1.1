@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+   	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    
+<cc:interface>
+	<cc:attribute name="multiple" default="true" />
+	<cc:attribute name="targetUpdate" />
+	<cc:attribute name="rendered" default="true"></cc:attribute>
+</cc:interface>
+
+<cc:implementation>
+	<ui:param name="complUpload" value="#{cc.id}"></ui:param>
+	<div align="right">
+	<p:commandButton value="Upload" onclick="#{complUpload}Dlg.show();" rendered="#{cc.attrs.rendered}" />
+	</div>
+	
+	<p:dialog id="#{complUpload}Dlg" widgetVar="#{complUpload}Dlg" appendToBody="false" resizable="false" width="700px"
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload style="display:inline;" multiple="#{cc.attrs.multiple}" fileUploadListener="#{complaintBackingBean.docUpload}"
+			mode="basic" id="#{complUpload}upload" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="#{cc.attrs.targetUpdate}" 
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			oncomplete="#{complUpload}Dlg.hide();return false;">
+		</p:fileUpload>
+	</p:dialog>
+	
+	<p:dialog widgetVar="#{complUpload}DeleteDlg" id="{complUpload}DeleteDlg" modal="true" height="100" width="500">
+   			#{complaintBackingBean.managedBean.attachmentDeleteMsg}
+   			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" oncomplete="#{complUpload}deleteDlg.hide()"
+				action="#{complaintBackingBean.removeAttachment}" update="@([id$=pnlComplDoc])"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="#{complUpload}deleteDlg.hide();"></p:commandButton>
+		</div>
+	</p:dialog>
+</cc:implementation>
+
+<cc:implementation>
+	<ui:param name="phonePanelId" value="#{cc.id}"></ui:param>
+	<h:panelGroup id="#{cc.attrs.id}">
+
+		+
+		<p:inputText value="#{cc.attrs.countryCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.country.code']}" 
+			required="#{cc.attrs.required}" id="countryCodeCompId" disabled="#{cc.attrs.disabled}">
+			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
+		</p:inputText>
+		<p:inputText value="#{cc.attrs.areaCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.area.code']}"
+			required="#{cc.attrs.required}" id="areaCodeCompId" disabled="#{cc.attrs.disabled}">
+			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
+		</p:inputText>
+		<p:inputText value="#{cc.attrs.number}" size="10" maxlength="10" disabled="#{cc.attrs.disabled}"
+			required="#{cc.attrs.required}" id="phoneNoCompId"  label="#{cc.attrs.label}">
+			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
+			<f:validator validatorId="phoneValidator" />
+			<f:attribute name="isMobileName" value="#{cc.attrs.isMobile ? 'Y' : 'N'}" />
+	        <f:attribute name="labelName" value="#{cc.attrs.label}" />
+		</p:inputText>	
+		<p:graphicImage id="#{phonePanelId}teleno"	value="/css/images/design/tooltips.png" /> 
+		<p:tooltip	id="#{phonePanelId}tfno" for="#{phonePanelId}teleno">
+			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telephoneno']}" />
+		</p:tooltip>
+		&#160;
+		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
+			style="width: 100px" id="telcoCompId" disabled="#{cc.attrs.disabled}">
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+			<f:selectItems value="#{applicationBean.telcoItems}" />
+		</p:selectOneMenu>
+		<p:graphicImage id="#{phonePanelId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile}" /> 
+		<p:tooltip	id="#{phonePanelId}tftelco" for="telcoCompId">
+			<table><tr><td width="300px">
+			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telco']}" />
+			</td></tr></table>
+		</p:tooltip>
+		<p:message id="#{phonePanelId}phMsg" for="phoneNoCompId" showSummary="true" showDetail="false" display="icon" />	
+	</h:panelGroup>
+</cc:implementation>
+</ui:composition>
