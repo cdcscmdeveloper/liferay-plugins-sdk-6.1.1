@@ -11,59 +11,173 @@
 	
 	<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintHeader.xhtml" />
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}"
-			action="#{complaintBackingBean.updateComplaint}"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" 
+			rendered="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.newComplaintReject and 
+			complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.reviewByPtpkReject and 
+			complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.reviewByPtpkReject}"
+			action="#{complaintBackingBean.updateComplaint}">
+			<f:param name="disableValidation" value="true" />	
+		</p:commandButton>
 	</div>
 	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />	
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.newComplaint}">
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.newComplaint}">
 			<ui:include src="initialReview.xhtml"  />
 		</c:if>
 		
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.reviewByPtpk}">
-			<ui:include src="complaintFirstReviewInfo.xhtml" />
-			<ui:include src="updateComplaintFirstReview.xhtml" />
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.newComplaintReject}">
+			<ui:include src="initialReview.xhtml"  />
 		</c:if>
 		
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.prepareSlLetter}">
-			<ui:include src="issueShowCauseLetter.xhtml" />
-<!-- 			<ui:include src="updateShowCauseLetterResponse.xhtml" /> -->
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.reviewByPtpk}">
+<!-- 			<ui:include src="complaintFirstReviewInfo.xhtml" /> -->
+<!-- 			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" /> -->
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="ptpkViewFLag" value="false" />
+
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview.xhtml" />
+<!-- 			<ui:include src="updateComplaintFirstReview.xhtml" /> -->
 		</c:if>
 		
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.updateSlReceiveDate}">
-			<ui:include src="issueShowCauseLetter.xhtml" />
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.reviewByPtpkReject}">
+<!-- 			<ui:include src="complaintFirstReviewInfo.xhtml" /> -->
+<!-- 			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" /> -->
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="ptpkViewFLag" value="false" />
+
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview.xhtml" />
+<!-- 			<ui:include src="updateComplaintFirstReview.xhtml" /> -->
 		</c:if>
 		
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.waitingSuppSlResp}">
-			<ui:include src="issueShowCauseLetter.xhtml" />
-			<ui:include src="updateShowCauseLetterResponse.xhtml" />
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.prepareScLetter}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/letterIssuanceInfo.xhtml" />
 		</c:if>
 		
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.reviewSuppResp}">
-				<ui:include src="complaintSecondReviewInfo.xhtml" />
-				<ui:include src="updateComplaintSecondReview.xhtml" />
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.updateScReceiveDate}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="scLetterViewFlag" value="true" />
+			
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/letterIssuanceInfo.xhtml" />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.waitingSuppScResp}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="scLetterViewFlag" value="true" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/letterIssuanceInfo.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/updateShowCauseLetterResponse.xhtml" />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.reviewSuppResp}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="scLetterViewFlag" value="true" />
+		
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/letterIssuanceInfo.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/updateShowCauseLetterResponse.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview2.xhtml" />
+		</c:if>
+		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.reviewSuppRespReject}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="scLetterViewFlag" value="true" />
+			<ui:param name="secondPtpkViewFLag" value="true" />
+		
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/letterIssuanceInfo.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/updateShowCauseLetterResponse.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview2.xhtml" />
 		</c:if>
 
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.prepareAcLetter}">
-				<ui:include src="updateAccusationLetterInfo.xhtml" />
-<!-- 					<ui:include src="updateAccusationLetterResponse.xhtml" /> -->
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.prepareAcLetter}">
+<!-- 				<ui:include src="updateAccusationLetterInfo.xhtml" /> -->
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="secondPtpkViewFLag" value="true" />
+						
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview2.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/accusationLetterIssuance.xhtml" />
 		</c:if>
 		
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.updateAcReceiveDate}">
-				<ui:include src="updateAccusationLetterInfo.xhtml" />
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.updateAcReceiveDate}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="secondPtpkViewFLag" value="true" />
+			<ui:param name="acLetterViewFlag" value="true" />
+						
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview2.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/accusationLetterIssuance.xhtml" />
 		</c:if>
 		
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.waitingSuppAcResp}">
-				<ui:include src="updateAccusationLetterInfo.xhtml" />
-				<ui:include src="updateAccusationLetterResponse.xhtml" />
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.waitingSuppAcResp}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="secondPtpkViewFLag" value="true" />
+			<ui:param name="acLetterViewFlag" value="true" />
+						
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview2.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/accusationLetterIssuance.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/updateAccusationLetterResponse.xhtml" />
 		</c:if>
 		
-		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.pendingReviewRespFromJktt}">
-			<ui:include src="JKTTDecision.xhtml" />
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.pendingReviewRespFromJktt}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="secondPtpkViewFLag" value="true" />
+			<ui:param name="acLetterViewFlag" value="true" />
+			
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview2.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/accusationLetterIssuance.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/updateAccusationLetterResponse.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/jkttDecision.xhtml" />
 		</c:if>
 		
+		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.complaintCompleted}">
+			<ui:param name="complainantDtlViewFLag" value="true" />
+			<ui:param name="complDtlViewFLag" value="true" />
+			<ui:param name="secondPtpkViewFLag" value="true" />
+			<ui:param name="acLetterViewFlag" value="true" />
+			<ui:param name="jkTTViewFLag" value="true" />
+			
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/ptjReview2.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/accusationLetterIssuance.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/updateAccusationLetterResponse.xhtml" />
+			<ui:include src="/xhtml/sm/shared/complaintRegistration/jkttDecision.xhtml" />
+		</c:if>
 		
-<!-- 		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionStatusConst.reviewSuppResp}">
+<!-- 		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.reviewSuppResp}">
 				<ui:include src="JKTTDecision.xhtml" />
 		</c:if> -->
 		

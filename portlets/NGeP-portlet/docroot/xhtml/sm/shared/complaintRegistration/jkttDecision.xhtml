@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="#{lbl['lbl.sm.complaint.jktt.decision']}" toggleable="true" id="pnlJkttDecision">
+		<table style="width: 100%">
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.sm.complaint.actual.meeting.date']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:calendar showOn="button" id="jkttMeetingDt" required="#{!empty param['disableValidation']}"
+						mindate="#{complaintBackingBean.managedBean.smComplaint.changedDate}" label="#{lbl['lbl.sm.complaint.actual.meeting.date']}"
+						maxdate="#{CommonConstants.CURRENT_DATE}" disabled="#{jkTTViewFLag}"
+						value="#{complaintBackingBean.managedBean.jkttReview.actualConveneDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.sm.complaint.minute.ref.no']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:inputText required="#{!empty param['disableValidation']}" disabled="#{jkTTViewFLag}"
+						label="#{lbl['lbl.sm.complaint.minute.ref.no']}"
+						value="#{complaintBackingBean.managedBean.jkttReview.minutesRefNo}" /></td>
+			</tr>
+
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.disciplinary.jktt.report.received']}" /></td>
+				<td class="tdContent"><p:calendar showOn="button" 
+						mindate="#{complaintBackingBean.managedBean.smComplaint.changedDate}" label="#{lbl['lbl.sm.complaint.actual.meeting.date']}"
+						maxdate="#{CommonConstants.CURRENT_DATE}" disabled="#{jkTTViewFLag}"
+						value="#{complaintBackingBean.managedBean.jkttReview.actualConveneDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+			</tr>
+
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.disciplinary.jktt.decision']}" /></td>
+				<td class="tdContent"><p:selectOneMenu id="decisionId" required="#{!empty param['disableValidation']}"
+						disabled = "#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.pendingReviewRespFromJktt}"
+						value="#{complaintBackingBean.managedBean.jkttReview.decisionTaken}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.disciplinary.jktt.decision.suspend']}" itemValue="#{DisciplinaryActionConst.jkttDecisionSuspend}" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.disciplinary.jktt.decision.terminate.acc']}" itemValue="#{DisciplinaryActionConst.jkttDecisionTerminate}" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.disciplinary.jktt.decision.close.case']}" itemValue="#{DisciplinaryActionConst.jkttDecisionClose}" />
+						<p:ajax event="change" update="pnlSuspendDT" />
+					</p:selectOneMenu></td>
+			</tr>
+
+			<tr>
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.remarks']}" />
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent" colspan="3"><p:inputTextarea disabled="#{jkTTViewFLag}" label="#{lbl['lbl.sm.remarks']}"
+						value="#{complaintBackingBean.managedBean.jkttReview.decisionRemark}"
+						rows="8" cols="100" maxlength="200" required="#{!empty param['disableValidation']}"/></td>
+			</tr>
+		</table>
+	</p:panel>
+	
+	<p:outputPanel id="pnlSuspendDT" rendered="#{complaintBackingBean.managedBean.jkttReview.decisionTaken == DisciplinaryActionConst.jkttDecisionSuspend}">
+			<table class="customTbl">
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.disciplinary.jktt.start.date']}" /></td>
+					<td class="tdContent"><p:calendar showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+
+					<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.disciplinary.jktt.end.date']}" /></td>
+					<td class="tdContent"><p:calendar showOn="button"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
+				</tr>
+			</table>
+		</p:outputPanel>
+
+	<p:panel header="#{lbl['lbl.sm.complaint.decision.report']}" id="pnlJkttDecisionReportDoc">
+		<p:dataTable value="#{complaintBackingBean.managedBean.jkttDecisionDocs}" var="jkttDecisionDocs">
+			<p:column headerText="#{lbl['lbl.sm.complainant.document.name']}">
+				#{jkttDecisionDocs.fileName}
+			</p:column>
+			
+			<p:column headerText="Action">
+				<p:commandLink oncomplete="jkttDocDeleteDlg.show()" action="#{complaintBackingBean.showDeleteDialog(jkttDecisionDocs)}" 
+						update="@([id$=jkttDocDeleteDlg])" rendered="#{complaintBackingBean.managedBean.jkttReview.brandNew}">
+							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+						</p:commandLink>
+						
+				<p:commandLink action="#{complaintBackingBean.attachmentDownload(jkttDecisionDocs)}" ajax="false"
+						 rendered="#{!complaintBackingBean.managedBean.jkttReview.brandNew}">
+							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.btn.download']}" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="jkttDlg.show();" rendered="#{complaintBackingBean.managedBean.jkttReview.brandNew}" />
+		</div>
+	</p:panel>
+	
+	<p:dialog id="jkttDlg" widgetVar="jkttDlg" appendToBody="false" resizable="false" width="700px"
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload style="display:inline;" multiple="true" fileUploadListener="#{complaintBackingBean.docUpload}"
+			mode="basic" id="jkttUpload" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="pnlJkttDecisionReportDoc" 
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			oncomplete="jkttDlg.hide();return false;">
+		</p:fileUpload>
+	</p:dialog>
+	
+	<p:dialog widgetVar="jkttDocDeleteDlg" id="jkttDocDeleteDlg" modal="true" height="100" width="500">
+   			#{complaintBackingBean.managedBean.attachmentDeleteMsg}
+   			<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" oncomplete="jkttDocDeleteDlg.hide()"
+				action="#{complaintBackingBean.removeAttachment}" update="@([id$=pnlJkttDecisionReportDoc])"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="jkttDocDeleteDlg.hide();"></p:commandButton>
+		</div>
+	</p:dialog>
+</ui:composition>
