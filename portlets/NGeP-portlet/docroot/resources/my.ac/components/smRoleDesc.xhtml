@@ -12,7 +12,7 @@
 	</cc:interface>
 	
 	<cc:implementation>
-		<h:outputText value="#{backingBean.getEpRoleDescByRoleCode(roleCode)}" rendered="#{cc.attrs.rendered}" />
+		<h:outputText value="#{cc.attrs.backingBean.getEpRoleDescByRoleCode(cc.attrs.roleCode)}" rendered="#{cc.attrs.rendered}" />
 	</cc:implementation>
 
 </ui:component>
