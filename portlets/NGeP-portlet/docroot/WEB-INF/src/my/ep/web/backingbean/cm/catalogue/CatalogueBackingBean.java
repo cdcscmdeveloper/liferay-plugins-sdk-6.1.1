@@ -253,7 +253,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		supplierReqDTO.setUserId(pmUser.getUserId());
 		supplierReqDTO.setAllStatuses(true);
-
+		
 		SupplierSearchResDTO smResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierReqDTO);
 
@@ -2597,21 +2597,28 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(item.getSize() > 61440){
 
 			//BufferedImage originalImage = ImageIO.read(new File("c:\\image\\mkyong.jpg"));
+			
 			BufferedImage originalImage = ImageIO.read(item.getInputstream());
-			int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-
-
-			BufferedImage resizeImageJpg = resizeImage(originalImage, type);
-
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write( resizeImageJpg, "jpg", baos );
-			baos.flush();
-			byte[] imageInByte = baos.toByteArray();
-			baos.close();
-
-			//ImageIO.write(resizeImageJpg, "jpg", new File("c:\\image\\mkyong_jpg.jpg")); 
-			System.out.println("image Byte*****"+imageInByte.length);
-			catImage.setImage(imageInByte);
+			System.out.println("originalImage.getType():"+originalImage.getType());
+			//int type =  BufferedImage.TYPE_INT_BGR;
+			int type = originalImage.getType() == 0 ? BufferedImage.TYPE_USHORT_565_RGB : originalImage.getType();
+			
+			if(originalImage.getWidth()-originalImage.getHeight()>800){
+				catImage.setImage(item.getContents());
+			}else{
+			
+				BufferedImage resizeImageJpg = resizeImage(originalImage, type);
+	
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ImageIO.write( resizeImageJpg, "jpg", baos );
+				baos.flush();
+				byte[] imageInByte = baos.toByteArray();
+				baos.close();
+	
+				//ImageIO.write(resizeImageJpg, "jpg", new File("c:\\image\\mkyong_jpg.jpg")); 
+				System.out.println("image Byte*****"+imageInByte.length);
+				catImage.setImage(imageInByte);
+			}
 		}else{
 			catImage.setImage(item.getContents());
 		}
@@ -2636,14 +2643,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	private static BufferedImage resizeImage(BufferedImage originalImage, int type){
 
+		int IMG_HEIGHT = 0;
+		int IMG_WIDTH = 0;
+	
+		IMG_HEIGHT = originalImage.getHeight();
+		IMG_WIDTH = originalImage.getWidth();
+		
+		
+	
+		System.out.println("IMG_WIDTH:"+IMG_WIDTH);
+		System.out.println("IMG_HEIGHT:"+IMG_HEIGHT);
 
-		int IMG_WIDTH = 710;
-		int IMG_HEIGHT = 410;
-
-		if(originalImage.getHeight()-originalImage.getWidth() >100){
-			IMG_WIDTH = 510;
-			IMG_HEIGHT = 610;
-		}
 
 		BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
 		Graphics2D g = resizedImage.createGraphics();
