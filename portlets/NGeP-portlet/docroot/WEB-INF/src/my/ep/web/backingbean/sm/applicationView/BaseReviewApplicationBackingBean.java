@@ -1544,9 +1544,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// for history load all category except status deleted
 				getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
 			} else {
-				// for supp profile load all active/pending re approval category only
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL) {
+				// for supp profile load all active category only
+				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					getManagedBean().getSuppProfileOrHistoryCategoryList().add(
 							cat);
 				}
