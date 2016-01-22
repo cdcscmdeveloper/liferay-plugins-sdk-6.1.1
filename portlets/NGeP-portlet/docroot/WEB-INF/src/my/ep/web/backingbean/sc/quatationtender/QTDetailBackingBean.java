@@ -1900,7 +1900,19 @@ public class QTDetailBackingBean extends
 				.getManagedBean().getTaskName())) {
 			this.getManagedBean().setPcbProcess(true);
 		}
-
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		if (scQt.getQtStatus() != null
+				&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt.getQtStatus().getStatusId()) 
+				&& scQt.isPanel()
+				&& scQt.getEstimatedAmount().intValue() < 50000) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							ResourceBundleUtils.getMessage("lbl.sc.qt.panel.estamt.msg",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+		}
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
