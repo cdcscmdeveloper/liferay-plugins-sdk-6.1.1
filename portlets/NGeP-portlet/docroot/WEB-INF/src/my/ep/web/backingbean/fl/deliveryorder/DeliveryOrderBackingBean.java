@@ -21,18 +21,14 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -46,6 +42,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
@@ -64,6 +62,7 @@ import my.ep.persistence.entity.fl.order.FlTempDoItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -72,9 +71,9 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -86,6 +85,12 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.util.PortalUtil;
+
 // TODO: Auto-generated Javadoc
 /**
  * Backing Bean for Create Delivery Order.
@@ -95,7 +100,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  */
 @ManagedBean(name = "createDOBackingBean")
 @RequestScoped
-public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManagedBean> {
+public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<DeliveryOrderManagedBean> {
 	
 	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
 	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
@@ -106,16 +111,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	private FlFulfilmentItemAddr amountSectionItemRow;
 	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
-	
-	/**
-	 * Gets the faces scopes.
-	 *
-	 * @return the faces scopes
-	 */
-	private FacesScopes getFacesScopes(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
 	
 	/**
 	 * Instantiates a new delivery order backing bean.
@@ -251,6 +246,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
+				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+				IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+			
 				if(null == getManagedBean().getSupplierDoRef()){
 					//TODO
 					// do valudation
@@ -266,6 +264,20 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				if(flBB.getManagedBean().getRemarkList().size() >0){
 					reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 				}
+				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+				UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
+				userGroupReqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+				userGroupReqDTO.setApprovalLimit(sumItemAmt);
+				UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+					if(userGroupResDTO.getUserGroupUserList() == null || userGroupResDTO.getUserGroupUserList().isEmpty()){
+						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
+				}
+				
+				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getFulfilmentRequest().getApprover());
+				reqDTO.setApproverUserList(approverUserList);
+				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
 			}
 			else{
@@ -992,6 +1004,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		}else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
 		}
 //		else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {

@@ -352,17 +352,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			
 			if(isRequisitioner()){
-				List<Long> backUpApprover = new ArrayList<Long>();
 				if(getManagedBean().getSelectedApprover() != null){
+					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
+					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser());
+					
+					reqDTO.setRequisitioner(Boolean.TRUE);
+					reqDTO.setApproverUserList(approverUserList);
 					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
-					for(Long approver : getManagedBean().getApproverList()){
-						if(!approver.equals(getManagedBean().getSelectedApprover())){
-							backUpApprover.add(approver);
-						}
-					}
 				}
 				
-				reqDTO.setSelectedApprovers(backUpApprover);
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
@@ -1776,6 +1774,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			e.printStackTrace();
 		}
         getManagedBean().getApproverList().clear();
+        getManagedBean().getApproverGroupUserList().clear();
+        getManagedBean().getApproverGroupUserList().addAll(resDTO.getApproverGroupUserList());
 		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
 			getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
 		}
@@ -4003,6 +4003,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+					userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getManagedBean().getFlRequest().getCreatedBy());
+					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.requisitioner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
+				}
 			}
 			
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -4355,6 +4364,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			e.printStackTrace();
 		}
         getManagedBean().getApproverList().clear();
+        getManagedBean().getApproverGroupUserList().clear();
+        getManagedBean().getApproverGroupUserList().addAll(resDTO.getApproverGroupUserList());
 		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
 			getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
 		}

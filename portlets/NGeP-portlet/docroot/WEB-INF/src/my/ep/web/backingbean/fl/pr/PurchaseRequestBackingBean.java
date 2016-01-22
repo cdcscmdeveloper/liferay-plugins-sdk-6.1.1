@@ -100,6 +100,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
@@ -316,18 +317,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			reqDTO.setTaskDeadLine(getManagedBean().getTaskDeadLine());
 			if(isFlFulfilmentRequisitioner()) {
-				List<Long> backUpApprover = new ArrayList<Long>();
-				if(getManagedBean().getSelectedApprover() != null){
-					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
-					for(Long approver : getManagedBean().getApproverList()){
-						if(!approver.equals(getManagedBean().getSelectedApprover())){
-							backUpApprover.add(approver);
-						}
-					}
-				}
+				PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
+				List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser());
 				
-				reqDTO.setSelectedApprovers(backUpApprover);
 				reqDTO.setRequisitioner(Boolean.TRUE);
+				reqDTO.setApproverUserList(approverUserList);
 			}
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -1452,13 +1446,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							firstPmUserGroup = resDTO.getApproverGroupUserList();
 						}
 						for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
-							getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
+							getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
 							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserId(), groupUser);
 						}
 					}
-					getManagedBean().getApproverList().clear();
+					getManagedBean().getApproverIdList().clear();
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
-						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
+						getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
 					}
 					if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
 						getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
@@ -1513,9 +1507,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		getManagedBean().getApproverList().clear();
+		getManagedBean().getApproverIdList().clear();
+		getManagedBean().getApproverGroupUserList().clear();
+		getManagedBean().getApproverGroupUserList().addAll( resDTO.getApproverGroupUserList());
 		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
-			getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
+			
+			getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
 		}
 	}
 	
@@ -3036,6 +3033,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
+				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
+					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.requisitioner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
+				}
 			}
 			
 			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
@@ -3313,7 +3319,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	
 	private void getApproverList(){
 		if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null || getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId()==null) {
-			getManagedBean().getApproverList().clear();
+			getManagedBean().getApproverIdList().clear();
 			return;
 		}		
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
@@ -3326,9 +3332,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        getManagedBean().getApproverList().clear();
+        getManagedBean().getApproverIdList().clear();
+        getManagedBean().getApproverGroupUserList().clear();
+        getManagedBean().getApproverGroupUserList().addAll(resDTO.getApproverGroupUserList());
 		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
-			getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
+			getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
 		}
 	}
 	
@@ -3389,7 +3397,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        getManagedBean().getApproverList().clear();
+        getManagedBean().getApproverIdList().clear();
 		items = new SelectItem[resDTO.getApproverGroupUserList().size() + 1];
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -3398,7 +3406,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		int i = 1;
 		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
 			items[i++] = new SelectItem(groupUser.getPmUser().getUserId(), groupUser.getPmUser().getUserName());
-			getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
+			getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
 		}
 		return items;
 	}

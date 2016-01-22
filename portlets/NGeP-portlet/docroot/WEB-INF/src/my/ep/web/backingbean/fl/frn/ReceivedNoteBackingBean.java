@@ -162,6 +162,16 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
+				
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getManagedBean().getFulfilmentNote().getCreatedBy());
+					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					}
+				}
 			}
 			
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -596,7 +606,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
 			if(getManagedBean().getPmUserList().isEmpty()){
-				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 //			for(PmUserGroupUser groupUser : userGroupResDTO.getUserGroupUserList()) {
 //				if (lastApproverLoginId.equalsIgnoreCase(groupUser.getPmUser().getLoginId())) {
@@ -611,7 +621,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 //			getManagedBean().getApproverList().addAll(orderApproverList);
 			if(getManagedBean().getUserLoginId() == null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{
-						ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+						ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 			for(PmUser user : getManagedBean().getPmUserList()){
 				if(getManagedBean().getUserLoginId().equals(user.getUserId())){
