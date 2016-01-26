@@ -404,6 +404,32 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="PM_ORG_PROFILE_AUTH_TYPE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesFromUserOrgProfileAuthType" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.ta.org.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 
 	<bean id="CT_CONTRACT" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="contractId" />
