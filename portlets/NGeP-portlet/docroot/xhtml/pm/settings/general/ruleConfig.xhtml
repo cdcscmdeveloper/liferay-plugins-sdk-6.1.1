@@ -13,7 +13,7 @@
 			<tr>
 				<td>
 					<div align="right" style="width: 100%">
-						<p:commandButton value="#{lbl['lbl.btn.save']}"
+						<p:commandButton value="#{lbl['lbl.btn.save']}" id="ruleCatalogSaveBtn"
 							partialSubmit="true" process=":form:settingTabId:ruleConfigId"
 							update=":form:settingTabId:ruleConfigId"
 							action="#{ruleCatalogueBackingBean.saveRuleCatalog}"></p:commandButton>
@@ -197,7 +197,7 @@
 				<p:calendar 
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
-					showOn="button" id="effDateId" style="width:100px;"
+					showOn="button" id="ruleValEffDateId" style="width:100px;"
 					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
 					required="true" label="#{lbl['lbl.pm.as.effdate']}"
 					readonlyInput="true"
@@ -246,7 +246,7 @@
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
 
-				<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}"
+				<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}" id="ruleTypeValState"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.brandNew}" style="width:100px;">
 					<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />

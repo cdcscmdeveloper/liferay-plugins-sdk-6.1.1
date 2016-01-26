@@ -13,7 +13,7 @@
 		<tr>
 			<td>
 				<div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.btn.save']}"
+					<p:commandButton value="#{lbl['lbl.btn.save']}" id="orgFeeSaveBtn"
 						partialSubmit="true" process=":form:settingTabId:feeSettingId"
 						update=":form:settingTabId:feeSettingId"
 						action="#{ruleCatalogueBackingBean.saveFeeExemptionForOrgItem}"></p:commandButton>
@@ -112,7 +112,7 @@
 			<f:facet name="header">
                #{lbl['lbl.pm.action']}
 			</f:facet>
-			<p:commandLink id="orgDeleteFee" partialSubmit="true" process="@this"
+			<p:commandLink id="orgDeleteFee" partialSubmit="true" process="@this" 
 				disabled="#{(feeObj.isG2G == 1) || (!(feeObj.brandNew) and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
 				action="#{ruleCatalogueBackingBean.deleteOrgAndItemFee(rowIndex)}"
 				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID">
@@ -123,7 +123,7 @@
 	</p:dataTable>
 
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+		<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true" id="orgFeeAddBtn"
 			process=":form:settingTabId:feeSettingId"
 			update=":form:settingTabId:feeSettingId"
 			action="#{ruleCatalogueBackingBean.addMoreOrgAndItemFee()}"></p:commandButton>
