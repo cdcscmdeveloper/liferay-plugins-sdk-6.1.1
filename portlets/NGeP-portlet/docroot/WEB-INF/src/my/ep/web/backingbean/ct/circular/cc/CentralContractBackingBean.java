@@ -391,6 +391,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				}
 			}
 			getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
+			RequestContext.getCurrentInstance().execute("cancelCircularDlg.show()");
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
