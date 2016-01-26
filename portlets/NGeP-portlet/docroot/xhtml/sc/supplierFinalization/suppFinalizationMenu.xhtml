@@ -63,27 +63,27 @@
 		<p:tabMenu id="tab"
 			activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}">
 			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
-				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(0)}"
-				process="@form" update="@form" partialSubmit="true"
-				style="width:150px;"
+				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(
+									suppFinalizationBackingBean.managedBean.preparationTabIndex)}"
+				process="@form" update="@form" partialSubmit="true" style="width:150px;"
 				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK and 
 								!suppFinalizationBackingBean.managedBean.readOnly}">
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}"
-				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(1)}"
-				process="@form" update="@form" partialSubmit="true"
-				style="width:150px;">
+				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(
+									suppFinalizationBackingBean.managedBean.reportTabIndex)}"
+				process="@form" update="@form" partialSubmit="true" style="width:150px;">
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.supplier.finalization']}"
-				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(2)}"
-				process="@form" update="@form" partialSubmit="true"
-				style="width:225px;">
+				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(
+									suppFinalizationBackingBean.managedBean.finalizationTabIndex)}"
+				process="@form" update="@form" partialSubmit="true" style="width:225px;">
 			</p:menuitem>
 			<p:menuitem
 				value="#{lbl['lbl.sc.committee.endorsement.finalization']}"
-				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(3)}"
-				process="@form" update="@form" partialSubmit="true"
-				style="width:330px;"
+				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(
+									suppFinalizationBackingBean.managedBean.commEndorsementTabIndex)}"
+				process="@form" update="@form" partialSubmit="true" style="width:330px;"
 				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK and
 								!suppFinalizationBackingBean.managedBean.readOnly}">
 			</p:menuitem>
