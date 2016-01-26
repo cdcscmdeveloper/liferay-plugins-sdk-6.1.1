@@ -2481,4 +2481,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		  return CENTRAL_CIRCULAR_PAGE;
 	  }	  
 	  
+	  /**
+	   * The method used to retrieve the zone object.
+	  */		
+	  public void getZoneObjDetails() {
+		  if (!getManagedBean().getContractVer().getCtContractZones().isEmpty()) {
+	    		for (CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
+	    			for (TreeNode zonename : getManagedBean().getCtZoneTrees().getChildren()) {
+	    				if (ctContractZone.toString().equalsIgnoreCase(((LocationDTO)zonename.getData()).getZoneId())) {
+	    					if (ctContractZone.getDeliveryTermUom() == null) {
+	     					   ctContractZone.setDeliveryTermUom(new PmParameter());
+	    					}
+	    					ctContractZone.getDeliveryTermUom().setParameterId(((LocationDTO)zonename.getData()).getUomId());
+	    					ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
+	    				}
+	    			}
+	    		}
+	    	}	  
+	  }	  
 }
