@@ -242,7 +242,7 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}"  oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" update="cancelledCclDt"
 				actionListener="#{centralContractBackingBean.addCancelCircularListener()}" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true" 
