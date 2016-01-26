@@ -3248,6 +3248,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 * @return the approverIdList
 	 */
 	public List<Long> getApproverIdList() {
+		if(approverIdList == null){
+			approverIdList = new ArrayList<Long>();
+		}
 		return approverIdList;
 	}
 
