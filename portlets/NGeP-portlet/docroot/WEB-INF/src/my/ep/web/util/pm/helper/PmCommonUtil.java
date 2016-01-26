@@ -3,13 +3,20 @@ package my.ep.web.util.pm.helper;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -95,14 +102,20 @@ import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 /**
  * CommonUtil for Profile Management
@@ -1628,6 +1641,105 @@ public class PmCommonUtil {
 		return Calendar.getInstance().get(Calendar.YEAR) + path;
 	}
 	
+	/**
+	 * Hash string.
+	 * 
+	 * @param str
+	 *            the str
+	 * @return the string
+	 */
+	public static String hashString(String str) {
+
+		MessageDigest md = null;
+
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException ex) {
+			log.info(ex.getMessage());
+			// return;
+		}
+		md.update(str.getBytes());
+		byte[] shaDig = md.digest();
+		return new String(Hex.encodeHex(shaDig));
+	}
+	
+	/**
+	 * Redirect to page with message as optional.
+	 * 
+	 * @param page
+	 *            - String
+	 * @param msgKeyId
+	 *            - String
+	 */
+	public static void redirectToPage(String page, String msgKeyId,
+			String[] params) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (StringUtils.isNotBlank(msgKeyId)) {
+			if (params != null && params.length > 0) {
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(msgKeyId, params,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			} else {
+				fc.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(msgKeyId,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		}
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, page);
+	}
+	
+	/**
+	 * retrieve pmUser by loginId
+	 * 
+	 * @param loginId
+	 * @return PmUser
+	 */
+	public static PmUser retrieveUserByLoginId(String loginId) {
+		PmUser pmUser = new PmUser();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setLoginId(loginId);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			resDTO = userSO
+					.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
+			
+
+			if (resDTO.isSuccessful()) {
+				pmUser = resDTO.getPmUser();
+			}
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770053, new String[] {
+					loginId.toString(), e.getMessage() });
+		} finally {
+			userSO = null;
+		}
+		return pmUser;
+	}
+	
+	/**
+	 * Get Liferay Portal Base URL
+	 * 
+	 * @return String
+	 */
+	public static String getBasePortalUrl() {
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		return themeDisplay.getURLPortal();
+	}
 	
 	
 }
