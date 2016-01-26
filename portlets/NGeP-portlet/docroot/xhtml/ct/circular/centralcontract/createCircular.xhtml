@@ -100,10 +100,10 @@
 	       </p:dataTable>
 	     
 	       <div class="ppRightBtn">
-	                <p:commandButton id="addExemptedBtn" value="#{lbl['lbl.btn.add']}"  
+	                <p:commandButton id="addExemptedBtn" value="#{lbl['lbl.btn.add']}" rendered="#{!centralContractBackingBean.managedBean.viewContract}"  
                           partialSubmit="true" process="@this" onclick="dlgExemptedMinistry.show()">
        	            </p:commandButton>
-       	            <p:commandButton id="delExemptedBtn" process="@form"  
+       	            <p:commandButton id="delExemptedBtn" process="@form" rendered="#{!centralContractBackingBean.managedBean.viewContract}"  
 		                  value="#{lbl['lbl.btn.delete']}"   onsuccess="dlgExemptedDel.show()">
 		            </p:commandButton>
 	         </div>
