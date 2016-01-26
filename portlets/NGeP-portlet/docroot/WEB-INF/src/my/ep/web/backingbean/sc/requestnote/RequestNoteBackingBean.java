@@ -277,6 +277,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 	    requestNoteReqDTO.setPidApprovers(getManagedBean().getPidApprovers());
 	    requestNoteReqDTO.setPidNo(getManagedBean().getPidNo());
+	    requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 	    requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
 	    Long prInqId = getManagedBean().getPrInquiryId();
@@ -467,6 +468,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 			requestNoteReqDTO.setPidApprovers(getManagedBean().getPidApprovers());
 			requestNoteReqDTO.setPidNo(getManagedBean().getPidNo());
+			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
 			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
@@ -738,17 +740,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			dpId = Long.valueOf(directPurchaseDataType.getRnId());
 		}
 		
-		if(directPurchaseDataType.getPidId() != null) {
-			getManagedBean().setPurchaseInDefaultId(
-					Long.valueOf(directPurchaseDataType.getPidId()));
-		}
-		
 		if(directPurchaseDataType.getPidExpiryDate() != null) {
 			getManagedBean().setTaskExpiryDate(directPurchaseDataType.getPidExpiryDate());
 		}
 		
 		getManagedBean().setPidApprovers(directPurchaseDataType.getPidApprover());
 		getManagedBean().setPidNo(directPurchaseDataType.getPidNumber());
+		getManagedBean().setPurchaseInDefaultId(directPurchaseDataType.getPidId());
 		
 		requestNoteReqDTO.setRequestNoteId(dpId);
 		RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
@@ -976,6 +974,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 			requestNoteReqDTO.setPidApprovers(getManagedBean().getPidApprovers());
 			requestNoteReqDTO.setPidNo(getManagedBean().getPidNo());
+			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			
 			requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 			
