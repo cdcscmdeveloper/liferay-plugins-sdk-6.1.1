@@ -92,8 +92,10 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
+import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -1088,126 +1090,219 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			           }
 		     }/*Remark validation end*/
 	
-		     /*validation for mandatory attachments incase  other  selection*/
-	         if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
-	    	       
-	        	    if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
-		                     throw new EpException(MessageConst.ERROR_750033);
-	                 }
-	    	         
-	    	         /*Validation for deduction type*/
-	    	         if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null && ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
-	    			      for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
-	    				        if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
-	    					         throw new EpException(MessageConst.ERROR_100022, 
-	    								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
-	    										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    				        }
-	    			       }
-	    		      }
-	    	         
-	    	        /*Validation for schedule */
-	    		    if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-	    				 
-	    		    	   if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-	    					       ctBackingBean.getManagedBean().getContractVer().setCtProgressivePayments(null);
-	    				    } else {
-	    						ctBackingBean.getManagedBean().getContractVer().setCtSchedules(null);  	
-	    				    }
-	    				
-	    				 List<String> schedulePhaseNoList = new ArrayList<String>();
-	    				 if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-	    					   if (ctBackingBean.getManagedBean().getContractVer().getCtSchedules() == null || ctBackingBean.getManagedBean().getContractVer().getCtSchedules().size() < 2 
-	    						    && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
-	    							  throw new EpException(MessageConst.ERROR_750022);
-	    				       }
-	    					
-	    					  for(CtSchedule schedules : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()) {
-	    							
-	    						    if(schedules.getScheduleNo() == null) {
-	    								  throw new EpException(MessageConst.ERROR_100022,
-	    										new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
-	    												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    							 
-	    						    } else if (schedulePhaseNoList.contains(schedules.getScheduleNo().toString())) {
-	    								   throw new EpException(MessageConst.ERROR_100046, 
-	    									  new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
-	    										  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    							
-	    						    } else {
-	    								schedulePhaseNoList.add(schedules.getScheduleNo().toString());
-	    							}
-	    							
-	    						    if (schedules.getStartMonth() == null) {
-	    								  throw new EpException(MessageConst.ERROR_100022,
-	    										 new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", 
-	    												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-	    												+ " " + ResourceBundleUtils.getMessage("lbl.ct.start.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    							
-	    						    } else if (schedules.getEndMonth() == null) {
-	    								   throw new EpException(MessageConst.ERROR_100022,
-	    									   new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", 
-	    											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) 
-	    												+ " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    				        	}
-	    						}     	
-	    					
-	    				   } else if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() == null || ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().size() < 2 
-	    							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()
-	    							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
-	    						         throw new EpException(MessageConst.ERROR_750022);
-	    					
-	    				   } else if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() != null && !ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() 
-	    							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-	    						      float percentage = 0.0f;
-	    						      for (CtProgressivePayment progressivePayment : ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments()) {
-	    							          percentage = percentage + progressivePayment.getPercentage();
-	    							          
-	    							          if (progressivePayment.getPhaseNo()== null) {
-	    								           throw new EpException(MessageConst.ERROR_100022,
-	    										       new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
-	    												   ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-	    												       + " " + ResourceBundleUtils.getMessage("lbl.ct.phase", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    							          
-	    							          } else if (schedulePhaseNoList.contains(progressivePayment.getPhaseNo().toString())) {
-	    			           			             throw new EpException(MessageConst.ERROR_100046, 
-	    			           					         new String[] {ResourceBundleUtils.getMessage("lbl.ct.phase", 
-	    			           							      ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    							         
-	    							          } else {
-	    								           schedulePhaseNoList.add(progressivePayment.getPhaseNo().toString());
-	    							          }
-	    							
-	    							        if (progressivePayment.getPhaseDesc() == null ||progressivePayment.getPhaseDesc() == "" ) {
-	    								            throw new EpException(MessageConst.ERROR_100022,
-	    										        new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
-	    												     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-	    												       + " " + ResourceBundleUtils.getMessage("lbl.ct.description",  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    							       
-	    							        }else if (progressivePayment.getStartMonth() == null) {
-	    								            throw new EpException(MessageConst.ERROR_100022, 
-	    										       new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
-	    												  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-	    												    + " " + ResourceBundleUtils.getMessage("lbl.ct.start.period",  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    							    
-	    							        }else if (progressivePayment.getEndMonth() == null) {
-	    								           throw new EpException(MessageConst.ERROR_100022, 
-	    										      new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
-	    												  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-	    												     + " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", 
-	    														ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    							        }     	
-	    						       }
-	    						
-	    						      int value = Float.compare(percentage,100);
-	    						      if (value != 0 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)  || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
-	    							         throw new EpException(MessageConst.ERROR_100022, 
-	    		           					     new String[] {ResourceBundleUtils.getMessage("lbl.ct.percentage.progressive", 
-	    		           							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	    						      }
-	    					    }
-	    				   }
-	                }/*Schedule validation end*/
+		     /*validation for other  selection*/
+	         if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+	        	 // Validation for mandatory attachments
+	        	 if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
+	                     throw new EpException(MessageConst.ERROR_750033);
+                 }
+	        	 
+	        	// Validation for PID Reason
+	     		if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null && ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
+	     			for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
+	     			   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+	     				   throw new EpException(MessageConst.ERROR_100022, 
+	     							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+	     									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     			   }
+	     			   if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+	     				   if(reason.getReasonDesc().isEmpty()){
+	     					   throw new EpException(MessageConst.ERROR_100022, 
+	     								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     				   }
+	     			   }
+	     			}
+	     		}
+	     		// Validation for Deduction
+	     		if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null && ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
+	     			  for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
+	     				   if(deduction.getDeductionType() == null ||deduction.getDeductionType().getParameterId() == null ){
+	     					   throw new EpException(MessageConst.ERROR_100022, 
+	     								new String[]{ResourceBundleUtils.getMessage("lbl.ct.deduction.type", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     				   }
+	     			  }
+	     		}
+	     		// Validation for zone
+	     		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+	     			ctBackingBean.getZoneObjDetails();
+	     			if (ctBackingBean.getManagedBean().getContractVer().getCtContractZones() != null) {
+	     				for (CtContractZone contractZone : ctBackingBean.getManagedBean().getContractVer().getCtContractZones()) {
+	     					if (contractZone.getDeliveryTerm() == 0) {
+	     						throw new EpException(MessageConst.ERROR_750004, new String[]{contractZone.getZoneName()});
+	     					}
+	     				}
+	     			}
+	     		}		
+	     		// Validation for agency
+	     		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) 
+	     				&& ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size() == 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+	     			throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
+	     		}
+	     		// Validation for schedule
+	     		if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+	     			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+	     				ctBackingBean.getManagedBean().getContractVer().setCtProgressivePayments(null);
+	     			} else {
+	     				ctBackingBean.getManagedBean().getContractVer().setCtSchedules(null);  	
+	     			}
+	     			List<String> schedulePhaseNoList = new ArrayList<String>();
+	     			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+	     				if (ctBackingBean.getManagedBean().getContractVer().getCtSchedules() == null || ctBackingBean.getManagedBean().getContractVer().getCtSchedules().size() < 2 
+	     						&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+	     					throw new EpException(MessageConst.ERROR_750022);
+	     		     	}
+	     				for (CtSchedule schedules : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()) {
+	     					if (schedules.getScheduleNo() == null) {
+	     						throw new EpException(MessageConst.ERROR_100022,
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					}
+	     					if (schedulePhaseNoList.contains(schedules.getScheduleNo().toString())) {
+	     						throw new EpException(MessageConst.ERROR_100046, 
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					} else {
+	     						schedulePhaseNoList.add(schedules.getScheduleNo().toString());
+	     					}
+	     					if (schedules.getStartMonth() == null) {
+	     						throw new EpException(MessageConst.ERROR_100022,
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+	     										+ " " + ResourceBundleUtils.getMessage("lbl.ct.start.period", 
+	     												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					}
+	     					if (schedules.getEndMonth() == null) {
+	     						throw new EpException(MessageConst.ERROR_100022,
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) 
+	     										+ " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", 
+	     												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     		        	}
+	     					
+	     					if (schedules.getScheduleType() == null || schedules.getScheduleType().getParameterId() == null) {
+	     						throw new EpException(MessageConst.ERROR_100022, 
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.type", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					}
+	     				}     	
+	     			} else if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() == null || ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().size() < 2 
+	     					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()
+	     					&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+	     				throw new EpException(MessageConst.ERROR_750022);
+	     			}
+	     			if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() != null && !ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty() 
+	     					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
+	     				float percentage = 0.0f;
+	     				for (CtProgressivePayment progressivePayment : ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments()) {
+	     					percentage = percentage + progressivePayment.getPercentage();
+	     					if (progressivePayment.getPhaseNo()== null) {
+	     						throw new EpException(MessageConst.ERROR_100022,
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+	     										+ " " + ResourceBundleUtils.getMessage("lbl.ct.phase", 
+	     												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					}
+	     					if (schedulePhaseNoList.contains(progressivePayment.getPhaseNo().toString())) {
+	     	           			throw new EpException(MessageConst.ERROR_100046, 
+	     	           					new String[] {ResourceBundleUtils.getMessage("lbl.ct.phase", 
+	     	           							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					} else {
+	     						schedulePhaseNoList.add(progressivePayment.getPhaseNo().toString());
+	     					}
+	     					if (progressivePayment.getPhaseDesc() == null ||progressivePayment.getPhaseDesc() == "" ) {
+	     						throw new EpException(MessageConst.ERROR_100022,
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+	     										+ " " + ResourceBundleUtils.getMessage("lbl.ct.description", 
+	     												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					}
+	     					if (progressivePayment.getStartMonth() == null) {
+	     						throw new EpException(MessageConst.ERROR_100022, 
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+	     										+ " " + ResourceBundleUtils.getMessage("lbl.ct.start.period", 
+	     												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					}
+	     					if (progressivePayment.getEndMonth() == null) {
+	     						throw new EpException(MessageConst.ERROR_100022, 
+	     								new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+	     										+ " " + ResourceBundleUtils.getMessage("lbl.ct.end.period", 
+	     												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     					}     	
+	     				}
+	     				int value = Float.compare(percentage,100);
+	     				if (value != 0 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+	     						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+	     					throw new EpException(MessageConst.ERROR_100022, 
+	                					new String[] {ResourceBundleUtils.getMessage("lbl.ct.percentage.progressive", 
+	                							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     				}
+	     			}
+	     		}
+	     		// Validation for AP178 agency
+	     		if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size()>0) {
+	     			double ceilingAmt = 0.0;
+	     			DecimalFormat df = new DecimalFormat("#.00");
+	     			for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
+	     				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+	     				if (ctAgency.isAp178() == true && (ctAgency.getFileName() == null  || ctAgency.getFileName().equalsIgnoreCase(""))) {
+	     					throw new EpException(MessageConst.ERROR_750008); 
+	     					// Approval document is mandatory for AP178 agency. Please upload the document.
+	     				}
+	     				
+	     				if (ctAgency.isAp178() == true && (ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
+	     					throw new EpException(MessageConst.ERROR_100022, 
+	                					new String[] {ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
+	                							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     				}
+	     			}
+	     			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
+	     			
+	     			double latestContractAmount = 0.0;
+	     			for (CtContractAmount contractAmt : ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts()){
+	     	    		if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
+	     	    				&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
+	     	    			latestContractAmount = contractAmt.getContractAmount().doubleValue();
+	     	    			latestContractAmount = Double.valueOf(df.format(latestContractAmount));
+	     	    			break;
+	     	    		}
+	     	    	}
+	     			if (ceilingAmt >  latestContractAmount) {
+	     				CommonUtils commonUtils = new CommonUtils();
+	     				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
+	     						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+	     				throw new EpException(MessageConst.ERROR_750007, 
+	     						new String[] {nf.format(latestContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+	     			}
+	     		}			
+	     		// Validation for ceiling quantity
+	     		if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems() != null) {
+	     			for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+	     				double totalCeilingQuantity = 0.0;
+	     				if (item.getCtItemMaxQties().size() != 0) {						
+	     					for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
+	     						totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
+	     					}
+	     					if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
+	     						throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
+	     					}
+	     				}
+	     			}
+	     		}
+	     		// Validation for AP201 exempt
+	     		if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
+	     				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+	     				&& (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp201FileName() == null 
+	     				||ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getAp201FileName().equalsIgnoreCase("")) 
+	     				&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+	     			throw new EpException(MessageConst.ERROR_100022, 
+	        					new String[] {ResourceBundleUtils.getMessage("lbl.ct.attachment.ap201", 
+	        							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     		} 
+	         }
 	    
 		     /* Validation mandatory for supporting document of AP201 special approver */
 		      if(isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME) &&
