@@ -151,7 +151,7 @@
             	                                  <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
                                            </p:selectOneMenu>
                                           <p:spacer height="1"/>
-                                          <p:selectOneMenu id="ministry" required="true" label="#{lbl['lbl.ct.ministry']}"
+                                          <p:selectOneMenu id="ministry" label="#{lbl['lbl.ct.ministry']}"
                                                   value="#{centralContractBackingBean.managedBean.ministryProfileId}" style="width:300px"  >
             	                                  <f:selectItems value="#{centralContractBackingBean.getMinistryDropdown()}"/>
             	                                  <p:ajax event="change" update=":form:jabatan" partialSubmit="true"
