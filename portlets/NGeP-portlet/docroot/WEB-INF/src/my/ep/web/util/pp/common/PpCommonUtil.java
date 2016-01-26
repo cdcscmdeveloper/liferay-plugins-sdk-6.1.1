@@ -41,6 +41,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -350,7 +351,11 @@ public class PpCommonUtil {
 			}
 			
 			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.retrieveUserListFromGroupOrgType(reqDTO);
+			if(RoleCode.PLAN_APPROVER.value().equals(roleCode)){
+				resDTO = userSO.retrieveUserListFromGroupOrgType(reqDTO);
+			}else{
+				resDTO = userSO.retrieveUserListByRole(reqDTO);
+			}
 			
 			if(resDTO.isSuccessful() && resDTO.getUserList()!=null){
 				pmUsers = resDTO.getUserList();
