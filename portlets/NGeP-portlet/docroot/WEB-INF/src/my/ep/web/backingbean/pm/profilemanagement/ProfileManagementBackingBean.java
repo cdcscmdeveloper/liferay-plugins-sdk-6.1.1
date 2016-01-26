@@ -3498,8 +3498,11 @@ public class ProfileManagementBackingBean extends
 				 && StringUtils.isBlank(pmUserOrg.getMobileNo())){
 			 throw new EpException(MessageConst.ERROR_770090);
 		 }
+		 if(user.isNotifyBySms() 
+				 && (pmUserOrg.getMobileTelcoId() == null)){
+			 throw new EpException(MessageConst.ERROR_770250);
+		 }
 
-		
 		// if (user.getPmCountry().getCountryId() == null) {
 		// throw new EpException(MessageConst.ERROR_770035);
 		// }
