@@ -634,7 +634,12 @@ public class ProfilePersonalizationBackingBean extends
 					 && StringUtils.isBlank(pmUser.getMobileNo())){
 				 throw new EpException(MessageConst.ERROR_770090);
 			 }
-
+			 
+			 if(pmUser.isNotifyBySms() 
+					 && (pmUser.getMobileTelcoId()  == null)){
+				 throw new EpException(MessageConst.ERROR_770250);
+			 }
+			
 //			if (pmUser.getNotifyRemovalDay() == null
 //					|| pmUser.getNotifyRemovalDay() <= 0) {
 //				throw new EpException(MessageConst.ERROR_770047);
