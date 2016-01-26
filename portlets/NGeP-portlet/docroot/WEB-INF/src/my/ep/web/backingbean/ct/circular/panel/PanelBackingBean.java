@@ -1087,11 +1087,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void addPanelSupplier(List<SmSupplier> supplierList){ //101
 		log.info("PanelBackingBean.addPanelSupplier()");
 		try {
-					
 			if (supplierList != null){
-				
 				List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
 				List<CtPanelSupplier> panelSupplierList = new ArrayList<CtPanelSupplier>();
+				List<String> bankAccountNoList = null;
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				SupplierSearchResDTO supplierResDTO = new SupplierSearchResDTO();
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 				
 				 if (this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null) {
 					 ctPanelSuppliers = this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers();
@@ -1104,7 +1106,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					CtPanelSupplier panelSupplier = new CtPanelSupplier();
 					panelSupplier.setSupplier(smSupplier);
 					panelSupplier.setCtPanelItem( this.getManagedBean().getSelectedPanelItems());
-					panelSupplier.setCtPanelZone(this.getManagedBean().getSelectedPanelZone());					
+					panelSupplier.setCtPanelZone(this.getManagedBean().getSelectedPanelZone());
+					
+					supplierReqDTO.setSupplierId(smSupplier.getSupplierId());					
+					supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
+					bankAccountNoList = new ArrayList<String>();
+					if (supplierResDTO.getSmSupplierBankList() != null) {
+						for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+							if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+								bankAccountNoList.add(smSupplierBank.getAccountNo());
+						    }
+						}
+					}
+					if(bankAccountNoList.size()==1) {
+						panelSupplier.setBankAccountNo(bankAccountNoList.get(0));
+					}
 					panelSupplierList.add(panelSupplier);
 				   
 					//Remove if already exist, avoid duplicate
@@ -1131,6 +1147,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.addPanelSupplier()");
 		 String panelCoverageICode;
 		try {
+			List<String> bankAccountNoList = null;
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+			SupplierSearchResDTO supplierResDTO = new SupplierSearchResDTO();
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 			
 			if (supplierList != null){
 				
@@ -1145,14 +1165,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 							   panelCoverageICode = panelItem.getPanelCoverageId().getParameterCode();
 						   }
 						   
-
-						   /*  if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE) 
-									   && getManagedBean().getSelectedPanelZone() == null){
-										   throw new EpException(MessageConst.ERROR_100022, 
-												new String[]{"Create panel zone"});
-						 	   }
-							   */
-						   
 						   if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)) {
 							
 							   ctPanelSuppliers =  panelItem.getCtPanelSuppliers();
@@ -1160,8 +1172,23 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 								      CtPanelSupplier panelSupplier = new CtPanelSupplier();
 								      panelSupplier.setSupplier(smSupplier);
 								      panelSupplier.setCtPanelItem(getManagedBean().getSelectedPanelItems());
-								      panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());					
-								      panelSupplierList.add(panelSupplier);
+								      panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());	
+								      
+								    supplierReqDTO.setSupplierId(smSupplier.getSupplierId());					
+									supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
+									bankAccountNoList = new ArrayList<String>();
+									if (supplierResDTO.getSmSupplierBankList() != null) {
+										for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+											if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+												bankAccountNoList.add(smSupplierBank.getAccountNo());
+											}
+										}
+									}
+									if(bankAccountNoList.size()==1) {
+										panelSupplier.setBankAccountNo(bankAccountNoList.get(0));
+									}
+
+									panelSupplierList.add(panelSupplier);
 								      
 								    //Remove if already exist, avoid duplicate
 										for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
@@ -1175,22 +1202,37 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
                           if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
 							   
                         	  for(CtPanelZone zone : panelItem.getCtPanelZones()) { 
-                        		        List<CtPanelSupplier> panelSupplierList1 = new ArrayList<CtPanelSupplier>();
-							    	    ctPanelSuppliers = zone.getCtPanelSuppliers();
-							    	     for (SmSupplier smSupplier : supplierList) {
-									                 CtPanelSupplier panelSupplier = new CtPanelSupplier();
-									                  panelSupplier.setSupplier(smSupplier);
-									                  panelSupplier.setCtPanelItem(getManagedBean().getSelectedPanelItems());
-									                  panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());					
-									                  panelSupplierList1.add(panelSupplier);
-									      
-									               //Remove if already exist, avoid duplicate
-										         	for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
-											      	     if(ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
-											      	    	panelSupplierList1.remove(panelSupplier);
-												           }
-											         }
-									   }  zone.getCtPanelSuppliers().addAll(panelSupplierList1);
+                        		  List<CtPanelSupplier> panelSupplierList1 = new ArrayList<CtPanelSupplier>();
+                        		  ctPanelSuppliers = zone.getCtPanelSuppliers();
+                        		  for (SmSupplier smSupplier : supplierList) {
+                        			  CtPanelSupplier panelSupplier = new CtPanelSupplier();
+                        			  panelSupplier.setSupplier(smSupplier);
+                        			  panelSupplier.setCtPanelItem(getManagedBean().getSelectedPanelItems());
+                        			  panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());	
+
+                        			  supplierReqDTO.setSupplierId(smSupplier.getSupplierId());					
+                        			  supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
+                        			  bankAccountNoList = new ArrayList<String>();
+                        			  if (supplierResDTO.getSmSupplierBankList() != null) {
+                        				  for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+                        					  if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+                        						  bankAccountNoList.add(smSupplierBank.getAccountNo());
+                        					  }
+                        				  }
+                        			  }
+                        			  if(bankAccountNoList.size()==1) {
+                        				  panelSupplier.setBankAccountNo(bankAccountNoList.get(0));
+                        			  }
+
+                        			  panelSupplierList1.add(panelSupplier);
+
+                        			  //Remove if already exist, avoid duplicate
+                        			  for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
+                        				  if(ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
+                        					  panelSupplierList1.remove(panelSupplier);
+                        				  }
+                        			  }
+                        		  }  zone.getCtPanelSuppliers().addAll(panelSupplierList1);
 							    }
 						   }
 					   }
@@ -1226,6 +1268,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public List<SelectItem> populateBankAccountList(SmSupplier smSupplier, int index) {		
 		 List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
+		 populateBankAccountList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 		 ISupplierSearchSO supplierSearchSO = null;
 	     SupplierSearchReqDTO supplierReqDTO = null;
 	     SupplierSearchResDTO supplierResDTO = null;
@@ -1233,49 +1276,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	     supplierReqDTO.setSupplierId(smSupplier.getSupplierId());
 		 supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 	     supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
-	     int counter = 0;
-	     /*Check bank account no incase one valid for select*/
 	     if (supplierResDTO.getSmSupplierBankList() != null) {
-	    	 
-	    	 for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
-	    		 if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-	    		      counter++;
-	    		      if(counter == 2 ){
-	    		          populateBankAccountList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));		    
-	    		       }
-	    	      }
-	    	 }/*End*/
-
-	    	 /*If supplier bank have only one valid records*/
-	    		    for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
-	    			      if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-	    			    	     String account = smSupplierBank.getAccountNo();
-							     if (smSupplierBank.getPmFinancialOrg() != null 
-									   && smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
-								       account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
-							       }
-							     populateBankAccountList.add(new SelectItem(smSupplierBank.getAccountNo(), account));
-							     if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
-								     getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
-							     }
-							   
-							     if(counter == 1) {
-							
-							    	   if(getManagedBean().isSelectionOfZone()) {
-							               CtPanelSupplier supplier = getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().get(index);
-							               supplier.setBankName(smSupplierBank.getPmFinancialOrg().getFinOrgName());
-							               getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().remove(index);
-							               getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().add(index, supplier); 
-							          } else {
-								           CtPanelSupplier supplier = getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().get(index);
-								           supplier.setBankName(smSupplierBank.getPmFinancialOrg().getFinOrgName());
-								           getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().remove(index);
-								           getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().add(index, supplier); 
-						              }
-					            }
-	    			       }
-	    		      }
-	    	     }
+		    for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+			      if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			    	     String account = smSupplierBank.getAccountNo();
+					     if (smSupplierBank.getPmFinancialOrg() != null 
+							   && smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
+						       account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
+					     }
+					     populateBankAccountList.add(new SelectItem(smSupplierBank.getAccountNo(), account));
+					     if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
+						     getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
+					     }
+			       }
+		      }
+	     }
 		return populateBankAccountList;
 	}
 	
