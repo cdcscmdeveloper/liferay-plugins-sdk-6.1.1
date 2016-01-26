@@ -606,11 +606,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setAutoUpdate(true);
 			
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-					    throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
+				//#7680
+//				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
+//					    throw new EpException(MessageConst.ERROR_100022, 
+//								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
+//										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//				}
 				
 				if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, 
