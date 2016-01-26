@@ -13,7 +13,7 @@
 			<td>
 				<div align="right" style="width: 100%">
 		<p:commandButton value="#{lbl['lbl.btn.save']}" partialSubmit="true" process=":form:settingTabId:feeSettingId"
-			update=":form:settingTabId:feeSettingId"
+			update=":form:settingTabId:feeSettingId" id="contractFeeSaveBtn"
 			action="#{ruleCatalogueBackingBean.saveFeeExemptionForContract}"></p:commandButton>
 </div>
 </td>
@@ -118,7 +118,7 @@
 		</p:column>
 	</p:dataTable>
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.btn.add']}" 
+		<p:commandButton value="#{lbl['lbl.btn.add']}" id="contractFeeAddBtn"
 		partialSubmit="true" process=":form:settingTabId:feeSettingId"
 			update=":form:settingTabId:feeSettingId"
 			action="#{ruleCatalogueBackingBean.addMoreContractFee()}"></p:commandButton>

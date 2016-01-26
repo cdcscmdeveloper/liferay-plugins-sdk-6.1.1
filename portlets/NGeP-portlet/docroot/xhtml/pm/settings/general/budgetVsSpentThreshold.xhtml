@@ -12,7 +12,7 @@
 			<tr>
 				<td>
 					<div align="right" style="width: 100%">
-						<p:commandButton value="#{lbl['lbl.btn.save']}"
+						<p:commandButton value="#{lbl['lbl.btn.save']}" id="budgetThreSaveBtn"
 							action="#{ruleCatalogueBackingBean.saveThresholds(2)}"
 							process="budgetThresholdPanel" update="@form"></p:commandButton>
 					</div>
@@ -23,7 +23,7 @@
 			<tr style="height: 30px;">
 				<td style="width: 10%"><p:outputLabel
 						value="#{lbl['lbl.pm.settings.threshold.setting']}" /></td>
-				<td style="width: 25%"><p:selectOneRadio
+				<td style="width: 25%"><p:selectOneRadio id="budgetThreRadioSelection"
 						value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.isBudgetThreshold}"
 						disabled="#{not ruleCatalogueBackingBean.checkIsEpAdmin()}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.settings.centralized']}"
