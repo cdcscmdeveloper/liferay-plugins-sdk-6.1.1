@@ -1586,6 +1586,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.hide()");
 	}
+	
+	public void clickExemptedOrgBtn() {
+		RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.show()");
+	}
 
 	public CtExemptedOrg[] getSelectedExemptedOrgs() {
 		return selectedExemptedOrgs;
