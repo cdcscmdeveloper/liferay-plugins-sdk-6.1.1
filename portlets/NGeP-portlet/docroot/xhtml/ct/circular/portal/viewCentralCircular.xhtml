@@ -57,8 +57,9 @@
 		       <h:panelGrid  class="columnWidth200">
 			  	  <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 			   </h:panelGrid>
-		       <h:commandLink  action="#{centralContractBackingBean.downloadFile(1)}"
+		       <h:commandLink  action="#{centralContractBackingBean.downloadFile(1)}" rendered="#{centralContractBackingBean.managedBean.circularVer.circularFileName != null}"
 		          styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}"  />
+		        <h:outputText rendered="#{centralContractBackingBean.managedBean.circularVer.circularFileName == null}" value="#{lbl['lbl.txt.na']}" />  
 			</h:panelGrid>
 	     </p:panel>
 	
