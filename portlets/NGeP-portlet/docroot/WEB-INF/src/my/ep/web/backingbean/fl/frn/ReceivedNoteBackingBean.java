@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
@@ -29,6 +30,8 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
+import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
@@ -39,6 +42,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -46,6 +51,10 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaReqDTO;
+import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaResDTO;
+import my.ep.dto.pm.general.settings.gstitem.GstItemReqDTO;
+import my.ep.dto.pm.general.settings.gstitem.GstItemResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -54,6 +63,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
@@ -66,14 +76,17 @@ import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
+import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -104,6 +117,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
 	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
 	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
+	public static final String NAV_CR = "/xhtml/fl/contractrequest/crBasePage.xhtml";
+	public static final String NAV_PR = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
 	
 	/**
 	 * Gets the class name.
@@ -431,6 +446,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApprover().getUserId()); 
 			}
 			getManagedBean().setSelectedTabIndex(0);
+			System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
+			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+				checkLastTaxFRN();//Issuance of CoGSTR
+			}
 			
 			// Set evaluation
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
@@ -658,6 +677,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			sumTotalReceivedQty = sumTotalOrderReceivedQty.add(sumTotalReceivedQty);
 			if(sumTotalReceivedQty.doubleValue() == sumTotalOrderQty.doubleValue()){
 				getManagedBean().setLastFRNTaxInv(true); 
+			}else{
+				getManagedBean().setLastFRNTaxInv(false); 
 			}
 			IPersonnelSO personnelSO = (IPersonnelSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
@@ -666,6 +687,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			
 			if(personnelResDTO.getSmPersonnelList().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+			if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isLastFRNTaxInv()){
+				getManagedBean().setSelectedTabIndex(1);
+				throw new EpException(MessageConst.ERROR_745078);
 			}
 		}
 	}
@@ -789,7 +814,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 *
 	 * @return the user role
 	 */
-	private String getUserRole() {		
+	private String getUserRole() {
 		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
 			return RoleCode.FL_APPROVER.value();		
 		}else if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
@@ -1217,6 +1242,140 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
 			getManagedBean().getFulfilmentNote().setSubmissionDate(DateUtils.getCurrentDateWithoutTime());
 		}		
+	}
+	
+	public void checkLastTaxFRN(){
+		BigDecimal sumTotalReceivedQty = BigDecimal.ZERO;
+		BigDecimal sumTotalOrderQty = BigDecimal.ZERO;
+		BigDecimal sumTotalOrderReceivedQty = BigDecimal.ZERO;
+		for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+			sumTotalReceivedQty = sumTotalReceivedQty.add(noteItem.getReceivedQty());
+		}
+		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
+				sumTotalOrderQty = sumTotalOrderQty.add(itemAddr.getOrderedQty());
+				sumTotalOrderReceivedQty = sumTotalOrderReceivedQty.add(itemAddr.getReceivedQty());
+			}
+		}
+		sumTotalReceivedQty = sumTotalOrderReceivedQty.add(sumTotalReceivedQty);
+		if(sumTotalReceivedQty.doubleValue() == sumTotalOrderQty.doubleValue()){
+			getManagedBean().setLastFRNTaxInv(true); 
+		}
+		System.out.println("isLastFRNTaxInv: "+getManagedBean().isLastFRNTaxInv());
+		if(getManagedBean().isLastFRNTaxInv()){
+			IDesignatedAreaSO designatedAreaSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
+			IGstItemSO gstItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
+			
+			GstItemReqDTO gstItemReqDTO = new GstItemReqDTO();
+			GstItemResDTO gstItemResDTO = null;
+			for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
+				gstItemReqDTO.setGst(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst());
+				gstItemReqDTO.setRequestType(getManagedBean().getFulfilmentRequest().getDocType());
+				// default to PCA to PCA
+				gstItemReqDTO.setGslTypeCode(GSLType.PCA_TO_PCA.value());
+				
+				// Set GSL Type
+				DesignatedAreaReqDTO daReqDTO = new DesignatedAreaReqDTO();
+				DesignatedAreaResDTO daResDTO = new DesignatedAreaResDTO();
+				daReqDTO.setFromAddressId(getManagedBean().getFulfilmentNote().getFlRequest().getFlSupplierDtl().getSmAddress().getAddressId());
+				daReqDTO.setToAddressId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getFlDeliveryAddress().getPmAddress().getAddressId());
+				daReqDTO.setActualReceivedDate(getManagedBean().getFulfilmentNote().getReceivedDate());
+				daResDTO = designatedAreaSO.retrieveGSLParam(daReqDTO);
+				if(daResDTO.isSuccessful()) {
+					gstItemReqDTO.setGslTypeCode(daResDTO.getGslParam().getParameterCode());
+				}
+									
+				gstItemResDTO = gstItemSO.retrieveGSTFlag(gstItemReqDTO);
+				System.out.println("line 1275 gstItemResDTO.isCoGSTRFlag(): "+gstItemResDTO.isCoGSTRFlag());
+				if(true){
+					getManagedBean().setLastFRNTaxInv(true);
+					break;
+				}else{
+					getManagedBean().setLastFRNTaxInv(false); 
+				}
+			}
+		}
+	}
+	
+	public String navigateToFlRequest(){
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		if(getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_REQUEST)){
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+			reqDTO.setFlRequestLink(true);
+			FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
+			
+			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
+			crBB.renewSesionObject();
+			crBB = new ContractRequestBackingBean();
+			crBB.getManagedBean().setSelectedTabIndex(0);
+			crBB.getManagedBean().setDocProcess(getManagedBean().getDocType());
+			crBB.setFulfilmentRequestField(resDTO);
+			crBB.initializeApproverGroup();
+			
+			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			crBB.getManagedBean().setButtonVal("View");
+			flBB.getManagedBean().setHideRemarks(true);
+			crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
+			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+			if(null != resDTO.getFlFulfilmentRequest()){
+				if(resDTO.getFlFulfilmentRequest().getCtContract().isFactored()){
+					Long supplieContractId=resDTO.getFlFulfilmentRequest().getCtContract().getContractId();
+					contractSupplierReqDTO.setContractId(supplieContractId);
+					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
+					if(contractSupplierResDTO.getFactoring() != null){
+						resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
+							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
+							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+						}
+					}else{
+						resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
+					}
+				}
+			}
+			
+			for(CtAgency agency : crBB.getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
+				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
+						(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_SUSPENDED && agency.getEffDate().after(new Date()))) {
+					crBB.getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile().getOrgProfileId());
+					if(agency == crBB.getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
+						crBB.getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
+					}else{
+						crBB.getManagedBean().setOrgProfileIds(crBB.getManagedBean().getOrgProfileIds() + "," +agency.getOrgProfile().getOrgProfileId().toString());
+					}
+				}
+			}
+			FacesContext fc = FacesContext.getCurrentInstance();
+			crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			crBB.getManagedBean().setHyperLinkPage(true);
+			return NAV_CR;
+		}if(getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+			reqDTO.setFlRequestLink(true);
+			FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
+			
+			PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+			prBB.getManagedBean().setSubmitButtonStatus(false);
+			prBB.getManagedBean().setDocProcess(getManagedBean().getDocType());
+			
+			prBB.setFulfilmentRequestField(resDTO);
+			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			prBB.getManagedBean().setButtonVal("View");
+			flBB.getManagedBean().setHideRemarks(true);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			prBB.getManagedBean().setHyperLinkPage(true);
+			return NAV_PR;
+		}
+		return null;
+		
 	}
 		
 }
