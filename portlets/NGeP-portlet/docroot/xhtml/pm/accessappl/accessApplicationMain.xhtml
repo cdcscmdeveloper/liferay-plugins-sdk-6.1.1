@@ -42,11 +42,26 @@
 			dynamic="true" resizable="false" width="700px" height="200"
 			position="top" style="z-index:-1;" header="#{lbl['lbl.bpm.choose.file']}">
 			<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+				fileLimit="1"
 				sizeLimit="2000000" process="@this"
 				invalidFileMessage="#{lbl['lbl.pm.access.app.upload.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.pm.access.app.upload.fileSize.errmsg']}"
 				fileUploadListener="#{accessApplBackingBean.handleAccessApplDocFileAttachment}"
-				update="accessApplUploadDialog" oncomplete="accessApplUploadDlg.hide();" />
+				update="@this,:form:suppDocPnl" oncomplete="accessApplUploadDlg.hide();" />
 		</p:dialog>
+		
+		<p:dialog id="deleteAttachmentDlg" widgetVar="deleteAttachmentDlg"
+      		styleClass="screen-title" modal="true" width="330">  
+	      	<h:panelGrid columns="3">
+	 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			   	<p:spacer width="10"/>
+	            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
+	     	</h:panelGrid>
+			<div class="ppRightBtn">
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@this,:form:suppDocPnl" process="@this" 
+		     	actionListener="#{accessApplBackingBean.deleteAttachmentAction()}" onclick="deleteAttachmentDlg.hide();"/>
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg.hide();" type="button" />
+		   </div>
+ 	</p:dialog>	
 	</ui:define>
 </ui:composition>
