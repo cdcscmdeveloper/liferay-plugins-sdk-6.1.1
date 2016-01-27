@@ -14,8 +14,9 @@
 				<td style="width: 23%;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText size="46" id="ctitle" required="true"
-						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}"
+				<td colspan="3"><p:inputText size="46" id="ctitle"
+						required="true" maxlength="100"
+						label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
 						style="margin-bottom: 5px;" /> <p:message id="ctitleMsg"
@@ -27,8 +28,7 @@
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.smSupplier.companyName}"
 						size="46" /></td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstRegNo}"
 						size="35" /> <ac:iconTooltip
@@ -407,9 +407,12 @@
 		</h:panelGroup>
 
 		<h:panelGroup id="attachmentId">
+			<ui:param name="attachFile"
+				value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}" />
+
 			<table style="width: 100%">
 				<tr>
-					<td width="7%" style="padding-right: 0px; text-align: right;">
+					<td width="23%" style="padding-right: 0px; text-align: right;">
 						<p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.attachment']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" />
@@ -417,42 +420,18 @@
 					<td class="TableFieldRight"><p:commandButton
 							oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
 							update="attachmentId" disabled="#{!isPendingSubmissionStatus}"
-							value="#{lbl['lbl.sc.purchase.in.default.choose.file']}" /></td>
-				</tr>
-				<tr>
-					<td />
-					<td style="width: 23%"><ui:param name="attachFile"
-							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}" />
+							value="#{lbl['lbl.sc.purchase.in.default.choose.file']}" /> <c:if
+							test="#{!empty attachFile}">
+							<h:commandLink value="#{attachFile.fileName}"
+								styleClass="blue_font" immediate="true"
+								action="#{purchaseInDefaultBackingBean.downloadFile(attachFile)}" />
+							<p:commandLink
+								action="#{purchaseInDefaultBackingBean.deleteUploadFile}"
+								immediate="true" update="attachmentId"
+								disabled="#{!isPendingSubmissionStatus}">
+								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+							</p:commandLink>
 
-						<c:if test="#{!empty attachFile}">
-							<table>
-								<tr>
-									<td rowspan="2" style="vertical-align: top;" align="left">
-										<ui:param name="icon"
-											value="#{purchaseInDefaultBackingBean.determineIcon(attachFile)}"></ui:param>
-										<p:graphicImage value="/css/images/design/#{icon}" height="30"
-											width="30">
-										</p:graphicImage>
-									</td>
-									<td><h:outputText
-											value="#{attachFile.createdUser.userName}" />, <h:outputText
-											value="#{attachFile.createdDate}">
-											<f:convertDateTime
-												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-										</h:outputText></td>
-								</tr>
-								<tr>
-									<td><h:commandLink value="#{attachFile.fileName}"
-											styleClass="blue_font" immediate="true"
-											action="#{purchaseInDefaultBackingBean.downloadFile(attachFile)}" />
-										<p:commandLink
-											action="#{purchaseInDefaultBackingBean.deleteUploadFile}"
-											immediate="true" update="attachmentId"
-											disabled="#{!isPendingSubmissionStatus}">
-											<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-										</p:commandLink></td>
-								</tr>
-							</table>
 						</c:if></td>
 				</tr>
 			</table>
@@ -465,11 +444,11 @@
 				value="#{lbl['lbl.sc.purchase.in.default.verified.by']}" />
 		</f:facet>
 
-		<table>
+		<table style="width: 100%">
 			<tr>
-				<td><h:outputText value="* "
-						styleClass="mandatory" /> <h:outputLabel
-						value="#{lbl['lbl.sc.ptj.approver.group']}" /></td>
+				<td style="width: 23%"><h:outputLabel
+						value="#{lbl['lbl.sc.ptj.approver.group']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width:300px; margin-bottom:5px;"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.userGroupId}">
@@ -481,10 +460,10 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel
-						value="#{lbl['lbl.sc.approverName']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.approverName']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="approverDropdown" required="true"
-				        label="#{lbl['lbl.sc.approverName']}"
+						label="#{lbl['lbl.sc.approverName']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.selectedApproverId}"
 						style="width:300px;">
@@ -492,8 +471,8 @@
 						<f:selectItems
 							value="#{purchaseInDefaultBackingBean.managedBean.approverList}"
 							var="user" itemLabel="#{user.userName}"
-							itemValue="#{user.userId}"/>
-							<p:ajax event="change" update="approversId" />
+							itemValue="#{user.userId}" />
+						<p:ajax event="change" update="approversId" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
