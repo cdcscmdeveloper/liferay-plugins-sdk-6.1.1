@@ -91,6 +91,7 @@ public class AccessApplBackingBean extends
 	 * */
 	public void preLoading() {
 		log.info("preLoading");
+		renewSesionObject();
 		initialAccessApplication();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -103,7 +104,7 @@ public class AccessApplBackingBean extends
 	 * */
 	public void preRenderView() {
 		log.info("preRenderView");
-		
+		renewSesionObject();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -344,7 +345,7 @@ public class AccessApplBackingBean extends
 				String messageId = MessageConst.INFO_700005;
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{"Access Application ","test1234"}, 
+								new String[]{"Access Application ", resDTO.getAccessAppl().getApplicantName()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
@@ -399,20 +400,32 @@ public class AccessApplBackingBean extends
 						+ getManagedBean().getAccessAppl().getIdentificationNo()
 						+ "/"
 						+ System.currentTimeMillis() + "/";
-
-				PmAccessApplDoc doc = getManagedBean().getSelectedPmAccessApplDoc();
-				doc.setFileName(StringUtils.replace(event.getFile()
-						.getFileName(), " ", "-"));
-				doc.setFilePath(filePath);
 				
-				getManagedBean().getAccessApplDocList().clear();
-				getManagedBean().getAccessApplDocList().add(doc);
+				for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
+					if(applDoc.getDocument().getDocumentId().equals(getManagedBean().getSelectedPmAccessApplDoc().getDocument().getDocumentId())){
+						applDoc.setFileName(StringUtils.replace(event.getFile()
+								.getFileName(), " ", "-"));
+						applDoc.setFilePath(filePath);
+					}
+				}
 
 				// upload file
 				commonUploadFile(event, filePath);
 			}
 		}
 
+	}
+	
+	public void deleteAttachmentAction(){
+		if (getManagedBean().getSelectedPmAccessApplDoc() != null) {
+			for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
+				if(applDoc.getDocument().getDocumentId().equals(getManagedBean().getSelectedPmAccessApplDoc().getDocument().getDocumentId())){
+					applDoc.setFileName(null);
+					applDoc.setFilePath(null);
+					break;
+				}
+			}
+		}
 	}
 	
 	private void validateAccessAppl(){
