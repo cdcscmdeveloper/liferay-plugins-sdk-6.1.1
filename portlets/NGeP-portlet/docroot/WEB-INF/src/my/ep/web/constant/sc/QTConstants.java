@@ -56,6 +56,7 @@ public interface QTConstants {
 	public static final String DP_LOA_LIST_PAGE = "/xhtml/sc/loa/loalist/dpLoaList.xhtml";
 	public static final String LOA_PAGE = "/xhtml/sc/loa/loarequest/loaDetailsMaint.xhtml";
 	public static final String SUPPLIER_LOA_PAGE = "loaSupplierMaint.xhtml";
+	public static final String DO_CONSOLIDATION_REPORT_PAGE = "/xhtml/sc/supplierFinalization/consolidationReport/consolidationReportMenu.xhtml";
 	public static final String FC_COORDINATE_MEETING_PAGE = "/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml";
 	public static final String FC_SUPPLIER_FINALIZATION_PAGE = "/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml";
 	public static final String FC_ONLINE_BIDDING_ENDORSEMENT_PAGE = "/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/endorsement.xhtml";
