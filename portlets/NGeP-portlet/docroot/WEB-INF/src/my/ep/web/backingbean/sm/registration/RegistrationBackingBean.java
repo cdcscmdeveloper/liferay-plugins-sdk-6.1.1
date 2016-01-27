@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -22,6 +21,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -2407,11 +2407,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		String captchaAnswer = (String) value;
 		if(captchaAnswer == null || captchaAnswer.length() == 0) {
 			log.error("Captcha is null");
-			throw new FacesException("Captcha is null.");
+			throw new ValidatorException(new FacesMessage(
+				    FacesMessage.SEVERITY_ERROR, null,
+				    SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721046, null)));
+			
 		}
 		if(!captchaAnswer.equals(this.getManagedBean().getCaptchaText())) {
 			log.error("Captcha is wrong");
-			throw new FacesException("Captcha is wrong.");
+			throw new ValidatorException(new FacesMessage(
+				    FacesMessage.SEVERITY_ERROR, null,
+				    SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721047, null)));
 		}
 	}
 }
