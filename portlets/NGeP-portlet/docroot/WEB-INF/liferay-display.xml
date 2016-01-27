@@ -66,6 +66,9 @@
             <portlet id="listprogramactivity"></portlet>
             <portlet id="listproject"></portlet>
             <portlet id="categoryPublicSeach"></portlet>	
+            <portlet id="pmAccessApplication"></portlet>	
+            <portlet id="accessApplicationDtl"></portlet>	
+            <portlet id="accessApplicationActivation"></portlet>
            			
 			
 		</category>
