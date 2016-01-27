@@ -143,6 +143,7 @@
 			<portlet id="scQuoteSearch"></portlet>
 			<portlet id="DirectPurchaseSearch"></portlet>
 			<portlet id="scQuotationTenderSearch"></portlet>
+			<portlet id="scConsolidationReport"></portlet>
 		    
 		</category>
 
