@@ -16,9 +16,9 @@
 		
 		<table>
 			<tr>
-				<td><h:outputText value="* "
-						styleClass="mandatory" /> <h:outputLabel
-						value="#{lbl['lbl.sc.ptj.approver.group']}" /></td>
+				<td> <h:outputLabel
+						value="#{lbl['lbl.sc.ptj.approver.group']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /> </td>
 				<td><p:selectOneMenu style="width:300px; margin-bottom:5px;"
 				        id="appGroupId"
 				        label="#{lbl['lbl.sc.ptj.approver.group']}"
@@ -32,8 +32,9 @@
 					</p:selectOneMenu><p:message id="appGroupIdMsg" for="appGroupId" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel
-						value="#{lbl['lbl.sc.approverName']}" /></td>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.approverName']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="approverNameId"
 				        label="#{lbl['lbl.sc.approverName']}"
 						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
