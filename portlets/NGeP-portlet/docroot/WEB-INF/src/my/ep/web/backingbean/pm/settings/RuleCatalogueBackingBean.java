@@ -464,7 +464,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			initGst();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "settingConfig");
+					.handleNavigation(fc, null, "settingConfig.xhtml?faces-redirect=true");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
