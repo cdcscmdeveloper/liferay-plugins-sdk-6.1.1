@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<ui:param name="isBrandNew" value="#{accessApplBackingBean.managedBean.accessAppl.brandNew}" />	
+		<!-- Message Section -->
+		<p:messages id="orgMessages" showDetail="true" showSummary="false" 
+			autoUpdate="true"
+			closable="true" severity="error,info"></p:messages>
+			
+		<!-- Button Section -->
+		<ui:include src="/xhtml/pm/accessappl/accessApplicationButton.xhtml"/>
+		
+		<!-- Header Section -->
+		<ui:include src="/xhtml/pm/accessappl/accessApplicationHeader.xhtml"/>
+		
+		<!-- Organisation Panel Section -->
+		<ui:include src="/xhtml/pm/accessappl/accessApplicationOrg.xhtml"/>
+		
+		<!-- Applicant Panel Section -->
+		<ui:include src="/xhtml/pm/accessappl/accessApplicationApplicant.xhtml"/>
+		
+		<!-- Request Type Panel Section -->
+		<ui:include src="/xhtml/pm/accessappl/accessApplicationRequestType.xhtml"/>
+		
+		<!-- Supporting Document Panel Section -->
+		<ui:include src="/xhtml/pm/accessappl/accessApplicationSuppDoc.xhtml"/>
+		
+		<!-- T n C Panel Section -->
+		<ui:include src="/xhtml/pm/accessappl/accessApplicationTnc.xhtml"/>
+		
+		<!-- Approval Info Panel Section -->
+		<ui:include src="/xhtml/pm/accessappl/accessApplicationApprovalInfo.xhtml"/>
+		<ac:lovPopup />
+		 
+		<p:dialog id="accessApplUploadDialog" widgetVar="accessApplUploadDlg" modal="true"
+			dynamic="true" resizable="false" width="700px" height="200"
+			position="top" style="z-index:-1;" header="#{lbl['lbl.bpm.choose.file']}">
+			<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+				sizeLimit="2000000" process="@this"
+				invalidFileMessage="#{lbl['lbl.pm.access.app.upload.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.pm.access.app.upload.fileSize.errmsg']}"
+				fileUploadListener="#{accessApplBackingBean.handleAccessApplDocFileAttachment}"
+				update="accessApplUploadDialog" oncomplete="accessApplUploadDlg.hide();" />
+		</p:dialog>
+	</ui:define>
+</ui:composition>
