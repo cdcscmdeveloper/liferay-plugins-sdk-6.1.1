@@ -1573,9 +1573,9 @@ public class LOIDetailBackingBean extends
 				isBiddingAward = Boolean.TRUE;
 				// remove nego price for online bidding.
 				removeNegoTermPrice(scLoi);
-			} else if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+			} else if (ParameterConst.RECOMMEND_BY_AWARD
 					.equals(recommendedBy.getParameterCode())) {
-				// remove nego price for multiple loi
+				// remove nego price for Direct Award
 				removeNegoTermPrice(scLoi);
 			}
 		}
