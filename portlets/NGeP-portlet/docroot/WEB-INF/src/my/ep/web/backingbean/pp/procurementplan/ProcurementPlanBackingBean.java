@@ -3199,7 +3199,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("orgProfile."+
 					OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
-			bean.setSearchValue(retrieveJabatanOrgProfile(planSearchBean.getKptj().getOrgProfileId()).getOrgProfileId());
+			bean.setSearchValue(planSearchBean.getKptj().getOrgProfileId());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}else if(planSearchBean.getMinistry()!=null  && planSearchBean.getMinistry().getOrgProfileId()!=null){
@@ -3208,7 +3208,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("orgProfile."+
 					OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
-			bean.setSearchValue(retrieveMinistryOrgProfile(planSearchBean.getMinistry().getOrgProfileId()).getOrgProfileId());
+			bean.setSearchValue(planSearchBean.getMinistry().getOrgProfileId());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}
