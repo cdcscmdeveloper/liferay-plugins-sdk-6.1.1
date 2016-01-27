@@ -3683,10 +3683,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //							getManagedBean().getPlanSearchBean().setMinistry(orgProfileList.get(0));
 //						}		
 						getManagedBean().getPlanSearchBean().setMinistry(retrieveMinistryOrgProfile(orgProfileId));
+						getManagedBean().getPlanSearchBean().setKptj(retrieveJabatanOrgProfile(orgProfileId));
+						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 						getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
 						getManagedBean().setDisabledMinistryLov(true);
 						getManagedBean().setDisabledKumpulanPTJLov(true);
-						getManagedBean().getPlanSearchBean().setKptj(retrieveJabatanOrgProfile(orgProfileId));
 					}
 				}
 				
