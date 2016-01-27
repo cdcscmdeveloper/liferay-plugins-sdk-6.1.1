@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<ui:param name="consolidationReportFolderPath" value="/xhtml/sc/supplierFinalization/consolidationReport" />
+		<ui:param name="validityDaysExpiredQt"
+				  value="#{consolidationReportBackingBean.checkProposalValidityDateReach(
+		     					consolidationReportBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+
+		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
+					autoUpdate="true" closable="true" severity="error, info" />
+
+		<div align="right" class="BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
+				partialSubmit="true" update="@form"
+				action="#{consolidationReportBackingBean.saveAction}" 
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+
+			<ui:repeat var="bpmAction"
+				value="#{consolidationReportBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel" 
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+					
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					action="#{consolidationReportBackingBean.managedBean.setOutcome(bpmAction)}"
+					process="@this" oncomplete="submissionPopup.show();"
+					update="@([id$=#{submissionPopup}])"
+					rendered="#{validityDaysExpiredQt}" />
+			</ui:repeat>
+		</div>
+
+		<ui:include src="#{consolidationReportFolderPath}/consolidationReportHeader.xhtml"/>
+
+		<p:tabMenu id="tab" activeIndex="#{consolidationReportBackingBean.managedBean.activeIndex}">
+			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}"
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(0)}" 
+				process="@form" update="@form" partialSubmit="true" style="width:150px;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.packagewise']}" 
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(1)}"
+				process="@form" update="@form" partialSubmit="true" style="width:150px;">
+			</p:menuitem>			
+			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}" 
+				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"
+				process="@form" update="@form" partialSubmit="true" style="width:150px;">
+			</p:menuitem>
+		</p:tabMenu>
+
+		<p:panel id="contentPanel">
+			<c:if test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getBRIEFING_PAPER_TAB_INDEX()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/briefingPaper/briefingPaperReport.xhtml" />
+			</c:if>
+			<c:if test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getPACKAGE_TYPE_TAB_INDEX()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
+			</c:if>
+			<c:if test="#{consolidationReportBackingBean.managedBean.activeIndex eq 
+								consolidationReportBackingBean.getITEMIZED_TYPE_TAB_INDEX()}">
+				<ui:include
+					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
+			</c:if>			
+		</p:panel>
+
+		<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/boardofDirectorsDetails.xhtml" />
+
+		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg"
+			modal="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{consolidationReportBackingBean.handleFileUpload}"
+				mode="advanced" id="uploadattachment"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				update="contentPanel" oncomplete="attachmentPopupDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
+		
+		<ac:confirmationPopup id="submissionPopup" 
+			title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+			width="400" height="100" widget="submissionPopup" 
+			okAction="consolidationReportBackingBean.submitAction" 
+			content="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit']}" 
+			process="@form"  update="@form" 
+			onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />		
+
+	</ui:define>
+
+</ui:composition>
