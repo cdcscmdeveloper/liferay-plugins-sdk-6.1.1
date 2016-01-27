@@ -11,7 +11,7 @@
 		<p:messages id="loiMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 
-        <ui:param name="isMultipleLoi" value="#{lOIDetailBackingBean.managedBean.docType eq ParameterConst.doctypeMultipleLoi}" />
+        <ui:param name="isMultipleLoi" value="#{lOIDetailBackingBean.managedBean.docType eq ParameterConst.recommendByMultipleLoi}" />
 		<ui:include src="loiListButtons.xhtml" />
 
 		<ui:include src="loiListHeader.xhtml" />
@@ -31,7 +31,7 @@
 					<td style="width: 200px;"><p:outputLabel
 							value="#{lbl['lbl.sc.recommend.by']}" /></td>
 					<td><p:inputText disabled="true"
-							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.finalizationRecommendBy,
 					lOIDetailBackingBean.managedBean.docType)}"
 							size="30" /></td>
 				</tr>

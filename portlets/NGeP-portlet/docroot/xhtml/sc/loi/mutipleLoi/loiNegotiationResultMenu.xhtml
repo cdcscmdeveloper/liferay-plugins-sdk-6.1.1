@@ -14,10 +14,10 @@
 		</p:blockUI>
 
 		<ui:param name="isPendingNegotiationStatus"
-			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_NEGOTIATION}" />
+			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_RECOMMENDATION || lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_NEGOTIATION}" />
 
 		<ui:param name="isPendingEndorsementStatus"
-			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_ENDORSEMENT}" />
+			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT || lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_ENDORSEMENT}" />
 
 		<ui:param name="isEditableStatus"
 			value="#{isPendingNegotiationStatus and !empty lOIDetailBackingBean.managedBean.taskId}" />

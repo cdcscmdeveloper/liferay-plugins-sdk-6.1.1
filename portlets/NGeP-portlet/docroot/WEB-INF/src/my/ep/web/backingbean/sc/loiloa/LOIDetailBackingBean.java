@@ -207,7 +207,6 @@ public class LOIDetailBackingBean extends
 	public void preRenderLoiListView() {
 		debugLogger("preRenderLoiListView");
 
-		IStatusSO statusSO;
 		try {
 
 			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
@@ -237,16 +236,9 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean()
 					.setRecommendDtlIds(awardDataType.getGroupkeyList());
-
-			Long currentStatusId = getManagedBean().getCurrentStatusId();
-
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(currentStatusId);
-			StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
-			getManagedBean().setDocType(resDTO.getPmStatus().getDocType());
+			
+			String finalizationMethod = getFinalizationMethodByAwardType(awardDataType.getAwardType());
+			getManagedBean().setDocType(finalizationMethod);
 
 			retrieveLOIList(sourceId);
 
@@ -258,8 +250,16 @@ public class LOIDetailBackingBean extends
 					.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
 		} catch (Exception e) {
 			handleException(e);
-		} finally {
-			statusSO = null;
+		} 
+	}
+	
+	private String getFinalizationMethodByAwardType(String awardType) {		
+		if (SourcingConstants.AWARD_TYPE_BIDDING_AWARD.equals(awardType)) {
+			return ParameterConst.RECOMMEND_BY_ONLINE_BIDDING;
+		} else if (SourcingConstants.AWARD_TYPE_MULTIPLE_LOI_AWARD.equals(awardType)) {
+			return ParameterConst.RECOMMEND_BY_MULTIPLE_LOI;
+		} else {
+			return ParameterConst.RECOMMEND_BY_AWARD;
 		}
 	}
 
@@ -820,7 +820,6 @@ public class LOIDetailBackingBean extends
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
-			reqDTO.setAwardType(getManagedBean().getDocType());
 			
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrievePendingLoiList(
 					reqDTO);
@@ -2003,7 +2002,6 @@ public class LOIDetailBackingBean extends
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
-			reqDTO.setAwardType(getManagedBean().getDocType());
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrievePendingLoiList(
 					reqDTO);
@@ -2376,7 +2374,7 @@ public class LOIDetailBackingBean extends
 				retrieveMultipleLoiDtls(scQtFinalization.getScQt().getQtId(),
 						getManagedBean().getCommitteeType(), getManagedBean()
 								.getRecommendDtlIds());
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_MULTIPLE_LOI, 
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.FINALIZATION_RECOMMEND_BY, ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, 
 						scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
 			}
 
@@ -2431,7 +2429,7 @@ public class LOIDetailBackingBean extends
 			if (null != digiSign) {
 				signOff();
 				updatePmDigiSignData(digiSign,
-						ParameterConst.DOCTYPE_MULTIPLE_LOI, scQtFinalization
+						ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION, scQtFinalization
 								.getScQt().getQtId(), scQtFinalization
 								.getScQt().getQtNo());
 			}
@@ -2449,8 +2447,8 @@ public class LOIDetailBackingBean extends
 				super.renewSesionObject();
 
 				successMessage(MessageConst.INFO_700005,
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_MULTIPLE_LOI, scQtFinalization
+						ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
+						ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
 								.getScQt().getQtNo(), Boolean.TRUE);
 			}
 
@@ -2484,7 +2482,10 @@ public class LOIDetailBackingBean extends
 	 */
 	private AwardSupplierReqDTO parseMultipleLoiDtls(boolean isSubmit) {
 		Long statusId  = getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.MLI_PENDING_NEGOTIATION
+		// TODO To be removed - merge supplier finalization method doc types to cater old QTs
+		if (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION
+				.equals(statusId) ||
+			QTStatusConst.MLI_PENDING_NEGOTIATION
 				.equals(statusId)) {
 
 			List<TplSpecZoneDtl> zoneDeDtls = getManagedBean().getMultiLOIZoneDetails();
@@ -3609,7 +3610,10 @@ public class LOIDetailBackingBean extends
 		debugLogger("downloadReport");
 		ScLoiReportAttachment scLoiReportAttachment = scLoiReport
 				.getScLoiReportAttachment();
-		if (QTStatusConst.MLI_PENDING_NEGOTIATION
+		// TODO To be removed - merge supplier finalization method doc types to cater old QTs
+		if (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION
+				.equals(getManagedBean().getCurrentStatusId()) ||
+			QTStatusConst.MLI_PENDING_NEGOTIATION
 				.equals(getManagedBean().getCurrentStatusId())
 							|| scLoiReportAttachment == null) {
 			scLoiReportAttachment = generateDocumentAttachment(scLoiReport);
@@ -5090,7 +5094,7 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
-		if (!ParameterConst.DOCTYPE_MULTIPLE_LOI.equals(docType) && isLoiRequired) {
+		if (!ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(docType) && isLoiRequired) {
 			isLoiLoasUpdate = Boolean.TRUE;
 		}
 		return isLoiLoasUpdate;
