@@ -32,7 +32,9 @@
 									autoResize="false"
 									onkeyup="limitTextArea(this,1000);"
 									onkeydown="limitTextArea(this,1000);">
-								</p:inputTextarea> <h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+									<p:ajax event="blur" process="@this" />
+								</p:inputTextarea> 
+								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
 							<td>
 								<h:panelGroup rendered="#{remarkIndex==0}">
