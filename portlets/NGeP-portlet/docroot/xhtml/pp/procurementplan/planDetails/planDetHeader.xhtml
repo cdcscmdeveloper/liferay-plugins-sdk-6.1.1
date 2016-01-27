@@ -41,8 +41,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="#{lbl['lbl.pp.ptj']}" />
 			</td>
 			<td>
-				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} /
-					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputText>
+				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} / #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputText>
 			</td>
 		</tr>
 		<c:if test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeProcurement}">
