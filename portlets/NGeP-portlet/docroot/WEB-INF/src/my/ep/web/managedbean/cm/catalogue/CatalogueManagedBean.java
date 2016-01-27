@@ -1162,6 +1162,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
 				PmUserOrg userOrg = null;
+				Long ministryId = null;
+				Long departmentId = null;
 				
 				if (bb.isRequisitioner()) {
 					UserReqDTO userReqDTO = new UserReqDTO();
@@ -1183,18 +1185,21 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					OrgProfileResDTO orgProfileResDTO = orgProfileSO
 							.retrieveMinistryByOrgProfileId(orgProfileReqDTO);
 					if (orgProfileResDTO.getPmOrgProfile() != null) {
-						String ministryId = "#"
-								+ orgProfileResDTO.getPmOrgProfile()
-										.getOrgProfileId() + "#";
-						SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(
-								new SearchFilterBean("EXEMPTED_MINISTRY_LIST",
-										SearchOperator.OPERATOR_IS_NULL.value(),
-										null), new SearchFilterBean(
-										"EXEMPTED_MINISTRY_LIST",
-										SearchOperator.OPERATOR_NOT_LIKE.value(),
-										ministryId,
-										SearchCondition.CONDITION_OR.value()));
-						searchBean.getDataFilterBeans().add(ministryFilterBean);
+						//String ministryId = "#" + orgProfileResDTO.getPmOrgProfile().getOrgProfileId() + "#";
+						ministryId = orgProfileResDTO.getPmOrgProfile().getOrgProfileId();
+//						SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(
+//								new SearchFilterBean("EXEMPTED_MINISTRY_LIST",
+//										SearchOperator.OPERATOR_IS_NULL.value(),
+//										null), new SearchFilterBean(
+//										"EXEMPTED_MINISTRY_LIST",
+//										SearchOperator.OPERATOR_NOT_LIKE.value(),
+//										ministryId,
+//										SearchCondition.CONDITION_OR.value()));
+//						searchBean.getDataFilterBeans().add(ministryFilterBean);
+					}
+					orgProfileResDTO = orgProfileSO.retrieveJabatanByOrgProfileId(orgProfileReqDTO);
+					if (orgProfileResDTO.getPmOrgProfile() != null) {	
+						departmentId = orgProfileResDTO.getPmOrgProfile().getOrgProfileId();
 					}
 				}
 
@@ -1203,6 +1208,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setViewSearchBean(searchBean);
 				if(userOrg!=null) {
 					reqDTO.setUserOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
+					reqDTO.setMinistryId(ministryId);
+					reqDTO.setDepartmentId(departmentId);
 				}
 				if (catTypeFilterBean != null
 						&& catTypeFilterBean.getSearchValue() != null) {
