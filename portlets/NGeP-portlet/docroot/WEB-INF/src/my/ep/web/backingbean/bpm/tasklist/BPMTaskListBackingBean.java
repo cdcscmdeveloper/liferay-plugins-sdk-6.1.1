@@ -73,6 +73,7 @@ public class BPMTaskListBackingBean extends
 				"plan-detail");
 		temp.put("Start Expenditure Preparation", "plan-detail");
 		temp.put("Start Procurement Preparation", "plan-detail");
+		temp.put("Access Application", "access-application-details");
 		// Procurement Plan - End
 
 		// Supplier Management - Start
