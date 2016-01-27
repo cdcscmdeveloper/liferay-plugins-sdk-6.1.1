@@ -20,14 +20,20 @@
 				<p:commandLink oncomplete="accessApplUploadDlg.show();"
 					update="@([id$=accessApplUploadDialog])" process="@this"
 					action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
-					rendered="#{accessApplDoc.brandNew}">
+					rendered="#{accessApplDoc.brandNew and empty accessApplDoc.fileName}">
 					<p:graphicImage value="/css/images/design/upload.png"
 						style="margin-right:2px;" />
 				</p:commandLink>
-				<h:commandLink value="#{accessApplDoc.fileName}" 
+				<p:commandLink value="#{accessApplDoc.fileName}" process="@this"
 								styleClass="blue_font"
-								rendered="#{not accessApplDoc.brandNew}" 
+								rendered="#{not empty accessApplDoc.fileName}" 
 								action="#{accessApplBackingBean.downloadFile(accessApplDoc.filePath)}" />
+				<p:commandLink onclick="deleteAttachmentDlg.show();" process="@this"
+							action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
+							rendered="#{not empty accessApplDoc.fileName and accessApplDoc.brandNew}" >
+			   				<h:graphicImage value="/css/images/design/icon_trash.png" 
+			   					styleClass="tasklist_title1"/>
+			 	</p:commandLink>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
