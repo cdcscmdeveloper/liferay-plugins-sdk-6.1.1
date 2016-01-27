@@ -327,11 +327,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setOrgProfileId(orgProfileId);
 				Long ministryId = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile().getOrgProfileId();
+				Long departmentId = profileSO.retrieveJabatanByOrgProfileId(reqDTO).getPmOrgProfile().getOrgProfileId();
 				
 				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
 				contractReqDTO.setActiveContractSearchBean(searchBean);
 				contractReqDTO.setMinistryId(ministryId);
+				contractReqDTO.setDepartmentId(departmentId);
 				contractReqDTO.setOrgProfileId(orgProfileId);
 				ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReqDTO);
 				
