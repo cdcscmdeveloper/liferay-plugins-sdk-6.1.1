@@ -2792,7 +2792,7 @@
 				<TR>
 					<TD class="columnGenClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.mofRegNoFrom']}" /></TD>
-					<TD><p:inputText maxlength="22"
+					<TD class="column9CheckClass"><p:inputText maxlength="22"
 							value="#{reportBackingBean.smMofRegNoFrom}" style="width:150px;">
 							<p:ajax event="blur"
 								listener="#{reportBackingBean.mofRegNoNumericValidation()}"
@@ -2846,7 +2846,7 @@
 							value="#{lbl['lbl.rpt.mofRegNoFrom']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></TD>
 
-					<TD><p:inputText label="#{lbl['lbl.rpt.mofRegNoFrom']}"
+					<TD class="column8CheckClass"><p:inputText label="#{lbl['lbl.rpt.mofRegNoFrom']}"
 							id="smMofRegNoFrom" maxlength="16"
 							value="#{reportBackingBean.smMofRegNoFrom}" required="true"
 							style="width:150px;">
@@ -2929,7 +2929,7 @@
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.paidaccumulatedshare']}" /></TD>
 					</c:if>
-					<TD><p:inputText maxlength="40"
+					<TD class="column9CheckClass"><p:inputText maxlength="40"
 							value="#{reportBackingBean.smBusPaidUpCapitalFrm}"
 							style="width:150px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
