@@ -245,7 +245,7 @@
 								headerText="Government Seller"
 								buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
 								saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
-								conditionField="recordStatus^1|govtSeller^1" update="@form" />
+								conditionField="#{simpleQuoteBackingBean.govtSellerCriteria}" update="@form" />
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								process="@this,govtSellerId" partialSubmit="true"
 								oncomplete="govtSellerDeletePopUp.show();"
