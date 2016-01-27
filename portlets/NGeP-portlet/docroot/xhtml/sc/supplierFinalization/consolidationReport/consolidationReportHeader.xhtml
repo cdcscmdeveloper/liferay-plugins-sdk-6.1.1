@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:param name="scQt"
+		value="#{consolidationReportBackingBean.managedBean.scQt}" />
+	<ui:param name="validatevalue"
+		value="#{consolidationReportBackingBean.handleProposalValidityDays(scQt)}"></ui:param>
+
+	<div align="left" class="header-info header-spacing">
+		<table style="width: 100%;">
+			<tr>
+				<td style="width: 10%;"><h:outputLabel
+						value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td style="width: 27%;" class="header-info-text">#{scQt.qtNo}</td>
+				<td style="width: 5%;"><h:outputLabel
+						value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td style="width: 32%;" class="header-info-text">
+					#{scQt.pmOrgProfile.orgName}</td>
+
+				<td style="width: 5%;"><h:outputLabel
+						value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
+				<td style="width: 22%;" class="header-info-text">#{scQt.qtValidityPeriod}</td>
+			</tr>
+			<tr>
+				<td style="width: 10%;"><h:outputLabel
+						value="#{lbl['lbl.sc.status']}" /></td>
+				<td style="width: 27%;" class="header-info-text">
+					#{consolidationReportBackingBean.getStatusDescById(
+							consolidationReportBackingBean.managedBean.currentStatusId)}
+				</td>
+
+				<td style="width: 5%;"></td>
+				<td style="width: 32%;" class="header-info-text"></td>
+
+				<td style="width: 5%;"><h:outputLabel
+						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
+				<c:if test="#{validatevalue eq 'true'}">
+					<td style="width: 22%" class="header-info-text">#{scQt.proposalValidityUntil}</td>
+				</c:if>
+				<c:if test="#{validatevalue eq 'false'}">
+					<td style="width: 22%; font-weight: bold; color: red;"
+						class="header-info-text">#{scQt.proposalValidityUntil}</td>
+				</c:if>
+			</tr>
+		</table>
+	</div>
+</ui:composition>
