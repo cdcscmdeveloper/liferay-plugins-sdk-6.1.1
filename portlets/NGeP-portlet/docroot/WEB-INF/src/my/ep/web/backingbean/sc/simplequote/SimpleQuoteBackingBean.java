@@ -454,7 +454,11 @@ public class SimpleQuoteBackingBean extends
 				if (isPanelOrGenItem) {
 					isPanelItemAdded = Boolean.TRUE;
 					CtPanelItem panelItem = getTopPanelItem();
-					if(panelItem != null && panelItem.getItemCategoryId()
+					if(panelItem == null) {
+						//general panel item
+						throw new EpException(MessageConst.ERROR_760160);
+					}
+					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 						throw new EpException(MessageConst.ERROR_760160);
