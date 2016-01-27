@@ -69,7 +69,7 @@ public class ScTrackingDiaryBackingBean extends
 					getFacesScopes().getUserLocale())));
 			
 			docTypeList.add(ParameterConst.DOCTYPE_QUOTATION);
-			docTypeList.add(ParameterConst.DOCTYPE_BIDDING_AWARD);
+			docTypeList.add(ParameterConst.DOCTYPE_BIDDING);
 			docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			

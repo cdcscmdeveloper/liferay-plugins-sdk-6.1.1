@@ -1458,7 +1458,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 			scQtCommittee.setMeetingAttendances(null);
 			setUserDetails(scQtCommittee);
 			
-			if (QTStatusConst.BI_PENDING_CONFIRMATION_COMMITTEE
+			// TODO To be removed - merge supplier finalization method doc types to cater old QTs
+			if (QTStatusConst.SF_PENDING_BIDDING_CONFIRMATION_COMMITTEE
+					.equals(getManagedBean().getCurrentStatusId()) ||
+				QTStatusConst.BI_PENDING_CONFIRMATION_COMMITTEE
 					.equals(getManagedBean().getCurrentStatusId())) {
 				reqDTO.setBiddingMeeting(true);
 			}

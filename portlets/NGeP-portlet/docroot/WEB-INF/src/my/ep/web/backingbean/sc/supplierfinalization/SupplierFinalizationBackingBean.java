@@ -123,8 +123,6 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
-import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -133,7 +131,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -247,7 +244,7 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setInitialDecisionFwdHighAuth(true);
 		} else if ((ParameterConst.DECISION_FORWARD_TO_BPK
 						.equals(dataType.getFcDecision()) || isQTRefinalized()) && 
-					QTStatusConst.SF_ESCALATION_TO_BPK
+					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 							.equals(getManagedBean().getCurrentStatusId())) {
 			getManagedBean().setCommitteeType(StringUtils.EMPTY);
 			getManagedBean().setInitialDecisionFwdToBPK(true);
@@ -1593,13 +1590,13 @@ public class SupplierFinalizationBackingBean extends
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(currentStatusId) || 
-				QTStatusConst.SF_ESCALATION_TO_BPK.equals(currentStatusId)) {
+				QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(currentStatusId)) {
 			this.getManagedBean().setSubmit(true);
 		}
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
-		
-		if (QTStatusConst.DA_PENDING_SIGN_OFF.equals(currentStatusId)) {
+		// TODO To be removed - merge supplier finalization method doc types to cater old QTs
+		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.DA_PENDING_SIGN_OFF.equals(currentStatusId)) {
 			if (CollectionUtils.isNotEmpty(
 					this.getManagedBean().getCommitteeList())) {
 				int totalMembersEndorsed = 0;
@@ -1882,7 +1879,7 @@ public class SupplierFinalizationBackingBean extends
 										   .getDecision().getParameterCode();
 			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 						.equals(currentStatusId) || 
-					QTStatusConst.SF_ESCALATION_TO_BPK
+					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 						.equals(currentStatusId)) && 
 							ParameterConst.DECISION_RECOMMEND_SUPPLIER
 								.equals(decisionTypeCode) ) {
@@ -2121,7 +2118,7 @@ public class SupplierFinalizationBackingBean extends
 		
 		if ((QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 				.equals(getManagedBean().getCurrentStatusId()) || 
-					QTStatusConst.SF_ESCALATION_TO_BPK
+					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 						.equals(getManagedBean().getCurrentStatusId()) || 
 							reportAttachment == null) && !isEvaluationReport) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
@@ -2182,7 +2179,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			if ((QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(getManagedBean().getCurrentStatusId()) ||
-						QTStatusConst.SF_ESCALATION_TO_BPK
+						QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 							.equals(getManagedBean().getCurrentStatusId()) ||
 								attachment == null) && !isEvaluationReport) {
 				attachment = generateDocumentAttachment(report);
