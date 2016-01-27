@@ -3573,8 +3573,8 @@ public class LOIDetailBackingBean extends
 			ParameterResDTO resDTO = parameterSO
 					.retrieveParameterByTypeAndCode(reqDTO);
 			scLoiReport.setDefinationType(resDTO.getPmParameter());
-			scLoiReport
-					.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOI_NEGOTIATION_RESULT); // NR
+			scLoiReport.setDocCategory(
+					ParameterConst.DOCUMENT_CATEGORY_LOI_NEGOTIATION_RESULT); // NR
 		} finally {
 			parameterSO = null;
 		}
