@@ -36,6 +36,13 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -79,7 +86,6 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
-import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -131,13 +137,6 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-
-import org.apache.log4j.Logger;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
 
 /**
  * Backing Bean For Contract
