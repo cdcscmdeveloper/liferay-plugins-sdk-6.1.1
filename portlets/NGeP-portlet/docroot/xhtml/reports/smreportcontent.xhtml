@@ -7,176 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<style type="text/css">
-.columnGenClass {
-	width: 15%;
-}
-
-.columnDateFromClass {
-	width: 10%;
-}
-
-.columnDateToClass {
-	width: 1%;
-}
-
-.columnDateFromWidthClass {
-	width: 46%;
-}
-.columnDateToWidthClass {
-	width: 6.4%;
-}
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.collectorGovRegistrationChkView}">
-.column1CheckClass {
-	width: 14.9%;
-}</c:if>
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.collectorCDCRegistrationChkView}">
-.column1CheckClass {
-	width: 1.7%;
-}</c:if>
-
-.column2CheckClass {
-	width: 12%;
-}
-.column3CheckClass {
-	width: 0%;
-}
-.column4CheckClass {
-	width: 62%;
-}
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationApprovedView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfCompaniesWithDOHEView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfDailyRegisteredApplicationView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfDOHEView
-              || smReportBackingBean.managedBean.rptGenBean.smListDeleteMOFAccountView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfExpiredCompanyView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfSOAView
-              || smReportBackingBean.managedBean.rptGenBean.smProfileRegCompanyView
-              || smReportBackingBean.managedBean.rptGenBean.smVirtualCertificateRelasedListView}">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCDCompanyNameView
-               || smReportBackingBean.managedBean.rptGenBean.smDOCompanyNameView
-               || smReportBackingBean.managedBean.rptGenBean.smMandatoryDOCSupplierTypeView
-               || smReportBackingBean.managedBean.rptGenBean.smCanMandatorySupplierTypeView
-               || smReportBackingBean.managedBean.rptGenBean.smLPCompanyNameView
-               || smReportBackingBean.managedBean.rptGenBean.smCompanyNameView
-               || smReportBackingBean.managedBean.rptGenBean.smPRMandatorySupplierTypeView}">
-.column5CheckClass {
-	width: 27.5%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationRejectedView
-              ||smReportBackingBean.managedBean.rptGenBean.smCompanyAddressListView
-              ||smReportBackingBean.managedBean.rptGenBean.smListOfDailyApplicationBasicAndMOFView
-              ||smReportBackingBean.managedBean.rptGenBean.smListOfSVOSVLView
-              ||smReportBackingBean.managedBean.rptGenBean.smListOfSOPPSVView}">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCDCompanyNameView
-               ||smReportBackingBean.managedBean.rptGenBean.smDARegistrationTypeView
-               ||smReportBackingBean.managedBean.rptGenBean.smMandatoryCompanyNameView
-               ||smReportBackingBean.managedBean.rptGenBean.smSVMandatoryApplicationNoView}">
-.column5CheckClass {
-	width: 26.5%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCategoryStatisticView 
-             || smReportBackingBean.managedBean.rptGenBean.smListOfCompaniesSRSCView }">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smBusCompanyRegistrationStatusView
-             || smReportBackingBean.managedBean.rptGenBean.smLCMandatorySupplierTypeView}">
-.column5CheckClass {
-	width: 24.8%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCategoryStatisticByStateView}">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDistrictView }">
-.column5CheckClass {
-	width: 35.2%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDailyReceiptsESView}">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentToView}">
-.column5CheckClass {
-	width: 26.9%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smListPSMoreView}">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCompanyNameView}">
-.column5CheckClass {
-	width: 23%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smListOfDailyReceiptView}">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDailyReceiptNoView}">
-.column5CheckClass {
-	width: 31%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smListOfPPRFView
-             || smReportBackingBean.managedBean.rptGenBean.smQRSView
-             || smReportBackingBean.managedBean.rptGenBean.smStatisticListCBCView
-             || smReportBackingBean.managedBean.rptGenBean.smSupplierPerformanceView
-             || smReportBackingBean.managedBean.rptGenBean.smCollectionReceiptTransationView
-             || smReportBackingBean.managedBean.rptGenBean.smCollectionReportPaymentMethodView}">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentTypeView
-             || smReportBackingBean.managedBean.rptGenBean.smListOfSOAView
-             || smReportBackingBean.managedBean.rptGenBean.smQRAllSupplierTypeView
-             || smReportBackingBean.managedBean.rptGenBean.smLAMofRegNoView
-             || smReportBackingBean.managedBean.rptGenBean.smMandatoryReciptTransactionReportTypeView
-             || smReportBackingBean.managedBean.rptGenBean.smCPSupplierNameView}">
-.column5CheckClass {
-	width: 29%;
-}
-</c:if>
-</c:if>
-
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDeletePendingApplicationView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfApplicationView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfApplicationStatusView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfGSTRegSupplierView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfOfflineSDPSView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfSOCPBAView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfUsersSCRView
-              || smReportBackingBean.managedBean.rptGenBean.smSupplierStatisticView
-              || smReportBackingBean.managedBean.rptGenBean.smThresholdOrSupplierTransactionView
-              || smReportBackingBean.managedBean.rptGenBean.smListOfCompaniesSortAlphabetView}">
-<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDEMandatoryAllSupplierTypeView
-              || smReportBackingBean.managedBean.rptGenBean.smSupplierTypeView 
-              || smReportBackingBean.managedBean.rptGenBean.smLAApplicationNoView
-              || smReportBackingBean.managedBean.rptGenBean.smGSTSupplierTypeView
-              || smReportBackingBean.managedBean.rptGenBean.smGSTSupplierTypeView
-              || smReportBackingBean.managedBean.rptGenBean.smOFApplicationNoView
-              || smReportBackingBean.managedBean.rptGenBean.smSCPSupplierTypeView
-              || smReportBackingBean.managedBean.rptGenBean.smUserNameView
-              || smReportBackingBean.managedBean.rptGenBean.smSupStateView
-              || smReportBackingBean.managedBean.rptGenBean.smTHMandatorySupplierTypeView
-              || smReportBackingBean.managedBean.rptGenBean.smComSupplierTypeView}">
-.column5CheckClass {
-	width: 21%;
-}
-</c:if>
-</c:if>
-
-.column6CheckClass {
-	width: 0%;
-}
-
-</style>
-
-
 	<div>
 		<table style="width: 100%;">
 			<tr>
@@ -2988,7 +2818,7 @@
 				<TR>
 					<TD class="columnGenClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.mofRegNoFrom']}" /></TD>
-					<TD><p:inputText maxlength="22"
+					<TD class="column5CheckClass"><p:inputText maxlength="22"
 							value="#{reportBackingBean.smMofRegNoFrom}" style="width:150px;">
 							<p:ajax event="blur"
 								listener="#{reportBackingBean.mofRegNoNumericValidation()}"
@@ -3459,9 +3289,10 @@
 					<TD class="columnGenClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.frommonth']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></TD>
-					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.frommonth']}"
-							id="MandatoryFromMonth" value="#{reportBackingBean.smFromMonth}"
-							required="true" style="width:150px;">
+					<TD class="column5CheckClass"><p:selectOneMenu
+							label="#{lbl['lbl.rpt.frommonth']}" id="MandatoryFromMonth"
+							value="#{reportBackingBean.smFromMonth}" required="true"
+							style="width:150px;">
 
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.monthList}"></f:selectItems>
@@ -3510,10 +3341,9 @@
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.yearfrom']}" /></TD>
 					</c:if>
-					<TD><p:selectOneMenu
+					<TD class="column5CheckClass"><p:selectOneMenu
 							value="#{reportBackingBean.smThresholdFromYear}"
 							style="width:175px;">
-
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 							<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
@@ -3524,7 +3354,6 @@
 					<TD><p:selectOneMenu
 							value="#{reportBackingBean.smThresholdToYear}"
 							style="width:150px;">
-
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 							<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
@@ -3577,12 +3406,12 @@
 
 
 
-					<TD><c:if
+					<TD class="column7CheckClass"><c:if
 							test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRegisteredReportTypeDateView}">
 							<p:selectOneMenu label="#{lbl['lbl.rpt.registeredyearfrom']}"
 								id="MandatoryFromYear"
 								value="#{reportBackingBean.smCreatedFromYear}" required="true"
-								style="width:170px;">
+								style="width:294px;">
 								<f:selectItems
 									value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"
@@ -3593,7 +3422,7 @@
 							<p:selectOneMenu label="#{lbl['lbl.rpt.receivedyearfrom']}"
 								id="MandatoryFromYear"
 								value="#{reportBackingBean.smCreatedFromYear}" required="true"
-								style="width:170px;">
+								style="width:294px;">
 								<f:selectItems
 									value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"
@@ -3604,7 +3433,7 @@
 							<p:selectOneMenu label="#{lbl['lbl.rpt.approvedyearfrom']}"
 								id="MandatoryFromYear"
 								value="#{reportBackingBean.smCreatedFromYear}" required="true"
-								style="width:170px;">
+								style="width:294px;">
 								<f:selectItems
 									value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"
@@ -3615,7 +3444,7 @@
 							<p:selectOneMenu label="#{lbl['lbl.rpt.rejectedyearfrom']}"
 								id="MandatoryFromYear"
 								value="#{reportBackingBean.smCreatedFromYear}" required="true"
-								style="width:170px;">
+								style="width:294px;">
 								<f:selectItems
 									value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"
@@ -3626,7 +3455,7 @@
 							<p:selectOneMenu label="#{lbl['lbl.rpt.yearfrom']}"
 								id="MandatoryFromYear"
 								value="#{reportBackingBean.smCreatedFromYear}" required="true"
-								style="width:170px;">
+								style="width:294px;">
 								<f:selectItems
 									value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"
@@ -3639,7 +3468,7 @@
 							value="*" styleClass="mandatory" /></TD>
 					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.dtRangeTo']}"
 							id="MandatoryToYear" value="#{reportBackingBean.smCreatedToYear}"
-							required="true" style="width:150px;">
+							required="true" style="width:297px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 							<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
