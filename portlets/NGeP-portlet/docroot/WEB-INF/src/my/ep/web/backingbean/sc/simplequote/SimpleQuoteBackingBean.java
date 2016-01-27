@@ -1168,11 +1168,14 @@ public class SimpleQuoteBackingBean extends
 		PmParameter pmParameter = new PmParameter();
 		if (pmOrgProfile != null && pmOrgProfile.isGovtSeller()) {
 			isGovtSeller = Boolean.TRUE;
-		} 
+		}
+		
+		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+		 boolean isG2G = catalogueBackingBean.getManagedBean().isG2gFlag();
 		
 		// check supplier is government seller or not
 		if(null == scQuote.getProcurementType()){
-			if(isGovtSeller){
+			if(isGovtSeller || isG2G){
 				pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
 				scQuote.setProcurementType(pmParameter);
 			} else{
@@ -1996,6 +1999,7 @@ public class SimpleQuoteBackingBean extends
 				requestItems.add(requestItem);
 				quote.setRequestItems(requestItems);
 			}
+			
 			if (quote.getRequestNotes() == null
 					|| quote.getRequestNotes().isEmpty()) {
 				List<ScRequestNote> requestNotes = new ArrayList<ScRequestNote>();
@@ -2032,17 +2036,25 @@ public class SimpleQuoteBackingBean extends
 			} else {
 				quote.setSupplierLocationLevel(null);
 			}
+			
+			if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+				if (null == quote.getProcurementTypeCategory()) {
+					throw new EpException(
+							MessageConst.ERROR_760315,
+							new String[] {ResourceBundleUtils.getMessage("lbl.sc.procurment.type.category",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				} else {
+					// procurement type category
+					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+					parameterReqDTO.setParameterId(quote
+							.getProcurementTypeCategory().getParameterId());
+					PmParameter procTypeCategory = getParameterSO()
+							.retrieveParameterById(parameterReqDTO)
+							.getPmParameter();
+					quote.setProcurementTypeCategory(procTypeCategory);
+				}
+			}	
 
-			// procurement type category
-			if (null != quote.getProcurementTypeCategory()) {
-				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO.setParameterId(quote
-						.getProcurementTypeCategory().getParameterId());
-				PmParameter procTypeCategory = getParameterSO()
-						.retrieveParameterById(parameterReqDTO)
-						.getPmParameter();
-				quote.setProcurementTypeCategory(procTypeCategory);
-			}
 
 			// justification type
 			if (quote.getProcurementType().getParameterCode()
@@ -2059,21 +2071,6 @@ public class SimpleQuoteBackingBean extends
 				quote.setJustificationType(getReasonByCategoryAndCode(
 						ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
 								.getJustificationType().getReasonCode()));
-			} else if (quote.getProcurementType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-
-				if (quote.getJustificationType().getReasonCode() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { ResourceBundleUtils.getMessage(
-									"lbl.sc.reason",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
-				}
-
-				/*quote.setJustificationType(getReasonByCategoryAndCode(
-						ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY, quote
-								.getJustificationType().getReasonCode()));*/
-
 			} else {
 				quote.setJustificationType(null);
 			}
