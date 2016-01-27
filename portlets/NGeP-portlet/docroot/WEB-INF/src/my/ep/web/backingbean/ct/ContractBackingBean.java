@@ -42,6 +42,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -59,6 +60,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.circular.CircularReqDTO;
+import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
 import my.ep.dto.ct.dtl.ContractZoneResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -2293,17 +2296,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	  * The method used to find active circular 
 	  * record return boolean value in case record true
 	  */
-	   public boolean chkCircularActiveRecord(){
-		    if(getManagedBean().getContractVer().getCtContract().getCtCircularContracts().size() > 0) {
-			      for(CtCircularContract circularContract : getManagedBean().getContractVer().getCtContract().getCtCircularContracts()) {
-			    	     if(circularContract.getCtCircularVer().getRecordStatusFlg() == 1) {
-			    			   getManagedBean().setCtCircularVer(circularContract.getCtCircularVer());
-			    			   return true;
-			    	       }
-			        } 
-			  }
-			  return false;
-		 }
+	public boolean chkCircularActiveRecord(){
+		ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+		CircularReqDTO reqDTO = new CircularReqDTO();
+		reqDTO.setContractId(getManagedBean().getContractVer().getCtContract().getContractId());
+		CircularResDTO resDTO = circularSO.retrieveCircularVerByContractId(reqDTO);
+		if(resDTO.getCircularVer()!=null) {
+			getManagedBean().setCtCircularVer(resDTO.getCircularVer());
+			return true;
+		} else {
+			return false;
+		}
+	}
 			 
 	 /**
 	   * The method used to render the check box for company name
