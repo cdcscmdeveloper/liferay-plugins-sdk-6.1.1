@@ -193,8 +193,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 					}
 				break;
 	        case ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL:
-	        	rptGenBean.setCmItemTypeView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
+	        	rptGenBean.setCmItemTypeView(true);	        	
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 	            break;
