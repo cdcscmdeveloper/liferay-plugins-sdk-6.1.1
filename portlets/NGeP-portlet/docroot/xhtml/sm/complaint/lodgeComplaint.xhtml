@@ -9,6 +9,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
 <!-- 		<ui:include -->
@@ -16,18 +18,13 @@
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
 		<ac:lovPopup />
-
-		<table class="customTbl">
-			<tr>
-				<td class="tdTitle">&#160;</td>
-				<td class="tdContent"></td>
-
-				<td class="tdTitle">&#160;</td>
-				<td class="tdContent">&#160;</td>
-			</tr>
-		</table>
+		
+		<br />
+		
 		<div align="left">
-			<p:selectBooleanCheckbox></p:selectBooleanCheckbox>
+			<p:selectBooleanCheckbox value="#{complaintBackingBean.managedBean.complaintTerm}">
+				<p:ajax event="change" update="btnSubmitCompl" />
+			</p:selectBooleanCheckbox>
 			<h:outputText value="#{lbl['lbl.sm.complaint.lodge.have.agreed']}"></h:outputText>
 			<p:commandLink style="color:blue;" value="#{lbl['lbl.sm.term.and.condition.header']}" onclick="dlg2.show();" />
 		</div>
@@ -38,8 +35,10 @@
 			</ac:smPanel>
 		</p:dialog>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				action="#{complaintBackingBean.lodgeComplaint}"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])" id="btnSubmitCompl"
+			disabled="#{!complaintBackingBean.managedBean.complaintTerm}" action="#{complaintBackingBean.lodgeComplaint}">
+				<f:param name="disableValidation" value="true" />
+			</p:commandButton>
 		</div>
 	</ui:define>
 </ui:composition>
