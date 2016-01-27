@@ -4355,6 +4355,40 @@ public class SimpleQuoteBackingBean extends
 		criteria.append("recordStatus^1");
 		return criteria.toString();
 	}
+	
+	/**
+	 * Gets the govt seller criteria.
+	 *
+	 * @return the govt seller criteria
+	 */
+	public String getGovtSellerCriteria() {
+		StringBuilder criteria = new StringBuilder();
+		StringBuilder supplierCriteria = new StringBuilder();
+
+		// selected govt seller criteria
+		if (getManagedBean().getGovtSellers() != null
+				&& getManagedBean().getGovtSellers().size() > 0) {
+			for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
+					.getGovtSellers()) {
+				supplierCriteria.append(
+						scQuoteSupplier.getSmSupplier().getSupplierId())
+						.append(",");
+			}
+		}
+
+		if (supplierCriteria.length() > 0) {
+			supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
+			supplierCriteria.append("^").append(
+					SearchOperator.OPERATOR_NOT_IN.value());
+			criteria.append("smSupplier.supplierId").append("^")
+					.append(supplierCriteria.toString()).append("|");
+		} 
+		criteria.append("recordStatus^1")
+		.append("|")
+		.append("govtSeller^1");
+		return criteria.toString();
+	}
+
 
 	/**
 	 * render the view based on the task id page navigation to simple quote
