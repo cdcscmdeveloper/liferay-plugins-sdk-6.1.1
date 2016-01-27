@@ -366,7 +366,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				                  <h:outputText value="#{lbl['lbl.ct.bank.account.name']}" />
 				              </f:facet>
 				               <p:selectOneMenu id="accountId" style="width:250px;margin-bottom: 5px;"
-						           value="#{supVar.bankAccountNo}">
+						           value="#{supVar.bankAccountNo}" disabled="#{panelBackingBean.managedBean.viewContract}">
 						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier, index)}" />
 						          <p:ajax event="change" process="@form"
 							          onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
