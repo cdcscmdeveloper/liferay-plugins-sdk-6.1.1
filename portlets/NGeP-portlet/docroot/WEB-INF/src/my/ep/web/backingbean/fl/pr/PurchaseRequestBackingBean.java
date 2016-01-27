@@ -322,6 +322,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				
 				reqDTO.setRequisitioner(Boolean.TRUE);
 				reqDTO.setApproverUserList(approverUserList);
+				reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 			}
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
