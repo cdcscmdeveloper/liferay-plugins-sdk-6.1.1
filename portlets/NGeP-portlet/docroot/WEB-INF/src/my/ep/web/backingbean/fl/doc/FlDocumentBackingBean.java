@@ -410,6 +410,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				stopInstrBB.getManagedBean().setSelectedTabIndex(0);
 				stopInstrBB.populateStopInstrItem();
 				stopInstrBB.populateChargeLineData();
+				if(isFlFulfilmentApprover()){
+					stopInstrBB.checkCogstr();
+				}
+				
 				stopInstrBB.getManagedBean().setBackToDocument(null);
 				if(resDTO.getFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
