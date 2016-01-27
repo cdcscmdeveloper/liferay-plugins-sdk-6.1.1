@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div>
-		<table style="width: 100%;margin-top:5px;">
+		<table style="width: 100%; margin-top: 5px;">
 			<tr>
 				<td width="100%">
 					<table style="width: 100%;">
@@ -329,47 +329,47 @@
 	<div>
 		<c:if
 			test="#{reportBackingBean.managedBean.rptGenBean.cmCatelogDateView}">
-			<TABLE style="margin-top: -6px; width: 50%;">
+			<TABLE style="width: 100%;">
 				<TR>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmPublishedDateView}">
-						<TD><p:outputLabel
+						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.publisheddatelabel']}"
 								style="width:181px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmApprovedDateView}">
-						<TD><p:outputLabel
+						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.approveddatelabel']}" style="width:181px;" />
 						</TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmSubmittedDateView}">
-						<TD><p:outputLabel
+						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.submitteddatelabel']}"
 								style="width:181px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmExpiredDateView}">
-						<TD><p:outputLabel value="#{lbl['lbl.rpt.expireddatelabel']}"
-								style="width:181px;" /></TD>
+						<TD class="columnGenClass"><p:outputLabel
+								value="#{lbl['lbl.rpt.expireddatelabel']}" style="width:181px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmItemValidityDateView}">
-						<TD><p:outputLabel
+						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.itemvaliditydatelabel']}"
 								style="width:181px;" /></TD>
 					</c:if>
-					<TD><p:calendar showOn="button" navigator="true"
-							display="inline" readonlyInput="true"
+					<TD class="columnDateFromClass"><p:calendar showOn="button"
+							navigator="true" display="inline" readonlyInput="true" size="9"
 							value="#{reportBackingBean.fromDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
-					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
-							 /></TD>
+					<TD class="columnDateToClass"><p:outputLabel
+							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
 					<TD><p:calendar showOn="button" navigator="true"
-							display="inline" readonlyInput="true"
+							display="inline" readonlyInput="true" size="9"
 							value="#{reportBackingBean.toDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">

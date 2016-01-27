@@ -7,6 +7,271 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+<style type="text/css">
+/* 
+  for Common allignement for all screens
+*/
+.columnGenClass {
+	width: 15%;
+}
+
+.columnDateFromClass {
+	width: 11%;
+}
+
+.columnDateToClass {
+	width: 1%;
+}
+
+.columnDateRangeClass {
+	margin-top: -3%;
+}
+
+.columnDateFromWidthClass {
+	width: 46%;
+}
+.columnDateToWidthClass {
+	width: 6.4%;
+}
+
+/* 
+  for SM Screens Allignement
+*/
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.collectorGovRegistrationChkView}">
+.column1CheckClass {
+	width: 14.9%;
+}</c:if>
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.collectorCDCRegistrationChkView}">
+.column1CheckClass {
+	width: 1.7%;
+}</c:if>
+
+.column2CheckClass {
+	width: 12%;
+}
+.column3CheckClass {
+	width: 0%;
+}
+.column4CheckClass {
+	width: 62%;
+}
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationApprovedView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfCompaniesWithDOHEView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfDailyRegisteredApplicationView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfDOHEView
+              || smReportBackingBean.managedBean.rptGenBean.smListDeleteMOFAccountView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfExpiredCompanyView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfSOAView
+              || smReportBackingBean.managedBean.rptGenBean.smProfileRegCompanyView
+              || smReportBackingBean.managedBean.rptGenBean.smVirtualCertificateRelasedListView
+              || smReportBackingBean.managedBean.rptGenBean.smTotalNoOfYearlyARView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfOfflineSDPSView}">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCDCompanyNameView
+               || smReportBackingBean.managedBean.rptGenBean.smDOCompanyNameView
+               || smReportBackingBean.managedBean.rptGenBean.smMandatoryDOCSupplierTypeView
+               || smReportBackingBean.managedBean.rptGenBean.smCanMandatorySupplierTypeView
+               || smReportBackingBean.managedBean.rptGenBean.smLPCompanyNameView
+               || smReportBackingBean.managedBean.rptGenBean.smCompanyNameView
+               || smReportBackingBean.managedBean.rptGenBean.smPRMandatorySupplierTypeView
+               || smReportBackingBean.managedBean.rptGenBean.smFromMonthView
+               || smReportBackingBean.managedBean.rptGenBean.smFromAndToYearView}">
+.column5CheckClass {
+	width: 27.5%;
+}
+</c:if>
+</c:if>
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationRejectedView
+              ||smReportBackingBean.managedBean.rptGenBean.smCompanyAddressListView
+              ||smReportBackingBean.managedBean.rptGenBean.smListOfDailyApplicationBasicAndMOFView
+              ||smReportBackingBean.managedBean.rptGenBean.smListOfSVOSVLView
+              ||smReportBackingBean.managedBean.rptGenBean.smListOfSOPPSVView}">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCDCompanyNameView
+               ||smReportBackingBean.managedBean.rptGenBean.smDARegistrationTypeView
+               ||smReportBackingBean.managedBean.rptGenBean.smMandatoryCompanyNameView
+               ||smReportBackingBean.managedBean.rptGenBean.smSVMandatoryApplicationNoView}">
+.column5CheckClass {
+	width: 26.5%;
+}
+</c:if>
+</c:if>
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCategoryStatisticView 
+             || smReportBackingBean.managedBean.rptGenBean.smListOfCompaniesSRSCView }">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smBusCompanyRegistrationStatusView
+             || smReportBackingBean.managedBean.rptGenBean.smLCMandatorySupplierTypeView}">
+.column5CheckClass {
+	width: 24.8%;
+}
+</c:if>
+</c:if>
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCategoryStatisticByStateView}">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDistrictView }">
+.column5CheckClass {
+	width: 35.2%;
+}
+</c:if>
+</c:if>
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDailyReceiptsESView}">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentToView}">
+.column5CheckClass {
+	width: 26.9%;
+}
+</c:if>
+</c:if>
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smListPSMoreView}">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCompanyNameView}">
+.column5CheckClass {
+	width: 23%;
+}
+</c:if>
+</c:if>
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smListOfDailyReceiptView}">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDailyReceiptNoView}">
+.column5CheckClass {
+	width: 31%;
+}
+</c:if>
+</c:if>
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smListOfPPRFView
+             || smReportBackingBean.managedBean.rptGenBean.smQRSView
+             || smReportBackingBean.managedBean.rptGenBean.smStatisticListCBCView
+             || smReportBackingBean.managedBean.rptGenBean.smSupplierPerformanceView
+             || smReportBackingBean.managedBean.rptGenBean.smCollectionReceiptTransationView
+             || smReportBackingBean.managedBean.rptGenBean.smCollectionReportPaymentMethodView}">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentTypeView
+             || smReportBackingBean.managedBean.rptGenBean.smListOfSOAView
+             || smReportBackingBean.managedBean.rptGenBean.smQRAllSupplierTypeView
+             || smReportBackingBean.managedBean.rptGenBean.smLAMofRegNoView
+             || smReportBackingBean.managedBean.rptGenBean.smMandatoryReciptTransactionReportTypeView
+             || smReportBackingBean.managedBean.rptGenBean.smCPSupplierNameView}">
+.column5CheckClass {
+	width: 29%;
+}
+</c:if>
+</c:if>
+
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDeletePendingApplicationView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfApplicationView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfApplicationStatusView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfGSTRegSupplierView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfOfflineSDPSView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfSOCPBAView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfUsersSCRView
+              || smReportBackingBean.managedBean.rptGenBean.smSupplierStatisticView
+              || smReportBackingBean.managedBean.rptGenBean.smThresholdOrSupplierTransactionView
+              || smReportBackingBean.managedBean.rptGenBean.smListOfCompaniesSortAlphabetView}">
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smDEMandatoryAllSupplierTypeView
+              || smReportBackingBean.managedBean.rptGenBean.smSupplierTypeView 
+              || smReportBackingBean.managedBean.rptGenBean.smLAApplicationNoView
+              || smReportBackingBean.managedBean.rptGenBean.smGSTSupplierTypeView
+              || smReportBackingBean.managedBean.rptGenBean.smGSTSupplierTypeView
+              || smReportBackingBean.managedBean.rptGenBean.smOFApplicationNoView
+              || smReportBackingBean.managedBean.rptGenBean.smSCPSupplierTypeView
+              || smReportBackingBean.managedBean.rptGenBean.smUserNameView
+              || smReportBackingBean.managedBean.rptGenBean.smSupStateView
+              || smReportBackingBean.managedBean.rptGenBean.smTHMandatorySupplierTypeView
+              || smReportBackingBean.managedBean.rptGenBean.smComSupplierTypeView}">
+.column5CheckClass {
+	width: 21%;
+}
+</c:if>
+</c:if>
+
+.column6CheckClass {
+	width: 0%;
+}
+
+.column7CheckClass {
+	width: 38%;
+}
+
+/* 
+  for PM Screens allignement
+*/
+ .pmColumnWidthDateFrom {
+	     width: 10%;
+        }
+
+      .pmColumnWidthDateTo {
+	      width: 1%;
+         }
+	
+          .pmColumn1Width {
+	        width: 14.9%;
+            }
+        <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgTypeView}">
+          .pmColumn2Width {
+        	width: 24.3%;
+          }
+           .pmColumn3Width {
+        	width: 0%;
+          }
+        </c:if>
+        <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmMandatoryOrgNameView}">
+         .pmColumn2Width {
+        	width: 24.3%;
+          }
+        .pmColumn3Width {
+	     width:18.1%;
+         } 
+        </c:if>
+        <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmBusinessRegNoView}">
+         .pmColumn2Width {
+      	width: 26%;
+         } 
+        </c:if>
+         <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmNonMandatoryOrgNameView}">
+         .pmColumn2Width {
+      	width: 24.6%;
+         } 
+        </c:if>
+        
+        <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmProfileStatusView}">
+        .pmColumn2Width {
+      	width: 26%;
+         } 
+         </c:if>
+          <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmItemNameView}">
+        .pmColumn2Width {
+      	width: 32.1%;
+         } 
+         </c:if>
+         <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmPhysicalContractNoView}">
+        .pmColumn2Width {
+      	width: 23.0%;
+         } 
+         </c:if>              
+          <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedItemView}">         
+             <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmFromDateView}">
+            .pmColumn2Width {
+           	 margin-top: 6px;
+         } 
+         </c:if>
+          </c:if>
+          
+          <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmExemptedContractedItemView}">         
+             <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmFromDateView}">
+            .pmColumn2Width {
+           	 margin-top: 4px; 
+         } 
+         </c:if>
+          </c:if>
+          
+          .pmColumn4Width {
+	        width: 32%;
+            }
+          
+
+</style>
+
+
 	<p:messages id="rptmessagesMsg" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="false" />
 	<table style="width: 100%">
@@ -142,36 +407,35 @@
 											</c:if>
 											<tr>
 												<td><ui:include src="smreportcontent.xhtml"></ui:include>
-													<ui:include src="screportcontent.xhtml"></ui:include>
-													<ui:include src="cmreportcontent.xhtml"></ui:include> 
-													<ui:include	src="flreportcontent.xhtml"></ui:include> 
-													<ui:include	src="ctreportcontent.xhtml"></ui:include> 
-													<ui:include	src="ppreportcontent.xhtml"></ui:include>
-													<ui:include	src="pmreportcontent.xhtml"></ui:include> 
-													<ui:include	src="scloadocument.xhtml"></ui:include> 
-													<ui:include	src="cmunspscdialog.xhtml"></ui:include>
-												</td>
+													<ui:include src="screportcontent.xhtml"></ui:include> <ui:include
+														src="cmreportcontent.xhtml"></ui:include> <ui:include
+														src="flreportcontent.xhtml"></ui:include> <ui:include
+														src="ctreportcontent.xhtml"></ui:include> <ui:include
+														src="ppreportcontent.xhtml"></ui:include> <ui:include
+														src="pmreportcontent.xhtml"></ui:include> <ui:include
+														src="scloadocument.xhtml"></ui:include> <ui:include
+														src="cmunspscdialog.xhtml"></ui:include></td>
 											</tr>
 										</table>
 										<div>
 											<c:if
 												test="#{reportBackingBean.managedBean.rptGenBean.fromDateView}">
-												<TABLE style="margin-top: 1px; width: 50%;">
+												<TABLE style="width: 100%;" class="">
 													<TR>
-														<TD><p:outputLabel
+														<TD class="columnGenClass"><p:outputLabel
 																value="#{lbl['lbl.rpt.dtRangeFrm']}"
 																style="width:183px;" /></TD>
-														<TD><p:calendar showOn="button" navigator="true"
-																display="inline" readonlyInput="true"
-																value="#{reportBackingBean.fromDate}"
+														<TD class="columnDateFromClass"><p:calendar
+																showOn="button" navigator="true" display="inline"
+																readonlyInput="true"
+																value="#{reportBackingBean.fromDate}" size="9"
 																pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 																partialSubmit="true" process="@form">
 															</p:calendar></TD>
-														<TD><p:outputLabel
-																value="#{lbl['lbl.rpt.dtRangeTo']}" />
-														</TD>
+														<TD class="columnDateToClass"><p:outputLabel
+																value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
 														<TD><p:calendar showOn="button" navigator="true"
-																display="inline" readonlyInput="true"
+																display="inline" readonlyInput="true" size="9"
 																value="#{reportBackingBean.toDate}"
 																pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 																partialSubmit="true" process="@form">
