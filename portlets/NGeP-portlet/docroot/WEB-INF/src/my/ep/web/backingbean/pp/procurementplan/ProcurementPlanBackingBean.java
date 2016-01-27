@@ -3285,6 +3285,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("resetPlanSearchBean");
 		this.getManagedBean().setSearch(false);
 		this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
+		getManagedBean().setSelectedMinistry(null);
+		getManagedBean().setSelectedKumpulanPTJ(null);
+		getManagedBean().setSelectedPTJ(null);
 		setupOrgProfile();
 		generateOrgFilter();
 		ppPlanDataModel = new PpPlanDataModel();
