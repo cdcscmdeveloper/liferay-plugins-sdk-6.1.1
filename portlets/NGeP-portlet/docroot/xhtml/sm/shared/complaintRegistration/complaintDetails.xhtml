@@ -45,7 +45,7 @@
 						<p:selectManyCheckbox id="offense" value="#{complaintBackingBean.managedBean.selectedOffenses}" 
 						disabled="#{complaintBackingBean.managedBean.smComplaint.pmStatus != null and 
 						complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.newComplaint}" 
-						required="#{!empty param['disableValidation']}">
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.complaint.type']}">
 							<f:selectItems value="#{complaintBackingBean.getRadioButtonValues(ParameterTypeConst.complaintType)}" />
 						</p:selectManyCheckbox>
 						<p:message id="offenseMsg" for="offense" display="icon" />
@@ -81,7 +81,7 @@
 						</p:commandLink>
 						
 				<p:commandLink action="#{complaintBackingBean.attachmentDownload(complDoc)}" ajax="false"
-						update="@([id$=attachmentDeleteDlg])" rendered="#{!complaintBackingBean.managedBean.smComplaint.brandNew}">
+						 rendered="#{!complaintBackingBean.managedBean.smComplaint.brandNew}">
 							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.btn.download']}" />
 				</p:commandLink>
 			</p:column>
@@ -110,5 +110,4 @@
 			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="attachmentDeleteDlg.hide();"></p:commandButton>
 		</div>
 	</p:dialog>
-
 </ui:composition>
