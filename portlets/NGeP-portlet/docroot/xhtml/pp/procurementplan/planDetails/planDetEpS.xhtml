@@ -176,7 +176,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
-	        <p:column>
+	         <p:column style="text-align:center;">
 	        	<p:commandLink oncomplete="dlItemJustificationWv.show();"  update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
 			    	 id="clEpJustification">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
