@@ -31,17 +31,25 @@
 			</p:scrollPanel>
 			</p:panel>
 			<br />
-			<p:panel id="captchaPanel" >
-				<p:inputText value="#{registrationBackingBean.managedBean.captchaAnswer}" 
-					validator="#{registrationBackingBean.validateCaptcha}"
-					size="10" />
-				<p:graphicImage id="captchaText" value="#{registrationBackingBean.captchaTextImage}" />
-				&#160;
-				<p:commandLink update="captchaText" >
-					<p:graphicImage value="/css/images/design/ico-refresh.png" />
-				</p:commandLink>
-				<p:messages id="messages" showDetail="true" autoUpdate="true"
-					closable="true" showSummary="false"/>
+			<p:panel id="captchaPanel">
+				<table>
+					<tr>
+						<td width="220px">
+							<p:inputText value="#{registrationBackingBean.managedBean.captchaAnswer}" 
+								validator="#{registrationBackingBean.validateCaptcha}"
+								size="10" />
+							<p:graphicImage id="captchaText" value="#{registrationBackingBean.captchaTextImage}" />
+							&#160;
+							<p:commandLink update="captchaText" >
+								<p:graphicImage value="/css/images/design/ico-refresh.png" />
+							</p:commandLink>
+						</td>
+						<td>
+							<p:messages id="messages" showDetail="true" autoUpdate="true"
+								closable="true" showSummary="false"/>
+						</td>
+					</tr>
+				</table>
 			</p:panel>
 			<br />
 			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}" 
