@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:outputPanel id="opTnc" rendered="#{isBrandNew}">
+		<p:panel header="#{lbl['lbl.pm.access.app.tnc.header']}"
+			toggleable="true" id="tncPnl">
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc1']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc2']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc3']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc4']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc4.list']}" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.tnc.desc5']}" />
+			<p:selectBooleanCheckbox id="isTncChkBox"
+				value="#{accessApplBackingBean.managedBean.tncChecked}">
+				<p:ajax update="@this,:form:accessApplBttnOp" />
+			</p:selectBooleanCheckbox>
+			<h:outputText escape="true"
+				value="#{lbl['lbl.pm.access.app.tnc.agree']}" />
+
+		</p:panel>
+		<p:panel header="#{lbl['lbl.pm.access.app.declaration']}"
+			toggleable="true" id="declPnl">
+			<p:selectBooleanCheckbox id="isDeclChkBox"
+				value="#{accessApplBackingBean.managedBean.declarationChecked}">
+				<p:ajax update="@this,:form:accessApplBttnOp"  />
+			</p:selectBooleanCheckbox>
+			<h:outputText escape="false"
+				value="#{lbl['lbl.pm.access.app.declaration.desc']}" />
+
+		</p:panel>
+	</p:outputPanel>
+</ui:composition>

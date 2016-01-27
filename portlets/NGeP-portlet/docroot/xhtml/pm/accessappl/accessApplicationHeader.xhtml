@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:outputPanel id="opStatusDtl" rendered="#{not isBrandNew}">
+		<div align="left" class="header-info header-spacing">
+			<table style="width:100%">
+				<tr>
+					<td width="6%">
+						<p:outputLabel value="#{lbl['lbl.pm.access.app.app.no']}" />  
+					</td>
+					<td class="header-info-text" width="30%">
+						#{accessApplBackingBean.managedBean.accessAppl.applNo}
+					</td>
+					<td width="8%">
+						<p:outputLabel value="#{lbl['lbl.pm.access.app.app.date']}" />
+					</td>
+					<td class="header-info-text" width="33%">
+					<h:outputText value="#{accessApplBackingBean.managedBean.accessAppl.createdDate}" >
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+					</h:outputText> 
+					</td>
+					<td width="5%">
+						<p:outputLabel value="#{lbl['lbl.pm.status']}" />  
+					</td>
+					<td class="header-info-text" width="18%">
+						#{accessApplBackingBean.getStatusDescById(accessApplBackingBean.managedBean.accessAppl.currentStatus)}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</p:outputPanel>
+
+
+</ui:composition>

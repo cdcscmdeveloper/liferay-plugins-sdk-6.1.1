@@ -1,0 +1,267 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel header="#{lbl['lbl.pm.access.app.applicant']}"
+		toggleable="true" id="appInfoPnl">
+		<table>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:selectOneMenu
+						styleClass="ppDropDownWidthL" id="somSalutation"
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}" 
+						label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.salutationCode.salutationId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{accessApplBackingBean.salutationOptions()}"
+							var="salutation" itemLabel="#{salutation.salutationName}"
+							itemValue="#{salutation.salutationId}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="@this" />
+					</p:selectOneMenu></td>
+				<td><p:message id="somSalutationMsg" for="somSalutation"
+						display="icon" /></td>
+
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.profiles.resorg.table.name']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:inputText styleClass="ppDisplayTextL"
+						id="itName" maxlength="50" 
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.profiles.resorg.table.name']}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.applicantName}">
+						<p:ajax event="blur" partialSubmit="true" process="@this"
+							update="@this" />
+					</p:inputText></td>
+				<td><p:message id="itNameMsg" for="itName" display="icon" /></td>
+
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.sm.identificationno']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:inputText id="itIdentityNo"
+						styleClass="ppDisplayTextL"
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.identificationNo}"
+						size="30" maxlength="12"
+						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
+						<f:validateRegex pattern="[0-9]+" />
+						<f:validateLength minimum="12" />
+					</p:inputText></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.profiles.userdetails.designation']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:inputText styleClass="ppDisplayTextL"
+						maxlength="30" id="itDesignation" 
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.designation}" />
+				</td>
+				<td><p:message id="itDesignationMsg" for="itDesignation"
+						display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.profiles.userdetails.grade']}" /></td>
+				<td class="tdContent"><p:inputText 
+						id="userGrade"
+						disabled="#{not isBrandNew}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.grade}"
+						maxlength="10" label="#{lbl['lbl.pm.profiles.userdetails.grade']}" />
+				</td>
+				<td><p:message id="userGradeMsg" for="userGrade" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.access.app.email']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td class="tdContent"><p:inputText size="40" id="usrEmail"
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.access.app.email']}" maxlength="80"
+						value="#{accessApplBackingBean.managedBean.accessAppl.email}"
+						validatorMessage="#{lbl['lbl.sm.invalidEmail']}">
+						<f:validateRegex disabled="#{empty param['disableValidation']}"
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText> &#160; <p:graphicImage id="emailti"
+						value="/css/images/design/tooltips.png" /> <p:tooltip
+						id="emailtt" for="emailti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.email']}" />
+					</p:tooltip> <p:message id="usrEmailMsg" for="usrEmail" display="icon" /></td>
+			</tr>
+
+			<ui:fragment rendered="#{isBrandNew}">
+				<tr>
+					<td class="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.pm.access.app.confirm.email']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td class="tdContent"><p:inputText size="40" 
+							id="conEmail"
+							value="#{accessApplBackingBean.managedBean.accessAppl.confirmEmail}"
+							disabled="#{not isBrandNew}"
+							required="#{!empty param['disableValidation']}"
+							label="#{lbl['lbl.pm.access.app.confirm.email']}" maxlength="80" /> <p:message
+							id="conEmailMsg" for="conEmail" display="icon" /></td>
+				</tr>
+			</ui:fragment>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.contact.phone']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><ac:phone id="contactPhone" isMobile="false"
+						label="#{lbl['lbl.pm.contact.phone']}"
+						countryCode="#{accessApplBackingBean.managedBean.accessAppl.phoneCountry}"
+						areaCode="#{accessApplBackingBean.managedBean.accessAppl.phoneArea}"
+						number="#{accessApplBackingBean.managedBean.accessAppl.phoneNo}"
+						validatorMessage="#{lbl['lbl.pm.contact.phone']} - #{lbl['lbl.pm.profiles.invalidNo']}"
+						required="#{!empty param['disableValidation']}"
+						disabled="#{not isBrandNew}" /></td>
+				<td><p:message id="contactPhoneMsg" for="contactPhone"
+						display="icon" /></td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.contact.fax']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td><ac:phone id="contactFax" isMobile="false"
+						label="#{lbl['lbl.pm.contact.fax']}"
+						countryCode="#{accessApplBackingBean.managedBean.accessAppl.faxCountry}"
+						areaCode="#{accessApplBackingBean.managedBean.accessAppl.faxArea}"
+						number="#{accessApplBackingBean.managedBean.accessAppl.faxNo}"
+						validatorMessage="#{lbl['lbl.pm.contact.fax']} - #{lbl['lbl.pm.profiles.invalidNo']}"
+						required="#{!empty param['disableValidation']}"
+						disabled="#{not isBrandNew}" /></td>
+				<td><p:message id="contactFaxMsg" for="contactFax"
+						display="icon" /></td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.address.address']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="itAddress1"
+						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.address1}"
+						size="40" /></td>
+				<td><p:message for="itAddress1" id="itAddress1Msg"
+						display="icon" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						disabled="#{not isBrandNew}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.address2}"
+						size="40" maxlength="255" /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						disabled="#{not isBrandNew}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.address3}"
+						size="40" maxlength="255" /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						disabled="#{not isBrandNew}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.address4}"
+						size="40" maxlength="255" /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="dpostCode"
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.address.postcode']}" maxlength="5" size="20"
+						value="#{accessApplBackingBean.managedBean.accessAppl.postcode}"
+						styleClass="ppDisplayTextL"
+						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.access.app.invalid.postcode']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						<f:validateLength minimum="5" />
+					</p:inputText></td>
+				<td><p:message for="dpostCode" id="dpostCodeMsg" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="dState" 
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.address.state']}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.pmState.stateId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{accessApplBackingBean.getStateList()}"
+							var="state" itemLabel="#{state.stateName}"
+							itemValue="#{state.stateId}" />
+						<p:ajax event="change" update="dDistrict,dCity" process="@this"
+							listener="#{accessApplBackingBean.retrievePmState(accessApplBackingBean.managedBean.accessAppl.pmState)}" />
+					</p:selectOneMenu></td>
+				<td><p:message for="dState" id="dStateMsg" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="dDistrict" 
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.address.district']}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.pmDistrict.districtId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{accessApplBackingBean.getDistrictList(accessApplBackingBean.managedBean.accessAppl.pmState.stateId)}"
+							var="district" itemLabel="#{district.districtName}"
+							itemValue="#{district.districtId}" />
+						<p:ajax event="change" update="dDistrict,dCity"
+							listener="#{accessApplBackingBean.retrievePmDistrict(accessApplBackingBean.managedBean.accessAppl.pmDistrict)}" />
+					</p:selectOneMenu></td>
+				<td><p:message for="dDistrict" id="dDistrictMsg" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="dCity" 
+						disabled="#{not isBrandNew}"
+						required="#{!empty param['disableValidation']}"
+						label="#{lbl['lbl.pm.address.city']}"
+						value="#{accessApplBackingBean.managedBean.accessAppl.pmCity.cityId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{accessApplBackingBean.getCityList(accessApplBackingBean.managedBean.accessAppl.pmDistrict.districtId)}"
+							var="city" itemLabel="#{city.cityName}"
+							itemValue="#{city.cityId}" />
+						<p:ajax event="change" update="dCity"
+							listener="#{accessApplBackingBean.retrievePmCity(accessApplBackingBean.managedBean.accessAppl.pmCity)}" />
+					</p:selectOneMenu></td>
+				<td><p:message id="dCityMsg" for="dCity" display="icon" /></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>
