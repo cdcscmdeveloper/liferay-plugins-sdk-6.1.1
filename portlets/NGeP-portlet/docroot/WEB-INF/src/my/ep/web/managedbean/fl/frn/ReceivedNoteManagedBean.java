@@ -112,7 +112,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
 	private String bpmTaskName;
-	private boolean lastFRNTaxInv;;
+	private boolean lastFRNTaxInv;
 	private List<PmUser> approverList;
 	
 	private boolean acknowledged;
@@ -150,6 +150,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private List<PmUser> pmUserList;
 	
 	private PmUser selectedAckOfficer;
+	private boolean issuanceCogstrCheck;
 	
 	
 	/**
@@ -894,6 +895,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedAckOfficer(PmUser selectedAckOfficer) {
 		this.selectedAckOfficer = selectedAckOfficer;
+	}
+
+	/**
+	 * @return the issuanceCogstrCheck
+	 */
+	public boolean isIssuanceCogstrCheck() {
+		return issuanceCogstrCheck;
+	}
+
+	/**
+	 * @param issuanceCogstrCheck the issuanceCogstrCheck to set
+	 */
+	public void setIssuanceCogstrCheck(boolean issuanceCogstrCheck) {
+		this.issuanceCogstrCheck = issuanceCogstrCheck;
 	}
 
 }

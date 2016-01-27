@@ -73,7 +73,9 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private List<PmUser> approverList;
     
     private boolean hyperLinkPage = false;
-	
+    private boolean issuanceCogstrCheck;
+    private boolean coGstr;
+    
 	/**
 	 * Gets the reason descs.
 	 *
@@ -328,6 +330,34 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	 */
 	public void setHyperLinkPage(boolean hyperLinkPage) {
 		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	/**
+	 * @return the issuanceCogstrCheck
+	 */
+	public boolean isIssuanceCogstrCheck() {
+		return issuanceCogstrCheck;
+	}
+
+	/**
+	 * @param issuanceCogstrCheck the issuanceCogstrCheck to set
+	 */
+	public void setIssuanceCogstrCheck(boolean issuanceCogstrCheck) {
+		this.issuanceCogstrCheck = issuanceCogstrCheck;
+	}
+
+	/**
+	 * @return the coGstr
+	 */
+	public boolean isCoGstr() {
+		return coGstr;
+	}
+
+	/**
+	 * @param coGstr the coGstr to set
+	 */
+	public void setCoGstr(boolean coGstr) {
+		this.coGstr = coGstr;
 	}
 
 }
