@@ -7563,7 +7563,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>scConsolidationReport</portlet-name>
-		<display-name>Consolidation Report</display-name>
+		<display-name>Consolidation Of Report</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
