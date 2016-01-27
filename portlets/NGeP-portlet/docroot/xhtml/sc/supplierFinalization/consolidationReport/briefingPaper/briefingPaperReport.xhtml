@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sc.report.section']}" toggleable="true">
+		
+		<p:dataTable id="reportTbl" value="#{consolidationReportBackingBean.managedBean.finalizationReports}" 
+			widgetVar="reportWidget" var="report" rows="10" rowKey="#{report}" 
+			rowIndexVar="rowIndex" styleClass="documentslist" 
+			selection="#{consolidationReportBackingBean.managedBean.selectedFinalizationReports}">
+						
+			<ac:paginator for="reportTbl" />
+			
+			<p:column selectionMode="multiple" style="width:2%" 
+					  disabledSelection="#{!empty report.pmDocument}" />
+
+			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:78%;">
+				<h:inputText style="width:96%" value="#{report.title}" rendered="#{empty report.pmDocument}" />
+				<h:outputText value="#{report.title}" rendered="#{!empty report.pmDocument}" />
+			</p:column>
+			
+			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
+				<ui:fragment rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
+					<h:commandLink value="#{report.scQtFinalizationReportAttachment.fileName}" styleClass="blue_font"
+								   action="#{consolidationReportBackingBean.downloadFile(
+													report.scQtFinalizationReportAttachment)}" />
+					<p:commandLink immediate="true" 
+						rendered="#{!empty report.scQtFinalizationReportAttachment.fileName}" update="reportTbl">
+						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
+							styleClass="tasklist_title1" />
+
+						<f:setPropertyActionListener target="#{report.scQtFinalizationReportAttachment}" value="#{null}" />
+					</p:commandLink>
+
+					<p:commandButton oncomplete="attachmentPopupDlg.show();"
+						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true" process="@this"
+						rendered="#{empty report.scQtFinalizationReportAttachment.fileName}"
+						update="@([id$=attachmentPopup])">
+						<f:setPropertyActionListener
+							target="#{consolidationReportBackingBean.managedBean.selectedFinalizationReport}"
+							value="#{report}" />
+						<f:setPropertyActionListener value="KTR"
+							target="#{consolidationReportBackingBean.managedBean.attachmentDocType}" />
+					</p:commandButton>
+				</ui:fragment>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:20%; text-align:center;">
+				<p:commandButton id="download" icon="ui-icon-download" 
+					style="background-color:transparent !important; border:0px none;"
+					ajax="false" action="#{consolidationReportBackingBean.downloadReport(report)}"
+					rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload 
+											? !empty report.scQtFinalizationReportAttachment.fileName : true}" />
+			</p:column>
+		</p:dataTable>
+		
+		<div class="ppRightBtn BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"	
+				action="#{consolidationReportBackingBean.downloadAllReports}" />
+				
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this, reportTbl" partialSubmit="true"
+				action="#{consolidationReportBackingBean.addFinalizationReportAction}"
+				oncomplete="reportWidget.paginator.endLink.click();" 
+				update="@([id$=reportTbl])"/>
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, reportTbl" partialSubmit="true"
+				oncomplete="deleteReportPopup.show();"
+				update="@([id$=#{deleteReportPopupId}])" />				
+		</div>
+		
+		<ac:confirmationPopup id="deleteReportPopupId" title="#{lbl['lbl.msg.confirm.delete.header']}"
+			width="400" height="100" widget="deleteReportPopup" 
+			okAction="consolidationReportBackingBean.deleteFinalizationReportAction" 
+			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+					
+	</p:panel>
+	
+</ui:composition>
