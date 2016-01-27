@@ -1348,6 +1348,8 @@ public class SupplierFinalizationBackingBean extends
 							awardQty = scQtRecommend.getRequestItem().getQuantity();
 						}
 						detail.setAwardQty(awardQty);
+						detail.setScQtProposalItem(qtProposalItem);
+						
 						toBeAddedSet.add(detail);
 						
 						break;
@@ -1452,6 +1454,7 @@ public class SupplierFinalizationBackingBean extends
 			awardQty = scQtRecommend.getRequestItem().getQuantity();
 		}
 		recommendDtl.setAwardQty(awardQty);
+		recommendDtl.setScQtProposalItem(qtProposalItem);
 
 		return recommendDtl;
 	}
