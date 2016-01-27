@@ -745,7 +745,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		getManagedBean().setPidApprovers(directPurchaseDataType.getPidApprover());
-		getManagedBean().setPidNo(directPurchaseDataType.getPidNumber());
+		getManagedBean().setPidNo(directPurchaseDataType.getPidDocumentNumber());
 		getManagedBean().setPurchaseInDefaultId(directPurchaseDataType.getPidId());
 		
 		requestNoteReqDTO.setRequestNoteId(dpId);
