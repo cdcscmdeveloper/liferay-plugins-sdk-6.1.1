@@ -3671,3 +3671,15 @@ table.taxableGuidelineTable td {
 	margin-right:5px;
 
 }
+
+.LIGHTORANGE{
+	background-color : rgb(255,201,102)!important;
+}
+
+.RED{
+	background-color: red !important; 
+}
+
+.DEFAULT{
+	background-color: white !important; 
+}
