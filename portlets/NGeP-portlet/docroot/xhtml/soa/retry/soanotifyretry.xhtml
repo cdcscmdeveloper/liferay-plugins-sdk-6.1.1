@@ -8,21 +8,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="resourceSection">
-	
-	<style type="text/css">
-		.LIGHTORANGE{
-			background-color : rgb(255,201,102)!important;
-		}
-		
-		.RED{
-			background-color: red !important; 
-		}
-		
-		.DEFAULT{
-			background-color: white !important; 
-		}
-	</style>
-	
 	</ui:define>
 	
 	<ui:define name="contentSection">
@@ -68,51 +53,36 @@
 									<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 
 									<p:column headerText="#{lbl['lbl.portal.soa.transId']}">
-							
-									<p:commandLink 
-										action="#{soaNotifyRetryBackingBean.managedBean.setPayload(notifyRetry.transId, notifyRetry.payload)}"
-										oncomplete="payloadPopUp.show()" update="@form">
-										#{notifyRetry.transId}			
-									</p:commandLink>
-							
-									</p:column>
-									
-									<p:column headerText="#{lbl['lbl.portal.soa.targetSystem']}">
-										#{notifyRetry.targetSystem}
+										<p:commandLink 
+											action="#{soaNotifyRetryBackingBean.managedBean.setPayload(notifyRetry.transId, notifyRetry.payload)}"
+											oncomplete="payloadPopUp.show()" update="@form">
+											#{notifyRetry.transId}			
+										</p:commandLink>
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.portal.soa.serviceName']}">
 											#{notifyRetry.serviceName}
 									</p:column>
 									
-									<p:column headerText="#{lbl['lbl.portal.soa.version']}">
-										#{notifyRetry.serviceVersion}
+									<p:column headerText="#{lbl['lbl.portal.soa.targetSystem']}">
+										#{notifyRetry.targetSystem}
 									</p:column>
 									
-									<p:column headerText="#{lbl['lbl.portal.soa.retryCount']}" styleClass="#{soaNotifyRetryBackingBean.getRetryCountFieldColor(notifyRetry.retryCount)}">
-										#{notifyRetry.retryCount}
-									</p:column>
-									
-									<p:column headerText="#{lbl['lbl.portal.soa.errMsg']}">
+									<p:column headerText="#{lbl['lbl.portal.soa.statusDesc']}">
 										#{notifyRetry.errorMsg}
 									</p:column>
 									
 									<p:column headerText="#{lbl['lbl.portal.soa.dateTime']}"
 										style="text-align: right;width:2%;">
 									
-										<h:outputText value="#{notifyRetry.createdDate}">
+										<h:outputText value="#{notifyRetry.changedDate}">
 											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
 										</h:outputText>
 									
 									</p:column>
 									
-									<p:column headerText="#{lbl['lbl.portal.soa.changedDateTime']}"
-										style="text-align: right;width:2%;">
-									
-										<h:outputText value="#{notifyRetry.changedDate}">
-											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
-										</h:outputText>
-									
+									<p:column headerText="#{lbl['lbl.portal.soa.retryCount']}" styleClass="#{soaServiceRetryBackingBean.getRetryCountFieldColor(serviceretry.retryCount)}">
+										#{notifyRetry.retryCount}
 									</p:column>
 									
 								</p:dataTable>
