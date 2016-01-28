@@ -13,7 +13,7 @@
 						value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu
-						styleClass="ppDropDownWidthL" id="somSalutation"
+						id="somSalutation"
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}" 
 						label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
@@ -36,7 +36,7 @@
 						value="#{lbl['lbl.pm.profiles.resorg.table.name']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText styleClass="ppDisplayTextL"
-						id="itName" maxlength="50" 
+						id="itName" maxlength="50"  size="40" 
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.profiles.resorg.table.name']}"
@@ -52,12 +52,12 @@
 						value="#{lbl['lbl.sm.identificationno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText id="itIdentityNo"
-						styleClass="ppDisplayTextL"
+						styleClass="ppDisplayTextL" size="40" 
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 						value="#{accessApplBackingBean.managedBean.accessAppl.identificationNo}"
-						size="30" maxlength="12"
+						maxlength="12"
 						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
 						<f:validateRegex pattern="[0-9]+" />
 						<f:validateLength minimum="12" />
@@ -69,7 +69,7 @@
 						value="#{lbl['lbl.pm.profiles.userdetails.designation']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText styleClass="ppDisplayTextL"
-						maxlength="30" id="itDesignation" 
+						maxlength="30" id="itDesignation" size="40" 
 						disabled="#{not isBrandNew}"
 						required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
@@ -83,7 +83,7 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.pm.profiles.userdetails.grade']}" /></td>
 				<td class="tdContent"><p:inputText 
-						id="userGrade"
+						id="userGrade" size="40" 
 						disabled="#{not isBrandNew}"
 						value="#{accessApplBackingBean.managedBean.accessAppl.grade}"
 						maxlength="10" label="#{lbl['lbl.pm.profiles.userdetails.grade']}" />
