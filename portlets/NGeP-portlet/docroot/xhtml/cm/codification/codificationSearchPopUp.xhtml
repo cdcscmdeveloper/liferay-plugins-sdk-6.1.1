@@ -11,38 +11,36 @@
 		<table width="100%;">
 
 			<tr>
-				<td width="10%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.popup.segment']} :"></p:outputLabel></td>
-			    <td colspan="1"><h:outputText
+				<td width="15%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.segment.code']} :"></p:outputLabel></td>
+			    <td><h:outputText
 						value="#{codificationBackingBean.managedBean.segmentCode}"
 						size="25"/></td>
-			    <td width="1%"/>
-				<td width="10%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.doc.title.segment']} :"></p:outputLabel></td>
-				<td colspan="1"><h:outputText value="#{codificationBackingBean.managedBean.segmentTitle}" 
+			  
+				<td width="15%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.segment.title']} :"></p:outputLabel></td>
+				<td><h:outputText value="#{codificationBackingBean.managedBean.segmentTitle}" 
 			        	style="white-space:normal!important;"		
 						size="75"/></td>
 			</tr>
 			<tr>
-				<td width="10%"><p:outputLabel  style="font-weight: bold;" value="#{lbl['lbl.cm.popup.family']} :"></p:outputLabel></td>
-				<td colspan="1"><h:outputText id="familyCode"
+				<td width="15%"><p:outputLabel  style="font-weight: bold;" value="#{lbl['lbl.cm.family.code']} :"></p:outputLabel></td>
+				<td><h:outputText id="familyCode"
 						value="#{codificationBackingBean.managedBean.familyCode}"	
 						size="25" disabled="true" />
 					</td>
-			    <td width="1%"/>
-				<td width="10%"><p:outputLabel  style="font-weight: bold;" value="#{lbl['lbl.cm.doc.title.family']} :"></p:outputLabel></td>
-				<td colspan="1"><h:outputText
+			  
+				<td width="15%"><p:outputLabel  style="font-weight: bold;" value="#{lbl['lbl.cm.family.title']} :"></p:outputLabel></td>
+				<td><h:outputText
 						value="#{codificationBackingBean.managedBean.familyTitle}" style="white-space:normal!important;"	
 						size="75" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td width="10%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.popup.class']} :"></p:outputLabel></td>
-				<td colspan="1"><h:outputText id="classCode"
+				<td width="15%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.class.code']} :"></p:outputLabel></td>
+				<td><h:outputText id="classCode"
 						value="#{codificationBackingBean.managedBean.classCode}" size="25"
 						disabled="true" />
-					
 				</td>
-				<td width="1%"/>
-				<td width="10%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.doc.title.class']} :"></p:outputLabel></td>
-				<td colspan="1"><h:outputText
+				<td width="15%"><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.class.title']} :"></p:outputLabel></td>
+				<td><h:outputText
 						value="#{codificationBackingBean.managedBean.classTitle}" style="white-space:normal!important;"	
 						size="75" disabled="true" /></td>
 			</tr>
