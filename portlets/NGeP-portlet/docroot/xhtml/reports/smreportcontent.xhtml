@@ -73,7 +73,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td width="100%"><h:panelGrid id="smReportCriteria" columns="4"
-						columnClasses="columnGenClass,column5CheckClass"
+						columnClasses="columnGenClass,column5CheckClass,column11CheckClass,column12CheckClass"
 						style="width:100%;">
 
 						<c:if
@@ -2793,7 +2793,7 @@
 					<TD class="columnGenClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.mofRegNoFrom']}" /></TD>
 					<TD class="column9CheckClass"><p:inputText maxlength="22"
-							value="#{reportBackingBean.smMofRegNoFrom}" style="width:150px;">
+							value="#{reportBackingBean.smMofRegNoFrom}" style="width:289px;">
 							<p:ajax event="blur"
 								listener="#{reportBackingBean.mofRegNoNumericValidation()}"
 								process="@form" partialSubmit="true" update="@form" />
@@ -2801,7 +2801,7 @@
 					<TD class="columnGenClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
 					<TD><p:inputText maxlength="22"
-							value="#{reportBackingBean.smMofRegNoTo}" style="width:150px;">
+							value="#{reportBackingBean.smMofRegNoTo}" style="width:289px;">
 							<p:ajax event="blur"
 								listener="#{reportBackingBean.mofRegNoNumericValidation()}"
 								process="@form" partialSubmit="true" update="@form" />
@@ -2819,7 +2819,7 @@
 					<TD class="columnGenClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.mofRegNoFrom']}" /></TD>
 					<TD class="column5CheckClass"><p:inputText maxlength="22"
-							value="#{reportBackingBean.smMofRegNoFrom}" style="width:150px;">
+							value="#{reportBackingBean.smMofRegNoFrom}" style="width:289px;">
 							<p:ajax event="blur"
 								listener="#{reportBackingBean.mofRegNoNumericValidation()}"
 								process="@form" partialSubmit="true" update="@form" />
@@ -2827,7 +2827,7 @@
 					<TD class="columnGenClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
 					<TD><p:inputText maxlength="22"
-							value="#{reportBackingBean.smMofRegNoTo}" style="width:150px;">
+							value="#{reportBackingBean.smMofRegNoTo}" style="width:289px;">
 							<p:ajax event="blur"
 								listener="#{reportBackingBean.mofRegNoNumericValidation()}"
 								process="@form" partialSubmit="true" update="@form" />
@@ -2849,7 +2849,7 @@
 					<TD class="column8CheckClass"><p:inputText label="#{lbl['lbl.rpt.mofRegNoFrom']}"
 							id="smMofRegNoFrom" maxlength="16"
 							value="#{reportBackingBean.smMofRegNoFrom}" required="true"
-							style="width:150px;">
+							style="width:289px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 						</p:inputText></TD>
 					<TD><p:message id="smMofRegNoFromMsg" for="smMofRegNoFrom"
@@ -2859,7 +2859,7 @@
 					<TD><p:inputText label="#{lbl['lbl.rpt.mofRegNoTo']}"
 							id="smMofRegNoTo" maxlength="16"
 							value="#{reportBackingBean.smMofRegNoTo}" required="true"
-							style="width:150px;">
+							style="width:289px;">
 							<p:ajax event="blur"
 								listener="#{reportBackingBean.mofRegNoNumericValidation()}"
 								process="@form" partialSubmit="true" update="@form" />
@@ -2931,14 +2931,14 @@
 					</c:if>
 					<TD class="column9CheckClass"><p:inputText maxlength="40"
 							value="#{reportBackingBean.smBusPaidUpCapitalFrm}"
-							style="width:150px;">
+							style="width:289px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 						</p:inputText></TD>
 					<TD class="columnGenClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
 					<TD><p:inputText maxlength="40"
 							value="#{reportBackingBean.smBusPaidUpCapitalTo}"
-							style="width:150px;">
+							style="width:289px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 						</p:inputText></TD>
 				</TR>
