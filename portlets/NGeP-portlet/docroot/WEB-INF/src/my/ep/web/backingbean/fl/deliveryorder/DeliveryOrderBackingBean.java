@@ -907,10 +907,17 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				}
 			}
 		}
+		List <String> supplierDoNoList = new ArrayList<String>();
 		IAddressSO addressSO = (IAddressSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				if(supplierDoNoList.contains(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef())){
+					throw new EpException(MessageConst.ERROR_740042, new String[]{flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef(),getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
+				}else{
+					supplierDoNoList.add(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
+				}
+				
 				Long addressId = flDeliveryAddress.getPmAddress().getAddressId();
 				if(flDeliveryAddress.getReceivingGrp()!=null && flDeliveryAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
 					reqDTO = new AddressReqDTO();
@@ -927,6 +934,25 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				}
 			}
 		}
+		
+		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		reqDTO.setSupplierDoNoList(supplierDoNoList);
+		FulfilmentResDTO resDTO = deliveryOrderSO.searchDuplicateSupplierDoNo(reqDTO);
+		if(resDTO.isDuplicateSupplierDoNo()){
+			String supplierRefNo = null;
+			for(int i = 0;i < resDTO.getDuplicatedSupplierDoNoList().size();i++){
+				if(supplierRefNo != null){
+					supplierRefNo = ", "+resDTO.getDuplicatedSupplierDoNoList().get(i);
+				}else{
+					supplierRefNo = resDTO.getDuplicatedSupplierDoNoList().get(i);
+				}
+			}
+			
+			throw new EpException(MessageConst.ERROR_740042, new String[]{supplierRefNo,getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
+		}
+		
 		reValidateRetrieveDelAmt();
 
 		// do validation for selected address have items with delmount and delQty or not....

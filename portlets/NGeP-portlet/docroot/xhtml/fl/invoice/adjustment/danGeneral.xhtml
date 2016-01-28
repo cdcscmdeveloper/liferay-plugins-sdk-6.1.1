@@ -67,7 +67,7 @@
 						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}" /></td>
-					<td><p:commandLink value="#{danBackingBean.managedBean.adjustment.flInvoice.invoiceNo}" immediate="true"
+					<td><p:commandLink value="#{danBackingBean.managedBean.adjustment.flInvoice.supplierInvoiceRef}" immediate="true"
 							action="#{danBackingBean.navigateDocument(ParameterConst.doctypeInvoice)}"/>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
 				</tr>
