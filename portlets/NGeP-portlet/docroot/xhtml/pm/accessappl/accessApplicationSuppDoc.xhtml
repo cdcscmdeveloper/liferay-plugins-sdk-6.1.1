@@ -17,24 +17,40 @@
 				<h:outputText value="#{accessApplDoc.document.docName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.txt.attachment']}" >
-				<p:commandLink oncomplete="accessApplUploadDlg.show();"
-					update="@([id$=accessApplUploadDialog])" process="@this"
-					action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
-					rendered="#{accessApplDoc.brandNew and empty accessApplDoc.fileName}">
-					<p:graphicImage value="/css/images/design/upload.png"
-						style="margin-right:2px;" />
-				</p:commandLink>
-				<p:commandLink value="#{accessApplDoc.fileName}" process="@this"
-								styleClass="blue_font"
-								rendered="#{not empty accessApplDoc.fileName}" 
-								action="#{accessApplBackingBean.downloadFile(accessApplDoc.filePath)}" />
+			<p:commandLink oncomplete="accessApplUploadDlg.show();"
+							update="@([id$=accessApplUploadDialog])" process="@this"
+							action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
+							rendered="#{accessApplDoc.brandNew and empty accessApplDoc.fileName}">
+							<p:graphicImage value="/css/images/design/upload.png"
+								style="margin-right:2px;" />
+						</p:commandLink>
+			<p:commandLink action="#{accessApplBackingBean.downloadAttachment(accessApplDoc)}" 
+	          		immediate="true" ajax="false" disabled="#{accessApplDoc.brandNew}">
+ 					  <p:graphicImage value="/css/images/design/attach.png" />
+ 				</p:commandLink>
 				<p:commandLink onclick="deleteAttachmentDlg.show();" process="@this"
 							action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
 							rendered="#{not empty accessApplDoc.fileName and accessApplDoc.brandNew}" >
 			   				<h:graphicImage value="/css/images/design/icon_trash.png" 
 			   					styleClass="tasklist_title1"/>
 			 	</p:commandLink>
-			</p:column>
+ 			 </p:column>
+ 				<ui:remove>
+					<p:column headerText="#{lbl['lbl.txt.attachment']}" >
+						<p:commandLink oncomplete="accessApplUploadDlg.show();"
+							update="@([id$=accessApplUploadDialog])" process="@this"
+							action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
+							rendered="#{accessApplDoc.brandNew and empty accessApplDoc.fileName}">
+							<p:graphicImage value="/css/images/design/upload.png"
+								style="margin-right:2px;" />
+						</p:commandLink>
+						<p:commandLink value="#{accessApplDoc.fileName}" process="@this"
+										styleClass="blue_font"
+										rendered="#{not empty accessApplDoc.fileName}" 
+										action="#{accessApplBackingBean.downloadFile(accessApplDoc.filePath)}" />
+						
+					</p:column>
+				</ui:remove>
 		</p:dataTable>
 	</p:panel>
 </ui:composition>

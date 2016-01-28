@@ -46,7 +46,7 @@
 				sizeLimit="2000000" process="@this"
 				invalidFileMessage="#{lbl['lbl.pm.access.app.upload.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.pm.access.app.upload.fileSize.errmsg']}"
-				fileUploadListener="#{accessApplBackingBean.handleAccessApplDocFileAttachment}"
+				fileUploadListener="#{accessApplBackingBean.handleFileUpload}"
 				update="@this,:form:suppDocPnl" oncomplete="accessApplUploadDlg.hide();" />
 		</p:dialog>
 		
@@ -59,7 +59,7 @@
 	     	</h:panelGrid>
 			<div class="ppRightBtn">
 		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@this,:form:suppDocPnl" process="@this" 
-		     	actionListener="#{accessApplBackingBean.deleteAttachmentAction()}" onclick="deleteAttachmentDlg.hide();"/>
+		     	actionListener="#{accessApplBackingBean.deleteAttachment()}" onclick="deleteAttachmentDlg.hide();"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg.hide();" type="button" />
 		   </div>
  	</p:dialog>	

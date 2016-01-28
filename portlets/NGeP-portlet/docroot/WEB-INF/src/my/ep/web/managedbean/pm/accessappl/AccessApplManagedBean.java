@@ -11,6 +11,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.event.FileUploadEvent;
+
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAccessAppl;
 import my.ep.persistence.entity.pm.common.PmAccessApplDoc;
@@ -47,6 +49,7 @@ public class AccessApplManagedBean extends BaseManagedBean{
 	private boolean declarationChecked;
 	private List<PmAccessApplDoc> accessApplDocList;
 	private String remarks;
+	private Map<PmAccessApplDoc, FileUploadEvent> fileEventMapper;
 	
 	public AccessApplManagedBean(){}
 
@@ -216,5 +219,19 @@ public class AccessApplManagedBean extends BaseManagedBean{
 	 */
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	/**
+	 * @return the fileEventMapper
+	 */
+	public Map<PmAccessApplDoc, FileUploadEvent> getFileEventMapper() {
+		return fileEventMapper;
+	}
+
+	/**
+	 * @param fileEventMapper the fileEventMapper to set
+	 */
+	public void setFileEventMapper(Map<PmAccessApplDoc, FileUploadEvent> fileEventMapper) {
+		this.fileEventMapper = fileEventMapper;
 	}
 }
