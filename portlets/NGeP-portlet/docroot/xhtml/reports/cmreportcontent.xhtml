@@ -360,6 +360,12 @@
 								value="#{lbl['lbl.rpt.itemvaliditydatelabel']}"
 								style="width:181px;" /></TD>
 					</c:if>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.cmFromDateView}">
+						<TD class="columnGenClass"><p:outputLabel
+								value="#{lbl['lbl.rpt.dtRangeFrm']}"
+								style="width:181px;" /></TD>
+					</c:if>
 					<TD class="columnDateFromClass"><p:calendar showOn="button"
 							navigator="true" display="inline" readonlyInput="true" size="9"
 							value="#{reportBackingBean.fromDate}"

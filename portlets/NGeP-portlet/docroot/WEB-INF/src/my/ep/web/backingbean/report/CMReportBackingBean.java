@@ -195,14 +195,16 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL:
 	        	rptGenBean.setCmItemTypeView(true);
 	        	rptGenBean.setExtraTwoColumnView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
+	        	rptGenBean.setCmCatelogDateView(true);
+				rptGenBean.setCmFromDateView(true);
+				//rptGenBean.setCmToDateView(true);					
 	            break;
 	        case ReportConst.SUM_REJ_CAT_ITM_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);				
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
+				rptGenBean.setCmUnspscTitleView(true);
+				rptGenBean.setCmCatelogDateView(true);
+				rptGenBean.setCmFromDateView(true);
+				//rptGenBean.setToDateView(true);	
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -214,9 +216,10 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				break;
 	        case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);				
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
+				rptGenBean.setCmUnspscTitleView(true);
+				rptGenBean.setCmCatelogDateView(true);
+				rptGenBean.setCmFromDateView(true);
+				//rptGenBean.setToDateView(true);	
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -226,9 +229,10 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 							rptGenBean.setCmRegistrationTypeView(true);	
 						}
 				break;
-	        case ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL:	        					
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
+	        case ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL:
+	        	rptGenBean.setCmCatelogDateView(true);
+				rptGenBean.setCmFromDateView(true);
+				//rptGenBean.setToDateView(true);				
 					rptGenBean.setCmItemTypeView(true);
 					rptGenBean.setCmRequestNumberView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
@@ -241,9 +245,10 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				break;
 	        case ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);				
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
+				rptGenBean.setCmUnspscTitleView(true);	
+				rptGenBean.setCmCatelogDateView(true);
+				rptGenBean.setCmFromDateView(true);
+				//rptGenBean.setToDateView(true);	
 				if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 					rptGenBean.setCmCompanyNameView(false);
 					rptGenBean.setCmRegistrationTypeView(false);
