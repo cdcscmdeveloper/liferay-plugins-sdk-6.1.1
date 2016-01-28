@@ -110,154 +110,153 @@ public class ReportsGenerateBean {
 
 	/** The collector cdc registration chk view. */
 	private boolean collectorCDCRegistrationChkView = false;
-	
-	
+
 	/** The sm application approved view. */
-	private boolean smApplicationApprovedView=false;
-	
+	private boolean smApplicationApprovedView = false;
+
 	/** The sm application rejected view. */
-	private boolean smApplicationRejectedView=false;
- 
+	private boolean smApplicationRejectedView = false;
+
 	/** The sm application verification performance view. */
-	private boolean smApplicationVerificationPerformanceView=false;
-	
+	private boolean smApplicationVerificationPerformanceView = false;
+
 	/** The sm application verification view. */
-	private boolean smApplicationVerificationView=false;
-	
+	private boolean smApplicationVerificationView = false;
+
 	/** The sm agency statistical status view. */
-	private boolean smAgencyStatisticalStatusView=false;
-	
+	private boolean smAgencyStatisticalStatusView = false;
+
 	/** The sm category statistic view. */
-	private boolean smCategoryStatisticView=false;
-	
+	private boolean smCategoryStatisticView = false;
+
 	/** The sm category statistic by state view. */
-	private boolean smCategoryStatisticByStateView=false;
-	
+	private boolean smCategoryStatisticByStateView = false;
+
 	/** The sm category statistic by year view. */
-	private boolean smCategoryStatisticByYearView=false;
-	
+	private boolean smCategoryStatisticByYearView = false;
+
 	/** The sm company address list view. */
-	private boolean smCompanyAddressListView=false;
-	
+	private boolean smCompanyAddressListView = false;
+
 	/** The sm daily receipts es view. */
-	private boolean smDailyReceiptsESView=false;
-	
+	private boolean smDailyReceiptsESView = false;
+
 	/** The sm delete pending application view. */
-	private boolean smDeletePendingApplicationView=false;
-	
+	private boolean smDeletePendingApplicationView = false;
+
 	/** The sm laporan terimaan harian view. */
-	private boolean smLaporanTerimaanHarianView=false;
-	
+	private boolean smLaporanTerimaanHarianView = false;
+
 	/** The sm list of application view. */
-	private boolean smListOfApplicationView=false;
-	
+	private boolean smListOfApplicationView = false;
+
 	/** The sm list of application pending for sv view. */
-	private boolean smListOfApplicationPendingForSVView=false;
-	
+	private boolean smListOfApplicationPendingForSVView = false;
+
 	/** The sm list of application status view. */
-	private boolean smListOfApplicationStatusView=false;
-	
+	private boolean smListOfApplicationStatusView = false;
+
 	/** The sm list of companies sort alphabet view. */
-	private boolean smListOfCompaniesSortAlphabetView=false;
-	
+	private boolean smListOfCompaniesSortAlphabetView = false;
+
 	/** The sm list of companies srsc view. */
-	private boolean smListOfCompaniesSRSCView=false;
-	
+	private boolean smListOfCompaniesSRSCView = false;
+
 	/** The sm list of companies with dohe view. */
-	private boolean smListOfCompaniesWithDOHEView=false;
-	
+	private boolean smListOfCompaniesWithDOHEView = false;
+
 	/** The sm list of daily application basic and mof view. */
-	private boolean smListOfDailyApplicationBasicAndMOFView=false;
-	
+	private boolean smListOfDailyApplicationBasicAndMOFView = false;
+
 	/** The sm list of daily registered application view. */
-	private boolean smListOfDailyRegisteredApplicationView=false;
-	
+	private boolean smListOfDailyRegisteredApplicationView = false;
+
 	/** The sm list of dohe view. */
-	private boolean smListOfDOHEView=false;
-	
+	private boolean smListOfDOHEView = false;
+
 	/** The sm list of gst reg supplier view. */
-	private boolean smListOfGSTRegSupplierView=false;
-	
+	private boolean smListOfGSTRegSupplierView = false;
+
 	/** The sm list delete mof account view. */
-	private boolean smListDeleteMOFAccountView=false;
-	
+	private boolean smListDeleteMOFAccountView = false;
+
 	/** The sm list of offline sdps view. */
-	private boolean smListOfOfflineSDPSView=false;
-	
+	private boolean smListOfOfflineSDPSView = false;
+
 	/** The sm list ps more view. */
-	private boolean smListPSMoreView=false;
-	
+	private boolean smListPSMoreView = false;
+
 	/** The sm list of expired company view. */
-	private boolean smListOfExpiredCompanyView=false;
-	
+	private boolean smListOfExpiredCompanyView = false;
+
 	/** The sm list of svosvl view. */
-	private boolean smListOfSVOSVLView=false;
-	
+	private boolean smListOfSVOSVLView = false;
+
 	/** The sm list of soa view. */
-	private boolean smListOfSOAView=false;
-	
+	private boolean smListOfSOAView = false;
+
 	/** The sm list of soppsv view. */
-	private boolean smListOfSOPPSVView=false;
-	
+	private boolean smListOfSOPPSVView = false;
+
 	/** The sm list of socpba view. */
-	private boolean smListOfSOCPBAView=false;
-	
+	private boolean smListOfSOCPBAView = false;
+
 	/** The sm list of users scr view. */
-	private boolean smListOfUsersSCRView=false;
-	
+	private boolean smListOfUsersSCRView = false;
+
 	/** The sm list of pprf view. */
-	private boolean smListOfPPRFView=false;
-	
+	private boolean smListOfPPRFView = false;
+
 	/** The sm monthly report view. */
-	private boolean smMonthlyReportView=false;
-	
+	private boolean smMonthlyReportView = false;
+
 	/** The sm profile reg company view. */
-	private boolean smProfileRegCompanyView=false;
-	
+	private boolean smProfileRegCompanyView = false;
+
 	/** The sm qrs view. */
-	private boolean smQRSView=false;
-	
+	private boolean smQRSView = false;
+
 	/** The sm statistic list cbc view. */
-	private boolean smStatisticListCBCView=false;
-	
+	private boolean smStatisticListCBCView = false;
+
 	/** The sm supplier performance view. */
-	private boolean smSupplierPerformanceView=false;
-	
+	private boolean smSupplierPerformanceView = false;
+
 	/** The sm supplier statistic view. */
-	private boolean smSupplierStatisticView=false;
-	
+	private boolean smSupplierStatisticView = false;
+
 	/** The sm supplier statistic by category view. */
-	private boolean smSupplierStatisticByCategoryView=false;
-	
+	private boolean smSupplierStatisticByCategoryView = false;
+
 	/** The sm threshold or supplier transaction view. */
-	private boolean smThresholdOrSupplierTransactionView=false;
-	
+	private boolean smThresholdOrSupplierTransactionView = false;
+
 	/** The sm threshold year view. */
-	private boolean smThresholdYearView=false;
-	
+	private boolean smThresholdYearView = false;
+
 	/** The sm total no of daily ar view. */
-	private boolean smTotalNoOfDailyARView=false;
-	
+	private boolean smTotalNoOfDailyARView = false;
+
 	/** The sm total no of yearly ar view. */
-	private boolean smTotalNoOfYearlyARView=false;
-	
+	private boolean smTotalNoOfYearlyARView = false;
+
 	/** The sm virtual certificate relased list view. */
-	private boolean smVirtualCertificateRelasedListView=false;
-	
+	private boolean smVirtualCertificateRelasedListView = false;
+
 	/** The sm collection receipt transation view. */
-	private boolean smCollectionReceiptTransationView=false;
-	
+	private boolean smCollectionReceiptTransationView = false;
+
 	/** The sm collection report payment method view. */
-	private boolean smCollectionReportPaymentMethodView=false;
-	
+	private boolean smCollectionReportPaymentMethodView = false;
+
 	/** The sm collection report clasification code view. */
-	private boolean smCollectionReportClasificationCodeView=false;
-	
+	private boolean smCollectionReportClasificationCodeView = false;
+
 	/** The sm revenue collection report view. */
-	private boolean smRevenueCollectionReportView=false;
-	
+	private boolean smRevenueCollectionReportView = false;
+
 	/** The sm list of daily receipt view. */
-	private boolean smListOfDailyReceiptView=false;	
+	private boolean smListOfDailyReceiptView = false;
 
 	/** The generate button view. */
 	private boolean generateButtonView = false;
@@ -388,6 +387,9 @@ public class ReportsGenerateBean {
 	/** The sc loa content view. */
 	private boolean scLOAContentView = false;
 	// cm module
+
+	/** The cm from date view. */
+	private boolean cmFromDateView = false;
 	/** The cm item type view. */
 	private boolean cmItemTypeView = false;
 
@@ -4345,12 +4347,12 @@ public class ReportsGenerateBean {
 
 	/** The Pm non mandatroy org code view. */
 	private boolean pmNonMandatroyOrgCodeView = false;
-	
+
 	/** The pm exempted item view. */
-	private boolean pmExemptedItemView=false;
-	
+	private boolean pmExemptedItemView = false;
+
 	/** The pm exempted contracted item view. */
-	private boolean pmExemptedContractedItemView=false;
+	private boolean pmExemptedContractedItemView = false;
 
 	/** The Pm company name view. */
 	private boolean pmCompanyNameView = false;
@@ -17479,7 +17481,8 @@ public class ReportsGenerateBean {
 	 * @param smLaporanTerimaanHarianView
 	 *            the smLaporanTerimaanHarianView to set
 	 */
-	public void setSmLaporanTerimaanHarianView(boolean smLaporanTerimaanHarianView) {
+	public void setSmLaporanTerimaanHarianView(
+			boolean smLaporanTerimaanHarianView) {
 		this.smLaporanTerimaanHarianView = smLaporanTerimaanHarianView;
 	}
 
@@ -18233,7 +18236,27 @@ public class ReportsGenerateBean {
 	 * @param pmExemptedContractedItemView
 	 *            the pmExemptedContractedItemView to set
 	 */
-	public void setPmExemptedContractedItemView(boolean pmExemptedContractedItemView) {
+	public void setPmExemptedContractedItemView(
+			boolean pmExemptedContractedItemView) {
 		this.pmExemptedContractedItemView = pmExemptedContractedItemView;
+	}
+
+	/**
+	 * Checks if is cm from date view.
+	 * 
+	 * @return the cmFromDateView
+	 */
+	public boolean isCmFromDateView() {
+		return cmFromDateView;
+	}
+
+	/**
+	 * Sets the cm from date view.
+	 * 
+	 * @param cmFromDateView
+	 *            the cmFromDateView to set
+	 */
+	public void setCmFromDateView(boolean cmFromDateView) {
+		this.cmFromDateView = cmFromDateView;
 	}
 }
