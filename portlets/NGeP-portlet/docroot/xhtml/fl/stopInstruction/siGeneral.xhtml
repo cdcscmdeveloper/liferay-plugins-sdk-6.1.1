@@ -174,8 +174,8 @@
 					</td>
 					<td style="width: 295px;">
 						<p:selectOneMenu id="reasonId" required="true" label="#{lbl['lbl.fl.stop.instuc.reason.justification']}" 
-							style="width:365px;margin-bottom: 5px;"
-							disabled="#{stopInstrBB.managedBean.buttonVal=='View' or stopInstrBB.isFlFulfilmentApprover()}"
+							style="width:365px;margin-bottom: 5px;" 
+							disabled="#{stopInstrBB.managedBean.buttonVal=='View' or stopInstrBB.managedBean.taskName eq 'Review SD'}"
 							value="#{stopInstrBB.managedBean.stopInstr.pmReason.reasonCode}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{stopInstrBB.populateReasonList}" var="reason"
