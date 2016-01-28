@@ -59,7 +59,7 @@
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
 							mindate="#{CommonConstants.GST_LAUNCH_DATE}">
-							<p:ajax event="dateSelect"  update="hqGstNotEmptyPanelId" process="@this"/>
+							<p:ajax event="dateSelect"  update="@form" process="@this"/>
 						</p:calendar>
 						<p:message id="hqGstRegDateCalIdMsg"
 							for="hqGstRegDateCalId" showSummary="true" showDetail="false"
@@ -120,14 +120,15 @@
 
 			<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
 				style="width : 20%;">
-
-				<p:commandLink oncomplete="hqUploadDialog.show();return false;"
-					rendered="#{!table.pmDocument.hardCopyReq}"
-					update="@([id$=hqUploadDialog])"
-					action="#{smUpdateGstInfoBackingBean.assignSelectedHqSupportDoc(table)}">
-					<p:graphicImage value="/css/images/design/upload.png"
-						style="margin-right:2px;" />
-				</p:commandLink>
+				<p:outputPanel rendered="#{not empty smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstRegNo 
+					and not empty smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstEffDate and !table.pmDocument.hardCopyReq}">
+					<p:commandLink oncomplete="hqUploadDialog.show();return false;"
+						update="@([id$=hqUploadDialog])"
+						action="#{smUpdateGstInfoBackingBean.assignSelectedHqSupportDoc(table)}">
+						<p:graphicImage value="/css/images/design/upload.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:outputPanel>
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.document.name']}"
