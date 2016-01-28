@@ -1757,7 +1757,13 @@
 								test="#{reportBackingBean.managedBean.rptGenBean.flInvoiceCancellationDateView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.invoiceCancelDtFrm']}"
 									style="width:206px;" />
-							</c:if></TD>
+							</c:if>
+							<c:if
+								test="#{reportBackingBean.managedBean.rptGenBean.flFromDateRangeView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.dtRangeFrm']}"
+									style="width:206px;" />
+							</c:if>
+							</TD>
 						<TD class="columnDateFromClass"><p:calendar showOn="button"
 								navigator="true" display="inline" readonlyInput="true"
 								value="#{reportBackingBean.fromDate}" size="9"
