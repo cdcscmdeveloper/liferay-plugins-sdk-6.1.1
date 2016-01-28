@@ -19,14 +19,18 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.declare']}" 
-				partialSubmit="true" update="@form" 
-				action="#{smUpdateGstInfoBackingBean.onDeclareGst}"
-				disabled="#{smUpdateGstInfoBackingBean.isDisableDeclareButton()}"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-			</p:commandButton>
-		</div>
+		<table style="width: 100%;">
+			<tr>
+				<td style="white-space: nowrap; float: right;">
+					<p:commandButton value="#{lbl['lbl.sm.declare']}" 
+						partialSubmit="true" update="@form" 
+						action="#{smUpdateGstInfoBackingBean.onDeclareGst}"
+						disabled="#{smUpdateGstInfoBackingBean.isDisableDeclareButton()}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+					</p:commandButton>
+				</td>
+			</tr>
+		</table>
 		
 		<ui:include src="/xhtml/sm/shared/gstInformation/gstInfoHq.xhtml" />
 		<ui:include src="/xhtml/sm/shared/gstInformation/gstInfoBranches.xhtml" />
