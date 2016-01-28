@@ -490,6 +490,11 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
 			reqTDTO.setEpAdmin(getFacesScopes().hasRoleUser(
 					RoleCode.EP_ADMIN.value()));
+			if(!getFacesScopes().hasRoleUser(
+					RoleCode.EP_ADMIN.value())){
+			    reqTDTO.setEpAdmin(getFacesScopes().hasRoleUser(
+						RoleCode.EP_ADMIN_1.value()));
+			}
 			if (getManagedBean().getCurrentActiveOrg() != null) {
 				reqTDTO.setOrgProfileId(getManagedBean().getCurrentActiveOrg()
 						.getOrgProfileId());
