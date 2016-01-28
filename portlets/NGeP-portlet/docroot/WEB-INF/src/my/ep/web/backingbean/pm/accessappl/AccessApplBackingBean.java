@@ -3,20 +3,31 @@
  */
 package my.ep.web.backingbean.pm.accessappl;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -64,8 +75,6 @@ import my.ep.web.managedbean.pm.accessappl.AccessApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 
 
 /**
@@ -342,6 +351,7 @@ public class AccessApplBackingBean extends
 			
 			AccessApplResDTO resDTO = accessApplSO.saveAccessAppl(reqDTO);
 			if(resDTO.isSuccessful()){
+				uploadAttachments();
 				String messageId = MessageConst.INFO_700005;
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
@@ -477,5 +487,183 @@ public class AccessApplBackingBean extends
 	
 	private FacesScopes getFacescopes(){
 		return new FacesScopes();
+	}
+	
+	/**
+	 * Download attachment
+	 * 
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void downloadAttachment(PmAccessApplDoc attachment)
+			throws FileNotFoundException, IOException {
+		log.info("downloadAttachment - START");
+		try {
+			if (attachment != null) {
+				downloadFile(attachment.getFilePath(), attachment.getFileName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770055,
+					new String[] { e.getMessage() });
+
+		}
+		log.info("downloadAttachment - END");
+	}
+
+	/**
+	 * Download attachment from server
+	 * 
+	 * @param filePath
+	 * @param fileName
+	 * @throws IOException
+	 */
+	private void downloadFile(String filePath, String fileName)
+			throws IOException {
+		log.info("Inside downloadFile start");
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
+		res.setHeader("Content-Disposition", "attachment; filename=\""
+				+ fileName + "\"");//
+		res.setHeader("Content-Transfer-Encoding", "binary");
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();
+		if (filePath != null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream());
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
+			}
+			input.close();
+		}
+		out.flush();
+		out.close();
+		FacesContext.getCurrentInstance().responseComplete();
+		log.info("Inside downloadFile end");
+	}
+	
+	/**
+	 * Upload files
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void uploadAttachments() throws FileNotFoundException, IOException {
+		log.info("uploadAttachments - START");
+		try {
+			if (this.getManagedBean().getFileEventMapper() != null
+					&& !this.getManagedBean().getFileEventMapper().isEmpty()) {
+				PmAccessApplDoc tempPmUserAttachment = null;
+				FileUploadEvent tempFileUploadEvent = null;
+				for (Map.Entry<PmAccessApplDoc, FileUploadEvent> entry : this
+						.getManagedBean().getFileEventMapper().entrySet()) {
+					tempPmUserAttachment = entry.getKey(); // PmUserAttachment
+					tempFileUploadEvent = entry.getValue(); // FileUploadEvent
+					PmCommonUtil.commonUploadFile(tempFileUploadEvent,
+							PmCommonUtil.getAttachmentPath(tempPmUserAttachment
+									.getFilePath()));
+				}
+				this.getManagedBean().getFileEventMapper().clear();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770060,
+					new String[] { e.getMessage() });
+
+		}
+		log.info("uploadAttachments - END");
+	}
+	
+	/**
+	 * Add attachment to list
+	 * 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		log.info("handleFileUpload - START");
+		try {
+			if (event != null) {
+				if (this.getManagedBean().getFileEventMapper() == null) {
+					this.getManagedBean().setFileEventMapper(
+							new HashMap<PmAccessApplDoc, FileUploadEvent>());
+				}
+				String loginId = getManagedBean().getAccessAppl().getIdentificationNo() != null 
+						? getManagedBean().getAccessAppl().getIdentificationNo() 
+								: "newApplication";
+						
+				// construct file path
+				String filePath = PmCommonUtil
+						.getUploadFilePath(ProfileManagementConst.ACCESS_APPL_FILE_PATH)
+						+ loginId
+						+ "/"
+						+ System.currentTimeMillis() + "/";
+				
+				PmAccessApplDoc accessApplDoc = null;
+				for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
+					if(applDoc.getDocument().getDocumentId().equals(getManagedBean().getSelectedPmAccessApplDoc().getDocument().getDocumentId())){
+						applDoc.setFileName(StringUtils.replace(event.getFile()
+								.getFileName(), " ", "-"));
+						applDoc.setFilePath(filePath);
+						accessApplDoc = applDoc;
+						break;
+					}
+				}				
+				if(accessApplDoc != null){
+					this.getManagedBean().getFileEventMapper()
+						.put(accessApplDoc, event);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770060,
+					new String[] { e.getMessage() });
+
+		}
+		log.info("handleFileUpload - END");
+	}
+	
+	/**
+	 * Delete attachment
+	 * 
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void deleteAttachment()
+			throws FileNotFoundException, IOException {
+		log.info("deleteAttachment - START");
+		try {
+			if (getManagedBean().getSelectedPmAccessApplDoc() != null) {
+				for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
+					if(applDoc.getDocument().getDocumentId().equals(getManagedBean().getSelectedPmAccessApplDoc().getDocument().getDocumentId())){
+						applDoc.setFileName(null);
+						applDoc.setFilePath(null);
+						break;
+					}
+				}	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770054,
+					new String[] { e.getMessage() });
+
+		}
+		log.info("deleteAttachment - END");
 	}
 }
