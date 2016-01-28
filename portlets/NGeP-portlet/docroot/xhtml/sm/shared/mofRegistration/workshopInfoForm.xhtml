@@ -24,6 +24,24 @@
 					style="width :60%;white-space : normal">
 					<h:outputText value="#{backingBean.getFullAddress(work.smAddress)}"
 						style="float : left" />
+					<br />
+					<script>
+					
+				      function getAddress2(addr1, addr2, addr3, addr4, cityName, districtName, stateName, countryName) {
+
+				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+				      	return address;
+				      }
+					
+					</script>
+
+					<ac:gmapInput id="gmapInput" 
+						latitude="#{work.smAddress.mapLatitude}" 
+						longitude="#{work.smAddress.mapLongitude}" 
+						address="getAddress2('#{work.smAddress.address1}', '#{work.smAddress.address2}', '#{work.smAddress.address3}', '#{work.smAddress.address4}', '#{work.smAddress.pmCity.cityName}', '#{work.smAddress.pmDistrict.districtName}', '#{work.smAddress.pmState.stateName}', '#{work.smAddress.pmCountry.countryName}')"
+						showButton="true"
+						disabled="false" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink partialSubmit="true" process="@this"
