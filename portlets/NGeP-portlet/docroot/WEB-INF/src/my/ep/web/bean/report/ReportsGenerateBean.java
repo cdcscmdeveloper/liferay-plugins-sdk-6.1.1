@@ -1478,6 +1478,9 @@ public class ReportsGenerateBean {
 
 	/** The fl from date view. */
 	private boolean flFromDateView = false;
+	
+	/** The fl from date range vie. */
+	private boolean flFromDateRangeView=false;
 
 	/** The fl contract request created date view. */
 	private boolean flContractRequestCreatedDateView = false;
@@ -18258,5 +18261,24 @@ public class ReportsGenerateBean {
 	 */
 	public void setCmFromDateView(boolean cmFromDateView) {
 		this.cmFromDateView = cmFromDateView;
+	}
+
+	/**
+	 * Checks if is fl from date range view.
+	 * 
+	 * @return the flFromDateRangeView
+	 */
+	public boolean isFlFromDateRangeView() {
+		return flFromDateRangeView;
+	}
+
+	/**
+	 * Sets the fl from date range view.
+	 * 
+	 * @param flFromDateRangeView
+	 *            the flFromDateRangeView to set
+	 */
+	public void setFlFromDateRangeView(boolean flFromDateRangeView) {
+		this.flFromDateRangeView = flFromDateRangeView;
 	}
 }
