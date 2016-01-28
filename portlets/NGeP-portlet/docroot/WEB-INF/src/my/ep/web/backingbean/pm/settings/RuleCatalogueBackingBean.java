@@ -495,6 +495,12 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			    reqTDTO.setEpAdmin(getFacesScopes().hasRoleUser(
 						RoleCode.EP_ADMIN_1.value()));
 			}
+			if(!getFacesScopes().hasRoleUser(
+					RoleCode.EP_ADMIN.value()) && !getFacesScopes().hasRoleUser(
+							RoleCode.EP_ADMIN_1.value())){
+			    reqTDTO.setEpAdmin(getFacesScopes().hasRoleUser(
+						RoleCode.BPK_ADMIN.value()));
+			}
 			if (getManagedBean().getCurrentActiveOrg() != null) {
 				reqTDTO.setOrgProfileId(getManagedBean().getCurrentActiveOrg()
 						.getOrgProfileId());
