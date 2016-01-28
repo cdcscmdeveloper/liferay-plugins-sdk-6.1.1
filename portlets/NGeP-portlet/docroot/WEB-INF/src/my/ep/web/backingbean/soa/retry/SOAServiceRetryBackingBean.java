@@ -18,6 +18,7 @@ import my.ep.dto.soa.retry.SOAServiceRetryResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.osb.OsbRetryDtl;
 import my.ep.util.MessageUtils;
+import my.ep.util.SOAUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -158,8 +159,6 @@ public class SOAServiceRetryBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 
-				String message = null;
-
 				if (resDTO.isAllRemoved()) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
@@ -255,14 +254,6 @@ public class SOAServiceRetryBackingBean extends
 	}
 	
 	public String getRetryCountFieldColor(Integer retryCount){
-		
-		if(retryCount > 1 && retryCount <= 5){
-			return "LIGHTORANGE";
-		} else 
-		if(retryCount > 5){
-			return "RED";
-		} else {
-			return "WHITE";
-		}  
+		return SOAUtil.getRetryCountFieldColor(retryCount);
 	}
 }

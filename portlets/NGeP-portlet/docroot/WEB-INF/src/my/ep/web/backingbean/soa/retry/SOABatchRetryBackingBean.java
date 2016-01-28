@@ -11,7 +11,6 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.soa.retry.ISOABatchRetrySO;
-import my.ep.biz.service.soa.retry.ISOAServiceRetrySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.soa.retry.SOABatchRetryReqDTO;
@@ -19,7 +18,7 @@ import my.ep.dto.soa.retry.SOABatchRetryResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.osb.OsbBatchRetryDtl;
 import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SOAUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -158,8 +157,6 @@ public class SOABatchRetryBackingBean extends
 			debugLogger("NotifyResDTO : at least one record isSuccessful[" + resDTO.isSuccessful()+ "]");
 
 			if (resDTO.isSuccessful()) {
-
-				String[] message = null;
 
 				if (resDTO.isAllRemoved()) {
 					FacesContext.getCurrentInstance().addMessage(
@@ -316,5 +313,9 @@ public class SOABatchRetryBackingBean extends
 		}
 		
 	    return items;
+	}
+	
+	public String getRetryCountFieldColor(Integer retryCount){
+		return SOAUtil.getRetryCountFieldColor(retryCount);
 	}
 }

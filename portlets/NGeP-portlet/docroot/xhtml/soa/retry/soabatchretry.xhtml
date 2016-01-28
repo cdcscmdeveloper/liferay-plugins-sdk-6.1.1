@@ -72,16 +72,8 @@
 										#{batchRetry.transId}
 									</p:column>
 
-									<p:column headerText="#{lbl['lbl.portal.soa.rqUid']}">
-										#{batchRetry.rqUid}
-									</p:column>
-
-									<p:column headerText="#{lbl['lbl.portal.soa.serviceCode']}">
-										#{batchRetry.serviceCode}
-									</p:column>
-
-									<p:column headerText="#{lbl['lbl.portal.soa.ibob']}">
-										#{batchRetry.serviceModule == 'IB' ? 'Inbound' : 'Outbound'}
+									<p:column headerText="#{lbl['lbl.portal.soa.serviceName']}">
+										#{batchRetry.serviceName}
 									</p:column>
 
 									<p:column headerText="#{lbl['lbl.portal.soa.sourceSystem']}">
@@ -91,9 +83,9 @@
 									<p:column headerText="#{lbl['lbl.portal.soa.targetSystem']}">
 										#{batchRetry.targetSystem}
 									</p:column>
-
-									<p:column headerText="#{lbl['lbl.portal.soa.statusCode']}">
-										#{batchRetry.statusCode}
+									
+									<p:column headerText="#{lbl['lbl.portal.soa.ibob']}">
+										#{batchRetry.serviceModule == 'IB' ? 'Inbound' : 'Outbound'}
 									</p:column>
 
 									<p:column headerText="#{lbl['lbl.portal.soa.statusDesc']}">
@@ -110,6 +102,11 @@
 											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
 										</h:outputText>
 									</p:column>
+									
+									<p:column headerText="#{lbl['lbl.portal.soa.retryCount']}" styleClass="#{soaBatchRetryBackingBean.getRetryCountFieldColor(batchRetry.retryCount)}">
+										#{batchRetry.retryCount}
+									</p:column>
+									
 								</p:dataTable>
 							</td>
 						</tr>
