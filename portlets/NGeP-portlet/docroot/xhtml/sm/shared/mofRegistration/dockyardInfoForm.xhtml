@@ -25,6 +25,26 @@
 					style="width :60%;white-space : normal">
 					<h:outputText value="#{backingBean.getFullAddress(doc.smAddress)}"
 						style="float : left" />
+						
+					<br />
+					<script>
+					
+				      function getAddress2(addr1, addr2, addr3, addr4, cityName, districtName, stateName, countryName) {
+
+				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+				      	return address;
+				      }
+					
+					</script>
+
+					<ac:gmapInput id="gmapInput" 
+						latitude="#{doc.smAddress.mapLatitude}" 
+						longitude="#{doc.smAddress.mapLongitude}" 
+						address="getAddress2('#{doc.smAddress.address1}', '#{doc.smAddress.address2}', '#{doc.smAddress.address3}', '#{doc.smAddress.address4}', '#{doc.smAddress.pmCity.cityName}', '#{doc.smAddress.pmDistrict.districtName}', '#{doc.smAddress.pmState.stateName}', '#{doc.smAddress.pmCountry.countryName}')"
+						showButton="true"
+						disabled="false" />
+						
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 					<p:commandLink action="#{backingBean.assignSelDockyard(doc)}"
@@ -36,6 +56,7 @@
 				</p:column>
 
 			</p:dataTable>
+			
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}" process="@this"
