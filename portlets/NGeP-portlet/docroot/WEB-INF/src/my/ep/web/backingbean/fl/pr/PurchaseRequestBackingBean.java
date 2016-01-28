@@ -317,12 +317,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			reqDTO.setTaskDeadLine(getManagedBean().getTaskDeadLine());
 			if(isFlFulfilmentRequisitioner()) {
-				PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
-				List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser());
-				
-				reqDTO.setRequisitioner(Boolean.TRUE);
-				reqDTO.setApproverUserList(approverUserList);
-				reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+				if(getManagedBean().getSelectedApprover() != null){
+					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
+					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser());
+					
+					reqDTO.setRequisitioner(Boolean.TRUE);
+					reqDTO.setApproverUserList(approverUserList);
+					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+				}
 			}
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
