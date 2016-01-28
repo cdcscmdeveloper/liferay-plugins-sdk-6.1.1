@@ -650,7 +650,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlDocumentTypeView(true);
-			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlFromDateView(true);
+			rptGenBean.setFlFromDateRangeView(true);
 			rptGenBean.setFlGroupNineView(true);
 			break;
 		case ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_MIN_VAL:
