@@ -3949,7 +3949,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					checkCeilingQty(flRequest);
 					checkMaximumQty(flRequest);
 				}else if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-					if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null){
+					if(getManagedBean().getFlRequest().getScPurchaseInDefault() == null){
 						checkCircularItemMinQtyAndOrderAmt(flRequest);
 					}
 					if(flRequest.getCtContract().getLatestContractVer().getCtContractValue().isFollowLoaAmt()){
@@ -4124,11 +4124,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				sumOrderQty = sumOrderQty.add(itemAddr.getOrderedQty());
 			}
 		}
-		if(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty() < sumOrderQty.doubleValue()){
-			throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty())});
+		if(flRequest.getScPurchaseInDefault().getQuantity().doubleValue() < sumOrderQty.doubleValue()){
+			throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
 		}
-		if(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty() > sumOrderQty.doubleValue()){
-			throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getContractedItem().getMinimumOrderQty())});
+		if(flRequest.getScPurchaseInDefault().getQuantity().doubleValue() > sumOrderQty.doubleValue()){
+			throw new EpException(MessageConst.ERROR_745074, new String[]{flRequest.getScPurchaseInDefault().getContractedItem().getScRequestItem().getItemName(),Double.toString(flRequest.getScPurchaseInDefault().getQuantity().doubleValue())});
 		}
 		
 	}
