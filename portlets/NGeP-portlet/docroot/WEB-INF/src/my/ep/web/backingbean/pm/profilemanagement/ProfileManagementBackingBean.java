@@ -4019,6 +4019,10 @@ public class ProfileManagementBackingBean extends
 			reqDTO.setPmUser(user);
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale()
 					.getLanguage());
+			
+			if(ParameterConst.ORG_TYPE_FACTORING.equals(user.getOrgTypeCode().getParameterCode())){
+				reqDTO.setFactoringUser(true);
+			}
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
