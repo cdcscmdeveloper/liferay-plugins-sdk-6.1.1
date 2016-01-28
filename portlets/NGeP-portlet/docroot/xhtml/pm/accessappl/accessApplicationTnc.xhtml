@@ -26,7 +26,7 @@
 				value="#{accessApplBackingBean.managedBean.tncChecked}">
 				<p:ajax update="@this,:form:accessApplBttnOp" />
 			</p:selectBooleanCheckbox>
-			<h:outputText escape="true"
+			<h:outputText escape="false" style="margin-left:5px;"
 				value="#{lbl['lbl.pm.access.app.tnc.agree']}" />
 
 		</p:panel>
@@ -36,7 +36,7 @@
 				value="#{accessApplBackingBean.managedBean.declarationChecked}">
 				<p:ajax update="@this,:form:accessApplBttnOp"  />
 			</p:selectBooleanCheckbox>
-			<h:outputText escape="false"
+			<h:outputText escape="false" style="margin-left:5px;"
 				value="#{lbl['lbl.pm.access.app.declaration.desc']}" />
 
 		</p:panel>
