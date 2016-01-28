@@ -3292,7 +3292,7 @@
 					<TD class="column5CheckClass"><p:selectOneMenu
 							label="#{lbl['lbl.rpt.frommonth']}" id="MandatoryFromMonth"
 							value="#{reportBackingBean.smFromMonth}" required="true"
-							style="width:150px;">
+							style="width:294px;">
 
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.monthList}"></f:selectItems>
@@ -3305,7 +3305,7 @@
 							styleClass="mandatory" /></TD>
 					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.tomonth']}"
 							id="MandatoryToMonth" value="#{reportBackingBean.smToMonth}"
-							required="true" style="width:150px;">
+							required="true" style="width:294px;">
 
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.monthList}"></f:selectItems>
@@ -3343,7 +3343,7 @@
 					</c:if>
 					<TD class="column5CheckClass"><p:selectOneMenu
 							value="#{reportBackingBean.smThresholdFromYear}"
-							style="width:175px;">
+							style="width:300px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 							<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
@@ -3353,7 +3353,7 @@
 							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
 					<TD><p:selectOneMenu
 							value="#{reportBackingBean.smThresholdToYear}"
-							style="width:150px;">
+							style="width:300px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 							<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
