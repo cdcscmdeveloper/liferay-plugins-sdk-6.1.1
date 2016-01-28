@@ -35,7 +35,7 @@
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					action="#{consolidationReportBackingBean.managedBean.setOutcome(bpmAction)}"
 					process="@this" oncomplete="submissionPopup.show();"
-					update="@([id$=#{submissionPopup}])"
+					update="@([id$=#{submissionPopupId}])"
 					rendered="#{validityDaysExpiredQt}" />
 			</ui:repeat>
 		</div>
@@ -91,7 +91,7 @@
 			</p:fileUpload>
 		</p:dialog>
 		
-		<ac:confirmationPopup id="submissionPopup" 
+		<ac:confirmationPopup id="submissionPopupId" 
 			title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			width="400" height="100" widget="submissionPopup" 
 			okAction="consolidationReportBackingBean.submitAction" 
