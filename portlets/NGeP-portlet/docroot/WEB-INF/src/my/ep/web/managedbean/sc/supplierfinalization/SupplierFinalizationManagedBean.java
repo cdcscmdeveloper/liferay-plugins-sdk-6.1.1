@@ -154,7 +154,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<Long> rejectedScQtRecommendIds;
 	
 	private Map<Long, TplSpecZoneDtl> zoneMap;
-	private Map<Long, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone;
+	private Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone;
 	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
 	
 	//Committee Endorsement
@@ -945,19 +945,18 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the shortlistedSupppliersByZone
+	 * @return the pkgShortlistedSupppliersByZone
 	 */
-	public Map<Long, List<ScQtEvaluationResultDtl>> getShortlistedSupppliersByZone() {
-		return shortlistedSupppliersByZone;
+	public Map<Long, List<ScQtEvaluationResultDtl>> getPkgShortlistedSupppliersByZone() {
+		return pkgShortlistedSupppliersByZone;
 	}
 
 	/**
-	 * @param shortlistedSupppliersByZone 
-	 * 								the shortlistedSupppliersByZone to set
+	 * @param pkgShortlistedSupppliersByZone the pkgShortlistedSupppliersByZone to set
 	 */
-	public void setShortlistedSupppliersByZone(
-			Map<Long, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone) {
-		this.shortlistedSupppliersByZone = shortlistedSupppliersByZone;
+	public void setPkgShortlistedSupppliersByZone(
+			Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone) {
+		this.pkgShortlistedSupppliersByZone = pkgShortlistedSupppliersByZone;
 	}
 
 	/**
