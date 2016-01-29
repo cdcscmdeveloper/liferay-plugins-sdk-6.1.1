@@ -1,9 +1,5 @@
 package my.ep.web.util.sm.helper;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,19 +23,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,7 +45,6 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-import javax.persistence.Id;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -104,11 +95,11 @@ import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -3106,22 +3097,74 @@ public class SmCommonUtil {
 		return items;
 	}
 
-	public List<SelectItem> getTravellingSoftwareItems() {
+	/**
+	 * Get machine items by category type code except for type printing
+	 * 
+	 * @param String
+	 *            catTypeCode
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getMachineItemsByCatTypeCode(String catTypeCode) {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
-		PmParameter categoryType = new PmParameter();
-		categoryType.setParameterCode(ParameterConst.CATEGORY_TYPE_TRAVEL);
+		String[] categoryInMachineSection = new String[] {
+				ParameterConst.CATEGORY_TYPE_DOCKYARD,
+				ParameterConst.CATEGORY_TYPE_TRAVEL,
+				ParameterConst.CATEGORY_TYPE_WORKSHOP };
+		if (StringUtils.isNotBlank(catTypeCode)
+				&& Arrays.asList(categoryInMachineSection)
+						.contains(catTypeCode)) {
+			PmParameter categoryType = new PmParameter();
+			categoryType.setParameterCode(catTypeCode);
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryTypeCode(categoryType);
+			List<PmMachine> machineList = SmServiceLookup.getCategoryCodeSO()
+					.retrievePmMachineByParameterCategoryType(reqDTO)
+					.getMachineList();
+			if (!SmCommonUtil.isCollectionEmpty(machineList)) {
+				SelectItem machineItem = null;
+				for (PmMachine machine : machineList) {
+					machineItem = new SelectItem();
+					machineItem.setValue(machine.getMachineId());
+					machineItem.setLabel(machine.getMachineDesc());
+					machineItems.add(machineItem);
+				}
+			}
+		}
+		return machineItems;
+	}
+
+	/**
+	 * Retrieve machine list for printing category type
+	 * 
+	 * @param PmCategoryL3
+	 *            categoryCode
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getPrintingMachineItemsByCategoryCode(
+			PmCategoryL3 categoryCode) {
+		List<PmMachine> machines = new ArrayList<PmMachine>();
+		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryTypeCode(categoryType);
-		List<PmMachine> machineList = SmServiceLookup.getCategoryCodeSO()
-				.retrievePmMachineByParameterCategoryType(reqDTO)
-				.getMachineList();
-		if (!SmCommonUtil.isCollectionEmpty(machineList)) {
-			SelectItem machineItem = null;
-			for (PmMachine machine : machineList) {
-				machineItem = new SelectItem();
-				machineItem.setValue(machine.getMachineId());
-				machineItem.setLabel(machine.getMachineDesc());
-				machineItems.add(machineItem);
+		if (categoryCode.getCategoryTypeCode() != null
+				&& categoryCode.getCategoryTypeCode().getParameterCode()
+						.equals(ParameterConst.CATEGORY_TYPE_PRINTING)
+				&& categoryCode != null
+				&& categoryCode.getPmCategoryL2() != null
+				&& categoryCode.getPmCategoryL2().getPmCategoryL1() != null) {
+			reqDTO.setCategoryL1Id(categoryCode.getPmCategoryL2()
+					.getPmCategoryL1().getCategoryL1Id());
+			reqDTO.setCategoryL2Id(categoryCode.getPmCategoryL2()
+					.getCategoryL2Id());
+			reqDTO.setCategoryL3Id(categoryCode.getCategoryL3Id());
+			machines = SmServiceLookup.getCategoryCodeSO()
+					.retrievePmMachineByCategoryCodeId(reqDTO).getMachineList();
+			if (!EntityHelper.isCollectionEmpty(machines)) {
+				for (PmMachine mac : machines) {
+					SelectItem macItem = new SelectItem();
+					macItem.setLabel(mac.getMachineDesc());
+					macItem.setValue(mac.getMachineId());
+					machineItems.add(macItem);
+				}
 			}
 		}
 		return machineItems;

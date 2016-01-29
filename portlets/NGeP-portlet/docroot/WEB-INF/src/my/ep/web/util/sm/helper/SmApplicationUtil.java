@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -5075,7 +5076,7 @@ public class SmApplicationUtil {
 		removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
 				.getBasicCompanyFacility().getFacilityType());
 		removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
-		removeTravellingSoftwareIfNotApplicable(bean.getSmAppl());
+		removeTravellingSoftwareIfNotApplicable(bean);
 		removeEquipmentIfNotApplicable(bean.getSmAppl());
 	}
 
@@ -5085,9 +5086,11 @@ public class SmApplicationUtil {
 	 * @param SmAppl
 	 *            appl
 	 */
-	public void removeTravellingSoftwareIfNotApplicable(SmAppl appl) {
+	public void removeTravellingSoftwareIfNotApplicable(
+			SmApplicationManagedBean bean) {
 		boolean isTravelSoftwareApplicable = false;
-		for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+		for (SmSupplierCategory cat : bean.getSmAppl()
+				.getSmSupplierCategories()) {
 			if (cat.isSpecialCategory()
 					&& cat.getPmCategoryL3() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
@@ -5112,9 +5115,12 @@ public class SmApplicationUtil {
 		}
 
 		if (!isTravelSoftwareApplicable
-				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierSystems())) {
-			appl.setSmSupplierSystems(new ArrayList<SmSupplierSystem>());
+				&& !SmCommonUtil.isCollectionEmpty(bean.getSmAppl()
+						.getSmSupplierSystems())) {
+			bean.getSmAppl().setSmSupplierSystems(
+					new ArrayList<SmSupplierSystem>());
 		}
+		bean.setShowTravelSoftwarePanel(isTravelSoftwareApplicable);
 	}
 
 	/**
@@ -5124,10 +5130,37 @@ public class SmApplicationUtil {
 	 *            appl
 	 */
 	public void removeEquipmentIfNotApplicable(SmAppl appl) {
+		List<String> pendingApproveCatTypeList = new ArrayList<String>();
 		if (appl.getApplCategoryType() != null
 				&& appl.getApplCategoryType().equals("N")) {
 			appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
 			appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+		}
+		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						|| cat.getRecordStatusFlg()
+								.compareTo(
+										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+					pendingApproveCatTypeList.add(cat.getPmCategoryL3()
+							.getCategoryTypeCode().getParameterCode());
+				}
+			}
+			if (!EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
+				for (Iterator<SmMachineDtl> macIt = appl.getSmMachineDtls()
+						.iterator(); macIt.hasNext();) {
+					SmMachineDtl mac = macIt.next();
+					if (mac.getCategoryType() != null
+							&& mac.getCategoryType().getParameterId() != null
+							&& (EntityHelper
+									.isCollectionEmpty(pendingApproveCatTypeList) || !pendingApproveCatTypeList
+									.contains(mac.getCategoryType()
+											.getParameterCode()))) {
+						macIt.remove();
+					}
+				}
+			}
 		}
 	}
 
@@ -7206,6 +7239,187 @@ public class SmApplicationUtil {
 			retVal = false;
 		}
 		return retVal;
+	}
+
+	/**
+	 * Get category types from pending activation category
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getSelectedCategoryTypeItems(SmAppl appl) {
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String[] relatedCatTypeCode = new String[] {
+				ParameterConst.CATEGORY_TYPE_DOCKYARD,
+				ParameterConst.CATEGORY_TYPE_WORKSHOP,
+				ParameterConst.CATEGORY_TYPE_PRINTING,
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING };
+		List<SelectItem> categoryTypeItems = new ArrayList<SelectItem>();
+		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						&& cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+						&& Arrays.asList(relatedCatTypeCode).contains(
+								cat.getPmCategoryL3().getCategoryTypeCode()
+										.getParameterCode())) {
+					SelectItem catType = (SelectItem) EntityHelper
+							.getEntityBySinglePropertyFromList(cat
+									.getPmCategoryL3().getCategoryTypeCode()
+									.getParameterId(), categoryTypeItems,
+									"value");
+					if (catType == null) {
+						if (!EntityHelper.isCollectionEmpty(cat
+								.getPmCategoryL3().getCategoryTypeCode()
+								.getPmParameterDescs())) {
+							SelectItem catTypeItem = new SelectItem();
+							PmParameterDesc desc = (PmParameterDesc) EntityHelper
+									.getEntityBySinglePropertyFromList(
+											language, cat.getPmCategoryL3()
+													.getCategoryTypeCode()
+													.getPmParameterDescs(),
+											"languageCode");
+							if (desc != null) {
+								catTypeItem.setLabel(desc.getCodeName());
+								catTypeItem
+										.setValue(cat.getPmCategoryL3()
+												.getCategoryTypeCode()
+												.getParameterId());
+								categoryTypeItems.add(catTypeItem);
+							}
+						}
+					}
+				}
+			}
+		}
+		return categoryTypeItems;
+	}
+
+	/**
+	 * Get pending activation category codes by category type Id
+	 * 
+	 * @param Long
+	 *            categoryTypeId
+	 * @param SmAppl
+	 *            appl
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getCategoryCodesItemsByCatTypeId(
+			Long categoryTypeId, SmAppl appl) {
+		List<SelectItem> categoryCodeItems = new ArrayList<SelectItem>();
+		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						&& cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode()
+								.getParameterId().compareTo(categoryTypeId) == 0) {
+					SelectItem catCodeItem = new SelectItem();
+					catCodeItem.setLabel(cat.getPmCategoryL3()
+							.getCategoryL3Code()
+							+ " - "
+							+ cat.getPmCategoryL3().getCategoryName());
+					catCodeItem.setValue(cat.getPmCategoryL3()
+							.getCategoryL3Id());
+					categoryCodeItems.add(catCodeItem);
+				}
+			}
+		}
+		return categoryCodeItems;
+	}
+
+	/**
+	 * Validate machine or equipment section
+	 * 
+	 * @param boolean valid
+	 * @param int currentTab
+	 * @param SmApplicationManagedBean
+	 *            bean
+	 * @return boolean
+	 */
+	public static boolean validateMachineDetails(boolean valid, int currentTab,
+			SmApplicationManagedBean bean) {
+		String[] relatedCatTypeCode = new String[] {
+				ParameterConst.CATEGORY_TYPE_DOCKYARD,
+				ParameterConst.CATEGORY_TYPE_WORKSHOP,
+				ParameterConst.CATEGORY_TYPE_PRINTING,
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING };
+		SmAppl appl = bean.getSmAppl();
+		PmParameterDesc desc = null;
+		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						&& cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+						&& Arrays.asList(relatedCatTypeCode).contains(
+								cat.getPmCategoryL3().getCategoryTypeCode()
+										.getParameterCode())) {
+					desc = (PmParameterDesc) EntityHelper
+							.getEntityBySinglePropertyFromList(
+									new FacesScopes().getUserLocale()
+											.getLanguage(), cat
+											.getPmCategoryL3()
+											.getCategoryTypeCode()
+											.getPmParameterDescs(),
+									"languageCode");
+					if (EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
+						valid = false;
+						if (currentTab != -1) {
+							setNavigationBackToCurrentPage(currentTab, bean);
+						}
+						throw new EpException(MessageConst.ERROR_722631,
+								new String[] { desc.getCodeName() });
+					} else {
+						SmMachineDtl mac = (SmMachineDtl) EntityHelper
+								.getEntityBySinglePropertyFromList(
+										cat.getPmCategoryL3()
+												.getCategoryTypeCode()
+												.getParameterId(),
+										appl.getSmMachineDtls(), "categoryType");
+						if (mac == null) {
+							valid = false;
+							if (currentTab != -1) {
+								setNavigationBackToCurrentPage(currentTab, bean);
+							}
+							throw new EpException(MessageConst.ERROR_722631,
+									new String[] { desc.getCodeName() });
+						}
+					}
+				}
+			}
+		}
+		return valid;
+	}
+
+	/**
+	 * Get machine select items by machine detail
+	 * 
+	 * @param SmMachineDtl
+	 *            machine
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getMachineItemsByMachineDetails(
+			SmMachineDtl machine) {
+		List<SelectItem> machineItems = new ArrayList<SelectItem>();
+		if (machine != null) {
+			if (machine.getCategoryType() != null
+					&& machine.getCategoryType().getParameterId() != null
+					&& (machine.getCategoryCode() == null || machine
+							.getCategoryCode().getCategoryL3Id() == null)) {
+				machineItems = SmCommonUtil.getInstance()
+						.getMachineItemsByCatTypeCode(
+								machine.getCategoryType().getParameterCode());
+			} else {
+				if (machine.getCategoryCode() != null
+						&& machine.getCategoryCode().getCategoryL3Id() != null) {
+					machineItems = SmCommonUtil
+							.getPrintingMachineItemsByCategoryCode(machine
+									.getCategoryCode());
+				}
+			}
+		}
+		return machineItems;
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
