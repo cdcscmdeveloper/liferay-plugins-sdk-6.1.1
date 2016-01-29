@@ -1426,9 +1426,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.OPEN_FOR_BUMI_THRESHOLD);
-			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
-			return ruleSO.compareAValueWithRuleTypeValues(reqDTO)
-					.isCompareValueResult();
+			
+			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
+					.getRuleValueList();
+
+			if (estimatedAmount != null && estimatedAmount.compareTo(BigDecimal.valueOf(0)) > 0 && 
+					configRuleValues != null && configRuleValues.size() > 0) {
+				PmConfigRuleValue configRuleValue = configRuleValues.get(0);
+				
+				if (configRuleValue != null && configRuleValue.getFromValue() != null && configRuleValue.getToValue() != null) {
+					return estimatedAmount.compareTo(configRuleValue.getFromValue()) >= 0 && 
+							estimatedAmount.compareTo(configRuleValue.getToValue()) <= 0;
+				}
+				
+			}
+			
+			return false;
 
 		} finally {
 			ruleSO = null;
