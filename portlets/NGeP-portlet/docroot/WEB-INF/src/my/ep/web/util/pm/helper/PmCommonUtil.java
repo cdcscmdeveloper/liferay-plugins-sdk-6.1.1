@@ -1637,8 +1637,21 @@ public class PmCommonUtil {
 		return resDTO.getPmDivision();
 	}
 	
-	public static String getUploadFilePath(String path) {
-		return Calendar.getInstance().get(Calendar.YEAR) + path;
+	// docuRepo/dev/ngep/2016/PM/AccAppl/loginId/timemilis/fileName
+	public static String getUploadFilePath(String path,String loginId, String fileName) {
+		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(Calendar.getInstance().get(Calendar.YEAR));
+		filePath.append(path);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(loginId);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(System.currentTimeMillis());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(fileName);
+		return filePath.toString();
 	}
 	
 	/**
