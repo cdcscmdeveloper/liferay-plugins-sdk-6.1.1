@@ -3896,30 +3896,29 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									l2SearchFilterBean),
 							SearchCondition.CONDITION_OR.value(),
 							l3SearchFilterBean));
-			
-			
-			BaseSearchFilterBean l1StatusSearchFilterBean = new SearchFilterBean("pmCategoryL2.pmCategoryL1.recordStatusFlg",
-					SearchOperator.OPERATOR_EQUALS.value(),
-					DbValueConst.RECORD_STATUS_ACTIVE);
-			
-			BaseSearchFilterBean l2StatusSearchFilterBean = new SearchFilterBean("pmCategoryL2.recordStatusFlg",
-					SearchOperator.OPERATOR_EQUALS.value(),
-					DbValueConst.RECORD_STATUS_ACTIVE);
-			
-			BaseSearchFilterBean l3StatusSearchFilterBean = new SearchFilterBean("recordStatusFlg",
-					SearchOperator.OPERATOR_EQUALS.value(),
-					DbValueConst.RECORD_STATUS_ACTIVE);
-			
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchMultiFilterBean(
-							new SearchMultiFilterBean(
-									l1StatusSearchFilterBean,
-									SearchCondition.CONDITION_AND.value(),
-									l2StatusSearchFilterBean),
-							SearchCondition.CONDITION_AND.value(),
-							l3StatusSearchFilterBean));
 		}
+		
+		BaseSearchFilterBean l1StatusSearchFilterBean = new SearchFilterBean("pmCategoryL2.pmCategoryL1.recordStatusFlg",
+				SearchOperator.OPERATOR_EQUALS.value(),
+				DbValueConst.RECORD_STATUS_ACTIVE);
+		
+		BaseSearchFilterBean l2StatusSearchFilterBean = new SearchFilterBean("pmCategoryL2.recordStatusFlg",
+				SearchOperator.OPERATOR_EQUALS.value(),
+				DbValueConst.RECORD_STATUS_ACTIVE);
+		
+		BaseSearchFilterBean l3StatusSearchFilterBean = new SearchFilterBean("recordStatusFlg",
+				SearchOperator.OPERATOR_EQUALS.value(),
+				DbValueConst.RECORD_STATUS_ACTIVE);
+		
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(
+						new SearchMultiFilterBean(
+								l1StatusSearchFilterBean,
+								SearchCondition.CONDITION_AND.value(),
+								l2StatusSearchFilterBean),
+						SearchCondition.CONDITION_AND.value(),
+						l3StatusSearchFilterBean));
 		
 		if(ccPulicSearchBean.getPaidUpCapital() !=null){
 			searchBean.getDataFilterBeans().add(
