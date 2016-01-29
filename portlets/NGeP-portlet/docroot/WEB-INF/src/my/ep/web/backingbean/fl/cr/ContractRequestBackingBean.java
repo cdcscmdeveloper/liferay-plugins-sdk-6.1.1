@@ -4443,7 +4443,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		for(FlDeliveryAddress delAddr : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			Long addressId = delAddr.getPmAddress().getAddressId();
 			if(delAddr.getReceivingGrp()!=null && delAddr.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
-				
+				reqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 				reqDTO.setAddressTypeId(delAddr.getReceivingGrp().getAddressTypeId());
 				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 				addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
