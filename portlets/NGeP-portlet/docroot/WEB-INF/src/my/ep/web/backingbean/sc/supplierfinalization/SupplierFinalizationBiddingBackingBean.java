@@ -312,6 +312,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 							scQtFinalization.getOnlineBiddingEndorse())) {
 				retrieveOnlineEndorsement();
 			} else {
+				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION
+						.equals(getManagedBean().getCurrentStatusId())) {
+					getManagedBean().setBpkUser(true);
+				}
 				retrieveOfflineEndorsement();
 			}
 		} finally {
