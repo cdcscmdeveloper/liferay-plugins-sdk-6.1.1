@@ -28,13 +28,16 @@
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{isOnlineBiddingEndorseMeeting}" process="@all"
+						rendered="#{isOnlineBiddingEndorseMeeting and 
+										suppFinalBiddingBackingBean.managedBean.secretaryUser}" 
+						process="@all"
 						partialSubmit="true"
 						action="#{suppFinalBiddingBackingBean.saveOnlineEndorsement}"
 						update="@form" />
 
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{!isOnlineBiddingEndorseMeeting}" process="@all"
+						rendered="#{!isOnlineBiddingEndorseMeeting and 
+										suppFinalBiddingBackingBean.managedBean.bpkUser}" process="@all"
 						partialSubmit="true"
 						action="#{suppFinalBiddingBackingBean.saveOfflineEndorsement}"
 						update="@form" />

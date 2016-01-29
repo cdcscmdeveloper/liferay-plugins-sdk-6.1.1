@@ -3502,7 +3502,6 @@ public class SupplierFinalizationBackingBean extends
 					
 					SuppFinalizationResDTO _resDTO = qtSuppFinalizationSO.retrieveLoiLoaByRecommendDtlIds(_reqDTO);
 					if (_resDTO.isSuccessful()) {
-//						ScLoiLoaItem scLoiLoaItem = _resDTO.getScLoiLoaItem();
 						List<ScLoiLoaItem> scLoiLoaItems = _resDTO.getScLoiLoaItemList();
 						
 						if (CollectionUtils.isNotEmpty(scLoiLoaItems)) {
@@ -3555,11 +3554,11 @@ public class SupplierFinalizationBackingBean extends
 								shortlistedSupppliersByZone.get(specZoneId));
 					}					
 
-					this.getManagedBean().setShortlistedSupppliersByZone(
+					this.getManagedBean().setPkgShortlistedSupppliersByZone(
 							shortlistedSupppliersByZone);
 				} else {
-					List<ScQtEvaluationResultDtl> shortlistedPackageList = resDTO
-							.getQualifiedByPackageSuppliers();
+					List<ScQtEvaluationResultDtl> shortlistedPackageList 
+							= resDTO.getQualifiedByPackageSuppliers();
 
 					// disabled supplier selection.
 					processShortlistedSupplierByPackage(
@@ -3645,8 +3644,7 @@ public class SupplierFinalizationBackingBean extends
 				// If QT is refinalized and finalization method is bidding award 
 				// then calculate the total bid price
 				if (getManagedBean().isRefinalizedAndBiddingAward() &&
-						evalResDtl.getBidRank() != null && 
-							!scQtRecommend.isCancelled()) {
+						evalResDtl.getBidRank() != null) {
 					calculateBidPrice(recommendedItems, evalResDtl);
 				}
 			}
@@ -3863,7 +3861,7 @@ public class SupplierFinalizationBackingBean extends
 						.addAll(getManagedBean().getShortlistedPackageList());
 				} else {
 					Map<Long, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone 
-									= this.getManagedBean().getShortlistedSupppliersByZone();
+									= this.getManagedBean().getPkgShortlistedSupppliersByZone();
 					if (MapUtils.isNotEmpty(shortlistedSupppliersByZone)) {
 						Long defaultSelectedZoneId = (Long) (shortlistedSupppliersByZone
 								.keySet().toArray())[0];
@@ -5383,7 +5381,7 @@ public class SupplierFinalizationBackingBean extends
 
 	private List<ScQtEvaluationResultDtl> getShortlistedSuppliersByZone(TplSpecZoneDtl specZone) {
 		Map<Long, List<ScQtEvaluationResultDtl>> shortlistedSuppliersByZone 
-						= this.getManagedBean().getShortlistedSupppliersByZone();
+						= this.getManagedBean().getPkgShortlistedSupppliersByZone();
 		if (MapUtils.isNotEmpty(shortlistedSuppliersByZone)) {
 			Long specZoneId = null;
 			if (specZone == null) {
@@ -6244,8 +6242,8 @@ public class SupplierFinalizationBackingBean extends
 						// Skip offered price or bid price calculation 
 						// if item is cancelled
 						if (!scQtRecommend.isCancelled()) {
-							calculateOfferedPrice(evalResultDtl,
-									scQtRecommend.getRequestItem());
+							calculateOfferedPrice(
+									evalResultDtl, scQtRecommend);
 						} else {
 							BigDecimal zero = new BigDecimal(0.0);
 							evalResultDtl.setBidPrice(zero);
@@ -6577,11 +6575,101 @@ public class SupplierFinalizationBackingBean extends
 		
 		this.getManagedBean().setSelectAll(false);
 	}
-
+	
+	private BigDecimal calculateTotalIntendedPrice(ScQtFinalization scQtFinalization) {
+		boolean isZonal = getManagedBean().getScQt().isZonal();
+		BigDecimal intendedPrice = null;
+		BigDecimal totalIntendedPrice = new BigDecimal(0);
+		
+		if (getManagedBean().isItemize()) {
+			for (ScQtRecommend item 
+					: scQtFinalization.getScQtRecommends()) {
+				if (!item.isCancelled()) {
+					List<ScQtEvaluationResultDtl> shortlistedSuppliers 
+							= item.getShortListedSupplierList();
+					if (CollectionUtils.isEmpty(
+									shortlistedSuppliers)) {
+						SuppFinalizationResDTO resDTO 
+							= retrieveShortListedSuppliersByItem(item);
+						shortlistedSuppliers = resDTO.getQualifiedByItemSuppliers();
+						item.setShortListedSupplierList(shortlistedSuppliers);
+					}
+					if (CollectionUtils.isNotEmpty(
+							shortlistedSuppliers)) {
+						
+					}
+				}
+			}
+		} else {
+			if (isZonal) {
+				Map<Long,List<ScQtEvaluationResultDtl>> shortlistedSuppliersByZone
+							= getManagedBean().getPkgShortlistedSupppliersByZone();
+				if (MapUtils.isNotEmpty(
+						shortlistedSuppliersByZone)) {
+					for (Long specZoneId : shortlistedSuppliersByZone.keySet()) {
+						List<ScQtRecommend> items = scQtFinalization
+								.getScQtRecommendsByZone().get(specZoneId);
+						List<ScQtEvaluationResultDtl> shortlistedSuppliers 
+								= shortlistedSuppliersByZone.get(specZoneId);
+						intendedPrice = calculateIntendedPrice(
+											shortlistedSuppliers,items);
+						totalIntendedPrice = totalIntendedPrice.add(intendedPrice);
+						totalIntendedPrice = totalIntendedPrice.setScale(2,
+												BigDecimal.ROUND_HALF_EVEN);
+					}
+				}
+			} else {
+				List<ScQtEvaluationResultDtl> shortlistedSuppliers 
+						= getManagedBean().getShortlistedPackageList();
+				List<ScQtRecommend> items = scQtFinalization.getScQtRecommends();
+				intendedPrice = calculateIntendedPrice(
+									shortlistedSuppliers, items);
+				totalIntendedPrice = totalIntendedPrice.add(intendedPrice);
+				totalIntendedPrice = totalIntendedPrice.setScale(2,
+										BigDecimal.ROUND_HALF_EVEN);				
+			}
+		}
+		
+		return totalIntendedPrice;
+	}
+	
+	private BigDecimal calculateIntendedPrice(List<ScQtEvaluationResultDtl> shortlistedSuppliers, 
+										List<ScQtRecommend> items) {
+		BigDecimal intendedPrice = new BigDecimal(0);
+		if (CollectionUtils.isNotEmpty(
+					shortlistedSuppliers) && 
+					!items.get(0).isCancelled()) {
+			for (ScQtEvaluationResultDtl shortlistedSupplier
+							: shortlistedSuppliers) {
+				if (shortlistedSupplier.isAwareded() || 
+						shortlistedSupplier.isShortListed()) {
+					for (ScQtRecommend item : items) {
+						calculateOfferedPrice(shortlistedSupplier, item);
+						
+						BigDecimal price = null;
+						if (getManagedBean().isRefinalizedAndBiddingAward()) {
+							price = shortlistedSupplier.getBidPrice();
+						} else {
+							price = shortlistedSupplier.getQtEvaluationResult()
+									.getOfferedPrice();												
+						}
+						if (price != null) {
+							intendedPrice = intendedPrice.add(price);
+							intendedPrice = intendedPrice.setScale(2,
+													BigDecimal.ROUND_HALF_EVEN);
+						}
+					}
+				}
+			}			
+		}			
+		
+		return intendedPrice;
+	}
+	
 	private void calculateOfferedPrice(ScQtEvaluationResultDtl evalResultDtl,
-			ScRequestItem requestItem) {
-		ScQtProposalItem proposalItem = evalResultDtl.getQtEvaluationResult()
-				.getScQtProposalItem();
+									   ScQtRecommend scQtRecommend) {
+		ScRequestItem requestItem = scQtRecommend.getRequestItem();
+		ScQtProposalItem proposalItem = getQtProposalItem(scQtRecommend, evalResultDtl);
 		if (proposalItem != null) {
 			if (getManagedBean().isRefinalizedAndBiddingAward()) {
 				BigDecimal bidPrice = TemplateSpecHelper.getInstance()
@@ -6596,7 +6684,8 @@ public class SupplierFinalizationBackingBean extends
 								proposalItem.getOfferPrice(),
 								proposalItem.getOfferQuantity());
 				
-				evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);				
+				evalResultDtl.getQtEvaluationResult()
+							 .setOfferedPrice(offeredPrice);				
 			}
 		}
 	}
