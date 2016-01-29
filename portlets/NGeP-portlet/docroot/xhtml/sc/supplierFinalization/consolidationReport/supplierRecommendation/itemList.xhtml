@@ -14,7 +14,7 @@
 			<ac:paginator for="itemListTbl" />
 
 			<p:ajax event="rowSelect" listener="#{consolidationReportBackingBean.selectItemEvent}"
-				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=supplierListTblPanel])" 
+				update="@([id$=itemSupplierPanel])" 
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
 				
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:20%; white-space:normal;">
