@@ -633,7 +633,8 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmApplicationTypeTwoView(true);
 			//rptGenBean.setSmSupplierView(true);
 			rptGenBean.setSmRegistrationNoView(true);
-			rptGenBean.setSmLAMofRegNoView(true);
+			//rptGenBean.setSmLAMofRegNoView(true);
+			rptGenBean.setSmMofRegNoView(true);
 			rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmApplicationDateView(true);
 			checkAuthorizationForSuppliers(rptGenBean, authoriztionList);
