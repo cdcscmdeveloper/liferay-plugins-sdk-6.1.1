@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"/>
 		</p:blockUI>
 
 		<ui:param name="isQTStatusReFinalized"
@@ -60,55 +60,41 @@
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
 
-		<p:tabMenu id="tab"
-			activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}">
-			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
-				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(0)}"
-				process="@form" update="@form" partialSubmit="true" style="width:150px;"
-				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK and 
-								!suppFinalizationBackingBean.managedBean.readOnly}">
-			</p:menuitem>
-			<p:menuitem value="#{lbl['lbl.sc.briefing.paper']}"
-				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(1)}"
-				process="@form" update="@form" partialSubmit="true" style="width:150px;">
-			</p:menuitem>
-			<p:menuitem value="#{lbl['lbl.sc.supplier.finalization']}"
-				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(2)}"
-				process="@form" update="@form" partialSubmit="true" style="width:225px;">
-			</p:menuitem>
-			<p:menuitem
-				value="#{lbl['lbl.sc.committee.endorsement.finalization']}"
-				actionListener="#{suppFinalizationBackingBean.onTabMenuChangeAction(3)}"
-				process="@form" update="@form" partialSubmit="true" style="width:330px;"
-				rendered="#{!suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK and
-								!suppFinalizationBackingBean.managedBean.readOnly}">
-			</p:menuitem>
+		<p:remoteCommand name="onMainTabMenuChangeAction" update="@form" 
+						 partialSubmit="true" process="@form" action="#{suppFinalizationBackingBean.onTabMenuChangeAction}" />
+		<p:tabMenu id="tab" activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}"
+				   model="#{suppFinalizationBackingBean.managedBean.mainMenuModel}">
+				   
+			<!-- Menu items are dynamically populated from backing bean -->
+			
 		</p:tabMenu>
 
 		<p:panel id="contentPanel">
-			<c:if
-				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.preparationTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/preparation/preparation.xhtml" />
 			</c:if>
-			<c:if
-				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.reportTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperReport.xhtml" />
 			</c:if>
-			<c:if
-				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.finalizationTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/supplierFinalization/suppplierFinalization.xhtml" />
 			</c:if>
-			<c:if
-				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.commEndorsementTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/committeeEndorsement/committeeEndorsement.xhtml" />
+			</c:if>
+
+			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+							suppFinalizationBackingBean.managedBean.endorsementReportActiveIndex}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/committeeEndorsement/endorsementReport.xhtml" />
 			</c:if>
 		</p:panel>
 
@@ -118,8 +104,8 @@
 			src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 
 		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg"
-			modal="true" resizable="false" width="700px" height="200"
-			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+				  modal="true" resizable="false" width="700px" height="200"
+				  styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
 
 			<p:fileUpload style="display:inline;"
 				fileUploadListener="#{suppFinalizationBackingBean.handleFileUpload}"
