@@ -4443,9 +4443,9 @@ public class ProfileManagementBackingBean extends
 					// check for any active org
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil
 							.retrieveActiveOrg(user.getUserId());
-					System.out.println("........pmUserOrgs="+pmUserOrgs);
+					
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
-						System.out.println("........pmUserOrgs.size()="+pmUserOrgs.size());
+						
 						// loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
 						// the identification Number already in DB
 						this.getManagedBean().getSelectedUser()
@@ -4473,23 +4473,36 @@ public class ProfileManagementBackingBean extends
 										orgProfile.getOrgCode() });
 							
 				     }else {
-				    		System.out.println("....else");
+				    		
 				    	 IPersonnelSO personnelSO;
 				    	 personnelSO = BusinessDelegate.getInstance().getServiceObject(
 									ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-				    		System.out.println("..............personnelSO="+personnelSO);
-				    		System.out.println("..............getManagedBean().getSelectedUser().getIdentificationNo()="+getManagedBean().getSelectedUser().getIdentificationNo());
+				    		
 				    		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 				    		reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
 				    		PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
-				    		System.out.println("..............resDTO1.isSupplierPersonnel()="+resDTO1.isSupplierPersonnel());
+				    		
 				    	 if(resDTO1.isSupplierPersonnel()){
 				    		 throw new EpException(MessageConst.ERROR_770214,
 										new String[] {getManagedBean().getSelectedUser().getIdentificationNo()});
 				    	 }
 					}
 
-				}
+				}else{//do validate by isSupplier
+					
+			    	 IPersonnelSO personnelSO;
+			    	 personnelSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+			    		
+			    		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			    		reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
+			    		PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
+			    		
+			    	 if(resDTO1.isSupplierPersonnel()){
+			    		 throw new EpException(MessageConst.ERROR_770214,
+									new String[] {getManagedBean().getSelectedUser().getIdentificationNo()});
+				 }
+			 	}
 
 			} finally {
 				userSO = null;
@@ -4544,9 +4557,9 @@ public class ProfileManagementBackingBean extends
 					// check for any active org
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil
 							.retrieveActiveOrg(user.getUserId());
-					System.out.println("........pmUserOrgs="+pmUserOrgs);
+					
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
-						System.out.println("........pmUserOrgs.size()="+pmUserOrgs.size());
+						
 						// loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
 						// the identification Number already in DB
 						this.getManagedBean().getSelectedUser()
@@ -4574,28 +4587,39 @@ public class ProfileManagementBackingBean extends
 										orgProfile.getOrgCode() });
 							
 				     }else {
-				    		System.out.println("....else");
+				    		
 				    	 IPersonnelSO personnelSO;
 				    	 personnelSO = BusinessDelegate.getInstance().getServiceObject(
 									ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-				    		System.out.println("..............personnelSO="+personnelSO);
-				    		System.out.println("..............getManagedBean().getSelectedUser().getIdentificationNo()="+getManagedBean().getSelectedUser().getIdentificationNo());
+
 				    		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 				    		reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
 				    		PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
-				    		System.out.println("..............resDTO1.isSupplierPersonnel()="+resDTO1.isSupplierPersonnel());
+//				    		
 				    	 if(resDTO1.isSupplierPersonnel()){
 				    		 throw new EpException(MessageConst.ERROR_770214,
 										new String[] {getManagedBean().getSelectedUser().getIdentificationNo()});
 				    	 }else{
-				    		 System.out.println(".........last else..");
+				    		
 						     loadUserInfo(user.getUserId());
 						// assign new pmUserOrg object to the current user
 				    	 }
 					}
 
-				}
+				}else{//do validate by isSupplier
+					
+			    	 IPersonnelSO personnelSO;
+			    	 personnelSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 
+			    		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			    		reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
+			    		PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
+			    	 if(resDTO1.isSupplierPersonnel()){
+			    		 throw new EpException(MessageConst.ERROR_770214,
+									new String[] {getManagedBean().getSelectedUser().getIdentificationNo()});
+				 }
+			 	}
 			} finally {
 				userSO = null;
 			}
