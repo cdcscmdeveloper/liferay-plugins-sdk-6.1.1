@@ -102,18 +102,18 @@
 		<p:spacer height="5px"></p:spacer>
 		<table>
 				<tr>
-					<td><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.click']}" escape="false" rendered="#{stopInstrBB.managedBean.lastFRNTaxInv}"/></td>
+					<td><h:outputText styleClass="instruction" value="#{lbl['lbl.txt.click']}" escape="false" rendered="#{stopInstrBB.managedBean.coGstr}"/></td>
 					<td><p:commandLink value="#{lbl['lbl.fl.instruction.here']}" style="font-size:10px;font-style:italic"
-							action="#{stopInstrBB.navigateToFlRequest()}" process="@this" rendered="#{stopInstrBB.managedBean.lastFRNTaxInv}" />
-							<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.gst.relief']}" escape="false" rendered="#{stopInstrBB.managedBean.lastFRNTaxInv}" /></td>
+							action="#{stopInstrBB.navigateToFlRequest()}" process="@this" rendered="#{stopInstrBB.managedBean.coGstr}" />
+							<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.gst.relief']}" escape="false" rendered="#{stopInstrBB.managedBean.coGstr}" /></td>
 
 				</tr>
 				<tr>
-					<td><p:selectBooleanCheckbox rendered="#{stopInstrBB.managedBean.lastFRNTaxInv}"
+					<td><p:selectBooleanCheckbox rendered="#{stopInstrBB.managedBean.coGstr}"
 							disabled="#{stopInstrBB.managedBean.buttonVal=='View'}"
 							value="#{stopInstrBB.managedBean.issuanceCogstrCheck}" /></td>
 					<td><h:outputText style="text-align:left"
-							value="#{lbl['lbl.fl.issuance.of.cogstr']}" rendered="#{stopInstrBB.managedBean.lastFRNTaxInv}" /></td>
+							value="#{lbl['lbl.fl.issuance.of.cogstr']}" rendered="#{stopInstrBB.managedBean.coGstr}" /></td>
 				</tr>
 			</table>
 		<p:blockUI widgetVar="blockTreeTable" block="chargeLineTbl">  
