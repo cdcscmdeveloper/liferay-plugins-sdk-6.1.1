@@ -108,37 +108,6 @@
 					<h:outputText value="#{lbl['lbl.sc.quantity']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
 				</f:facet>
-				<p:outputPanel id="quantityListTbl"  rendered="#{ (item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or
-										item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and 
-										(finalizationMethod == ParameterConst.recommendByMultipleAward or 
-											(item.awardedItem and item.activeSupplierCount gt 1)) }"> 
-					<h:outputText value="#{lbl['lbl.sc.max.quantity']}" style="text-align: right;">
-					</h:outputText>[
-					<h:outputText value="#{item.requestItem.quantity}" style="text-align: right;">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" />
-					</h:outputText>]									
-					<div class="datalist-quantity">
-						<p:dataList var="rdetail" value="#{item.recommendDtls}" type="none">						
-							<p:column>
-								<h:inputText value="#{rdetail.awardQty}" maxlength="13" size="10" required="true" 
-											 style="text-align:right; width:120px;" label="#{lbl['lbl.sc.quantity']}" 
-											 disabled="#{item.disabled or item.awardedItem or 
-											 				!(suppFinalizationBackingBean.managedBean.secretaryUser 
-											 					or suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}"
-											 rendered="#{rdetail.recordStatusFlg == DbValueConst.recordStatusActive}">
-									<p:ajax partialSubmit="true" process="@this" update="@this"/>
-									<p:ajax event="blur" partialSubmit="true" process="@this" 
-											update="@([id$=supplierListTblMultiple],[id$=itemSupplierListTblSingle])" 
-											listener="#{suppFinalizationBackingBean.updateOfferedPrice(rdetail)}"/>
-									<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, 
-														item.requestItem.uom.uomCode)}" maxIntegerDigits="10" maxFractionDigits="3"/>								
-								</h:inputText>
-								<br/>
-							</p:column>
-						</p:dataList>
-					</div>
-				</p:outputPanel>
-				
 				<h:outputText value="#{item.requestItem.quantity}" style="text-align: right;"
 					rendered="#{ (item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or
 									item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and
