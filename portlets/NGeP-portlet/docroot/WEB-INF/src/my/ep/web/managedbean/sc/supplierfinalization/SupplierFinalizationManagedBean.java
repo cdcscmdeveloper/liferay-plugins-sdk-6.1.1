@@ -52,6 +52,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String processName;
 	
 	//MenuModel
+	private MenuModel mainMenuModel;
 	private MenuModel zoneMenuModel;
 	
 	//Header
@@ -176,6 +177,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int reportTabIndex;
 	private int finalizationTabIndex;
 	private int commEndorsementTabIndex;
+	private int endorsementReportActiveIndex;
+	private List<Integer> endorsementReportTabIndexes;
 	
 
 	/**
@@ -1354,6 +1357,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the mainMenuModel
+	 */
+	public MenuModel getMainMenuModel() {
+		return mainMenuModel;
+	}
+
+	/**
+	 * @param mainMenuModel
+	 *            the mainMenuModel to set
+	 */
+	public void setMainMenuModel(MenuModel mainMenuModel) {
+		this.mainMenuModel = mainMenuModel;
+	}
+
+	/**
 	 * @return the zoneMenuModel
 	 */
 	public MenuModel getZoneMenuModel() {
@@ -1643,6 +1661,35 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.commEndorsementTabIndex = commEndorsementTabIndex;
 	}
 
-	
+	/**
+	 * @return the endorsementReportActiveIndex
+	 */
+	public int getEndorsementReportActiveIndex() {
+		return endorsementReportActiveIndex;
+	}
+
+	/**
+	 * @param endorsementReportActiveIndex
+	 *            the endorsementReportActiveIndex to set
+	 */
+	public void setEndorsementReportActiveIndex(int endorsementReportActiveIndex) {
+		this.endorsementReportActiveIndex = endorsementReportActiveIndex;
+	}
+
+	/**
+	 * @return the endorsementReportTabIndexes
+	 */
+	public List<Integer> getEndorsementReportTabIndexes() {
+		return endorsementReportTabIndexes;
+	}
+
+	/**
+	 * @param endorsementReportTabIndexes
+	 *            the endorsementReportTabIndexes to set
+	 */
+	public void setEndorsementReportTabIndexes(
+			List<Integer> endorsementReportTabIndexes) {
+		this.endorsementReportTabIndexes = endorsementReportTabIndexes;
+	}
 
 }
