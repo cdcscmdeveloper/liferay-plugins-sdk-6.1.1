@@ -9,27 +9,28 @@
 	<div class="header-spacing">
 			<p:outputPanel id="accessApplBttnOp">
 			<table style="width: 100%;">
-				<tr>
+				<tr style="float:right">
 					<td><p:commandButton value="#{lbl['lbl.btn.submit']}" 
 							action="#{accessApplBackingBean.saveAccessApplication('SAVE')}" 
 							disabled="#{not accessApplBackingBean.managedBean.declarationChecked or not accessApplBackingBean.managedBean.tncChecked}" 
-							update="@([id$=Msg])"  style="float:right;" 
+							update="@([id$=Msg])"  onstart="blockWidget.show()" 
+							oncomplete="blockWidget.hide()"
 							rendered="#{isBrandNew}">
 							 <f:param name="disableValidation" value="true" /> 
 						</p:commandButton>
-						
-						 <ui:repeat var="action" value="#{accessApplBackingBean.managedBean.outComes}" 
-						 	rendered ="#{not isBrandNew}">
-							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
-							<p:commandButton value="#{lbl[buttonLabel]}" 
-								ajax="false" 
-								style="float:right;" 
-								action="#{accessApplBackingBean.saveAccessApplication(action)}" >
-								<f:param name="disableValidation" value="true" /> 
-							</p:commandButton>
-						</ui:repeat>
 					</td>
-					<td></td>
+					<ui:repeat var="action" value="#{accessApplBackingBean.managedBean.outComes}" 
+						rendered ="#{not isBrandNew}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+							<td>
+								<p:commandButton value="#{lbl[buttonLabel]}" 
+									action="#{accessApplBackingBean.saveAccessApplication(action)}" 
+									onstart="blockWidget.show()" 
+									oncomplete="blockWidget.hide()">
+									<f:param name="disableValidation" value="true" /> 
+							</p:commandButton>
+							</td>
+						</ui:repeat>
 				</tr>
 			</table>
 			</p:outputPanel>	
