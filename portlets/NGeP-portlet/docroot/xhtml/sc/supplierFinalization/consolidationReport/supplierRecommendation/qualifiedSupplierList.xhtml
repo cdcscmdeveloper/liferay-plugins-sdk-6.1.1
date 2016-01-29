@@ -103,7 +103,7 @@
 							maxIntegerDigits="3" integerOnly="true" />
 							<f:attribute name="min" value="1" />
 							<f:attribute name="max" value="#{consolidationReportBackingBean.managedBean.maxRank}" />
-						<p:ajax event="blur" partialSubmit="true" process="@this" update="@this"/>						
+						<p:ajax partialSubmit="true" process="@this" update="@this"/>						
 					</p:inputText>
 					<p:message id="deskOfficerRankInputErrorMsg" for="deskOfficerRankInput" display="icon"/>					
 				</p:column>
@@ -113,7 +113,7 @@
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 required="#{!empty qualifiedSupp.deskOfficerRank ? true : false}" 
 								 size="20" autocomplete="false" >
-						<p:ajax event="blur" partialSubmit="true" process="@this" update="@this"/>
+						<p:ajax partialSubmit="true" process="@this" update="@this"/>
 					</p:inputText>
 					<p:message id="deskOfficerRemarksErrorMsg" for="deskOfficerRemarks" display="icon"/>					
 				</p:column>
