@@ -993,7 +993,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
 				sb.append(getManagedBean().getButtonAction());
 				getManagedBean().setTextBeforeSign(sb.toString());
-			}else if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
+			}else if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (hasGovtSellerRole() || isSupplierRole())) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("DO-");
 				sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
