@@ -11072,6 +11072,7 @@ public class ReportBackingBean extends
 			rptGenBean = new ReportsGenerateBean();
 			// rptGenBean.setReportCategoryView(this.isReportCategoryView());
 		}
+		getManagedBean().setModuleNameValue(this.getModuleValue());
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
 		this.setReportName(ReportConst.EMPTY_VAL);

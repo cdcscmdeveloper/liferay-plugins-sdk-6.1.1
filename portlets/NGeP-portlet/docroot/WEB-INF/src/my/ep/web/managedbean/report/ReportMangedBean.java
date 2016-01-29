@@ -37,6 +37,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;	
 	private ScQt scQt;
 	private Long scQtId;
+	private String moduleNameValue;
 	
 	/** The search value. */
 	private String[] searchValue = new String[3];
@@ -251,6 +252,18 @@ public class ReportMangedBean extends BaseManagedBean{
 	 */
 	public void setLoaReportDocumentList(List<ScLoaReport> loaReportDocumentList) {
 		this.loaReportDocumentList = loaReportDocumentList;
+	}
+	/**
+	 * @return the moduleNameValue
+	 */
+	public String getModuleNameValue() {
+		return moduleNameValue;
+	}
+	/**
+	 * @param moduleNameValue the moduleNameValue to set
+	 */
+	public void setModuleNameValue(String moduleNameValue) {
+		this.moduleNameValue = moduleNameValue;
 	}
 	
 	
