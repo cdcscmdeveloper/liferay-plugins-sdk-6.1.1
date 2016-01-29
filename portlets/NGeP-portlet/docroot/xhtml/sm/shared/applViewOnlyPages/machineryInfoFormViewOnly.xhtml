@@ -13,8 +13,18 @@
 				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 				<ac:paginator for="macDt" />
 
-				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}">
-					<h:outputText value="#{macBean.machineType}" />
+				<p:column headerText="#{lbl['lbl.sm.machine.category']}">
+					<h:outputText value="#{viewSmApplBackingBean.getMachineCategoryType(macBean)}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.machine.categorycode']}" style="width : 25%;white-space: normal;">
+					<h:outputText value="#{macBean.categoryCode.categoryL3Code} - #{macBean.categoryCode.categoryName}" 
+						rendered="#{not empty macBean.categoryCode}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}" style="width : 25%;white-space: normal;">
+					<h:outputText value="#{macBean.machineType}" rendered="#{not empty macBean.machineType}"/>
+					<h:outputText value="#{macBean.machine.machineDesc}" rendered="#{empty macBean.machineType}"/>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
@@ -54,8 +64,27 @@
 		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.machine.category']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getMachineCategoryType(viewSmApplBackingBean.managedBean.selectedMachine)}" /></td>
+				</tr>
+				<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.selectedMachine.categoryCode}">
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.machine.categorycode']}" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view"
+								 value="#{viewSmApplBackingBean.managedBean.selectedMachine.categoryCode.categoryL3Code} - 
+								 		#{viewSmApplBackingBean.managedBean.selectedMachine.categoryCode.categoryName}" />
+						</td>
+					</tr>
+				</p:outputPanel>
+				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.machine.equiType']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineType}" /></td>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineType}" 
+							rendered="#{not empty viewSmApplBackingBean.managedBean.selectedMachine.machineType}"/>
+						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.machine.machineDesc}" 
+							rendered="#{empty viewSmApplBackingBean.managedBean.selectedMachine.machineType}"/>
+					</td>
 				</tr>
 	
 				<tr>

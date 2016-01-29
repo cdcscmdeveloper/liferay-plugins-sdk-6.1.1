@@ -50,9 +50,19 @@
 				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 				<ac:paginator for="macDt" />
 				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smMachineDtls}"/>
-
-				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}">
-					<h:outputText value="#{macBean.machineType}" />
+				
+				<p:column headerText="#{lbl['lbl.sm.machine.category']}">
+					<h:outputText value="#{backingBean.getMachineCategoryType(macBean)}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.machine.categorycode']}" style="width : 25%;white-space: normal;">
+					<h:outputText value="#{macBean.categoryCode.categoryL3Code} - #{macBean.categoryCode.categoryName}" 
+						rendered="#{not empty macBean.categoryCode}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}" style="width : 25%;white-space: normal;">
+					<h:outputText value="#{macBean.machineType}" rendered="#{not empty macBean.machineType}"/>
+					<h:outputText value="#{macBean.machine.machineDesc}" rendered="#{empty macBean.machineType}"/>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
@@ -126,112 +136,213 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="600px" height="350px"
+	<p:dialog width="700px" height="400px"
 		header="#{lbl['lbl.sm.machine.diaHdr']}" widgetVar="equipmentDialog"
 		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="equipmentDialog">
-
-		<p:messages id="equipmentDialogMsg" showSummary="false"
-			showDetail="true" autoUpdate="true" closable="true" />
-
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="50"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.machine.equiType']}" id="smMachEquiType"
-						value="#{backingBean.managedBean.selectedMachine.machineType}"
-						size="35" /> <p:message id="smMachEquiTypeMsg"
-						for="smMachEquiType" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="50"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.machine.brand']}" id="smMachBrand"
-						value="#{backingBean.managedBean.selectedMachine.brandName}"
-						size="35">
-					</p:inputText> <p:message id="smMachBrandMsg" for="smMachBrand"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="50"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.machine.function']}" id="smMachFnc"
-						value="#{backingBean.managedBean.selectedMachine.machineFunction}"
-						size="35" /> <p:message id="smMachFncMsg" for="smMachFnc"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="6"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.machine.quantity']}" id="smMachQuant"
-						value="#{backingBean.managedBean.selectedMachine.qty}" size="35" />
-					<p:message id="smMachQuantMsg" for="smMachQuant" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="18"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.machine.value']}" id="smMachVal"
-						value="#{backingBean.managedBean.selectedMachine.value}" size="35">
-						<f:validateDoubleRange
-							minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-							maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						<p:ajax process="@this" partialSubmit="true"
-							update="@this,smMachValMsg" />
-					</p:inputText> <p:message id="smMachValMsg" for="smMachVal" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purMthd']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.machine.purMthd']}" id="smMachPurMthd"
-						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItems value="#{backingBean.getDropdownCodeValues('BM')}" />
-					</p:selectOneMenu> <p:message id="smMachPurMthdMsg" for="smMachPurMthd"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
-				<td><p:inputText maxlength="50"
-						value="#{backingBean.managedBean.selectedMachine.guarantorName}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.machine.purchase.year']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
-						required="#{backingBean.managedBean.valueReqd}"
-						validatorMessage="#{lbl['lbl.sm.machine.purchase.year.invalid.msg']}"
-						label="#{lbl['lbl.sm.machine.purchase.year']}" id="smMachPurYr"
-						value="#{backingBean.managedBean.selectedMachine.purchaseYear}"
-						size="35">
-						<f:validateLongRange minimum="1950"
-							maximum="#{backingBean.managedBean.currYear}" />
-					</p:inputText> <p:message id="smMachPurYrMsg" for="smMachPurYr"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-
-
-		</table>
+		
+		<p:outputPanel id="machineOutPanelId">
+			<p:messages id="equipmentDialogMsg" showSummary="false"
+				showDetail="true" autoUpdate="true" closable="true" />
+	
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.machine.category']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory"/>
+					</td>
+					<td><p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.machine.category']}" id="smMachineCatTypeId"
+							value="#{backingBean.managedBean.selectedMachine.categoryType.parameterId}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{backingBean.managedBean.categoryTypeItems}" />
+							<p:ajax event="change" process="@this" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								listener="#{backingBean.onChangeCategoryType()}"
+								update="machineOutPanelId" />
+						</p:selectOneMenu>
+						<p:message id="smMachineCatTypeIdMsg" for="smMachineCatTypeId"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<p:outputPanel rendered="#{backingBean.managedBean.selectedMachine.categoryType.parameterCode eq 'PC'}">
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sm.machine.categorycode']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory"/>
+						</td>
+						<td><p:selectOneMenu
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.machine.categorycode']}" id="smMachineCatCodeId"
+								value="#{backingBean.managedBean.selectedMachine.categoryCode.categoryL3Id}"
+								style="width: 207px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems value="#{backingBean.managedBean.categoryCodeItems}" />
+								<p:ajax event="change" process="@this"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									listener="#{backingBean.onChangeCategoryCode()}"
+									update="machineOutPanelId" />
+							</p:selectOneMenu>
+							<p:message id="smMachineCatCodeIdMsg" for="smMachineCatCodeId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+				</p:outputPanel>
+				<tr>
+					<td style="border-style: none !important;float: right !important;">
+						<p:selectBooleanCheckbox value="#{backingBean.managedBean.othersMachine}">
+							<p:ajax event="change" partialSubmit="true" process="@this" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update="machineOutPanelId" listener="#{backingBean.onTickOtherMachine()}"/>
+						</p:selectBooleanCheckbox>
+					</td>
+					<td valign="top" style="border-style: none !important;">
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.machine.equiType.others']}" />
+					</td>
+				</tr>
+				<p:outputPanel rendered="#{!backingBean.managedBean.othersMachine}">
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory"/>
+						</td>
+						<td><p:selectOneMenu
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.machine.equiType']}" id="smMachineTypeId"
+								value="#{backingBean.managedBean.selectedMachine.machine.machineId}"
+								style="width: 207px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems value="#{backingBean.managedBean.machineItems}" />
+								<p:ajax event="change" process="@this" update="@this" />
+							</p:selectOneMenu>
+							<p:message id="smMachineTypeIdMsg" for="smMachineTypeId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.othersMachine}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:inputText maxlength="50"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.machine.equiType']}" id="smMachEquiType"
+								value="#{backingBean.managedBean.selectedMachine.machineType}"
+								size="35" >
+								<p:ajax process="@this" update="@this,smMachEquiTypeMsg" partialSubmit="true" event="blur" />
+							</p:inputText> 
+							<p:message id="smMachEquiTypeMsg"
+								for="smMachEquiType" showSummary="true" showDetail="false"
+								display="icon" />
+						</td>
+					</tr>
+				</p:outputPanel>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="50"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.machine.brand']}" id="smMachBrand"
+							value="#{backingBean.managedBean.selectedMachine.brandName}"
+							size="35">
+							<p:ajax process="@this" update="@this,smMachBrandMsg" partialSubmit="true" event="blur" />
+						</p:inputText> 
+						<p:message id="smMachBrandMsg" for="smMachBrand"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="50"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.machine.function']}" id="smMachFnc"
+							value="#{backingBean.managedBean.selectedMachine.machineFunction}"
+							size="35" >
+							<p:ajax process="@this" update="@this,smMachFncMsg" partialSubmit="true" event="blur" />
+						</p:inputText> 
+						<p:message id="smMachFncMsg" for="smMachFnc"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="6"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.machine.quantity']}" id="smMachQuant"
+							value="#{backingBean.managedBean.selectedMachine.qty}" size="35">
+							<p:ajax process="@this" update="@this,smMachQuantMsg" partialSubmit="true" event="blur" />
+						</p:inputText>
+						<p:message id="smMachQuantMsg" for="smMachQuant" showSummary="true"
+							showDetail="false" display="icon" />
+					</td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="18"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.machine.value']}" id="smMachVal"
+							value="#{backingBean.managedBean.selectedMachine.value}" size="35">
+							<f:validateDoubleRange 
+								minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+								maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							<p:ajax process="@this" partialSubmit="true" event="blur"
+								update="@this,smMachValMsg" />
+						</p:inputText> 
+						<p:message id="smMachValMsg" for="smMachVal" showSummary="true"
+							showDetail="false" display="icon" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.purMthd']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.machine.purMthd']}" id="smMachPurMthd"
+							value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItems value="#{backingBean.getDropdownCodeValues('BM')}" />
+							<p:ajax process="@this" update="@this,smMachPurMthdMsg" partialSubmit="true" event="change" />
+						</p:selectOneMenu> 
+						<p:message id="smMachPurMthdMsg" for="smMachPurMthd"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
+					<td><p:inputText maxlength="50"
+							value="#{backingBean.managedBean.selectedMachine.guarantorName}"
+							size="35" >
+							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+						</p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.machine.purchase.year']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
+							required="#{backingBean.managedBean.valueReqd}"
+							validatorMessage="#{lbl['lbl.sm.machine.purchase.year.invalid.msg']}"
+							label="#{lbl['lbl.sm.machine.purchase.year']}" id="smMachPurYr"
+							value="#{backingBean.managedBean.selectedMachine.purchaseYear}"
+							size="35">
+							<f:validateLongRange minimum="1950" 
+								maximum="#{backingBean.managedBean.currYear}" />
+							<p:ajax process="@this" update="@this,smMachPurYrMsg" partialSubmit="true" event="blur" />
+						</p:inputText> 
+						<p:message id="smMachPurYrMsg" for="smMachPurYr"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+				</tr>
+	
+	
+			</table>
+		</p:outputPanel>
 		<br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
@@ -239,7 +350,7 @@
 				partialSubmit="true" process="equipmentDialog"
 				update=":form:tt:macDt, @([Id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				partialSubmit="true" process="@this"
+				partialSubmit="true" process="@this" update="machineOutPanelId"
 				action="#{backingBean.cancelMachineSaveorUpdate}" />
 		</div>
 	</p:dialog>
