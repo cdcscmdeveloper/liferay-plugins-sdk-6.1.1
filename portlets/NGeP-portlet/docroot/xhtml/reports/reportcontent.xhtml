@@ -23,12 +23,12 @@
       <c:when test="#{smReportBackingBean.managedBean.rptGenBean.collectorGovRegistrationChkView ||
                       smReportBackingBean.managedBean.rptGenBean.collectorCDCRegistrationChkView}">
      .columnSmTableClass {
-	         margin-top: 1%;
+	         margin-top: 0%;
 	         }
       </c:when>      
       <c:otherwise>
      .columnSmTableClass {
-	    margin-top: 1%;
+	    margin-top: 0%;
 	    }
       </c:otherwise>
     </c:choose>
@@ -37,32 +37,32 @@
 
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'PP'}">
 .columnPpTableClass {
-	margin-top: -5%;
+	margin-top: 0%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'CT'}">
 .columnCtTableClass {
-	margin-top: -4%;
+	margin-top: 0%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'DP'}">
 .columnScTableClass {
-	margin-top: 1%;
+	margin-top: 0%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'SC'}">
 .columnScTableClass {
-	margin-top: 1%;
+	margin-top: 0%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'PM'}">
 .columnPmTableClass {
-	margin-top: -7%;
+	margin-top: 2%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'FL'}">
 .columnFlTableClass {
-	margin-top: -4%;
+	margin-top: 2%;
 }
 </c:if>
 
