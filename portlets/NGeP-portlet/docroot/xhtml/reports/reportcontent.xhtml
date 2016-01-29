@@ -8,9 +8,66 @@
 
 
 <style type="text/css">
-/* 
-  for Common allignement for all screens
+/*   
+  This is for space removal allignement for All Modules.
 */
+
+<c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'CM'}">
+.columnCmTableClass {
+	margin-top: 1%;
+}
+</c:if>
+
+<c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'SM'}"> 
+ <c:choose>
+      <c:when test="#{smReportBackingBean.managedBean.rptGenBean.collectorGovRegistrationChkView ||
+                      smReportBackingBean.managedBean.rptGenBean.collectorCDCRegistrationChkView}">
+     .columnSmTableClass {
+	         margin-top: 1%;
+	         }
+      </c:when>      
+      <c:otherwise>
+     .columnSmTableClass {
+	    margin-top: 1%;
+	    }
+      </c:otherwise>
+    </c:choose>
+
+</c:if>
+
+<c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'PP'}">
+.columnPpTableClass {
+	margin-top: -5%;
+}
+</c:if>
+<c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'CT'}">
+.columnCtTableClass {
+	margin-top: -4%;
+}
+</c:if>
+<c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'DP'}">
+.columnScTableClass {
+	margin-top: 1%;
+}
+</c:if>
+<c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'SC'}">
+.columnScTableClass {
+	margin-top: 1%;
+}
+</c:if>
+<c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'PM'}">
+.columnPmTableClass {
+	margin-top: -7%;
+}
+</c:if>
+<c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'FL'}">
+.columnFlTableClass {
+	margin-top: -4%;
+}
+</c:if>
+
+/* for Common allignement for all screens */
+
 .columnGenClass {
 	width: 15%;
 }
@@ -424,21 +481,21 @@
 												</tr>
 											</c:if>
 											<tr>
-												<td><ui:include src="smreportcontent.xhtml"></ui:include>
-													<ui:include src="screportcontent.xhtml"></ui:include> <ui:include
-														src="cmreportcontent.xhtml"></ui:include> <ui:include
-														src="flreportcontent.xhtml"></ui:include> <ui:include
-														src="ctreportcontent.xhtml"></ui:include> <ui:include
+												<td><ui:include src="cmreportcontent.xhtml"></ui:include>
+													<ui:include src="cmunspscdialog.xhtml"></ui:include> <ui:include
+														src="smreportcontent.xhtml"></ui:include> <ui:include
 														src="ppreportcontent.xhtml"></ui:include> <ui:include
-														src="pmreportcontent.xhtml"></ui:include> <ui:include
+														src="ctreportcontent.xhtml"></ui:include> <ui:include
+														src="screportcontent.xhtml"></ui:include> <ui:include
 														src="scloadocument.xhtml"></ui:include> <ui:include
-														src="cmunspscdialog.xhtml"></ui:include></td>
+														src="pmreportcontent.xhtml"></ui:include> <ui:include
+														src="flreportcontent.xhtml"></ui:include></td>
 											</tr>
 										</table>
 										<div>
 											<c:if
 												test="#{reportBackingBean.managedBean.rptGenBean.fromDateView}">
-												<TABLE style="width: 100%;" class="">
+												<TABLE style="width: 100%;">
 													<TR>
 														<TD class="columnGenClass"><p:outputLabel
 																value="#{lbl['lbl.rpt.dtRangeFrm']}"
