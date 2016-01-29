@@ -1,0 +1,425 @@
+<html>
+<head>
+	<style>
+		.header {
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:16px;
+			font-weight: bold;
+			text-align:left;
+		}
+		.standard{
+			color: #333; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			text-align:left;
+		}
+		.title{
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			font-weight: bold;
+			text-align:left;
+		}
+		.border{
+			border-TOP: 1px solid #a2a2a2;
+			border-bottom: 1px solid #a2a2a2;
+		}
+		.border-bottom{
+			border-bottom: 1px solid #a2a2a2;
+		}
+		.left-right {
+			border-left: 1px solid #a2a2a2;
+			border-right: 1px solid #a2a2a2;
+		}
+		.left{
+			border-left: 1px solid #a2a2a2;
+		}
+		.right{
+			border-right: 1px solid #a2a2a2;
+		}
+		table, td, th {
+			border: 0 solid #555;
+		}
+		table{
+			width: 100%;
+		}
+		th{
+			height: 20px;
+			padding: 5px 5px 5px 10px;
+		}
+		td{
+			height: 18px;
+			padding: 5px 5px 5px 10px;
+		}
+		.white{
+			color:#fff;
+		}
+	</style>
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KERTAS KEPUTUSAN </span>
+            <br/><br/>
+        </td>
+    </tr>
+	<tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> LEMBAGA PEROLEHAN B </span>
+            <br/>
+        </td>
+    </tr>
+	<tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KEMENTERIAN KESELAMATAN DALAM NEGERI </span>
+            <br/><br/>
+        </td>
+    </tr>
+	<tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> MESYUARAT BIL. (meeting no)</span>
+            <br/>
+        </td>
+    </tr>
+	<tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> (Meeting Date) </span>
+            <br/><br/>
+        </td>
+    </tr>
+	<tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> (Meeting Location) </span>
+            <br/><br/>
+        </td>
+    </tr>
+	<tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> TENDER PEMBEKALAN MINYAK PELINCIR (MARIN) UNTUK POLIS DIRAJA MALAYSIA </span>
+            <br/><br/><br/><br/>
+        </td>
+    </tr>
+    <tr>
+    	<td>
+		#if ($isZonal == "true")
+			#if ($zoneDetailsMap.keySet())
+				#foreach ($specZoneDtl in $zoneDetailsMap.keySet())
+					#set ($zoneReportDTO = $zoneDetailsMap.get($specZoneDtl))
+					<span>Zone Name : <b>$specZoneDtl.zoneName</b></span>
+					<br/><br/>
+								
+					#if ($itemized == "true")
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									<td width="15%" bgcolor="#6d839b" class="title border left">Item</td>
+									<td bgcolor="#6d839b" class="title border right">
+										<table width="100%" border="0" cellpadding="0" cellspacing="0">
+											<tbody>
+												<tr>
+													<td width="11%" bgcolor="#6d839b" class="title left">Supplier Code</td>
+													<td width="12%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
+													<td width="13%" bgcolor="#6d839b" class="title left">Total Score</td>
+													<td width="11%" bgcolor="#6d839b" class="title left">Ranking</td>
+													<td width="11%" bgcolor="#6d839b" class="title left">Unit Price</td>
+													<td width="11%" bgcolor="#6d839b" class="title left">Quantity</td>
+													<td width="17%" bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								#foreach( $item in $zoneReportDTO.recommendedItems )
+									<tr class="ui-content">
+										<td width="15%" class="standard border-bottom left">$item.requestItem.itemName</td>
+										#if ($item.awardSupplierList && $item.awardSupplierList.size() > 0)
+											<td class="standard border-bottom right">
+												#set ($count = 0)
+												#foreach( $evalResultDtl in $item.awardSupplierList )
+													<table width="100%" border="0" cellpadding="0" cellspacing="0">
+														<tbody>
+															<tr>
+																#if ($evalResultDtl.awareded)
+																	<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+																	<td width="12%" class="standard left">
+																		#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+																			Yes
+																		#else
+																			No
+																		#end
+																	</td>
+																	<td width="13%" class="standard left alignRight">$evalResultDtl.totalScore</td>
+																	<td width="11%" class="standard left">$evalResultDtl.evalRank</td>
+																	<td width="11%" class="standard left">$numberFormatter.format($evalResultDtl.scQtRecommendDtl.get(0).scQtProposalItem.finalPrice)</td>
+																	<td width="11%" class="standard left">$evalResultDtl.scQtRecommendDtl.get(0).awardQty</td>
+																	<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>
+																#else 
+																	#set ($count = $count + 1)
+																#end														
+															</tr>
+														</tbody>
+													</table>
+												#end
+												#if ($count == $item.awardSupplierList.size())
+													No awarded supplier for this item
+												#end										
+											</td>
+										#else
+											No awarded supplier for this item
+										#end
+									</tr>
+								#end
+							</tbody>
+						</table>
+					#else
+						#if (!$zoneReportDTO.empty)
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tbody>
+									<tr>
+										<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
+										<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
+										<td width="23%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
+										<td width="12%" bgcolor="#6d839b" class="title border left">Total Score</td>
+										<td width="10%" bgcolor="#6d839b" class="title border left">Ranking</td>
+									</tr>
+									#foreach($supplierDtl in $zoneReportDTO.awardedSuppliers)
+										#set($String = "formatter")
+										#if($supplierDtl.awareded)
+										<tr class="ui-content">
+											<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+											<td width="12%" class="standard border-bottom left">
+												#if ($supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+													Yes
+												#else
+													No
+												#end
+											</td>
+											<td width="23%" class="standard border-bottom left">$zoneReportDTO.afterNegoSubTotal</td>
+											<td width="12%" class="standard border-bottom left">$String.format("%.2f", $supplierDtl.totalScore)</td>
+											<td width="10%" class="standard border-bottom left-right">$supplierDtl.evalRank</td>
+										</tr>
+										#end
+									#end
+								</tbody>
+							</table>
+							<br/>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tbody>
+									<tr>
+										<td width="20%" bgcolor="#6d839b" class="title border left">Item</td>
+										<td width="10%" bgcolor="#6d839b" class="title border left">Quantity</td>
+										<td width="15%" bgcolor="#6d839b" class="title border left">Unit Price (RM)</td>
+										<td width="15%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
+									</tr>
+									#foreach( $loiLoaItem in $zoneReportDTO.loiLoaItems )
+										#set($String = "formatter")
+										<tr class="ui-content">
+											<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
+											<td class="standard border-bottom left alignRight">
+												#if ($!loiLoaItem.tplSpecTierQty )
+												   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
+												#else
+												   $loiLoaItem.qty
+												#end 
+											</td>
+											<td class="standard border-bottom left alignRight">
+												#if($!loiLoaItem.scQtProposalItem.offerPrice) 
+													$String.format("%.2f", $loiLoaItem.scQtProposalItem.offerPrice) 
+												#end
+											</td>
+											<td class="standard border-bottom left-right alignRight">
+												#if ( $!loiLoaItem.unitPrice )
+													$String.format("%.2f", $loiLoaItem.unitPrice) 
+												#else
+													<!-- $numberFormatter.format($!loiLoaItem.afterNegoSubTotal) -->
+												#end
+											</td>
+										</tr>
+									#end
+				
+									<tr class="ui-content">
+										<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Total</th>
+										<td bgcolor="#6d839b" class="title border left alignRight">$zoneReportDTO.afterNegoSubTotal</td>
+									</tr>
+								</tbody>
+							</table>
+						#else
+							No awarded supplier (or) all suppliers have rejected the LOI in this zone
+						#end
+					#end
+					<br/><br/><br/><br/>
+				#end
+			#end 
+		#else
+			#if ($itemized == "true")
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<td width="15%" bgcolor="#6d839b" class="title border left">Item</td>
+							<td bgcolor="#6d839b" class="title border right">
+								<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tbody>
+										<tr>
+											<td width="11%" bgcolor="#6d839b" class="title left">Supplier Code</td>
+											<td width="12%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
+											<td width="13%" bgcolor="#6d839b" class="title left">Total Score</td>
+											<td width="11%" bgcolor="#6d839b" class="title left">Ranking</td>
+											<td width="11%" bgcolor="#6d839b" class="title left">Unit Price</td>
+											<td width="11%" bgcolor="#6d839b" class="title left">Quantity</td>
+											<td width="17%" bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						#foreach ($item in $reportDTO.recommendedItems)
+							<tr class="ui-content">
+								<td width="15%" class="standard border-bottom left">$item.requestItem.itemName</td>
+								#if ($item.awardSupplierList && $item.awardSupplierList.size() > 0)
+									<td class="standard border-bottom right">
+										#set ($count = 0)
+										#foreach ($evalResultDtl in $item.awardSupplierList)
+											<table width="100%" border="0" cellpadding="0" cellspacing="0">
+												<tbody>
+													<tr>
+														#if ($evalResultDtl.awareded)
+															<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+															<td width="12%" class="standard left">
+																#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+																	Yes
+																#else
+																	No
+																#end
+															</td>
+															<td width="13%" class="standard left alignRight">$evalResultDtl.totalScore</td>
+															<td width="11%" class="standard left">$evalResultDtl.evalRank</td>
+															<td width="11%" class="standard left">$numberFormatter.format($evalResultDtl.scQtRecommendDtl.get(0).scQtProposalItem.finalPrice)</td>											
+															<td width="11%" class="standard left">$evalResultDtl.scQtRecommendDtl.get(0).awardQty</td>
+															<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>											
+														#else 
+															#set ($count = $count + 1)
+														#end
+													</tr>
+												</tbody>
+											</table>
+									    #end
+										#if ($count == $item.awardSupplierList.size())
+											No awarded supplier for this item
+										#end							    
+									</td>
+								#else 
+									<td class="standard border-bottom right" colspan="8">
+										No awarded supplier for this item
+									</td>
+								#end
+							</tr>
+						#end
+					</tbody>
+				</table>
+			#else
+				<br/>
+				#if (!$reportDTO.empty)
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tbody>
+							<tr>
+								<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
+								<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
+								<td width="23%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
+								<td width="12%" bgcolor="#6d839b" class="title border left">Total Score</td>
+								<td width="10%" bgcolor="#6d839b" class="title border left">Ranking</td>
+							</tr>
+							#foreach($supplierDtl in $reportDTO.awardedSuppliers)
+								#set($String = "formatter")
+								#if($supplierDtl.awareded)
+								<tr class="ui-content">
+									<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+									<td width="12%" class="standard border-bottom left">
+										#if ($supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+											Yes
+										#else
+											No
+										#end
+									</td>
+									<td width="23%" class="standard border-bottom left">$reportDTO.afterNegoSubTotal</td>
+									<td width="12%" class="standard border-bottom left">$String.format("%.2f", $supplierDtl.totalScore)</td>
+									<td width="10%" class="standard border-bottom left-right">$supplierDtl.evalRank</td>
+								</tr>
+								#end
+							#end
+						</tbody>
+					</table>
+					<br/>
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tbody>
+							<tr>
+								<td width="20%" bgcolor="#6d839b" class="title border left">Item</td>
+								<td width="10%" bgcolor="#6d839b" class="title border left">Quantity</td>
+								<td width="15%" bgcolor="#6d839b" class="title border left">Unit Price (RM)</td>
+								<td width="15%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
+							</tr>
+							#foreach( $loiLoaItem in $reportDTO.loiLoaItems )
+								#set($String = "formatter")
+								<tr class="ui-content">
+									<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
+									<td class="standard border-bottom left alignRight">
+										#if ($!loiLoaItem.tplSpecTierQty )
+										   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
+										#else
+										   $loiLoaItem.qty
+										#end 
+									</td>
+									<td class="standard border-bottom left alignRight">
+										#if($!loiLoaItem.scQtProposalItem.offerPrice) 
+											$String.format("%.2f", $loiLoaItem.scQtProposalItem.offerPrice) 
+										#end
+									</td>
+									<td class="standard border-bottom left-right alignRight">
+										#if ( $!loiLoaItem.unitPrice )
+											$String.format("%.2f", $loiLoaItem.unitPrice) 
+										#else
+											<!-- $numberFormatter.format($!loiLoaItem.afterNegoSubTotal) -->
+										#end
+									</td>
+								</tr>
+							#end
+		
+							<tr class="ui-content">
+								<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Total</th>
+								<td bgcolor="#6d839b" class="title border left alignRight">$reportDTO.afterNegoSubTotal</td>
+							</tr>
+						</tbody>
+					</table>
+				#else
+					No awarded supplier
+				#end		
+			#end 
+		#end  
+		</td>  
+    </tr>
+	<tr>
+		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>---------------- </span>
+		<br /><br/><br/><br/></td>
+	</tr>
+	<tr>
+		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Pengerusi Lembaga Perolehan 'B' <br />
+		Kementerian Keselamatan Dalam Negeri <br />
+		---------------- </span>
+		<br /><br/><br/><br/></td>
+	</tr>
+	<tr>
+		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Ahli Lembaga Perolehan 'B' <br />
+		(Bahagian Perolehan) <br />
+		---------------- </span>
+		<br /><br/><br/><br/></td>
+	</tr>
+    <tr>
+		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Wakil Ketua Pengarah Kerja Raya <br />
+		---------------- </span>
+		<br /><br/><br/><br/></td>
+	</tr>
+</table>
+<br/>
+</body>
+</html>
