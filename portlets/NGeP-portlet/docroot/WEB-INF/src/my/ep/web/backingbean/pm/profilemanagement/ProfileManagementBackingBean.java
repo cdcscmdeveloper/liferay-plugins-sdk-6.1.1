@@ -41,6 +41,7 @@ import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -62,6 +63,8 @@ import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -3919,6 +3922,7 @@ public class ProfileManagementBackingBean extends
 			user = this.getManagedBean().getSelectedUser();
 			userOrg = this.getManagedBean().getSelectedUserOrg();
 			// Validation
+			checkIdentificationNumber1();
 			validateUser(user, userOrg);
 			// addressEntered = validateUserAddress(this.getManagedBean()
 			// .getUserAddress());
@@ -4392,7 +4396,107 @@ public class ProfileManagementBackingBean extends
 		}
 		logger.info("changePassword - END");
 	}
+	public void checkIdentificationNumber1() {
+		System.out.println(".............checkIdentificationNumber1...........");
+		this.getManagedBean().getSelectedUser().setHasActiveOrg(false);
+		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+		if (getManagedBean().getSelectedUser().getIdentificationNo() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getSelectedUser()
+						.getIdentificationNo())
+				&& getManagedBean().getSelectedUser().getIdentificationCode()
+						.getParameterCode() != null) {
+			SearchFilterBean idNoSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			idNoSearchBean.setSearchField("identificationNo");
+			idNoSearchBean.setSearchValue(getManagedBean().getSelectedUser()
+					.getIdentificationNo());
 
+			searchBean.getDataFilterBeans().add(idNoSearchBean);
+
+			searchBean
+					.getDataFilterBeans()
+					.add(new SearchFilterBean(
+							"identificationCode.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getSelectedUser()
+									.getIdentificationCode().getParameterCode()));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserSearchBean(searchBean);
+			IUserSO userSO;
+			try {
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserResDTO resDTO = userSO.searchUserProfile(userReqDTO);
+
+				if (resDTO != null
+						&& resDTO.getUserResultBean().getResultList() != null
+						&& resDTO.getUserResultBean().getResultList().size() > 0) {
+					PmUser user = resDTO.getUserResultBean().getResultList()
+							.get(0);
+					// TODO set current user info
+					// check for any active org
+					List<PmUserOrg> pmUserOrgs = PmCommonUtil
+							.retrieveActiveOrg(user.getUserId());
+					System.out.println("........pmUserOrgs="+pmUserOrgs);
+					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
+						System.out.println("........pmUserOrgs.size()="+pmUserOrgs.size());
+						// loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
+						// the identification Number already in DB
+						this.getManagedBean().getSelectedUser()
+								.setHasActiveOrg(true);
+						PmOrgProfile orgProfile = pmUserOrgs.get(0)
+								.getPmOrgProfile();
+//						System.out.println("orgProfile.getPmFinancialOrg().getFinOrgName()="+orgProfile.getPmFinancialOrg().getFinOrgName());
+						if( orgProfile.getOrgName()== null || orgProfile.getOrgCode() == null){
+							String param1 =null;
+//							System.out.println("orgProfile.getOrgTypeCode().getParameterCode()="+orgProfile.getOrgTypeCode().getParameterCode());
+							if(orgProfile.getOrgTypeCode().getParameterCode() != null && orgProfile.getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)){
+								param1 = orgProfile.getSmSupplier().getCompanyName();
+								
+							}else if(orgProfile.getOrgTypeCode().getParameterCode() != null && orgProfile.getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_FACTORING)){
+								param1 = orgProfile.getPmFinancialOrg().getFinOrgName();
+								
+							}
+//							System.out.println("param1="+param1);
+							
+							throw new EpException(MessageConst.ERROR_770215,
+									new String[] {param1});
+						}
+						throw new EpException(MessageConst.ERROR_770155,
+								new String[] { orgProfile.getOrgName(),
+										orgProfile.getOrgCode() });
+							
+				     }else {
+				    		System.out.println("....else");
+				    	 IPersonnelSO personnelSO;
+				    	 personnelSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+				    		System.out.println("..............personnelSO="+personnelSO);
+				    		System.out.println("..............getManagedBean().getSelectedUser().getIdentificationNo()="+getManagedBean().getSelectedUser().getIdentificationNo());
+				    		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				    		reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
+				    		PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
+				    		System.out.println("..............resDTO1.isSupplierPersonnel()="+resDTO1.isSupplierPersonnel());
+				    	 if(resDTO1.isSupplierPersonnel()){
+				    		 throw new EpException(MessageConst.ERROR_770214,
+										new String[] {getManagedBean().getSelectedUser().getIdentificationNo()});
+				    	 }
+					}
+
+				}
+
+			} finally {
+				userSO = null;
+			}
+		}
+
+	}
 	public void checkIdentificationNumber() {
 		System.out.println(".............checkIdentificationNumber...........");
 		this.getManagedBean().getSelectedUser().setHasActiveOrg(false);
@@ -4440,20 +4544,54 @@ public class ProfileManagementBackingBean extends
 					// check for any active org
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil
 							.retrieveActiveOrg(user.getUserId());
-
+					System.out.println("........pmUserOrgs="+pmUserOrgs);
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
+						System.out.println("........pmUserOrgs.size()="+pmUserOrgs.size());
 						// loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
 						// the identification Number already in DB
 						this.getManagedBean().getSelectedUser()
 								.setHasActiveOrg(true);
 						PmOrgProfile orgProfile = pmUserOrgs.get(0)
 								.getPmOrgProfile();
+//						System.out.println("orgProfile.getPmFinancialOrg().getFinOrgName()="+orgProfile.getPmFinancialOrg().getFinOrgName());
+						if( orgProfile.getOrgName()== null || orgProfile.getOrgCode() == null){
+							String param1 =null;
+//							System.out.println("orgProfile.getOrgTypeCode().getParameterCode()="+orgProfile.getOrgTypeCode().getParameterCode());
+							if(orgProfile.getOrgTypeCode().getParameterCode() != null && orgProfile.getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)){
+								param1 = orgProfile.getSmSupplier().getCompanyName();
+								
+							}else if(orgProfile.getOrgTypeCode().getParameterCode() != null && orgProfile.getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_FACTORING)){
+								param1 = orgProfile.getPmFinancialOrg().getFinOrgName();
+								
+							}
+//							System.out.println("param1="+param1);
+							
+							throw new EpException(MessageConst.ERROR_770215,
+									new String[] {param1});
+						}
 						throw new EpException(MessageConst.ERROR_770155,
 								new String[] { orgProfile.getOrgName(),
 										orgProfile.getOrgCode() });
-					} else {
-						loadUserInfo(user.getUserId());
+							
+				     }else {
+				    		System.out.println("....else");
+				    	 IPersonnelSO personnelSO;
+				    	 personnelSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+				    		System.out.println("..............personnelSO="+personnelSO);
+				    		System.out.println("..............getManagedBean().getSelectedUser().getIdentificationNo()="+getManagedBean().getSelectedUser().getIdentificationNo());
+				    		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				    		reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
+				    		PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
+				    		System.out.println("..............resDTO1.isSupplierPersonnel()="+resDTO1.isSupplierPersonnel());
+				    	 if(resDTO1.isSupplierPersonnel()){
+				    		 throw new EpException(MessageConst.ERROR_770214,
+										new String[] {getManagedBean().getSelectedUser().getIdentificationNo()});
+				    	 }else{
+				    		 System.out.println(".........last else..");
+						     loadUserInfo(user.getUserId());
 						// assign new pmUserOrg object to the current user
+				    	 }
 					}
 
 				}
