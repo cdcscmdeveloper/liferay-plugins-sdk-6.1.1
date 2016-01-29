@@ -24,8 +24,7 @@
 				<td style="width: 10%"><p:outputLabel
 						value="#{lbl['lbl.pm.settings.threshold.setting']}" /></td>
 				<td style="width: 25%"><p:selectOneRadio id="unplanedThreRadioSelection"
-						value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.isUnplannedThreshold}"
-						disabled="#{not ruleCatalogueBackingBean.checkIsEpAdmin()}">
+						value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.isUnplannedThreshold}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.settings.centralized']}"
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.pm.settings.ministry']}"
@@ -40,7 +39,6 @@
 						value="#{ruleCatalogueBackingBean.managedBean.threshold.s2Unplanned}"
 						label="#{lbl['lbl.pm.settings.threshold.threshold.percentage']}"
 						valueChangeListener="#{ruleCatalogueBackingBean.onChangeMainUnplannedThreshold}"
-						disabled="#{not ruleCatalogueBackingBean.checkIsEpAdmin()}"
 						required="true">
 						<f:validateLongRange minimum="0" maximum="100" />
 						<p:ajax event="change"
@@ -69,7 +67,7 @@
 				<p:inputText id="ministryUnplannedThresholdId"
 					valueChangeListener="#{ruleCatalogueBackingBean.onChangeUnplannedThreshold}"
 					label="#{lbl['lbl.pm.settings.threshold.threshold.percentage']}"
-					disabled="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.isUnplannedThreshold == 1 ? 'true':'false' or ruleCatalogueBackingBean.checkIsEpAdmin()}"
+					disabled="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.isUnplannedThreshold == 1 ? 'true':'false'}"
 					value="#{ministry.s2Unplanned}" required="true">
 					<f:attribute name="threshold" value="#{ministry}" />
 					<f:validateLongRange minimum="0"
