@@ -66,11 +66,15 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;" 
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
+		               			  style="width:5%; text-align:right; white-space:normal;" />
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
+		               			  style="width:10%; white-space:normal;" />		               	
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
@@ -150,6 +154,16 @@
 						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
 	         		</p:commandLink> 
 				</p:column>
+				
+				<p:column style="text-align:right;">
+					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>					
+				</p:column>
+				
+				<p:column style="text-align:left;">
+					<h:outputText value="#{shortlistedSupp.finalizationRemark}"/>
+				</p:column>				
 								
 				<p:column styleClass="td-check-box-spacing" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
 					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
@@ -175,11 +189,15 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
+		               			  style="width:5%; text-align:right; white-space:normal;" />
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
+		               			  style="width:10%; white-space:normal;" />	               	
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
@@ -265,6 +283,16 @@
 	         		</p:commandLink> 
 				</p:column>
 				
+				<p:column style="text-align:right;">
+					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>					
+				</p:column>
+				
+				<p:column style="text-align:left;">
+					<h:outputText value="#{shortlistedSupp.finalizationRemark}"/>
+				</p:column>				
+				
 				<p:column styleClass="td-check-box-spacing" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectAwardSupplier" value="#{shortlistedSupp.awareded}" 
 						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
@@ -315,11 +343,15 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
+		               			  style="width:5%; text-align:right; white-space:normal;" />
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
+		               			  style="width:10%; white-space:normal;" />		               	
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
@@ -405,6 +437,16 @@
 	         		</p:commandLink> 
 				</p:column>
 				
+				<p:column style="text-align:right;">
+					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>					
+				</p:column>
+				
+				<p:column style="text-align:left;">
+					<h:outputText value="#{shortlistedSupp.finalizationRemark}"/>
+				</p:column>
+								
 				<p:column styleClass="td-check-box-spacing" selectionMode="single" 
 					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 											suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
