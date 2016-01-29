@@ -1170,25 +1170,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			
 			boolean isAssignedState = BpmConstants.STATE_ASSIGNED.equals(resDTO.getStatus());
 			Object payLoad = resDTO.getPojo();
-			 if(null!=resDTO.isGroupTask() && resDTO.isGroupTask()==true){
-		            System.out.println("====groupTask not null==="+resDTO.isGroupTask());
-					BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-					String claim = originalServletRequest.getParameter("claim");
-					System.out.println("claim:" + claim);
-					Boolean b = Boolean.valueOf(claim);
-					if(null!=b && b==false){
-						this.getManagedBean().setReadOnly(true);
-					}else{
-						this.getManagedBean().setReadOnly(false);
-					}
-					bb.getManagedBean().setClaim(b);
-					bb.getManagedBean().setTaskId(taskId);
-					bb.getManagedBean().setGroupTask(true);
-		            }else{
-		            	System.out.println("====groupTask null==="+resDTO.isGroupTask());
-		            	this.getManagedBean().setReadOnly(false);
-		            	this.getManagedBean().setGroupTask(false);
-		            }
+			BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+			
+			if (null != resDTO.isGroupTask() && resDTO.isGroupTask() == true) {
+				log.info("====groupTask not null==="
+						+ resDTO.isGroupTask());
+				Boolean claim = resDTO.isClaimed();
+				log.info("claim:" + claim);
+				if (null != claim && claim == false) {
+					this.getManagedBean().setReadOnly(true);
+				} else {
+					this.getManagedBean().setReadOnly(false);
+				}
+				bb.getManagedBean().setClaim(claim);
+				bb.getManagedBean().setTaskId(taskId);
+				bb.getManagedBean().setGroupTask(true);
+			} else {
+				log.info("====groupTask null==="
+						+ resDTO.isGroupTask());
+				this.getManagedBean().setReadOnly(false);
+				bb.getManagedBean().setClaim(false);
+				bb.getManagedBean().setGroupTask(false);
+			}
 			
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setAssignedState(isAssignedState);
