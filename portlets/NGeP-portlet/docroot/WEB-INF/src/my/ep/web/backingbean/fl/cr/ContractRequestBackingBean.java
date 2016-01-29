@@ -2455,6 +2455,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param selectedTabIndex the selected tab index
 	 */
 	public void onTabChange(int selectedTabIndex){
+		
+		initialize();
+		
 		if(selectedTabIndex==0){
 			initializeApproverGroup();
 		}
@@ -4492,4 +4495,84 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		return items;
 	}
 	
+	private void initialize(){
+		
+		if (getManagedBean().getFlRequest() == null) {
+			getManagedBean().setFlRequest(new FlFulfilmentRequest());
+			getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
+			getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
+			getManagedBean().getFlRequest().setCreatedOrgProfile(new PmOrgProfile());
+			getManagedBean().getFlRequest().setPreparedOrgProfile(new PmOrgProfile());
+			getManagedBean().getFlRequest().setCtContract(new CtContract());
+			getManagedBean().getFlRequest().getCtContract().setContractType(new PmParameter());
+			getManagedBean().getFlRequest().getCtContract().setFulfillmentType(new PmParameter());
+			getManagedBean().getFlRequest().getCtContract().setSmSupplier(new SmSupplier());
+			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
+			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
+		}
+		
+		if(null == getManagedBean().getFlManulaAddress()){
+			getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
+			getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
+			if(null == getManagedBean().getFlManulaAddress().getAddressType()){
+				 getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
+			}
+			getManagedBean().getFlManulaAddress().getAddressType().setPmAddress(new PmAddress());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCountry(new PmCountry());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().setCountryId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmState(new PmState());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmState().setStateId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDistrict(new PmDistrict());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCity(new PmCity());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCity().setCityId(1L);
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDivision(new PmDivision());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmDivision().setDivisionId(1L);
+			getManagedBean().getFlManulaAddress().setReceivingGrp(new PmAddressType());
+		}
+		if(null == getManagedBean().getFlManulaAddress().getPmAddress()){
+			 getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
+		}
+		if(null == getManagedBean().getFlManulaAddress().getAddressType().getPmContacts() || getManagedBean().getFlManulaAddress().getAddressType().getPmContacts().size()==0){
+			getManagedBean().getFlManulaAddress().getAddressType().setPmContacts(new ArrayList<PmContact>());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmContacts().add(new PmContact());
+		}
+		if(null == getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry()){
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCountry(new PmCountry());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().setCountryId(1L);
+		}
+		if (isRequisitioner()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if (isApprover()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setApprover(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if(getManagedBean().getFlRequest().getPreparedOrgProfile()!=null && getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity() == null){
+			getManagedBean().getFlRequest().getPreparedOrgProfile().setPmOrgValidity(new PmOrgValidity());
+			
+		}
+		if(getManagedBean().getFlRequest().getIssuedOrgProfile()!=null && getManagedBean().getFlRequest().getIssuedOrgProfile().getPmOrgValidity() == null){
+			getManagedBean().getFlRequest().getIssuedOrgProfile().setPmOrgValidity(new PmOrgValidity());
+			
+		}
+		if(getManagedBean().getFlRequest().getChargeOrgProfile()!=null && getManagedBean().getFlRequest().getChargeOrgProfile().getPmOrgValidity() == null){
+			getManagedBean().getFlRequest().getChargeOrgProfile().setPmOrgValidity(new PmOrgValidity());
+			
+		}
+		getManagedBean().setDeleteButtonHide(true);
+		getManagedBean().setItemDeleteButtonShow(true);
+		
+		if(isFlFulfilmentRequisitioner()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+		}
+		
+		if(getManagedBean().getFeeVoteFund()==null) {
+			IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
+			ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(null);
+			getManagedBean().setFeeVoteFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
+		}
+	}
 }
