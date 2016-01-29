@@ -1128,6 +1128,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				BigDecimal remainQty = new BigDecimal(getRemainingQuantity(getManagedBean().getSelectedItem()));
 				getManagedBean().setRemainingQty(remainQty);
 			}
+			getManagedBean().setItemTypeProduct(false);
+			if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+				getManagedBean().setItemTypeProduct(true);
+			}else if(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+				getManagedBean().setItemTypeProduct(false);
+			}
 		}
 	}
 	
