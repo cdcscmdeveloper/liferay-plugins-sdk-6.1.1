@@ -38,6 +38,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -66,6 +67,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -129,6 +131,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -1295,6 +1298,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			itemsToSelectedAddress(flItemAddr);
 		}
 		populateItemsForSelectedAddress();
+		checkPRThresholdPerItem();
 	}
 	
 	
@@ -1408,6 +1412,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
+		checkPRThresholdPerItem();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml");
 	}
@@ -3423,6 +3428,45 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		FacesContext fc = FacesContext.getCurrentInstance();
 		reqNoteBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		reqNoteBB.viewRequestNote(requestNoteId);
+	}
+	
+	private void checkPRThresholdPerItem(){
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		IFlItemSummarySO itemSummSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+		Map<ScRequestItem, BigDecimal> itemAmtMap = new HashMap<ScRequestItem, BigDecimal>();
+		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()){
+				if(itemAmtMap.containsKey(item.getScRequestItem().getRequestNoteItemId())){
+					itemAmtMap.put(item.getScRequestItem(), itemAmtMap.get(item.getScRequestItem()).add(item.getOrderedAmt()));
+				}else{
+					itemAmtMap.put(item.getScRequestItem(), item.getOrderedAmt());
+				}
+			}
+		}
+		double thresoldAmt = 0;
+		for(Map.Entry<ScRequestItem, BigDecimal> map : itemAmtMap.entrySet() ){
+			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
+			summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
+			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
+			summReq.setItemId(map.getKey().getCmItem().getItemId());
+			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
+			sumAmt = map.getValue().add(sumAmt);
+			if(sumAmt != null){
+				RuleReqDTO ruleReqDTO = new RuleReqDTO();
+				ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+				RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
+					thresoldAmt = Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue());
+				}
+				if(sumAmt.doubleValue() > thresoldAmt){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.ERROR_740019, 
+									new String[]{map.getKey().getItemName()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+			}
+		}
 	}
 	
 }
