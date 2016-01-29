@@ -318,16 +318,13 @@ public class AccessApplBackingBean extends
 	}
 	
 	public String saveAccessApplication(String outcome) throws Exception {
-		IAccessApplSO accessApplSO = null;
-		
+		log.info("saveAccessApplication");
+		IAccessApplSO accessApplSO = null;		
 		try{
 			PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
 			accessAppl.setOrgProfile(getManagedBean().getSelectedOrgProfile());
 			accessAppl.setOrgTypeCode(getManagedBean().getSelectedOrgProfile().getOrgTypeCode());
-			
-			
 			validateAccessAppl();
-			
 			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IAccessApplSO.class);
@@ -347,8 +344,7 @@ public class AccessApplBackingBean extends
 					accessAppl.setCpRemark(getManagedBean().getRemarks());
 				}
 			}
-			reqDTO.setOutcome(outcome);
-			
+			reqDTO.setOutcome(outcome);			
 			AccessApplResDTO resDTO = accessApplSO.saveAccessAppl(reqDTO);
 			if(resDTO.isSuccessful()){
 				uploadAttachments();
