@@ -139,6 +139,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResultDtl> shortlistedSuppliers;
 	private List<String> awardedRecommendDtlIds;
 	
+	private boolean bpkUser;
+	
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1179,6 +1181,20 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setAwardedRecommendDtlIds(
 					List<String> awardedRecommendDtlIds) {
 		this.awardedRecommendDtlIds = awardedRecommendDtlIds;
+	}
+
+	/**
+	 * @return the bpkUser
+	 */
+	public boolean isBpkUser() {
+		return bpkUser;
+	}
+
+	/**
+	 * @param bpkUser the bpkUser to set
+	 */
+	public void setBpkUser(boolean bpkUser) {
+		this.bpkUser = bpkUser;
 	}
 	
 }
