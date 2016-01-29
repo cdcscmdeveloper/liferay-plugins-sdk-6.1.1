@@ -12,7 +12,9 @@
 		<p:messages id="orgMessages" showDetail="true" showSummary="false" 
 			autoUpdate="true"
 			closable="true" severity="error,info"></p:messages>
-			
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>	
 		<!-- Button Section -->
 		<ui:include src="/xhtml/pm/accessappl/accessApplicationButton.xhtml"/>
 		

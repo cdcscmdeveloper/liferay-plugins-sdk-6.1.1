@@ -400,31 +400,31 @@ public class AccessApplBackingBean extends
 		getManagedBean().setSelectedPmAccessApplDoc(doc);
 	}
 	
-	public void handleAccessApplDocFileAttachment(FileUploadEvent event) {
-		if (event.getFile() != null) {
-			if (getManagedBean().getSelectedPmAccessApplDoc() != null) {
-
-				// construct file path
-				String filePath = PmCommonUtil
-						.getUploadFilePath(ProfileManagementConst.ACCESS_APPL_FILE_PATH)
-						+ getManagedBean().getAccessAppl().getIdentificationNo()
-						+ "/"
-						+ System.currentTimeMillis() + "/";
-				
-				for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
-					if(applDoc.getDocument().getDocumentId().equals(getManagedBean().getSelectedPmAccessApplDoc().getDocument().getDocumentId())){
-						applDoc.setFileName(StringUtils.replace(event.getFile()
-								.getFileName(), " ", "-"));
-						applDoc.setFilePath(filePath);
-					}
-				}
-
-				// upload file
-				commonUploadFile(event, filePath);
-			}
-		}
-
-	}
+//	public void handleAccessApplDocFileAttachment(FileUploadEvent event) {
+//		if (event.getFile() != null) {
+//			if (getManagedBean().getSelectedPmAccessApplDoc() != null) {
+//
+//				// construct file path
+//				String filePath = PmCommonUtil
+//						.getUploadFilePath(ProfileManagementConst.ACCESS_APPL_FILE_PATH)
+//						+ getManagedBean().getAccessAppl().getIdentificationNo()
+//						+ "/"
+//						+ System.currentTimeMillis() + "/";
+//				
+//				for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
+//					if(applDoc.getDocument().getDocumentId().equals(getManagedBean().getSelectedPmAccessApplDoc().getDocument().getDocumentId())){
+//						applDoc.setFileName(StringUtils.replace(event.getFile()
+//								.getFileName(), " ", "-"));
+//						applDoc.setFilePath(filePath);
+//					}
+//				}
+//
+//				// upload file
+//				commonUploadFile(event, filePath);
+//			}
+//		}
+//
+//	}
 	
 	public void deleteAttachmentAction(){
 		if (getManagedBean().getSelectedPmAccessApplDoc() != null) {
@@ -608,11 +608,10 @@ public class AccessApplBackingBean extends
 								: "newApplication";
 						
 				// construct file path
-				String filePath = PmCommonUtil
-						.getUploadFilePath(ProfileManagementConst.ACCESS_APPL_FILE_PATH)
-						+ loginId
-						+ "/"
-						+ System.currentTimeMillis() + "/";
+						
+				String filePath = 
+						PmCommonUtil.getUploadFilePath(ProfileManagementConst.ACCESS_APPL_FILE_PATH,loginId,event.getFile().getFileName());
+						
 				
 				PmAccessApplDoc accessApplDoc = null;
 				for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
