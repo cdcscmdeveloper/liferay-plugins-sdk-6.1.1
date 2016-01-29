@@ -76,9 +76,6 @@ th{
 			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KETERANGAN TAWARAN :</span> $qtTitle</td>
 		</tr>
 		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JUMLAH HARGA YANG DICADANGKAN :</span> RM $estimatedAmt</td>
-		</tr>
-		<tr>
 			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JENIS TAWARAN :</span> #if ($qtType == "Open")
 				Terbuka
 			#end 
