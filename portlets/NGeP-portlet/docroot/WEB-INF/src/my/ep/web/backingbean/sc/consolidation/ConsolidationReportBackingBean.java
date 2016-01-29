@@ -432,11 +432,8 @@ public class ConsolidationReportBackingBean extends
 			}
 		}		
 		
-		if ((QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-				.equals(getManagedBean().getCurrentStatusId()) || 
-					QTStatusConst.SF_ESCALATION_TO_BPK
-						.equals(getManagedBean().getCurrentStatusId()) || 
-							reportAttachment == null) && !isEvaluationReport) {
+		if (reportAttachment == null 
+					&& !isEvaluationReport) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
@@ -493,11 +490,8 @@ public class ConsolidationReportBackingBean extends
 					}
 				}
 			}
-			if ((QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-					.equals(getManagedBean().getCurrentStatusId()) ||
-						QTStatusConst.SF_ESCALATION_TO_BPK
-							.equals(getManagedBean().getCurrentStatusId()) ||
-								attachment == null) && !isEvaluationReport) {
+			if (attachment == null && 
+					!isEvaluationReport) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
 			}
@@ -511,9 +505,6 @@ public class ConsolidationReportBackingBean extends
 	}	
 
 	public void saveAction() {
-		// Validate Desk officer ranking
-		validateConsolidationReport();
-		
 		SuppFinalizationReqDTO reqDTO = prepareDataToSave();
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		
@@ -545,6 +536,9 @@ public class ConsolidationReportBackingBean extends
 	}
 	
 	public void submitAction() {
+		// Validate Desk officer ranking
+		validateConsolidationReport();
+		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		SuppFinalizationReqDTO reqDTO = prepareDataToSave();
 		
