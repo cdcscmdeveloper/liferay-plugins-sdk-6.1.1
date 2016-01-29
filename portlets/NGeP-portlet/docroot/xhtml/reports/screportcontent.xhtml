@@ -9,10 +9,8 @@
 	<div class="columnScTableClass">
 		<table style="width: 100%;">
 			<tr>
-				<td width="100%"><h:panelGrid id="scReportCriteria" columns="4"
+				<td width="100%"><h:panelGrid id="scReportCriteria" columns="4" columnClasses="columnWidthSc1,columnWidthSc2,columnWidthSc3,columnWidthSc4"
 						style="width:85%;">
-
-
 
 						<c:if
 							test="#{scReportBackingBean.managedBean.rptGenBean.scProcureAllChkView}">
@@ -613,10 +611,10 @@
 			<TABLE style="width: 85%;" id="createDateTable">
 				<TR>
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.createdFrom']}"
-							style="margin-top:5px;width:162px;margin-left:-71px" /></TD>
+							style="margin-top:5px;width:162px;margin-left:-8px" /></TD>
 					<TD><p:selectOneMenu
 							value="#{reportBackingBean.scCreatedFromMonth}"
-							style="margin-top:5px;width:90px;">
+							style="margin-top:5px;width:154px;">
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 								itemValue="#{null}"></f:selectItem>
 							<f:selectItems value="#{reportBackingBean.scMonthList}"></f:selectItems>
@@ -626,24 +624,24 @@
 						</p:selectOneMenu></TD>
 					<TD><p:selectOneMenu
 							value="#{reportBackingBean.scCreatedFromYear}"
-							style="margin-top:5px;width:80px;">
+							style="margin-top:5px;width:132px;">
 							<f:selectItems value="#{reportBackingBean.scYearList}"></f:selectItems>
 							<p:ajax event="change"
 								listener="#{reportBackingBean.createdToDtUpdate}"
 								process="@this" partialSubmit="true" update=":form:createDt" />
 						</p:selectOneMenu></TD>
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.createdTo']}"
-							style="margin-top:5px;width:145px;;margin-left:-55px" /></TD>
+							style="margin-top:5px;width:145px;;margin-left:4px" /></TD>
 					<TD><p:selectOneMenu id="createMonth"
 							value="#{reportBackingBean.scCreatedToMonth}"
-							style="margin-top:5px;width:90px;">
+							style="margin-top:5px;width:151px;">
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 								itemValue="#{null}"></f:selectItem>
 							<f:selectItems value="#{reportBackingBean.scMonthList}"></f:selectItems>
 						</p:selectOneMenu></TD>
 					<TD><p:selectOneMenu id="createDt"
 							value="#{reportBackingBean.scCreatedToYear}" disabled="true"
-							style="margin-top:5px;width:80px;">
+							style="margin-top:5px;width:132px;">
 							<f:selectItems value="#{reportBackingBean.scYearList}"></f:selectItems>
 						</p:selectOneMenu></TD>
 				</TR>
@@ -682,7 +680,7 @@
 			<TABLE style="width: 100%;">
 				<TR>
 					<TD class="columnGenClass"><p:outputLabel
-							value="#{lbl['lbl.rpt.publishedDt']}" style="width:203px;" /></TD>
+							value="#{lbl['lbl.rpt.publishedDt']}" style="width:181px;" /></TD>
 					<TD class="columnDateFromClass"><p:calendar showOn="button"
 							navigator="true" display="inline" readonlyInput="true"
 							value="#{reportBackingBean.scPublishFromDate}" size="9"
