@@ -213,6 +213,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplSectionReview apprvrSecReview;
 	private boolean termsAccepted;
 	private boolean othersSystem;
+	private boolean othersMachine;
 	private String newSupplierType;
 	private String catTypeConfirm;
 	private SmFacility basicCompanyFacility;
@@ -386,6 +387,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmEduLevel diplomaEduLevel;
 	private List<SelectItem> acadQualifications;
 	private List<SelectItem> travellingSoftwareItems;
+	private List<SelectItem> categoryTypeItems;
+	private List<SelectItem> categoryCodeItems;
+	private List<SelectItem> machineItems;
 	private Long prevBasicStateId;
 	private SmApplStatusInfoVO applStatusInfo;
 	private PmDigiSign pmDigiSign;
@@ -568,6 +572,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedManufacturer = new SmManufacturingDtl();
 		selectedManufacturer.setPmUom(new PmUom());
 		selectedMachine = new SmMachineDtl();
+		selectedMachine.setCategoryType(new PmParameter());
+		selectedMachine.setCategoryCode(new PmCategoryL3());
+		selectedMachine.setMachine(new PmMachine());
 		selectedMachineList = new ArrayList<SmMachineDtl>();
 		selectedSystem = new SmSupplierSystem();
 		selectedSystem.setSystem(new PmMachine());
@@ -3134,5 +3141,37 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSalutationSelectItems(List<SelectItem> salutationSelectItems) {
 		this.salutationSelectItems = salutationSelectItems;
+	}
+
+	public List<SelectItem> getCategoryTypeItems() {
+		return categoryTypeItems;
+	}
+
+	public void setCategoryTypeItems(List<SelectItem> categoryTypeItems) {
+		this.categoryTypeItems = categoryTypeItems;
+	}
+
+	public List<SelectItem> getCategoryCodeItems() {
+		return categoryCodeItems;
+	}
+
+	public void setCategoryCodeItems(List<SelectItem> categoryCodeItems) {
+		this.categoryCodeItems = categoryCodeItems;
+	}
+
+	public List<SelectItem> getMachineItems() {
+		return machineItems;
+	}
+
+	public void setMachineItems(List<SelectItem> machineItems) {
+		this.machineItems = machineItems;
+	}
+
+	public boolean isOthersMachine() {
+		return othersMachine;
+	}
+
+	public void setOthersMachine(boolean othersMachine) {
+		this.othersMachine = othersMachine;
 	}
 }

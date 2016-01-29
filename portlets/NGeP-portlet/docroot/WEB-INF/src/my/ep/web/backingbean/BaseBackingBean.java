@@ -47,6 +47,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -57,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -1061,6 +1063,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				.retrieveRoleDescByRoleCode(reqDTO).getPmRoleDesc();
 		if (roleDesc != null && StringUtils.isNotBlank(roleDesc.getRoleName())) {
 			retVal = roleDesc.getRoleName();
+		}
+		return retVal;
+	}
+	
+	/**
+	 * Get machine category type
+	 * 
+	 * @param SmMachineDtl
+	 *            machine
+	 * @return String
+	 */
+	public String getMachineCategoryType(SmMachineDtl machine) {
+		String retVal = StringUtils.EMPTY;
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		if (machine.getCategoryType() != null
+				&& !EntityHelper.isCollectionEmpty(machine.getCategoryType()
+						.getPmParameterDescs())) {
+			for (PmParameterDesc desc : machine.getCategoryType()
+					.getPmParameterDescs()) {
+				if (desc.getLanguageCode().equals(language)) {
+					retVal = desc.getCodeName();
+				}
+			}
 		}
 		return retVal;
 	}
