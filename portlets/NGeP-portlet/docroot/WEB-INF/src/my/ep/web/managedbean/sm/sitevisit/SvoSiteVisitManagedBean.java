@@ -94,8 +94,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private Map<Integer,SmSvTemplate> indexPageMap;
 	private SmPersonnel contactPerson;
 	
-	private List<SmSupplierCategory> svTaskCategories;
-	
 	private Integer lastIndex;
 
 	private List<String> higherManagementNames = new ArrayList<String>();
@@ -496,14 +494,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setLastIndex(Integer lastIndex) {
 		this.lastIndex = lastIndex;
-	}
-
-	public List<SmSupplierCategory> getSvTaskCategories() {
-		return svTaskCategories;
-	}
-
-	public void setSvTaskCategories(List<SmSupplierCategory> svTaskCategories) {
-		this.svTaskCategories = svTaskCategories;
 	}
 
 	public int getTotalEquityOwner() {
