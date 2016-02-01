@@ -4468,9 +4468,9 @@ public class ProfileManagementBackingBean extends
 							throw new EpException(MessageConst.ERROR_770215,
 									new String[] {param1});
 						}
-						throw new EpException(MessageConst.ERROR_770155,
-								new String[] { orgProfile.getOrgName(),
-										orgProfile.getOrgCode() });
+//						throw new EpException(MessageConst.ERROR_770155,
+//								new String[] { orgProfile.getOrgName(),
+//										orgProfile.getOrgCode() });
 							
 				     }else {
 				    		
