@@ -111,6 +111,31 @@
 		</c:if>							
 	</p:dialog>
 	
+	<p:panel header="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}">
+		<table class="customTbl">
+				<tr>
+					<td class="tdTitle">
+						<p:outputLabel
+							value="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td class="tdContent">
+						<p:calendar showOn="button" id="actualSvDate" required="#{!empty param['disableValidation']}"
+							mindate="#{svoSiteVisitBackingBean.managedBean.smSvTask.createdDate}" label="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}"
+							maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
+							value="#{svoSiteVisitBackingBean.managedBean.smSvTask.actualVisitDate}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+					</td>
+					
+					<td class="tdTitle">
+					</td>
+					
+					<td class="tdContent">
+					</td>
+				</tr>
+		</table>
+	</p:panel>
+	
 	<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
 	
 </ui:composition>
