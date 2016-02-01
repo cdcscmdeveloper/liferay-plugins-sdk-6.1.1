@@ -147,7 +147,7 @@
 						<div class="ppRightBtn BtnSpacing" style="width: 100%">
 							<ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 								postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
-								headerText="Business Nature" buttonLabel="#{lbl['lbl.btn.add']}"
+								headerText="#{lbl['lbl.sc.sq.business.nature']}" buttonLabel="#{lbl['lbl.btn.add']}"
 								selectionMode="multiple"
 								saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
 								conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
@@ -194,7 +194,7 @@
 						<div class="ppRightBtn BtnSpacing" style="width: 100%">
 							<ac:lov id="supplier" lovId="SM_SUPPLIER_SQ"
 								postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
-								headerText="Supplier List" buttonLabel="#{lbl['lbl.btn.add']}"
+								headerText="#{lbl['lbl.sc.supplier.list']}" buttonLabel="#{lbl['lbl.btn.add']}"
 								selectionMode="multiple" update="@form"
 								saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
 								conditionField="#{simpleQuoteBackingBean.supplierListCriteria}" />
@@ -242,7 +242,7 @@
 						<div class="ppRightBtn BtnSpacing" style="width: 100%">
 							<ac:lov id="govtSeller" lovId="PM_ORG_PROFILE"
 								postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
-								headerText="Government Seller"
+								headerText="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}"
 								buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
 								saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
 								conditionField="#{simpleQuoteBackingBean.govtSellerCriteria}" update="@form" />
