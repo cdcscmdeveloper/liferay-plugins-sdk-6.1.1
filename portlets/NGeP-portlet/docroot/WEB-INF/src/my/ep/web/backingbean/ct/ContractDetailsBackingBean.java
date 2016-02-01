@@ -511,10 +511,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    	if (!ctBB.getManagedBean().isViewContract()
 	    			&& ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaGstAmount() == null) {
 	    		// Only allow to change during FD creation and FD Update
-	    		if (resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)
-	    				|| (ctBB.getManagedBean().getCtContractAmount().isAgreement()
-	    						&& !ctBB.getManagedBean().getCtContractAmount().getCtAgreement().getStatus().getStatusId().equals(ContractStatusConst.AC_COMPLETE)
-	    						&& !ctBB.getManagedBean().getCtContractAmount().getCtAgreement().getStatus().getStatusId().equals(ContractStatusConst.SA_COMPLETE))) {
+	    		if (resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+	    				|| resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
 		    		ctBB.getManagedBean().setDisableGstAmount(false);
 	    		}
 			}	    	
