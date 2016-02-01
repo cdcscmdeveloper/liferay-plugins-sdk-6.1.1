@@ -1293,7 +1293,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 									
 				gstItemResDTO = gstItemSO.retrieveGSTFlag(gstItemReqDTO);
 				System.out.println("line 1275 gstItemResDTO.isCoGSTRFlag(): "+gstItemResDTO.isCoGSTRFlag());
-				if(true){
+				if(gstItemResDTO.isCoGSTRFlag()){
 					getManagedBean().setLastFRNTaxInv(true);
 					break;
 				}else{
