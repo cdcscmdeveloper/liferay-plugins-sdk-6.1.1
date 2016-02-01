@@ -512,6 +512,11 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean pidValidityExpired = false;
 	private List<PmUserGroupUser> approverGroupUserList;
 	
+	private Long ministryProfileId;
+	private Long jabatanProfileId;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValues;
+	
 /**
  * Gets the charge line item root.
  *
@@ -3276,6 +3281,62 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverGroupUserList(List<PmUserGroupUser> approverGroupUserList) {
 		this.approverGroupUserList = approverGroupUserList;
+	}
+
+	/**
+	 * @return the ministryProfileId
+	 */
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	/**
+	 * @param ministryProfileId the ministryProfileId to set
+	 */
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	/**
+	 * @return the jabatanProfileId
+	 */
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+
+	/**
+	 * @param jabatanProfileId the jabatanProfileId to set
+	 */
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+
+	/**
+	 * @return the ptjCodeName
+	 */
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	/**
+	 * @param ptjCodeName the ptjCodeName to set
+	 */
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	/**
+	 * @return the ptjCodeNameSearchValues
+	 */
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+
+	/**
+	 * @param ptjCodeNameSearchValues the ptjCodeNameSearchValues to set
+	 */
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
 	}
 
 }
