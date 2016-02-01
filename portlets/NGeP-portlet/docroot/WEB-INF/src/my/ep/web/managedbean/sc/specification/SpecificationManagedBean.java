@@ -19,6 +19,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -284,7 +285,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	// template Specification variables
 	/** The standard template. */
-	private String standardTemplate = "ST";
+	private String standardTemplate = ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD;
 
 	/** The supporting doc. */
 	private String supportingDoc;
@@ -309,6 +310,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/** The search procurement id. */
 	private Long searchProcurementId;
+	
+	/** The search created by. */
+	private Long searchCreatedBy;
 
 	/** The doc searchlist. */
 	private List<ScQtDoc> docSearchlist;
@@ -2098,6 +2102,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchProcurementId(Long searchProcurementId) {
 		this.searchProcurementId = searchProcurementId;
+	}
+
+	/**
+	 * @return the searchCreatedBy
+	 */
+	public Long getSearchCreatedBy() {
+		return searchCreatedBy;
+	}
+
+	/**
+	 * @param searchCreatedBy the searchCreatedBy to set
+	 */
+	public void setSearchCreatedBy(Long searchCreatedBy) {
+		this.searchCreatedBy = searchCreatedBy;
 	}
 
 	/**

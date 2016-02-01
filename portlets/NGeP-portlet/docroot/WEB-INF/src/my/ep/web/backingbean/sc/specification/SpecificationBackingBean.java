@@ -46,6 +46,7 @@ import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -81,6 +82,7 @@ import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -172,6 +174,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -4312,6 +4315,43 @@ public class SpecificationBackingBean extends
 		return items;
 		// return getDropdownCodeValues(committeeRole);
 	}
+	
+	public List<PmUser> getCreatedByDropdownValues() {
+		IUserSO userSO = null;
+		List<PmUser> users = new ArrayList<PmUser>();
+		
+		try {
+			userSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
+			ScQt scQt = getManagedBean().getScQt();
+			
+			// Get Desk Officer User
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(scQt.getCreatedBy());
+			PmUser doUser = userSO.retrieveUserByUserId(reqDTO)
+				.getPmUser();
+			if (doUser != null) {
+				users.add(doUser);
+			}
+			
+			// Get Specification Initiator Users
+			reqDTO = new UserReqDTO();
+			reqDTO.setRoleCode(RoleCode.BIZ_OWNER.value());
+			reqDTO.setOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId());
+			List<PmUser> boUsers = userSO.retrieveUserListByRole(reqDTO)
+					.getUserList();
+			if (boUsers != null && boUsers.size() > 0) {
+				users.addAll(boUsers);
+			}
+			
+			
+		} finally {
+			userSO = null;
+		}
+		
+		return users;
+	}
 
 	/**
 	 * Show supplier location popup.Event handle navigate to the Supplier
@@ -6239,6 +6279,7 @@ public class SpecificationBackingBean extends
 				.get("value");
 		templateSpecCreate.resetData();
 		this.getManagedBean().setStandardTemplate(template);
+		this.getManagedBean().setSearchCreatedBy(null);
 		if (null != getManagedBean().getScQt().getPmProcurementCategory()
 				&& null != getManagedBean().getScQt()
 						.getPmProcurementCategory().getParameterId()) {
@@ -11184,7 +11225,15 @@ public class SpecificationBackingBean extends
 										.getPmProcurementCategory()
 										.getParameterId());
 					}
-
+					
+					// Filter By - created by
+					if (getManagedBean().getSearchCreatedBy() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								"createdBy",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getSearchCreatedBy()));	
+					}
+					
 					// Filter By - ministry orgProfileId
 					ScQt scQt = getManagedBean().getScQt();
 					List<String> templeteTypes = new ArrayList<String>();
@@ -16293,7 +16342,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public void checkListYesConfirmation(String stage) {
-		this.getManagedBean().setStandardTemplate("ST");
+		this.getManagedBean().setStandardTemplate(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
 		if (this.getManagedBean().getCheckListYesIndex() > 3) {
 			checkFinancialSpecStatus(this.getManagedBean().getScQt());
 		}
@@ -16302,7 +16351,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public void checkListNoConfirmation(String stage) {
-		this.getManagedBean().setStandardTemplate("ST");
+		this.getManagedBean().setStandardTemplate(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
 		if (QTConstants.TECHNICAL_SPEC_TYPE.equalsIgnoreCase(stage)) {
 			this.getManagedBean().setActiveIndex(2);
 
