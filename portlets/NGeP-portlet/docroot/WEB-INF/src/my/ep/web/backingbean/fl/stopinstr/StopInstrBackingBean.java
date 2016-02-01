@@ -624,7 +624,23 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		GstItemResDTO gstItemResDTO = null;
 		for(FlFulfilmentNote fulfilmentNote : getManagedBean().getStopInstr().getFlRequest().getFlFulfilmentNotes()) {
 			if(fulfilmentNote.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
+				gstItemReqDTO.setG2g(false);
+				if(getManagedBean().getStopInstr().getFlRequest().getProcurementType()!=null) {
+					if(getManagedBean().getStopInstr().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+						gstItemReqDTO.setG2g(true);
+					}
+				}
+				gstItemReqDTO.setGstEffDate(fulfilmentNote.getGstEffectiveDate());
+				gstItemReqDTO.setProcurementCatCode(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY);
+				if(getManagedBean().getStopInstr().getFlRequest().getProcurementTypeCategory()!=null) {
+					gstItemReqDTO.setProcurementCatCode(getManagedBean().getStopInstr().getFlRequest().getProcurementTypeCategory().getParameterCode());
+				}
+				if(getManagedBean().getStopInstr().getFlRequest().getCtContract()!=null) {
+					gstItemReqDTO.setSvcCharge(getManagedBean().getStopInstr().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().isServiceTax());
+					gstItemReqDTO.setLoaSignedDate(getManagedBean().getStopInstr().getFlRequest().getCtContract().getLoa().getAckDate());
+				}
 				for(FlFulfilmentNoteItem frnItem : fulfilmentNote.getFlFulfilmentNoteItem()){
+					
 					gstItemReqDTO.setGst(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst());
 					gstItemReqDTO.setRequestType(getManagedBean().getStopInstr().getFlRequest().getDocType());
 					// default to PCA to PCA
