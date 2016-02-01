@@ -1081,7 +1081,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			if (getManagedBean().getLoginUserPersonnelInfo() != null
 					&& (getManagedBean().getLoginUserPersonnelInfo()
 							.getEpRole()
-							.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
+							.equals(RoleCode.G2G_SUPPLIER_ADMIN.value())
+							|| getManagedBean()
+									.getLoginUserPersonnelInfo()
+									.getEpRole()
+									.equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
 							|| getManagedBean()
 									.getLoginUserPersonnelInfo()
 									.getEpRole()
