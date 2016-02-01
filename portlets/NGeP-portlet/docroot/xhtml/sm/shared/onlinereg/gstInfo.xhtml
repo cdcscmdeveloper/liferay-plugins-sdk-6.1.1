@@ -12,12 +12,14 @@
 						<p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" />
 					</td>
 					<td class="tdContent" colspan="3">
-						<p:inputText id="gstRegNo"  maxlength="12"
+						<p:inputText id="gstRegNoId"  maxlength="12"
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstRegNo}"
 							size="30" label="#{lbl['lbl.sm.gst.regno']}">
 							<p:ajax event="blur" update="pnlGstInfo" listener="#{registrationBackingBean.validateGstRegNo}" 
 								partialSubmit="true" process="@this"/>
 						</p:inputText>
+						<p:message id="gstRegNoIdMsg" for="gstRegNoId" display="icon" />
+						
 					</td>
 				</tr>
 				
@@ -35,6 +37,7 @@
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}">
 							<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
 						</p:calendar>
+						<p:message id="gstEffDateCalIdMsg" for="gstEffDateCalId" display="icon" />
 					</td>
 					<td>&#160;</td>
 					<td>&#160;</td>
@@ -80,7 +83,7 @@
 	</p:panel>
 	
 	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false" resizable="false" width="700px"
-		height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
 		<p:fileUpload style="display:inline;" multiple="false" fileUploadListener="#{registrationBackingBean.handleFileUpload}"
 			mode="basic" id="upload" fileLimit="1" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="dtGstDocId"
