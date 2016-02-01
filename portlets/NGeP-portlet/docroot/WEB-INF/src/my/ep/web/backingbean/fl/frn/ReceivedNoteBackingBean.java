@@ -1274,6 +1274,21 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			
 			GstItemReqDTO gstItemReqDTO = new GstItemReqDTO();
 			GstItemResDTO gstItemResDTO = null;
+			gstItemReqDTO.setG2g(false);
+			if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType()!=null) {
+				if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+					gstItemReqDTO.setG2g(true);
+				}
+			}
+			gstItemReqDTO.setGstEffDate(getManagedBean().getFulfilmentNote().getGstEffectiveDate());
+			gstItemReqDTO.setProcurementCatCode(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY);
+			if(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementTypeCategory()!=null) {
+				gstItemReqDTO.setProcurementCatCode(getManagedBean().getFulfilmentNote().getFlRequest().getProcurementTypeCategory().getParameterCode());
+			}
+			if(getManagedBean().getFulfilmentNote().getFlRequest().getCtContract()!=null) {
+				gstItemReqDTO.setSvcCharge(getManagedBean().getFulfilmentNote().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().isServiceTax());
+				gstItemReqDTO.setLoaSignedDate(getManagedBean().getFulfilmentNote().getFlRequest().getCtContract().getLoa().getAckDate());
+			}
 			for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
 				gstItemReqDTO.setGst(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst());
 				gstItemReqDTO.setRequestType(getManagedBean().getFulfilmentRequest().getDocType());
@@ -1292,7 +1307,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				}
 									
 				gstItemResDTO = gstItemSO.retrieveGSTFlag(gstItemReqDTO);
-				System.out.println("line 1275 gstItemResDTO.isCoGSTRFlag(): "+gstItemResDTO.isCoGSTRFlag());
 				if(gstItemResDTO.isCoGSTRFlag()){
 					getManagedBean().setLastFRNTaxInv(true);
 					break;
