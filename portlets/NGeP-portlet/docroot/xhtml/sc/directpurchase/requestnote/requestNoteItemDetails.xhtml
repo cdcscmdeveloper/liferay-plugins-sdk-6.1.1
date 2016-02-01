@@ -32,7 +32,8 @@
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}">
-						<p:ajax partialSubmit="true" process="@this" update="@this" />
+						<p:ajax partialSubmit="true" process="@this" update="requestListDataTable" 
+						 listener="#{requestNoteBackingBean.selectSingleRow}"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
 
@@ -250,7 +251,7 @@
 						value="#{requestNoteDtl.procTypeCategoryId}"
 						style="width:130px;margin-top: 8px;" required="true"
 						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
-						label="#{lbl['lbl.sc.procurment.type.category']}">
+						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.procurment.type.category']}">
 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
