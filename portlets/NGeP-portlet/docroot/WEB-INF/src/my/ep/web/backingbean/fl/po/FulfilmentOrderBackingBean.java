@@ -318,8 +318,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		for(FlDeliveryAddress deliveryAddress : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
 				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
-				itemAddr.setDeliveredQty(remainOrderQty);
-				if(itemAddr.getDeliveredQty().intValue()>0){
+				if(itemAddr.getDeliveredQty().doubleValue()==0) {
+					itemAddr.setDeliveredQty(remainOrderQty);
+				}
+				if(itemAddr.getDeliveredQty().doubleValue()>0){
 					if(itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 						BigDecimal unitPriceCal=itemAddr.getUnitPrice();
 						delAmtCal=unitPriceCal.multiply(itemAddr.getDeliveredQty());
@@ -543,17 +545,16 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	 * @param fulfilmentItemAddr the fulfilment item addr
 	 */
 	public void retrieveOrderAmount(FlFulfilmentItemAddr fulfilmentItemAddr){
-		int unitPrice = 0;
-		int ordQnty = 0;
-		int ordAmoun = 0;
+		double unitPrice = 0;
+		double ordQnty = 0;
+		double ordAmoun = 0;
 		if(null != fulfilmentItemAddr.getUnitPrice())
-			unitPrice= fulfilmentItemAddr.getUnitPrice().intValue();
+			unitPrice= fulfilmentItemAddr.getUnitPrice().doubleValue();
 		if(null != fulfilmentItemAddr.getOrderedQty())
-			ordQnty = fulfilmentItemAddr.getOrderedQty().intValue();
+			ordQnty = fulfilmentItemAddr.getOrderedQty().doubleValue();
 		ordAmoun =((unitPrice) * (ordQnty));
-		BigDecimal ordAmount = new BigDecimal("0");
-		ordAmount=new BigDecimal(ordAmoun);
-		fulfilmentItemAddr.setOrderedAmt(ordAmount);
+		BigDecimal ordAmount=new BigDecimal(ordAmoun);
+		fulfilmentItemAddr.setOrderedAmt(ordAmount.setScale(2, RoundingMode.HALF_UP));
 	}
 	
 	/**
