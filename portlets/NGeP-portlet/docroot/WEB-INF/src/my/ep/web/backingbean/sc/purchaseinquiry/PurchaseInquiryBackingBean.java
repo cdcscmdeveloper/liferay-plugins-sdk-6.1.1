@@ -638,6 +638,9 @@ public class PurchaseInquiryBackingBean extends
 			} else {
 				requestNoteDtl.setJustificationType(null);
 			}
+			
+			// title
+			requestNoteDtl.setProcurementTitle(prInquiry.getTitle());
 
 			// price type
 			if (getManagedBean().getPriceType() != null) {
