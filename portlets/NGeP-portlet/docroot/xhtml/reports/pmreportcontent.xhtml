@@ -11,8 +11,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td><h:panelGrid id="pmReportCriteria" columns="4"
-						columnClasses="pmColumn1Width,pmColumn2Width,pmColumn3Width"
-						style="width:100%;margin-top:42px;">
+						columnClasses="pmColumn1Width,pmColumn2Width,pmColumn3Width" style="width:100%;">
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmServiceTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.servicescreen']}" />
@@ -452,8 +451,5 @@
 			</TABLE>
 		</c:if>
 	</div>
-
-
-
 
 </ui:composition>

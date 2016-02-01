@@ -53,6 +53,11 @@
 .columnScTableClass {
 	margin-top: 0%;
 }
+/* for 'Direct Purchase' Report of 'LOA Content Report' allignement */
+.columnDPMarginTopClass {
+	margin-top: 2%;
+}
+
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'SC'}">
 .columnScTableClass {
@@ -61,7 +66,7 @@
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'PM'}">
 .columnPmTableClass {
-	margin-top: 2%;
+	margin-top: 1%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'FL'}">
@@ -93,10 +98,6 @@
 }
 .columnDateToWidthClass {
 	width: 6.4%;
-}
-/* for 'Direct Purchase' Report of 'LOA Content Report' allignement */
-.columnDPMarginTopClass {
-	margin-top: 2%;
 }
 
 /* 
