@@ -155,12 +155,16 @@ public class SmPersonnelBackingBean extends
 						.getSmPersonnelList();
 				for (SmPersonnel smPersonnelTemp : authorizedPersonnelList) {
 					if (smPersonnelTemp.getEpRole().equals(
-							RoleCode.BASIC_SUPPLIER_ADMIN.value())
+							RoleCode.G2G_SUPPLIER_ADMIN.value())
+							|| smPersonnelTemp.getEpRole().equals(
+									RoleCode.BASIC_SUPPLIER_ADMIN.value())
 							|| smPersonnelTemp.getEpRole().equals(
 									RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 						adminPersonnel = smPersonnelTemp;
 					} else if (smPersonnelTemp.getEpRole().equals(
-							RoleCode.BASIC_SUPPLIER_USER.value())
+							RoleCode.G2G_SUPPLIER_USER.value())
+							|| smPersonnelTemp.getEpRole().equals(
+									RoleCode.BASIC_SUPPLIER_USER.value())
 							|| smPersonnelTemp.getEpRole().equals(
 									RoleCode.MOF_SUPPLIER_USER.value())
 							|| smPersonnelTemp.getEpRole().equals(
@@ -201,32 +205,41 @@ public class SmPersonnelBackingBean extends
 	 * construct valid roles
 	 */
 	private void buildRoleList() {
+		boolean isGovtSeller = (StringUtils.isNotBlank(getManagedBean()
+				.getSmSupplier().getBusinessType()) && getManagedBean()
+				.getSmSupplier()
+				.getBusinessType()
+				.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) ? true
+				: false;
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 
 		SelectItem role = new SelectItem();
-		role.setLabel(SmCommonUtil.getMessage(
-				"lbl.sm.person.composition.suppUser", null));
-		role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
+		role.setValue(isGovtSeller ? RoleCode.G2G_SUPPLIER_USER.value()
+				: RoleCode.BASIC_SUPPLIER_USER.value());
+		role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
 		if (!getManagedBean().isDisableRole()) {
 			roles.add(role);
 		}
+
 		role = new SelectItem();
-		role.setLabel(SmCommonUtil.getMessage(
-				"lbl.sm.person.composition.catUser", null));
 		role.setValue(RoleCode.CM_USER.value());
+		role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
 		roles.add(role);
 
 		getManagedBean().setRoleList(roles);
 
 		if (getManagedBean().getBasicSmPersonnel() != null
 				&& getManagedBean().getBasicSmPersonnel().getEpRole() != null
-				&& getManagedBean().getBasicSmPersonnel().getEpRole()
-						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				&& (getManagedBean().getBasicSmPersonnel().getEpRole()
+						.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || getManagedBean()
+						.getBasicSmPersonnel().getEpRole()
+						.equals(RoleCode.G2G_SUPPLIER_ADMIN.value()))
 				&& getManagedBean().isEditMode()) {
 			SelectItem adminRole = new SelectItem();
-			adminRole.setLabel(SmCommonUtil.getMessage(
-					"lbl.sm.person.composition.suppAdmin", null));
-			adminRole.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+			adminRole.setValue(isGovtSeller ? RoleCode.G2G_SUPPLIER_ADMIN
+					.value() : RoleCode.BASIC_SUPPLIER_ADMIN.value());
+			adminRole.setLabel(getEpRoleDescByRoleCode(adminRole.getValue()
+					.toString()));
 			getManagedBean().getRoleList().add(adminRole);
 		}
 	}
