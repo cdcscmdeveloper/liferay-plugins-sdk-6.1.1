@@ -1,15 +1,25 @@
 <u><b>License/Insurance</b></u>
 <table>
-	#if($licenseInsuranceLs.size() > 0)
+	#if($licenseInsuranceLs != $null && $licenseInsuranceLs.size() > 0)
 		#foreach($licenseIns in $licenseInsuranceLs)
 		<tr>
-			<td class="txtBold" width="40%"></td>
+			<td class="txtBold" width="30%"></td>
 			<td class="txtBold">
-			$licenseIns.codeName
-			#if($licenseIns.pmParameter.parameterCode != "C")
-				, Expiry Date
-			#end
+				#if($review)
+					$licenseIns.pmParameter.pmParameterDescs.get(0).codeDesc
+				#else
+					$licenseIns.codeDesc
+				#end
+				,Expiry Date
 			</td>
+				
+
+			#if($review)
+				<td>$licenseIns.pppmmNo, 
+				#if($licenseIns.expDate != $null)
+					$smVmUtil.formatDate($licenseIns.expDate)
+				#end</td>
+			#end
 		</tr>
 		#end
 	#end

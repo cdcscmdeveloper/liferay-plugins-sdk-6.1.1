@@ -7,19 +7,19 @@
 
 
 	<p:panel header="#{lbl['lbl.sm.category']}" toggleable="true">
-		<p:dataTable var="cType"
-			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate}"
+		<p:dataTable var="cTask"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
 				<ui:param name="lblCategoryDesc"
-					value="lbl.sm.sitevisit.category.categorycode_#{cType.pmParameter.parameterCode}" />
+					value="lbl.sm.sitevisit.category.categorycode_#{cTask.smSvTemplate.pmParameter.parameterCode}" />
 				#{lbl[lblCategoryDesc]}
 			</p:column>
 
 
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
 				<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
-					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cType)}">
+					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cTask,false)}">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
 			</p:column>
@@ -28,20 +28,12 @@
 
 		<br />
 		<p:dataTable var="cat"
-			value="#{svoSiteVisitBackingBean.managedBean.svTaskCategories}"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvCategories}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="#{lbl['lbl.sm.category.description']}">
 				#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 				:
 				#{cat.pmCategoryL3.categoryName}
-				&#160;<h:outputText value="(#{cat.otherDesc})"
-					rendered="#{cat.pmCategoryL3.categoryL3Code eq '99' or 
-				(cat.pmCategoryL1.categoryL1Code eq '22' and cat.pmCategoryL2.categoryL2Code eq '07' and cat.pmCategoryL3.categoryL3Code eq '01')}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.category.remarks']}">
-				<h:outputText value="#{cat.poRemarks}"
-					style="float: left;white-space: normal;" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>

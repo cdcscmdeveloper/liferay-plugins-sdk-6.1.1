@@ -13,7 +13,7 @@
 			value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.categoryType,keyTemplate)}" />
 		</p:column>
 	
-		<p:column headerText="#{lbl['lbl.sm.address']}" style="white-space: normal;">
+		<p:column headerText="#{lbl['lbl.sm.address']}" style="white-space: normal;" >
 			<table>
 				<ui:repeat var="svTask" value="#{svoSiteVisitBackingBean.managedBean.templateTaskMap[keyTemplate]}">
 					<tr>
@@ -22,10 +22,21 @@
 							escape="false" style="float : left" />
 						</td>
 						<td>
-							<p:commandButton value="view" action="#{svoSiteVisitBackingBean.selectReportTask(svTask)}" 
+							<div align="center">
+							<p:commandButton value="#{lbl['lbl.btn.view']}" action="#{svoSiteVisitBackingBean.selectReportTask(svTask)}" 
 							update=":#{p:component('reportPanel')}" oncomplete="reportDlg.show()">
 							
 							</p:commandButton>
+							</div>
+						</td>
+						
+						<td>
+							<div align="center">
+							<p:commandButton value="#{lbl['lbl.btn.download']}" action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}" 
+							ajax="false">
+							<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
+							</p:commandButton>
+							</div>
 						</td>
 					</tr>
 				</ui:repeat>

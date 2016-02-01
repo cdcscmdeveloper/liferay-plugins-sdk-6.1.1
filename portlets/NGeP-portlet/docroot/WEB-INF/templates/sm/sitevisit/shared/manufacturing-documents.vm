@@ -10,20 +10,36 @@
 			<th width="10%" class="txtBold">Date Issued</th>
 			<th width="30%" class="txtBold">Notes</th>
 		</tr>
-		
-		#if($financialDocLs.size() > 0)
-			#foreach($financialDoc in $financialDocLs)
-			<tr>
-				<td>$velocityCount</td>
-				<td>$financialDoc.codeName</td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
+
+		#if($review)
+			#if($financialDocLs.size() > 0)
+				#foreach($revFinDoc in $financialDocLs)
+					#if($revFinDoc.pmParameter != $null)
+					<tr>
+						<td>$velocityCount</td>
+						<td>$revFinDoc.pmParameter.pmParameterDescs.get(0).codeDesc</td>
+						<td>$!revFinDoc.docRef</td>
+						<td>$!smVmUtil.formatDate($revFinDoc.docDate)</td>
+						<td>$!revFinDoc.remark</td>
+					</tr>
+					#end
+				#end
 			#end
 		#else
-			<tr>
-				<td colspan="5" align="center">No Record Found</td>
-			</tr>
+			#if($financialDocLs.size() > 0)
+				#foreach($financialDoc in $financialDocLs)
+				<tr>
+					<td>$velocityCount</td>
+					<td>$financialDoc.codeName</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				#end
+			#else
+				<tr>
+					<td colspan="5" align="center">No Record Found</td>
+				</tr>
+			#end
 		#end
 </table>

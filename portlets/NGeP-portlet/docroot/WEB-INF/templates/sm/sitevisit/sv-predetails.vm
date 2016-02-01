@@ -68,12 +68,12 @@
 		    	
 		 <tr>
 		    <td><b>Schedule Date of Visit</b></td>
-		    <td>$smVmUtil.formatDate($svAdd.scheduleDate)</td>
+		    <td>$smVmUtil.formatDate($scheduleDate)</td>
 		 </tr>
 		    	
 		 <tr>
 	        <td width="30%"><b>Visiting Date</b></td>
-	    	 <td></td>
+	    	<td>#if($actualSiteVisitDate != $null) $smVmUtil.formatDate($actualSiteVisitDate) #end</td>
     	</tr>
     	<tr><td><br /></td></tr>
 	 
