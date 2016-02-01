@@ -9733,7 +9733,7 @@ public class ReportBackingBean extends
 		if ((null != this.getReportValue())
 				&& (this.getReportValue()
 						.equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))) {
-			getManagedBean().getRptGenBean().setMadatoryIndicatorView(false);
+			getManagedBean().getRptGenBean().setMadatoryIndicatorView(true);
 		}
 	}
 
