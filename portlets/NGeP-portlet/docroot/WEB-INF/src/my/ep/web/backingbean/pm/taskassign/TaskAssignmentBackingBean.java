@@ -154,21 +154,21 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			this.orgTypeSearchBean = super.createSearchBean(
 					PmParameterDesc.class, "somOrgType");
 			
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
-			bean.setSearchField("pmParameter.parameterCode");
-			bean.setSearchValue(new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
-			orgTypeSearchBean.getDataFilterBeans().add(bean);
-			
-			if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())){
-				if(this.getManagedBean().getCurrentActiveOrg()!=null){
-					SearchFilterBean orgTypeBean = new SearchFilterBean();
-					orgTypeBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-					orgTypeBean.setSearchField("pmParameter.parameterCode");
-					orgTypeBean.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgCode());
-					orgTypeSearchBean.getDataFilterBeans().add(orgTypeBean);
-				}
-			}
+//			SearchFilterBean bean = new SearchFilterBean();
+//			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+//			bean.setSearchField("pmParameter.parameterCode");
+//			bean.setSearchValue(new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
+//			orgTypeSearchBean.getDataFilterBeans().add(bean);
+//			
+//			if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value())){
+//				if(this.getManagedBean().getCurrentActiveOrg()!=null){
+//					SearchFilterBean orgTypeBean = new SearchFilterBean();
+//					orgTypeBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+//					orgTypeBean.setSearchField("pmParameter.parameterCode");
+//					orgTypeBean.setSearchValue(this.getManagedBean().getCurrentActiveOrg().getOrgCode());
+//					orgTypeSearchBean.getDataFilterBeans().add(orgTypeBean);
+//				}
+//			}
 			
 		}
 
