@@ -290,6 +290,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean hyperLinkPage = false;
 	private boolean pidValidityExpired = false;
 	
+	private Long ministryProfileId;
+	private Long jabatanProfileId;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValues;
+	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
 	
@@ -2717,6 +2722,62 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverGroupUserList(List<PmUserGroupUser> approverGroupUserList) {
 		this.approverGroupUserList = approverGroupUserList;
+	}
+
+	/**
+	 * @return the ministryProfileId
+	 */
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	/**
+	 * @param ministryProfileId the ministryProfileId to set
+	 */
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	/**
+	 * @return the jabatanProfileId
+	 */
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+
+	/**
+	 * @param jabatanProfileId the jabatanProfileId to set
+	 */
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+
+	/**
+	 * @return the ptjCodeName
+	 */
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	/**
+	 * @param ptjCodeName the ptjCodeName to set
+	 */
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	/**
+	 * @return the ptjCodeNameSearchValues
+	 */
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+
+	/**
+	 * @param ptjCodeNameSearchValues the ptjCodeNameSearchValues to set
+	 */
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
 	}
 
 }
