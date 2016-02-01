@@ -58,7 +58,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvAdtMachine;
 import my.ep.persistence.entity.sm.SmSvBankInfo;
 import my.ep.persistence.entity.sm.SmSvCategory;
@@ -76,7 +75,6 @@ import my.ep.persistence.entity.sm.SmSvPrintmachine;
 import my.ep.persistence.entity.sm.SmSvPrintwork;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
-import my.ep.persistence.entity.sm.SmSvTemplateAddress;
 import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -309,10 +307,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(svTemplate.getSmSvComment() == null){
 				svTemplate.setSmSvComment(new SmSvComment());
 				svTemplate.getSmSvComment().setSmSvTemplate(svTemplate);
-			}
-			
-			if(svTemplate.getSmSvTemplateAddresses() == null){
-				svTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
 			}
 			
 			if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
@@ -1972,25 +1966,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
 		
-		// To ensure at least 1 address to be selected when action equal to "SUBMIT"
-		if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-			/*for(SmSvTemplate smSvTemplate : svTask.getSmSvTemplates()){
-				//smSvTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
-				String tmpDesc = getTemplateNameFromLabel(smSvTemplate.getPmParameter().getParameterCode());
-
-				if(smSvTemplate.getSelectedAddresses() == null){
-					log.info("-----svTemplate.getSelectedAddresses IS NULL-----" );
-					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-					throw new EpException(MessageConst.ERROR_721301, new String[]{tmpDesc});
-				}
-
-				if(smSvTemplate.getSelectedAddresses().length < 1){
-					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-					throw new EpException(MessageConst.ERROR_721301, new String[]{tmpDesc});
-				}
-			}*/
-		}
-		
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		//for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()){
 			//for Manufacturing Template. Add additional doc to SmSvManufacturingDOC
@@ -2018,52 +1993,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
 				validateDuplicateWorker(svTemplate.getSmSvWorkers());
 			}
-			
-			//to add/ remove svTemplateAddress based on the selectedAddress
-			if(svTemplate.getSmSvTemplateAddresses().size() > 0){
-				if(svTemplate.getSelectedAddresses().length < 1){
-					svTemplate.getSmSvTemplateAddresses().clear();
-				}else{
-					//convert existing template adddress to map
-					Map<Long, SmSvTemplateAddress> templateAddMap = new HashMap<Long,SmSvTemplateAddress>();
-					for(SmSvTemplateAddress templateAdd : svTemplate.getSmSvTemplateAddresses()){
-						templateAddMap.put(templateAdd.getSmSvAddress().getSvAddressId(), templateAdd);
-					}
-					
-					//comvert selectedAdd to map
-					Map<Long, SmSvAddress> selectedAddMap = new HashMap<Long,SmSvAddress>();
-					for(SmSvAddress templateAdd : svTemplate.getSelectedAddresses()){
-						selectedAddMap.put(templateAdd.getSvAddressId(), templateAdd);
-					}
-					
-					//remove the non selected add from template address
-					for(SmSvTemplateAddress templateAdd : svTemplate.getSmSvTemplateAddresses()){
-						if(selectedAddMap.get(templateAdd.getSmSvAddress().getSvAddressId()) == null){
-							svTemplate.getSmSvTemplateAddresses().remove(templateAdd);
-						}
-					}
-					
-					//add the new selected add to template address
-					for(SmSvAddress selectedAdd : svTemplate.getSelectedAddresses()){
-						if(templateAddMap.get(selectedAdd.getSvAddressId()) == null){
-							SmSvTemplateAddress svTempAdd = new SmSvTemplateAddress();
-							svTempAdd.setSmSvTemplate(svTemplate);
-							svTempAdd.setSmSvAddress(selectedAdd);
-							svTemplate.getSmSvTemplateAddresses().add(svTempAdd);
-						}
-					}
-				}
-			}else{
-				if(svTemplate.getSelectedAddresses() != null && svTemplate.getSelectedAddresses().length > 0){
-					for(SmSvAddress selectedAdd : svTemplate.getSelectedAddresses()){
-						SmSvTemplateAddress svTempAdd = new SmSvTemplateAddress();
-						svTempAdd.setSmSvTemplate(svTemplate);
-						svTempAdd.setSmSvAddress(selectedAdd);
-						svTemplate.getSmSvTemplateAddresses().add(svTempAdd);
-					}
-				}
-			}
-		//}
 		
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
