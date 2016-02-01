@@ -2715,6 +2715,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
+	 * Select single row.
+	 *
+	 * @param event the event
+	 */
+	public void selectSingleRow(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+				if (flag) {
+					setFlag(Boolean.FALSE);
+				} 
+	}
+	
+	/**
 	 * Cancel.
 	 * cancel  - cancel the request note.
 	 * @return the string
