@@ -11148,6 +11148,7 @@ public class SpecificationBackingBean extends
 	 */
 	public void resetTemplate() {
 		getManagedBean().setSpecName(null);
+		getManagedBean().setSearchCreatedBy(null);
 		// getManagedBean().setStandardTemplate(null);
 		// getManagedBean().setSearchProcurementId(null);
 		if (!this.getManagedBean().getScQt().isPanel()) {
