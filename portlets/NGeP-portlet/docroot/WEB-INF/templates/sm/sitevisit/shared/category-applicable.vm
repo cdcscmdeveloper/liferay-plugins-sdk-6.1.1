@@ -7,7 +7,7 @@
 			<th>Category Description</th>
 			<th>First Recommendation</th>
 		</tr>
-		#if($categoryCodeLs.size() > 0)
+		#if($categoryCodeLs != $null && $categoryCodeLs.size() > 0)
 			#foreach($cat in $categoryCodeLs)
 				#set($codeL1 = $cat.pmCategoryL1.categoryL1Code)
 				#set($codeL2 = $cat.pmCategoryL2.categoryL2Code)

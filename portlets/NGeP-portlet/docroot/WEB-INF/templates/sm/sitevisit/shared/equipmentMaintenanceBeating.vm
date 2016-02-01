@@ -8,13 +8,13 @@
 			<th width="15%">Quantity/Set</th>
 		</tr>
 		
-	#if($equipmentMaintenance.size() > 0)
+	#if($equipmentMaintenance != $null && $equipmentMaintenance.size() > 0)
 		#foreach($equipMaint in $equipmentMaintenance)
 		<tr>
 			<td>$velocityCount</td>
 			<td class="txtBold">$!equipMaint.pmMachine.machineDesc</td>
-			<td><br /></td>
-			<td><br /></td>
+			<td align="center">#if($review) #if($equipMaint.equipmentAvailable)Yes #else No #end #else <br />#end</td>
+			<td align="center">#if($review) #if($equipMaint.equipmentQty != $null) $equipMaint.equipmentQty #end #else <br />#end</td>
 		</tr>
 		#end
 	#end
@@ -30,15 +30,15 @@
 			<th width="15%">Available</th>
 			<th width="15%">Quantity/Set</th>
 		</tr>
-		
-	#if($equipmentMaintenance.size() > 0)
+	
+	#if($equipmentBeating != $null && $equipmentBeating.size() > 0)
 		#foreach($equipBeating in $equipmentBeating)
 		<tr>
 			<td>$velocityCount</td>
 			<td class="txtBold">$!equipBeating.pmMachine.machineDesc</td>
-			<td><br /></td>
-			<td><br /></td>
+			<td align="center">#if($review) #if($equipBeating.equipmentAvailable)Yes #else No #end #else <br />#end</td>
+			<td align="center">#if($review) #if($equipBeating.equipmentQty != $null) $equipBeating.equipmentQty #end #else <br />#end</td>
 		</tr>
 		#end
-	#end
+	#end	
 </table>

@@ -3,21 +3,23 @@
 	<tr>
 		<td width="40%" class="txtBold">Ownership</td>
 		<td  width="40%" class="txtBold">Private, Purchasing Price (RM)</td>
-		<td>$!preLocPurchasePrice</td>
+		#if($review) <td>$!preLocPurchasePrice</td> #end
 	</tr>
 	<tr>
 		<td width="40%">$!ownerShipType</td>
 		<td class="txtBold" width="40%">Rent, Monthly Rate (RM)</td>
-		<td>$!preLocRentalRate</td>
+		#if($review) <td>$!preLocRentalRate</td> #end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold" width="40%">Documents</td>
+		#if($review) #if($svTask.smSvTemplate.smSvFacility.document) Yes #else No #end #end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold" width="40%">Agreement Letter</td>
+		#if($review) #if($svTask.smSvTemplate.smSvFacility.agreementLetter) Yes #else No #end #end
 	</tr>
 </table>

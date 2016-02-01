@@ -78,6 +78,23 @@
 						<td valign="top" class="txtBold">Terms and Conditions</td>
 						<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
 					</tr>
+					
+					#if($review)
+						<tr>
+							<td></td>
+							<td valign="top" class="txtBold">Valid</td>
+							<td valign="top">
+								#if($bank.valid)Yes #else No #end
+							</td>
+						</tr>
+						
+						<tr>
+							<td></td>
+							<td valign="top" class="txtBold">Remark</td>
+							<td valign="top">$!bank.remark</td>
+						</tr>
+					#end
+					<br />
 				#end
 			</table>
 		</td>
@@ -86,23 +103,40 @@
 </table>
 <br /><br />
 
-<table>
-	<tr>
-		<td class="txtBold" colspan="2"><u>Check List</u></td>
-	</tr>
-	
-	#if($financialCheckList.size() > 0)
-		#foreach($finCheckItem in $financialCheckList)
-		    <tr>
-		    	<td width="20%"><br /></td>
-		    	<td>$finCheckItem</td>
-		    </tr>
-		    <tr>
-		    	<td><br /></td>
-		    	<td><br /></td>
-		    </tr>
-		#end
-  	#end
+<table class="sTable">
+	#if($review)
+		<tr>
+			<td class="txtBold" width="40%"><u>Check List</u></td>
+			<td class="txtBold"><u>Avaialble</u></td>
+			<td class="txtBold"><u>Remark</u></td>
+		</tr>
+		#if($financialCheckList.size() > 0)
+			#foreach($finCheckItem in $financialCheckList)
+				<tr>
+			    	<td>$finCheckItem.pmParameter.pmParameterDescs.get(0).codeDesc</td>
+			    	<td>#if($finCheckItem.valid)Yes #else No #end</td>
+			    	<td>$!finCheckItem.remark</td>
+			    </tr>
+			<tr><td><br /></td></tr>
+			#end
+  		#end
+	#else
+		<tr>
+			<td class="txtBold" colspan="2"><u>Check List</u></td>
+		</tr>
+		#if($financialCheckList.size() > 0)
+			#foreach($finCheckItem in $financialCheckList)
+			    <tr>
+			    	<td width="20%"><br /></td>
+			    	<td>$finCheckItem</td>
+			    </tr>
+			    <tr>
+			    	<td><br /></td>
+			    	<td><br /></td>
+			    </tr>
+			#end
+  		#end
+	#end
 </table>
 
 #include("templates/sm/sitevisit/shared/footer.vm")

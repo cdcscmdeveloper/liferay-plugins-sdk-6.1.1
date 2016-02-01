@@ -93,13 +93,27 @@
     	
     	<tr>
     		<td width="30%" valign="top"><b>Interviewed Representatives</b></td>
-    		<td>
-    			Name<br />
-    			Designation<br /><br />
-    			Name<br />
-    			Designation<br /><br />
-    			Name<br />
-    			Designation<br />
+    		<td valign="top">
+    			#if($intRepresentatives.size() != $null && $intRepresentatives.size() > 0)
+    				<table>
+    				#foreach($intRep in $intRepresentatives)
+    					<tr><td width="50%" class="txtBold">Name</td>
+    						<td>$intRep.name</td>
+    					</tr>
+	    				<tr><td class="txtBold">Designation</td>
+	    					<td>$intRep.designation</td>
+	    				</tr>
+	    				<tr><td><br /></td></tr>
+    				#end
+    				</table>
+    			#else
+	    			<p class="txtBold">Name</p>
+	    			<p class="txtBold">Designation</p><br />
+	    			<p class="txtBold">Name</p>
+	    			<p class="txtBold">Designation</p><br />
+	    			<p class="txtBold">Name</p>
+	    			<p class="txtBold">Designation</p><br />
+    			#end
     		</td>
     	</tr>
 	</table>
