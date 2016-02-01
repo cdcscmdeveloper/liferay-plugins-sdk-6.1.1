@@ -20,23 +20,16 @@ import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -60,6 +53,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -139,6 +133,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -159,6 +154,14 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 // TODO: Auto-generated Javadoc
 /**
  * Backing Bean for Create Purchase Order.
@@ -167,7 +170,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  * @since 7/10/2013
  */
 @ManagedBean(name = "purchaseRequestBackingBean")
-@RequestScoped
+@ViewScoped
 public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<PurchaseRequestManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
@@ -177,6 +180,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private String className="@(.myPrClassName)";
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	private boolean selectAllCheckbox;
+	private IPagingDataModel<PmOrgProfile> chargedPtjDataModel = new chargedPtjPagingDataModel();
+	private PmOrgProfile selectedPmOrgProfile;
 	
 	/**
 	 * Gets the class name.
@@ -285,6 +290,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
 		getManagedBean().setDeleteButtonHide(true);
+		
 	}
 
 	/**
@@ -505,6 +511,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}else {
 			getManagedBean().getFulfilmentRequest().setSubmissionDate(new Timestamp(System.currentTimeMillis()));
 		}
+		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 	}
 
 	/**
@@ -3468,5 +3476,221 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 	}
+	
+	/**
+	 * The method used for generating a list of available ministry
+	 * for searching charged PTJ as selection.
+	 * 
+	 * @return the selection list of ministry
+	 */
+	public SelectItem[] getMinistryDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
+		    
+		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
+		    items = new SelectItem[list.size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	/**
+	 * The method used for generating a list of available jabatan
+	 * for searching charged PTJ as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getJabatanDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+			reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+			
+		    List<Object[]> list = resDTO.getOrgProfileDDList();
+		    items = new SelectItem[list.size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			
+		    for(Object[] object : list){
+		    //for (PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	/**
+	 * The method used for searching the charged PTJ.
+	 */
+	public void searchChargedPtjDetails() {
+		try {
+			chargedPtjDataModel.reloadData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
+		}
+	}
+	
+	/**
+	 * The method used to reset the search criteria for charged PTJ.
+	 */
+	public void resetChargedPtjDetails() {
+		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
+		
+		getManagedBean().setJabatanProfileId(null);
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
+		chargedPtjDataModel.resetData();
+	}
+	
+	/**
+	 * Pagination for available charged PTJ search list
+	 */
+	private class chargedPtjPagingDataModel extends PagingDataModel<PmOrgProfile> {
+		private static final long serialVersionUID = 1L;
+
+		public chargedPtjPagingDataModel() {
+			super("tableChargePtj", false);
+		}
+		
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+	 * .biz.bean.search.ISearchBean)
+	 */
+	@Override
+	public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {			
+		try {
+			// Filter By - parameterType
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
+		
+			// Filter By - Org Type
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
+			
+			
+			// Filter By - Ministry Profile Id
+			Long ministryProfileId = getManagedBean().getMinistryProfileId();
+			if (ministryProfileId == null) {
+				ministryProfileId = 0L;
+			}
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ministryProfileId));
+			
+			
+			if (getManagedBean().getJabatanProfileId() != null) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getJabatanProfileId()));
+			}
+			
+			Date currentDate = DateUtils.getCurrentDateWithoutTime();
+			// Filter By - Org effDate
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+
+			// Filter By - Org expDate
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(new SearchFilterBean(
+							"pmOrgValidity.expDate",
+							SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+							currentDate), new SearchFilterBean(
+							"pmOrgValidity.expDate",
+							SearchOperator.OPERATOR_IS_NULL.value(), null,
+							SearchCondition.CONDITION_OR.value())));
+			
+			if (getManagedBean().getPtjCodeName() != null
+					&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
+				if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
+					SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+					filterBean.setCaseInsensitive(true);
+				    searchBean.getDataFilterBeans().add(filterBean);
+				
+				} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
+					SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+					filterBean.setCaseInsensitive(true);
+				    searchBean.getDataFilterBeans().add(filterBean);
+				}
+			}
+			
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileSearchBean(searchBean);
+			OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
+			if (resDTO.isSuccessful()) {
+				 return resDTO.getOrgProfileResultBean();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+}
+	
+	/**
+	 * @return the chargedPtjDataModel
+	 */
+	public IPagingDataModel<PmOrgProfile> getChargedPtjDataModel() {
+		return chargedPtjDataModel;
+	}
+
+	/**
+	 * @param chargedPtjDataModel the chargedPtjDataModel to set
+	 */
+	public void setChargedPtjDataModel(
+			IPagingDataModel<PmOrgProfile> chargedPtjDataModel) {
+		this.chargedPtjDataModel = chargedPtjDataModel;
+	}
+
+	
+	public void addChargedPtjDetails() {
+			System.out.println("org name "+selectedPmOrgProfile.getOrgName());
+			System.out.println("org id "+selectedPmOrgProfile.getOrgProfileId());
+			getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgName(selectedPmOrgProfile.getOrgName());
+			getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgCode(selectedPmOrgProfile.getOrgCode());
+		
+		selectedPmOrgProfile = null;
+	}
+	/**
+	 * @return the selectedPmOrgProfile
+	 */
+	public PmOrgProfile getSelectedPmOrgProfile() {
+		return selectedPmOrgProfile;
+	}
+	/**
+	 * @param selectedPmOrgProfile the selectedPmOrgProfile to set
+	 */
+	public void setSelectedPmOrgProfile(PmOrgProfile selectedPmOrgProfile) {
+		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+	
 	
 }

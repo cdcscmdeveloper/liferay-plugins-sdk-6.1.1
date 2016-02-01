@@ -60,16 +60,21 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="8" id="chargeOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <ac:lov id="chargePtj"
-						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.charge.ptj']}" readonly="true"
-						saveObject="contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile"
-						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" 
+					<p:spacer width="8" />	
+					<p:inputText size="50" id="chargePtj"
+						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}"
+						disabled="true" />	
+					<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"
+						oncomplete="dlgChargedPtj.show();" partialSubmit="true"
+						process="@this"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
-						update=":form:chargeOrgProfileId" size="50"
-						postUpdateListener="contractRequestBackingBean.comparePtjGroup"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1"
-						tooltip="#{lbl['lbl.fl.tooltip.charge.ptj']}"	>
-					</ac:lov></td>
+						action="#{contractRequestBackingBean.resetChargedPtjDetails}"
+						update=":form:chargeOrgProfileId,chargePtj">
+						<p:tooltip for="addBtn">
+							<h:outputText value="#{lbl['lbl.fl.tooltip.charge.ptj']}"
+								escape="false" />
+						</p:tooltip>
+					</p:commandButton></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
@@ -373,4 +378,68 @@
 			</tr>
 		</table>
 	</p:panel>
+	
+	<p:dialog id="dialogChargedPtj"  header="#{lbl['lbl.fl.add.charge.ptj']}" widgetVar="dlgChargedPtj" 
+			styleClass="pop_up_top" modal="true" width="700" height="500">
+			<p:messages id="chargePtjMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+		   <h:panelGroup  id="chargedPtj">
+              <h:panelGrid columns="3">
+                 <p:selectOneMenu for="chargeMinistry"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.fl.ministry']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="chargeMinistry" style="width:300px"
+                      value="#{contractRequestBackingBean.managedBean.ministryProfileId}" >
+            	   <f:selectItems value="#{contractRequestBackingBean.getMinistryDropdown()}"/>
+            	   <p:ajax event="change" update=":form:jabatan" />
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="jabatan"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.fl.jabatan']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="jabatan" style="width:300px"
+                      value="#{contractRequestBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{contractRequestBackingBean.getJabatanDropdown()}"/>
+            	    <p:ajax event="change" update=":form:jabatan"/>
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="ptjcodename" 
+                    value="#{contractRequestBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
+                       <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
+            	      <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
+            	      <p:ajax process="@this"/>
+                 </p:selectOneMenu>
+				 <p:spacer height="1"/>
+                 <p:inputText id="ptjCodeVaue"  style="width:300px;" 
+                     value="#{contractRequestBackingBean.managedBean.ptjCodeNameSearchValues}" >
+                     <p:ajax process="@this"/></p:inputText>
+			  </h:panelGrid>
+			  	<div class="ppRightBtn">
+       		         <p:commandButton id="chargePtjSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableChargePtj"  
+       		            action="#{contractRequestBackingBean.searchChargedPtjDetails}" process="@this" /> 
+			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
+			            action="#{contractRequestBackingBean.resetChargedPtjDetails}" update=":form:chargedPtj"   />
+		       </div>
+			   <p:spacer height="2"/>
+              <p:dataTable id="tableChargePtj" var="pmVar" value="#{contractRequestBackingBean.chargedPtjDataModel}" 
+                 rowIndexVar="rowIndex" selection="#{contractRequestBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
+                  <ac:paginator for="tableChargePtj"/>
+                    <p:column selectionMode="single" style="width:18px;"> 
+                         <f:facet name="header">
+                             
+		               </f:facet>
+                    </p:column>       
+                    <p:column headerText="#{lbl['lbl.fl.ptj.code']}" >
+                       	#{pmVar.orgCode}
+					</p:column>
+                    <p:column headerText="#{lbl['lbl.fl.ptj.name']}" >
+                      	#{pmVar.orgName}
+					</p:column>
+			 </p:dataTable>           
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"  update=":form:chargeOrgProfileId,:form:chargePtj" 
+				    action="#{contractRequestBackingBean.addChargedPtjDetails()}" onclick="dlgChargedPtj.hide();"/>
+				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtj.hide();" />
+           </div>
+           </h:panelGroup>
+	</p:dialog>
 </ui:composition>
