@@ -19,7 +19,7 @@
 </c:if>
 
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'SM'}"> 
- <c:choose>
+ /* <c:choose>
       <c:when test="#{smReportBackingBean.managedBean.rptGenBean.collectorGovRegistrationChkView ||
                       smReportBackingBean.managedBean.rptGenBean.collectorCDCRegistrationChkView}">
      .columnSmTableClass {
@@ -31,7 +31,11 @@
 	    margin-top: 0%;
 	    }
       </c:otherwise>
-    </c:choose>
+    </c:choose> */
+
+.columnSmTableClass {
+	         margin-top: 0%;
+	         }
 
 </c:if>
 
@@ -104,7 +108,7 @@
 }</c:if>
 <c:if test="#{smReportBackingBean.managedBean.rptGenBean.collectorCDCRegistrationChkView}">
 .column1CheckClass {
-	width: 1.7%;
+	width: 1.8%;
 }</c:if>
 
 .column2CheckClass {
