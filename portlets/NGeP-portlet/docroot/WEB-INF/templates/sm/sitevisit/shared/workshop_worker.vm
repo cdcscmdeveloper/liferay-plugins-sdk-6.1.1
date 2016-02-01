@@ -1,4 +1,4 @@
-<u>Employee</u>
+<u class="txtBold">Employee</u>
 <br /><br />
 
 <table  class="descTable" width="100%">
@@ -10,14 +10,23 @@
 			<th width="25%">Experience</th>
 		</tr>
 		
-		#if($workerLs.size() > 0)
-			<tr>
-				<td width="5%"></td>
-				<td width="25%"></td>
-				<td width="25%"></td>
-				<td width="20%"></td>
-				<td width="25%"></td>
-			</tr>
+		
+		#if($review)
+			#if($workerLs != $null && $workerLs.size() > 0)
+				#foreach($worker in $workerLs)
+				<tr>
+					<td width="5%">$velocityCount</td>
+					<td width="25%">$!worker.expertise</td>
+					<td width="25%">$!worker.name</td>
+					<td width="20%">$!worker.identificationNo</td>
+					<td width="25%">$!worker.workExpYear</td>
+				</tr>
+				#end
+			#else
+				<tr>
+		 			<td colspan="5" align="center">No Record Found</td>
+		 		</tr>
+			#end
 		#else
 		 	<tr>
 		 		<td colspan="5" align="center">No Record Found</td>

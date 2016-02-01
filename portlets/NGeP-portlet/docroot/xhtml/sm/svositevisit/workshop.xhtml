@@ -9,7 +9,7 @@
 	<h:outputText value="#{lbl['lbl.sm.workshop']}" styleClass="screen-title" />
 	<p:tabView>
 		<p:tab title="#{lbl['lbl.sm.workshop.siteinfo']}">
-			<ui:remove>
+
 			<c:choose>
 				<c:when test="#{!viewFlag}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/addressRepresentatives.xhtml" />
@@ -19,7 +19,6 @@
 					<ui:include src="/xhtml/sm/shared/sitevisit/view_addressRepresentatives.xhtml" />
 				</c:otherwise>
 			</c:choose>
-			</ui:remove>
 			<ui:include src="/xhtml/sm/shared/sitevisit/licenseInsurance.xhtml" />
 		</p:tab>
 		

@@ -1,4 +1,4 @@
-<u>Premise Location</u>
+<u class="txtBold">Premise Location</u>
 <br />
 <table>
 	<tr>
@@ -18,51 +18,61 @@
 	<tr>
 		<td width="40%" class="txtBold">Area</td>
 		<td class="txtBold" width="40%">Overall Square Feet/Meter</td>
+		#if($review)<td>$!facility.overallSqft</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold" width="40%">Enclosed Square Feet/Meter</td>
+		#if($review)<td>$!facility.enclosedSqft</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold" width="40%">Enclosed Capacity Feet/Meter</td>
+		#if($review)<td>$!facility.enclosedCapacitySqft</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold">Floor</td>
 		<td class="txtBold" width="40%">Cement</td>
+		#if($review)<td>#if($facility.cementFloor)Yes #else No #end</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold" width="40%">Tar</td>
+		#if($review)<td>#if($facility.tarFloor)Yes #else No #end</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold"  width="40%">Others</td>
+		#if($review)<td>#if($facility.otherFloor)Yes - $facility.otherFloorRemark #else No #end</td>#end
 	</tr>
 	
 	
 	<tr>
 		<td width="40%" class="txtBold">Environment</td>
 		<td class="txtBold"  width="40%">Fenced</td>
+		#if($review)<td>#if($facility.envFence)Yes #else No #end</td>#end
 	</tr>
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold" width="40%">Cleanliness</td>
+		#if($review)<td>#if($facility.envClean)Yes #else No #end</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold" width="40%">Organized</td>
+		#if($review)<td>#if($facility.envOrganize)Yes #else No #end</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
 		<td class="txtBold" width="40%">Others</td>
+		#if($review)<td>#if($facility.otherEnv)Yes - $facility.otherEnvRemark #else No #end</td>#end
 	</tr>
 
 </table>

@@ -11,19 +11,31 @@
 		<td>Guarantor</td>
 	</tr>
 	
-	#if($printingCat.size() > 0)
+	#if($printingCat != $null && $printingCat.size() > 0)
 		#foreach($pCat in $printingCat.keySet())
 				<tr><td colspan="7"><b>$pCat</b></td></tr>
-				#foreach($category in $printingCat.get($pCat))
-					<tr>
-						<td>$velocityCount</td>
-						<td>$!category.pmMachine.machineDesc</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
+				#foreach($machine in $printingCat.get($pCat))
+					#if($review)
+						<tr>
+							<td>$velocityCount</td>
+							<td>$!machine.pmMachine.machineDesc</td>
+							<td>$!machine.brand</td>
+							<td>$!machine.qty</td>
+							<td>$!machine.requisiteMethod</td>
+							<td>$!machine.requisiteYear</td>
+							<td>$!machine.guarantor</td>
+						</tr>
+					#else
+						<tr>
+							<td>$velocityCount</td>
+							<td>$!machine.pmMachine.machineDesc</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					#end
 				#end
 		#end
 	#end
