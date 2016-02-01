@@ -4316,6 +4316,11 @@ public class SpecificationBackingBean extends
 		// return getDropdownCodeValues(committeeRole);
 	}
 	
+	/**
+	 * To get a list of users (DO+BO) for dropdown
+	 * 
+	 * @return the list of PmUser instance
+	 */
 	public List<PmUser> getCreatedByDropdownValues() {
 		IUserSO userSO = null;
 		List<PmUser> users = new ArrayList<PmUser>();
