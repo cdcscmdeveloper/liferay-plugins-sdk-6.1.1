@@ -764,6 +764,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
    	   }
        
        /**
+   	 * The method used to delete the selected frequency schedule.
+   	 */
+   	public void deleteScheduleDetails() {
+   		for (int i = 0; i < selectedSchedule.length; i++) {
+   			CtSchedule ctSchedule = selectedSchedule[i];
+   			this.getManagedBean().getContractVer().getCtSchedules().remove(ctSchedule);
+   		}
+   		selectedSchedule = null;	
+   	}
+       
+       /**
    	 * The method used for generating a list of available year
    	 * as selection.
    	 * @return the selection list of year
