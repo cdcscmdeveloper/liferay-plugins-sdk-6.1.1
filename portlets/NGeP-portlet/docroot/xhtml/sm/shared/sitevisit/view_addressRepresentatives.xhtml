@@ -6,43 +6,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:remove>
-	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" id="pnlSvSelectSvAdd" align="left">
-		<p:dataTable var="svAdd" id="dtblSelectedSvAdd" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAddresses}">
-			<ui:remove>
-			<p:column headerText="#{lbl['lbl.sm.facility.type']}">
-				#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType,svoSiteVisitBackingBean.managedBean.facilityTypeAddressMap[svAdd.svAddressId])}
-			</p:column>
-			</ui:remove>
-			<p:column headerText="#{lbl['lbl.sm.address']}">
-				<h:outputText
-					value="#{svoSiteVisitBackingBean.displayAddress(svAdd.smAddress)}"
-					escape="false" style="float : left" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.postcode']}">
-				#{svAdd.smAddress.postcode}
-				</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.towncity']}">
-				#{svAdd.smAddress.pmCity.cityName}
-				</p:column>
-				
-			<p:column headerText="#{lbl['lbl.sm.district']}">
-				#{svAdd.smAddress.pmDistrict.districtName}
-				</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.state']}">
-				#{svAdd.smAddress.pmState.stateName}
-				</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.country']}">
-				#{svAdd.smAddress.pmCountry.countryName}
-			</p:column>
-		</p:dataTable>
-	</p:panel>
-	</ui:remove>
 	
 <!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/assistingOfficer.xhtml" /> -->
 	
