@@ -570,7 +570,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 */
 	public boolean validBasicSupplier(){
 		log.info("*******validBasicSupplierAdmin********");
-		if(new FacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){ 
+		FacesScopes fs = new FacesScopes();
+		if(fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())){ 
 			return true;
 		}
 		return false;
