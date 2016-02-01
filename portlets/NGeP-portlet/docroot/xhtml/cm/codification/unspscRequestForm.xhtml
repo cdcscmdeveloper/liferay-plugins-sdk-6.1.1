@@ -10,11 +10,9 @@
 
 	<ui:define name="contentSection">
 
-		<script>
-			$('#portlet_UnspscRequestForm_WAR_NGePportlet').find(
-					'.portlet-title-text').html(
-					"#{lbl['lbl.cm.unspsc.code.request.form']}");
-		</script>
+	<script>
+		$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.item.code.search']}");
+	</script>
 
 		<p:blockUI block="form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
