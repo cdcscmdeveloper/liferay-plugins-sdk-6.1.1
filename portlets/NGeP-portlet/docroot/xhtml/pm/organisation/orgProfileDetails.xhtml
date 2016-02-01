@@ -118,7 +118,7 @@
 						value="#{lbl['lbl.pm.organisation.orgName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				
-						<td><p:inputText id="orgName" disabled="#{ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType or organisationBackingBean.managedBean.orgType eq 'FJA'}"
+						<td><p:inputText id="orgName" disabled="#{ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType or ParameterConst.orgTypeJabatan eq organisationBackingBean.managedBean.orgType or ParameterConst.orgTypePegawaiPengawal eq organisationBackingBean.managedBean.orgType}"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
 								required="#{!empty param['disableValidation']}" size="45" styleClass="ppDisplayTextL"
@@ -286,7 +286,7 @@
 				<td><p:selectOneMenu id="orgStatus"
 						styleClass="ppDropDownWidthM" 
 						label="#{lbl['lbl.pm.organisation.status']}"
-						disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew or ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType or organisationBackingBean.managedBean.orgType eq 'FJA'}"
+						disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew or ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType or ParameterConst.orgTypeJabatan eq organisationBackingBean.managedBean.orgType or ParameterConst.orgTypePegawaiPengawal eq organisationBackingBean.managedBean.orgType}"
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
 						required="#{!empty param['disableValidation']}" style="margin-bottom: 5px;">
 						<f:selectItems
