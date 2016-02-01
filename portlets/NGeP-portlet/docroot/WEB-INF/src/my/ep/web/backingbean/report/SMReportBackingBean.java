@@ -193,7 +193,7 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL:
 			rptGenBean.setSmListOfDailyRegisteredApplicationView(true);
 			rptGenBean.setSmCDCompanyNameView(true);
-			//rptGenBean.setSmDRMofRegNoTwoView(true);
+			rptGenBean.setSmDRMofRegNoTwoView(true);
 			rptGenBean.setSmRegistrationTypeTwoView(true);
 			rptGenBean.setSmActiveSubmissiveFromDateView(true);
 			rptGenBean.setSmActSubmisAllDateView(true);
@@ -604,7 +604,7 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmSupplierView(true);
 			//rptGenBean.setSmSuppCompanyNameView(true);
 			rptGenBean.setSmRegistrationNoView(true);
-			rptGenBean.setSmARMofRegNoView(true);
+			rptGenBean.setSmMofRegNoView(true);
 			checkAuthorizationForSuppliers(rptGenBean, authoriztionList);
 			break;
 		case ReportConst.SM_DAILY_APP_SUBMITTED:
