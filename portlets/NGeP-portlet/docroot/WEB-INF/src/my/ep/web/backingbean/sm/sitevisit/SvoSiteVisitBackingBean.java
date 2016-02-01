@@ -2393,7 +2393,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public void reviewSiteVisitReport(){
 		getManagedBean().setViewMode(true);
 		//getManagedBean().setAppId(1261306L); Manufacturing
-		getManagedBean().setAppId(1259470L);
+		//getManagedBean().setAppId(1259470L);
 		//SmSvTask svoTask = retrieveSiteVisitInfoByViewMode(viewMode);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
