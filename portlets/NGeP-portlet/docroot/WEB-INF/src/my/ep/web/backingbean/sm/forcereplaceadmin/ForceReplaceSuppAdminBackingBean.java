@@ -247,9 +247,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 							// check if already had active basic supplier user
 							// account
 							if (StringUtils.isNotBlank(smPersonnel.getEpRole())
-									&& smPersonnel.getEpRole().equals(
+									&& (smPersonnel.getEpRole().equals(
 											RoleCode.BASIC_SUPPLIER_USER
-													.value())
+													.value()) || smPersonnel
+											.getEpRole().equals(
+													RoleCode.G2G_SUPPLIER_USER
+															.value()))
 									&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 								getManagedBean().setHasSupplierUser(true);
 							}
