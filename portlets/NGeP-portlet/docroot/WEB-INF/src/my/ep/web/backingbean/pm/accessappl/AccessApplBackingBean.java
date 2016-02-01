@@ -68,8 +68,10 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.pm.accessappl.AccessApplManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -324,7 +326,7 @@ public class AccessApplBackingBean extends
 			PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
 			accessAppl.setOrgProfile(getManagedBean().getSelectedOrgProfile());
 			accessAppl.setOrgTypeCode(getManagedBean().getSelectedOrgProfile().getOrgTypeCode());
-			validateAccessAppl();
+			validateAccessAppl(outcome);
 			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IAccessApplSO.class);
@@ -357,7 +359,7 @@ public class AccessApplBackingBean extends
 			}
 			
 		}catch(Exception e){
-			throw new EpException(e.getMessage());
+			throw e;
 		}finally{
 			accessApplSO = null;
 		}
@@ -370,8 +372,7 @@ public class AccessApplBackingBean extends
 		try{
 			DocumentReqDTO reqDTO = new DocumentReqDTO();
 			reqDTO.setDocumentSearchBean(new SearchBean<PmDocument>());
-			reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT);
-			reqDTO.setDocName("Authorisation letter which has been endorsed by Head of Department");			
+			reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_ACCESS_APPLICATION_DOC);			
 			docSO = (IDocumentSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -434,17 +435,26 @@ public class AccessApplBackingBean extends
 		}
 	}
 	
-	private void validateAccessAppl(){
+	private void validateAccessAppl(String outcome){
 		PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
 		for(PmAccessApplDoc accessApplDoc : getManagedBean().getAccessApplDocList()){
 			if(StringUtils.isBlank(accessApplDoc.getFileName()) || StringUtils.isBlank(accessApplDoc.getFilePath())){
-				throw new EpException(accessApplDoc.getDocument().getDocName() + " is mandatory.");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { accessApplDoc.getDocument().getDocName()});
 			}
+		}
+		
+		if(accessAppl.isBrandNew() && !accessAppl.getEmail().equals(accessAppl.getConfirmEmail())){
+			throw new EpException(MessageConst.ERROR_721020);
 		}
 		
 		if(!accessAppl.isMarketResearch() 
 				&& !accessAppl.isCompanyProfile()){
-			throw new EpException("Please select request type.");
+			throw new EpException(MessageConst.ERROR_100050,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.pm.access.app.request.type",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
 		}
 		
 		PmUser user = PmCommonUtil.retrieveUserByLoginId(accessAppl.getIdentificationNo());
@@ -460,7 +470,8 @@ public class AccessApplBackingBean extends
 			if(currentUserOrg != null){
 				if(!currentUserOrg.getPmOrgProfile().getOrgProfileId()
 						.equals(accessAppl.getOrgProfile().getOrgProfileId())){
-					throw new EpException("Please inactive the current user orgnisation:" +currentUserOrg.getPmOrgProfile().getOrgName());
+					throw new EpException(MessageConst.ERROR_770215,
+							new String[] {currentUserOrg.getPmOrgProfile().getOrgName()});
 				}else{
 					boolean hasMrRole = false;
 					boolean hasCpRole = false;
@@ -471,13 +482,42 @@ public class AccessApplBackingBean extends
 							hasCpRole = true;
 						}
 					}
-					if(accessAppl.isCompanyProfile() && hasCpRole){
-						throw new EpException("The user has the Company Profile Role, please login using your current login and password.");
+					
+					if(accessAppl.isCompanyProfile() && hasCpRole && accessAppl.isMarketResearch() && hasMrRole){						
+						throw new EpException(MessageConst.ERROR_770216,
+								new String[] {ResourceBundleUtils
+								.getMessage("lbl.pm.access.app.cp.and.mr",
+										new String[] {},
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()),
+										PmCommonUtil.getBasePortalUrl()});
+					}else if(accessAppl.isCompanyProfile() && hasCpRole){
+						throw new EpException(MessageConst.ERROR_770216,
+								new String[] {ResourceBundleUtils
+								.getMessage("lbl.pm.access.app.company.profile",
+										new String[] {},
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()),
+										PmCommonUtil.getBasePortalUrl()});
 					}else if(accessAppl.isMarketResearch() && hasMrRole){
-						throw new EpException("The user has the Market Research Role, please login using your current login and password.");
+						throw new EpException(MessageConst.ERROR_770216,
+								new String[] {ResourceBundleUtils
+								.getMessage("lbl.pm.access.app.market.research",
+										new String[] {},
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()),
+										PmCommonUtil.getBasePortalUrl()});
 					}
 				}
 			}
+		}
+		
+		if(BpmOutcomeConst.BPM_REJECT.equals(outcome) && !accessAppl.isBrandNew() && StringUtils.isBlank(getManagedBean().getRemarks())){
+			throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils
+					.getMessage("lbl.pm.access.app.remarks",
+							new String[] {},
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())});
 		}
 	}
 	

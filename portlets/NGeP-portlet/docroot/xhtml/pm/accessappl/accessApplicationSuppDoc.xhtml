@@ -16,7 +16,7 @@
 			<p:column headerText="#{lbl['lbl.pm.document.name']}">
 				<h:outputText value="#{accessApplDoc.document.docName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.txt.attachment']}" >
+			<p:column headerText="#{lbl['lbl.txt.attachment']}" style="text-align:center;">
 			<p:commandLink oncomplete="accessApplUploadDlg.show();"
 							update="@([id$=accessApplUploadDialog])" process="@this"
 							action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
@@ -24,11 +24,11 @@
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
 						</p:commandLink>
-			<p:commandLink action="#{accessApplBackingBean.downloadAttachment(accessApplDoc)}" 
-	          		immediate="true" ajax="false" disabled="#{accessApplDoc.brandNew}">
- 					  <p:graphicImage value="/css/images/design/attach.png" />
- 				</p:commandLink>
-				<p:commandLink onclick="deleteAttachmentDlg.show();" process="@this"
+						<p:commandLink value="#{accessApplDoc.fileName}" process="@this"
+										styleClass="blue_font" disabled="#{accessApplDoc.brandNew}"
+										rendered="#{not empty accessApplDoc.fileName}" 
+										action="#{accessApplBackingBean.downloadAttachment(accessApplDoc)}" />
+					<p:commandLink onclick="deleteAttachmentDlg.show();" process="@this"
 							action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
 							rendered="#{not empty accessApplDoc.fileName and accessApplDoc.brandNew}" >
 			   				<h:graphicImage value="/css/images/design/icon_trash.png" 
