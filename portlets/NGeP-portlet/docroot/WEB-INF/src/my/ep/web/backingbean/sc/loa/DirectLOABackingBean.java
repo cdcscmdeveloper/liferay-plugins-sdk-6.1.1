@@ -1280,9 +1280,12 @@ public class DirectLOABackingBean extends
 			DirectAwardReqDTO awardReqDTO) {
 
 		scLoa.setIssueDate(scLoa.getContractEffDate());
+
 		// Acknowledge Date
-		scLoa.setAckDueDate(DateUtils.addDays(
-				DateUtils.getCurrentDateWithoutTime(), 14));
+		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
+			Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
+		}
 
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
@@ -3830,6 +3833,10 @@ public class DirectLOABackingBean extends
 		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
 		getManagedBean().setOverallContractAmt(overallCtAmout);
 		scLoa.setOverallContractAmt(overallCtAmout);
+		
+		// Acknowledge Date
+		Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOA_RESPONSE_PERIOD);
+		scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 
 		TemplateSpecBean bean = new TemplateSpecBean(
 				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
@@ -6062,6 +6069,26 @@ public class DirectLOABackingBean extends
 		loa.setAgreementReq(isAgreementMandatory);
 
 		return isAgreementMandatory;
+	}
+	
+	/**
+	 * Gets the days by rules.
+	 *
+	 * @param RuleType the rule type
+	 * @return the days by rules
+	 */
+	private Integer getDaysByRules(String RuleType){
+		Integer days = 0;
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleType);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			days  = Integer.valueOf(configRuleValue.getRuleValue());
+		}
+		return days;
 	}
 
 }
