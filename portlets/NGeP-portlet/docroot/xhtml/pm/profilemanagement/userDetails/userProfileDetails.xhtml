@@ -192,8 +192,7 @@
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
 										size="30" maxlength="12"
 										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
-										<f:validateRegex pattern="[0-9]+" />
-										<f:validateLength minimum="12" />
+										<f:validateRegex pattern="[0-9]{12}" />
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
 											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
