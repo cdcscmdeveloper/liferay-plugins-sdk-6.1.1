@@ -30,6 +30,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -42,6 +43,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
@@ -823,19 +825,21 @@ public class ApprovalBackingBean extends
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
 						revertToOldValues(approvalRequests, qt);
-					} else {
+					} /* else {
 						QTDocumentsBackingBean docbackingBean = new QTDocumentsBackingBean();
 						if (CollectionUtils.isNotEmpty(approvalRequests)) {
 
 							for (int i = 0; i < approvalRequests.size(); i++) {
 								ScQtApprovalRequest approvalRequest = approvalRequests
 										.get(i);
-								String approvalType = approvalRequest
+									String approvalType = approvalRequest
 										.getApprovalType().getParameterCode();
 								if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD
 										.equalsIgnoreCase(approvalType)
 
 								) {
+									//TODO Commented by VidyasagarReddy
+									//Need to discuss kenny for document regeneration
 									qt.setChanged(true);
 									qt.setQtValidityPeriod(Integer
 											.parseInt(approvalRequest
@@ -857,7 +861,7 @@ public class ApprovalBackingBean extends
 
 						}
 
-					}
+					}**/
 				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approvalCategoryCode)) {
 
@@ -1368,6 +1372,49 @@ public class ApprovalBackingBean extends
 			List<ScQtApprovalRequest> approvalRequests = this.getManagedBean()
 					.getScQtApprovalRequestList();
 
+			
+			IQTProposalSO proposalSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTProposalSO.class);
+			ProposalReqDTO proposalReqDTO= new ProposalReqDTO();
+			proposalReqDTO.setQtId(qt.getQtId());
+			Integer count = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO).getTotalAccepted();
+			if(Integer.valueOf(1).equals(count)){
+			QTDocumentsBackingBean docbackingBean = new QTDocumentsBackingBean();
+			if (CollectionUtils.isNotEmpty(approvalRequests)) {
+
+				for (int i = 0; i < approvalRequests.size(); i++) {
+					ScQtApprovalRequest approvalRequest = approvalRequests
+							.get(i);
+						String approvalType = approvalRequest
+							.getApprovalType().getParameterCode();
+					if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD
+							.equalsIgnoreCase(approvalType)
+
+					) {
+						
+						qt.setChanged(true);
+						qt.setQtValidityPeriod(Integer
+								.parseInt(approvalRequest
+										.getChangedValue()));
+
+						qt.setProposalValidityEndDate(DateUtils
+								.addDays(qt.getClosingDate(),
+										qt.getQtValidityPeriod()));
+						docbackingBean.reGenerateDocuments(
+								qt.getQtId(), qt
+										.getCurrentWorkFlowStatus()
+										.getPmStatus()
+										.getStatusId(), true);
+						break;
+
+					}
+
+				}
+
+			}
+			}
+			
 			finalizeRemarks(approval.getScQtApprovalRemarks());
 			approval.getScQtApprovalDtls().addAll(approvalRequests);
 			List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
