@@ -16,6 +16,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
+import my.ep.biz.service.sm.blacklistDirector.IBlacklistDirectorSO;
 import my.ep.biz.service.sm.bulkApplication.ISmBulkApplicationSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
@@ -423,7 +424,7 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICategoryCodeSO.class);
 	}
-	
+
 	/**
 	 * Get IRevertApplicationSO
 	 * 
@@ -434,7 +435,7 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IRevertApplicationSO.class);
 	}
-	
+
 	/**
 	 * Get ISmRuleSO
 	 * 
@@ -454,14 +455,25 @@ public class SmServiceLookup {
 		return (IComplaintSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IComplaintSO.class);
 	}
-	
+
 	/**
 	 * Get IRoleSO
+	 * 
 	 * @return IRoleSO
 	 */
-	public static IRoleSO getRoleSO(){
-		return (IRoleSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IRoleSO.class);
+	public static IRoleSO getRoleSO() {
+		return (IRoleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+	}
+
+	/**
+	 * Get IBlacklistDirectorSO
+	 * 
+	 * @return IBlacklistDirectorSO
+	 */
+	public static IBlacklistDirectorSO getBlacklistDirectorSO() {
+		return (IBlacklistDirectorSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IBlacklistDirectorSO.class);
 	}
 }
