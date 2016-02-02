@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_BlacklistDirector_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.blacklist.director.owner']}");
+		</script>
+	</ui:define>
+	
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<ui:param name="bb" value="#{smBlacklistDirectorBackingBean}" />
+		
+		<p:outputPanel id="searchMainPanelId" rendered="#{bb.managedBean.targetPage eq bb.SEARCH_PAGE}">
+			<ui:include src="searchMain.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel id="companyResultPanelId" rendered="#{bb.managedBean.targetPage eq bb.VIEW_COMPANY_RESULT_PAGE}">
+			<ui:include src="viewCompanyResult.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel id="directorResultPanelId" rendered="#{bb.managedBean.targetPage eq bb.VIEW_DIRECTOR_RESULT_PAGE}">
+			<ui:include src="viewDirectorResult.xhtml" />
+		</p:outputPanel>
+	</ui:define>
+		
+</ui:composition>

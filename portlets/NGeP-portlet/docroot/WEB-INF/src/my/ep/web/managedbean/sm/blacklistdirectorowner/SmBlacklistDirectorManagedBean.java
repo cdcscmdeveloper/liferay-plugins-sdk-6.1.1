@@ -24,6 +24,8 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = -4846065354985815446L;
+
+	// Main
 	private String targetPage;
 	private String searchBy;
 
@@ -34,7 +36,7 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 	private String epNo;
 
 	// search by personnel
-	private String personnelSearchBy;
+	private String directorSearchBy;
 	private String name;
 	private String identificationNo;
 
@@ -54,7 +56,7 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = -3028215409193408953L;
 
 		public SupplierPagingDataModel() {
-			super("supplierDtId");
+			super("companyDtId");
 		}
 
 		@Override
@@ -93,7 +95,7 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = -5742902894022742837L;
 
 		public OwnerDirectorPagingDataModel() {
-			super("ownerDirectorDtId");
+			super("directorDtId");
 		}
 
 		@Override
@@ -160,12 +162,12 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 		this.companySearchBy = companySearchBy;
 	}
 
-	public String getPersonnelSearchBy() {
-		return personnelSearchBy;
+	public String getDirectorSearchBy() {
+		return directorSearchBy;
 	}
 
-	public void setPersonnelSearchBy(String personnelSearchBy) {
-		this.personnelSearchBy = personnelSearchBy;
+	public void setDirectorSearchBy(String directorSearchBy) {
+		this.directorSearchBy = directorSearchBy;
 	}
 
 	public String getName() {
