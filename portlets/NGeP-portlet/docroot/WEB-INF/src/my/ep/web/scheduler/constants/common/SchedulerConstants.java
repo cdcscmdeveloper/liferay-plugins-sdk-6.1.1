@@ -48,10 +48,13 @@ public class SchedulerConstants {
 	// PM Module Constants
 	// PM Job Group ID
 	public static final String PM_INTEGRATION_JOB_GROUP = "PM INTEGRATION JOB GROUP";
+	public static final String PM_JOB_GROUP = "PM JOB GROUP";
 	// PM Job Key Id
 	public static final String PM_INTEGRATION_DAILY_JOB = "PM INTEGRATION JOB";
+	public static final String UPDATE_EXPIRED_ACCESS_APPLICATION = "UPDATE EXPIRED ACCESS APPLICATION";
 	// PM Integration Job Description
 	public static final String PM_INTEGRATION_DAILY_JOB_DESC = "";
+	public static final String UPDATE_EXPIRED_ACCESS_APPLICATION_JOB_DESC = "Job run every day at 00:01 AM to expire the access application that no more effective.";
 
 	// SM Module Scheduler COnstants
 
