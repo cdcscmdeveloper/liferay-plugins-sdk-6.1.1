@@ -895,23 +895,24 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				}
 			}
 		}
-		
-		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		reqDTO.setSupplierDoNoList(supplierDoNoList);
-		FulfilmentResDTO resDTO = deliveryOrderSO.searchDuplicateSupplierDoNo(reqDTO);
-		if(resDTO.isDuplicateSupplierDoNo()){
-			String supplierRefNo = null;
-			for(int i = 0;i < resDTO.getDuplicatedSupplierDoNoList().size();i++){
-				if(supplierRefNo != null){
-					supplierRefNo = ", "+resDTO.getDuplicatedSupplierDoNoList().get(i);
-				}else{
-					supplierRefNo = resDTO.getDuplicatedSupplierDoNoList().get(i);
+		if(!supplierDoNoList.isEmpty()){
+			IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+			reqDTO.setSupplierDoNoList(supplierDoNoList);
+			FulfilmentResDTO resDTO = deliveryOrderSO.searchDuplicateSupplierDoNo(reqDTO);
+			if(resDTO.isDuplicateSupplierDoNo()){
+				String supplierRefNo = null;
+				for(int i = 0;i < resDTO.getDuplicatedSupplierDoNoList().size();i++){
+					if(supplierRefNo != null){
+						supplierRefNo = ", "+resDTO.getDuplicatedSupplierDoNoList().get(i);
+					}else{
+						supplierRefNo = resDTO.getDuplicatedSupplierDoNoList().get(i);
+					}
 				}
+				
+				throw new EpException(MessageConst.ERROR_740042, new String[]{supplierRefNo,getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
 			}
-			
-			throw new EpException(MessageConst.ERROR_740042, new String[]{supplierRefNo,getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
 		}
 		
 		reValidateRetrieveDelAmt();
