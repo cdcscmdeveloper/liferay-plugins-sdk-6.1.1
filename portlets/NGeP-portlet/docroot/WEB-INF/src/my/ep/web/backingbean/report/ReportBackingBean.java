@@ -13192,9 +13192,12 @@ public class ReportBackingBean extends
 									|| smSupplier.getPmCategoryL3()
 											.getCategoryL3Id() == null || smSupplier
 									.getPmCategoryL3().getCategoryL3Id() != null)) {
-						maincategory.append(ReportConst.KAMA + "");
-						subcategory.append(ReportConst.KAMA + "");
-						subcategorydivision.append(ReportConst.KAMA + "");
+						maincategory.append(ReportConst.KAMA + smSupplier.getPmCategoryL1()
+								.getCategoryL1Id());
+						subcategory.append(ReportConst.KAMA +smSupplier.getPmCategoryL2()
+								.getCategoryL2Id());
+						subcategorydivision.append(ReportConst.KAMA + smSupplier.getPmCategoryL3()
+								.getCategoryL3Id());
 					}
 
 					/*
@@ -15812,6 +15815,7 @@ public class ReportBackingBean extends
 				searchBean2.getSortColumns();
 				otherItems = getDropdownValuesBySearchBean(
 						ParameterTypeConst.ORGANISATION_TYPES, searchBean2);
+				// for the removal of 'Select One' in the dropdown
 				otherItems = (SelectItem[]) ArrayUtils.remove(otherItems, 0);
 			}
 			items = ArrayUtils.addAll(federalItems, otherItems);
