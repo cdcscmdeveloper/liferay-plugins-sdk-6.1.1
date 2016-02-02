@@ -3922,7 +3922,9 @@ public class ProfileManagementBackingBean extends
 			user = this.getManagedBean().getSelectedUser();
 			userOrg = this.getManagedBean().getSelectedUserOrg();
 			// Validation
-			checkIdentificationNumber1();
+			if(isNewUser){
+		    	checkIdentificationNumber1();
+			}
 			validateUser(user, userOrg);
 			// addressEntered = validateUserAddress(this.getManagedBean()
 			// .getUserAddress());
@@ -4468,9 +4470,9 @@ public class ProfileManagementBackingBean extends
 							throw new EpException(MessageConst.ERROR_770215,
 									new String[] {param1});
 						}
-//						throw new EpException(MessageConst.ERROR_770155,
-//								new String[] { orgProfile.getOrgName(),
-//										orgProfile.getOrgCode() });
+						throw new EpException(MessageConst.ERROR_770155,
+								new String[] { orgProfile.getOrgName(),
+										orgProfile.getOrgCode() });
 							
 				     }else {
 				    		
