@@ -52,6 +52,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -62,6 +63,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
@@ -83,6 +85,7 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -115,6 +118,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
@@ -908,6 +912,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
      			
      			getSupplierListForLoaAck();
      			reqDTO.setSupplierList(getManagedBean().getSupplierList());
+     			
+     			// Acknowledge Due Date
+     			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+     							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+     				Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOA_RESPONSE_PERIOD);
+     				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
+     			}
 	     	}
 	     	
 	     	if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
@@ -5149,4 +5160,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     	}
     	return false;
     }
+	
+	/**
+	 * Gets the days by rules.
+	 *
+	 * @param RuleType the rule type
+	 * @return the days by rules
+	 */
+	private Integer getDaysByRules(String RuleType){
+		Integer days = 0;
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleType);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			days  = Integer.valueOf(configRuleValue.getRuleValue());
+		}
+		return days;
+	}
 }
