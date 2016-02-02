@@ -16,6 +16,8 @@ import my.ep.web.managedbean.sm.blacklistdirectorowner.SmBlacklistDirectorManage
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.lang.StringUtils;
+
 @ManagedBean(name = "smBlacklistDirectorBackingBean")
 @RequestScoped
 public class SmBlacklistDirectorBackingBean extends
@@ -28,26 +30,41 @@ public class SmBlacklistDirectorBackingBean extends
 	public static String COMPANY_SEARCH_BY_REGNO = "CR";
 	public static String COMPANY_SEARCH_BY_EPNO = "CE";
 	public static String SEARCH_PAGE = "S";
-	public static String COMPANY_RESULT_PAGE = "RC";
-	public static String DIRECTOR_RESULT_PAGE = "RD";
+	public static String VIEW_COMPANY_RESULT_PAGE = "RC";
+	public static String VIEW_DIRECTOR_RESULT_PAGE = "RD";
 
 	public void preRenderBlacklistDirector() {
 		renewSesionObject();
 		getManagedBean().setTargetPage(SEARCH_PAGE);
+		getManagedBean().setSupplier(new SmSupplier());
+		getManagedBean().setDirectorOwner(new SmPersonnel());
+		getManagedBean().setOwnerDirectorList(new ArrayList<SmPersonnel>());
+		getManagedBean().setCompanyList(new ArrayList<SmSupplier>());
 		SmCommonUtil.setMDCUserId();
 		SmCommonUtil
 				.redirectToPage("blacklistDirectorBasePage.xhtml", "", null);
 	}
 
-	public void searchSupplier() {
+	public void searchCompany() {
 		getManagedBean().getSupplierDataModel().reloadData();
 	}
 
-	public void searchOwnerDirector() {
+	public void resetCompanySearch() {
+		getManagedBean().setCompanyName(StringUtils.EMPTY);
+		getManagedBean().setBussRegNo(StringUtils.EMPTY);
+		getManagedBean().setEpNo(StringUtils.EMPTY);
+	}
+
+	public void resetDirectorSearch() {
+		getManagedBean().setName(StringUtils.EMPTY);
+		getManagedBean().setIdentificationNo(StringUtils.EMPTY);
+	}
+
+	public void searchDirector() {
 		getManagedBean().getOwnerDirectorDataModel().reloadData();
 	}
 
-	public void viewSupplier(String supplierId) {
+	public void viewCompany(String supplierId) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setSupplierId(Long.parseLong(supplierId));
 
@@ -69,9 +86,10 @@ public class SmBlacklistDirectorBackingBean extends
 				}
 			}
 		}
+		getManagedBean().setTargetPage(VIEW_COMPANY_RESULT_PAGE);
 	}
 
-	public void viewDirectorOrOwner(String identificationNo, String name) {
+	public void viewDirector(String identificationNo, String name) {
 		getManagedBean().setDirectorOwner(new SmPersonnel());
 		getManagedBean().getDirectorOwner().setName(name);
 		getManagedBean().getDirectorOwner().setIdentificationNo(
@@ -88,6 +106,7 @@ public class SmBlacklistDirectorBackingBean extends
 		if (getManagedBean().getCompanyList() == null) {
 			getManagedBean().setCompanyList(new ArrayList<SmSupplier>());
 		}
+		getManagedBean().setTargetPage(VIEW_DIRECTOR_RESULT_PAGE);
 	}
 
 	public void navigateToPage(String page) {
@@ -126,11 +145,11 @@ public class SmBlacklistDirectorBackingBean extends
 		return SEARCH_PAGE;
 	}
 
-	public String getCOMPANY_RESULT_PAGE() {
-		return COMPANY_RESULT_PAGE;
+	public String getVIEW_COMPANY_RESULT_PAGE() {
+		return VIEW_COMPANY_RESULT_PAGE;
 	}
 
-	public String getDIRECTOR_RESULT_PAGE() {
-		return DIRECTOR_RESULT_PAGE;
+	public String getVIEW_DIRECTOR_RESULT_PAGE() {
+		return VIEW_DIRECTOR_RESULT_PAGE;
 	}
 }
