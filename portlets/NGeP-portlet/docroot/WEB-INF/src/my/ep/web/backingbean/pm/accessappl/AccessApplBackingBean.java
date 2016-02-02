@@ -350,10 +350,18 @@ public class AccessApplBackingBean extends
 			AccessApplResDTO resDTO = accessApplSO.saveAccessAppl(reqDTO);
 			if(resDTO.isSuccessful()){
 				uploadAttachments();
-				String messageId = MessageConst.INFO_700005;
+				String messageId = null;
+				accessAppl = resDTO.getAccessAppl();
+				if(accessAppl.isCompanyProfile() && accessAppl.isMarketResearch()){
+					messageId = MessageConst.INFO_730033;
+				}else if(accessAppl.isCompanyProfile() ){
+					messageId = MessageConst.INFO_730031;
+				}else if(accessAppl.isMarketResearch()){
+					messageId = MessageConst.INFO_730032;
+				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{"Access Application ", resDTO.getAccessAppl().getApplicantName()}, 
+								new String[]{accessAppl.getApplNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
