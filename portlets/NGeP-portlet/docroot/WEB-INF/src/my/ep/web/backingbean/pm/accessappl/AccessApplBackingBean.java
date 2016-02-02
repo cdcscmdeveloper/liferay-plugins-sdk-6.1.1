@@ -465,6 +465,26 @@ public class AccessApplBackingBean extends
 							new FacesScopes().getUserLocale()) });
 		}
 		
+		if(accessAppl.isBrandNew()){
+			IAccessApplSO accessApplSO = null;
+			try{
+				accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IAccessApplSO.class);
+				
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplProccessingByIdNo(reqDTO);
+				if(resDTO.isSuccessful() && !resDTO.isValid()){
+					throw new EpException(MessageConst.ERROR_730034);
+				}
+			}catch(Exception e){
+				throw new EpException(e.getMessage());
+			}finally{
+				accessApplSO = null;
+			}
+		}
+		
 		PmUser user = PmCommonUtil.retrieveUserByLoginId(accessAppl.getIdentificationNo());
 		if(user != null){
 			PmUserOrg currentUserOrg = null;
