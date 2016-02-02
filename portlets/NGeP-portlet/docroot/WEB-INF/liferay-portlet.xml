@@ -2314,6 +2314,13 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>basicDataMaintenance-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>blacklistDirectorOwner</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>blacklistDirectorOwner-portlet</css-class-wrapper>
+	</portlet>
 	 <portlet>
 		  <portlet-name>disciplinaryAction</portlet-name>
 		  <icon>/icon.png</icon>

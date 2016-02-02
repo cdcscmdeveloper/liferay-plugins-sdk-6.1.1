@@ -276,6 +276,7 @@
 		<portlet id="updateGstInfo"></portlet>
 		<portlet id="basicAccountDeactivation"></portlet>
 		<portlet id="basicDataMaintenance"></portlet>
+		<portlet id="blacklistDirectorOwner"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
