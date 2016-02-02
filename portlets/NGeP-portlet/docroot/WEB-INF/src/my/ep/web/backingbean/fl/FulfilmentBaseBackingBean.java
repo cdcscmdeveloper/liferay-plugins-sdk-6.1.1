@@ -13,6 +13,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
+
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -26,20 +28,20 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
 
 /**
  * Base Backing Bean for Fulfilment.
@@ -194,4 +196,69 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		return list2;
 	}
+	
+	/**
+	 * Checks if is supplier role.
+	 *
+	 * @return true, if is supplier role
+	 */
+	protected boolean hasSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	
+	/**
+	 * Retrieve supplier user's role
+	 *
+	 * @return user supplier role
+	 */
+	protected String getUserSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) 
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()))
+			return RoleCode.MOF_SUPPLIER_USER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
+			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) 
+			return RoleCode.FL_USER.value();				
+		else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
+			return RoleCode.GOVT_SELLER.value();		
+		else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) 
+			return RoleCode.G2G_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) 
+			return RoleCode.G2G_SUPPLIER_USER.value();	
+		else 
+			throw new EpException(MessageConst.ERROR_750040);
+	}
+	
+	/**
+	 * Check is it login user is Government Seller
+	 * 
+	 * @return true, if user is Governement Seller
+	 */
+	protected boolean hasGovtSellerRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
+			return true;
+		else
+			return false;
+	}
+	
 }

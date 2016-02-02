@@ -133,9 +133,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 	
 		FulfilmentResDTO resDTO = null;
-		if(isFlFulfilmentApprover()) {
-			reqDTO.setApprover(Boolean.TRUE);
-		}
+		reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
 		
 		if(getManagedBean().getPmDigiSign() != null){
 			reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -340,32 +338,13 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 *
 	 * @return the user role
 	 */
-	private String getUserRole() {
-		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-			return RoleCode.FL_APPROVER.value();
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
-		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-			return RoleCode.MOF_SUPPLIER_ADMIN.value();
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
-			return RoleCode.BASIC_SUPPLIER_USER.value();
-		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-			return RoleCode.MOF_SUPPLIER_USER.value();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-			return RoleCode.GOVT_SELLER.value();		
-		}
-		return null;
-	}
-	
-	/**
-	 * Checks if is fl fulfilment approver.
-	 *
-	 * @return true, if is fl fulfilment approver
-	 */
-	
-	public boolean isFlFulfilmentApprover() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+	private String getUserRole() {		
+		if(hasSupplierRole())
+			return getUserSupplierRole();
+		else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
+			return RoleCode.FL_APPROVER.value();		
+		else 
+			throw new EpException(MessageConst.ERROR_750040);
 	}
 	
 	/**
@@ -415,38 +394,36 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			}
 		}
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
-			IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-			IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
-			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId());
-			UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
-			userGroupReqDTO.setGroupId(getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
-			userGroupReqDTO.setApprovalLimit(sumItemAmt);
-			UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
-			if(userGroupResDTO.getUserGroupUserList().isEmpty()){
-				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			if(hasSupplierRole()) {
+				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+				IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId());
+				UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
+				userGroupReqDTO.setGroupId(getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
+				userGroupReqDTO.setApprovalLimit(sumItemAmt);
+				UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
+				if(userGroupResDTO.getUserGroupUserList().isEmpty()){
+					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getStopInstr().getFlRequest().getApprover());
+				getManagedBean().getApproverList().addAll(approverUserList);
 			}
-			List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getStopInstr().getFlRequest().getApprover());
-			getManagedBean().getApproverList().addAll(approverUserList);
 			if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isCoGstr()){
 				getManagedBean().setSelectedTabIndex(1);
 				throw new EpException(MessageConst.ERROR_745078);
 			}
 		}
 
-		if (!hasGovtSellerRole() && (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
-				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
-						|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
-								|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))) {
+		if(hasSupplierRole() && !hasGovtSellerRole()) { // Supplier stop delivery
 			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			return null;
-		}else if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) ||
-				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
-				||  hasGovtSellerRole()) {
-			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
+		} else {
+			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && 
+				(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))){
 				IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 				PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
 				personnelReqDTO.setSmSupplierId(getManagedBean().getStopInstr().getFlRequest().getSmSupplier().getSupplierId());
@@ -456,20 +433,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}
-			// Temp setTextBeforeSign : DocNo+SAP
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
-			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getSapOrderNo());
-			sb.append(getManagedBean().getButtonAction());
-			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
+			setTextBeforeSign(outcome);
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		}
-		else{
-			return saveStopInstruction(outcome);
 		}
 	}
 	
@@ -481,26 +450,16 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * @return the string
 	 * @throws Exception the exception
 	 */
-	public String preSubmitStopInstruction(
-			PmDigiSign pmDigiSign) throws Exception {
-		this.getManagedBean().setPmDigiSign(pmDigiSign);
+	public String preSubmitStopInstruction(PmDigiSign pmDigiSign) throws Exception {
+		getManagedBean().setPmDigiSign(pmDigiSign);
 		if (pmDigiSign != null) {
-			if (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
-					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
-							|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
-									|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
-				// Temp setTextBeforeSign : DocNo+SAP
-				StringBuilder sb = new StringBuilder();
-				sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
-				sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getSapOrderNo());
-				sb.append(getManagedBean().getButtonAction());
-				getManagedBean().setTextBeforeSign(sb.toString());
+			if(hasSupplierRole() && !hasGovtSellerRole()) {
+				setTextBeforeSign(getManagedBean().getButtonAction());
 				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocType(), 
 						getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo(), 
 						getManagedBean().getTextBeforeSign());
 			}
 		}
-		
 		return saveStopInstruction(getManagedBean().getButtonAction());
 	}
 	
@@ -510,26 +469,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
-	}
-	
-	/**
-	 * Checks if is supplier role.
-	 *
-	 * @return true, if is supplier role
-	 */
-	private boolean isSupplierRole(){
-		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
 	}
 	
 	// To update digisign data for spki
@@ -587,9 +526,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		orderBackingBean.getManagedBean().setButtonVal("View");
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
-		if(isSupplierRole()){
-			orderBackingBean.getManagedBean().setSupplier(true);
-		}
+		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 		flBB.getManagedBean().setHideRemarks(true);
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			return NAV_PO;
@@ -607,13 +544,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
-	}
-	
-	private boolean hasGovtSellerRole() {
-		 if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
-				return true;
-		 else
-		return false;
 	}
 	
 	public void checkCogstr(){
@@ -747,6 +677,20 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			return NAV_PR;
 		}
 		return null;
-		
+	}
+	
+	private void setTextBeforeSign(String outcome) {
+		StringBuffer sb = new StringBuffer();
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
+			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo()+"|");
+			sb.append(ParameterConst.DOCTYPE_STOP_DELIVERY+"|");
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
+		} else {
+			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo()+"|");
+			sb.append(getManagedBean().getStopInstr().getStopInstrNo()+"|");
+			sb.append(outcome+"|");
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
+		}
+		getManagedBean().setTextBeforeSign(sb.toString());
 	}
 }
