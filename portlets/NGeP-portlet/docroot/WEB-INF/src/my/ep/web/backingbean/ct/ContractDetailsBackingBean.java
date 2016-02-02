@@ -940,7 +940,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
    							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 		// Validation for performance bond exempted
-		if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()
+		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() 
+				&& !ctBB.getManagedBean().isDirectPurchase()
+				&& ctBB.getManagedBean().getCtContractAmount().isBondExempted()
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				&& (ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName() == null 
 				|| ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName().equalsIgnoreCase(""))) {
