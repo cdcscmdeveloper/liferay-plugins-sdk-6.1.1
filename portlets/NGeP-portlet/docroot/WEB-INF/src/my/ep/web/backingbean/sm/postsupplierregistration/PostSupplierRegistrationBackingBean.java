@@ -90,6 +90,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private boolean changeRoleSection;
 	private boolean roleChangeSuccess;
 	
+	private static final String CATALOGUE_PUBLISHED = "U";
+	
 	public static Logger log = Logger.getLogger(PostSupplierRegistrationBackingBean.class);
 	
 	public PostSupplierRegistrationBackingBean() {
@@ -482,28 +484,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				mofActionMap.put("SC", MOF_SOFTCERT_REQUEST);
 			}
 			
-/*			List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
-			log.info("SupplierItems size:>>>>> " + suppItems);
-			boolean publishedStatus = false;
-			if(suppItems.size() > 0){
-				for(CmSupplierItem cmSuppItem : suppItems){
-					if(cmSuppItem.getItemStatus().equalsIgnoreCase("U")){
-						publishedStatus = true;
-					}
-				}
-			}
-			
-			if(!publishedStatus){
-				//String msg = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
-				//String catUploadImg = getLabelFromProperties("lbl.sm.catalogue.upload.image");
-				mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
-			}*/
-			
 			String catalogue = checkCatalogueUpload(supplier.getSupplierId()); 
 			if(catalogue == null){
 				mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
 			}else{
-				if(!catalogue.equalsIgnoreCase("U")){
+				if(!catalogue.equalsIgnoreCase(CATALOGUE_PUBLISHED)){
 					mofActionMap.put("CU",CATALOGUE_MAINT);
 				}
 			}
@@ -590,7 +575,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		if(catalogue == null){
 			basicActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
 		}else{
-			if(!catalogue.equalsIgnoreCase("U")){
+			if(!catalogue.equalsIgnoreCase(CATALOGUE_PUBLISHED)){
 				basicActionMap.put("CU",CATALOGUE_MAINT);
 			}
 		}
@@ -686,8 +671,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		
 		if(suppItems.size() > 0){
 			for(CmSupplierItem cmSuppItem : suppItems){
-				if(cmSuppItem.getItemStatus().equalsIgnoreCase("U")){
-					catalogueStatus = "U";
+				if(cmSuppItem.getItemStatus().equalsIgnoreCase(CATALOGUE_PUBLISHED)){
+					catalogueStatus = CATALOGUE_PUBLISHED;
 					break;
 				}else{
 					catalogueStatus = cmSuppItem.getItemStatus();
@@ -763,11 +748,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
 		log.info("-------mofSupplierFlowAfterApproval supplier type-------------" + supplier.getSmAppl().getSupplierType());
 		if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
-			List<CmSupplierItem> cmSuppItemLs = getCmSupplierItems(supplier.getSupplierId());
-			//SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
 			softCertStatus = currentPersonnel.getSoftcertFlg();
 			if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal()){
-				if(cmSuppItemLs.size() < 1){
+				if(!isPublishedCatalogue(supplier.getSupplierId())){
 					path = CATALOGUE_UPLOAD_PATH;
 					getManagedBean().setFlowStatus(5);
 				}else{
@@ -783,16 +766,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}
 
 
-				if(cmSuppItemLs.size() > 0 && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
+				if(isPublishedCatalogue(supplier.getSupplierId()) && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
 				}
 			}else{
-			/*	getManagedBean().setFlowStatus(5);
-				if(validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
-					log.info(">>>CHange ROle for SUpplier Temp<<");
-					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
-				}*/
 				log.info(">>>Contractor<<<");
 				if(validSupplierTemp()){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
@@ -815,11 +793,14 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		String path = null;
 		
 		//Basic Applcation
-		List<CmSupplierItem> cmSuppItemLs = getCmSupplierItems(supplier.getSupplierId());
+		//List<CmSupplierItem> cmSuppItemLs = getCmSupplierItems(supplier.getSupplierId());
 		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
 		softCertStatus = currentPersonnel.getSoftcertFlg();
+		boolean isG2G = supplier.getBusinessType().
+				equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER) ? true : false;
 		
-		if(cmSuppItemLs.size() < 1){
+		
+		if(!isPublishedCatalogue(supplier.getSupplierId()) && !isG2G){
 			path = CATALOGUE_UPLOAD_PATH;
 			getManagedBean().setFlowStatus(1);
 		}else{
@@ -834,11 +815,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				getManagedBean().setFlowStatus(2);
 			}
 			
-/*						log.info("cmSuppItemLs.size()>>>>" + cmSuppItemLs.size());
-			log.info("validSupplierTemp()>>>>" + validSupplierTemp());
-			log.info("softCertStatus()>>>>" + softCertStatus);*/
-			
-			if(cmSuppItemLs.size() > 0 && validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
+			if(validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
 				log.info(">>>CHange ROle for SUpplier Temp<<");
 				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId());
 			}
@@ -868,20 +845,23 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return roleChangeSuccess;
 	}
 	
-/*	private void initCatalogueBackingBean(){
-		CatalogueBackingBean cBB = new CatalogueBackingBean();
-		cBB.preRenderCatalogue();
-	}*/
+	private boolean isPublishedCatalogue(Long supplierId){
+		List<CmSupplierItem> suppItems = getCmSupplierItems(supplierId);
+		boolean catalogueStatus = false;
+		
+		if(suppItems.size() > 0){
+			for(CmSupplierItem cmSuppItem : suppItems){
+				if(cmSuppItem.getItemStatus().equalsIgnoreCase(CATALOGUE_PUBLISHED)){
+					catalogueStatus = true;
+					break;
+				}
+			}
+		}
+		
+		return catalogueStatus;
+	}
 	
-/*	
-	private void initSoftcertBackingBean(){
-		SoftCertBackingBean scBB = new SoftCertBackingBean();
-		scBB.preRenderSoftCert();
-	}*/
-	
-/*	public void preRenderView(){
-		//if(this.getManagedBean().getSmSupplier() == null){
-			pageNavigation();
-		//}
-	}*/
+	public String getG2GBusinessType(){
+		return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
+	}
 }
