@@ -187,6 +187,17 @@ public class SmBlacklistDirectorBackingBean extends
 		getManagedBean().setTargetPage(page);
 	}
 
+	/**
+	 * Back to previous page from view director page
+	 */
+	public void backFromDirectorPage() {
+		if (getManagedBean().getSearchBy().equals(SEARCH_BY_COMPANY)) {
+			getManagedBean().setTargetPage(VIEW_COMPANY_RESULT_PAGE);
+		} else {
+			getManagedBean().setTargetPage(SEARCH_PAGE);
+		}
+	}
+
 	public String getSEARCH_BY_COMPANY() {
 		return SEARCH_BY_COMPANY;
 	}
