@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.constant.MessageConst;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.helper.EntityHelper;
@@ -13,10 +14,12 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.blacklistdirectorowner.SmBlacklistDirectorManagedBean;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "smBlacklistDirectorBackingBean")
 @RequestScoped
@@ -81,7 +84,7 @@ public class SmBlacklistDirectorBackingBean extends
 					.getSmPersonnels()) {
 				if ((per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || per
 						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
-						|| (per.isDirector() || per.isEquityOwner())) {
+						&& (per.isDirector() || per.isEquityOwner())) {
 					getManagedBean().getOwnerDirectorList().add(per);
 				}
 			}
@@ -103,10 +106,52 @@ public class SmBlacklistDirectorBackingBean extends
 						.retrieveSupplierByOwnerDirectorIdNo(reqDTO)
 						.getSupplierList());
 
+		getManagedBean().setCurrentlyBlacklist(
+				SmServiceLookup.getBlacklistDirectorSO()
+						.isIdentificatioNoBlacklisted(reqDTO).isBlacklisted());
+
+		getManagedBean().setBlacklist(getManagedBean().isCurrentlyBlacklist());
+
 		if (getManagedBean().getCompanyList() == null) {
 			getManagedBean().setCompanyList(new ArrayList<SmSupplier>());
+		} else {
+			for (SmSupplier sup : getManagedBean().getCompanyList()) {
+				sup.setSmPersonnel((SmPersonnel) EntityHelper
+						.getEntityBySinglePropertyFromList(identificationNo,
+								sup.getSmAppl().getSmPersonnels(),
+								"identificationNo"));
+			}
 		}
 		getManagedBean().setTargetPage(VIEW_DIRECTOR_RESULT_PAGE);
+	}
+
+	public void submit() {
+		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+		reqDTO.setBlacklist(getManagedBean().isBlacklist());
+		reqDTO.setRemarks(getManagedBean().getRemarks());
+		reqDTO.setDirectorIdNo(getManagedBean().getDirectorOwner()
+				.getIdentificationNo());
+		SmServiceLookup.getBlacklistDirectorSO().submitBlacklist(reqDTO);
+		SmCommonUtil.redirectToPage(
+				SmApplicationUtil.getApplicationErrorPage(),
+				MessageConst.INFO_711001, null);
+	}
+
+	public void onClickSubmit() {
+		// if no change just redirect and display to acknowledgement page
+		if ((getManagedBean().isCurrentlyBlacklist() && getManagedBean()
+				.isBlacklist())
+				|| (!getManagedBean().isCurrentlyBlacklist() && !getManagedBean()
+						.isBlacklist())) {
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.INFO_711001, null);
+		}
+		// if had changed call confirmation dialog
+		else {
+			RequestContext.getCurrentInstance().execute(
+					"confirmSubmitDialog.show();");
+		}
 	}
 
 	public void navigateToPage(String page) {

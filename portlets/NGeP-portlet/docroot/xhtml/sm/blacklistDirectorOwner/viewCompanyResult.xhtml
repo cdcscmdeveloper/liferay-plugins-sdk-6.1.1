@@ -6,6 +6,83 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	Company Result!!!
+	<table style="width: 100%;">
+		<tr>
+			<td>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+					action="#{bb.navigateToPage(bb.SEARCH_PAGE)}" update="@form"/>
+			</td>
+		</tr>
+		<tr height="10"><td height="10"></td></tr>
+	</table>
+	
+	<p:panel header="#{lbl['lbl.sm.blacklist.company.details']}" toggleable="true" id="viewCompanyPanelId">
+		<table style="width: 80%;" >
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" styleClass="outputLabel-view-label"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.supplier.companyName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" styleClass="outputLabel-view-label"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.supplier.regNo}" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	
+	
+	<p:panel header="#{lbl['lbl.sm.blacklist.company.owner.list']}" toggleable="true" id="companyDirectorsPanelId">
+		
+		<p:dataTable var="per" widgetVar="perWidgetVar"
+			editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{bb.managedBean.ownerDirectorList}"
+			rowKey="#{per}" rowIndexVar="index" id="viewCompanyDtId">
+			
+			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}" >
+				<h:outputText value="#{per.name}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}" >
+				<h:outputText value="#{per.identificationNo}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.person.designation']}" >
+				<h:outputText value="#{per.designation}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}" >
+				<h:outputText value="#{lbl['lbl.txt.yes']}"
+					rendered="#{per.equityOwner}" />
+				<h:outputText value="#{lbl['lbl.txt.no']}"
+					rendered="#{!per.equityOwner}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.person.composition.isDir']}" >
+				<h:outputText value="#{lbl['lbl.txt.yes']}"
+					rendered="#{per.director}" />
+				<h:outputText value="#{lbl['lbl.txt.no']}"
+					rendered="#{!per.director}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}" >
+				<ac:labelAmount value="#{per.sharePercentage}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}">
+				<ac:labelAmount value="#{per.shareAmt}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+				<p:commandLink onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()"
+					action="#{bb.viewDirector(per.identificationNo,per.name)}"
+					process="@this" partialSubmit="true" update="@form"
+					style="padding-right:5px;">
+					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+				</p:commandLink>
+			</p:column>
+			
+		</p:dataTable>
+		
+	</p:panel>
 
 </ui:composition>
