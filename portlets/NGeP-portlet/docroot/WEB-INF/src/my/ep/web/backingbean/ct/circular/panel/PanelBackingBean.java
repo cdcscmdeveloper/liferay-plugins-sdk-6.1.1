@@ -64,6 +64,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -2362,11 +2363,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    try {
 		    	   
 		    	    List<String> pmReasonType = new ArrayList<String>();
-			        pmReasonType.add("C");
-			        pmReasonType.add("R");
-			        pmReasonType.add("U");
-			        pmReasonType.add("S");
-			        pmReasonType.add("O");
+		    	    pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_CHEAPER_PRICE);
+			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY);
+			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_UNABLE_SUPPLIER);
+			        pmReasonType.add(ProfileManagementConst. PID_REASONTYPE_SPECIFICATION);
+			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_OTHER);
 			        
 			        reqDTO = new ReasonReqDTO();
 			        reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
@@ -2426,7 +2427,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				 reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
 		         reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
 		         pmReason = reasonSO.retrieveReasonById(reqDTO).getPmReason();
-		         if(pmReason.getReasonCode().equalsIgnoreCase("O")){
+		         if(pmReason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_OTHER)){
 			          return true;
 		         }
 		} catch (Exception e) {
