@@ -7,6 +7,7 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -36,6 +37,9 @@ public class SmBlacklistDirectorBackingBean extends
 	public static String VIEW_COMPANY_RESULT_PAGE = "RC";
 	public static String VIEW_DIRECTOR_RESULT_PAGE = "RD";
 
+	/**
+	 * Pre-render blacklist director main page
+	 */
 	public void preRenderBlacklistDirector() {
 		renewSesionObject();
 		getManagedBean().setTargetPage(SEARCH_PAGE);
@@ -48,6 +52,9 @@ public class SmBlacklistDirectorBackingBean extends
 				.redirectToPage("blacklistDirectorBasePage.xhtml", "", null);
 	}
 
+	/**
+	 * Search company
+	 */
 	public void searchCompany() {
 		getManagedBean().getSupplierDataModel().reloadData();
 	}
@@ -58,15 +65,27 @@ public class SmBlacklistDirectorBackingBean extends
 		getManagedBean().setEpNo(StringUtils.EMPTY);
 	}
 
+	/**
+	 * Reset director search criteria
+	 */
 	public void resetDirectorSearch() {
 		getManagedBean().setName(StringUtils.EMPTY);
 		getManagedBean().setIdentificationNo(StringUtils.EMPTY);
 	}
 
+	/**
+	 * Search director
+	 */
 	public void searchDirector() {
 		getManagedBean().getOwnerDirectorDataModel().reloadData();
 	}
 
+	/**
+	 * View company in result table
+	 * 
+	 * @param String
+	 *            supplierId
+	 */
 	public void viewCompany(String supplierId) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setSupplierId(Long.parseLong(supplierId));
@@ -92,6 +111,14 @@ public class SmBlacklistDirectorBackingBean extends
 		getManagedBean().setTargetPage(VIEW_COMPANY_RESULT_PAGE);
 	}
 
+	/**
+	 * View director in result table
+	 * 
+	 * @param String
+	 *            identificationNo
+	 * @param String
+	 *            name
+	 */
 	public void viewDirector(String identificationNo, String name) {
 		getManagedBean().setDirectorOwner(new SmPersonnel());
 		getManagedBean().getDirectorOwner().setName(name);
@@ -106,10 +133,12 @@ public class SmBlacklistDirectorBackingBean extends
 						.retrieveSupplierByOwnerDirectorIdNo(reqDTO)
 						.getSupplierList());
 
-		getManagedBean().setCurrentlyBlacklist(
-				SmServiceLookup.getBlacklistDirectorSO()
-						.isIdentificatioNoBlacklisted(reqDTO).isBlacklisted());
-
+		// Get blacklist by identification no
+		BlacklistDirectorResDTO resDTO = new BlacklistDirectorResDTO();
+		resDTO = SmServiceLookup.getBlacklistDirectorSO()
+				.isIdentificatioNoBlacklisted(reqDTO);
+		getManagedBean().setRemarks(resDTO.getRemarks());
+		getManagedBean().setCurrentlyBlacklist(resDTO.isBlacklisted());
 		getManagedBean().setBlacklist(getManagedBean().isCurrentlyBlacklist());
 
 		if (getManagedBean().getCompanyList() == null) {
@@ -125,6 +154,9 @@ public class SmBlacklistDirectorBackingBean extends
 		getManagedBean().setTargetPage(VIEW_DIRECTOR_RESULT_PAGE);
 	}
 
+	/**
+	 * Submit blacklist/remove blacklist director
+	 */
 	public void submit() {
 		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
 		reqDTO.setBlacklist(getManagedBean().isBlacklist());
@@ -137,23 +169,20 @@ public class SmBlacklistDirectorBackingBean extends
 				MessageConst.INFO_711001, null);
 	}
 
+	/**
+	 * On click submit button
+	 */
 	public void onClickSubmit() {
-		// if no change just redirect and display to acknowledgement page
-		if ((getManagedBean().isCurrentlyBlacklist() && getManagedBean()
-				.isBlacklist())
-				|| (!getManagedBean().isCurrentlyBlacklist() && !getManagedBean()
-						.isBlacklist())) {
-			SmCommonUtil.redirectToPage(
-					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_711001, null);
-		}
-		// if had changed call confirmation dialog
-		else {
-			RequestContext.getCurrentInstance().execute(
-					"confirmSubmitDialog.show();");
-		}
+		RequestContext.getCurrentInstance().execute(
+				"confirmSubmitDialog.show();");
 	}
 
+	/**
+	 * Navigate to page
+	 * 
+	 * @param String
+	 *            page
+	 */
 	public void navigateToPage(String page) {
 		getManagedBean().setTargetPage(page);
 	}
