@@ -35,7 +35,7 @@ public class PmAccessApplJob implements Job {
 		IPmSchedulerSO schedulerSO = null;
 		try {
 			schedulerSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IPmSchedulerSO.class);			
+					ModuleCodeConst.PROFILE_MANAGEMENT, IPmSchedulerSO.class);			
 			schedulerSO.updateExpiredPendingActivationAccessAppl();
 		} finally {
 			schedulerSO = null;
