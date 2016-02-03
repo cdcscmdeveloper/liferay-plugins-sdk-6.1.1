@@ -3673,8 +3673,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	
 	public void addChargedPtjDetails() {
 			getManagedBean().getFulfilmentRequest().setChargeOrgProfile(selectedPmOrgProfile);
-			getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgName(selectedPmOrgProfile.getOrgName());
-			getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgCode(selectedPmOrgProfile.getOrgCode());
+			//getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgName(selectedPmOrgProfile.getOrgName());
+			//getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgCode(selectedPmOrgProfile.getOrgCode());
 		
 		selectedPmOrgProfile = null;
 	}
