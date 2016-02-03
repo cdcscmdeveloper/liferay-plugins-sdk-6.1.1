@@ -4697,8 +4697,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	
 	public void addChargedPtjDetails() {
-			System.out.println("org name "+selectedPmOrgProfile.getOrgName());
-			System.out.println("org id "+selectedPmOrgProfile.getOrgProfileId());
+			getManagedBean().getFlRequest().setChargeOrgProfile(selectedPmOrgProfile);
 			getManagedBean().getFlRequest().getChargeOrgProfile().setOrgName(selectedPmOrgProfile.getOrgName());
 			getManagedBean().getFlRequest().getChargeOrgProfile().setOrgCode(selectedPmOrgProfile.getOrgCode());
 		
