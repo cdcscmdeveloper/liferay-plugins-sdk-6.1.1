@@ -53,6 +53,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -66,6 +67,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -76,6 +78,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -91,6 +95,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularItem;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -101,12 +106,15 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -1599,4 +1607,99 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void setSelectedExemptedOrgs(CtExemptedOrg[] selectedExemptedOrgs) {
 		this.selectedExemptedOrgs = selectedExemptedOrgs;
 	}
+	
+		/**
+		 * This method used to retrieve 
+		 * deduction type from database 
+		 * @return menu item, List of deduction types
+		 */
+		public SelectItem[] getDropdownPidCodeValues() {
+			
+			    SelectItem[] items = null;
+			    ReasonReqDTO reqDTO = null;
+			    IReasonSO reasonSO = null;
+			    List<PmReasonDesc> list = null;
+			    ReasonResDTO resDTO  = null;
+			    ISearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>();
+			    int i = 1;
+			    try {
+			    	   
+			    	    List<String> pmReasonType = new ArrayList<String>();
+			    	    pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_CHEAPER_PRICE);
+				        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY);
+				        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_UNABLE_SUPPLIER);
+				        pmReasonType.add(ProfileManagementConst. PID_REASONTYPE_SPECIFICATION);
+				        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_OTHER);
+				        
+				        reqDTO = new ReasonReqDTO();
+				        reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+				        reqDTO.setSortBy("pmReason.reasonId");
+				        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), ReasonCategory.PID_JUSTIFICATION.value()));
+				        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCode", SearchOperator.OPERATOR_IN.value(), pmReasonType));
+				        reqDTO.setReasonDescSearchBean(searchBean);
+				        
+				        reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+				        resDTO = reasonSO.retrieveReasonDescBySearchBean(reqDTO);
+				        list = resDTO.getReasonDescResultBean().getResultList();
+				        items = new SelectItem[list.size() + 1];
+				        items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					     	"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+			         	for (PmReasonDesc reasonDesc : list) {
+					          items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
+				        }
+			     } catch (Exception e) {
+				        e.printStackTrace();
+				        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			     } finally {
+			    	    reqDTO = null;
+					    reasonSO = null;
+					    list = null;
+					    searchBean = null;
+					    resDTO = null;
+			     }
+		    return items;
+		}
+		
+	public boolean PidPurchaseTypeOther(Long reasonId){
+			
+			if(reasonId == null || reasonId.intValue() == 0)
+			return false;
+			
+			ReasonReqDTO reqDTO = null;
+			IReasonSO reasonSO = null;
+			PmReason pmReason = null;
+			try {
+					 reqDTO = new ReasonReqDTO();
+					 reqDTO.setReasonId(reasonId);
+					 reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+			         reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+			         pmReason = reasonSO.retrieveReasonById(reqDTO).getPmReason();
+			         if(pmReason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_OTHER)){
+				          return true;
+			         }
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			} finally{
+				 reqDTO = null;
+				reasonSO = null;
+				pmReason = null;
+			}
+			return false;
+		}
+	
+		public void addPurchaseInDefault(){
+				CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
+				ctCircularPidReasons.setPmReason(new PmReason());
+				getManagedBean().getCircularVer().getCtCircularPidReason().add(ctCircularPidReasons);
+			}
+			
+		public void deletePidPurchase(){
+				try {
+					getManagedBean().getCircularVer().getCtCircularPidReason().removeAll(getManagedBean().getCtCircularPidReasons());
+				} catch (Exception e) {
+					e.printStackTrace();
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+				}
+			}
 }
