@@ -324,8 +324,9 @@ public class AccessApplBackingBean extends
 		IAccessApplSO accessApplSO = null;		
 		try{
 			PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
+			Integer currentStatus = accessAppl.getCurrentStatus();
 			accessAppl.setOrgProfile(getManagedBean().getSelectedOrgProfile());
-			accessAppl.setOrgTypeCode(getManagedBean().getSelectedOrgProfile().getOrgTypeCode());
+			accessAppl.setOrgTypeCode(getManagedBean().getSelectedOrgProfile().getOrgTypeCode());			
 			validateAccessAppl(outcome);
 			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -351,17 +352,33 @@ public class AccessApplBackingBean extends
 			if(resDTO.isSuccessful()){
 				uploadAttachments();
 				String messageId = null;
-				accessAppl = resDTO.getAccessAppl();
-				if(accessAppl.isCompanyProfile() && accessAppl.isMarketResearch()){
-					messageId = MessageConst.INFO_730033;
-				}else if(accessAppl.isCompanyProfile() ){
-					messageId = MessageConst.INFO_730031;
-				}else if(accessAppl.isMarketResearch()){
-					messageId = MessageConst.INFO_730032;
+				PmAccessAppl savedAccessAppl = resDTO.getAccessAppl();
+				if(BpmOutcomeConst.BPM_SAVE.equals(outcome)){
+					if(savedAccessAppl.isCompanyProfile() && savedAccessAppl.isMarketResearch()){
+						messageId = MessageConst.INFO_730033;
+					}else if(savedAccessAppl.isCompanyProfile() ){
+						messageId = MessageConst.INFO_730031;
+					}else if(savedAccessAppl.isMarketResearch()){
+						messageId = MessageConst.INFO_730032;
+					}
+				}else if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+					if(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL.equals(currentStatus.longValue())){
+						messageId = MessageConst.INFO_730035;
+					}else if(ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.equals(currentStatus.longValue())){
+						messageId = MessageConst.INFO_730037;
+					}
+					
+				}else if(BpmOutcomeConst.BPM_REJECT.equals(outcome)){
+					if(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL.equals(currentStatus.longValue())){
+						messageId = MessageConst.INFO_730036;
+					}else if(ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.equals(currentStatus.longValue())){
+						messageId = MessageConst.INFO_730038;
+					}
 				}
+				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{accessAppl.getApplNo()}, 
+								new String[]{accessAppl.getApplNo() }, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
@@ -445,6 +462,15 @@ public class AccessApplBackingBean extends
 	
 	private void validateAccessAppl(String outcome){
 		PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
+		
+		if(accessAppl.getOrgProfile() == null ){
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.pm.access.app.org",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())});
+		}
+		
 		for(PmAccessApplDoc accessApplDoc : getManagedBean().getAccessApplDocList()){
 			if(StringUtils.isBlank(accessApplDoc.getFileName()) || StringUtils.isBlank(accessApplDoc.getFilePath())){
 				throw new EpException(MessageConst.ERROR_100022,
