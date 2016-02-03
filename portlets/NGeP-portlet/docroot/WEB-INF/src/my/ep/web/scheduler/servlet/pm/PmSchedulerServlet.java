@@ -8,12 +8,15 @@ import my.ep.factory.EpLogger;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.job.ct.CtContractNotificationJob;
 import my.ep.web.scheduler.job.phis.MasterDataKodAkaunJob;
 import my.ep.web.scheduler.job.phis.MasterDataProgramJob;
 import my.ep.web.scheduler.job.phis.MasterDataProjectJob;
 import my.ep.web.scheduler.job.phis.MasterDataVotDanaJob;
 import my.ep.web.scheduler.job.phis.MasterDataVotJob;
 import my.ep.web.scheduler.job.phis.PaymentEffectNotificationJob;
+import my.ep.web.scheduler.job.pm.PmAccessApplJob;
+import my.ep.web.scheduler.job.pm.PmAccessApplReminderJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
@@ -74,6 +77,23 @@ public class PmSchedulerServlet extends HttpServlet {
 		SchedulerConstants.PHIS_PM_OUTBOUND_JOB_GROUP),
 		PaymentEffectNotificationJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
 		EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound"));
+		
+		
+		// Update Expired Access Application Workflow Status 
+		EpSchedulerHelper.scheduleJob(new JobKey(
+		SchedulerConstants.UPDATE_EXPIRED_ACCESS_APPLICATION,
+		SchedulerConstants.PM_JOB_GROUP),
+		PmAccessApplJob.class,
+		SchedulerConstants.UPDATE_EXPIRED_ACCESS_APPLICATION_JOB_DESC,
+		SchedulerConstants.TRIGGER_TIME);
+		
+		// Send Access Application Reminder
+		EpSchedulerHelper.scheduleJob(new JobKey(
+		SchedulerConstants.SEND_REMINDER_ACCESS_APPLICATION,
+		SchedulerConstants.PM_JOB_GROUP),
+		PmAccessApplReminderJob.class,
+		SchedulerConstants.SEND_REMINDER_ACCESS_APPLICATION_JOB_DESC,
+		SchedulerConstants.TRIGGER_TIME);
 		
 	}
 }
