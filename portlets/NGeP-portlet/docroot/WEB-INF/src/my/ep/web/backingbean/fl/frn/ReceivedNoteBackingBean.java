@@ -662,24 +662,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(status==null || status.getStatusId().longValue()!=FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT) {
 				throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
 			}
-			BigDecimal sumTotalReceivedQty = BigDecimal.ZERO;
-			BigDecimal sumTotalOrderQty = BigDecimal.ZERO;
-			BigDecimal sumTotalOrderReceivedQty = BigDecimal.ZERO;
-			for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
-				sumTotalReceivedQty = sumTotalReceivedQty.add(noteItem.getReceivedQty());
-			}
-			for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
-					sumTotalOrderQty = sumTotalOrderQty.add(itemAddr.getOrderedQty());
-					sumTotalOrderReceivedQty = sumTotalOrderReceivedQty.add(itemAddr.getReceivedQty());
-				}
-			}
-			sumTotalReceivedQty = sumTotalOrderReceivedQty.add(sumTotalReceivedQty);
-			if(sumTotalReceivedQty.doubleValue() == sumTotalOrderQty.doubleValue()){
-				getManagedBean().setLastFRNTaxInv(true); 
-			}else{
-				getManagedBean().setLastFRNTaxInv(false); 
-			}
+			checkLastTaxFRN();
 			IPersonnelSO personnelSO = (IPersonnelSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
 			personnelReqDTO.setSmSupplierId(fulfilmentNote.getFlRequest().getSmSupplier().getSupplierId());

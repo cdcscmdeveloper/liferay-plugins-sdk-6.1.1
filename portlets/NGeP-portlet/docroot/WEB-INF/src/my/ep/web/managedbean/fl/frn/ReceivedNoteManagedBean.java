@@ -112,7 +112,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
 	private String bpmTaskName;
-	private boolean lastFRNTaxInv;
+	private boolean lastFRNTaxInv=false;
 	private List<PmUser> approverList;
 	
 	private boolean acknowledged;
