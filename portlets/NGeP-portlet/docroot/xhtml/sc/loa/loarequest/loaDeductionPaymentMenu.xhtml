@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" id="deductionPayId" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.deduction.payment']}"
+		id="deductionPayId" toggleable="true">
 
 		<p:dataTable id="deductTbl" widgetVar="deductTblWidget"
 			var="scQtDeduction"
@@ -31,8 +32,9 @@
 				</f:facet>
 
 				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="deductionType" label="#{lbl['lbl.sc.deduction.type']}"
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					<p:selectOneMenu id="deductionType"
+						label="#{lbl['lbl.sc.deduction.type']}"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						value="#{scQtDeduction.deductionType.parameterId}" required="true">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getDeductionItemTypeDropdownList()}" />
@@ -53,7 +55,7 @@
 					<p:inputText id="amtid" size="30" maxlength="18" required="true"
 						label="#{lbl['lbl.sc.deduction.amount']}"
 						value="#{scQtDeduction.deductionAmount}"
-						disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus or lOADetailBackingBean.managedBean.readOnly}"
+						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
 						style="margin-right:5px;text-align:right;"
 						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
 						<ac:validateNumber
@@ -68,13 +70,13 @@
 		<c:if test="#{isEditableStatus}">
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
-				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					process="@this, deductTbl" partialSubmit="true"
 					action="#{lOADetailBackingBean.addDeductionPaymentAction}"
 					oncomplete="deductTblWidget.paginator.endLink.click();"
 					update="deductTbl" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					process="@this, deductTbl" partialSubmit="true"
 					oncomplete="deductionPayDeletePopUp.show();"
 					update="@([id$=#{deductionPayDeleteId}])" />
@@ -96,13 +98,29 @@
 			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
 				var="scQtDeductionClause"
 				value="#{lOADetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
-				selection="#{lOADetailBackingBean.managedBean.selectedDeductionClauses}"
 				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
 
 				<ac:paginator for="deductClauseTbl" />
 
-				<p:column selectionMode="multiple" style="width:2%"
-					rendered="#{isEditableStatus}" />
+				<p:column style="width:2%">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selectAllClauses"
+							disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+							value="#{lOIDetailBackingBean.flag}"
+							rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
+							<p:ajax partialSubmit="true" process="@this"
+								update="deductClauseTbl"
+								listener="#{lOADetailBackingBean.selectAllClauses}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox
+						rendered="#{empty scQtDeductionClause.pmClause}"
+						value="#{scQtDeductionClause.selected}"
+						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="deductClauseTbl" />
+					</p:selectBooleanCheckbox>
+				</p:column>
 
 				<p:column style="white-space:normal;">
 					<f:facet name="header">
@@ -113,16 +131,14 @@
 
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+							disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
 							required="true" id="clauseId"
-							label="#{lbl['lbl.sc.deduction.clause']}" rows="2"
-							maxlength="500" style=" margin-bottom:5px; width:790px"
-							rendered="#{isEditableStatus}">
+							label="#{lbl['lbl.sc.deduction.clause']}" rows="3"
+							autoResize="false" maxlength="500"
+							style=" margin-bottom:5px; width:825px">
 							<p:ajax event="keyup" />
 						</p:inputTextarea>
 						<p:message id="clauseIdMsg" for="clauseId" display="icon" />
-						<h:outputText value="#{scQtDeductionClause.clauseDesc}"
-							rendered="#{!isEditableStatus}" />
 					</h:panelGroup>
 
 					<h:outputText escape="false"
@@ -137,14 +153,14 @@
 				<h:panelGroup
 					rendered="#{!empty lOADetailBackingBean.managedBean.selectedScQtDeduction and lOADetailBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers and isEditableStatus}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						action="#{lOADetailBackingBean.addDeductionClauseAction}"
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						process="@this, deductClauseTbl" partialSubmit="true"
+						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+						process="@this" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
 						update="@([id$=#{deductionClauseDeleteId}])" />
 
