@@ -1652,7 +1652,7 @@ public class SmCommonUtil {
 		Long userId = 1L;
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if (user != null) {
-			userId = user.getUserId();
+			userId = user.getUserId() != null ? user.getUserId() : 1L;
 		}
 		new LogKey(userId);
 	}
