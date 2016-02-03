@@ -1027,20 +1027,29 @@ public class LOADetailBackingBean extends
 		}
 		getManagedBean().setSelectedScQtDeduction(null);
 	}
-
+	
 	/**
 	 * Delete deduction clause.
 	 */
 	public void deleteDeductionClause() {
-		ScQtDeduction scQtDeduction = getManagedBean().getSelectedScQtDeduction();
-		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedDeductionClauses();
-		if(clauses != null && clauses.size()>0){
-			deleteRowsAction(scQtDeduction.getScQtDeductionClauses(), clauses);
-		} else {
+		List<ScQtDeductionClause> result = new ArrayList<ScQtDeductionClause>();
+		boolean flag = true;
+		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedScQtDeduction().getScQtDeductionClauses();
+		if (clauses != null && clauses.size() > 0) {
+			for (ScQtDeductionClause deductionClause : clauses) {
+				if (!deductionClause.isSelected()) {
+					result.add(deductionClause);
+				} else {
+					flag = false;
+				}
+			}
+		}
+		if (flag) {
 			throw new EpException(MessageConst.ERROR_760158);
 		}
+		getManagedBean().getSelectedScQtDeduction().setScQtDeductionClauses(result);
 	}
-
+	
 	/**
 	 * Adds the loa content action.
 	 */
@@ -1117,6 +1126,26 @@ public class LOADetailBackingBean extends
 					scLoaReport.setSelected(true);
 				} else {
 					scLoaReport.setSelected(false);
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * Select all clauses.
+	 *
+	 * @param event the event
+	 */
+	public void selectAllClauses(AjaxBehaviorEvent event) {
+		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		List<ScQtDeductionClause> deductionClauses = getManagedBean().getSelectedScQtDeduction().getScQtDeductionClauses();
+		if (deductionClauses != null && deductionClauses.size() > 0) {
+			for (ScQtDeductionClause deductionClause : deductionClauses) {
+				if (isSelectAll && null == deductionClause.getPmClause()) {
+					deductionClause.setSelected(true);
+				} else {
+					deductionClause.setSelected(false);
 				}
 			}
 		}
@@ -2757,8 +2786,6 @@ public class LOADetailBackingBean extends
 		validateDeductionPaymentDtls(scLoa);
 		
 	}
-	
-   
 
 	/**
 	 * Parses the loa details.
