@@ -1867,6 +1867,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
 				TreeNode lv2TreeNode = new DefaultTreeNode(chargeLineLv2, lv1TreeNode);
 				for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
+					if(invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
+						continue;
+					}
 					grandTotalReceivedAmt = grandTotalReceivedAmt.add(invItemLv3.getReceivedAmt());
 					InvoiceChargeLineVO chargeLineLv3 = new InvoiceChargeLineVO();
 					chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
@@ -1902,6 +1905,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
 				TreeNode lv2TreeNode = new DefaultTreeNode(chargeLineLv2, lv1TreeNode);
 				for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
+					if(!invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
+						continue;
+					}
 					grandTotalReceivedAmt = grandTotalReceivedAmt.add(invItemLv3.getReceivedAmt());
 					InvoiceChargeLineVO chargeLineLv3 = new InvoiceChargeLineVO();
 					chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
