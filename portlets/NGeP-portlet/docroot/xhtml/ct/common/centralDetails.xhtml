@@ -202,19 +202,7 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>
-		    <h:panelGrid columns="3">
-			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract
-			       		or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" 
-			             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
-			              <p:ajax event="change"  update=":form:purchaseInDefaultPanel" process="@this"></p:ajax>
-			         </p:selectBooleanCheckbox>
-			         <p:spacer width="2" />	
-			          <h:panelGrid columns="2">
-			  	            <h:outputText value="#{lbl['lbl.ct.pid']}"  />
-			  	           <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ct.pid']}" />
-			  	      </h:panelGrid>
-		 </h:panelGrid>	
-		 
+		    
 		     <h:panelGrid columns="3" 
 		     	rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"

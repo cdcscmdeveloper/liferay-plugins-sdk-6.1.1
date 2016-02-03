@@ -188,7 +188,8 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>
-		    <h:panelGrid columns="3">
+		    <h:panelGrid columns="3" 
+		         rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 			       <p:selectBooleanCheckbox disabled="true" 
 			             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
 			         </p:selectBooleanCheckbox>
