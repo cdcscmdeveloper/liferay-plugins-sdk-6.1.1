@@ -178,7 +178,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			});
 			boolean match = false;
 			for(PmUser pmUser : pmUserList){
-				if(pmUser.equals(approver)){
+				if(pmUser.getUserName().equals(approver.getUserName())){
 					match = true;
 				}
 				if(match){
