@@ -14,6 +14,7 @@
 			</td>
 			<td style="white-space: nowrap; float: right;">
 			    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
+			    	disabled="#{bb.managedBean.blacklist eq bb.managedBean.currentlyBlacklist}"
 			    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{bb.onClickSubmit}"/>
 			</td>
 		</tr>
@@ -35,26 +36,23 @@
 						value="#{lbl['lbl.sm.blacklist.with.mof']}" /></td>
 				<td>
 					<p:selectBooleanCheckbox value="#{bb.managedBean.blacklist}" >
-			            <p:ajax update="remarksOutPanelId" event="change" process="@this" partialSubmit="true"
+			            <p:ajax update="viewDirectorPanelId,:#{p:component('submitBtnId')}" 
+			            	event="change" process="@this" partialSubmit="true"
 			            	onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			        </p:selectBooleanCheckbox>
 				</td>
 			</tr>
-			<p:outputPanel 
-				rendered="#{(bb.managedBean.blacklist and !bb.managedBean.currentlyBlacklist) 
-					or (!bb.managedBean.blacklist and bb.managedBean.currentlyBlacklist)}" 
-				id="remarksOutPanelId">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.remarks']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputTextarea autoResize="false" cols="41" id="remarksId"
-							maxlength="200" required="true" label="#{lbl['lbl.sm.remarks']}"
-							value="#{bb.managedBean.remarks}" />
-						<p:message id="remarksIdMsg"
-						for="remarksId" showSummary="true" showDetail="false"
-						display="icon" />
-					</td>
-				</tr>
-			</p:outputPanel>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.remarks']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputTextarea autoResize="false" cols="41" id="remarksId" maxlength="200" 
+						required="#{bb.managedBean.blacklist ne bb.managedBean.currentlyBlacklist}" label="#{lbl['lbl.sm.remarks']}"
+						disabled="#{bb.managedBean.blacklist eq bb.managedBean.currentlyBlacklist}"
+						value="#{bb.managedBean.remarks}" />
+					<p:message id="remarksIdMsg"
+					for="remarksId" showSummary="true" showDetail="false"
+					display="icon" />
+				</td>
+			</tr>
 		</table>
 	</p:panel>
 	
