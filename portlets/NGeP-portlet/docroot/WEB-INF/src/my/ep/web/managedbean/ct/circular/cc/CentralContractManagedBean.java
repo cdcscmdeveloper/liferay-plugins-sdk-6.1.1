@@ -24,6 +24,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularItem;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
@@ -98,7 +99,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Map<Long, PmUserGroup> userGroupMap;	
 	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
 	private Map<Long, PmUser> userMap;
-	
+	private List<CtCircularPidReason> ctCircularPidReasons;
 	/**
 	 * @return the updateAction
 	 */
@@ -681,61 +682,116 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.orgTypeCode = orgTypeCode;
 	}
 
-	
-
+	/**
+	 * @return the ministryProfileId
+	 */
 	public Long getMinistryProfileId() {
 		return ministryProfileId;
 	}
 
+	/**
+	 * @param ministryProfileId the ministryProfileId to set
+	 */
 	public void setMinistryProfileId(Long ministryProfileId) {
 		this.ministryProfileId = ministryProfileId;
 	}
 
+	/**
+	 * @return the jabatanProfileId
+	 */
 	public Long getJabatanProfileId() {
 		return jabatanProfileId;
 	}
 
+	/**
+	 * @param jabatanProfileId the jabatanProfileId to set
+	 */
 	public void setJabatanProfileId(Long jabatanProfileId) {
 		this.jabatanProfileId = jabatanProfileId;
 	}
 
+	/**
+	 * @return the ptjProfileId
+	 */
 	public Long getPtjProfileId() {
 		return ptjProfileId;
 	}
 
+	/**
+	 * @param ptjProfileId the ptjProfileId to set
+	 */
 	public void setPtjProfileId(Long ptjProfileId) {
 		this.ptjProfileId = ptjProfileId;
 	}
 
+	/**
+	 * @return the exmptedMinistryDD
+	 */
 	public boolean isExmptedMinistryDD() {
 		return exmptedMinistryDD;
 	}
 
+	/**
+	 * @param exmptedMinistryDD the exmptedMinistryDD to set
+	 */
 	public void setExmptedMinistryDD(boolean exmptedMinistryDD) {
 		this.exmptedMinistryDD = exmptedMinistryDD;
 	}
 
+	/**
+	 * @return the ptjCodeName
+	 */
 	public String getPtjCodeName() {
 		return ptjCodeName;
 	}
 
+	/**
+	 * @param ptjCodeName the ptjCodeName to set
+	 */
 	public void setPtjCodeName(String ptjCodeName) {
 		this.ptjCodeName = ptjCodeName;
 	}
 
+	/**
+	 * @return the ptjCodeNameSearchValues
+	 */
 	public String getPtjCodeNameSearchValues() {
 		return ptjCodeNameSearchValues;
 	}
 
+	/**
+	 * @param ptjCodeNameSearchValues the ptjCodeNameSearchValues to set
+	 */
 	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
 		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
 	}
 
+	/**
+	 * @return the officerProfileId
+	 */
 	public Long getOfficerProfileId() {
 		return officerProfileId;
 	}
 
+	/**
+	 * @param officerProfileId the officerProfileId to set
+	 */
 	public void setOfficerProfileId(Long officerProfileId) {
 		this.officerProfileId = officerProfileId;
+	}
+	
+	/**
+	 * @return the ctCircularPidReasons
+	 */
+	public List<CtCircularPidReason> getCtCircularPidReasons() {
+		return ctCircularPidReasons;
+	}
+
+	/**
+	 * @param ctCircularPidReasons the ctCircularPidReasons to set
+	 */
+	public void setCtCircularPidReasons(
+			List<CtCircularPidReason> ctCircularPidReasons) {
+		this.ctCircularPidReasons = ctCircularPidReasons;
 	}
 }
