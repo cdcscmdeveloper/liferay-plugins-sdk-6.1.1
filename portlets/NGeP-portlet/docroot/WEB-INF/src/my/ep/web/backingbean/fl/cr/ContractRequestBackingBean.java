@@ -4698,8 +4698,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	public void addChargedPtjDetails() {
 			getManagedBean().getFlRequest().setChargeOrgProfile(selectedPmOrgProfile);
-			getManagedBean().getFlRequest().getChargeOrgProfile().setOrgName(selectedPmOrgProfile.getOrgName());
-			getManagedBean().getFlRequest().getChargeOrgProfile().setOrgCode(selectedPmOrgProfile.getOrgCode());
+			//getManagedBean().getFlRequest().getChargeOrgProfile().setOrgName(selectedPmOrgProfile.getOrgName());
+			//getManagedBean().getFlRequest().getChargeOrgProfile().setOrgCode(selectedPmOrgProfile.getOrgCode());
 		
 		selectedPmOrgProfile = null;
 	}
