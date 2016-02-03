@@ -12,7 +12,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.complaint.search.by']}" /></td>
 				<td><p:selectOneRadio id="searchModeId" required="false"
 						value="#{bb.managedBean.searchBy}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.company']}" itemValue="#{bb.SEARCH_BY_COMPANY}" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.businesscomptype']}" itemValue="#{bb.SEARCH_BY_COMPANY}" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.director.owner']}" itemValue="#{bb.SEARCH_BY_DIRECTOR}" />
 						<p:ajax update="searchMainPanelId" event="change" process="@this" 
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -20,13 +20,19 @@
 			</tr>
 			<p:outputPanel rendered="#{bb.managedBean.searchBy eq bb.SEARCH_BY_COMPANY}">
 				<ui:include src="searchCompany.xhtml" />
-				<ui:include src="resultCompany.xhtml" />
 			</p:outputPanel>
 			<p:outputPanel rendered="#{bb.managedBean.searchBy eq bb.SEARCH_BY_DIRECTOR}">
 				<ui:include src="searchDirector.xhtml" />
-				<ui:include src="resultDirector.xhtml" />
 			</p:outputPanel>
 		</table>
 	</p:panel>
+	
+	<p:outputPanel rendered="#{bb.managedBean.searchBy eq bb.SEARCH_BY_COMPANY}">
+		<ui:include src="resultCompany.xhtml" />
+	</p:outputPanel>
+	
+	<p:outputPanel rendered="#{bb.managedBean.searchBy eq bb.SEARCH_BY_DIRECTOR}">
+		<ui:include src="resultDirector.xhtml" />
+	</p:outputPanel>
 	
 </ui:composition>

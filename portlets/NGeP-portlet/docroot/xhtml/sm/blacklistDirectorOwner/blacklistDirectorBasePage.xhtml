@@ -24,12 +24,15 @@
 		<p:outputPanel id="searchMainPanelId" rendered="#{bb.managedBean.targetPage eq bb.SEARCH_PAGE}">
 			<ui:include src="searchMain.xhtml" />
 		</p:outputPanel>
+	
 		<p:outputPanel id="companyResultPanelId" rendered="#{bb.managedBean.targetPage eq bb.VIEW_COMPANY_RESULT_PAGE}">
 			<ui:include src="viewCompanyResult.xhtml" />
 		</p:outputPanel>
+		
 		<p:outputPanel id="directorResultPanelId" rendered="#{bb.managedBean.targetPage eq bb.VIEW_DIRECTOR_RESULT_PAGE}">
 			<ui:include src="viewDirectorResult.xhtml" />
 		</p:outputPanel>
+		
 	</ui:define>
 		
 </ui:composition>

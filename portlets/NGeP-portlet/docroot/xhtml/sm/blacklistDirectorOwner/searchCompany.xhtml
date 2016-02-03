@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<tr>
-		<td><p:outputLabel value="#{lbl['lbl.sm.complaint.search.by']}" /></td>
+		<td><p:outputLabel value="#{lbl['lbl.sm.blacklist.company.search.by']}" /></td>
 		<td><p:selectOneRadio id="companySearchModeId" required="false"
 				value="#{bb.managedBean.companySearchBy}">
 				<f:selectItem itemLabel="#{lbl['lbl.sm.ep.no']}" itemValue="#{bb.COMPANY_SEARCH_BY_EPNO}" />
@@ -62,11 +62,12 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}" 
 					action="#{bb.searchCompany}"
-					update="@form" 
+					update="@form" disabled="#{empty bb.managedBean.companySearchBy}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
 					action="#{bb.resetCompanySearch}"
+					disabled="#{empty bb.managedBean.companySearchBy}"
 					update="searchMainPanelId">
 				</p:commandButton>
 			</div>

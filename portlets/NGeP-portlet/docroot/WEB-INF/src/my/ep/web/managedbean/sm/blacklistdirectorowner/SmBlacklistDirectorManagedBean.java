@@ -5,6 +5,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -46,6 +48,10 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 	private SmPersonnel directorOwner;
 	private SmSupplier supplier;
 
+	private boolean blacklist;
+	private boolean currentlyBlacklist;
+	private String remarks;
+
 	private IPagingDataModel<Object[]> supplierDataModel = new SupplierPagingDataModel();
 
 	private class SupplierPagingDataModel extends PagingDataModel<Object[]> {
@@ -66,7 +72,13 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 			reqDTO.setObjArrSearchBean(searchBean);
 
 			try {
-				return getSupplierResultBean(reqDTO);
+				if (StringUtils.isNotBlank(bussRegNo)
+						|| StringUtils.isNotBlank(epNo)
+						|| StringUtils.isNotBlank(companyName)) {
+					return getSupplierResultBean(reqDTO);
+				} else {
+					return new SearchResultBean();
+				}
 			} catch (Exception ex) {
 				return new SearchResultBean();
 			} finally {
@@ -105,7 +117,12 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 			reqDTO.setObjArrSearchBean(searchBean);
 
 			try {
-				return getOwnerDirectorResultBean(reqDTO);
+				if (StringUtils.isNotBlank(name)
+						|| StringUtils.isNotBlank(identificationNo)) {
+					return getOwnerDirectorResultBean(reqDTO);
+				} else {
+					return new SearchResultBean();
+				}
 			} catch (Exception ex) {
 				return new SearchResultBean();
 			} finally {
@@ -242,5 +259,29 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 
 	public void setSupplier(SmSupplier supplier) {
 		this.supplier = supplier;
+	}
+
+	public boolean isBlacklist() {
+		return blacklist;
+	}
+
+	public void setBlacklist(boolean blacklist) {
+		this.blacklist = blacklist;
+	}
+
+	public boolean isCurrentlyBlacklist() {
+		return currentlyBlacklist;
+	}
+
+	public void setCurrentlyBlacklist(boolean currentlyBlacklist) {
+		this.currentlyBlacklist = currentlyBlacklist;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 }
