@@ -408,6 +408,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		if(isRequisitioner()){
 			initializeApproverGroup();
+			getApproverList();
 		}
 		getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 		
