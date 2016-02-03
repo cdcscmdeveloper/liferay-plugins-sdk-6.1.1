@@ -2378,11 +2378,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    try {
 		    	
 		    	    List<String> pmReasonType = new ArrayList<String>();
-			        pmReasonType.add("C");
-			        pmReasonType.add("R");
-			        pmReasonType.add("U");
-			        pmReasonType.add("S");
-			        pmReasonType.add("O");
+			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_CHEAPER_PRICE);
+			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY);
+			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_UNABLE_SUPPLIER);
+			        pmReasonType.add(ProfileManagementConst. PID_REASONTYPE_SPECIFICATION);
+			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_OTHER);
 			        
 			        reqDTO = new ReasonReqDTO();
 			        FacesScopes facesScopes = new FacesScopes();
@@ -2459,8 +2459,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				    reqDTO.setLanguage(facesScope.getUserLocale().getLanguage());
 					reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
 					pmReason = reasonSO.retrieveReasonById(reqDTO).getPmReason();
-					if(pmReason != null && pmReason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.REASON_CATEGORY_CODE_OTHER)){
-						 return true;
+					if(pmReason != null && pmReason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_OTHER)){
+						   return true;
 					 }
 			  } catch (Exception e) {
 					e.printStackTrace();
