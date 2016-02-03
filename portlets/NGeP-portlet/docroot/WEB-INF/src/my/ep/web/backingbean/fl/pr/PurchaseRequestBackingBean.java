@@ -26,6 +26,14 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -153,14 +161,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -326,11 +326,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			reqDTO.setTaskDeadLine(getManagedBean().getTaskDeadLine());
 			if(isFlFulfilmentRequisitioner()) {
+				reqDTO.setRequisitioner(Boolean.TRUE);
 				if(getManagedBean().getSelectedApprover() != null){
 					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
 					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser());
 					
-					reqDTO.setRequisitioner(Boolean.TRUE);
 					reqDTO.setApproverUserList(approverUserList);
 					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 				}
@@ -393,8 +393,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
 		PurchaseRequestReqDTO scReqDTO = new PurchaseRequestReqDTO();
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
-		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 		getManagedBean().getFulfilmentRequest().setTitle(getManagedBean().getFulfilmentRequest().getTitle().trim());
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean(ParameterConst.DOCTYPE_PURCHASE_REQUEST, resDTO.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
@@ -406,7 +404,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(resDTO.getFlFulfilmentRequest().getApprover() != null){
 			getManagedBean().setSelectedApprover(resDTO.getFlFulfilmentRequest().getApprover().getUserId());
 		}
-		if(isRequisitioner()){
+		if(isFlFulfilmentRequisitioner()){
 			initializeApproverGroup();
 			getApproverList();
 		}
@@ -1411,7 +1409,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 				if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
 					getManagedBean().setPidValidityExpired(true);
-					if(isRequisitioner()) {
+					if(isFlFulfilmentRequisitioner()) {
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740040, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 					} else {
@@ -1539,8 +1537,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return true, if is fl fulfilment requisitioner
 	 */
 	public boolean isFlFulfilmentRequisitioner() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	
 	/**
@@ -1549,8 +1546,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return true, if is fl fulfilment approver
 	 */
 	public boolean isFlFulfilmentApprover() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+		return getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	
 	/**
@@ -2924,15 +2920,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	}
 	
 	/**
-	 * Checks if is requisitioner.
-	 *
-	 * @return true, if is requisitioner
-	 */
-	public boolean isRequisitioner() {
-		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
-	}
-	
-	/**
 	 * Not remove address row.
 	 */
 	public void notRemoveAddressRow(){
@@ -2965,13 +2952,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @throws Exception the exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (!isRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
+		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
 				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateFulfilmentRequest(outcome);
-			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-			sb.append(outcome);
+			sb.append(getManagedBean().getFulfilmentRequest().getDocNo()+"|");
+			sb.append(getOrderAmount()+"|");
+			sb.append(outcome+"|");
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setButtonAction(outcome);
@@ -2987,6 +2975,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 	}
 	
+	private double getOrderAmount() {
+		BigDecimal totalOrderAmount = BigDecimal.ZERO;
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+				totalOrderAmount = totalOrderAmount.add(itemAddr.getOrderedAmt());
+			}
+		}
+		return totalOrderAmount.doubleValue();
+	}
 	
 	/**
 	 * Pre submit fulfillment request.
@@ -3025,7 +3022,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 				if(getManagedBean().isPidValidityExpired()) {
-					if(isRequisitioner()) {
+					if(isFlFulfilmentRequisitioner()) {
 						throw new EpException(MessageConst.ERROR_740040);
 					} else {
 						throw new EpException(MessageConst.ERROR_740041);
