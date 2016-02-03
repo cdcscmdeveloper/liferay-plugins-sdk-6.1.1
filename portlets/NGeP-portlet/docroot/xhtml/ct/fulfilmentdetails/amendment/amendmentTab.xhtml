@@ -181,7 +181,9 @@
 		 	        </p:outputPanel>
 				    <ui:include src="/xhtml/ct/common/quotationTender.xhtml" />
 				    <ui:include src="/xhtml/ct/common/supplier.xhtml" />
-				    <ui:include src="/xhtml/ct/common/purchaseInDefault.xhtml" />
+				   <p:outputPanel id="ctMenuIdPidId" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+		 	                <ui:include src="/xhtml/ct/common/purchaseInDefault.xhtml" />
+		 	        </p:outputPanel>
 				    <ui:include src="performanceBond.xhtml" />
 				</p:outputPanel>
 				

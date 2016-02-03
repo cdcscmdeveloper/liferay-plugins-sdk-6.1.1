@@ -71,9 +71,21 @@
 						<p:spacer width="5" />
 						<h:outputText value="#{lbl['lbl.ct.months']}" />
 					</h:panelGroup>
-				<h:panelGrid class="columnWidth200">
-					<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-				</h:panelGrid>
+				
+					 <f:verbatim/>
+			         <h:panelGrid columns="3">
+			               <p:selectBooleanCheckbox disabled="#{centralContractBackingBean.managedBean.viewContract}" 
+			                       value="#{centralContractBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
+			                       <p:ajax event="change"  update=":form:groupPidId" process="@this"></p:ajax>
+			                </p:selectBooleanCheckbox>
+			                <p:spacer width="2" />	
+			                <h:outputText value="#{lbl['lbl.ct.pid']}"  />
+			  	      </h:panelGrid>
+			  	      <f:verbatim/> <f:verbatim/>
+			  	  
+				      <h:panelGrid class="columnWidth200">
+					       <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+				      </h:panelGrid>
 		             
 		 		<h:panelGroup id="uploadCircularPg">
 			  		<p:commandButton value="#{lbl['lbl.bpm.choose.file']}" update="uploadCircularPg, uploadCircularDlg"

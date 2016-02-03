@@ -16,6 +16,54 @@
 		</h:panelGroup>		
 	</p:panel>
 	
+	<h:panelGroup id="groupPidId">
+	   <p:panel rendered="#{centralContractBackingBean.managedBean.circularVer.pid}"
+	            id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
+	             <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj"
+	                   value="#{centralContractBackingBean.managedBean.circularVer.ctCircularPidReason}" 
+	                   rowKey="#{pidObj}" selection="#{centralContractBackingBean.managedBean.ctCircularPidReasons}">
+				       <ac:paginator for="pidTableId" />
+				       <p:column selectionMode="multiple"
+				             style="width:3%" rendered="#{!centralContractBackingBean.managedBean.viewContract}">
+				        </p:column>
+				        <p:column style="width:50%;" 
+				            headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
+		                        <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" style="width:360px;float:left;text-align:left;">
+			                          <f:selectItems value="#{centralContractBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
+			                          <p:ajax event="change" partialSubmit="true" update=":form:pidTableId"></p:ajax>
+			                    </p:selectOneMenu>
+			          </p:column> 
+		              <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" 
+		                     id="updatePidPurchase"  styleClass="column-align-center" style="width:50%;">
+		                      <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"
+		                           style="width:350px;float:left;text-align:left;" 
+		                           rendered="#{centralContractBackingBean.PidPurchaseTypeOther(pidObj.pmReason.reasonId)}">
+		                           </p:inputText>  
+		               </p:column>  
+				 </p:dataTable>
+	             <div class="ppRightBtn"> 
+			         <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
+				          partialSubmit="true" action="#{centralContractBackingBean.addPurchaseInDefault()}" update=":form:pidTableId" 
+				         oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>	
+				     <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" 
+			             onsuccess="delPidPurchaseDlg.show()" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>			
+		        </div>
+		        <p:dialog id="delPidPurchaseDlg"   styleClass="screen-title" 
+		             widgetVar="delPidPurchaseDlg"  modal="true" width="330">  
+                     <h:panelGrid columns="3">
+                           <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			               <p:spacer width="10"/>
+                           <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+                     </h:panelGrid>
+                     <div class="ppRightBtn">
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:pidTableId"
+		                    process="@all" actionListener="#{centralContractBackingBean.deletePidPurchase()}" onclick="delPidPurchaseDlg.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPidPurchaseDlg.hide();" type="button" />
+		            </div>
+               </p:dialog>  		
+	      </p:panel>
+	</h:panelGroup>
+	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
 		<p:dataTable id="contactPersonDt" var="contactPersonsVar" widgetVar="contactPersonObj"
 		     value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index"
