@@ -37,6 +37,8 @@
 			value="#{bb.managedBean.ownerDirectorList}"
 			rowKey="#{per}" rowIndexVar="index" id="viewCompanyDtId">
 			
+			<ac:paginator for="viewCompanyDtId" />
+			
 			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}" >
 				<h:outputText value="#{per.name}" />
 			</p:column>
