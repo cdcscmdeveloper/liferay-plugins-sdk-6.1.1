@@ -80,12 +80,12 @@ public class PmSchedulerServlet extends HttpServlet {
 		
 		
 		// Update Expired Access Application Workflow Status 
-		EpSchedulerHelper.scheduleJob(new JobKey(
-		SchedulerConstants.UPDATE_EXPIRED_ACCESS_APPLICATION,
-		SchedulerConstants.PM_JOB_GROUP),
-		PmAccessApplJob.class,
-		SchedulerConstants.UPDATE_EXPIRED_ACCESS_APPLICATION_JOB_DESC,
-		SchedulerConstants.TRIGGER_TIME);
+//		EpSchedulerHelper.scheduleJob(new JobKey(
+//		SchedulerConstants.UPDATE_EXPIRED_ACCESS_APPLICATION,
+//		SchedulerConstants.PM_JOB_GROUP),
+//		PmAccessApplJob.class,
+//		SchedulerConstants.UPDATE_EXPIRED_ACCESS_APPLICATION_JOB_DESC,
+//		SchedulerConstants.TRIGGER_TIME);
 		
 //		// Send Access Application Reminder
 //		EpSchedulerHelper.scheduleJob(new JobKey(
