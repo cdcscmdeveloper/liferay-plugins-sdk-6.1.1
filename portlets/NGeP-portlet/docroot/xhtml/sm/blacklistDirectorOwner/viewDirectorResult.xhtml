@@ -64,6 +64,8 @@
 			value="#{bb.managedBean.companyList}"
 			rowKey="#{comp}" rowIndexVar="index" id="viewDirectorDtId">
 			
+			<ac:paginator for="viewDirectorDtId" />
+			
 			<p:column headerText="#{lbl['lbl.sm.companyname']}" >
 				<h:outputText value="#{comp.companyName}" />
 			</p:column>
