@@ -52,11 +52,11 @@
 							<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
 								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
 								disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
-												suppFinalizationBackingBean.managedBean.secretaryUser)}">
+												suppFinalizationBackingBean.managedBean.secretaryUser)}"
+								style="width:100% !important;">
 								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
-								<p:ajax event="change" 
-									update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
-												[id$=rePublishPanel],[id$=itemSupplierPanel])" 
+								<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
+															     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
 									listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" />
 				   			</p:selectOneMenu>
 						</td>
@@ -135,7 +135,7 @@
 			</h:panelGrid>		
 				
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-				columnClasses="columnWidth20" rendered="#{decisionSupplFinalOrFwdHighAuth}">
+						 columnClasses="columnWidth20" rendered="#{decisionSupplFinalOrFwdHighAuth}">
 				<h:column>
 					<p:outputLabel value="#{lbl['lbl.sc.loi.loa.prepared.by']}" />
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
@@ -147,74 +147,33 @@
 						<f:selectItems value="#{suppFinalizationBackingBean.getLoiLoaPreparedByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>
-
 			</h:panelGrid>
 
-			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-				columns="2" columnClasses="columnWidth20"
-				rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
-
-				<h:column
-					rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
-					<p:outputLabel value="#{lbl['lbl.sc.sf.higher.authority']}" />
+			<h:panelGrid id="highAuthGrid" border="0" cellpadding="0" cellspacing="0" 
+						 width="100%" columns="2" columnClasses="columnWidth20"
+						 rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
+				<h:column id="reasonLabel">
+					<p:outputLabel value="#{lbl['lbl.sc.reason']}" />
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}"
 						styleClass="mandatory" />
 				</h:column>
-
-				<h:column
-					rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
-					<p:selectOneMenu id="finalizationCommittee"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterId}"
-						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}"
-						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-						<f:selectItems
-							value="#{suppFinalizationBackingBean.getFinalizationCommitteeDropDown()}" />
-						<p:ajax event="change" update="@([id$=committeeSecretary])"
-							listener="#{suppFinalizationBackingBean.finalizationCommitteeEvent}"
-							process="@this" />
-					</p:selectOneMenu>
-					<p:selectOneMenu id="committeeSecretary"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId}"
-						style="width: 178px;" required="true"
-						label="#{lbl['lbl.sc.sf.higher.authority']}" 
-						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems var="usersSecretary"
-							value="#{suppFinalizationBackingBean.retrieveCommitteeSecretary(
-											suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterCode)}"
-							itemLabel="#{usersSecretary.userName}"
-							itemValue="#{usersSecretary.userId}" />
-					</p:selectOneMenu>
-					<p:message id="finalizationCommitteeMsg"
-						for="finalizationCommittee" display="icon" />
-					<p:message id="committeeSecretaryMsg" for="committeeSecretary"
-						display="icon" />
-				</h:column>
-
-				<h:column>
-					<p:outputLabel value="#{lbl['lbl.sc.reason']}"
-						rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}" />
-					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}"
-						styleClass="mandatory" />
-					<p:outputLabel value=" "
-						rendered="#{suppFinalizationBackingBean.managedBean.forwardToBpk}" />
-				</h:column>
+										 
 				<h:column>
 					<table>
 						<tr>
-							<td><p:selectOneRadio id="reason" layout="grid" columns="1"
-									required="true" label="#{lbl['lbl.sc.reason']}"
-									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}"
-									rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}"
-									disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-									<f:selectItems
-										value="#{suppFinalizationBackingBean.getReasonRadioBtn()}" />
-								</p:selectOneRadio> <h:outputText style="text-align: left;"
-									value="#{lbl['lbl.sc.notes.forward.to.bpk']}"
-									rendered="#{suppFinalizationBackingBean.managedBean.forwardToBpk}" />
-
-								<p:message id="reasonMsg" for="reason" display="icon" /></td>
+							<td>
+								<p:selectOneRadio id="reason" layout="grid" columns="1" 
+										required="true" label="#{lbl['lbl.sc.reason']}"
+										value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}"
+										disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+									<f:selectItems value="#{suppFinalizationBackingBean.getReasonRadioBtn()}"/>
+									<p:ajax event="change" partialSubmit="true" process="@this" 
+											listener="#{suppFinalizationBackingBean.changeReasonEvent}" 
+											update="@([id$=highAuthGrid])"/>
+								</p:selectOneRadio> 
+								
+								<p:message id="reasonMsg" for="reason" display="icon" />
+							</td>
 							<td style="margin-top: -3px"><ac:iconTooltip
 									value="#{lbl[suppFinalizationBackingBean.managedBean.scQt.procurementMode == 
 										ParameterConst.procurementModeQuotation 
@@ -223,6 +182,51 @@
 						</tr>
 					</table>
 				</h:column>
+				
+				<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
+					<p:outputLabel value="#{lbl['lbl.sc.sf.higher.authority']}" />
+					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+				</h:column>
+
+				<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
+					<p:selectOneMenu id="finalizationCommittee"
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterId}"
+						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}"
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
+										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}">
+						<f:selectItems
+							value="#{suppFinalizationBackingBean.getFinalizationCommitteeDropDown()}" />
+						<p:ajax event="change" update="@([id$=committeeSecretary],[id$=reasonLabel],[id$=reason])" 
+							listener="#{suppFinalizationBackingBean.finalizationCommitteeEvent}"
+							process="@this" />
+					</p:selectOneMenu>
+					<p:selectOneMenu id="committeeSecretary"
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId}"
+						style="width: 178px;" required="true"
+						label="#{lbl['lbl.sc.sf.higher.authority']}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
+										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}" 
+						rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItems var="usersSecretary"
+							value="#{suppFinalizationBackingBean.retrieveCommitteeSecretary(
+											suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterCode)}"
+							itemLabel="#{usersSecretary.userName}" itemValue="#{usersSecretary.userId}" />
+					</p:selectOneMenu>
+					<p:message id="finalizationCommitteeMsg"
+							for="finalizationCommittee" display="icon" />
+					<p:message id="committeeSecretaryMsg" 
+							for="committeeSecretary" display="icon" />
+				</h:column>
+				
+				<h:column rendered="#{suppFinalizationBackingBean.managedBean.forwardToBpk}">
+				</h:column>
+				
+				<h:column rendered="#{suppFinalizationBackingBean.managedBean.forwardToBpk}">
+					<h:outputText style="text-align: left;" value="#{lbl['lbl.sc.notes.forward.to.bpk']}" />		
+				</h:column>
+
 			</h:panelGrid>
 			
 		</p:outputPanel>
