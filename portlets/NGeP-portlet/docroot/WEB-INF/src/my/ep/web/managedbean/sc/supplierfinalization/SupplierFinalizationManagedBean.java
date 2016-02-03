@@ -135,6 +135,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean itemCancelled;
 	private Boolean qtRefinalized;
 	private boolean refinalizedAndBiddingAward;
+	private boolean disableFwdToHighAuthorityOption;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -156,6 +157,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Map<Long, TplSpecZoneDtl> zoneMap;
 	private Map<Long, List<ScQtEvaluationResultDtl>> pkgShortlistedSupppliersByZone;
 	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
+	
+	private Map<String,String[]> higherAuthoritiesMap;
 	
 	//Committee Endorsement
 	private List<ScQtCommitteeActivity> reminderList;
@@ -824,6 +827,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the disableFwdToHighAuthorityOption
+	 */
+	public boolean isDisableFwdToHighAuthorityOption() {
+		return disableFwdToHighAuthorityOption;
+	}
+
+	/**
+	 * @param disableFwdToHighAuthorityOption
+	 *            the disableFwdToHighAuthorityOption to set
+	 */
+	public void setDisableFwdToHighAuthorityOption(
+			boolean disableFwdToHighAuthorityOption) {
+		this.disableFwdToHighAuthorityOption = disableFwdToHighAuthorityOption;
+	}
+
+	/**
 	 * @return the shortlistedSupplierList
 	 */
 	public List<ScQtEvaluationResultDtl> getShortlistedSupplierList() {
@@ -989,6 +1008,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
 		this.scQtFinalization = scQtFinalization;
+	}
+
+	/**
+	 * @return the higherAuthoritiesMap
+	 */
+	public Map<String, String[]> getHigherAuthoritiesMap() {
+		return higherAuthoritiesMap;
+	}
+
+	/**
+	 * @param higherAuthoritiesMap
+	 *            the higherAuthoritiesMap to set
+	 */
+	public void setHigherAuthoritiesMap(
+			Map<String, String[]> higherAuthoritiesMap) {
+		this.higherAuthoritiesMap = higherAuthoritiesMap;
 	}
 
 	/**
