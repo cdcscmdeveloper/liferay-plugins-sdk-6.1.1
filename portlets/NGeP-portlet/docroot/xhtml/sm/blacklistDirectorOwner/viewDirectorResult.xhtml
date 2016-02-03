@@ -6,6 +6,112 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	Director Result!!!
+	<table style="width: 100%;">
+		<tr>
+			<td>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+					action="#{bb.navigateToPage(bb.SEARCH_PAGE)}" update="@form"/>
+			</td>
+			<td style="white-space: nowrap; float: right;">
+			    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
+			    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{bb.submit}"/>
+			</td>
+		</tr>
+		<tr height="10"><td height="10"></td></tr>
+	</table>
+	
+	<p:panel header="#{lbl['lbl.sm.director.owner.details']}" toggleable="true" id="viewDirectorPanelId">
+		<table style="width: 80%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.name']}" styleClass="outputLabel-view-label"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.directorOwner.name}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']}" styleClass="outputLabel-view-label"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{bb.managedBean.directorOwner.identificationNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.blacklist.with.mof']}" /></td>
+				<td>
+					<p:selectBooleanCheckbox value="#{bb.managedBean.blacklist}" >
+			            <p:ajax update="remarksOutPanelId" event="change" process="@this" partialSubmit="true"
+			            	onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			        </p:selectBooleanCheckbox>
+				</td>
+			</tr>
+			<p:outputPanel 
+				rendered="#{(bb.managedBean.blacklist and !bb.managedBean.currentlyBlacklist) or (!bb.managedBean.blacklist and bb.managedBean.currentlyBlacklist)}" 
+				id="remarksOutPanelId">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.remarks']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputTextarea autoResize="false" cols="41" id="remarksId"
+							maxlength="200" required="true" label="#{lbl['lbl.sm.remarks']}"
+							value="#{bb.managedBean.remarks}" />
+						<p:message id="remarksIdMsg"
+						for="remarksId" showSummary="true" showDetail="false"
+						display="icon" />
+					</td>
+				</tr>
+			</p:outputPanel>
+		</table>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sm.director.owner.company.list']}" toggleable="true" id="directorCompaniesPanelId">
+		
+		<p:dataTable var="comp" widgetVar="compWidgetVar"
+			editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{bb.managedBean.companyList}"
+			rowKey="#{comp}" rowIndexVar="index" id="viewDirectorDtId">
+			
+			<p:column headerText="#{lbl['lbl.sm.companyname']}" >
+				<h:outputText value="#{comp.companyName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.rocNo']}" >
+				<h:outputText value="#{comp.regNo}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.person.designation']}" >
+				<h:outputText value="#{comp.smPersonnel.designation}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}" >
+				<h:outputText value="#{lbl['lbl.txt.yes']}"
+					rendered="#{comp.smPersonnel.equityOwner}" />
+				<h:outputText value="#{lbl['lbl.txt.no']}"
+					rendered="#{!comp.smPersonnel.equityOwner}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.person.composition.isDir']}" >
+				<h:outputText value="#{lbl['lbl.txt.yes']}"
+					rendered="#{comp.smPersonnel.director}" />
+				<h:outputText value="#{lbl['lbl.txt.no']}"
+					rendered="#{!comp.smPersonnel.director}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}" >
+				<ac:labelAmount value="#{comp.smPersonnel.sharePercentage}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}">
+				<ac:labelAmount value="#{comp.smPersonnel.shareAmt}" />
+			</p:column>
+			
+		</p:dataTable>
+	</p:panel>
+	
+	<p:confirmDialog id="confirmDeclareDialog" closable="true"
+		message="#{bb.managedBean.blacklist?lbl['lbl.sm.blacklist.confirm.submit.msg']:lbl['lbl.sm.unblacklist.confirm.submit.msg']}"
+		header="#{lbl['lbl.sm.cancelmof.bysupp.confirm.dialog.header']}" severity="alert"
+		widgetVar="confirmSubmitDialog">
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmSubmitDialog.hide();" 
+				action="#{bb.submit}" update="@form"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmSubmitDialog.hide();" />
+		</div>
+	</p:confirmDialog>
 
 </ui:composition>
