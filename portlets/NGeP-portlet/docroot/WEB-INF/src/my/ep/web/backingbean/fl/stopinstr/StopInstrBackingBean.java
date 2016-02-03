@@ -408,10 +408,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getStopInstr().getFlRequest().getApprover());
 				getManagedBean().getApproverList().addAll(approverUserList);
 			}
-			if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isCoGstr()){
-				getManagedBean().setSelectedTabIndex(1);
-				throw new EpException(MessageConst.ERROR_745078);
-			}
 		}
 
 		if(hasSupplierRole() && !hasGovtSellerRole()) { // Supplier stop delivery
@@ -424,6 +420,11 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		} else {
 			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && 
 				(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))){
+				if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isCoGstr()){
+					getManagedBean().setSelectedTabIndex(1);
+					throw new EpException(MessageConst.ERROR_745078);
+				}
+				
 				IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 				PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
 				personnelReqDTO.setSmSupplierId(getManagedBean().getStopInstr().getFlRequest().getSmSupplier().getSupplierId());
