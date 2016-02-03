@@ -32,7 +32,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -55,8 +54,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -150,6 +147,7 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -268,6 +266,7 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex);
 			getManagedBean().setCommEndorsementTabIndex(-1);
+			getManagedBean().setEndorsementReportActiveIndex(-1);
 		} else {
 			getManagedBean().setPreparationTabIndex(tabIndex++);
 			getManagedBean().setReportTabIndex(tabIndex++);
@@ -331,10 +330,6 @@ public class SupplierFinalizationBackingBean extends
 		Integer selectedTabIndex = Integer.valueOf(FacesContext
 				.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("selectedTabIndex"));
-		if (selectedTabIndex == 
-				this.getManagedBean().getActiveIndex()) {
-			return;
-		}
 		
 		switch (selectedTabIndex) {
 			case 0:
@@ -1402,13 +1397,14 @@ public class SupplierFinalizationBackingBean extends
 								: scQtRecommend.getRecommendDtls()) {
 			
 			// Skip the deletion of rejected suppliers and 
-			// suppliers with LOI or LOA
+			// suppliers with LOI or LOA as these records should not be deleted
 			if (!recommendDtl.getRecordStatusFlg().equals(
 					DbValueConst.RECORD_STATUS_ACTIVE)
 						|| recommendDtl.getLoiLoaCount() > 0) {
-				if (isReset && 
-						!recommendDtl.getRecordStatusFlg()
-							.equals(DbValueConst.RECORD_STATUS_REJECTED)) {
+				if (isReset && (!recommendDtl.getRecordStatusFlg()
+						.equals(DbValueConst.RECORD_STATUS_REJECTED) || 
+							!recommendDtl.getRecordStatusFlg()
+								.equals(DbValueConst.RECORD_STATUS_CANCELLED))) {
 					recommendDtl.setRecordStatus(false);
 					recommendDtl.setRecordStatusFlg(
 							DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -1541,8 +1537,6 @@ public class SupplierFinalizationBackingBean extends
 		int cancelledItemsCount = 0;
 		String decisionTypeCode = scQtFinalization.getDecision()
 									.getParameterCode();
-		boolean isFwdToHighAuth = ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-				.equals(decisionTypeCode) ? true : false;			
 		boolean isSubmit = this.getManagedBean().isSubmit();
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		TplSpecZoneDtl selectedZone = this.getManagedBean().getCurrentZone();
@@ -1749,11 +1743,19 @@ public class SupplierFinalizationBackingBean extends
 			String recommendTypeCode = scQtFinalization.getRecommendedTypeId()
 					.getParameterCode();
 			
-			if (decisionRecommendSupplier || 
-					this.getManagedBean().isForwardToBpk()) {
+//			if (decisionRecommendSupplier || 
+//					this.getManagedBean().isForwardToBpk()) {
+//				scQtFinalization.setHigherCommitte(null);
+//				scQtFinalization.setHigherCommitteStr(null);
+//			}
+			if (decisionRecommendSupplier) {
 				scQtFinalization.setHigherCommitte(null);
 				scQtFinalization.setHigherCommitteStr(null);
-			}
+				scQtFinalization.setHigherSecretary(null);
+				scQtFinalization.setHigherSecretaryStr(null);
+				scQtFinalization.setReason(null);
+				scQtFinalization.setReasonStr(null);
+			}			
 
 			boolean zonalPackageItemsCancelled = getManagedBean().isItemCancelled();
 			
@@ -1761,7 +1763,6 @@ public class SupplierFinalizationBackingBean extends
 			if (!zonalPackageItemsCancelled && 
 					ParameterConst.RECOMMEND_TYPE_PACKAGE
 						.equals(recommendTypeCode) && 
-					decisionRecommendSupplier && 
 					!this.getManagedBean().isDisableSupplierSelection()) {
 				TplSpecZoneDtl zoneDtl = this.getManagedBean().getCurrentZone();
 				
@@ -4307,7 +4308,8 @@ public class SupplierFinalizationBackingBean extends
 					ParameterConst.DECISION_RE_EVALUATION);	
 		}
 		
-		if (getManagedBean().isInitialDecisionFwdToBPK()) {
+		if (getManagedBean().isInitialDecisionFwdToBPK() || 
+				getManagedBean().isDisableFwdToHighAuthorityOption()) {
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
 			}
@@ -4371,83 +4373,113 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public SelectItem[] getFinalizationCommitteeDropDown() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		String committeeType = getManagedBean().getCommitteeType();
-		if (committeeType
-				.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-			// defaulted QCA
-			searchBean
-					.getDataFilterBeans()
-					.add(new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A));
-
-		} else if (committeeType
-				.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-			// dropdown (PBB/PBA)
-
-			List<String> finalizationCommiteeList = new ArrayList<String>();
-			Long userId = getFacesScopes().getUserSessionBean().getUserId();
-			String orgType = null;
-			IUserSO userSO = null;
-			try {
-				userSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserId(userId);
-				UserResDTO resDTO = userSO.retrieveUserDtlById(reqDTO);
-				if (resDTO != null) {
-					orgType = resDTO.getPmUser().getOrgTypeCode()
-							.getParameterCode();
-				}
-			} finally {
-				userSO = null;
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		
+		String[] higherCommittees = null;
+		List<String> finalizationCommitteeList = new ArrayList<String>();
+		
+		higherCommittees = retrieveHigherCommittees(
+								scQtFinalization.getReason());
+		
+		if (ArrayUtils.isNotEmpty(
+					higherCommittees)) {
+			for (String committee : higherCommittees) {
+				finalizationCommitteeList.add(committee);
 			}
+		}
+		
+//		if (committeeType
+//				.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+//			// defaulted QCA
+//			searchBean
+//					.getDataFilterBeans()
+//					.add(new SearchFilterBean("pmParameter.parameterCode",
+//							SearchOperator.OPERATOR_EQUALS.value(),
+//							ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A));
+//
+//		} else if (committeeType
+//				.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+//			// dropdown (PBB/PBA)
+//
+//			List<String> finalizationCommiteeList = new ArrayList<String>();
+//			Long userId = getFacesScopes().getUserSessionBean().getUserId();
+//			String orgType = null;
+//			IUserSO userSO = null;
+//			try {
+//				userSO = BusinessDelegate.getInstance().getServiceObject(
+//						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//
+//				UserReqDTO reqDTO = new UserReqDTO();
+//				reqDTO.setUserId(userId);
+//				UserResDTO resDTO = userSO.retrieveUserDtlById(reqDTO);
+//				if (resDTO != null) {
+//					orgType = resDTO.getPmUser().getOrgTypeCode()
+//							.getParameterCode();
+//				}
+//			} finally {
+//				userSO = null;
+//			}
+//
+//			if (StringUtils.equals(orgType, ParameterConst.ORG_TYPE_PMS_SABAH)
+//					|| StringUtils.equals(orgType,
+//							ParameterConst.ORG_TYPE_PMS_SARAWAK)) {// FIXME - to
+//																	// filter by
+//																	// PTJ
+//																	// profile
+//				finalizationCommiteeList
+//						.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
+//				finalizationCommiteeList
+//						.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
+//			} else {
+//				finalizationCommiteeList
+//						.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A);
+//				finalizationCommiteeList
+//						.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B);
+//			}
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("pmParameter.parameterCode",
+//							SearchOperator.OPERATOR_IN.value(),
+//							finalizationCommiteeList));
+//
+//		} else if (committeeType
+//				.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)
+//				|| committeeType
+//						.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
+//				|| committeeType
+//						.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+//				|| committeeType
+//						.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+//
+//			// hide Finalization Committee and display
+//			// "Notes: Quotation/Tender will be forward to BPK"
+//			getManagedBean().setForwardToBpk(true);
+//		}
 
-			if (StringUtils.equals(orgType, ParameterConst.ORG_TYPE_PMS_SABAH)
-					|| StringUtils.equals(orgType,
-							ParameterConst.ORG_TYPE_PMS_SARAWAK)) {// FIXME - to
-																	// filter by
-																	// PTJ
-																	// profile
-				finalizationCommiteeList
-						.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
-				finalizationCommiteeList
-						.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
+		SelectItem[] items = null;
+		if (CollectionUtils.isNotEmpty(
+				finalizationCommitteeList)) {
+			if (!finalizationCommitteeList.contains(
+					SourcingConstants.FC_COMMITTEE_TYPE_MOF)) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode",
+								SearchOperator.OPERATOR_IN.value(),
+								finalizationCommitteeList));
+				items = getDropdownValuesBySearchBean(
+							ParameterTypeConst.SC_COMMITTEE_TYPE, searchBean);
 			} else {
-				finalizationCommiteeList
-						.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A);
-				finalizationCommiteeList
-						.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B);
+				items = new SelectItem[2];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+								"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								(new FacesScopes()).getUserLocale()));					
+				items[1] = new SelectItem(SourcingConstants.FC_COMMITTEE_TYPE_MOF, SourcingConstants.FC_COMMITTEE_TYPE_MOF);
 			}
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_IN.value(),
-							finalizationCommiteeList));
-
-		} else if (committeeType
-				.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)
-				|| committeeType
-						.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
-				|| committeeType
-						.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
-				|| committeeType
-						.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-
-			// hide Finalization Committee and display
-			// "Notes: Quotation/Tender will be forward to BPK"
-			getManagedBean().setForwardToBpk(true);
+		} else {
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+							"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							(new FacesScopes()).getUserLocale()));
 		}
-		if (getManagedBean().getScQtFinalization().getHigherCommitte() == null) {
-			getManagedBean().getScQtFinalization().setHigherCommitte(
-					new PmParameter());
-		}
-		if (getManagedBean().getScQtFinalization().getReason() == null) {
-			getManagedBean().getScQtFinalization().setReason(new PmReason());
-		}
-
-		SelectItem[] items = getDropdownValuesBySearchBean(
-				ParameterTypeConst.SC_COMMITTEE_TYPE, searchBean);
+		
 		return items;
 	}
 
@@ -4513,7 +4545,80 @@ public class SupplierFinalizationBackingBean extends
 		}
 		return items;
 	}
+	
+	/**
+	 * Event to trigger change of reason for Forward to Higher Authority
+	 */
+	public void changeReasonEvent() {
+		ScQtFinalization scQtFinalization 
+				= getManagedBean().getScQtFinalization();
+		
+		PmReason reason = scQtFinalization.getReason();
+		String[] higherCommittees = retrieveHigherCommittees(reason);
 
+		boolean isForwardToBPK = false;
+		if (ArrayUtils.isNotEmpty(
+						higherCommittees)) {
+			boolean hasMOF = ArrayUtils.contains(higherCommittees, 
+									SourcingConstants.FC_COMMITTEE_TYPE_MOF);
+			if (hasMOF) {
+				isForwardToBPK = true;
+			}
+		}
+		getManagedBean().setForwardToBpk(isForwardToBPK);
+		
+		if (getManagedBean().getCurrentStatusId().equals(
+				QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION)) {
+			if (isForwardToBPK) {
+				scQtFinalization.setHigherCommitte(null);
+				scQtFinalization.setHigherCommitteStr(null);
+				scQtFinalization.setHigherSecretary(null);
+				scQtFinalization.setHigherSecretaryStr(null);
+			} else {
+				scQtFinalization.setHigherCommitte(new PmParameter());
+				scQtFinalization.setHigherCommitteStr(StringUtils.EMPTY);
+				scQtFinalization.setHigherSecretary(new PmUser());
+				scQtFinalization.setHigherSecretaryStr(StringUtils.EMPTY);
+			}
+		}
+	}	
+		
+	private String[] retrieveHigherCommittees(PmReason reason) {
+		String[] higherCommittees = null;
+		
+		if (reason != null && 
+				reason.getReasonId() != null) {
+			IReasonSO reasonSO = null;
+			
+			try {
+				ReasonReqDTO reqDTO = new ReasonReqDTO();
+				reqDTO.setReasonId(reason.getReasonId());
+				
+				reasonSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+				reason = reasonSO.retrieveReasonById(reqDTO).getPmReason();
+			} finally {
+				reasonSO = null;
+			}
+			
+			if (reason != null) {
+				String committeeType = getManagedBean().getCommitteeType();
+				Map<String,String[]> higherAuthoritiesMap 
+							= getManagedBean().getHigherAuthoritiesMap();
+				
+				// 1 - Non Unanimous decision
+				// 2 - Awarded price exceeded committee authority
+				if ("1".equals(reason.getReasonCode())) {
+					higherCommittees = higherAuthoritiesMap.get(committeeType + "_NU");
+				} else if ("2".equals(reason.getReasonCode())) {
+					higherCommittees = higherAuthoritiesMap.get(committeeType + "_EX");
+				}
+			}
+		}
+		
+		return higherCommittees;
+	}
+	
 	/**
 	 * Populate values for Re-Evaluation by radio button(s), when the decision
 	 * is set to Re-Evaluation under Supplier Finalization tab
@@ -4866,11 +4971,13 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setForwardToHigherAuthority(false);
 		this.getManagedBean().setRecommendedSupplier(null);
 
+		boolean disableFwdToHighAuthorityOption = false;
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		boolean isInitialDecisionFwdToBPK 
 					= this.getManagedBean().isInitialDecisionFwdToBPK();
 		boolean isInitialDecisionFwdToHighAuth 
 					= this.getManagedBean().isInitialDecisionFwdHighAuth();
+		String committeeType = getManagedBean().getCommitteeType();
 		
 		scQtFinalization.setHigherAuthReq(false);
 		
@@ -4878,15 +4985,73 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setFinalizationMethod(
 					finalizationMethod.getParameterCode());
 		
-		String decision = scQtFinalization.getDecision().getParameterCode();
-		if (isInitialDecisionFwdToBPK) {
+		Map<String,String[]> higherAuthoritiesMap 
+					= getManagedBean().getHigherAuthoritiesMap();
+		
+		if (!isInitialDecisionFwdToBPK) {
+			if (MapUtils.isEmpty(higherAuthoritiesMap)) {
+				
+				ICommitteSO committeeSO = null;
+				try {
+					committeeSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+		
+					CommitteReqDTO reqDTO = new CommitteReqDTO();
+					reqDTO.setSupplierFinalization(true);
+					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+					CommitteResDTO resDTO = committeeSO.retrieveFinalizationCommitteeType(reqDTO);
+					if (resDTO != null) {
+						higherAuthoritiesMap = resDTO.getHigherAuthoritiesMap();
+						
+						getManagedBean().setHigherAuthoritiesMap(higherAuthoritiesMap);
+					}
+				} finally {
+					committeeSO = null;
+				}
+			}
+			if (MapUtils.isNotEmpty(
+					higherAuthoritiesMap) && 
+						!higherAuthoritiesMap
+							.containsKey(committeeType + "_EX")) {
+				disableFwdToHighAuthorityOption = true;
+				getManagedBean().setDisableFwdToHighAuthorityOption(
+									disableFwdToHighAuthorityOption);
+			}
+		}
+		
+		String decision = null;
+		if (scQtFinalization.getDecision() != null) {
+			decision = scQtFinalization.getDecision().getParameterCode();
+			boolean isDecisionFwdToHighAuthority = false;
+			
 			if (ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-						.equals(decision)) {
-				PmParameter recommendSupplier = getParameterByTypeAndCode(
-						ParameterTypeConst.FINALIZATION_DECISION_TYPE, 
-						ParameterConst.DECISION_RECOMMEND_SUPPLIER);
-				decision = recommendSupplier.getParameterCode();
-				scQtFinalization.setDecision(recommendSupplier);
+					.equals(decision)) {
+				isDecisionFwdToHighAuthority = true;
+				
+				if (scQtFinalization.getHigherCommitte() != null && 
+						committeeType.equals(scQtFinalization
+								.getHigherCommitte().getParameterCode())) {
+					resetForwardToHigherAuthorityParams(scQtFinalization);
+					scQtFinalization.setHigherCommitte(new PmParameter());
+					scQtFinalization.setHigherSecretary(new PmUser());
+					scQtFinalization.setReason(new PmReason());
+				}
+				
+				if (!isInitialDecisionFwdToBPK && 
+						scQtFinalization.getReason() != null) {
+					changeReasonEvent();
+				}
+			}
+			
+			if (isInitialDecisionFwdToBPK || 
+					disableFwdToHighAuthorityOption) {
+				if (isDecisionFwdToHighAuthority) {
+					PmParameter recommendSupplier = getParameterByTypeAndCode(
+							ParameterTypeConst.FINALIZATION_DECISION_TYPE, 
+							ParameterConst.DECISION_RECOMMEND_SUPPLIER);
+					decision = recommendSupplier.getParameterCode();
+					scQtFinalization.setDecision(recommendSupplier);
+				}
 			}
 		}
 		
@@ -5189,14 +5354,18 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void resetForwardToHigherAuthority(ScQtFinalization scQtFinalization) {
+		resetForwardToHigherAuthorityParams(scQtFinalization);
+		scQtFinalization.setHigherAuthReq(false);
+		this.getManagedBean().setForwardToHigherAuthority(false);
+	}
+	
+	private void resetForwardToHigherAuthorityParams(ScQtFinalization scQtFinalization) {
 		scQtFinalization.setReason(null);
 		scQtFinalization.setReasonStr(null);		
 		scQtFinalization.setHigherSecretary(null);
 		scQtFinalization.setHigherSecretaryStr(null);
 		scQtFinalization.setHigherCommitte(null);
 		scQtFinalization.setHigherCommitteStr(null);
-		scQtFinalization.setHigherAuthReq(false);
-		this.getManagedBean().setForwardToHigherAuthority(false);
 	}
 
 	private void resetRepublish(ScQtFinalization scQtFinalization) {
@@ -5274,7 +5443,7 @@ public class SupplierFinalizationBackingBean extends
 		menuItem.setProcess("@form");
 		menuItem.setUpdate("@form");
 		menuItem.setOncomplete("onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : "
-				+ (tabIndex++) + "}]); ");
+				+ (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
 		mainMenuModel.addMenuItem(menuItem);
 		
 		
@@ -5290,7 +5459,7 @@ public class SupplierFinalizationBackingBean extends
 		menuItem.setProcess("@form");
 		menuItem.setUpdate("@form");
 		menuItem.setOncomplete("onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : "
-				+ (tabIndex++) + "}]); ");
+				+ (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
 		mainMenuModel.addMenuItem(menuItem);
 
 		
@@ -6061,18 +6230,31 @@ public class SupplierFinalizationBackingBean extends
 		// if (fwdHigherAuthority.equalsIgnoreCase("true")) {
 		// forward = true;
 		if (fwdHigherAuthority) {
-			String committeeType = getManagedBean().getCommitteeType();
-			if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A
-					.equals(committeeType)
-						|| ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B
-								.equals(committeeType)
-						|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH
-								.equals(committeeType)
-						|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
-								.equals(committeeType)) {
+			String higherCommitteeType = null;
+			if (scQtFinalization.getHigherCommitte() != null) {
+				higherCommitteeType = scQtFinalization
+						.getHigherCommitte().getParameterCode();
+			}
+//			if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A
+//					.equals(committeeType)
+//						|| ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B
+//								.equals(committeeType)
+//						|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH
+//								.equals(committeeType)
+//						|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
+//								.equals(committeeType)) {
+			if (SourcingConstants.FC_COMMITTEE_TYPE_MOF
+								 .equals(higherCommitteeType)) {
 				getManagedBean().setForwardToBpk(true);
 			} else if (getManagedBean().isSecretaryUser()) {
-				getFinalizationCommitteeDropDown();
+				// getFinalizationCommitteeDropDown();
+				if (getManagedBean().getScQtFinalization().getHigherCommitte() == null) {
+					getManagedBean().getScQtFinalization().setHigherCommitte(
+							new PmParameter());
+				}
+				if (getManagedBean().getScQtFinalization().getReason() == null) {
+					getManagedBean().getScQtFinalization().setReason(new PmReason());
+				}
 			}
 		} else if (!this.getManagedBean().isInitialDecisionFwdHighAuth()) {
 			resetForwardToHigherAuthority(scQtFinalization);
@@ -6999,7 +7181,7 @@ public class SupplierFinalizationBackingBean extends
 //		boolean isPriceTypeTier = isItemPriceTypeTariffOrTier(scQtRecommend);
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();	
-		String defaultRecommendByStr = ParameterConst.RECOMMEND_BY_AWARD;;
+		String defaultRecommendByStr = ParameterConst.RECOMMEND_BY_AWARD;
 //		if (isPriceTypeTier) {
 //			defaultRecommendByStr = ParameterConst.RECOMMEND_BY_AWARD;
 //		}
