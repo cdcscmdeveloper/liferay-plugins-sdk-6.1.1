@@ -22,7 +22,7 @@
     </tr>
 	<tr>
         <td align="left">
-            Total Fulfilment : $totalFrequency<br/>
+            Total Fulfilment : $!totalFrequency<br/>
         </td>
     </tr>
     <tr align='left'>
@@ -61,7 +61,7 @@
     </tr>
 	<tr>
         <td align="left">
-            Total Phase : $totalPhase<br/>
+            Total Phase : $!totalPhase<br/>
         </td>
     </tr>
 	<tr align='left'>
