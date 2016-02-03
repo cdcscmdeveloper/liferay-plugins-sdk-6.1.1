@@ -10,7 +10,8 @@
 		<tr>
 			<td>
 				<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-					action="#{bb.navigateToPage(bb.SEARCH_PAGE)}" update="@form"/>
+					action="#{bb.backFromDirectorPage}" 
+					update="@form"/>
 			</td>
 			<td style="white-space: nowrap; float: right;">
 			    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
