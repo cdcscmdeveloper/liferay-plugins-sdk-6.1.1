@@ -622,6 +622,8 @@ public class AccessApplBackingBean extends
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
+		log.info(" file path : "+filePath);
+		log.info(" file name : "+fileName);
 		if (filePath != null) {
 			InputStream input = null;
 			try {
@@ -629,6 +631,7 @@ public class AccessApplBackingBean extends
 				input = new BufferedInputStream(uc.getInputStream());
 			} catch (Exception e) {
 				// Cannot open connection, maybe local file
+				log.info(e.getMessage());
 				input = new FileInputStream(filePath);
 			}
 			byte[] buffer = new byte[4096];
