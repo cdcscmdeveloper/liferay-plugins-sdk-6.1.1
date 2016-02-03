@@ -87,13 +87,13 @@ public class PmSchedulerServlet extends HttpServlet {
 		SchedulerConstants.UPDATE_EXPIRED_ACCESS_APPLICATION_JOB_DESC,
 		SchedulerConstants.TRIGGER_TIME);
 		
-		// Send Access Application Reminder
-		EpSchedulerHelper.scheduleJob(new JobKey(
-		SchedulerConstants.SEND_REMINDER_ACCESS_APPLICATION,
-		SchedulerConstants.PM_JOB_GROUP),
-		PmAccessApplReminderJob.class,
-		SchedulerConstants.SEND_REMINDER_ACCESS_APPLICATION_JOB_DESC,
-		SchedulerConstants.TRIGGER_TIME);
+//		// Send Access Application Reminder
+//		EpSchedulerHelper.scheduleJob(new JobKey(
+//		SchedulerConstants.SEND_REMINDER_ACCESS_APPLICATION,
+//		SchedulerConstants.PM_JOB_GROUP),
+//		PmAccessApplReminderJob.class,
+//		SchedulerConstants.SEND_REMINDER_ACCESS_APPLICATION_JOB_DESC,
+//		SchedulerConstants.TRIGGER_TIME);
 		
 	}
 }
