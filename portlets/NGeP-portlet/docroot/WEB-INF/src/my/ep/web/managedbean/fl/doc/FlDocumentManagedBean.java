@@ -563,26 +563,24 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				reqDTO.setFlOrderId(Long.valueOf(docId));
 				orderInfo.setOrderId(reqDTO.getFlOrderId());
 		        resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);			
-				if(null != resDTO.getFlOrder()){
-					if(null != resDTO.getFlOrder()){
-						if(null != resDTO.getFlOrder().getStatus()){
-							if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-								orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-								if(isFlFulfilmentApprover()){
-									orderInfo.setRole(RoleCode.FL_APPROVER.value());
-								}else if(isFlFulfilmentSupplier()){
-									orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
-								}
-								if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType)){
-									orderInfo.setFactored(resDTO.getFlOrder().isFactored());
-								}
-							}
-						}
-						if(resDTO.getFlOrder().getFlReliefOrders() != null && !resDTO.getFlOrder().getFlReliefOrders().isEmpty()){
-							orderInfo.setCoGSTR(true);
-						}
-					}
-				}
+		        if(null != resDTO.getFlOrder()){
+		        	if(null != resDTO.getFlOrder().getStatus()){
+		        		if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
+		        			orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+		        			if(isFlFulfilmentApprover()){
+		        				orderInfo.setRole(RoleCode.FL_APPROVER.value());
+		        			}else if(isFlFulfilmentSupplier()){
+		        				orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+		        			}
+		        			if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType)){
+		        				orderInfo.setFactored(resDTO.getFlOrder().isFactored());
+		        			}
+		        		}
+		        	}
+		        	if(resDTO.getFlOrder().getFlReliefOrders() != null && !resDTO.getFlOrder().getFlReliefOrders().isEmpty()){
+		        		orderInfo.setCoGSTR(true);
+		        	}
+		        }
 			} 
 			if(orderInfo.getRole()==null) {
 				if(isFlFulfilmentApprover()){
