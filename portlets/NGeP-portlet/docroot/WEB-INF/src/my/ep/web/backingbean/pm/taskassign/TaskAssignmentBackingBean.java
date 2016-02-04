@@ -1213,6 +1213,19 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	/**
 	 * Reset Fields 
 	 * **/
+	public void onChangeOrg(BaseEntity entity){
+		if(getManagedBean().getTaskAssignmentSearchBean().getUser() != null ){
+			getManagedBean().getTaskAssignmentSearchBean().setUser(null);
+		}
+		
+		if(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles() != null && !getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().isEmpty()){
+			getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().clear();
+		}
+	}
+	
+	/**
+	 * Reset Fields 
+	 * **/
 	public void onChangeUser(BaseEntity entity){
 		if(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles() != null && !getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().isEmpty()){
 			getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().clear();

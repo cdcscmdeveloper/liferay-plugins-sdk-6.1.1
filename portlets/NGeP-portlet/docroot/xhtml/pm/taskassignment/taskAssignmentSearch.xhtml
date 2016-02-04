@@ -48,7 +48,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.pmOrgValidity.orgName}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile"
-						conditionField="#{taskAssignBackingBean.constructConditionFields()}"/>
+						conditionField="#{taskAssignBackingBean.constructConditionFields()}"
+						postUpdateListener ="taskAssignBackingBean.onChangeOrg"/>
 				</td>
 				<td width="30%">
 					
