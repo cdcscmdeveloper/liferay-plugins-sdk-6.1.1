@@ -103,7 +103,8 @@
 		
 		<br />
 		<p:dataTable var="table" id="hqSuppDocDtId" rendered="#{!smUpdateGstInfoBackingBean.managedBean.gstEmpty}"
-			value="#{smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.smGstSupplierDocs}"
+			value="#{smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.smGstSupplierDocs}" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 			rowIndexVar="index">
 
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
