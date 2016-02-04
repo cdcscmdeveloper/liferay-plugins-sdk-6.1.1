@@ -7365,6 +7365,8 @@ public class SmApplicationUtil {
 				ParameterConst.CATEGORY_TYPE_MANUFACTURING };
 		SmAppl appl = bean.getSmAppl();
 		PmParameterDesc desc = null;
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String categoryTypeDesc = StringUtils.EMPTY;
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
@@ -7374,20 +7376,19 @@ public class SmApplicationUtil {
 								cat.getPmCategoryL3().getCategoryTypeCode()
 										.getParameterCode())) {
 					desc = (PmParameterDesc) EntityHelper
-							.getEntityBySinglePropertyFromList(
-									new FacesScopes().getUserLocale()
-											.getLanguage(), cat
-											.getPmCategoryL3()
-											.getCategoryTypeCode()
-											.getPmParameterDescs(),
-									"languageCode");
+							.getEntityBySinglePropertyFromList(language, cat
+									.getPmCategoryL3().getCategoryTypeCode()
+									.getPmParameterDescs(), "languageCode");
+					categoryTypeDesc = desc != null ? desc.getCodeName()
+							: categoryTypeDesc;
+
 					if (EntityHelper.isCollectionEmpty(appl.getSmMachineDtls())) {
 						valid = false;
 						if (currentTab != -1) {
 							setNavigationBackToCurrentPage(currentTab, bean);
 						}
 						throw new EpException(MessageConst.ERROR_722631,
-								new String[] { desc.getCodeName() });
+								new String[] { categoryTypeDesc });
 					} else {
 						SmMachineDtl mac = (SmMachineDtl) EntityHelper
 								.getEntityBySinglePropertyFromList(
@@ -7401,7 +7402,7 @@ public class SmApplicationUtil {
 								setNavigationBackToCurrentPage(currentTab, bean);
 							}
 							throw new EpException(MessageConst.ERROR_722631,
-									new String[] { desc.getCodeName() });
+									new String[] { categoryTypeDesc });
 						}
 					}
 				}
