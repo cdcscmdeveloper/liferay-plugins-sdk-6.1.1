@@ -42,7 +42,8 @@ public class ReactivateBasicBackingBean extends
 		renewObject();
 		reactivateBasic = new ReactivateSupplierVO();
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml", "",null);
+				"/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml", "",
+				null);
 	}
 
 	/**
@@ -55,8 +56,7 @@ public class ReactivateBasicBackingBean extends
 					.getOriginalServletRequest();
 			encryptActivationKey = originalServletRequest.getParameter("kp");
 			createdTimeParam = originalServletRequest.getParameter("ct");
-			adminPersonnelIdParam = originalServletRequest
-					.getParameter("pr");
+			adminPersonnelIdParam = originalServletRequest.getParameter("pr");
 
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 			reqDTO.setPersonnelId(Long.parseLong(adminPersonnelIdParam));
@@ -71,7 +71,7 @@ public class ReactivateBasicBackingBean extends
 		} catch (Exception ex) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721031,null);
+					MessageConst.INFO_721031, null);
 		}
 	}
 
@@ -97,7 +97,7 @@ public class ReactivateBasicBackingBean extends
 				renewObject();
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/userProfileMaintenance/outputMsg",
-						MessageConst.INFO_721028,null);
+						MessageConst.INFO_721028, null);
 			}
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
@@ -126,7 +126,7 @@ public class ReactivateBasicBackingBean extends
 				renewObject();
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721029,null);
+						MessageConst.INFO_721029, null);
 			} catch (Exception ex) {
 				throw new EpException(ex.getMessage());
 			}
@@ -139,34 +139,34 @@ public class ReactivateBasicBackingBean extends
 				|| basicSupplierAdmin == null) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721031,null);
+					MessageConst.INFO_721031, null);
 		} else if (createdTimeParam != null
 				&& StringUtils.isNotBlank(createdTimeParam)
 				&& new Long(createdTimeParam).compareTo(basicSupplier
 						.getChangedDate().getTime()) != 0) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721031,null);
+					MessageConst.INFO_721031, null);
 		} else if (createdTimeParam == null
 				|| StringUtils.isBlank(createdTimeParam)) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721031,null);
+					MessageConst.INFO_721031, null);
 		} else {
 			SmCommonUtil.redirectToPage(
 					"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
-					"",null);
+					"", null);
 		}
 
 	}
 
 	private void renewObject() {
 		basicSupplier = null;
-		loginId = "";
-		activationKey = "";
+		loginId = StringUtils.EMPTY;
+		activationKey = StringUtils.EMPTY;
 		reactivateBasic = null;
 		basicSupplierAdmin = null;
-		encryptActivationKey = "";
+		encryptActivationKey = StringUtils.EMPTY;
 	}
 
 	public ReactivateSupplierVO getReactivateBasic() {
