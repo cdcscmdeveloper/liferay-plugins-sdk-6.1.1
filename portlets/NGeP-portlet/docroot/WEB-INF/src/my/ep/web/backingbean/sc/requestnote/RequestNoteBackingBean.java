@@ -2720,10 +2720,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param event the event
 	 */
 	public void selectSingleRow(AjaxBehaviorEvent event) {
+		boolean isSelectedALL= Boolean.TRUE;
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
-				if (flag) {
-					setFlag(Boolean.FALSE);
+		if (flag) {
+			setFlag(Boolean.FALSE);
+		} 
+
+		List<ScRequestNoteDtl> scRequestNoteDtls = getManagedBean()
+				.getRequestNoteDtls();
+		if (scRequestNoteDtls != null) {
+			for (ScRequestNoteDtl ScRequestNoteDtl : scRequestNoteDtls) {
+				if (!ScRequestNoteDtl.isSelected()) {
+					isSelectedALL= Boolean.FALSE;
+					break;
 				} 
+			}
+			
+			if(isSelectedALL){
+				setFlag(isSelectedALL);
+			}
+		}
 	}
 	
 	/**
@@ -2746,6 +2762,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestContext.getCurrentInstance().execute("itemDtlPopup.hide()");
 		getManagedBean().setAutoUpdate(true);
 	}
+	
+	/**
+	 * Cancel apply all items popup.
+	 */
+	public void cancelApplyAllItemsPopup() {
+		debugLogger("cancelApplyAllPopup");
+		
+		getManagedBean().setAssignedToUserId(null);
+		getManagedBean().setProcTypeCategoryId(null);
+		getManagedBean().setProcTitle("");
+		getManagedBean().setPeriodValue(null);
+		
+		RequestContext.getCurrentInstance().execute("applyAllPopUp.hide();");
+	}
+
 	
 	/**
 	 * Debug logger.
