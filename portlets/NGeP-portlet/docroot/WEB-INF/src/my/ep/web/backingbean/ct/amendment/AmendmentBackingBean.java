@@ -4335,7 +4335,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 			double deductionAmount = 0;				
 			for (CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()) {
-				if (deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED_DEPOSIT)) {
+				if (deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED)) {
 					deductionAmount = deductionAmount + deduction.getAmount();
 				}
 			}				
