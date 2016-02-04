@@ -131,6 +131,7 @@
 				 <br />
 				 <p:dataTable var="table" id="hqSuppDocDtId"
 					value="#{br.gst.smGstSupplierDocs}" rendered="#{not empty br.gst and br.gst.isCurrent and !br.sameWithHq}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowIndexVar="index">
 		
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
