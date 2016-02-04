@@ -215,7 +215,8 @@
 				<tr>
 					<td><p:outputLabel id="basicBURoleLabel"
 							value="#{lbl['lbl.sm.userprofile.eprole']}" /> <p:outputLabel id="basicBURoleMandatory"
-							value="*" styleClass="mandatory" /></td>
+							value="*" styleClass="mandatory" />
+					</td>
 					<td><p:selectOneMenu id="basicBURole" 
 							label="#{lbl['lbl.sm.userprofile.eprole']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
@@ -226,7 +227,9 @@
 							or smPersonnelBackingBean.managedBean.deactivatePersonnel}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
-							<p:ajax event="change" partialSubmit="true" process="@this" update="softCertId, contrSignId, contrSignSelDropDownId" />
+							<p:ajax event="change" partialSubmit="true" process="@this" 
+								update=":#{p:component('softCertId')},:#{p:component('contrSignId')},:#{p:component('contrSignSelDropDownId')}" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneMenu>
 						<p:message id="basicBURoleMsg" for="basicBURole"
 							showSummary="true" showDetail="false" display="icon" /></td>
@@ -245,7 +248,7 @@
 								showSummary="true" showDetail="false" display="icon" /></td>		
 				</tr>
 				
-				<p:outputPanel rendered="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl or smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl.supplierType ne 'J'}">
+				<p:outputPanel rendered="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl or smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl.supplierType ne 'J'}" >
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
 						<td style="float: left;">
