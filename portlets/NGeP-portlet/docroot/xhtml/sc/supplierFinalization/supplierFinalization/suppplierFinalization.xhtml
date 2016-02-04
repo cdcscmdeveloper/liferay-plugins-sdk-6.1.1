@@ -53,7 +53,7 @@
 								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
 								disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
 												suppFinalizationBackingBean.managedBean.secretaryUser)}"
-								style="width:100% !important;">
+								style="width:225px;">
 								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 								<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
 															     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
@@ -203,8 +203,7 @@
 					</p:selectOneMenu>
 					<p:selectOneMenu id="committeeSecretary"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId}"
-						style="width: 178px;" required="true"
-						label="#{lbl['lbl.sc.sf.higher.authority']}" 
+						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}" 
 						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
 										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}" 
 						rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
