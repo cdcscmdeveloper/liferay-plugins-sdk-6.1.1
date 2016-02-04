@@ -405,7 +405,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				if(userGroupResDTO.getUserGroupUserList().isEmpty()){
 					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
-				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getStopInstr().getFlRequest().getApprover());
+				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getStopInstr().getFlRequest().getApprover(),getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
 				getManagedBean().getApproverList().addAll(approverUserList);
 			}
 		}

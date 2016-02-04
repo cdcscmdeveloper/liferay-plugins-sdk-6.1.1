@@ -13,17 +13,15 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
-
-import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -42,6 +40,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 /**
  * Base Backing Bean for Fulfilment.
@@ -153,13 +153,13 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 	}
 	
-	protected List<PmUser> sortApproverUserList(List<PmUserGroupUser> approverGroupUserList, PmUser approver){
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	protected List<PmUser> sortApproverUserList(List<PmUserGroupUser> approverGroupUserList, PmUser approver,Long groupId){
+		IUserGroupSO userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 		ArrayList<String> names = new ArrayList<String>();
 		List<PmUser> list1 = new ArrayList<PmUser>();
 		List<PmUser> list2 = new ArrayList<PmUser>();
-
-		UserReqDTO userReqDTO = new UserReqDTO();
+		UserGroupReqDTO reqDTO = new UserGroupReqDTO();
+		
 		List<PmUser> pmUserList = new ArrayList<PmUser>();
 		if(approver != null){
 			for(PmUserGroupUser groupUser : approverGroupUserList){
@@ -187,9 +187,10 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 					list1.add(pmUser);
 				}
 			}
-			userReqDTO.setLoginId(approver.getLoginId());
-			UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
-			if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+			reqDTO.setGroupId(groupId);
+			reqDTO.setUserId(approver.getUserId());
+			UserGroupResDTO resDTO = userGroupSO.retrieveUserGroupUserByUserIdAndGroupId(reqDTO);
+			if(resDTO.getUserGroupUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
 				list2.remove(0);
 			}
 			list2.addAll(list1);
