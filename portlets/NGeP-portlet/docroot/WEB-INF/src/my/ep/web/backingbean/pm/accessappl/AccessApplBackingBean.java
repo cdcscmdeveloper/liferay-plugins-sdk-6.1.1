@@ -325,9 +325,9 @@ public class AccessApplBackingBean extends
 		try{
 			PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
 			Integer currentStatus = accessAppl.getCurrentStatus();
-			accessAppl.setOrgProfile(getManagedBean().getSelectedOrgProfile());
-			accessAppl.setOrgTypeCode(getManagedBean().getSelectedOrgProfile().getOrgTypeCode());			
+			accessAppl.setOrgProfile(getManagedBean().getSelectedOrgProfile());			
 			validateAccessAppl(outcome);
+			accessAppl.setOrgTypeCode(getManagedBean().getSelectedOrgProfile().getOrgTypeCode());
 			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IAccessApplSO.class);
