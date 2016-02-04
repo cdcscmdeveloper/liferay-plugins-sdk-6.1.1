@@ -811,7 +811,21 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
-		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){ //DO maintenance by supplier
+			List <String> supplierDoNoList = null;
+			if(null != getManagedBean().getFlDeliveryOrder().getSupplierDoRef()){
+				IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+				supplierDoNoList = new ArrayList<String>();
+				supplierDoNoList.add(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+				reqDTO.setSupplierDoNoList(supplierDoNoList);
+				FulfilmentResDTO resDTO = deliveryOrderSO.searchDuplicateSupplierDoNo(reqDTO);
+				if(resDTO.isDuplicateSupplierDoNo()){
+					throw new EpException(MessageConst.ERROR_740042, new String[]{resDTO.getDuplicatedSupplierDoNoList().get(0),getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
+				}
+			}
+		}
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || // DO Submission by Supplier
 				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){ // DO Maintenance by Supplier
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
