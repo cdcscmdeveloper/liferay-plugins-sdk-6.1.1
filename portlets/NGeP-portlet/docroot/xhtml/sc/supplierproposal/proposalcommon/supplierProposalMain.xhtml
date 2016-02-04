@@ -9,7 +9,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="spMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info"/>
+			closable="true" showSummary="false" severity="error, info" />
 
 		<table style="border: 0px; width: 100%">
 			<tr>
@@ -21,10 +21,12 @@
 				<td><ui:include src="supplierProposalHeader.xhtml" /></td>
 			</tr>
 		</table>
-		<p:spacer height="5"></p:spacer>
-		<p:panel>
-			<td valign="top"><ui:include src="supplierProposalMenu.xhtml" /></td>
-		</p:panel>
+
+		<table style="border: 0px; width: 100%">
+			<tr>
+				<td valign="top"><ui:include src="supplierProposalMenu.xhtml" /></td>
+			</tr>
+		</table>
 
 	</ui:define>
 </ui:composition>
