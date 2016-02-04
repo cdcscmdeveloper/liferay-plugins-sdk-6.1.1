@@ -7,7 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true" id="branchGstInfoPanelId">
-		<p:dataTable var="br" id="branchDt"
+		<p:dataTable var="br" id="branchDt" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 			value="#{smUpdateGstInfoBackingBean.managedBean.branches}"
 			rowIndexVar="index">
 
