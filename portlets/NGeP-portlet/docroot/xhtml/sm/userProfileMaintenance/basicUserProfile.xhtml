@@ -226,7 +226,7 @@
 							or smPersonnelBackingBean.managedBean.deactivatePersonnel}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
-							<p:ajax event="change" partialSubmit="true" process="basicBURole" update="softCertId, contrSignId, contrSignSelDropDownId" />
+							<p:ajax event="change" partialSubmit="true" process="@this" update="softCertId, contrSignId, contrSignSelDropDownId" />
 						</p:selectOneMenu>
 						<p:message id="basicBURoleMsg" for="basicBURole"
 							showSummary="true" showDetail="false" display="icon" /></td>
@@ -250,7 +250,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
 						<td style="float: left;">
 							<p:outputPanel id="softCertId">
-								<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{!smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+								<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}"/>
 								<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
 							</p:outputPanel>
 						</td>
@@ -263,7 +263,7 @@
 						</td>		
 						<td><p:outputPanel id="contrSignSelDropDownId">
 								<p:selectOneRadio value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}"
-									rendered="#{!smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}">
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 									<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 								</p:selectOneRadio>
