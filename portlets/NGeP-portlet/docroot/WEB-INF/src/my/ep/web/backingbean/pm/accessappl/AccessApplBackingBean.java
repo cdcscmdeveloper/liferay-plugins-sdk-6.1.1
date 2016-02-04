@@ -704,8 +704,8 @@ public class AccessApplBackingBean extends
 				// construct file path
 						
 				String filePath = 
-						PmCommonUtil.getUploadFilePath(ProfileManagementConst.ACCESS_APPL_FILE_PATH,loginId,event.getFile().getFileName());
-						
+						PmCommonUtil.getUploadPath(loginId,
+								event.getFile().getFileName());
 				
 				PmAccessApplDoc accessApplDoc = null;
 				for(PmAccessApplDoc applDoc : getManagedBean().getAccessApplDocList()){
