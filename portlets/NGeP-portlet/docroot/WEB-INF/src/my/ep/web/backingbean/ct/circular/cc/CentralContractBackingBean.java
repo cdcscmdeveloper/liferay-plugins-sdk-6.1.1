@@ -145,7 +145,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class CentralContractBackingBean extends BaseBackingBean<CentralContractManagedBean>{
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
-	ContractBackingBean ctBB = null;
+	private ContractBackingBean ctBB = null;
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private CtExemptedOrg[] selectedExemptedOrgs;
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
@@ -208,6 +208,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 */
 	public void preRenderView() {
 		ICircularSO circularSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO res = null;
+		CircularResDTO resDTO = null;
 		try {
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(getFacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -220,10 +223,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();	
 			getManagedBean().setTaskName(res.getTaskName());
 			CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
@@ -241,7 +244,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CircularReqDTO circularReqDTO = new CircularReqDTO();
 			circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 			
-			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
+			resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
 			setContractCircularVar(resDTO);
 			getManagedBean().setSelectedTabIndex(0);						
 		} catch (Exception e) {
@@ -249,6 +252,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			circularSO = null;
+			reqDTO = null;
+			res = null;
+			resDTO = null;
 		}
 	}
 	
@@ -526,6 +532,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
 			       validateCircular(action);
+			
+			 if(!getManagedBean().getCircularVer().isPid()){
+				  getManagedBean().getCircularVer().setCtCircularPidReason(null);
+			  }
 			
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null) {
