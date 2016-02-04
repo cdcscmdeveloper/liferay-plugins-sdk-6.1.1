@@ -265,7 +265,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					}
 				}
 				
-				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getFulfilmentRequest().getApprover());
+				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getFulfilmentRequest().getApprover(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(approverUserList);
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);

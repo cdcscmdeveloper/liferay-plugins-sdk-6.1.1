@@ -22,7 +22,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -31,9 +30,6 @@ import org.primefaces.model.TreeNode;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
-// TODO: Auto-generated Javadoc
-//import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -218,7 +214,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(resDTO.getApproverGroupUserList().isEmpty()){
 					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
 				}
-				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),getManagedBean().getInvoice().getFlRequest().getApprover());
+				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),getManagedBean().getInvoice().getFlRequest().getApprover(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 			}
 			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setInvoice(invoice);
@@ -259,7 +255,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
 					}
 				}
-				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),getManagedBean().getInvoice().getFlRequest().getApprover());
+				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),getManagedBean().getInvoice().getFlRequest().getApprover(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(listOfApprover);
 				
 				
