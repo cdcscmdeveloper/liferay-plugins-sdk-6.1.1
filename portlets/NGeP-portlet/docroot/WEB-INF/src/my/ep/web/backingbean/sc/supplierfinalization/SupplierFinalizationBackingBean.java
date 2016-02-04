@@ -829,80 +829,88 @@ public class SupplierFinalizationBackingBean extends
 					.getScQtFinalization();
 
 			switch (index) {
-			case 0:
-				// Preparation Tab
-				ScQtCommittee scQtCommittee = preparationDtlsInfo();
-				reqDTO.setDeletedMeetingsList(getManagedBean()
-						.getDeletedMeetingList());
-				reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
-				reqDTO.setScQtCommittee(scQtCommittee);
-				reqDTO.setSubmit(this.getManagedBean().isSubmit());
-				
-				qtSuppFinalizationSO.validatePreparation(reqDTO);
-				reqDTO.setScQtFinalization(scQtFinalization);
-				break;
-
-			case 1:
-				// Briefing Paper Tab
-				// no validation
-				// scQtFinalization.set attachment
-				scQtFinalization = supplierFinalizationInfo(scQtFinalization);
-				reqDTO.setScQtFinalization(scQtFinalization);
-				break;
-
-			case 2:
-				// Supplier Finalization Tab
-				scQtFinalization = supplierFinalizationInfo(scQtFinalization);
-				String decisionTypeCode = scQtFinalization.getDecision()
-						.getParameterCode();
-				if (ParameterConst.DECISION_RECOMMEND_SUPPLIER
-						.equals(decisionTypeCode) ||
-							ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-								.equals(decisionTypeCode)) {
-					String recommendTypeCode = scQtFinalization
-							.getRecommendedTypeId().getParameterCode();
-					if (ParameterConst.RECOMMEND_TYPE_PACKAGE
-							.equals(recommendTypeCode)) {
-						if (this.getManagedBean().getScQt().isZonal()) {
-							saveByPackageByZone(scQtFinalization);
-						} else {
-							saveByPackage(scQtFinalization);
+				case 0:
+					// Preparation Tab
+					ScQtCommittee scQtCommittee = preparationDtlsInfo();
+					reqDTO.setDeletedMeetingsList(getManagedBean()
+							.getDeletedMeetingList());
+					reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
+					reqDTO.setScQtCommittee(scQtCommittee);
+					reqDTO.setSubmit(this.getManagedBean().isSubmit());
+					
+					qtSuppFinalizationSO.validatePreparation(reqDTO);
+					reqDTO.setScQtFinalization(scQtFinalization);
+					break;
+	
+				case 1:
+					// Briefing Paper Tab
+					// no validation
+					// scQtFinalization.set attachment
+					scQtFinalization = supplierFinalizationInfo(scQtFinalization);
+					reqDTO.setScQtFinalization(scQtFinalization);
+					break;
+	
+				case 2:
+					// Supplier Finalization Tab
+					scQtFinalization = supplierFinalizationInfo(scQtFinalization);
+					String decisionTypeCode = scQtFinalization.getDecision()
+							.getParameterCode();
+					if (ParameterConst.DECISION_RECOMMEND_SUPPLIER
+							.equals(decisionTypeCode) ||
+								ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
+									.equals(decisionTypeCode)) {
+						
+						if (ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
+								.equals(decisionTypeCode) && 
+								(scQtFinalization.getReason() == null || 
+									scQtFinalization.getReason().getReasonId() == null)) {
+							navigateToSupplierFinalizationTab();
+							throw new EpException(MessageConst.ERROR_760385);
+						}						
+						String recommendTypeCode = scQtFinalization
+								.getRecommendedTypeId().getParameterCode();
+						if (ParameterConst.RECOMMEND_TYPE_PACKAGE
+								.equals(recommendTypeCode)) {
+							if (this.getManagedBean().getScQt().isZonal()) {
+								saveByPackageByZone(scQtFinalization);
+							} else {
+								saveByPackage(scQtFinalization);
+							}
+						} else if (ParameterConst.RECOMMEND_TYPE_ITEM
+											.equals(recommendTypeCode)) {
+							saveByItem(scQtFinalization);
 						}
-					} else if (ParameterConst.RECOMMEND_TYPE_ITEM
-										.equals(recommendTypeCode)) {
-						saveByItem(scQtFinalization);
-					}
-				} else {
-					if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(
-							scQtFinalization.getRecommendedTypeId().getParameterCode())) {
-						resetItemWiseSelectionDetails(this.getManagedBean().getScQt().isZonal(), 
-								scQtFinalization);	
 					} else {
-						resetPackageWiseSelectionDetails(this.getManagedBean().getScQt().isZonal(), 
-								scQtFinalization);						
+						if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(
+								scQtFinalization.getRecommendedTypeId().getParameterCode())) {
+							resetItemWiseSelectionDetails(this.getManagedBean().getScQt().isZonal(), 
+									scQtFinalization);	
+						} else {
+							resetPackageWiseSelectionDetails(this.getManagedBean().getScQt().isZonal(), 
+									scQtFinalization);						
+						}
 					}
-				}
-
-				ScQtCommittee _scQtCommittee = this.getManagedBean()
-						.getScQtCommittee();
-				if (_scQtCommittee != null) {
-					List<ScQtCommitteRemarks> remarksList = finalizeRemarks(this
-							.getManagedBean().getCommitteeRemarkList());
-					_scQtCommittee.setQtCommitteRemarks(remarksList);
-					setUserDetails(_scQtCommittee);
-				}
-
-				reqDTO.setScQtCommittee(_scQtCommittee);
-				reqDTO.setScQtFinalization(scQtFinalization);
-				reqDTO.setResetSuppliers(
-						this.getManagedBean().getResetSupplierList());
-				qtSuppFinalizationSO.validateSupplierFinalization(reqDTO);
-				break;
-
-			case 3:
-				// Committee Endorsement Tab
-				reqDTO.setScQtFinalization(scQtFinalization);
-				break;
+	
+					ScQtCommittee _scQtCommittee = this.getManagedBean()
+							.getScQtCommittee();
+					if (_scQtCommittee != null) {
+						List<ScQtCommitteRemarks> remarksList = finalizeRemarks(this
+								.getManagedBean().getCommitteeRemarkList());
+						_scQtCommittee.setQtCommitteRemarks(remarksList);
+						setUserDetails(_scQtCommittee);
+					}
+	
+					reqDTO.setScQtCommittee(_scQtCommittee);
+					reqDTO.setScQtFinalization(scQtFinalization);
+					reqDTO.setResetSuppliers(
+							this.getManagedBean().getResetSupplierList());
+	//				qtSuppFinalizationSO.validateSupplierFinalization(reqDTO);
+					break;
+	
+				case 3:
+					// Committee Endorsement Tab
+					reqDTO.setScQtFinalization(scQtFinalization);
+					break;
 			}
 			return reqDTO;
 		} finally {
@@ -4549,7 +4557,7 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 * Event to trigger change of reason for Forward to Higher Authority
 	 */
-	public void changeReasonEvent() {
+	public void changeReasonEvent(AjaxBehaviorEvent ajaxEvent) {
 		ScQtFinalization scQtFinalization 
 				= getManagedBean().getScQtFinalization();
 		
@@ -4565,10 +4573,8 @@ public class SupplierFinalizationBackingBean extends
 				isForwardToBPK = true;
 			}
 		}
-		getManagedBean().setForwardToBpk(isForwardToBPK);
 		
-		if (getManagedBean().getCurrentStatusId().equals(
-				QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION)) {
+		if (ajaxEvent != null) {
 			if (isForwardToBPK) {
 				scQtFinalization.setHigherCommitte(null);
 				scQtFinalization.setHigherCommitteStr(null);
@@ -4581,6 +4587,7 @@ public class SupplierFinalizationBackingBean extends
 				scQtFinalization.setHigherSecretaryStr(StringUtils.EMPTY);
 			}
 		}
+		getManagedBean().setForwardToBpk(isForwardToBPK);
 	}	
 		
 	private String[] retrieveHigherCommittees(PmReason reason) {
@@ -5039,7 +5046,7 @@ public class SupplierFinalizationBackingBean extends
 				
 				if (!isInitialDecisionFwdToBPK && 
 						scQtFinalization.getReason() != null) {
-					changeReasonEvent();
+					changeReasonEvent(null);
 				}
 			}
 			
