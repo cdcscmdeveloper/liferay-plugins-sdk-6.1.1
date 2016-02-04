@@ -51,7 +51,7 @@
 							size="110">
 							<f:validateLength maximum="1000" />
 						</p:inputText></td>
-						<td style="width: 20%"></td>
+					<td style="width: 20%"></td>
 
 				</tr>
 
@@ -75,7 +75,7 @@
 							value="#{biddingBB.managedBean.searchBiddingDateTo}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidToDate"
 							showOn="button" /></td>
-							<td style="width: 20%"></td>
+					<td style="width: 20%"></td>
 
 				</tr>
 				<TR>
@@ -227,10 +227,11 @@
 
 	</h:panelGrid>
 	<h:panelGrid id="rescheduleRebidPopUp">
-		<p:dialog header="#{lbl['lbl.sc.re.schedule.bid']}" width="700px"
+		<p:dialog header="#{lbl['lbl.sc.re.schedule.bid']}" width="750px"
 			height="340px" draggable="false" resizable="false"
-			widgetVar="bidRescheduleOrResume" showEffect="fade" hideEffect="fade"
-			modal="false" id="rescheduleOrResumeBid">
+			styleClass="pop_up_top" widgetVar="bidRescheduleOrResume"
+			showEffect="fade" hideEffect="fade" modal="false"
+			id="rescheduleOrResumeBid">
 			<ui:include
 				src="/xhtml/sc/bidding/bidManagement/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
 		</p:dialog>
