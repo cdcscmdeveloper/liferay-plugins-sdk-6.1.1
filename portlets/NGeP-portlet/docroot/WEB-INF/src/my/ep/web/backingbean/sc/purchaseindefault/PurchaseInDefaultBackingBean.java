@@ -470,7 +470,11 @@ public class PurchaseInDefaultBackingBean extends
 		return null;
 	}
 	
-	
+	/**
+	 * Validate pid.
+	 *
+	 * @param scPurchaseInDefault the sc purchase in default
+	 */
 	private void validatePID(ScPurchaseInDefault scPurchaseInDefault){
 		FacesScopes facesScopes = new FacesScopes();
 		// validate quantity
@@ -480,14 +484,6 @@ public class PurchaseInDefaultBackingBean extends
 					ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							facesScopes.getUserLocale()), "0" });
-		}
-
-		// approver validation
-		if(null == scPurchaseInDefault.getApprover()){
-			throw new EpException(
-					MessageConst.ERROR_760315,
-					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 
 	}
