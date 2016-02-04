@@ -287,7 +287,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCountry(new PmCountry());
 			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().setCountryId(1L);
 		}
-		if (isRequisitioner()) {
+		if (isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
@@ -338,7 +338,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
-			if(isRequisitioner()) {
+			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
 			
@@ -356,7 +356,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			
-			if(isRequisitioner()){
+			if(isFlFulfilmentRequisitioner()){
 				if(getManagedBean().getSelectedApprover() != null){
 					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
 					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser());
@@ -475,7 +475,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSelectedApprover(getManagedBean().getFlRequest().getApprover().getUserId());
 		}
 		
-		if(isRequisitioner()){
+		if(isFlFulfilmentRequisitioner()){
 			initializeApproverGroup();
 			getApproverList();
 		}
@@ -1012,6 +1012,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * renew session. Retrieve fulfilment request object and set it into managedBean.
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public void preRenderView() {
 		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
@@ -1022,7 +1023,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		if (taskId != null) {
 			renewSesionObject();
-			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
+			new ContractRequestBackingBean();
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 					IFulfilmentRequestSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -1151,7 +1152,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				Date pidExpiredDate = DateUtils.addDays(getManagedBean().getFlRequest().getCreatedDate(), pidValidDays);
 				if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
 					getManagedBean().setPidValidityExpired(true);
-					if(isRequisitioner()) {
+					if(isFlFulfilmentRequisitioner()) {
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740040, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 					} else {
@@ -1163,7 +1164,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 		}else if(contractId != null){
 			renewSesionObject();
-			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
+			new ContractRequestBackingBean();
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -1478,21 +1479,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setPmUserOrg(userOrg);
 
 	}
-
-	/**
-	 * check role user is requisitioner
-	 */
-	public boolean isRequisitioner() {
-		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
-
-	}
 	
 	/**
 	 * check role user is fl_approver
 	 */
 	public boolean isApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
-
 	}
 	
 	private void checkContractAmount(FlFulfilmentRequest flRequest){
@@ -3202,8 +3194,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @return true, if is fl fulfilment requisitioner
 	 */
 	public boolean isFlFulfilmentRequisitioner() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	
 	/**
@@ -3816,13 +3807,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @throws Exception the exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (!isRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
+		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
 				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateContractRequest(outcome);
-			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getFlRequest().getCtContract().getContractNo());
-			sb.append(outcome);
+			sb.append(getManagedBean().getFlRequest().getDocNo()+"|");
+			sb.append(getOrderAmount()+"|");
+			sb.append(outcome+"|");
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setButtonAction(outcome);
@@ -3835,6 +3827,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			return submitAction(outcome);
 		}
+	}
+	
+	private double getOrderAmount() {
+		BigDecimal totalOrderAmount = BigDecimal.ZERO;
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+			for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+				totalOrderAmount = totalOrderAmount.add(itemAddr.getOrderedAmt());
+			}
+		}
+		return totalOrderAmount.doubleValue();
 	}
 	
 	/**
@@ -3930,7 +3932,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		try {
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(getManagedBean().isPidValidityExpired()) {
-					if(isRequisitioner()) {
+					if(isFlFulfilmentRequisitioner()) {
 						throw new EpException(MessageConst.ERROR_740040);
 					} else {
 						throw new EpException(MessageConst.ERROR_740041);
@@ -4029,7 +4031,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			
-			if(isRequisitioner()) {
+			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
 			flRequest.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
@@ -4047,7 +4049,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			
 			
-			if(isRequisitioner()){
+			if(isFlFulfilmentRequisitioner()){
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
@@ -4763,7 +4765,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmCountry(new PmCountry());
 			getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().setCountryId(1L);
 		}
-		if (isRequisitioner()) {
+		if (isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
