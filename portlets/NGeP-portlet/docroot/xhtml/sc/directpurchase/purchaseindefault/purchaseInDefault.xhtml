@@ -449,15 +449,17 @@
 				<td style="width: 23%"><h:outputLabel
 						value="#{lbl['lbl.sc.ptj.approver.group']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width:300px; margin-bottom:5px;"
-						disabled="#{!isPendingSubmissionStatus}"
+				<td><p:selectOneMenu id="appGroupId"
+				        style="width:300px; margin-bottom:5px;"
+						disabled="#{!isPendingSubmissionStatus}" required="true"
+						label="#{lbl['lbl.sc.ptj.approver.group']}"
 						value="#{purchaseInDefaultBackingBean.managedBean.userGroupId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<p:ajax event="change" process="@this" update="approversId"
 							listener="#{purchaseInDefaultBackingBean.userGroupChangeListener()}" />
 						<f:selectItems
 							value="#{purchaseInDefaultBackingBean.getUserGroupDropdown()}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="appGroupIdMsg" for="appGroupId" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.approverName']}" /> <p:outputLabel
@@ -473,7 +475,7 @@
 							var="user" itemLabel="#{user.userName}"
 							itemValue="#{user.userId}" />
 						<p:ajax event="change" update="approversId" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="approverDropdownMsg" for="approverDropdown" display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
