@@ -625,6 +625,7 @@ public class AccessApplBackingBean extends
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
 		if (filePath != null) {
+			log.info(">>>>filePath != null");
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
