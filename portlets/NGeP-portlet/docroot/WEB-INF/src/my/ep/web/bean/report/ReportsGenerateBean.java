@@ -1136,6 +1136,12 @@ public class ReportsGenerateBean {
 	// FL module
 	/** The fl ptj view. */
 	private boolean flPtjView = false;
+	
+	/** The fl pega wai pengawal view. */
+	private boolean flPegaWaiPengawalView = false;
+	
+	/** The fl kumpulan ptj view. */
+	private boolean flKumpulanPTJView = false;	
 
 	/** The fl contract no view. */
 	private boolean flContractNoView = false;
@@ -18280,5 +18286,43 @@ public class ReportsGenerateBean {
 	 */
 	public void setFlFromDateRangeView(boolean flFromDateRangeView) {
 		this.flFromDateRangeView = flFromDateRangeView;
+	}
+
+	/**
+	 * Checks if is fl pega wai pengawal view.
+	 * 
+	 * @return the flPegaWaiPengawalView
+	 */
+	public boolean isFlPegaWaiPengawalView() {
+		return flPegaWaiPengawalView;
+	}
+
+	/**
+	 * Sets the fl pega wai pengawal view.
+	 * 
+	 * @param flPegaWaiPengawalView
+	 *            the flPegaWaiPengawalView to set
+	 */
+	public void setFlPegaWaiPengawalView(boolean flPegaWaiPengawalView) {
+		this.flPegaWaiPengawalView = flPegaWaiPengawalView;
+	}
+
+	/**
+	 * Checks if is fl kumpulan ptj view.
+	 * 
+	 * @return the flKumpulanPTJView
+	 */
+	public boolean isFlKumpulanPTJView() {
+		return flKumpulanPTJView;
+	}
+
+	/**
+	 * Sets the fl kumpulan ptj view.
+	 * 
+	 * @param flKumpulanPTJView
+	 *            the flKumpulanPTJView to set
+	 */
+	public void setFlKumpulanPTJView(boolean flKumpulanPTJView) {
+		this.flKumpulanPTJView = flKumpulanPTJView;
 	}
 }
