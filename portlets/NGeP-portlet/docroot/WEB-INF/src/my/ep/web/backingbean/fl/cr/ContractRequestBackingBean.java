@@ -359,7 +359,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(isFlFulfilmentRequisitioner()){
 				if(getManagedBean().getSelectedApprover() != null){
 					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
-					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser());
+					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
 					
 					reqDTO.setRequisitioner(Boolean.TRUE);
 					reqDTO.setApproverUserList(approverUserList);
