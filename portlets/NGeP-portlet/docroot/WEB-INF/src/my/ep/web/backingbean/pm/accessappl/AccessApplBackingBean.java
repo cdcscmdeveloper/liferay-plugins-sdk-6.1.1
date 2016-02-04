@@ -378,7 +378,7 @@ public class AccessApplBackingBean extends
 				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{accessAppl.getApplNo() }, 
+								new String[]{savedAccessAppl.getApplNo() }, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
