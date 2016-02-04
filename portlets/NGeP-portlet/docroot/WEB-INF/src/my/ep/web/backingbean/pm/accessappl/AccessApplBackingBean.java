@@ -612,6 +612,8 @@ public class AccessApplBackingBean extends
 	private void downloadFile(String filePath, String fileName)
 			throws IOException {
 		log.info("Inside downloadFile start");
+		log.info(" file path : "+filePath);
+		log.info(" file name : "+fileName);
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil
@@ -622,8 +624,6 @@ public class AccessApplBackingBean extends
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
-		log.info(" file path : "+filePath);
-		log.info(" file name : "+fileName);
 		if (filePath != null) {
 			InputStream input = null;
 			try {
