@@ -17,6 +17,7 @@ import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmAccessAppl;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.pm.accessappl.AccessApplActivationManagedBean;
@@ -160,7 +161,13 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 				if(resDTO.isSuccessful()){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Account Activated"));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_730039,
+											new String[] { },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
 			}catch(Exception ex){
