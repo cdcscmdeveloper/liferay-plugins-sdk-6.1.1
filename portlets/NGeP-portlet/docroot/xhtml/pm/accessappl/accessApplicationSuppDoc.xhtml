@@ -25,9 +25,11 @@
 								style="margin-right:2px;" />
 						</p:commandLink>
 						<p:commandLink value="#{accessApplDoc.fileName}" process="@this"
+										immediate="true" ajax="false"
 										styleClass="blue_font" disabled="#{accessApplDoc.brandNew}"
 										rendered="#{not empty accessApplDoc.fileName}" 
 										action="#{accessApplBackingBean.downloadAttachment(accessApplDoc)}" />
+		
 					<p:commandLink onclick="deleteAttachmentDlg.show();" process="@this"
 							action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
 							rendered="#{not empty accessApplDoc.fileName and accessApplDoc.brandNew}" >
