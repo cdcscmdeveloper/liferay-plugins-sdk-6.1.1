@@ -9,7 +9,9 @@
 		<tr>
 			<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include src="smViewAddtnlCatApplnSideMenuItem.xhtml" /></td>
 			<td>
-				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/manufacturingOrAssmblyInfoFormViewOnly.xhtml" />
+				<ui:remove>
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/manufacturingOrAssmblyInfoFormViewOnly.xhtml" />
+				</ui:remove>
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/machineryInfoFormViewOnly.xhtml" />
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/travellingSoftwareInfoFormViewOnly.xhtml" />
 			</td>

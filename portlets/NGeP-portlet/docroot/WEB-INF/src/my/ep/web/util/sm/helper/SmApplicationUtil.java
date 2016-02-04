@@ -168,6 +168,7 @@ import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -5335,9 +5336,6 @@ public class SmApplicationUtil {
 			if (!SmCommonUtil.isCollectionEmpty(catList)) {
 				l3 = getCatL3ByCatTypeFromList(catType, catList);
 				if (l3 != null) {
-					facList = getFacilityByFacTypeFromList(
-							l3.getFacilityType(), bean.getSmAppl()
-									.getSmFacilities());
 					facVO = new SmSiteVisitFacilityVO();
 					facVO.setL3(l3);
 					for (PmParameterDesc codeDesc : l3.getCategoryTypeCode()
@@ -5349,19 +5347,41 @@ public class SmApplicationUtil {
 							break;
 						}
 					}
-					facVO.setFacilities(facList);
-					if (facVO.getFacilities() == null) {
-						facVO.setFacilities(new ArrayList<SmFacility>());
-					}
+
+					// add facility include HQ
+					facList = getFacilityByFacTypeFromList(
+							l3.getFacilityType(), bean.getSmAppl()
+									.getSmFacilities());
 					if (EntityHelper.getEntityByMultiplePropertiesFromList(hq,
-							facVO.getFacilities(),
-							new String[] { "facilityId" }, null, null) == null) {
-						facVO.getFacilities().add(hq);
+							facList, new String[] { "facilityId" }, null, null) == null) {
+						facList.add((SmFacility) SerializationUtils.clone(hq));
 					}
-					facVO.setAssocCompanies(bean.getSmAppl()
-							.getSmAssociateCompanies());
-					facVO.setSuppBranches(bean.getSmAppl()
-							.getSmSupplierBranches());
+					facVO.setFacilities(facList);
+
+					// add associate company
+					facVO.setAssocCompanies(new ArrayList<SmAssociateCompany>());
+					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+							.getSmAssociateCompanies())) {
+						for (SmAssociateCompany assoc : bean.getSmAppl()
+								.getSmAssociateCompanies()) {
+							facVO.getAssocCompanies().add(
+									(SmAssociateCompany) SerializationUtils
+											.clone(assoc));
+						}
+					}
+
+					// add branch
+					facVO.setSuppBranches(new ArrayList<SmSupplierBranch>());
+					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+							.getSmSupplierBranches())) {
+						for (SmSupplierBranch br : bean.getSmAppl()
+								.getSmSupplierBranches()) {
+							facVO.getSuppBranches().add(
+									(SmSupplierBranch) SerializationUtils
+											.clone(br));
+						}
+					}
+
 					facVO.setSuppCategories(catList);
 					bean.getSiteVisitFacVOList().add(facVO);
 				}
@@ -6667,7 +6687,6 @@ public class SmApplicationUtil {
 	}
 
 	public static SmFacility getHqFacilityByAppl(SmAppl appl) {
-		SmFacility hqCompFac = new SmFacility();
 		for (SmFacility smFac : appl.getSmFacilities()) {
 			if ((smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
@@ -6675,11 +6694,10 @@ public class SmApplicationUtil {
 					.equalsIgnoreCase(
 							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
 					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-				hqCompFac = smFac;
-				break;
+				return smFac;
 			}
 		}
-		return hqCompFac;
+		return null;
 	}
 
 	public static SmApplicationUtil getInstance() {
