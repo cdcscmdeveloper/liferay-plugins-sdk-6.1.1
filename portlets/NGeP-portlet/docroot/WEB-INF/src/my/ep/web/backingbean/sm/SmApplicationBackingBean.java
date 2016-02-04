@@ -6957,7 +6957,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSplCategoryList().add(category);
 			}
 		}
-		getManagedBean().setShowParentMsg(false);
+		assignValReqdToTrue();
+		resetAssignSiteVisitPopup();
 		SmApplicationUtil.setAssignSiteVisitVO(getManagedBean());
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
@@ -7024,9 +7025,22 @@ public class SmApplicationBackingBean extends
 	 *            - the dialog id to be close
 	 */
 	public void cancelSiteVisitAction(String dialog) {
-		getManagedBean().setShowParentMsg(true);
+		assignValReqdToFalse();
+		resetAssignSiteVisitPopup();
 		RequestContext.getCurrentInstance().reset(":form:tt:" + dialog);
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+	}
+
+	private void resetAssignSiteVisitPopup() {
+		getManagedBean().setPoSiteVisitType(StringUtils.EMPTY);
+		if (getManagedBean().getPoSecReview() != null) {
+			getManagedBean().getPoSecReview().setSitevisitRemark(
+					StringUtils.EMPTY);
+			getManagedBean().getPoSecReview().setRecommendation(
+					StringUtils.EMPTY);
+			getManagedBean().getPoSecReview().setRemarkToApprover(
+					StringUtils.EMPTY);
+		}
 	}
 
 	/**

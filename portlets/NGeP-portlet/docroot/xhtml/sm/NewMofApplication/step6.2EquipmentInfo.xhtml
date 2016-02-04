@@ -12,13 +12,15 @@
 				<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
 						src="smMofApplnSideMenuItem.xhtml" /></td>
 				<td style="vertical-align: top;"><h:inputHidden
-						value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <ui:include
-						src="/xhtml/sm/shared/mofRegistration/manufacturingOrAssmblyInfoForm.xhtml" />
-					<ui:include
-						src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
+						value="#{backingBean.managedBean.smAppl.applCategoryType}" /> 
+					
+					<ui:remove>
+						<ui:include src="/xhtml/sm/shared/mofRegistration/manufacturingOrAssmblyInfoForm.xhtml" />
+					</ui:remove>
+					
+					<ui:include src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
 						
-					<ui:include
-						src="/xhtml/sm/shared/mofRegistration/travellingSoftwareInfoForm.xhtml" />
+					<ui:include src="/xhtml/sm/shared/mofRegistration/travellingSoftwareInfoForm.xhtml" />
 
 					<div class="nav-wrapper">
 						<table style="width: 100%">
@@ -48,12 +50,14 @@
 
 	<c:if test="#{backingBean.managedBean.supplierUser}">
 
-		<h:inputHidden
-			value="#{backingBean.managedBean.smAppl.applCategoryType}" />
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/manufacturingOrAssmblyInfoForm.xhtml" />
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
+		<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
+		
+		<ui:remove>
+			<ui:include src="/xhtml/sm/shared/mofRegistration/manufacturingOrAssmblyInfoForm.xhtml" />
+		</ui:remove>
+		
+		<ui:include src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
+		
 		<ui:include src="/xhtml/sm/shared/mofRegistration/travellingSoftwareInfoForm.xhtml" />
 
 		<div class="nav-wrapper">

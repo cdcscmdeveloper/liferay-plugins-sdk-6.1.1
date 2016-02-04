@@ -10,7 +10,9 @@
 		<tr>
 			<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include src="smViewProfileApplnSideMenuItem.xhtml" /></td>
 			<td style="vertical-align: top;">
-				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/manufacturingOrAssmblyInfoFormViewOnly.xhtml" />
+				<ui:remove>
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/manufacturingOrAssmblyInfoFormViewOnly.xhtml" />
+				</ui:remove>
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/machineryInfoFormViewOnly.xhtml" />
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/travellingSoftwareInfoFormViewOnly.xhtml" />
 			</td>
