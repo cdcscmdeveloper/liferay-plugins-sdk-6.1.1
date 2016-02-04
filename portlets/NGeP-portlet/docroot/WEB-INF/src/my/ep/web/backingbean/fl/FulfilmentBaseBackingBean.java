@@ -261,4 +261,16 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			return false;
 	}
 	
+	/**
+	 * Check is it login user is Factoring User
+	 * 
+	 * @return true, if user is Factoring User
+	 */
+	protected boolean hasFactoringUserRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value()))
+			return true;
+		else
+			return false;
+	}
+	
 }
