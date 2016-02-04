@@ -329,7 +329,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				reqDTO.setRequisitioner(Boolean.TRUE);
 				if(getManagedBean().getSelectedApprover() != null){
 					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
-					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser());
+					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 					
 					reqDTO.setApproverUserList(approverUserList);
 					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
@@ -3443,9 +3443,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()){
 				if(itemAmtMap.containsKey(item.getScRequestItem().getRequestNoteItemId())){
-					itemAmtMap.put(item.getScRequestItem(), itemAmtMap.get(item.getScRequestItem()).add(item.getOrderedAmt()));
+					itemAmtMap.put(item.getScRequestItem(), itemAmtMap.get(item.getScRequestItem()).add(new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue())));
 				}else{
-					itemAmtMap.put(item.getScRequestItem(), item.getOrderedAmt());
+					itemAmtMap.put(item.getScRequestItem(), new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue()));
 				}
 			}
 		}
