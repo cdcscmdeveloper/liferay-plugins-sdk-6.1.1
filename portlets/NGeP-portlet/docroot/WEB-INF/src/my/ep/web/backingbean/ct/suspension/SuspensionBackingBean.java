@@ -134,6 +134,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	   public void preRenderView(){
 			
 		     IContractSuspensionSO contractSuspensionSO= null;
+		     ContractResDTO resDTO = null;
+		     IBpmSO bpmSO = null;
 	          try{	
 		          
 	        	       contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSuspensionSO.class);
@@ -150,7 +152,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				        	      reqDTO.setContractVerId(Long.parseLong(contractVerId));
 				        	      reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 				        	      reqDTO.setUpdateAction(false);
-				        	      ContractResDTO resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
+				        	      resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
 				        	   
 				        	      /*Start if statement if login user not contract admin*/
 				        	      if (!getFacesScopes().getUserSessionBean().getUserId().equals(resDTO.getCtContractVer().getContractAdmin().getUserId())) {
@@ -176,7 +178,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		
 			          FacesScopes face = new FacesScopes();
 			          Object token =face.getBPMAuthenticationCtxToken();
-			          IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			          bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 			          BpmRequestDTO reqDTO = new BpmRequestDTO();
 			          reqDTO.setCtxToken(token);
@@ -210,6 +212,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			          			          
 	     } catch(Exception e){
 			  e.printStackTrace();
+		 } finally{
+			     contractSuspensionSO= null;
+			     resDTO = null;
+			     bpmSO = null;
 		 }
 	 }
 	   
@@ -354,6 +360,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		 } finally {
 			 contractSO = null;
 			 amendmentSO = null;
+			 amendmentResDTO = null;
+			 resDTO = null;
 		 }
 	 }
 	 
@@ -421,6 +429,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		  
 		 IContractSuspensionSO contractSuspensionSO = null;
 		 ContractReqDTO reqDTO = null;
+		 ContractResDTO resDTO = null;
 		 try{
 			     long startTime1 = System.currentTimeMillis();
 				log.info("Start Time >>>>>>>>>>>>>>>>>>>>" +startTime1);
@@ -447,7 +456,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				 if(this.getManagedBean().getPmDigiSign() !=null){
 					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 				 }
-			     ContractResDTO resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
+			    resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			 	long endTime1 = System.currentTimeMillis();
 				log.info("End Time1 >>>>>>>>>>>>>>>>>>>>" +endTime1);
 				log.info("Total Time1 >>>>>>>>>>>>>>>>>>>>" +(endTime1 - startTime1));
@@ -494,6 +503,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				}
 			  }finally {
 				  contractSuspensionSO = null;
+				  reqDTO = null;
+			      resDTO = null;
 			  }
 		   return null;
 	 } 

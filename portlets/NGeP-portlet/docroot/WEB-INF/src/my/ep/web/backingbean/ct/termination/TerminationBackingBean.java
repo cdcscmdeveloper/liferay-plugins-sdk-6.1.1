@@ -295,6 +295,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		} finally {
 			contractSO = null;
 			amendmentSO = null;
+			resDTO  = null;
+			amendmentResDTO = null;
 		}
 	}
 	
@@ -636,46 +638,48 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			boolean remedy = false;
 			decisionTypeList = new ArrayList<SelectItem>();
 			ISearchBean<PmParameterDesc> searchBean = null;
+			IContractSO contractSO = null;
+			 ContractResDTO resDTO = null;
 			try {
-				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);			
-				ContractReqDTO reqDTO = new ContractReqDTO();
+				       contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);			
+				       ContractReqDTO reqDTO = new ContractReqDTO();
+				       reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				       resDTO = contractSO.retrieveTerminationHistoryList(reqDTO);
 				
-				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-				ContractResDTO resDTO = contractSO.retrieveTerminationHistoryList(reqDTO);
+				       for (CtTermination ctTermination : resDTO.getTerminationHistoryList()) {
+					            if (ctTermination.getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
+						              reqDTO = new ContractReqDTO();
+						              reqDTO.setDocId(ctTermination.getCtContractVer().getContractVerId());
+						              reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+						              PmStatus status = contractSO.retrieveWorkflowStatus(reqDTO).getCtWorkflowStatus().getPmStatus();
+					             	  if (status.getStatusId().longValue() == ContractStatusConst.FT_APPROVED.longValue()) {
+							                remedy = true;
+							                break;
+						              }
+					          }
+				        }			
+				       
+				       List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+						   ParameterTypeConst.TERMINATION_DECISION_TYPE, searchBean);
 				
-				for (CtTermination ctTermination : resDTO.getTerminationHistoryList()) {
-					if (ctTermination.getDecisionType().getParameterCode().equalsIgnoreCase(
-							ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
-						reqDTO = new ContractReqDTO();
-						reqDTO.setDocId(ctTermination.getCtContractVer().getContractVerId());
-						reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-						PmStatus status = contractSO.retrieveWorkflowStatus(reqDTO).getCtWorkflowStatus().getPmStatus();
-						if (status.getStatusId().longValue() == ContractStatusConst.FT_APPROVED.longValue()) {
-							remedy = true;
-							break;
-						}
-					}
-				}			
-				List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
-						ParameterTypeConst.TERMINATION_DECISION_TYPE, searchBean);
+				       decisionTypeList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+						     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
-				decisionTypeList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-				
-			    for (PmParameterDesc parameterDesc : parameterDescs) {
-			    	if (!getManagedBean().isViewContract() && !remedy 
-			    			&& parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
-			    		continue;
-			    	}
-			    	decisionTypeList.add(new SelectItem(
-			    			parameterDesc.getPmParameter().getParameterId(), 
-			    			parameterDesc.getCodeName()));
+			           for (PmParameterDesc parameterDesc : parameterDescs) {
+			    	        if (!getManagedBean().isViewContract() && !remedy 
+			    			    && parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
+			    		        continue;
+			        	    }
+			    	       decisionTypeList.add(new SelectItem(
+			    			   parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName()));
+			         }
+			   } catch (Exception e) {
+				          e.printStackTrace();
+				           FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			    }finally{
+			    	contractSO = null;
+			    	 resDTO = null;
 			    }
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			}
 		 }
 		 return decisionTypeList;
 	}
@@ -1133,14 +1137,21 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 */
     public String gotoTerminatePage() throws NamingException {
     	Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
-    	ContractReqDTO ctReqDTO = new ContractReqDTO();
-    	ctReqDTO.setContractVerId(contractVerId);
-    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-    	IContractTerminationSO contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
-		ContractResDTO resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
-	    getManagedBean().setViewContract(true);
-	    getManagedBean().setExternalPageUrl(TERMINATE_HISTORY_PAGE);
-	    setTerminationContractVer(resDTO);
+    	ContractResDTO resDTO = null;
+    	IContractTerminationSO contractTerminationSO = null;
+    	try {
+    	          ContractReqDTO ctReqDTO = new ContractReqDTO();
+    	          ctReqDTO.setContractVerId(contractVerId);
+    	          ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+    	          contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
+		          resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
+	              getManagedBean().setViewContract(true);
+	              getManagedBean().setExternalPageUrl(TERMINATE_HISTORY_PAGE);
+	              setTerminationContractVer(resDTO);
+           }finally{
+        	   resDTO = null;
+        	   contractTerminationSO = null;
+           }
 		return PROCESS_TERMINATE_PAGE;
 	}
     
