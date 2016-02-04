@@ -21,7 +21,6 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -74,7 +73,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
-		initAuthorizedPersonnels();
+		initPersonnels();
 		getManagedBean().setGstRate(SmCommonUtil.getGstCurrentRate());
 		getManagedBean().setTargetPage(SELECT_PERSONNELS_PAGE);
 		getManagedBean().setSuppDocMode(
@@ -582,7 +581,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	/**
 	 * Initialized authorized personnel list
 	 */
-	private void initAuthorizedPersonnels() {
+	private void initPersonnels() {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setApplId(getManagedBean().getLoginUserPersonnelInfo()
 				.getSmAppl().getApplId());
@@ -610,6 +609,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getManagedBean().setAlreadyHadFreeSoftcert(false);
 		getManagedBean().setSoftCertSelectList(new ArrayList<SmPersonnel>());
 		for (SmPersonnel personnel : personnels) {
+			// check for supplier tmp
 			if (StringUtils.isNotBlank(personnel.getEpRole())
 					&& personnel.getEpRole().equals(
 							RoleCode.SUPPLIER_TEMP.value())
@@ -619,7 +619,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				getManagedBean().getSoftCertSelectList().add(
 						getManagedBean().getSoftCertSelect());
 
-			} else if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
+			}
+			// check for softcert flg not entitled to request
+			else if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
 					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED
 					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 				personnel.setDisableRowSelection(true);
@@ -627,9 +629,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
 				}
-			} else {
+			}
+			// check for softcert flg that pending request or rejected or failed
+			else {
 
-				// set rejected or failed softcert request
+				// set rejected or failed softcert request reason
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
@@ -637,9 +641,16 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							supplierId);
 				}
 
-				// check if all authorized MOF_SUPPLIER_USER already request
-				// softcert to allowed FL_USER proceed to request
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+
+					// check if pending activation or deactivated personnel set
+					// not entitled to request
+					if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+							|| (StringUtils.isBlank(personnel.getEpRole()) && personnel
+									.getPmUser() != null)) {
+						personnel.setDisableRowSelection(true);
+					}
+
 					if (!personnel.getEpRole().equals(RoleCode.FL_USER.value())
 							&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						getManagedBean().setAllAuthSuppUserAlreadyRequested(
