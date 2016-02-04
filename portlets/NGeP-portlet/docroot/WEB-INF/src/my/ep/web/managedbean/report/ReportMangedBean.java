@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -38,6 +39,11 @@ public class ReportMangedBean extends BaseManagedBean{
 	private ScQt scQt;
 	private Long scQtId;
 	private String moduleNameValue;
+	private PmOrgProfile selectedMinistry;
+	private PmOrgProfile selectedPegwaiPengawal;
+	private PmOrgProfile selectedKumpulanPTJ;
+	private PmOrgProfile selectedPTJ;
+
 	
 	/** The search value. */
 	private String[] searchValue = new String[3];
@@ -264,6 +270,54 @@ public class ReportMangedBean extends BaseManagedBean{
 	 */
 	public void setModuleNameValue(String moduleNameValue) {
 		this.moduleNameValue = moduleNameValue;
+	}
+	/**
+	 * @return the selectedMinistry
+	 */
+	public PmOrgProfile getSelectedMinistry() {
+		return selectedMinistry;
+	}
+	/**
+	 * @param selectedMinistry the selectedMinistry to set
+	 */
+	public void setSelectedMinistry(PmOrgProfile selectedMinistry) {
+		this.selectedMinistry = selectedMinistry;
+	}
+	/**
+	 * @return the selectedPegwaiPengawal
+	 */
+	public PmOrgProfile getSelectedPegwaiPengawal() {
+		return selectedPegwaiPengawal;
+	}
+	/**
+	 * @param selectedPegwaiPengawal the selectedPegwaiPengawal to set
+	 */
+	public void setSelectedPegwaiPengawal(PmOrgProfile selectedPegwaiPengawal) {
+		this.selectedPegwaiPengawal = selectedPegwaiPengawal;
+	}
+	/**
+	 * @return the selectedKumpulanPTJ
+	 */
+	public PmOrgProfile getSelectedKumpulanPTJ() {
+		return selectedKumpulanPTJ;
+	}
+	/**
+	 * @param selectedKumpulanPTJ the selectedKumpulanPTJ to set
+	 */
+	public void setSelectedKumpulanPTJ(PmOrgProfile selectedKumpulanPTJ) {
+		this.selectedKumpulanPTJ = selectedKumpulanPTJ;
+	}
+	/**
+	 * @return the selectedPTJ
+	 */
+	public PmOrgProfile getSelectedPTJ() {
+		return selectedPTJ;
+	}
+	/**
+	 * @param selectedPTJ the selectedPTJ to set
+	 */
+	public void setSelectedPTJ(PmOrgProfile selectedPTJ) {
+		this.selectedPTJ = selectedPTJ;
 	}
 	
 	

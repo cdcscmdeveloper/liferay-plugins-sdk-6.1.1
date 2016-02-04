@@ -542,6 +542,7 @@ public class SMReportBackingBean extends
 			break;
 		case ReportConst.SM_DELETE_PENDING_APPL:
 			rptGenBean.setSmDeletePendingApplicationView(true);
+			rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmFromDateView(true);
 			rptGenBean.setSmGenCompanyNameView(true);
 			// rptGenBean.setSmBothMandatorySupplierTypeView(true);
