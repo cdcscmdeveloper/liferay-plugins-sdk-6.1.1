@@ -153,6 +153,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private CtAgreementParty[] selectedSupplierWitnes;
 	private CtAgreementParty[] selectedSupplierSigner;
 	
+	private String agreementZipFileName = null;
+	private String agreementZipFilePath = null;
+	
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -571,6 +574,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSignAgencyWitness());
 			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSupplierWitness());
 
+			// Generate agreement Zip File
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)
+					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
+				generateAgreementZipFile();
+				getManagedBean().getCtAgreement().setFilePath(DocumentRepositoryUtils.getDBFilePath(agreementZipFilePath.replace("\\", "/")));
+				getManagedBean().getCtAgreement().setFileName(agreementZipFileName);
+			}
+			
 			boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());
@@ -683,28 +694,18 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		     }
 		
 			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-		       if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
-			       if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_PRINT)
-					    && getManagedBean().getCtAgreement().getFileName() == null) {
-				           throw new EpException(MessageConst.ERROR_100022, 
-						       new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.finalist.agreement", 
-								  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			      }		
-		     
-		        } else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
-			        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)
-					      && getManagedBean().getCtAgreement().getSignedPageName() == null) {
+		       if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
+			        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
+			        	if (getManagedBean().getCtAgreement().getSignedPageName() == null) {
 				             throw new EpException(MessageConst.ERROR_100022, 
 						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.signed.page", 
 								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			         }			
-			
-			        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE) 
-					     && getManagedBean().getCtAgreement().getStampedPageName() == null) {
-				         throw new EpException(MessageConst.ERROR_100022, 
-						     new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.stamped.page", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			         }
+			        	} else if (getManagedBean().getCtAgreement().getStampedPageName() == null) {
+				             throw new EpException(MessageConst.ERROR_100022, 
+						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.stamped.page", 
+								     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			        	}
+			        }
 		      }
 		
 		     if (getManagedBean().getCtAgencySigner().size() == 0) {
@@ -1192,29 +1193,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	/**
-	 * The method used to upload the attachment for final agreement.
-	 * 
-	 * @param  event      the upload event for file upload from screen
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
-	 */
-	public void uploadAgreement(FileUploadEvent event) throws Exception {
-		UploadedFile item = event.getFile();
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-
-		String filePath = getManagedBean().getFileDirectory();
-		File file = new File(filePath);
-		file.mkdirs();
-		filePath = filePath + "/"+ attachmentFormat.format(item.getFileName(), null);
-
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
-		fileOuputStream.write(item.getContents());
-		fileOuputStream.close();
-		getManagedBean().getCtAgreement().setFileName(item.getFileName());
-		getManagedBean().getCtAgreement().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-	}
-
-	/**
 	 * The method used to upload the attachment for agreement stamped page.
 	 * 
 	 * @param  event      the upload event for file upload from screen
@@ -1260,6 +1238,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		getManagedBean().getCtAgreement().setSignedPagePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
 	
+	/**
+	 * The method used to download the sample agreement file
+	 * base on the quotation tender ID.
+	 * 
+	 * @throws IOException  if an input or output exception occurred
+	 * @see    IOException
+	 */
 	public void downloadSampleFile() throws IOException{
 		if(getManagedBean().getCtContract().getQuotationTender() == null 
 				|| getManagedBean().getCtContract().getQuotationTender().getQtId() == null) {
@@ -1363,7 +1348,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @throws IOException       if an input or output exception occurred
 	 * @see    IOException
 	 */
-	public void downloadDocFile(CtAgreementContent agreementContent) throws   Exception {		
+	public void downloadDocFile(CtAgreementContent agreementContent) throws   Exception {
 	
 		AttachmentFormat attachmentFormat = null;
 			
@@ -1390,21 +1375,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				}
 			} else {
 				if (agreementContent.getFilePath() == null) {
-					throw new EpException(MessageConst.INFO_100052,new String[] { agreementContent.getTitle() });
+					throw new EpException(MessageConst.INFO_100052,
+							new String[] {agreementContent.getTitle()});
 				}
 				downloadFile(DocumentRepositoryUtils.getDBFilePath(agreementContent.getFilePath()),
 						agreementContent.getFileName());
 			}
 		}catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
-			} finally {
-		
-				attachmentFormat = null;
-			}
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+	
+			attachmentFormat = null;
+		}
 	}	
 
 	/**
@@ -1412,6 +1395,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * as a zip file.
 	 */
 	public void downloadAll() {
+		try {
+			generateAgreementZipFile();
+			downloadFile(DocumentRepositoryUtils.getDBFilePath(agreementZipFilePath.replace("\\", "/")), agreementZipFileName);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+	}
+	
+	/**
+	 * The method used to generate agreement zip file.
+	 *
+	 */
+	private void generateAgreementZipFile() {
 		List<File> fileList = new ArrayList<File>();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 
@@ -1424,33 +1420,26 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		try {
 			for (CtAgreementContent agreementContent : getManagedBean().getCtAgreement().getAgreementContents()) {
-				// System Define Doc
-				if (agreementContent.getContentType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.AGREEMENT_SYSTEM_DEFINE_DOC)) {                        
-					fileName = getTemplateFileName(agreementContent.getTitle());
-                    if (fileName != null) {
-					    content = getContent(agreementContent.getTitle());
-					    filePath = tempDirectory + "/"+ attachmentFormat.format(fileName, null);
+				fileName = getTemplateFileName(agreementContent.getTitle());
+				if (fileName != null) {
+					if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
+						getTemplateContent(agreementContent);
+					    content = previewAction();
+					} else {
+						content = getContent(agreementContent.getTitle());
+					}
+					if (content != null) {
+						filePath = tempDirectory + "/"+ attachmentFormat.format(fileName, null);
                         convertHtmlToDocFile(content, filePath);
 					    fileList.add(new File(filePath));
-				    } else {
-					    // TODO: get from LOA, external link
-				    }
-		    	}
-				// Template Doc
-				else if (agreementContent.getContentType().getParameterId().equals(
-						getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
-								ParameterConst.AGREEMENT_TEMPLATE_DOC).getParameterId())) {
-					// TODO: download template doc
-				}
-				// User Upload Doc
-				else if (agreementContent.getContentType().getParameterId().equals(
-						getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE,
-								ParameterConst.AGREEMENT_USER_UPLOAD_DOC).getParameterId())) {
-					if (agreementContent.getFilePath() != null) {
-						fileList.add(new File(agreementContent.getFilePath()));
 					}
-				}
+				} else {
+					if (agreementContent.getFilePath() != null) {
+						filePath = DocumentRepositoryUtils.getBaseDir() + agreementContent.getFilePath();
+						fileList.add(new File(filePath));
+					}
+				}				
 			}
 
 			String zipFileName = "agreement.zip";
@@ -1477,7 +1466,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			downloadFile(DocumentRepositoryUtils.getDBFilePath(zipFile.getPath().replace("\\", "/")), zipFileName);
+			agreementZipFilePath = zipFile.getPath();
+			agreementZipFileName = zipFile.getName();
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}

@@ -146,34 +146,6 @@
 		   </div>
         </p:dialog>  
 	</p:panel>
-	
-	<p:panel id="agreementPnl" header="#{lbl['lbl.ct.agreement']}"
-	    toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}" >
-		<h:panelGroup id="uploadAgPg">
-			<h:panelGrid columns="2">
-					<p:outputLabel value="#{lbl['lbl.txt.attachment']}" styleClass="required" />
-				<p:commandButton oncomplete="uploadAgDlg.show();return false;" 
-					rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}"
-					value="#{lbl['lbl.btn.upload']}" update=":form:uploadAgPg, uploadAgDlg" />
-				<h:outputLabel rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}" />
-				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}" 
-					style="float:left;" styleClass="blue_font"
-					rendered="#{agreementBackingBean.managedBean.ctAgreement.fileName != null}"
-					action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.filePath, agreementBackingBean.managedBean.ctAgreement.fileName)}" />
-			</h:panelGrid>
-			<p:spacer height="20" />
-		</h:panelGroup>
-		<p:dialog id="uploadAgDlg" widgetVar="uploadAgDlg" modal="true"
-			width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-			<p:ajax event="close" />
-			<p:fileUpload style="display:inline;" mode="advanced"
-			     sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-				fileUploadListener="#{agreementBackingBean.uploadAgreement}"
-				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" update=":form:uploadAgPg">
-			</p:fileUpload>
-		</p:dialog>				
-	</p:panel>
 	<p:panel id="agreementDisclaimerPnl" header="#{lbl['lbl.ct.disclaimer']}"
 	    toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.approveFinalAgreement}" >
 		<h:panelGrid columns="2">
