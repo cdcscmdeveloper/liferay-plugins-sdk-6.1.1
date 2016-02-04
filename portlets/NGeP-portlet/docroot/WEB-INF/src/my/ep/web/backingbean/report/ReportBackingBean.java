@@ -100,6 +100,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -7752,8 +7753,7 @@ public class ReportBackingBean extends
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			if ((null != this.getSmZone())
-					&& (ReportConst.EMPTY_VAL != this.getSmZone())) {
+			
 				List<Object[]> regStatusList = reportSO
 						.retrieveProcessingOfficerList(this.getSmZone());
 				for (Object[] object : regStatusList) {
@@ -7762,7 +7762,7 @@ public class ReportBackingBean extends
 					selectItem.setLabel(object[0].toString());
 					processingOfficerList.add(selectItem);
 				}
-			}
+			
 		}
 		return processingOfficerList;
 	}
@@ -11113,10 +11113,12 @@ public class ReportBackingBean extends
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
+						this.getManagedBean().setReportTitle(pmReport.getReportTitle());
 					} else if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
+						this.getManagedBean().setReportTitle(pmReport.getReportTitleMalay());
 					}
 					this.setSubModule(pmReport.getSubModule());
 				} else {
@@ -11124,15 +11126,18 @@ public class ReportBackingBean extends
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
+						this.getManagedBean().setReportTitle(pmReport.getReportTitle());
 					} else if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
+						this.getManagedBean().setReportTitle(pmReport.getReportTitle());
 					}
 				}
 				this.setReportName(label);
 				reportFileNameJSP = pmReport.getReportFilename();
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
+				
 			}
 			retrieveHighRoleCodeByUser();
 			retrieveAllRoleCodesByUser();
@@ -12048,8 +12053,20 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean().setGenerateButtonView(true);
 				// generateReportTimer();
 				// generateReportIntime();
-				fileGenerateReport(getManagedBean().getReportJsp(),
-						constructedParamString);
+				
+				if ((strLanguage != null)
+						&& (strLanguage
+								.equalsIgnoreCase(ReportConst.ENG_LANG))) {
+					fileGenerateReport(getManagedBean().getReportTitle(),
+							constructedParamString);
+				} else if ((strLanguage != null)
+						&& (strLanguage
+								.equalsIgnoreCase(ReportConst.MALAY_LANG))) {					
+					fileGenerateReport(getManagedBean().getReportTitle(),
+							constructedParamString);
+				}
+				
+				
 				/*
 				 * FacesContext.getCurrentInstance().getPartialViewContext().
 				 * getRenderIds().add("reportGenDialog.hide()");//execute(
@@ -12103,7 +12120,7 @@ public class ReportBackingBean extends
 			Runnable rnbl = new Runnable() {
 				@Override
 				public void run() {
-					fileGenerateReport(getManagedBean().getReportJsp(),
+					fileGenerateReport(getManagedBean().getReportTitle(),
 							constructedParamString);
 				}
 			};
@@ -12131,7 +12148,7 @@ public class ReportBackingBean extends
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				fileGenerateReport(getManagedBean().getReportJsp(),
+				fileGenerateReport(getManagedBean().getReportTitle(),
 						constructedParamString);
 			}
 		});
@@ -15147,7 +15164,7 @@ public class ReportBackingBean extends
 	 * @param paramConstrString
 	 *            the param constr string
 	 */
-	protected void fileGenerateReport(String reportFile,
+	protected void fileGenerateReport(String reportTitle,
 			String paramConstrString) {
 		log.info("ReportBackingBean-fileGenerateReport");
 		StringBuilder gnrtdURL = new StringBuilder();
@@ -15173,12 +15190,12 @@ public class ReportBackingBean extends
 					.getCurrentInstance().getExternalContext().getResponse();
 			HttpServletResponse res = PortalUtil
 					.getHttpServletResponse(portletResponse);
-			int position = reportFile.lastIndexOf(ReportConst.DOTJSP);
+			/*int position = reportFile.lastIndexOf(ReportConst.DOTJSP);
 			if (position != -1) {
 				reportFile = reportFile.substring(0, position);
-			}
+			}*/
 			res.setHeader(ReportConst.CONTENT_DISPOSITION,
-					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportFile
+					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportTitle
 							+ ReportConst.UNDERSCORE
 							+ ReportConst.REPORT_DATE_TIME.format(new Date())
 							+ ReportConst.DOTPDFEIFON);//
@@ -15974,4 +15991,96 @@ public class ReportBackingBean extends
 			}
 		}
 	}
+	
+	public String constructMinistryConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.MINISTRY.value());
+		sb.append("|recordStatus^1");
+		return sb.toString();
+	}
+
+	public String constructPegwaiPengawalConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.PENGAWAI_PENGAWAL.value());		
+		sb.append("|recordStatus^1");
+		sb.append("|");
+		sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.PENGAWAI_PENGAWAL.value(),OrganizationType.MINISTRY.value()));
+		sb.append("^");
+		sb.append(this.getManagedBean().getSelectedMinistry().getOrgProfileId());
+		return sb.toString();
+	}
+	public String constructKumpulanPTJConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DEPARTMENT.value());		
+		sb.append("|recordStatus^1");
+		sb.append("|");
+		sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.PENGAWAI_PENGAWAL.value()));
+		sb.append("^");
+		sb.append(this.getManagedBean().getSelectedPegwaiPengawal().getOrgProfileId());
+		return sb.toString();
+	}
+	
+	public String constructPTJConditionFields() {
+		StringBuilder sb = new StringBuilder();		
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DIVISION.value());
+		sb.append("|recordStatus^1");
+		sb.append("|");
+		sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
+		sb.append("^");
+		sb.append(this.getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId());		
+		return sb.toString();
+	}
+	
+	/*public void updateSearchCriteria(BaseEntity entity) {
+		log.info("updateSearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		
+	}*/
+	
+	/*public void updateKPTJSearchCriteria(BaseEntity entity) {
+		log.info("updateKPTJSearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPlanSearchBean()
+				.setKptj(orgProfile);
+	}*/
+	
+	/*public void updateMinistrySearchCriteria(BaseEntity entity) {
+		log.info("updateMinistrySearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPlanSearchBean()
+				.setMinistry(orgProfile);
+	}*/
+	
+	/*public void retrieveMinistryOrgProfile(){
+		 this.getManagedBean().setSelectedMinistry(getMinistryOrgProfileByLoginUser());
+	}*/
+		               
+	public PmOrgProfile getMinistryOrgProfileByLoginUser() {
+		IOrgProfileSO orgProfileSO = null;
+		PmOrgProfile pmOrgProfile = null;
+		try {
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);			
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+			if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+				pmOrgProfile = pmOrgProfiles.get(0);
+			}
+
+		} finally {
+			orgProfileSO = null;
+		}
+		
+		return pmOrgProfile;
+	}
+		      
+	
 }
