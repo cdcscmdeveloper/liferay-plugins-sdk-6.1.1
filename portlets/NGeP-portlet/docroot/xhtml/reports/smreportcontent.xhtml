@@ -1019,6 +1019,8 @@
 									itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}"
 									itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.upgradeBasicToMOF']}"
+									itemValue="#{lbl['lbl.rpt.upgradeBasicToMOFValue']}"></f:selectItem>
 								<p:ajax event="change"
 									listener="#{reportBackingBean.changeDateBasedOnRegType}"
 									process="@this" partialSubmit="true" update="@all" />
