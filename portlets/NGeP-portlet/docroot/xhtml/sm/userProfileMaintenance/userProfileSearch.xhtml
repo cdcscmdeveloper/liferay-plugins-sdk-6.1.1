@@ -97,6 +97,7 @@
 			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{smPersonnelBackingBean.navigateToAddNewUserPage}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 			</div>
