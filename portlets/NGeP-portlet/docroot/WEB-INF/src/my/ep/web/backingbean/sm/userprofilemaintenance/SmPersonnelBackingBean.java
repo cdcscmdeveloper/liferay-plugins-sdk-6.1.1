@@ -428,6 +428,8 @@ public class SmPersonnelBackingBean extends
 		setDisabledActivateDeactivateRadioButton();
 		setPersonnelViewOnlyData(getManagedBean().getBasicSmPersonnel());
 		setDeactivateEpRole(getManagedBean().getBasicSmPersonnel());
+		getManagedBean().getBasicSmPersonnel().setPrevSoftcertFlg(
+				getManagedBean().getBasicSmPersonnel().getSoftcertFlg());
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(
 					getManagedBean().getBasicSmPersonnelMailingAddress()
@@ -462,10 +464,13 @@ public class SmPersonnelBackingBean extends
 				.getEpRole())) {
 			if (getManagedBean().getBasicSmPersonnel().getEpRole()
 					.equals(RoleCode.CM_USER.value())) {
-				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
-						DbValueConst.RECORD_STATUS_SUSPENDED);
-				getManagedBean().getBasicSmPersonnel().setContractSignerFlg(
-						DbValueConst.RECORD_STATUS_SUSPENDED);
+				if (getManagedBean().getBasicSmPersonnel().getPrevSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED) {
+					getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
+							DbValueConst.RECORD_STATUS_SUSPENDED);
+					getManagedBean().getBasicSmPersonnel()
+							.setContractSignerFlg(
+									DbValueConst.RECORD_STATUS_SUSPENDED);
+				}
 			}
 		}
 	}
