@@ -454,6 +454,23 @@ public class SmPersonnelBackingBean extends
 	}
 
 	/**
+	 * On change role selection if Catalogue User set contract signer and
+	 * softcert flag to false
+	 */
+	public void onChangeRole() {
+		if (StringUtils.isNotBlank(getManagedBean().getBasicSmPersonnel()
+				.getEpRole())) {
+			if (getManagedBean().getBasicSmPersonnel().getEpRole()
+					.equals(RoleCode.CM_USER.value())) {
+				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
+						DbValueConst.RECORD_STATUS_SUSPENDED);
+				getManagedBean().getBasicSmPersonnel().setContractSignerFlg(
+						DbValueConst.RECORD_STATUS_SUSPENDED);
+			}
+		}
+	}
+
+	/**
 	 * Initialize personnel addresses
 	 */
 	public void initializeLists() {
