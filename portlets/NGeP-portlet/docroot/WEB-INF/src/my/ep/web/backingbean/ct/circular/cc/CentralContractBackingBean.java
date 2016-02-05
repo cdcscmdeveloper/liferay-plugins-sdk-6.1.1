@@ -530,12 +530,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 //				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 //			}
 			
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
-			       validateCircular(action);
-			
 			 if(!getManagedBean().getCircularVer().isPid()){
 				  getManagedBean().getCircularVer().setCtCircularPidReason(null);
 			  }
+			 
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
+			       validateCircular(action);
 			
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null) {
@@ -623,6 +623,32 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTAwardSO.class);
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			getManagedBean().setAutoUpdate(true);
+		
+			//Validation for PID
+			if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getCircularVer().isPid() && 
+					(getManagedBean().getCircularVer().getCtCircularPidReason() == null || getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
+				 throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
+			if(getManagedBean().getCircularVer().getCtCircularPidReason() != null 
+					 && getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0 ){
+				for(CtCircularPidReason reason : getManagedBean().getCircularVer().getCtCircularPidReason()){
+					   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+						   throw new EpException(MessageConst.ERROR_100022, 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					   }
+					   if(PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+						   if(reason.getReasonDesc().isEmpty()){
+							   throw new EpException(MessageConst.ERROR_100022, 
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						   }
+					   }
+				}
+			} 
 			
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				//#7680

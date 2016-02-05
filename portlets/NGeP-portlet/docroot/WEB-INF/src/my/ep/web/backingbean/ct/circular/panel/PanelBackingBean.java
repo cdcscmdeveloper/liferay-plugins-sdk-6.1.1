@@ -454,16 +454,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		try {
 			
+			
+			if(!getManagedBean().getCircularVer().isPid()){
+				  getManagedBean().getCircularVer().setCtCircularPidReason(null);
+			  }
+			
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			      validateCircular(action);
 			}
 			  circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			  if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
-			  }
-			
-			  if(!getManagedBean().getCircularVer().isPid()){
-				  getManagedBean().getCircularVer().setCtCircularPidReason(null);
 			  }
 			  
 			CtCircular circular = getManagedBean().getCircular();
@@ -653,6 +654,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				 }
 			}
 			
+			if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+					&& getManagedBean().getCircularVer().isPid() && 
+					(getManagedBean().getCircularVer().getCtCircularPidReason() == null 
+					|| getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
+				 throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
 			if(getManagedBean().getCircularVer().getCtCircularPidReason() != null 
 					 && getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0 ){
 				for(CtCircularPidReason reason : getManagedBean().getCircularVer().getCtCircularPidReason()){
@@ -669,7 +679,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						   }
 					   }
 				}
-			}
+			} 
 			
 			if (getManagedBean().getCircularVer().getCtContactPersons() != null 
 					&& getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {				
