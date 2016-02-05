@@ -187,8 +187,8 @@
 			  </h:panelGrid>
 		   </h:panelGrid>
 		    <h:panelGrid columns="3">
-			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract
-			       		or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}" 
+			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.contractVer.panel
+			       		or  ctBackingBean.managedBean.disableAmendDetails}" 
 			             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
 			              <p:ajax event="change"  update=":form:purchaseInDefaultPanel" process="@this"></p:ajax>
 			         </p:selectBooleanCheckbox>
