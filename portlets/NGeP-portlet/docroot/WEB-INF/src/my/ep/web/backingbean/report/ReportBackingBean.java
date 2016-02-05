@@ -10970,7 +10970,7 @@ public class ReportBackingBean extends
 					getManagedBean().getRptGenBean().setSmMofRegNoTwoView(true);
 					getManagedBean().getRptGenBean()
 							.setSmActiveSubmissiveFromDateView(true);					
-					getManagedBean().getRptGenBean().setSmActivationDateView(
+					getManagedBean().getRptGenBean().setSmActSubmisAllDateView(
 							true);
 				} else if (this.getReportValue().equals(
 						ReportConst.SM_SUPPLIER_PERFORMANCE)) {
