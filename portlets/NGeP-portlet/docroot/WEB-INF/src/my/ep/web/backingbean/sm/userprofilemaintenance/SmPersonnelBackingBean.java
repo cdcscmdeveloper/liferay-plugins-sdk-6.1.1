@@ -463,14 +463,18 @@ public class SmPersonnelBackingBean extends
 		if (StringUtils.isNotBlank(getManagedBean().getBasicSmPersonnel()
 				.getEpRole())) {
 			if (getManagedBean().getBasicSmPersonnel().getEpRole()
-					.equals(RoleCode.CM_USER.value())) {
+					.equals(RoleCode.CM_USER.value())
+					|| getManagedBean()
+							.getBasicSmPersonnel()
+							.getSmAppl()
+							.getSupplierType()
+							.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
 				if (getManagedBean().getBasicSmPersonnel().getPrevSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED) {
 					getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
 							DbValueConst.RECORD_STATUS_SUSPENDED);
-					getManagedBean().getBasicSmPersonnel()
-							.setContractSignerFlg(
-									DbValueConst.RECORD_STATUS_SUSPENDED);
 				}
+				getManagedBean().getBasicSmPersonnel().setContractSignerFlg(
+						DbValueConst.RECORD_STATUS_SUSPENDED);
 			}
 		}
 	}
