@@ -1927,7 +1927,7 @@ public class ProfileManagementBackingBean extends
 				}
 			}
 
-		
+			
 
 		// check for role restriction
 		if (DbValueConst.RECORD_STATUS_ACTIVE == pmUserRole
@@ -3425,9 +3425,11 @@ public class ProfileManagementBackingBean extends
 				Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
 		boolean activeRole = false;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		List<PmUserRole> userRoleList = null;
 		if (userOrg != null) {
 			// for (PmUserOrg userOrg : user.getPmUserOrgs()) {
 			if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				userRoleList = userOrg.getPmUserRoles();
 				for (PmUserRole userRole : userOrg.getPmUserRoles()) {
 					String roleCode = userRole.getPmRole().getRoleCode();
 					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
@@ -3440,7 +3442,19 @@ public class ProfileManagementBackingBean extends
 									new String[] { getRoleDescByRoleCode(roleCode, languageCode) });
 						}
 					}
-
+					
+					// Check single role for all users
+					if (userRole.getPmRole().isSingleRole() && userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null
+								&& !this.getManagedBean().getSelectedUserOrg()
+										.getPmUserRoles().isEmpty()) {
+							for (PmUserRole current : userRoleList) {
+								if (!current.getPmRole().getRoleCode().equals(userRole.getPmRole().getRoleCode()) && current.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+									throw new EpException(MessageConst.ERROR_770134);
+								}
+							}
+						}
+					} 
 					// check if contains unique role
 					// if (uniqueRoles
 					// .contains(userRole.getPmRole().getRoleCode())) {
