@@ -54,7 +54,7 @@
 								value="#{organisationBackingBean.profileDetails}" />
 						</p:menuitem>
 						<p:menuitem partialSubmit="true" 
-							value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}" rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}"
+							value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}" rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller and (ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType)}"
 							update="@form">
 							<f:param name="disableValidation" value="" />
 							<f:setPropertyActionListener
@@ -77,7 +77,7 @@
 						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.profileDetails}">
 						<ui:include src="orgProfileDetails.xhtml" />
 					</p:outputPanel> <p:outputPanel
-						rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller and organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.governmentSeller }">
+						rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller and organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.governmentSeller and (ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType)}">
 						<ui:include src="orgGovernmentSeller.xhtml" />
 					</p:outputPanel> <p:outputPanel
 						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == (organisationBackingBean.managedBean.orgProfile.govtSeller ? 2: 1)}">
