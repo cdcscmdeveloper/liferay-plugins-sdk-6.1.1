@@ -229,7 +229,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
 							<p:ajax event="change" partialSubmit="true" process="@this" listener="#{smPersonnelBackingBean.onChangeRole}"
-								update=":#{p:component('softCertId')},:#{p:component('contrSignId')}}" 
+								update=":#{p:component('softcertOutPanelId')},:#{p:component('contractOutPanelId')}" 
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneMenu>
 						<p:message id="basicBURoleMsg" for="basicBURole"
@@ -248,34 +248,32 @@
 						<p:message id="dobDateMsg" for="dobDate"
 								showSummary="true" showDetail="false" display="icon" /></td>		
 				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
+					<td style="float: left;">
+						<p:outputPanel id="softcertOutPanelId">
+							<p:outputLabel value="#{lbl['lbl.txt.yes']}" 
+								rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}"/>
+							<p:outputLabel value="#{lbl['lbl.txt.no']}" 
+								rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+						</p:outputPanel>
+					</td>
+				</tr>
 				
-				<p:outputPanel id="softCertId" rendered="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl 
-						or smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl.supplierType ne 'J'}">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" 
-								rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"/></td>
-						<td style="float: left;">
-							<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}"/>
-							<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
-						</td>
-					</tr>
-				</p:outputPanel>
-				<p:outputPanel id="contrSignId" rendered="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl or smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl.supplierType ne 'J'}">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}" 
-								rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole 
-									and smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}"/>
-						</td>		
-						<td>
-							<p:selectOneRadio value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}"
-								rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole 
-									and smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}" />
+					</td>		
+					<td>
+						<p:outputPanel id="contractOutPanelId">
+							<p:selectOneRadio disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'
+									or smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl.supplierType eq 'J'}"
+								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}" >
 								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 							</p:selectOneRadio>
-						</td>
-					</tr>
-				</p:outputPanel>
+						</p:outputPanel>
+					</td>
+				</tr>
 			</table>
 		</p:panel>
 
