@@ -878,6 +878,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		try {
 			chkComplyAP201Rule();
 			setSecretary();
+			if(!ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid()){
+				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
+         	}
 			validateContractAmendment(action);
 			reqDTO = new ContractReqDTO();
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();	
@@ -1100,6 +1103,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			           }
 		     }/*Remark validation end*/
+		   
+		 //Validation for PID
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
+					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid() && 
+					(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() == null || ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() == 0)) {
+				  throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
+		// Validation for PID Reason
+    		if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null && ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
+    			for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
+    			   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+    				   throw new EpException(MessageConst.ERROR_100022, 
+    							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+    									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+    			   }
+    			   if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+    				   if(reason.getReasonDesc().isEmpty()){
+    					   throw new EpException(MessageConst.ERROR_100022, 
+    								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+    										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+    				   }
+    			   }
+    			}
+    		}
 	
 		     /*validation for other  selection*/
 	         if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
@@ -1108,23 +1138,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	                     throw new EpException(MessageConst.ERROR_750033);
                  }
 	        	 
-	        	// Validation for PID Reason
-	     		if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null && ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
-	     			for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
-	     			   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
-	     				   throw new EpException(MessageConst.ERROR_100022, 
-	     							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
-	     									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	     			   }
-	     			   if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
-	     				   if(reason.getReasonDesc().isEmpty()){
-	     					   throw new EpException(MessageConst.ERROR_100022, 
-	     								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
-	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	     				   }
-	     			   }
-	     			}
-	     		}
 	     		// Validation for Deduction
 	     		if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null && ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
 	     			  for(CtDeduction deduction : ctBackingBean.getManagedBean().getContractVer().getCtDeductions()){
