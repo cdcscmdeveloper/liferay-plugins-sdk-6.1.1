@@ -24,7 +24,7 @@
 								value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 								
-						<td ><p:selectOneRadio id="sorOrgTypeId" layout="custom"
+						<td colspan="3"><p:selectOneRadio id="sorOrgTypeId" layout="custom"
 								value="#{profileManagementBackingBean.managedBean.orgCategory}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
 								<f:selectItem
@@ -38,10 +38,10 @@
 							</p:selectOneRadio>
 							<h:panelGrid id="orgCategoryMaintainPanelGrid" columns="4">
 					            <p:radioButton id="sorMaintainFederalGovn" for="sorOrgTypeId" itemIndex="0" />
-					            <h:outputLabel for="sorMaintainFederalGovn" value="#{lbl['lbl.pm.org.federal.government']}" />			       
+					            <h:outputLabel styleClass="commonLabel" for="sorMaintainFederalGovn" value="#{lbl['lbl.pm.org.federal.government']}" />			       
 					 
 					            <p:radioButton id="sorMaintainOthers" for="sorOrgTypeId" itemIndex="1" />
-					            <h:outputLabel for="sorMaintainOthers" value="#{lbl['lbl.pm.org.others']}" />			          
+					            <h:outputLabel styleClass="commonLabel" for="sorMaintainOthers" value="#{lbl['lbl.pm.org.others']}" />			          
 					            
 			       	 		</h:panelGrid>
 							
