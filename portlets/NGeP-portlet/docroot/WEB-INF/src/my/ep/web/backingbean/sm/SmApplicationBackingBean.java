@@ -4748,8 +4748,7 @@ public class SmApplicationBackingBean extends
 						RoleCode.MOF_SUPPLIER_USER.value()) || prevPersonnel
 						.getEpRole().equals(RoleCode.FL_USER.value())) && prevPersonnel
 						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
-				&& (prevPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel
-						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
+				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 			retVal = true;
 		} else if (!retVal && prevPersonnel != null
 				&& !prevPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
@@ -8989,7 +8988,8 @@ public class SmApplicationBackingBean extends
 						.getEpRole().equalsIgnoreCase(
 								RoleCode.BASIC_SUPPLIER_ADMIN.value())))
 						|| (personnel.isPrevApprovedDirector() || personnel
-								.isPrevApprovedEquityOwner())) {
+								.isPrevApprovedEquityOwner())
+						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
 					iterator.remove();
 				}
 			}
