@@ -21,6 +21,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
@@ -80,9 +86,9 @@ import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
@@ -96,12 +102,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.util.PortalUtil;
-
 // TODO: Auto-generated Javadoc
 /**
  * Backing Bean for Create Received Note .
@@ -111,7 +111,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "receivedNoteBackingBean")
 @RequestScoped
-public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManagedBean> {
+public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedNoteManagedBean> {
 	private static Logger log = Logger.getLogger(ReceivedNoteBackingBean.class);
 	private String className="@(.myFrnEvalClassName)";
 	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/deliveryorder/doBasePage.xhtml";
@@ -136,16 +136,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 */
 	public void setClassName(String className) {
 		this.className = className;
-	}
-
-	/**
-	 * get faces scopes.
-	 *
-	 * @return FacesScopes
-	 */
-	private FacesScopes getFacesScopes(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
 	}
 	
 	/**
@@ -205,7 +195,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			}
 			if(getManagedBean().getBpmTaskName()!=null && 
 				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT)){
-				reqDTO.setUserRole(hasRORole());	
+				reqDTO.setUserRole(RoleCode.RECEIVING_OFFICER.value());	
 			}else if(getManagedBean().getBpmTaskName()!=null && 
 				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				reqDTO.setUserRole(RoleCode.ACKNOWLEDGE_OFFICER.value());	
@@ -734,14 +724,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 * @param outcome the outcome
 	 */
 	public String gpkiSignAction(String outcome){
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-			// Temp setTextBeforeSign : DocNo+Type
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-			sb.append(outcome);
-			getManagedBean().setTextBeforeSign(sb.toString());			
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {		
 			validateFulfilmentNote(outcome);
-			// set action
+			setTextBeforeSign(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			getManagedBean().setButtonAction(outcome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -752,10 +737,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 			if(getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
-				StringBuilder sb = new StringBuilder();
-				sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-				sb.append(outcome);
-				getManagedBean().setTextBeforeSign(sb.toString());			
+				setTextBeforeSign(outcome);		
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 				getManagedBean().setButtonAction(outcome);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -798,15 +780,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 * @return the user role
 	 */
 	private String getUserRole() {
-		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
-			return RoleCode.FL_APPROVER.value();		
-		}else if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
+		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
 			return RoleCode.RECEIVING_OFFICER.value();		
 		}else if(getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())){
 			return RoleCode.ACKNOWLEDGE_OFFICER.value();		
+		}else{  
+			throw new EpException(MessageConst.ERROR_750040);
 		}
-		else 
-			return null;
 	}
 	
 	/**
@@ -865,19 +845,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
 			orderBackingBean.getManagedBean().setButtonVal("View");
 			flBB.getManagedBean().setHideRemarks(true);
-			if(isSupplierRole()){
-				orderBackingBean.getManagedBean().setSupplier(true);
-			}
+			orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				return NAV_PO;
 			}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				return NAV_CO;
 			}
-			
 		}
-		
 		return null;
-		
 	}
 	
 	/**
@@ -1001,18 +976,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "frnBasePage?faces-redirect=true");
 		}
 	}	
-	
-	private String hasRORole() {
-		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
-			return RoleCode.RECEIVING_OFFICER.value();
-		}else
-			return null;
-		
-	}
-	
+
 	public boolean isFlFulfilmentApprover() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+		return getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	
 	/**
@@ -1022,9 +988,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	public boolean isReceivingOfficer() {
 		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
 			return true;
-		}else
+		}else{
 			return false;
-		
+		}
 	}
 	
 	private void getSupplierGst(FlFulfilmentNote fulfilmentNote) {
@@ -1119,27 +1085,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			}
 		}
 	}
-	
-	/**
-	 * Checks if is supplier role.
-	 *
-	 * @return true, if is supplier role
-	 */
-	public boolean isSupplierRole(){
-		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-			return Boolean.TRUE;
-		}else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
-	
 	
 	/**
 	 * Retrieve a list of acknowledge officers 
@@ -1379,6 +1324,15 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 		return null;
 		
+	}
+	
+	private void setTextBeforeSign(String outcome) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getManagedBean().getFulfilmentRequest().getFlFulfilmentOrder().getDocNo()+"|");
+		sb.append(getManagedBean().getFulfilmentNote().getFulfilmentNoteNo()+"|");
+		sb.append(outcome+"|");
+		sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
+		getManagedBean().setTextBeforeSign(sb.toString());
 	}
 		
 }

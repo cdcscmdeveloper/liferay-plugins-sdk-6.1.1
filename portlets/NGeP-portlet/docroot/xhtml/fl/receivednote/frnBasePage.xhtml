@@ -45,7 +45,8 @@
 						var="bpmAction"
 						value="#{receivedNoteBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<ui:param name="immediateValue" value="#{bpmAction=='SAVE' or bpmAction=='REJECT'?'true':'false'}" />
+						<ui:param name="immediateValue" value="#{bpmAction=='SAVE' or 
+							(bpmAction=='REJECT' and receivedNoteBackingBean.isReceivingOfficer())?'true':'false'}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button" immediate="#{immediateValue}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{receivedNoteBackingBean.gpkiSignAction(bpmAction)}"/>
