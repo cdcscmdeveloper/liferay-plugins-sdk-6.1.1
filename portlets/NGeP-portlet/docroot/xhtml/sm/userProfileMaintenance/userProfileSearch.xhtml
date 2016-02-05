@@ -39,10 +39,9 @@
 					<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}">
 						<h:outputText value="#{personnel.pmCountry.countryName}" />
 					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}">
-						<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{personnel.authorizedFlg eq '1'}" />
-						<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{personnel.authorizedFlg ne '1'}" />
+					
+					<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
+						<ac:smSoftcertStatus personnel="#{personnel}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
