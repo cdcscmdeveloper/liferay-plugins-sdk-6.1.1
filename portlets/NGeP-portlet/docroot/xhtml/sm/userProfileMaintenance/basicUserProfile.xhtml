@@ -47,7 +47,8 @@
 							rendered="#{smPersonnelBackingBean.managedBean.editMode}">
 							<f:selectItem itemLabel="#{smPersonnelBackingBean.managedBean.deactivatePersonnel?lbl['lbl.sm.accountstatus.reactivate']:lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.terminate']}" itemValue="9" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.terminate']}" itemValue="9" 
+								itemDisabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq 3}"/>
 							<p:ajax update="UserProfile" event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeAccntStatus}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneRadio></td>
 					<td></td>
@@ -221,7 +222,9 @@
 							label="#{lbl['lbl.sm.userprofile.eprole']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
 							style="width: 207px;margin-bottom: 5px;" required="true" 
-							disabled="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '1' or smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '3')
+							disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' 
+								or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'G2G_SUPPLIER_ADMIN'
+								or smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq 3
 								or smPersonnelBackingBean.managedBean.deactivatePersonnel}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
