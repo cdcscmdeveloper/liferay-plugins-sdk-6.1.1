@@ -462,6 +462,8 @@ public class SmPersonnelBackingBean extends
 	public void onChangeRole() {
 		if (StringUtils.isNotBlank(getManagedBean().getBasicSmPersonnel()
 				.getEpRole())) {
+
+			// if personnel is Catalogue User or supplier type is Consultant
 			if (getManagedBean().getBasicSmPersonnel().getEpRole()
 					.equals(RoleCode.CM_USER.value())
 					|| getManagedBean()
@@ -469,12 +471,49 @@ public class SmPersonnelBackingBean extends
 							.getSmAppl()
 							.getSupplierType()
 							.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+
+				// if latest softcert flag not yet issued, then set flag no
 				if (getManagedBean().getBasicSmPersonnel().getPrevSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED) {
 					getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
-							DbValueConst.RECORD_STATUS_SUSPENDED);
+							Integer.parseInt(ParameterConst.FLAG_NO));
+				} else {
+					getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
+							getManagedBean().getBasicSmPersonnel()
+									.getPrevSoftcertFlg());
 				}
+
+				// set contract signer flag to no
 				getManagedBean().getBasicSmPersonnel().setContractSignerFlg(
-						DbValueConst.RECORD_STATUS_SUSPENDED);
+						Integer.parseInt(ParameterConst.FLAG_NO));
+
+				// set authorized flag to no
+				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+						Integer.parseInt(ParameterConst.FLAG_NO));
+			} else {
+				// newly added personnel, set softcert flag to pending request
+				if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
+					getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
+							SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+
+				} else {
+					// if latest softcert flag is 0, set to pending request
+					if (getManagedBean().getBasicSmPersonnel()
+							.getPrevSoftcertFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+						getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
+								SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+					}
+					// if latest softcert flag is not 0, set to latest softcert
+					// flag
+					else {
+						getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
+								getManagedBean().getBasicSmPersonnel()
+										.getPrevSoftcertFlg());
+					}
+
+				}
+				// set authorized flag to yes
+				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+						Integer.parseInt(ParameterConst.FLAG_YES));
 			}
 		}
 	}
@@ -1154,7 +1193,6 @@ public class SmPersonnelBackingBean extends
 	public SmPersonnel saveNewUser(SmPersonnel smPersonnel) {
 
 		validatePersonnelBeforeSave(smPersonnel);
-		setAuthorizedFlag(smPersonnel);
 		SmCommonUtil.setNewPersonnelPermAndMailAddress(smPersonnel,
 				getManagedBean().getBasicSmPersonnelMailingAddress(),
 				getManagedBean().getBasicSmPersonnelPermanentAddress());
@@ -1211,7 +1249,6 @@ public class SmPersonnelBackingBean extends
 	 */
 	private PersonnelResDTO updatePersonnel(SmPersonnel smPersonnel)
 			throws Exception {
-		setAuthorizedFlag(smPersonnel);
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
 			SmAddress address = SmCommonUtil.cloneAddress(getManagedBean()
 					.getBasicSmPersonnelPermanentAddress().getSmAddress());
@@ -1635,31 +1672,6 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setNoSupplierUserMsg(
 					SmCommonUtil.getMessage(
 							"lbl.sm.deactivate.nosupplieruser.mof.msg", null));
-		}
-	}
-
-	/**
-	 * Set personnel authorized flag
-	 * 
-	 * @param SmPersonnel
-	 *            smPersonnel
-	 */
-	private void setAuthorizedFlag(SmPersonnel smPersonnel) {
-		if (smPersonnel != null && smPersonnel.getEpRole() != null
-				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
-			if (smPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
-				smPersonnel.setSoftcertFlg(0);
-				smPersonnel.setAuthorizedFlg(Integer
-						.parseInt(ParameterConst.FLAG_YES));
-			} else if (smPersonnel.getEpRole().equals(
-					RoleCode.BASIC_SUPPLIER_USER.value())) {
-				if (smPersonnel.getSoftcertFlg() == 0) {
-					smPersonnel
-							.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-				}
-				smPersonnel.setAuthorizedFlg(Integer
-						.parseInt(ParameterConst.FLAG_YES));
-			}
 		}
 	}
 
