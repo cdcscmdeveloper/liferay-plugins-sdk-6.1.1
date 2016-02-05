@@ -263,13 +263,13 @@
 				<p:outputPanel id="contrSignId" rendered="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl or smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl.supplierType ne 'J'}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}" 
-								rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole and 
-									smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}"/>
+								rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole 
+									and smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}"/>
 						</td>		
 						<td>
 							<p:selectOneRadio value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}"
 								rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole 
-									smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}">
+									and smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 							</p:selectOneRadio>
