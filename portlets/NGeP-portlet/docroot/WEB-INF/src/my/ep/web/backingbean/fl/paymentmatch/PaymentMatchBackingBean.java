@@ -23,6 +23,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -89,10 +96,10 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.GSFType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.dan.DebitAdjustmentNoteBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
@@ -108,13 +115,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
 
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
-
 // TODO: Auto-generated Javadoc
 /**
  * Payment Match Backing Bean.
@@ -124,7 +124,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "paymentMatchBackingBean")
 @RequestScoped
-public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManagedBean>{
+public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMatchManagedBean>{
 	
 	private static Logger log = Logger.getLogger(PaymentMatchBackingBean.class);
 	private String className="@(.myPmClassName)";
@@ -157,16 +157,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	public void setClassName(String className) {
 		this.className = className;
-	}
-	
-	/**
-	 * get faces scopes.
-	 *
-	 * @return FacesScopes
-	 */
-	private FacesScopes getFacesScopes(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
 	}
 	
 	/**
@@ -811,7 +801,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 						TaxInvoiceVO taxInvVO = new TaxInvoiceVO();
 						taxInvVO.setAmountWithoutGst(invItem.getInvAmt());
 						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
-							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlInvoice().getFlRequest().getGstRate()+"%");
+							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlRequest().getGstRate()+"%");
 							taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
 						}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
 							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = 0%");
@@ -1195,13 +1185,15 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	public void gpkiSignAction(String outcome){
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
 			validatePaymentMatch(outcome);
-//			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
-//			sb.append(df.format(getManagedBean().getFulfilmentRequest().getStartDate()));
-//			sb.append(df.format(getManagedBean().getFulfilmentRequest().getEndDate()));
-			sb.append(outcome);
+			sb.append(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocNo()+"|");
+			if(getManagedBean().getPaymentAdvice().isBrandNew()) {
+				sb.append(ParameterConst.DOCTYPE_PAYMENT_ADVICE+"|");
+			} else {
+				sb.append(getManagedBean().getPaymentAdvice().getPaymentAdviceNo()+"|");
+			}
+			sb.append(outcome+"|");
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setButtonAction(outcome);
