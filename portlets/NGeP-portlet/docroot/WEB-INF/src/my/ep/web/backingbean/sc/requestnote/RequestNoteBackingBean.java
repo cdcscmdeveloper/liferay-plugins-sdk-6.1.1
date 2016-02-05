@@ -245,6 +245,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     	
     	parseRequestNote(requestNote, outcome);
 	    
+    	// remarks
+    	finalizeRemarks(requestNote.getRemarks());
+    	
 	    setUserDetails(requestNote);
 	    requestNoteReqDTO.setRequestNote(requestNote);
 	    FacesScopes face = new FacesScopes();
@@ -525,9 +528,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
 
 			parseRequestNote(scRequestNote, outcome);
-			
+
 			// validate RN
 			validateRequestNote(scRequestNote);
+
+			// remarks
+			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) 
+					|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome) 
+					|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
+				finalizeRemarks(scRequestNote.getRemarks());
+			}
 
 			if(!scRequestNote.getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SQ) && 
 					requestNoteDtls != null && requestNoteDtls.size() > 1){
@@ -596,6 +606,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					sb.append(spacer).append(requestNoteDtl.getProcurementTitle());
 					++counter;
 				} 
+				
+				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+					// title validation
+					if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+						throw new EpException(
+								MessageConst.ERROR_760315,
+								new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}	
+				}
 			}	
 
 			//procurement title limit  - 500 
@@ -615,12 +635,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		requestNote.setRequestNoteDtls(requestNoteDtls);
-
-		if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) 
-				|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome) 
-				|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
-			finalizeRemarks(requestNote.getRemarks());
-		}
 	}
 
 	/**
