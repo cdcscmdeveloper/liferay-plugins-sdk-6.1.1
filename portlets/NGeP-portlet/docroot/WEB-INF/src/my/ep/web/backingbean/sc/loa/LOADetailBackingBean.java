@@ -1569,7 +1569,16 @@ public class LOADetailBackingBean extends
 		context.put("agencyAddress", agencyAddress);
 		context.put("agencyPhoneNo", agencyPhoneNo);
 		context.put("agencyFaxNo", agencyFaxNo);
-		context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
+		
+		String fileNo ="";
+		if(!StringUtils.isBlank(scLoiLoa.getFileNo())){
+			fileNo = scLoiLoa.getFileNo();
+			if(fileNo.length()>30){
+				fileNo = splitLongLengthString(fileNo, 29);
+			}
+		}
+		
+		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
 
 		String issueDate = "";
@@ -1700,12 +1709,15 @@ public class LOADetailBackingBean extends
 		}
 		context.put("loaSigner", LoaSigner);	
 
-		String LoaSignerDesig = "";
+		String loaSignerDesig = "";
 		if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
-			LoaSignerDesig = scLoa.getLoaSignerDesig();
-		}
-		context.put("loaSignerDesignation", LoaSignerDesig);
+			loaSignerDesig = scLoa.getLoaSignerDesig();
 
+			if(loaSignerDesig.length()>86){
+				loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
+			}
+		}
+		context.put("loaSignerDesignation", loaSignerDesig);
 		// Supplier user details
 		String supplierUser = "";
 		String supplierIcNo = "";
@@ -1803,7 +1815,20 @@ public class LOADetailBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	
+	private static String splitLongLengthString(String text, int split){
+		StringBuilder sb = new StringBuilder();
+		String[] array = text.split("(?<=\\G.{" + split + "})");
+		int counter=1;
+		for (String string : array) {
+			sb.append(string);
+			if(array.length != counter){
+				sb.append("<br />");
+				++counter;
+			}
+		}
+		return sb.toString();
+	}
+
 
 	/**
 	 * Generate declaration pdf from velocity in Performance Bond.
@@ -1856,8 +1881,8 @@ public class LOADetailBackingBean extends
 				: scLoiLoa.getTitle();
 		context.put("title", title);
 
-		String userName = "&#60;supplier user name&#62;";
-		String icNo = "&#60;ic no&#62;";
+		String userName = "Nama Pembekal";
+		String icNo = "No. Kad Pengenalan";
 		if (pmUser != null) {
 			userName = pmUser.getUserName();
 			icNo = pmUser.getIdentificationNo();
