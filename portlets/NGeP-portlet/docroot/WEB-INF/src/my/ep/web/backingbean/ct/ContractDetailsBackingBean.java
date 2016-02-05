@@ -324,8 +324,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		ctBB = new ContractBackingBean();
 		ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
-	          
-	    // Retrieve Agencies
+	      
+		// Retrieve Agencies
 	    if (ctBB.getManagedBean().getContractVer().getCtAgencies() != null 
 	    		&& ctBB.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 	    	ctBB.getManagedBean().setSelectedAgency(null);
@@ -518,7 +518,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}	    	
 	    } else {
 	    	ctBB.getManagedBean().setGstCheckingGUI(false);
-	    }
+	    }		
 	}
 	
 	/**
@@ -536,6 +536,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	
     	try {
     		ctBB.getZoneObjDetails();
+    	
+    		if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){
+         		ctBB.getManagedBean().getContractVer().setCtPidReasons(null);
+         	}
+    		
     		validateCtContractVer(action);
     		ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
@@ -551,10 +556,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
               
          	if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
          		ctBB.scheduleProgressiveDate();
-         	}
-         	
-         	if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){
-         		ctBB.getManagedBean().getContractVer().setCtPidReasons(null);
          	}
          	
          	reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
@@ -655,6 +656,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
  			}
  		}
+		
+		//Validation for PID
+		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
+				ctBB.getManagedBean().getContractVer().getCtContractValue().isPid() && 
+				(ctBB.getManagedBean().getContractVer().getCtPidReasons() == null || ctBB.getManagedBean().getContractVer().getCtPidReasons().size() == 0)) {
+			  throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		
 		// Validation for PID Reason
 		if(ctBB.getManagedBean().getContractVer().getCtPidReasons() != null && ctBB.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
 			for(CtPidReason reason : ctBB.getManagedBean().getContractVer().getCtPidReasons()){
