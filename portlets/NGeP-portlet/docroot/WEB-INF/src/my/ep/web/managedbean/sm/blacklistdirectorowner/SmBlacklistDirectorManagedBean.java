@@ -5,18 +5,19 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.commons.lang3.StringUtils;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
+import my.ep.persistence.entity.sm.SmPersonBlacklist;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.lang3.StringUtils;
 
 @ManagedBean(name = "blacklistDirectorMB")
 @SessionScoped
@@ -47,9 +48,10 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 
 	private SmPersonnel directorOwner;
 	private SmSupplier supplier;
+	private SmPersonBlacklist personBlacklist;
 
 	private boolean blacklist;
-	private boolean currentlyBlacklist;
+	private SmPersonBlacklist currentPersonBlacklist;
 	private String remarks;
 
 	private IPagingDataModel<Object[]> supplierDataModel = new SupplierPagingDataModel();
@@ -269,19 +271,27 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 		this.blacklist = blacklist;
 	}
 
-	public boolean isCurrentlyBlacklist() {
-		return currentlyBlacklist;
-	}
-
-	public void setCurrentlyBlacklist(boolean currentlyBlacklist) {
-		this.currentlyBlacklist = currentlyBlacklist;
-	}
-
 	public String getRemarks() {
 		return remarks;
 	}
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public SmPersonBlacklist getPersonBlacklist() {
+		return personBlacklist;
+	}
+
+	public void setPersonBlacklist(SmPersonBlacklist personBlacklist) {
+		this.personBlacklist = personBlacklist;
+	}
+
+	public SmPersonBlacklist getCurrentPersonBlacklist() {
+		return currentPersonBlacklist;
+	}
+
+	public void setCurrentPersonBlacklist(SmPersonBlacklist currentPersonBlacklist) {
+		this.currentPersonBlacklist = currentPersonBlacklist;
 	}
 }
