@@ -37,8 +37,6 @@
 			value="#{bb.managedBean.ownerDirectorList}"
 			rowKey="#{per}" rowIndexVar="index" id="viewCompanyDtId">
 			
-			<ac:paginator for="viewCompanyDtId" />
-			
 			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}" >
 				<h:outputText value="#{per.name}" />
 			</p:column>
@@ -76,7 +74,7 @@
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
-					action="#{bb.viewDirector(per.identificationNo,per.name)}"
+					action="#{bb.viewDirectorByCompany(per)}"
 					process="@this" partialSubmit="true" update="@form"
 					style="padding-right:5px;">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
