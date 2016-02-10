@@ -48,10 +48,9 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 
 	private SmPersonnel directorOwner;
 	private SmSupplier supplier;
-	private SmPersonBlacklist personBlacklist;
+	private SmPersonBlacklist currentPersonBlacklist;
 
 	private boolean blacklist;
-	private SmPersonBlacklist currentPersonBlacklist;
 	private String remarks;
 
 	private IPagingDataModel<Object[]> supplierDataModel = new SupplierPagingDataModel();
@@ -279,19 +278,12 @@ public class SmBlacklistDirectorManagedBean extends BaseManagedBean {
 		this.remarks = remarks;
 	}
 
-	public SmPersonBlacklist getPersonBlacklist() {
-		return personBlacklist;
-	}
-
-	public void setPersonBlacklist(SmPersonBlacklist personBlacklist) {
-		this.personBlacklist = personBlacklist;
-	}
-
 	public SmPersonBlacklist getCurrentPersonBlacklist() {
 		return currentPersonBlacklist;
 	}
 
-	public void setCurrentPersonBlacklist(SmPersonBlacklist currentPersonBlacklist) {
+	public void setCurrentPersonBlacklist(
+			SmPersonBlacklist currentPersonBlacklist) {
 		this.currentPersonBlacklist = currentPersonBlacklist;
 	}
 }
