@@ -114,16 +114,30 @@ public class SmBlacklistDirectorBackingBean extends
 	/**
 	 * View director in result table
 	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 */
+	public void viewDirectorByCompany(SmPersonnel personnel) {
+		viewDirector(personnel.getIdentificationTypeId().toString(),
+				personnel.getIdentificationNo(), personnel.getName());
+	}
+
+	/**
+	 * View director in result table
+	 * 
 	 * @param String
 	 *            identificationNo
 	 * @param String
 	 *            name
 	 */
-	public void viewDirector(String identificationNo, String name) {
+	public void viewDirector(String identificationTypeId,
+			String identificationNo, String name) {
 		getManagedBean().setDirectorOwner(new SmPersonnel());
 		getManagedBean().getDirectorOwner().setName(name);
 		getManagedBean().getDirectorOwner().setIdentificationNo(
 				identificationNo);
+		getManagedBean().getDirectorOwner().setIdentificationTypeId(
+				Long.parseLong(identificationTypeId));
 
 		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
 		reqDTO.setDirectorIdNo(identificationNo);
@@ -136,10 +150,14 @@ public class SmBlacklistDirectorBackingBean extends
 		// Get blacklist by identification no
 		BlacklistDirectorResDTO resDTO = new BlacklistDirectorResDTO();
 		resDTO = SmServiceLookup.getBlacklistDirectorSO()
-				.isIdentificatioNoBlacklisted(reqDTO);
-		getManagedBean().setRemarks(resDTO.getRemarks());
-		getManagedBean().setCurrentlyBlacklist(resDTO.isBlacklisted());
-		getManagedBean().setBlacklist(getManagedBean().isCurrentlyBlacklist());
+				.retrievePersonBlacklistByIdentificationNO(reqDTO);
+		getManagedBean().setCurrentPersonBlacklist(resDTO.getPersonBlacklist());
+		getManagedBean().setBlacklist(false);
+		if (getManagedBean().getCurrentPersonBlacklist() != null) {
+			getManagedBean().setRemarks(
+					getManagedBean().getCurrentPersonBlacklist().getRemark());
+			getManagedBean().setBlacklist(true);
+		}
 
 		if (getManagedBean().getCompanyList() == null) {
 			getManagedBean().setCompanyList(new ArrayList<SmSupplier>());
@@ -163,6 +181,9 @@ public class SmBlacklistDirectorBackingBean extends
 		reqDTO.setRemarks(getManagedBean().getRemarks());
 		reqDTO.setDirectorIdNo(getManagedBean().getDirectorOwner()
 				.getIdentificationNo());
+		reqDTO.setDirectorIdentificationTypeId(getManagedBean()
+				.getDirectorOwner().getIdentificationTypeId());
+		reqDTO.setSupplierList(getManagedBean().getCompanyList());
 		SmServiceLookup.getBlacklistDirectorSO().submitBlacklist(reqDTO);
 		SmCommonUtil.redirectToPage(
 				SmApplicationUtil.getApplicationErrorPage(),
