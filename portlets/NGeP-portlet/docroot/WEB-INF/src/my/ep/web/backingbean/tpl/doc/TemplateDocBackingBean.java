@@ -521,8 +521,10 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				// save for template doc of contract agreement
 				if (getManagedBean().getExternalPageUrl() != null && getManagedBean().getProcessType()!=null 
 					&& getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
-					reqDTOS.setDocMasterId(resDTO.getTplDocMaster().getDocMasterId());
-					getManagedBean().getCtAgreementContent().setTplDocMaster(templateSO.getTemplateMaster(reqDTOS).getTplDocMaster());
+					if (getManagedBean().getCtAgreementContent().getTplDocMaster() == null) {
+						reqDTOS.setDocMasterId(resDTO.getTplDocMaster().getDocMasterId());
+						getManagedBean().getCtAgreementContent().setTplDocMaster(templateSO.getTemplateMaster(reqDTOS).getTplDocMaster());
+					}
 				}
 			}
 			
