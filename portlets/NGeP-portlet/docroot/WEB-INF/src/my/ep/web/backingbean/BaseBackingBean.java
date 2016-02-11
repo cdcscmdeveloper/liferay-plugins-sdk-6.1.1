@@ -1108,7 +1108,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 						smAddress));
 		if (!SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE.contains(supplier
 				.getBusinessType())
-				&& getManagedBean().getLocalAuthorityItems().size() == 1) {
+				|| getManagedBean().getLocalAuthorityItems().size() == 1) {
 			supplier.setLocalAuthorityId((Long) getManagedBean()
 					.getLocalAuthorityItems().get(0).getValue());
 		}

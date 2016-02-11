@@ -3320,8 +3320,10 @@ public class SmCommonUtil {
 					&& smAddress.getPmState().getStateId() != null) {
 				if (smAddress.getPmDistrict() != null
 						&& smAddress.getPmDistrict().getDistrictId() != null
-						&& smAddress
-								.getPmDistrict()
+						&& getInstance()
+								.getDistrictById(
+										smAddress.getPmDistrict()
+												.getDistrictId())
 								.getDistrictCode()
 								.equals(SupplierManagementConst.KUCHING_DISTRICT_CODE)) {
 					items.add(getLhdnSelectItem());
@@ -3344,7 +3346,7 @@ public class SmCommonUtil {
 							item.setValue(orgProfile.getOrgProfileId());
 							items.add(item);
 						}
-					}else{
+					} else {
 						items.add(getLhdnSelectItem());
 					}
 				}
