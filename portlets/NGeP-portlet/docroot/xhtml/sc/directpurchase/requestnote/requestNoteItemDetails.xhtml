@@ -17,8 +17,7 @@
 
 		<h:panelGrid width="100%" id="itemDtlId">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl"
-				style="white-space: normal;"
-				styleClass ="BtnSpacing"
+				style="white-space: normal;" styleClass="BtnSpacing"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
 				rowKey="#{requestNoteDtl}" rowIndexVar="rowIndex">
 
@@ -32,8 +31,9 @@
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}">
-						<p:ajax partialSubmit="true" process="@this" update="requestListDataTable" 
-						 listener="#{requestNoteBackingBean.selectSingleRow}"/>
+						<p:ajax partialSubmit="true" process="@this"
+							update="requestListDataTable"
+							listener="#{requestNoteBackingBean.selectSingleRow}" />
 					</p:selectBooleanCheckbox>
 				</p:column>
 
@@ -218,7 +218,7 @@
 					<p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 
-				<p:column style="width: 9%; white-space: normal;">
+				<p:column style="white-space: normal;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
@@ -226,19 +226,14 @@
 							value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
 					</f:facet>
 					<p:inputText
-						style="width:21px;margin-top: 8px;margin-right: 1px;text-align: right;"
+						style="width:20px;margin-top: 8px;"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 						size="6" maxlength="4"
 						disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag or requestNoteBackingBean.managedBean.viewOnly}"
 						id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"
 						required="#{!requestNoteDtl.selected}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
-					</p:inputText>
-
-					<p:inputText style="width: 30px;margin-top: 8px;"
-						value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.deliverTermType)}"
-						disabled="true" size="2" />
-
+					</p:inputText> #{lbl['lbl.sc.days']}
 					<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 				</p:column>
 
@@ -287,75 +282,17 @@
 			</p:dataTable>
 		</h:panelGrid>
 
-		<ui:param name="isSourcheMethodAsSC"
-			value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
+		<div class="ppRightBtn BtnSpacing">
+			<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
+				partialSubmit="true" process="@this"
+				onsuccess="applyAllPopUp.show();" update="@([id$=applyAllPopUp])" />
 
-		<h:panelGroup id ="applyAll" rendered="#{!requestNoteBackingBean.managedBean.viewOnly}">
-			<table style="width: 100%;">
-				<tr>
-					<td style="padding-bottom: 0px;"><h:outputText
-							value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" /> <p:spacer
-							width="6px;" /> <h:selectOneMenu style="width:172px;"
-							value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
-							disabled="false">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{requestNoteBackingBean.managedBean.userList}"
-								var="user" itemLabel="#{user.userName}"
-								itemValue="#{user.userId}"></f:selectItems>
-						</h:selectOneMenu> 
-						<p:spacer width="12px;" /> 
-						
-						<h:outputText
-							value="#{lbl['lbl.sc.request.note.delivery.term']}"
-							rendered="#{isSourcheMethodAsSC}" /> <p:spacer width="6px;" />
-						<p:inputText id="periodId"
-							style="width:25px;text-align:right;margin-top: 7px;"
-							label="#{lbl['lbl.sc.request.note.delivery.term']}"
-							rendered="#{isSourcheMethodAsSC}"
-							value="#{requestNoteBackingBean.managedBean.periodValue}" /> <p:spacer
-							width="12px;" /> 
-							
-						<h:outputText
-							value="#{lbl['lbl.sc.procurment.type.category']}"
-							rendered="#{isSourcheMethodAsSC}" /> 
-							<p:spacer width="6px;" />
-						<h:selectOneMenu id="procTypeCategoryId"
-							value="#{requestNoteBackingBean.managedBean.procTypeCategoryId}"
-							style="width:130px;"
-							label="#{lbl['lbl.sc.procurment.type.category']}"
-							rendered="#{isSourcheMethodAsSC}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{requestNoteBackingBean.procTypeCategories}"
-								var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
-								itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
-						</h:selectOneMenu> <p:spacer width="12px;" /> 
-					
-					<p:commandButton
-							value="#{lbl['lbl.btn.apply.to.all']}" partialSubmit="true"
-							process="@this applyAll"
-							action="#{requestNoteBackingBean.applyForRequestNote}"
-							update="@([id$=requestListDataTable])" /></td>
-
-					<td style="text-align: right; vertical-align: initial" rowspan="2"><c:if
-							test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
-							<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-								partialSubmit="true" onsuccess="deleteConformDlg.show();"
-								update="@([id$=requestListDataTable])" />
-						</c:if></td>
-				</tr>
-				<tr>
-					<td style="padding-left: 100px;padding-top: 0px;"><h:outputText   
-							value="#{lbl['lbl.sc.direct.purchase.title']}"
-							rendered="#{isSourcheMethodAsSC}" /> <p:spacer width="6px;" />
-						<p:inputText id="procTitle" rendered="#{isSourcheMethodAsSC}"
-							size="92" value="#{requestNoteBackingBean.managedBean.procTitle}" /></td>
-				</tr>
-			</table>
-		</h:panelGroup>
+			<c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+					partialSubmit="true" onsuccess="deleteConformDlg.show();"
+					update="@([id$=requestListDataTable])" />
+			</c:if>
+		</div>
 	</p:panel>
 
 	<p:dialog id="deleteConformDlg" widgetVar="deleteConformDlg"
@@ -378,6 +315,81 @@
 			<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
 				process="@this" onclick="deleteConformDlg.hide();" type="button" />
 		</div>
+	</p:dialog>
+
+
+	<p:dialog id="applyAllItems" widgetVar="applyAllPopUp"
+		header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true" dynamic="true" 
+		closable="false" position="center"
+		resizable="false" styleClass="pop_up_top" width="1000">
+		<p:panel id="applyAll">
+			<ui:param name="isSourcheMethodAsSC"
+				value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
+
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td width="22%"><p:outputLabel
+							value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" /></td>
+					<td><h:selectOneMenu style="width:200px;"
+							value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
+							disabled="false">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{requestNoteBackingBean.managedBean.userList}"
+								var="user" itemLabel="#{user.userName}"
+								itemValue="#{user.userId}"></f:selectItems>
+						</h:selectOneMenu></td>
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.request.note.delivery.term']}" /></td>
+					<td><p:inputText id="periodId"
+							style="width:300px;text-align:right;margin-top: 7px;"
+							label="#{lbl['lbl.sc.request.note.delivery.term']}"
+							rendered="#{isSourcheMethodAsSC}"
+							value="#{requestNoteBackingBean.managedBean.periodValue}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.procurment.type.category']}"
+							rendered="#{isSourcheMethodAsSC}" /></td>
+					<td><h:selectOneMenu id="procTypeCategoryId"
+							value="#{requestNoteBackingBean.managedBean.procTypeCategoryId}"
+							style="width:200px;"
+							label="#{lbl['lbl.sc.procurment.type.category']}"
+							rendered="#{isSourcheMethodAsSC}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{requestNoteBackingBean.procTypeCategories}"
+								var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+								itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
+						</h:selectOneMenu></td>
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.direct.purchase.title']}"
+							rendered="#{isSourcheMethodAsSC}" /></td>
+					<td><p:inputTextarea id="procTitle" rows="2"
+							label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
+							value="#{requestNoteBackingBean.managedBean.procTitle}"
+							autoResize="false" style="width:300px;" /></td>
+				</tr>
+			</table>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.apply']}"
+				    style="margin-top: 10px;"
+					partialSubmit="true" process="@this applyAll"
+					onsuccess="applyAllPopUp.hide();"
+					action="#{requestNoteBackingBean.applyForRequestNote}"
+					update="@([id$=requestListDataTable])" />
+
+				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true" 
+				    update="@form"
+					process="@this" action="#{requestNoteBackingBean.cancelApplyAllItemsPopup}"/>
+			</div>
+		</p:panel>
+
 	</p:dialog>
 
 </ui:composition>
