@@ -81,6 +81,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -116,6 +117,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
+
+import weblogic.xml.crypto.wss.Base64Encoding;
+
 import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
@@ -240,6 +244,12 @@ public class ReportBackingBean extends
 
 	/** The ministry list. */
 	private List<SelectItem> ministryList = new ArrayList<SelectItem>();
+
+	/** The ptj list. */
+	private List<SelectItem> pegaWaiPengawalList = new ArrayList<SelectItem>();
+
+	/** The kumpulan ptj list. */
+	private List<SelectItem> kumpulanPTJList = new ArrayList<SelectItem>();
 
 	/** The ptj list. */
 	private List<SelectItem> ptjList = new ArrayList<SelectItem>();
@@ -441,6 +451,12 @@ public class ReportBackingBean extends
 
 	/** The common ministry. */
 	private String commonMinistry;
+
+	/** The common pega wai pengawal. */
+	private String commonPegaWaiPengawal;
+
+	/** The common kumpulan ptj. */
+	private String commonKumpulanPTJ;
 
 	/** The ministry name. */
 	private String ministryName;
@@ -1106,8 +1122,10 @@ public class ReportBackingBean extends
 	/** The pm physical loa no. */
 	private String pmPhysicalLOANo;
 
+	/** The pm zone. */
 	private String pmZone;
 
+	/** The pm profile status. */
 	private String pmProfileStatus;
 
 	/** The selected all. */
@@ -7401,6 +7419,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the pm zone.
+	 * 
 	 * @return the pmZone
 	 */
 	public String getPmZone() {
@@ -7408,6 +7428,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the pm zone.
+	 * 
 	 * @param pmZone
 	 *            the pmZone to set
 	 */
@@ -7416,6 +7438,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the pm profile status.
+	 * 
 	 * @return the pmProfileStatus
 	 */
 	public String getPmProfileStatus() {
@@ -7423,6 +7447,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the pm profile status.
+	 * 
 	 * @param pmProfileStatus
 	 *            the pmProfileStatus to set
 	 */
@@ -7506,6 +7532,82 @@ public class ReportBackingBean extends
 	public void setSmBusCompTypeRegistrationStatus(
 			String smBusCompTypeRegistrationStatus) {
 		this.smBusCompTypeRegistrationStatus = smBusCompTypeRegistrationStatus;
+	}
+
+	/**
+	 * Gets the common pega wai pengawal.
+	 * 
+	 * @return the commonPegaWaiPengawal
+	 */
+	public String getCommonPegaWaiPengawal() {
+		return commonPegaWaiPengawal;
+	}
+
+	/**
+	 * Sets the common pega wai pengawal.
+	 * 
+	 * @param commonPegaWaiPengawal
+	 *            the commonPegaWaiPengawal to set
+	 */
+	public void setCommonPegaWaiPengawal(String commonPegaWaiPengawal) {
+		this.commonPegaWaiPengawal = commonPegaWaiPengawal;
+	}
+
+	/**
+	 * Gets the common kumpulan ptj.
+	 * 
+	 * @return the commonKumpulanPTJ
+	 */
+	public String getCommonKumpulanPTJ() {
+		return commonKumpulanPTJ;
+	}
+
+	/**
+	 * Sets the common kumpulan ptj.
+	 * 
+	 * @param commonKumpulanPTJ
+	 *            the commonKumpulanPTJ to set
+	 */
+	public void setCommonKumpulanPTJ(String commonKumpulanPTJ) {
+		this.commonKumpulanPTJ = commonKumpulanPTJ;
+	}
+
+	/**
+	 * Gets the pega wai pengawal list.
+	 * 
+	 * @return the pegaWaiPengawalList
+	 */
+	public List<SelectItem> getPegaWaiPengawalList() {
+		return pegaWaiPengawalList;
+	}
+
+	/**
+	 * Sets the pega wai pengawal list.
+	 * 
+	 * @param pegaWaiPengawalList
+	 *            the pegaWaiPengawalList to set
+	 */
+	public void setPegaWaiPengawalList(List<SelectItem> pegaWaiPengawalList) {
+		this.pegaWaiPengawalList = pegaWaiPengawalList;
+	}
+
+	/**
+	 * Gets the kumpulan ptj list.
+	 * 
+	 * @return the kumpulanPTJList
+	 */
+	public List<SelectItem> getKumpulanPTJList() {
+		return kumpulanPTJList;
+	}
+
+	/**
+	 * Sets the kumpulan ptj list.
+	 * 
+	 * @param kumpulanPTJList
+	 *            the kumpulanPTJList to set
+	 */
+	public void setKumpulanPTJList(List<SelectItem> kumpulanPTJList) {
+		this.kumpulanPTJList = kumpulanPTJList;
 	}
 
 	/**
@@ -8719,12 +8821,16 @@ public class ReportBackingBean extends
 
 	/**
 	 * roleCodeUsersSetup - Role code users setup will be done by user id.
+	 * 
+	 * @param entity
+	 *            the entity
 	 */
 	public void roleCodeUsersSetup() {
 		log.info("ReportBackingBean-roleCodeUsersSetup");
 		rolecodeRquisitionerList = new ArrayList<SelectItem>();
 		rolecodeApproverList = new ArrayList<SelectItem>();
 		rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
+
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -8796,9 +8902,13 @@ public class ReportBackingBean extends
 				}
 			} else {
 				Long lngPtjId = null;
-				if (this.getCommonPtj() != null) {
-					lngPtjId = Long.parseLong(this.getCommonPtj());
+				if (this.getManagedBean().getSelectedPTJ().getOrgProfileId() != null) {
+					lngPtjId = (this.getManagedBean().getSelectedPTJ()
+							.getOrgProfileId());
+				} else {
+					lngPtjId = this.getManagedBean().getPtjId();
 				}
+
 				// List<String> ptLst =
 				// reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
 				if ((this.getReportValue() != null)
@@ -10009,7 +10119,8 @@ public class ReportBackingBean extends
 							.contains(highRoleCodeList.get(0)))) {
 				// if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))
 				// {
-				getLtstMinistryList();
+				// getLtstMinistryList();
+				getManagedBean().getRptGenBean().setCommonLOVBasedRoles(true);
 				getParameterCodeTypeString();
 				getManagedBean().getRptGenBean().setFlSupplierDropdownView(
 						false);
@@ -10135,8 +10246,11 @@ public class ReportBackingBean extends
 	 */
 	public void retrieveParameterCodeType() {
 		log.info("ReportBackingBean-retrieveParameterCodeType");
-		ptjList = new ArrayList<SelectItem>();
 		ministryList = new ArrayList<SelectItem>();
+		pegaWaiPengawalList = new ArrayList<SelectItem>();
+		kumpulanPTJList = new ArrayList<SelectItem>();
+		ptjList = new ArrayList<SelectItem>();
+
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			getParameterCodeTypeString();
 			if ((parameterCodeType != null)
@@ -10144,8 +10258,12 @@ public class ReportBackingBean extends
 							.equals(ReportConst.PARAM_CODE_TYPE_FPJ))) {
 				// retrieveFPJMinistryList();
 				// getLtstMinistryListByUserid();
+				getManagedBean().getRptGenBean().setFlTextBoxBasedRoles(true);
 				retrieveOnlyFPJMinistryList();
+				retrievePFPPList();
+				retrievePFJAList();
 				retrieveFPJPTJList();
+
 				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
 					getManagedBean().getRptGenBean()
 							.setFlSupplierTextView(true);
@@ -10465,7 +10583,68 @@ public class ReportBackingBean extends
 				}
 			}
 		}
+		this.getManagedBean().setPtjId(
+				(Long.valueOf(ptjList.get(0).getValue().toString())));
 		return ptjList;
+	}
+
+	public List<SelectItem> retrievePFPPList() {
+		log.info("ReportBackingBean-retrievePFPPList");
+		pegaWaiPengawalList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> ptjLst = reportSO.retrievePFPPList(lngUserId);
+			if (ptjLst.size() > 0) {
+				if (ptjLst.size() > 2) {
+					SelectItem selectItem1 = new SelectItem();
+					selectItem1.setLabel(ResourceBundleUtils.getMessage(
+							"lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+					selectItem1.setValue(null);
+					pegaWaiPengawalList.add(selectItem1);
+				}
+				for (Object[] object : ptjLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1].toString());
+					pegaWaiPengawalList.add(selectItem);
+				}
+			}
+		}
+		return pegaWaiPengawalList;
+	}
+
+	public List<SelectItem> retrievePFJAList() {
+		log.info("ReportBackingBean-retrievePFJAList");
+		kumpulanPTJList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> ptjLst = reportSO.retrievePFJAList(lngUserId);
+			if (ptjLst.size() > 0) {
+				if (ptjLst.size() > 2) {
+					SelectItem selectItem1 = new SelectItem();
+					selectItem1.setLabel(ResourceBundleUtils.getMessage(
+							"lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+					selectItem1.setValue(null);
+					kumpulanPTJList.add(selectItem1);
+				}
+				for (Object[] object : ptjLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1].toString());
+					kumpulanPTJList.add(selectItem);
+				}
+			}
+		}
+
+		return kumpulanPTJList;
 	}
 
 	/**
@@ -10608,6 +10787,7 @@ public class ReportBackingBean extends
 				}
 			}
 		}
+
 		return ministryList;
 	}
 
@@ -10966,10 +11146,10 @@ public class ReportBackingBean extends
 
 				if (this.getReportValue().equals(
 						ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)) {
-					
+
 					getManagedBean().getRptGenBean().setSmMofRegNoTwoView(true);
 					getManagedBean().getRptGenBean()
-							.setSmActiveSubmissiveFromDateView(true);					
+							.setSmActiveSubmissiveFromDateView(true);
 					getManagedBean().getRptGenBean().setSmActSubmisAllDateView(
 							true);
 				} else if (this.getReportValue().equals(
@@ -12026,6 +12206,19 @@ public class ReportBackingBean extends
 					// throw new EpException("MOF No. is mandatory.");
 					throw new EpException(MessageConst.ERROR_REPORT_780029);
 				}
+			}
+
+			// For FL,CT and PP # for setting the Only LOV's values
+			if (this.getManagedBean().getRptGenBean().isCommonLOVBasedRoles()) {
+				this.setCommonMinistry(this.getManagedBean()
+						.getSelectedMinistry().getOrgProfileId().toString());
+				this.setCommonPegaWaiPengawal((this.getManagedBean()
+						.getSelectedPegwaiPengawal().getOrgProfileId()
+						.toString()));
+				this.setCommonKumpulanPTJ(this.getManagedBean()
+						.getSelectedKumpulanPTJ().getOrgProfileId().toString());
+				this.setCommonPtj((this.getManagedBean().getSelectedPTJ()
+						.getOrgProfileId().toString()));
 			}
 
 			if (this.getModuleValue().equalsIgnoreCase(
@@ -14013,6 +14206,10 @@ public class ReportBackingBean extends
 				|| ((this.getFlJabatan() != null) && (this.getFlJabatan() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this
 						.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPegaWaiPengawal() != null) && (this
+						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonKumpulanPTJ() != null) && (this
+						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSupplier() != null) && (this.getFlSupplier() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlStatus() != null) && (this.getFlStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDuration() != null) && (this.getFlDuration() != ReportConst.EMPTY_VAL))
@@ -14063,11 +14260,7 @@ public class ReportBackingBean extends
 						.getFlContractRequest() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPurchaseOrderNo() != null) && (this
 						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL))) {
-			if ((this.getCommonPtj() != null)
-					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setPtjTotVar(ReportConst.FL_AMP_PTJ_NAME_EQ
-						+ this.getCommonPtj());
-			}
+
 			if ((this.getFlContractNo() != null)
 					&& (this.getFlContractNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -14090,6 +14283,38 @@ public class ReportBackingBean extends
 				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ
 						+ this.getCommonMinistry());
 			}
+
+			if ((this.getCommonPegaWaiPengawal() != null)
+					&& (this.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL)) {
+				/*
+				 * Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				 * 
+				 * rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ +
+				 * retrieveMinistryName(orgprofileid));
+				 */
+				rptGenBean
+						.setPegwaiPengawaiTotVar(ReportConst.FL_AMP_PEGAWAI_PENGAWAI_EQ
+								+ this.getCommonPegaWaiPengawal());
+			}
+
+			if ((this.getCommonKumpulanPTJ() != null)
+					&& (this.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL)) {
+				/*
+				 * Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				 * 
+				 * rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ +
+				 * retrieveMinistryName(orgprofileid));
+				 */
+				rptGenBean.setKumpulanPTJTotVar(ReportConst.FL_AMP_KUMPULAN_EQ
+						+ this.getCommonKumpulanPTJ());
+			}
+
+			if ((this.getCommonPtj() != null)
+					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPtjTotVar(ReportConst.FL_AMP_PTJ_NAME_EQ
+						+ this.getCommonPtj());
+			}
+
 			if ((this.getFlSupplier() != null)
 					&& (this.getFlSupplier() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setSupplierTotVar(ReportConst.FL_AMP_SUPPL_NAME_EQ
@@ -14363,11 +14588,13 @@ public class ReportBackingBean extends
 						+ rptGenBean.getRegistrationTypeTotVar()
 						+ rptGenBean.getItemCategoryTotVar()
 						+ rptGenBean.getProofIdentityTotVar()
-						+ rptGenBean.getPtjTotVar()
 						+ rptGenBean.getContractNoTotVar()
 						+ rptGenBean.getSstTotVar()
 						+ rptGenBean.getJabatanTotVar()
 						+ rptGenBean.getMinistryTotVar()
+						+ rptGenBean.getPegwaiPengawaiTotVar()
+						+ rptGenBean.getKumpulanPTJTotVar()
+						+ rptGenBean.getPtjTotVar()
 						+ rptGenBean.getSupplierTotVar()
 						+ rptGenBean.getStatusTotVar()
 						+ rptGenBean.getDurationTotVar()
@@ -14984,6 +15211,16 @@ public class ReportBackingBean extends
 		this.setFlPrNo(null);
 		this.setFlPmo(null);
 		this.setFlItemName(null);
+		/*
+		 * this.ministryList = new ArrayList<SelectItem>();
+		 * this.pegaWaiPengawalList = new ArrayList<SelectItem>();
+		 * this.kumpulanPTJList= new ArrayList<SelectItem>(); this.ptjList = new
+		 * ArrayList<SelectItem>();
+		 */
+		this.getManagedBean().setSelectedMinistry(null);
+		this.getManagedBean().setSelectedPegwaiPengawal(null);
+		this.getManagedBean().setSelectedKumpulanPTJ(null);
+		this.getManagedBean().setSelectedPTJ(null);
 		this.setSmApplicationNo(null);
 		if ((allRoleCodesList != null)
 				&& (allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN) || allRoleCodesList
@@ -15163,8 +15400,8 @@ public class ReportBackingBean extends
 	/**
 	 * fileGenerateReport - Ut will generate report based on generated URL.
 	 * 
-	 * @param reportFile
-	 *            the report file
+	 * @param reportTitle
+	 *            the report title
 	 * @param paramConstrString
 	 *            the param constr string
 	 */
@@ -15997,6 +16234,11 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Construct ministry condition fields.
+	 * 
+	 * @return the string
+	 */
 	public String constructMinistryConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
@@ -16005,6 +16247,11 @@ public class ReportBackingBean extends
 		return sb.toString();
 	}
 
+	/**
+	 * Construct pegwai pengawal condition fields.
+	 * 
+	 * @return the string
+	 */
 	public String constructPegwaiPengawalConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
@@ -16019,6 +16266,11 @@ public class ReportBackingBean extends
 		return sb.toString();
 	}
 
+	/**
+	 * Construct kumpulan ptj condition fields.
+	 * 
+	 * @return the string
+	 */
 	public String constructKumpulanPTJConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
@@ -16034,6 +16286,11 @@ public class ReportBackingBean extends
 		return sb.toString();
 	}
 
+	/**
+	 * Construct ptj condition fields.
+	 * 
+	 * @return the string
+	 */
 	public String constructPTJConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
@@ -16048,34 +16305,12 @@ public class ReportBackingBean extends
 		return sb.toString();
 	}
 
-	/*
-	 * public void updateSearchCriteria(BaseEntity entity) {
-	 * log.info("updateSearchCriteria"); PmOrgProfile orgProfile =
-	 * (PmOrgProfile) entity;
+	/**
+	 * Gets the ministry org profile by login user.
 	 * 
-	 * }
+	 * @return the ministry org profile by login user (Curently this method not
+	 *         used any where in report)
 	 */
-
-	/*
-	 * public void updateKPTJSearchCriteria(BaseEntity entity) {
-	 * log.info("updateKPTJSearchCriteria"); PmOrgProfile orgProfile =
-	 * (PmOrgProfile) entity; this.getManagedBean().getPlanSearchBean()
-	 * .setKptj(orgProfile); }
-	 */
-
-	/*
-	 * public void updateMinistrySearchCriteria(BaseEntity entity) {
-	 * log.info("updateMinistrySearchCriteria"); PmOrgProfile orgProfile =
-	 * (PmOrgProfile) entity; this.getManagedBean().getPlanSearchBean()
-	 * .setMinistry(orgProfile); }
-	 */
-
-	/*
-	 * public void retrieveMinistryOrgProfile(){
-	 * this.getManagedBean().setSelectedMinistry
-	 * (getMinistryOrgProfileByLoginUser()); }
-	 */
-
 	public PmOrgProfile getMinistryOrgProfileByLoginUser() {
 		IOrgProfileSO orgProfileSO = null;
 		PmOrgProfile pmOrgProfile = null;
@@ -16095,7 +16330,6 @@ public class ReportBackingBean extends
 		} finally {
 			orgProfileSO = null;
 		}
-
 		return pmOrgProfile;
 	}
 

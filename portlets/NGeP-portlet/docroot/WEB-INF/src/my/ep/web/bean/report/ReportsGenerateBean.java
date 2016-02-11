@@ -1136,12 +1136,15 @@ public class ReportsGenerateBean {
 	// FL module
 	/** The fl ptj view. */
 	private boolean flPtjView = false;
-	
+
 	/** The fl pega wai pengawal view. */
 	private boolean flPegaWaiPengawalView = false;
-	
+
 	/** The fl kumpulan ptj view. */
-	private boolean flKumpulanPTJView = false;	
+	private boolean flKumpulanPTJView = false;
+
+	/** The ptj list for authorizer. */
+	private List<SelectItem> ptjListForAuthorizer = new ArrayList<SelectItem>();
 
 	/** The fl contract no view. */
 	private boolean flContractNoView = false;
@@ -1154,6 +1157,18 @@ public class ReportsGenerateBean {
 
 	/** The fl ministry view. */
 	private boolean flMinistryView = false;
+
+	/** The fl lov based roles. */
+	private boolean commonLOVBasedRoles = false;
+
+	/** The ct lov based roles. */
+	private boolean ctLOVBasedRoles = false;
+
+	/** The pp lov based roles. */
+	private boolean ppLOVBasedRoles = false;
+
+	/** The fl text box based roles. */
+	private boolean flTextBoxBasedRoles = false;
 
 	/** The fl supplier view. */
 	private boolean flSupplierView = false;
@@ -1484,9 +1499,9 @@ public class ReportsGenerateBean {
 
 	/** The fl from date view. */
 	private boolean flFromDateView = false;
-	
+
 	/** The fl from date range vie. */
-	private boolean flFromDateRangeView=false;
+	private boolean flFromDateRangeView = false;
 
 	/** The fl contract request created date view. */
 	private boolean flContractRequestCreatedDateView = false;
@@ -3546,6 +3561,12 @@ public class ReportsGenerateBean {
 	/** The ct ministry view. */
 	private boolean ctMinistryView = false;
 
+	/** The ct pega wai pengawal view. */
+	private boolean ctPegaWaiPengawalView = false;
+
+	/** The ct kumpulan ptj view. */
+	private boolean ctKumpulanPTJView = false;
+
 	/** The ct ptj view. */
 	private boolean ctPtjView = false;
 
@@ -3614,6 +3635,13 @@ public class ReportsGenerateBean {
 
 	/** The pp ptj view. */
 	private boolean ppPTJView = false;
+
+	/** The pp pega wai pengawal view. */
+	private boolean ppPegaWaiPengawalView = false;
+
+	/** The pp kumpulan ptj view. */
+	private boolean ppKumpulanPTJView = false;
+
 	// PM
 	/** The pm service type view. */
 	private boolean pmServiceTypeView = false;
@@ -3714,6 +3742,12 @@ public class ReportsGenerateBean {
 
 	/** The ministry tot var. */
 	private String ministryTotVar = ReportConst.EMPTY_VAL;
+
+	/** The pegwai pengawai tot var. */
+	private String pegwaiPengawaiTotVar = ReportConst.EMPTY_VAL;
+
+	/** The kumpulan ptj tot var. */
+	private String kumpulanPTJTotVar = ReportConst.EMPTY_VAL;
 
 	/** The supplier tot var. */
 	private String supplierTotVar = ReportConst.EMPTY_VAL;
@@ -18324,5 +18358,210 @@ public class ReportsGenerateBean {
 	 */
 	public void setFlKumpulanPTJView(boolean flKumpulanPTJView) {
 		this.flKumpulanPTJView = flKumpulanPTJView;
+	}
+
+	/**
+	 * Checks if is fl text box based roles.
+	 * 
+	 * @return the flTextBoxBasedRoles
+	 */
+	public boolean isFlTextBoxBasedRoles() {
+		return flTextBoxBasedRoles;
+	}
+
+	/**
+	 * Sets the fl text box based roles.
+	 * 
+	 * @param flTextBoxBasedRoles
+	 *            the flTextBoxBasedRoles to set
+	 */
+	public void setFlTextBoxBasedRoles(boolean flTextBoxBasedRoles) {
+		this.flTextBoxBasedRoles = flTextBoxBasedRoles;
+	}
+
+	/**
+	 * Gets the ptj list for authorizer.
+	 * 
+	 * @return the ptjListForAuthorizer
+	 */
+	public List<SelectItem> getPtjListForAuthorizer() {
+		return ptjListForAuthorizer;
+	}
+
+	/**
+	 * Sets the ptj list for authorizer.
+	 * 
+	 * @param ptjListForAuthorizer
+	 *            the ptjListForAuthorizer to set
+	 */
+	public void setPtjListForAuthorizer(List<SelectItem> ptjListForAuthorizer) {
+		this.ptjListForAuthorizer = ptjListForAuthorizer;
+	}
+
+	/**
+	 * Gets the pegwai pengawai tot var.
+	 * 
+	 * @return the pegwaiPengawaiTotVar
+	 */
+	public String getPegwaiPengawaiTotVar() {
+		return pegwaiPengawaiTotVar;
+	}
+
+	/**
+	 * Sets the pegwai pengawai tot var.
+	 * 
+	 * @param pegwaiPengawaiTotVar
+	 *            the pegwaiPengawaiTotVar to set
+	 */
+	public void setPegwaiPengawaiTotVar(String pegwaiPengawaiTotVar) {
+		this.pegwaiPengawaiTotVar = pegwaiPengawaiTotVar;
+	}
+
+	/**
+	 * Gets the kumpulan ptj tot var.
+	 * 
+	 * @return the kumpulanPTJTotVar
+	 */
+	public String getKumpulanPTJTotVar() {
+		return kumpulanPTJTotVar;
+	}
+
+	/**
+	 * Sets the kumpulan ptj tot var.
+	 * 
+	 * @param kumpulanPTJTotVar
+	 *            the kumpulanPTJTotVar to set
+	 */
+	public void setKumpulanPTJTotVar(String kumpulanPTJTotVar) {
+		this.kumpulanPTJTotVar = kumpulanPTJTotVar;
+	}
+
+	/**
+	 * Checks if is ct lov based roles.
+	 * 
+	 * @return the ctLOVBasedRoles
+	 */
+	public boolean isCtLOVBasedRoles() {
+		return ctLOVBasedRoles;
+	}
+
+	/**
+	 * Sets the ct lov based roles.
+	 * 
+	 * @param ctLOVBasedRoles
+	 *            the ctLOVBasedRoles to set
+	 */
+	public void setCtLOVBasedRoles(boolean ctLOVBasedRoles) {
+		this.ctLOVBasedRoles = ctLOVBasedRoles;
+	}
+
+	/**
+	 * Checks if is pp lov based roles.
+	 * 
+	 * @return the ppLOVBasedRoles
+	 */
+	public boolean isPpLOVBasedRoles() {
+		return ppLOVBasedRoles;
+	}
+
+	/**
+	 * Sets the pp lov based roles.
+	 * 
+	 * @param ppLOVBasedRoles
+	 *            the ppLOVBasedRoles to set
+	 */
+	public void setPpLOVBasedRoles(boolean ppLOVBasedRoles) {
+		this.ppLOVBasedRoles = ppLOVBasedRoles;
+	}
+
+	/**
+	 * Checks if is ct pega wai pengawal view.
+	 * 
+	 * @return the ctPegaWaiPengawalView
+	 */
+	public boolean isCtPegaWaiPengawalView() {
+		return ctPegaWaiPengawalView;
+	}
+
+	/**
+	 * Sets the ct pega wai pengawal view.
+	 * 
+	 * @param ctPegaWaiPengawalView
+	 *            the ctPegaWaiPengawalView to set
+	 */
+	public void setCtPegaWaiPengawalView(boolean ctPegaWaiPengawalView) {
+		this.ctPegaWaiPengawalView = ctPegaWaiPengawalView;
+	}
+
+	/**
+	 * Checks if is ct kumpulan ptj view.
+	 * 
+	 * @return the ctKumpulanPTJView
+	 */
+	public boolean isCtKumpulanPTJView() {
+		return ctKumpulanPTJView;
+	}
+
+	/**
+	 * Sets the ct kumpulan ptj view.
+	 * 
+	 * @param ctKumpulanPTJView
+	 *            the ctKumpulanPTJView to set
+	 */
+	public void setCtKumpulanPTJView(boolean ctKumpulanPTJView) {
+		this.ctKumpulanPTJView = ctKumpulanPTJView;
+	}
+
+	/**
+	 * Checks if is pp pega wai pengawal view.
+	 * 
+	 * @return the ppPegaWaiPengawalView
+	 */
+	public boolean isPpPegaWaiPengawalView() {
+		return ppPegaWaiPengawalView;
+	}
+
+	/**
+	 * Sets the pp pega wai pengawal view.
+	 * 
+	 * @param ppPegaWaiPengawalView
+	 *            the ppPegaWaiPengawalView to set
+	 */
+	public void setPpPegaWaiPengawalView(boolean ppPegaWaiPengawalView) {
+		this.ppPegaWaiPengawalView = ppPegaWaiPengawalView;
+	}
+
+	/**
+	 * Checks if is pp kumpulan ptj view.
+	 * 
+	 * @return the ppKumpulanPTJView
+	 */
+	public boolean isPpKumpulanPTJView() {
+		return ppKumpulanPTJView;
+	}
+
+	/**
+	 * Sets the pp kumpulan ptj view.
+	 * 
+	 * @param ppKumpulanPTJView
+	 *            the ppKumpulanPTJView to set
+	 */
+	public void setPpKumpulanPTJView(boolean ppKumpulanPTJView) {
+		this.ppKumpulanPTJView = ppKumpulanPTJView;
+	}
+
+	/**
+	 * @return the commonLOVBasedRoles
+	 */
+	public boolean isCommonLOVBasedRoles() {
+		return commonLOVBasedRoles;
+	}
+
+	/**
+	 * @param commonLOVBasedRoles
+	 *            the commonLOVBasedRoles to set
+	 */
+	public void setCommonLOVBasedRoles(boolean commonLOVBasedRoles) {
+		this.commonLOVBasedRoles = commonLOVBasedRoles;
 	}
 }
