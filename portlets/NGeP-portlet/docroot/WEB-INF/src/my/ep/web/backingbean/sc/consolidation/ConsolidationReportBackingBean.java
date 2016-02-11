@@ -894,7 +894,7 @@ public class ConsolidationReportBackingBean extends
 	private void initializeRemarks() {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
-		// Retrieve committee remarks
+		// Retrieve finalization remarks
 		List<ScQtFinalizationRemarks> remarks = initializeRemarks(scQtFinalization,
 				null, scQtFinalization.getScQtFinalizationRemarks(), ScQtFinalizationRemarks.class);
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
