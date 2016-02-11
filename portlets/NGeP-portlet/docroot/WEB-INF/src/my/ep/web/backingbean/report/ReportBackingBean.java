@@ -12209,16 +12209,35 @@ public class ReportBackingBean extends
 			}
 
 			// For FL,CT and PP # for setting the Only LOV's values
-			if (this.getManagedBean().getRptGenBean().isCommonLOVBasedRoles()) {
-				this.setCommonMinistry(this.getManagedBean()
-						.getSelectedMinistry().getOrgProfileId().toString());
-				this.setCommonPegaWaiPengawal((this.getManagedBean()
-						.getSelectedPegwaiPengawal().getOrgProfileId()
-						.toString()));
-				this.setCommonKumpulanPTJ(this.getManagedBean()
-						.getSelectedKumpulanPTJ().getOrgProfileId().toString());
-				this.setCommonPtj((this.getManagedBean().getSelectedPTJ()
-						.getOrgProfileId().toString()));
+			if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.CONTRACT_MANAGEMENT)
+					|| this.getModuleValue().equalsIgnoreCase(
+							ModuleCodeConst.PROCUREMENT_PLAN)
+					|| this.getModuleValue().equalsIgnoreCase(
+							ModuleCodeConst.ORDER_FULFILLMENT)) {
+				if (this.getManagedBean().getRptGenBean()
+						.isCommonLOVBasedRoles()) {
+					if (this.getManagedBean().getSelectedMinistry()
+							.getOrgProfileId() != null) {
+						this.setCommonMinistry(this.getManagedBean()
+								.getSelectedMinistry().getOrgProfileId()
+								.toString());
+					} else if (this.getManagedBean()
+							.getSelectedPegwaiPengawal().getOrgProfileId() != null) {
+						this.setCommonPegaWaiPengawal(this.getManagedBean()
+								.getSelectedPegwaiPengawal().getOrgProfileId()
+								.toString());
+					} else if (this.getManagedBean().getSelectedKumpulanPTJ()
+							.getOrgProfileId() != null) {
+						this.setCommonKumpulanPTJ(this.getManagedBean()
+								.getSelectedKumpulanPTJ().getOrgProfileId()
+								.toString());
+					} else if (this.getManagedBean().getSelectedPTJ()
+							.getOrgProfileId() != null) {
+						this.setCommonPtj(this.getManagedBean()
+								.getSelectedPTJ().getOrgProfileId().toString());
+					}
+				}
 			}
 
 			if (this.getModuleValue().equalsIgnoreCase(
@@ -12477,6 +12496,10 @@ public class ReportBackingBean extends
 						.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this
 						.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPegaWaiPengawal() != null) && (this
+						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonKumpulanPTJ() != null) && (this
+						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtContractNo() != null) && (this.getCtContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtPhysicalContractNo() != null) && (this
@@ -12666,11 +12689,26 @@ public class ReportBackingBean extends
 				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
 						+ this.getCommonMinistry());
 			}
+
+			if ((this.getCommonPegaWaiPengawal() != null)
+					&& (this.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL)) {
+
+				rptGenBean
+						.setCtPegaiPengawaiVar(ReportConst.CT_AMP_PPEGAIPENGAWAI_EQ
+								+ this.getCommonPegaWaiPengawal());
+			}
+			if ((this.getCommonKumpulanPTJ() != null)
+					&& (this.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtKumpulanVar(ReportConst.CT_AMP_PKUMPULAN_EQ
+						+ this.getCommonKumpulanPTJ());
+			}
+
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtPtjVar(ReportConst.CT_AMP_PPTJNAME_EQ
 						+ this.getCommonPtj());
 			}
+
 			if ((this.getCtUserType() != null)
 					&& (this.getCtUserType() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtUserTypeVar(ReportConst.CT_AMP_USERTYPE_EQ
@@ -12701,6 +12739,8 @@ public class ReportBackingBean extends
 						+ rptGenBean.getCtGroupThreeVar()
 						+ rptGenBean.getCtProductServiceVar()
 						+ rptGenBean.getCtMinistryVar()
+						+ rptGenBean.getPegwaiPengawaiTotVar()
+						+ rptGenBean.getCtKumpulanVar()
 						+ rptGenBean.getCtPtjVar()
 						+ rptGenBean.getCtLoanNoVar()
 						+ rptGenBean.getCtLOAPhysicalNoVar()
@@ -14661,6 +14701,11 @@ public class ReportBackingBean extends
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this
 						.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPegaWaiPengawal() != null) && (this
+						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonKumpulanPTJ() != null) && (this
+						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
+
 				|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
@@ -14669,15 +14714,25 @@ public class ReportBackingBean extends
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
-				/*
-				 * Long orgprofileid = Long.parseLong(this.getCommonMinistry());
-				 * 
-				 * rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ +
-				 * retrieveMinistryName(orgprofileid));
-				 */
+				
 				rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
 						+ this.getCommonMinistry());
 			}
+			
+			if ((this.getCommonPegaWaiPengawal() != null)
+					&& (this.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL)) {
+				
+				rptGenBean.setPpPegaiPengawaiVar(ReportConst.FL_AMP_MINISTRY_EQ
+						+ this.getCommonPegaWaiPengawal());
+			}
+			
+			if ((this.getCommonKumpulanPTJ() != null)
+					&& (this.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL)) {
+				
+				rptGenBean.setPpKumpulanVar(ReportConst.FL_AMP_MINISTRY_EQ
+						+ this.getCommonKumpulanPTJ());
+			}
+			
 			if ((this.getPpYear() != null)
 					&& (this.getPpYear() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPpYearVar(ReportConst.AMP_SM_YEAR_EQ
@@ -14691,6 +14746,8 @@ public class ReportBackingBean extends
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getPpPTJVar()
 						+ rptGenBean.getPpMinistryVar()
+						+ rptGenBean.getPpPegaiPengawaiVar()
+						+ rptGenBean.getPpKumpulanVar()
 						+ rptGenBean.getPpYearVar()
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());

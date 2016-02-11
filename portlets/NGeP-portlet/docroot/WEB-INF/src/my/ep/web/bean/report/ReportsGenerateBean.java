@@ -4177,6 +4177,10 @@ public class ReportsGenerateBean {
 
 	/** The ct ministry var. */
 	private String ctMinistryVar = ReportConst.EMPTY_VAL;
+	
+	private String ctPegaiPengawaiVar = ReportConst.EMPTY_VAL;
+	
+	private String ctKumpulanVar = ReportConst.EMPTY_VAL;
 
 	/** The ct ptj var. */
 	private String ctPtjVar = ReportConst.EMPTY_VAL;
@@ -4294,6 +4298,10 @@ public class ReportsGenerateBean {
 
 	/** The pp ministry var. */
 	private String ppMinistryVar = ReportConst.EMPTY_VAL;
+	
+	private String ppPegaiPengawaiVar = ReportConst.EMPTY_VAL;
+	
+	private String ppKumpulanVar = ReportConst.EMPTY_VAL;
 
 	/** The pp ptj var. */
 	private String ppPTJVar = ReportConst.EMPTY_VAL;
@@ -18563,5 +18571,61 @@ public class ReportsGenerateBean {
 	 */
 	public void setCommonLOVBasedRoles(boolean commonLOVBasedRoles) {
 		this.commonLOVBasedRoles = commonLOVBasedRoles;
+	}
+
+	/**
+	 * @return the ctPegaiPengawaiVar
+	 */
+	public String getCtPegaiPengawaiVar() {
+		return ctPegaiPengawaiVar;
+	}
+
+	/**
+	 * @param ctPegaiPengawaiVar the ctPegaiPengawaiVar to set
+	 */
+	public void setCtPegaiPengawaiVar(String ctPegaiPengawaiVar) {
+		this.ctPegaiPengawaiVar = ctPegaiPengawaiVar;
+	}
+
+	/**
+	 * @return the ctKumpulanVar
+	 */
+	public String getCtKumpulanVar() {
+		return ctKumpulanVar;
+	}
+
+	/**
+	 * @param ctKumpulanVar the ctKumpulanVar to set
+	 */
+	public void setCtKumpulanVar(String ctKumpulanVar) {
+		this.ctKumpulanVar = ctKumpulanVar;
+	}
+
+	/**
+	 * @return the ppPegaiPengawaiVar
+	 */
+	public String getPpPegaiPengawaiVar() {
+		return ppPegaiPengawaiVar;
+	}
+
+	/**
+	 * @param ppPegaiPengawaiVar the ppPegaiPengawaiVar to set
+	 */
+	public void setPpPegaiPengawaiVar(String ppPegaiPengawaiVar) {
+		this.ppPegaiPengawaiVar = ppPegaiPengawaiVar;
+	}
+
+	/**
+	 * @return the ppKumpulanVar
+	 */
+	public String getPpKumpulanVar() {
+		return ppKumpulanVar;
+	}
+
+	/**
+	 * @param ppKumpulanVar the ppKumpulanVar to set
+	 */
+	public void setPpKumpulanVar(String ppKumpulanVar) {
+		this.ppKumpulanVar = ppKumpulanVar;
 	}
 }
