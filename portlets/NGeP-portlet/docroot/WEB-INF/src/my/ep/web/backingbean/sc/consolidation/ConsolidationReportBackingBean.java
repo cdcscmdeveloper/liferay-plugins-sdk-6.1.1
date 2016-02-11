@@ -899,7 +899,7 @@ public class ConsolidationReportBackingBean extends
 				null, scQtFinalization.getScQtFinalizationRemarks(), ScQtFinalizationRemarks.class);
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
 
-		// Committee Remarks list
+		// Finalization Remarks list
 		getManagedBean().setFinalizationRemars(remarks);		
 	}	
 	
