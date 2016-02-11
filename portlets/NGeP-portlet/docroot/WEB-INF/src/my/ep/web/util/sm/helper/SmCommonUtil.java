@@ -89,12 +89,14 @@ import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -3296,6 +3298,71 @@ public class SmCommonUtil {
 			}
 		}
 		return retVal;
+	}
+
+	/**
+	 * Get local authority select items by business type and address
+	 * 
+	 * @param String
+	 *            businessType
+	 * @param SmAddress
+	 *            smAddress
+	 * @return List<SelectItem>
+	 */
+	public static List<SelectItem> getLocalAuthorityItems(String businessType,
+			SmAddress smAddress) {
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		SelectItem item = null;
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		if (SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
+				.contains(businessType)) {
+			if (smAddress != null && smAddress.getPmState() != null
+					&& smAddress.getPmState().getStateId() != null) {
+				if (smAddress.getPmDistrict() != null
+						&& smAddress.getPmDistrict().getDistrictId() != null
+						&& smAddress
+								.getPmDistrict()
+								.getDistrictCode()
+								.equals(SupplierManagementConst.KUCHING_DISTRICT_CODE)) {
+					items.add(getLhdnSelectItem());
+				} else {
+					reqDTO.setSmAddress(smAddress);
+					List<PmOrgProfile> orgProfileList = SmServiceLookup
+							.getRegistrationSO()
+							.retrieveLocalAuthorityOrgProfileByAddress(reqDTO)
+							.getOrgProfileList();
+					if (!EntityHelper.isCollectionEmpty(orgProfileList)) {
+						item = new SelectItem();
+						item.setLabel(SmCommonUtil.getMessage("lbl.txt.select",
+								null));
+						item.setValue(null);
+						items.add(item);
+						for (PmOrgProfile orgProfile : orgProfileList) {
+							item = new SelectItem();
+							item.setLabel(orgProfile.getPmOrgValidity()
+									.getOrgName());
+							item.setValue(orgProfile.getOrgProfileId());
+							items.add(item);
+						}
+					}else{
+						items.add(getLhdnSelectItem());
+					}
+				}
+			}
+		} else {
+			items.add(getLhdnSelectItem());
+		}
+		return items;
+	}
+
+	private static SelectItem getLhdnSelectItem() {
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		PmOrgProfile orgProfile = SmServiceLookup.getRegistrationSO()
+				.retrieveLembagaHasilOrgProfile(reqDTO).getOrgProfile();
+		SelectItem item = new SelectItem();
+		item.setLabel(orgProfile.getPmOrgValidity().getOrgName());
+		item.setValue(orgProfile.getOrgProfileId());
+		return item;
 	}
 
 	private static PmUserOrg getSupplierPmUserOrg(SmPersonnel personnel) {
