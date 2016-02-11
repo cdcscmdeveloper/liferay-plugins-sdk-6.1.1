@@ -19,6 +19,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -491,6 +492,9 @@ public class ReportMangedBean extends BaseManagedBean {
 	public PmOrgProfile getSelectedMinistry() {
 		if (selectedMinistry == null) {
 			selectedMinistry = new PmOrgProfile();
+			if(selectedMinistry.getPmOrgValidity()==null){
+				selectedMinistry.setPmOrgValidity(new PmOrgValidity());				
+			}
 		}
 		return selectedMinistry;
 	}
@@ -513,6 +517,10 @@ public class ReportMangedBean extends BaseManagedBean {
 	public PmOrgProfile getSelectedPegwaiPengawal() {
 		if (selectedPegwaiPengawal == null) {
 			selectedPegwaiPengawal = new PmOrgProfile();
+			if(selectedPegwaiPengawal.getPmOrgValidity()==null){
+				selectedPegwaiPengawal.setPmOrgValidity(new PmOrgValidity());				
+			}
+
 		}
 		return selectedPegwaiPengawal;
 	}
@@ -535,6 +543,9 @@ public class ReportMangedBean extends BaseManagedBean {
 	public PmOrgProfile getSelectedKumpulanPTJ() {
 		if (selectedKumpulanPTJ == null) {
 			selectedKumpulanPTJ = new PmOrgProfile();
+			if(selectedKumpulanPTJ.getPmOrgValidity()==null){
+				selectedKumpulanPTJ.setPmOrgValidity(new PmOrgValidity());
+			}
 		}
 		return selectedKumpulanPTJ;
 	}
@@ -557,6 +568,10 @@ public class ReportMangedBean extends BaseManagedBean {
 	public PmOrgProfile getSelectedPTJ() {
 		if (selectedPTJ == null) {
 			selectedPTJ = new PmOrgProfile();
+			if(selectedPTJ.getPmOrgValidity()==null){
+				selectedPTJ.setPmOrgValidity(new PmOrgValidity());
+				
+			}
 		}
 		return selectedPTJ;
 	}

@@ -752,6 +752,9 @@ public class ReportConst {
 	public static final String CT_AMP_PLOANO_EQ = "&PLOANO=";
 	public static final String CT_AMP_PLOAPHYSICALNO_EQ = "&PLOAPHYSICALNO=";
 	public static final String CT_AMP_PMINISTRY_EQ = "&PMINIS=";
+	public static final String CT_AMP_PPEGAIPENGAWAI_EQ = "&PFPP=";
+	public static final String CT_AMP_PKUMPULAN_EQ = "&PFJA=";
+	
 	/*
 	 * public static final String CT_AMP_PPEGAWAI_PENGAWAI_EQ="&PFPP"; public
 	 * static final String CT_AMP_PKUMPULAN_EQ="&PFJA";
