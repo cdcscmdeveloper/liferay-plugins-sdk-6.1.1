@@ -4,6 +4,9 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
+import java.util.List;
+
+import javax.faces.model.SelectItem;
 
 /**
  * @author siew mei
@@ -14,7 +17,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Object token;
-	
+
 	// For BPM task details
 	private String taskId;
 	private String[] outComes;
@@ -25,7 +28,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private String processName;
 	private Boolean groupTask;
 	private boolean isReadOnly;
-	
+	private List<SelectItem> localAuthorityItems;
+
 	// For sub title displayed in screen.
 	private String title;
 
@@ -37,7 +41,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param token the token to set
+	 * @param token
+	 *            the token to set
 	 */
 	public void setToken(Object token) {
 		this.token = token;
@@ -51,7 +56,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param taskId the taskId to set
+	 * @param taskId
+	 *            the taskId to set
 	 */
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
@@ -65,7 +71,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param outComes the outComes to set
+	 * @param outComes
+	 *            the outComes to set
 	 */
 	public void setOutComes(String[] outComes) {
 		this.outComes = outComes;
@@ -79,7 +86,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param currentStatusId the currentStatusId to set
+	 * @param currentStatusId
+	 *            the currentStatusId to set
 	 */
 	public void setCurrentStatusId(Long currentStatusId) {
 		this.currentStatusId = currentStatusId;
@@ -93,7 +101,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param taskName the taskName to set
+	 * @param taskName
+	 *            the taskName to set
 	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
@@ -107,7 +116,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param isAssignedState the isAssignedState to set
+	 * @param isAssignedState
+	 *            the isAssignedState to set
 	 */
 	public void setAssignedState(boolean isAssignedState) {
 		this.isAssignedState = isAssignedState;
@@ -121,7 +131,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param payLoad the payLoad to set
+	 * @param payLoad
+	 *            the payLoad to set
 	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
@@ -135,7 +146,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -149,7 +161,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param processName the processName to set
+	 * @param processName
+	 *            the processName to set
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
@@ -163,7 +176,8 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param groupTask the groupTask to set
+	 * @param groupTask
+	 *            the groupTask to set
 	 */
 	public void setGroupTask(Boolean groupTask) {
 		this.groupTask = groupTask;
@@ -177,15 +191,26 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param isReadOnly the isReadOnly to set
+	 * @param isReadOnly
+	 *            the isReadOnly to set
 	 */
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
 	}
 
-	
-	
+	/**
+	 * @return local authority items
+	 */
+	public List<SelectItem> getLocalAuthorityItems() {
+		return localAuthorityItems;
+	}
 
-	
+	/**
+	 * @param List
+	 *            <SelectItem> localAuthorityItems
+	 */
+	public void setLocalAuthorityItems(List<SelectItem> localAuthorityItems) {
+		this.localAuthorityItems = localAuthorityItems;
+	}
 
 }

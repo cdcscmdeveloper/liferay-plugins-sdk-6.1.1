@@ -253,14 +253,14 @@ public class SupplierManagementConst {
 	public static final String PM_PAYMENT_ITEM = "SPI";
 
 	// soft cert status
-	public static final int IS_SOFTCERT_REQ = 2;
-	public static final int SOFT_CERT_PROCESSING = 3;
-	public static final int SOFT_CERT_PENDING_REQ = 4;
-	public static final int SOFT_CERT_ISSUED = 1;
-	public static final int SOFT_CERT_REVOKED = 5;
-	public static final int SOFT_CERT_REJECTED = 6;
-	public static final int SOFT_CERT_READY_FOR_RENEWAL = 7;
-	public static final int SOFT_CERT_REQ_FAILED = 9;
+	public static final int IS_SOFTCERT_REQ = my.ep.constant.sm.SupplierManagementConst.IS_SOFTCERT_REQ;
+	public static final int SOFT_CERT_PROCESSING = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_PROCESSING;
+	public static final int SOFT_CERT_PENDING_REQ = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_PENDING_REQ;
+	public static final int SOFT_CERT_ISSUED = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_ISSUED;
+	public static final int SOFT_CERT_REVOKED = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_REVOKED;
+	public static final int SOFT_CERT_REJECTED = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_REJECTED;
+	public static final int SOFT_CERT_READY_FOR_RENEWAL = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL;
+	public static final int SOFT_CERT_REQ_FAILED = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_REQ_FAILED;
 
 	// rejected soft cert reason code
 	public static final String REJECTED_WITH_FRAUD = "R";
@@ -329,23 +329,23 @@ public class SupplierManagementConst {
 	public static final String STAFF_TYPE_SEMIPROF = "S";
 	public static final String STAFF_TYPE_CLERICAL = "C";
 
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL = "A";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP = "B";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG = "C";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH = "D";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK = "E";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG = "F";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH = "G";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK = "H";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD = "I";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD = "J";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN = "K";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI = "L";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN = "M";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_NGO = "N";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2 = "O";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2 = "P";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = "Q";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_NGO = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_NGO;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2 = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2 = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
 
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
@@ -357,6 +357,11 @@ public class SupplierManagementConst {
 	public static List<String> LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
 					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG);
+	public static List<String> LOCAL_AUTH_BUSINESS_TYPE =Arrays.asList(
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK);
 
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT = "ROS";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT = "ROB_I";
@@ -442,9 +447,9 @@ public class SupplierManagementConst {
 	// Site Visit
 	// public static final String SVO_FIN_CHECKLIST = "FCL";
 	public static final String MALAYSIA_CODE = "MY";
-	public static final String SABAH_CODE = "SA";
-	public static final String SARAWAK_CODE = "13";
-	public static final String KUCHING_DISTRICT_CODE = "1301";
+	public static final String SABAH_CODE = my.ep.constant.sm.SupplierManagementConst.PM_SABAH_STATE_CODE;
+	public static final String SARAWAK_CODE = my.ep.constant.sm.SupplierManagementConst.PM_SARAWAK_STATE_CODE;
+	public static final String KUCHING_DISTRICT_CODE = my.ep.constant.sm.SupplierManagementConst.KUCHING_DISTRICT_CODE;
 
 	// Pm Edu codes
 	public static final String SUPPLIER_EDU_PHD = "1";
@@ -528,16 +533,16 @@ public class SupplierManagementConst {
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 
 	// SME STATUS
-	public static final String SME_STATUS_SERVICES = "S";
-	public static final String SME_STATUS_MANUFACTURING = "M";
-	public static final String SME_STATUS_NONE_SME = "N";
-	public static final String SME_STATUS_BOTH = "B";
+	public static final String SME_STATUS_SERVICES = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_SERVICES;
+	public static final String SME_STATUS_MANUFACTURING = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_MANUFACTURING;
+	public static final String SME_STATUS_NONE_SME = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_NONE_SME;
+	public static final String SME_STATUS_BOTH = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_BOTH;
 
 	// SUPPLIER TYPE
-	public static final String SUPP_TYPE_CONTRACTOR = "K";
-	public static final String SUPP_TYPE_CONSULTANT = "J";
-	public static final String SUPP_TYPE_BASIC = "B";
-	public static final String SUPP_TYPE_GOVT_TO_GOVT = "G";
+	public static final String SUPP_TYPE_CONTRACTOR = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONTRACTOR;
+	public static final String SUPP_TYPE_CONSULTANT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONSULTANT;
+	public static final String SUPP_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_BASIC;
+	public static final String SUPP_TYPE_GOVT_TO_GOVT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT;
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {

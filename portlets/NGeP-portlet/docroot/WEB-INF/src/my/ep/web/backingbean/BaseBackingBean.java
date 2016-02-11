@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -66,6 +68,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.AddressUtils;
@@ -76,6 +79,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
@@ -1088,6 +1092,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			}
 		}
 		return retVal;
+	}
+	
+	/**
+	 * Populate local authority when on change business type or district
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 * @param SmAddress
+	 *            smAddress
+	 */
+	public void populateLocalAuthority(SmSupplier supplier, SmAddress smAddress) {
+		getManagedBean().setLocalAuthorityItems(
+				SmCommonUtil.getLocalAuthorityItems(supplier.getBusinessType(),
+						smAddress));
+		if (!SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE.contains(supplier
+				.getBusinessType())
+				&& getManagedBean().getLocalAuthorityItems().size() == 1) {
+			supplier.setLocalAuthorityId((Long) getManagedBean()
+					.getLocalAuthorityItems().get(0).getValue());
+		}
+	}
+	
+	/**
+	 * Get list size
+	 * 
+	 * @param Collection
+	 *            <?> value
+	 * @return int
+	 */
+	public int getListSize(Collection<?> value) {
+		return value.size();
 	}
 	
 	/**
