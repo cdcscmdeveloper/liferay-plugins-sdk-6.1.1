@@ -4248,7 +4248,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			
-			String zipFileName = "amendment.zip";
+			String zipFileName = "NGeP-LOA-Report.zip";
 			File zipFile = new File(tempDirectory + "/" + attachmentFormat.format(zipFileName, null));
 			try {
 				zipFile.createNewFile();
