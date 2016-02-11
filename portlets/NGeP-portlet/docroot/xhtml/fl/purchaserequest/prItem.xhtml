@@ -593,190 +593,187 @@
 		
 		<p:dialog id="itemTaxGuideLineDialog"
 		widgetVar="taxGuideLineInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="900" height="500" resizable="false" >
+		modal="true" width="900" height="300" resizable="false" >
 		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" header="#{lbl['lbl.fl.guideline.taxable.item.g2g']}" toggleable="false">
 			<table style="width: 100%"  class="taxableGuidelineTable" >
 				<tr>
-					<td style="width: 10%;font:bold; color: blue;">No</td>
-					<td style="width: 20%;font:bold; color: blue;">Item</td>
-					<td style="width: 35%;font:bold; color: blue;">Agency</td>
+					<td style="width: 10%;font:bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.no']}" /></td>
+					<td style="width: 30%;font:bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.item']}" /></td>
+					<td style="width: 60%;font:bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.agency']}" /></td>
 				</tr>
 				<tr>
-					<td rowspan="3">1</td>
-					<td rowspan="3">Treated Water</td>
-					<td>* Supplied by JKR Perlis</td>
+					<td rowspan="3" style="vertical-align: top;">1</td>
+					<td rowspan="3" style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col1']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col11']}" /></td>
 				</tr>
 				<tr>
-					<td>* Supplied by JKR Sarawak</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col12']}" /></td>
 				</tr>
 				<tr>
-					<td>* Supplied by Jabatan Air Negeri Sabah</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col13']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
 					<td>2</td>
-					<td>Advertisement Space or Advertisement Time in Radio and Television</td>
-					<td>Supplied by Jabatan Penyiaran Malaysia</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col2']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col2']}" /></td>
 				</tr>
 				<tr>
 					<td>3</td>
-					<td>Broadcasting Facilities and Equipment Rental</td>
-					<td>Supplied by Jabatan Penyiaran Malaysia</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col3']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col2']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
 					<td>4</td>
-					<td>Goods and Services made or Provided by Prisoners</td>
-					<td>Supplied by Jabatan Penjara Malaysia</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col4']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col4']}" /></td>
 				</tr>
 				<tr>
 					<td>5</td>
-					<td>Freight Services</td>
-					<td>Supplied by Jabatan Keretapi Negeri Sabah</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col5']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col5']}" /></td>
 				</tr>
-				
 			</table>
 		</p:panel>
 		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode ne ParameterConst.procurementTypeG2G}"  header="#{lbl['lbl.fl.guideline.taxable.item']}" toggleable="false">
-			<h5>Designated Areas can be Tioman, Langkawi or Labuan.</h5>
+			<br/>
+			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header1']}" /></h5>
+			<br/>
 			<table style="width: 100%" class="taxableGuidelineTable">
 				<tr>
-					<td style="width: 10%; font: bold; color: blue;">No</td>
-					<td style="width: 20%; font: bold; color: blue;">Item</td>
-					<td style="width: 35%; font: bold; color: blue;">Supplier Address</td>
-					<td style="width: 35%; font: bold; color: blue;">Delivery Address</td>
+					<td style="width: 35%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.proc.typ.category']}" /></td>
+					<td style="width: 65%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.gst.changes']}" /></td>
+				</tr>
+				<tr>
+					<td rowspan="2" style="font: bold;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.service']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.service.col1']}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.service.col2']}" /></td>
+				</tr>
+				<tr>
+					<td rowspan="3" style="font: bold;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suply.goods']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col1']}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col2']}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col3']}" /></td>
+				</tr>
+			</table>
+			<br/>
+			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header2']}" /></h5>
+			<br/>
+			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header3']}" /></h5>
+			<br/>
+			<table style="width: 100%" class="taxableGuidelineTable">
+				<tr>
+					<td style="width: 10%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.no']}" /></td>
+					<td style="width: 20%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.item']}" /></td>
+					<td style="width: 35%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.supp.address']}" /></td>
+					<td style="width: 35%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.del.address']}" /></td>
 				</tr>
 				<tr>
 					<td rowspan="5" style="vertical-align: top;">1</td>
-					<td rowspan="5" style="vertical-align: top;">Supply of Petrol
-						RON 97</td>
-					<td>Malaysia (other than Designated Area)</td>
-					<td>Designated Areas</td>
+					<td rowspan="5" style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col1']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
 				</tr>
 				<tr>
-					<td>Malaysia (other than Designated Area)</td>
-					<td>Malaysia (other than Designated Area)</td>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
 				</tr>
 				<tr>
-					<td>Designated Areas</td>
-					<td>Malaysia (other than Designated Area)</td>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" /></td>
 				</tr>
 				<tr>
-					<td>Designated Areas (i.e. Langkawi)</td>
-					<td>Designated Areas (i.e. Tioman)</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
 				</tr>
 				<tr>
-					<td>Designated Areas (i.e. Langkawi)</td>
-					<td>Designated Areas (i.e. Langkawi)</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.da']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
 					<td rowspan="5" style="vertical-align: top;">2</td>
-					<td>Supply of Bahan Bakar Pukal:</td>
-					<td rowspan="2">Malaysia (other than Designated Area)</td>
-					<td rowspan="2">Malaysia (other than Designated Area)</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col2']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
-					<td>* Petrol RON 95</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col21']}" /></td>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
-					<td>* Diesel</td>
-					<td rowspan="2">Designated Areas (i.e. Langkawi)</td>
-					<td rowspan="2">Designated Areas (i.e. Tioman)</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col22']}" /></td>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
-					<td>* LPG (50KG)</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col23']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
-					<td>* Aviation Fuel (AVGAS)</td>
-					<td>Designated Areas (i.e. Langkawi)</td>
-					<td>Designated Areas (i.e. Langkawi)</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col24']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.da']}" /></td>
 				</tr>
 				<tr>
-					<td rowspan="7" style="vertical-align: top;">3</td>
-					<td>Supply of:</td>
-					<td colspan="2">Supply of motor vehicles including imported
-						cars from Malaysia (other than Designated Areas) to Tioman</td>
+					<td rowspan="5" style="vertical-align: top;">3</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col3']}" /></td>
+					<td rowspan="3"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+					<td rowspan="3"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
 				</tr>
 				<tr>
-					<td>* Motor Vehicles</td>
-					<td colspan="2">Supply of imported cars from Tioman to
-						Malaysia (other than Designated Areas).</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col31']}" /></td>
 				</tr>
 				<tr>
-					<td>* Imported Cars</td>
-					<td colspan="2">Supply of motor vehicles including imported
-						cars between Langkawi/Labuan to Tioman.</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col32']}" /></td>
 				</tr>
 				<tr>
-					<td>Criteria for imported cars:</td>
-					<td colspan="2">Supply of motor vehicles in Tioman.</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col33']}" /></td>
+					<td rowspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+					<td rowspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.tioman']}" /></td>
 				</tr>
 				<tr>
-					<td>* Fully imported passenger motorcar (CBU)</td>
-					<td colspan="2">Supply of imported cars from Langkawi/Labuan
-						to Malaysia (other than Designated Areas).</td>
-				</tr>
-				<tr>
-					<td>* 9 passenger including driver</td>
-					<td colspan="2">Supply of imported cars from Designated Areas
-						to Malaysia (other than Designated Areas).</td>
-				</tr>
-				<tr>
-					<td>* Not exceeding 3 tan car</td>
-					<td colspan="2">Supply of motor vehicles including imported
-						cars from Malaysia (other than Designated Areas)/Langkawi/Labuan
-						to Tioman.</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col34']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
-					<td rowspan="4" style="vertical-align: top;">4</td>
-					<td>Supply of Fully Imported:</td>
-					<td>Malaysia (other than Designated Area)</td>
-					<td>Langkawi</td>
+					<td rowspan="2" style="vertical-align: top;">4</td>
+					<td rowspan="2" style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col4']}" /></td>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.tioman']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
-					<td>* Marble</td>
-					<td>Designated Areas (Tioman or Labuan)</td>
-					<td>Langkawi</td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td>* Cement</td>
-					<td rowspan="2">Langkawi</td>
-					<td rowspan="2">Langkawi</td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td>* Rubber</td>
-				</tr>
-
-				<tr>
-					<td rowspan="3" style="vertical-align: top;">5</td>
-					<td rowspan="3" style="vertical-align: top;">Freight Services</td>
-					<td>Malaysia (outside the Designated Area)</td>
-					<td>Designated Area</td>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.supplied.tioman']}" /></td>
 				</tr>
 				<tr>
-					<td>Designated Area</td>
-					<td>Malaysia (outside the Designated Area)</td>
+					<td rowspan="5" style="vertical-align: top;">5</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col5']}" /></td>
+					<td colspan="2" rowspan="5"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.langkawi']}" /></td>
 				</tr>
 				<tr>
-					<td>Designated Areas (i.e. Langkawi)</td>
-					<td>Designated Areas (i.e. Tioman)</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col51']}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col52']}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col53']}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col54']}" /></td>
 				</tr>
 				<tr bgcolor="#CCCCCF">
-					<td rowspan="4" style="vertical-align: top;">6</td>
-					<td rowspan="4" style="vertical-align: top;">Telecommunication
-						Services</td>
-					<td>Malaysia (outside the Designated Area)</td>
-					<td>Designated Area</td>
+					<td style="vertical-align: top;">6</td>
+					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col6']}" /></td>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
 				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td>Designated Area</td>
-					<td>Malaysia (outside the Designated Area)</td>
+				<tr>
+					<td rowspan="2" style="vertical-align: top;">7</td>
+					<td rowspan="2" style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col7']}" /></td>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
 				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td>Designated Areas (i.e. Langkawi)</td>
-					<td>Designated Areas (i.e. Tioman)</td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td>Designated Areas (i.e. Langkawi)</td>
-					<td>Designated Areas (i.e. Langkawi)</td>
+				<tr>
+					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" /></td>
 				</tr>
 			</table>
 		</p:panel>
