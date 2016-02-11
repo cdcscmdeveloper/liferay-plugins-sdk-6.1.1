@@ -57,10 +57,10 @@
 			</td>
 			<td width="80%">
 				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 0}">
-					<ui:include src="viewPanelCircular.xhtml" />
+					<ui:include src="/xhtml/ct/circular/panel/circularDetail.xhtml" />
 				</p:outputPanel>
 				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 1}">
-					<ui:include src="viewPanelItem.xhtml" />
+					<ui:include src="/xhtml/ct/circular/panel/item.xhtml" />
 				</p:outputPanel>
 			</td>
 		</tr>

@@ -40,6 +40,10 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+		<p:messages id="messages" showSummary="false" escape="false"
+			showDetail="true"
+			autoUpdate="#{centralContractBackingBean.managedBean.autoUpdate}"
+			closable="true" severity="error, info, warn" />
 		<f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />
        <table style="width: 100%;">
 		<tr>
@@ -66,10 +70,10 @@
 					</p:tabMenu></td>
 				<td width="80%"><p:outputPanel
 						rendered="#{centralContractBackingBean.managedBean.selectedTabIndex == 0}">
-						<ui:include src="viewCentralCircular.xhtml" />
+						<ui:include src="/xhtml/ct/circular/centralcontract/createCircular.xhtml" />
 						</p:outputPanel> <p:outputPanel
 						rendered="#{centralContractBackingBean.managedBean.selectedTabIndex == 1}">
-						<ui:include src="centralContract.xhtml" />
+						<ui:include src="/xhtml/ct/circular/centralcontract/contract.xhtml" />
 					</p:outputPanel></td>
 			</tr>
 		</table>
