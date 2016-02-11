@@ -607,7 +607,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					++counter;
 				} 
 				
-				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+				if(!BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					// title validation
 					if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
 						throw new EpException(
