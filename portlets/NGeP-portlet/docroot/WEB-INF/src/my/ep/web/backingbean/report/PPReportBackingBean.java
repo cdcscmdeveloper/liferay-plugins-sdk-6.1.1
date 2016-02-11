@@ -7,7 +7,7 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.backingbean.report;
 
 import java.util.List;
@@ -48,6 +48,8 @@ public class PPReportBackingBean extends
 
 		case ReportConst.PP_PROCUREMENT_PTJ_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			// rptGenBean.setPpMinistryView(true);
 			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
@@ -55,44 +57,60 @@ public class PPReportBackingBean extends
 		case ReportConst.PP_PROCUREMENT_MINISTRY_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
 			// rptGenBean.setPpMinistryView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
 			break;
 		case ReportConst.PP_PROCUREMENT_BKP_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
 			// rptGenBean.setPpMinistryView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
 			break;
 		case ReportConst.PP_EXPENDITURE_PLAN_PTJ_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
 			// rptGenBean.setPpMinistryView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			checkAuthorizationByRoleCode(rptGenBean, authoriztionList);
 			break;
 		case ReportConst.PP_EXPEND_MINISTRY_BY_VOT_PTJ_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
 			rptGenBean.setPpMinistryView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			break;
 		case ReportConst.PP_EXPEND_MINISTRY_BY_GOSO_PTJ_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
 			rptGenBean.setPpMinistryView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			break;
 		case ReportConst.PP_EXPEND_MINISTRY_BY_GOSO_VOT_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
 			rptGenBean.setPpMinistryView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			break;
 		case ReportConst.PP_EXPENDITURE_BPK_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
 			rptGenBean.setPpMinistryView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			break;
 		case ReportConst.PP_EXPENDITURE_UNPLANNED_LEVEL_RPT_VAL:
 			rptGenBean.setPpYearView(true);
 			rptGenBean.setPpMinistryView(true);
+			rptGenBean.setPpPegaWaiPengawalView(true);
+			rptGenBean.setPpKumpulanPTJView(true);
 			rptGenBean.setPpPTJView(true);
 			break;
 		default:

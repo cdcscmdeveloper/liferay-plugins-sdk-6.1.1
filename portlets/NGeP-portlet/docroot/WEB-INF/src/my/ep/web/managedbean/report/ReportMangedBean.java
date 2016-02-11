@@ -7,7 +7,7 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.managedbean.report;
 
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.managedbean.BaseManagedBean;
+
 // TODO: Auto-generated Javadoc
 
 /**
@@ -35,82 +36,84 @@ import my.ep.web.managedbean.BaseManagedBean;
  */
 @ManagedBean(name = "reportManagedBean")
 @SessionScoped
-public class ReportMangedBean extends BaseManagedBean{
-	
+public class ReportMangedBean extends BaseManagedBean {
+
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The rpt gen bean. */
 	private ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
-	
+
 	/** The report list. */
-	private List<SelectItem> reportList=new ArrayList<SelectItem>();
-	//private String reportName;
+	private List<SelectItem> reportList = new ArrayList<SelectItem>();
+	// private String reportName;
 	/** The report value. */
 	private String reportValue;
-	//private String moduleValue;
+	// private String moduleValue;
 	/** The report jsp. */
 	private String reportJsp;
-	
+
 	/** The report title. */
 	private String reportTitle;
-	
+
 	/** The month map. */
-	private HashMap<String, String> monthMap= new HashMap<String, String>();
-	
+	private HashMap<String, String> monthMap = new HashMap<String, String>();
+
 	/** The loa report document list. */
-	private List<ScLoaReport> loaReportDocumentList;	
-	
+	private List<ScLoaReport> loaReportDocumentList;
+
 	/** The sc loa. */
 	private ScLoa scLoa;
-	
+
 	/** The pm status. */
 	private PmStatus pmStatus;
-	
+
 	/** The sc loa report. */
 	private List<ScLoaReport> scLoaReport;
-	
+
 	/** The supp loi loa map. */
-	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;	
-	
+	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;
+
 	/** The sc qt. */
 	private ScQt scQt;
-	
+
 	/** The sc qt id. */
 	private Long scQtId;
-	
+
 	/** The module name value. */
 	private String moduleNameValue;
-	
+
 	/** The selected ministry. */
 	private PmOrgProfile selectedMinistry;
-	
+
 	/** The selected pegwai pengawal. */
 	private PmOrgProfile selectedPegwaiPengawal;
-	
+
 	/** The selected kumpulan ptj. */
 	private PmOrgProfile selectedKumpulanPTJ;
-	
+
 	/** The selected ptj. */
 	private PmOrgProfile selectedPTJ;
 
-	
+	/** The ptj id. */
+	private Long ptjId = null;
+
 	/** The search value. */
 	private String[] searchValue = new String[3];
-	
+
 	/** The search field value. */
 	private String[] searchFieldValue = new String[3];
-	
+
 	/** The search operator value. */
 	private String[] searchOperatorValue = new String[3];
-	
+
 	/** The selected lov. */
 	private CmUnspsc selectedLOV;
 	/** The search field. */
 	private List<SelectItem> searchField;
 	/** The search operator. */
 	private List<SelectItem> searchOperator;
-			
+
 	/**
 	 * Gets the report jsp.
 	 * 
@@ -119,7 +122,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public String getReportJsp() {
 		return reportJsp;
 	}
-	
+
 	/**
 	 * Sets the report jsp.
 	 * 
@@ -129,7 +132,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setReportJsp(String reportJsp) {
 		this.reportJsp = reportJsp;
 	}
-	
+
 	/**
 	 * Gets the report value.
 	 * 
@@ -138,7 +141,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public String getReportValue() {
 		return reportValue;
 	}
-	
+
 	/**
 	 * Sets the report value.
 	 * 
@@ -148,12 +151,11 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setReportValue(String reportValue) {
 		this.reportValue = reportValue;
 	}
-	/*public String getModuleValue() {
-		return moduleValue;
-	}
-	public void setModuleValue(String moduleValue) {
-		this.moduleValue = moduleValue;
-	}*/	
+
+	/*
+	 * public String getModuleValue() { return moduleValue; } public void
+	 * setModuleValue(String moduleValue) { this.moduleValue = moduleValue; }
+	 */
 	/**
 	 * Gets the rpt gen bean.
 	 * 
@@ -162,7 +164,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public ReportsGenerateBean getRptGenBean() {
 		return rptGenBean;
 	}
-	
+
 	/**
 	 * Sets the rpt gen bean.
 	 * 
@@ -171,13 +173,12 @@ public class ReportMangedBean extends BaseManagedBean{
 	 */
 	public void setRptGenBean(ReportsGenerateBean rptGenBean) {
 		this.rptGenBean = rptGenBean;
-	}	
-	/*public String getReportName() {
-		return reportName;
 	}
-	public void setReportName(String reportName) {
-		this.reportName = reportName;
-	}*/
+
+	/*
+	 * public String getReportName() { return reportName; } public void
+	 * setReportName(String reportName) { this.reportName = reportName; }
+	 */
 	/**
 	 * Gets the report list.
 	 * 
@@ -186,7 +187,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public List<SelectItem> getReportList() {
 		return reportList;
 	}
-	
+
 	/**
 	 * Sets the report list.
 	 * 
@@ -196,7 +197,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
 	}
-	
+
 	/**
 	 * Gets the month map.
 	 * 
@@ -205,7 +206,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public HashMap<String, String> getMonthMap() {
 		return monthMap;
 	}
-	
+
 	/**
 	 * Sets the month map.
 	 * 
@@ -215,7 +216,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setMonthMap(HashMap<String, String> monthMap) {
 		this.monthMap = monthMap;
 	}
-	
+
 	/**
 	 * Gets the search value.
 	 * 
@@ -224,7 +225,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public String[] getSearchValue() {
 		return searchValue;
 	}
-	
+
 	/**
 	 * Sets the search value.
 	 * 
@@ -234,7 +235,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSearchValue(String[] searchValue) {
 		this.searchValue = searchValue;
 	}
-	
+
 	/**
 	 * Gets the search field value.
 	 * 
@@ -243,7 +244,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public String[] getSearchFieldValue() {
 		return searchFieldValue;
 	}
-	
+
 	/**
 	 * Sets the search field value.
 	 * 
@@ -253,7 +254,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSearchFieldValue(String[] searchFieldValue) {
 		this.searchFieldValue = searchFieldValue;
 	}
-	
+
 	/**
 	 * Gets the search operator value.
 	 * 
@@ -262,7 +263,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public String[] getSearchOperatorValue() {
 		return searchOperatorValue;
 	}
-	
+
 	/**
 	 * Sets the search operator value.
 	 * 
@@ -272,7 +273,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSearchOperatorValue(String[] searchOperatorValue) {
 		this.searchOperatorValue = searchOperatorValue;
 	}
-		
+
 	/**
 	 * Sets the search field.
 	 * 
@@ -282,7 +283,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSearchField(List<SelectItem> searchField) {
 		this.searchField = searchField;
 	}
-	
+
 	/**
 	 * Gets the search operator.
 	 * 
@@ -291,7 +292,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public List<SelectItem> getSearchOperator() {
 		return searchOperator;
 	}
-	
+
 	/**
 	 * Sets the search operator.
 	 * 
@@ -301,7 +302,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSearchOperator(List<SelectItem> searchOperator) {
 		this.searchOperator = searchOperator;
 	}
-	
+
 	/**
 	 * Gets the search field.
 	 * 
@@ -310,7 +311,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public List<SelectItem> getSearchField() {
 		return searchField;
 	}
-	
+
 	/**
 	 * Gets the selected lov.
 	 * 
@@ -319,7 +320,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public CmUnspsc getSelectedLOV() {
 		return selectedLOV;
 	}
-	
+
 	/**
 	 * Sets the selected lov.
 	 * 
@@ -329,7 +330,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSelectedLOV(CmUnspsc selectedLOV) {
 		this.selectedLOV = selectedLOV;
 	}
-	
+
 	/**
 	 * Gets the sc loa.
 	 * 
@@ -338,7 +339,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public ScLoa getScLoa() {
 		return scLoa;
 	}
-	
+
 	/**
 	 * Sets the sc loa.
 	 * 
@@ -348,7 +349,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setScLoa(ScLoa scLoa) {
 		this.scLoa = scLoa;
 	}
-	
+
 	/**
 	 * Gets the pm status.
 	 * 
@@ -357,7 +358,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public PmStatus getPmStatus() {
 		return pmStatus;
 	}
-	
+
 	/**
 	 * Sets the pm status.
 	 * 
@@ -367,7 +368,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setPmStatus(PmStatus pmStatus) {
 		this.pmStatus = pmStatus;
 	}
-	
+
 	/**
 	 * Gets the sc loa report.
 	 * 
@@ -376,7 +377,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public List<ScLoaReport> getScLoaReport() {
 		return scLoaReport;
 	}
-	
+
 	/**
 	 * Sets the sc loa report.
 	 * 
@@ -386,7 +387,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setScLoaReport(List<ScLoaReport> scLoaReport) {
 		this.scLoaReport = scLoaReport;
 	}
-	
+
 	/**
 	 * Gets the supp loi loa map.
 	 * 
@@ -395,17 +396,17 @@ public class ReportMangedBean extends BaseManagedBean{
 	public Map<Long, List<ScLoiLoa>> getSuppLoiLoaMap() {
 		return suppLoiLoaMap;
 	}
-	
+
 	/**
 	 * Sets the supp loi loa map.
 	 * 
 	 * @param suppLoiLoaMap
 	 *            the suppLoiLoaMap to set
 	 */
-	public void setSuppLoiLoaMap(Map<Long, List<ScLoiLoa>> suppLoiLoaMap) {		
+	public void setSuppLoiLoaMap(Map<Long, List<ScLoiLoa>> suppLoiLoaMap) {
 		this.suppLoiLoaMap = suppLoiLoaMap;
 	}
-	
+
 	/**
 	 * Gets the sc qt.
 	 * 
@@ -414,7 +415,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public ScQt getScQt() {
 		return scQt;
 	}
-	
+
 	/**
 	 * Sets the sc qt.
 	 * 
@@ -424,7 +425,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
 	}
-	
+
 	/**
 	 * Gets the sc qt id.
 	 * 
@@ -433,7 +434,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public Long getScQtId() {
 		return scQtId;
 	}
-	
+
 	/**
 	 * Sets the sc qt id.
 	 * 
@@ -443,7 +444,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setScQtId(Long scQtId) {
 		this.scQtId = scQtId;
 	}
-	
+
 	/**
 	 * Gets the loa report document list.
 	 * 
@@ -452,7 +453,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public List<ScLoaReport> getLoaReportDocumentList() {
 		return loaReportDocumentList;
 	}
-	
+
 	/**
 	 * Sets the loa report document list.
 	 * 
@@ -462,7 +463,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setLoaReportDocumentList(List<ScLoaReport> loaReportDocumentList) {
 		this.loaReportDocumentList = loaReportDocumentList;
 	}
-	
+
 	/**
 	 * Gets the module name value.
 	 * 
@@ -471,7 +472,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public String getModuleNameValue() {
 		return moduleNameValue;
 	}
-	
+
 	/**
 	 * Sets the module name value.
 	 * 
@@ -481,16 +482,19 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setModuleNameValue(String moduleNameValue) {
 		this.moduleNameValue = moduleNameValue;
 	}
-	
+
 	/**
 	 * Gets the selected ministry.
 	 * 
 	 * @return the selectedMinistry
 	 */
 	public PmOrgProfile getSelectedMinistry() {
+		if (selectedMinistry == null) {
+			selectedMinistry = new PmOrgProfile();
+		}
 		return selectedMinistry;
 	}
-	
+
 	/**
 	 * Sets the selected ministry.
 	 * 
@@ -500,16 +504,19 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSelectedMinistry(PmOrgProfile selectedMinistry) {
 		this.selectedMinistry = selectedMinistry;
 	}
-	
+
 	/**
 	 * Gets the selected pegwai pengawal.
 	 * 
 	 * @return the selectedPegwaiPengawal
 	 */
 	public PmOrgProfile getSelectedPegwaiPengawal() {
+		if (selectedPegwaiPengawal == null) {
+			selectedPegwaiPengawal = new PmOrgProfile();
+		}
 		return selectedPegwaiPengawal;
 	}
-	
+
 	/**
 	 * Sets the selected pegwai pengawal.
 	 * 
@@ -519,16 +526,19 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSelectedPegwaiPengawal(PmOrgProfile selectedPegwaiPengawal) {
 		this.selectedPegwaiPengawal = selectedPegwaiPengawal;
 	}
-	
+
 	/**
 	 * Gets the selected kumpulan ptj.
 	 * 
 	 * @return the selectedKumpulanPTJ
 	 */
 	public PmOrgProfile getSelectedKumpulanPTJ() {
+		if (selectedKumpulanPTJ == null) {
+			selectedKumpulanPTJ = new PmOrgProfile();
+		}
 		return selectedKumpulanPTJ;
 	}
-	
+
 	/**
 	 * Sets the selected kumpulan ptj.
 	 * 
@@ -538,16 +548,19 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSelectedKumpulanPTJ(PmOrgProfile selectedKumpulanPTJ) {
 		this.selectedKumpulanPTJ = selectedKumpulanPTJ;
 	}
-	
+
 	/**
 	 * Gets the selected ptj.
 	 * 
 	 * @return the selectedPTJ
 	 */
 	public PmOrgProfile getSelectedPTJ() {
+		if (selectedPTJ == null) {
+			selectedPTJ = new PmOrgProfile();
+		}
 		return selectedPTJ;
 	}
-	
+
 	/**
 	 * Sets the selected ptj.
 	 * 
@@ -557,7 +570,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSelectedPTJ(PmOrgProfile selectedPTJ) {
 		this.selectedPTJ = selectedPTJ;
 	}
-	
+
 	/**
 	 * Gets the report title.
 	 * 
@@ -566,7 +579,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	public String getReportTitle() {
 		return reportTitle;
 	}
-	
+
 	/**
 	 * Sets the report title.
 	 * 
@@ -576,6 +589,24 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setReportTitle(String reportTitle) {
 		this.reportTitle = reportTitle;
 	}
-	
-	
+
+	/**
+	 * Gets the ptj id.
+	 * 
+	 * @return the ptjId
+	 */
+	public Long getPtjId() {
+		return ptjId;
+	}
+
+	/**
+	 * Sets the ptj id.
+	 * 
+	 * @param ptjId
+	 *            the ptjId to set
+	 */
+	public void setPtjId(Long ptjId) {
+		this.ptjId = ptjId;
+	}
+
 }

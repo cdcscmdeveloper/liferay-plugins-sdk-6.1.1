@@ -1,7 +1,7 @@
 /* 
  ***************************************************   
- * Product nextgen
  *                ePerolehan 
+ * Product nextgen
  * Release 1.00    
  *    
  * Copyright © 2013 Archisoft. All rights reserved.
@@ -723,8 +723,10 @@ public class ReportConst {
 	public static final String FL_AMP_APPROVER_NAME_EQ = "&PAPPROVER=";
 	public static final String FL_AMP_REQUI_NAME_EQ = "&PREQUEST=";
 	public static final String FL_AMP_SUPPL_NAME_EQ = "&PSUPP=";
-	public static final String FL_AMP_PTJ_NAME_EQ = "&PPTJ=";
 	public static final String FL_AMP_MINISTRY_EQ = "&PMINIS=";
+	public static final String FL_AMP_PEGAWAI_PENGAWAI_EQ = "&PFPP";
+	public static final String FL_AMP_KUMPULAN_EQ = "&PFJA";
+	public static final String FL_AMP_PTJ_NAME_EQ = "&PPTJ=";
 	public static final String FL_AMP_SST_NO_EQ = "&PLOA=";
 	public static final String FL_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
 	public static final String FL_AMP_REPORT_ID_EQ = "&PREPORTID=";
@@ -750,6 +752,10 @@ public class ReportConst {
 	public static final String CT_AMP_PLOANO_EQ = "&PLOANO=";
 	public static final String CT_AMP_PLOAPHYSICALNO_EQ = "&PLOAPHYSICALNO=";
 	public static final String CT_AMP_PMINISTRY_EQ = "&PMINIS=";
+	/*
+	 * public static final String CT_AMP_PPEGAWAI_PENGAWAI_EQ="&PFPP"; public
+	 * static final String CT_AMP_PKUMPULAN_EQ="&PFJA";
+	 */
 	public static final String CT_AMP_PPTJNAME_EQ = "&PPTJ=";
 	public static final String CT_AMP_PROCUREMENTMODE_EQ = "&PPROCUREMENTMODE=";
 	public static final String CT_AMP_USERTYPE_EQ = "&PUSERTYPE=";
@@ -785,7 +791,7 @@ public class ReportConst {
 	public static final String AMP_PM_PHYSICAL_LOA_NO_EQ = "&PPHYSICALLOA=";
 	public static final String AMP_PM_SUPP_ZONE_EQ = "&PSUPPZONE=";
 	public static final String AMP_PM_SUPP_PROFILE_STATUS_EQ = "&PPRSTAT=";
-	
+
 	public static final String FEDERAL_GOVT = "1";
 	public static final String OTHERS = "2";
 

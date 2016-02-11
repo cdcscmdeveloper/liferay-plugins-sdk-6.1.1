@@ -11,83 +11,152 @@
 			<tr>
 				<td width="100%"><h:panelGrid id="ppReportCriteria" columns="4"
 						style="width:85%;">
+
 						<c:if
-							test="#{ctReportBackingBean.managedBean.rptGenBean.ppNonMandatoryView}">
+							test="#{ppReportBackingBean.managedBean.rptGenBean.commonLOVBasedRoles}">
 							<c:if
-								test="#{ctReportBackingBean.managedBean.rptGenBean.ppMinistryView}">
-								<p:outputLabel value="#{lbl['lbl.rpt.ministry']}"
+								test="#{ppReportBackingBean.managedBean.rptGenBean.ppNonMandatoryView}">
+								<c:if
+									test="#{ppReportBackingBean.managedBean.rptGenBean.ppMinistryView}">
+									<p:column>
+										<table style="width: 100%;">
+											<tr style="width: 100%;">
+												<td><p:outputLabel value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel>
+												</td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column>
+										<table style="width: 100%;">
+											<tr style="width: 100%;">
+												<td><ac:lov id="lovMinistry"
+														lovId="PM_ORG_PROFILE_REPORT" size="40" update="@form"
+														headerText="#{lbl['lbl.rpt.ministry']}"
+														value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+														saveObject="reportBackingBean.managedBean.selectedMinistry"
+														conditionField="#{reportBackingBean.constructMinistryConditionFields()}" /></td>
+												<td><p:message id="lovMinistryMsg" for="lovMinistry"
+														display="icon" /></td>
+											</tr>
+										</table>
+									</p:column>
+								</c:if>
+							</c:if>
+							<c:if
+								test="#{ppReportBackingBean.managedBean.rptGenBean.ppMandatoryView}">
+								<c:if
+									test="#{ppReportBackingBean.managedBean.rptGenBean.ppMinistryView}">
+									<p:column>
+										<table style="width: 100%;">
+											<tr style="width: 100%;">
+												<td><p:outputLabel value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel>
+													<p:outputLabel value="*" styleClass="mandatory" /></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column>
+										<table style="width: 100%;">
+											<tr style="width: 100%;">
+												<td><ac:lov id="lovMinistry"
+														lovId="PM_ORG_PROFILE_REPORT" size="40" update="@form"
+														headerText="#{lbl['lbl.rpt.ministry']}"
+														value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+														saveObject="reportBackingBean.managedBean.selectedMinistry"
+														conditionField="#{reportBackingBean.constructMinistryConditionFields()}" /></td>
+												<td><p:message id="lovMinistryMsg" for="lovMinistry"
+														display="icon" /></td>
+											</tr>
+										</table>
+									</p:column>
+								</c:if>
+							</c:if>
+							<c:if
+								test="#{ppReportBackingBean.managedBean.rptGenBean.ppPegaWaiPengawalView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel
+													value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><ac:lov id="lovPegaWaiPengawal"
+													lovId="PM_ORG_PROFILE_REPORT" size="40" update="@form"
+													headerText="#{lbl['lbl.rpt.pegawaipengawal']}"
+													value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"
+													saveObject="reportBackingBean.managedBean.selectedPegwaiPengawal"
+													conditionField="#{reportBackingBean.constructPegwaiPengawalConditionFields()}" /></td>
+											<td><p:message id="lovPegaWaiPengawalMsg"
+													for="lovPegaWaiPengawal" display="icon" /></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+							<c:if
+								test="#{ppReportBackingBean.managedBean.rptGenBean.ppKumpulanPTJView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel
+													value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><ac:lov id="lovKumpulanPTJ"
+													lovId="PM_ORG_PROFILE_REPORT" size="40" update="@form"
+													headerText="#{lbl['lbl.rpt.kumpulan.ptj']}"
+													value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+													saveObject="reportBackingBean.managedBean.selectedKumpulanPTJ"
+													conditionField="#{reportBackingBean.constructKumpulanPTJConditionFields()}" /></td>
+											<td><p:message id="lovKumpulanPTJMsg"
+													for="lovKumpulanPTJ" display="icon" /></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+							<c:if
+								test="#{ppReportBackingBean.managedBean.rptGenBean.ppPTJView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><ac:lov id="lovPTJ" lovId="PM_ORG_PROFILE_REPORT"
+													size="40" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
+													value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+													saveObject="reportBackingBean.managedBean.selectedPTJ"
+													conditionField="#{reportBackingBean.constructPTJConditionFields()}" /></td>
+											<td><p:message id="lovPTJMsg" for="lovPTJ"
+													display="icon" /></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+							</c:if>
+							<c:if
+								test="#{ppReportBackingBean.managedBean.rptGenBean.ppYearView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.yearone']}"
 									style="margin-top:5px;width:160px;" />
-								<p:selectOneMenu id="ppMinistry"
-									value="#{reportBackingBean.commonMinistry}"
+								<p:selectOneMenu id="ppYear" value="#{reportBackingBean.ppYear}"
 									style="margin-top:5px;width:300px;">
-									<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>
-									<p:ajax event="change"
-										listener="#{reportBackingBean.retrieveFMIPTJList}"
-										process="@this" partialSubmit="true" update="@all" />
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItems value="#{reportBackingBean.generateYearList()}"></f:selectItems>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
 								</p:selectOneMenu>
 							</c:if>
-						</c:if>
-
-						<c:if
-							test="#{ctReportBackingBean.managedBean.rptGenBean.ppMandatoryView}">
-							<c:if
-								test="#{ctReportBackingBean.managedBean.rptGenBean.ppMinistryView}">
-								<p:column>
-									<table style="width: 182px;">
-										<tr style="width: 100%;">
-											<td style="margin-top: 5px; width: 160px;"><p:outputLabel
-													value="#{lbl['lbl.rpt.ministry']}" id="ministryId" /> <p:outputLabel
-													value="*" styleClass="mandatory" /></td>
-										</tr>
-									</table>
-								</p:column>
-								<p:column>
-									<table style="width: 100%">
-										<tr>
-											<td style="width: 84%"><p:selectOneMenu
-													label="#{lbl['lbl.rpt.ministry']}" id="ppMinistry"
-													value="#{reportBackingBean.commonMinistry}"
-													style="margin-top:5px;width:300px;" required="true">
-													<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>
-													<p:ajax event="change"
-														listener="#{reportBackingBean.retrieveFMIPTJList}"
-														process="@this" partialSubmit="true" update="@all" />
-												</p:selectOneMenu></td>
-											<td><p:message id="rptMinMsg" for="ppMinistry"
-													display="icon" showDetail="false" /></td>
-										</tr>
-									</table>
-								</p:column>
-							</c:if>
-						</c:if>
-						<c:if
-							test="#{ctReportBackingBean.managedBean.rptGenBean.ppPTJView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu id="ppPtj"
-								value="#{reportBackingBean.commonPtj}"
-								style="margin-top:5px;width:300px;">
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
-						</c:if>
-						<c:if
-							test="#{ctReportBackingBean.managedBean.rptGenBean.ppYearView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.yearone']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu id="ppYear" value="#{reportBackingBean.ppYear}"
-								style="margin-top:5px;width:300px;">
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItems value="#{reportBackingBean.generateYearList()}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
-						</c:if>
-
 					</h:panelGrid></td>
 			</tr>
 		</table>
