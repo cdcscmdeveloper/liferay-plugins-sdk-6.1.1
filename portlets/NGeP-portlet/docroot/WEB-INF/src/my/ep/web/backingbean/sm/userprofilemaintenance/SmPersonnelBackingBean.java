@@ -463,7 +463,7 @@ public class SmPersonnelBackingBean extends
 		if (StringUtils.isNotBlank(getManagedBean().getBasicSmPersonnel()
 				.getEpRole())) {
 
-			// if personnel is Catalogue User or supplier type is Consultant
+			// if personnel is Catalogue User
 			if (getManagedBean().getBasicSmPersonnel().getEpRole()
 					.equals(RoleCode.CM_USER.value())) {
 
