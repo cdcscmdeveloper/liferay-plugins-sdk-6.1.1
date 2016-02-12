@@ -81,13 +81,13 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" styleClass="outputLabel-view-label"/></td>
 					<td><ac:labelDate styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" /></td>		
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" styleClass="outputLabel-view-label"/></td>
-					<td>
-						<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg ne '0'}"/>
-						<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '0'}"/>
-					</td>
-				</tr>
+				<p:outputPanel rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole 
+					and smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
+						<td><ac:smSoftcertStatus personnel="#{smPersonnelBackingBean.managedBean.basicSmPersonnel}"  /></td>
+					</tr>
+				</p:outputPanel>
 				<p:outputPanel rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}">
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isContrSign']}" /></td>		
