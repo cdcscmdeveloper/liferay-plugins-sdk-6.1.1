@@ -1204,6 +1204,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			// this.getManagedBean().getSmBusinessAdd().getPmState().getStateId();
 			List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setBusinessCityLs(cityLs);
+			populateLocalAuthority(getManagedBean().getSmSupp(), this.getManagedBean().getSmBusinessAdd());
 		} else if (typeAdd.equals("residential")) {
 			List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmResAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setResidentialCityLs(cityLs);
@@ -1818,6 +1819,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 		this.getManagedBean().setBusinessStateLs(stateSelectLs);
+		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
 		
 	}
 	

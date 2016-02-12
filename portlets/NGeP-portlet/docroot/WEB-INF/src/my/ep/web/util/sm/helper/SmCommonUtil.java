@@ -3352,15 +3352,27 @@ public class SmCommonUtil {
 				}
 			}
 		} else {
-			items.add(getLhdnSelectItem());
+			items.add(getSsmSelectItem());
 		}
 		return items;
 	}
 
 	private static SelectItem getLhdnSelectItem() {
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		reqDTO.setOrgCode(my.ep.constant.sm.SupplierManagementConst.LHDN_ORG_PROFILE_CODE);
 		PmOrgProfile orgProfile = SmServiceLookup.getRegistrationSO()
-				.retrieveLembagaHasilOrgProfile(reqDTO).getOrgProfile();
+				.retrieveOrgProfileByOrgCode(reqDTO).getOrgProfile();
+		SelectItem item = new SelectItem();
+		item.setLabel(orgProfile.getPmOrgValidity().getOrgName());
+		item.setValue(orgProfile.getOrgProfileId());
+		return item;
+	}
+	
+	private static SelectItem getSsmSelectItem() {
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		reqDTO.setOrgCode(my.ep.constant.sm.SupplierManagementConst.SSM_ORG_PROFILE_CODE);
+		PmOrgProfile orgProfile = SmServiceLookup.getRegistrationSO()
+				.retrieveOrgProfileByOrgCode(reqDTO).getOrgProfile();
 		SelectItem item = new SelectItem();
 		item.setLabel(orgProfile.getPmOrgValidity().getOrgName());
 		item.setValue(orgProfile.getOrgProfileId());
