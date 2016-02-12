@@ -253,9 +253,11 @@
 					<td style="float: left;">
 						<p:outputPanel id="softcertOutPanelId">
 							<p:outputLabel value="#{lbl['lbl.txt.yes']}" 
-								rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}"/>
+								rendered="#{not empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole and 
+									smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole ne 'CM_USER'}"/>
 							<p:outputLabel value="#{lbl['lbl.txt.no']}" 
-								rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+								rendered="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole or 
+									smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
 						</p:outputPanel>
 					</td>
 				</tr>
