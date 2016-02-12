@@ -9,6 +9,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmPIDReason;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.web.bean.pm.ReasonSearchBean;
@@ -39,10 +40,11 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private boolean suppAppCheck;
 	private boolean suppComCheck;
 	private boolean suppTypeCheck;
+	private boolean contractPurchaseCheck;
 	
 	private List <PmSupplierReason> deleteRestrictions;
 	private int selectedTabIndex;
-
+	private List<PmPIDReason> pmPidListOrigin = new ArrayList<PmPIDReason>();
 	/**
 	 * @return the reasonSearchBean
 	 */
@@ -255,6 +257,22 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	public boolean isContractPurchaseCheck() {
+		return contractPurchaseCheck;
+	}
+
+	public void setContractPurchaseCheck(boolean contractPurchaseCheck) {
+		this.contractPurchaseCheck = contractPurchaseCheck;
+	}
+
+	public List<PmPIDReason> getPmPidListOrigin() {
+		return pmPidListOrigin;
+	}
+
+	public void setPmPidListOrigin(List<PmPIDReason> pmPidListOrigin) {
+		this.pmPidListOrigin = pmPidListOrigin;
 	}
 	
 }

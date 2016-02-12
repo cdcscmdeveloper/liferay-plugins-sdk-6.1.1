@@ -1,115 +1,199 @@
-<ui:composition
-xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:p="http://primefaces.org/ui"
-xmlns:c="http://java.sun.com/jsp/jstl/core"
->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:outputPanel id="opRejectReasonCat">
 		<table class="ppOneTable">
 			<tr>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.reason.category']}"/>
-					<p:outputLabel value="* " styleClass="mandatory" />
-				</th>
-				<td>
-					<p:selectOneMenu id="somReasonCategory" required="true" disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
-						label="#{lbl['lbl.pm.reason.category']}" styleClass="ppDropDownWidthM"  
+				<th><p:outputLabel value="#{lbl['lbl.pm.reason.category']}" />
+					<p:outputLabel value="* " styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="somReasonCategory" required="true"
+						disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
+						label="#{lbl['lbl.pm.reason.category']}"
+						styleClass="ppDropDownWidthM"
 						value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterId}">
-						<f:selectItems  value="#{rejectionReasonBackingBean.reasonCategoryOptions()}" />
-						<p:ajax event="change" listener="#{rejectionReasonBackingBean.reasonCategoryChange(false,
+						<f:selectItems
+							value="#{rejectionReasonBackingBean.reasonCategoryOptions()}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{rejectionReasonBackingBean.reasonCategoryChange(false,
 						rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterId)}"
-							update="pReasonRestriction,pRejectReasonDet" />
-					</p:selectOneMenu>
-					<p:message id="somReasonCategoryMsg" for="somReasonCategory" display="icon" />
-				</td>
+							update=":form:conditionTabId:cTabID,pReasonRestriction,pRejectReasonDet" />
+					</p:selectOneMenu> <p:message id="somReasonCategoryMsg" for="somReasonCategory"
+						display="icon" /></td>
 			</tr>
 		</table>
-		
-		<p:panel id="pRejectReasonDet" header="#{lbl['lbl.pm.rejection.reason.details']}" toggleable="true">
+
+		<p:panel id="pRejectReasonDet"
+			header="#{lbl['lbl.pm.rejection.reason.details']}" toggleable="true">
 			<table class="ppOneTable">
 				<tr>
-					<th>
-						<p:outputLabel value="#{lbl['lbl.pm.reason.code']}"/>
-					</th>
-					<td>
-						<p:inputText id="itReasonCode" styleClass="ppDisplayTextM" style="text-transform:uppercase"
-							required="true" maxlength="10" 
+					<th><p:outputLabel value="#{lbl['lbl.pm.reason.code']}" /></th>
+					<td><p:inputText id="itReasonCode" styleClass="ppDisplayTextM"
+							style="text-transform:uppercase" required="true" maxlength="10"
 							disabled="true"
-							value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCode}" 
+							value="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCode}"
 							validatorMessage="#{lbl['lbl.pm.reason.code']} - #{lbl['lbl.pm.uppercase']}"
 							label="#{lbl['lbl.pm.reason.code']}">
-						
-						</p:inputText>
-						<p:message id="itReasonCodeMsg" for="itReasonCode" display="icon" />							
+
+						</p:inputText> <p:message id="itReasonCodeMsg" for="itReasonCode" display="icon" />
 					</td>
 				</tr>
 				<tr>
 					<!-- List of languages with description -->
-					<th>
-						<p:outputLabel value="#{lbl['lbl.pm.reason.desc']}"/>
-						<p:outputLabel value="* " styleClass="mandatory" />
-					</th>
-					<td>
-						<p:dataTable id="dtReasonDesc" styleClass="reasonDescList" var="reasonDesc"   
+					<th><p:outputLabel value="#{lbl['lbl.pm.reason.desc']}" /> <p:outputLabel
+							value="* " styleClass="mandatory" /></th>
+					<td><p:dataTable id="dtReasonDesc" styleClass="reasonDescList"
+							var="reasonDesc"
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.pmReasonDescs}">
-					        <p:column headerText="#{lbl['lbl.pm.settings.language']}" width="10%">  
+							<p:column headerText="#{lbl['lbl.pm.settings.language']}"
+								width="10%">  
 						    	#{reasonDesc.pmLanguage.languageName}
-					        </p:column>  
-					        <p:column headerText="* #{lbl['lbl.pm.reason.desc']}">  
-					            <p:inputTextarea id="itReasonDesc" value="#{reasonDesc.reasonDesc}" cols="50" rows="5" required="true"
-					            	maxlength="255" label="#{lbl['lbl.pm.reason.desc']}" autoResize="false"/>
-				            	<p:message id="itReasonDescMsg" for="itReasonDesc" display="icon" />	
-					        </p:column>  
-					   	</p:dataTable>
-					</td>
+					        </p:column>
+							<p:column headerText="* #{lbl['lbl.pm.reason.desc']}">
+								<p:inputTextarea id="itReasonDesc"
+									value="#{reasonDesc.reasonDesc}" cols="50" rows="5"
+									required="true" maxlength="255"
+									label="#{lbl['lbl.pm.reason.desc']}" autoResize="false" />
+								<p:message id="itReasonDescMsg" for="itReasonDesc"
+									display="icon" />
+							</p:column>
+						</p:dataTable></td>
 				</tr>
-				<c:if test="#{rejectionReasonBackingBean.managedBean.suppReason}">				
-				<tr>
-					<th><p:outputLabel value="#{lbl['lbl.pm.restriction']}" /></th>
-					<td>
-						<p:selectBooleanCheckbox id="chkAppType" value="#{rejectionReasonBackingBean.managedBean.suppAppCheck}">
-						 	<p:ajax event="change" process="@this" update="pReasonRestriction" listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrApp)}"/>
-						</p:selectBooleanCheckbox>
-						<h:outputText value="#{lbl['lbl.pm.by.application.type']}"/>
-					 	<br/>								
-								
-						<p:selectBooleanCheckbox id="chkComType" value="#{rejectionReasonBackingBean.managedBean.suppComCheck}">
-							<p:ajax event="change" process="@this" update="pReasonRestriction" listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrComp)}" />
-						</p:selectBooleanCheckbox>
-						<h:outputText value="#{lbl['lbl.pm.by.company.type']}"/>
-					 	<br/>		
-								
-						<p:selectBooleanCheckbox id="chkSuppType" value="#{rejectionReasonBackingBean.managedBean.suppTypeCheck}">
-							<p:ajax event="change" process="@this" update="pReasonRestriction" listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrSupp)}" />
-						</p:selectBooleanCheckbox>
-						<h:outputText value="#{lbl['lbl.pm.by.supplier.type']}"/>
-					 	<br/>	
-							
+				<c:if test="#{rejectionReasonBackingBean.managedBean.suppReason}">
+					<tr>
+						<th><p:outputLabel value="#{lbl['lbl.pm.restriction']}" /></th>
+						<td><p:selectBooleanCheckbox id="chkAppType"
+								value="#{rejectionReasonBackingBean.managedBean.suppAppCheck}">
+								<p:ajax event="change" process="@this"
+									update="pReasonRestriction"
+									listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrApp)}" />
+							</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.application.type']}" /> <br />
+
+							<p:selectBooleanCheckbox id="chkComType"
+								value="#{rejectionReasonBackingBean.managedBean.suppComCheck}">
+								<p:ajax event="change" process="@this"
+									update="pReasonRestriction"
+									listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrComp)}" />
+							</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.company.type']}" /> <br />
+
+							<p:selectBooleanCheckbox id="chkSuppType"
+								value="#{rejectionReasonBackingBean.managedBean.suppTypeCheck}">
+								<p:ajax event="change" process="@this"
+									update="pReasonRestriction"
+									listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrSupp)}" />
+							</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.by.supplier.type']}" /> <br />
+
 						</td>
 					</tr>
-			
+
 				</c:if>
 				<tr>
-					<th>
-						<p:outputLabel value="#{lbl['lbl.pm.status']}"/>
-						<p:outputLabel value="* " styleClass="mandatory" />
-					</th>
-					<td>
-						<p:selectOneMenu styleClass="ppDropDownWidthM"  label="#{lbl['lbl.pm.status']}"
+					<th><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel
+							value="* " styleClass="mandatory" /></th>
+					<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+							label="#{lbl['lbl.pm.status']}"
 							disabled="#{rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.recordStatusFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
-						</p:selectOneMenu>
-					</td>
+							<f:selectItems
+								value="#{rejectionReasonBackingBean.getStatusOptions()}" />
+						</p:selectOneMenu></td>
 				</tr>
 			</table>
-			
+
+			<p:tabView id="conditionTabId">
+				<p:tab id="cTabID"
+					rendered="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
+					title="#{lbl['lbl.pm.reason.conditions']}">
+					<p:panel>
+
+						<table class="ppOneTable">
+							<tr>
+								<th><p:outputLabel
+										value="#{lbl['lbl.pm.reason.purchase.form']}" /></th>
+								<td><p:selectBooleanCheckbox id="chkPrchaseContract"
+										value="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}">
+										<p:ajax event="change" process="@this"
+											update="circularCategory, sourcingMethod"
+											listener="#{rejectionReasonBackingBean.purchaseFromContractChange()}" />
+									</p:selectBooleanCheckbox></td>
+								<th><p:outputLabel
+										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> <p:outputLabel
+										value="* " styleClass="mandatory" /></th>
+								<td><p:selectOneMenu id="circularCategory" required="true"
+										disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}"
+										label="#{lbl['lbl.pm.reason.circular.criteria']}"
+										styleClass="ppDropDownWidthM"
+										value="#{rejectionReasonBackingBean.managedBean.selectedReason.conditionField.parameterId}">
+										<f:selectItems
+											value="#{rejectionReasonBackingBean.contractCircularConditionOptions()}" />
+										<p:ajax event="change" partialSubmit="true" process="@this"
+											listener="#{rejectionReasonBackingBean.conditionFieldChange(false,
+					                           	rejectionReasonBackingBean.managedBean.selectedReason.conditionField.parameterId)}"
+											update="@this" />
+									</p:selectOneMenu> <p:message id="circularCategoryMsg" for="circularCategory"
+										display="icon" /></td>
+
+								<th><p:outputLabel
+										value="#{lbl['lbl.pm.reason.sourcing.method']}" /></th>
+								<td><p:selectOneMenu id="sourcingMethod"
+										disabled="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}"
+										label="#{lbl['lbl.pm.reason.sourcing.method']}"
+										styleClass="ppDropDownWidthM"
+										value="#{rejectionReasonBackingBean.managedBean.selectedReason.sourceMethod.parameterId}">
+										<f:selectItems
+											value="#{rejectionReasonBackingBean.sourcingMethodOptions()}" />
+										<p:ajax event="change" partialSubmit="true" process="@this"
+											listener="#{rejectionReasonBackingBean.sourceMethodChange(false,
+					                           	rejectionReasonBackingBean.managedBean.selectedReason.sourceMethod.parameterId)}"
+											update="@this" />
+									</p:selectOneMenu> <p:message id="sourcingMethodMsg" for="sourcingMethod"
+										display="icon" /></td>
+							</tr>
+							<tr>
+								<td colspan="6"><p:dataTable id="dtReasonApplicaility"
+										emptyMessage="#{lbl['lbl.pp.no.record.found']}" rows="10"
+										rowIndexVar="rowIndex"
+										value="#{rejectionReasonBackingBean.managedBean.selectedReason.pmPIDReasonList}"
+										var="PIDreason">
+										<p:column style="width:80%;"
+											headerText="#{lbl['lbl.pm.reason.applicability']}">
+											<p:selectOneMenu id="docTypeID" required="true"
+												label="#{lbl['lbl.pm.reason.applicability']}"
+												styleClass="ppDropDownWidthL" value="#{PIDreason.docType}">
+												<f:selectItems
+													value="#{rejectionReasonBackingBean.reasonApplicablityOptions()}" />
+												<p:ajax event="change" process="@this"
+													update="dtReasonApplicaility" listener="#{rejectionReasonBackingBean.reasonApplicableChange(PIDreason)}"/>
+											</p:selectOneMenu>
+										</p:column>
+										<p:column style="width:5%;text-align:center;"
+											headerText="#{lbl['lbl.pm.action']}">
+											<p:commandLink partialSubmit="true" process="@this"
+												action="#{rejectionReasonBackingBean.deleteReasonApplicability(rowIndex)}"
+												update=":form:conditionTabId:dtReasonApplicaility">
+												<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+											</p:commandLink>
+										</p:column>
+									</p:dataTable>
+									<div class="ppRightBtn">
+										<p:commandButton value="#{lbl['lbl.btn.add']}"
+											id="reasonAppAddBtnId"
+											update=":form:conditionTabId:dtReasonApplicaility"
+											partialSubmit="true" process="@this"
+											action="#{rejectionReasonBackingBean.addMoreReasonApplicablity()}" />
+									</div></td>
+							</tr>
+						</table>
+					</p:panel>
+				</p:tab>
+			</p:tabView>
 		</p:panel>
 		<!-- Restriction List (App Type, Supp Type, Comp Reg Type) -->
-		<ui:include src="restrictionList.xhtml"/>
+		<ui:include src="restrictionList.xhtml" />
 	</p:outputPanel>
 </ui:composition>
