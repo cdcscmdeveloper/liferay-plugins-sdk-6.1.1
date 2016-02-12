@@ -84,6 +84,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -8902,11 +8903,14 @@ public class ReportBackingBean extends
 				}
 			} else {
 				Long lngPtjId = null;
-				if (this.getManagedBean().getSelectedPTJ().getOrgProfileId() != null) {
-					lngPtjId = (this.getManagedBean().getSelectedPTJ()
-							.getOrgProfileId());
-				} else {
-					lngPtjId = this.getManagedBean().getPtjId();
+				if (this.getManagedBean().getSelectedPTJ() != null) {
+					if (this.getManagedBean().getSelectedPTJ()
+							.getOrgProfileId() != null) {
+						lngPtjId = (this.getManagedBean().getSelectedPTJ()
+								.getOrgProfileId());
+					} else {
+						lngPtjId = this.getManagedBean().getPtjId();
+					}
 				}
 
 				// List<String> ptLst =
@@ -11265,6 +11269,32 @@ public class ReportBackingBean extends
 		smMofRegistrationFeeList = new ArrayList<SelectItem>();
 		smProcessingFeeList = new ArrayList<SelectItem>();
 		smSoftCertificateFeeList = new ArrayList<SelectItem>();
+		
+		
+		/*if (this.getManagedBean().getSelectedMinistry() == null) {
+			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
+			if(this.getManagedBean().getSelectedMinistry().getPmOrgValidity()==null){
+				this.getManagedBean().getSelectedMinistry().setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+		if (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
+			this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
+			if(this.getManagedBean().getSelectedPegwaiPengawal().getPmOrgValidity()==null){
+				this.getManagedBean().getSelectedPegwaiPengawal().setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+		if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
+			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+			if(this.getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity()==null){
+				this.getManagedBean().getSelectedKumpulanPTJ().setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+		if (this.getManagedBean().getSelectedPTJ() == null) {
+			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+			if(this.getManagedBean().getSelectedPTJ().getPmOrgValidity()==null){
+				this.getManagedBean().getSelectedPTJ().setPmOrgValidity(new PmOrgValidity());
+			}
+		}*/
 
 		getManagedBean().setReportValue(this.getReportValue());
 		if ((this.getModuleValue()) != null
@@ -12217,28 +12247,77 @@ public class ReportBackingBean extends
 							ModuleCodeConst.ORDER_FULFILLMENT)) {
 				if (this.getManagedBean().getRptGenBean()
 						.isCommonLOVBasedRoles()) {
-					if (this.getManagedBean().getSelectedMinistry()
-							.getOrgProfileId() != null) {
-						this.setCommonMinistry(this.getManagedBean()
-								.getSelectedMinistry().getOrgProfileId()
-								.toString());
-					} else if (this.getManagedBean()
-							.getSelectedPegwaiPengawal().getOrgProfileId() != null) {
-						this.setCommonPegaWaiPengawal(this.getManagedBean()
-								.getSelectedPegwaiPengawal().getOrgProfileId()
-								.toString());
-					} else if (this.getManagedBean().getSelectedKumpulanPTJ()
-							.getOrgProfileId() != null) {
-						this.setCommonKumpulanPTJ(this.getManagedBean()
-								.getSelectedKumpulanPTJ().getOrgProfileId()
-								.toString());
-					} else if (this.getManagedBean().getSelectedPTJ()
-							.getOrgProfileId() != null) {
-						this.setCommonPtj(this.getManagedBean()
-								.getSelectedPTJ().getOrgProfileId().toString());
+
+					if (this.getManagedBean().getSelectedMinistry() != null) {
+						if (this.getManagedBean().getSelectedMinistry()
+								.getOrgProfileId() != null) {
+							this.setCommonMinistry(this.getManagedBean()
+									.getSelectedMinistry().getOrgProfileId()
+									.toString());
+						}
+					} else {
+						this.getManagedBean().setSelectedMinistry(
+								new PmOrgProfile());
+						if (this.getManagedBean().getSelectedMinistry()
+								.getPmOrgValidity() == null) {
+							this.getManagedBean().getSelectedMinistry()
+									.setPmOrgValidity(new PmOrgValidity());
+						}
+					}
+
+					if (this.getManagedBean().getSelectedPegwaiPengawal() != null) {
+						if (this.getManagedBean().getSelectedPegwaiPengawal()
+								.getOrgProfileId() != null) {
+							this.setCommonPegaWaiPengawal(this.getManagedBean()
+									.getSelectedPegwaiPengawal()
+									.getOrgProfileId().toString());
+						}
+					} else {
+						this.getManagedBean().setSelectedPegwaiPengawal(
+								new PmOrgProfile());
+						if (this.getManagedBean().getSelectedPegwaiPengawal()
+								.getPmOrgValidity() == null) {
+							this.getManagedBean().getSelectedPegwaiPengawal()
+									.setPmOrgValidity(new PmOrgValidity());
+						}
+					}
+
+					if (this.getManagedBean().getSelectedKumpulanPTJ() != null) {
+						if (this.getManagedBean().getSelectedKumpulanPTJ()
+								.getOrgProfileId() != null) {
+							this.setCommonKumpulanPTJ(this.getManagedBean()
+									.getSelectedKumpulanPTJ().getOrgProfileId()
+									.toString());
+						}
+					} else {
+						this.getManagedBean().setSelectedKumpulanPTJ(
+								new PmOrgProfile());
+						if (this.getManagedBean().getSelectedKumpulanPTJ()
+								.getPmOrgValidity() == null) {
+							this.getManagedBean().getSelectedKumpulanPTJ()
+									.setPmOrgValidity(new PmOrgValidity());
+						}
+
+					}
+					if (this.getManagedBean().getSelectedPTJ() != null) {
+						if (this.getManagedBean().getSelectedPTJ()
+								.getOrgProfileId() != null) {
+							this.setCommonPtj(this.getManagedBean()
+									.getSelectedPTJ().getOrgProfileId()
+									.toString());
+						}
+					} else {
+						this.getManagedBean()
+								.setSelectedPTJ(new PmOrgProfile());
+						if (this.getManagedBean().getSelectedPTJ()
+								.getPmOrgValidity() == null) {
+							this.getManagedBean().getSelectedPTJ()
+									.setPmOrgValidity(new PmOrgValidity());
+						}
 					}
 				}
 			}
+			
 
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
@@ -14755,7 +14834,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			throw new EpException(MessageConst.ERROR_REPORT_780003);
+			//throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
 
@@ -16319,6 +16398,13 @@ public class ReportBackingBean extends
 				OrganizationType.PENGAWAI_PENGAWAL.value(),
 				OrganizationType.MINISTRY.value()));
 		sb.append("^");
+		if (this.getManagedBean().getSelectedMinistry() == null) {
+			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedMinistry()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
 		sb.append(this.getManagedBean().getSelectedMinistry().getOrgProfileId());
 		return sb.toString();
 	}
@@ -16338,6 +16424,13 @@ public class ReportBackingBean extends
 				OrganizationType.DEPARTMENT.value(),
 				OrganizationType.PENGAWAI_PENGAWAL.value()));
 		sb.append("^");
+		if(this.getManagedBean().getSelectedPegwaiPengawal()==null){
+			this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedPegwaiPengawal().getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedPegwaiPengawal()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
 		sb.append(this.getManagedBean().getSelectedPegwaiPengawal()
 				.getOrgProfileId());
 		return sb.toString();
@@ -16357,6 +16450,20 @@ public class ReportBackingBean extends
 		sb.append(OrgProfileUtil
 				.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
 		sb.append("^");
+		if(this.getManagedBean().getSelectedKumpulanPTJ()==null){
+			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedKumpulanPTJ()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+		if(this.getManagedBean().getSelectedPTJ()==null){
+			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedPTJ()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
 		sb.append(this.getManagedBean().getSelectedKumpulanPTJ()
 				.getOrgProfileId());
 		return sb.toString();

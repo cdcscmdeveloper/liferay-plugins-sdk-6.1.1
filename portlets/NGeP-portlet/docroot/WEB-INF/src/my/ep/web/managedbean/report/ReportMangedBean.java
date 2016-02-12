@@ -489,13 +489,7 @@ public class ReportMangedBean extends BaseManagedBean {
 	 * 
 	 * @return the selectedMinistry
 	 */
-	public PmOrgProfile getSelectedMinistry() {
-		if (selectedMinistry == null) {
-			selectedMinistry = new PmOrgProfile();
-			if(selectedMinistry.getPmOrgValidity()==null){
-				selectedMinistry.setPmOrgValidity(new PmOrgValidity());				
-			}
-		}
+	public PmOrgProfile getSelectedMinistry() {			
 		return selectedMinistry;
 	}
 
@@ -514,14 +508,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	 * 
 	 * @return the selectedPegwaiPengawal
 	 */
-	public PmOrgProfile getSelectedPegwaiPengawal() {
-		if (selectedPegwaiPengawal == null) {
-			selectedPegwaiPengawal = new PmOrgProfile();
-			if(selectedPegwaiPengawal.getPmOrgValidity()==null){
-				selectedPegwaiPengawal.setPmOrgValidity(new PmOrgValidity());				
-			}
-
-		}
+	public PmOrgProfile getSelectedPegwaiPengawal() {	
+		
 		return selectedPegwaiPengawal;
 	}
 
@@ -540,13 +528,7 @@ public class ReportMangedBean extends BaseManagedBean {
 	 * 
 	 * @return the selectedKumpulanPTJ
 	 */
-	public PmOrgProfile getSelectedKumpulanPTJ() {
-		if (selectedKumpulanPTJ == null) {
-			selectedKumpulanPTJ = new PmOrgProfile();
-			if(selectedKumpulanPTJ.getPmOrgValidity()==null){
-				selectedKumpulanPTJ.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
+	public PmOrgProfile getSelectedKumpulanPTJ() {		
 		return selectedKumpulanPTJ;
 	}
 
@@ -565,14 +547,7 @@ public class ReportMangedBean extends BaseManagedBean {
 	 * 
 	 * @return the selectedPTJ
 	 */
-	public PmOrgProfile getSelectedPTJ() {
-		if (selectedPTJ == null) {
-			selectedPTJ = new PmOrgProfile();
-			if(selectedPTJ.getPmOrgValidity()==null){
-				selectedPTJ.setPmOrgValidity(new PmOrgValidity());
-				
-			}
-		}
+	public PmOrgProfile getSelectedPTJ() {		
 		return selectedPTJ;
 	}
 
