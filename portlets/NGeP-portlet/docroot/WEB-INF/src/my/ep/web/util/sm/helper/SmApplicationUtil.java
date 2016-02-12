@@ -5001,6 +5001,7 @@ public class SmApplicationUtil {
 		item.setValue(StringUtils.EMPTY);
 		item.setLabel(SmCommonUtil.getMessage("lbl.txt.select", null));
 		managedBean.getAddrSameAsItems().add(item);
+		item = new SelectItem();
 		item.setValue("HQ");
 		item.setLabel(SmCommonUtil.getMessage("lbl.sm.facility.type._B", null));
 		managedBean.getAddrSameAsItems().add(item);
