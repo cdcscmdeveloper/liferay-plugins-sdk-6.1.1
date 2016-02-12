@@ -107,7 +107,7 @@
 						<h:outputText value="#{itemVar.ctContractItem.scRequestItem.itemName}"  style="float:left;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:10%;" styleClass="column-align-center">
-						<p:inputText styleClass="colFloatRight" style="width:120px;"
+						<p:inputText styleClass="ppRightBtn"  style="width:120px;"
 							value="#{itemVar.minimumOrderQty}" maxlength="#{itemVar.ctContractItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
 							label="#{lbl['lbl.ct.min.order.qty']}" 
 							disabled="#{centralContractBackingBean.managedBean.viewContract}">
@@ -117,7 +117,7 @@
 						</p:inputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.min.order.amount']}" style="width:15%;white-space:pre-line;" styleClass="column-align-center">
-						<p:inputText styleClass="colFloatRight" style="width:120px;"
+						<p:inputText styleClass="ppRightBtn" style="width:120px;"
 							value="#{itemVar.minimumOrderAmt}" maxlength="19"
 							label="#{lbl['lbl.ct.min.order.amount']}"
 							disabled="#{centralContractBackingBean.managedBean.viewContract}">
@@ -128,7 +128,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.purchase.limit']}"
 						style="width:15%;white-space:pre-line;" styleClass="column-align-center">
-						<p:inputText styleClass="colFloatRight" style="width:120px;"
+						<p:inputText styleClass="ppRightBtn" style="width:120px;"
 							value="#{itemVar.maxProcureAmt}" maxlength="19"
 							label="#{lbl['lbl.ct.contract.purchase.limit']}"
 							disabled="#{centralContractBackingBean.managedBean.viewContract}">
