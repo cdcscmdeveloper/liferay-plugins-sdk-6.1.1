@@ -126,17 +126,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	public CodificationBackingBean() {
 		
-		this.getManagedBean().setContractedItem(null);
-		CmUnspsc unspsc = new CmUnspsc();
-		unspsc.setUnspscTitle("item");
-		this.getManagedBean().getContractedItem().add(unspsc);
-		
+	
 		if(this.getManagedBean().isRefreshPageNoFlag()){
 			System.out.println("****************************");
-			PagingDataModel paging = new ExtensionSearchItemDataModel();
-			paging.setPageNo(0);
 			
-			this.getManagedBean().setExtensionSearchItemDataModel(new ExtensionSearchItemDataModel());
+			this.getManagedBean().initRefreshPageNoFlag();
 		}
 	
 		
@@ -180,10 +174,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		protected ISearchResultBean<Object[]> pageChangeListener(
 				ISearchBean<Object[]> searchBean) {
 
-			System.out
-			.println("........search extension combination.................");
-			log.info("Unspsc Code:"
-					+ getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+			System.out.println("........search extension combination 11.................");
+			log.info("Unspsc Code:"+ getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
 
 			ICodificationSO codificationSO = null;
 			CodificationResDTO resDTO = null;
@@ -198,14 +190,14 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				reqDTO.setUnspscCode(getManagedBean().getSelectedUNSPSCObj()
 						.getUnspscCode());
 
+				System.out.println("colorFilterBean.getSearchValue():"+colorFilterBean.getSearchValue());
 				if (StringUtils.isNotBlank((String) colorFilterBean
 						.getSearchValue())) {
 					reqDTO.setColorId(Long.valueOf(colorFilterBean
 							.getSearchValue().toString()));
 				}
 
-				log.info("typeFilterBean.getSearchValue()"
-						+ typeFilterBean.getSearchValue());
+				System.out.println("typeFilterBean.getSearchValue()"+ typeFilterBean.getSearchValue());
 				if (StringUtils.isNotBlank((String) typeFilterBean
 						.getSearchValue())) {
 					reqDTO.setTypeId(Long.valueOf(typeFilterBean
@@ -225,7 +217,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
 							.getSearchValue().toString()));
 				}
-
+				System.out.println("*********in********");
 				resDTO = codificationSO.searchExtension(reqDTO);
 
 			} catch (Exception e) {
@@ -686,7 +678,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		this.getManagedBean().getBrandFilterBean().setSearchValue("");
 		
 		
-
+		System.out.println("NAV_TO_EXTENSION_SEARCH");
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
 	
@@ -1554,14 +1546,14 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public String backToPrev() {
 		
 		this.getManagedBean().setRefreshPageNoFlag(true);
-
+	
 		return "codificationView";
 	}
 	
 	public String backToPrevPortal() {
 		
 		this.getManagedBean().setRefreshPageNoFlag(true);
-
+		
 		return "codificationViewPortal";
 	}
 
@@ -3031,69 +3023,72 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void cloneAllExtensionSelection(){
 
 		Map checkDuplicateAdd = new HashMap();
-		for (int i = 0; i < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); i++) {
-
-
-			ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
-			Object[] objects = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(i);
-
-			extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
-			extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
-			extCodeVO
-			.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
-			extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-
-			extCodeVO.setTypeName(String.valueOf(objects[4]));
-			extCodeVO.setBrandName(String.valueOf(objects[5]));
-			extCodeVO.setMeasurementName(String.valueOf(objects[6]));
-			extCodeVO.setColorName(String.valueOf(objects[7]));
-			extCodeVO.setKey(String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7]));
-
-			if(this.getManagedBean().isExtensionSearchcheckBoxAll()){
-				extCodeVO.setSelected(true);
-				objects[8] = true;
-			}else{
-				extCodeVO.setSelected(false);
-				objects[8] = false;
-			}
-		
-			if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
-
-
-				boolean addInLs = true;
-				for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
-
-					if(!checkDuplicateAdd.containsKey(obj.getKey())){
-						checkDuplicateAdd.put(obj.getKey(), obj.getKey());
-					}
-
-
-				
-					if(!extCodeVO.isSelected() && extCodeVO.getKey().equalsIgnoreCase(obj.getKey())){
-						this.getManagedBean().getCloneExtensionVOs().remove(obj);
-						addInLs = false;
-						break;
-					}
-
+		if(this.getManagedBean().getExtensionSearchItemDataModel()!=null 
+				&& this.getManagedBean().getExtensionSearchItemDataModel().getList()!=null
+				&& this.getManagedBean().getExtensionSearchItemDataModel().getList().size()>0){
+			for (int i = 0; i < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); i++) {
+	
+	
+				ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
+				Object[] objects = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(i);
+	
+				extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
+				extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
+				extCodeVO
+				.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
+				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
+	
+				extCodeVO.setTypeName(String.valueOf(objects[4]));
+				extCodeVO.setBrandName(String.valueOf(objects[5]));
+				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
+				extCodeVO.setColorName(String.valueOf(objects[7]));
+				extCodeVO.setKey(String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7]));
+	
+				if(this.getManagedBean().isExtensionSearchcheckBoxAll()){
+					extCodeVO.setSelected(true);
+					objects[8] = true;
+				}else{
+					extCodeVO.setSelected(false);
+					objects[8] = false;
 				}
 			
-				if(addInLs){
-					if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
-						this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
+				if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
+	
+	
+					boolean addInLs = true;
+					for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
+	
+						if(!checkDuplicateAdd.containsKey(obj.getKey())){
+							checkDuplicateAdd.put(obj.getKey(), obj.getKey());
+						}
+	
+	
+					
+						if(!extCodeVO.isSelected() && extCodeVO.getKey().equalsIgnoreCase(obj.getKey())){
+							this.getManagedBean().getCloneExtensionVOs().remove(obj);
+							addInLs = false;
+							break;
+						}
+	
+					}
+				
+					if(addInLs){
+						if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
+							this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
+						}
+					}
+	
+				}else{
+					if(extCodeVO.isSelected()){
+						if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
+							this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
+						}
 					}
 				}
-
-			}else{
-				if(extCodeVO.isSelected()){
-					if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
-						this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
-					}
-				}
+	
 			}
 
 		}
-
-
 
 
 
@@ -3108,31 +3103,37 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		int count =0;
 		Map tempMap = new HashMap();
-		for (int i = 0; i < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); i++) {
-			Object[] objects = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(i);
-
-			if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
-
-				for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
-					if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
-
-						if(!tempMap.containsKey(obj.getKey())){
-							objects[8] = true;
-							count = count + 1;
-							System.out.println("**loop***"+count);
-							tempMap.put(obj.getKey(), obj.getKey());
+		
+		if(this.getManagedBean().getExtensionSearchItemDataModel()!=null 
+				&& this.getManagedBean().getExtensionSearchItemDataModel().getList()!=null
+				&& this.getManagedBean().getExtensionSearchItemDataModel().getList().size()>0){
+			for (int i = 0; i < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); i++) {
+				Object[] objects = (Object[]) this.getManagedBean().getExtensionSearchItemDataModel().getList().get(i);
+	
+				if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
+	
+					for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
+						if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
+	
+							if(!tempMap.containsKey(obj.getKey())){
+								objects[8] = true;
+								count = count + 1;
+								System.out.println("**loop***"+count);
+								tempMap.put(obj.getKey(), obj.getKey());
+							}
 						}
 					}
+	
 				}
-
+	
 			}
-
-		}
+			
+			if(count ==  this.getManagedBean().getExtensionSearchItemDataModel().getList().size()){
+				this.getManagedBean().setExtensionSearchcheckBoxAll(true);
+			}else{
+				this.getManagedBean().setExtensionSearchcheckBoxAll(false);
+			}
 		
-		if(count ==  this.getManagedBean().getExtensionSearchItemDataModel().getList().size()){
-			this.getManagedBean().setExtensionSearchcheckBoxAll(true);
-		}else{
-			this.getManagedBean().setExtensionSearchcheckBoxAll(false);
 		}
 
 	}

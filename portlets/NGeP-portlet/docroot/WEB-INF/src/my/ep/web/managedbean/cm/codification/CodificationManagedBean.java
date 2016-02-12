@@ -185,6 +185,21 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
 
+	
+	public void initRefreshPageNoFlag(){
+		
+		if(this.isRefreshPageNoFlag()){
+			System.out.println("****************************");
+			PagingDataModel paging = new ExtensionSearchItemDataModel();
+			paging.setPageNo(0);
+			
+			this.getExtensionSearchItemDataModel().resetData();
+			this.setExtensionSearchcheckBoxAll(false);
+			this.setCloneExtensionVOs(null);
+			this.setRefreshPageNoFlag(false);
+			System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		}
+	}
 
 	private class ExtensionSearchItemDataModel extends
 	PagingDataModel<Object[]> {
@@ -220,7 +235,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 							.getSearchValue().toString()));
 				}
 
-
+				System.out.println("typeFilterBean.getSearchValue():"+typeFilterBean.getSearchValue());
 				if (StringUtils.isNotBlank((String) typeFilterBean
 						.getSearchValue())) {
 					reqDTO.setTypeId(Long.valueOf(typeFilterBean
