@@ -595,6 +595,9 @@
 		widgetVar="taxGuideLineInfo" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" height="300" resizable="false" >
 		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" header="#{lbl['lbl.fl.guideline.taxable.item.g2g']}" toggleable="false">
+			<br/>
+			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.main.header1']}" /></h5>
+			<br/>
 			<table style="width: 100%"  class="taxableGuidelineTable" >
 				<tr>
 					<td style="width: 10%;font:bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.no']}" /></td>

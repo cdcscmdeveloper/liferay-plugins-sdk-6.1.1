@@ -28,145 +28,12 @@
 		</style>
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
-			<table>
-			<tr>
-				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
-						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
-						style="width: 314px;">
-						<f:selectItems
-							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
-						<p:ajax event="change" update="searchPanel"
-							listener="#{flDocumentBackingBean.selectedOrderType}" />
-					</p:selectOneMenu></td>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
-				<td><p:inputText size="28" maxlength="17" 
-						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
-			</tr>
-			<tr>
-			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
-			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
-						value="#{flDocumentBackingBean.managedBean.searchDocType}">
-						<f:selectItems
-							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
-						<p:ajax event="change"
-							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
-							listener="#{flDocumentBackingBean.selectedDoctype}" />
-					</p:selectOneMenu></td>
-			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
-			<td><p:inputText size="28" value="#{flDocumentBackingBean.managedBean.searchDocNo}" />
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.document.no']}"/>	
-			</td>
-			</tr>
-			</table>
-			<h:panelGroup id="docStatusSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
-					<p:selectOneMenu id="statusId"
-						value="#{flDocumentBackingBean.managedBean.statusDescId}"
-						style="width: 314px;">
-						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0" ></f:selectItem>
-						<f:selectItems value="#{flDocumentBackingBean.getStatusDropdownValues('FL',flDocumentBackingBean.managedBean.searchDocType)}" />
-					</p:selectOneMenu>
-				</h:panelGrid>
-			</h:panelGroup>
-			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
-				<p:inputText size="45"
-					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
-			</h:panelGrid>
-			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-				<p:outputLabel value="#{lbl['lbl.fl.financial.year']}" />
-				<p:selectOneMenu id="searchFinancialYear" style="width: 314px;"
-						value="#{flDocumentBackingBean.managedBean.searchFinancialYear}">
-						<f:selectItems
-							value="#{flDocumentBackingBean.getFinancialYearOpt()}" />
-					</p:selectOneMenu>
-			</h:panelGrid>
-			<h:panelGroup id="docDoStatusSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDoDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
-				</h:panelGrid>
-			</h:panelGroup>
-			<h:panelGroup id="docInvStatusSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
-				</h:panelGrid>
-			</h:panelGroup>
-			<h:panelGroup id="docTypeSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.treasury.circular']}" />
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
-					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchCentralContractName}"></p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.central.contract.name']}"/>
-				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
-					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel
-						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
-					<p:calendar mode="popup" showOn="button" id="calendarStart"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
-					</p:calendar>
-					<p:spacer width="5" />
-					<p:calendar mode="popup" showOn="button" id="calendarEnd"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
-					</p:calendar>
-				</h:panelGrid>
-			</h:panelGroup>
 			<h:panelGroup id="orgSearch">
 			<table>
 				<tr>
 					<td style="width: 190px;">
-						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"	/>
+						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"	/><p:outputLabel
+						value="*" styleClass="mandatory" />
 					</td>
 					<td>
 						<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="46" readonly="true" style="width:314px"
@@ -209,6 +76,147 @@
 				</tr>
 			</table>
 			</h:panelGroup>
+			<table>
+			<tr>
+				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
+						style="width: 314px;">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
+						<p:ajax event="change" update="searchPanel"
+							listener="#{flDocumentBackingBean.selectedOrderType}" />
+					</p:selectOneMenu></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
+				<td><p:inputText size="28" maxlength="17" 
+						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
+			</tr>
+			<tr>
+			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
+			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
+						value="#{flDocumentBackingBean.managedBean.searchDocType}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
+						<p:ajax event="change"
+							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
+							listener="#{flDocumentBackingBean.selectedDoctype}" />
+					</p:selectOneMenu></td>
+			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+			<td><p:inputText size="28" value="#{flDocumentBackingBean.managedBean.searchDocNo}" />
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.document.no']}"/>	
+			</td>
+			</tr>
+			</table>
+			<h:panelGroup id="docStatusSearch">
+				<table>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel
+								value="#{lbl['lbl.fl.doc.maintain.doc.status']}" /></td>
+						<td><p:selectOneMenu id="statusId"
+								value="#{flDocumentBackingBean.managedBean.statusDescId}"
+								style="width: 314px;">
+								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>
+								<f:selectItems
+									value="#{flDocumentBackingBean.getStatusDropdownValues('FL',flDocumentBackingBean.managedBean.searchDocType)}" />
+							</p:selectOneMenu></td>
+						<td style="width: 250px;"><p:outputLabel
+								value="#{lbl['lbl.fl.financial.year']}" /></td>
+						<td><p:selectOneMenu id="searchFinancialYear"
+								style="width: 100px;"
+								value="#{flDocumentBackingBean.managedBean.searchFinancialYear}">
+								<f:selectItems
+									value="#{flDocumentBackingBean.getFinancialYearOpt()}" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
+				<p:inputText size="45"
+					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
+			</h:panelGrid>
+			
+			<h:panelGroup id="docDoStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDoDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docInvStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docTypeSearch">
+			
+				<table>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.sistem.panel.name']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchCentralContractName}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.central.contract.name']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+						<td style="width: 340px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.circular.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.treasury.circular']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+					</tr>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+						<td style="width: 340px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+					</tr>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.contract.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+						<td style="width: 340px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
+						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+						value="#{flDocumentBackingBean.managedBean.searchPhysContractNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>
+					</tr>
+					<tr>
+						<td style="width: 190px;"><p:outputLabel
+								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.contract.start.date']}" /></td>
+						<td><p:calendar mode="popup" showOn="button"
+								id="calendarStart" readonlyInput="true"
+								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
+							</p:calendar> </td>
+						<td style="width: 340px;"><p:outputLabel
+								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.doc.maintain.contract.end.date']}" /></td>
+						<td><p:calendar mode="popup" showOn="button" id="calendarEnd"
+								readonlyInput="true"
+								rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
+							</p:calendar></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+			
 			<p:outputPanel id="advanceSearchID" style="width:100%">
 			</p:outputPanel>
 
