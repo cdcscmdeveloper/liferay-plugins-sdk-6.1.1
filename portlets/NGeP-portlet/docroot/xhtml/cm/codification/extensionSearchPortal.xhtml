@@ -135,7 +135,7 @@
 
 
 
-			<p:remoteCommand name="refreshExtensionSearch" id="refreshExtensionSearch" action="#{codificationBackingBean.checkingCheckAll}" update=":form:itemTableID:selectAllCheckBoxId"></p:remoteCommand>
+			<p:remoteCommand name="refreshExtensionSearch" id="refreshExtensionSearch" action="#{codificationBackingBean.checkingCheckAll}"></p:remoteCommand>
 
 
 			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
@@ -148,34 +148,22 @@
 
 					<ac:paginator for="itemTableID"></ac:paginator>
 
-					<p:column style="text-align: left;">
-						<f:facet name="header">
-							<p:selectBooleanCheckbox id="selectAllCheckBoxId" value="#{codificationBackingBean.managedBean.extensionSearchcheckBoxAll}">
-								<p:ajax event="change"
-									listener="#{codificationBackingBean.cloneAllExtensionSelection()}" update="itemTableID"></p:ajax>
-							</p:selectBooleanCheckbox>
-						</f:facet>
-						<p:selectBooleanCheckbox value="#{obj[8]}">
-							<p:ajax event="change"
-								listener="#{codificationBackingBean.cloneExtensionSelection(rowIndex)}" update="itemTableID"></p:ajax>
-						</p:selectBooleanCheckbox>
-					</p:column>
+					
 
-
-					<p:column>
+					<p:column width="25%">
 						<f:facet name="header">
 							#{lbl['lbl.cm.type']}
 						</f:facet>
 						#{obj[4]}
 
 					</p:column>
-					<p:column>
+					<p:column width="25%">
 						<f:facet name="header">
 							#{lbl['lbl.cm.brand']}
 						</f:facet>
 						#{obj[5]}
 					</p:column>
-					<p:column>
+					<p:column width="25%">
 						<f:facet name="header">
 							#{lbl['lbl.cm.measurement']}
 						</f:facet>
@@ -183,7 +171,7 @@
 						#{obj[6]}
 
 					</p:column>
-					<p:column>
+					<p:column width="25%">
 						<f:facet name="header">
 							#{lbl['lbl.cm.color']}
 						</f:facet>
