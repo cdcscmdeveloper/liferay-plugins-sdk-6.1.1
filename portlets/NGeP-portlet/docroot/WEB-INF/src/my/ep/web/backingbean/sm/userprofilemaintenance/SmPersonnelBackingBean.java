@@ -465,12 +465,7 @@ public class SmPersonnelBackingBean extends
 
 			// if personnel is Catalogue User or supplier type is Consultant
 			if (getManagedBean().getBasicSmPersonnel().getEpRole()
-					.equals(RoleCode.CM_USER.value())
-					|| getManagedBean()
-							.getBasicSmPersonnel()
-							.getSmAppl()
-							.getSupplierType()
-							.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+					.equals(RoleCode.CM_USER.value())) {
 
 				// if latest softcert flag not yet issued, then set flag no
 				if (getManagedBean().getBasicSmPersonnel().getPrevSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED) {

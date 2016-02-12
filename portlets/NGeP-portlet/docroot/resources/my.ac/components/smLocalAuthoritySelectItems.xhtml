@@ -8,13 +8,14 @@
    	xmlns:ac="http://ac.my/jsf/composite/cc" >
     
 <cc:interface>
+	<cc:attribute name="required" default="false"/>
 	<cc:attribute name="smSupplier" required="true" />
 	<cc:attribute name="backingBean" required="true" />
 </cc:interface>
 
 <cc:implementation>
 	<p:selectOneMenu value="#{cc.attrs.smSupplier.localAuthorityId}" 
-		required="true"
+		required="#{cc.attrs.required}"
 		rendered="#{cc.attrs.smSupplier.businessType eq 'D' or cc.attrs.smSupplier.businessType eq 'E' 
 				or cc.attrs.smSupplier.businessType eq 'G' or cc.attrs.smSupplier.businessType eq 'H'}" 
 		disabled="#{cc.attrs.backingBean.getListSize(cc.attrs.backingBean.managedBean.localAuthorityItems) eq 1}"
