@@ -267,8 +267,8 @@
 					</td>		
 					<td>
 						<p:outputPanel id="contractOutPanelId">
-							<p:selectOneRadio disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'
-									or smPersonnelBackingBean.managedBean.basicSmPersonnel.smAppl.supplierType eq 'J'}"
+							<p:selectOneRadio disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER' 
+								or empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}" >
 								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
