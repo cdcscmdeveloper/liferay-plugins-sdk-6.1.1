@@ -1827,8 +1827,8 @@ public class SmApplicationBackingBean extends
 			return true;
 		} finally {
 			mofRegistrationSO = null;
-			// SmApplicationUtil.getInstance().setApplAddressTransientValue(
-			// getManagedBean().getSmAppl(), false);
+			SmApplicationUtil.getInstance().setApplAddressTransientValue(
+					getManagedBean().getSmAppl(), false);
 
 			// set application table field change status
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
@@ -3706,6 +3706,7 @@ public class SmApplicationBackingBean extends
 	public void assignSelFactory(SmFacility facilityBean) {
 		log.info("******** Selected value ******"
 				+ facilityBean.getSmAddress().getAddress1());
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_FACTORY_FACILITY_PANEL);
@@ -3723,6 +3724,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmFacility object of type Factory
 	 */
 	public void assignNewFactoryBean() {
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		getManagedBean().setSelectedFactoryFacility(new SmFacility());
 		setFacilityDefaultPrices(getManagedBean().getSelectedFactoryFacility());
 		getManagedBean().getSelectedFactoryFacility().setRevNo(1);
@@ -3814,6 +3816,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelDockyard(SmFacility facilityBean) {
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL);
@@ -3831,6 +3834,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmFacility object of type Dockyard
 	 */
 	public void assignNewDockyardBean() {
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		getManagedBean().setSelectedDockyardFacility(new SmFacility());
 		setFacilityDefaultPrices(getManagedBean().getSelectedDockyardFacility());
 		getManagedBean().getSelectedDockyardFacility().setRevNo(1);
@@ -3923,6 +3927,7 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL);
@@ -3940,6 +3945,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmFacility object of type Workshop
 	 */
 	public void assignNewWorkshopBean() {
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		getManagedBean().setSelectedWorkShopFacility(new SmFacility());
 		setFacilityDefaultPrices(getManagedBean().getSelectedWorkShopFacility());
 		getManagedBean().getSelectedWorkShopFacility().setRevNo(1);
@@ -4029,6 +4035,7 @@ public class SmApplicationBackingBean extends
 	 *            the facility bean
 	 */
 	public void assignSelStore(SmFacility facilityBean) {
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
 				getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_STORE_FACILITY_PANEL);
@@ -4046,6 +4053,7 @@ public class SmApplicationBackingBean extends
 	 * Add or create a new SmFacility object of type Store
 	 */
 	public void assignNewStoreBean() {
+		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
 		getManagedBean().setSelectedStoreFacility(new SmFacility());
 		setFacilityDefaultPrices(getManagedBean().getSelectedStoreFacility());
 		getManagedBean().getSelectedStoreFacility().setRevNo(1);
@@ -9681,6 +9689,29 @@ public class SmApplicationBackingBean extends
 					.getSmAddress();
 			getManagedBean().setRoleStaffAndMailAddrReqd(
 					isAddressReqdForRoleStaff(mailAddress));
+		}
+	}
+
+	public void onChangeFacAddrSameAs(SmAddress address, String panelName) {
+		if (StringUtils.isNotBlank(getManagedBean().getFacAddresSameAs())) {
+			if (getManagedBean().getFacAddresSameAs().equals("HQ")) {
+				SmApplicationUtil.getInstance().cloneAddress(
+						address,
+						getManagedBean().getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().get(0).getSmAddress());
+			} else {
+				Long branchId = Long.parseLong(getManagedBean()
+						.getFacAddresSameAs());
+				SmSupplierBranch branch = (SmSupplierBranch) EntityHelper
+						.getEntityBySinglePropertyFromList(branchId,
+								getManagedBean().getSmAppl()
+										.getSmSupplierBranches(),
+								"supplierBranchId");
+				SmApplicationUtil.getInstance().cloneAddress(address,
+						branch.getSmAddress());
+			}
+			SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
+					getManagedBean(), address, panelName);
 		}
 	}
 
