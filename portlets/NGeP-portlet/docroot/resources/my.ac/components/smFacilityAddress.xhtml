@@ -30,7 +30,7 @@
 				<f:selectItems 
 					value="#{cc.attrs.backingBean.managedBean.addrSameAsItems}" />
 				<p:ajax event="change" process="@this"
-					listener="#{cc.attrs.backingBean.onChangeFacAddrSameAs(cc.attrs.smAddress)}"
+					listener="#{cc.attrs.backingBean.onChangeFacAddrSameAs(cc.attrs.smAddress,cc.attrs.facilityPanel)}"
 					update="addr1LabelId,addr1InputId,addr2InputId,addr3InputId,addr4InputId,
 					countryLabelId,countryInputId,stateLabelId,stateInputId,districtLabelId,districtInputId,
 					cityLabelId,cityInputId,postCodeLabelId,postCodeInputId" />

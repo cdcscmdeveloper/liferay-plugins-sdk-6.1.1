@@ -4144,7 +4144,6 @@ public class SmApplicationUtil {
 	}
 
 	public void cloneAddress(SmAddress desAddr, SmAddress srcAddr) {
-		log.info(">>>>>>>>>>>>>>CLONE ADDRESS<<<<<<<<<<<<<<<");
 		desAddr.setAddress1(srcAddr.getAddress1());
 		desAddr.setAddress2(srcAddr.getAddress2());
 		desAddr.setAddress3(srcAddr.getAddress3());

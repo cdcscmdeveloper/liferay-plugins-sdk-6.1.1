@@ -406,6 +406,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmGstSupplierDoc selectedGstSuppDoc;
 	private List<SmSiteVisitFacilityVO> siteVisitFacVOList;
 	private boolean branchSameAsHq;
+	private String facAddresSameAs;
+	private List<SelectItem> addrSameAsItems;
 
 	private boolean showNewChanges;
 
@@ -633,6 +635,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedGst = new SmGstSupplier();
 		companyBasicGst = new SmGstSupplier();
 		salutationSelectItems = SmCommonUtil.getSalutationItems();
+		addrSameAsItems = new ArrayList<SelectItem>();
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -3173,5 +3176,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setOthersMachine(boolean othersMachine) {
 		this.othersMachine = othersMachine;
+	}
+
+	public String getFacAddresSameAs() {
+		return facAddresSameAs;
+	}
+
+	public void setFacAddresSameAs(String facAddresSameAs) {
+		this.facAddresSameAs = facAddresSameAs;
+	}
+
+	public List<SelectItem> getAddrSameAsItems() {
+		return addrSameAsItems;
+	}
+
+	public void setAddrSameAsItems(List<SelectItem> addrSameAsItems) {
+		this.addrSameAsItems = addrSameAsItems;
 	}
 }
