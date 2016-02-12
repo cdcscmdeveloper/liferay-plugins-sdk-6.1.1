@@ -39,7 +39,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.machine.value']}">
-					<h:outputText value="#{macBean.value}" />
+					<ac:labelAmount styleClass="outputLabel-view" value="#{macBean.value}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
