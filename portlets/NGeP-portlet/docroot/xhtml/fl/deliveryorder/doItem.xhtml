@@ -378,26 +378,19 @@
 		</p:fileUpload>
 	</p:dialog>
 	
-	<p:dialog id="delFileDlg" widgetVar="delFileDlg"
-			header="Delete Confirmation" styleClass="screen-title"
-			resizable="false" modal="true" width="325" height="90">
-			<h:panelGrid columns="3">
-				<p:graphicImage styleClass="ui-icon-complain" />
-				<p:spacer width="10" />
-				<p:inputTextarea disabled="true"
-					value="Are you sure you want to delete this file?" rows="2"
-					cols="48" styleClass="ui-inputtextarea" />
-			</h:panelGrid>
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.delete']}"
+			severity="alert" widgetVar="delFileDlg" closable="true"
+			appendToBody="true" header="Delete Confirmation">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-					partialSubmit="true"
+					partialSubmit="true" immediate="true"
 					update="lampiran"
-					action="#{fulfilmentBackingBean.deleteAttachmentAction()}"
-					 />
+					action="#{fulfilmentBackingBean.deleteAttachmentAction()}"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="delFileDlg.hide();" type="button" />
 			</div>
-		</p:dialog>
+		</p:confirmDialog>		
+		
 		<p:dialog id="uomRefDlg" header="#{lbl['lbl.fl.instruction.uom.table']}" 
 			widgetVar="uomRefDialog" showEffect="fade" hideEffect="fade" modal="true"
 			width="600" resizable="false">
