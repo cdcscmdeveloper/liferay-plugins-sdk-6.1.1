@@ -14834,7 +14834,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			//throw new EpException(MessageConst.ERROR_REPORT_780003);
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
 
