@@ -4996,7 +4996,25 @@ public class SmApplicationUtil {
 	 */
 	public static void handleShowOrHideFacilityPanels(
 			SmApplicationManagedBean managedBean) {
-		log.info("**** Enter handleShowOrHideFacilityPanels **********");
+		managedBean.setAddrSameAsItems(new ArrayList<SelectItem>());
+		SelectItem item = new SelectItem();
+		item.setValue(StringUtils.EMPTY);
+		item.setLabel(SmCommonUtil.getMessage("lbl.txt.select", null));
+		managedBean.getAddrSameAsItems().add(item);
+		item.setValue("HQ");
+		item.setLabel(SmCommonUtil.getMessage("lbl.sm.facility.type._B", null));
+		managedBean.getAddrSameAsItems().add(item);
+		if (!EntityHelper.isCollectionEmpty(managedBean.getSmAppl()
+				.getSmSupplierBranches())) {
+			for (SmSupplierBranch br : managedBean.getSmAppl()
+					.getSmSupplierBranches()) {
+				item = new SelectItem();
+				item.setValue(br.getSupplierBranchId());
+				item.setLabel(br.getBranchName());
+				managedBean.getAddrSameAsItems().add(item);
+			}
+		}
+
 		managedBean.setShowDockyardPanel(false);
 		managedBean.setShowStorePanel(false);
 		managedBean.setShowFactoryPanel(false);

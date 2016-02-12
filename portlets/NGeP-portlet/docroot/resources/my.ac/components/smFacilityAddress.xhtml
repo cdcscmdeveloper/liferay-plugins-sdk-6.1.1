@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+   	xmlns:ac="http://ac.my/jsf/composite/cc" >
+    
+<cc:interface>
+	<cc:attribute name="backingBean" required="true" />
+	<cc:attribute name="smAddress" required="true" />
+	<cc:attribute name="countryItems" required="true" />
+	<cc:attribute name="stateItems" required="true" />
+	<cc:attribute name="districtItems" required="true" />
+	<cc:attribute name="cityItems" required="true" />
+	<cc:attribute name="facilityPanel" required="true" />
+</cc:interface>
+
+<cc:implementation>
+	<p:outputPanel id="facilityAddressOutPanelId">
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /></td>
+			<td>
+				<p:selectOneMenu id="sameAsAddrId"
+					label="#{lbl['lbl.sm.facility.address.same.as']}"
+					value="#{cc.attrs.backingBean.managedBean.facAddresSameAs}"
+					style="width: 207px;margin-bottom: 5px;">
+					<f:selectItems 
+						value="#{cc.attrs.backingBean.managedBean.addrSameAsItems}" />
+					<p:ajax event="change" process="@this"
+						listener="#{cc.attrs.backingBean.onChangeFacAddrSameAs(cc.attrs.smAddress)}"
+						update=":#{p:component('facilityAddressOutPanelId')}" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<p:outputPanel rendered="#{empty cc.attrs.backingBean.managedBean.facAddresSameAs}">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="35"
+						required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.address']}" id="addr1Id"
+						value="#{cc.attrs.smAddress.address1}"
+						size="35" /> 
+						<p:message id="addr1IdMsg" for="addr1Id"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+	
+			<tr>
+				<td></td>
+				<td><p:inputText maxlength="35"
+						value="#{cc.attrs.smAddress.address2}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText maxlength="35"
+						value="#{cc.attrs.smAddress.address3}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText maxlength="35"
+						value="#{cc.attrs.smAddress.address4}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="countryId"
+						required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.country']}"
+						value="#{cc.attrs.smAddress.countryId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems 
+							value="#{cc.attrs.countryItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{cc.attrs.backingBean.onChangeCountry(cc.attrs.smAddress,cc.attrs.facilityPanel)}"
+							update="stateId,districtId,cityId,postCodePanelId" />
+					</p:selectOneMenu> <p:message id="countryIdMsg" for="countryId"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+	
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.state']}"
+						value="#{cc.attrs.smAddress.stateId}"
+						id="stateId">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems 
+							value="#{cc.attrs.stateItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{cc.attrs.backingBean.onChangeState(cc.attrs.smAddress,cc.attrs.facilityPanel)}"
+							update="districtId,cityId" />
+	
+					</p:selectOneMenu> <p:message id="stateIdMsg" for="stateId" showSummary="true"
+						showDetail="false" display="icon" /></td>
+			</tr>
+	
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						id="districtId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.district']}"
+						value="#{cc.attrs.smAddress.districtId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems 
+							value="#{cc.attrs.districtItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{cc.attrs.backingBean.onChangeDistrict(cc.attrs.smAddress,cc.attrs.facilityPanel)}"
+							update="cityId" />
+					</p:selectOneMenu> <p:message id="districtIdMsg" for="districtId" showSummary="true"
+						showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						id="cityId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.towncity']}"
+						value="#{cc.attrs.smAddress.cityId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems
+							value="#{cc.attrs.cityItems}" />
+						<p:ajax event="change" process="@this"
+							listener="#{cc.attrs.backingBean.onChangeCity(cc.attrs.smAddress,cc.attrs.facilityPanel)}"
+							update="cityId" />
+					</p:selectOneMenu> <p:message id="cityIdMsg" for="cityId" showSummary="true"
+						showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:outputPanel id="postCodePanelId">
+						<p:outputPanel
+							rendered="#{cc.attrs.smAddress.countryId==cc.attrs.backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="5"
+								required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="posCodeMyId"
+								value="#{cc.attrs.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="35">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="posCodeMyIdMsg" for="posCodeMyId"
+								showSummary="true" showDetail="false" display="icon" />
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{cc.attrs.smAddress.countryId!=cc.attrs.backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="10"
+								required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="posCodeForeignId"
+								value="#{cc.attrs.smAddress.postcode}"
+								size="35">
+							</p:inputText>
+							<p:message id="posCodeForeignIdMsg"
+								for="posCodeForeignId" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+					</p:outputPanel></td>
+			</tr>
+		</p:outputPanel>
+		<p:outputPanel rendered="#{not empty cc.attrs.backingBean.managedBean.facAddresSameAs}">
+			<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderDuplicatAddrPanelForm.xhtml" />
+		</p:outputPanel>
+	</p:outputPanel>
+</cc:implementation>
+</ui:composition>
