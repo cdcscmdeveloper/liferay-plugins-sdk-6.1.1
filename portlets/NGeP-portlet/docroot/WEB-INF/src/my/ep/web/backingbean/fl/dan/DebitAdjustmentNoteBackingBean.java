@@ -127,6 +127,9 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			if(getManagedBean().getPmDigiSign()!=null) {
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			}
 			
 			FulfilmentResDTO resDTO = adjustmentSO.saveAdjustment(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -568,8 +571,10 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			}
 			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getAdjustment().getDocNo());
-			sb.append(outcome);
+			sb.append(getManagedBean().getAdjustment().getFlOrder().getDocNo()+"|");
+			sb.append(getManagedBean().getAdjustment().getDocNo()+"|");
+			sb.append(outcome+"|");
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 			getManagedBean().setTextBeforeSign(sb.toString());			
 			//validateFulfilmentNote(outcome);
 			// set action
