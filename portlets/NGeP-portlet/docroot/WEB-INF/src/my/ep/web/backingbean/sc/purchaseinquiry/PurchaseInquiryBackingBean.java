@@ -404,6 +404,7 @@ public class PurchaseInquiryBackingBean extends
 						orgProfileResDTO.getOrgProfileList().get(0));
 			}
 		}
+		getManagedBean().setShowButton(Boolean.TRUE);
 		return PURCHASE_INQUIRY_PAGE;
 	}
 
@@ -1311,7 +1312,8 @@ public class PurchaseInquiryBackingBean extends
 
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
-		getManagedBean().setViewOnly(Boolean.FALSE);
+		getManagedBean().setViewOnly(Boolean.TRUE);
+		getManagedBean().setShowButton(Boolean.TRUE);
 
 		// price change lister
 		priceTypeChangeListener();
@@ -1556,6 +1558,8 @@ public class PurchaseInquiryBackingBean extends
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		getManagedBean().setViewOnly(Boolean.TRUE);
+		getManagedBean().setShowButton(Boolean.FALSE);
+		getManagedBean().setShowBackButton(Boolean.TRUE);
 		
 		// current page url for page navigation from pid to request note
 		FacesContext fc = FacesContext.getCurrentInstance();

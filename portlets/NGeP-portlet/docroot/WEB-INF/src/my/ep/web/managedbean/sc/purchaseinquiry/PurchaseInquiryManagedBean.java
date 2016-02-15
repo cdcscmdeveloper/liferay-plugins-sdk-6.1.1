@@ -129,6 +129,11 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	/** The tracking dairy view. */
 	private boolean trackingDairyView;
 	
+	/** The show button. */
+	private boolean showButton;
+	
+	 /** The show back button. */
+     private boolean showBackButton;
     
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -668,5 +673,32 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 		this.trackingDairyView = trackingDairyView;
 	}
 	
+	/**
+	 * @return the showButton
+	 */
+	public boolean isShowButton() {
+		return showButton;
+	}
+
+	/**
+	 * @param showButton the showButton to set
+	 */
+	public void setShowButton(boolean showButton) {
+		this.showButton = showButton;
+	}
+
+	/**
+	 * @return the showBackButton
+	 */
+	public boolean isShowBackButton() {
+		return showBackButton;
+	}
+
+	/**
+	 * @param showBackButton the showBackButton to set
+	 */
+	public void setShowBackButton(boolean showBackButton) {
+		this.showBackButton = showBackButton;
+	}
 	
 }
