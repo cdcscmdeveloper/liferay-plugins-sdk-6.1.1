@@ -64,7 +64,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private String popupForImportedItems = "L";
 	private String searchContractNo;
 	private String searchContractName;
-	private Long searchMinistryProfileId;
+	private PmOrgProfile searchMinistryProfile;
+	private PmOrgProfile searchPtjGroupProfile;
 	private PmOrgProfile searchPtjProfile;
 	private String searchCircularNo;
 	private String searchCircularName;
@@ -743,15 +744,29 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	/**
 	 * @return the searchMinistryProfile
 	 */
-	public Long getSearchMinistryProfileId() {
-		return searchMinistryProfileId;
+	public PmOrgProfile getSearchMinistryProfile() {
+		return searchMinistryProfile;
 	}
 
 	/**
-	 * @param searchMinistryProfile the searchMinistryProfileId to set
+	 * @param searchMinistryProfile the searchMinistryProfile to set
 	 */
-	public void setSearchMinistryProfileId(Long searchMinistryProfileId) {
-		this.searchMinistryProfileId = searchMinistryProfileId;
+	public void setSearchMinistryProfile(PmOrgProfile searchMinistryProfile) {
+		this.searchMinistryProfile = searchMinistryProfile;
+	}
+	
+	/**
+	 * @return the searchPtjGroupProfile
+	 */
+	public PmOrgProfile getSearchPtjGroupProfile() {
+		return searchPtjGroupProfile;
+	}
+
+	/**
+	 * @param searchPtjGroupProfile the searchPtjGroupProfile to set
+	 */
+	public void setSearchPtjGroupProfile(PmOrgProfile searchPtjGroupProfile) {
+		this.searchPtjGroupProfile = searchPtjGroupProfile;
 	}
 
 	/**
@@ -886,9 +901,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
 							getSearchPtjProfile().getOrgProfileId()));
 					
-				} else if (getSearchMinistryProfileId() != null) {
+				} else if (getSearchPtjGroupProfile() != null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_GROUP_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
+							getSearchPtjGroupProfile().getOrgProfileId()));
+				} else if (getSearchMinistryProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("MINISTRY_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchMinistryProfileId()));
+							getSearchMinistryProfile().getOrgProfileId()));
 				}
 				if (StringUtils.isNotBlank(getSearchCircularNo())) {
 					SearchFilterBean filterBean = new SearchFilterBean("CIRCULAR_NO",SearchOperator.OPERATOR_LIKE.value(),

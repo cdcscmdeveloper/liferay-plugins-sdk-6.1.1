@@ -1382,6 +1382,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 								SearchOperator.OPERATOR_IS_NULL.value(), null,
 								SearchCondition.CONDITION_OR.value())));
 				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(), true));
+				
 				if (getManagedBean().getPtjCodeName() != null
 						&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
 					if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
