@@ -5760,7 +5760,7 @@ public class SmApplicationUtil {
 		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
-		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedBy(user != null ? user.getUserId() : 1L);
 		trckVO.setActionedByRole(getUserRoleValue(managedBean));
 		trckVO.setDocId(managedBean.getSmAppl().getApplId());
 		trckVO.setDocNo(managedBean.getSmAppl().getApplNo());
