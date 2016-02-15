@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -187,8 +188,6 @@ public class SupplierFinalizationBackingBean extends
 	private static final int PREPARE_ACTIVE_INDEX_MEETING = 0;
 	private static final int PREPARE_ACTIVE_INDEX_COMMITTEE = 1;
 	private static final int PREPARE_ACTIVE_INDEX_JOIN_IN = 2;
-
-	private static final String SPACE = " ";
 
 	/**
 	 * Default constructor
@@ -2068,6 +2067,8 @@ public class SupplierFinalizationBackingBean extends
 			
 			int endorsementReportCount = 0;
 			ScQtFinalizationReport coverReport = null;
+			List<ScQtFinalizationReport> endorsementReports = 
+								new ArrayList<ScQtFinalizationReport>();
 			for (ScQtFinalizationReport report : finalizationReports) {
 				String docCategory = report.getDocCategory();
 				String docDefinitionKey = null;
@@ -2080,6 +2081,7 @@ public class SupplierFinalizationBackingBean extends
 					coverReport = report;
 				} else if (ParameterConst.DOCUMENT_CATEGORY_ENDORSEMENT_REPORT
 								.equals(docCategory)) {
+					endorsementReports.add(report);
 					++endorsementReportCount;
 				}
 			}
@@ -2092,9 +2094,39 @@ public class SupplierFinalizationBackingBean extends
 			
 			int totalFinalizationRounds = findFinalizationCount();
 			if (endorsementReportCount < totalFinalizationRounds) {
-				addFinalizationReport(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
-			 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new Locale(Locale.ENGLISH.getLanguage())) 
-			 			+ SPACE + totalFinalizationRounds);
+				addFinalizationReport();
+			} else {
+				finalizationReports.removeAll(endorsementReports);
+				
+				// Sort the reports as per the last updated date
+				Collections.sort(endorsementReports, 
+									new Comparator<ScQtFinalizationReport>() {
+										public int compare(ScQtFinalizationReport report1, 
+												ScQtFinalizationReport report2) {
+											if (report1.getChangedDate() != null && 
+													report2.getChangedDate() != null) {
+												
+												// Ascending order
+												if (report1.getChangedDate().getTime() == 
+														report2.getChangedDate().getTime()) {
+													return 0;
+												} else if (report1.getChangedDate().getTime() == 
+														report2.getChangedDate().getTime()) {
+													return 1;
+												} else {
+													return -1;
+												}
+											}
+											return -1;
+										}
+									});
+				
+				if (endorsementReports.size() > 0) {
+					endorsementReports.get(endorsementReports.size() - 1)
+									  .setSelected(true);
+				}
+				
+				finalizationReports.addAll(endorsementReports);
 			}
 			
 			if (finalizationReports != null) {
@@ -2108,7 +2140,7 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 * Add ScQtFinalizationReport
 	 */
-	private void addFinalizationReport(String reportName) {
+	private void addFinalizationReport() {
 		debugLogger("addScQtFinalizationReport");
 
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
@@ -2120,7 +2152,8 @@ public class SupplierFinalizationBackingBean extends
 		report.setScQtFinalization(scQtFinalization);
 		report.setScQtFinalizationReportAttachment(
 					new ScQtFinalizationReportAttachment());
-
+		report.setSelected(true);
+		
 		IParameterSO parameterSO = null;
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2131,7 +2164,6 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
 			ParameterResDTO resDTO = parameterSO
 					.retrieveParameterByTypeAndCode(reqDTO);
-			report.setTitle(reportName);
 			report.setDefinationType(resDTO.getPmParameter());
 			report.setDocCategory(
 					ParameterConst.DOCUMENT_CATEGORY_ENDORSEMENT_REPORT); // DR
@@ -3402,7 +3434,18 @@ public class SupplierFinalizationBackingBean extends
 		}	
 		
 		if (scQtFinalization.getFinalizationMethod() != null) {
-			context.put("loiLoaPreparedBy", scQtFinalization.getLoiLoaBy());
+			String loiLoaPreparedBy = null;
+			
+			if (StringUtils.isNotBlank(
+					scQtFinalization.getLoiLoaBy())) {
+				PmParameter param = getPmParameterByTypeAndCode(
+						ParameterTypeConst.FINALIZATION_LOILOA_PREPARED_BY, 
+						scQtFinalization.getLoiLoaBy());
+				if (param != null) {
+					loiLoaPreparedBy = getParameterDesc(param);
+				}
+			}
+			context.put("loiLoaPreparedBy", loiLoaPreparedBy);
 		}	
 		
 		if (isForwardToHigherAuthority) {
