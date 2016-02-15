@@ -14,6 +14,9 @@
      .ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
               width:250px;
    }   
+   .columnWidth23 {
+   		width:23.5%;
+   }
        
        
     </style>
@@ -25,60 +28,76 @@
           showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" />
 
      <p:panel id="searchId" header="#{lbl['lbl.btn.search']}" toggleable="true"  toggleSpeed="500">
-     	<h:panelGrid columns="4" style="width:100%;" 
-     	   columnClasses="columnWidth20,columnWidth20,columnWidth15,columnWidth30">
-           <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractNo}" maxlength="17" style="width:170px;"/>
-           <p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractName}" maxlength="1000" style="width:170px;"/>
-           <p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
-           <p:selectOneMenu id="searchMinistry" style="width:300px" disabled="#{contractDetailsBackingBean.disableMinistrySelection()}"
-                rendered="#{!contractDetailsBackingBean.isBPKCCA()}"
-                value="#{contractDetailsBackingBean.managedBean.searchMinistryProfileId}" >
-      	   		<f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
-      	   		<p:ajax event="change" process="@form" update="@([id$=searchPtj])"  listener="#{contractDetailsBackingBean.resetPtjProfile}"/>
-           </p:selectOneMenu>
-           <p:inputText value="#{lbl['lbl.pm.org.gst.na']}" maxlength="50" disabled="true" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           <p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
-           <ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="40" readonly="true"
-				disabled="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.managedBean.searchMinistryProfileId==null}"
-				headerText="#{lbl['lbl.ct.ptj']}"
-				value="#{contractDetailsBackingBean.managedBean.searchPtjProfile.pmOrgValidity.orgName}"
-				saveObject="contractDetailsBackingBean.managedBean.searchPtjProfile"
-				conditionField="#{contractDetailsBackingBean.getPTJCondition()}">			
+     	<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth23">
+ 			<p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
+           	<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="108" readonly="true"
+				disabled="#{contractDetailsBackingBean.disableMinistryLov()}"
+				headerText="#{lbl['lbl.ct.ministry']}" 
+				value="#{contractDetailsBackingBean.managedBean.searchMinistryProfile.orgName}"
+				postUpdateListener="contractDetailsBackingBean.resetPtjGroupProfile()"
+				update="@form"
+				saveObject="contractDetailsBackingBean.managedBean.searchMinistryProfile">
 			</ac:lov>
-           <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularNo}" maxlength="50" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           <p:outputLabel value="#{lbl['lbl.ct.circular.name']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularName}" maxlength="500" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
-           <p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
-           <p:calendar id="popupButtonCal"   showOn="button" readonlyInput="true"  navigator="true"
-               style="width:130px;" value="#{contractDetailsBackingBean.managedBean.searchCtStartDate}" 
-               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-           <p:outputLabel value="#{lbl['lbl.ct.contract.end']}" />
-           <p:calendar id="popupButtonCal1"  style="width:130px;"  readonlyInput="true" 
-             value="#{contractDetailsBackingBean.managedBean.searchCtEndDate}"  navigator="true"  showOn="button"
-             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-           <p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaNo}" maxlength="17" style="width:170px;"/>
-           <p:outputLabel value="#{lbl['lbl.ct.supplier.name']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.searchSupplierName}" maxlength="100" style="width:170px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/> 
-           <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaPhysicalNo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
-           <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
-		   <p:outputLabel value="#{lbl['lbl.ct.termination.type']}" />
-		   <p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.searchTerminationType}" style="width:200px; margin-bottom:5px">
+			<p:outputLabel value="#{lbl['lbl.ct.jabatan']}" />
+           	<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="108" readonly="true"
+				disabled="#{contractDetailsBackingBean.isContractAdmin() 
+					or contractDetailsBackingBean.managedBean.searchMinistryProfile==null}"
+				headerText="#{lbl['lbl.ct.jabatan']}"
+				value="#{contractDetailsBackingBean.managedBean.searchPtjGroupProfile.orgName}"
+				postUpdateListener="contractDetailsBackingBean.resetPtjProfile()"
+				update="@form"
+				saveObject="contractDetailsBackingBean.managedBean.searchPtjGroupProfile"
+				conditionField="#{contractDetailsBackingBean.getPTJGroupCondition()}">			
+			</ac:lov>
+     		<p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
+           	<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="108" readonly="true"
+				disabled="#{contractDetailsBackingBean.isContractAdmin() 
+					or contractDetailsBackingBean.managedBean.searchMinistryProfile==null
+					or contractDetailsBackingBean.managedBean.searchPtjGroupProfile==null}"
+				headerText="#{lbl['lbl.ct.ptj']}"
+				value="#{contractDetailsBackingBean.managedBean.searchPtjProfile.orgName}"
+				saveObject="contractDetailsBackingBean.managedBean.searchPtjProfile"
+				conditionField="#{contractDetailsBackingBean.getPtjCondition()}">			
+			</ac:lov>
+     	</h:panelGrid>
+     	<h:panelGrid columns="4" style="width:100%;" 
+     	   	columnClasses="columnWidth20,columnWidth20,columnWidth15,columnWidth30">
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractNo}" maxlength="17" style="width:170px;"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractName}" maxlength="1000" style="width:170px;"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularNo}" maxlength="50" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.circular.name']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCircularName}" maxlength="500" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
+           	<p:calendar id="popupButtonCal"   showOn="button" readonlyInput="true"  navigator="true"
+               	style="width:130px;" value="#{contractDetailsBackingBean.managedBean.searchCtStartDate}" 
+               	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+           	<p:outputLabel value="#{lbl['lbl.ct.contract.end']}" />
+           	<p:calendar id="popupButtonCal1"  style="width:130px;"  readonlyInput="true" 
+             	value="#{contractDetailsBackingBean.managedBean.searchCtEndDate}"  navigator="true"  showOn="button"
+             	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaNo}" maxlength="17" style="width:170px;"/>
+           	<p:outputLabel value="#{lbl['lbl.ct.supplier.name']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
+          	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchSupplierName}" maxlength="100" style="width:170px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/> 
+           	<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaPhysicalNo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
+           	<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
+		   	<p:outputLabel value="#{lbl['lbl.ct.termination.type']}" />
+		   	<p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.searchTerminationType}" style="width:200px; margin-bottom:5px">
 		   		<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
-		   </p:selectOneMenu>
-		   <p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" />
-		   <p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}"	style="width:200px;">
+		   	</p:selectOneMenu>
+		  	<p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" />
+		   	<p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}"	style="width:200px;">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchContractStatusDropdown()}" />
-		   </p:selectOneMenu>
-		   <p:outputLabel for="status" value="#{lbl['lbl.ct.doc.contract.status']}" />
-		   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.searchStatus}"	style="width:200px; margin-bottom:5px">
+		   	</p:selectOneMenu>
+		   	<p:outputLabel for="status" value="#{lbl['lbl.ct.doc.contract.status']}" />
+		   	<p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.searchStatus}"	style="width:200px; margin-bottom:5px">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
-		   </p:selectOneMenu>		   
+		   	</p:selectOneMenu>		   
 		</h:panelGrid>
 	  	<div class="ppRightBtn"> 
         	<p:commandButton
