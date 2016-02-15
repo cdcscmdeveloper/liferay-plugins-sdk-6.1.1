@@ -2,59 +2,68 @@
 <head>
 	<style>
 		.header {
-			color: #fff; 
 			font-family:'Arial', sans-serif;
 			font-size:16px;
 			font-weight: bold;
 			text-align:left;
 		}
-		.standard{
+		.standard {
 			color: #333; 
 			font-family:'Arial', sans-serif;
 			font-size:12px;
 			text-align:left;
 		}
-		.title{
-			color: #fff; 
+		.number {
+			color: #333; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			text-align:right;
+		}		
+		.title {
 			font-family:'Arial', sans-serif;
 			font-size:12px;
 			font-weight: bold;
-			text-align:left;
 		}
-		.border{
+		.border {
 			border-TOP: 1px solid #a2a2a2;
 			border-bottom: 1px solid #a2a2a2;
 		}
-		.border-bottom{
+		.border-bottom {
 			border-bottom: 1px solid #a2a2a2;
 		}
 		.left-right {
 			border-left: 1px solid #a2a2a2;
 			border-right: 1px solid #a2a2a2;
 		}
-		.left{
+		.left {
 			border-left: 1px solid #a2a2a2;
 		}
-		.right{
+		.right {
 			border-right: 1px solid #a2a2a2;
 		}
 		table, td, th {
 			border: 0 solid #555;
 		}
-		table{
+		table {
 			width: 100%;
 		}
-		th{
+		th {
 			height: 20px;
 			padding: 5px 5px 5px 10px;
 		}
-		td{
+		td {
 			height: 18px;
 			padding: 5px 5px 5px 10px;
 		}
-		.white{
+		.white {
 			color:#fff;
 		}
+		.align-left {
+			text-align: left;
+		}
+		.align-right {
+			text-align: right;
+		}		
 	</style>
 </head>
 <body>
@@ -79,19 +88,19 @@
     </tr>
 	<tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> MESYUARAT BIL. (meeting no)</span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> MESYUARAT BIL. 1</span>
             <br/>
         </td>
     </tr>
 	<tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> (Meeting Date) </span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $!meetingDate </span>
             <br/><br/>
         </td>
     </tr>
 	<tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> (Meeting Location) </span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $!meetingLocation </span>
             <br/><br/>
         </td>
     </tr>
@@ -101,6 +110,139 @@
             <br/><br/><br/><br/>
         </td>
     </tr>
+    
+	#if ($isRepublish == "true")  
+	<tr>
+		<td align="left">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td width="15%" class="title text-right">Meeting Decision</td>
+						<td width="15%" class="text-left">$!meetingDecision</td>
+					</tr>
+					<tr>
+						<td width="15%" class="title text-right">Required Specification Changes</td>
+						<td width="15%" class="text-left">
+							#if ($requireSpecChanges == "true") 
+								Ya
+							#else
+								Tiada
+							#end
+						</td>
+					</tr>					
+				</tbody>
+			</table>
+        </td>
+    </tr> 	
+	#end 
+	
+	#if ($isReEvaluate == "true")  
+	<tr>
+		<td align="left">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td width="15%" class="title text-right">Meeting Decision</td>
+						<td width="15%" class="text-left">$!meetingDecision</td>
+					</tr>
+					<tr>
+						<td width="15%" class="title text-right">Re-Evaluate By</td>
+						<td width="15%" class="text-left"> </td>
+					</tr>					
+					<tr>
+						<td width="15%" class="title text-right">Document Compliance</td>
+						<td width="15%" class="text-left">
+							#if ($documentCompliance == "true") 
+								Ya
+							#else
+								Tiada
+							#end
+						</td>
+					</tr>
+					
+					#if ($hasTechnical == "true")
+					<tr>
+						<td width="15%" class="title text-right">Technical</td>
+						<td width="15%" class="text-left">
+							#if ($technical == "true") 
+								Ya
+							#else
+								Tiada
+							#end
+						</td>
+					</tr>	
+					#end
+										
+					<tr>
+						<td width="15%" class="title text-right">Financial</td>
+						<td width="15%" class="text-left">
+							#if ($financial == "true") 
+								Ya
+							#else
+								Tiada
+							#end
+						</td>
+					</tr>									
+				</tbody>
+			</table>
+        </td>
+    </tr> 	
+	#end
+	
+	#if ($isCancel == "true")  
+	<tr>
+		<td align="left">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td width="15%" class="title text-right">Meeting Decision</td>
+						<td width="15%" class="text-left">$!meetingDecision</td>
+					</tr>
+				</tbody>
+			</table>
+        </td>
+    </tr> 	
+	#end	
+    
+    #if ($isSupplierFinalization == "true" || $isForwardToHigherAuthority == "true")
+	<tr>
+		<td align="left">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td width="15%" class="title text-right">Meeting Decision</td>
+						<td width="15%" class="text-left">$!meetingDecision</td>
+					</tr>
+					<tr>
+						<td width="15%" class="title text-right">Selection Based On</td>
+						<td width="15%" class="text-left">$!selectionBasedOn</td>
+					</tr>
+					<tr>
+						<td width="15%" class="title text-right">Supplier Finalization Method</td>
+						<td width="15%" class="text-left">$!finalizationMethod</td>
+					</tr>	
+					<tr>
+						<td width="15%" class="title text-right">LOI / LOA Prepared By</td>
+						<td width="15%" class="text-left">$!loiLoaPreparedBy</td>
+					</tr>	
+					
+					
+					#if ($isForwardToHigherAuthority == "true") 
+					<tr>
+						<td width="15%" class="title text-right">Reason</td>
+						<td width="15%" class="text-left">$!reason</td>
+					</tr>
+					<tr>
+						<td width="15%" class="title text-right">Higher Authority</td>
+						<td width="15%" class="text-left">$!higherAuthority</td>
+					</tr>					
+					#end	
+																		
+				</tbody>
+			</table>
+        </td>
+    </tr> 
+
     <tr>
     	<td>
 		#if ($isZonal == "true")
@@ -114,18 +256,15 @@
 						<table width="100%" border="0" cellpadding="0" cellspacing="0">
 							<tbody>
 								<tr>
-									<td width="15%" bgcolor="#6d839b" class="title border left">Item</td>
-									<td bgcolor="#6d839b" class="title border right">
+									<td width="15%" class="title border left">Item</td>
+									<td class="title border right">
 										<table width="100%" border="0" cellpadding="0" cellspacing="0">
 											<tbody>
 												<tr>
-													<td width="11%" bgcolor="#6d839b" class="title left">Supplier Code</td>
-													<td width="12%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
-													<td width="13%" bgcolor="#6d839b" class="title left">Total Score</td>
-													<td width="11%" bgcolor="#6d839b" class="title left">Ranking</td>
-													<td width="11%" bgcolor="#6d839b" class="title left">Unit Price</td>
-													<td width="11%" bgcolor="#6d839b" class="title left">Quantity</td>
-													<td width="17%" bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
+													<td width="11%" class="title left">Supplier Code</td>
+													<td width="12%" class="title left">Bumiputra Status</td>
+													<td width="17%" class="title left">Total Amaun (RM)</td>
+													<td width="11%" class="title left-right">Total Amaun In Words (RM)</td>
 												</tr>
 											</tbody>
 										</table>
@@ -134,27 +273,28 @@
 								#foreach( $item in $zoneReportDTO.recommendedItems )
 									<tr class="ui-content">
 										<td width="15%" class="standard border-bottom left">$item.requestItem.itemName</td>
-										#if ($item.awardSupplierList && $item.awardSupplierList.size() > 0)
+										#if ($!item.awardSupplierList && $item.awardSupplierList.size() > 0)
 											<td class="standard border-bottom right">
 												#set ($count = 0)
 												#foreach( $evalResultDtl in $item.awardSupplierList )
 													<table width="100%" border="0" cellpadding="0" cellspacing="0">
 														<tbody>
 															<tr>
-																#if ($evalResultDtl.awareded)
+																#if ($evalResultDtl.awareded == "true" || $evalResultDtl.shortListed == "true")
 																	<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 																	<td width="12%" class="standard left">
 																		#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
-																			Yes
+																			Ya
 																		#else
-																			No
+																			Tiada
 																		#end
 																	</td>
-																	<td width="13%" class="standard left alignRight">$evalResultDtl.totalScore</td>
-																	<td width="11%" class="standard left">$evalResultDtl.evalRank</td>
-																	<td width="11%" class="standard left">$numberFormatter.format($evalResultDtl.scQtRecommendDtl.get(0).scQtProposalItem.finalPrice)</td>
-																	<td width="11%" class="standard left">$evalResultDtl.scQtRecommendDtl.get(0).awardQty</td>
-																	<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>
+																	<td width="17%" class="number left">
+																		$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)
+																	</td>
+																	<td width="11%" class="standard left">
+																		$evalResultDtl.amountInWords
+																	</td>																	
 																#else 
 																	#set ($count = $count + 1)
 																#end														
@@ -163,90 +303,56 @@
 													</table>
 												#end
 												#if ($count == $item.awardSupplierList.size())
-													No awarded supplier for this item
+													No shortlisted supplier(s) for this item
 												#end										
 											</td>
 										#else
-											No awarded supplier for this item
+											No shortlisted supplier(s) for this item
 										#end
 									</tr>
 								#end
 							</tbody>
 						</table>
 					#else
-						#if (!$zoneReportDTO.empty)
+						#if ($zoneReportDTO.empty == "false")
 							<table width="100%" border="0" cellpadding="0" cellspacing="0">
 								<tbody>
 									<tr>
-										<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
-										<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
-										<td width="23%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
-										<td width="12%" bgcolor="#6d839b" class="title border left">Total Score</td>
-										<td width="10%" bgcolor="#6d839b" class="title border left">Ranking</td>
+										<td width="15%" class="title border left">Supplier Code</td>
+										<td width="10%" class="title border left">SSM No.</td>
+										<td width="15%" class="title border left">Bumiputra</td>
+										<td width="23%" class="title border left">Total Amaun (RM)</td>
+										<td width="23%" class="title border left-right">Total Amaun In Words (RM)</td>
 									</tr>
-									#foreach($supplierDtl in $zoneReportDTO.awardedSuppliers)
+									#foreach($supplierDtl in $zoneReportDTO.recommendedSuppliers)
 										#set($String = "formatter")
-										#if($supplierDtl.awareded)
 										<tr class="ui-content">
-											<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+											<td width="15%" class="standard border-bottom left">
+												$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo
+											</td>
+											<td width="15%" class="standard border-bottom left">
+												$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo
+											</td>
 											<td width="12%" class="standard border-bottom left">
 												#if ($supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
-													Yes
+													Ya
 												#else
-													No
+													Tiada
 												#end
 											</td>
-											<td width="23%" class="standard border-bottom left">$zoneReportDTO.afterNegoSubTotal</td>
-											<td width="12%" class="standard border-bottom left">$String.format("%.2f", $supplierDtl.totalScore)</td>
-											<td width="10%" class="standard border-bottom left-right">$supplierDtl.evalRank</td>
+											<td width="10%" class="number border-bottom left">
+												$numberFormatter.format($supplierDtl.proposalAmount.proposalAmt)
+											</td>
+											<td width="10%" class="standard border-bottom left-right">
+												$supplierDtl.amountInWords
+											</td>											
 										</tr>
-										#end
 									#end
 								</tbody>
 							</table>
 							<br/>
-							<table width="100%" border="0" cellpadding="0" cellspacing="0">
-								<tbody>
-									<tr>
-										<td width="20%" bgcolor="#6d839b" class="title border left">Item</td>
-										<td width="10%" bgcolor="#6d839b" class="title border left">Quantity</td>
-										<td width="15%" bgcolor="#6d839b" class="title border left">Unit Price (RM)</td>
-										<td width="15%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
-									</tr>
-									#foreach( $loiLoaItem in $zoneReportDTO.loiLoaItems )
-										#set($String = "formatter")
-										<tr class="ui-content">
-											<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
-											<td class="standard border-bottom left alignRight">
-												#if ($!loiLoaItem.tplSpecTierQty )
-												   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
-												#else
-												   $loiLoaItem.qty
-												#end 
-											</td>
-											<td class="standard border-bottom left alignRight">
-												#if($!loiLoaItem.scQtProposalItem.offerPrice) 
-													$String.format("%.2f", $loiLoaItem.scQtProposalItem.offerPrice) 
-												#end
-											</td>
-											<td class="standard border-bottom left-right alignRight">
-												#if ( $!loiLoaItem.unitPrice )
-													$String.format("%.2f", $loiLoaItem.unitPrice) 
-												#else
-													<!-- $numberFormatter.format($!loiLoaItem.afterNegoSubTotal) -->
-												#end
-											</td>
-										</tr>
-									#end
-				
-									<tr class="ui-content">
-										<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Total</th>
-										<td bgcolor="#6d839b" class="title border left alignRight">$zoneReportDTO.afterNegoSubTotal</td>
-									</tr>
-								</tbody>
-							</table>
 						#else
-							No awarded supplier (or) all suppliers have rejected the LOI in this zone
+							No awarded supplier(s) in this zone
 						#end
 					#end
 					<br/><br/><br/><br/>
@@ -257,18 +363,16 @@
 				<table width="100%" border="0" cellpadding="0" cellspacing="0">
 					<tbody>
 						<tr>
-							<td width="15%" bgcolor="#6d839b" class="title border left">Item</td>
-							<td bgcolor="#6d839b" class="title border right">
+							<td width="15%" class="title border left">Item</td>
+							<td class="title border right">
 								<table width="100%" border="0" cellpadding="0" cellspacing="0">
 									<tbody>
 										<tr>
-											<td width="11%" bgcolor="#6d839b" class="title left">Supplier Code</td>
-											<td width="12%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
-											<td width="13%" bgcolor="#6d839b" class="title left">Total Score</td>
-											<td width="11%" bgcolor="#6d839b" class="title left">Ranking</td>
-											<td width="11%" bgcolor="#6d839b" class="title left">Unit Price</td>
-											<td width="11%" bgcolor="#6d839b" class="title left">Quantity</td>
-											<td width="17%" bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
+											<td width="11%" class="title left">Supplier Code</td>
+											<td width="12%" class="title left">Bumiputra Status</td>
+											<td width="13%" class="title left">SSM No.</td>
+											<td width="17%" class="title left">Total Amaun (RM)</td>
+											<td width="17%" class="title left">Total Amaun In Words(RM)</td>
 										</tr>
 									</tbody>
 								</table>
@@ -277,27 +381,31 @@
 						#foreach ($item in $reportDTO.recommendedItems)
 							<tr class="ui-content">
 								<td width="15%" class="standard border-bottom left">$item.requestItem.itemName</td>
-								#if ($item.awardSupplierList && $item.awardSupplierList.size() > 0)
+								#if ($item.awardSupplierList.size() > 0)
 									<td class="standard border-bottom right">
 										#set ($count = 0)
 										#foreach ($evalResultDtl in $item.awardSupplierList)
 											<table width="100%" border="0" cellpadding="0" cellspacing="0">
 												<tbody>
 													<tr>
-														#if ($evalResultDtl.awareded)
+														#if ($evalResultDtl.awareded == "true" || $evalResultDtl.shortListed == "true")
 															<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 															<td width="12%" class="standard left">
 																#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
-																	Yes
+																	Ya
 																#else
-																	No
+																	Tiada
 																#end
 															</td>
-															<td width="13%" class="standard left alignRight">$evalResultDtl.totalScore</td>
-															<td width="11%" class="standard left">$evalResultDtl.evalRank</td>
-															<td width="11%" class="standard left">$numberFormatter.format($evalResultDtl.scQtRecommendDtl.get(0).scQtProposalItem.finalPrice)</td>											
-															<td width="11%" class="standard left">$evalResultDtl.scQtRecommendDtl.get(0).awardQty</td>
-															<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>											
+															<td width="13%" class="standard left alignRight">
+																$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo
+															</td>
+															<td width="17%" class="standard left alignRight">
+																$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)
+															</td>	
+															<td width="17%" class="standard left">
+																$!evalResultDtl.amountInWords
+															</td>										
 														#else 
 															#set ($count = $count + 1)
 														#end
@@ -306,12 +414,12 @@
 											</table>
 									    #end
 										#if ($count == $item.awardSupplierList.size())
-											No awarded supplier for this item
+											No shortlisted supplier(s) for this item
 										#end							    
 									</td>
 								#else 
-									<td class="standard border-bottom right" colspan="8">
-										No awarded supplier for this item
+									<td class="standard border-bottom right">
+										No shortlisted supplier(s) for this item
 									</td>
 								#end
 							</tr>
@@ -320,88 +428,52 @@
 				</table>
 			#else
 				<br/>
-				#if (!$reportDTO.empty)
+				#if ($reportDTO.empty == "false")
 					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tbody>
 							<tr>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Supplier Code</td>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Bumiputra Status</td>
-								<td width="23%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
-								<td width="12%" bgcolor="#6d839b" class="title border left">Total Score</td>
-								<td width="10%" bgcolor="#6d839b" class="title border left">Ranking</td>
+								<td width="15%" class="title border left">Supplier Code</td>
+								<td width="10%" class="title border left">SSM No.</td>
+								<td width="15%" class="title border left">Bumiputra</td>
+								<td width="23%" class="title border left-right">Total Amaun (RM)</td>
+								<td width="40%" class="title border left-right">Total Amaun In Words (RM)</td>
 							</tr>
-							#foreach($supplierDtl in $reportDTO.awardedSuppliers)
+							#foreach($supplierDtl in $reportDTO.recommendedSuppliers)
 								#set($String = "formatter")
-								#if($supplierDtl.awareded)
 								<tr class="ui-content">
-									<td width="15%" class="standard border-bottom left">$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+									<td width="15%" class="standard border-bottom left">
+										$supplierDtl.qtEvaluationResult.scQtProposal.supplierNo
+									</td>
+									<td width="12%" class="standard border-bottom left">
+										$supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo
+									</td>
 									<td width="12%" class="standard border-bottom left">
 										#if ($supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
-											Yes
+											Ya
 										#else
-											No
+											Tiada
 										#end
 									</td>
-									<td width="23%" class="standard border-bottom left">$reportDTO.afterNegoSubTotal</td>
-									<td width="12%" class="standard border-bottom left">$String.format("%.2f", $supplierDtl.totalScore)</td>
-									<td width="10%" class="standard border-bottom left-right">$supplierDtl.evalRank</td>
+									<td width="23%" class="number border-bottom left" >
+										$numberFormatter.format($supplierDtl.proposalAmount.proposalAmt)
+									</td>
+									<td width="23%" class="standard border-bottom left-right" style="white-space:normal;">
+										$!supplierDtl.amountInWords
+									</td>									
 								</tr>
-								#end
 							#end
 						</tbody>
 					</table>
 					<br/>
-					<table width="100%" border="0" cellpadding="0" cellspacing="0">
-						<tbody>
-							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left">Item</td>
-								<td width="10%" bgcolor="#6d839b" class="title border left">Quantity</td>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Unit Price (RM)</td>
-								<td width="15%" bgcolor="#6d839b" class="title border left">Offered Price (RM)</td>
-							</tr>
-							#foreach( $loiLoaItem in $reportDTO.loiLoaItems )
-								#set($String = "formatter")
-								<tr class="ui-content">
-									<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
-									<td class="standard border-bottom left alignRight">
-										#if ($!loiLoaItem.tplSpecTierQty )
-										   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
-										#else
-										   $loiLoaItem.qty
-										#end 
-									</td>
-									<td class="standard border-bottom left alignRight">
-										#if($!loiLoaItem.scQtProposalItem.offerPrice) 
-											$String.format("%.2f", $loiLoaItem.scQtProposalItem.offerPrice) 
-										#end
-									</td>
-									<td class="standard border-bottom left-right alignRight">
-										#if ( $!loiLoaItem.unitPrice )
-											$String.format("%.2f", $loiLoaItem.unitPrice) 
-										#else
-											<!-- $numberFormatter.format($!loiLoaItem.afterNegoSubTotal) -->
-										#end
-									</td>
-								</tr>
-							#end
-		
-							<tr class="ui-content">
-								<th colspan="3" bgcolor="#6d839b" class="title border left alignRight">Total</th>
-								<td bgcolor="#6d839b" class="title border left alignRight">$reportDTO.afterNegoSubTotal</td>
-							</tr>
-						</tbody>
-					</table>
 				#else
-					No awarded supplier
+					No awarded supplier(s)<br/><br/>
 				#end		
 			#end 
 		#end  
 		</td>  
     </tr>
-	<tr>
-		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>---------------- </span>
-		<br /><br/><br/><br/></td>
-	</tr>
+	#end
+	
 	<tr>
 		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Pengerusi Lembaga Perolehan 'B' <br />
 		Kementerian Keselamatan Dalam Negeri <br />

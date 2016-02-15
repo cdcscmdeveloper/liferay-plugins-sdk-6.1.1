@@ -15,8 +15,8 @@
 			<ac:paginator for="meetingDtlTbl" />
 
 			<ui:param name="disableMeeting"
-				value="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
-																  meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
+				      value="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
+										meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
 			<p:column styleClass="td-check-box-spacing">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
