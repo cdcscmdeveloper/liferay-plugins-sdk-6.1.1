@@ -579,6 +579,29 @@ public class PmCommonUtil {
 		}
 		return resultList;
 	}
+	
+	/**
+	 * retrieve district list from Pm District by division id
+	 * 
+	 * @param stateId
+	 * @return List<PmDistrict>
+	 */
+	public static List<PmDistrict> retrievePmDistrictListByDivisionId(Long divisionId) {
+		IDistrictSO reqSO = null;
+		List<PmDistrict> resultList = null;
+		try {
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setDivisionId(divisionId);
+			reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IDistrictSO.class);
+			DistrictResDTO resDTO = reqSO.retriveDistrictListByDivision(reqDTO);
+			resultList = resDTO.getDistrictList();
+		} finally {
+			reqSO = null;
+		}
+		return resultList;
+	}
 
 	/**
 	 * retrieve district list from Pm District by state id
