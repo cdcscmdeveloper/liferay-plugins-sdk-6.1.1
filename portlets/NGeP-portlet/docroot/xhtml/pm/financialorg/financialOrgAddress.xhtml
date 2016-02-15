@@ -44,7 +44,7 @@
 						  value="#{financialOrgBackingBean.getStateList(financialOrgBackingBean.managedBean.pmAddress.pmCountry.countryId)}" 
 						  var="state" itemLabel="#{state.stateName}"
 						  itemValue="#{state.stateId}"/>
-						<p:ajax event="change" update="facDistrict, facDivision, facCity" 
+						<p:ajax event="change" update="olDivisionMandatory,facDistrict, facDivision, facCity" 
 						 	listener="#{financialOrgBackingBean.retrievePmState(financialOrgBackingBean.managedBean.pmAddress.pmState)}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="facState" id="facStateMsg" display="icon" /></td>
@@ -63,6 +63,12 @@
 				<td><p:message for="address1" id="address1Msg" display="icon" /></td>
 				<td class="tdTitle" width="150">
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
+					<p:outputPanel id="olDivisionMandatory">
+						<p:outputLabel
+						value="*" styleClass="mandatory" 
+						rendered="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}"/>
+					</p:outputPanel>
+					
 				</td>
 				<td class="tdContent">
 					<p:selectOneMenu id="facDivision" tabindex="8"

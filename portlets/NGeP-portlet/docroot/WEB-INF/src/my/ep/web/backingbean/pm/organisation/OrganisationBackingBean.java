@@ -1961,14 +1961,20 @@ public class OrganisationBackingBean extends
 	}
 
 	/**
-	 * get district list by state id
+	 * get district list by state id / division id
 	 * 
 	 * @param stateId
 	 * @return List<PmDistrict>
 	 */
 	public List<PmDistrict> getDistrictList(Long stateId) {
 		log.info("getDistrictList");
-		return PmCommonUtil.retrievePmDistrictList(stateId);
+		if(getManagedBean().getOfficeAddress().getPmDivision() != null 
+				&& getManagedBean().getOfficeAddress().getPmDivision().getDivisionId() !=null){
+			return PmCommonUtil.retrievePmDistrictListByDivisionId(getManagedBean().getOfficeAddress().getPmDivision().getDivisionId());					
+		}else {
+			return PmCommonUtil.retrievePmDistrictList(stateId);
+		}
+		
 	}
 
 	/**
