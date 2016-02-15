@@ -200,6 +200,7 @@ public class SmApplicationBackingBean extends
 	 * Pre-render re-submission questionnaire page.
 	 */
 	public void prerenderResubmissionQuestionaire() {
+		SmSupplier currLoginSupplier = SmApplicationUtil.getCurrentSupplier();
 		IMofRegistrationSO mofRegistrationSO = null;
 		try {
 			log.info("**** Prerender Questions *************");
@@ -223,7 +224,11 @@ public class SmApplicationBackingBean extends
 			}
 
 			this.getManagedBean().setValidResubmit(true);
-			if (rejAppl != null && supplierProfile != null) {
+			if (rejAppl != null
+					&& supplierProfile != null
+					&& currLoginSupplier != null
+					&& currLoginSupplier.getSupplierId().compareTo(
+							supplierProfile.getSupplierId()) == 0) {
 				boolean activeExist = false;
 				activeExist = SmApplicationUtil
 						.checkActiveSmApplForSupp(supplierProfile);
