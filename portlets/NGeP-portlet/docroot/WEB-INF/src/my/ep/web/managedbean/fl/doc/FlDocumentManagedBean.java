@@ -578,7 +578,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        		}
 		        	}
 		        	if(resDTO.getFlOrder().getFlReliefOrders() != null && !resDTO.getFlOrder().getFlReliefOrders().isEmpty()){
-		        		orderInfo.setCoGSTR(true);
+		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer()) {
+		        			orderInfo.setCoGSTR(true);
+		        		}
 		        	}
 		        }
 			} 
@@ -640,7 +642,14 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
+		return  facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || 
+				facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || 
+				facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+				facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+				facesScopes.hasRoleUser(RoleCode.FL_USER.value()) || 
+				facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value()) || 
+				facesScopes.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+				facesScopes.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value());
 	}
 	
 	/**
