@@ -8941,15 +8941,13 @@ public class ReportBackingBean extends
 				if (this.getCommonPtj() != null) {
 					lngPtjId = Long.parseLong(this.getCommonPtj());
 				}
-				/*if (this.getManagedBean().getSelectedPTJ() != null) {
-					if (this.getManagedBean().getSelectedPTJ()
-							.getOrgProfileId() != null) {
-						lngPtjId = (this.getManagedBean().getSelectedPTJ()
-								.getOrgProfileId());
-					} else {
-						lngPtjId = this.getManagedBean().getPtjId();
-					}
-				}*/
+				/*
+				 * if (this.getManagedBean().getSelectedPTJ() != null) { if
+				 * (this.getManagedBean().getSelectedPTJ() .getOrgProfileId() !=
+				 * null) { lngPtjId = (this.getManagedBean().getSelectedPTJ()
+				 * .getOrgProfileId()); } else { lngPtjId =
+				 * this.getManagedBean().getPtjId(); } }
+				 */
 
 				// List<String> ptLst =
 				// reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
@@ -10162,7 +10160,7 @@ public class ReportBackingBean extends
 				// if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))
 				// {
 				getLtstMinistryList();
-				//getManagedBean().getRptGenBean().setCommonLOVBasedRoles(true);
+				// getManagedBean().getRptGenBean().setCommonLOVBasedRoles(true);
 				getParameterCodeTypeString();
 				getManagedBean().getRptGenBean().setFlSupplierDropdownView(
 						false);
@@ -10305,6 +10303,9 @@ public class ReportBackingBean extends
 				retrievePFPPList();
 				/*retrievePFJAList();
 				retrieveFPJPTJList();*/
+				/*
+				 * retrievePFJAList(); retrieveFPJPTJList();
+				 */
 
 				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
 					getManagedBean().getRptGenBean()
@@ -12987,7 +12988,7 @@ public class ReportBackingBean extends
 						.getSmRegistrationType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationNo() != null) && (this
 						.getSmApplicationNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmZone() != null || this.getSmZone()== null))
+				|| ((this.getSmZone() != null || this.getSmZone() == null))
 				|| ((this.getSmSupplierType() != null) && (this
 						.getSmSupplierType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMofRegNo() != null) && (this.getSmMofRegNo() != ReportConst.EMPTY_VAL))
@@ -13089,20 +13090,20 @@ public class ReportBackingBean extends
 				|| (this.getSmSoftCertificateFeeList() != null && this
 						.getSmSoftCertificateFeeList().size() > 0)) {
 
-			/*if ((getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL))) {
-				if (((this.getSmCompanyName() == null) || (this
-						.getSmCompanyName().equals(ReportConst.EMPTY_VAL)))
-						&& ((this.getSmMofRegNo() == null) || (this
-								.getSmMofRegNo().equals(ReportConst.EMPTY_VAL)))
-						&& ((this.getFromDate() == null) || (this.getFromDate()
-								.toString().equals(ReportConst.EMPTY_VAL)))
-						&& ((this.getToDate() == null) || (this.getToDate()
-								.toString().equals(ReportConst.EMPTY_VAL)))) {
-					throw new EpException(MessageConst.ERROR_REPORT_780003);
-				}
-			}*/
+			/*
+			 * if ((getManagedBean().getReportValue() != null) &&
+			 * (getManagedBean().getReportValue().trim()
+			 * .equalsIgnoreCase(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL)))
+			 * { if (((this.getSmCompanyName() == null) || (this
+			 * .getSmCompanyName().equals(ReportConst.EMPTY_VAL))) &&
+			 * ((this.getSmMofRegNo() == null) || (this
+			 * .getSmMofRegNo().equals(ReportConst.EMPTY_VAL))) &&
+			 * ((this.getFromDate() == null) || (this.getFromDate()
+			 * .toString().equals(ReportConst.EMPTY_VAL))) && ((this.getToDate()
+			 * == null) || (this.getToDate()
+			 * .toString().equals(ReportConst.EMPTY_VAL)))) { throw new
+			 * EpException(MessageConst.ERROR_REPORT_780003); } }
+			 */
 
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
@@ -13523,72 +13524,98 @@ public class ReportBackingBean extends
 			StringBuffer maincategory = new StringBuffer();
 			StringBuffer subcategory = new StringBuffer();
 			StringBuffer subcategorydivision = new StringBuffer();
-			if ((getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL))
-					|| (getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL))
-					|| (getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL))
-					|| (getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL))
-					|| (getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
-				maincategory.append(ReportConst.AMP_SM_MAIN_CATEGORY_EQ);
-				subcategory.append(ReportConst.AMP_SM_SUB_CATEGORY_EQ);
-				subcategorydivision
-						.append(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ);
-				for (SmSupplierCategory smSupplier : this.getSelectedCatList()) {
 
-					if (smSupplier.getPmCategoryL1().getCategoryL1Id() != null
-							&& smSupplier.getPmCategoryL2().getCategoryL2Id() != null
-							&& smSupplier.getPmCategoryL3().getCategoryL3Id() != null) {
-						maincategory.append(ReportConst.KAMA
-								+ smSupplier.getPmCategoryL1()
-										.getCategoryL1Id());
-						subcategory.append(ReportConst.KAMA
-								+ smSupplier.getPmCategoryL2()
-										.getCategoryL2Id());
-						subcategorydivision.append(ReportConst.KAMA
-								+ smSupplier.getPmCategoryL3()
-										.getCategoryL3Id());
-					} else if (smSupplier.getPmCategoryL1().getCategoryL1Id() != null
-							&& (smSupplier.getPmCategoryL2().getCategoryL2Id() == null
-									|| smSupplier.getPmCategoryL2()
-											.getCategoryL2Id() != null
-									|| smSupplier.getPmCategoryL3()
-											.getCategoryL3Id() == null || smSupplier
-									.getPmCategoryL3().getCategoryL3Id() != null)) {
-						maincategory.append(ReportConst.KAMA
-								+ smSupplier.getPmCategoryL1()
-										.getCategoryL1Id());
-						subcategory.append(ReportConst.KAMA
-								+ smSupplier.getPmCategoryL2()
-										.getCategoryL2Id());
-						subcategorydivision.append(ReportConst.KAMA
-								+ smSupplier.getPmCategoryL3()
-										.getCategoryL3Id());
+			if (getManagedBean().getReportValue() != null) {
+				if (getManagedBean()
+						.getReportValue()
+						.trim()
+						.equalsIgnoreCase(
+								ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_CATEGORY_OVERLAPPING_RPT_VAL)) {
+					maincategory.append(ReportConst.AMP_SM_MAIN_CATEGORY_EQ);
+					subcategory.append(ReportConst.AMP_SM_SUB_CATEGORY_EQ);
+					subcategorydivision
+							.append(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ);
+					for (SmSupplierCategory smSupplier : this
+							.getSelectedCatList()) {
+
+						if (smSupplier.getPmCategoryL1().getCategoryL1Id() != null
+								&& smSupplier.getPmCategoryL2()
+										.getCategoryL2Id() != null
+								&& smSupplier.getPmCategoryL3()
+										.getCategoryL3Id() != null) {
+							maincategory.append(ReportConst.KAMA
+									+ smSupplier.getPmCategoryL1()
+											.getCategoryL1Id());
+							subcategory.append(ReportConst.KAMA
+									+ smSupplier.getPmCategoryL2()
+											.getCategoryL2Id());
+							subcategorydivision.append(ReportConst.KAMA
+									+ smSupplier.getPmCategoryL3()
+											.getCategoryL3Id());
+						} else if (smSupplier.getPmCategoryL1()
+								.getCategoryL1Id() != null
+								&& (smSupplier.getPmCategoryL2()
+										.getCategoryL2Id() == null
+										|| smSupplier.getPmCategoryL2()
+												.getCategoryL2Id() != null
+										|| smSupplier.getPmCategoryL3()
+												.getCategoryL3Id() == null || smSupplier
+										.getPmCategoryL3().getCategoryL3Id() != null)) {
+							maincategory.append(ReportConst.KAMA
+									+ smSupplier.getPmCategoryL1()
+											.getCategoryL1Id());
+							subcategory.append(ReportConst.KAMA
+									+ smSupplier.getPmCategoryL2()
+											.getCategoryL2Id());
+							subcategorydivision.append(ReportConst.KAMA
+									+ smSupplier.getPmCategoryL3()
+											.getCategoryL3Id());
+						}
+
+						/*
+						 * else if
+						 * ((smSupplier.getPmCategoryL1().getCategoryL1Id() !=
+						 * null ||
+						 * smSupplier.getPmCategoryL2().getCategoryL2Id() ==
+						 * null || smSupplier
+						 * .getPmCategoryL3().getCategoryL3Id() == null) ||
+						 * (smSupplier.getPmCategoryL2().getCategoryL2Id() !=
+						 * null || smSupplier.getPmCategoryL1()
+						 * .getCategoryL1Id() == null || smSupplier
+						 * .getPmCategoryL3().getCategoryL3Id() == null) ||
+						 * (smSupplier.getPmCategoryL3().getCategoryL3Id() !=
+						 * null || smSupplier.getPmCategoryL1()
+						 * .getCategoryL1Id() == null || smSupplier
+						 * .getPmCategoryL2().getCategoryL2Id() == null)) {
+						 * throw new
+						 * EpException(MessageConst.ERROR_REPORT_780028); }
+						 */
 					}
-
-					/*
-					 * else if ((smSupplier.getPmCategoryL1().getCategoryL1Id()
-					 * != null || smSupplier.getPmCategoryL2().getCategoryL2Id()
-					 * == null || smSupplier
-					 * .getPmCategoryL3().getCategoryL3Id() == null) ||
-					 * (smSupplier.getPmCategoryL2().getCategoryL2Id() != null
-					 * || smSupplier.getPmCategoryL1() .getCategoryL1Id() ==
-					 * null || smSupplier .getPmCategoryL3().getCategoryL3Id()
-					 * == null) ||
-					 * (smSupplier.getPmCategoryL3().getCategoryL3Id() != null
-					 * || smSupplier.getPmCategoryL1() .getCategoryL1Id() ==
-					 * null || smSupplier .getPmCategoryL2().getCategoryL2Id()
-					 * == null)) { throw new
-					 * EpException(MessageConst.ERROR_REPORT_780028); }
-					 */
 				}
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
@@ -16398,7 +16425,8 @@ public class ReportBackingBean extends
 					this.setSupplierParentCatList(retrievCategoryListBySupplierType(this
 							.getSmSupplierType()));
 				}
-			} else {
+			} else if (!this.getReportValue().equalsIgnoreCase(
+					ReportConst.SM_CATEGORY_OVERLAPPING_RPT_VAL)) {
 				retrieveRegStatusListForAll();
 				for (SmSupplierCategory cat : this.getSelectedCatList()) {
 					cat.setPmCategoryL1(new PmCategoryL1());
