@@ -128,6 +128,9 @@ public class ReportsGenerateBean {
 
 	/** The sm category statistic view. */
 	private boolean smCategoryStatisticView = false;
+	
+	/** The sm category over lapping view. */
+	private boolean smCategoryOverLappingView=false;
 
 	/** The sm category statistic by state view. */
 	private boolean smCategoryStatisticByStateView = false;
@@ -4178,8 +4181,10 @@ public class ReportsGenerateBean {
 	/** The ct ministry var. */
 	private String ctMinistryVar = ReportConst.EMPTY_VAL;
 	
+	/** The ct pegai pengawai var. */
 	private String ctPegaiPengawaiVar = ReportConst.EMPTY_VAL;
 	
+	/** The ct kumpulan var. */
 	private String ctKumpulanVar = ReportConst.EMPTY_VAL;
 
 	/** The ct ptj var. */
@@ -4299,8 +4304,10 @@ public class ReportsGenerateBean {
 	/** The pp ministry var. */
 	private String ppMinistryVar = ReportConst.EMPTY_VAL;
 	
+	/** The pp pegai pengawai var. */
 	private String ppPegaiPengawaiVar = ReportConst.EMPTY_VAL;
 	
+	/** The pp kumpulan var. */
 	private String ppKumpulanVar = ReportConst.EMPTY_VAL;
 
 	/** The pp ptj var. */
@@ -18559,6 +18566,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is common lov based roles.
+	 * 
 	 * @return the commonLOVBasedRoles
 	 */
 	public boolean isCommonLOVBasedRoles() {
@@ -18566,6 +18575,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Sets the common lov based roles.
+	 * 
 	 * @param commonLOVBasedRoles
 	 *            the commonLOVBasedRoles to set
 	 */
@@ -18574,6 +18585,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Gets the ct pegai pengawai var.
+	 * 
 	 * @return the ctPegaiPengawaiVar
 	 */
 	public String getCtPegaiPengawaiVar() {
@@ -18581,13 +18594,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param ctPegaiPengawaiVar the ctPegaiPengawaiVar to set
+	 * Sets the ct pegai pengawai var.
+	 * 
+	 * @param ctPegaiPengawaiVar
+	 *            the ctPegaiPengawaiVar to set
 	 */
 	public void setCtPegaiPengawaiVar(String ctPegaiPengawaiVar) {
 		this.ctPegaiPengawaiVar = ctPegaiPengawaiVar;
 	}
 
 	/**
+	 * Gets the ct kumpulan var.
+	 * 
 	 * @return the ctKumpulanVar
 	 */
 	public String getCtKumpulanVar() {
@@ -18595,13 +18613,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param ctKumpulanVar the ctKumpulanVar to set
+	 * Sets the ct kumpulan var.
+	 * 
+	 * @param ctKumpulanVar
+	 *            the ctKumpulanVar to set
 	 */
 	public void setCtKumpulanVar(String ctKumpulanVar) {
 		this.ctKumpulanVar = ctKumpulanVar;
 	}
 
 	/**
+	 * Gets the pp pegai pengawai var.
+	 * 
 	 * @return the ppPegaiPengawaiVar
 	 */
 	public String getPpPegaiPengawaiVar() {
@@ -18609,13 +18632,18 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param ppPegaiPengawaiVar the ppPegaiPengawaiVar to set
+	 * Sets the pp pegai pengawai var.
+	 * 
+	 * @param ppPegaiPengawaiVar
+	 *            the ppPegaiPengawaiVar to set
 	 */
 	public void setPpPegaiPengawaiVar(String ppPegaiPengawaiVar) {
 		this.ppPegaiPengawaiVar = ppPegaiPengawaiVar;
 	}
 
 	/**
+	 * Gets the pp kumpulan var.
+	 * 
 	 * @return the ppKumpulanVar
 	 */
 	public String getPpKumpulanVar() {
@@ -18623,9 +18651,31 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param ppKumpulanVar the ppKumpulanVar to set
+	 * Sets the pp kumpulan var.
+	 * 
+	 * @param ppKumpulanVar
+	 *            the ppKumpulanVar to set
 	 */
 	public void setPpKumpulanVar(String ppKumpulanVar) {
 		this.ppKumpulanVar = ppKumpulanVar;
+	}
+
+	/**
+	 * Checks if is sm category over lapping view.
+	 * 
+	 * @return the smCategoryOverLappingView
+	 */
+	public boolean isSmCategoryOverLappingView() {
+		return smCategoryOverLappingView;
+	}
+
+	/**
+	 * Sets the sm category over lapping view.
+	 * 
+	 * @param smCategoryOverLappingView
+	 *            the smCategoryOverLappingView to set
+	 */
+	public void setSmCategoryOverLappingView(boolean smCategoryOverLappingView) {
+		this.smCategoryOverLappingView = smCategoryOverLappingView;
 	}
 }
