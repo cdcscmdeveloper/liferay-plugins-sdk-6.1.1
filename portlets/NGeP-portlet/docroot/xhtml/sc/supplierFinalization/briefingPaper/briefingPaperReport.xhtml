@@ -18,8 +18,14 @@
 			<ac:paginator for="reportTbl" />
 
 			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:78%">
-				<h:outputText value="#{report.title}" />
-			</p:column>
+				<p:inputText style="width:96%" value="#{report.title}" required="true" label="#{lbl['lbl.sc.content']}"
+							 rendered="#{report.docCategory eq ParameterConst.documentCategoryEndorsementReport}"
+							 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or !report.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:inputText>
+				<h:outputText value="#{report.title}" 
+							  rendered="#{report.docCategory ne ParameterConst.documentCategoryEndorsementReport}" />
+			</p:column>			
 			
 			<p:column headerText="#{lbl['lbl.sc.type']}" style="width:20%">
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(report.definationType)}" />
