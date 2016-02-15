@@ -16,6 +16,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
@@ -72,13 +73,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> committeeList;
 	private List<ScQtCommitteeActivity> committeeEndorsementList;
 	private List<ScQtCommitteRemarks> committeeRemarkList;
+	private List<ScQtFinalizationRemarks> finalizationRemarks;
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	private List<ScQtMeetingAttendance> deletedMeetingAttendanceList;
 	
 	//Briefing Paper/Kertas Taklimat
+	private ScQtFinalizationReport selectedFinalizationReport;
 	private List<ScQtFinalizationReport> documentList;
 	private StreamedContent streamContent;
+	private String attachmentDocType;
 	
 	//Supplier Finalization
 	/*private String decisionType = ParameterConst.DECISION_RECOMMEND_SUPPLIER;
@@ -181,7 +185,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int finalizationTabIndex;
 	private int commEndorsementTabIndex;
 	private int endorsementReportActiveIndex;
-	private List<Integer> endorsementReportTabIndexes;
 	
 
 	/**
@@ -336,6 +339,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the finalizationRemarks
+	 */
+	public List<ScQtFinalizationRemarks> getFinalizationRemarks() {
+		return finalizationRemarks;
+	}
+
+	/**
+	 * @param finalizationRemarks
+	 *            the finalizationRemarks to set
+	 */
+	public void setFinalizationRemarks(
+			List<ScQtFinalizationRemarks> finalizationRemarks) {
+		this.finalizationRemarks = finalizationRemarks;
+	}
+
+	/**
 	 * @return the meetingAttendanceList
 	 */
 	public List<ScQtMeetingAttendance> getMeetingAttendanceList() {
@@ -411,6 +430,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setDocumentList(List<ScQtFinalizationReport> documentList) {
 		this.documentList = documentList;
+	}
+
+	/**
+	 * @return the selectedFinalizationReport
+	 */
+	public ScQtFinalizationReport getSelectedFinalizationReport() {
+		return selectedFinalizationReport;
+	}
+
+	/**
+	 * @param selectedFinalizationReport
+	 *            the selectedFinalizationReport to set
+	 */
+	public void setSelectedFinalizationReport(
+			ScQtFinalizationReport selectedFinalizationReport) {
+		this.selectedFinalizationReport = selectedFinalizationReport;
 	}
 
 	/**
@@ -1346,6 +1381,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the attachmentDocType
+	 */
+	public String getAttachmentDocType() {
+		return attachmentDocType;
+	}
+
+	/**
+	 * @param attachmentDocType
+	 *            the attachmentDocType to set
+	 */
+	public void setAttachmentDocType(String attachmentDocType) {
+		this.attachmentDocType = attachmentDocType;
+	}
+
+	/**
 	 * @return the tabList
 	 */
 	public List<TabBean> getTabList() {
@@ -1708,22 +1758,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setEndorsementReportActiveIndex(int endorsementReportActiveIndex) {
 		this.endorsementReportActiveIndex = endorsementReportActiveIndex;
-	}
-
-	/**
-	 * @return the endorsementReportTabIndexes
-	 */
-	public List<Integer> getEndorsementReportTabIndexes() {
-		return endorsementReportTabIndexes;
-	}
-
-	/**
-	 * @param endorsementReportTabIndexes
-	 *            the endorsementReportTabIndexes to set
-	 */
-	public void setEndorsementReportTabIndexes(
-			List<Integer> endorsementReportTabIndexes) {
-		this.endorsementReportTabIndexes = endorsementReportTabIndexes;
 	}
 
 }
