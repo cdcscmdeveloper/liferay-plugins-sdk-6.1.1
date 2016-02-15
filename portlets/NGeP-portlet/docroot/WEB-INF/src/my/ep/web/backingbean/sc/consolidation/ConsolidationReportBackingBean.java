@@ -626,16 +626,7 @@ public class ConsolidationReportBackingBean extends
 
 		loadInitialData();
 
-		switch (activeIndex) {
-			case 0:
-				navigateToBriefingPaperTab();
-				break;
-			case 1:
-				navigateToItemizedTab();
-				break;
-			case 2:
-				navigateToPackagewiseTab();
-		}
+		onTabMenuChangeAction(activeIndex);
 	}	
 	
 	/**
@@ -772,19 +763,6 @@ public class ConsolidationReportBackingBean extends
 			
 			List<ScQtFinalizationReport> finalizationReports 
 								= _scQtFinalization.getScQtFinalizationReports();
-			if (CollectionUtils.isNotEmpty(
-								finalizationReports)) {
-				for (ScQtFinalizationReport report 
-									: finalizationReports) {
-					String docDefinitionKey = report.getPmDocument().getDocDefinitionKey();					
-					if (SourcingConstants.DOC_DEF_KEY_COVER
-											.equals(docDefinitionKey)) {
-						finalizationReports.remove(report);
-						break;
-					}
-				}
-			}
-
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			if (finalizationReports != null) {
 				this.getManagedBean().setFinalizationReports(finalizationReports);
