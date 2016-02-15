@@ -189,7 +189,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& getManagedBean().getSearchStatus() == 0 
 				&& getManagedBean().getSearchTerminationType() == null
 				&& getManagedBean().getSearchContractStatus() == 0
-				&& getManagedBean().getSearchMinistryProfileId() == null
+				&& getManagedBean().getSearchMinistryProfile() == null
+				&& getManagedBean().getSearchPtjGroupProfile() == null
 				&& getManagedBean().getSearchPtjProfile() == null) {
 			throw new EpException(MessageConst.ERROR_100060);
 		} else {
@@ -2042,7 +2043,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
     
     /**
-   	 * The method used to disable the ministry selection
+   	 * The method used to disable the ministry lov
    	 * if login user is central contract administrator
    	 * or ministry administrator
    	 * or internal auditor.
@@ -2050,7 +2051,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
    	 * @return true, if login user is central contract administrator/ministry administrator/internal auditor
    	 *         false, if login user is not central contract administrator/ministry administrator/internal auditor
 	 */
-    public boolean disableMinistrySelection() {
+    public boolean disableMinistryLov() {
     	return (isContractAdmin() || (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
 				&& !getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())));
     }
@@ -2065,7 +2066,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-    		this.getManagedBean().setSearchMinistryProfileId(null);
+    		this.getManagedBean().setSearchMinistryProfile(null);
+    		this.getManagedBean().setSearchPtjGroupProfile(null);
     		this.getManagedBean().setSearchPtjProfile(null);
 			
 		} else {
@@ -2079,26 +2081,56 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			
 			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {			
-				this.getManagedBean().setSearchMinistryProfileId(orgProfile.getOrgProfileId());
+				this.getManagedBean().setSearchMinistryProfile(orgProfile);
+				this.getManagedBean().setSearchPtjGroupProfile(null);
 				this.getManagedBean().setSearchPtjProfile(null);
-			} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-				this.getManagedBean().setSearchMinistryProfileId(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId());
-				this.getManagedBean().setSearchPtjProfile(orgProfile);
-			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-				this.getManagedBean().setSearchMinistryProfileId(null);
+			} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
+				if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
+					this.getManagedBean().setSearchPtjGroupProfile(null);
+				}
 				this.getManagedBean().setSearchPtjProfile(orgProfile);
 			}
 		}
     }
     
     /**
+   	 * Get PTJ Group condition for construct the LOV listing
+   	 * @return String
+   	 */
+   	public String getPTJGroupCondition() {
+   		String condition = OrgProfileUtil.getFromToSearchBeanParentString(
+   				OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
+   				this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
+   		return condition;
+   	}
+	
+	/**
 	 * Get PTJ condition for construct the LOV listing
 	 * @return String
 	 */
-	public String getPTJCondition() {
-		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
-				this.getManagedBean().getSearchMinistryProfileId();
+	public String getPtjCondition() {
+		String condition = null;
+		
+		if (this.getManagedBean().getSearchPtjGroupProfile() != null) {
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(
+	   				OrganizationType.DIVISION.value(), OrganizationType.DEPARTMENT.value())+"^"+
+	   				this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId();
+		} else {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+				this.getManagedBean().getSearchMinistryProfile().getOrgProfileId();
+		}
 		return condition;
+	}
+	
+	/**
+	 * The method used reset PTJ/PTJ Group profile value once select the Ministry
+	 */
+	public void resetPtjGroupProfile() {
+		getManagedBean().setSearchPtjProfile(null);
+		getManagedBean().setSearchPtjGroupProfile(null);
 	}
 	
 	/**
