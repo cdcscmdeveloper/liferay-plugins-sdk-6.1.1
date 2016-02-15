@@ -226,7 +226,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		}
 
 
-		ICodificationSO codificationSO = null;
+/*		ICodificationSO codificationSO = null;
 		CodificationResDTO cdResDTO = new CodificationResDTO();
 		try {
 			codificationSO = (ICodificationSO) BusinessDelegate
@@ -246,7 +246,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 			.getBrandCriteria()
 			.add(new SelectItem(brand.getBrandId(), brand
 					.getBrandName()));
-		}
+		}*/
 
 		this.getManagedBean().getSearchDataModel().reloadData();
 
