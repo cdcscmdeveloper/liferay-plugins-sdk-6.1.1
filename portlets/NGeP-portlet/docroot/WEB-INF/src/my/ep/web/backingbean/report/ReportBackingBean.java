@@ -8938,7 +8938,10 @@ public class ReportBackingBean extends
 				}
 			} else {
 				Long lngPtjId = null;
-				if (this.getManagedBean().getSelectedPTJ() != null) {
+				if (this.getCommonPtj() != null) {
+					lngPtjId = Long.parseLong(this.getCommonPtj());
+				}
+				/*if (this.getManagedBean().getSelectedPTJ() != null) {
 					if (this.getManagedBean().getSelectedPTJ()
 							.getOrgProfileId() != null) {
 						lngPtjId = (this.getManagedBean().getSelectedPTJ()
@@ -8946,7 +8949,7 @@ public class ReportBackingBean extends
 					} else {
 						lngPtjId = this.getManagedBean().getPtjId();
 					}
-				}
+				}*/
 
 				// List<String> ptLst =
 				// reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
