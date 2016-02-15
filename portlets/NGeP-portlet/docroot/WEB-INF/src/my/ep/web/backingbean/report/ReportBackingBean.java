@@ -33,6 +33,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -43,6 +45,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -81,7 +84,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
@@ -118,9 +120,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
-
-import weblogic.xml.crypto.wss.Base64Encoding;
-
 import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
@@ -142,6 +141,42 @@ public class ReportBackingBean extends
 	 * Instantiates a new report backing bean.
 	 */
 	public ReportBackingBean() {
+	}
+
+	@PostConstruct
+	public void init() {
+		if (this.getManagedBean().getSelectedMinistry() == null) {
+			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedMinistry()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+
+		if (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
+			this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedPegwaiPengawal()
+					.getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedPegwaiPengawal()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+
+		if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
+			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedKumpulanPTJ()
+					.getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedKumpulanPTJ()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+		if (this.getManagedBean().getSelectedPTJ() == null) {
+			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedPTJ()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
 	}
 
 	/** The module value. */
@@ -10123,8 +10158,8 @@ public class ReportBackingBean extends
 							.contains(highRoleCodeList.get(0)))) {
 				// if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))
 				// {
-				// getLtstMinistryList();
-				getManagedBean().getRptGenBean().setCommonLOVBasedRoles(true);
+				getLtstMinistryList();
+				//getManagedBean().getRptGenBean().setCommonLOVBasedRoles(true);
 				getParameterCodeTypeString();
 				getManagedBean().getRptGenBean().setFlSupplierDropdownView(
 						false);
@@ -10265,8 +10300,8 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean().setFlTextBoxBasedRoles(true);
 				retrieveOnlyFPJMinistryList();
 				retrievePFPPList();
-				retrievePFJAList();
-				retrieveFPJPTJList();
+				/*retrievePFJAList();
+				retrieveFPJPTJList();*/
 
 				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
 					getManagedBean().getRptGenBean()
@@ -11269,32 +11304,32 @@ public class ReportBackingBean extends
 		smMofRegistrationFeeList = new ArrayList<SelectItem>();
 		smProcessingFeeList = new ArrayList<SelectItem>();
 		smSoftCertificateFeeList = new ArrayList<SelectItem>();
-		
-		
-		/*if (this.getManagedBean().getSelectedMinistry() == null) {
-			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
-			if(this.getManagedBean().getSelectedMinistry().getPmOrgValidity()==null){
-				this.getManagedBean().getSelectedMinistry().setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-		if (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
-			this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
-			if(this.getManagedBean().getSelectedPegwaiPengawal().getPmOrgValidity()==null){
-				this.getManagedBean().getSelectedPegwaiPengawal().setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-		if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
-			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
-			if(this.getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity()==null){
-				this.getManagedBean().getSelectedKumpulanPTJ().setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-		if (this.getManagedBean().getSelectedPTJ() == null) {
-			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
-			if(this.getManagedBean().getSelectedPTJ().getPmOrgValidity()==null){
-				this.getManagedBean().getSelectedPTJ().setPmOrgValidity(new PmOrgValidity());
-			}
-		}*/
+
+		/*
+		 * if (this.getManagedBean().getSelectedMinistry() == null) {
+		 * this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
+		 * if(this
+		 * .getManagedBean().getSelectedMinistry().getPmOrgValidity()==null){
+		 * this.getManagedBean().getSelectedMinistry().setPmOrgValidity(new
+		 * PmOrgValidity()); } } if
+		 * (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
+		 * this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
+		 * if
+		 * (this.getManagedBean().getSelectedPegwaiPengawal().getPmOrgValidity(
+		 * )==null){
+		 * this.getManagedBean().getSelectedPegwaiPengawal().setPmOrgValidity
+		 * (new PmOrgValidity()); } } if
+		 * (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
+		 * this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+		 * if(this
+		 * .getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity()==null){
+		 * this.getManagedBean().getSelectedKumpulanPTJ().setPmOrgValidity(new
+		 * PmOrgValidity()); } } if (this.getManagedBean().getSelectedPTJ() ==
+		 * null) { this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+		 * if(this.getManagedBean().getSelectedPTJ().getPmOrgValidity()==null){
+		 * this.getManagedBean().getSelectedPTJ().setPmOrgValidity(new
+		 * PmOrgValidity()); } }
+		 */
 
 		getManagedBean().setReportValue(this.getReportValue());
 		if ((this.getModuleValue()) != null
@@ -12317,7 +12352,6 @@ public class ReportBackingBean extends
 					}
 				}
 			}
-			
 
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
@@ -12401,6 +12435,8 @@ public class ReportBackingBean extends
 					Collections.<String, Object> emptyMap());
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
+
+		// return "/xhtml/reports/reportcontent.xhtml";
 	}
 
 	/**
@@ -14793,25 +14829,25 @@ public class ReportBackingBean extends
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
-				
+
 				rptGenBean.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
 						+ this.getCommonMinistry());
 			}
-			
+
 			if ((this.getCommonPegaWaiPengawal() != null)
 					&& (this.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL)) {
-				
+
 				rptGenBean.setPpPegaiPengawaiVar(ReportConst.FL_AMP_MINISTRY_EQ
 						+ this.getCommonPegaWaiPengawal());
 			}
-			
+
 			if ((this.getCommonKumpulanPTJ() != null)
 					&& (this.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL)) {
-				
+
 				rptGenBean.setPpKumpulanVar(ReportConst.FL_AMP_MINISTRY_EQ
 						+ this.getCommonKumpulanPTJ());
 			}
-			
+
 			if ((this.getPpYear() != null)
 					&& (this.getPpYear() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPpYearVar(ReportConst.AMP_SM_YEAR_EQ
@@ -14835,6 +14871,7 @@ public class ReportBackingBean extends
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
+
 		}
 	}
 
@@ -16424,9 +16461,10 @@ public class ReportBackingBean extends
 				OrganizationType.DEPARTMENT.value(),
 				OrganizationType.PENGAWAI_PENGAWAL.value()));
 		sb.append("^");
-		if(this.getManagedBean().getSelectedPegwaiPengawal()==null){
+		if (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
 			this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedPegwaiPengawal().getPmOrgValidity() == null) {
+			if (this.getManagedBean().getSelectedPegwaiPengawal()
+					.getPmOrgValidity() == null) {
 				this.getManagedBean().getSelectedPegwaiPengawal()
 						.setPmOrgValidity(new PmOrgValidity());
 			}
@@ -16450,14 +16488,15 @@ public class ReportBackingBean extends
 		sb.append(OrgProfileUtil
 				.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
 		sb.append("^");
-		if(this.getManagedBean().getSelectedKumpulanPTJ()==null){
+		if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
 			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity() == null) {
+			if (this.getManagedBean().getSelectedKumpulanPTJ()
+					.getPmOrgValidity() == null) {
 				this.getManagedBean().getSelectedKumpulanPTJ()
 						.setPmOrgValidity(new PmOrgValidity());
 			}
 		}
-		if(this.getManagedBean().getSelectedPTJ()==null){
+		if (this.getManagedBean().getSelectedPTJ() == null) {
 			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
 			if (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
 				this.getManagedBean().getSelectedPTJ()
