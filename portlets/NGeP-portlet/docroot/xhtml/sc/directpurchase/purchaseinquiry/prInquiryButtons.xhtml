@@ -10,13 +10,11 @@
 	<ac:gpkiPopup
 		textBeforeSign="#{purchaseInquiryBackingBean.textBeforeSign}"
 		postSignAction="#{purchaseInquiryBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
-		
-		
+
 	<div>
 		<!-- view back button -->
 		<p:commandButton immediate="true" process="@this" partialSubmit="true"
-			value="#{lbl['lbl.btn.back']}"
-			rendered="#{isViewOnly}"
+			value="#{lbl['lbl.btn.back']}" rendered="#{purchaseInquiryBackingBean.managedBean.showBackButton}"
 			action="#{purchaseInquiryBackingBean.backToPrevious}" />
 
 		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -26,9 +24,8 @@
 			immediate="true" />
 
 	</div>
-	
-	<h:panelGroup
-		rendered="#{!isViewOnly}">
+
+	<h:panelGroup rendered="#{isShowButton}">
 		<c:if test="#{isPendingSubmissionStatus}">
 			<div>
 				<p:commandButton immediate="true"
@@ -46,18 +43,16 @@
 		<c:if test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
 			<div class="ppRightBtn">
 				<c:if test="#{isPendingRnCreationStatus}">
-					<c:if test="#{!isViewOnly}">
-						<p:commandButton value="#{lbl['lbl.btn.proceed']}"
-							partialSubmit="true" process="@form"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{purchaseInquiryBackingBean.requisitionerAction('PROCESSED')}" />
+					<p:commandButton value="#{lbl['lbl.btn.proceed']}"
+						partialSubmit="true" process="@form" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{purchaseInquiryBackingBean.requisitionerAction('PROCESSED')}" />
 
-						<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-							style="float:right;" partialSubmit="true" process="@form"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}" />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						style="float:right;" partialSubmit="true" process="@form"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						action="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}" />
 
-					</c:if>
 				</c:if>
 				<ui:repeat var="bpmAction"
 					value="#{purchaseInquiryBackingBean.managedBean.outComes}">
