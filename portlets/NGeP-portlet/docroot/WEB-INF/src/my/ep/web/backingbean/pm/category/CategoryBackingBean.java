@@ -990,9 +990,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 */
 	private void loadPmCategoryL3Data(Long id) {
 
-		List<PmMachineCategory> removedDuplicatePmMachineCategory = new ArrayList<>();
+		List<PmMachineCategory> removedDuplicatePmMachineCategory = new ArrayList<PmMachineCategory>();
 		Set<PmMachineCategory> pmMachineCategorySet = null;
-		List<PmBasicCategory> removedDuplicatePmBasicCategory = new ArrayList<>();
+		List<PmBasicCategory> removedDuplicatePmBasicCategory = new ArrayList<PmBasicCategory>();
 		Set<PmBasicCategory> pmBasicCategorySet = null;
 		ICategoryCodeSO categoryCodeSO;
 
