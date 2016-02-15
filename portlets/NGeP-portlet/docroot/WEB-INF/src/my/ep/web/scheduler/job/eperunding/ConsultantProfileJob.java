@@ -1,6 +1,10 @@
 package my.ep.web.scheduler.job.eperunding;
 
+import my.ep.biz.service.intg.eperunding.IEperundingServiceSO;
+import my.ep.biz.service.intg.gfmas.IGfmasServiceSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.integration.common.EperundingIntegration;
 import my.ep.web.integration.common.EperundingTemplate;
 
@@ -24,8 +28,10 @@ public class ConsultantProfileJob implements Job {
 			throws JobExecutionException {
 
 		log.info("ConsultantProfileJob start");
-		EperundingTemplate eperundingTemplate = new EperundingIntegration();
-		eperundingTemplate.createConsultantProfile();
+		IEperundingServiceSO  eperundingServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IEperundingServiceSO.class);
+		eperundingServiceSO.createConsultantProfile();
 		log.info("ConsultantProfileJob end");
 
 	}

@@ -1,6 +1,9 @@
 package my.ep.web.scheduler.job.phis;
 
+import my.ep.biz.service.intg.phis.IPHISServiceSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.integration.common.PhisIntegration;
 import my.ep.web.integration.common.PhisTemplate;
 
@@ -21,8 +24,10 @@ public class PaymentEffectNotificationJob implements Job {
 			throws JobExecutionException {
 
 		log.info("PaymentEffectNotificationJob start");
-		PhisTemplate phisTemplate = new PhisIntegration();
-		phisTemplate.paymentEffectNotification();
+		IPHISServiceSO  phisServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IPHISServiceSO.class);
+		phisServiceSO.paymentEffectNotification();
 		log.info("PaymentEffectNotificationJob end");
 
 	}

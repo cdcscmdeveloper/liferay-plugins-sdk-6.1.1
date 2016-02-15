@@ -20,7 +20,7 @@ public class MasterDataMaterialJob implements Job {
 			throws JobExecutionException {
 
 		log.info("MasterDataMaterialJob start");
-		PhisTemplate phisTemplate = new PhisIntegration();
+		PhisIntegration phisTemplate = new PhisIntegration();
 		phisTemplate.createFilesforPHIS();
 		log.info("MasterDataMaterialJob end");
 
