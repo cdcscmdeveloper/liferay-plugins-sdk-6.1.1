@@ -694,6 +694,13 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmDailyReceiptNoView(true);
 			rptGenBean.setSmApplicationNoView(true);
 			break;
+		case ReportConst.SM_CATEGORY_OVERLAPPING_RPT_VAL:		
+			rptGenBean.setSmCategoryOverLappingView(true);
+			rptGenBean.setSmPSSupplierTypeView(true);
+			rptGenBean.setSmCategoryBySupplierTypeView(true);
+			rptGenBean.setSmExtraTwoColumnView(true);
+			break;
+			
 		default:
 			throw new EpException(
 					CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));

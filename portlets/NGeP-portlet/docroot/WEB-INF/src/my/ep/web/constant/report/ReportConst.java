@@ -451,6 +451,7 @@ public class ReportConst {
 	public static final String SM_COLLECTION_CLASSIFICATION_CODE_RPT_VAL = "SM_073";
 	public static final String SM_REVENUE_COLLECTION_RPT_VAL = "SM_074";
 	public static final String SM_LIST_DAILY_RECIPT_RPT_VAL = "SM_075";
+	public static final String SM_CATEGORY_OVERLAPPING_RPT_VAL = "SM_076";
 
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
