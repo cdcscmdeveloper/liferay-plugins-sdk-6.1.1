@@ -3452,7 +3452,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		double thresoldAmt = 0;
 		for(Map.Entry<ScRequestItem, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
-			summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
+			summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(map.getKey().getCmItem().getItemId());
