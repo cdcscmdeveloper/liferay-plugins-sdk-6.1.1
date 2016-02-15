@@ -807,6 +807,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			UserReqDTO reqDTO = new UserReqDTO();
 			UserResDTO resDTO = new UserResDTO();
 			
+			if((getFacesScopes().getUserSessionBean() == null 
+					|| getFacesScopes().getUserSessionBean().getUserId() == null) && getManagedBean().isViewContract()){
+				   return sourceList;
+			}
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
 			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 			
