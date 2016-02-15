@@ -45,7 +45,7 @@
 							var="state" itemLabel="#{state.stateName}"
 							itemValue="#{state.stateId}" />
 						<p:ajax event="change"
-							update="orgDistrict, orgDivision, orgCity,:form:addressTabs:acgmap:gmapInput:gmapInput"
+							update="olOffDivisionMandatory,orgDistrict, orgDivision, orgCity,:form:addressTabs:acgmap:gmapInput:gmapInput"
 							process="@this"
 							listener="#{organisationBackingBean.retrievePmState()}" />
 					</p:selectOneMenu></td>
@@ -65,7 +65,14 @@
 					</p:inputText></td>
 				<td><p:message for="address1" id="address1Msg" display="icon" /></td>
 				<td width="150"><p:outputLabel
-						value="#{lbl['lbl.pm.address.division']}" /></td>
+						value="#{lbl['lbl.pm.address.division']}" />
+						<p:outputPanel id="olOffDivisionMandatory">
+							<p:outputLabel 
+								value="*" styleClass="mandatory" 
+								rendered="#{organisationBackingBean.managedBean.officeAddress.pmState.stateCode eq ParameterConst.sarakSkCode}"
+							/>
+						</p:outputPanel>
+						</td>
 				<td width="220"><p:selectOneMenu id="orgDivision"
 						disabled="#{organisationBackingBean.managedBean.officeAddress.pmState.stateCode ne ParameterConst.sarakSkCode}"
 						required="#{organisationBackingBean.managedBean.officeAddress.pmState.stateCode eq ParameterConst.sarakSkCode}"

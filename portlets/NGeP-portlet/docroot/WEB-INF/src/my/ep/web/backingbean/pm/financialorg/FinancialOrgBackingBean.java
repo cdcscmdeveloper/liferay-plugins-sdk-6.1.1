@@ -443,7 +443,14 @@ public class FinancialOrgBackingBean extends
 	 */
 	public List<PmDistrict> getDistrictList(Long stateId) {
 		log.info("getDistrictList");
-		return PmCommonUtil.retrievePmDistrictList(stateId);
+		log.info("getDistrictList");
+		if(getManagedBean().getPmAddress().getPmDivision() != null 
+				&& getManagedBean().getPmAddress().getPmDivision().getDivisionId() !=null){
+			return PmCommonUtil.retrievePmDistrictListByDivisionId(getManagedBean().getPmAddress().getPmDivision().getDivisionId());					
+		}else {
+				return PmCommonUtil.retrievePmDistrictList(stateId);
+		}
+	
 	}
 	
 	/**
