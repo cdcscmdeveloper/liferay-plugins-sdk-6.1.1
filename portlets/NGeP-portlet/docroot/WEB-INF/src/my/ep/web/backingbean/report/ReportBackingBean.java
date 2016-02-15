@@ -13322,9 +13322,15 @@ public class ReportBackingBean extends
 								+ this.getSmSupplierType());
 			}
 			if ((this.getSmZone() != null || this.getSmZone() == null)) {
-				rptGenBean
-						.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
-								+ this.getSmZone());
+				if (this.getSmZone() != null) {
+					rptGenBean
+							.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
+									+ this.getSmZone());
+				} else {
+						rptGenBean
+							.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
+									+ ReportConst.EMPTY_VAL);
+				}
 			}
 			if ((this.getSmReportType() != null)
 					&& (this.getSmReportType() != ReportConst.EMPTY_VAL)) {
