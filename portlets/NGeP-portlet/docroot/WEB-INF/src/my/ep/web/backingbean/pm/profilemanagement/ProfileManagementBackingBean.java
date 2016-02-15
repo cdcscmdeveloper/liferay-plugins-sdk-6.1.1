@@ -4042,6 +4042,11 @@ public class ProfileManagementBackingBean extends
 			if(ParameterConst.ORG_TYPE_FACTORING.equals(user.getOrgTypeCode().getParameterCode())){
 				reqDTO.setFactoringUser(true);
 			}
+			
+			if(ParameterConst.ORG_TYPE_SUPPLIER.equals(user.getOrgTypeCode().getParameterCode())){
+				reqDTO.setSupplierUser(true);
+			}
+			
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
