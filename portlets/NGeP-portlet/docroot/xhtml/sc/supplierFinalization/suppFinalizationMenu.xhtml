@@ -116,6 +116,20 @@
 				update="contentPanel" oncomplete="attachmentPopupDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
+		
+		<p:dialog id="reportAttachmentPopup" widgetVar="reportAttachmentPopupDlg"
+				  modal="true" resizable="false" width="700px" height="200"
+				  styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{suppFinalizationBackingBean.handleReportFileUpload}"
+				mode="advanced" id="uploadReportAttachment"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				update="contentPanel" oncomplete="reportAttachmentPopupDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>		
 
 	</ui:define>
 

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -13,15 +12,13 @@
 		<p:dataTable id="reportTbl" 
 			widgetVar="reportWidget" var="report"
 			value="#{suppFinalizationBackingBean.managedBean.documentList}" 
-			rows="10"
-			styleClass="documentslist"
-			rowKey="#{report}"
-			rowIndexVar="rowIndex">
+			rows="10" styleClass="documentslist"
+			rowKey="#{report}" rowIndexVar="rowIndex">
+			
 			<ac:paginator for="reportTbl" />
 
 			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:78%">
-				<h:inputText style="width:96%" value="#{report.title}" rendered="#{empty report.pmDocument}" />
-				<h:outputText value="#{report.title}" rendered="#{!empty report.pmDocument}" />
+				<h:outputText value="#{report.title}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.type']}" style="width:20%">
@@ -35,7 +32,30 @@
 					ajax="false"
 					action="#{suppFinalizationBackingBean.downloadReport(report)}"
 					rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload 
-														? !empty report.scQtFinalizationAttachment.fileName : true}" />
+														? !empty report.scQtFinalizationReportAttachment.fileName : true}" />
+														
+				<ui:fragment rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
+					<p:commandLink immediate="true" 
+						rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser and 
+										report.docCategory eq ParameterConst.documentCategoryEndorsementReport and 
+											!empty report.scQtFinalizationReportAttachment.fileName}" update="reportTbl">
+						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
+							styleClass="tasklist_title1" />
+
+						<f:setPropertyActionListener target="#{report.scQtFinalizationReportAttachment}" value="#{null}" />
+					</p:commandLink>
+
+					<p:commandButton oncomplete="reportAttachmentPopupDlg.show();"
+						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true" process="@this"
+						rendered="#{empty report.scQtFinalizationReportAttachment.fileName}"
+						update="@([id$=reportAttachmentPopup])">
+						<f:setPropertyActionListener
+							target="#{suppFinalizationBackingBean.managedBean.selectedFinalizationReport}"
+							value="#{report}" />
+						<f:setPropertyActionListener value="KTR"
+							target="#{suppFinalizationBackingBean.managedBean.attachmentDocType}" />
+					</p:commandButton>
+				</ui:fragment>														
 			</p:column>
 		</p:dataTable>
 		
