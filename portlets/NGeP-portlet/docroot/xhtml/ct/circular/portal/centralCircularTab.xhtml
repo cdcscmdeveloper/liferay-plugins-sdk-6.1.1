@@ -41,10 +41,8 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		<p:messages id="messages" showSummary="false" escape="false"
-			showDetail="true"
-			autoUpdate="#{centralContractBackingBean.managedBean.autoUpdate}"
-			closable="true" severity="error, info, warn" />
-		<f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />
+			showDetail="false" rendered="#{!centralContractBackingBean.managedBean.viewContract}" />
+     <f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />
        <table style="width: 100%;">
 		<tr>
 			<td> <p:commandButton value="#{lbl['lbl.btn.back']}"
