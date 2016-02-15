@@ -1,6 +1,9 @@
 package my.ep.web.scheduler.job.phis;
 
+import my.ep.biz.service.intg.phis.IPHISServiceSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.integration.common.PhisIntegration;
 import my.ep.web.integration.common.PhisTemplate;
 
@@ -21,8 +24,10 @@ public class MasterDataDeliveryAddressJob implements Job {
 			throws JobExecutionException {
 
 		log.info("MasterDataDeliveryAddressJob start");
-		PhisTemplate phisTemplate = new PhisIntegration();
-		phisTemplate.deliveryAddress();
+		IPHISServiceSO  phisServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IPHISServiceSO.class);
+		phisServiceSO.deliveryAddress();
 		log.info("MasterDataDeliveryAddressJob end");
 
 	}
