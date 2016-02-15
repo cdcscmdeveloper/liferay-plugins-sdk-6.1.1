@@ -868,8 +868,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			UserResDTO resDTO = new UserResDTO();
-			
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
+			if((getFacesScopes().getUserSessionBean() == null 
+					|| getFacesScopes().getUserSessionBean().getUserId() == null) && getManagedBean().isViewContract()){
+				   return sourceList;
+			}
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());			
 			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 			
 			if (resDTO.getUserOrgList().size() > 0) {
