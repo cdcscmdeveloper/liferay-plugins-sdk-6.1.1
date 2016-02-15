@@ -164,7 +164,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				ccBB.getManagedBean().setViewContract(true);
 				ccBB.getManagedBean().setUpdateAction(false);
 				ccBB.getManagedBean().setOutComes(new String[]{});
-				ccBB.setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));	
+				ccBB.setContractCircularVar(reqDTO);	
 				ccBB.getManagedBean().setFromCircularNotice(true);
 				return "../centralcontract/circularBase.xhtml?faces-redirect=true";
 			}
@@ -215,7 +215,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				ccBB.getManagedBean().setViewContract(true);
 				ccBB.getManagedBean().setUpdateAction(false);
 				ccBB.getManagedBean().setOutComes(new String[]{});
-				ccBB.setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));	
+				ccBB.setContractCircularVar(reqDTO);	
 				ccBB.getManagedBean().setFromCircularNotice(true);
 				return "centralCircularTab.xhtml?faces-redirect=true";
 			}
@@ -352,7 +352,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 					centralContractBackingBean.getManagedBean().setViewContract(false);
 					centralContractBackingBean.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 				}
-				centralContractBackingBean.setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+				centralContractBackingBean.setContractCircularVar(reqDTO);
 				return "/xhtml/ct/circular/centralcontract/circularBase.xhtml";
 			}
 		} catch (Exception e) {
