@@ -100,7 +100,7 @@
 						  value="#{organisationBackingBean.getStateList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCountry.countryId)}" 
 						  var="state" itemLabel="#{state.stateName}"
 						  itemValue="#{state.stateId}"/>
-						<p:ajax event="change" update="dDistrict, dDivision, dCity" 
+						<p:ajax event="change" update="olDelDivisionMandatory,dDistrict, dDivision, dCity" 
 						 	listener="#{organisationBackingBean.retrieveDeliveryPmState(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState)}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="dState" id="dStateMsg" display="icon" /></td>
@@ -119,6 +119,11 @@
 				<td><p:message for="daddress1" id="daddress1Msg" display="icon" /></td>
 				<td width="150">
 					<p:outputLabel value="#{lbl['lbl.pm.address.division']}" /> 
+					<p:outputPanel id="olDelDivisionMandatory">
+					<p:outputLabel
+						value="*" styleClass="mandatory" 
+						rendered="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}"/>
+					</p:outputPanel>
 				</td>
 				<td width="220">
 					<p:selectOneMenu id="dDivision" 
