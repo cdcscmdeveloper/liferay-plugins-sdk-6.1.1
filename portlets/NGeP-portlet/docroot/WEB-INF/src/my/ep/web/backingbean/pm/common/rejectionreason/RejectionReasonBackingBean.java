@@ -277,11 +277,51 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					}
 				}
 			}
+            /////////////////////////////////
+//			ReasonReqDTO reqDTO = new ReasonReqDTO();
+//			reqDTO.setReasonCode("3");
+//			reqDTO.setReasonCategoryId(94L);
+//			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+//			ReasonResDTO resDTO = reasonSO.retrieveReasonByReasonCode(reqDTO);
+//			
+//			PmReason reason = resDTO.getPmReason();
+//			
+//			System.out.println("reason: " + reason.getReasonCode());
+//			System.out.println("reason_id: " + reason.getReasonId());
+//			System.out.println("reason.getConditionField().getParameterId(): " + reason.getConditionField().getParameterId());
+//			System.out.println("reason.getSourceMethod().getParameterId(): " + reason.getSourceMethod().getParameterId());
+//			>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//			log.info("./..start test for PID API");
+//			IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
+//					.getServiceObject("pm", IParameterSO.class);
+//			IReasonSO resReqSO = (IReasonSO) BusinessDelegate.getInstance()
+//					.getServiceObject("pm", IReasonSO.class);
+//
+//			ParameterReqDTO reqDTO = new ParameterReqDTO();
+//			reqDTO.setParameterCode(ParameterConst.PURCHASE_IN_DEFAULT);
+//			reqDTO.setParameterType(ParameterTypeConst.REASON_CATEGORY);
+//			ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
+//			if (resDTO != null && resDTO.getPmParameter() != null) {
+//				ReasonReqDTO resReqDTO = new ReasonReqDTO();
+//				resReqDTO.setReasonCategoryId(resDTO.getPmParameter()
+//						.getParameterId());
+//				resReqDTO.setLanguage(new FacesScopes().getUserLocale()
+//						.getLanguage());
+//				resReqDTO.setDocumentType("CQ");
+//				ReasonResDTO resResDTO = resReqSO
+//						.retrieveReasonByDocType(resReqDTO);
+//				log.info("./.......resResDTO.getPmReason()="+resResDTO.getPmReasonList());
+//				for(PmReason r : resResDTO.getPmReasonList()){
+//				 log.info("./.......r.getReasonId="+r.getReasonId());
+//				}
+//			}
+//				>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			//////////////////////////////////
 			this.getManagedBean().getPmPidListOrigin().clear();
 			this.getManagedBean().setSelectedReason(pmReason);
 			this.getManagedBean().getPmPidListOrigin().addAll(pmReason.getPmPIDReasonList());//get backup to validation
-			log.info("./.......pmReason.getPmPIDReasonList().size()="+pmReason.getPmPIDReasonList().size());
-			log.info("./.......this.getPmPidListOrigin().size()="+this.getManagedBean().getPmPidListOrigin().size());
+//			log.info("./.......pmReason.getPmPIDReasonList().size()="+pmReason.getPmPIDReasonList().size());
+//			log.info("./.......this.getPmPidListOrigin().size()="+this.getManagedBean().getPmPidListOrigin().size());
 			loadRestriction(pmReason);
 			this.getManagedBean().setDeleteAppTypeRestrictions(null);
 			this.getManagedBean().setDeleteComTypeRestrictions(null);
@@ -1143,6 +1183,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		if(this.getManagedBean().getSelectedReason().isContractPurchase()){
 			PmParameter paramObj = (PmParameter) souringMethodMapper.get(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 			this.getManagedBean().getSelectedReason().getSourceMethod().setParameterId(paramObj.getParameterId());
+		}else{
+			
+			this.getManagedBean().getSelectedReason().setConditionField(new PmParameter());
 		}
 	}
 	/**
