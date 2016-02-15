@@ -11637,6 +11637,7 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL);
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
 		reportNameList.add(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL);
+		reportNameList.add(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL);
 
 	}
 
@@ -12986,7 +12987,7 @@ public class ReportBackingBean extends
 						.getSmRegistrationType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationNo() != null) && (this
 						.getSmApplicationNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmZone() != null) && (this.getSmZone() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmZone() != null || this.getSmZone()== null))
 				|| ((this.getSmSupplierType() != null) && (this
 						.getSmSupplierType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMofRegNo() != null) && (this.getSmMofRegNo() != ReportConst.EMPTY_VAL))
@@ -13088,7 +13089,7 @@ public class ReportBackingBean extends
 				|| (this.getSmSoftCertificateFeeList() != null && this
 						.getSmSoftCertificateFeeList().size() > 0)) {
 
-			if ((getManagedBean().getReportValue() != null)
+			/*if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL))) {
 				if (((this.getSmCompanyName() == null) || (this
@@ -13101,7 +13102,7 @@ public class ReportBackingBean extends
 								.toString().equals(ReportConst.EMPTY_VAL)))) {
 					throw new EpException(MessageConst.ERROR_REPORT_780003);
 				}
-			}
+			}*/
 
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
@@ -13319,8 +13320,7 @@ public class ReportBackingBean extends
 						.setSupplierTypeTotVar(ReportConst.AMP_SM_SUPPLIER_TYPE_EQ
 								+ this.getSmSupplierType());
 			}
-			if ((this.getSmZone() != null)
-					&& (this.getSmZone() != ReportConst.EMPTY_VAL)) {
+			if ((this.getSmZone() != null || this.getSmZone() == null)) {
 				rptGenBean
 						.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
 								+ this.getSmZone());
