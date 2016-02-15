@@ -373,24 +373,29 @@ public class SmApplicationBackingBean extends
 						}
 					}
 				} else {
-					getManagedBean().setResubmitInValidMsg(
-							SmCommonUtil.getMessage("lbl.sm.activeDrftExist",
-									null));
-					this.getManagedBean().setValidResubmit(false);
-
+					redirectToResubmitErrorPage("lbl.sm.activeDrftExist");
 				}
 
 			} else {
-				getManagedBean().setResubmitInValidMsg(
-						SmCommonUtil.getMessage("lbl.sm.resubmission.invalid",
-								null));
-				// redirect & display resubmit expired
-				this.getManagedBean().setValidResubmit(false);
+				redirectToResubmitErrorPage("lbl.sm.resubmission.invalid");
 			}
 		} finally {
 			mofRegistrationSO = null;
 		}
 
+	}
+
+	private void redirectToResubmitErrorPage(String labelKey) {
+		getManagedBean().setResubmitInValidMsg(
+				SmCommonUtil.getMessage(labelKey, null));
+		this.getManagedBean().setValidResubmit(false);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+				getManagedBean().getResubmitInValidMsg()));
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						SmApplicationUtil.getApplicationErrorPage());
 	}
 
 	/**
