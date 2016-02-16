@@ -371,97 +371,105 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * The method used for to retrieve  associate circular with current circular for cancel
 	 */
 	public void addCancelCircularListener() {
-		try {
-			if(getManagedBean().getCancelledCircularList()==null) {
-				CircularReqDTO reqDTO = new CircularReqDTO();
-				ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("circularVer.ctCircular.circularType", 
-						SearchOperator.OPERATOR_EQUALS.value(), 
-						ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
-				reqDTO.setCancelCircularSearchBean(searchBean);
+		   ICircularSO circularSO = null;
+		   CircularResDTO resDTO = null;
+		
+		   try {
+			          if(getManagedBean().getCancelledCircularList()==null) {
+				             CircularReqDTO reqDTO = new CircularReqDTO();
+				             ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
+				             searchBean.getDataFilterBeans().add(new SearchFilterBean("circularVer.ctCircular.circularType", 
+						      SearchOperator.OPERATOR_EQUALS.value(), ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
+				              reqDTO.setCancelCircularSearchBean(searchBean);
 				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
-				if(resDTO.isSuccessful()) {
-					getManagedBean().setCancelledCircularList(resDTO.getCancelCircularResultBean().getResultList());
-				}
-			}
-			getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
-			RequestContext.getCurrentInstance().execute("cancelCircularDlg.show()");
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	}
+				              circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+				              resDTO = circularSO.searchCancelledCircular(reqDTO);
+				              if(resDTO.isSuccessful()) {
+					                getManagedBean().setCancelledCircularList(resDTO.getCancelCircularResultBean().getResultList());
+			                  }
+		           	 }
+			
+			          getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
+			         RequestContext.getCurrentInstance().execute("cancelCircularDlg.show()");
+		      } catch (Exception e) {
+			         e.printStackTrace();
+			         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		      }finally{
+		    	  resDTO = null;
+		    	  circularSO = null;
+		      }
+	   }
 	
-	/**
-	 * The method used  to add  associate circular with current circular for cancel
-	 */
-	public void addCancelledCircular() {
-		  try {	
-        	for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
-        		cancelCircular.setCancelCircularId(null);
-        		cancelCircular.setCtCancelCircularReq(null);
-        	}
-        	getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
-        	getManagedBean().getCancelledCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		/**
+		 * The method used  to add  associate circular with current circular for cancel
+		 */
+		 public void addCancelledCircular() {
+			  try {	
+	        	        for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
+	        		             cancelCircular.setCancelCircularId(null);
+	        		             cancelCircular.setCtCancelCircularReq(null);
+	        	          }
+	        	
+	        	        getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
+	        	        getManagedBean().getCancelledCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
+		     	} catch (Exception e) {
+				           e.printStackTrace();
+				          FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		     	}
 		}
-	}
 	
 	/**
 	 * The method used to delete  associate circular with current circular 
 	 */
 	public void deleteCancelCircular(){
-		try {
-			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
-			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	}
+			try {
+			     	getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
+				   getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());
+			} catch (Exception e) {
+				   e.printStackTrace();
+				   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+	 }
 	
 	/**
 	 * The method used to delete  associate circular with current circular 
 	 */
 	public void addSelectedContract() {
-		IContractSO contractSO = null;
-        
-        	
-        	if(getManagedBean().getSelectedContractList() == null || getManagedBean().getSelectedContractList().isEmpty()){
+		
+          if(getManagedBean().getSelectedContractList() == null || getManagedBean().getSelectedContractList().isEmpty()){
         		throw new EpException(MessageConst.ERROR_755015);
         	}
+          
+           IContractSO contractSO = null;
+           ContractReqDTO reqDTO  = null;
+           CtCircularContract circularContract = null;
         	try {
-        	contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-        	ContractReqDTO reqDTO = new ContractReqDTO();
-        	
-        	CtCircularContract circularContract = null;
-        	for(CtContract contract : getManagedBean().getSelectedContractList()) {
-        		circularContract = new CtCircularContract();
+        	          contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+        	          reqDTO = new ContractReqDTO();
+        	          for(CtContract contract : getManagedBean().getSelectedContractList()) {
+        		                circularContract = new CtCircularContract();
+        		                reqDTO.setContractId(contract.getContractId());
+        		                ContractResDTO resDTO = contractSO.retrieveSelectedContract(reqDTO);
+        		                circularContract.setCtContract(resDTO.getContract());
+        		                circularContract.setCtContractVer(resDTO.getContract().getLatestContractVer());
+        		                getManagedBean().getCircularVer().getCtCircularContracts().add(circularContract);
         		
-        		reqDTO.setContractId(contract.getContractId());
-        		ContractResDTO resDTO = contractSO.retrieveSelectedContract(reqDTO);
-        		circularContract.setCtContract(resDTO.getContract());
-        		circularContract.setCtContractVer(resDTO.getContract().getLatestContractVer());
-        		getManagedBean().getCircularVer().getCtCircularContracts().add(circularContract);
-        		
-        		int currentIndex = getManagedBean().getCircularVer().getCtCircularContracts().size() - 1;
-        		CtCircularContract ctCircularContract = getManagedBean().getCircularVer().getCtCircularContracts().get(currentIndex);
-        		for(CtContractItem ctitems : ctCircularContract.getCtContractVer().getCtContractItems()){
-					CtCircularItem item = new CtCircularItem();
-					item.setCtContractItem(ctitems);
-					ctCircularContract.getCtCircularItems().add(item);
-				}
-        	}
-        	RequestContext.getCurrentInstance().execute("contractDlg.hide()");
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	}
+        		               int currentIndex = getManagedBean().getCircularVer().getCtCircularContracts().size() - 1;
+        		               CtCircularContract ctCircularContract = getManagedBean().getCircularVer().getCtCircularContracts().get(currentIndex);
+        		               for(CtContractItem ctitems : ctCircularContract.getCtContractVer().getCtContractItems()){
+					                 CtCircularItem item = new CtCircularItem();
+					                 item.setCtContractItem(ctitems);
+					                 ctCircularContract.getCtCircularItems().add(item);
+				              }
+        	         }
+        	     RequestContext.getCurrentInstance().execute("contractDlg.hide()");
+	    	} catch (Exception e) {
+			        e.printStackTrace();
+			        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		    } finally{
+		    	contractSO = null;
+		    }
+	 }
 	
 	/**
 	 * The method used to set role of central contract admin
@@ -506,59 +514,55 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 		ICircularSO circularSO = null;
 		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-		
-//			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-//				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
-//			}
+			       circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+	               if(!getManagedBean().getCircularVer().isPid()){
+				        getManagedBean().getCircularVer().setCtCircularPidReason(null);
+			        }
+			       
+	               if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
+			             validateCircular(action);
 			
-			 if(!getManagedBean().getCircularVer().isPid()){
-				  getManagedBean().getCircularVer().setCtCircularPidReason(null);
-			  }
-			 
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
-			       validateCircular(action);
+			       CtCircular circular = getManagedBean().getCircular();
+			       if(circular==null) {
+				       circular = new CtCircular();
+				       circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+			       }
+			  
+			       CtCircularVer circularVer = getManagedBean().getCircularVer();
+		           if(circularVer.getDocType()==null) {
+				      circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+			       }
 			
-			CtCircular circular = getManagedBean().getCircular();
-			if(circular==null) {
-				circular = new CtCircular();
-				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
-			}
-			CtCircularVer circularVer = getManagedBean().getCircularVer();
-			if(circularVer.getDocType()==null) {
-				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-			}
+			     CircularReqDTO reqDTO = new CircularReqDTO();
+		         reqDTO.setUserMap(getManagedBean().getUserMap());
+		         reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			     reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			     reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
+			     reqDTO.setAttachments(getManagedBean().getAttachmentList());			
+			     reqDTO.setOutcome(action);
+			     reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			     reqDTO.setTaskId(getManagedBean().getTaskId());
+			     reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			     PmUser pmUSer = new PmUser();
+			     pmUSer.setLoginId(getManagedBean().getCircularAdmin());
+			     reqDTO.setCircularAdmin(pmUSer);
+			     reqDTO.setUserRole(getUserRole());
+			     reqDTO.setTaskName(getManagedBean().getTaskName());
+			     reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			     if(getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value())) {
+				      circularVer.setApprover(getFacesScopes().getUserSessionBean());
+				      circularVer.setApprovedDate(new Date());
+			     }
 			
-			CircularReqDTO reqDTO = new CircularReqDTO();
-		    reqDTO.setUserMap(getManagedBean().getUserMap());
-		    reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-			reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
-			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
-			reqDTO.setOutcome(action);
-			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(getManagedBean().getTaskId());
-			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			PmUser pmUSer = new PmUser();
-			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
-			reqDTO.setCircularAdmin(pmUSer);
-			reqDTO.setUserRole(getUserRole());
-			reqDTO.setTaskName(getManagedBean().getTaskName());
-			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			if(getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value())) {
-				circularVer.setApprover(getFacesScopes().getUserSessionBean());
-				circularVer.setApprovedDate(new Date());
-			}
+			    reqDTO.setCircular(circular);
+			    reqDTO.setCircularVer(circularVer);
+			    reqDTO.setUpdateAction(getManagedBean().isUpdateAction());
+			    if(getManagedBean().getPmDigiSign() !=null){
+				    reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			    }
 			
-			reqDTO.setCircular(circular);
-			reqDTO.setCircularVer(circularVer);
-			reqDTO.setUpdateAction(getManagedBean().isUpdateAction());
-			if(getManagedBean().getPmDigiSign() !=null){
-				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
-			}
-			
-			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
-			if(resDTO.isSuccessful()) {
+			   CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
+			   if(resDTO.isSuccessful()) {
 			    	String messageId = MessageConst.INFO_700005;
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 						messageId = MessageConst.INFO_700025;
@@ -599,98 +603,88 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * This method used to validate central circular details
 	 */
 	public void validateCircular(String outcome) {
-		IQTAwardSO qtAwardSO = null;
-		IContractSO contractSO = null;
-		try {
-			qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTAwardSO.class);
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-			getManagedBean().setAutoUpdate(true);
+		  IQTAwardSO qtAwardSO = null;
+		  IContractSO contractSO = null;
+		  try {
+			        qtAwardSO = (IQTAwardSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTAwardSO.class);
+			        contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			        getManagedBean().setAutoUpdate(true);
 		
-			//Validation for PID
-			if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getCircularVer().isPid() && 
-					(getManagedBean().getCircularVer().getCtCircularPidReason() == null || getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
-				 throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+			        //Validation for PID
+			        if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getCircularVer().isPid() && 
+					     (getManagedBean().getCircularVer().getCtCircularPidReason() == null || getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
+				        throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
+			        }
 			
-			if(getManagedBean().getCircularVer().getCtCircularPidReason() != null 
-					 && getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0 ){
-				for(CtCircularPidReason reason : getManagedBean().getCircularVer().getCtCircularPidReason()){
-					   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
-						   throw new EpException(MessageConst.ERROR_100022, 
-									new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					   }
-					   if(PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
-						   if(reason.getReasonDesc().isEmpty()){
-							   throw new EpException(MessageConst.ERROR_100022, 
-										new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						   }
-					   }
-				}
-			} 
+			       if(getManagedBean().getCircularVer().getCtCircularPidReason() != null 
+					    && getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0 ){
+				             for(CtCircularPidReason reason : getManagedBean().getCircularVer().getCtCircularPidReason()){
+					              if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+						                throw new EpException(MessageConst.ERROR_100022, 
+									         new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					               }
+					  
+					              if(PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+						                 if(reason.getReasonDesc().isEmpty()){
+							                  throw new EpException(MessageConst.ERROR_100022, 
+										            new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						                 }
+					              }
+				           }
+			          } 
 			
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				//#7680
-//				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-//					    throw new EpException(MessageConst.ERROR_100022, 
-//								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
-//										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-//				}
-				
-				if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-					throw new EpException(MessageConst.ERROR_100023, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.list", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				
-				if(getManagedBean().getApproverModel().getTarget().size()==0) {
-					throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
-				}
-			}
-			
-			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-				String remark = getManagedBean().getRemarkList().get(0).getRemark();
-	 			if((remark == null || remark.length() == 0)) {
-	 				throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	 			}
-			}
-			
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
-				ContractReqDTO contractReqDTO = new ContractReqDTO();
-				for(CtCircularContract circularContrart : getManagedBean().getCircularVer().getCtCircularContracts()) {				
-					awardSupplierReqDTO.setQtId(circularContrart.getCtContract().getQuotationTender().getQtId());
-					AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOILOAListBySupplier(awardSupplierReqDTO);
+		          	if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+							
+					        if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
+						            throw new EpException(MessageConst.ERROR_100023, 
+								        new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.list", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					        }
 					
-					for(ScLoa scLoa : awardSupplierResDTO.getLoaResultBean().getResultList()) {
-						contractReqDTO.setLoaId(scLoa.getLoaId());
-						CtContract ctContract = contractSO.retrieveContractByLoaId(contractReqDTO).getContract();
-						if(ctContract==null || ctContract.getLatestContractVer()==null) { 
-							throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
-						}
-					}
-				}
-			}
+					       if(getManagedBean().getApproverModel().getTarget().size()==0) {
+						         throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
+					        }
+			      }
 			
-			if (getManagedBean().getCircularVer().getCtContactPersons() != null && getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {
-				for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()) {	
-					if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
-							|| contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()) {
-						throw new EpException(MessageConst.ERROR_100022, new String[]{"Contact Person Details"});
-					}
-				}
-			}
+			      if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				         String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			         if((remark == null || remark.length() == 0)) {
+	 				            throw new EpException(MessageConst.ERROR_100022, 
+							       new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	 			          }
+			       }
 			
-			if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
-					outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-					throw new EpException(MessageConst.ERROR_750018, new String[]{"Central circular update"});
-			}
-		}
+			      if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				        AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+				        ContractReqDTO contractReqDTO = new ContractReqDTO();
+				        for(CtCircularContract circularContrart : getManagedBean().getCircularVer().getCtCircularContracts()) {				
+					           awardSupplierReqDTO.setQtId(circularContrart.getCtContract().getQuotationTender().getQtId());
+					           AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOILOAListBySupplier(awardSupplierReqDTO);
+					
+					           for(ScLoa scLoa : awardSupplierResDTO.getLoaResultBean().getResultList()) {
+						           contractReqDTO.setLoaId(scLoa.getLoaId());
+						           CtContract ctContract = contractSO.retrieveContractByLoaId(contractReqDTO).getContract();
+						           if(ctContract==null || ctContract.getLatestContractVer()==null) { 
+							            throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
+						           }
+					         }
+				      }
+		   	     }
+			
+			    if (getManagedBean().getCircularVer().getCtContactPersons() != null && getManagedBean().getCircularVer().getCtContactPersons().size() >= 1) {
+				       for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()) {	
+					       if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
+							    || contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()) {
+						        throw new EpException(MessageConst.ERROR_100022, new String[]{"Contact Person Details"});
+					      }
+				     }
+			    }
+			
+			   if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
+					  outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+					  throw new EpException(MessageConst.ERROR_750018, new String[]{"Central circular update"});
+			     }
+		  }
 		 finally {
 			 qtAwardSO = null;
 			 contractSO = null;
@@ -1252,7 +1246,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		
 		try {
 		    int i = 1;
-		 //   if(getManagedBean().isExmptedMinistryDD()){
 		     IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
 		
@@ -1269,7 +1262,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
 			return items;
-		   // }
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1312,41 +1304,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	    return null;
 	}
-	
-	/**
-	 * The method used for generating a list of available jabatan
-	 * for searching agency as selection.
-	 * 
-	 * @return the selection list of jabatan
-	 *//*
-	public SelectItem[] getPtjDropdown() {		
-		SelectItem[] items = null;
-		
-		try {
-		    int i = 1;
-		    if(getManagedBean().getJabatanProfileId() != null && getManagedBean().isExmptedMinistryDD()) {
-				    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
-				    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-					reqDTO.setParentOrgProfileId(getManagedBean().getJabatanProfileId());
-					reqDTO.setOrgCode(OrganizationType.DIVISION.value());
-					OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
-					
-				    List<Object[]> list = resDTO.getOrgProfileDDList();
-				    items = new SelectItem[list.size() + 1];
-				    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-					
-				     for(Object[] objects : list){
-				    	items[i++] = new SelectItem(Long.parseLong(objects[0].toString()), objects[1].toString());
-					}return items;
-		    }
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	    return null;
-	}*/
 	
 	/**
 	 * Call by ajax listener to set value of
@@ -1434,20 +1391,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
 	
-/*	*//**
-	 * The method used for
-	 * searching organization details
-	 *//*
-	public void searchMinistryDetails(){
-			try {
-				if(getManagedBean().getOrgTypeCode().equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)){
-				     exemptedOrgDataModel.reloadData();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
-			}
-	}*/
 	/**
 	 * The method used for
 	 * searching organization details
@@ -1490,134 +1433,134 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	@Override
 	public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {			
 		
-		try {
+		    try {
 		
-			   OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			   IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			
-			   // Filter By - parameterType
-			   searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
+			        OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			        IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			        // Filter By - parameterType
+			       searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
 					
-			   // Filter Kumpulan Ptj By - Ministry Profile Id
-			   if(getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())  
-				    && getManagedBean().getMinistryProfileId() != null){
-				       reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
-				       reqDTO.setOrgCode(OrganizationType.PENGAWAI_PENGAWAL.value());
-				       OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
-				       List<Object[]> orgName =  resDTO.getOrgProfileDDList();
-				       List<Long> longValue = new ArrayList<Long>();
-				       for(Object[] org : orgName){
-					      BigDecimal decimal =(BigDecimal)org[0];
-					      longValue.add(decimal.longValue());
-				       }
+			      // Filter Kumpulan Ptj By - Ministry Profile Id
+			      if(getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())   && getManagedBean().getMinistryProfileId() != null){
+				         reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+				         reqDTO.setOrgCode(OrganizationType.PENGAWAI_PENGAWAL.value());
+				        OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				        List<Object[]> orgName =  resDTO.getOrgProfileDDList();
+				        List<Long> longValue = new ArrayList<Long>();
+				        for(Object[] org : orgName){
+					        BigDecimal decimal =(BigDecimal)org[0];
+					        longValue.add(decimal.longValue());
+				        }
 				       searchBean.getDataFilterBeans().add(
 							new SearchFilterBean(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(), OrganizationType.PENGAWAI_PENGAWAL.value()), SearchOperator.OPERATOR_IN.value(),longValue));
-				
-			   } if(getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-		          
-						if (getManagedBean().getMinistryProfileId() != null) {
-						          searchBean.getDataFilterBeans().add(
-								  new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-										SearchOperator.OPERATOR_EQUALS.value(),
-										getManagedBean().getMinistryProfileId()));
-						
-						}  if (getManagedBean().getJabatanProfileId() != null) {
-						     searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-										SearchOperator.OPERATOR_EQUALS.value(),
-										getManagedBean().getJabatanProfileId()));
-					     }
-			  }
-			
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getOrgTypeCode()));
-				
-			searchBean.getDataFilterBeans()
-			  .add(new SearchFilterBean("recordStatus",SearchOperator.OPERATOR_LESS_EQUAL.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+				  } 
 
-			Date currentDate = DateUtils.getCurrentDateWithoutTime();
-			// Filter By - Org effDate
-			searchBean.getDataFilterBeans()
+                  if(getManagedBean().getOrgTypeCode().equalsIgnoreCase(OrganizationType.DIVISION.value())) {
+							if (getManagedBean().getMinistryProfileId() != null) {
+							          searchBean.getDataFilterBeans().add(
+									  new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+											SearchOperator.OPERATOR_EQUALS.value(),
+											getManagedBean().getMinistryProfileId()));
+							
+							}  if (getManagedBean().getJabatanProfileId() != null) {
+							     searchBean.getDataFilterBeans().add(
+									new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+											SearchOperator.OPERATOR_EQUALS.value(),
+											getManagedBean().getJabatanProfileId()));
+						     }
+			        }
+			
+			       searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getOrgTypeCode()));
+				   searchBean.getDataFilterBeans()
+			          .add(new SearchFilterBean("recordStatus",SearchOperator.OPERATOR_LESS_EQUAL.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+
+		    	  Date currentDate = DateUtils.getCurrentDateWithoutTime();
+			      // Filter By - Org effDate
+			      searchBean.getDataFilterBeans()
 					.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
 
-			// Filter By - Org expDate
-			searchBean.getDataFilterBeans().add(
-					new SearchMultiFilterBean(new SearchFilterBean("pmOrgValidity.expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+			     // Filter By - Org expDate
+			     searchBean.getDataFilterBeans().add(
+					  new SearchMultiFilterBean(new SearchFilterBean("pmOrgValidity.expDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(),
 							currentDate), new SearchFilterBean("pmOrgValidity.expDate",	SearchOperator.OPERATOR_IS_NULL.value(), null,
 							SearchCondition.CONDITION_OR.value())));
 			
-			if (getManagedBean().getPtjCodeName() != null
-					&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
-				if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
-					SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
-					filterBean.setCaseInsensitive(true);
-				    searchBean.getDataFilterBeans().add(filterBean);
-				
-				} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
-					SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
-					filterBean.setCaseInsensitive(true);
-				    searchBean.getDataFilterBeans().add(filterBean);
-				}
-			}
+			     if (getManagedBean().getPtjCodeName() != null
+					   && (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
+						 if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
+								SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+								filterBean.setCaseInsensitive(true);
+							    searchBean.getDataFilterBeans().add(filterBean);
+						
+							} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
+								SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+								filterBean.setCaseInsensitive(true);
+							    searchBean.getDataFilterBeans().add(filterBean);
+							}
+			       }
 			
-			reqDTO.setOrgProfileSearchBean(searchBean);
-			OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
-			if (resDTO.isSuccessful()) {
-				 return resDTO.getOrgProfileResultBean();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+					reqDTO.setOrgProfileSearchBean(searchBean);
+					OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
+					if (resDTO.isSuccessful()) {
+						 return resDTO.getOrgProfileResultBean();
+					}
+		    } catch (Exception e) {
+		    	e.printStackTrace();
+		    }
+		    return null;
 		}
-		return null;
-	 }
   }
 	
-	/**
-	 * The method used to add a new exempted organization
-	 * This method will 
-	 * generate a new record in central circular
-	 */
-	public void addExemtedOrgDetails() {
-		
-		if(selectedPmOrgProfile.length == 0){
-			throw new EpException(MessageConst.ERROR_755019);
-		}
-		getManagedBean().setAutoUpdate(true);
-		List<CtExemptedOrg>  orgList = new ArrayList<CtExemptedOrg>();
-		for (int i = 0; i < selectedPmOrgProfile.length; i++) {
+		/**
+		 * The method used to add a new exempted organization
+		 * This method will 
+		 * generate a new record in central circular
+		 */
+		public void addExemtedOrgDetails() {
 			
-			//Remove if already exist, avoid duplicate
-		  	for (CtExemptedOrg exmptOrg : this.getManagedBean().getCircularVer().getCtExemptedOrgs()) {
-		  		if (exmptOrg.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
-		  			throw new EpException(MessageConst.INFO_758000, new String[]{exmptOrg.getOrgProfile().getOrgName()}); 
-		  		}
-		  	}
-		  	
-		  	CtExemptedOrg org = new CtExemptedOrg();
-	    	org.setOrgProfile(selectedPmOrgProfile[i]);
-			org.setOrgTypeCode(selectedPmOrgProfile[i].getOrgTypeCode().getParameterCode());
-			getManagedBean().setExmptedMinistryDD(false);
-			orgList.add(org);
+			   if(selectedPmOrgProfile.length == 0){
+				    throw new EpException(MessageConst.ERROR_755019);
+			   }
+			 
+			   getManagedBean().setAutoUpdate(true);
+			  List<CtExemptedOrg>  orgList = new ArrayList<CtExemptedOrg>();
+		      for (int i = 0; i < selectedPmOrgProfile.length; i++) {
+				
+					//Remove if already exist, avoid duplicate
+				  	for (CtExemptedOrg exmptOrg : this.getManagedBean().getCircularVer().getCtExemptedOrgs()) {
+				  		if (exmptOrg.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
+				  			throw new EpException(MessageConst.INFO_758000, new String[]{exmptOrg.getOrgProfile().getOrgName()}); 
+				  		}
+				  	}
+			  	
+				  	CtExemptedOrg org = new CtExemptedOrg();
+			    	org.setOrgProfile(selectedPmOrgProfile[i]);
+					org.setOrgTypeCode(selectedPmOrgProfile[i].getOrgTypeCode().getParameterCode());
+					getManagedBean().setExmptedMinistryDD(false);
+					orgList.add(org);
+		      }
+			 
+		      if (selectedPmOrgProfile.length>0) {
+				this.getManagedBean().getCircularVer().getCtExemptedOrgs().addAll(orgList);
+			 }
+		
+		      selectedPmOrgProfile = null;
+			  getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+			  getManagedBean().setPtjCodeNameSearchValues(null);
+			  RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.hide()");
 		}
-		if (selectedPmOrgProfile.length>0) {
-			this.getManagedBean().getCircularVer().getCtExemptedOrgs().addAll(orgList);
-		}
-		selectedPmOrgProfile = null;
-		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
-		getManagedBean().setPtjCodeNameSearchValues(null);
-		RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.hide()");
-	}
 	
-	public void clickExemptedOrgBtn() {
-		RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.show()");
-	}
+		public void clickExemptedOrgBtn() {
+			RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.show()");
+		}
 
-	public CtExemptedOrg[] getSelectedExemptedOrgs() {
-		return selectedExemptedOrgs;
-	}
+		public CtExemptedOrg[] getSelectedExemptedOrgs() {
+			return selectedExemptedOrgs;
+		}
 
-	public void setSelectedExemptedOrgs(CtExemptedOrg[] selectedExemptedOrgs) {
-		this.selectedExemptedOrgs = selectedExemptedOrgs;
-	}
+		public void setSelectedExemptedOrgs(CtExemptedOrg[] selectedExemptedOrgs) {
+			this.selectedExemptedOrgs = selectedExemptedOrgs;
+		}
 	
 		/**
 		 * This method used to retrieve 
@@ -1671,7 +1614,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		    return items;
 		}
 		
-	public boolean PidPurchaseTypeOther(Long reasonId){
+		/**
+		 * This method used to 
+		 * compare PID Reason other with other
+		 * @Reason Id reasonId
+		 * @return boolean value
+		 */
+	 public boolean PidPurchaseTypeOther(Long reasonId){
 			
 			if(reasonId == null || reasonId.intValue() == 0)
 			return false;
@@ -1699,12 +1648,20 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			return false;
 		}
 	
+	    /**
+		 * This method used to
+		 *  add new record in datatable
+		 */
 		public void addPurchaseInDefault(){
 				CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
 				ctCircularPidReasons.setPmReason(new PmReason());
 				getManagedBean().getCircularVer().getCtCircularPidReason().add(ctCircularPidReasons);
 			}
 			
+		 /**
+		 * This method used to
+		 *  delete old record from datatable
+		 */
 		public void deletePidPurchase(){
 				try {
 					getManagedBean().getCircularVer().getCtCircularPidReason().removeAll(getManagedBean().getCtCircularPidReasons());
