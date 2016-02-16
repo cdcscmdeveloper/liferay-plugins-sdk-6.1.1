@@ -15,7 +15,6 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -135,11 +134,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * @return the navigate URL 
 	 */
 	public String gotoPage(Long circularVerId, String docType) {
-		ICircularSO circularSO = null;
-		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
-			
-			CircularReqDTO reqDTO = new CircularReqDTO();
+		
+		    CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
 				PanelBackingBean ppBB = new PanelBackingBean();
@@ -151,7 +147,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				ppBB.getManagedBean().setUpdateAction(false);
 				ppBB.getManagedBean().setViewContract(true);
 				ppBB.getManagedBean().setOutComes(new String[]{});
-				ppBB.setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+				ppBB.setPanelCircularVar(reqDTO);
 				ppBB.getManagedBean().setFromCircularNotice(true);
 				return "../panel/circularBase.xhtml?faces-redirect=true";
 			} else {
@@ -168,13 +164,6 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				ccBB.getManagedBean().setFromCircularNotice(true);
 				return "../centralcontract/circularBase.xhtml?faces-redirect=true";
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			circularSO = null;
-		}
-		return null;
 	}
 	
 	/**
@@ -186,10 +175,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * @return the navigate URL
 	 */
 	public String gotoViewPage(Long circularVerId, String docType) {
-		ICircularSO circularSO = null;
-		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
-			
+		
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
@@ -202,7 +188,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				ppBB.getManagedBean().setUpdateAction(false);
 				ppBB.getManagedBean().setViewContract(true);
 				ppBB.getManagedBean().setOutComes(new String[]{});
-				ppBB.setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+				ppBB.setPanelCircularVar(reqDTO);
 				ppBB.getManagedBean().setFromCircularNotice(true);
 				return "panelCircularTab.xhtml?faces-redirect=true";
 			} else {
@@ -219,13 +205,6 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				ccBB.getManagedBean().setFromCircularNotice(true);
 				return "centralCircularTab.xhtml?faces-redirect=true";
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			circularSO = null;
-		}
-		return null;
 	}
 	
 	/**
@@ -304,11 +283,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * Navigate to circular page as per user selection for update or view
 	 * */
 	public String gotoPage(String action, Long circularVerId) {
-		ICircularSO circularSO = null;
-		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			
-			CircularReqDTO reqDTO = new CircularReqDTO();
+	    
+		    CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			
 			if(getManagedBean().getSearchCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
@@ -331,7 +307,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 					panelBackingBean.getManagedBean().setCircularExtension(false);
 					panelBackingBean.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 				}
-				panelBackingBean.setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+				panelBackingBean.setPanelCircularVar(reqDTO);
 				return "/xhtml/ct/circular/panel/circularBase.xhtml";
 			} else {
 				CentralContractBackingBean centralContractBackingBean = new CentralContractBackingBean();
@@ -355,13 +331,6 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				centralContractBackingBean.setContractCircularVar(reqDTO);
 				return "/xhtml/ct/circular/centralcontract/circularBase.xhtml";
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			circularSO = null;
-		}
-		return null;
 	}
 	
 	/**
