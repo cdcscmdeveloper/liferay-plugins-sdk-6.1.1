@@ -85,8 +85,8 @@
 						style="width: 314px;">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
-						<p:ajax event="change" update="searchPanel"
-							listener="#{flDocumentBackingBean.selectedOrderType}" />
+						<p:ajax event="change" update=":form"
+							listener="#{flDocumentBackingBean.selectedOrderType}"/>
 					</p:selectOneMenu></td>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
 				<td><p:inputText size="28" maxlength="17" 
@@ -229,7 +229,7 @@
 					action="#{flDocumentBackingBean.searchDocument}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{flDocumentBackingBean.searchReset}" 
+					action="#{flDocumentBackingBean.flDocSearchReset}" 
 					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
