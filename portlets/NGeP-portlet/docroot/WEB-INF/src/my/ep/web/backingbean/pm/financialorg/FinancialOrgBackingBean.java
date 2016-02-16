@@ -579,8 +579,7 @@ public class FinancialOrgBackingBean extends
 				pmState = PmCommonUtil.retrievePmStateByStateId(pmState
 						.getStateId());				
 				getManagedBean().getPmAddress().setPmState(pmState);				
-				if(pmState.getStateCode()
-						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+				if(pmState.getAdoptDivision()){
 					getManagedBean().getPmAddress().setPmDivision(new PmDivision()); 
 				}	
 			} else {
@@ -636,7 +635,7 @@ public class FinancialOrgBackingBean extends
 						}
 						
 //						PmState pmState = PmCommonUtil.retrievePmStateByStateId(pmAddress.getPmState().getStateId());
-						if(ParameterConst.SARAK_SK_CODE.equals(pmAddress.getPmState().getStateCode())){
+						if(pmAddress.getPmState().getAdoptDivision()){
 							if(pmAddress.getPmDivision().getDivisionId()==null){
 								throw new EpException(MessageConst.ERROR_770044);
 							}

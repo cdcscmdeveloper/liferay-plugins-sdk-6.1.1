@@ -122,14 +122,14 @@
 					<p:outputPanel id="olDelDivisionMandatory">
 					<p:outputLabel
 						value="*" styleClass="mandatory" 
-						rendered="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}"/>
+						rendered="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.adoptDivision}"/>
 					</p:outputPanel>
 				</td>
 				<td width="220">
 					<p:selectOneMenu id="dDivision" 
-						disabled="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateCode ne ParameterConst.sarakSkCode}"
+						disabled="#{not organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.adoptDivision}"
 						required="#{!empty param['dialogValidation']
-							and organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}" 
+							and organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.adoptDivision}" 
 						styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.division']}"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDivision.divisionId}"
@@ -138,7 +138,7 @@
 						<f:selectItems
 						  value="#{organisationBackingBean.getDivisionList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateId)}" 
 						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>
-						<p:ajax event="change" update="dDivision" listener="#{organisationBackingBean.retrieveDeliveryPmDivision(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDivision)}" />
+						<p:ajax event="change" update="dDistrict, dDivision, dCity"  listener="#{organisationBackingBean.retrieveDeliveryPmDivision(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDivision)}" />
 					</p:selectOneMenu>
 				</td>
 				<td><p:message for="dDivision" id="dDivisionMsg" display="icon" /></td>
@@ -159,7 +159,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems 
-							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateId)}"
+							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateId,organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDivision)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
 						<p:ajax event="change" update="dDistrict,dCity" listener="#{organisationBackingBean.retrieveDeliveryPmDistrict(organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmDistrict)}" />

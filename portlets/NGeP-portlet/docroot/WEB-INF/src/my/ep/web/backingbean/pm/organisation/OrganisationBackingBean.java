@@ -719,8 +719,7 @@ public class OrganisationBackingBean extends
 						if(addressResDTO != null && addressResDTO.getPmAddress() != null){
 							if(addressResDTO.getPmAddress().getPmState() != null 
 									&& addressResDTO.getPmAddress().getPmDivision() == null
-									&& addressResDTO.getPmAddress().getPmState().getStateCode()
-									.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+									&& addressResDTO.getPmAddress().getPmState().getAdoptDivision()){
 								pmAddressType.getPmAddress().setPmDivision(new PmDivision()); 
 							}							
 						}
@@ -1084,8 +1083,7 @@ public class OrganisationBackingBean extends
 			if (pmAddress.getPmCity().getCityId() == null) {
 				throw new EpException(MessageConst.ERROR_775112);
 			}
-			if (ParameterConst.SARAK_SK_CODE.equals(pmAddress.getPmState()
-					.getStateCode())) {
+			if (pmAddress.getPmState().getAdoptDivision()) {
 				if (pmAddress.getPmDivision() == null || pmAddress.getPmDivision().getDivisionId() == null) {
 					throw new EpException(MessageConst.ERROR_770044);
 				}
@@ -1152,8 +1150,7 @@ public class OrganisationBackingBean extends
 			if (deliverAddress.getPmCity().getCityId() == null) {
 				throw new EpException(MessageConst.ERROR_775126);
 			}
-			if (ParameterConst.SARAK_SK_CODE.equals(deliverAddress.getPmState()
-					.getStateCode())) {
+			if (deliverAddress.getPmState().getAdoptDivision()) {
 				if (deliverAddress.getPmDivision() == null || deliverAddress.getPmDivision().getDivisionId() == null) {
 					throw new EpException(MessageConst.ERROR_775127);
 				}
@@ -1390,9 +1387,8 @@ public class OrganisationBackingBean extends
 
 			if (address.getAddressType().equalsIgnoreCase(
 					AddressType.DELIVERY_ADDRESS.value())) {
-				if (address.getPmAddress().getPmState() != null &&
-						ParameterConst.SARAK_SK_CODE.equals(address.getPmAddress().getPmState()
-						.getStateCode()) && address.getPmAddress().getPmDivision() == null ) {
+				if (address.getPmAddress().getPmState() != null &&address.getPmAddress().getPmState().getAdoptDivision()
+					 && address.getPmAddress().getPmDivision() == null ) {
 					address.getPmAddress().setPmDivision(new PmDivision());
 				}
 				this.getManagedBean().setDeliveryAddress(address);
@@ -1966,11 +1962,11 @@ public class OrganisationBackingBean extends
 	 * @param stateId
 	 * @return List<PmDistrict>
 	 */
-	public List<PmDistrict> getDistrictList(Long stateId) {
+	public List<PmDistrict> getDistrictList(Long stateId,PmDivision pmDivision) {
 		log.info("getDistrictList");
-		if(getManagedBean().getOfficeAddress().getPmDivision() != null 
-				&& getManagedBean().getOfficeAddress().getPmDivision().getDivisionId() !=null){
-			return PmCommonUtil.retrievePmDistrictListByDivisionId(getManagedBean().getOfficeAddress().getPmDivision().getDivisionId());					
+		if(pmDivision != null 
+				&& pmDivision.getDivisionId() !=null){
+			return PmCommonUtil.retrievePmDistrictListByDivisionId(pmDivision.getDivisionId());					
 		}else {
 			return PmCommonUtil.retrievePmDistrictList(stateId);
 		}
@@ -2003,8 +1999,7 @@ public class OrganisationBackingBean extends
 				PmState pmState = PmCommonUtil.retrievePmStateByStateId(getManagedBean()
 						.getSelectedStateId());				
 				getManagedBean().getOfficeAddress().setPmState(pmState);		
-				if(pmState.getStateCode()
-						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+				if(pmState.getAdoptDivision()){
 					getManagedBean().getOfficeAddress().setPmDivision(new PmDivision()); 
 				}	
 			} 
@@ -2021,8 +2016,7 @@ public class OrganisationBackingBean extends
 				getManagedBean().getDeliveryAddress().getPmAddress().setPmState(pmState);
 				getManagedBean().getDeliveryAddress().getPmAddress().setPmDistrict(new PmDistrict());
 				getManagedBean().getDeliveryAddress().getPmAddress().setPmCity(new PmCity());
-				if(pmState.getStateCode()
-						.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+				if(pmState.getAdoptDivision()){
 					getManagedBean().getDeliveryAddress().getPmAddress().setPmDivision(new PmDivision()); 
 				}	
 			} else {

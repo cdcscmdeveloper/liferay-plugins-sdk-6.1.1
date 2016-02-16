@@ -69,13 +69,13 @@
 						<p:outputPanel id="olOffDivisionMandatory">
 							<p:outputLabel 
 								value="*" styleClass="mandatory" 
-								rendered="#{organisationBackingBean.managedBean.officeAddress.pmState.stateCode eq ParameterConst.sarakSkCode}"
+								rendered="#{organisationBackingBean.managedBean.officeAddress.pmState.adoptDivision}"
 							/>
 						</p:outputPanel>
 						</td>
 				<td width="220"><p:selectOneMenu id="orgDivision"
-						disabled="#{organisationBackingBean.managedBean.officeAddress.pmState.stateCode ne ParameterConst.sarakSkCode}"
-						required="#{organisationBackingBean.managedBean.officeAddress.pmState.stateCode eq ParameterConst.sarakSkCode}"
+						disabled="#{not organisationBackingBean.managedBean.officeAddress.pmState.adoptDivision}"
+						required="#{organisationBackingBean.managedBean.officeAddress.pmState.adoptDivision}"
 						styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.division']}"
 						value="#{organisationBackingBean.managedBean.officeAddress.pmDivision.divisionId}"
@@ -109,7 +109,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
-							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.officeAddress.pmState.stateId)}"
+							value="#{organisationBackingBean.getDistrictList(organisationBackingBean.managedBean.officeAddress.pmState.stateId,organisationBackingBean.managedBean.officeAddress.pmDivision)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}" />
 						<p:ajax event="change"
