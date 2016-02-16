@@ -66,7 +66,7 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
-						action="#{viewSuppProfileBackingBean.initSmApplByApplNo(smAppl[0])}"
+						action="#{viewSuppProfileBackingBean.initSmApplByApplNo(smAppl[0],index)}"
 						process="@this" partialSubmit="true" update="@form"
 						style="padding-right:5px;">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />

@@ -20,7 +20,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.applNo}</td>
 				<td><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
-				<td class="header-info-text">#{viewSmApplBackingBean.getApplicationStatus()}</td>
+				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc}</td>
 			</tr>
 			<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smApplRejectReasons}">
 				<tr height="20"><td>&#160;</td></tr>

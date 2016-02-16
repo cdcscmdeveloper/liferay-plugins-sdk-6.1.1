@@ -1,17 +1,20 @@
 package my.ep.web.backingbean.sm.applicationView;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -68,32 +71,48 @@ public class ViewApplHistoryBackingBean extends
 						"", null);
 	}
 
+	public void redirectToResubmit() {
+		SmCommonUtil.redirectToExternalUrl(getManagedBean().getResubmitUrl());
+	}
+
 	/**
 	 * Get Application Status
 	 * 
-	 * @param String
-	 *            statusId
+	 * @param PmStatus
+	 *            status
 	 * @return String
 	 */
-	public String getApplicationStatus() {
-		String statusDesc = "";
-		SmWorkflowStatus sts = SmCommonUtil
-				.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl()
-						.getApplId());
-
-		if (sts != null && sts.getPmStatus() != null
-				&& sts.getPmStatus().getStatusId() != null) {
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(sts.getPmStatus().getStatusId());
-			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
-					.getLanguage());
-			StatusResDTO resDTO = SmServiceLookup.getStatusSO()
-					.retrieveStatusDescById(reqDTO);
-			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-				statusDesc = resDTO.getPmStatusDesc().getStatusName();
-			}
+	private String getApplicationStatus(PmStatus status) {
+		String statusDesc = StringUtils.EMPTY;
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(status.getStatusId());
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		StatusResDTO resDTO = SmServiceLookup.getStatusSO()
+				.retrieveStatusDescById(reqDTO);
+		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+			statusDesc = resDTO.getPmStatusDesc().getStatusName();
 		}
 		return statusDesc;
+	}
+
+	private void initWorkflowStatus(SmAppl smAppl, int index) {
+		List<String> rejectedStatus = Arrays
+				.asList(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER,
+						SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER);
+		SmWorkflowStatus sts = SmCommonUtil
+				.getCurrentActiveWokFlowStatus(smAppl.getApplId());
+		if (sts != null && sts.getPmStatus() != null) {
+			smAppl.setWorkflowStatus(sts.getPmStatus());
+			smAppl.setWorkflowStatusDesc(getApplicationStatus(sts.getPmStatus()));
+			if (index == 0
+					&& rejectedStatus.contains(sts.getPmStatus().getStatusId()
+							.toString())) {
+				getManagedBean().setResubmitUrl(
+						SmCommonUtil.getEpBaseUrl()
+								+ "/resubmit-application?apId="
+								+ smAppl.getApplId());
+			}
+		}
 	}
 
 	/**
@@ -109,7 +128,8 @@ public class ViewApplHistoryBackingBean extends
 	 * @param String
 	 *            applNo
 	 */
-	public void initSmApplByApplNo(String applNo) {
+	public void initSmApplByApplNo(String applNo, int index) {
+		getManagedBean().setResubmitUrl(StringUtils.EMPTY);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
@@ -117,6 +137,7 @@ public class ViewApplHistoryBackingBean extends
 		viewApplication(smAppl);
 		initBumiRecommendNote();
 		initVirtualCert();
+		initWorkflowStatus(getManagedBean().getSmAppl(), index);
 	}
 
 	/**

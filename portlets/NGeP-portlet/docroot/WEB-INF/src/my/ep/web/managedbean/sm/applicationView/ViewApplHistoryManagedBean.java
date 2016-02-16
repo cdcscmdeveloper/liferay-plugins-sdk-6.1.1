@@ -23,6 +23,7 @@ public class ViewApplHistoryManagedBean extends
 	 */
 	private static final long serialVersionUID = 1191700333390541593L;
 	private SmAppl selectedApplHistory;
+	private String resubmitUrl;
 	private IPagingDataModel<Object[]> smSupplierDataModel = new SmSupplierPagingDataModel();
 
 	public ViewApplHistoryManagedBean() {
@@ -99,6 +100,14 @@ public class ViewApplHistoryManagedBean extends
 
 	public void setSelectedApplHistory(SmAppl selectedApplHistory) {
 		this.selectedApplHistory = selectedApplHistory;
+	}
+
+	public String getResubmitUrl() {
+		return resubmitUrl;
+	}
+
+	public void setResubmitUrl(String resubmitUrl) {
+		this.resubmitUrl = resubmitUrl;
 	}
 
 }
