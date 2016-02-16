@@ -20,7 +20,7 @@ public class SmRuleHelper {
 	public int getApplicationResubmissionDays() {
 		return SmServiceLookup.getSmRuleSO()
 				.retrieveApplicationReSubmissionDays()
-				.getApplicationSubmissionDays();
+				.getApplicationReSubmissionDays();
 	}
 
 	public int getMaxCategoryAllowed() {
