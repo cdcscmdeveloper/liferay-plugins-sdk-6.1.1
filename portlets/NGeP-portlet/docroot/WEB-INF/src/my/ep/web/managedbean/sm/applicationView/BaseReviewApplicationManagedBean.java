@@ -135,6 +135,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String supplierIdParam;
 	private String regCatCodeConfirmHeader;
 	private String regCatCodeConfirmMsg;
+	private String resubmitUrl;
 
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -1191,6 +1192,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setMofCertLs(List<SmMofCert> mofCertLs) {
 		this.mofCertLs = mofCertLs;
+	}
+
+	public String getResubmitUrl() {
+		return resubmitUrl;
+	}
+
+	public void setResubmitUrl(String resubmitUrl) {
+		this.resubmitUrl = resubmitUrl;
 	}
 
 }
