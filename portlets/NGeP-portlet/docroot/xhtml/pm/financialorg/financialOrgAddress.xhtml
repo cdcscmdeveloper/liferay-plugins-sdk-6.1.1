@@ -66,14 +66,14 @@
 					<p:outputPanel id="olDivisionMandatory">
 						<p:outputLabel
 						value="*" styleClass="mandatory" 
-						rendered="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}"/>
+						rendered="#{financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"/>
 					</p:outputPanel>
 					
 				</td>
 				<td class="tdContent">
 					<p:selectOneMenu id="facDivision" tabindex="8"
-						disabled="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode ne ParameterConst.sarakSkCode}"
-						required="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateCode eq ParameterConst.sarakSkCode}" 
+						disabled="#{not financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"
+						required="#{financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}" 
 						styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.address.division']}"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDivision.divisionId}">
