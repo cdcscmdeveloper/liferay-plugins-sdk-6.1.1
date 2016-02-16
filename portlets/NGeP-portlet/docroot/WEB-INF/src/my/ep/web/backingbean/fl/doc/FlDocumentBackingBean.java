@@ -857,21 +857,31 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 * @param e the e
 	 */
 	public void selectedOrderType(AjaxBehaviorEvent e) {
+		
+//		getManagedBean().setSearchDocType(null);
+//
+//		// reset everything to false
+//		this.getManagedBean().setCheckDocType(false);
+//		this.getManagedBean().setCheckPoDocType(false);
+//		this.getManagedBean().setCheckDoDocType(false);
+//		this.getManagedBean().setCheckInDocType(false);
+//		this.getManagedBean().setCheckDoInDocType(false);
+		
+		//resetSearchCriteria();
+		
+		String searchOrderType = this.getManagedBean().getSearchOrderType();
+		
 		String id = (String) e.getComponent().getAttributes().get("value");
-		getManagedBean().setSearchDocType(null);
-
-		// reset everything to false
-		this.getManagedBean().setCheckDocType(false);
-		this.getManagedBean().setCheckPoDocType(false);
-		this.getManagedBean().setCheckDoDocType(false);
-		this.getManagedBean().setCheckInDocType(false);
-		this.getManagedBean().setCheckDoInDocType(false);
-		resetSearchCriteria();
-		if(id!=null) {
+		
+		if(id != null) {
 			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
 			}	
 		}
+		
+		this.flDocSearchReset();
+		
+		this.getManagedBean().setSearchOrderType(searchOrderType);
 	}
 	
 	/**
@@ -902,6 +912,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		renewSesionObject();
 	}
 	
+	/**
+	 * Search reset.
+	 */
+	public void flDocSearchReset(){
+		this.searchReset();
+		this.defaultPtjAndMinistryValues();
+	}
 	/**
 	 * Gets the procurement type list based on procurement type and language code.
 	 *
