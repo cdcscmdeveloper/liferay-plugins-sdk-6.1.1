@@ -15,7 +15,6 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,9 +35,6 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -80,7 +76,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -127,8 +122,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	public SupplierBackingBean(){
 		/* Initialization of button */
-		if (getManagedBean().getAction() == null) {
-			getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});
+		if (getManagedBean().getOutComes() == null) {
+			getManagedBean().setOutComes(new String[] {BpmOutcomeConst.BPM_SUBMIT});
 		}
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
@@ -222,113 +217,172 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * The method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderView() {	   
-		IUserSO userSO = null;
-	   // IContractSO contractSO = null;
-		IChangeBankAccSO changeBankAccSO = null;
-	    ContractResDTO resDTO = null;
-	    ContractReqDTO ctReqDTO = null;
-	    UserReqDTO userReqDTO = null;
-	    UserResDTO userResDTO = null;
-	    ContractSupplierResDTO csResDTO = null;
-	    IContractSupplierSO contractSupplierSO = null;
-	    
-	    try {
-	    	HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+	 
+			ContractSupplierReqDTO reqDTO = null;
+		    UserResDTO userResDTO = null;
+		    IUserSO userSO = null;
+		    
+		    HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		    HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		    String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 		    String factoringId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
-		    
-		    if (factoringId != null) {
-		    	ContractSupplierReqDTO csReqDTO = new ContractSupplierReqDTO();
-	     	 	csReqDTO.setFactoringId(Long.parseLong(factoringId));
-	     	 	contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
-	     	 	csResDTO = contractSupplierSO.retrieveFactoringRequest(csReqDTO);
-			    
-	     	 	//Restrict If login user not the contract admin
-	     	 	if (!getFacesScopes().getUserSessionBean().getUserId().equals(csResDTO.getFactoring().getLoa().getContractAdmin().getUserId())) {
-					   FacesContext fc = FacesContext.getCurrentInstance();
-					   fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
-							   MessageUtils.getMessage(MessageConst.ERROR_700116,
-									   MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
-					   return;
-	     	 	}
-	     	 	getManagedBean().setViewOnly(true);
-	     	 	setFactoringField(csResDTO);
-	     	 	return;
-	     	}
-		    if (taskId == null) {
-				return;
-		    }
-		    BpmRequestDTO reqDTO = new BpmRequestDTO();
-		    reqDTO.setCtxToken(getFacesScopes().getBPMAuthenticationCtxToken());
-		    reqDTO.setTaskId(taskId);
-		    getManagedBean().setTaskId(taskId);
-
-		    String docType = null;
-		    IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		    BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		    Object obj = res.getPojo();
-	        getManagedBean().setAction(res.getAction());
-		    getManagedBean().setTaskName(res.getTaskName());
-		    getManagedBean().setAutoUpdate(true);		    
-		    userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-		    
+	    
+	        if (factoringId != null) {
+	    	      reqDTO = new ContractSupplierReqDTO();
+	    	      reqDTO.setFactoringId(Long.parseLong(factoringId));
+     	 	      setFactoringDetails(reqDTO);
+     	 	
+     	 	      //Restrict If login user not the contract admin
+     	          if (!getFacesScopes().getUserSessionBean().getUserId().equals(getManagedBean().getFactoring().getLoa().getContractAdmin().getUserId())) {
+				          FacesContext fc = FacesContext.getCurrentInstance();
+				          fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+						  MessageUtils.getMessage(MessageConst.ERROR_700116,
+								   MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				          fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
+				        return;
+     	 	        }
+     	 	      getManagedBean().setViewOnly(true);
+     	 	     return;
+     	     }
+	 
+	          if (taskId == null) {
+			         return;
+	           }	
+	     
+	          Object payLoad = super.getBpmTaskDetails(Object.class, null);
+		      getManagedBean().setAutoUpdate(true);		    
+		   	  
 		    // Change Bank Account
-		    if (res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
-		    	ctReqDTO = new ContractReqDTO();
-		    	CTBankAccountDataType dataType = (CTBankAccountDataType) obj;
-		    	ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-		    	docType = ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT;
-		    	ctReqDTO.setDocType(docType);
-				       
-		    	userReqDTO = new UserReqDTO();
-		    	userReqDTO.setUserId(new Long(dataType.getSupplier().getUserId()));
-		    	userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-		    	getManagedBean().setSupplierPmUser(userResDTO.getPmUser());
-				      
-		    	changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);
-		    	resDTO = changeBankAccSO.retrieveContractVerForChangeAcc(ctReqDTO);
-			    
-		    	getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		    	getManagedBean().setContractVer(resDTO.getCtContractVer());
-		    	getManagedBean().setCurentAccNoBankName(null);
-		    	if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
-					getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +ContractConst.SPACE_SLASH+ getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
-		       
-		    	getManagedBean().setRemarkList(resDTO.getCtRemarks());
-		    	getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		    	
-		    	if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-		    		String account = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
-		    		if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
-			               account = account + ContractConst.SPACE_SLASH + getManagedBean().getContractVer().getCtContractValue().getBankName();
-		    		}
-		    		getManagedBean().setAccountNoAndName(account);
-		    	}
-		    	getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-		    			ModuleCodeConst.CONTRACT_MANAGEMENT, docType, getManagedBean().getCtContract().getContractNo()));
-		    	ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-		    	ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), 
-		    			getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		    
-		    } else if (res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {	// Factoring Request		            
-		    	ContractSupplierReqDTO csReqDTO = new ContractSupplierReqDTO();
-		    	CTFactoringDataType dataType = (CTFactoringDataType) obj;
-     	       	csReqDTO.setFactoringId(new Long(dataType.getDocId()));
-     	       	contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
-     	       	csResDTO = contractSupplierSO.retrieveFactoringRequest(csReqDTO);
-     	       	setFactoringField(csResDTO);	
+		    if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
+
+                        CTBankAccountDataType bankAccDataType= (CTBankAccountDataType) payLoad;
+		    	        UserReqDTO userReqDTO = new UserReqDTO();
+		    	        userReqDTO.setUserId(new Long(bankAccDataType.getSupplier().getUserId()));
+		    	        userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
+		    	        userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+				    	getManagedBean().setSupplierPmUser(userResDTO.getPmUser());
+						      
+		    	        ContractReqDTO ctReqDTO = new ContractReqDTO();
+		    	        ctReqDTO.setContractVerId(new Long(bankAccDataType.getDocId()));
+		    	        ctReqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
+		    	        setChangeBankDetails(ctReqDTO);       
+
+		     } else if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {	// Factoring Request		            
+		    	     CTFactoringDataType dataType = (CTFactoringDataType) payLoad;
+		    	     reqDTO = new ContractSupplierReqDTO();
+		    	     reqDTO.setFactoringId(new Long(dataType.getDocId()));
+		    	     setFactoringDetails(reqDTO);	
 		    }
-	    } finally {
-	    	contractSupplierSO = null;
-		  //  contractSO = null;
-		    resDTO = null;
-		    csResDTO = null;
-		    userReqDTO = null;
-		    userResDTO = null;
-	    }
 	}
+	
+	public void setChangeBankDetails(ContractReqDTO reqDTO) {
+		
+		   IChangeBankAccSO changeBankAccSO = null;
+		   ContractResDTO resDTO = null;
+		 
+		    try{
+			             changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);
+				    	 resDTO = changeBankAccSO.retrieveContractVerForChangeAcc(reqDTO);
+					    
+				    	getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+				    	getManagedBean().setContractVer(resDTO.getCtContractVer());
+				    	getManagedBean().setCurentAccNoBankName(null);
+						
+				    	if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
+							 getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +ContractConst.SPACE_SLASH+ getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
+				       
+				    	getManagedBean().setRemarkList(resDTO.getCtRemarks());
+				    	getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+				    	
+				    	if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
+				    		String account = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+				    		    if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null) {
+					                   account = account + ContractConst.SPACE_SLASH + getManagedBean().getContractVer().getCtContractValue().getBankName();
+				    	 	     }
+				    		  getManagedBean().setAccountNoAndName(account);
+				    	 }
+				    
+				    	getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+				    			ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT, getManagedBean().getCtContract().getContractNo()));
+				    	ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+				    	ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), 
+				    			getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		   } catch (Exception e) {
+			    e.printStackTrace();
+			    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	   	   }finally{
+	   		    resDTO = null;
+	   		    changeBankAccSO = null;
+		   }
+	}
+	/**
+	 * The method used to set the factoring request details information while
+	 * rendering the screen.
+	 * 
+	 * @param resDTO  the response data transfer object for factoring request
+	 */
+    private void setFactoringDetails(ContractSupplierReqDTO reqDTO) {
+    	   IContractSupplierSO contractSupplierSO = null;
+    	   ContractSupplierResDTO resDTO = null;
+    	   
+    	   try {
+	    	 	    contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+	    	 	    resDTO = contractSupplierSO.retrieveFactoringRequest(reqDTO);
+	 	            getManagedBean().setFactoring(resDTO.getFactoring());
+	                getManagedBean().setCtContract(resDTO.getFactoring().getCtContract());
+	                getManagedBean().setRemarkList(resDTO.getCtRemarks());
+	                getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+	                getManagedBean().setLoaDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getAckDate());
+	                getManagedBean().setContractNo(getManagedBean().getCtContract().getContractNo());
+	                getManagedBean().setContractName(getManagedBean().getCtContract().getContractName());
+	                getManagedBean().setEffDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate());
+	                getManagedBean().setExpDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate());
+	                resetFactoringCompany();
+        
+                    // Remove Factoring Request
+                    if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+        	              getManagedBean().setRemoveFactoring(true);
+                    }
+                    
+                    if (getManagedBean().getUserMap().size() == 0) {
+            			initializeApproverList();
+            		}
+            		if (getManagedBean().getFactoring() == null) {
+            			initializeFactoring();
+            		}
+            		
+                   getManagedBean().getApproverModel().setSource(
+				   getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+						  getManagedBean().getUserMap()));
+                 
+                   if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+        	                getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+        	                for (PmUser approverUser : resDTO.getApproverList())  {
+				                 Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+				                 while (sourceIt.hasNext()) {
+					                 PmUser user = sourceIt.next();
+					                 if (user.getUserId() == approverUser.getUserId()) {
+						                     sourceIt.remove();
+					                  }
+				                 }
+			                }
+                     }
+               
+                   getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+        		          ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
+                   ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+                   ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
+                   ctBB.initializeRemarkAndAttachement(getManagedBean().getFactoring().getCtWorkflowStatus(), 
+        		       getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+              
+    	   } catch (Exception e) {
+			    e.printStackTrace();
+			    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+    	   }finally{
+    		   contractSupplierSO = null;
+    		   resDTO = null;
+    	     }
+      }
 	
 	/**
 	 * The method used to save the change bank request.
@@ -345,8 +399,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		IChangeBankAccSO changeBankAccSO =null;
 		ContractReqDTO reqDTO = null;
 		ContractResDTO resDTO = null;
-		long starttime = Calendar.getInstance().getTimeInMillis();	 
-		log.info(" Start time>>>>>" +starttime);
 		try {
 			validateChangeBankRequest(action);
             reqDTO = new ContractReqDTO();
@@ -375,9 +427,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			
 		    changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IChangeBankAccSO.class);
 			resDTO = changeBankAccSO.saveChangeBankAccRequest(reqDTO);
-			long endttime = Calendar.getInstance().getTimeInMillis();
-			 log.info(" End time>>>>>" +endttime);
-			 log.info(" Diff time>>>>>" +(starttime - endttime));
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700043;
@@ -438,51 +487,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	    }
 	}
 	
-	/**
-	 * The method used to set the factoring request details information while
-	 * rendering the screen.
-	 * 
-	 * @param resDTO  the response data transfer object for factoring request
-	 */
-    private void setFactoringField(ContractSupplierResDTO csResDTO) {
-    	getManagedBean().setFactoring(csResDTO.getFactoring());
-        getManagedBean().setCtContract(csResDTO.getFactoring().getCtContract());
-        getManagedBean().setRemarkList(csResDTO.getCtRemarks());
-        getManagedBean().setAttachmentList(csResDTO.getCtAttachments());
-        getManagedBean().setLoaDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getAckDate());
-        getManagedBean().setContractNo(getManagedBean().getCtContract().getContractNo());
-        getManagedBean().setContractName(getManagedBean().getCtContract().getContractName());
-        getManagedBean().setEffDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate());
-        getManagedBean().setExpDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate());
-        resetFactoringCompany();
-        
-        // Remove Factoring Request
-        if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-        	getManagedBean().setRemoveFactoring(true);
-        }
-        getManagedBean().getApproverModel().setSource(
-				getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
-						getManagedBean().getUserMap()));
-        if (csResDTO.getApproverList() != null && csResDTO.getApproverList().size() != 0) {
-        	getManagedBean().getApproverModel().setTarget(csResDTO.getApproverList());
-        	for (PmUser approverUser : csResDTO.getApproverList())  {
-				Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
-				while (sourceIt.hasNext()) {
-					PmUser user = sourceIt.next();
-					if (user.getUserId() == approverUser.getUserId()) {
-						sourceIt.remove();
-					}
-				}
-			}
-        }
-        getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-        		ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
-        ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-        ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
-        ctBB.initializeRemarkAndAttachement(getManagedBean().getFactoring().getCtWorkflowStatus(), 
-        		getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-    }
-    
     /**
 	 * The method used to save the factoring request
 	 * This method will navigate to acknowledgment page with a 
