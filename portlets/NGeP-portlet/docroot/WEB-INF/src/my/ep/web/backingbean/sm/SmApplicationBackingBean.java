@@ -7345,6 +7345,9 @@ public class SmApplicationBackingBean extends
 										&& cat.getApprvrDecFlg() != null && cat
 										.getApprvrDecFlg().compareTo(
 												new Integer(1)) == 0)) {
+							if (cat.getApprovedDate() == null) {
+								cat.setApprovedDate(new Date());
+							}
 							cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
 							setSupplierCategoryEffectiveDate(cat,
 									getManagedBean().getSmAppl().getApplType());
