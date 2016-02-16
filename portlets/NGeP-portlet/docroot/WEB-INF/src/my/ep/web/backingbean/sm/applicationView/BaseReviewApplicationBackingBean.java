@@ -1998,10 +1998,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					SmAppl smApplSer = null;
 					try {
 						if (SmCommonUtil.isSerFileExist(smAppl.getApplNo(),
-								"SUP")) {
+								"SER")) {
 							SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 							reqDTO.setDeSerFileName(getDeSerFileNameAndPath(smAppl
-									.getApplNo() + "_SUP"));
+									.getApplNo() + "_SER"));
 							smApplSer = SmServiceLookup.getSmApplRevisionSO()
 									.readApplicationHist(reqDTO).getSmAppl();
 							if (smApplSer == null) {
