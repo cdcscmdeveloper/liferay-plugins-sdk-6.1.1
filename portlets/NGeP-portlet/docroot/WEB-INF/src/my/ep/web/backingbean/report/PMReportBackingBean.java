@@ -48,7 +48,7 @@ public class PMReportBackingBean extends
 			break;
 
 		case ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL:
-			rptGenBean.setPmMandatoryOrgCategoryTypeView(true);
+			//rptGenBean.setPmMandatoryOrgCategoryTypeView(true);
 			rptGenBean.setPmMandatoryOrgTypeView(true);
 			rptGenBean.setPmNonMandatoryOrgNameView(true);
 			rptGenBean.setPmOrgCodeView(true);

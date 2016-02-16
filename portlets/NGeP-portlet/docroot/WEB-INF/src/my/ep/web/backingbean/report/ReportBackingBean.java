@@ -16264,34 +16264,29 @@ public class ReportBackingBean extends
 		SelectItem[] federalItems = null;
 		SelectItem[] otherItems = null;
 
-		if (this.reportValue
-				.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
-
-			if (this.getPmOrgCategory() != null
-					&& this.getPmOrgCategory().equals(ReportConst.FEDERAL_GOVT)) {
-				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
-
-			} else if (this.getPmOrgCategory() != null
-					&& this.getPmOrgCategory().equals(ReportConst.OTHERS)) {
-				searchBean1 = getOrgTypeSearchBean("orgTypeOthersList");
-			} else {
-				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
-				if (searchBean1 != null) {
-					searchBean1.getSortColumns();
-					items = getDropdownValuesBySearchBean(
-							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
-				}
-			}
-			if (this.getPmOrgCategory() != null) {
-				if (searchBean1 != null) {
-					searchBean1.getSortColumns();
-					items = getDropdownValuesBySearchBean(
-							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
-				}
-			}
-
-		} else if (this.reportValue
-				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
+		/*
+		 * if (this.reportValue
+		 * .equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
+		 * 
+		 * if (this.getPmOrgCategory() != null &&
+		 * this.getPmOrgCategory().equals(ReportConst.FEDERAL_GOVT)) {
+		 * searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+		 * 
+		 * } else if (this.getPmOrgCategory() != null &&
+		 * this.getPmOrgCategory().equals(ReportConst.OTHERS)) { searchBean1 =
+		 * getOrgTypeSearchBean("orgTypeOthersList"); } else { searchBean1 =
+		 * getOrgTypeSearchBean("orgTypeFederalList"); if (searchBean1 != null)
+		 * { searchBean1.getSortColumns(); items =
+		 * getDropdownValuesBySearchBean( ParameterTypeConst.ORGANISATION_TYPES,
+		 * searchBean1); } } if (this.getPmOrgCategory() != null) { if
+		 * (searchBean1 != null) { searchBean1.getSortColumns(); items =
+		 * getDropdownValuesBySearchBean( ParameterTypeConst.ORGANISATION_TYPES,
+		 * searchBean1); } }
+		 * 
+		 * } else
+		 */if (this.reportValue.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)
+				|| this.reportValue
+						.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
 
 			searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
 			if (searchBean1 != null) {
