@@ -215,6 +215,7 @@ public class SmApplicationBackingBean extends
 			SmAppl rejAppl = null;
 			SmSupplier supplierProfile = null;
 			String xhtml = "/xhtml/sm/resubmitApplication/prerenderResubmitApplication.xhtml";
+			String resubmitErrorKey = StringUtils.EMPTY;
 			if (applId != null) {
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = SmApplicationUtil.retriveApplicationById(Integer
@@ -265,12 +266,7 @@ public class SmApplicationBackingBean extends
 					resDto = mofRegistrationSO
 							.checkForApplicationDuplicateResubmission(reqDTO);
 					if (resDto != null && resDto.getResubmitApplnCount() > 0) {
-						getManagedBean()
-								.setResubmitInValidMsg(
-										SmCommonUtil
-												.getMessage(
-														"lbl.sm.resubmitAndRejectApplicationCantProceed",
-														null));
+						resubmitErrorKey = "lbl.sm.resubmitAndRejectApplicationCantProceed";
 						this.getManagedBean().setValidResubmit(false);
 					}
 					// 1.2 Check for resubmitted and approved
@@ -286,12 +282,7 @@ public class SmApplicationBackingBean extends
 								.checkForApplicationDuplicateResubmission(reqDTO);
 						if (resDto != null
 								&& resDto.getResubmitApplnCount() > 0) {
-							getManagedBean()
-									.setResubmitInValidMsg(
-											SmCommonUtil
-													.getMessage(
-															"lbl.sm.approvedApplicationCantProceed",
-															null));
+							resubmitErrorKey = "lbl.sm.approvedApplicationCantProceed";
 							this.getManagedBean().setValidResubmit(false);
 						}
 					}
@@ -306,12 +297,7 @@ public class SmApplicationBackingBean extends
 								.checkForApplicationDuplicateResubmission(reqDTO);
 						if (resDto != null
 								&& resDto.getResubmitApplnCount() > 0) {
-							getManagedBean()
-									.setResubmitInValidMsg(
-											SmCommonUtil
-													.getMessage(
-															"lbl.sm.approvedApplicationPendingFinalPay",
-															null));
+							resubmitErrorKey = "lbl.sm.approvedApplicationPendingFinalPay";
 							this.getManagedBean().setValidResubmit(false);
 						}
 					}
@@ -319,9 +305,7 @@ public class SmApplicationBackingBean extends
 							&& rejAppl.getCreatedDate().compareTo(
 									supplierProfile.getSmAppl()
 											.getCreatedDate()) < 0) {
-						getManagedBean().setResubmitInValidMsg(
-								SmCommonUtil.getMessage(
-										"lbl.sm.anotherApplApproved", null));
+						resubmitErrorKey = "lbl.sm.anotherApplApproved";
 						this.getManagedBean().setValidResubmit(false);
 					}
 					if (this.getManagedBean().isValidResubmit()) {
@@ -371,6 +355,8 @@ public class SmApplicationBackingBean extends
 							getManagedBean().setSmSupplier(supplierProfile);
 							prerenderApplicationForResubmission();
 						}
+					} else {
+						redirectToResubmitErrorPage(resubmitErrorKey);
 					}
 				} else {
 					redirectToResubmitErrorPage("lbl.sm.activeDrftExist");
