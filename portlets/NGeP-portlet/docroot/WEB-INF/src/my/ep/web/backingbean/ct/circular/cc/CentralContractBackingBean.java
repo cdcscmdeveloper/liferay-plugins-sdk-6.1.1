@@ -162,7 +162,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 				getManagedBean().getCircularVer().setStatus(status);
 				 /*Initialization of contract details backing bean*/
-				// initializeRemarks();
+				 initializeRemarks();
 				if(ctBB == null) {
 				      ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 				      ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
@@ -173,10 +173,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(isCentralContractAdmin()) 
 				getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
 			
-			/*if(getManagedBean().getUserMap().size()==0) {
+			if(getManagedBean().getUserMap().size()==0) {
 				 initializeApproverList();
 				 getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		    }*/
+		    }
 	}
 	
 	/**
