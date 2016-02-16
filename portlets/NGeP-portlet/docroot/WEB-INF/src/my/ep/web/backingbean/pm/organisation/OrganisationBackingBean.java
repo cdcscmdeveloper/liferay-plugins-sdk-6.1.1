@@ -577,7 +577,10 @@ public class OrganisationBackingBean extends
 							AddressType.DELIVERY_ADDRESS.value()) && 
 							(DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg() ||
 								DbValueConst.RECORD_STATUS_SUSPENDED == pmAddressType.getRecordStatusFlg())) {
-
+						if(StringUtils.isBlank(pmAddressType.getPmAddress().getPhoneCountry())){
+							//default to 60
+							pmAddressType.getPmAddress().setPhoneCountry("60");
+						}
 						deliveryAddressList.add(pmAddressType);
 						// this.getManagedBean().setDeliveryContactPerson(pmAddressType.getPmContacts().get(0));
 					}
@@ -1092,9 +1095,17 @@ public class OrganisationBackingBean extends
 				pmAddress.setPmDivision(null);
 			}
 			
+			if(StringUtils.isBlank(pmAddress.getPhoneCountry())){
+				throw new EpException(MessageConst.ERROR_775136);
+			}
+			
+			if(StringUtils.isBlank(pmAddress.getPhoneArea())){
+				throw new EpException(MessageConst.ERROR_775135);
+			}
+			
 			if(StringUtils.isBlank(pmAddress.getPhoneNo())){
 				throw new EpException(MessageConst.ERROR_775128);
-			}
+			}	
 			
 			PmAddressType addressType = null;
 			for(PmUser user : getManagedBean().getSupplierUsers()){
@@ -1159,9 +1170,19 @@ public class OrganisationBackingBean extends
 				deliverAddress.setPmDivision(null);
 			}
 			
+			if(StringUtils.isBlank(deliverAddress.getPhoneCountry())){
+				throw new EpException(MessageConst.ERROR_775134);
+			}
+			
+			if(StringUtils.isBlank(deliverAddress.getPhoneArea())){
+				throw new EpException(MessageConst.ERROR_775133);
+			}
+			
 			if(StringUtils.isBlank(deliverAddress.getPhoneNo())){
 				throw new EpException(MessageConst.ERROR_775129);
 			}
+			
+		
 		}
 
 		return addressEntered;
@@ -1384,7 +1405,7 @@ public class OrganisationBackingBean extends
 
 		boolean addrExist = false;
 		if (address != null) {
-
+			
 			if (address.getAddressType().equalsIgnoreCase(
 					AddressType.DELIVERY_ADDRESS.value())) {
 				if (address.getPmAddress().getPmState() != null &&address.getPmAddress().getPmState().getAdoptDivision()
