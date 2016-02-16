@@ -63,7 +63,7 @@
 			</p:dataTable>
 		</p:outputPanel>
 		<br />
-		<p:outputPanel id="catCodeInfPan" layout="block">
+		<p:outputPanel id="catCodeInfPan" layout="block" rendered="#{backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U'}">
 			<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
 				<table style="width: 100%">
 					<tr>
