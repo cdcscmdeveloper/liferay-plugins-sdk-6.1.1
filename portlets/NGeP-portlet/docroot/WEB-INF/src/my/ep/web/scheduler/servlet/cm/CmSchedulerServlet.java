@@ -27,13 +27,13 @@ public class CmSchedulerServlet extends HttpServlet {
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.PHIS_MASTER_DATA,
-				SchedulerConstants.PHIS_PM_OUTBOUND_JOB_GROUP),
+				SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 				MasterDataMaterialJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound1"));
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.PHIS_MASTER_DATA_MATERIAL,
-				SchedulerConstants.PHIS_PM_OUTBOUND_JOB_GROUP),
+				SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 				MasterDataMaterialInformationJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound1"));
 

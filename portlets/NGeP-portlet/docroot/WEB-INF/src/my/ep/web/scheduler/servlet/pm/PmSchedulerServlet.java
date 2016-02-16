@@ -8,7 +8,6 @@ import my.ep.factory.EpLogger;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchPmInboundJob;
 import my.ep.web.scheduler.job.phis.MasterDataDeliveryAddressJob;
 import my.ep.web.scheduler.job.phis.MasterDataKodAkaunJob;
 import my.ep.web.scheduler.job.phis.MasterDataProgramJob;
