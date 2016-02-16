@@ -718,8 +718,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
      */
 	public String factoringRequestSignAction(String outcome) throws Exception {
     	StringBuilder sb = null;
-    	if ((BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) || BpmOutcomeConst.BPM_ENDORSE.equals(outcome)) 
-    			&& !isSupplierRole()) {
+    	if (BpmOutcomeConst.BPM_ENDORSE.equals(outcome) && !isSupplierRole()) {
     		validateFactoringRequest(outcome);
 			sb = new StringBuilder();
 			sb.append(getManagedBean().getCtContract().getContractNo());
@@ -738,7 +737,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			return null;
 		} else {
-			return saveFactoringRequest(outcome);
+			// No GPKI for CA acknowledge
+			if(BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)) {
+				validateFactoringRequest(outcome);
+			}
+ 			return saveFactoringRequest(outcome);
 		}
 	}
 	
