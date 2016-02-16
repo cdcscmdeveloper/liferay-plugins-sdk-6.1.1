@@ -35,7 +35,6 @@ import org.primefaces.model.DualListModel;
 import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.bank.IChangeBankAccSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
@@ -1516,49 +1515,27 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public String gotoChangeBankPage(Long contractId) {
 		
 		IContractSO contractSO = null;
-		IChangeBankAccSO changeBankAccSO = null;
 		ContractReqDTO reqDTO = null;
-		ContractResDTO resDTO = null;
 		
 		try {
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO = new ContractReqDTO();
 			reqDTO.setContractId(contractId);
 			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-			
-			changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);	
 			reqDTO = new ContractReqDTO();
             reqDTO.setContractVerId(contractVerId);
             reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
             reqDTO.setUpdateAction(true);
-			
-			resDTO = changeBankAccSO.retrieveContractVerForChangeAcc(reqDTO);
 			SupplierBackingBean supplierBB =  new SupplierBackingBean();
+			supplierBB.setChangeBankDetails(reqDTO);
 			supplierBB.renewSesionObject();
-          	if (resDTO.isSuccessful()) {
-          		supplierBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
-          		supplierBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-				
-          		supplierBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
-		    			ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT, supplierBB.getManagedBean().getCtContract().getContractNo()));
-          		supplierBB.setCtBB(new ContractBackingBean(supplierBB.getManagedBean().getFileDirectory()));		    	
-          		
-          		supplierBB.getManagedBean().setCurentAccNoBankName(null);
-				if(supplierBB.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null 
-						&& supplierBB.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
-					supplierBB.getManagedBean().setCurentAccNoBankName(supplierBB.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() 
-							+ " / " + supplierBB.getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
-				
-				if (supplierBB.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-					supplierBB.getManagedBean().setOriginalAccountNo(supplierBB.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-					supplierBB.getPopulateBankAccountList();
-				}
-           }
-				
+			if (supplierBB.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
+				supplierBB.getManagedBean().setOriginalAccountNo(supplierBB.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+				supplierBB.getPopulateBankAccountList();
+			}
 		} finally {
 			reqDTO  = null;
-			resDTO   = null;
+			contractSO   = null;
 		}
 		return CHANGE_BANK_ACCOUNT_PAGE;
 	}
