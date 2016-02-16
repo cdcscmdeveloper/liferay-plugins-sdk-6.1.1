@@ -15,9 +15,13 @@
 					</p:commandButton>
 				</td>
 				<td style="text-align: right;">
+					<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl and viewSmApplBackingBean.managedBean.supplierUser}">
+						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							action="#{viewSmApplBackingBean.redirectToResubmit()}" 
+							process="@this" partialSubmit="true" update=":form" 
+							value="#{lbl['lbl.sm.resubmit']}"/>&#160;&#160;
+					</p:outputPanel>
 					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-						rendered="#{viewSmApplBackingBean.managedBean.mofSupplier or viewSmApplBackingBean.managedBean.poUser 
-						or viewSmApplBackingBean.managedBean.approverUser}"
 						action="#{viewSmApplBackingBean.redirectToSupplierProfileOrHistoryPage()}" 
 						process="@this" partialSubmit="true" update=":form" 
 						value="#{viewSmApplBackingBean.managedBean.portletUrlLabel}"/>&#160;&#160;
