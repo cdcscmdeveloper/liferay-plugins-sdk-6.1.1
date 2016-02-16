@@ -9,6 +9,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchPmInboundJob;
+import my.ep.web.scheduler.job.phis.MasterDataDeliveryAddressJob;
 import my.ep.web.scheduler.job.phis.MasterDataKodAkaunJob;
 import my.ep.web.scheduler.job.phis.MasterDataProgramJob;
 import my.ep.web.scheduler.job.phis.MasterDataProjectJob;
@@ -36,7 +37,7 @@ public class PmSchedulerServlet extends HttpServlet {
 		BidSchedulesPoolingJob.class,
 		"Job run every day at 11:55 PM", "0 55 23 * * ?");*/
 		
-	/*	EpSchedulerHelper.scheduleJob(new JobKey(
+		EpSchedulerHelper.scheduleJob(new JobKey(
 		SchedulerConstants.PHIS_VOT_FUND_JOB,
 		SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 		MasterDataVotJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
@@ -78,11 +79,11 @@ public class PmSchedulerServlet extends HttpServlet {
 		PaymentEffectNotificationJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
 		EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound"));
 		
-		EpSchedulerHelper.scheduleJob(new JobKey(
-		SchedulerConstants.GFMAS_MASTER_DATA_INBOUND,
-		SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
-		GfmasBatchPmInboundJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
-		EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound"));*/
+//		EpSchedulerHelper.scheduleJob(new JobKey(
+//		SchedulerConstants.GFMAS_MASTER_DATA_INBOUND,
+//		SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+//		GfmasBatchPmInboundJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
+//		EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound"));
 		
 		
 		// Update Expired Access Application Workflow Status 
