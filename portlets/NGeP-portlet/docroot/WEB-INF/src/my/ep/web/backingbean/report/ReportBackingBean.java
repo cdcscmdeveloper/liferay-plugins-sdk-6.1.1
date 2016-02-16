@@ -143,6 +143,9 @@ public class ReportBackingBean extends
 	public ReportBackingBean() {
 	}
 
+	/**
+	 * Inits the.
+	 */
 	@PostConstruct
 	public void init() {
 		if (this.getManagedBean().getSelectedMinistry() == null) {
@@ -346,6 +349,9 @@ public class ReportBackingBean extends
 
 	/** The all role codes list. */
 	private List<String> allRoleCodesList = new ArrayList<String>();
+
+	/** The is by zonelist. */
+	private List<BigDecimal> isByZonelist = new ArrayList<BigDecimal>();
 
 	/** The param table role code list. */
 	private List<String> paramTableRoleCodeList = new ArrayList<String>();
@@ -8857,9 +8863,6 @@ public class ReportBackingBean extends
 
 	/**
 	 * roleCodeUsersSetup - Role code users setup will be done by user id.
-	 * 
-	 * @param entity
-	 *            the entity
 	 */
 	public void roleCodeUsersSetup() {
 		log.info("ReportBackingBean-roleCodeUsersSetup");
@@ -9143,7 +9146,7 @@ public class ReportBackingBean extends
 							.getReportValue().equals(
 									ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL))) {
 
-				if ((allRoleCodesList != null)
+				if ((allRoleCodesList != null && isByZonelist != null)
 						&& (allRoleCodesList
 								.contains(ReportConst.ROLE_CODE_UPS_PO)
 								|| allRoleCodesList
@@ -9154,8 +9157,11 @@ public class ReportBackingBean extends
 										.contains(ReportConst.ROLE_CODE_UPS_SVO)
 								|| allRoleCodesList
 										.contains(ReportConst.ROLE_CODE_UPS_SVC) || allRoleCodesList
-									.contains(ReportConst.ROLE_CODE_UPS_SDO))) {
+									.contains(ReportConst.ROLE_CODE_UPS_SDO))
+						&& (!isByZonelist.get(0).equals(new BigDecimal(1)))) {
+
 					// if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
+
 					this.setSmZone(this.getStringZone());
 					getManagedBean().getRptGenBean().setSmZoneLabelView(true);
 					// }
@@ -10306,6 +10312,9 @@ public class ReportBackingBean extends
 				/*
 				 * retrievePFJAList(); retrieveFPJPTJList();
 				 */
+				/*
+				 * retrievePFJAList(); retrieveFPJPTJList();
+				 */
 
 				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
 					getManagedBean().getRptGenBean()
@@ -10631,6 +10640,11 @@ public class ReportBackingBean extends
 		return ptjList;
 	}
 
+	/**
+	 * Retrieve pfpp list.
+	 * 
+	 * @return the list
+	 */
 	public List<SelectItem> retrievePFPPList() {
 		log.info("ReportBackingBean-retrievePFPPList");
 		pegaWaiPengawalList = new ArrayList<SelectItem>();
@@ -10660,6 +10674,11 @@ public class ReportBackingBean extends
 		return pegaWaiPengawalList;
 	}
 
+	/**
+	 * Retrieve pfja list.
+	 * 
+	 * @return the list
+	 */
 	public List<SelectItem> retrievePFJAList() {
 		log.info("ReportBackingBean-retrievePFJAList");
 		kumpulanPTJList = new ArrayList<SelectItem>();
@@ -11396,6 +11415,8 @@ public class ReportBackingBean extends
 			retrieveHighRoleCodeByUser();
 			retrieveAllRoleCodesByUser();
 			retrieveZoneByUser();
+			isByZonelist = new ArrayList<BigDecimal>();
+			isByZoneListByReportCode(this.getManagedBean().getReportValue());
 			// retrieveMinistryList();
 			retriveUserrloeByUserId(this.getModuleValue());
 			retrieveParamCodeByUser();
@@ -13327,7 +13348,7 @@ public class ReportBackingBean extends
 							.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
 									+ this.getSmZone());
 				} else {
-						rptGenBean
+					rptGenBean
 							.setZoneTotVar(ReportConst.AMP_SM_SUPPLIER_ZONE_NAME_EQ
 									+ ReportConst.EMPTY_VAL);
 				}
@@ -16571,6 +16592,46 @@ public class ReportBackingBean extends
 			orgProfileSO = null;
 		}
 		return pmOrgProfile;
+	}
+
+	/**
+	 * Checks if is by zone list by report code.
+	 * 
+	 * @param reportCode
+	 *            the report code
+	 * @return the list
+	 */
+	public List<BigDecimal> isByZoneListByReportCode(String reportCode) {
+
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IPMReportSO.class);
+		List<BigDecimal> isByZonelistByReportCode = reportSO
+				.retrieveIsByZoneByReportCode(reportCode);
+		if (isByZonelistByReportCode.size() > 0
+				&& !isByZonelistByReportCode.isEmpty()) {
+			isByZonelist.add(isByZonelistByReportCode.get(0));
+		}
+		return isByZonelist;
+	}
+
+	/**
+	 * Gets the checks if is by zonelist.
+	 * 
+	 * @return the isByZonelist
+	 */
+	public List<BigDecimal> getIsByZonelist() {
+		return isByZonelist;
+	}
+
+	/**
+	 * Sets the checks if is by zonelist.
+	 * 
+	 * @param isByZonelist
+	 *            the isByZonelist to set
+	 */
+	public void setIsByZonelist(List<BigDecimal> isByZonelist) {
+		this.isByZonelist = isByZonelist;
 	}
 
 }
