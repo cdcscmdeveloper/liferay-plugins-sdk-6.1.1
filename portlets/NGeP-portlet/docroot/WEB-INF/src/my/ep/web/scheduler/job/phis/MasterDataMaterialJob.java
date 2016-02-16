@@ -1,7 +1,9 @@
 package my.ep.web.scheduler.job.phis;
 
+import my.ep.biz.service.intg.phis.IPHISServiceSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
-import my.ep.web.integration.common.PhisIntegration;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -19,8 +21,10 @@ public class MasterDataMaterialJob implements Job {
 			throws JobExecutionException {
 
 		log.info("MasterDataMaterialJob start");
-		PhisIntegration phisTemplate = new PhisIntegration();
-		phisTemplate.createFilesforPHIS();
+		IPHISServiceSO  phisServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IPHISServiceSO.class);
+		phisServiceSO.createFilesforPHIS();
 		log.info("MasterDataMaterialJob end");
 
 	}
