@@ -19,7 +19,6 @@ import my.ep.web.scheduler.job.eperunding.GovernmentProjectJob;
 import my.ep.web.scheduler.job.eperunding.ManagementPersonnelJob;
 import my.ep.web.scheduler.job.eperunding.RegisteredCategoryJob;
 import my.ep.web.scheduler.job.eperunding.SignatoryJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchSmOutboundJob;
 import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
 import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
 import my.ep.web.scheduler.job.sm.SoftCertRenewalReminderJob;
@@ -71,11 +70,11 @@ public class SmSchedulerServlet extends HttpServlet {
 				SchedulerConstants.SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER);
 		
 		//GFMAS SM OUT bound Continuous job				
-		EpSchedulerHelper.scheduleJob(new JobKey(
-				SchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB,
-				SchedulerConstants.GFMAS_SM_OUT_JOB_GROUP),
-				GfmasBatchSmOutboundJob.class, SchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));
+		/*EpSchedulerHelper.scheduleJob(new JobKey(
+				SchedulerConstants.GFMAS_VENDOR_OUTBOUND,
+				SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+				MasterDataVendorOutboundJob.class, SchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
+				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));*/
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.EPERUNDING_CONSULTANT_PROFILE_JOB,

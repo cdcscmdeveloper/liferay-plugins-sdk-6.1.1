@@ -91,13 +91,15 @@ public class SchedulerConstants {
 	public static final String SM_DAILY_PAYMENT_REMINDER_TIMER = "0 00 03 * * ?";
 	public static final String SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER = "0 30 03 * * ?";
 
-	// CM Module Scheduler Constants
 
-	// CM Job Group ID
-	public static final String CM_INTEGRATION_JOB_GROUP = "CM INTEGRATION JOB GROUP";
+//	Integration
+	
+	public static final String PHIS_INTEGRATION_JOB_GROUP = "PHIS INTEGRATION JOB GROUP";
+	public static final String EPERUNDING_INTEGRATION_JOB_GROUP = "EPERUNDING INTEGRATION JOB GROUP";
+	public static final String GFMAS_INTEGRATION_JOB_GROUP = "1GFMAS INTEGRATION JOB GROUP";
+	
 	// EPERUNDING OUT BOUND
-	public static final String EPERUNDING_INTEGRATION_JOB_GROUP = "EPERUNDING JOB GROUP";
-	public static final String EPERUNDING_INTEGRATION_CONTINUOUS_JOB = "EPERUNDING INTEGRATION JOB";
+	
 	public static final String EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC = "Job run once daily 1 AM";
 
 	public static final String EPERUNDING_CONSULTANT_PROFILE_JOB = "CONSULTANT PROFILE JOB";
@@ -139,47 +141,35 @@ public class SchedulerConstants {
 	
 	public static final String PHIS_MASTER_DATA_MATERIAL = "MATERIAL MASTER DATA JOB";
 	
-	public static final String PHIS_MASTER_DATA = "PHIS MATERIAL MASTER DATA JOB";
+	public static final String PHIS_MASTER_DATA = "MATERIAL MASTER DATA JOB";
+	
+//	1GFMAS OUT BOUND
+	
+	public static final String GFMAS_SST_INFORMATION = "SST INFORMATION JOB";
+	
+	public static final String GFMAS_VENDOR_OUTBOUND = "MASTER DATA VENDOR JOB(Outbound)";
+	
+	public static final String GFMAS_VENDOR_INBOUND = "MASTER DATA VENDOR JOB(Inbound)";
+	
+	public static final String GFMAS_MASTER_DATA = "MATERIAL MASTER DATA JOB";
+	
+//	1GFMAS IN BOUND
+	
+	public static final String GFMAS_MASTER_DATA_INBOUND = "MASTER DATA JOB(Inbound)";
+	
+	public static final String GFMAS_PAYMENT_INFORMATION_INBOUND = "PAYMENT INFORMATION JOB(Inbound)";
 
 	// PHIS OUT BOUND
-	// PM
-	public static final String PHIS_PM_OUTBOUND_JOB_GROUP = "PHIS JOB GROUP";
-	public static final String PHIS_PM_OUTBOUND_CONTINUOUS_JOB = "PHIS OUTBOUND PM JOB";
 	public static final String PHIS_PM_CONTINUOUS_JOB_DESC = "Job run every 5 minutes";
-	// SM
-	public static final String PHIS_SM_OUTBOUND_JOB_GROUP = "PHIS JOB GROUP";
-	public static final String PHIS_SM_OUTBOUND_CONTINUOUS_JOB = "PHIS OUTBOUND SM JOB";
 	public static final String PHIS_SM_CONTINUOUS_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
-	// CM
-	public static final String PHIS_CM_OUTBOUND_JOB_GROUP = "PHIS JOB GROUP";
-	public static final String PHIS_CM_OUTBOUND_CONTINUOUS_JOB = "PHIS OUTBOUND CM JOB";
 	public static final String PHIS_CM_CONTINUOUS_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
-	// FL
-	public static final String PHIS_FL_OUTBOUND_JOB_GROUP = "PHIS JOB GROUP";
-	public static final String PHIS_FL_OUTBOUND_CONTINUOUS_JOB = "PHIS OUTBOUND FL JOB";
 	public static final String PHIS_FL_CONTINUOUS_JOB_DESC = "Job runs every 1 hour";
 
-	// GFMS IN BOUND
-	// PM
-	public static final String GFMAS_PM_IN_JOB_GROUP = "GFMAS JOB GROUP";
-	public static final String GFMAS_PM_IN_CONTINUOUS_JOB = "GFMAS IN PM JOB";
 	public static final String GFMAS_PM_CONTINUOUS_JOB_DESC = "Job run every 5 minutes";
-	// SM
-	public static final String GFMAS_SM_IN_JOB_GROUP = "GFMAS JOB GROUP";
-	public static final String GFMAS_SM_IN_CONTINUOUS_JOB = "GFMAS IN SM JOB";
 	public static final String GFMAS_SM_CONTINUOUS_JOB_DESC = "Job run every 5 minute";
-	// SC
-	public static final String GFMAS_SC_OUT_JOB_GROUP = "GFMAS JOB GROUP";
-	public static final String GFMAS_SC_OUT_CONTINUOUS_JOB = "GFMAS OUT SC JOB";
 	public static final String GFMAS_SC_CONTINUOUS_JOB_DESC = "Job run once daily 8 AM";
-	// FL
-	public static final String GFMAS_FL_IN_JOB_GROUP = "GFMAS JOB GROUP";
-	public static final String GFMAS_FL_IN_CONTINUOUS_JOB = "GFMAS IN FL JOB";
 	public static final String GFMAS_FL_CONTINUOUS_JOB_DESC = "Job runs every 1 hour";
 
-	// GFMS OUT BOUND
-	// SM
-	public static final String GFMAS_SM_OUT_JOB_GROUP = "GFMAS JOB GROUP";
 	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB = "GFMAS OUT SM JOB";
 	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB_DESC = "Job run every 5 minute";
 
