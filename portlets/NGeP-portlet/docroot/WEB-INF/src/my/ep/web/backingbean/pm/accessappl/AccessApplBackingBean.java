@@ -350,7 +350,10 @@ public class AccessApplBackingBean extends
 			reqDTO.setOutcome(outcome);			
 			AccessApplResDTO resDTO = accessApplSO.saveAccessAppl(reqDTO);
 			if(resDTO.isSuccessful()){
-				uploadAttachments();
+				if(accessAppl.isBrandNew()){
+					uploadAttachments();
+				}
+				
 				String messageId = null;
 				PmAccessAppl savedAccessAppl = resDTO.getAccessAppl();
 				if(BpmOutcomeConst.BPM_SAVE.equals(outcome)){
