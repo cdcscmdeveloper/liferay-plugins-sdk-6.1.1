@@ -313,13 +313,30 @@ public class SmApplicationBackingBean extends
 								.retriveApplicationById(
 										Integer.parseInt(applId)).getSmAppl();
 						SmAppl latestResubmitAppl = null;
+						MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
 						if (rejectedAppl.isQuestionnaire()) {
 							latestResubmitAppl = SmApplicationUtil
 									.getLatesResubmitApplicationByRejectedAppl(rejectedAppl);
+							if (latestResubmitAppl != null) {
+								// mofReqDto = new MofRegistrationReqDTO();
+								// mofReqDto.setSmAppl(latestResubmitAppl);
+								// mofReqDto.setSrcAppl(rejectedAppl);
+								// latestResubmitAppl = SmServiceLookup
+								// .getMofRegistrationSO()
+								// .cloneExistingApplication(mofReqDto)
+								// .getSmAppl();
+							} else {
+								mofReqDto = new MofRegistrationReqDTO();
+								mofReqDto.setApplId(Long.parseLong(applId));
+								mofReqDto.setSmSupplier(supplierProfile);
+								MofRegistrationResDTO mofRespDto = mofRegistrationSO
+										.cloneSmApplicationForResubmissionDraft(mofReqDto);
+								latestResubmitAppl = mofRespDto.getSmAppl();
+							}
 						}
 						if (latestResubmitAppl == null) {
 							FacesContext fc = FacesContext.getCurrentInstance();
-							MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
+							mofReqDto = new MofRegistrationReqDTO();
 							mofReqDto.setApplId(Long.parseLong(applId));
 							mofReqDto.setSmSupplier(supplierProfile);
 							MofRegistrationResDTO mofRespDto = mofRegistrationSO
