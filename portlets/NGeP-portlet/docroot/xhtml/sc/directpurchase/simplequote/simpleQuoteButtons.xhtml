@@ -11,7 +11,7 @@
 
 	<p:dialog id="quoteSubmitConform" widgetVar="sqConformDlg"
 		header="#{lbl['lbl.sc.submit.confirmation']}" resizable="false"
-		width="500" height="100" closable="false" modal="true">
+		width="600" closable="false" modal="true">
 
 		<p:blockUI block="conformDlgId" trigger="yesButton">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -20,7 +20,15 @@
 			<table>
 				<tr>
 					<td><h:graphicImage value="/css/images/design/exclamation.png" />
-						#{simpleQuoteBackingBean.managedBean.promptMessage}</td>
+						<ui:fragment
+							rendered="#{!empty simpleQuoteBackingBean.managedBean.pidExpiryMessage}">
+							<h:outputText
+								value="#{simpleQuoteBackingBean.managedBean.pidExpiryMessage}" />
+							<br />
+							<br />
+						</ui:fragment>
+						<h:outputText
+							value="#{simpleQuoteBackingBean.managedBean.promptMessage}" /></td>
 				</tr>
 			</table>
 
@@ -53,8 +61,8 @@
 					style="float:left;" rendered="#{!isEditable}"
 					action="#{simpleQuoteBackingBean.backToPrevious}" /></td>
 
-			<td style="vertical-align: bottom;"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-					style="float:right;"
+			<td style="vertical-align: bottom;"><p:commandLink
+					value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
 					rendered="#{simpleQuoteBackingBean.managedBean.trackingDairyView}"
 					action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(simpleQuoteBackingBean.managedBean.dpObj)}"
 					immediate="true" /></td>
@@ -107,8 +115,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
-				rendered="#{!isPidExpired}"
-				update="@form" process="@all" />
+				rendered="#{!isPidExpired}" update="@form" process="@all" />
 
 			<ui:repeat var="bpmAction"
 				value="#{simpleQuoteBackingBean.managedBean.outComes}">
