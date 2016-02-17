@@ -104,7 +104,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmGstSupplier smGstSupplier;
 	private SmSvTemplate selectedAttachmentTemplate;
 	private SmAttachment selectedUploadAttachment;
-	private String selectedAttachmentTemplType;
+	private Long selectedAttachmentTemplId;
 	private String attachmentDeleteMsg;
 	private boolean viewMode;
 	
@@ -577,14 +577,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedUploadAttachment = selectedUploadAttachment;
 	}
 
-	public String getSelectedAttachmentTemplType() {
-		return selectedAttachmentTemplType;
-	}
-
-	public void setSelectedAttachmentTemplType(String selectedAttachmentTemplType) {
-		this.selectedAttachmentTemplType = selectedAttachmentTemplType;
-	}
-
 	public String getAttachmentDeleteMsg() {
 		return attachmentDeleteMsg;
 	}
@@ -631,6 +623,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setTemplateTaskMap(Map<String, List<SmSvTask>> templateTaskMap) {
 		this.templateTaskMap = templateTaskMap;
+	}
+
+	public Long getSelectedAttachmentTemplId() {
+		return selectedAttachmentTemplId;
+	}
+
+	public void setSelectedAttachmentTemplId(Long selectedAttachmentTemplId) {
+		this.selectedAttachmentTemplId = selectedAttachmentTemplId;
 	}
 
 }
