@@ -154,6 +154,7 @@ public class CommonApplBackingBean extends
 
 			Object bpmObj = new Object();
 			PaymentBackingBean paymentBB = new PaymentBackingBean();
+			
 			if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
@@ -167,6 +168,8 @@ public class CommonApplBackingBean extends
 						(long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
 			}
 
+			log.info("Doc No>>>>>" + resDTO.getDocNumber());
+			paymentBB.getManagedBean().setDocNo(resDTO.getDocNumber());
 			paymentBB.getManagedBean().setTaskId(taskId);
 			paymentBB.getManagedBean().setBpmPojo(bpmObj);
 
@@ -596,6 +599,8 @@ public class CommonApplBackingBean extends
 						(long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
 			}
 
+			log.info("Doc No>>>>>" + resDTO.getDocNumber());
+			paymentBB.getManagedBean().setDocNo(resDTO.getDocNumber());
 			paymentBB.getManagedBean().setTaskId(taskId);
 			paymentBB.getManagedBean().setBpmPojo(bpmObj);
 
