@@ -124,6 +124,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					(long) ((SMUserAddDataType) bpmObj).getDocumentId());
 			paymentBB.getManagedBean().setTaskId(taskId);
 			paymentBB.getManagedBean().setBpmPojo(bpmObj);
+			paymentBB.getManagedBean().setDocNo(resDTO.getDocNumber());
 			paymentBB.retrieveBillInfo();
 			SmCommonUtil.redirectToPage(
 					"/xhtml/sm/payment/portletViewMode.xhtml", "", null);
