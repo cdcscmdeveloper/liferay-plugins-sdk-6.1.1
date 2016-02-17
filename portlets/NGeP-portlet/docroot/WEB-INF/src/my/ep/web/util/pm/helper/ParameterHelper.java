@@ -12,7 +12,9 @@ package my.ep.web.util.pm.helper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -28,6 +30,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -191,6 +194,31 @@ public class ParameterHelper {
 	}
 	
 	/**
+	 * Get parameter description by parameter type, code and Locale.
+	 * 
+	 * @param parameterType
+	 * 		the parameter type
+	 * @param parameterCode
+	 * 		the parameter code
+	 * @param locale
+	 * 		the locale
+	 * 
+	 * @return the parameter description
+	 */
+	public String getParameterDesc(String parameterType, String parameterCode, Locale locale) {
+		debugLogger("getParameterDescList.parameterType: " + parameterType + ", parameterCode: " + parameterCode + 
+					", Language Code : " + locale.getLanguage());
+		
+		PmParameterDesc pmParameterDesc = getParameterDescByTypeAndCode(parameterType, parameterCode, locale);
+		
+		if (pmParameterDesc != null) {
+			return pmParameterDesc.getCodeName();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
 	 * Get parameter by parameter type and code.
 	 * 
 	 * @param parameterType
@@ -289,6 +317,70 @@ public class ParameterHelper {
 		
 		return null;
 	}
+	
+	/**
+	 * Gets the parameter desc by type and code.
+	 * 
+	 * @param parameterType
+	 *           the parameter type
+	 * @param parameterCode
+	 *           the parameter code
+	 * @param locale
+	 * 			 the locale
+	 * 
+	 * @return the parameter desc by type and code
+	 */
+	private PmParameterDesc getParameterDescByTypeAndCode(String parameterType, 
+										   String parameterCode, Locale locale) {
+		String languageCode = locale.getLanguage();
+		StringBuilder key = new StringBuilder()
+			.append(parameterType)
+			.append(KEY_SEPARATOR)
+			.append(languageCode);
+		
+		debugLogger("key: " + key);
+		
+		// Get the parameter description list from map.
+		String[][] paramDescArry = parameterMap.get(key.toString());
+		
+		if (paramDescArry == null) {
+			// Get parameter description list from db directly.
+			List<PmParameterDesc> list = getParameterDescFromDB(key.toString(), languageCode, parameterType, null);
+			
+			for (PmParameterDesc pmParameterDesc : list) {
+				// compare matched parameterCode.
+				if (pmParameterDesc.getPmParameter().getParameterCode()
+						.equals(parameterCode)) {
+					return pmParameterDesc;
+				}
+			}
+			
+		} else {
+			// Get parameter description list from jpa cache.
+			int i = 0;
+			String[] parameterDescIds = new String[1];
+			
+			for (String tmpParameterCode : paramDescArry[MAP_VALUE_PARAMETER_CODE]) {
+				// compare matched parameterCode.
+				if (tmpParameterCode.equals(parameterCode)) {
+					parameterDescIds[0] = paramDescArry[MAP_VALUE_PARAMETER_DESC_ID][i];
+					break;
+				}
+				
+				i++;
+			}
+			
+			if (StringUtils.isNotBlank(parameterDescIds[0])) {
+				List<PmParameterDesc> list = getParameterDescFromCache(parameterDescIds);
+				
+				if (list.size() > 0) {
+					return list.get(0);
+				}
+			}
+		}
+		
+		return null;
+	}	
 	
 	/**
 	 * Gets the search bean key.
