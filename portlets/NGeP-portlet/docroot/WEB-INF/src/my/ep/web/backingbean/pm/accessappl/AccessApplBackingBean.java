@@ -527,7 +527,7 @@ public class AccessApplBackingBean extends
 			if(currentUserOrg != null){
 				if(!currentUserOrg.getPmOrgProfile().getOrgProfileId()
 						.equals(accessAppl.getOrgProfile().getOrgProfileId())){
-					throw new EpException(MessageConst.ERROR_770215,
+					throw new EpException(MessageConst.ERROR_770217,
 							new String[] {currentUserOrg.getPmOrgProfile().getOrgName()});
 				}else{
 					boolean hasMrRole = false;
