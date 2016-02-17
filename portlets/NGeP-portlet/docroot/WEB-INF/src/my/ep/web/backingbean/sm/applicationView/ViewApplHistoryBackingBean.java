@@ -104,9 +104,8 @@ public class ViewApplHistoryBackingBean extends
 		if (sts != null && sts.getPmStatus() != null) {
 			smAppl.setWorkflowStatus(sts.getPmStatus());
 			smAppl.setWorkflowStatusDesc(getApplicationStatus(sts.getPmStatus()));
-			if (index == 0
-					&& rejectedStatus.contains(sts.getPmStatus().getStatusId()
-							.toString())) {
+			if (rejectedStatus.contains(sts.getPmStatus().getStatusId()
+					.toString())) {
 				getManagedBean().setResubmitUrl(
 						SmCommonUtil.getEpBaseUrl()
 								+ "/resubmit-application?apId="
