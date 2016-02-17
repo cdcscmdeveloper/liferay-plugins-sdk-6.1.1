@@ -1220,6 +1220,7 @@ public class SimpleQuoteBackingBean extends
 		String taskId = getManagedBean().getTaskId();
 		Long defaultCountryId = getManagedBean().getDefaultCountryId();
 		boolean autoUpdate = getManagedBean().isAutoUpdate();
+		Date pidExpDate = getManagedBean().getPidExpiryDate();
 		try {
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -1231,7 +1232,7 @@ public class SimpleQuoteBackingBean extends
 			// validate start date and end date
 			validateStartDateAndEndDate(quote);
 			if (null == quote.getStartDate() ||  null == quote.getEndDate()) {
-				throw new EpException("Hours and Minuts are required.");
+				throw new EpException(MessageConst.ERROR_760388);
 			}
 			
 			if (quote.getRequestItems() == null) {
@@ -1489,6 +1490,7 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setTaskId(taskId);
 					getManagedBean().setDefaultCountryId(defaultCountryId);
 					getManagedBean().setAutoUpdate(autoUpdate);
+					getManagedBean().setPidExpiryDate(pidExpDate);
 					reloadSimpleQuote(scQuote);
 					successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, 
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo(), Boolean.FALSE);
@@ -3651,34 +3653,68 @@ public class SimpleQuoteBackingBean extends
 		if (quote.getEndDate() != null && quote.getStartDate() != null) {
 			Date currentDate = new Date();
 			Date endDate = quote.getEndDate();
-			StringBuilder message = new StringBuilder();
+			String message ="";
+
+			if(getManagedBean().getPidExpiryDate() != null){
+				/*Rule : during preparation of SQ upon select start and end date, error : 
+				the end date not allowed to enter equal or more than PID approval validity period date & time. */
+				Date pidExpDate = getManagedBean().getPidExpiryDate();
+				//Calendar cal = Calendar.getInstance(); 
+				//cal.setTime(pidExpDate);
+				//cal.add(Calendar.DATE, -1); // - one day for pid exp date
+
+				// End date should be before one day pid exp date
+				//Date oneDayBeforePidExpDate =   cal.getTime();
+
+				if(endDate.after(pidExpDate)){
+					throw new EpException(MessageConst.ERROR_760387);
+				} 
+				
+				String hours = getHours(currentDate, pidExpDate);
+				String mins = getMinuts(currentDate, pidExpDate);
+
+				String pidExpMessage = getMessage(
+						"lbl.sc.quote.pid.approval.valid.duration", new String[] {hours, mins});
+
+				getManagedBean().setPidExpiryMessage(pidExpMessage);
+			}
+
 			if (endDate.after(currentDate)) {
-				long timeDiff = Math.abs(currentDate.getTime() - endDate.getTime());
-				String hours = String.format("%d",
-						TimeUnit.MILLISECONDS.toHours(timeDiff));
-				String mins = String
-						.format("%d", (TimeUnit.MILLISECONDS
-								.toMinutes(timeDiff) - TimeUnit.HOURS
-								.toMinutes(TimeUnit.MILLISECONDS
-										.toHours(timeDiff))));
-				message.append(
-						"Total time Supplier responds for this Simple Quote is only")
-						.append(" ").append(hours).append(" ")
-						.append("Hour(s)").append(" ").append("and")
-						.append(" ").append(mins).append(" ")
-						.append("minute(s)").append(" ").append("Proceed?");
+				String hours = getHours(currentDate, endDate);
+				String mins = getMinuts(currentDate, endDate);
+				message = getMessage(
+						"lbl.sc.quote.supplier.resp.duration", new String[] {hours, mins});
 				getManagedBean().setConformDlgBtnFlag(Boolean.TRUE);
 
 			} else {
-				message.append("End date and time cannot be less than current date and time. Please change the end date and time to more than current time.");
+				message = getMessage(
+						"lbl.sc.quote.enddate.cannot.be.lessthan.currentdate", null);
 				getManagedBean().setConformDlgBtnFlag(Boolean.FALSE);
 			}
 			RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
 			getManagedBean().setPromptMessage(message.toString());
-			
+
 		} else if ( null == quote.getStartDate() ||  null == quote.getEndDate()) {
-			throw new EpException("Hours and Minuts are required.");
+			throw new EpException(MessageConst.ERROR_760388);
 		}
+	}
+	
+	private String getHours(Date fromDate, Date toDate){
+		long timeDiff = Math.abs(fromDate.getTime() - toDate.getTime());
+		String hours = String.format("%d",
+				TimeUnit.MILLISECONDS.toHours(timeDiff));
+		
+		return hours;
+	}
+	
+	private String getMinuts(Date fromDate, Date toDate){
+		long timeDiff = Math.abs(fromDate.getTime() - toDate.getTime());
+		String mins = String
+				.format("%d", (TimeUnit.MILLISECONDS
+						.toMinutes(timeDiff) - TimeUnit.HOURS
+						.toMinutes(TimeUnit.MILLISECONDS
+								.toHours(timeDiff))));
+		return mins;
 	}
 
 	/*
@@ -4403,6 +4439,11 @@ public class SimpleQuoteBackingBean extends
 		
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
+		
+		// pid expiry date
+		if(directPurchaseDataType.getPidExpiryDate() != null){
+			getManagedBean().setPidExpiryDate(directPurchaseDataType.getPidExpiryDate().getTime());	
+		}
 		
 		Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
 		Long purchaseInDefaultId = null;
