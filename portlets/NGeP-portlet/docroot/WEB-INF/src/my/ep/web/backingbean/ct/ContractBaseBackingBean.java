@@ -29,6 +29,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
@@ -228,5 +229,15 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		}
 	    return items;
 	}
+	
+    /**
+     * Retrieve cancel confirmation message by passing in document type
+     * 
+     * @return Cancel Confirmation message
+     */
+    public String getCancelConfirmationContent(String docType) {
+   	 	return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+    }
+    
 }
 
