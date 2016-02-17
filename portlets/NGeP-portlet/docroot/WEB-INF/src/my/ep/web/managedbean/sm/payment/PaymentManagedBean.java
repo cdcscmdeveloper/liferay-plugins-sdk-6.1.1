@@ -7,9 +7,9 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.py.PyBill;
+import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmBill;
-import my.ep.persistence.entity.sm.SmBillDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -25,18 +25,19 @@ public class PaymentManagedBean extends BaseManagedBean{
 	private String billDesc;
 	private String country;
 	private SmAppl smAppl;
-	private SmBill smBill;
+	private PyBill pyBill;
 	private BigDecimal totalAmount;
 	private BigDecimal totalAmountBeforeGst;
 	private BigDecimal gstAmount;
 	private SmPersonnel[] selectedSoftCertLs;
 	private List<SmPersonnel> softCertReqPersonnels;
-	private SmBillDtl applicationPayment;
-	private List<SmBillDtl> newSmBillDtlLs;
-	private Map<Long,SmBillDtl> defaultCertPaymentMap;
+	private PyBillDtl applicationPayment;
+	private List<PyBillDtl> newPyBillDtlLs;
+	private Map<Long,PyBillDtl> defaultCertPaymentMap;
 	private Object bpmPojo;
 	private boolean softcertPayment;
 	private Long appId;
+	private String docNo;
 	
 	/**
 	 * @return the orderId
@@ -131,14 +132,14 @@ public class PaymentManagedBean extends BaseManagedBean{
 	/**
 	 * @return the smBill
 	 */
-	public SmBill getSmBill() {
-		return smBill;
+	public PyBill getPyBill() {
+		return pyBill;
 	}
 	/**
 	 * @param smBill the smBill to set
 	 */
-	public void setSmBill(SmBill smBill) {
-		this.smBill = smBill;
+	public void setPyBill(PyBill pyBill) {
+		this.pyBill = pyBill;
 	}
 
 	/**
@@ -168,37 +169,37 @@ public class PaymentManagedBean extends BaseManagedBean{
 	/**
 	 * @return the applicationPayment
 	 */
-	public SmBillDtl getApplicationPayment() {
+	public PyBillDtl getApplicationPayment() {
 		return applicationPayment;
 	}
 	/**
 	 * @param applicationPayment the applicationPayment to set
 	 */
-	public void setApplicationPayment(SmBillDtl applicationPayment) {
+	public void setApplicationPayment(PyBillDtl applicationPayment) {
 		this.applicationPayment = applicationPayment;
 	}
 	/**
 	 * @return the newSmBillDtlLs
 	 */
-	public List<SmBillDtl> getNewSmBillDtlLs() {
-		return newSmBillDtlLs;
+	public List<PyBillDtl> getNewPyBillDtlLs() {
+		return newPyBillDtlLs;
 	}
 	/**
 	 * @param newSmBillDtlLs the newSmBillDtlLs to set
 	 */
-	public void setNewSmBillDtlLs(List<SmBillDtl> newSmBillDtlLs) {
-		this.newSmBillDtlLs = newSmBillDtlLs;
+	public void setNewPyBillDtlLs(List<PyBillDtl> newPyBillDtlLs) {
+		this.newPyBillDtlLs = newPyBillDtlLs;
 	}
 	/**
 	 * @return the defaultCertPaymentMap
 	 */
-	public Map<Long, SmBillDtl> getDefaultCertPaymentMap() {
+	public Map<Long, PyBillDtl> getDefaultCertPaymentMap() {
 		return defaultCertPaymentMap;
 	}
 	/**
 	 * @param defaultCertPaymentMap the defaultCertPaymentMap to set
 	 */
-	public void setDefaultCertPaymentMap(Map<Long, SmBillDtl> defaultCertPaymentMap) {
+	public void setDefaultCertPaymentMap(Map<Long, PyBillDtl> defaultCertPaymentMap) {
 		this.defaultCertPaymentMap = defaultCertPaymentMap;
 	}
 	/**
@@ -260,6 +261,12 @@ public class PaymentManagedBean extends BaseManagedBean{
 	}
 	public void setGstAmount(BigDecimal gstAmount) {
 		this.gstAmount = gstAmount;
+	}
+	public String getDocNo() {
+		return docNo;
+	}
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
 	}
 
 }
