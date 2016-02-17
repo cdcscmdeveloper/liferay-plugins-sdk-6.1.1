@@ -9514,10 +9514,16 @@ public class SmApplicationBackingBean extends
 		if (currPage
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 				&& !getManagedBean().isDisabledBusinessType()) {
+			getManagedBean()
+					.getSmAppl()
+					.getSmSupplier()
+					.setBusinessType(
+							getManagedBean().getSmSupplier().getBusinessType());
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
-			SmServiceLookup.getMofRegistrationSO()
-					.updateSupplierProfile(reqDTO);
+			reqDTO.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
+			getManagedBean().setSmSupplier(
+					SmServiceLookup.getMofRegistrationSO()
+							.updateSupplierProfile(reqDTO).getSmSupplier());
 		}
 	}
 
