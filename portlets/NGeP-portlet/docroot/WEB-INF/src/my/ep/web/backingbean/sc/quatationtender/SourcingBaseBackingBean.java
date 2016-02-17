@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
@@ -1987,6 +1988,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 		return pmOrgProfile;
+	}
+	
+	/**
+	 * Gets the message.
+	 * 
+	 * @param key
+	 *            - String key
+	 * @param params
+	 *            - String[]
+	 * @return the message
+	 */
+	public static String getMessage(String key, String[] params) {
+		Locale locale = new FacesScopes().getUserLocale();
+		String msg = "";
+
+		if (params != null) {
+			msg = ResourceBundleUtils.getMessage(key, params,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		} else {
+			msg = ResourceBundleUtils.getMessage(key,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		}
+
+		return msg;
 	}
 	
 }
