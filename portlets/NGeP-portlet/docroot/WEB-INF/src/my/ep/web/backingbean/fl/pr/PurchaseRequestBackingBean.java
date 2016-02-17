@@ -3467,8 +3467,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 				if(sumAmt.doubleValue() > thresoldAmt){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.ERROR_740019, 
-									new String[]{map.getKey().getItemName()}, 
+							MessageUtils.getMessage(MessageConst.ERROR_740004, 
+									new String[]{map.getKey().getItemName(),getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),String.valueOf(Calendar.getInstance().get(Calendar.YEAR))}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			}
