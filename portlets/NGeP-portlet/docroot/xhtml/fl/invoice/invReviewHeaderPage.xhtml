@@ -15,7 +15,7 @@
 					</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']} " /></td>
 				<td class="header-info-text">
-					#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef == null ? lbl['lbl.fl.supp.na']:invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}
+					#{invoiceBackingBean.managedBean.invoice.invoiceNo == null ? lbl['lbl.fl.supp.na']:invoiceBackingBean.managedBean.invoice.invoiceNo}
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.inv.no']}"/>
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
