@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- Qualified Supplier Details By Evaluation Stage dialog -->
+	<p:dialog id="qualSuppDetailsPopupId" widgetVar="qualSuppDetailsPopup"
+		position="center" header="#{lbl[suppFinalizationBackingBean.managedBean.evaluationHeader]}" 
+		modal="true" dynamic="true" styleClass="pop_up_top" width="950" resizable="false">
+
+		<ui:param name="isTechnicalEvalStage" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 1}" />
+		<ui:param name="isFinancialEvalStageByPkg" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 2 and 
+																!suppFinalizationBackingBean.managedBean.itemize}" />
+		<ui:param name="isFinancialEvalStageByItem" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 2 and 
+																suppFinalizationBackingBean.managedBean.itemize}" />																
+																		
+		<p:dataTable id="qualifiedSuppliersList" style="width:100%;"
+			var="qualifiedSupp" widgetVar="qualifiedSupplierDtls"
+			value="#{suppFinalizationBackingBean.managedBean.qualifiedSuppliersByEvalStage}"
+			rowIndexVar="index">
+
+			<ac:paginator for="qualifiedSuppliersList" />
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:right;">
+				<h:outputText value="#{qualifiedSupp.evalRank}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;">
+				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+					process="@this" update="@([id$=suppDetailsPopup])"
+					style="float:right;">
+					<f:setPropertyActionListener
+						value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+						target="#{supplierDetailBackingBean.smSupplier}" />
+					<h:outputText
+						value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;">
+				<h:outputText value="#{qualifiedSupp.totalScore}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+					  style="width:5%; white-space:normal;" rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+										fn:toUpperCase(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
+					  style="width:10%; text-align:right;" rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="#{qualifiedSupp.proposalAmount.proposalAmt}"
+							  rendered="#{qualifiedSupp.proposalAmount ne null}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+												CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Price Difference" style="width:5%; white-space:normal;" 
+					  rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="" />
+			</p:column>
+
+			<p:column headerText="Difference" style="width:15%; text-align:center;" 
+					  rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="" />
+			</p:column>
+
+			<p:column headerText="Bumiputra Preference" 
+					  style="width:5%; text-align:right; white-space:normal;" 
+					  rendered="#{isFinancialEvalStageByPkg}">
+				<h:outputText value="" />
+			</p:column>
+
+		</p:dataTable>
+
+	</p:dialog>
+	
+</ui:composition>

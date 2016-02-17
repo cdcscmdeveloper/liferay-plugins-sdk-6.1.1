@@ -29,12 +29,15 @@
 			  value="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesOneTier  
 			  			and suppFinalizationBackingBean.managedBean.scQt.techEvaluationReq}" />
 	<ui:param name="isTwoTier"
-			  value="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />														
+			  value="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />	
+	<ui:param name="hasPresentationDemo" value="#{suppFinalizationBackingBean.managedBean.scQt.demoRequired}" />
+			  			  													
 	<ui:param name="decisionSupplFinalOrFwdHighAuth"
 			  value="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
 							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />							
 			
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
+	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
 	
 	<p:panel header="#{lbl['lbl.sc.sf.committee.decision']}" toggleable="true">
 
@@ -60,7 +63,7 @@
 									listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" />
 				   			</p:selectOneMenu>
 						</td>
-						<td style="margin-top: -3px">
+						<td style="margin-top: -3px;">
 							<ac:iconTooltip value="#{lbl['lbl.sc.sf.meeting.decision.tooltip']}" />
 						</td>
 					</tr>

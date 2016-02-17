@@ -83,7 +83,7 @@
 			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.finalizationTabIndex}">
 				<ui:include
-					src="/xhtml/sc/supplierFinalization/supplierFinalization/suppplierFinalization.xhtml" />
+					src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierFinalization.xhtml" />
 			</c:if>
 			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.commEndorsementTabIndex}">
@@ -113,7 +113,7 @@
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-				update="contentPanel" oncomplete="attachmentPopupDlg.hide()">
+				update="contentPanel" oncomplete="attachmentPopupDlg.hide();">
 			</p:fileUpload>
 		</p:dialog>
 		
@@ -127,7 +127,7 @@
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-				update="contentPanel" oncomplete="reportAttachmentPopupDlg.hide()">
+				update="contentPanel" oncomplete="reportAttachmentPopupDlg.hide();">
 			</p:fileUpload>
 		</p:dialog>		
 
