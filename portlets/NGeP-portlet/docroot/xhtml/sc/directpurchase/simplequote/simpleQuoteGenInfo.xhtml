@@ -5,24 +5,26 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="sqinfoId" header="#{lbl['lbl.sc.simple.quote.information']}" toggleable="true">
-	  <table style="width:100%;">
+	<p:panel id="sqinfoId"
+		header="#{lbl['lbl.sc.simple.quote.information']}" toggleable="true">
+		<table style="width: 100%;">
 			<tr>
-				<td style="width:23%"><p:outputLabel
+				<td style="width: 23%"><p:outputLabel
 						value="#{lbl['lbl.sc.panel']}" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="panel" required="true"
-							        styleClass="commonLabel"
+									styleClass="commonLabel"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"
 									label="#{lbl['lbl.sc.panel']}" disabled="true">
 									<f:selectItems
 										value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								</p:selectOneRadio></td>
 
-							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message id="panelMsg" for="panel" display="icon" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.sq.panel.tooltip']}" /></td>
+							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
+									id="panelMsg" for="panel" display="icon" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.sq.panel.tooltip']}" /></td>
 						</tr>
 					</table>
 				</td>
@@ -48,7 +50,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.quote.scope.of.work.and.services']}" /></td>
-					<td colspan="3"><p:commandButton process="@this"
+				<td colspan="3"><p:commandButton process="@this"
 						oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
 						update="attachmentId" disabled="#{!isEditable}"
 						value="#{lbl['lbl.txt.attachment']}" /> <ui:param
@@ -69,7 +71,8 @@
 							<td><p:selectOneMenu id="procTypeCategory"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementTypeCategory.parameterId}"
 									disabled="#{!isEditable}"
-									style="width:220px;margin-bottom: 5px;margin-top: 5px;" required="true"
+									style="width:240px;margin-bottom: 5px;margin-top: 5px;"
+									required="true"
 									label="#{lbl['lbl.sc.procurment.type.category']}">
 
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -85,14 +88,13 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio style="margin-bottom: 5px;"
-							        styleClass="commonLabel"
-									disabled="#{!isEditable}"
+									styleClass="commonLabel" disabled="#{!isEditable}"
 									id="procurementType" required="true"
 									label="#{lbl['lbl.sc.procurement.type']}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
@@ -103,58 +105,62 @@
 										process="@this" />
 								</p:selectOneRadio></td>
 
-							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message id="procTypeMsg" for="procurementType"
-									display="icon" /> <ac:iconTooltip
+							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
+									id="procTypeMsg" for="procurementType" display="icon" /> <ac:iconTooltip
 									value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 			<tr>
-			<td colspan="4"><p:outputPanel id="justId">
-				<table style="width: 100%">
-				    <tr>
-					   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
-						 <td style="width: 23%">
-						     <p:outputLabel value="#{lbl['lbl.sc.reason']}" />
-						     <p:outputLabel value="*" styleClass="mandatory" />
-						 </td>
-						 <td style="width: 85%"> <p:selectOneMenu style="width: 220px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.reason']}"
-						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
-						         disabled="#{!isEditable}" 
-								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.reasonCode}">
-							   <f:selectItems
-									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
-								<p:ajax event="change" update="justId" process="@this" />
-							</p:selectOneMenu> 
-								<p:message id="justTypeMsg" for="justificationId" display="icon" />
-							</td>
-			    	</ui:fragment>
-				</tr>
-				<tr>
-				   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
-					<td style="vertical-align:top; text-align:left;">
-						<p:outputLabel value="#{lbl['lbl.sc.justification']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
-					          id="justificationRmk" label="#{lbl['lbl.sc.justification']}" maxlength="100"
-					           disabled="#{!isEditable}"
-					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
-							rows="3" cols="58" style="margin-bottom: 5px; width: 210px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
-				 </ui:fragment>
-			    </tr>
-				</table>
-			   </p:outputPanel></td>
+				<td colspan="4"><p:outputPanel id="justId">
+						<table style="width: 100%">
+							<tr>
+								<ui:fragment
+									rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
+									<td style="width: 23%"><p:outputLabel
+											value="#{lbl['lbl.sc.reason']}" /> <p:outputLabel value="*"
+											styleClass="mandatory" /></td>
+									<td style="width: 85%"><p:selectOneMenu
+											style="width: 240px;margin-bottom: 5px;" id="justificationId"
+											label="#{lbl['lbl.sc.reason']}"
+											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
+											disabled="#{!isEditable}"
+											value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.reasonCode}">
+											<f:selectItems
+												value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
+											<p:ajax event="change" update="justId" process="@this" />
+										</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId"
+											display="icon" /></td>
+								</ui:fragment>
+							</tr>
+							<tr>
+								<ui:fragment
+									rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
+									<td style="vertical-align: top; text-align: left;"><p:outputLabel
+											value="#{lbl['lbl.sc.justification']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" /></td>
+									<td colspan="4"><p:inputTextarea
+											value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
+											id="justificationRmk" label="#{lbl['lbl.sc.justification']}"
+											maxlength="100" disabled="#{!isEditable}"
+											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A'}"
+											rows="3" cols="58" style="margin-bottom: 5px; width: 230px;" />
+										<p:message id="justRmksMsg" for="justificationRmk"
+											display="icon" /></td>
+								</ui:fragment>
+							</tr>
+						</table>
+					</p:outputPanel></td>
 			</tr>
 			<tr>
-				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.sq.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sq.zonal']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="zonal" required="true"
-							        styleClass="commonLabel"
+									styleClass="commonLabel"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
 									label="#{lbl['lbl.sc.sq.zonal']}"
 									disabled="#{!isEditable or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
@@ -164,94 +170,100 @@
 										process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
 								</p:selectOneRadio></td>
 
-							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message id="zonalMsg" for="zonal" display="icon" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.sq.zonal.tooltip']}" /></td>
+							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
+									id="zonalMsg" for="zonal" display="icon" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.sq.zonal.tooltip']}" /></td>
 						</tr>
 					</table>
 				</td>
 			</tr>
-			
+
+			<ui:fragment
+				rendered="#{!empty simpleQuoteBackingBean.managedBean.pidExpiryDate}">
+				<tr>
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.purchase.in.default.exp.date']}" /></td>
+					<td><p:calendar disabled="true" size="30"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+							value="#{simpleQuoteBackingBean.managedBean.pidExpiryDate}">
+						</p:calendar></td>
+
+				</tr>
+			</ui:fragment>
+
 			<tr>
-				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.start.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td>
-					<ac:dateTime id="startDate"  
-							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
-							        required="true"
-							        disabled="#{!isEditable}"
-									label="#{lbl['lbl.sc.start.date']}"
-									value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
-									postUpdateListener="simpleQuoteBackingBean.dateListener"
-									update="@([id$=endDate])">
-							</ac:dateTime>
-				  </td>
-				   <td>
-				     <p:outputLabel value="#{lbl['lbl.sc.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.start.date']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><ac:dateTime id="startDate"
+						mindate="#{simpleQuoteBackingBean.managedBean.today}"
+						required="true" disabled="#{!isEditable}"
+						label="#{lbl['lbl.sc.start.date']}"
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
+						postUpdateListener="simpleQuoteBackingBean.dateListener"
+						update="@([id$=endDate])">
+					</ac:dateTime></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.end.date']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 
-				    <td>
-					      <ac:dateTime id="endDate"
-									label="#{lbl['lbl.sc.end.date']}"
-									mindate="#{!empty simpleQuoteBackingBean.managedBean.scQuote.startDate ? simpleQuoteBackingBean.managedBean.scQuote.startDate : simpleQuoteBackingBean.managedBean.today}"
-									required="true"
+				<td><ac:dateTime id="endDate" label="#{lbl['lbl.sc.end.date']}"
+						mindate="#{!empty simpleQuoteBackingBean.managedBean.scQuote.startDate ? simpleQuoteBackingBean.managedBean.scQuote.startDate : simpleQuoteBackingBean.managedBean.today}"
+						required="true" disabled="#{!isEditable}"
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
+						postUpdateListener="simpleQuoteBackingBean.dateListener"
+						update="@([id$=durationId])">
+					</ac:dateTime></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sq.duration']}" /></td>
+				<td colspan="3"><p:outputPanel autoUpdate="true"
+						id="durationId">
+						<p:inputText size="24" label="#{lbl['lbl.sc.sq.duration']}"
+							maxlength="5"
+							value="#{simpleQuoteBackingBean.managedBean.duration}"
+							disabled="true" style="text-align:right; margin-top: 4px">
+							<f:convertNumber pattern="##0.0" />
+						</p:inputText>
+
+						<p:spacer width="5px" />
+						<h:outputText value="#{lbl['lbl.sc.simple.quote.hours']}"></h:outputText>
+					</p:outputPanel></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.sq.simple.quote.type']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+					<table>
+						<tr>
+							<td><p:selectOneRadio id="noOfQuote"
+									styleClass="commonLabel"
+									label="#{lbl['lbl.sc.sq.simple.quote.type']}" required="true"
 									disabled="#{!isEditable}"
-									value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
-									postUpdateListener="simpleQuoteBackingBean.dateListener"
-									update="@([id$=durationId])">
-								  </ac:dateTime>
-					  </td>
-				     </tr>
-					 <tr>
-						<td><p:outputLabel
-									value="#{lbl['lbl.sc.sq.duration']}" /></td>
-						<td colspan="3"><p:outputPanel autoUpdate="true"
-									id="durationId">
-									<p:inputText size="26"
-										label="#{lbl['lbl.sc.sq.duration']}" maxlength="5"
-										value="#{simpleQuoteBackingBean.managedBean.duration}"
-										disabled="true" style="text-align:right; margin-top: 4px">
-										<f:convertNumber pattern="##0.0" />
-									</p:inputText>
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
+									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.single']}"
+										itemValue="false" />
+									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.multiple']}"
+										itemValue="true" />
+									<p:ajax event="change" update="@([id$=mainTabMenu])"
+										process="@this" partialSubmit="true"
+										listener="#{simpleQuoteBackingBean.noOfQuoteEvent}" />
+								</p:selectOneRadio></td>
 
-									<p:spacer width="5px" />
-									<h:outputText value="#{lbl['lbl.sc.simple.quote.hours']}"></h:outputText>
-								</p:outputPanel></td>
-					</tr>
-
-					<tr>
-						<td><p:outputLabel
-									value="#{lbl['lbl.sc.sq.simple.quote.type']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td colspan="3">
-								<table>
-									<tr>
-										<td><p:selectOneRadio id="noOfQuote"
-										        styleClass="commonLabel"
-												label="#{lbl['lbl.sc.sq.simple.quote.type']}"
-												required="true" disabled="#{!isEditable}"
-												value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
-												<f:selectItem
-													itemLabel="#{lbl['lbl.sc.sq.single']}"
-													itemValue="false" />
-												<f:selectItem
-													itemLabel="#{lbl['lbl.sc.sq.multiple']}"
-													itemValue="true" />
-												<p:ajax event="change" update="@([id$=mainTabMenu])"
-													process="@this" partialSubmit="true"
-													listener="#{simpleQuoteBackingBean.noOfQuoteEvent}" />
-											</p:selectOneRadio></td>
-
-										<td style="padding-bottom: 10px; padding-left: 0px;"><p:message id="noofquoteMsg"
-												for="noOfQuote" display="icon" /> <ac:iconTooltip
-												value="#{lbl['lbl.sc.sq.quotetype.tooltip']}" /></td>
-									</tr>
-								</table>
-							</td>
-
+							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
+									id="noofquoteMsg" for="noOfQuote" display="icon" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.sq.quotetype.tooltip']}" /></td>
 						</tr>
 					</table>
-	  </p:panel>
+				</td>
 
-	<p:panel header="#{lbl['lbl.sc.simple.quote.remark']}" toggleable="true">
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.simple.quote.remark']}"
+		toggleable="true">
 		<ui:include src="simpleQuoteRemark.xhtml" />
 	</p:panel>
 
