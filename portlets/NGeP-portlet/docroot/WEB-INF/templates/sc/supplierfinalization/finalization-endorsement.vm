@@ -117,12 +117,12 @@
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tbody>
 					<tr>
-						<td width="15%" class="title text-right">Meeting Decision</td>
-						<td width="15%" class="text-left">$!meetingDecision</td>
+						<td width="15%" class="title align-right">Keputusan Mesyuarat</td>
+						<td width="15%" class="align-left">$!meetingDecision</td>
 					</tr>
 					<tr>
-						<td width="15%" class="title text-right">Required Specification Changes</td>
-						<td width="15%" class="text-left">
+						<td width="15%" class="title align-right">Perubahan Spesifikasi Diperlukan</td>
+						<td width="15%" class="align-left">
 							#if ($requireSpecChanges == "true") 
 								Ya
 							#else
@@ -142,16 +142,16 @@
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tbody>
 					<tr>
-						<td width="15%" class="title text-right">Meeting Decision</td>
-						<td width="15%" class="text-left">$!meetingDecision</td>
+						<td width="15%" class="title align-right">Keputusan Mesyuarat</td>
+						<td width="15%" class="align-left">$!meetingDecision</td>
 					</tr>
 					<tr>
-						<td width="15%" class="title text-right">Re-Evaluate By</td>
-						<td width="15%" class="text-left"> </td>
+						<td width="15%" class="title align-right">Penilaian Semula</td>
+						<td width="15%" class="align-left"> </td>
 					</tr>					
 					<tr>
-						<td width="15%" class="title text-right">Document Compliance</td>
-						<td width="15%" class="text-left">
+						<td width="15%" class="title align-right">Ketepatan Dokumen</td>
+						<td width="15%" class="align-left">
 							#if ($documentCompliance == "true") 
 								Ya
 							#else
@@ -162,8 +162,8 @@
 					
 					#if ($hasTechnical == "true")
 					<tr>
-						<td width="15%" class="title text-right">Technical</td>
-						<td width="15%" class="text-left">
+						<td width="15%" class="title align-right">Teknikal</td>
+						<td width="15%" class="align-left">
 							#if ($technical == "true") 
 								Ya
 							#else
@@ -174,8 +174,8 @@
 					#end
 										
 					<tr>
-						<td width="15%" class="title text-right">Financial</td>
-						<td width="15%" class="text-left">
+						<td width="15%" class="title align-right">Kewangan</td>
+						<td width="15%" class="align-left">
 							#if ($financial == "true") 
 								Ya
 							#else
@@ -195,8 +195,8 @@
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tbody>
 					<tr>
-						<td width="15%" class="title text-right">Meeting Decision</td>
-						<td width="15%" class="text-left">$!meetingDecision</td>
+						<td width="15%" class="title align-right">Keputusan Mesyuarat</td>
+						<td width="15%" class="align-left">$!meetingDecision</td>
 					</tr>
 				</tbody>
 			</table>
@@ -210,31 +210,31 @@
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tbody>
 					<tr>
-						<td width="15%" class="title text-right">Meeting Decision</td>
-						<td width="15%" class="text-left">$!meetingDecision</td>
+						<td width="15%" class="title align-right">Keputusan Mesyuarat</td>
+						<td width="15%" class="align-left">$!meetingDecision</td>
 					</tr>
 					<tr>
-						<td width="15%" class="title text-right">Selection Based On</td>
-						<td width="15%" class="text-left">$!selectionBasedOn</td>
+						<td width="15%" class="title align-right">Pemilihan Berdasarkan</td>
+						<td width="15%" class="align-left">$!selectionBasedOn</td>
 					</tr>
 					<tr>
-						<td width="15%" class="title text-right">Supplier Finalization Method</td>
-						<td width="15%" class="text-left">$!finalizationMethod</td>
+						<td width="15%" class="title align-right">Kaedah Memuktamadkan Pembekal</td>
+						<td width="15%" class="align-left">$!finalizationMethod</td>
 					</tr>	
 					<tr>
-						<td width="15%" class="title text-right">LOI / LOA Prepared By</td>
-						<td width="15%" class="text-left">$!loiLoaPreparedBy</td>
+						<td width="15%" class="title align-right">LOI / LOA Disediakan Oleh</td>
+						<td width="15%" class="align-left">$!loiLoaPreparedBy</td>
 					</tr>	
 					
 					
 					#if ($isForwardToHigherAuthority == "true") 
 					<tr>
-						<td width="15%" class="title text-right">Reason</td>
-						<td width="15%" class="text-left">$!reason</td>
+						<td width="15%" class="title align-right">Sebab</td>
+						<td width="15%" class="align-left">$!reason</td>
 					</tr>
 					<tr>
-						<td width="15%" class="title text-right">Higher Authority</td>
-						<td width="15%" class="text-left">$!higherAuthority</td>
+						<td width="15%" class="title align-right">Peringkat Atasan</td>
+						<td width="15%" class="align-left">$!higherAuthority</td>
 					</tr>					
 					#end	
 																		
