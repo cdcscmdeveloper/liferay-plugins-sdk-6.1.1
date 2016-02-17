@@ -102,6 +102,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
 	
+	private ScQtRecommend selectedItem;
+	
 	private String supplierBranch;
 	private SmSupplier smSupplier;
 	private SmCompanyBasic smCompanyBasic;
@@ -148,6 +150,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl recommendedSupplierByItem;
 	private ScQtEvaluationResultDtl prevRecommendedSupplierByItem;
 	
+	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
 	private List<ScQtEvaluationResultDtl> shortlistedPackageList;
 	private List<ScQtEvaluationResultDtl> shortlistedSupplierList;
 	private List<ScQtEvaluationResultDtl> recommendedSupplierList;
@@ -186,7 +189,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int commEndorsementTabIndex;
 	private int endorsementReportActiveIndex;
 	
-
+	private int evaluationStageId;
+	private String evaluationHeader;
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -1261,6 +1266,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the selectedItem
+	 */
+	public ScQtRecommend getSelectedItem() {
+		return selectedItem;
+	}
+
+	/**
+	 * @param selectedItem
+	 *            the selectedItem to set
+	 */
+	public void setSelectedItem(ScQtRecommend selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	/**
 	 * @return the supplierBranch
 	 */
 	public String getSupplierBranch() {
@@ -1563,6 +1583,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the qualifiedSuppliersByEvalStage
+	 */
+	public List<ScQtEvaluationResultDtl> getQualifiedSuppliersByEvalStage() {
+		return qualifiedSuppliersByEvalStage;
+	}
+
+	/**
+	 * @param qualifiedSuppliersByEvalStage
+	 *            the qualifiedSuppliersByEvalStage to set
+	 */
+	public void setQualifiedSuppliersByEvalStage(
+			List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage) {
+		this.qualifiedSuppliersByEvalStage = qualifiedSuppliersByEvalStage;
+	}
+
+	/**
 	 * @return the shortlistedPackageList
 	 */
 	public List<ScQtEvaluationResultDtl> getShortlistedPackageList() {
@@ -1758,6 +1794,36 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setEndorsementReportActiveIndex(int endorsementReportActiveIndex) {
 		this.endorsementReportActiveIndex = endorsementReportActiveIndex;
+	}
+
+	/**
+	 * @return the evaluationStageId
+	 */
+	public int getEvaluationStageId() {
+		return evaluationStageId;
+	}
+
+	/**
+	 * @param evaluationStageId
+	 *            the evaluationStageId to set
+	 */
+	public void setEvaluationStageId(int evaluationStageId) {
+		this.evaluationStageId = evaluationStageId;
+	}
+
+	/**
+	 * @return the evaluationHeader
+	 */
+	public String getEvaluationHeader() {
+		return evaluationHeader;
+	}
+
+	/**
+	 * @param evaluationHeader
+	 *            the evaluationHeader to set
+	 */
+	public void setEvaluationHeader(String evaluationHeader) {
+		this.evaluationHeader = evaluationHeader;
 	}
 
 }

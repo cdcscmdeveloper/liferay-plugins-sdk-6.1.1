@@ -5,9 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<ui:param name="isRefinalizedAndBiddingAward" 
-			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>
+			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>			  
 	
 	<p:spacer height="15px" rendered="#{suppFinalizationBackingBean.managedBean.itemize}"/>	
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
@@ -39,10 +39,14 @@
 				</table>
 			</h:column>
 		</h:panelGrid>
-			
+		
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
 		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled}" />
+		               			  			 				
+			<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{suppFinalizationBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
+							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>		    
+			           			  			 				
 			<p:dataTable id="supplierListTblSingle"
 				var="shortlistedSupp" widgetVar="shortlistedSuppDtls" 
 				value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
@@ -67,7 +71,19 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:right;"/>
+		               	<p:column rowspan="2" style="width:5%; text-align:right; white-space:normal;">
+		               		<f:facet name="header">
+								<p:outputLabel value="#{lbl['lbl.sc.ranking']}" /><br/>
+								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
+									rendered="#{isOneTierWithTechnical or isTwoTier}" 
+									process="@this">
+									<p:outputLabel value="TEC" />
+								</p:commandLink>		               		
+			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
+									<p:outputLabel value="FEC" />
+								</p:commandLink>								
+		               		</f:facet>
+		               	</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
@@ -102,11 +118,13 @@
 				<p:column style="text-align:right;">
 					<h:outputText value="#{shortlistedSupp.proposalAmount.proposalAmt}" 
 								  rendered="#{shortlistedSupp.proposalAmount ne null and !isRefinalizedAndBiddingAward}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 					<h:outputText value="#{shortlistedSupp.bidPrice}" 
 								  rendered="#{isRefinalizedAndBiddingAward}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>					
 				</p:column>
 	
