@@ -2376,12 +2376,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    return items;
 	}
 	
+	 /**
+	 * This method used to
+	 *  add new record in datatable
+	 */
 	public void addPurchaseInDefault(){
 		CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
 		ctCircularPidReasons.setPmReason(new PmReason());
 		getManagedBean().getCircularVer().getCtCircularPidReason().add(ctCircularPidReasons);
 	}
 	
+	 /**
+	 * This method used to
+	 *  delete old record from datatable
+	 */
 	public void deletePidPurchase(){
 		try {
 			getManagedBean().getCircularVer().getCtCircularPidReason().removeAll(getManagedBean().getCtCircularPidReasons());
@@ -2391,6 +2399,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * This method used to 
+	 * compare PID Reason other with other
+	 * @Reason Id reasonId
+	 * @return boolean value
+	 */
 	public boolean PidPurchaseTypeOther(Long reasonId){
 		
 		if(reasonId == null || reasonId.intValue() == 0)

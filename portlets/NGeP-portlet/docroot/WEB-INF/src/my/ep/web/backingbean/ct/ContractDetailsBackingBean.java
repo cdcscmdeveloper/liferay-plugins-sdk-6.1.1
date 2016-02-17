@@ -1528,11 +1528,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
             reqDTO.setUpdateAction(true);
 			SupplierBackingBean supplierBB =  new SupplierBackingBean();
 			supplierBB.setChangeBankDetails(reqDTO);
-			supplierBB.renewSesionObject();
-			if (supplierBB.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
-				supplierBB.getManagedBean().setOriginalAccountNo(supplierBB.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-				supplierBB.getPopulateBankAccountList();
-			}
+			//supplierBB.renewSesionObject();
 		} finally {
 			reqDTO  = null;
 			contractSO   = null;
