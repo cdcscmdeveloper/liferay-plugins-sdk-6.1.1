@@ -39,18 +39,17 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
 			</p:column>
 			
-			<ui:remove>
 			<p:column>
-				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(template)}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.upload']}" onclick="uploadDlg.show();" actionListener="#{svoSiteVisitBackingBean.setReportUploadTemplate(svTask.smSvTemplate)}"></p:commandButton>
 			</p:column>
 			
 			<p:column>
 				<table>
-					<ui:repeat var="attch" value="#{svoSiteVisitBackingBean.managedBean.smSvTemplateMap[template.pmParameter.parameterCode].smAttachments}">
+					<ui:repeat var="attch" value="#{svTask.smSvTemplate.smAttachments}">
 					<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
 					<tr>
 						<td><h:outputText value="#{attch.fileName}" /></td>
-						<td><p:commandLink oncomplete="attachmentDeleteDlg.show()" action="#{svoSiteVisitBackingBean.showDeleteDialog(template.pmParameter.parameterCode,attch)}" 
+						<td><p:commandLink oncomplete="attachmentDeleteDlg.show()" action="#{svoSiteVisitBackingBean.showDeleteDialog(template.svTemplateId,attch)}" 
 						update="@([id$=attachmentDeleteDlg])">
 							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 						</p:commandLink></td>
@@ -59,7 +58,6 @@
 					</ui:repeat>
 				</table>
 			</p:column>
-			</ui:remove>
 		</p:dataTable>
 	</p:panel>
 	

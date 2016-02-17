@@ -61,9 +61,7 @@
 			</c:if>
 			
 			<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
-				<ui:remove>
 				<ui:include src="/xhtml/sm/shared/sitevisit/view_uploadedSiteVisitReport.xhtml" />
-				</ui:remove>
 				<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
 			</c:if>
 	</p:outputPanel>
