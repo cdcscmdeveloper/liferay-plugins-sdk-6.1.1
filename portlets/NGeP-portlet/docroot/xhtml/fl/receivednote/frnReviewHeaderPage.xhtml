@@ -17,7 +17,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.fl.frn.do.no']} " />
 				</td>
 				<td class="header-info-text">
-					<p:commandLink value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.supplierDoRef}" immediate="true"
+					<p:commandLink value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.deliveryOrderNo}" immediate="true"
 					 action="#{receivedNoteBackingBean.navigateDocument(ParameterConst.doctypeDeliveryOrder)}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.no']}"/>
 				</td>
