@@ -606,7 +606,8 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPkpNoView(true);
 			// rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupThirteenView(true);
+			//rptGenBean.setFlGroupThirteenView(true);
+			rptGenBean.setFlGroupThirteenWithSupplAckRecView(true);
 			rptGenBean.setFlDeliveryOrderNoView(true);
 			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
@@ -661,7 +662,8 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPaymentAdviceNoView(true);
 			rptGenBean.setFlStatusView(true);
 			// rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupFourteenView(true);
+			//rptGenBean.setFlGroupFourteenView(true);
+			rptGenBean.setFlGroupFourteenWithSupplPaymentOffView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlPurchaseOrderCreatedDateView(true);
 			break;
@@ -674,7 +676,8 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPkpNoView(true);
 			// rptGenBean.setFromDateView(true);
 			rptGenBean.setToDateView(true);
-			rptGenBean.setFlGroupTenView(true);
+			//rptGenBean.setFlGroupTenView(true);
+			rptGenBean.setFlGroupTenWithSupplReqAppView(true);
 			rptGenBean.setFlPrNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlPurchaseRequestRejectionDateView(true);
@@ -688,7 +691,8 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPkpNoView(true);
 			// rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupTwentyThreeView(true);
+			//rptGenBean.setFlGroupTwentyThreeView(true);
+			rptGenBean.setFlGroupTwentyThreeWithSupplCancelView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlPurchaseOrderCancellationDateView(true);
 			break;
@@ -848,7 +852,8 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlStopInstructionNoView(true);
-			rptGenBean.setFlGroupEighteenView(true);
+			//rptGenBean.setFlGroupEighteenView(true);
+			rptGenBean.setFlGroupEighteenWithSupplApproverView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlStopInstructionCreatedDateView(true);
 			break;

@@ -8579,6 +8579,30 @@ public class ReportBackingBean extends
 				&& (this.getReportValue()
 						.equals(ReportConst.PUR_REQ_RPT_PO_VAL))) {
 			doctype = ReportConst.DOC_TYPE_PR;
+		}
+
+		else if ((this.getReportValue() != null)
+				&& (this.getReportValue()
+						.equals(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL))) {
+			doctype = ReportConst.DOC_TYPE_SD;
+		}
+		
+		else if ((this.getReportValue() != null)
+				&& (this.getReportValue()
+						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL))) {
+			doctype = ReportConst.DOC_TYPE_SD;
+		}
+		
+		else if ((this.getReportValue() != null)
+				&& (this.getReportValue()
+						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL))) {
+			doctype = ReportConst.DOC_TYPE_SD;
+		}
+
+		else if ((this.getReportValue() != null)
+				&& (this.getReportValue()
+						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL))) {
+			doctype = ReportConst.DOC_TYPE_SD;
 			/*
 			 * }else
 			 * if((this.getReportValue()!=null)&&(this.getReportValue().equals
@@ -10306,9 +10330,11 @@ public class ReportBackingBean extends
 				// getLtstMinistryListByUserid();
 				getManagedBean().getRptGenBean().setFlTextBoxBasedRoles(true);
 				retrieveOnlyFPJMinistryList();
-				retrievePFPPList();
-				/*retrievePFJAList();
-				retrieveFPJPTJList();*/
+				retrieveFPJPTJList();
+
+				/*retrievePFPPList();
+				  retrievePFJAList();
+				*/
 				/*
 				 * retrievePFJAList(); retrieveFPJPTJList();
 				 */
