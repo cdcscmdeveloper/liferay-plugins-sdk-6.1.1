@@ -335,7 +335,11 @@ public class AccessApplBackingBean extends
 			AccessApplReqDTO reqDTO = new AccessApplReqDTO();
 			reqDTO.setAccessAppl(accessAppl);
 			reqDTO.setAccessApplDocList(getManagedBean().getAccessApplDocList());
-			reqDTO.setPortalBaseUrl(PmCommonUtil.getBasePortalUrl());
+			PmUser user =  PmCommonUtil.retrieveUserByLoginId(accessAppl.getIdentificationNo());
+			if(user == null){
+				reqDTO.setPortalBaseUrl(PmCommonUtil.getBasePortalUrl());
+			}
+			
 			if(!accessAppl.isBrandNew()){
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setToken(getFacescopes().getBPMAuthenticationCtxToken());
@@ -346,7 +350,10 @@ public class AccessApplBackingBean extends
 						== accessAppl.getCurrentStatus().longValue()){
 					accessAppl.setCpRemark(getManagedBean().getRemarks());
 				}
+				reqDTO.setActionedBy(getFacescopes().getUserSessionBean());
+				reqDTO.setRoleCode(getUserRoleValue());
 			}
+			
 			reqDTO.setOutcome(outcome);			
 			AccessApplResDTO resDTO = accessApplSO.saveAccessAppl(reqDTO);
 			if(resDTO.isSuccessful()){
@@ -761,5 +768,15 @@ public class AccessApplBackingBean extends
 
 		}
 		log.info("deleteAttachment - END");
+	}
+	
+	private static String getUserRoleValue() {
+		FacesScopes sc = new FacesScopes();
+		if (sc.hasRoleUser(RoleCode.UPS_ADMIN.value())) {
+			return RoleCode.UPS_ADMIN.value();
+		} else if (sc.hasRoleUser(RoleCode.EP_ADMIN_2.value())) {
+			return RoleCode.EP_ADMIN_2.value();
+		} 
+		return null;
 	}
 }
