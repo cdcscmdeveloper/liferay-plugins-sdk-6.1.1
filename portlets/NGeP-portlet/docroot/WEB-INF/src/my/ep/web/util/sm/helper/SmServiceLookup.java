@@ -6,6 +6,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
+import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -475,5 +476,15 @@ public class SmServiceLookup {
 		return (IBlacklistDirectorSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IBlacklistDirectorSO.class);
+	}
+	
+	/**
+	 * Get IConfigGeneralSO
+	 * @return IConfigGeneralSO
+	 */
+	public static IConfigGeneralSO getConfigGeneralSO(){
+		return (IConfigGeneralSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IConfigGeneralSO.class);
 	}
 }
