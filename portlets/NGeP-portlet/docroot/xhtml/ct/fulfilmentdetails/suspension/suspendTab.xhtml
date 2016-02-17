@@ -100,10 +100,10 @@
 		<ui:include src="suspendAgency.xhtml" />
 		<ui:include src="approverSetting.xhtml" />
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
-		<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}"
+		<p:confirmDialog message="#{suspensionBackingBean.getCancelConfirmationContent(suspensionBackingBean.managedBean.contractVer.docType)}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
-			appendToBody="true">
-			<h:panelGrid columns="2">
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
 					action="#{suspensionBackingBean.saveContractSuspension('CANCEL')}"
@@ -111,7 +111,7 @@
 					oncomplete="blockWidget.hide();"   />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="cancelConfirmDlg.hide()" type="button" />
-			</h:panelGrid>
+			</div>
 		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
