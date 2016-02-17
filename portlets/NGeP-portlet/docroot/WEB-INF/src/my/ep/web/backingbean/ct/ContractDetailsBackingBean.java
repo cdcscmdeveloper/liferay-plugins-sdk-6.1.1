@@ -616,7 +616,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ContractResDTO ctResDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 					setValidateContractField(ctResDTO);
 				}
-		    }
+		    } else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
     	} finally {
     		contractSO = null;
     	}

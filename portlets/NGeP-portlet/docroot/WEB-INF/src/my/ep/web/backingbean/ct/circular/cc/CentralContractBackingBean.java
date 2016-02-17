@@ -590,9 +590,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					setContractCircularVar(reqDTO);
 				}
 				
-			  }else {
-					throw new EpException("Failed.");
-			  }
+			  } else {
+					throw new EpException(MessageConst.ERROR_700020);
+			}
 		  } finally {
 			  circularSO = null;
 		  }

@@ -533,6 +533,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		  }finally {
 			  circularSO = null;
@@ -610,20 +612,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
-				throw new EpException("000001");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			if(e instanceof EpException) {
-				EpException ep = (EpException) e;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		} finally {
 			circularSO = null;
 		}
-		return null;
 	}
 	
 	/**
