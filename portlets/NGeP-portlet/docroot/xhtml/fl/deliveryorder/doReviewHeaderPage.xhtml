@@ -14,10 +14,10 @@
 					<p:commandLink value="#{createDOBackingBean.managedBean.fulfilmentOrder.docNo}" immediate="true"
 					action="#{createDOBackingBean.navigateOrderNoPage(createDOBackingBean.managedBean.fulfilmentOrder.docType)}"/>
 				</td>
-				<td><h:outputLabel value="#{lbl['lbl.fl.frn.do.no']} " rendered="#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef != null}"/>
+				<td><h:outputLabel value="#{lbl['lbl.fl.frn.do.no']} " rendered="#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo != null}"/>
 				</td>
 				<td class="header-info-text">
-					#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef == null ? '' :createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef}
+					#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo == null ? '' :createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo}
 				</td>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
