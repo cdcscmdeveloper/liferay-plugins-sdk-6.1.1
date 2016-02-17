@@ -388,6 +388,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The pid verifier and approvers */
 	private String pidApprovers;
 	
+	/** The pid expiry date. */
+	private Date pidExpiryDate;
+	
+	/** The pid expiry message. */
+	private String pidExpiryMessage;
+	
 
 	/**
 	 * Gets the spki backing bean.
@@ -2495,6 +2501,34 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setPidApprovers(String pidApprovers) {
 		this.pidApprovers = pidApprovers;
+	}
+
+	/**
+	 * @return the pidExpiryDate
+	 */
+	public Date getPidExpiryDate() {
+		return pidExpiryDate;
+	}
+
+	/**
+	 * @param pidExpiryDate the pidExpiryDate to set
+	 */
+	public void setPidExpiryDate(Date pidExpiryDate) {
+		this.pidExpiryDate = pidExpiryDate;
+	}
+
+	/**
+	 * @return the pidExpiryMessage
+	 */
+	public String getPidExpiryMessage() {
+		return pidExpiryMessage;
+	}
+
+	/**
+	 * @param pidExpiryMessage the pidExpiryMessage to set
+	 */
+	public void setPidExpiryMessage(String pidExpiryMessage) {
+		this.pidExpiryMessage = pidExpiryMessage;
 	}
 	
 }
