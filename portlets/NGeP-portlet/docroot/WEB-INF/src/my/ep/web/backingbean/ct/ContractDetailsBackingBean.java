@@ -2156,21 +2156,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return getManagedBean().getLoaContractVerList();
 	}
 	
-	    /**
-   	       * The method used to reflect the contract details base on selected loa
-   	    */
-    	public void changeLoaContractVer() {
-		    if (getManagedBean().getLoaContractVerId() != null)
-		          {
-				     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				     ContractReqDTO reqDTO = new ContractReqDTO();
-				     reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
-				     reqDTO.setViewOnly(true);
-				     reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
-			         ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
-			         ctBB.getManagedBean().setViewContract(true);
-			         getManagedBean().setAsAtDate(null);
-			         setValidateContractField(resDTO);
-		         }
-	      }
+     /**
+      * The method used to reflect the contract details base on selected loa
+      */
+     public void changeLoaContractVer() {
+    	 if (getManagedBean().getLoaContractVerId() != null)
+    	 {
+    		 IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+    		 ContractReqDTO reqDTO = new ContractReqDTO();
+    		 reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
+    		 reqDTO.setViewOnly(true);
+    		 reqDTO.setContractVerId(getManagedBean().getLoaContractVerId());
+    		 ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+    		 ctBB.getManagedBean().setViewContract(true);
+    		 getManagedBean().setAsAtDate(null);
+    		 setValidateContractField(resDTO);
+    	 }
+     }
+     
+     /**
+      * Retrieve cancel confirmation message by passing in document type
+      * 
+      * @return Cancel Confirmation message
+      */
+     public String getCancelConfirmationContent() {
+    	 return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ctBB.getManagedBean().getContractVer().getDocType())}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+     }
 }
