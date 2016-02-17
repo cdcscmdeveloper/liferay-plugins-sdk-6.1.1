@@ -5,6 +5,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<style type="text/css">
+		.commandLink {
+			color:blue !important; 
+			text-decoration: underline;
+		}
+	</style>
 
 	<ui:param name="isRefinalizedAndBiddingAward" 
 			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>			  
@@ -75,12 +82,11 @@
 		               		<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.sc.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
-									rendered="#{isOneTierWithTechnical or isTwoTier}" 
-									process="@this">
-									<p:outputLabel value="TEC" />
+									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
+									<p:outputLabel value="TEC" styleClass="commandLink" />
 								</p:commandLink>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="FEC" />
+									<p:outputLabel value="FEC" styleClass="commandLink" />
 								</p:commandLink>								
 		               		</f:facet>
 		               	</p:column>
