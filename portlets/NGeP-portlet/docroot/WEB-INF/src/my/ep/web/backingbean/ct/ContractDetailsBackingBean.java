@@ -2174,12 +2174,4 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	 }
      }
      
-     /**
-      * Retrieve cancel confirmation message by passing in document type
-      * 
-      * @return Cancel Confirmation message
-      */
-     public String getCancelConfirmationContent() {
-    	 return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ctBB.getManagedBean().getContractVer().getDocType())}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-     }
 }
