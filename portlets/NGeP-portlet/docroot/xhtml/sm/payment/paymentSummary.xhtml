@@ -18,7 +18,6 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
@@ -26,9 +25,8 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.gst.disclaimer']}" rendered="#{paymentBackingBean.managedBean.softcertPayment}"/>
-	
 	<p:panel header="#{paymentBackingBean.managedBean.softcertPayment?lbl['lbl.sm.soft.cert']:lbl['lbl.sm.payment.item']}">
-		<p:dataTable value="#{paymentBackingBean.managedBean.newSmBillDtlLs}" var="itemLs">
+		<p:dataTable value="#{paymentBackingBean.managedBean.newPyBillDtlLs}" var="itemLs">
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column headerText="#{lbl['lbl.sm.itemsLbl']}" />
@@ -36,8 +34,8 @@
                 </p:row>
 			</p:columnGroup>
 			<p:column>
-				<h:outputText value="#{paymentBackingBean.getBillItemDescByLanguage(itemLs.pmParameter)}" />
-				<h:outputText rendered="#{itemLs.pmParameter.parameterCode eq 'SF'}"  value="- #{itemLs.smPersonnel.name}" />
+				<h:outputText value="#{paymentBackingBean.getBillItemDescByLanguage(itemLs.itemCode)}" />
+				<h:outputText rendered="#{itemLs.itemCode.parameterCode eq 'SF'}"  value="- #{paymentBackingBean.retrievePersonnelByPersonnelId(itemLs.billDtlRefId).name}" />
 			</p:column>
 
 			<p:column>
