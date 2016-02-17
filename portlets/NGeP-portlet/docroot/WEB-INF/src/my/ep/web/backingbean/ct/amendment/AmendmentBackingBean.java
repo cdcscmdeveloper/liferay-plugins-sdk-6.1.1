@@ -1067,7 +1067,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ConstructTabSideMenu();
 				}
 			} else {
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		} finally {
 			contractAmendmentSO = null;
@@ -4632,6 +4632,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("contractSigner", scLoa.getContractSigner().getUserName());
 				context.put("contractSignerDesignation", scLoa.getContractSigner().getDesignation());
 			}
+			
+//			String LoaSigner = "";
+//			if(getManagedBean().getContractSignerUser() != null){
+//				if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
+//					LoaSigner = getManagedBean().getContractSignerUser().getUserName();
+//				}
+//			}
+//			context.put("loaSigner", LoaSigner);	
+//
+//			String loaSignerDesig = "";
+//			if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
+//				loaSignerDesig = scLoa.getLoaSignerDesig();
+//
+//				if(loaSignerDesig.length()>86){
+//					loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
+//				}
+//			}
+//			context.put("loaSignerDesignation", loaSignerDesig);
 			
 			String ackDate = "";
 			String bankAccNo = "";

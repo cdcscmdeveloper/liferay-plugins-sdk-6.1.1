@@ -631,7 +631,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
                     setCtAgreementDetails(agreementResDTO);
 				}
 			} else {
-				throw new EpException("Failed.");
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		} finally {
 			agreementSO = null;
