@@ -318,13 +318,13 @@ public class SmApplicationBackingBean extends
 							latestResubmitAppl = SmApplicationUtil
 									.getLatesResubmitApplicationByRejectedAppl(rejectedAppl);
 							if (latestResubmitAppl != null) {
-								// mofReqDto = new MofRegistrationReqDTO();
-								// mofReqDto.setSmAppl(latestResubmitAppl);
-								// mofReqDto.setSrcAppl(rejectedAppl);
-								// latestResubmitAppl = SmServiceLookup
-								// .getMofRegistrationSO()
-								// .cloneExistingApplication(mofReqDto)
-								// .getSmAppl();
+								mofReqDto = new MofRegistrationReqDTO();
+								mofReqDto.setSmAppl(latestResubmitAppl);
+								mofReqDto.setSrcAppl(rejectedAppl);
+								latestResubmitAppl = SmServiceLookup
+										.getMofRegistrationSO()
+										.cloneExistingResubmitApplication(mofReqDto)
+										.getSmAppl();
 							} else {
 								mofReqDto = new MofRegistrationReqDTO();
 								mofReqDto.setApplId(Long.parseLong(applId));
