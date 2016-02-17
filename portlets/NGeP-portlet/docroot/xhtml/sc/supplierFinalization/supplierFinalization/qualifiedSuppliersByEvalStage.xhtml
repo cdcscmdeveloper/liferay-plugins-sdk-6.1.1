@@ -17,10 +17,10 @@
 		<ui:param name="isFinancialEvalStageByItem" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 2 and 
 																suppFinalizationBackingBean.managedBean.itemize}" />																
 																		
-		<p:dataTable id="qualifiedSuppliersList" style="width:100%;"
+		<p:dataTable id="qualifiedSuppliersList" style="width:100%; height:75%;"
 			var="qualifiedSupp" widgetVar="qualifiedSupplierDtls"
 			value="#{suppFinalizationBackingBean.managedBean.qualifiedSuppliersByEvalStage}"
-			rowIndexVar="index">
+			rowIndexVar="index" rows="10">
 
 			<ac:paginator for="qualifiedSuppliersList" />
 
