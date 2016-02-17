@@ -969,6 +969,7 @@ public class ReportConst {
 	public static final String DOC_TYPE_DN = "DN";
 	public static final String DOC_TYPE_PO = "PO";
 	public static final String DOC_TYPE_PR = "PR";
+	public static final String DOC_TYPE_SD = "SD";
 	public static final String DOC_TYPE_FRN = "FRN";
 	public static final String MINISTRY_CONTRACT_ADMIN = "Ministry Contract Admin";
 	public static final String MIN_CONTRACT_ADMIN = "MIN_CONTRACT_ADMIN";

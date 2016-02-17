@@ -1340,6 +1340,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group ten view. */
 	private boolean flGroupTenView = false;
+	
+	/** The fl group ten with suppl req app view. */
+	private boolean flGroupTenWithSupplReqAppView=false;
 
 	/** The fl group ten without suppl view. */
 	private boolean flGroupTenWithoutSupplView = false;
@@ -1373,6 +1376,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group thirteen with suppl view. */
 	private boolean flGroupThirteenWithSupplView = false;
+	
+	/** The fl group thirteen with suppl ack rec view. */
+	private boolean flGroupThirteenWithSupplAckRecView=false;
 
 	/** The fl group fourteen view. */
 	private boolean flGroupFourteenView = false;
@@ -1385,6 +1391,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group fourteen all rolecodes without suppl view. */
 	private boolean flGroupFourteenAllRolecodesWithoutSupplView = false;
+	
+	/** The fl group fourteen with suppl payment off view. */
+	private boolean flGroupFourteenWithSupplPaymentOffView=false;
 
 	/** The fl group fifteen view. */
 	private boolean flGroupFifteenView = false;
@@ -1436,6 +1445,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group eighteen with suppl view. */
 	private boolean flGroupEighteenWithSupplView = false;
+	
+	/** The fl group eighteen with suppl approver view. */
+	private boolean flGroupEighteenWithSupplApproverView=false;
 
 	/** The fl group nineteen view. */
 	private boolean flGroupNineteenView = false;
@@ -1490,6 +1502,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty three with suppl view. */
 	private boolean flGroupTwentyThreeWithSupplView = false;
+	
+	/** The fl group twenty three with suppl cancel view. */
+	private boolean flGroupTwentyThreeWithSupplCancelView=false;
 
 	/** The fl group twenty four view. */
 	private boolean flGroupTwentyFourView = false;
@@ -18677,5 +18692,105 @@ public class ReportsGenerateBean {
 	 */
 	public void setSmCategoryOverLappingView(boolean smCategoryOverLappingView) {
 		this.smCategoryOverLappingView = smCategoryOverLappingView;
+	}
+
+	/**
+	 * Checks if is fl group thirteen with suppl ack rec view.
+	 * 
+	 * @return the flGroupThirteenWithSupplAckRecView
+	 */
+	public boolean isFlGroupThirteenWithSupplAckRecView() {
+		return flGroupThirteenWithSupplAckRecView;
+	}
+
+	/**
+	 * Sets the fl group thirteen with suppl ack rec view.
+	 * 
+	 * @param flGroupThirteenWithSupplAckRecView
+	 *            the flGroupThirteenWithSupplAckRecView to set
+	 */
+	public void setFlGroupThirteenWithSupplAckRecView(
+			boolean flGroupThirteenWithSupplAckRecView) {
+		this.flGroupThirteenWithSupplAckRecView = flGroupThirteenWithSupplAckRecView;
+	}
+
+	/**
+	 * Checks if is fl group fourteen with suppl payment off view.
+	 * 
+	 * @return the flGroupFourteenWithSupplPaymentOffView
+	 */
+	public boolean isFlGroupFourteenWithSupplPaymentOffView() {
+		return flGroupFourteenWithSupplPaymentOffView;
+	}
+
+	/**
+	 * Sets the fl group fourteen with suppl payment off view.
+	 * 
+	 * @param flGroupFourteenWithSupplPaymentOffView
+	 *            the flGroupFourteenWithSupplPaymentOffView to set
+	 */
+	public void setFlGroupFourteenWithSupplPaymentOffView(
+			boolean flGroupFourteenWithSupplPaymentOffView) {
+		this.flGroupFourteenWithSupplPaymentOffView = flGroupFourteenWithSupplPaymentOffView;
+	}
+
+	/**
+	 * Checks if is fl group twenty three with suppl cancel view.
+	 * 
+	 * @return the flGroupTwentyThreeWithSupplCancelView
+	 */
+	public boolean isFlGroupTwentyThreeWithSupplCancelView() {
+		return flGroupTwentyThreeWithSupplCancelView;
+	}
+
+	/**
+	 * Sets the fl group twenty three with suppl cancel view.
+	 * 
+	 * @param flGroupTwentyThreeWithSupplCancelView
+	 *            the flGroupTwentyThreeWithSupplCancelView to set
+	 */
+	public void setFlGroupTwentyThreeWithSupplCancelView(
+			boolean flGroupTwentyThreeWithSupplCancelView) {
+		this.flGroupTwentyThreeWithSupplCancelView = flGroupTwentyThreeWithSupplCancelView;
+	}
+
+	/**
+	 * Checks if is fl group ten with suppl req app view.
+	 * 
+	 * @return the flGroupTenWithSupplReqAppView
+	 */
+	public boolean isFlGroupTenWithSupplReqAppView() {
+		return flGroupTenWithSupplReqAppView;
+	}
+
+	/**
+	 * Sets the fl group ten with suppl req app view.
+	 * 
+	 * @param flGroupTenWithSupplReqAppView
+	 *            the flGroupTenWithSupplReqAppView to set
+	 */
+	public void setFlGroupTenWithSupplReqAppView(
+			boolean flGroupTenWithSupplReqAppView) {
+		this.flGroupTenWithSupplReqAppView = flGroupTenWithSupplReqAppView;
+	}
+
+	/**
+	 * Checks if is fl group eighteen with suppl approver view.
+	 * 
+	 * @return the flGroupEighteenWithSupplApproverView
+	 */
+	public boolean isFlGroupEighteenWithSupplApproverView() {
+		return flGroupEighteenWithSupplApproverView;
+	}
+
+	/**
+	 * Sets the fl group eighteen with suppl approver view.
+	 * 
+	 * @param flGroupEighteenWithSupplApproverView
+	 *            the flGroupEighteenWithSupplApproverView to set
+	 */
+	public void setFlGroupEighteenWithSupplApproverView(
+			boolean flGroupEighteenWithSupplApproverView) {
+		this.flGroupEighteenWithSupplApproverView = flGroupEighteenWithSupplApproverView;
 	}
 }
