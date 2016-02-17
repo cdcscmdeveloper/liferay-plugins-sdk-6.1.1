@@ -24,6 +24,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
@@ -34,6 +35,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
@@ -356,7 +359,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 		}else{
 			if(index == this.getManagedBean().getLastIndex()){
-				//retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplates());
+				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
 			}
 		}
 	}
@@ -965,7 +968,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			log.info("---------------viewActiveIndex End-----------");
 		}else{
 			if(index == this.getManagedBean().getLastIndex()){
-				//retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplates());
+				retrievUploadedSiteVisitReport(getManagedBean().getSmSvTask().getSmSvTemplate());
 			}
 		}
 	}
@@ -2267,31 +2270,30 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param templateType
 	 * @param attachment
 	 */
-	public void removeUploadedSvFile(SmSvTemplate svTemplate){
-		String templateType = getManagedBean().getSelectedAttachmentTemplType();
+	public void removeUploadedSvFile(){
+/*		Long templateId = getManagedBean().getSelectedAttachmentTemplId();*/
 		SmAttachment attachment = getManagedBean().getSelectedUploadAttachment();
 		
-		if(templateType != null && attachment != null){
-/*			if(getManagedBean().getSmSvTemplateMap().get(templateType) != null){
-				SmSvTemplate svTemplate = getManagedBean().getSmSvTemplateMap().get(templateType);*/
-				if(svTemplate.getSmAttachments() != null && !svTemplate.getSmAttachments().isEmpty()){
-					int index = svTemplate.getSmAttachments().indexOf(attachment);
-					SmAttachment attach = svTemplate.getSmAttachments().get(index);
-					if(attach.getAttachmentId() != null){
-						attach.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-					}else{
-						svTemplate.getSmAttachments().remove(attachment);
-					}
+		if(getManagedBean().getSmSvTask().getSmSvTemplate() != null && attachment != null){
+			SmSvTemplate svTemplate = getManagedBean().getSmSvTask().getSmSvTemplate();
+			if(svTemplate.getSmAttachments() != null && !svTemplate.getSmAttachments().isEmpty()){
+				int index = svTemplate.getSmAttachments().indexOf(attachment);
+				SmAttachment attach = svTemplate.getSmAttachments().get(index);
+				if(attach.getAttachmentId() != null){
+					attach.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+				}else{
+					svTemplate.getSmAttachments().remove(attachment);
 				}
-			//}
+			}
+
 		}
 	}
 	
-	public void showDeleteDialog(String templateType, SmAttachment attachment){
+	public void showDeleteDialog(Long templateId, SmAttachment attachment){
 		String msg = SmCommonUtil.getMessage("lbl.sm.sitevisit.upload.delete.confirm", new String[]{attachment.getFileName()});
 		
 		getManagedBean().setAttachmentDeleteMsg(msg);
-		getManagedBean().setSelectedAttachmentTemplType(templateType);
+		getManagedBean().setSelectedAttachmentTemplId(templateId);
 		getManagedBean().setSelectedUploadAttachment(attachment);
 	}
 	
@@ -2396,5 +2398,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 		return svEquipmentLs;
+	}
+	
+	public void retrievUploadedSiteVisitReport(SmSvTemplate template){
+		if(template != null){
+			//for(SmSvTemplate template : templateLs){
+				if(template.getSmAttachments() == null){
+						ISmAttachmentSO reqSO = SmServiceLookup.getSmAttachmentSO();
+						SmAttachmentReqDTO reqDTO = new SmAttachmentReqDTO();
+						reqDTO.setDocType(attachmentType);
+						reqDTO.setDocId(template.getSvTemplateId());
+						SmAttachmentResDTO resDTO = reqSO.retrieveSmAttachmentListByDocIdAndType(reqDTO);
+						
+						template.setSmAttachments(resDTO.getAttachmentLs());
+				}
+			//}
+		}
 	}
 }
