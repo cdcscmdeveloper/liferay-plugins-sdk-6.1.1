@@ -13,12 +13,7 @@
       .column-align-center { text-align: center !important;}
      .ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
               width:250px;
-   }   
-   .columnWidth23 {
-   		width:23.5%;
    }
-       
-       
     </style>
    
     <p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
@@ -28,9 +23,9 @@
           showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" />
 
      <p:panel id="searchId" header="#{lbl['lbl.btn.search']}" toggleable="true"  toggleSpeed="500">
-     	<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth23">
+     	<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20">
  			<p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
-           	<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="108" readonly="true"
+           	<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="110" readonly="true"
 				disabled="#{contractDetailsBackingBean.disableMinistryLov()}"
 				headerText="#{lbl['lbl.ct.ministry']}" 
 				value="#{contractDetailsBackingBean.managedBean.searchMinistryProfile.orgName}"
@@ -39,7 +34,7 @@
 				saveObject="contractDetailsBackingBean.managedBean.searchMinistryProfile">
 			</ac:lov>
 			<p:outputLabel value="#{lbl['lbl.ct.jabatan']}" />
-           	<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="108" readonly="true"
+           	<ac:lov id="searchPtjGroup" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="110" readonly="true"
 				disabled="#{contractDetailsBackingBean.isContractAdmin() 
 					or contractDetailsBackingBean.managedBean.searchMinistryProfile==null}"
 				headerText="#{lbl['lbl.ct.jabatan']}"
@@ -50,7 +45,7 @@
 				conditionField="#{contractDetailsBackingBean.getPTJGroupCondition()}">			
 			</ac:lov>
      		<p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
-           	<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="108" readonly="true"
+           	<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="110" readonly="true"
 				disabled="#{contractDetailsBackingBean.isContractAdmin() 
 					or contractDetailsBackingBean.managedBean.searchMinistryProfile==null
 					or contractDetailsBackingBean.managedBean.searchPtjGroupProfile==null}"
