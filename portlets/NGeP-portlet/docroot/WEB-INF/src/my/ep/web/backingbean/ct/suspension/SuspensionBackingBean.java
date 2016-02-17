@@ -425,7 +425,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		 *  This method will navigate to acknowledgment page with
 		 *   a confirmation message once submit successfully
 		 */
-	 public String saveContractSuspension(String action){
+	 public String saveContractSuspension(String action) throws Exception{
 		  
 		 IContractSuspensionSO contractSuspensionSO = null;
 		 ContractReqDTO reqDTO = null;
@@ -490,18 +490,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				    	  setSuspensionContractVer(ctResDTO);
 				      }
 		   	     } else {
-						throw new EpException(ContractConst.FAILED);
-				  }
-			  }catch (Exception e) {
-				log.error("Exception>>", e);
-				e.printStackTrace();
-				if(e instanceof EpException) {
-					EpException ep = (EpException) e;
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-				} else {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ContractConst.MESSAGE_NO, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-				}
-			  }finally {
+					throw new EpException(MessageConst.ERROR_700020);
+				 }
+			  } finally {
 				  contractSuspensionSO = null;
 				  reqDTO = null;
 			      resDTO = null;

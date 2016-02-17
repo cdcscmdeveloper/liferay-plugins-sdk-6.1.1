@@ -449,7 +449,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			    	ctResDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
 			    	setTerminationContractVer(ctResDTO);
 				}
-			  }
+			  }  else {
+				throw new EpException(MessageConst.ERROR_700020);
+			 }
 		  }finally {
 			  contractTerminationSO = null;
 			  ctResDTO = null;
