@@ -1201,10 +1201,17 @@ public class ProfilePersonalizationBackingBean extends
 	private void fillUserOrgInfoFromUser(PmUser user) {
 		for(PmUserOrg activeOrg: user.getPmUserOrgs()){
 			if(DbValueConst.RECORD_STATUS_ACTIVE == activeOrg.getRecordStatusFlg()){
-				activeOrg.setEmail(user.getEmail());
+				activeOrg.setEmail(user.getEmail());			
 				activeOrg.setPhoneNo(user.getPhoneNo());
+				activeOrg.setPhoneArea(user.getPhoneArea());
+				activeOrg.setPhoneCountry(user.getPhoneCountry());
 				activeOrg.setFaxNo(user.getFaxNo());
+				activeOrg.setFaxArea(user.getFaxArea());
+				activeOrg.setFaxCountry(user.getFaxCountry());
 				activeOrg.setMobileNo(user.getMobileNo());
+				activeOrg.setMobileArea(user.getMobileArea());
+				activeOrg.setMobileCountry(user.getMobileCountry());
+				activeOrg.setMobileTelcoId(user.getMobileTelcoId());
 				break;
 			}
 		}
