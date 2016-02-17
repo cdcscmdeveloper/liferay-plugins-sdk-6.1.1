@@ -13,9 +13,7 @@
 			$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.wizard.paymentLbl']}");
 		</script>
 	</ui:define>
-
 	<ui:define name="contentSection">
-		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -23,7 +21,7 @@
 		<p:panel header="#{lbl['lbl.sm.payment.item']}" rendered="#{paymentBackingBean.managedBean.applicationPayment != null}">
 			<p:dataTable value="#{paymentBackingBean.managedBean.applicationPayment}" var="billItem">
 				<p:column headerText="#{lbl['lbl.sm.payment.application']}">
-					<h:outputText value="#{paymentBackingBean.getBillItemDescByLanguage(billItem.pmParameter)}" />
+					<h:outputText value="#{paymentBackingBean.getBillItemDescByLanguage(billItem.itemCode)}" />
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.price']}">

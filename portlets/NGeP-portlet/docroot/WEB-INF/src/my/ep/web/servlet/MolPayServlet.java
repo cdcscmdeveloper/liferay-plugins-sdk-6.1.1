@@ -15,9 +15,9 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmPayment;
-import my.ep.persistence.entity.sm.SmPaymentOrder;
-import my.ep.persistence.entity.sm.SmPaymentResponse;
+import my.ep.persistence.entity.py.PyPayment;
+import my.ep.persistence.entity.py.PyPaymentOrder;
+import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
@@ -102,10 +102,10 @@ public class MolPayServlet extends HttpServlet {
 				BigDecimal txAmount = new BigDecimal(amount);
 				boolean validPayment = false;
 
-				if (resDTO.getSmPayment() != null) {
-					SmPayment smPayment = resDTO.getSmPayment();
-					SmPaymentResponse smPaymentRes = new SmPaymentResponse();
-					SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
+				if (resDTO.getPyPayment() != null) {
+					PyPayment smPayment = resDTO.getPyPayment();
+					PyPaymentResponse smPaymentRes = new PyPaymentResponse();
+					PyPaymentOrder paymentOrder = smPayment.getPyPaymentOrder();
 					Long statusCode = null;
 
 					if (status.equals(SupplierManagementConst.MOL_SUCCESS)) {
@@ -148,10 +148,10 @@ public class MolPayServlet extends HttpServlet {
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
 					smPaymentRes.setTransactionDate(txDate);
-					smPaymentRes.setSmPaymentOrder(paymentOrder);
+					smPaymentRes.setPyPaymentOrder(paymentOrder);
 					smPaymentRes.setPaymentStatus(status);
 					smPaymentRes.setPaidAmt(txAmount);
-					paymentOrder.getSmPaymentResponses().add(smPaymentRes);
+					paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 					int requeryCount = paymentOrder.getRequeryCount() + 1;
 					paymentOrder.setRequeryCount(requeryCount);
 
@@ -165,7 +165,7 @@ public class MolPayServlet extends HttpServlet {
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 					//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 					pymtReqDTO.setValidPayment(validPayment);
-					pymtReqDTO.setSmPayment(smPayment);
+					pymtReqDTO.setPyPayment(smPayment);
 					pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 
 					//						pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
