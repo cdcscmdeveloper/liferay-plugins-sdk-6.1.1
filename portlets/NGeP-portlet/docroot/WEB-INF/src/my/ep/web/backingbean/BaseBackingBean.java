@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -578,6 +579,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			return null;
 		}
 	}
+	
+	/**
+	 * Get Parameter description by parameter and Locale.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @param locale
+	 * 			  the Locale instance.
+	 * 
+	 * @return parameter description
+	 */
+	public String getParameterDesc(PmParameter parameter, Locale locale) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			if (locale == null) {
+				locale = new FacesScopes().getUserLocale();
+			}
+			return ParameterHelper.getInstance().getParameterDesc(
+					parameter.getParameterType(), parameter.getParameterCode(), locale);
+		} else {
+			return null;
+		}
+	}	
 	
 	/**
 	 * Get reason description by reason.
