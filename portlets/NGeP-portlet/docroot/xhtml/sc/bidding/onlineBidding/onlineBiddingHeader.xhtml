@@ -5,99 +5,126 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-		<div align="right" style="width: 100%">
-			<TABLE>
-				<TR>
-					<TD><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
+	<div align="right" style="width: 100%">
+		<TABLE>
+			<TR>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
 
-					<TD><p:selectOneMenu id="currentDayBidList"
-							style="width : 155px"
-							value="#{onlineBiddingBB.selectedBidScheduleId}">
-							<f:selectItems var="bid"
-								value="#{onlineBiddingBB.activeBidSchedules}"
-								itemLabel="#{bid.bidNo}" itemValue="#{bid.bidScheduleId}" />
-							<p:ajax event="change" process="@this" partialSubmit="true" 
-								listener="#{onlineBiddingBB.selectedBidChangeListener()}" />
+				<TD><p:selectOneMenu id="currentDayBidList"
+						style="width : 155px"
+						value="#{onlineBiddingBB.selectedBidScheduleId}">
+						<f:selectItems var="bid"
+							value="#{onlineBiddingBB.activeBidSchedules}"
+							itemLabel="#{bid.bidNo}" itemValue="#{bid.bidScheduleId}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{onlineBiddingBB.selectedBidChangeListener()}" />
 
-						</p:selectOneMenu>
-					</TD>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.sc.online.bidding.tooltip']}" />
-					</td>
-				</TR>
-			</TABLE>
+					</p:selectOneMenu></TD>
+				<td><ac:iconTooltip
+						value="#{lbl['lbl.sc.online.bidding.tooltip']}" /></td>
+			</TR>
+		</TABLE>
 
-		</div>
+	</div>
 
-		<p:panel header="#{lbl['lbl.sc.bid.details']}" id="bidDetailsPanel"
-			toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.bid.details']}" id="bidDetailsPanel"
+		toggleable="true">
 
-			<div style="width: 100%">
+		<table style="width: 100%;">
 
-				<table style="width: 60%;">
+			<tr>
+				<td style="width: 55%;"><p:outputPanel>
 
-					<tr>
-						<td style="width: 120px"><p:outputLabel
-								value="#{lbl['lbl.sc.bidding.no']}" /></td>
-						<td><p:inputText id="bidNo"
-								value="#{onlineBiddingBB.scBidSchedule.bidNo}" disabled="true"
-								size="20" /></td>
-						<TD></TD>
-						<TD></TD>
-						
-					</tr>
 
-					<tr>
-						<td style="width: 120px"><p:outputLabel
-								value="#{lbl['lbl.sc.document.no']}" /></td>
-						<td><p:inputText id="documentNo"
-								value="#{onlineBiddingBB.scBidSchedule.scBid.docNo}"
-								disabled="true" size="20" /></td>
-						<TD></TD>
-						<TD></TD>
-					</tr>
 
-					<tr>
-						<td style="width: 120px"><p:outputLabel
-								value="#{lbl['lbl.sc.document.title']}" /></td>
-						<td colspan="3"><p:inputText id="documentTitle"
-								value="#{onlineBiddingBB.scBidSchedule.scBid.docTitle}"
-								disabled="true" size="77" /></td>
-					</tr>
+						<table style="width: 100%;">
 
-					<tr>
-						<td style="width: 120px"><p:outputLabel
-								value="#{lbl['lbl.sc.ptj']}" /></td>
-						<td colspan="3"><p:inputText id="ptjName"
-								value="#{onlineBiddingBB.scBidSchedule.scBid.pmOrgProfile.orgName}"
-								disabled="true" size="77" /></td>
+							<tr>
+								<td style="width: 120px"><p:outputLabel
+										value="#{lbl['lbl.sc.bidding.no']}" /></td>
+								<td><p:inputText id="bidNo"
+										value="#{onlineBiddingBB.scBidSchedule.bidNo}" disabled="true"
+										size="20" /></td>
+								<TD></TD>
+								<TD></TD>
 
-					</tr>
+							</tr>
 
-					<tr>
+							<tr>
+								<td style="width: 120px"><p:outputLabel
+										value="#{lbl['lbl.sc.document.no']}" /></td>
+								<td><p:inputText id="documentNo"
+										value="#{onlineBiddingBB.scBidSchedule.scBid.docNo}"
+										disabled="true" size="20" /></td>
+								<TD></TD>
+								<TD></TD>
+							</tr>
 
-						<td style="width: 120px"><p:outputLabel
-								value="#{lbl['lbl.sc.bidding.start']}" /></td>
-						<td><p:inputText id="bidStart"
-								value="#{onlineBiddingBB.scBidSchedule.startDate}"
-								disabled="true" size="20">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-							</p:inputText></td>
-						<TD style="width: 120px"><p:outputLabel
-								value="#{lbl['lbl.sc.bidding.end']}" /></TD>
-						<TD><p:inputText id="bidEnd"
-								value="#{onlineBiddingBB.scBidSchedule.endDate}" disabled="true"
-								size="20">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-							</p:inputText></TD>
+							<tr>
+								<td style="width: 120px"><p:outputLabel
+										value="#{lbl['lbl.sc.document.title']}" /></td>
+								<td colspan="3"><p:inputText id="documentTitle"
+										value="#{onlineBiddingBB.scBidSchedule.scBid.docTitle}"
+										disabled="true" size="77" /></td>
+							</tr>
 
-					</tr>
+							<tr>
+								<td style="width: 120px"><p:outputLabel
+										value="#{lbl['lbl.sc.ptj']}" /></td>
+								<td colspan="3"><p:inputText id="ptjName"
+										value="#{onlineBiddingBB.scBidSchedule.scBid.pmOrgProfile.orgName}"
+										disabled="true" size="77" /></td>
 
-				</table>
+							</tr>
 
-			</div>
-		</p:panel>
-	
+							<tr>
+
+								<td style="width: 120px"><p:outputLabel
+										value="#{lbl['lbl.sc.bidding.start']}" /></td>
+								<td><p:inputText id="bidStart"
+										value="#{onlineBiddingBB.scBidSchedule.startDate}"
+										disabled="true" size="20">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</p:inputText></td>
+								<TD style="width: 120px"><p:outputLabel
+										value="#{lbl['lbl.sc.bidding.end']}" /></TD>
+								<TD><p:inputText id="bidEnd"
+										value="#{onlineBiddingBB.scBidSchedule.endDate}"
+										disabled="true" size="20">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</p:inputText></TD>
+							</tr>
+						</table>
+					</p:outputPanel></td>
+				<td style="width: 45%;"><p:outputPanel>
+						<table style="width: 100%;">
+							<tr>
+								<td>#{lbl['lbl.sc.notes']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.sc.bidding.clause1']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.sc.bidding.clause2']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.sc.bidding.clause3']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.sc.bidding.clause4']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.sc.bidding.clause5']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.sc.bidding.clause6']}</td>
+							</tr>
+						</table>
+					</p:outputPanel></td>
+			</tr>
+		</table>
+	</p:panel>
+
 </ui:composition>
