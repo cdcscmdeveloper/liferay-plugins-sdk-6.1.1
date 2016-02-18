@@ -66,6 +66,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -80,12 +81,14 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.util.MessageUtils;
@@ -99,6 +102,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -285,6 +289,12 @@ public class ConsolidationReportBackingBean extends
 					= retrieveQualifiedSuppliersByItem(scQtRecommend);
 			qualifiedSuppliers = resDTO.getQualifiedByItemSuppliers();
 			scQtRecommend.setShortListedSupplierList(qualifiedSuppliers);
+		}
+		if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
+			for (ScQtEvaluationResultDtl qualSupp 
+						: qualifiedSuppliers) {
+				calculateOfferedPrice(qualSupp, scQtRecommend);
+			}
 		}
 		if (qualifiedSuppliers != null) {
 			getManagedBean().setMaxRank(
@@ -804,6 +814,64 @@ public class ConsolidationReportBackingBean extends
 		}
 
 		return resDTO;
+	}	
+	
+	private void calculateOfferedPrice(ScQtEvaluationResultDtl evalResultDtl,
+									   ScQtRecommend scQtRecommend) {
+		ScRequestItem requestItem = scQtRecommend.getRequestItem();
+		ScQtProposalItem proposalItem = fetchQtProposalItem(scQtRecommend,
+														  evalResultDtl);
+		if (proposalItem != null) {
+			BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
+					.calculateTotalAmount(requestItem.getTplSpecQuestion(),
+							proposalItem.getOfferPrice(),
+							proposalItem.getOfferQuantity());
+
+			evalResultDtl.getQtEvaluationResult()
+						 .setOfferedPrice(offeredPrice);
+		}
+	}
+	
+	private ScQtProposalItem fetchQtProposalItem(ScQtRecommend scQtRecommend, 
+												 ScQtEvaluationResultDtl recommendedSupplier) {
+		ScQtProposalItem qtProposalItem = null;
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			if (scQtRecommend.getTplSpecZoneDtl() != null) {
+				reqDTO.setSpecZoneId(scQtRecommend.getTplSpecZoneDtl().getSpecZoneId());
+			}
+			reqDTO.setScQtProposalAmount(recommendedSupplier.getProposalAmount());
+			reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
+					.getRequestNoteItemId());
+			boolean isPriceTypeTier = isItemPriceTypeTariffOrTier(scQtRecommend);
+			reqDTO.setTierPricing(isPriceTypeTier);			
+			
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.getQtProposalItem(reqDTO);
+			qtProposalItem = resDTO.getScQtProposalItem();
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+		
+		return qtProposalItem;
+	}	
+	
+	private boolean isItemPriceTypeTariffOrTier(ScQtRecommend scQtRecommend) {
+		TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
+		boolean isPriceTypeTariffOrTier = false;
+		
+		if (ParameterConst.PRICE_TYPE_TARIFF.equals(
+				scQtRecommend.getRequestItem().getTplSpecQuestion().getClPriceTypeCode())) {
+			isPriceTypeTariffOrTier = true;
+		} else {
+			isPriceTypeTariffOrTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+					specQuestion.getClPriceTypeCode().getParameterCode());
+		}
+		
+		return isPriceTypeTariffOrTier;
 	}	
 	
 	private void createZoneMenuModel() {
