@@ -102,7 +102,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.fullname']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td class="tdContent" colspan="3">
+					<td class="tdContent">
 						<p:inputText size="40" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.fullname']}"
 							id="fullName" maxlength="80" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
@@ -114,6 +114,19 @@
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.user.full.name']}"  />
 						</p:tooltip>
 						<p:message id="fullNameMsg" for="fullName" display="icon" />
+					</td>
+					<td class="tdTitle">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td class="tdContent">
+						<p:selectOneMenu id="salutationId" required="#{!empty param['disableValidation']}"  
+							label="#{lbl['lbl.pm.profiles.userdetails.salutation']}" value="#{registrationBackingBean.managedBean.smPersonnel.title.salutationId}" 
+							style="width: 150px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{registrationBackingBean.managedBean.salutationItems}" />
+						</p:selectOneMenu>
+						<p:message id="salutationIdMsg" for="salutationId" display="icon" />
 					</td>
 				</tr>
 
