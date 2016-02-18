@@ -278,7 +278,7 @@
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateCityByAddType('business',true)}"
-							update="busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
 					</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
 			</tr>
 
@@ -334,6 +334,22 @@
 								for="compPostCodeForeign" showSummary="true"
 								showDetail="false" display="icon" />
 						</p:outputPanel>
+					</p:outputPanel>
+				</td>
+				<td class="tdTitle">
+					<p:outputPanel id="localAuthLabelOutPanelId" 
+						rendered="#{registrationBackingBean.managedBean.smSupp.businessType eq 'D' or registrationBackingBean.managedBean.smSupp.businessType eq 'E'
+							or registrationBackingBean.managedBean.smSupp.businessType eq 'G' or registrationBackingBean.managedBean.smSupp.businessType eq 'H'}">
+						<p:outputLabel value="#{lbl['lbl.sm.local.authority']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</p:outputPanel>
+				</td>
+				<td class="tdContent">
+					<p:outputPanel id="localAuthInputOutPanelId" 
+						rendered="#{registrationBackingBean.managedBean.smSupp.businessType eq 'D' or registrationBackingBean.managedBean.smSupp.businessType eq 'E'
+							or registrationBackingBean.managedBean.smSupp.businessType eq 'G' or registrationBackingBean.managedBean.smSupp.businessType eq 'H'}">
+						<ac:smLocalAuthoritySelectItems backingBean="#{registrationBackingBean}" 
+							smSupplier="#{registrationBackingBean.managedBean.smSupp}" required="#{!empty param['disableValidation']}"/>
 					</p:outputPanel>
 				</td>
 			</tr>
