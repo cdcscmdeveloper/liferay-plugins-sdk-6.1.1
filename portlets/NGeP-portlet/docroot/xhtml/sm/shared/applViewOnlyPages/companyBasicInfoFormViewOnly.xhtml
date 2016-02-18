@@ -98,8 +98,12 @@
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
-					<td></td>
-					<td></td>
+					<p:outputPanel 
+						rendered="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType eq 'D' or viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType eq 'E'
+							or viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType eq 'G' or viewSmApplBackingBean.managedBean.smAppl.smSupplier.businessType eq 'H'}">
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.local.authority']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.localAuthority}" /></td>
+					</p:outputPanel>
 				</tr>
 			</table>
 				
