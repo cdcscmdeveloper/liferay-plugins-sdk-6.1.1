@@ -67,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -301,6 +302,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)){
 			compBasic.setWithFederal(true);
 		} 
+		
+		if(this.getManagedBean().getSmPersonnel().getTitle() == null) {
+			this.getManagedBean().getSmPersonnel().setTitle(new PmSalutation());
+		}
 		
 		return firstUserRegistration;
 	}
