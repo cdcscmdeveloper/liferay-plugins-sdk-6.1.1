@@ -38,8 +38,7 @@
 								
 								
 					</script></td>
-					<TD style="width: 50%;"><h:outputLabel
-							value="#{lbl['lbl.sc.notes']}" /></TD>
+					<TD style="width: 50%;"></TD>
 				</tr>
 			</table>
 		</div>
@@ -77,39 +76,10 @@
 								
 								
 					</script></td>
-					<TD><h:outputLabel value="#{lbl['lbl.sc.notes']}" /></TD>
+					<TD></TD>
 				</tr>
 			</table>
 		</div>
 
 	</h:panelGroup>
-
-	<h:panelGroup id="pauseCustomDisplay"
-		rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidPaused}">
-
-		<div style="align: left">
-			<table style="width: 40%;">
-				<tr>
-					<td style="width: 40%;"><p:outputLabel
-							value="#{lbl['lbl.sc.remaining.time']}" /></td>
-					<td style="width: 20%;"><p:inputText size="3" disabled="true"
-							value="#{onlineBiddingBB.remainingHours}" /></td>
-					<td style="width: 20%;"><p:inputText size="3" disabled="true"
-							value="#{onlineBiddingBB.remainingMinutes}" /></td>
-					<td style="width: 20%;"><p:inputText size="3" disabled="true"
-							value="#{onlineBiddingBB.remainingSeconds}" /></td>
-				</tr>
-				<tr>
-					<td style="width: 40%;"></td>
-					<td style="width: 20%;text-align: left;"  ><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.hours']}" /></td>
-					<td style="width: 20%;text-align: left;"><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.minutes']}" /></td>
-					<td style="width: 20%;text-align: left;"><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.seconds']}" /></td>
-				</tr>
-			</table>
-		</div>
-	</h:panelGroup>
-
 </ui:composition>
