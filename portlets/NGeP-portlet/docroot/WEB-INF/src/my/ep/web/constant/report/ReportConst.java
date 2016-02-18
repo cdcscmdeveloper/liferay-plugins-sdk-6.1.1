@@ -723,6 +723,8 @@ public class ReportConst {
 	public static final String FL_AMP_STATUS_EQ = "&PSTATUS=";
 	public static final String FL_AMP_APPROVER_NAME_EQ = "&PAPPROVER=";
 	public static final String FL_AMP_REQUI_NAME_EQ = "&PREQUEST=";
+	public static final String FL_AMP_ACKNOWLEDGE_NAME_EQ = "&PACKOFF=";
+	public static final String FL_AMP_PAYMENT_NAME_EQ = "&PPAYOFF=";
 	public static final String FL_AMP_SUPPL_NAME_EQ = "&PSUPP=";
 	public static final String FL_AMP_MINISTRY_EQ = "&PMINIS=";
 	public static final String FL_AMP_PEGAWAI_PENGAWAI_EQ = "&PFPP";
@@ -946,6 +948,9 @@ public class ReportConst {
 	public static final String ROLE_CODE_CT_APPROVER = "CT_APPROVER";
 	public static final String ROLE_CODE_RN_APPROVER = "RN_APPROVER";
 	public static final String ROLE_CODE_RECEIVING_OFFICER = "RECEIVING_OFFICER";
+	public static final String ROLE_CODE_ACKNOWLEDGE_OFFICER = "ACKNOWLEDGE_OFFICER";
+	public static final String ROLE_CODE_PAY_OFFICER = "PAY_OFFICER";
+	public static final String STATUS_CANCELLED="Cancelled";
 
 	public static final String ROLE_CODE_UPS_PO = "UPS_PO";
 	public static final String ROLE_CODE_UPS_APPROVER = "UPS_APPROVER";
@@ -980,4 +985,5 @@ public class ReportConst {
 	// ERROR N EXCEPTIONS
 	public static final String ERR_999000_MORTHAN_TEN = "lbl.rpt.ERR_999000_MORTHAN_TEN";
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
+	
 }

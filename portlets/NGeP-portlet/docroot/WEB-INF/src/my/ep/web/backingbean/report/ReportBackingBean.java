@@ -362,6 +362,12 @@ public class ReportBackingBean extends
 	/** The rolecode approver list. */
 	private List<SelectItem> rolecodeApproverList = new ArrayList<SelectItem>();
 
+	/** The rolecode acknowledge officer list. */
+	private List<SelectItem> rolecodeAcknowledgeOfficerList = new ArrayList<SelectItem>();
+
+	/** The rolecode pay officer list. */
+	private List<SelectItem> rolecodePayOfficerList = new ArrayList<SelectItem>();
+
 	/** The rolecode recieving officer list. */
 	private List<SelectItem> rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
 
@@ -454,6 +460,8 @@ public class ReportBackingBean extends
 
 	/** The doc type status items list. */
 	private List<SelectItem> docTypeStatusItemsList = new ArrayList<SelectItem>();
+
+	private List<SelectItem> docTypeTempStatusItemsList = new ArrayList<SelectItem>();
 
 	/** The local to date var. */
 	private String localToDateVar;
@@ -719,6 +727,12 @@ public class ReportBackingBean extends
 
 	/** The fl requisitioner. */
 	private String flRequisitioner;
+
+	/** The fl acknowledge officer. */
+	private String flAcknowledgeOfficer;
+
+	/** The fl paymentofficer. */
+	private String flPaymentofficer;
 
 	/** The fl mto contract. */
 	private String flMtoContract;
@@ -8586,13 +8600,13 @@ public class ReportBackingBean extends
 						.equals(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL))) {
 			doctype = ReportConst.DOC_TYPE_SD;
 		}
-		
+
 		else if ((this.getReportValue() != null)
 				&& (this.getReportValue()
 						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL))) {
 			doctype = ReportConst.DOC_TYPE_SD;
 		}
-		
+
 		else if ((this.getReportValue() != null)
 				&& (this.getReportValue()
 						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL))) {
@@ -8637,6 +8651,21 @@ public class ReportBackingBean extends
 			for (SelectItem itemCommon : docTypeStatusItems) {
 				docTypeStatusItemsList.add(itemCommon);
 			}
+
+			if (this.getReportValue().equals(
+					ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL)
+					|| this.getReportValue().equals(
+							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) {				
+					for (SelectItem item : docTypeStatusItemsList) {
+						if (!item.getLabel().equalsIgnoreCase(
+								ReportConst.STATUS_CANCELLED))
+							docTypeTempStatusItemsList.add(item);
+					}
+				docTypeStatusItemsList.clear();
+				docTypeStatusItemsList.addAll(docTypeTempStatusItemsList);
+				docTypeTempStatusItemsList.clear();
+			}
+
 		}
 		return docTypeStatusItems;
 	}
@@ -9022,9 +9051,15 @@ public class ReportBackingBean extends
 						&& (this.getReportValue().equals(
 								ReportConst.CON_ORD_RPT_MIN_VAL)
 								|| this.getReportValue().equals(
-										ReportConst.CON_ORD_RPT_CEN_PEN_VAL) || this
-								.getReportValue().equals(
-										ReportConst.PUR_ORD_RPT_PO_VAL))) {
+										ReportConst.CON_ORD_RPT_CEN_PEN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.PUR_ORD_RPT_PO_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.PUR_REQ_CANC_RPT_PO_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.PUR_ORD_CANC_RPT_PO_VAL) || this
+								.getReportValue()
+								.equals(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL))) {
 					List<Object[]> rlcdLst = reportSO
 							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
 									ReportConst.ROLE_CODE_FL_APPROVER, lngPtjId);
@@ -9033,6 +9068,35 @@ public class ReportBackingBean extends
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1]);
 						rolecodeApproverList.add(selectItem);
+					}
+				} else if ((this.getReportValue() != null)
+						&& (this.getReportValue().equals(
+								ReportConst.FL_REC_NOTE_RPT_PO_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.LATE_DEL_RPT_PO_VAL) || this
+								.getReportValue()
+								.equals(ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL))) {
+					List<Object[]> rlcdLst = reportSO
+							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
+									ReportConst.ROLE_CODE_ACKNOWLEDGE_OFFICER,
+									lngPtjId);
+					for (Object[] object : rlcdLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						rolecodeAcknowledgeOfficerList.add(selectItem);
+					}
+				} else if ((this.getReportValue() != null)
+						&& (this.getReportValue()
+								.equals(ReportConst.PYMT_MATCH_RPT_PO_VAL))) {
+					List<Object[]> rlcdLst = reportSO
+							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
+									ReportConst.ROLE_CODE_PAY_OFFICER, lngPtjId);
+					for (Object[] object : rlcdLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						rolecodePayOfficerList.add(selectItem);
 					}
 				}
 			}
@@ -9063,6 +9127,52 @@ public class ReportBackingBean extends
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeRecievingOfficerList.add(selectItem);
+				}
+				List<Object[]> rlcdLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_REQUISITIONER);
+				for (Object[] object : rlcdLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodeRquisitionerList.add(selectItem);
+				}
+			}
+
+			if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_ACKNOWLEDGE_OFFICER))) {
+				List<Object[]> recoffLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_ACKNOWLEDGE_OFFICER);
+				for (Object[] object : recoffLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodeAcknowledgeOfficerList.add(selectItem);
+				}
+				List<Object[]> rlcdLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_REQUISITIONER);
+				for (Object[] object : rlcdLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodeRquisitionerList.add(selectItem);
+				}
+			}
+
+			if ((highRoleCodeList != null)
+					&& (highRoleCodeList
+							.contains(ReportConst.ROLE_CODE_PAY_OFFICER))) {
+				List<Object[]> recoffLst = reportSO
+						.retrieveUserListByREQUISITIONER(lngUserId,
+								ReportConst.ROLE_CODE_PAY_OFFICER);
+				for (Object[] object : recoffLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodePayOfficerList.add(selectItem);
 				}
 				List<Object[]> rlcdLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
@@ -10332,9 +10442,9 @@ public class ReportBackingBean extends
 				retrieveOnlyFPJMinistryList();
 				retrieveFPJPTJList();
 
-				/*retrievePFPPList();
-				  retrievePFJAList();
-				*/
+				/*
+				 * retrievePFPPList(); retrievePFJAList();
+				 */
 				/*
 				 * retrievePFJAList(); retrieveFPJPTJList();
 				 */
@@ -14460,6 +14570,10 @@ public class ReportBackingBean extends
 						.getFlContractType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlRequisitioner() != null) && (this
 						.getFlRequisitioner() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlAcknowledgeOfficer() != null) && (this
+						.getFlAcknowledgeOfficer() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPaymentofficer() != null) && (this
+						.getFlPaymentofficer() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlMtoContract() != null) && (this
 						.getFlMtoContract() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlInvoiceNo() != null) && (this.getFlInvoiceNo() != ReportConst.EMPTY_VAL))
@@ -14593,6 +14707,21 @@ public class ReportBackingBean extends
 						.setRequisitionerTotVar(ReportConst.FL_AMP_REQUI_NAME_EQ
 								+ this.getFlRequisitioner());
 			}
+
+			if ((this.getFlAcknowledgeOfficer() != null)
+					&& (this.getFlAcknowledgeOfficer() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setAcknowledgeOfficerTotVar(ReportConst.FL_AMP_ACKNOWLEDGE_NAME_EQ
+								+ this.getFlAcknowledgeOfficer());
+			}
+
+			if ((this.getFlPaymentofficer() != null)
+					&& (this.getFlPaymentofficer() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPaymentOfficerTotVar(ReportConst.FL_AMP_PAYMENT_NAME_EQ
+								+ this.getFlPaymentofficer());
+			}
+
 			if ((this.getFlMtoContract() != null)
 					&& (this.getFlMtoContract() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setMtoContractTotVar(ReportConst.AMP_MTO_CONTR_EQ
@@ -14841,6 +14970,8 @@ public class ReportBackingBean extends
 						+ rptGenBean.getFlRecNoteNoTotVar()
 						+ rptGenBean.getContractTypeTotVar()
 						+ rptGenBean.getRequisitionerTotVar()
+						+ rptGenBean.getAcknowledgeOfficerTotVar()
+						+ rptGenBean.getPaymentOfficerTotVar()
 						+ rptGenBean.getMtoContractTotVar()
 						+ rptGenBean.getInvoiceNoTotVar()
 						+ rptGenBean.getFlSupplierInvoiceNoVar()
@@ -15447,6 +15578,8 @@ public class ReportBackingBean extends
 		this.setFlRecNoteNo(null);
 		this.setFlContractType(null);
 		this.setFlRequisitioner(null);
+		this.setFlAcknowledgeOfficer(null);
+		this.setFlPaymentofficer(null);
 		this.setFlMtoContract(null);
 		this.setFlInvoiceNo(null);
 		this.setFlDeductionType(null);
@@ -16653,6 +16786,100 @@ public class ReportBackingBean extends
 	 */
 	public void setIsByZonelist(List<BigDecimal> isByZonelist) {
 		this.isByZonelist = isByZonelist;
+	}
+
+	/**
+	 * Gets the rolecode acknowledge officer list.
+	 * 
+	 * @return the rolecodeAcknowledgeOfficerList
+	 */
+	public List<SelectItem> getRolecodeAcknowledgeOfficerList() {
+		return rolecodeAcknowledgeOfficerList;
+	}
+
+	/**
+	 * Sets the rolecode acknowledge officer list.
+	 * 
+	 * @param rolecodeAcknowledgeOfficerList
+	 *            the rolecodeAcknowledgeOfficerList to set
+	 */
+	public void setRolecodeAcknowledgeOfficerList(
+			List<SelectItem> rolecodeAcknowledgeOfficerList) {
+		this.rolecodeAcknowledgeOfficerList = rolecodeAcknowledgeOfficerList;
+	}
+
+	/**
+	 * Gets the rolecode pay officer list.
+	 * 
+	 * @return the rolecodePayOfficerList
+	 */
+	public List<SelectItem> getRolecodePayOfficerList() {
+		return rolecodePayOfficerList;
+	}
+
+	/**
+	 * Sets the rolecode pay officer list.
+	 * 
+	 * @param rolecodePayOfficerList
+	 *            the rolecodePayOfficerList to set
+	 */
+	public void setRolecodePayOfficerList(
+			List<SelectItem> rolecodePayOfficerList) {
+		this.rolecodePayOfficerList = rolecodePayOfficerList;
+	}
+
+	/**
+	 * Gets the fl acknowledge officer.
+	 * 
+	 * @return the flAcknowledgeOfficer
+	 */
+	public String getFlAcknowledgeOfficer() {
+		return flAcknowledgeOfficer;
+	}
+
+	/**
+	 * Sets the fl acknowledge officer.
+	 * 
+	 * @param flAcknowledgeOfficer
+	 *            the flAcknowledgeOfficer to set
+	 */
+	public void setFlAcknowledgeOfficer(String flAcknowledgeOfficer) {
+		this.flAcknowledgeOfficer = flAcknowledgeOfficer;
+	}
+
+	/**
+	 * Gets the fl paymentofficer.
+	 * 
+	 * @return the flPaymentofficer
+	 */
+	public String getFlPaymentofficer() {
+		return flPaymentofficer;
+	}
+
+	/**
+	 * Sets the fl paymentofficer.
+	 * 
+	 * @param flPaymentofficer
+	 *            the flPaymentofficer to set
+	 */
+	public void setFlPaymentofficer(String flPaymentofficer) {
+		this.flPaymentofficer = flPaymentofficer;
+	}
+
+	/**
+	 * @return the docTypeTempStatusItemsList
+	 */
+	public List<SelectItem> getDocTypeTempStatusItemsList() {
+		return docTypeTempStatusItemsList;
+	}
+
+	/**
+	 * @param docTypeTempStatusItemsList
+	 *            the docTypeTempStatusItemsList to set
+	 */
+	public void setDocTypeTempStatusItemsList(
+			List<SelectItem> docTypeTempStatusItemsList) {
+		this.docTypeTempStatusItemsList = docTypeTempStatusItemsList;
 	}
 
 }
