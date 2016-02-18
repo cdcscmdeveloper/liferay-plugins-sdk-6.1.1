@@ -31,7 +31,7 @@
 					value="#{lbl['lbl.sm.suppDoc.document.hdrCpySent']}"
 					style="float: left;white-space: normal;" />
 				<p:commandButton value="#{lbl['lbl.cm.download']}"
-					rendered="#{!onTable.pmDocument.hardCopyReq and not empty onTable.smApplDocFiles and not empty onTable.smApplDocFiles[0].filePath}"
+					rendered="#{!onTable.pmDocument.hardCopyReq and not empty onTable.smApplDocFiles[0].fileName}"
 					action="#{backingBean.downloadSelectedSuppDoc(onTable.smApplDocFiles[0].fileName,onTable.smApplDocFiles[0].filePath)}"
 					update=":form" ajax="false">
 					<p:fileDownload value="#{backingBean.file}" />
