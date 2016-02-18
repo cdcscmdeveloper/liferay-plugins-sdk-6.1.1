@@ -323,15 +323,8 @@ public class SmApplicationBackingBean extends
 								mofReqDto.setSrcAppl(rejectedAppl);
 								latestResubmitAppl = SmServiceLookup
 										.getMofRegistrationSO()
-										.cloneExistingResubmitApplication(mofReqDto)
-										.getSmAppl();
-							} else {
-								mofReqDto = new MofRegistrationReqDTO();
-								mofReqDto.setApplId(Long.parseLong(applId));
-								mofReqDto.setSmSupplier(supplierProfile);
-								MofRegistrationResDTO mofRespDto = mofRegistrationSO
-										.cloneSmApplicationForResubmissionDraft(mofReqDto);
-								latestResubmitAppl = mofRespDto.getSmAppl();
+										.cloneExistingResubmitApplication(
+												mofReqDto).getSmAppl();
 							}
 						}
 						if (latestResubmitAppl == null) {
