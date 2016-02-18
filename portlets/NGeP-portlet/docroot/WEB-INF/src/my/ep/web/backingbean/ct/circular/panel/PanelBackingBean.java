@@ -53,9 +53,6 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -124,7 +121,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
@@ -330,29 +326,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				           }
 				        return;
 			         }
-			
-			        circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
-			        FacesScopes face = new FacesScopes();
-			        Object token = face.getBPMAuthenticationCtxToken();
-			        IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-
-			        BpmRequestDTO reqDTO = new BpmRequestDTO();
-			        reqDTO.setCtxToken(token);
-			        reqDTO.setTaskId(taskId);
-			
-			        BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			        Object obj = res.getPojo();			
-			        CTCircularCancellationDataType dataType = (CTCircularCancellationDataType) obj;
-			
-			        getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
-			        getManagedBean().setTaskId(taskId);
-					getManagedBean().setTaskName(res.getTaskName());
-			        String[] outcome = new String[res.getAction().length];
-			        int i = 0;
-			        for(String action : res.getAction()) 
-				          outcome[i++]= action;
-			        getManagedBean().setOutComes(outcome);	
-			
+			         
+			        circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			        CTCircularCancellationDataType dataType = super.getBpmTaskDetails(CTCircularCancellationDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});			
+					getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			        CircularReqDTO cancelReqDTO = new CircularReqDTO();
 			        cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
 			
@@ -365,6 +342,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		            else 
 			        	     getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			
+			    	initializeRemarks();
+	             	if(getManagedBean().getUserMap().size()==0) {
+	     			   initializeApproverList();
+	             	}
 			        getManagedBean().getApproverModel().setSource(getAvailableApproverList(getApproverRoleCodeByDocType()));
 			        if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 				          getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());

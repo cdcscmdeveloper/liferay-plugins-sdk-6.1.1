@@ -41,9 +41,6 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -80,7 +77,6 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -138,8 +134,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		if(ctBB == null){
    		  ctBB = new ContractBackingBean();
    	  }
-		if(this.getManagedBean().getAction() == null)
-			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
+		if(getManagedBean().getOutComes() == null)
+			this.getManagedBean().setOutComes(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
 		
 		 if(getManagedBean().getUserMap().size()==0) {
 			  initializeApproverList();
@@ -179,14 +175,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 */
 	public void preRenderView(){
 		
-		IContractTerminationSO contractTerminationSO = null;
-		BpmRequestDTO reqDTO = null;
-		ContractReqDTO ctReqDTO = null;
-		BpmResponseDTO res = null;
-		ContractResDTO resDTO = null;
-		
-		try{
-		
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
@@ -194,56 +182,102 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				return;
 			}
 			
-			FacesScopes face = new FacesScopes();
-			Object token =face.getBPMAuthenticationCtxToken();
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-
-			reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
-			reqDTO.setTaskId(taskId);
-			
-			ctReqDTO = new ContractReqDTO();
-			ctReqDTO.setUpdateAction(false);
-			
-			res = bpmSO.getTaskDetails(reqDTO);
-			Object obj = res.getPojo();
-			
-			 String[] outcome = new String[res.getAction().length + 1];
-		     outcome[0] = BpmOutcomeConst.BPM_SAVE;
-		     int i = 1;
-		     for (String action : res.getAction()) {
-			    outcome[i++] = action;
-		     }
-			
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setAction(outcome);
-			getManagedBean().setTaskName(res.getTaskName());
-			
-			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
-			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
-			ctReqDTO.setDocType(dataType.getDocType());
+			 CTContractTerminationDataType dataType =  super.getBpmTaskDetails(CTContractTerminationDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
+		     
+			 ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setUpdateAction(false);
+			reqDTO.setContractId(new Long(dataType.getContractId()));
+			reqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
+			reqDTO.setDocType(dataType.getDocType());
 			getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
-			
-			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
-			resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
-			setTerminationContractVer(resDTO);
+			setTerminationContractVer(reqDTO);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_TERMINATION);
-		
-	      } catch(Exception e){
-				e.printStackTrace();
-		 
-	      } finally {
-			   contractTerminationSO = null;
-			   reqDTO = null;
-			   ctReqDTO = null;
-			   res = null;
-			   resDTO = null;
-		  }
-	 }
+	   }
 	
+	  /**
+	 * This  method used to set retrieve value from BPM or contract maintenance
+      */
+      public void setTerminationContractVer(ContractReqDTO reqDTO) {
+             IContractTerminationSO contractTerminationSO = null;
+             ContractResDTO resDTO = null;
+             try {
+                        contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
+                        resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(reqDTO);
+                        getManagedBean().setContractVer(resDTO.getCtContractVer());
+                        getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+                        ctBB.renewSesionObject();
+                        getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+	                    ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
+                       ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
+                       ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
+                       //Retrieve agreement contract version for physical no & signed date
+                      retrieveContractVerOfAgreement();
+
+						if(getManagedBean().getContractVer().getCtTermination() == null){
+							getManagedBean().getContractVer().setCtTermination(new CtTermination());
+						    getManagedBean().getContractVer().getCtTermination().setDecisionType(new PmParameter());
+						}
+
+						if(getManagedBean().getUserMap().size()==0) {
+							  initializeApproverList();
+					     }
+						getManagedBean().getApproverModel().setSource(
+								getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+										getManagedBean().getUserMap()));
+
+						if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+							     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+							     for (PmUser approverUser : resDTO.getApproverList())  {
+									Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+									while (sourceIt.hasNext()) {
+										PmUser user = sourceIt.next();
+										if (user.getUserId() == approverUser.getUserId()) {
+											sourceIt.remove();
+										}
+								 }
+	                      }
+                     } 
+
+						getManagedBean().setRemarkList(resDTO.getCtRemarks());
+						getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+						getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+								getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+
+						ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
+						ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+						if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+							if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
+								ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
+							}
+							ctBB.getManagedBean().setGstCheckingGUI(true);
+						} else {
+							ctBB.getManagedBean().setGstCheckingGUI(false);
+						}
+						flush();
+						if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
+								if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
+									getManagedBean().setRemedy(true);
+								} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
+									getManagedBean().setTermination(true);
+								} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+									getManagedBean().setMutualTermination(true);
+								}
+						}
+
+						if(getManagedBean().getContractVer().getStatus().getStatusId().longValue()==ContractStatusConst.FT_PENDING_LETTER_PRINT_AND_UPDATE.longValue() 
+							&& getManagedBean().getContractVer().getCtTermination().getNoticeDate()==null) {
+							getManagedBean().getContractVer().getCtTermination().setNoticeDate(new Date());
+						}
+             	}catch(Exception e){
+    				e.printStackTrace();
+    				 
+      	      } finally {
+      			   contractTerminationSO = null;
+      			   resDTO = null;
+      		  }
+         }
 	/**
 	 * This  method used for back button
     */
@@ -300,72 +334,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		}
 	}
 	
-	   /**
-			 * This  method used to set retrieve value from BPM or contract maintenance
-		 */
-	public void setTerminationContractVer(ContractResDTO resDTO) {
-		getManagedBean().setContractVer(resDTO.getCtContractVer());
-		getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		ctBB.renewSesionObject();
-		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-			    ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
-		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
-		    ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
-		//Retrieve agreement contract version for physical no & signed date
-		retrieveContractVerOfAgreement();
-		
-		if(getManagedBean().getContractVer().getCtTermination() == null){
-			getManagedBean().getContractVer().setCtTermination(new CtTermination());
-		    getManagedBean().getContractVer().getCtTermination().setDecisionType(new PmParameter());
-		}
-		
-		getManagedBean().getApproverModel().setSource(
-				getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
-						getManagedBean().getUserMap()));
-	    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-		     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-		     for (PmUser approverUser : resDTO.getApproverList())  {
-				Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
-				while (sourceIt.hasNext()) {
-					PmUser user = sourceIt.next();
-					if (user.getUserId() == approverUser.getUserId()) {
-						sourceIt.remove();
-					}
-				}
-			}
-		} 
-		
-		getManagedBean().setRemarkList(resDTO.getCtRemarks());
-		getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-				getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
-		
-	    ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
-	    ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-	    if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-	    	if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
-	    		ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
-			}
-	    	ctBB.getManagedBean().setGstCheckingGUI(true);
-	    } else {
-	    	ctBB.getManagedBean().setGstCheckingGUI(false);
-	    }
-	    flush();
-		if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
-				if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
-					getManagedBean().setRemedy(true);
-				} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
-					getManagedBean().setTermination(true);
-				} else if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
-					getManagedBean().setMutualTermination(true);
-				}
-		}
-		
-		if(getManagedBean().getContractVer().getStatus().getStatusId().longValue()==ContractStatusConst.FT_PENDING_LETTER_PRINT_AND_UPDATE.longValue() 
-			&& getManagedBean().getContractVer().getCtTermination().getNoticeDate()==null) {
-			getManagedBean().getContractVer().getCtTermination().setNoticeDate(new Date());
-		}
-	}
+	 
 	
 	 /**
 	 * This method used to terminate contract
@@ -373,16 +342,15 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 *  This method will navigate to acknowledgment page with
 	 *   a confirmation message once submit successfully
 	 */
-	public String saveContractTermination(String action) throws Exception{
+	public String saveContractTermination(String outcome) throws Exception{
 		
 		 IContractTerminationSO contractTerminationSO = null;
 		 ContractReqDTO reqDTO = null;
 		 ContractResDTO resDTO = null;
 		 ContractReqDTO ctReqDTO = null;
-		 ContractResDTO ctResDTO = null;
 		 try{
 			 
-			validateContractTermination(action);
+			validateContractTermination(outcome);
 			 
 			reqDTO = new ContractReqDTO();
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -390,7 +358,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
 		   
 		    reqDTO.setToken(token);
-		    reqDTO.setOutcome(action);
+		    reqDTO.setOutcome(outcome);
 		    reqDTO.setTaskId(getManagedBean().getTaskId());
 		    reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		  
@@ -422,22 +390,22 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		    if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700046;
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
+				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
 					messageId = MessageConst.INFO_700045;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
+				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
 					messageId = MessageConst.INFO_700026;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
 				}	
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getContractVer().getDocType()), 
 								getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) {
+			    if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) {
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} 
@@ -445,16 +413,13 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			    	ctReqDTO = new ContractReqDTO();
 			    	ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 			    	ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
-			    	
-			    	ctResDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
-			    	setTerminationContractVer(ctResDTO);
+			    	setTerminationContractVer(ctReqDTO);
 				}
 			  }  else {
 				throw new EpException(MessageConst.ERROR_700020);
 			 }
 		  }finally {
 			  contractTerminationSO = null;
-			  ctResDTO = null;
 			  ctReqDTO = null;
 			  reqDTO = null;
 			  resDTO = null;
@@ -1138,23 +1103,14 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * Method used to navigate main page for contract termination
 	 */
     public String gotoTerminatePage() throws NamingException {
-    	Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
-    	ContractResDTO resDTO = null;
-    	IContractTerminationSO contractTerminationSO = null;
-    	try {
-    	          ContractReqDTO ctReqDTO = new ContractReqDTO();
-    	          ctReqDTO.setContractVerId(contractVerId);
-    	          ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-    	          contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
-		          resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
-	              getManagedBean().setViewContract(true);
-	              getManagedBean().setExternalPageUrl(TERMINATE_HISTORY_PAGE);
-	              setTerminationContractVer(resDTO);
-           }finally{
-        	   resDTO = null;
-        	   contractTerminationSO = null;
-           }
-		return PROCESS_TERMINATE_PAGE;
+    	   Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
+           ContractReqDTO reqDTO = new ContractReqDTO();
+    	   reqDTO.setContractVerId(contractVerId);
+    	   reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+    	   getManagedBean().setViewContract(true);
+	       getManagedBean().setExternalPageUrl(TERMINATE_HISTORY_PAGE);
+	       setTerminationContractVer(reqDTO);
+		   return PROCESS_TERMINATE_PAGE;
 	}
     
     /**

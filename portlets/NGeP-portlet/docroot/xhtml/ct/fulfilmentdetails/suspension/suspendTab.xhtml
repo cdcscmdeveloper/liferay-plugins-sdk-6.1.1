@@ -51,7 +51,7 @@
 					</td>
 					<td class="ppRightBtn">
 						<c:if test="#{!suspensionBackingBean.managedBean.viewOnly}">	
-						<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
+						<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />		
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
 								update ="@form"
