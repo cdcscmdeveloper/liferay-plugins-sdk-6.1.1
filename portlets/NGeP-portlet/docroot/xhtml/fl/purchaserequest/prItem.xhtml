@@ -584,11 +584,10 @@
 			</p:panel>			
 		</p:dialog>
 		
-		<p:dialog id="itemTaxGuideLineDialog"
+		<p:dialog id="itemTaxGuideLineDialog" header="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G?lbl['lbl.fl.guideline.taxable.item.g2g']:lbl['lbl.fl.guideline.taxable.item']}"
 		widgetVar="taxGuideLineInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="900" height="300" resizable="false" >
-		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" header="#{lbl['lbl.fl.guideline.taxable.item.g2g']}" toggleable="false">
-			<br/>
+		modal="true" width="900" height="500" resizable="false" >
+		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" toggleable="false">
 			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.main.header1']}" /></h5>
 			<br/>
 			<table style="width: 100%"  class="taxableGuidelineTable" >
@@ -630,8 +629,7 @@
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode ne ParameterConst.procurementTypeG2G}"  header="#{lbl['lbl.fl.guideline.taxable.item']}" toggleable="false">
-			<br/>
+		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode ne ParameterConst.procurementTypeG2G}" toggleable="false">
 			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header1']}" /></h5>
 			<br/>
 			<table style="width: 100%" class="taxableGuidelineTable">
