@@ -136,6 +136,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String regCatCodeConfirmHeader;
 	private String regCatCodeConfirmMsg;
 	private String resubmitUrl;
+	private String localAuthority;
 
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -1200,6 +1201,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setResubmitUrl(String resubmitUrl) {
 		this.resubmitUrl = resubmitUrl;
+	}
+
+	public String getLocalAuthority() {
+		return localAuthority;
+	}
+
+	public void setLocalAuthority(String localAuthority) {
+		this.localAuthority = localAuthority;
 	}
 
 }
