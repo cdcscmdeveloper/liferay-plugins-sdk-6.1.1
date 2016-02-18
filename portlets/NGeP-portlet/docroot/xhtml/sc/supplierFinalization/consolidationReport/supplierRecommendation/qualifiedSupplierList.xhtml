@@ -51,10 +51,18 @@
 				</p:column>
 				
 				<p:column style="text-align:right;">
-					<h:outputText value="#{qualifiedSupp.proposalAmount.proposalAmt}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<h:outputText value="#{qualifiedSupp.proposalAmount.proposalAmt}"
+								  rendered="#{!consolidationReportBackingBean.managedBean.itemized  
+								  					and qualifiedSupp.proposalAmount ne null}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-				</p:column>
+					<h:outputText value="#{qualifiedSupp.qtEvaluationResult.offeredPrice}"
+								  rendered="#{consolidationReportBackingBean.managedBean.itemized}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText> 
+				</p:column>				
 	
 				<p:column style="text-align:right;">
 					<h:outputText value="#{qualifiedSupp.totalScore}">
