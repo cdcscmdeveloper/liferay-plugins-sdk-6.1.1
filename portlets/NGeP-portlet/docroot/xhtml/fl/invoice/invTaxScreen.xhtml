@@ -62,9 +62,15 @@
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstUnitPrice}" rendered="#{chargeLineNode.level == 3}" style="float:right;">
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstUnitPrice}" rendered="#{chargeLineNode.level == 3 and chargeLineNode.flInvoiceItem.gstFlag.parameterCode!=ParameterConst.zeroRated and chargeLineNode.flInvoiceItem.gstFlag.parameterCode!=ParameterConst.taxRelief}" style="float:right;">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
+				<h:outputText value="0.00" rendered="#{chargeLineNode.level == 3 and chargeLineNode.flInvoiceItem.gstFlag.parameterCode==ParameterConst.zeroRated}" style="float:right;">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{chargeLineNode.level == 3 and chargeLineNode.flInvoiceItem.gstFlag.parameterCode==ParameterConst.taxRelief}" style="float:right;">
+				</h:outputText>
+				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.total.amt.gst']}" style="white-space:normal;text-align:center">
 			<f:facet name="footer">
