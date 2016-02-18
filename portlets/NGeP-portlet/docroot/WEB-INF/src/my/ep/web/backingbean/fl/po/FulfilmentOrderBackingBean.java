@@ -901,9 +901,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @throws Exception the exception
 	 */
 	public String signingAction(String outcome) throws Exception{
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || hasFactoringUserRole()) {
+			if(hasFactoringUserRole()) {
+				validateFulfillmentOrder(outcome);
+			}
 			return fulfillmentOrderAction(outcome);
-		} else if((hasSupplierRole() && !hasGovtSellerRole()) || hasFactoringUserRole()) {
+		} else if((hasSupplierRole() && !hasGovtSellerRole())) {
 			validateFulfillmentOrder(outcome);
 			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 			getManagedBean().setButtonAction(outcome);
@@ -945,7 +948,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	public String preSubmitFulfillmentOrder(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
-			if((hasSupplierRole() && !hasGovtSellerRole()) || hasFactoringUserRole()) {
+			if((hasSupplierRole() && !hasGovtSellerRole())) {
 				setTextBeforeSign(getManagedBean().getButtonAction());
 				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getFulfilmentOrder().getDocType(), 
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
