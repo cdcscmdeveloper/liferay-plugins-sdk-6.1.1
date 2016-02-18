@@ -359,6 +359,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(), msgKey,
 						null);
+			} else {
+				throw new EpException(MessageConst.ERROR_721037);
 			}
 		}
 	}
