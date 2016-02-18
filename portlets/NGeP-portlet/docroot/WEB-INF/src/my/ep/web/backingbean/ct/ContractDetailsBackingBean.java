@@ -36,8 +36,6 @@ import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
-import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
-import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -1254,9 +1252,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String gotoTerminatePage(Long contractId ) {
 		IContractSO contractSO = null;
-		ContractResDTO resDTO = null;
 		ContractReqDTO reqDTO = null;
-		IContractTerminationSO contractTerminationSO;
 		TerminationBackingBean trBB = null;
 		
 		try {
@@ -1267,20 +1263,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-			reqDTO.setUpdateAction(true);
-			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
-			
-			resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(reqDTO);
+			reqDTO.setUpdateAction(true);	
 			trBB = new TerminationBackingBean();
 			trBB.getManagedBean().setViewContract(false);
 			trBB.getManagedBean().setExternalPageUrl(null);
-			trBB.setTerminationContractVer(resDTO);  
-		} catch (Exception e) {
-			e.printStackTrace();
+			trBB.setTerminationContractVer(reqDTO);  
 		} finally{
 			contractSO = null;
-			contractTerminationSO = null;
-			resDTO = null;
 			reqDTO = null;
 			trBB= null;
 		}
@@ -1295,40 +1284,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String gotoSuspendPage(Long contractId) {
 		  
-		IContractSO contractSO = null;
-		IContractSuspensionSO contractSuspensionSO = null;
-		ContractResDTO resDTO  = null;
-		ContractReqDTO reqDTO  = null;
-		SuspensionBackingBean suspBB = null;
-		
-		try {
+			 IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		     ContractReqDTO reqDTO  = new ContractReqDTO();   
+		     reqDTO.setContractId(contractId);
+			 Long  contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+		     reqDTO.setContractVerId(contractVerId);
+			 reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+			 reqDTO.setUpdateAction(true);
 			
-			reqDTO = new ContractReqDTO();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		    reqDTO.setContractId(contractId);
-		    Long  contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-		
-			reqDTO.setContractVerId(contractVerId);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
-			reqDTO.setUpdateAction(true);
-			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
-			resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
-			
-			suspBB = new SuspensionBackingBean();
-			suspBB.getManagedBean().setViewOnly(false);
-			suspBB.setSuspensionContractVer(resDTO);
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			contractSO = null;
-			contractSuspensionSO = null;
-			resDTO = null;
-			reqDTO = null;
-			suspBB = null;
-		}
-		return PROCESS_SUSPEND_PAGE;
+			 SuspensionBackingBean	suspBB = new SuspensionBackingBean();
+		     suspBB.getManagedBean().setViewOnly(false);
+			suspBB.setSuspensionContractVer(reqDTO);
+			return PROCESS_SUSPEND_PAGE;
 	}
 	
 	/**

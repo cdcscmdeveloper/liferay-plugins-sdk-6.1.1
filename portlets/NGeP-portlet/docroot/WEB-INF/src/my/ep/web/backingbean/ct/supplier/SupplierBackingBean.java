@@ -287,10 +287,15 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				    	getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 				    	getManagedBean().setContractVer(resDTO.getCtContractVer());
 				    	getManagedBean().setCurentAccNoBankName(null);
+				    	
+				    	if (getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
+							   getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+							   getPopulateBankAccountList();
+						 }
 						
 				    	if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
 							 getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +ContractConst.SPACE_SLASH+ getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
-				       
+				    	
 				    	getManagedBean().setRemarkList(resDTO.getCtRemarks());
 				    	getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 				    	
@@ -816,7 +821,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @return populateBankAccountList  the selection list
 	 */
 	public SelectItem[] getPopulateBankAccountList() {		
-		if (getManagedBean().getPopulateBankAccountList() == null ) {
 			SelectItem[] items = null;
 			ISupplierSearchSO supplierSearchSO = null;
 	        SupplierSearchReqDTO reqDTO = null;
@@ -858,14 +862,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 							changeAccountActionListener();
 						}
 					}
-		            getManagedBean().setPopulateBankAccountList(items);	        		
+		            getManagedBean().setPopulateBankAccountList(items);	
 	        	}
-	        } finally {
+	        } 
+	        	finally {
 	        	supplierSearchSO = null;
 	            reqDTO = null;
 	            resDTO = null;
 	        }
-		}
 		return getManagedBean().getPopulateBankAccountList();
 	}
 	

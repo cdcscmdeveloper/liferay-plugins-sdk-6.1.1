@@ -53,7 +53,7 @@
 						       action="#{supplierBackingBean.backAction}" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"/>
 				    </td>
 				    <td class="ppRightBtn">
-				         <ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
+				         <ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.outComes}">
 						       <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 								<p:commandButton value="#{lbl[buttonLabel]}" update="@form,@([id$=messages])"
 									styleClass="ui-button" onstart="blockWidget.show();"	 oncomplete="blockWidget.hide();" 	

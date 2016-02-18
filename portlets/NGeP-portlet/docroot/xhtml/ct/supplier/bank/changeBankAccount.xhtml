@@ -56,7 +56,7 @@
 						immediate="true" onstart="blockWidget.show();"
 						oncomplete="window.history.back();blockWidget.hide();" rendered="#{supplierBackingBean.managedBean.taskId==null}" /></td>
 				<td class="ppRightBtn"><ui:repeat var="outcome"
-						value="#{supplierBackingBean.managedBean.action}">
+						value="#{supplierBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
