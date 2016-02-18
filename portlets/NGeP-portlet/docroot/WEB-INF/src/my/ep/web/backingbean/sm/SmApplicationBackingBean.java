@@ -301,6 +301,7 @@ public class SmApplicationBackingBean extends
 							this.getManagedBean().setValidResubmit(false);
 						}
 					}
+
 					if (this.getManagedBean().isValidResubmit()
 							&& rejAppl.getCreatedDate().compareTo(
 									supplierProfile.getSmAppl()
@@ -957,6 +958,11 @@ public class SmApplicationBackingBean extends
 		// set softcert reject reason
 		setPersonnelSoftcertRejectReason();
 
+		// populate and set default local authority
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
@@ -1221,8 +1227,8 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
 					ruleHelper);
 		}
+		setSupplierChangeValues(currentPageType);
 		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
-		saveSupplierBusinesType(currentPageType);
 		log.info("******* Current page AFTER in managed bean ********"
 				+ getManagedBean().getCurrentPageType());
 	}
@@ -1812,6 +1818,8 @@ public class SmApplicationBackingBean extends
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.retrieveCurrentDraftApplication(finReqDto);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
+			getManagedBean().setSmSupplier(
+					getManagedBean().getSmAppl().getSmSupplier());
 			setApplicationFailities(getManagedBean().getSmAppl()
 					.getSmFacilities());
 
@@ -8077,6 +8085,9 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
 	}
 
 	/**
@@ -9499,24 +9510,19 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Save supplier business type if got changes
+	 * Set supplier change values
 	 * 
 	 * @param currPage
 	 */
-	private void saveSupplierBusinesType(String currPage) {
+	private void setSupplierChangeValues(String currPage) {
 		if (currPage
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 				&& !getManagedBean().isDisabledBusinessType()) {
-			getManagedBean()
-					.getSmAppl()
-					.getSmSupplier()
-					.setBusinessType(
-							getManagedBean().getSmSupplier().getBusinessType());
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
-			getManagedBean().setSmSupplier(
-					SmServiceLookup.getMofRegistrationSO()
-							.updateSupplierProfile(reqDTO).getSmSupplier());
+			SmSupplier supplier = getManagedBean().getSmAppl().getSmSupplier();
+			supplier.setBusinessType(getManagedBean().getSmSupplier()
+					.getBusinessType());
+			supplier.setLocalAuthorityId(getManagedBean().getSmSupplier()
+					.getLocalAuthorityId());
 		}
 	}
 

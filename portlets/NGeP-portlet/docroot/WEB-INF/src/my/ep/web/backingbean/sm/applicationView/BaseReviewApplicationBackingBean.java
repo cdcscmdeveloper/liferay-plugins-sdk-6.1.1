@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -29,6 +30,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -432,6 +434,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				SmCommonUtil.getDropDownViewOnlyValueByCode(
 						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 						getManagedBean().getSmSupplier().getBusinessType()));
+		populateLocalAuthority(getManagedBean().getSmSupplier(), smAppl
+				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress());
+		for (SelectItem item : getManagedBean().getLocalAuthorityItems()) {
+			if (item.getValue().equals(
+					getManagedBean().getSmSupplier().getLocalAuthorityId())) {
+				getManagedBean().setLocalAuthority(item.getLabel());
+				break;
+			}
+		}
 		if (getManagedBean().isViewSupplierProfile()) {
 			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
 		}

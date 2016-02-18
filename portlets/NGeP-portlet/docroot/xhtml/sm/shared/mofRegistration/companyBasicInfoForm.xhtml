@@ -384,6 +384,22 @@
 							currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.website}" 
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.website}"/>
 					</td>
+					<td>
+						<p:outputPanel id="localAuthLabelOutPanelId" 
+							rendered="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
+								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}">
+							<p:outputLabel value="#{lbl['lbl.sm.local.authority']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</p:outputPanel>
+					</td>
+					<td>
+						<p:outputPanel id="localAuthInputOutPanelId" 
+							rendered="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
+								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}">
+							<ac:smLocalAuthoritySelectItems backingBean="#{backingBean}" 
+								smSupplier="#{backingBean.managedBean.smSupplier}" required="true"/>
+						</p:outputPanel>
+					</td>
 				</tr>
 				
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
