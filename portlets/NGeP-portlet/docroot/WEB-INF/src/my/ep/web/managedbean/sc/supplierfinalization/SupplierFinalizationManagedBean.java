@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -150,7 +151,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl recommendedSupplierByItem;
 	private ScQtEvaluationResultDtl prevRecommendedSupplierByItem;
 	
-	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
+//	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
+	
+	/** Qualified suppliers by evaluation stage */
+	private IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;	
+	
 	private List<ScQtEvaluationResultDtl> shortlistedPackageList;
 	private List<ScQtEvaluationResultDtl> shortlistedSupplierList;
 	private List<ScQtEvaluationResultDtl> recommendedSupplierList;
@@ -1582,10 +1587,33 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.resetSupplierList = resetSupplierList;
 	}
 
+//	/**
+//	 * @return the qualifiedSuppliersByEvalStage
+//	 */
+//	public List<ScQtEvaluationResultDtl> getQualifiedSuppliersByEvalStage() {
+//		return qualifiedSuppliersByEvalStage;
+//	}
+//
+//	/**
+//	 * @param qualifiedSuppliersByEvalStage
+//	 *            the qualifiedSuppliersByEvalStage to set
+//	 */
+//	public void setQualifiedSuppliersByEvalStage(
+//			List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage) {
+//		this.qualifiedSuppliersByEvalStage = qualifiedSuppliersByEvalStage;
+//	}
+
+	/**
+	 * @return the shortlistedPackageList
+	 */
+	public List<ScQtEvaluationResultDtl> getShortlistedPackageList() {
+		return shortlistedPackageList;
+	}
+
 	/**
 	 * @return the qualifiedSuppliersByEvalStage
 	 */
-	public List<ScQtEvaluationResultDtl> getQualifiedSuppliersByEvalStage() {
+	public IPagingDataModel<ScQtEvaluationResultDtl> getQualifiedSuppliersByEvalStage() {
 		return qualifiedSuppliersByEvalStage;
 	}
 
@@ -1594,15 +1622,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 *            the qualifiedSuppliersByEvalStage to set
 	 */
 	public void setQualifiedSuppliersByEvalStage(
-			List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage) {
+			IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage) {
 		this.qualifiedSuppliersByEvalStage = qualifiedSuppliersByEvalStage;
-	}
-
-	/**
-	 * @return the shortlistedPackageList
-	 */
-	public List<ScQtEvaluationResultDtl> getShortlistedPackageList() {
-		return shortlistedPackageList;
 	}
 
 	/**
