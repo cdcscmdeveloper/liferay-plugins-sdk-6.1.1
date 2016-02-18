@@ -143,19 +143,32 @@
 			</tr>
 		</table>
 		<p:dialog id="gfmasErrorDlg" header="1GFMAS Error" widgetVar="gfmasError"
-		showEffect="fade" hideEffect="fade" modal="true" 
-		resizable="false">
-		<table style="width: 100%">
-			<tr>
-				<td><p:messages id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
-			</tr>
-		</table>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Close" oncomplete="gfmasError.hide();">
-			</p:commandButton>
-		</div>
-	</p:dialog>
+			showEffect="fade" hideEffect="fade" modal="true" 
+			resizable="false">
+			<table style="width: 100%">
+				<tr>
+					<td><p:messages id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				</tr>
+			</table>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton value="Close" oncomplete="gfmasError.hide();">
+				</p:commandButton>
+			</div>
+		</p:dialog>
+		<p:confirmDialog message="#{contractRequestBackingBean.getCancelConfirmationContent(ParameterConst.doctypeContractRequest)}"
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					partialSubmit="true" process="@this"
+					action="#{contractRequestBackingBean.submitAction('CANCEL')}"
+					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="cancelConfirmDlg.hide()" type="button" />
+			</div>
+		</p:confirmDialog>	
 		<ac:lovPopup />
 	</ui:define>
 </ui:composition>
