@@ -17,12 +17,13 @@
 		<ui:param name="isFinancialEvalStageByItem" value="#{suppFinalizationBackingBean.managedBean.evaluationStageId == 2 and 
 																suppFinalizationBackingBean.managedBean.itemize}" />																
 																		
-		<p:dataTable id="qualifiedSuppliersList" style="width:100%; height:75%;"
-			var="qualifiedSupp" widgetVar="qualifiedSupplierDtls"
-			value="#{suppFinalizationBackingBean.managedBean.qualifiedSuppliersByEvalStage}"
-			rowIndexVar="index" rows="10">
+		<p:dataTable id="evaluationQualifiedSuppliers" style="width:100%; height:75%;" 
+					 var="qualifiedSupp" widgetVar="qualifiedSupplierDtls" 
+					 rowKey="#{qualifiedSupp.evaluationResultDtlId}" 
+					 rowIndexVar="index" rows="10" lazy="true" 
+					 value="#{suppFinalizationBackingBean.managedBean.qualifiedSuppliersByEvalStage}">
 
-			<ac:paginator for="qualifiedSuppliersList" />
+			<ac:paginator for="evaluationQualifiedSuppliers" />
 
 			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:right;">
 				<h:outputText value="#{qualifiedSupp.evalRank}">
@@ -38,8 +39,7 @@
 					<f:setPropertyActionListener
 						value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 						target="#{supplierDetailBackingBean.smSupplier}" />
-					<h:outputText
-						value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
+					<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 				</p:commandLink>
 			</p:column>
 
