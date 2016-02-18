@@ -23,6 +23,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 @ManagedBean(name = "registrationMB")
 @SessionScoped
@@ -45,6 +46,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<SelectItem> residentialCityLs;
 	private List<SelectItem> permenantCityLs;
 
+	private List<SelectItem> salutationItems;
+	
 	private boolean sameAddress;
 	private SmSupplierBank[] selectedSuppBanks;
 //	private List<SmSupplierBank> smSuppBanks;
@@ -602,6 +605,17 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setCaptchaAnswer(String captchaAnswer) {
 		this.captchaAnswer = captchaAnswer;
+	}
+
+	public List<SelectItem> getSalutationItems() {
+		if(salutationItems == null || salutationItems.size() > 0) {
+			salutationItems = SmCommonUtil.getSalutationItems();
+		}
+		return salutationItems;
+	}
+
+	public void setSalutationItems(List<SelectItem> salutationItems) {
+		this.salutationItems = salutationItems;
 	}
 
 }
