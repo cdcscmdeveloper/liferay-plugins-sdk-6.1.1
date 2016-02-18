@@ -31,6 +31,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
@@ -136,6 +137,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -772,7 +774,9 @@ public class SupplierFinalizationBackingBean extends
 		}
 		getManagedBean().setEvaluationStageId(evaluationStageId);
 		
+		Long qtId = getManagedBean().getScQt().getQtId();
 		Long selectedZoneId = null;
+		Long selectedItemId = null;
 		String evaluationStage = null;
 		String evaluationHeader = null;
 		
@@ -788,6 +792,16 @@ public class SupplierFinalizationBackingBean extends
 					 
 			case 2 : if (getManagedBean().isItemize()) {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_FINANCIAL_ITM;
+						 
+						 if (getManagedBean().isItemRowSelect() && 
+								 getManagedBean().getSelectedItem() != null) {
+							selectedItemId = getManagedBean().getSelectedItem()
+										.getRequestItem().getRequestNoteItemId();
+						 } else {
+							 getManagedBean().setQualifiedSuppliersByEvalStage(null);
+							 log.debug("None of the item(s) has been row selected");
+							 return;
+						 }
 					 } else {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
 					 }
@@ -799,33 +813,10 @@ public class SupplierFinalizationBackingBean extends
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
 		
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			
-			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-			reqDTO.setEvaluationStage(evaluationStage);
-			reqDTO.setQtZoneCriteriaId(selectedZoneId);			
-
-			if (getManagedBean().isItemRowSelect() && 
-					getManagedBean().getSelectedItem() != null) {
-				reqDTO.setRequestItemId(getManagedBean().getSelectedItem()
-						.getRequestItem().getRequestNoteItemId());
-			}
-			
-			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
-						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
-			if (resDTO.isSuccessful()) {
-				getManagedBean().setQualifiedSuppliersByEvalStage(
-						 resDTO.getQualifiedSuppliersByEvalStage());
-			}
-			
-		} finally {
-			qtSuppFinalizationSO = null;
-		}
+		getManagedBean().setQualifiedSuppliersByEvalStage(
+				new QualifiedSuppliersPagingDataModel(
+						"evaluationQualifiedSuppliers", qtId,
+						selectedZoneId, selectedItemId, evaluationStage));
 	}
 	
 	/**
@@ -5328,6 +5319,7 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().getZoneActiveIndex()) {
 			return;
 		}
+		getManagedBean().setSelectedItem(null);
 		
 		TplSpecZoneDtl currentZone = this.getManagedBean().getCurrentZone();
 		if (!this.getManagedBean().isItemize()) {
@@ -5438,6 +5430,8 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setReEvaluate(false);
 		this.getManagedBean().setRePublish(false);
 		this.getManagedBean().setForwardToHigherAuthority(false);
+		
+		getManagedBean().setSelectedItem(null);
 		this.getManagedBean().setRecommendedSupplier(null);
 
 		boolean disableFwdToHighAuthorityOption = false;
@@ -5887,7 +5881,7 @@ public class SupplierFinalizationBackingBean extends
 
 		int tabIndex = 0;
 		MenuItem menuItem = null;
-		String tabMenuChangeAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
+		String tabMenuChangeCommonAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
 		
 		// Preparation Menu Item
 		if (!isBPKUser) {
@@ -5901,7 +5895,7 @@ public class SupplierFinalizationBackingBean extends
 			menuItem.setPartialSubmit(true);
 			menuItem.setProcess("@form");
 			menuItem.setUpdate("@form");
-			menuItem.setOncomplete(tabMenuChangeAction
+			menuItem.setOncomplete(tabMenuChangeCommonAction
 					+ (tabIndex++) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);
 		}
@@ -5918,7 +5912,7 @@ public class SupplierFinalizationBackingBean extends
 		menuItem.setPartialSubmit(true);
 		menuItem.setProcess("@form");
 		menuItem.setUpdate("@form");
-		menuItem.setOncomplete(tabMenuChangeAction
+		menuItem.setOncomplete(tabMenuChangeCommonAction
 				+ (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
 		mainMenuModel.addMenuItem(menuItem);
 		
@@ -5934,7 +5928,7 @@ public class SupplierFinalizationBackingBean extends
 		menuItem.setPartialSubmit(true);
 		menuItem.setProcess("@form");
 		menuItem.setUpdate("@form");
-		menuItem.setOncomplete(tabMenuChangeAction
+		menuItem.setOncomplete(tabMenuChangeCommonAction
 				+ (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
 		mainMenuModel.addMenuItem(menuItem);
 
@@ -5942,13 +5936,16 @@ public class SupplierFinalizationBackingBean extends
 		// Supplier Finalization Committee Endorsement Menu Item
 		if (!isBPKUser) {
 			menuItem = new MenuItem();
-			menuItem.setValue("Endorsement Report");
+			menuItem.setValue(ResourceBundleUtils.getMessage(
+							"lbl.sc.committee.endorsement.report",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
 			menuItem.setStyle("width:15%;");
 			menuItem.setTransient(true);
 			menuItem.setPartialSubmit(true);
 			menuItem.setProcess("@form");
 			menuItem.setUpdate("@form");
-			menuItem.setOncomplete(tabMenuChangeAction
+			menuItem.setOncomplete(tabMenuChangeCommonAction
 					+ (tabIndex++) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);	
 			
@@ -5962,7 +5959,7 @@ public class SupplierFinalizationBackingBean extends
 			menuItem.setPartialSubmit(true);
 			menuItem.setProcess("@form");
 			menuItem.setUpdate("@form");
-			menuItem.setOncomplete(tabMenuChangeAction
+			menuItem.setOncomplete(tabMenuChangeCommonAction
 					+ (tabIndex++) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);			
 		}
@@ -7367,29 +7364,6 @@ public class SupplierFinalizationBackingBean extends
 		return WordUtils.capitalizeFully(NumberWordUtil.convert(amount.toString()));
 	}
 	
-	private BigDecimal calculateAfterNegoSubTotal(
-			List<ScLoiLoaItem> scLoiLoaItems,
-			List<ScQtRecommend> recommendedItems) {
-		BigDecimal afterNegotiationSubTotal = new BigDecimal(0.0);
-
-		if (CollectionUtils.isNotEmpty(scLoiLoaItems)) {
-			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-				if (scLoiLoaItem.getAfterNegoSubTotal() != null) {
-					BigDecimal itemAfterNegoSubTotal = scLoiLoaItem
-							.getAfterNegoSubTotal();
-					itemAfterNegoSubTotal = itemAfterNegoSubTotal.setScale(2,
-							BigDecimal.ROUND_HALF_EVEN);
-					afterNegotiationSubTotal = afterNegotiationSubTotal
-							.add(itemAfterNegoSubTotal);
-					afterNegotiationSubTotal = afterNegotiationSubTotal
-							.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-				}
-			}
-		}
-
-		return afterNegotiationSubTotal;
-	}	
-	
 	private void calculateBidPrice(List<ScQtRecommend> recommendedItems, 
 								   ScQtEvaluationResultDtl scQtEvalResDtl) {
 		BigDecimal totalBidPrice = new BigDecimal(0.0);
@@ -7994,6 +7968,92 @@ public class SupplierFinalizationBackingBean extends
 			this.totalSubmitted = totalSubmitted;
 		}
 	}
+	
+	/**
+	 * Evaluation Qualified Suppliers Paging Data Model
+	 * 
+	 * @author Praneeth
+	 * @since 17.02.2016
+	 */
+	private class QualifiedSuppliersPagingDataModel extends
+			PagingDataModel<ScQtEvaluationResultDtl> {
+
+		private static final long serialVersionUID = 1L;
+
+		private Long qtId;
+		private Long selectedZoneId;
+		private Long selectedItemId;
+		private String evaluationStage;
+
+		/**
+		 * Constructor for Summary Supplier Paging Data Model
+		 */
+		public QualifiedSuppliersPagingDataModel(String componentId,
+					            Long qtId, Long selectedZoneId, 
+								Long selectedItemId, String evaluationStage) {
+			super(componentId);
+			this.qtId = qtId;
+			this.selectedZoneId = selectedZoneId; 
+			this.selectedItemId = selectedItemId;
+			this.evaluationStage = evaluationStage;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<ScQtEvaluationResultDtl> pageChangeListener(
+				ISearchBean<ScQtEvaluationResultDtl> searchBean) {
+			ISearchResultBean<ScQtEvaluationResultDtl> resultBean = null;
+			
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"qtEvaluationResult.scQtProposal.scQtSupplier.scQt.qtId",
+					SearchOperator.OPERATOR_EQUALS.value(), qtId));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("qtEvaluationResult.evaluationStage",
+							SearchOperator.OPERATOR_EQUALS.value(), evaluationStage));
+			
+			if (null != selectedZoneId) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("tplSpecZoneDtl.specZoneId",
+								SearchOperator.OPERATOR_EQUALS.value(), selectedZoneId));
+			}
+			if (null != selectedItemId) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scRequestItem.requestNoteItemId",
+								SearchOperator.OPERATOR_EQUALS.value(), selectedItemId));				
+			}			
+			
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+			try {
+				qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				
+				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+				reqDTO.setSearchBean(searchBean);
+				
+				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
+				if (resDTO.isSuccessful()) {
+					resultBean = resDTO.getQualifiedSuppliersByEvalStage();
+				}
+			} finally {
+				qtSuppFinalizationSO = null;
+			}
+			
+			return resultBean;
+		}
+	}
+	
 	
 	/**
 	 * Inner class FinalizationEndorsementReportDTO for 
