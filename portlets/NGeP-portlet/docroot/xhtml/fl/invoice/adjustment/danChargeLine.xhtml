@@ -29,15 +29,15 @@
 			</tr>
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.fl.dan.total.dan.amount']}" rendered="#{danBackingBean.managedBean.adjustment.docType eq 'DN'}" />
-					<p:outputLabel value="#{lbl['lbl.fl.dan.total.can.amount']}" rendered="#{danBackingBean.managedBean.adjustment.docType eq 'CN'}" />
+					<p:outputLabel value="#{lbl['lbl.fl.dan.total.dan.amount']}" rendered="#{danBackingBean.managedBean.adjustment.docType eq ParameterConst.doctypeDebitAdjustmentNote}" />
+					<p:outputLabel value="#{lbl['lbl.fl.dan.total.can.amount']}" rendered="#{danBackingBean.managedBean.adjustment.docType eq ParameterConst.doctypeCreditAdjustmentNote}" />
 				</td>
 				<td><p:inputText size="15" disabled="true" style="text-align:right"
 						value="#{danBackingBean.managedBean.danAmtTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.total.dan.amt']}"/></td>
+					<ac:iconTooltip value="#{danBackingBean.managedBean.adjustment.docType eq ParameterConst.doctypeDebitAdjustmentNote?lbl['lbl.fl.tooltip.total.dan.amt']:lbl['lbl.fl.tooltip.total.can.amt']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
