@@ -363,7 +363,7 @@
 			   showDetail="true"   autoUpdate="true" cosable="true" severity="error, info" />
 					<h:panelGrid columns="6">
 					<h:outputText value="#{lbl['lbl.ct.contract.no']}" />
-					<p:inputText id="contractNo" maxlength="17"  validator="#{webappBean.checkIntegerField}"
+					<p:inputText id="contractNo" maxlength="17"  validator="#{webappBean.validateNumbers}"
 						value="#{centralContractBackingBean.managedBean.searchContractNo}"/>
 					<p:spacer width="10" />
 					<h:outputText value="#{lbl['lbl.ct.contract.title']}" />
