@@ -34,22 +34,45 @@
 								<td width="15%"><p:outputLabel
 										value="#{lbl['lbl.cm.item.name.keyword']}" /></td>
 								<td width="35%%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
+										value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText>
+									<p:graphicImage id="itemNameID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="itemNameID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.product.service']}" />
+									</p:tooltip></td>
 								<td width="15%"><p:outputLabel
 										value="#{lbl['lbl.cm.item.code']}" /></td>
 								<td width="35%"><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText></td>
+										value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText>
+									<p:graphicImage id="itemCodeID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="itemCodeID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.item.code']}" />
+									</p:tooltip></td>
 							</tr>
 
 
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
 								<td><p:inputText size="50"
-										value="#{catalogueBackingBean.managedBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
-								<td><p:outputLabel
-											value="#{lbl['lbl.cm.business.reg.no']}" /></td>
+										value="#{catalogueBackingBean.managedBean.supplierNameFilterBean.searchValue}"></p:inputText>
+									<p:graphicImage id="suppID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="suppID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.supplier']}" />
+									</p:tooltip></td>
+								<td><p:outputLabel value="#{lbl['lbl.cm.business.reg.no']}" /></td>
 								<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText></td>
+										value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText>
+									<p:graphicImage id="regNoID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="regNoID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.business.registration.no']}" />
+									</p:tooltip></td>
 
 							</tr>
 						</table>
@@ -60,10 +83,15 @@
 											value="#{lbl['lbl.cm.ep.no']}" /></td>
 									<td width="35%"><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}"></p:inputText></td>
-									<td><p:outputLabel
-											value="#{lbl['lbl.sm.mofno']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.sm.mofno']}" /></td>
 									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText></td>
+											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText>
+										<p:graphicImage id="mofNoID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="mofNoID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.mof.no']}" />
+										</p:tooltip></td>
 
 								</tr>
 
@@ -76,25 +104,37 @@
 											value="/css/images/design/tooltips.png" /> <p:tooltip
 											id="uid" for="uidt">
 											<p:outputLabel escape="false"
-												value="#{lbl['lbl.fl.tooltip.active.contract.mof']}" />
+												value="#{lbl['lbl.tooltip.contract.no']}" />
 										</p:tooltip></td>
 
-									<td width="15%"><p:outputLabel value="#{lbl['lbl.ct.contract.title']}" /></td>
+									<td width="15%"><p:outputLabel
+											value="#{lbl['lbl.ct.contract.title']}" /></td>
 									<td width="35%"><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.contractTitleFilterBean.searchValue}"></p:inputText></td>
 
 
 								</tr>
-								
+
 								<tr>
-									<td><p:outputLabel
-											value="#{lbl['lbl.ct.loa.no']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.loaNoFilterBean.searchValue}" />
-									</td>
-									<td><p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" /></td>
+										<p:graphicImage id="loaNoID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="loaNoID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.letter.of.acceptance.loa.no']}" />
+										</p:tooltip></td>
+									<td><p:outputLabel
+											value="#{lbl['lbl.ct.loa.physical.no']}" /></td>
 									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.loaPhysicalNoFilterBean.searchValue}"></p:inputText></td>
+											value="#{catalogueBackingBean.managedBean.loaPhysicalNoFilterBean.searchValue}"></p:inputText>
+										<p:graphicImage id="phyloaNoID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="phyloaNoID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.physical.letter.of.acceptance.loa.no']}" />
+										</p:tooltip></td>
 								</tr>
 
 								<tr>
@@ -102,18 +142,29 @@
 											value="#{lbl['lbl.cm.physical.contract.no']}" /></td>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.physicalContractNoFilterBean.searchValue}" />
-									</td>
+										<p:graphicImage id="phyContractNoID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="phyContractNoID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.physical.contract.no']}" />
+										</p:tooltip></td>
 									<td><p:outputLabel value="#{lbl['lbl.cm.circular.no']}" /></td>
 									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText></td>
+											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText>
+										<p:graphicImage id="circularID"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="circularID">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.treasury.circular.1pp.no']}" />
+										</p:tooltip></td>
 								</tr>
 							</table>
 						</h:panelGroup>
 						<table style="width: 100%">
 							<tr>
-								<td width="15%"><p:outputLabel
+								<td width="16%"><p:outputLabel
 										value="#{lbl['lbl.sm.state']}" /></td>
-								<td width="35%"><p:selectManyMenu id="stateIdDD"
+								<td width="15%"><p:selectManyMenu id="stateIdDD"
 										showCheckbox="true" style="height:100px;width: 200px;"
 										value="#{catalogueBackingBean.managedBean.stateId}">
 										<f:selectItems
@@ -123,9 +174,15 @@
 										<p:ajax listener="#{catalogueBackingBean.findDistrict}"
 											update="@(.ui-selectmanymenu[id$=districtDD])"></p:ajax>
 									</p:selectManyMenu></td>
+								<td width="20%"><p:graphicImage id="stateID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="stateID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.state']}" />
+									</p:tooltip></td>
 								<td width="15%"><p:outputLabel
 										value="#{lbl['lbl.sm.district']}" /></td>
-								<td width="35%"><p:selectManyMenu id="districtDD"
+								<td width="15%"><p:selectManyMenu id="districtDD"
 										showCheckbox="true" style="height:100px;width: 200px;"
 										value="#{catalogueBackingBean.managedBean.districtId}">
 										<f:selectItems
@@ -133,11 +190,18 @@
 											var="district" itemLabel="#{district.districtName}"
 											itemValue="#{district.districtId}"></f:selectItems>
 									</p:selectManyMenu></td>
+								<td width="20%"><p:graphicImage id="districtID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="districtID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.district']}" />
+									</p:tooltip></td>
 
 							</tr>
-							<tr style="height:30px">
-							<td><p:outputLabel value="G2G"/></td>
-							<td><p:selectBooleanCheckbox value="#{catalogueBackingBean.managedBean.g2gFlag}"/></td>
+							<tr style="height: 30px">
+								<td><p:outputLabel value="G2G" /></td>
+								<td><p:selectBooleanCheckbox
+										value="#{catalogueBackingBean.managedBean.g2gFlag}" /></td>
 							</tr>
 						</table>
 
@@ -227,10 +291,11 @@
 									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
 							</p:tabMenu>
 
-							<p:dataTable lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							<p:dataTable lazy="true"
+								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 								rendered="#{catalogueBackingBean.managedBean.renderTableView}"
 								value="#{catalogueBackingBean.managedBean.searchDataModel}"
-								rowKey="#{supplierItem.rowId}" 
+								rowKey="#{supplierItem.rowId}"
 								selection="#{catalogueBackingBean.managedBean.selectedItems}"
 								id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
 								rows="10">
@@ -278,10 +343,12 @@
 								<p:column width="8%" headerText="#{lbl['lbl.cm.contact.no']}"
 									rendered="#{unspscCodeBackingBean.requisitioner}"
 									style="white-space: normal">
-								<h:outputText value="#{supplierItem.latestContractPhysicalNo}" rendered="#{supplierItem.latestContractPhysicalNo != null}"/>
-								<h:outputText value="&lt;br/&gt;" escape="false" rendered="#{supplierItem.latestContractPhysicalNo != null}"/>
-								<h:outputText value="#{supplierItem.contractNo}" />
-							</p:column>
+									<h:outputText value="#{supplierItem.latestContractPhysicalNo}"
+										rendered="#{supplierItem.latestContractPhysicalNo != null}" />
+									<h:outputText value="&lt;br/&gt;" escape="false"
+										rendered="#{supplierItem.latestContractPhysicalNo != null}" />
+									<h:outputText value="#{supplierItem.contractNo}" />
+								</p:column>
 
 								<p:column width="8%" headerText="#{lbl['lbl.cm.circular.no']}"
 									rendered="#{unspscCodeBackingBean.requisitioner}"
@@ -400,8 +467,8 @@
 										rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }"
 										partialSubmit="true" process="@this"
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-										<p:graphicImage  value="/css/images/design/cart.png"  id="addToCartId"
-											style="max-width: 16px;" />
+										<p:graphicImage value="/css/images/design/cart.png"
+											id="addToCartId" style="max-width: 16px;" />
 									</p:commandLink>
 									<p:tooltip for="addToCartId">
 										<h:outputText value="#{lbl['lbl.sc.atc.tooltip']}"
@@ -465,9 +532,9 @@
 																	action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
 																	disabled="#{!supplierItem.pidRequired}"
 																	rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
-																</p:commandButton> <p:tooltip for="pidId" value="#{lbl['lbl.sc.purchase.in.default']}" />
-																<p:commandButton value="#{lbl['lbl.sc.simple.quote']}"
-																	id="sqId"
+																</p:commandButton> <p:tooltip for="pidId"
+																	value="#{lbl['lbl.sc.purchase.in.default']}" /> <p:commandButton
+																	value="#{lbl['lbl.sc.simple.quote']}" id="sqId"
 																	action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"
 																	rendered="#{supplierItem.circularNo ne null}"
 																	disabled="#{supplierItem.circularNo ne null }">
