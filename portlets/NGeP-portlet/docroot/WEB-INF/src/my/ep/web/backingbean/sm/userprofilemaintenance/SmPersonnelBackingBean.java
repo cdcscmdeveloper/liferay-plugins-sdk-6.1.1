@@ -1093,51 +1093,63 @@ public class SmPersonnelBackingBean extends
 	 * 
 	 * @throws Exception
 	 */
-	public void save() throws Exception {
-		if (getManagedBean().getBasicSmPersonnel() != null) {
-			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
-					.getBasicSmPersonnel().getName(), getManagedBean()
-					.getBasicSmPersonnel().getEmail());
-		}
-		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
-			getManagedBean().setBasicSmPersonnel(
-					saveNewUser(getManagedBean().getBasicSmPersonnel()));
-			initAuthorizedPersonnels(getManagedBean().getSmSupplier());
-			getManagedBean().setDisableAddNewUser(
-					validatePersonLimit(getManagedBean().getSmSupplier()));
-		} else {
-			if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				updateUser(getManagedBean().getBasicSmPersonnel());
+	public void save() {
+		try {
+			if (getManagedBean().getBasicSmPersonnel() != null) {
+				SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
+						.getBasicSmPersonnel().getName(), getManagedBean()
+						.getBasicSmPersonnel().getEmail());
+			}
+			if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
+				getManagedBean().setBasicSmPersonnel(
+						saveNewUser(getManagedBean().getBasicSmPersonnel()));
 				initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 				getManagedBean().setDisableAddNewUser(
 						validatePersonLimit(getManagedBean().getSmSupplier()));
-			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				if (!getManagedBean().isDeactivatePersonnel()) {
-					String[] params = { getManagedBean().getBasicSmPersonnel()
-							.getName() };
-					getManagedBean().setDeactivateTerminateConfirmMsg(
-							SmCommonUtil.getMessage(
-									"lbl.sm.userprofile.deactivate.personnel",
-									params));
-					RequestContext.getCurrentInstance().execute(
-							"confirmDialog.show()");
-				} else {
-					getManagedBean().getBasicSmPersonnel().setEpRole(null);
+			} else {
+				if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					updateUser(getManagedBean().getBasicSmPersonnel());
 					initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 					getManagedBean().setDisableAddNewUser(
 							validatePersonLimit(getManagedBean()
 									.getSmSupplier()));
+				} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					if (!getManagedBean().isDeactivatePersonnel()) {
+						String[] params = { getManagedBean()
+								.getBasicSmPersonnel().getName() };
+						getManagedBean()
+								.setDeactivateTerminateConfirmMsg(
+										SmCommonUtil
+												.getMessage(
+														"lbl.sm.userprofile.deactivate.personnel",
+														params));
+						RequestContext.getCurrentInstance().execute(
+								"confirmDialog.show()");
+					} else {
+						getManagedBean().getBasicSmPersonnel().setEpRole(null);
+						updateUser(getManagedBean().getBasicSmPersonnel());
+						initAuthorizedPersonnels(getManagedBean()
+								.getSmSupplier());
+						getManagedBean().setDisableAddNewUser(
+								validatePersonLimit(getManagedBean()
+										.getSmSupplier()));
+					}
+				} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
+					String[] params = { getManagedBean().getBasicSmPersonnel()
+							.getName() };
+					getManagedBean().setDeactivateTerminateConfirmMsg(
+							SmCommonUtil.getMessage(
+									"lbl.sm.userprofile.terminate.personnel",
+									params));
+					RequestContext.getCurrentInstance().execute(
+							"confirmDialog.show()");
 				}
-			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
-				String[] params = { getManagedBean().getBasicSmPersonnel()
-						.getName() };
-				getManagedBean().setDeactivateTerminateConfirmMsg(
-						SmCommonUtil.getMessage(
-								"lbl.sm.userprofile.terminate.personnel",
-								params));
-				RequestContext.getCurrentInstance().execute(
-						"confirmDialog.show()");
+			}
+		} catch (Exception ex) {
+			if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
+				throw new EpException(MessageConst.ERROR_722633);
+			} else {
+				throw new EpException(MessageConst.ERROR_722632);
 			}
 		}
 	}
@@ -1164,7 +1176,7 @@ public class SmPersonnelBackingBean extends
 	 *            smPersonnel
 	 * @throws Exception
 	 */
-	public void updateUser(SmPersonnel smPersonnel) throws Exception {
+	public void updateUser(SmPersonnel smPersonnel) {
 		if (smPersonnel.getTitle() != null
 				&& smPersonnel.getTitle().getSalutationId() == null) {
 			smPersonnel.setTitle(null);
@@ -1175,6 +1187,8 @@ public class SmPersonnelBackingBean extends
 			SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
 					MessageConst.INFO_100002, null);
 			getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
+		} else {
+			throw new EpException(MessageConst.ERROR_722632);
 		}
 	}
 
@@ -1221,6 +1235,7 @@ public class SmPersonnelBackingBean extends
 
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.savePersonnelRecord(reqDTO);
+		SmPersonnel personnel = resDTO.getSmPersonnel();
 
 		if (resDTO.isSuccessful()) {
 			SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
@@ -1229,9 +1244,10 @@ public class SmPersonnelBackingBean extends
 							smPersonnel.getEmail(),
 							SmRuleHelper.getInstance().getEmailActivationDays()
 									+ "" });
-			return resDTO.getSmPersonnel();
-		} else
-			return null;
+		} else {
+			throw new EpException(MessageConst.ERROR_722633);
+		}
+		return personnel;
 	}
 
 	/**
@@ -1239,11 +1255,9 @@ public class SmPersonnelBackingBean extends
 	 * 
 	 * @param SmPersonnel
 	 *            smPersonnel
-	 * @return
-	 * @throws Exception
+	 * @return PersonnelResDTO
 	 */
-	private PersonnelResDTO updatePersonnel(SmPersonnel smPersonnel)
-			throws Exception {
+	private PersonnelResDTO updatePersonnel(SmPersonnel smPersonnel) {
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
 			SmAddress address = SmCommonUtil.cloneAddress(getManagedBean()
 					.getBasicSmPersonnelPermanentAddress().getSmAddress());
