@@ -120,21 +120,6 @@
 
 						</c:if>
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flStatusView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.status']}"
-								style="margin-top:5px;width:160px;" />
-
-							<p:selectOneMenu value="#{reportBackingBean.flStatus}"
-								style="margin-top:5px;width:300px;">
-
-								<f:selectItems
-									value="#{reportBackingBean.docTypeStatusItemsList}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
-						</c:if>
-
-						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flDurationView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.duration']}"
 								style="margin-top:5px;width:160px;" />
@@ -205,6 +190,36 @@
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItems
 									value="#{reportBackingBean.rolecodeRquisitionerList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+
+						<c:if
+							test="#{flReportBackingBean.managedBean.rptGenBean.flAcknowledgeOfficerView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.ackofficername']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu
+								value="#{reportBackingBean.flAcknowledgeOfficer}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems
+									value="#{reportBackingBean.rolecodeAcknowledgeOfficerList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
+							test="#{flReportBackingBean.managedBean.rptGenBean.flPayOfficerView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.paymentofficername']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.flPaymentofficer}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems
+									value="#{reportBackingBean.rolecodePayOfficerList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
@@ -419,6 +434,21 @@
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
+						</c:if>
+
+						<c:if
+							test="#{flReportBackingBean.managedBean.rptGenBean.flStatusView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.status']}"
+								style="margin-top:5px;width:160px;" />
+
+							<p:selectOneMenu value="#{reportBackingBean.flStatus}"
+								style="margin-top:5px;width:300px;">
+
+								<f:selectItems
+									value="#{reportBackingBean.docTypeStatusItemsList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
 						</c:if>
 
 						<c:if

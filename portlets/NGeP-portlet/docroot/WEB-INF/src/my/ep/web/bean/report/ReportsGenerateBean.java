@@ -1196,6 +1196,12 @@ public class ReportsGenerateBean {
 
 	/** The fl requisitioner view. */
 	private boolean flRequisitionerView = false;
+	
+	/** The fl acknowledge officer view. */
+	private boolean flAcknowledgeOfficerView = false;
+	
+	/** The fl pay officer view. */
+	private boolean flPayOfficerView = false;
 
 	/** The fl mto contract view. */
 	private boolean flMtoContractView = false;
@@ -3789,7 +3795,13 @@ public class ReportsGenerateBean {
 	private String contractTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The requisitioner tot var. */
-	private String requisitionerTotVar = ReportConst.EMPTY_VAL;
+	private String requisitionerTotVar = ReportConst.EMPTY_VAL;	
+	
+	/** The acknowledge officer tot var. */
+	private String acknowledgeOfficerTotVar=ReportConst.EMPTY_VAL;
+	
+	/** The payment officer tot var. */
+	private String paymentOfficerTotVar=ReportConst.EMPTY_VAL;
 
 	/** The mto contract tot var. */
 	private String mtoContractTotVar = ReportConst.EMPTY_VAL;
@@ -18792,5 +18804,81 @@ public class ReportsGenerateBean {
 	public void setFlGroupEighteenWithSupplApproverView(
 			boolean flGroupEighteenWithSupplApproverView) {
 		this.flGroupEighteenWithSupplApproverView = flGroupEighteenWithSupplApproverView;
+	}
+
+	/**
+	 * Checks if is fl acknowledge officer view.
+	 * 
+	 * @return the flAcknowledgeOfficerView
+	 */
+	public boolean isFlAcknowledgeOfficerView() {
+		return flAcknowledgeOfficerView;
+	}
+
+	/**
+	 * Sets the fl acknowledge officer view.
+	 * 
+	 * @param flAcknowledgeOfficerView
+	 *            the flAcknowledgeOfficerView to set
+	 */
+	public void setFlAcknowledgeOfficerView(boolean flAcknowledgeOfficerView) {
+		this.flAcknowledgeOfficerView = flAcknowledgeOfficerView;
+	}
+
+	/**
+	 * Checks if is fl pay officer view.
+	 * 
+	 * @return the flPayOfficerView
+	 */
+	public boolean isFlPayOfficerView() {
+		return flPayOfficerView;
+	}
+
+	/**
+	 * Sets the fl pay officer view.
+	 * 
+	 * @param flPayOfficerView
+	 *            the flPayOfficerView to set
+	 */
+	public void setFlPayOfficerView(boolean flPayOfficerView) {
+		this.flPayOfficerView = flPayOfficerView;
+	}
+
+	/**
+	 * Gets the acknowledge officer tot var.
+	 * 
+	 * @return the acknowledgeOfficerTotVar
+	 */
+	public String getAcknowledgeOfficerTotVar() {
+		return acknowledgeOfficerTotVar;
+	}
+
+	/**
+	 * Sets the acknowledge officer tot var.
+	 * 
+	 * @param acknowledgeOfficerTotVar
+	 *            the acknowledgeOfficerTotVar to set
+	 */
+	public void setAcknowledgeOfficerTotVar(String acknowledgeOfficerTotVar) {
+		this.acknowledgeOfficerTotVar = acknowledgeOfficerTotVar;
+	}
+
+	/**
+	 * Gets the payment officer tot var.
+	 * 
+	 * @return the paymentOfficerTotVar
+	 */
+	public String getPaymentOfficerTotVar() {
+		return paymentOfficerTotVar;
+	}
+
+	/**
+	 * Sets the payment officer tot var.
+	 * 
+	 * @param paymentOfficerTotVar
+	 *            the paymentOfficerTotVar to set
+	 */
+	public void setPaymentOfficerTotVar(String paymentOfficerTotVar) {
+		this.paymentOfficerTotVar = paymentOfficerTotVar;
 	}
 }
