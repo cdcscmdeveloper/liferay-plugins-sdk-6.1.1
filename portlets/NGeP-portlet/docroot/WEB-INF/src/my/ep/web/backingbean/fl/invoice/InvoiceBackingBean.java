@@ -1845,7 +1845,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 			for(FlInvoiceItemSummary invItemSummLv2 : taxList){
 				if(lvl1TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode())) {
-					lv1TreeNode = lvl1TaxMap.get(invItemSummLv2.getFlFulfilmentItem().getItemCode());
+					continue;
 				} else {
 					InvoiceChargeLineVO chargeLineLv1 = new InvoiceChargeLineVO();
 					chargeLineLv1.setLevel(1);
