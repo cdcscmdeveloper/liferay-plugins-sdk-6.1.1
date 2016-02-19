@@ -187,16 +187,13 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sm.userprofile.phone']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.phone']}" /></td>
 					<td>
 						<ac:phone id="basicBUPhone" isMobile="false" label="#{lbl['lbl.sm.userprofile.phone']}"
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneCountry}" 
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneArea}" 
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}"  
-							validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" 
-							required="true"/>
+							validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
 					</td>
 
 					<td><p:outputLabel
