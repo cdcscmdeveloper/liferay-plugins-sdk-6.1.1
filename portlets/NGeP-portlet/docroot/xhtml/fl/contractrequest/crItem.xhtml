@@ -770,12 +770,12 @@
 		</p:dialog>
 		<p:dialog id="itemTaxGuideLineDialog" header="#{contractRequestBackingBean.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G?lbl['lbl.fl.guideline.taxable.item.g2g']:lbl['lbl.fl.guideline.taxable.item']}"
 			widgetVar="taxGuideLineInfo" showEffect="fade" hideEffect="fade"
-			modal="true" width="900" height="#{contractRequestBackingBean.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G?250:500}" resizable="false" >
+			modal="true" width="900" height="#{contractRequestBackingBean.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G?300:500}" resizable="false" >
 		<p:panel rendered="#{contractRequestBackingBean.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" toggleable="false">
 			<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.g2g.main.header1']}" />
 			<div class="ui-datatable ui-widget" style="width: 850px" >
 				<div class="ui-datatable-tablewrapper" style="width: 100%" >
-					<div align="center"><h:outputText style="font-weight:bold;" value="#{lbl['lbl.fl.taxable.table.g2g']}" /></div>
+					<div align="center"><h:outputText escape="false" style="font-weight:bold;" value="#{lbl['lbl.fl.taxable.table.g2g']}" /></div>
 					<table style="width: 100%" >
 						<thead>
 							<th class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.no']}" /></th>
@@ -824,14 +824,14 @@
 						</thead>
 						<tbody class="ui-datatable-data ui-widget-content">
 							<tr class="ui-widget-content ui-datatable-even">
-								<td style="vertical-align:top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.service']}" /></td>
+								<td style="vertical-align:top;"><h:outputText style="font-weight:bold;" value="#{lbl['lbl.fl.taxable.table.non.g2g.service']}" /></td>
 								<td style="white-space:normal;">
 									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.service.col1']}" /><br/><br/>
 									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.service.col2']}" />
 								</td>
 							</tr>
 							<tr class="ui-widget-content ui-datatable-odd">
-								<td style="vertical-align:top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suply.goods']}" /></td>
+								<td style="vertical-align:top;"><h:outputText style="font-weight:bold;" value="#{lbl['lbl.fl.taxable.table.non.g2g.suply.goods']}" /></td>
 								<td style="white-space:normal;">
 									<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col1']}" /><br/><br/>
 									<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col2']}" /><br/><br/>
@@ -910,12 +910,12 @@
 							<tr class="ui-widget-content ui-datatable-even">
 								<td rowspan="2" style="vertical-align: top;">3</td>
 								<td rowspan="2" style="vertical-align: top;white-space:normal;"><h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col3']}" /></td>
-								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
-								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
+								<td style="vertical-align: top;white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+								<td style="vertical-align: top;white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
 							</tr>
 							<tr class="ui-widget-content ui-datatable-even">
-								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
-								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.tioman']}" /></td>
+								<td style="vertical-align: top;white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+								<td style="vertical-align: top;white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.tioman']}" /></td>
 							</tr>
 												
 							<tr class="ui-widget-content ui-datatable-odd">
@@ -929,8 +929,8 @@
 												
 							<tr class="ui-widget-content ui-datatable-even">
 								<td style="vertical-align: top;">5</td>
-								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col5']}" /></td>
-								<td colspan="2" style="white-space:normal;"><h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.langkawi']}" /></td>
+								<td style="white-space:normal;width:40%;"><h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col5']}" /></td>
+								<td colspan="2" style="white-space:normal;vertical-align: top;"><h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.langkawi']}" /></td>
 							</tr>
 											
 							<tr class="ui-widget-content ui-datatable-odd">
