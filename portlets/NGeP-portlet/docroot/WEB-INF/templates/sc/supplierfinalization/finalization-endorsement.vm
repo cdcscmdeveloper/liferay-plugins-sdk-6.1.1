@@ -264,7 +264,7 @@
 													<td width="11%" class="title left">Supplier Code</td>
 													<td width="12%" class="title left">Bumiputra Status</td>
 													<td width="17%" class="title left">Total Amaun (RM)</td>
-													<td width="11%" class="title left-right">Total Amaun In Words (RM)</td>
+													<td width="11%" class="title left">Total Amaun In Words (RM)</td>
 												</tr>
 											</tbody>
 										</table>
@@ -307,7 +307,9 @@
 												#end										
 											</td>
 										#else
-											No shortlisted supplier(s) for this item
+											<td class="standard border-bottom right">
+												No shortlisted supplier(s) for this item
+											</td>
 										#end
 									</tr>
 								#end
@@ -475,22 +477,21 @@
 	#end
 	
 	<tr>
-		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Pengerusi Lembaga Perolehan 'B' <br />
-		Kementerian Keselamatan Dalam Negeri <br />
+		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Pengerusi $!committeeType <br />
+		Kementerian Keselamatan Dalam Negeri <br /> $!chairPerson <br/>
 		---------------- </span>
 		<br /><br/><br/><br/></td>
 	</tr>
+	
+	#foreach($member in $commMembers)
 	<tr>
-		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Ahli Lembaga Perolehan 'B' <br />
-		(Bahagian Perolehan) <br />
+		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Ahli $!committeeType <br />
+		(Bahagian Perolehan) <br /> $member.memberName.toUpperCase() <br/>
 		---------------- </span>
 		<br /><br/><br/><br/></td>
 	</tr>
-    <tr>
-		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Wakil Ketua Pengarah Kerja Raya <br />
-		---------------- </span>
-		<br /><br/><br/><br/></td>
-	</tr>
+	#end
+	
 </table>
 <br/>
 </body>
