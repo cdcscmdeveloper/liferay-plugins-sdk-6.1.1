@@ -162,11 +162,13 @@ public class SmBlacklistDirectorBackingBean extends
 		if (getManagedBean().getCompanyList() == null) {
 			getManagedBean().setCompanyList(new ArrayList<SmSupplier>());
 		} else {
+			SmPersonnel personnel = null;
 			for (SmSupplier sup : getManagedBean().getCompanyList()) {
-				sup.setSmPersonnel((SmPersonnel) EntityHelper
+				personnel = (SmPersonnel) EntityHelper
 						.getEntityBySinglePropertyFromList(identificationNo,
 								sup.getSmAppl().getSmPersonnels(),
-								"identificationNo"));
+								"identificationNo");
+				sup.setSmPersonnel(personnel);
 			}
 		}
 		getManagedBean().setTargetPage(VIEW_DIRECTOR_RESULT_PAGE);
