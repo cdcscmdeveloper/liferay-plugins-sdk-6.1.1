@@ -40,8 +40,8 @@
 							disabled="#{flDocumentBackingBean.disableMinistryLov()}"
 							headerText="#{lbl['lbl.fl.ministry']}" 
 							value="#{flDocumentBackingBean.managedBean.ministry.orgName}"
-							postUpdateListener="flDocumentBackingBean.resetPtjProfile()"
-							update=":form:searchPtj,:form:orgSearch,:form:searchPtjGroup"
+							postUpdateListener="flDocumentBackingBean.resetPtjGroupProfile()"
+							update=":form:searchPtj,:form:orgSearch"
 							saveObject="flDocumentBackingBean.managedBean.ministry">
 						</ac:lov>
 					</td>
@@ -85,7 +85,7 @@
 						style="width: 314px;">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
-						<p:ajax event="change" update=":form"
+						<p:ajax event="change" update="form:searchPanel"
 							listener="#{flDocumentBackingBean.selectedOrderType}"/>
 					</p:selectOneMenu></td>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
@@ -229,7 +229,7 @@
 					action="#{flDocumentBackingBean.searchDocument}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{flDocumentBackingBean.flDocSearchReset}" 
+					action="#{flDocumentBackingBean.searchReset}" 
 					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
