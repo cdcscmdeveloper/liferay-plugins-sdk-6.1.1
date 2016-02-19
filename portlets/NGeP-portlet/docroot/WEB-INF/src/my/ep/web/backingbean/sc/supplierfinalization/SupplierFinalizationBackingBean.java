@@ -852,6 +852,8 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO = validateInfo(2);
 			}
 			
+			validateFinalizationReports();
+						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
 						this.getManagedBean().getDeletedMeetingList());
@@ -3574,7 +3576,6 @@ public class SupplierFinalizationBackingBean extends
 								CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		context.put("numberFormatter", amountDF);
 		
-		boolean isQTRefinalized = isQTRefinalized();
 		FinalizationEndorsementReportDTO reportDTO = null;
 		Map<TplSpecZoneDtl,FinalizationEndorsementReportDTO> zoneDetailsMap = null;
 		
@@ -7359,7 +7360,12 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	private String convertNumberToWord(BigDecimal amount) {
-		return WordUtils.capitalizeFully(NumberWordUtil.convert(amount.toString()));
+		String amountInWords = null;
+		if (amount != null) {
+			amountInWords = WordUtils.capitalizeFully(
+							NumberWordUtil.convert(amount.toString()));
+		}
+		return amountInWords;
 	}
 	
 	private void calculateBidPrice(List<ScQtRecommend> recommendedItems, 
