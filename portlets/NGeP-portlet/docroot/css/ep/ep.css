@@ -3322,23 +3322,6 @@ table.rptTbl {
 	border: 1px solid #d1d1d1;
 }
 
-table.taxableGuidelineTable {
-    border-width: 1px !important;
-    border-style: outset !important;
-    border-color: grey !important;
-    border-collapse: separate !important;
-    background-color: white !important;
-}
-
-table.taxableGuidelineTable td {
-    border-width: 1px !important;
-    padding: 1px !important;
-    border-style: inset !important;
-    border-color: blue !important;
-    background-color: white !important;
-    -moz-border-radius: ;
-}
-
 .ui-widget-content .ui-datalist-content{
     border: none;
     background: transparent;
