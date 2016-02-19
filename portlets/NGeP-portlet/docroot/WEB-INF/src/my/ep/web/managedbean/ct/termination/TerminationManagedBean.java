@@ -51,7 +51,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = true;
 	private boolean viewContract = false;
 
-	private String[] action;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtTermination> terminationList;
@@ -74,20 +73,6 @@ public class TerminationManagedBean extends BaseManagedBean {
 	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
-	}
-
-	/**
-	 * @return the action
-	 */
-	public String[] getAction() {
-		return action;
-	}
-
-	/**
-	 * @param action the action to set
-	 */
-	public void setAction(String[] action) {
-		this.action = action;
 	}
 
 	/**

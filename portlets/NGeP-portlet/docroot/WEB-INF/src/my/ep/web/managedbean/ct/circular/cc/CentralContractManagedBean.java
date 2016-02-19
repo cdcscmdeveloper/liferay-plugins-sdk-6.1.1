@@ -54,7 +54,6 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String searchContractNo;
 	private String searchContractName;
 	private String textBeforeSign;
-	//private String taskName;
 	private String gotoPreviewPage;	
 	private String orgTypeCode;
 	private String ptjCodeName;
@@ -591,23 +590,15 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the taskName
-	 *//*
-	public String getTaskName() {
-		return taskName;
-	}
-	
-	*//**
-	 * @param updateAction the updateAction to set
-	 *//*
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}*/
-	
+	 * @return the fileDirectory
+	 */
 	public String getFileDirectory() {
 		return fileDirectory;
 	}
 
+	/**
+	 * @param fileDirectory the fileDirectory to set
+	 */
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
