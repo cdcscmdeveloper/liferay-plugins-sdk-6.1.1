@@ -9,14 +9,13 @@
 		id="approvalInfoPnl" rendered="#{not isBrandNew}">
 		<table>
 			<tr>
-				<td class="tdTitle"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.pm.access.app.remarks']}" /> </td>
-				<td class="tdContent">
-					<h:inputTextarea id="textAreaId"    
-							cols="40"  value="#{accessApplBackingBean.managedBean.remarks}"  
-							autoResize="false" 
-							onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);">
-					 </h:inputTextarea>
+				<td>
+					<p:inputTextarea id="textAreaId"    
+							cols="40" maxlength="1000"  value="#{accessApplBackingBean.managedBean.remarks}"  							
+							>
+					 </p:inputTextarea>
 				</td>
 			</tr>
 		</table>
