@@ -44,7 +44,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class AmendmentManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	private String[] action;	
+	//private String[] action;	
 	private String taskName;
 	private String ackFA;
 	private String showItem;
@@ -110,17 +110,17 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	/**
 	 * @return the action
-	 */
+	 *//*
 	public String[] getAction() {
 		return action;
 	}
 	
-	/**
+	*//**
 	 * @param action the action to set
-	 */
+	 *//*
 	public void setAction(String[] action) {
 		this.action = action;
-	}
+	}*/
 	
 	/**
 	 * @return the taskName
