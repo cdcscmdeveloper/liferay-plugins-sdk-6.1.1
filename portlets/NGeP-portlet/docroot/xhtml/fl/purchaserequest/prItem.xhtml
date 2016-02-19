@@ -586,7 +586,7 @@
 		
 	<p:dialog id="itemTaxGuideLineDialog" header="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G?lbl['lbl.fl.guideline.taxable.item.g2g']:lbl['lbl.fl.guideline.taxable.item']}"
 		widgetVar="taxGuideLineInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="900" height="500" resizable="false" >
+		modal="true" width="900" height="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G?250:500}" resizable="false" >
 		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" toggleable="false">
 			<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.g2g.main.header1']}" />
 			<div class="ui-datatable ui-widget" style="width: 850px" >
