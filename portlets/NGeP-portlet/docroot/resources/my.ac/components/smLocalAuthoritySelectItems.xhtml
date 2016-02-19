@@ -11,13 +11,14 @@
 	<cc:attribute name="required" default="false"/>
 	<cc:attribute name="smSupplier" required="true" />
 	<cc:attribute name="backingBean" required="true" />
+	<cc:attribute name="isShow" default="true" />
 </cc:interface>
 
 <cc:implementation>
 	<p:selectOneMenu value="#{cc.attrs.smSupplier.localAuthorityId}" 
 		required="#{cc.attrs.required}"
-		rendered="#{cc.attrs.smSupplier.businessType eq 'D' or cc.attrs.smSupplier.businessType eq 'E' 
-				or cc.attrs.smSupplier.businessType eq 'G' or cc.attrs.smSupplier.businessType eq 'H'}" 
+		rendered="#{cc.attrs.isShow and (cc.attrs.smSupplier.businessType eq 'D' or cc.attrs.smSupplier.businessType eq 'E' 
+				or cc.attrs.smSupplier.businessType eq 'G' or cc.attrs.smSupplier.businessType eq 'H')}" 
 		disabled="#{cc.attrs.backingBean.getListSize(cc.attrs.backingBean.managedBean.localAuthorityItems) eq 1}"
 		label="#{lbl['lbl.sm.local.authority']}"
 		style="width:80%" id="localAuthorityId">
