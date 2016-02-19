@@ -185,6 +185,17 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 * <p>get fl document Search result based on selected and filled in parameters.
 	 */
 	public void searchDocument(){
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			if(null == getManagedBean().getMinistry()){ 
+				throw new EpException(MessageConst.ERROR_740044);
+			}
+			
+		}
+		
 		if(null == getManagedBean().getSearchOrderType()){ 
 			throw new EpException(MessageConst.ERROR_740023);
 		}else if((null ==getManagedBean().getSearchDocType() &&  "".equalsIgnoreCase(getManagedBean().getSearchOrderNo()) && "".equalsIgnoreCase(getManagedBean().getSearchDocNo()))){
@@ -857,31 +868,21 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 * @param e the e
 	 */
 	public void selectedOrderType(AjaxBehaviorEvent e) {
-		
-//		getManagedBean().setSearchDocType(null);
-//
-//		// reset everything to false
-//		this.getManagedBean().setCheckDocType(false);
-//		this.getManagedBean().setCheckPoDocType(false);
-//		this.getManagedBean().setCheckDoDocType(false);
-//		this.getManagedBean().setCheckInDocType(false);
-//		this.getManagedBean().setCheckDoInDocType(false);
-		
-		//resetSearchCriteria();
-		
-		String searchOrderType = this.getManagedBean().getSearchOrderType();
-		
 		String id = (String) e.getComponent().getAttributes().get("value");
-		
-		if(id != null) {
+		getManagedBean().setSearchDocType(null);
+
+		// reset everything to false
+		this.getManagedBean().setCheckDocType(false);
+		this.getManagedBean().setCheckPoDocType(false);
+		this.getManagedBean().setCheckDoDocType(false);
+		this.getManagedBean().setCheckInDocType(false);
+		this.getManagedBean().setCheckDoInDocType(false);
+		resetSearchCriteria();
+		if(id!=null) {
 			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
 			}	
 		}
-		
-		this.flDocSearchReset();
-		
-		this.getManagedBean().setSearchOrderType(searchOrderType);
 	}
 	
 	/**
@@ -912,13 +913,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		renewSesionObject();
 	}
 	
-	/**
-	 * Search reset.
-	 */
-	public void flDocSearchReset(){
-		this.searchReset();
-		this.defaultPtjAndMinistryValues();
-	}
 	/**
 	 * Gets the procurement type list based on procurement type and language code.
 	 *
@@ -1134,9 +1128,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-			this.getManagedBean().setMinistry(null);
-			this.getManagedBean().setPtj(null);
-			this.getManagedBean().setPtjGroup(null);
+			//this.getManagedBean().setMinistry(null);
+			//this.getManagedBean().setPtj(null);
+			//this.getManagedBean().setPtjGroup(null);
 
 		} else {
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
@@ -1174,11 +1168,18 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 		
 	/**
-		* The method used reset PTJ profile value once select the Ministry
-	*/
-	public void resetPtjProfile() {
+	 * The method used reset PTJ/PTJ Group profile value once select the Ministry
+	 */
+	public void resetPtjGroupProfile() {
 		getManagedBean().setPtj(null);
 		getManagedBean().setPtjGroup(null);
+	}
+	
+	/**
+	 * The method used reset PTJ profile value once select the Ministry
+	 */
+	public void resetPtjProfile() {
+		getManagedBean().setPtj(null);
 	}
 		
 	/**
