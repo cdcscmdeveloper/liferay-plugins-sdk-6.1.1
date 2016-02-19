@@ -24,7 +24,13 @@
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" immediate="true"
 						style="float:left;" 
-						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						action="#{specificationBackingBean.committeeBackAction}" /> 
+						
+				<p:commandButton
+						value="#{lbl['lbl.btn.print']}" type="button">
+						<p:printer target="techCheckListPrivateCompExp" />
+					</p:commandButton>
+					<p:commandButton
 						value="#{lbl['lbl.btn.save']}" 
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" onstart="blockWidget.show();"
@@ -41,6 +47,8 @@
 			</tr>
 		</table>
 
+	<h:panelGroup id="techCheckListPrivateCompExp">
+					
 		<ui:include
 			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
@@ -436,5 +444,6 @@
 				</h:panelGroup>
 			</h:panelGroup>
 		</p:panel>
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>
