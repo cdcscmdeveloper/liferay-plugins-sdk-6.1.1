@@ -851,8 +851,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO = validateInfo(2);
 			}
-			
-			validateFinalizationReports();
+			validateFinalizationReports(true);
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
@@ -883,11 +882,13 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	private void validateFinalizationReports() {
+	private void validateFinalizationReports(boolean isSaveAction) {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
 		
+		List<ScQtFinalizationReport> toBeRemovedReports 
+					= new ArrayList<ScQtFinalizationReport>();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
 			for (ScQtFinalizationReport report 
 							: finalizationReports) {
@@ -895,9 +896,20 @@ public class SupplierFinalizationBackingBean extends
 						.equals(report.getDocCategory()) && 
 						(report.getScQtFinalizationReportAttachment() == null ||
 							report.getScQtFinalizationReportAttachment().getFileName() == null)) {
+					//TODO : Remove the report (if saveAction == true)
+//					if (isSaveAction) {
+//						toBeRemovedReports.add(report);
+//					} else {
+//
+//					}
 					navigateToBriefingPaperTab();
 					throw new EpException(MessageConst.ERROR_760386);
 				}
+			}
+			
+			if (toBeRemovedReports.size() > 0) {
+				finalizationReports.removeAll(
+							toBeRemovedReports);
 			}
 		}
 	}
@@ -1790,7 +1802,7 @@ public class SupplierFinalizationBackingBean extends
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(getManagedBean().getCurrentStatusId())) {
 				
-				validateFinalizationReports();
+				validateFinalizationReports(false);
 				
 				if (CollectionUtils.isNotEmpty(meetingList)) {
 					boolean atleastOneMeetingIsDone = false;
@@ -3560,6 +3572,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		context.put("meetingDate", meetingDate);
 		context.put("meetingLocation", meetingLocation);
+		context.put("committeeType", getManagedBean().getCommitteeType());
 
 		String loiloaPrepared = "";
 		if (scQtFinalization.getLoiLoaBy() != null) {
@@ -3713,26 +3726,25 @@ public class SupplierFinalizationBackingBean extends
 		String secretaryName = null;
 		String memberName = null;
 		
+		List<ScCommitteeMember> commMembers = new ArrayList<ScCommitteeMember>();
 		for (ScQtCommitteeActivity scQtCommitteeActivity 
 					: getManagedBean().getCommitteeList()) {
-			if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
-					.equals(getFacesScopes().getUserSessionBean().getUserId())) {
-				ScCommitteeMember commMember = scQtCommitteeActivity.getScCommitteeMember();
-				if (commMember.getMemberRole().getParameterCode()
-						.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-					chairPersonName = commMember.getMemberName().toUpperCase();
-				} else if (commMember.getMemberRole().getParameterCode()
-						.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-					secretaryName = commMember.getMemberName().toUpperCase();
-				} else if (commMember.getMemberRole().getParameterCode()
-						.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
-					memberName = commMember.getMemberName().toUpperCase();
-				}
+			ScCommitteeMember commMember = scQtCommitteeActivity.getScCommitteeMember();
+			if (commMember.getMemberRole().getParameterCode()
+					.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				chairPersonName = commMember.getMemberName().toUpperCase();
+			} else if (commMember.getMemberRole().getParameterCode()
+					.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+				secretaryName = commMember.getMemberName().toUpperCase();
+			} else if (commMember.getMemberRole().getParameterCode()
+					.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+				memberName = commMember.getMemberName().toUpperCase();
+				commMembers.add(commMember);
 			}
 		}
-		
+		context.put("commMembers", commMembers);
 		context.put("chairPerson", chairPersonName);
-		context.put("secretary", secretaryName);
+//		context.put("secretary", secretaryName);
 		context.put("member", memberName);
 		
 		context.put("reportDTO", reportDTO);
