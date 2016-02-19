@@ -71,8 +71,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.dan.DebitAdjustmentNoteBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
@@ -101,7 +101,7 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name="flDocumentBackingBean")
 @RequestScoped
-public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean>{
+public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentManagedBean>{
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(FlDocumentBackingBean.class);
@@ -146,17 +146,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public static final String NAV_TO_GST_RELIEF = "/xhtml/fl/relieforder/reliefOrderBasePage.xhtml";
 	
 	
-	
-	/**
-	 * Gets the faces scopes.
-	 *
-	 * @return the faces scopes
-	 */
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-	
 	/**
 	 * Advance search.
 	 */
@@ -186,10 +175,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 */
 	public void searchDocument(){
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				|| hasSupplierRole()) {
 			if(null == getManagedBean().getMinistry()){ 
 				throw new EpException(MessageConst.ERROR_740044);
 			}
@@ -208,7 +194,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFlRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
-		if(isFlFulfilmentSupplier()) {
+		if(hasSupplierRole()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFlSupplier(facesScopes.getUserSessionBean().getLoginId());
 		}
@@ -232,7 +218,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFlRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
-		if(isFlFulfilmentSupplier()) {
+		if(hasSupplierRole()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFlSupplier(facesScopes.getUserSessionBean().getLoginId());
 		}
@@ -509,7 +495,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 			
 			if(!isGovtSeller()){
-				flOrderBB.getManagedBean().setSupplier(isFlFulfilmentSupplier());
+				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
 			}
 			
 			navgPage=NAV_TO_MAINTAIN_PO;
@@ -551,7 +537,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}	
 			if(!isGovtSeller()){
-				flOrderBB.getManagedBean().setSupplier(isFlFulfilmentSupplier());
+				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
 			}
 			navgPage=NAV_TO_MAINTAIN_CO;
 		}else if(docType.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
@@ -788,7 +774,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}	
 			if(!isGovtSeller()){
-				reliefOrderBB.getManagedBean().setSupplier(isFlFulfilmentSupplier());
+				reliefOrderBB.getManagedBean().setSupplier(hasSupplierRole());
 			}
 			navgPage=NAV_TO_GST_RELIEF;
 		}	
@@ -946,16 +932,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public boolean isFlFulfilmentApprover() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
-	}
-	
-	/**
-	 * Checks if is fl fulfilment supplier.
-	 *
-	 * @return true, if is fl fulfilment supplier
-	 */
-	public boolean isFlFulfilmentSupplier() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
 	
 	/**
@@ -1124,10 +1100,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 */
 	private void defaultPtjAndMinistryValues() {
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+				|| hasSupplierRole()) {
 			//this.getManagedBean().setMinistry(null);
 			//this.getManagedBean().setPtj(null);
 			//this.getManagedBean().setPtjGroup(null);
