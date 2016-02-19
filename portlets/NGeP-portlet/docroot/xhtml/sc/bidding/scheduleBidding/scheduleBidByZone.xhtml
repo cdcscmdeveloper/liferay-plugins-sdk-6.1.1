@@ -56,7 +56,7 @@
 					<h:outputText value="#{lbl['lbl.sc.bidding.end']}" />
 				</f:facet>
 				<p:calendar value="#{scheduleZoneBid.endDate}" showOn="button"
-					 id="zoneBidEndDate" readonlyInput="true"
+					 id="zoneBidEndDate" readonlyInput="true" maxMinute="0"
 					label="#{lbl['lbl.sc.bidding.end']}"
 					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
