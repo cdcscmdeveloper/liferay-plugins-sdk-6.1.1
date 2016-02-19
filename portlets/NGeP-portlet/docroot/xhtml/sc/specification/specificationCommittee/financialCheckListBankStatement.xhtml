@@ -27,7 +27,9 @@
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.save']}"
+						value="#{lbl['lbl.btn.print']}" type="button">
+						<p:printer target="financialCheckListBankStatement" />
+					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -39,188 +41,185 @@
 					</p:commandButton></td>
 			</tr>
 		</table>
+		<h:panelGroup id="financialCheckListBankStatement">
+			<ui:include
+				src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-		<ui:include
-			src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
+			<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}"
+				toggleable="true">
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.spec.bank.statement.instruction']}"
+					escape="false" />
 
-		<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}"
-			toggleable="true">
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.spec.bank.statement.instruction']}"
-				escape="false" />
-
-			<table>
-				<tr>
-					<td style="width: 10%;"><p:outputLabel
-							value=" #{lbl['lbl.sc.spec.from.month']}"></p:outputLabel> <ui:fragment
-							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</ui:fragment></td>
-					<td><p:selectOneMenu required="true" style="width:100px;"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-							label="#{lbl['lbl.sc.spec.from.month']}"
-							value="#{specificationBackingBean.managedBean.fromMonth}">
-
-							<f:selectItems
-								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
-							<p:ajax event="change"
-								update="toDetailsUpdate,amountdetails"
-								listener="#{specificationBackingBean.bankStatementsfromChange}"></p:ajax>
-						</p:selectOneMenu> <p:spacer width="1"></p:spacer> <p:selectOneMenu
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-							style="width:60px;"
-							value="#{specificationBackingBean.managedBean.startYear}">
-
-							<f:selectItems
-								value="#{specificationBackingBean.bankYearsDisplayDtls}">
-							</f:selectItems>
-							<p:ajax event="change"
-								update="toDetailsUpdate,amountdetails"
-								listener="#{specificationBackingBean.bankStatementsyearsChange}"></p:ajax>
-						</p:selectOneMenu></td>
-
-					<td style="width: 35%"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel></td>
-					<td><h:panelGroup id="toDetailsUpdate">
-
-							<p:inputText readonly="true" size="10"
-								value="#{specificationBackingBean.managedBean.bankstmntTomonth}"></p:inputText>
-							<p:spacer width="5"></p:spacer>
-
-							<p:inputText readonly="true" size="7"
-								value="#{specificationBackingBean.managedBean.endYear}"></p:inputText>
-
-						</h:panelGroup></td>
-				</tr>
-			</table>
-
-			<h:panelGroup id="amountdetails">
-				<p:spacer height="10px"></p:spacer>
 				<table>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel></td>
-						<td><p:inputText disabled="true"
-								value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText></td>
-					</tr>
+						<td style="width: 10%;"><p:outputLabel
+								value=" #{lbl['lbl.sc.spec.from.month']}"></p:outputLabel> <ui:fragment
+								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							</ui:fragment></td>
+						<td><p:selectOneMenu required="true" style="width:100px;"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								label="#{lbl['lbl.sc.spec.from.month']}"
+								value="#{specificationBackingBean.managedBean.fromMonth}">
 
-					<tr>
-						<td><h:outputLabel
-								value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel></td>
-						<td><p:inputText disabled="true"
-								value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText></td>
+								<f:selectItems
+									value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
+								<p:ajax event="change" update="toDetailsUpdate,amountdetails"
+									listener="#{specificationBackingBean.bankStatementsfromChange}"></p:ajax>
+							</p:selectOneMenu> <p:spacer width="1"></p:spacer> <p:selectOneMenu
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								style="width:60px;"
+								value="#{specificationBackingBean.managedBean.startYear}">
+
+								<f:selectItems
+									value="#{specificationBackingBean.bankYearsDisplayDtls}">
+								</f:selectItems>
+								<p:ajax event="change" update="toDetailsUpdate,amountdetails"
+									listener="#{specificationBackingBean.bankStatementsyearsChange}"></p:ajax>
+							</p:selectOneMenu></td>
+
+						<td style="width: 35%"><p:outputLabel
+								value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel></td>
+						<td><h:panelGroup id="toDetailsUpdate">
+
+								<p:inputText readonly="true" size="10"
+									value="#{specificationBackingBean.managedBean.bankstmntTomonth}"></p:inputText>
+								<p:spacer width="5"></p:spacer>
+
+								<p:inputText readonly="true" size="7"
+									value="#{specificationBackingBean.managedBean.endYear}"></p:inputText>
+
+							</h:panelGroup></td>
 					</tr>
 				</table>
 
-			</h:panelGroup>
-		</p:panel>
-
-
-
-		<p:panel id="financialBankStmtScore"
-			header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
-			toggleable="true"
-			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
-			<table>
-				<tr>
-					<td style="width: 200px;"><ui:fragment
-							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-							<p:outputLabel value="*" styleClass="mandatory"
-								style="float : left"></p:outputLabel>
-						</ui:fragment> <p:outputLabel style="float : left"
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu required="true"
-							style="width: 180px;margin-bottom: 5px;"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-							label="#{lbl['lbl.sc.spec.asset.score.type']}"
-							id="bankStatementAutoScore"
-							value="#{specificationBackingBean.managedBean.checklistScoreType}">
-							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
-							<p:ajax event="change"
-								update="bankDetails,financialBankStmtScore"
-								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-						</p:selectOneMenu> <p:message id="bankStatementAutoScoreId"
-							for="bankStatementAutoScore" display="icon"></p:message></td>
-					<td><ac:iconTooltip
-							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
-					</td>
-				</tr>
-			</table>
-
-			<h:panelGroup id="bankDetails">
-				<h:panelGroup
-					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
-
-					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
-					<h:panelGroup id="bankGroupId">
-						<ui:param name="scoringList"
-							value="#{specificationBackingBean.managedBean.checkListScore}" />
-						<ui:param name="selectionList"
-							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
-						<ui:param name="componentName" value="bankStatememt" />
-						<ui:param name="scoringPnlId" value="bankStatememtId" />
-						<ui:param name="scoringPnlName"
-							value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
-						<ui:include
-							src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
-						<div align="right">
-							<p:commandButton value="#{lbl['lbl.btn.add']}"
-								styleClass="BtnSpacing"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-								process="@this,#{scoringPnlId}" partialSubmit="true"
-								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addScoring(50)}"
-								update="#{scoringPnlId}" />
-							<p:commandButton value="#{lbl['lbl.btn.delete']}"
-								styleClass="BtnSpacing"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-								process="@this" partialSubmit="true"
-								oncomplete="financialBankStatementsDeletePopUp.show();"
-								update="@([id$=#{financiaBankStatementsDeleteId}])">
-								<f:setPropertyActionListener
-									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
-									value="#{false}" />
-							</p:commandButton>
-
-						</div>
-						<ui:param name="financiaBankStatementsDeleteId"
-							value="financiaBankStatementsDeleteId"></ui:param>
-
-						<ac:confirmationPopup id="#{financiaBankStatementsDeleteId}"
-							widget="financialBankStatementsDeletePopUp" width="450"
-							height="100"
-							okAction="specificationBackingBean.deleteCheckListScoreContrats"
-							title="#{lbl['lbl.sc.spec.bank.statement']}"
-							content="#{lbl['lbl.sc.dialog.confirm.message']}"
-							update="@([id$=#{scoringPnlId}])" />
-					</h:panelGroup>
-
-				</h:panelGroup>
-
-				<h:panelGroup
-					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+				<h:panelGroup id="amountdetails">
+					<p:spacer height="10px"></p:spacer>
 					<table>
 						<tr>
-							<td style="width: 200px;"><ui:fragment
-									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-									<p:outputLabel value="*" styleClass="mandatory"
-										style="float : left"></p:outputLabel>
-								</ui:fragment> <p:outputLabel style="float : left"
-									value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
-							<td><p:inputText id="bankStmtMaxScore" required="true"
-									style="text-align:right;"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
-									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
-									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-								</p:inputText> <p:message id="bkStmtMaxScoreId" for="bankStmtMaxScore"
-									display="icon"></p:message></td>
+							<td><h:outputLabel
+									value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel></td>
+							<td><p:inputText disabled="true"
+									value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText></td>
+						</tr>
+
+						<tr>
+							<td><h:outputLabel
+									value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel></td>
+							<td><p:inputText disabled="true"
+									value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText></td>
 						</tr>
 					</table>
+
 				</h:panelGroup>
-			</h:panelGroup>
+			</p:panel>
 
-		</p:panel>
+			<p:panel id="financialBankStmtScore"
+				header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
+				toggleable="true"
+				rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
+				<table>
+					<tr>
+						<td style="width: 200px;"><ui:fragment
+								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+								<p:outputLabel value="*" styleClass="mandatory"
+									style="float : left"></p:outputLabel>
+							</ui:fragment> <p:outputLabel style="float : left"
+								value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+						<td><p:selectOneMenu required="true"
+								style="width: 180px;margin-bottom: 5px;"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								label="#{lbl['lbl.sc.spec.asset.score.type']}"
+								id="bankStatementAutoScore"
+								value="#{specificationBackingBean.managedBean.checklistScoreType}">
+								<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
+								<p:ajax event="change"
+									update="bankDetails,financialBankStmtScore"
+									listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+							</p:selectOneMenu> <p:message id="bankStatementAutoScoreId"
+								for="bankStatementAutoScore" display="icon"></p:message></td>
+						<td><ac:iconTooltip
+								value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+						</td>
+					</tr>
+				</table>
 
+				<h:panelGroup id="bankDetails">
+					<h:panelGroup
+						rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+
+						<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
+						<h:panelGroup id="bankGroupId">
+							<ui:param name="scoringList"
+								value="#{specificationBackingBean.managedBean.checkListScore}" />
+							<ui:param name="selectionList"
+								value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
+							<ui:param name="componentName" value="bankStatememt" />
+							<ui:param name="scoringPnlId" value="bankStatememtId" />
+							<ui:param name="scoringPnlName"
+								value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
+							<ui:include
+								src="/xhtml/sc/specification/specificationCommittee/scoring.xhtml"></ui:include>
+							<div align="right">
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
+									styleClass="BtnSpacing"
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									process="@this,#{scoringPnlId}" partialSubmit="true"
+									oncomplete="scoreWidget.paginator.endLink.click();"
+									actionListener="#{specificationBackingBean.addScoring(50)}"
+									update="#{scoringPnlId}" />
+								<p:commandButton value="#{lbl['lbl.btn.delete']}"
+									styleClass="BtnSpacing"
+									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									process="@this" partialSubmit="true"
+									oncomplete="financialBankStatementsDeletePopUp.show();"
+									update="@([id$=#{financiaBankStatementsDeleteId}])">
+									<f:setPropertyActionListener
+										target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+										value="#{false}" />
+								</p:commandButton>
+
+							</div>
+							<ui:param name="financiaBankStatementsDeleteId"
+								value="financiaBankStatementsDeleteId"></ui:param>
+
+							<ac:confirmationPopup id="#{financiaBankStatementsDeleteId}"
+								widget="financialBankStatementsDeletePopUp" width="450"
+								height="100"
+								okAction="specificationBackingBean.deleteCheckListScoreContrats"
+								title="#{lbl['lbl.sc.spec.bank.statement']}"
+								content="#{lbl['lbl.sc.dialog.confirm.message']}"
+								update="@([id$=#{scoringPnlId}])" />
+						</h:panelGroup>
+
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+						<table>
+							<tr>
+								<td style="width: 200px;"><ui:fragment
+										rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+										<p:outputLabel value="*" styleClass="mandatory"
+											style="float : left"></p:outputLabel>
+									</ui:fragment> <p:outputLabel style="float : left"
+										value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
+								<td><p:inputText id="bankStmtMaxScore" required="true"
+										style="text-align:right;"
+										disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+										label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
+										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+									</p:inputText> <p:message id="bkStmtMaxScoreId" for="bankStmtMaxScore"
+										display="icon"></p:message></td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</h:panelGroup>
+
+			</p:panel>
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>
