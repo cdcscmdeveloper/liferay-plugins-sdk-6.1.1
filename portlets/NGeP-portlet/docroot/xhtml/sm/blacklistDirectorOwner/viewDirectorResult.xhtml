@@ -10,7 +10,7 @@
 		<tr>
 			<td>
 				<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-					action="#{bb.backFromDirectorPage}" 
+					action="#{bb.backFromDirectorPage}" immediate="true"
 					update="@form"/>
 			</td>
 			<td style="white-space: nowrap; float: right;">
@@ -61,9 +61,10 @@
 	<p:panel header="#{lbl['lbl.sm.director.owner.company.list']}" toggleable="true" id="directorCompaniesPanelId">
 		
 		<p:dataTable var="comp" widgetVar="compWidgetVar"
-			editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{bb.managedBean.companyList}"
+			editable="false" value="#{bb.managedBean.companyList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{comp}" rowIndexVar="index" id="viewDirectorDtId">
+			<ac:paginator for="viewDirectorDtId" />
 			
 			<p:column headerText="#{lbl['lbl.sm.companyname']}" >
 				<h:outputText value="#{comp.companyName}" />
