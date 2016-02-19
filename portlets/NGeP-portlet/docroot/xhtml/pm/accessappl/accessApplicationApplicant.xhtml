@@ -5,6 +5,17 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"	
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<script type="application/javascript">
+	$(document).ready(function(e){
+		 $("input[id$=usrEmail]").bind("cut copy paste",function(e) {
+	         e.preventDefault();
+	     });
+		  
+		  $("input[id$=conEmail]").bind("cut copy paste",function(e) {
+	         e.preventDefault();
+	     });
+	});
+	</script>
 	<p:panel header="#{lbl['lbl.pm.access.app.applicant']}"
 		toggleable="true" id="appInfoPnl">
 		<table>
