@@ -103,15 +103,15 @@
 				<c:otherwise>
 					<table style="width: 100%">
 						<tr>
-							<td><p:outputLabel
-									value="#{lbl['lbl.sm.catCodes.applCatType']}" /></td>
-							<td><h:outputText
-									value="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
-									rendered="#{backingBean.managedBean.smAppl.applCategoryType eq 'N'}"
-									style="font-weight: bold;" /> <h:outputText
-									value="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
-									rendered="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}"
-									style="font-weight: bold;" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.applCatType']}" /></td>
+							<td>
+								<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applCategoryType eq 'N'}">
+									#{lbl['lbl.sm.catCodes.catTypeNrm']}
+								</p:outputPanel>
+								<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									#{lbl['lbl.sm.catCodes.catTypeSpl']}
+								</p:outputPanel>
+							</td>
 							<c:if
 								test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
 								<td>
