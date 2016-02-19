@@ -30,7 +30,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
 						widgetVar="printBtn" styleClass="ui-button" style="display:none;"
 						action="#{amendmentBackingBean.downloadAll()}" /> <ui:repeat
-						var="outcome" value="#{amendmentBackingBean.managedBean.action}">
+						var="outcome" value="#{amendmentBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(outcome)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"

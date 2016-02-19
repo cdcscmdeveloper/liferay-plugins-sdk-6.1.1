@@ -38,8 +38,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class SupplierManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	private String[] action;
-	private String taskName;
 	private String contractNo;
 	private String contractName;
 	private String originalAccountNo;
@@ -76,34 +74,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
-    
-	/**
-	 * @return the action
-	 */
-	public String[] getAction() {
-		return action;
-	}
-	
-	/**
-	 * @param action the action to set
-	 */
-	public void setAction(String[] action) {
-		this.action = action;
-	}
-	
-	/**
-	 * @return the taskName
-	 */
-	public String getTaskName() {
-		return taskName;
-	}
-	
-	/**
-	 * @param taskName the taskName to set
-	 */
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
 	
 	/**
 	 * @return the contractNo
