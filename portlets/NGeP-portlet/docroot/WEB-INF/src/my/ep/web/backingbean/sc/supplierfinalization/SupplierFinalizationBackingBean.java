@@ -2168,7 +2168,7 @@ public class SupplierFinalizationBackingBean extends
 				if (endorsementReportCount < totalFinalizationRounds) {
 					String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, myLocale) 
-				 			+ SPACE + totalFinalizationRounds;
+				 			+ SPACE + "(" + totalFinalizationRounds + ")";
 					addFinalizationReport(reportTitle);
 				} else {
 					finalizationReports.removeAll(endorsementReports);
