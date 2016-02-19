@@ -246,7 +246,7 @@
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.onChangeDistrict(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress,
 											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-											update="basicCompCity" />
+											update="basicCompCity,localAuthInputOutPanelId" />
 									</p:selectOneMenu> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -385,18 +385,20 @@
 							alertValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.website}"/>
 					</td>
 					<td>
-						<p:outputPanel id="localAuthLabelOutPanelId" 
-							rendered="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
-								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}">
-							<p:outputLabel value="#{lbl['lbl.sm.local.authority']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputPanel id="localAuthLabelOutPanelId">
+							<p:outputLabel value="#{lbl['lbl.sm.local.authority']}" 
+								rendered="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
+								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}"/>
+							<p:outputLabel value="*" styleClass="mandatory" 
+								rendered="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
+								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}"/>
 						</p:outputPanel>
 					</td>
 					<td>
-						<p:outputPanel id="localAuthInputOutPanelId" 
-							rendered="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
-								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}">
+						<p:outputPanel id="localAuthInputOutPanelId" >
 							<ac:smLocalAuthoritySelectItems backingBean="#{backingBean}" 
+								isShow="#{backingBean.managedBean.smSupplier.businessType eq 'D' or backingBean.managedBean.smSupplier.businessType eq 'E'
+								or backingBean.managedBean.smSupplier.businessType eq 'G' or backingBean.managedBean.smSupplier.businessType eq 'H'}"
 								smSupplier="#{backingBean.managedBean.smSupplier}" required="true"/>
 						</p:outputPanel>
 					</td>
