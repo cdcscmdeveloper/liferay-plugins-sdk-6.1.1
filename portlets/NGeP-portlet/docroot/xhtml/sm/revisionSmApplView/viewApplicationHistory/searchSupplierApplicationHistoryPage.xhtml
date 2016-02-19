@@ -58,9 +58,10 @@
 					<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl[2] eq 'J'}"/>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.regStatus']}">
+				<p:column headerText="#{lbl['lbl.sm.latest.status']}">
 					<h:outputText value="#{smAppl[4]}" rendered="#{not empty smAppl[4]}"/>
-					<h:outputText value="#{smAppl[6]}" rendered="#{not empty smAppl[6]}"/>
+					<h:outputText value="#{smAppl[6]}" rendered="#{empty smAppl[4]}"/>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[4] and empty smAppl[6]}"/>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
