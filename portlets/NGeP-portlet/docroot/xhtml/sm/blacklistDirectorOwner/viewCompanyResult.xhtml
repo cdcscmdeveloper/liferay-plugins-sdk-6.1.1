@@ -10,7 +10,7 @@
 		<tr>
 			<td>
 				<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-					action="#{bb.navigateToPage(bb.SEARCH_PAGE)}" update="@form"/>
+					action="#{bb.navigateToPage(bb.SEARCH_PAGE)}" update="@form" immediate="true"/>
 			</td>
 		</tr>
 		<tr height="10"><td height="10"></td></tr>
@@ -33,9 +33,9 @@
 	<p:panel header="#{lbl['lbl.sm.blacklist.company.owner.list']}" toggleable="true" id="companyDirectorsPanelId">
 		
 		<p:dataTable var="per" widgetVar="perWidgetVar"
-			editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{bb.managedBean.ownerDirectorList}"
+			editable="false" value="#{bb.managedBean.ownerDirectorList}"
 			rowKey="#{per}" rowIndexVar="index" id="viewCompanyDtId">
+			<ac:paginator for="viewCompanyDtId" />
 			
 			<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}" >
 				<h:outputText value="#{per.name}" />
