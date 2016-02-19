@@ -3821,12 +3821,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
-			validateContractRequest(outcome);
-			getManagedBean().setValidated(Boolean.TRUE);
-			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
-			return null;
-		} else{
+		}else{
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
 				getManagedBean().setValidated(Boolean.FALSE);
 			}
@@ -4804,14 +4799,4 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setFeeVoteFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
 		}
 	}
-	
-    /**
-     * Retrieve cancel confirmation message by passing in document type
-     * 
-     * @return Cancel Confirmation message
-     */
-    public String getCancelConfirmationContent(String docType) {
-   	 	return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-    }
-    
 }
