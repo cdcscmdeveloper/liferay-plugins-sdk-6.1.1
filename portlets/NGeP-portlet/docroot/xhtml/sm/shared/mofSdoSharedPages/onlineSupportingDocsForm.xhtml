@@ -36,6 +36,8 @@
 					update=":form" ajax="false">
 					<p:fileDownload value="#{backingBean.file}" />
 				</p:commandButton>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{!onTable.pmDocument.hardCopyReq and 
+					(empty onTable.smApplDocFiles[0].fileName or onTable.smApplDocFiles[0].fileName eq ' ')}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.dwldVld']}"
