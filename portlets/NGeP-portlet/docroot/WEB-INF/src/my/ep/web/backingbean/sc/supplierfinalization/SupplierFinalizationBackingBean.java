@@ -852,8 +852,6 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO = validateInfo(2);
 			}
 			
-			validateFinalizationReports();
-			
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
 						this.getManagedBean().getDeletedMeetingList());
