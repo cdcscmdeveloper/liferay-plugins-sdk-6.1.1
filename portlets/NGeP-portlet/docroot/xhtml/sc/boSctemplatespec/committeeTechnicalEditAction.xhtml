@@ -10,7 +10,6 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-
 	<ui:define name="contentSection">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -23,13 +22,16 @@
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true" 
+						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.cancel']}"
+						value="#{lbl['lbl.btn.print']}" type="button">
+						<p:printer target="committeeTechEdit" />
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-						style="float:right;" immediate="true" 
+						style="float:right;" immediate="true"
 						onclick="createTechnicalDialog.show();"></p:commandButton> <p:commandButton
-						value="#{lbl['lbl.btn.complete']}" 
+						value="#{lbl['lbl.btn.complete']}"
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -37,112 +39,108 @@
 						update="@all" /> <p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" 
+						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}" />
 
 				</td>
 			</tr>
 		</table>
-		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
 
-
-			<table>
-				<tr>
-					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
-					<td colspan="3"><p:inputTextarea rows="2" cols="95"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-							style="margin-bottom:5px;width:83%;" maxlength="200"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
-				</tr>
-
-				<tr>
-					<td style="width: 10%"><h:outputLabel
-							value="#{lbl['lbl.sc.item.type']}" /></td>
-					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" /></td>
-					<td><h:outputLabel
-							value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
-					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
-
-				</tr>
-
-				<tr>
-
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
-					<td><p:selectOneRadio
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
-							<f:selectItems
-								value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
-							<p:ajax event="change" partialSubmit="true" process="@this" />
-						</p:selectOneRadio></td>
-				</tr>
-
-				<tr>
-
-					<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
-					<td>
-						<table>
-							<tr>
-								<td><p:selectOneRadio disabled="true"
-										value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
-										<f:selectItems
-											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
-
-
-										<p:ajax event="change" partialSubmit="true" process="@this"
-											listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
-
-									</p:selectOneRadio></td>
-								<td style="margin-top: -3px"><ac:iconTooltip
-										value="#{lbl['lbl.sc.spec.item.weightage.tooltip']}" /></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-
-			</table>
-
-			<p:dialog id="specCommitteeEditTechnicalDialog"
-				widgetVar="createTechnicalDialog"
-				header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
-				width="400" height="75" closable="false">
+		<h:panelGroup id="committeeTechEdit">
+			<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
 				<table>
 					<tr>
-						<td align="center"><h:graphicImage
-								value="/css/images/design/exclamation.png" /> <p:outputLabel
-								value="#{lbl['lbl.sc.dialog.cancel.message']}" /></td>
+						<td valign="top"><h:outputLabel
+								value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
+						<td colspan="3"><p:inputTextarea rows="2" cols="95"
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								style="margin-bottom:5px;width:83%;" maxlength="200"
+								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 					</tr>
+
+					<tr>
+						<td style="width: 10%"><h:outputLabel
+								value="#{lbl['lbl.sc.item.type']}" /></td>
+						<td><p:inputText disabled="true" size="30"
+								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" /></td>
+						<td><h:outputLabel
+								value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
+						<td><p:inputText disabled="true" size="30"
+								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
+
+					</tr>
+
+					<tr>
+
+						<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
+						<td><p:selectOneRadio
+								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
+								<f:selectItems
+									value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+								<p:ajax event="change" partialSubmit="true" process="@this" />
+							</p:selectOneRadio></td>
+					</tr>
+
+					<tr>
+
+						<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+						<td><p:inputText disabled="true" size="30"
+								value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
+						<td>
+							<table>
+								<tr>
+									<td><p:selectOneRadio disabled="true"
+											value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
+											<f:selectItems
+												value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
+
+
+											<p:ajax event="change" partialSubmit="true" process="@this"
+												listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
+
+										</p:selectOneRadio></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.spec.item.weightage.tooltip']}" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
 				</table>
-				<p:spacer height="1" />
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}" immediate="true"
-						oncomplete="createTechnicalDialog.hide();"
-						action="#{specificationBackingBean.cancelSpecAction('SC')}" />
-					<p:commandButton value="#{lbl['lbl.btn.no']}"
-						onclick="createTechnicalDialog.hide();" type="button" />
-				</div>
-			</p:dialog>
 
-		</p:panel>
+				<p:dialog id="specCommitteeEditTechnicalDialog"
+					widgetVar="createTechnicalDialog"
+					header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
+					width="400" height="75" closable="false">
+					<table>
+						<tr>
+							<td align="center"><h:graphicImage
+									value="/css/images/design/exclamation.png" /> <p:outputLabel
+									value="#{lbl['lbl.sc.dialog.cancel.message']}" /></td>
+						</tr>
+					</table>
+					<p:spacer height="1" />
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}" immediate="true"
+							oncomplete="createTechnicalDialog.hide();"
+							action="#{specificationBackingBean.cancelSpecAction('SC')}" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							onclick="createTechnicalDialog.hide();" type="button" />
+					</div>
+				</p:dialog>
+
+			</p:panel>
 
 
-		<ac:templateSpec
-			newable="#{specificationBackingBean.managedBean.specNewable}"
-			editable="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
+			<ac:templateSpec
+				newable="#{specificationBackingBean.managedBean.specNewable}"
+				editable="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+				templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 
-
-
-
-
+		</h:panelGroup>
 	</ui:define>
-
 
 </ui:composition>
