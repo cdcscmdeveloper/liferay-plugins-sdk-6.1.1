@@ -10,7 +10,6 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-
 	<ui:define name="contentSection">
 
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -25,7 +24,9 @@
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.complete']}"
+						value="#{lbl['lbl.btn.print']}" type="button">
+						<p:printer target="financialComitteeTemp" />
+					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.complete']}"
 						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -41,67 +42,58 @@
 				</td>
 			</tr>
 		</table>
-		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
 
+		<h:panelGroup id="financialComitteeTemp">
+			<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
 
-			<table>
-				<tr>
-					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
-					<td colspan="3"><p:inputTextarea rows="2" cols="95"
-							disabled="true" style="margin-bottom:5px;width:85%;"
-							maxlength="200"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
-				</tr>
-				<tr>
-					<td style="width: 10%"><h:outputLabel
-							value="#{lbl['lbl.sc.item.type']}" /></td>
-					<td><p:inputText
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}"
-							disabled="true" size="30" /></td>
-					<td><h:outputLabel
-							value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
-					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
+				<table>
+					<tr>
+						<td valign="top"><h:outputLabel
+								value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
+						<td colspan="3"><p:inputTextarea rows="2" cols="95"
+								disabled="true" style="margin-bottom:5px;width:85%;"
+								maxlength="200"
+								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 10%"><h:outputLabel
+								value="#{lbl['lbl.sc.item.type']}" /></td>
+						<td><p:inputText
+								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}"
+								disabled="true" size="30" /></td>
+						<td><h:outputLabel
+								value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
+						<td><p:inputText disabled="true" size="30"
+								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
-				</tr>
-				<tr>
+					</tr>
+					<tr>
 
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
-					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode)}"></p:inputText></td>
-				</tr>
+						<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
+						<td><p:inputText disabled="true" size="30"
+								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode)}"></p:inputText></td>
+					</tr>
 
+					<tr>
 
-				<tr>
-
-					<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
-					<!-- 	<td><h:outputLabel
+						<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+						<td><p:inputText disabled="true" size="30"
+								value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
+						<!-- 	<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td><p:inputText
 							value="#{lbl[specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.weightageReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 							disabled="true" readonly="true">
 						</p:inputText></td> -->
-				</tr>
-			</table>
+					</tr>
+				</table>
+			</p:panel>
 
+			<ac:templateSpec
+				editable="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION ) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+				templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}"
+				title="#{lbl['lbl.sc.spec.financial.title']}" />
 
-
-		</p:panel>
-
-
-		<ac:templateSpec
-			editable="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION ) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}"
-			title="#{lbl['lbl.sc.spec.financial.title']}" />
-
-
-
-
-
+		</h:panelGroup>
 	</ui:define>
-
-
 </ui:composition>
