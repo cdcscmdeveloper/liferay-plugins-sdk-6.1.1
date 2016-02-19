@@ -23,9 +23,11 @@
 			<tr>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true" 
+						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.save']}" 
+						value="#{lbl['lbl.btn.print']}" type="button">
+						<p:printer target="financialCheckListSuppInfo" />
+					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -37,17 +39,11 @@
 			</tr>
 		</table>
 
-
-
-		<h:panelGroup>
-
+		<h:panelGroup id="financialCheckListSuppInfo">
 			<ui:include
 				src="/xhtml/sc/specification/specificationCommittee/financialCheckListSupplierInfoscore.xhtml" />
 		</h:panelGroup>
+		
 	</ui:define>
-
-
-
-
 
 </ui:composition>
