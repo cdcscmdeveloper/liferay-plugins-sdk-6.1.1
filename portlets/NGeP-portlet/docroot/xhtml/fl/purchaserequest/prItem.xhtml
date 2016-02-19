@@ -584,192 +584,190 @@
 			</p:panel>			
 		</p:dialog>
 		
-		<p:dialog id="itemTaxGuideLineDialog" header="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G?lbl['lbl.fl.guideline.taxable.item.g2g']:lbl['lbl.fl.guideline.taxable.item']}"
+	<p:dialog id="itemTaxGuideLineDialog" header="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G?lbl['lbl.fl.guideline.taxable.item.g2g']:lbl['lbl.fl.guideline.taxable.item']}"
 		widgetVar="taxGuideLineInfo" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" height="500" resizable="false" >
 		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" toggleable="false">
-			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.main.header1']}" /></h5>
-			<br/>
-			<table style="width: 100%"  class="taxableGuidelineTable" >
-				<tr>
-					<td style="width: 10%;font:bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.no']}" /></td>
-					<td style="width: 30%;font:bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.item']}" /></td>
-					<td style="width: 60%;font:bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.agency']}" /></td>
-				</tr>
-				<tr>
-					<td rowspan="3" style="vertical-align: top;">1</td>
-					<td rowspan="3" style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col1']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col11']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col12']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col13']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td>2</td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col2']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col2']}" /></td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col3']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col2']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td>4</td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col4']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col4']}" /></td>
-				</tr>
-				<tr>
-					<td>5</td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col5']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col5']}" /></td>
-				</tr>
-			</table>
+			<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.g2g.main.header1']}" />
+			<div class="ui-datatable ui-widget" style="width: 850px" >
+				<div class="ui-datatable-tablewrapper" style="width: 100%" >
+					<div align="center"><h:outputText style="font-weight:bold;" value="#{lbl['lbl.fl.taxable.table.g2g']}" /></div>
+					<table style="width: 100%" >
+						<thead>
+							<th class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.no']}" /></th>
+							<th style="white-space:normal;" class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.item']}" /></th>
+							<th style="white-space:normal;" class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.agency']}" /></th>
+						</thead>
+						<tbody class="ui-datatable-data ui-widget-content">
+							<tr class="ui-widget-content ui-datatable-even">
+								<td style="vertical-align: top;">1</td>
+								<td style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col1']}" /></td>
+								<td><h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.g2g.agency.col1']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td>2</td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col2']}" /></td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col2']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-even">
+								<td>3</td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col3']}" /></td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col2']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td>4</td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col4']}" /></td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col4']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-even">
+								<td>5</td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.item.col5']}" /></td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.g2g.agency.col5']}" /></td>
+							</tr>							
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</p:panel>
-		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode ne ParameterConst.procurementTypeG2G}" toggleable="false">
-			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header1']}" /></h5>
-			<br/>
-			<table style="width: 100%" class="taxableGuidelineTable">
-				<tr>
-					<td style="width: 35%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.proc.typ.category']}" /></td>
-					<td style="width: 65%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.gst.changes']}" /></td>
-				</tr>
-				<tr>
-					<td rowspan="2" style="font: bold;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.service']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.service.col1']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.service.col2']}" /></td>
-				</tr>
-				<tr>
-					<td rowspan="3" style="font: bold;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suply.goods']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col1']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col2']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col3']}" /></td>
-				</tr>
-			</table>
-			<br/>
-			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header2']}" /></h5>
-			<br/>
-			<h5><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header3']}" /></h5>
-			<br/>
-			<table style="width: 100%" class="taxableGuidelineTable">
-				<tr>
-					<td style="width: 10%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.no']}" /></td>
-					<td style="width: 20%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.item']}" /></td>
-					<td style="width: 35%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.supp.address']}" /></td>
-					<td style="width: 35%; font: bold; color: blue;"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.del.address']}" /></td>
-				</tr>
-				<tr>
-					<td rowspan="5" style="vertical-align: top;">1</td>
-					<td rowspan="5" style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col1']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.da']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td rowspan="5" style="vertical-align: top;">2</td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col2']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col21']}" /></td>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col22']}" /></td>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col23']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col24']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.da']}" /></td>
-				</tr>
-				<tr>
-					<td rowspan="5" style="vertical-align: top;">3</td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col3']}" /></td>
-					<td rowspan="3"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
-					<td rowspan="3"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col31']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col32']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col33']}" /></td>
-					<td rowspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
-					<td rowspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.tioman']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col34']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td rowspan="2" style="vertical-align: top;">4</td>
-					<td rowspan="2" style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col4']}" /></td>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.tioman']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.supplied.tioman']}" /></td>
-				</tr>
-				<tr>
-					<td rowspan="5" style="vertical-align: top;">5</td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col5']}" /></td>
-					<td colspan="2" rowspan="5"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.langkawi']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col51']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col52']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col53']}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col54']}" /></td>
-				</tr>
-				<tr bgcolor="#CCCCCF">
-					<td style="vertical-align: top;">6</td>
-					<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col6']}" /></td>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
-				</tr>
-				<tr>
-					<td rowspan="2" style="vertical-align: top;">7</td>
-					<td rowspan="2" style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col7']}" /></td>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" /></td>
-				</tr>
-			</table>
+		<p:panel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.parameterCode ne ParameterConst.procurementTypeG2G}"  toggleable="false">
+			<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header1']}" />
+			<div class="ui-datatable ui-widget" style="width: 850px" >
+				<div class="ui-datatable-tablewrapper" style="width: 100%" >
+					<table style="width: 100%" >
+						<thead>
+							<th class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.proc.typ.category']}" /></th>
+							<th style="white-space:normal;" class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.gst.changes']}" /></th>
+						</thead>
+						<tbody class="ui-datatable-data ui-widget-content">
+							<tr class="ui-widget-content ui-datatable-even">
+								<td style="vertical-align:top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.service']}" /></td>
+								<td style="white-space:normal;">
+									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.service.col1']}" /><br/><br/>
+									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.service.col2']}" />
+								</td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td style="vertical-align:top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suply.goods']}" /></td>
+								<td style="white-space:normal;">
+									<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col1']}" /><br/><br/>
+									<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col2']}" /><br/><br/>
+									<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.gst.suply.goods.col3']}" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>			
+			<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header2']}" /><br/>
+			<h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.main.header3']}" /><br/><br/>
+			<div class="ui-datatable ui-widget" style="width: 850px" >
+				<div class="ui-datatable-tablewrapper" style="width: 100%" >
+					<div align="center"><h:outputText style="font-weight:bold;" value="#{lbl['lbl.fl.taxable.table']}" /></div>
+					<table style="width: 100%" >
+						<thead>
+							<th class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.no']}" /></th>
+							<th style="white-space:normal;" class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.item']}" /></th>
+							<th style="white-space:normal;" class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.supp.address']}" /></th>
+							<th style="white-space:normal;" class="ui-state-default"><h:outputText value="#{lbl['lbl.fl.taxable.table.header.del.address']}" /></th>
+						</thead>
+						<tbody class="ui-datatable-data ui-widget-content">
+							<tr class="ui-widget-content ui-datatable-even">
+								<td rowspan="5" style="vertical-align: top;">1</td>
+								<td rowspan="5" style="vertical-align: top;white-space:normal;">
+									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col1']}" />
+								</td>
+								<td style="white-space:normal;">
+									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" />
+								</td>
+								<td style="white-space:normal;">
+									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" />
+								</td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-even">
+								<td colspan="2" style="white-space:normal;">
+									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" />
+								</td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-even">
+								<td colspan="2" style="white-space:normal;">
+									<h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" />
+								</td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-even">
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-even">
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.da']}" /></td>
+							</tr>
+							
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td rowspan="5" style="vertical-align: top;">2</td>
+								<td rowspan="5" style="vertical-align: top;white-space:normal;"><h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col2']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.pca.other.da']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td colspan="2" style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td colspan="2" style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.da']}" /></td>
+							</tr>
+									
+							<tr class="ui-widget-content ui-datatable-even">
+								<td rowspan="2" style="vertical-align: top;">3</td>
+								<td rowspan="2" style="vertical-align: top;white-space:normal;"><h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col3']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.pca']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-even">
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.oversea']}" /></td>
+								<td style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.del.add.tioman']}" /></td>
+							</tr>
+												
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td rowspan="2" style="vertical-align: top;">4</td>
+								<td rowspan="2" style="vertical-align: top;white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col4']}" /></td>
+								<td colspan="2" style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.tioman']}" /></td>
+							</tr>
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td colspan="2" style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.supplied.tioman']}" /></td>
+							</tr>
+												
+							<tr class="ui-widget-content ui-datatable-even">
+								<td style="vertical-align: top;">5</td>
+								<td><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col5']}" /></td>
+								<td colspan="2" style="white-space:normal;"><h:outputText escape="false" value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.importation.langkawi']}" /></td>
+							</tr>
+											
+							<tr class="ui-widget-content ui-datatable-odd">
+								<td style="vertical-align: top;">6</td>
+								<td style="vertical-align: top;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col6']}" /></td>
+								<td colspan="2" style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
+							</tr>
+							
+							<tr class="ui-widget-content ui-datatable-even">
+								<td rowspan="2" style="vertical-align: top;">7</td>
+								<td rowspan="2" style="vertical-align: top;white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.item.col7']}" /></td>
+								<td colspan="2" style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.between.da']}" /></td>
+							</tr>
+							<tr>
+								<td colspan="2" style="white-space:normal;"><h:outputText value="#{lbl['lbl.fl.taxable.table.non.g2g.suppl.add.within.da']}" /></td>
+							</tr>											
+																																	
+						</tbody>						
+					</table>
+				</div>
+			</div>			
 		</p:panel>
-	</p:dialog>
+	</p:dialog>		
 </ui:composition>
