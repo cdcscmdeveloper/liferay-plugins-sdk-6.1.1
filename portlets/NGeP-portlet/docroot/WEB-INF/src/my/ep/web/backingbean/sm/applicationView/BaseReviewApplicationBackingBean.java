@@ -437,12 +437,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		populateLocalAuthority(getManagedBean().getSmSupplier(), smAppl
 				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 				.getSmAddress());
-		for (SelectItem item : getManagedBean().getLocalAuthorityItems()) {
-			if (item.getValue().equals(
-					getManagedBean().getSmSupplier().getLocalAuthorityId())) {
-				getManagedBean().setLocalAuthority(item.getLabel());
-				break;
-			}
+		SelectItem item = (SelectItem) EntityHelper
+				.getEntityBySinglePropertyFromList(getManagedBean()
+						.getSmSupplier().getLocalAuthorityId(),
+						getManagedBean().getLocalAuthorityItems(), "value");
+		if (item != null) {
+			getManagedBean().setLocalAuthority(item.getLabel());
 		}
 		if (getManagedBean().isViewSupplierProfile()) {
 			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
