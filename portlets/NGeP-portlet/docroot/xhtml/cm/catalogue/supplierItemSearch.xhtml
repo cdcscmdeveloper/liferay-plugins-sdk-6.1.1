@@ -318,13 +318,16 @@
 										update="@(.ui-button[id$=compareButton])" />
 								</ui:remove>
 
-								<p:column headerText="#{lbl['lbl.cm.image']}" width="8%">
+								<p:column headerText="#{lbl['lbl.cm.item.code']}" width="8%">
 									<h:panelGroup rendered="#{supplierItem.imagePath == null}">
 
 										<p:outputPanel
 											style="border: 1px solid #808080; display: block; vertical-align: middle; padding: 20px 4px; text-align: center;">
 								#{lbl['lbl.cm.no.image.available']}
+								
 								</p:outputPanel>
+								
+									<h:outputText value="#{supplierItem.itemCode}"></h:outputText>
 
 									</h:panelGroup>
 									<h:panelGroup rendered="#{supplierItem.imagePath != null}">
