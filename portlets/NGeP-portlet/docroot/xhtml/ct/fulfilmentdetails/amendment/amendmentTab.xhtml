@@ -124,12 +124,12 @@
 				  	 
 		  	<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.details']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'LOD')}" update=":form" />
 	 
 		  <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.content']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'CNT')}" update=":form" />
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
@@ -144,12 +144,12 @@
 	
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SLOA')}" update=":form" />
 	
 	       <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.declaration']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SDEC')}" update=":form" />
 	
 	       <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.meeting']}"

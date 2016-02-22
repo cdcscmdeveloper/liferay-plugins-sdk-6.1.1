@@ -25,12 +25,33 @@
 				<td style="width: 25%" class="header-info-text">
 					#{ctBackingBean.managedBean.contractVer.ctContract.ownerOrgProfile.orgName}
 				</td>
+				<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA eq null}">
 				<td style="width: 5%">
 					<h:outputLabel value="#{lbl['lbl.ct.fulfilment.details.status']}" />
 				</td>
 				<td style="width: 15%" class="header-info-text">
 					#{ctBackingBean.getStatusDescById(ctBackingBean.managedBean.contractVer.status.statusId)}
 				</td>
+				</h:panelGroup>				
+				<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}">
+				<td style="width: 5%">
+					<h:outputLabel value="#{lbl['lbl.ct.loa.issue.date']}" />
+				</td>
+				<td style="width: 5%" class="header-info-text">
+					<h:outputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.issueDate}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</td>
+				<td style="width: 5%">
+					<h:outputLabel value="#{lbl['lbl.ct.response.due.date']}" />
+				</td>
+				<td style="width: 5%" class="header-info-text">
+					<h:outputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackDueDate}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+					(#{DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.ackDueDate)} #{lbl['lbl.ct.days']})
+				</td>
+				</h:panelGroup>
 			</tr>
 		</table>
 	</div>
