@@ -124,7 +124,7 @@
 								<th><p:outputLabel
 										value="#{lbl['lbl.pm.reason.circular.criteria']}" /> <p:outputLabel
 										value="* " styleClass="mandatory" /></th>
-								<td><p:selectOneMenu id="circularCategory" required="true"
+								<td><p:selectOneMenu id="circularCategory" required="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
 										disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}"
 										label="#{lbl['lbl.pm.reason.circular.criteria']}"
 										styleClass="ppDropDownWidthM"
@@ -162,7 +162,7 @@
 										var="PIDreason">
 										<p:column style="width:80%;"
 											headerText="#{lbl['lbl.pm.reason.applicability']}">
-											<p:selectOneMenu id="docTypeID" required="true"
+											<p:selectOneMenu id="docTypeID" required="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
 												label="#{lbl['lbl.pm.reason.applicability']}"
 												styleClass="ppDropDownWidthL" value="#{PIDreason.docType}">
 												<f:selectItems
