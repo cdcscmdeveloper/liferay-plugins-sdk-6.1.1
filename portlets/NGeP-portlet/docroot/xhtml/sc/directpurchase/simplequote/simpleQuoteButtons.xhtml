@@ -37,8 +37,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					id="yesButton"
 					rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
-					onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();sqConformDlg.hide();"
+					onstart="sqConformDlg.show();"
+					oncomplete="sqConformDlg.hide();"
 					actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
