@@ -35,8 +35,11 @@
 				</h:outputText>
 			</h:panelGroup>
 			<h:panelGroup rendered="#{!isSelectedPriceTypeTier}">
-				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.clQuantity}">
+				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.clQuantity}" rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}" />
+				</h:outputText>
+				<h:outputText value="#{tplSpecAnswer.tplSpecZoneQty.qty}" rendered="#{!empty templateSpecBean.specMaster.tplSpecZone and templateSpecBean.specMaster.qtyByZone}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
 				</h:outputText>
 			</h:panelGroup>
 		</p:column>
