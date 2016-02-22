@@ -1482,13 +1482,7 @@ public class SupplierFinalizationBackingBean extends
 						ScQtProposalItem qtProposalItem = getQtProposalItem(
 											scQtRecommend, recommendedSupplier);
 						
-						BigDecimal awardQty = null;
-						if (qtProposalItem != null) {
-							awardQty = qtProposalItem.getOfferQuantity();
-						} else {
-							awardQty = scQtRecommend.getRequestItem().getQuantity();
-						}
-						detail.setAwardQty(awardQty);
+						detail.setAwardQty(scQtRecommend.getOrderQty());
 						detail.setScQtProposalItem(qtProposalItem);
 						toBeAddedSet.add(detail);
 						
@@ -1588,13 +1582,7 @@ public class SupplierFinalizationBackingBean extends
 		ScQtProposalItem qtProposalItem 
 				= getQtProposalItem(scQtRecommend, recommendedSupplier);
 		
-		BigDecimal awardQty = null;
-		if (qtProposalItem != null) {
-			awardQty = qtProposalItem.getOfferQuantity();
-		} else {
-			awardQty = scQtRecommend.getRequestItem().getQuantity();
-		}
-		recommendDtl.setAwardQty(awardQty);
+		recommendDtl.setAwardQty(scQtRecommend.getOrderQty());
 		recommendDtl.setScQtProposalItem(qtProposalItem);
 
 		return recommendDtl;
@@ -6524,8 +6512,8 @@ public class SupplierFinalizationBackingBean extends
 		
 		boolean isItemize = getManagedBean().isItemize();
 		ScQt scQt = getManagedBean().getScQt();
+		boolean isZonal = scQt.isZonal();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-		List<TplSpecZoneDtl> specZones = getManagedBean().getZoneDetails();
 		Map<Long, TplSpecZoneDtl> zoneMap = getManagedBean().getZoneMap();
 		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 		
@@ -6534,54 +6522,64 @@ public class SupplierFinalizationBackingBean extends
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTSuppFinalizationSO.class);	
 			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setZonal(scQt.isZonal());
+			reqDTO.setZonal(isZonal);
 			reqDTO.setItemize(isItemize);
 			
-			if (isItemize) {
-				List<Long> requestItemIds = new ArrayList<Long>();
-				for (ScQtRecommend scQtRecommend 
-							: scQtFinalization.getScQtRecommends()) {
-					if (!(scQtRecommend.isCancelled() || 
-							scQtRecommend.isAwardedItem())) {
-						requestItemIds.add(scQtRecommend
-								.getRequestItem().getRequestNoteItemId());
+			StringBuilder requestItemAndZoneId = new StringBuilder();
+			List<String> requestItemAndZoneIds = new ArrayList<String>();
+			for (ScQtRecommend scQtRecommend 
+						: scQtFinalization.getScQtRecommends()) {
+				if (!(scQtRecommend.isCancelled() || 
+						scQtRecommend.isAwardedItem())) {
+					requestItemAndZoneId = new StringBuilder();
+					
+					if (isItemize) {
+						requestItemAndZoneId.append(scQtRecommend.getRequestItem().getRequestNoteItemId());
+						
+						if (isZonal) {
+							requestItemAndZoneId.append(CommonConstants.DB_FIELDS_SEPARATOR);	
+						}
+					}
+					
+					if (isZonal && scQtRecommend.getTplSpecZoneDtl() != null) {
+						requestItemAndZoneId.append(scQtRecommend.getTplSpecZoneDtl().getSpecZoneId());
+					}
+					
+					if (!requestItemAndZoneIds.contains(requestItemAndZoneId.toString())) {
+						requestItemAndZoneIds.add(requestItemAndZoneId.toString());	
 					}
 				}
-				reqDTO.setRequestItemIds(requestItemIds);
-			} else if (scQt.isZonal()) {
-				List<Long> specZoneDtlIds = new ArrayList<Long>();	
-				for (TplSpecZoneDtl specZoneDtl : specZones) {
-					specZoneDtlIds.add(specZoneDtl.getSpecZoneId());
-				}
-				reqDTO.setSpecZoneDtlIds(specZoneDtlIds);
 			}
-			
-			SuppFinalizationResDTO resDTO 
-					= qtSuppFinalizationSO.hasAtleastTwoQualifiedSuppliers(reqDTO);
-			
-			if (!resDTO.isSuccessful()) {
-				getManagedBean().setFinalizationMethod(
-						scQtFinalization.getFinalizationMethod().getParameterCode());
+			if (requestItemAndZoneIds.size() > 0) {
+				reqDTO.setRequestItemAndZoneIds(requestItemAndZoneIds);
 				
-				List<Object[]> qualifiedSupplierCountList 
-									= resDTO.getQualifiedSupplierCountList();
-				Object[] paramsObj = qualifiedSupplierCountList.get(0);
+				SuppFinalizationResDTO resDTO 
+						= qtSuppFinalizationSO.hasAtleastTwoQualifiedSuppliers(reqDTO);
 				
-				if (isItemize) {
-					if (scQt.isZonal()) {
-						String zoneName = zoneMap.get(((BigDecimal) paramsObj[2]).longValue()).getZoneName();
-						throw new EpException(MessageConst.ERROR_760370, new String[] { (String) paramsObj[0], zoneName});
+				if (!resDTO.isSuccessful()) {
+					getManagedBean().setFinalizationMethod(
+							scQtFinalization.getFinalizationMethod().getParameterCode());
+					
+					List<Object[]> qualifiedSupplierCountList 
+										= resDTO.getQualifiedSupplierCountList();
+					Object[] paramsObj = qualifiedSupplierCountList.get(0);
+					
+					if (isItemize) {
+						if (scQt.isZonal()) {
+							String zoneName = zoneMap.get(((BigDecimal) paramsObj[2]).longValue()).getZoneName();
+							throw new EpException(MessageConst.ERROR_760370, new String[] { (String) paramsObj[0], zoneName});
+						} else {
+							throw new EpException(MessageConst.ERROR_760371, new String[] { (String) paramsObj[0]});
+						}
 					} else {
-						throw new EpException(MessageConst.ERROR_760371, new String[] { (String) paramsObj[0]});
-					}
-				} else {
-					if (scQt.isZonal()) {
-						String zoneName = zoneMap.get(((BigDecimal) paramsObj[0]).longValue()).getZoneName();
-						getManagedBean().setFinalizationMethod(
-								scQtFinalization.getFinalizationMethod().getParameterCode());
-						throw new EpException(MessageConst.ERROR_760372, new String[] { zoneName });
-					} else {
-						throw new EpException(MessageConst.ERROR_760373);
+						if (scQt.isZonal()) {
+							String zoneName = zoneMap.get(((BigDecimal) paramsObj[0]).longValue()).getZoneName();
+							getManagedBean().setFinalizationMethod(
+									scQtFinalization.getFinalizationMethod().getParameterCode());
+							throw new EpException(MessageConst.ERROR_760372, new String[] { zoneName });
+						} else {
+							throw new EpException(MessageConst.ERROR_760373);
+						}
 					}
 				}
 			}
@@ -7354,7 +7352,7 @@ public class SupplierFinalizationBackingBean extends
 				BigDecimal bidPrice = TemplateSpecHelper.getInstance()
 						.calculateTotalAmount(requestItem.getTplSpecQuestion(),
 								proposalItem.getFinalPrice(),
-								proposalItem.getOfferQuantity());
+								scQtRecommend.getOrderQty());
 				
 				evalResultDtl.setBidPrice(bidPrice);
 				evalResultDtl.setAmountInWords(convertNumberToWord(bidPrice));
@@ -7362,7 +7360,7 @@ public class SupplierFinalizationBackingBean extends
 				BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
 						.calculateTotalAmount(requestItem.getTplSpecQuestion(),
 								proposalItem.getOfferPrice(),
-								proposalItem.getOfferQuantity());
+								scQtRecommend.getOrderQty());
 				
 				evalResultDtl.getQtEvaluationResult()
 							 .setOfferedPrice(offeredPrice);	
@@ -7392,7 +7390,7 @@ public class SupplierFinalizationBackingBean extends
 				totalBidPrice = totalBidPrice.add(TemplateSpecHelper.getInstance()
 						.calculateTotalAmount(requestItem.getTplSpecQuestion(),
 								proposalItem.getFinalPrice(),
-								proposalItem.getOfferQuantity()));
+								scQtRecommend.getOrderQty()));
 				totalBidPrice = totalBidPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			}
 		}
