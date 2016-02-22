@@ -101,17 +101,28 @@
 			<h:outputText value="#{lbl['lbl.ct.loa.signer']}"/>
 	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
 	  	</f:facet>
-		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
+		<h:panelGrid columns="2" columnClasses="columnWidth225">
 			    <p:outputLabel value="#{lbl['lbl.ct.loa.signer']}"  styleClass="required"/>
 			<h:panelGrid columns="2">
-			   <p:selectOneMenu id="signer" style="width:310px" label="#{lbl['lbl.ct.loa.signer']}"
+			   <p:selectOneMenu id="signer" style="width:310px; margin-bottom:5px" label="#{lbl['lbl.ct.loa.signer']}"
 			        disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 			       value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
 				   <f:selectItems value="#{amendmentBackingBean.getContractSignerDropdown()}" />
-				   <p:ajax event="change" partialSubmit="true" process="@this" update="signer" 
+				   <p:ajax event="change" partialSubmit="true" process="@this" update="@this signerDesignation" 
 				   	listener="#{amendmentBackingBean.contractSignerChange()}" />
 		     	</p:selectOneMenu>
 		         <p:message for="signer" display="icon"/>
+		     </h:panelGrid>
+		     <p:outputLabel value="#{lbl['lbl.ct.signer.designation']}"  styleClass="required"/>
+			<h:panelGrid columns="2">
+			   	<p:inputText id="signerDesignation"
+						disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
+						maxlength="100"
+						value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.loaSignerDesig}"
+						label="#{lbl['lbl.ct.signer.designation']}" required="true"
+						style="width:250px">
+					</p:inputText>
+		         <p:message for="signerDesignation" display="icon"/>
 		     </h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
