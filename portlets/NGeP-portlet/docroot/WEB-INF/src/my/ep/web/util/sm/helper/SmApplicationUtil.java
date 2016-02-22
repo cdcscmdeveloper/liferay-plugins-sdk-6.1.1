@@ -120,6 +120,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -128,6 +129,7 @@ import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -7457,6 +7459,34 @@ public class SmApplicationUtil {
 			}
 		}
 		return machineItems;
+	}
+
+	public static SmAppl deleteApplChildEntities(SmAppl appl) {
+		appl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
+		appl.setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
+		appl.setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
+		appl.setSmAssociationBodies(new ArrayList<SmAssociationBody>());
+		appl.setSmEquityCompanies(new ArrayList<SmEquityCompany>());
+		appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+		appl.setSmSupplierSystems(new ArrayList<SmSupplierSystem>());
+		appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
+		appl.setSmPersonnels(new ArrayList<SmPersonnel>());
+		appl.setSmStaffTotals(new ArrayList<SmStaffTotal>());
+		appl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		appl.setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
+		appl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
+		appl.setSmSupplierCerts(new ArrayList<SmSupplierCert>());
+		appl.setSmApplRejectReasons(new ArrayList<SmApplRejectReason>());
+		appl.setSmCompanyBasic(null);
+		appl.setSmCompanyExperiences(new ArrayList<SmCompanyExperience>());
+		appl.setSmFacilities(new ArrayList<SmFacility>());
+		appl.setSmSvTasks(new ArrayList<SmSvTask>());
+		appl.setSmApplInquiries(new ArrayList<SmApplInquiry>());
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSmAppl(appl);
+		appl = SmServiceLookup.getMofRegistrationSO()
+				.updateSmAppl(reqDTO).getSmAppl();
+		return appl;
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {

@@ -320,52 +320,65 @@ public class SmApplicationBackingBean extends
 							latestResubmitAppl = SmApplicationUtil
 									.getLatesResubmitApplicationByRejectedAppl(rejectedAppl);
 							if (latestResubmitAppl != null) {
-								mofReqDto = new MofRegistrationReqDTO();
-								mofReqDto.setSmAppl(latestResubmitAppl);
-								mofReqDto.setSrcAppl(rejectedAppl);
-								latestResubmitAppl = SmServiceLookup
-										.getMofRegistrationSO()
-										.cloneExistingResubmitApplication(
-												mofReqDto).getSmAppl();
+								try {
+									latestResubmitAppl = SmApplicationUtil
+											.deleteApplChildEntities(latestResubmitAppl);
+									mofReqDto = new MofRegistrationReqDTO();
+									mofReqDto.setSmAppl(latestResubmitAppl);
+									mofReqDto.setSrcAppl(rejectedAppl);
+									latestResubmitAppl = SmServiceLookup
+											.getMofRegistrationSO()
+											.cloneExistingResubmitApplication(
+													mofReqDto).getSmAppl();
+								} catch (Exception ex) {
+									resubmitErrorKey = ex.getMessage();
+									this.getManagedBean().setValidResubmit(
+											false);
+								}
 							}
 						}
-						if (latestResubmitAppl == null) {
-							FacesContext fc = FacesContext.getCurrentInstance();
-							mofReqDto = new MofRegistrationReqDTO();
-							mofReqDto.setApplId(Long.parseLong(applId));
-							mofReqDto.setSmSupplier(supplierProfile);
-							MofRegistrationResDTO mofRespDto = mofRegistrationSO
-									.cloneSmApplicationForResubmissionDraft(mofReqDto);
-							SmAppl clnAppl = mofRespDto.getSmAppl();
-							SmSupplier supp = mofRespDto.getSmSupplier();
+						if (this.getManagedBean().isValidResubmit()) {
+							if (latestResubmitAppl == null) {
+								FacesContext fc = FacesContext
+										.getCurrentInstance();
+								mofReqDto = new MofRegistrationReqDTO();
+								mofReqDto.setApplId(Long.parseLong(applId));
+								mofReqDto.setSmSupplier(supplierProfile);
+								MofRegistrationResDTO mofRespDto = mofRegistrationSO
+										.cloneSmApplicationForResubmissionDraft(mofReqDto);
+								SmAppl clnAppl = mofRespDto.getSmAppl();
+								SmSupplier supp = mofRespDto.getSmSupplier();
 
-							if (!clnAppl.getApplType().equalsIgnoreCase(
-									ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-								QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-								quesBackingBean.getManagedBean().setTargetUrl(
-										xhtml);
-								quesBackingBean.getManagedBean().setSmSupp(
-										supplierProfile);
-								quesBackingBean.getManagedBean().setSmAppl(
-										clnAppl);
-								quesBackingBean.getManagedBean()
-										.setRejectedAppl(rejectedAppl);
-								quesBackingBean.retrieveQuestionnaire();
-								fc.getApplication()
-										.getNavigationHandler()
-										.handleNavigation(fc, null,
-												"/xhtml/sm/questionnaire/questionnaireView.xhtml");
-								getManagedBean().setSmAppl(clnAppl);
-								getManagedBean().setSmSupplier(supp);
+								if (!clnAppl.getApplType().equalsIgnoreCase(
+										ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+									QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+									quesBackingBean.getManagedBean()
+											.setTargetUrl(xhtml);
+									quesBackingBean.getManagedBean().setSmSupp(
+											supplierProfile);
+									quesBackingBean.getManagedBean().setSmAppl(
+											clnAppl);
+									quesBackingBean.getManagedBean()
+											.setRejectedAppl(rejectedAppl);
+									quesBackingBean.retrieveQuestionnaire();
+									fc.getApplication()
+											.getNavigationHandler()
+											.handleNavigation(fc, null,
+													"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+									getManagedBean().setSmAppl(clnAppl);
+									getManagedBean().setSmSupplier(supp);
+								} else {
+									getManagedBean().setSmAppl(clnAppl);
+									getManagedBean().setSmSupplier(supp);
+									prerenderApplicationForResubmission();
+								}
 							} else {
-								getManagedBean().setSmAppl(clnAppl);
-								getManagedBean().setSmSupplier(supp);
+								getManagedBean().setSmAppl(latestResubmitAppl);
+								getManagedBean().setSmSupplier(supplierProfile);
 								prerenderApplicationForResubmission();
 							}
 						} else {
-							getManagedBean().setSmAppl(latestResubmitAppl);
-							getManagedBean().setSmSupplier(supplierProfile);
-							prerenderApplicationForResubmission();
+							redirectToResubmitErrorPage(resubmitErrorKey);
 						}
 					} else {
 						redirectToResubmitErrorPage(resubmitErrorKey);
