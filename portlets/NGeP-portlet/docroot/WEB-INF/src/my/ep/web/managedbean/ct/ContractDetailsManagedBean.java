@@ -59,7 +59,6 @@ import org.primefaces.model.DualListModel;
 public class ContractDetailsManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	private String[] action;
 	private String taskName;
 	private String popupForImportedItems = "L";
 	private String searchContractNo;
@@ -111,20 +110,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int agencyIndex = 102;
 	private int index;
 	private boolean trackingDiarySearch;
-	
-	/**
-	 * @return the action
-	 */
-	public String[] getAction() {
-		return action;
-	}
-
-	/**
-	 * @param action the action to set
-	 */
-	public void setAction(String[] action) {
-		this.action = action;
-	}
 	
 	/**
 	 * @return the taskName
