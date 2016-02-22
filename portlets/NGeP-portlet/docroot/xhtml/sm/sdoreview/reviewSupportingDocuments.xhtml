@@ -293,13 +293,16 @@
 							maxdate="#{CommonConstants.CURRENT_DATE}" display="inline"
 							size="30" showOn="button" /> <p:message id="receiveCalIdMsg"
 							for="receiveCalId" display="icon" /></td>
-					<td><p:commandButton value="#{lbl['lbl.sm.receive.all']}" style="float:right;"			    		
+					<td>
+						<p:outputLabel value="&#160;" />
+					</td>
+					<td><p:outputLabel value="&#160;" /></td>
+					<td>
+						<p:commandButton value="#{lbl['lbl.sm.receive.all']}" style="float:right;"			    		
 				    		action="#{sdoReviewBackingBean.receiveAllSuppDoc}"
 				    		update=":form:btnInquiryId,:form:btnSubmitId,:form:dtSuppDoc" process="@this" partialSubmit="true">
 				    	</p:commandButton>
 					</td>
-					<td><p:outputLabel value="&#160;" /></td>
-					<td><p:outputLabel value="&#160;" /></td>
 				</tr>
 			</table><br />
 			
