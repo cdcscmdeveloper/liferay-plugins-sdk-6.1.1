@@ -13,21 +13,24 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<p:dataTable id="dtPlanResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" styleClass="ppTablePlanItem" rows="10"
 			rowIndexVar="rowIndex"  lazy="true" var="plan" value="#{pPlanBackingBean.ppPlanDataModel}">
 			<ac:paginator for="dtPlanResult" />
-			<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
-		    	#{plan.planNo}
-	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.plan.year']}">  
-		    	#{plan.planYear}
-	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.type']}">  
-	            #{pPlanBackingBean.getParameterDesc(plan.planType)}
-	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pp.ministry']}" style="white-space:normal; width:25%;">  
-	           	#{pPlanBackingBean.retrieveMinistryByOrgProfileId(plan.orgProfile.orgProfileId)}
+			 <p:column headerText="#{lbl['lbl.pp.kumpulan.ptj']}" style="white-space:normal; width:25%;">  
+	           	#{pPlanBackingBean.retrieveJabatanByOrgProfileId(plan.orgProfile.orgProfileId)}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pp.ptj']}" style="white-space:normal;  width:25%;" >  
 	            #{plan.orgProfile!=null ? plan.orgProfile.pmOrgValidity.orgName : '-'}
 	        </p:column>
+	         <p:column headerText="#{lbl['lbl.pp.type']}">  
+	            #{pPlanBackingBean.getParameterDesc(plan.planType)}
+	        </p:column> 
+	         <p:column headerText="#{lbl['lbl.pp.plan.year']}">  
+		    	#{plan.planYear}
+	        </p:column>  
+			<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
+		    	#{plan.planNo}
+	        </p:column> 
+	        <p:column headerText="#{lbl['lbl.pp.procurement.title']}" style="white-space:normal;  width:15%;"> 
+	        	#{not empty plan.title ? plan.title : ' '}
+			</p:column>
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
 	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(plan.status.statusId) : pPlanBackingBean.getDefaultStatusDesc(plan.planType)}
 	        </p:column>  
