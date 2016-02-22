@@ -638,8 +638,16 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info("saveRejectReason - Start");
 		String returnPage = null;
 		//unique reason code
-		if(this.getManagedBean().getSelectedReason().getPmPIDReasonList() == null || this.getManagedBean().getSelectedReason().getPmPIDReasonList().size() == 0){
+
+		if(this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterCode().equals(ParameterConst.PURCHASE_IN_DEFAULT) && (this.getManagedBean().getSelectedReason().getPmPIDReasonList() == null || this.getManagedBean().getSelectedReason().getPmPIDReasonList().size() == 0)){
 			throw new EpException(MessageConst.ERROR_770300, new String[]{});
+		}
+		//remove pmParameter empty objs
+		if(this.getManagedBean().getSelectedReason().getConditionField() != null && this.getManagedBean().getSelectedReason().getConditionField().getParameterId() == null){
+			this.getManagedBean().getSelectedReason().setConditionField(null);
+		}
+		if(this.getManagedBean().getSelectedReason().getSourceMethod() != null && this.getManagedBean().getSelectedReason().getSourceMethod().getParameterId() == null){
+			this.getManagedBean().getSelectedReason().setSourceMethod(null);
 		}
 		if(this.getManagedBean().getSelectedReason().isBrandNew()){
 			generateReasonCode();
