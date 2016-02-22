@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.virtualcert;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -138,6 +139,24 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		this.getManagedBean().setMofCertLs(new ArrayList<SmMofCert>());
 		if(resDTO.getSmMofCerts().size() > 0){
 			this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
+		}
+	}
+	
+	/**
+	 * Print Virtual Cert
+	 * @param cert
+	 * @throws IOException
+	 */
+	public void printVirtualCert(SmMofCert cert) throws IOException{
+		if(cert.getFileName() != null || cert.getFilePath() != null){
+			String file = cert.getFilePath() + "/" + cert.getFileName();
+			commonDownload(file,cert.getFileName());
+		}else{
+			SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
+					SmVirtualCertHelper.getInstance().getReportType(cert.isBumiCert()), 
+					SmVirtualCertHelper.getInstance().getReportParam(cert), cert);
+			String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
+			commonDownload(newfile,mofCert.getFileName());
 		}
 	}
 
