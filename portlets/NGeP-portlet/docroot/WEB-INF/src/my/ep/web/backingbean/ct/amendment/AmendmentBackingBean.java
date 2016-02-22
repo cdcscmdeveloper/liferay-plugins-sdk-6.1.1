@@ -1390,6 +1390,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.signer", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
+			if	(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaSignerDesig() == null) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.signer.designation", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
 			if (getManagedBean().getScLoaWitness() != null) {
 				if (getManagedBean().getScLoaWitness().getIdentificationNo() == null 
 						|| getManagedBean().getScLoaWitness().getIdentificationNo().length() == 0) {
@@ -3160,7 +3166,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			   	PmUser pmUser = resDTO.getPmUser();
 			   	if (pmUser != null) {
 			   		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractSigner(pmUser);
+			   		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setLoaSignerDesig(pmUser.getDesignation());
 			   	}
+			} else {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setLoaSignerDesig(null);
 			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
@@ -4309,8 +4318,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
 			context = new VelocityContext();	
 			vmFile = ContractConst.DOCPATH_CT_LOA_CONTRACT_SUMMARY;
-			context.put("fileNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
-			context.put("sourcingTitle",  ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getTitle());
+			
+			context.put("fileNo",  ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
+			context.put("sourcingTitle",  ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractName());
 			context.put("successfulSupplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			
 			BigDecimal contractValue = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount() != null 
@@ -4619,26 +4629,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context.put("contractEffDate", contractEffDate);
 			if (scLoa.getContractSigner() != null) {
 				context.put("contractSigner", scLoa.getContractSigner().getUserName());
-				context.put("contractSignerDesignation", scLoa.getContractSigner().getDesignation());
+				String loaSignerDesig = scLoa.getLoaSignerDesig();
+				if (loaSignerDesig.length()>86){
+					loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
+				}
+				context.put("contractSignerDesignation", loaSignerDesig);
 			}
-			
-//			String LoaSigner = "";
-//			if(getManagedBean().getContractSignerUser() != null){
-//				if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
-//					LoaSigner = getManagedBean().getContractSignerUser().getUserName();
-//				}
-//			}
-//			context.put("loaSigner", LoaSigner);	
-//
-//			String loaSignerDesig = "";
-//			if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
-//				loaSignerDesig = scLoa.getLoaSignerDesig();
-//
-//				if(loaSignerDesig.length()>86){
-//					loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
-//				}
-//			}
-//			context.put("loaSignerDesignation", loaSignerDesig);
 			
 			String ackDate = "";
 			String bankAccNo = "";
@@ -4787,6 +4783,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
 		}
 		return content;
+	}
+	
+	private static String splitLongLengthString(String text, int split){
+		StringBuilder sb = new StringBuilder();
+		String[] array = text.split("(?<=\\G.{" + split + "})");
+		int counter=1;
+		for (String string : array) {
+			sb.append(string);
+			if(array.length != counter){
+				sb.append("<br />");
+				++counter;
+			}
+		}
+		return sb.toString();
 	}
 	
 	/**
