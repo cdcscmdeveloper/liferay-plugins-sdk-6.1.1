@@ -128,9 +128,9 @@ public class ReportsGenerateBean {
 
 	/** The sm category statistic view. */
 	private boolean smCategoryStatisticView = false;
-	
+
 	/** The sm category over lapping view. */
-	private boolean smCategoryOverLappingView=false;
+	private boolean smCategoryOverLappingView = false;
 
 	/** The sm category statistic by state view. */
 	private boolean smCategoryStatisticByStateView = false;
@@ -1150,7 +1150,16 @@ public class ReportsGenerateBean {
 	private List<SelectItem> ptjListForAuthorizer = new ArrayList<SelectItem>();
 
 	/** The fl contract no view. */
-	private boolean flContractNoView = false;
+	private boolean flContractNoView =false;
+	
+	/** The fl physical contract no view. */
+	private boolean flPhysicalContractNoView =false;
+	
+	/** The fl loa physical no view. */
+	private boolean flLoaPhysicalNoView =false;
+	
+	/** The fl contract req view. */
+	private boolean flContractReqView=false;
 
 	/** The fl sst view. */
 	private boolean flSstView = false;
@@ -1196,10 +1205,10 @@ public class ReportsGenerateBean {
 
 	/** The fl requisitioner view. */
 	private boolean flRequisitionerView = false;
-	
+
 	/** The fl acknowledge officer view. */
 	private boolean flAcknowledgeOfficerView = false;
-	
+
 	/** The fl pay officer view. */
 	private boolean flPayOfficerView = false;
 
@@ -1270,7 +1279,10 @@ public class ReportsGenerateBean {
 	private boolean flGroupOneWithoutSupplView = false;
 
 	/** The fl group two view. */
-	private boolean flGroupTwoView = false;
+	private boolean flGroupTwoView = false;	
+	
+	/** The fl group two with suppl all view. */
+	private boolean flGroupTwoWithSupplAllView=false;
 
 	/** The fl group two without suppl view. */
 	private boolean flGroupTwoWithoutSupplView = false;
@@ -1346,9 +1358,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group ten view. */
 	private boolean flGroupTenView = false;
-	
+
 	/** The fl group ten with suppl req app view. */
-	private boolean flGroupTenWithSupplReqAppView=false;
+	private boolean flGroupTenWithSupplReqAppView = false;
 
 	/** The fl group ten without suppl view. */
 	private boolean flGroupTenWithoutSupplView = false;
@@ -1382,12 +1394,15 @@ public class ReportsGenerateBean {
 
 	/** The fl group thirteen with suppl view. */
 	private boolean flGroupThirteenWithSupplView = false;
-	
+
 	/** The fl group thirteen with suppl ack rec view. */
-	private boolean flGroupThirteenWithSupplAckRecView=false;
+	private boolean flGroupThirteenWithSupplAckRecView = false;
 
 	/** The fl group fourteen view. */
 	private boolean flGroupFourteenView = false;
+	
+	/** The fl group fourteen all rolecodes with pp suppl view. */
+	private boolean flGroupFourteenAllRolecodesWithPPSupplView=false;
 
 	/** The fl group fourteen without suppl view. */
 	private boolean flGroupFourteenWithoutSupplView = false;
@@ -1397,9 +1412,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group fourteen all rolecodes without suppl view. */
 	private boolean flGroupFourteenAllRolecodesWithoutSupplView = false;
-	
+
 	/** The fl group fourteen with suppl payment off view. */
-	private boolean flGroupFourteenWithSupplPaymentOffView=false;
+	private boolean flGroupFourteenWithSupplPaymentOffView = false;
 
 	/** The fl group fifteen view. */
 	private boolean flGroupFifteenView = false;
@@ -1451,9 +1466,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group eighteen with suppl view. */
 	private boolean flGroupEighteenWithSupplView = false;
-	
+
 	/** The fl group eighteen with suppl approver view. */
-	private boolean flGroupEighteenWithSupplApproverView=false;
+	private boolean flGroupEighteenWithSupplApproverView = false;
 
 	/** The fl group nineteen view. */
 	private boolean flGroupNineteenView = false;
@@ -1475,6 +1490,27 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty one view. */
 	private boolean flGroupTwentyOneView = false;
+	
+	/** The fl group three with contract order suppl view. */
+	private boolean flGroupThreeWithContractOrderSupplView=false;
+	
+	/** The fl group twenty five with all contract ord suppl view. */
+	private boolean flGroupTwentyFiveWithAllContractOrdSupplView=false;
+	
+	/** The fl group two with suppl contract view. */
+	private boolean flGroupTwoWithSupplContractView=false;	
+	
+	/** The fl group twenty two with all suppl view. */
+	private boolean flGroupTwentyTwoWithAllSupplView=false;
+	
+	/** The fl group nineteen with all suppl view. */
+	private boolean flGroupNineteenWithAllSupplView=false;
+	
+	/** The fl group twenty with all suppl view. */
+	private boolean flGroupTwentyWithAllSupplView=false;
+	
+	/** The fl group twenty one with all suppl view. */
+	private boolean flGroupTwentyOneWithAllSupplView=false;
 
 	/** The fl group twenty one without suppl view. */
 	private boolean flGroupTwentyOneWithoutSupplView = false;
@@ -1508,9 +1544,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty three with suppl view. */
 	private boolean flGroupTwentyThreeWithSupplView = false;
-	
+
 	/** The fl group twenty three with suppl cancel view. */
-	private boolean flGroupTwentyThreeWithSupplCancelView=false;
+	private boolean flGroupTwentyThreeWithSupplCancelView = false;
 
 	/** The fl group twenty four view. */
 	private boolean flGroupTwentyFourView = false;
@@ -1583,6 +1619,63 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty seven view. */
 	private boolean flGroupTwentySevenView = false;
+
+	/** The fl group three with suppl plr view. */
+	private boolean flGroupThreeWithSupplPLRView = false;
+
+	/** The fl group seven with all suppl view. */
+	private boolean flGroupSevenWithAllSupplView = false;
+
+	/** The fl group three with suppl all view. */
+	private boolean flGroupThreeWithSupplAllView = false;
+
+	/** The fl group twenty seven with all pprf suppl view. */
+	private boolean flGroupTwentySevenWithAllPPRFSupplView = false;
+
+	/** The fl group three all rolecodes without ppct suppl view. */
+	private boolean flGroupThreeAllRolecodesWithoutPPCTSupplView = false;
+
+	/** The fl group three with pppt suppl all view. */
+	private boolean flGroupThreeWithPPPTSupplAllView = false;
+
+	/** The fl group six with suppl pra view. */
+	private boolean flGroupSixWithSupplPRAView = false;
+
+	/** The fl group twenty seven with all suppl view. */
+	private boolean flGroupTwentySevenWithAllSupplView = false;
+
+	/** The fl group twenty seven with all ppra suppl view. */
+	private boolean flGroupTwentySevenWithAllPPRASupplView = false;
+
+	/** The fl group one with all suppl view. */
+	private boolean flGroupOneWithAllSupplView = false;
+
+	/** The fl group two with suppl ppr view. */
+	private boolean flGroupTwoWithSupplPPRView = false;
+
+	/** The fl group twenty four with all suppl view. */
+	private boolean flGroupTwentyFourWithAllSupplView = false;
+
+	/** The fl group four with all suppl view. */
+	private boolean flGroupFourWithAllSupplView = false;
+
+	/** The fl group fourteen all rolecodes without pp suppl view. */
+	private boolean flGroupFourteenAllRolecodesWithoutPPSupplView = false;
+
+	/** The fl group three with ppp suppl all view. */
+	private boolean flGroupThreeWithPPPSupplAllView = false;
+
+	/** The fl group twenty five with all suppl view. */
+	private boolean flGroupTwentyFiveWithAllSupplView = false;
+
+	/** The fl group twenty six with all suppl view. */
+	private boolean flGroupTwentySixWithAllSupplView = false;
+
+	/** The fl group twenty six with all ppra suppl view. */
+	private boolean flGroupTwentySixWithAllPPRASupplView = false;
+
+	/** The fl group one with all ppt suppl view. */
+	private boolean flGroupOneWithAllPPTSupplView = false;
 
 	/** The fl group twenty seven without suppl view. */
 	private boolean flGroupTwentySevenWithoutSupplView = false;
@@ -3795,13 +3888,13 @@ public class ReportsGenerateBean {
 	private String contractTypeTotVar = ReportConst.EMPTY_VAL;
 
 	/** The requisitioner tot var. */
-	private String requisitionerTotVar = ReportConst.EMPTY_VAL;	
-	
+	private String requisitionerTotVar = ReportConst.EMPTY_VAL;
+
 	/** The acknowledge officer tot var. */
-	private String acknowledgeOfficerTotVar=ReportConst.EMPTY_VAL;
-	
+	private String acknowledgeOfficerTotVar = ReportConst.EMPTY_VAL;
+
 	/** The payment officer tot var. */
-	private String paymentOfficerTotVar=ReportConst.EMPTY_VAL;
+	private String paymentOfficerTotVar = ReportConst.EMPTY_VAL;
 
 	/** The mto contract tot var. */
 	private String mtoContractTotVar = ReportConst.EMPTY_VAL;
@@ -4207,10 +4300,10 @@ public class ReportsGenerateBean {
 
 	/** The ct ministry var. */
 	private String ctMinistryVar = ReportConst.EMPTY_VAL;
-	
+
 	/** The ct pegai pengawai var. */
 	private String ctPegaiPengawaiVar = ReportConst.EMPTY_VAL;
-	
+
 	/** The ct kumpulan var. */
 	private String ctKumpulanVar = ReportConst.EMPTY_VAL;
 
@@ -4330,10 +4423,10 @@ public class ReportsGenerateBean {
 
 	/** The pp ministry var. */
 	private String ppMinistryVar = ReportConst.EMPTY_VAL;
-	
+
 	/** The pp pegai pengawai var. */
 	private String ppPegaiPengawaiVar = ReportConst.EMPTY_VAL;
-	
+
 	/** The pp kumpulan var. */
 	private String ppKumpulanVar = ReportConst.EMPTY_VAL;
 
@@ -18880,5 +18973,618 @@ public class ReportsGenerateBean {
 	 */
 	public void setPaymentOfficerTotVar(String paymentOfficerTotVar) {
 		this.paymentOfficerTotVar = paymentOfficerTotVar;
+	}
+
+	/**
+	 * Checks if is fl group three with suppl plr view.
+	 * 
+	 * @return the flGroupThreeWithSupplPLRView
+	 */
+	public boolean isFlGroupThreeWithSupplPLRView() {
+		return flGroupThreeWithSupplPLRView;
+	}
+
+	/**
+	 * Sets the fl group three with suppl plr view.
+	 * 
+	 * @param flGroupThreeWithSupplPLRView
+	 *            the flGroupThreeWithSupplPLRView to set
+	 */
+	public void setFlGroupThreeWithSupplPLRView(
+			boolean flGroupThreeWithSupplPLRView) {
+		this.flGroupThreeWithSupplPLRView = flGroupThreeWithSupplPLRView;
+	}
+
+	/**
+	 * Checks if is fl group seven with all suppl view.
+	 * 
+	 * @return the flGroupSevenWithAllSupplView
+	 */
+	public boolean isFlGroupSevenWithAllSupplView() {
+		return flGroupSevenWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group seven with all suppl view.
+	 * 
+	 * @param flGroupSevenWithAllSupplView
+	 *            the flGroupSevenWithAllSupplView to set
+	 */
+	public void setFlGroupSevenWithAllSupplView(
+			boolean flGroupSevenWithAllSupplView) {
+		this.flGroupSevenWithAllSupplView = flGroupSevenWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group three with suppl all view.
+	 * 
+	 * @return the flGroupThreeWithSupplAllView
+	 */
+	public boolean isFlGroupThreeWithSupplAllView() {
+		return flGroupThreeWithSupplAllView;
+	}
+
+	/**
+	 * Sets the fl group three with suppl all view.
+	 * 
+	 * @param flGroupThreeWithSupplAllView
+	 *            the flGroupThreeWithSupplAllView to set
+	 */
+	public void setFlGroupThreeWithSupplAllView(
+			boolean flGroupThreeWithSupplAllView) {
+		this.flGroupThreeWithSupplAllView = flGroupThreeWithSupplAllView;
+	}
+
+	/**
+	 * Checks if is fl group twenty seven with all pprf suppl view.
+	 * 
+	 * @return the flGroupTwentySevenWithAllPPRFSupplView
+	 */
+	public boolean isFlGroupTwentySevenWithAllPPRFSupplView() {
+		return flGroupTwentySevenWithAllPPRFSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty seven with all pprf suppl view.
+	 * 
+	 * @param flGroupTwentySevenWithAllPPRFSupplView
+	 *            the flGroupTwentySevenWithAllPPRFSupplView to set
+	 */
+	public void setFlGroupTwentySevenWithAllPPRFSupplView(
+			boolean flGroupTwentySevenWithAllPPRFSupplView) {
+		this.flGroupTwentySevenWithAllPPRFSupplView = flGroupTwentySevenWithAllPPRFSupplView;
+	}
+
+	/**
+	 * Checks if is fl group three all rolecodes without ppct suppl view.
+	 * 
+	 * @return the flGroupThreeAllRolecodesWithoutPPCTSupplView
+	 */
+	public boolean isFlGroupThreeAllRolecodesWithoutPPCTSupplView() {
+		return flGroupThreeAllRolecodesWithoutPPCTSupplView;
+	}
+
+	/**
+	 * Sets the fl group three all rolecodes without ppct suppl view.
+	 * 
+	 * @param flGroupThreeAllRolecodesWithoutPPCTSupplView
+	 *            the flGroupThreeAllRolecodesWithoutPPCTSupplView to set
+	 */
+	public void setFlGroupThreeAllRolecodesWithoutPPCTSupplView(
+			boolean flGroupThreeAllRolecodesWithoutPPCTSupplView) {
+		this.flGroupThreeAllRolecodesWithoutPPCTSupplView = flGroupThreeAllRolecodesWithoutPPCTSupplView;
+	}
+
+	/**
+	 * Checks if is fl group three with pppt suppl all view.
+	 * 
+	 * @return the flGroupThreeWithPPPTSupplAllView
+	 */
+	public boolean isFlGroupThreeWithPPPTSupplAllView() {
+		return flGroupThreeWithPPPTSupplAllView;
+	}
+
+	/**
+	 * Sets the fl group three with pppt suppl all view.
+	 * 
+	 * @param flGroupThreeWithPPPTSupplAllView
+	 *            the flGroupThreeWithPPPTSupplAllView to set
+	 */
+	public void setFlGroupThreeWithPPPTSupplAllView(
+			boolean flGroupThreeWithPPPTSupplAllView) {
+		this.flGroupThreeWithPPPTSupplAllView = flGroupThreeWithPPPTSupplAllView;
+	}
+
+	/**
+	 * Checks if is fl group six with suppl pra view.
+	 * 
+	 * @return the flGroupSixWithSupplPRAView
+	 */
+	public boolean isFlGroupSixWithSupplPRAView() {
+		return flGroupSixWithSupplPRAView;
+	}
+
+	/**
+	 * Sets the fl group six with suppl pra view.
+	 * 
+	 * @param flGroupSixWithSupplPRAView
+	 *            the flGroupSixWithSupplPRAView to set
+	 */
+	public void setFlGroupSixWithSupplPRAView(boolean flGroupSixWithSupplPRAView) {
+		this.flGroupSixWithSupplPRAView = flGroupSixWithSupplPRAView;
+	}
+
+	/**
+	 * Checks if is fl group twenty seven with all suppl view.
+	 * 
+	 * @return the flGroupTwentySevenWithAllSupplView
+	 */
+	public boolean isFlGroupTwentySevenWithAllSupplView() {
+		return flGroupTwentySevenWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty seven with all suppl view.
+	 * 
+	 * @param flGroupTwentySevenWithAllSupplView
+	 *            the flGroupTwentySevenWithAllSupplView to set
+	 */
+	public void setFlGroupTwentySevenWithAllSupplView(
+			boolean flGroupTwentySevenWithAllSupplView) {
+		this.flGroupTwentySevenWithAllSupplView = flGroupTwentySevenWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group twenty seven with all ppra suppl view.
+	 * 
+	 * @return the flGroupTwentySevenWithAllPPRASupplView
+	 */
+	public boolean isFlGroupTwentySevenWithAllPPRASupplView() {
+		return flGroupTwentySevenWithAllPPRASupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty seven with all ppra suppl view.
+	 * 
+	 * @param flGroupTwentySevenWithAllPPRASupplView
+	 *            the flGroupTwentySevenWithAllPPRASupplView to set
+	 */
+	public void setFlGroupTwentySevenWithAllPPRASupplView(
+			boolean flGroupTwentySevenWithAllPPRASupplView) {
+		this.flGroupTwentySevenWithAllPPRASupplView = flGroupTwentySevenWithAllPPRASupplView;
+	}
+
+	/**
+	 * Checks if is fl group one with all suppl view.
+	 * 
+	 * @return the flGroupOneWithAllSupplView
+	 */
+	public boolean isFlGroupOneWithAllSupplView() {
+		return flGroupOneWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group one with all suppl view.
+	 * 
+	 * @param flGroupOneWithAllSupplView
+	 *            the flGroupOneWithAllSupplView to set
+	 */
+	public void setFlGroupOneWithAllSupplView(boolean flGroupOneWithAllSupplView) {
+		this.flGroupOneWithAllSupplView = flGroupOneWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group two with suppl ppr view.
+	 * 
+	 * @return the flGroupTwoWithSupplPPRView
+	 */
+	public boolean isFlGroupTwoWithSupplPPRView() {
+		return flGroupTwoWithSupplPPRView;
+	}
+
+	/**
+	 * Sets the fl group two with suppl ppr view.
+	 * 
+	 * @param flGroupTwoWithSupplPPRView
+	 *            the flGroupTwoWithSupplPPRView to set
+	 */
+	public void setFlGroupTwoWithSupplPPRView(boolean flGroupTwoWithSupplPPRView) {
+		this.flGroupTwoWithSupplPPRView = flGroupTwoWithSupplPPRView;
+	}
+
+	/**
+	 * Checks if is fl group twenty four with all suppl view.
+	 * 
+	 * @return the flGroupTwentyFourWithAllSupplView
+	 */
+	public boolean isFlGroupTwentyFourWithAllSupplView() {
+		return flGroupTwentyFourWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty four with all suppl view.
+	 * 
+	 * @param flGroupTwentyFourWithAllSupplView
+	 *            the flGroupTwentyFourWithAllSupplView to set
+	 */
+	public void setFlGroupTwentyFourWithAllSupplView(
+			boolean flGroupTwentyFourWithAllSupplView) {
+		this.flGroupTwentyFourWithAllSupplView = flGroupTwentyFourWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group four with all suppl view.
+	 * 
+	 * @return the flGroupFourWithAllSupplView
+	 */
+	public boolean isFlGroupFourWithAllSupplView() {
+		return flGroupFourWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group four with all suppl view.
+	 * 
+	 * @param flGroupFourWithAllSupplView
+	 *            the flGroupFourWithAllSupplView to set
+	 */
+	public void setFlGroupFourWithAllSupplView(
+			boolean flGroupFourWithAllSupplView) {
+		this.flGroupFourWithAllSupplView = flGroupFourWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group fourteen all rolecodes without pp suppl view.
+	 * 
+	 * @return the flGroupFourteenAllRolecodesWithoutPPSupplView
+	 */
+	public boolean isFlGroupFourteenAllRolecodesWithoutPPSupplView() {
+		return flGroupFourteenAllRolecodesWithoutPPSupplView;
+	}
+
+	/**
+	 * Sets the fl group fourteen all rolecodes without pp suppl view.
+	 * 
+	 * @param flGroupFourteenAllRolecodesWithoutPPSupplView
+	 *            the flGroupFourteenAllRolecodesWithoutPPSupplView to set
+	 */
+	public void setFlGroupFourteenAllRolecodesWithoutPPSupplView(
+			boolean flGroupFourteenAllRolecodesWithoutPPSupplView) {
+		this.flGroupFourteenAllRolecodesWithoutPPSupplView = flGroupFourteenAllRolecodesWithoutPPSupplView;
+	}
+
+	/**
+	 * Checks if is fl group three with ppp suppl all view.
+	 * 
+	 * @return the flGroupThreeWithPPPSupplAllView
+	 */
+	public boolean isFlGroupThreeWithPPPSupplAllView() {
+		return flGroupThreeWithPPPSupplAllView;
+	}
+
+	/**
+	 * Sets the fl group three with ppp suppl all view.
+	 * 
+	 * @param flGroupThreeWithPPPSupplAllView
+	 *            the flGroupThreeWithPPPSupplAllView to set
+	 */
+	public void setFlGroupThreeWithPPPSupplAllView(
+			boolean flGroupThreeWithPPPSupplAllView) {
+		this.flGroupThreeWithPPPSupplAllView = flGroupThreeWithPPPSupplAllView;
+	}
+
+	/**
+	 * Checks if is fl group twenty five with all suppl view.
+	 * 
+	 * @return the flGroupTwentyFiveWithAllSupplView
+	 */
+	public boolean isFlGroupTwentyFiveWithAllSupplView() {
+		return flGroupTwentyFiveWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty five with all suppl view.
+	 * 
+	 * @param flGroupTwentyFiveWithAllSupplView
+	 *            the flGroupTwentyFiveWithAllSupplView to set
+	 */
+	public void setFlGroupTwentyFiveWithAllSupplView(
+			boolean flGroupTwentyFiveWithAllSupplView) {
+		this.flGroupTwentyFiveWithAllSupplView = flGroupTwentyFiveWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group twenty six with all suppl view.
+	 * 
+	 * @return the flGroupTwentySixWithAllSupplView
+	 */
+	public boolean isFlGroupTwentySixWithAllSupplView() {
+		return flGroupTwentySixWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty six with all suppl view.
+	 * 
+	 * @param flGroupTwentySixWithAllSupplView
+	 *            the flGroupTwentySixWithAllSupplView to set
+	 */
+	public void setFlGroupTwentySixWithAllSupplView(
+			boolean flGroupTwentySixWithAllSupplView) {
+		this.flGroupTwentySixWithAllSupplView = flGroupTwentySixWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group twenty six with all ppra suppl view.
+	 * 
+	 * @return the flGroupTwentySixWithAllPPRASupplView
+	 */
+	public boolean isFlGroupTwentySixWithAllPPRASupplView() {
+		return flGroupTwentySixWithAllPPRASupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty six with all ppra suppl view.
+	 * 
+	 * @param flGroupTwentySixWithAllPPRASupplView
+	 *            the flGroupTwentySixWithAllPPRASupplView to set
+	 */
+	public void setFlGroupTwentySixWithAllPPRASupplView(
+			boolean flGroupTwentySixWithAllPPRASupplView) {
+		this.flGroupTwentySixWithAllPPRASupplView = flGroupTwentySixWithAllPPRASupplView;
+	}
+
+	/**
+	 * Checks if is fl group one with all ppt suppl view.
+	 * 
+	 * @return the flGroupOneWithAllPPTSupplView
+	 */
+	public boolean isFlGroupOneWithAllPPTSupplView() {
+		return flGroupOneWithAllPPTSupplView;
+	}
+
+	/**
+	 * Sets the fl group one with all ppt suppl view.
+	 * 
+	 * @param flGroupOneWithAllPPTSupplView
+	 *            the flGroupOneWithAllPPTSupplView to set
+	 */
+	public void setFlGroupOneWithAllPPTSupplView(
+			boolean flGroupOneWithAllPPTSupplView) {
+		this.flGroupOneWithAllPPTSupplView = flGroupOneWithAllPPTSupplView;
+	}
+
+	/**
+	 * Checks if is fl group three with contract order suppl view.
+	 * 
+	 * @return the flGroupThreeWithContractOrderSupplView
+	 */
+	public boolean isFlGroupThreeWithContractOrderSupplView() {
+		return flGroupThreeWithContractOrderSupplView;
+	}
+
+	/**
+	 * Sets the fl group three with contract order suppl view.
+	 * 
+	 * @param flGroupThreeWithContractOrderSupplView
+	 *            the flGroupThreeWithContractOrderSupplView to set
+	 */
+	public void setFlGroupThreeWithContractOrderSupplView(
+			boolean flGroupThreeWithContractOrderSupplView) {
+		this.flGroupThreeWithContractOrderSupplView = flGroupThreeWithContractOrderSupplView;
+	}
+
+	/**
+	 * Checks if is fl group twenty five with all contract ord suppl view.
+	 * 
+	 * @return the flGroupTwentyFiveWithAllContractOrdSupplView
+	 */
+	public boolean isFlGroupTwentyFiveWithAllContractOrdSupplView() {
+		return flGroupTwentyFiveWithAllContractOrdSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty five with all contract ord suppl view.
+	 * 
+	 * @param flGroupTwentyFiveWithAllContractOrdSupplView
+	 *            the flGroupTwentyFiveWithAllContractOrdSupplView to set
+	 */
+	public void setFlGroupTwentyFiveWithAllContractOrdSupplView(
+			boolean flGroupTwentyFiveWithAllContractOrdSupplView) {
+		this.flGroupTwentyFiveWithAllContractOrdSupplView = flGroupTwentyFiveWithAllContractOrdSupplView;
+	}
+
+	/**
+	 * Checks if is fl group two with suppl contract view.
+	 * 
+	 * @return the flGroupTwoWithSupplContractView
+	 */
+	public boolean isFlGroupTwoWithSupplContractView() {
+		return flGroupTwoWithSupplContractView;
+	}
+
+	/**
+	 * Sets the fl group two with suppl contract view.
+	 * 
+	 * @param flGroupTwoWithSupplContractView
+	 *            the flGroupTwoWithSupplContractView to set
+	 */
+	public void setFlGroupTwoWithSupplContractView(
+			boolean flGroupTwoWithSupplContractView) {
+		this.flGroupTwoWithSupplContractView = flGroupTwoWithSupplContractView;
+	}
+
+	/**
+	 * Checks if is fl group twenty two with all suppl view.
+	 * 
+	 * @return the flGroupTwentyTwoWithAllSupplView
+	 */
+	public boolean isFlGroupTwentyTwoWithAllSupplView() {
+		return flGroupTwentyTwoWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty two with all suppl view.
+	 * 
+	 * @param flGroupTwentyTwoWithAllSupplView
+	 *            the flGroupTwentyTwoWithAllSupplView to set
+	 */
+	public void setFlGroupTwentyTwoWithAllSupplView(
+			boolean flGroupTwentyTwoWithAllSupplView) {
+		this.flGroupTwentyTwoWithAllSupplView = flGroupTwentyTwoWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group nineteen with all suppl view.
+	 * 
+	 * @return the flGroupNineteenWithAllSupplView
+	 */
+	public boolean isFlGroupNineteenWithAllSupplView() {
+		return flGroupNineteenWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group nineteen with all suppl view.
+	 * 
+	 * @param flGroupNineteenWithAllSupplView
+	 *            the flGroupNineteenWithAllSupplView to set
+	 */
+	public void setFlGroupNineteenWithAllSupplView(
+			boolean flGroupNineteenWithAllSupplView) {
+		this.flGroupNineteenWithAllSupplView = flGroupNineteenWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group twenty with all suppl view.
+	 * 
+	 * @return the flGroupTwentyWithAllSupplView
+	 */
+	public boolean isFlGroupTwentyWithAllSupplView() {
+		return flGroupTwentyWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty with all suppl view.
+	 * 
+	 * @param flGroupTwentyWithAllSupplView
+	 *            the flGroupTwentyWithAllSupplView to set
+	 */
+	public void setFlGroupTwentyWithAllSupplView(
+			boolean flGroupTwentyWithAllSupplView) {
+		this.flGroupTwentyWithAllSupplView = flGroupTwentyWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group twenty one with all suppl view.
+	 * 
+	 * @return the flGroupTwentyOneWithAllSupplView
+	 */
+	public boolean isFlGroupTwentyOneWithAllSupplView() {
+		return flGroupTwentyOneWithAllSupplView;
+	}
+
+	/**
+	 * Sets the fl group twenty one with all suppl view.
+	 * 
+	 * @param flGroupTwentyOneWithAllSupplView
+	 *            the flGroupTwentyOneWithAllSupplView to set
+	 */
+	public void setFlGroupTwentyOneWithAllSupplView(
+			boolean flGroupTwentyOneWithAllSupplView) {
+		this.flGroupTwentyOneWithAllSupplView = flGroupTwentyOneWithAllSupplView;
+	}
+
+	/**
+	 * Checks if is fl group two with suppl all view.
+	 * 
+	 * @return the flGroupTwoWithSupplAllView
+	 */
+	public boolean isFlGroupTwoWithSupplAllView() {
+		return flGroupTwoWithSupplAllView;
+	}
+
+	/**
+	 * Sets the fl group two with suppl all view.
+	 * 
+	 * @param flGroupTwoWithSupplAllView
+	 *            the flGroupTwoWithSupplAllView to set
+	 */
+	public void setFlGroupTwoWithSupplAllView(boolean flGroupTwoWithSupplAllView) {
+		this.flGroupTwoWithSupplAllView = flGroupTwoWithSupplAllView;
+	}
+
+	/**
+	 * Checks if is fl group fourteen all rolecodes with pp suppl view.
+	 * 
+	 * @return the flGroupFourteenAllRolecodesWithPPSupplView
+	 */
+	public boolean isFlGroupFourteenAllRolecodesWithPPSupplView() {
+		return flGroupFourteenAllRolecodesWithPPSupplView;
+	}
+
+	/**
+	 * Sets the fl group fourteen all rolecodes with pp suppl view.
+	 * 
+	 * @param flGroupFourteenAllRolecodesWithPPSupplView
+	 *            the flGroupFourteenAllRolecodesWithPPSupplView to set
+	 */
+	public void setFlGroupFourteenAllRolecodesWithPPSupplView(
+			boolean flGroupFourteenAllRolecodesWithPPSupplView) {
+		this.flGroupFourteenAllRolecodesWithPPSupplView = flGroupFourteenAllRolecodesWithPPSupplView;
+	}
+
+	/**
+	 * Checks if is fl physical contract no view.
+	 * 
+	 * @return the flPhysicalContractNoView
+	 */
+	public boolean isFlPhysicalContractNoView() {
+		return flPhysicalContractNoView;
+	}
+
+	/**
+	 * Sets the fl physical contract no view.
+	 * 
+	 * @param flPhysicalContractNoView
+	 *            the flPhysicalContractNoView to set
+	 */
+	public void setFlPhysicalContractNoView(boolean flPhysicalContractNoView) {
+		this.flPhysicalContractNoView = flPhysicalContractNoView;
+	}
+
+	/**
+	 * Checks if is fl loa physical no view.
+	 * 
+	 * @return the flLoaPhysicalNoView
+	 */
+	public boolean isFlLoaPhysicalNoView() {
+		return flLoaPhysicalNoView;
+	}
+
+	/**
+	 * Sets the fl loa physical no view.
+	 * 
+	 * @param flLoaPhysicalNoView
+	 *            the flLoaPhysicalNoView to set
+	 */
+	public void setFlLoaPhysicalNoView(boolean flLoaPhysicalNoView) {
+		this.flLoaPhysicalNoView = flLoaPhysicalNoView;
+	}
+
+	/**
+	 * Checks if is fl contract req view.
+	 * 
+	 * @return the flContractReqView
+	 */
+	public boolean isFlContractReqView() {
+		return flContractReqView;
+	}
+
+	/**
+	 * Sets the fl contract req view.
+	 * 
+	 * @param flContractReqView
+	 *            the flContractReqView to set
+	 */
+	public void setFlContractReqView(boolean flContractReqView) {
+		this.flContractReqView = flContractReqView;
 	}
 }
