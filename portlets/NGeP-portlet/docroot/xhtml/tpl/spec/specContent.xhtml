@@ -12,6 +12,7 @@
 	<ui:param name="scoringSetPopup" value="#{templateSpecId}scoringSetPopup" />
 	<ui:param name="estimationPopup" value="#{templateSpecId}estimationPopup" />
 	<ui:param name="zoneTierPricePopup" value="#{templateSpecId}zoneTierPricePopup" />
+	<ui:param name="zoneQtyPopup" value="#{templateSpecId}zoneQtyPopup" />
 	
 		<p:panel id="spg" header="#{title}" toggleable="true">
 			<h:panelGroup rendered="false">
@@ -111,6 +112,7 @@
 					<ui:param name="isUOMDays" value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
 					<ui:param name="delBtnClientId" value="#{templateSpecId}delBtn" />
 					<ui:param name="isValidationReq" value="#{param[p:component(delBtnClientId)]==null}" />
+					<ui:param name="isQuestion" value="true" />
 					
 					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)) and editable}">
 						<ui:decorate template="specColumnQuestion.xhtml" />
@@ -184,6 +186,8 @@
 						</div>			
 					</c:if>
 				</p:dialog>
+				
+				<ui:include src="zoneQtyPopup.xhtml" />
 			</c:if>
 			
 					
@@ -245,6 +249,10 @@
 				<c:if test="#{isSpecTypeFinancial and isZonal}">
 					<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 				</c:if>
+				
+				<c:if test="#{!isSpecTypeFinancial and isZonal}">
+					<ui:include src="zoneQtyPopup.xhtml" />
+				</c:if>
 			</c:if>
 			
 			<c:if test="#{isContentTypeQuestionAndAnswer}">
@@ -266,6 +274,7 @@
 					<ui:param name="isUOMDays" value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
 					<ui:param name="delBtnClientId" value="#{templateSpecId}delBtn" />
 					<ui:param name="isValidationReq" value="#{param[p:component(delBtnClientId)]==null}" />
+					<ui:param name="isQuestion" value="true" />
 					
 					<ui:decorate template="specColumnQuestion.xhtml" />
 					<ui:decorate template="specColumnQuestionAnswer.xhtml" />
@@ -273,6 +282,10 @@
 				
 				<ui:include src="deleteConfirmPopup.xhtml" />
 				<ui:include src="tierQtyPopup.xhtml" />
+				
+				<c:if test="#{isZonal}">
+					<ui:include src="zoneQtyPopup.xhtml" />
+				</c:if>
 				
 				<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
 			
