@@ -492,7 +492,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		//Log for testing httpsession
 		getPaymentHttpSession();
 		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
-		Object bpmPojo = (Object)session.getAttribute("paymentBpmPojo");
+		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
 		
 		log.info("paymentBean.getPaymentTaskId(): " + paymentTaskId);
 		log.info("paymentBean.getPaymentBpmPojo(): " + paymentBpmPojo);
