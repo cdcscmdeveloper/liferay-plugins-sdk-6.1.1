@@ -14757,7 +14757,7 @@ public class SpecificationBackingBean extends
 					.getTemplateMaster(specReqDTO);
 			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 					.cloneTplSpecMaster(resDTO.getSpecMaster(), true,
-							getManagedBean().getScQt().isTechEvaluationReq(),
+							getManagedBean().getQt().isTechEvaluationReq(),
 							true);
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
