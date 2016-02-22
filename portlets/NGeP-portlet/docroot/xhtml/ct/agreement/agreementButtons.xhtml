@@ -20,7 +20,7 @@
 					onstart="blockWidget.show();" /></td>
 			<td class="ppRightBtn">
 				<ui:repeat var="action"
-					value="#{agreementBackingBean.managedBean.action}">
+					value="#{agreementBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel"
 						value="lbl.btn.#{fn:toLowerCase(action)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
