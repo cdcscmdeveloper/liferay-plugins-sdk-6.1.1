@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:param name="isQuotationThresHold"
-		value="#{specificationBackingBean.managedBean.scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation}" />
+		value="#{specificationBackingBean.managedBean.qt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation}" />
 	<ui:param name="isOneTierThresHold"
-		value="#{specificationBackingBean.isOneTierThresHold(specificationBackingBean.managedBean.scQt.estimatedAmount)}" />
+		value="#{specificationBackingBean.isOneTierThresHold(specificationBackingBean.managedBean.qt.estimatedAmount)}" />
 
 	<ac:lovPopup />
 
@@ -35,7 +35,7 @@
 						update="@form" />
 
 					<c:if
-						test="#{((specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true' and specificationBackingBean.managedBean.taskName eq 'Specification Approval')  or (specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true' and specificationBackingBean.managedBean.ministryRemarksSize ge 1))}">
+						test="#{((specificationBackingBean.managedBean.qt.specApprovalReq eq 'true' and specificationBackingBean.managedBean.taskName eq 'Specification Approval')  or (specificationBackingBean.managedBean.qt.specApprovalReq eq 'true' and specificationBackingBean.managedBean.ministryRemarksSize ge 1))}">
 
 						<p:menuitem value="#{lbl['lbl.sc.approval']}"
 							actionListener="#{specificationBackingBean.businessOwnerTabChange(4)}"
@@ -65,7 +65,7 @@
 					test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
 
 					<ui:fragment
-						rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true'}">
+						rendered="#{specificationBackingBean.managedBean.qt.specApprovalReq eq 'true'}">
 						<ui:include src="/xhtml/sc/specification/businessOwner/approvalBusinessOwner.xhtml"></ui:include>
 
 					</ui:fragment>

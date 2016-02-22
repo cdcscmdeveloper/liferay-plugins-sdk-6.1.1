@@ -8,19 +8,19 @@
 
 	<h:panelGroup>
 		<ui:fragment
-			rendered="#{specificationBackingBean.managedBean.scQt.zonal ne 'false'}">
+			rendered="#{specificationBackingBean.managedBean.qt.zonal ne 'false'}">
 			<p:accordionPanel id="panelNoaccordpnllist" dynamic="true"
 				value="#{specificationBackingBean.managedBean.deliveryLocBean}"
 				var="zonePnlList">
 				<p:ajax event="tabChange"
 					listener="#{specificationBackingBean.deliveryDetailsZonesTabChange}" />
 				<c:if
-					test="#{specificationBackingBean.managedBean.scQt.panel ne 'false'}">
+					test="#{specificationBackingBean.managedBean.qt.panel ne 'false'}">
 					<ui:param name="zoneName"
 						value="#{zonePnlList.tplSpecZoneDtl.panelZone.name}" />
 				</c:if>
 				<c:if
-					test="#{specificationBackingBean.managedBean.scQt.panel eq 'false'}">
+					test="#{specificationBackingBean.managedBean.qt.panel eq 'false'}">
 					<ui:param name="zoneName"
 						value="#{zonePnlList.tplSpecZoneDtl.zoneName}" />
 				</c:if>
@@ -35,7 +35,7 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{specificationBackingBean.managedBean.scQt.zonal eq 'false'}">
+			rendered="#{specificationBackingBean.managedBean.qt.zonal eq 'false'}">
 			<ui:param name="deliveryList"
 				value="#{specificationBackingBean.managedBean.deliveryNonZoneList}" />
 			<ui:param name="selectDeliveryList"
