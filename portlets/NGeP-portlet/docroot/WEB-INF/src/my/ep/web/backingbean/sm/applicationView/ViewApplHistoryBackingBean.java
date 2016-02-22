@@ -24,6 +24,7 @@ import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -157,34 +158,19 @@ public class ViewApplHistoryBackingBean extends
 	 * Initialized virtual certificate by application Id
 	 */
 	private void initVirtualCert() {
-		boolean isRegenerate = false;
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
-		List<SmMofCert> mofCerts = SmServiceLookup.getVirtualCertSO()
-				.retrieveMofCertsByApplId(reqDTO).getSmMofCerts();
-		if (!SmCommonUtil.isCollectionEmpty(mofCerts)) {
-			for (SmMofCert mCert : mofCerts) {
-				// if both is null, generate the pdf and save the file name and
-				// path
-				if (mCert != null) {
-					if (mCert.getFileName() == null
-							|| mCert.getFilePath() == null) {
-						getInstance()
-								.genReport(
-										getInstance().getReportType(
-												mCert.isBumiCert()),
-										getInstance().getReportParam(mCert),
-										mCert);
-						isRegenerate = true;
-					}
-				}
-			}
-			if (isRegenerate) {
-				mofCerts = SmServiceLookup.getVirtualCertSO()
-						.retrieveMofCertsByApplId(reqDTO).getSmMofCerts();
-			}
+		try {
+			SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(
+					getManagedBean().getSmAppl().getApplId());
+			getManagedBean().setMofCertLs(
+					SmServiceLookup.getVirtualCertSO()
+							.retrieveMofCertsByApplId(reqDTO).getSmMofCerts());
+		} catch (Exception ex) {
+			getManagedBean().setMofCertLs(
+					SmServiceLookup.getVirtualCertSO()
+							.retrieveMofCertsByApplId(reqDTO).getSmMofCerts());
 		}
-		getManagedBean().setMofCertLs(mofCerts);
 	}
 
 	/**
