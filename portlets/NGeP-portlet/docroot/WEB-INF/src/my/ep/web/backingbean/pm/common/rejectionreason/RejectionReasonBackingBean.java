@@ -254,6 +254,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			
 //			initialRejectReason();
 			PmReason pmReason = retrieveReasonObjById(id);
+			if(pmReason.getConditionField() == null){
+			  pmReason.setConditionField(new PmParameter());
+			}
+			if(pmReason.getSourceMethod() == null){
+			pmReason.setSourceMethod(new PmParameter());
+			}
 			//set supplier type flag
 			this.getManagedBean().setSuppReason( 
 					ParameterConst.REASON_CATEGORY_SUPPLIER.equals(pmReason.getReasonCategoryCode().getParameterCode())
