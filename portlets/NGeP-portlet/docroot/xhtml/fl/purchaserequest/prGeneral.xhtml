@@ -73,7 +73,7 @@
 						disabled="true" /> <p:commandLink
 						oncomplete="dlgChargedPtj.show();"
 						action="#{purchaseRequestBackingBean.resetChargedPtjDetails}"
-						update=":form:chargeOrgProfileId,chargePtj,resultPanel"
+						update=":form:chargeOrgProfileId,chargePtj,:form:chargedPtj"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						style="padding-left:10px">
 						<p:graphicImage value="/css/images/design/search.png" />
