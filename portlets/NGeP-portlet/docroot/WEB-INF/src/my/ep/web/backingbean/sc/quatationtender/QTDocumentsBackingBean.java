@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -142,6 +143,8 @@ public class QTDocumentsBackingBean extends
 
 	/** The Constant DOCUMENT_PAGE. */
 	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
+	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
+				  SourcingConstants.MALAYSIA_COUNTRY_CODE);
 
 	/**
 	 * Debug logger.
@@ -1889,6 +1892,24 @@ public class QTDocumentsBackingBean extends
 				SourcingConstants.DOCPATH_QT_PROGRASSIVE_PAYMENT, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
+	
+	/**
+	 * Get Parameter description by parameter for report.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @return parameter description
+	 */
+	public String getParameterDescForReport(PmParameter parameter) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			return getParameterDesc(
+					parameter,
+					myLocale);
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * Generate spesifikasi pdf from velocity.
@@ -1920,16 +1941,7 @@ public class QTDocumentsBackingBean extends
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 				TplSpecMaster master = null;
 				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
-				StringBuilder itemTypes = new StringBuilder();
-				if (itemTypes != null) {
-					itemTypes
-							.append(getParameterDesc(master.getItemTypeCode()));
-				}
-				StringBuilder localGoods = new StringBuilder();
-				if (localGoods != null) {
-					localGoods.append(getParameterDesc(master
-							.getItemOriginCode()));
-				}
+				
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 					TplSpecQuestion parentQuestion = question
 							.getParentSpecQuestion();
@@ -1978,8 +1990,6 @@ public class QTDocumentsBackingBean extends
 				master.setTplSpecQuestions(newTplSpecQuestionsList);
 				masters.add(master);
 
-				context.put("localGoods", localGoods);
-				context.put("itemType", itemTypes);
 				context.put("masters", masters);
 				context.put("bean", this);
 			}
