@@ -36,6 +36,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -84,7 +85,7 @@ public class TemplateSpecHelper {
 	 * 		clone including child entities.
 	 * @return	the new cloned TplSpecMaster instance.
 	 */
-	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq) {
+	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq, boolean isQtyByZone) {
 		debugLogger("cloneTplSpecMaster : " + specMaster);
 		
 		TplSpecMaster newSpecMaster = null;
@@ -103,6 +104,7 @@ public class TemplateSpecHelper {
 					newSpecMaster.setScQtDoc(null);
 					newSpecMaster.setScQuoteDocs(null);
 					newSpecMaster.setScoringReq(isScoringReq);
+					newSpecMaster.setQtyByZone(isQtyByZone);
 					setUserDetails(newSpecMaster);
 
 					if (includeQuestions) {
@@ -217,6 +219,9 @@ public class TemplateSpecHelper {
 								
 								// clone spec quantities
 								cloneTplSpecTierQty(newSpecQuestion, specQuestion.getTplSpecTierQties());	
+								
+								// clone spec zone quantities.
+								cloneTplSpecZoneQty(newSpecQuestion, specQuestion.getTplSpecZoneQties());
 								
 								setUserDetails(newSpecQuestion);
 								newSpecQuestions.add(newSpecQuestion);
@@ -354,6 +359,7 @@ public class TemplateSpecHelper {
 						
 						if (newSpecEstimation != null) {
 							newSpecEstimation.setSpecEstimationId(null);
+							newSpecEstimation.setBrandNew(true);
 							newSpecEstimation.setTplSpecQuestion(newSpecQuestion);
 							//newSpecEstimation.setTplSpecZoneDtl(null);
 							//newSpecEstimation.setTplSpecTierQty(null);
@@ -375,6 +381,51 @@ public class TemplateSpecHelper {
 		}
 		
 		return newSpecEstimations;
+	}
+	
+	/**
+	 * Clone the list of Spec Zone Quantities.
+	 * 
+	 * @param newSpecMaster
+	 * 		the new TplSpecMaster cloned.
+	 * @param specZoneQties
+	 * 		the list of TplSpecZoneQty to be clone.
+	 * @return	the list of new cloned TplSpecZoneQty instance.
+	 */
+	public List<TplSpecZoneQty> cloneTplSpecZoneQty(TplSpecQuestion newSpecQuestion, List<TplSpecZoneQty> specZoneQties) {
+		debugLogger("cloneTplSpecZoneQty : " + newSpecQuestion);
+		
+		List<TplSpecZoneQty> newSpecZoneQties = null;
+
+		if (newSpecQuestion != null) {
+			if (specZoneQties != null && !specZoneQties.isEmpty()) {	
+				newSpecZoneQties = new ArrayList<TplSpecZoneQty>();
+				
+				for (TplSpecZoneQty specZoneQty : specZoneQties) {
+					try {
+						TplSpecZoneQty newSpecZoneQty = (TplSpecZoneQty) BeanUtils.cloneBean(specZoneQty);
+						
+						if (newSpecZoneQty != null) {
+							newSpecZoneQty.setSpecZoneQtyId(null);
+							newSpecZoneQty.setBrandNew(true);
+							newSpecZoneQty.setTplSpecQuestion(newSpecQuestion);
+							setUserDetails(newSpecZoneQty);
+							newSpecZoneQties.add(newSpecZoneQty);
+
+						}
+					} catch (IllegalAccessException
+							| InstantiationException
+							| InvocationTargetException
+							| NoSuchMethodException e) {
+						log.error(e);
+						log.warn("clone " + specZoneQty + ": " + specZoneQty.getSpecZoneQtyId() + " failed.");
+					}
+				}
+			}
+			newSpecQuestion.setTplSpecZoneQties(newSpecZoneQties);	
+		}
+		
+		return newSpecZoneQties;
 	}
 	
 	/**
@@ -713,10 +764,28 @@ public class TemplateSpecHelper {
 	public TplSpecAnswer createNewSpecAnswer(TemplateSpecBean templateSpecBean, TplSpecQuestion specQuestion, TplSpecZoneDtl specZoneDtl,
 			TplSpecTierQty specTierQty) {
 		
+		TplSpecZoneQty tplSpecZoneQty = null;
 		TplSpecAnswer newSpecAnswer = new TplSpecAnswer();
 		
 		newSpecAnswer.setTplSpecQuestion(specQuestion);
 		newSpecAnswer.setTplSpecTierQty(specTierQty);
+		
+		if (specZoneDtl != null && templateSpecBean.getSpecMaster().isQtyByZone()) {
+			// Get TplSpecZoneQty by zone.
+			List<TplSpecZoneQty> specZoneQties = specQuestion.getTplSpecZoneQties();
+			if (specZoneQties != null) {
+				for (TplSpecZoneQty specZoneQty : specZoneQties) {
+					if (specZoneQty != null && 
+							(specZoneQty.getTplSpecZoneDtl().equals(specZoneDtl) ||
+									(specZoneQty.getTplSpecZoneDtl().getSpecZoneId() != null && specZoneQty.getTplSpecZoneDtl().getSpecZoneId().equals(specZoneDtl.getSpecZoneId())))) {
+						tplSpecZoneQty = specZoneQty;
+						break;
+					}
+				}	
+			}
+			newSpecAnswer.setTplSpecZoneQty(tplSpecZoneQty);	
+		}
+		
 		setUserDetails(newSpecAnswer);
 		
 		TplSpecSuppAnswer newSpecSuppAnswer = new TplSpecSuppAnswer();

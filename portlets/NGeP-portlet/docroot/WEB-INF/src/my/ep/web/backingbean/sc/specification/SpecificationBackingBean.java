@@ -2402,6 +2402,7 @@ public class SpecificationBackingBean extends
 			specMaster.setItemTypeCode(panelItem.getItemType());
 			specMaster.setStatus(templateStaus);
 			specMaster.setItemOriginCode(localGoodsResDTO.getPmParameter());
+			specMaster.setQtyByZone(true);
 			setUserDetails(specMaster);
 			List<TplSpecQuestion> questionsList = new ArrayList<TplSpecQuestion>();
 			new TemplateSpecBackingBean().addQuestion(new TemplateSpecBean(),
@@ -14437,7 +14438,7 @@ public class SpecificationBackingBean extends
 			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 					.cloneTplSpecMaster(
 							scQtCheckList.getScQtDoc().getTplSpecMaster(),
-							false, true);
+							false, true, true);
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 
@@ -14756,7 +14757,8 @@ public class SpecificationBackingBean extends
 					.getTemplateMaster(specReqDTO);
 			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 					.cloneTplSpecMaster(resDTO.getSpecMaster(), true,
-							getManagedBean().getQt().isTechEvaluationReq());
+							getManagedBean().getScQt().isTechEvaluationReq(),
+							true);
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 			if (getManagedBean().getQt().isZonal()) {
