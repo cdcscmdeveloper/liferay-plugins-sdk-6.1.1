@@ -90,6 +90,7 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -702,6 +703,12 @@ public class QTDetailBackingBean extends
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
+			if(null == selectedScQt.getContractType()){
+				selectedScQt.setContractType(new PmParameter());
+			}
+			if(null == selectedScQt.getItemGroup()){
+				selectedScQt.setItemGroup(new CtPanelItemGroup());
+			}
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			this.getManagedBean().setRuleDataBean(resDTO.getRuleDataBean());
 
@@ -3226,7 +3233,7 @@ public class QTDetailBackingBean extends
 			tenderReqDTO.setBdgDtlsReq(true);
 			QuationTenderResDTO tenderResDTO = null;
 			ScQt scQt = this.getManagedBean().getQt();
-			
+			circularListSelect(scQt.getCircularVer());
 			if (null == scQt
 					|| (scQt.isZonal()
 					/* && !scQt.isPanel() */
@@ -4958,13 +4965,14 @@ public class QTDetailBackingBean extends
 	private void circularListSelect(CtCircularVer circular) {
 		ICircularDetailSO circularDetailSO;
 		try {
+			if (null != circular && null != circular.getCircularVerId()) {
 			CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
 			this.getManagedBean().getQt().setCircularVer(circular);
 			circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.CONTRACT_MANAGEMENT,
 							ICircularDetailSO.class);
-			if (null != circular) {
+			
 				reqDTO.setCircularVerId(circular.getCircularVerId());
 				reqDTO.setQuotationTender(true);
 				CircularDetailResDTO resDTO = circularDetailSO

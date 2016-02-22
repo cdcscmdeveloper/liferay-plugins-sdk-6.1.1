@@ -55,7 +55,7 @@
 
 
 	<p:panel toggleable="true"
-		rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
+		rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.qt.zonal !='false'}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
 			<ac:iconTooltip
@@ -67,7 +67,7 @@
 				<td style="width: 185px;"><p:outputLabel
 						value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText disabled="true" size="30" maxlength="18"
-						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
+						value="#{specificationBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -76,7 +76,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locZoneLevels" disabled="true"
-						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
+						value="#{specificationBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
 						style="width:215px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
@@ -87,7 +87,7 @@
 
 
 	<h:panelGroup
-		rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
+		rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.qt.zonal !='false'}">
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneyesDataTable" rows="10"
 				value="#{specificationBackingBean.managedBean.zoneTrees}"
@@ -114,7 +114,7 @@
 
 
 	<p:panel toggleable="true"
-		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
+		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.qt.zonal !='false'))}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
 			<ac:iconTooltip
@@ -125,17 +125,17 @@
 			<tr>
 				<td style="width: 200px"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}"
-						rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
+						rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
 				<td><p:inputText disabled="true" value="No" size="30"
-						rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
+						rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText size="30" maxlength="18" disabled="true"
-						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
+						value="#{specificationBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -144,7 +144,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locLevels" disabled="true"
-						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
+						value="#{specificationBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
 						style="width: 250px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
@@ -154,7 +154,7 @@
 	</p:panel>
 
 	<h:panelGroup
-		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
+		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.qt.zonal !='false'))}">
 		<h:panelGrid width="100%">
 
 			<p:dataTable id="zoneLocationDataTable" rows="10"
@@ -179,7 +179,7 @@
 
 	</h:panelGroup>
 	<p:panel toggleable="true"
-		rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
+		rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState !='false'}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
 			<ac:iconTooltip
@@ -191,13 +191,13 @@
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}" /></td>
 				<td><p:inputText size="30"
-						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+						value="#{lbl[specificationBackingBean.managedBean.qt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						disabled="true" style="margin-right:5px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText maxlength="18" disabled="true" size="30"
-						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
+						value="#{specificationBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />

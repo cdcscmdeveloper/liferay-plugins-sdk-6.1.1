@@ -11,14 +11,14 @@
 		<table style="width: 100%">
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
-				<td class="header-info-text">#{specificationBackingBean.managedBean.scQt.qtNo}</td>
+				<td class="header-info-text">#{specificationBackingBean.managedBean.qt.qtNo}</td>
 				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
+					rendered="#{specificationBackingBean.managedBean.qt.ppPlan.planNo ne null}">
 					<td><h:outputLabel value="#{lbl['lbl.sc.planno']}" /></td>
-					<td class="header-info-text">#{specificationBackingBean.managedBean.scQt.ppPlan.planNo}</td>
+					<td class="header-info-text">#{specificationBackingBean.managedBean.qt.ppPlan.planNo}</td>
 				</ui:fragment>
 				<td><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td class="header-info-text">#{specificationBackingBean.managedBean.scQt.pmOrgProfile.orgName}</td>
+				<td class="header-info-text">#{specificationBackingBean.managedBean.qt.pmOrgProfile.orgName}</td>
 				<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 				<td class="header-info-text">
 					#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.currentStatusId)}
