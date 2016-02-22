@@ -7696,7 +7696,7 @@ public class SmApplicationBackingBean extends
 	 * @return
 	 */
 	public void onBlurSetMofNo(Object obj) {
-		String mofNo = "";
+		String mofNo = StringUtils.EMPTY;
 		try {
 			Object objRegNoVal = PropertyUtils.getProperty(obj, "regNo");
 			if (objRegNoVal != null) {
