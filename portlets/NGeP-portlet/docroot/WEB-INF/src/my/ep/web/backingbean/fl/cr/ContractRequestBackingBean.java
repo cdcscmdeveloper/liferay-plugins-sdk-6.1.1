@@ -498,8 +498,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				break;
 			}
 		}
-		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
-				getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 	}
 	
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
@@ -1337,6 +1335,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 //		setOneOffFulfilmentItemAddr(getManagedBean().getFlRequest());
 		setFulfilmentItemAddr(getManagedBean().getFlRequest());
+		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
 	}
 
 	private void setFlSupplierDtl(FlFulfilmentRequest flRequest) {
