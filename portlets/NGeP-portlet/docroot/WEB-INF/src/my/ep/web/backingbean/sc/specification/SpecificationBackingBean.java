@@ -117,6 +117,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
@@ -11657,6 +11658,13 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setActiveIndex(4);
 			}
 			ScQt scQt = this.getManagedBean().getQt();
+			
+			if(null == scQt.getContractType()){
+				scQt.setContractType(new PmParameter());
+			}
+			if(null == scQt.getItemGroup()){
+				scQt.setItemGroup(new CtPanelItemGroup());
+			}
 			if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
 					.getManagedBean().getTaskName())
 					|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION

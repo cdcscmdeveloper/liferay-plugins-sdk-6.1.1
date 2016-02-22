@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<c:if
-		test="${specificationBackingBean.managedBean.scQt.evaluationType eq '2' or(specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true')}">
+		test="${specificationBackingBean.managedBean.qt.evaluationType eq '2' or(specificationBackingBean.managedBean.qt.evaluationType eq '1' and specificationBackingBean.managedBean.qt.techEvaluationReq eq 'true')}">
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -148,7 +148,7 @@
 
 
 	<c:if
-		test="${specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq ne 'true'}">
+		test="${specificationBackingBean.managedBean.qt.evaluationType eq '1' and specificationBackingBean.managedBean.qt.techEvaluationReq ne 'true'}">
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -165,7 +165,7 @@
 							update="@form" />
 
 						<c:if
-							test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
+							test="#{specificationBackingBean.managedBean.qt.evaluationType eq '1'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.prepare.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(2)}"
 								update="@form" />
@@ -229,7 +229,7 @@
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '2'}">
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
+							rendered="#{specificationBackingBean.managedBean.qt.evaluationType eq '1'}">
 							<ui:include
 								src="/xhtml/sc/specification/specificationCommittee/prepareSpecification.xhtml"></ui:include>
 						</ui:fragment>

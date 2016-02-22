@@ -16,7 +16,7 @@
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
 					<td><p:selectOneRadio
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
+							value="#{specificationBackingBean.managedBean.qt.scheduleType}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -32,7 +32,7 @@
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
+				rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
 
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.freq.schedule.instruction']}"
@@ -40,7 +40,7 @@
 				<table>
 					<tr>
 						<h:panelGroup
-							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
+							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}">
 							<td style="width: 175px;"><h:outputLabel
 									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td>
 							<td><p:inputText style="text-align:right;" id="focus"
@@ -61,7 +61,7 @@
 
 
 				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
-					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}"
+					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}"
 					rowIndexVar="index"
 					value="#{specificationBackingBean.managedBean.scheduleList}">
 					<ac:paginator for="frequencySchedule" />
@@ -182,7 +182,7 @@
 	</h:panelGroup>
 	<h:panelGroup id="progressive">
 		<c:if
-			test="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen or specificationBackingBean.managedBean.scQt.scheduleType eq ParameterConst.periodicScheduleTypeProgressivePayment}">
+			test="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen or specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeProgressivePayment}">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true">
 

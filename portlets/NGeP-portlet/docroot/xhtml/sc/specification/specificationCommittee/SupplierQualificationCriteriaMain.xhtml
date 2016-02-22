@@ -11,16 +11,16 @@
 
 
 	<c:if
-		test="#{specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeOpen and  specificationBackingBean.managedBean.scQt.panel == 'No'}">
+		test="#{specificationBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeOpen and  specificationBackingBean.managedBean.qt.panel == 'No'}">
 		<ui:include src="/xhtml/sc/specification/specificationCommittee/supplierQualificationCriteriaNonPanel.xhtml" />
 	</c:if>
 
 	<c:if
-		test="#{specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
+		test="#{specificationBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
 		<ui:include src="/xhtml/sc/specification/specificationCommittee/supplierQualificationCriteriaRestrictedTenderMain.xhtml" />
 	</c:if>
 	<c:if
-		test="#{ specificationBackingBean.managedBean.scQt.panel != 'No' and specificationBackingBean.managedBean.scQt.qtType == PmCodeConst.quotationTenderTypeOpen }">
+		test="#{ specificationBackingBean.managedBean.qt.panel != 'No' and specificationBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeOpen }">
 		<ui:include src="/xhtml/sc/specification/specificationCommittee/supplierQualificationCriteriaPanel.xhtml" />
 	</c:if>
 
