@@ -42,7 +42,7 @@
 			header="#{lbl['lbl.sc.qt.circular.item.details']}" toggleable="true">
 
 			<p:dataTable id="itemdtlid" var="panelItem" rowIndexVar="index"
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.selectpanelItem}"
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedpanelItems}"
 				rowKey="#{panelItem}" rows="10">
 
 				<ac:paginator for="itemdtlid" />

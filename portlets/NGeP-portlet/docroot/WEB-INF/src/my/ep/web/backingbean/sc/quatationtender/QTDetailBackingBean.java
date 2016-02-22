@@ -35,6 +35,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -56,6 +57,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -85,6 +88,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
@@ -734,7 +738,7 @@ public class QTDetailBackingBean extends
 				this.getManagedBean()
 						.setCommitteMember(new ScCommitteeMember());
 
-				REDIRECT_PAGE = QTConstants.BO_MAINTANANCE_PAGE;
+				
 			} else {
 
 				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
@@ -1111,6 +1115,7 @@ public class QTDetailBackingBean extends
 
 		}
 		scQt.setScQtStatus(null);
+		
 		// save.
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
@@ -1555,108 +1560,134 @@ public class QTDetailBackingBean extends
 
 			committeTabs = new ArrayList<TabBean>();
 			// BO and specification committe is common for both evaluations..
-			String tabType = ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER;
+			/*String tabType = ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER;
 			ScQtCommittee boCommitte = getQtCommiteDtlsByQtIdNType(tabType,
 					qtId);
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
-					parameterType, tabType), tabType, boCommitte));
+					parameterType, tabType), tabType, boCommitte));*/
 
-			tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
+			String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
 			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType,
 					qtId);
 			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
 					.getScCommittee().getCommitteStatus().getStatusId())) {
 				this.getManagedBean().setCloneNeeded(true);
 			}
-			copyBoMembersToSpecCommitte(specCommitte, boCommitte);
+			//copyBoMembersToSpecCommitte(specCommitte, boCommitte);
 
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, specCommitte));
-			// evaluation type is one tier only oc is added..
-			if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
-				tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
-				ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
-						tabType, qtId);
-				if (isApprovalReq) {
-					evalCommitte.getScCommittee().setApprovalReq(isApprovalReq);
-					evalCommitte.getScCommittee().setModified(true);
-				}
-				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
-						parameterType, tabType), tabType, evalCommitte));
-			}
-			// evaluation type is two tier below committe are added
-			else {
-				tabType = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
-				ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(
-						tabType, qtId);
-				if (isApprovalReq) {
-					openingCommitte.getScCommittee().setApprovalReq(
-							isApprovalReq);
-					openingCommitte.getScCommittee().setModified(true);
-				}
-				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
-						parameterType, tabType), tabType, openingCommitte));
-
-				tabType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
-				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
-						tabType, qtId);
-				if (isApprovalReq) {
-					tecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
-					tecCommitte.getScCommittee().setModified(true);
-				}
-				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
-						parameterType, tabType), tabType, tecCommitte));
-
-				tabType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
-				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
-						tabType, qtId);
-				if (isApprovalReq) {
-					fecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
-					fecCommitte.getScCommittee().setModified(true);
-				}
-				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
-						parameterType, tabType), tabType, fecCommitte));
-			}
-
-			String fcTitleName = null;
-			PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
-			if (fcSecretaryCode == null || fcSecretaryCode.getParameterId() == null) {
-				List<PmParameter> fcSecretaries = retrieveFinalizationCommitteeType();
-				if (fcSecretaries != null && fcSecretaries.size() > 0) {
-					fcSecretaryCode = fcSecretaries.get(0);
-				} else {
-					fcSecretaryCode = null;
-				}
-			}
-			
-			// Displaying the Secretary Details
-			if (fcSecretaryCode != null) {
-				StringBuilder fcTitleLabel = new StringBuilder(
-						"lbl.sc.finalization.committee.secretary.");
-				String fcSecretary = fcSecretaryCode.getParameterCode();
-
-				if (fcSecretary != null) {
-					if (fcSecretary
-							.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
-						fcTitleLabel
-								.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
-						tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
-					} else if (fcSecretary
-							.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD) >= 0) {
-						fcTitleLabel
-								.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
-						tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+			 
+			if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT <= currentStatus) {
+				// evaluation type is one tier only oc is added..
+				if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
+					tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
+					ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
+							tabType, qtId);
+					if (isApprovalReq) {
+						evalCommitte.getScCommittee().setApprovalReq(
+								isApprovalReq);
+						evalCommitte.getScCommittee().setModified(true);
 					}
-
-					fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel
-							.toString().toLowerCase(),
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+					committeTabs.add(new TabBean(parameterHelper
+							.getParameterDesc(parameterType, tabType), tabType,
+							evalCommitte));
 				}
-			}
+				// evaluation type is two tier below committe are added
+				else {
+					tabType = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
+					ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(
+							tabType, qtId);
+					if (isApprovalReq) {
+						openingCommitte.getScCommittee().setApprovalReq(
+								isApprovalReq);
+						openingCommitte.getScCommittee().setModified(true);
+					}
+					committeTabs.add(new TabBean(parameterHelper
+							.getParameterDesc(parameterType, tabType), tabType,
+							openingCommitte));
 
-			ScQtCommittee committee = null;
-			committeTabs.add(new TabBean(fcTitleName, tabType, committee));
+					tabType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+					ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
+							tabType, qtId);
+					if (isApprovalReq) {
+						tecCommitte.getScCommittee().setApprovalReq(
+								isApprovalReq);
+						tecCommitte.getScCommittee().setModified(true);
+					}
+					committeTabs.add(new TabBean(parameterHelper
+							.getParameterDesc(parameterType, tabType), tabType,
+							tecCommitte));
+
+					tabType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
+					ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
+							tabType, qtId);
+					if (isApprovalReq) {
+						fecCommitte.getScCommittee().setApprovalReq(
+								isApprovalReq);
+						fecCommitte.getScCommittee().setModified(true);
+					}
+					committeTabs.add(new TabBean(parameterHelper
+							.getParameterDesc(parameterType, tabType), tabType,
+							fecCommitte));
+				}
+
+				String fcTitleName = null;
+				PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
+				if (fcSecretaryCode == null
+						|| fcSecretaryCode.getParameterId() == null) {
+					List<PmParameter> fcSecretaries = retrieveFinalizationCommitteeType();
+					if (fcSecretaries != null && fcSecretaries.size() > 0) {
+						fcSecretaryCode = fcSecretaries.get(0);
+					} else {
+						fcSecretaryCode = null;
+					}
+				}
+
+				// Displaying the Secretary Details
+				if (fcSecretaryCode != null) {
+					StringBuilder fcTitleLabel = new StringBuilder(
+							"lbl.sc.finalization.committee.secretary.");
+					String fcSecretary = fcSecretaryCode.getParameterCode();
+
+					if (fcSecretary != null) {
+						if (fcSecretary
+								.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
+							fcTitleLabel
+									.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+							tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+						} else if (fcSecretary
+								.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD) >= 0) {
+							fcTitleLabel
+									.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
+							tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+						}
+
+						fcTitleName = ResourceBundleUtils.getMessage(
+								fcTitleLabel.toString().toLowerCase(),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale());
+					}
+				}
+
+				ScQtCommittee committee = null;
+				committeTabs.add(new TabBean(fcTitleName, tabType, committee));
+			}
+		} else if (null == committeTabs) { // formed only SC committee while creating the new QT. 
+        
+			String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
+			ParameterHelper parameterHelper = ParameterHelper.getInstance();
+			committeTabs = new ArrayList<TabBean>();
+			String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
+			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType,
+					qtId);
+			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
+					.getScCommittee().getCommitteStatus().getStatusId())) {
+				this.getManagedBean().setCloneNeeded(true);
+			}
+			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+					parameterType, tabType), tabType, specCommitte));
+		}
 
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 
@@ -1711,7 +1742,7 @@ public class QTDetailBackingBean extends
 						committeTabs.get(this.getManagedBean()
 								.getSelectedCommitteeTabIndex()));
 			}
-		}
+		
 	}
 
 	/**
@@ -2395,7 +2426,8 @@ public class QTDetailBackingBean extends
 					tenderResDTO = QtDetailsSO
 							.retriveQTSuppQulCriDetails(tenderReqDTO);
 					List<ScQtCategory> categoryResults = tenderResDTO
-							.getCategoryResultBean().getResultList();
+							.getCategoryResultBean() != null ? tenderResDTO
+							.getCategoryResultBean().getResultList() : null;
 					if (isNotNullOREmpty(categoryResults)) {
 						if (QTConstants.OPEN_TYPE.equalsIgnoreCase(tenderResDTO
 								.getQtDetail().getQtType())) {
@@ -2436,7 +2468,7 @@ public class QTDetailBackingBean extends
 						}
 					} else if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
 							.equalsIgnoreCase(scQt.getQtType())) {
-						if (tenderResDTO.getSupplierResultBean()
+						if (null != tenderResDTO.getSupplierResultBean() && tenderResDTO.getSupplierResultBean()
 								.getTotalRecord() > 0) {
 							this.getManagedBean().setQtSupplierList(
 									tenderResDTO.getSupplierResultBean()
@@ -2538,34 +2570,29 @@ public class QTDetailBackingBean extends
 								.getCtPanelItem()) {
 					this.getManagedBean().setCtPanelItem(
 							scQt.getScQtSupplierCriteria().getCtPanelItem());
-					if (null != scQt.getScQtSupplierCriteria().getCtPanelItem()
-							.getCtCircularVer()) {
-						this.getManagedBean().setCtCircularVer(
-								scQt.getScQtSupplierCriteria().getCtPanelItem()
-										.getCtCircularVer());
-					}
+					
 					this.getManagedBean().setPanelItemCategory(
 							getParameterDesc(scQt.getScQtSupplierCriteria()
 									.getCtPanelItem().getItemCategoryId()));
 					List<CtPanelItem> panelList = this.getManagedBean()
-							.getSelectpanelItem();
+							.getSelectedpanelItems();
 					panelList = new ArrayList<CtPanelItem>();
 
 					panelList.add(this.getManagedBean().getQt()
 							.getScQtSupplierCriteria().getCtPanelItem());
-					this.getManagedBean().setSelectpanelItem(panelList);
+					this.getManagedBean().setSelectedpanelItems(panelList);
 				}
-				if (null != this.getManagedBean().getCtCircularVer()) {
+				if (null != this.getManagedBean().getQt().getCircularVer()) {
 					this.getManagedBean().setCircularExpDate(
-							this.getManagedBean().getCtCircularVer()
+							this.getManagedBean().getQt().getCircularVer()
 									.getEndDate());
 					this.getManagedBean().setCircularNo(
-							this.getManagedBean().getCtCircularVer()
+							this.getManagedBean().getQt().getCircularVer()
 									.getCircularNo());
 					this.getManagedBean().setCircularName(
-							this.getManagedBean().getCtCircularVer().getName());
+							this.getManagedBean().getQt().getCircularVer().getName());
 					this.getManagedBean().setCircularType(
-							this.getManagedBean().getCtCircularVer()
+							this.getManagedBean().getQt().getCircularVer()
 									.getDocType());
 				}
 				if (null != this.getManagedBean().getZoneGeneralTrees()
@@ -2663,10 +2690,10 @@ public class QTDetailBackingBean extends
 				}
 			}
 			List<CtPanelItem> itemList = this.getManagedBean()
-					.getSelectpanelItem();
+					.getSelectedpanelItems();
 			itemList = new ArrayList<CtPanelItem>();
 			itemList.add(this.getManagedBean().getCtPanelItem());
-			this.getManagedBean().setSelectpanelItem(itemList);
+			this.getManagedBean().setSelectedpanelItems(itemList);
 		} finally {
 		}
 	}
@@ -3199,6 +3226,7 @@ public class QTDetailBackingBean extends
 			tenderReqDTO.setBdgDtlsReq(true);
 			QuationTenderResDTO tenderResDTO = null;
 			ScQt scQt = this.getManagedBean().getQt();
+			
 			if (null == scQt
 					|| (scQt.isZonal()
 					/* && !scQt.isPanel() */
@@ -3207,13 +3235,14 @@ public class QTDetailBackingBean extends
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
 					getManagedBean().setQt(tenderResDTO.getQtDetail());
-
+					scQt = this.getManagedBean().getQt();
 					Long currentStatus = this.getManagedBean().getQt()
 							.getQtStatus().getStatusId();
 					this.getManagedBean().setCurrentStatusId(currentStatus);
 					getManagedBean().getCtContract().setContractNo(
 							this.getManagedBean().getQt()
 									.getExistingContractNo());
+					//this.getManagedBean().setContractType(scQt.getContractType());
 					if (this.getManagedBean().getQt().isZonal()) {
 						if (this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
@@ -3224,9 +3253,18 @@ public class QTDetailBackingBean extends
 												.getZoneLocationLevel()
 												.getParameterCode());
 							}
-							this.getManagedBean().setSupplierCriteria(
-									this.getManagedBean().getQt()
-											.getScQtSupplierCriteria());
+							ScQtSupplierCriteria suppCriteria = this.getManagedBean().getQt()
+							.getScQtSupplierCriteria();
+							if (suppCriteria != null) {
+								this.getManagedBean().setSupplierCriteria(
+										suppCriteria);
+								this.getManagedBean().setCtPanelItem(suppCriteria.getCtPanelItem());
+								/*scQt.setPanelItemId(
+										suppCriteria.getCtPanelItem().getPanelItemId());*/
+								
+								circularListSelect(scQt.getCircularVer());
+							}
+							
 							if (tenderResDTO.getQtDetail().isZonal()) {
 								this.getManagedBean().setCtzones(Boolean.TRUE);
 								if (isNotNullOREmpty(tenderResDTO
@@ -3249,8 +3287,9 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-
+					
 				}
+				
 				this.getManagedBean().setAmendMentBean(
 						tenderResDTO.getAmendMentBean());
 				if (this.getManagedBean().getGosodos() == null) {
@@ -3271,6 +3310,7 @@ public class QTDetailBackingBean extends
 					scQt.setEstimatedAmount(estimatedAmount);
 					scQt.setDecryptedEstAmt(estimatedAmount);
 				}
+				//this.getManagedBean().setContractType(scQt.getContractType());
 			}
 		} finally {
 			QtDetailsSO = null;
@@ -3700,7 +3740,8 @@ public class QTDetailBackingBean extends
 		int subTabIndex = this.getManagedBean().getSelectedTabIndex();
 
 		String taskName = this.getManagedBean().getTaskName();
-
+        boolean isCreateQt = this.getManagedBean().isCreateQt();
+        
 		String zonelocationLevel = this.getManagedBean().getStateCodes();
 		String locationLevel = this.getManagedBean().getLocalLevelCode();
 
@@ -3725,14 +3766,25 @@ public class QTDetailBackingBean extends
 			renewSesionObject();
 			this.getManagedBean().setTaskName(taskName);
 			
-			this.getManagedBean().setMaintanceFlow(
-					this.getManagedBean().getTaskName() == null ? true : false);
+			/*this.getManagedBean().setMaintanceFlow(
+					this.getManagedBean().getTaskName() == null ? true : false);*/
 			
 			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId(), null);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			// this.getManagedBean().setQt(resDTO.getQtDetail());
 			break;
 		case 1:
+			reqDTO = prepareQTInfo();
+			detailSO.validateSupplierQualificationDtls(reqDTO);
+			reqDTO.setSaveFlow(true);
+			resDTO = detailSO.saveQTDtl(reqDTO);
+			renewSesionObject();
+			this.getManagedBean().setQt(resDTO.getQtDetail());
+			this.getManagedBean().setCurrentStatusId(currentStatus);
+			retrieveSuppQualificationTabDtl();
+			setAmmendMentBean(resDTO.getAmendMentBean());
+			break;
+		case 2:
 			reqDTO = prepareQTInfo();
 			reqDTO.setSaveFlow(true);
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
@@ -3752,17 +3804,6 @@ public class QTDetailBackingBean extends
 			// this.getManagedBean().setActiveIndex(0);
 			this.getManagedBean().setSelectedCommitteeTabIndex(committeeTabIndex);
 			retrieveCommitteeAppointmentTabDtl(false);
-			setAmmendMentBean(resDTO.getAmendMentBean());
-			break;
-		case 2:
-			reqDTO = prepareQTInfo();
-			detailSO.validateSupplierQualificationDtls(reqDTO);
-			reqDTO.setSaveFlow(true);
-			resDTO = detailSO.saveQTDtl(reqDTO);
-			renewSesionObject();
-			this.getManagedBean().setQt(resDTO.getQtDetail());
-			this.getManagedBean().setCurrentStatusId(currentStatus);
-			retrieveSuppQualificationTabDtl();
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
 		case 3:
@@ -3856,6 +3897,13 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setTaskName(taskName);
 		this.getManagedBean().setPendingRevision(pendingRevision);
 		this.getManagedBean().setPayLoad(payLoad);
+		this.getManagedBean().setCreateQt(isCreateQt);
+		if (isCreateQt) {
+			this.getManagedBean().setOutComes(
+					new String[] { ResourceBundleUtils.getMessage("lbl.btn.submit",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+		}
 	}
 
 	/**
@@ -3881,11 +3929,11 @@ public class QTDetailBackingBean extends
 				// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
 				break;
 			case 1:
-				// retrieveCommitteeAppointmentTabDtl();
+				detailSO.validateSupplierQualificationDtls(reqDTO);
 				break;
 
 			case 2:
-				detailSO.validateSupplierQualificationDtls(reqDTO);
+				// retrieveCommitteeAppointmentTabDtl();
 				// retrieveSuppQualificationTabDtl();
 				break;
 			case 3:
@@ -3942,12 +3990,12 @@ public class QTDetailBackingBean extends
 						.getQtId(), null);
 				break;
 			case 1:
-				retrieveCommitteeAppointmentTabDtl(false);
+				retrieveSuppQualificationTabDtl();
 				break;
 
 			case 2:
 				// detailSO.validateSupplierQualificationDtls(reqDTO);
-				retrieveSuppQualificationTabDtl();
+				retrieveCommitteeAppointmentTabDtl(false);
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
@@ -4906,4 +4954,29 @@ public class QTDetailBackingBean extends
 	 * scQt.setDecryptedEstAmt(estimatedAmount); } finally { qtDetailsSO = null;
 	 * } }
 	 */
+	
+	private void circularListSelect(CtCircularVer circular) {
+		ICircularDetailSO circularDetailSO;
+		try {
+			CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
+			this.getManagedBean().getQt().setCircularVer(circular);
+			circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT,
+							ICircularDetailSO.class);
+			if (null != circular) {
+				reqDTO.setCircularVerId(circular.getCircularVerId());
+				reqDTO.setQuotationTender(true);
+				CircularDetailResDTO resDTO = circularDetailSO
+						.getPanelItemsByCircularVerId(reqDTO);
+				this.getManagedBean().setSelectedpanelItems(
+						resDTO.getPanelItemList());
+				this.getManagedBean().setCircularType(circular.getDocType());
+
+			}
+
+		} finally {
+
+		}
+	}
 }

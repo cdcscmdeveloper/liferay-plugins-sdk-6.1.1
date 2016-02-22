@@ -1,0 +1,59 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+					styleClass="sidemenu"
+					activeIndex="#{qTDetailBB.managedBean.activeIndex}">
+					<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
+						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form"
+						process="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
+						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"
+						process="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
+						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
+						process="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.approval']}"
+						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
+						process="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.activities']}"
+						action="#{qTDetailBB.qtDetailsTabChange(8)}" update="@form"
+						process="@form" />
+
+				</p:tabMenu></td>
+			<td width="80%" valign="top"><h:panelGroup id="menuQTContent">
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
+						<ui:include
+							src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGenerlDetails.xhtml" />
+					</c:if>
+					
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '1'}">
+						<ui:include
+							src="/xhtml/sc/quatationtender/supplierQualificationCriteria/supplierQualificationCriteria.xhtml" />
+					</c:if>
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '2'}">
+						<ui:include
+							src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+					</c:if>
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '3'}">
+						<ui:include
+							src="/xhtml/sc/quatationtender/approval/approvalCheckBox.xhtml" />
+					</c:if>
+
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8'}">
+						<ui:include
+							src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
+					</c:if>
+
+				</h:panelGroup></td>
+		</tr>
+	</table>
+
+</ui:composition>
