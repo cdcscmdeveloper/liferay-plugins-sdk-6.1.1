@@ -3790,8 +3790,8 @@ public class LOADetailBackingBean extends
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClPriceTypeCode() ? 
 									"" : getParameterDesc(answer.getTplSpecQuestion().getClPriceTypeCode()));
 							
-							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
-									"" : answer.getTplSpecQuestion().getClQuantity().toString());
+							/*row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
+									"" : answer.getTplSpecQuestion().getClQuantity().toString());*/
 						
 						}
 						
@@ -3837,8 +3837,8 @@ public class LOADetailBackingBean extends
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomPerMonth() ? 
 									"" : answer.getTplSpecQuestion().getClUomPerMonth().toString());
 
-							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
-									"" : answer.getTplSpecQuestion().getClQuantity().toString());
+							/*row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
+									"" : answer.getTplSpecQuestion().getClQuantity().toString());*/
 						}
 
 						for (int x = 0; x < serviceSheet.getRow(0)

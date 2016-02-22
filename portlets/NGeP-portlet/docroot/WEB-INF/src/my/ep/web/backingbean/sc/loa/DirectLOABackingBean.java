@@ -5312,11 +5312,11 @@ public class DirectLOABackingBean extends
 												.getTplSpecQuestion()
 												.getClPriceTypeCode()));
 
-						row.createCell(cellIndex++).setCellValue(
+						/*row.createCell(cellIndex++).setCellValue(
 								null == answer.getTplSpecQuestion()
 										.getClQuantity() ? "" : answer
 										.getTplSpecQuestion().getClQuantity()
-										.toString());
+										.toString());*/
 
 					}
 
@@ -5384,11 +5384,11 @@ public class DirectLOABackingBean extends
 										.getTplSpecQuestion()
 										.getClUomPerMonth().toString());
 
-						row.createCell(cellIndex++).setCellValue(
+						/*row.createCell(cellIndex++).setCellValue(
 								null == answer.getTplSpecQuestion()
 										.getClQuantity() ? "" : answer
 										.getTplSpecQuestion().getClQuantity()
-										.toString());
+										.toString());*/
 					}
 
 					for (int x = 0; x < serviceSheet.getRow(0)
