@@ -1,0 +1,193 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}"
+		toggleable="true"
+		rendered="#{(scQt.zonal !='false')}">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 300px"><p:outputLabel
+						value="#{lbl['lbl.sc.zone.location.level']}" /> <p:outputLabel
+						value="*" styleClass="mandatory"></p:outputLabel></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:selectOneMenu id="locationLevels" required="true"
+									label="#{lbl['lbl.sc.zone.location.level']}"
+									value="#{scQt.zoneLocationLevel.parameterId}"
+									style="width: 303px;">
+
+									<f:selectItems
+										value="#{createQtBB.getDropdownLocationValues(ParameterTypeConst.locationLevel,scQt)}" />
+									<p:ajax event="change" update="generalLocationList"
+										listener="#{createQtBB.selectZoneLocationLevel}"></p:ajax>
+								</p:selectOneMenu> <p:message id="withzone" for="locationLevels" display="icon"></p:message>
+							</td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
+
+			</tr>
+		</table>
+
+
+		<h:panelGroup
+			rendered="#{scQt.zonal !='false'}">
+			<h:panelGrid width="100%">
+				<p:dataTable id="zoneGeneralDataTable" rows="10"
+					value="#{qTDetailBB.managedBean.zoneGeneralTrees}"
+					var="zoneTree" style="width:100%" rowIndexVar="index"
+					rowKey="#{zoneTree}">
+
+					<p:column style="width:250%;">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
+						</f:facet>
+						<p:tree value="#{zoneTree}" var="location"
+							selectionMode="checkbox">
+							<p:ajax event="select"
+								listener="#{createQtBB.selectZoneTreeNode}" />
+							<p:ajax event="unselect"
+								listener="#{createQtBB.unSelectZoneTreeNode}" />
+
+							<p:treeNode type="zone">
+								<h:outputText value="#{location.zoneName}" />
+							</p:treeNode>
+
+							<p:treeNode type="state">
+								<h:outputText value="#{location.pmState.stateName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.pmDistrict.districtName}" />
+							</p:treeNode>
+						</p:tree>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.action']}"
+						style="width:10%;text-align: center;">
+						<p:commandLink
+							disabled="#{qTDetailBB.managedBean.readOnly}"
+							actionListener="#{createQtBB.editZones(zoneTree,index,scQt)}"
+							process="@this" update="@([id$=dlgId])"
+							oncomplete="ZoneGeneral.show();">
+							<h:graphicImage value="/css/images/design/edit.png" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:panelGrid>
+			<div align="right" style="width: 100%">
+				<p:selectBooleanCheckbox id="checkAllZonesList"
+					style="float:left;margin-top: 13px;margin-right: -4px;">
+					<p:ajax event="change" partialSubmit="true" process="@all"
+						update="zoneGeneralDataTable"
+						listener="#{createQtBB.checkAllZoneGeneral}" />
+				</p:selectBooleanCheckbox>
+				<p:spacer width="1" />
+				<h:outputText value="#{lbl['lbl.sc.spec.check.all']}"
+					style="float:left;margin-top: 12px;;margin-left: 10px;" />
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
+					disabled="#{qTDetailBB.managedBean.readOnly}"
+					actionListener="#{createQtBB.showGeneralZonesPopup}" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+					styleClass="BtnSpacing" partialSubmit="true"
+					disabled="#{qTDetailBB.managedBean.readOnly}"
+					oncomplete="zonesNonpanelDeletePopUp.show();"
+					update="@([id$=#{zonesNonpanelDeleteId}])" />
+			</div>
+			<ui:param name="zonesNonpanelDeleteId" value="zonesNonpanelDeleteId"></ui:param>
+			<ac:confirmationPopup id="#{zonesNonpanelDeleteId}"
+				widget="zonesNonpanelDeletePopUp"
+				okAction="createQtBB.deleteTreeNode" width="400"
+				height="100" title="#{lbl['lbl.sc.qt.zone.location.info']}"
+				content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
+				update="@([id$=zoneGeneralDataTable])" />
+		</h:panelGroup>
+	</p:panel>
+
+	<p:dialog id="dlgId" header="#{lbl['lbl.sc.add.location']}"
+		widgetVar="ZoneGeneral" modal="true" width="520" position="top"
+		height="410">
+		<p:messages id="specBusinessOwnerZonemessages" showDetail="true"
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
+		<h:panelGroup id="zonePopupGeneral">
+			<table styleClass="noBorders tr,noBorders td" border="0">
+				<TR>
+					<td style="width: 35%" valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.zone.name']}"></p:outputLabel> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td style="width: 65%">
+						<table>
+							<tr>
+								<td><p:inputText size="50" id="zoneNameId"
+										label="#{lbl['lbl.sc.zone.name']}" maxlength="50"
+										required="#{qTDetailBB.managedBean.zoneLocation}"
+										value="#{qTDetailBB.managedBean.zoneName}"></p:inputText></td>
+								<td><p:message id="zoneNameMsg" for="zoneNameId"
+										display="icon" /></td>
+							</tr>
+						</table>
+					</td>
+				</TR>
+				<TR>
+					<TD valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.location']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></TD>
+					<TD>
+						<div style="height: 300px; overflow-y: scroll;">
+							<p:tree id="treeZoneGeneralPopup"
+								value="#{qTDetailBB.managedBean.rootZoanlTree}"
+								var="location"
+								selection="#{qTDetailBB.managedBean.selectedGeneralTreeNodes}"
+								selectionMode="checkbox">
+								<p:treeNode type="state">
+									<h:outputText value="#{location.pmState.stateName}" />
+								</p:treeNode>
+								<p:treeNode type="division">
+									<h:outputText value="#{location.pmDivision.divisionName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.pmDistrict.districtName}" />
+								</p:treeNode>
+								<p:treeNode type="city">
+									<h:outputText value="#{pmCity.cityName}" />
+								</p:treeNode>
+							</p:tree>
+						</div>
+					</TD>
+				</TR>
+				<TR>
+					<TD></TD>
+					<TD><p:selectBooleanCheckbox id="popupCheck"
+							style="float:left;margin-top: 13px;margin-right: -4px;"
+							value="#{qTDetailBB.managedBean.checkAllList}">
+							<p:ajax event="change" partialSubmit="true" process="@all"
+								update=":form:treeZoneGeneralPopup"
+								listener="#{createQtBB.checkAllZoneGeneralPopUp(qTDetailBB.managedBean.checkAllList)}" />
+						</p:selectBooleanCheckbox> <p:spacer width="1" /> <h:outputText
+							value="#{lbl['lbl.sc.spec.check.all']}"
+							style="float:left;margin-top: 12px;;margin-left: 10px;" /> <p:commandButton
+							value="#{lbl['lbl.btn.cancel']}" style="float:right;"
+							styleClass="BtnSpacing" onclick="ZoneGeneral.hide();" />
+						&#160;&#160; <p:commandButton value="#{lbl['lbl.btn.ok']}"
+							style="float:right;" process="@all"
+							update="@this, zoneGeneralDataTable,zonePopupGeneral"
+							styleClass="BtnSpacing"
+							action="#{createQtBB.updateZoneGeneralLocation}">
+						</p:commandButton></TD>
+				</TR>
+			</table>
+		</h:panelGroup>
+	</p:dialog>
+</ui:composition>

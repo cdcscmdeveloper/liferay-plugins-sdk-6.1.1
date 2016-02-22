@@ -32,7 +32,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
@@ -62,7 +61,7 @@ import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.sc.quationtender.QTBaseManagedBean;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
@@ -74,7 +73,7 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name = "specificationMB")
 @SessionScoped
-public class SpecificationManagedBean extends BaseManagedBean {
+public class SpecificationManagedBean extends QTBaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -119,8 +118,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	/** The evaluation type. */
 	private String evaluationType;
 
-	/** The sc qt. */
-	private ScQt scQt;
+	
 
 	/** The stage two tech compliance list. */
 	private List<PmDocument> stageTwoTechComplianceList;
@@ -179,11 +177,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	/** The total progressive payment. */
 	private int totalProgressivePayment;
 
-	/** The cir cular no. */
-	private String cirCularNo;
-
-	/** The circular name. */
-	private String circularName;
+	
 
 	/** The item name. */
 	private String itemName;
@@ -1533,43 +1527,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.totalFrequency = totalFrequency;
 	}
 
-	/**
-	 * Gets the cir cular no.
-	 * 
-	 * @return the cir cular no
-	 */
-	public String getCirCularNo() {
-		return cirCularNo;
-	}
-
-	/**
-	 * Sets the cir cular no.
-	 * 
-	 * @param cirCularNo
-	 *            the new cir cular no
-	 */
-	public void setCirCularNo(String cirCularNo) {
-		this.cirCularNo = cirCularNo;
-	}
-
-	/**
-	 * Gets the circular name.
-	 * 
-	 * @return the circular name
-	 */
-	public String getCircularName() {
-		return circularName;
-	}
-
-	/**
-	 * Sets the circular name.
-	 * 
-	 * @param circularName
-	 *            the new circular name
-	 */
-	public void setCircularName(String circularName) {
-		this.circularName = circularName;
-	}
+	
 
 	/**
 	 * Gets the selectpanel item.
@@ -2460,24 +2418,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.yearList = yearList;
 	}
 
-	/**
-	 * Gets the sc qt.
-	 * 
-	 * @return the sc qt
-	 */
-	public ScQt getScQt() {
-		return scQt;
-	}
-
-	/**
-	 * Sets the sc qt.
-	 * 
-	 * @param scQt
-	 *            the new sc qt
-	 */
-	public void setScQt(ScQt scQt) {
-		this.scQt = scQt;
-	}
+	
 
 	/**
 	 * Gets the tech points.

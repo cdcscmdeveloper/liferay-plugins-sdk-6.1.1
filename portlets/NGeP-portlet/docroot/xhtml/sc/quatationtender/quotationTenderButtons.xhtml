@@ -18,7 +18,7 @@
 		</tr>
 		<tr>
 		<td align="right">
-			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
+			<c:if test="#{qTDetailBB.managedBean.taskId eq null and !qTDetailBB.managedBean.createQt}">
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 					action="#{qTDetailBB.gotoQtSearchPage}"
 					partialSubmit="true"
@@ -48,10 +48,16 @@
 					</c:when>
 					<c:otherwise>
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
+							update="@all"
+							onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" rendered="#{qTDetailBB.managedBean.createQt}"/>
+							
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
 							action="#{qTDetailBB.submitQtDetailsFormMaintanace}" process="@form"
 							update="@all"
 							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" />
+							oncomplete="blockWidget.hide();" rendered="#{!qTDetailBB.managedBean.createQt}"/>
 					</c:otherwise>
 				</c:choose>
 				

@@ -977,11 +977,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 			this.getManagedBean().setCtZoneSupplierList(
 					supplierResDTO.getCtPanelSuppliers());
 			List<CtPanelItem> itemList = this.getManagedBean()
-					.getSelectpanelItem();
+					.getSelectedpanelItems();
 			itemList = new ArrayList<CtPanelItem>();
 			itemList.add(this.getManagedBean().getCtPanelItem());
 
-			this.getManagedBean().setSelectpanelItem(itemList);
+			this.getManagedBean().setSelectedpanelItems(itemList);
 		}
 	}
 
@@ -1546,10 +1546,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public String viewCircularAttachments() {
 		debugLogger("viewCircularAttachments");
-		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
+		List<CtPanelItem> itemList = this.getManagedBean().getSelectedpanelItems();
 		itemList = new ArrayList<CtPanelItem>();
 		itemList.add(this.getManagedBean().getCtPanelItem());
-		CtCircularVer ctCircularVer = this.getManagedBean().getCtCircularVer();
+		CtCircularVer ctCircularVer = this.getManagedBean().getQt().getCircularVer();
 		String pageView = "";
 		if (null != ctCircularVer) {
 			PanelBackingBean panelbackingbean = new PanelBackingBean();
@@ -1557,7 +1557,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/quatationtender/quatationtendercreation.xhtml");
 			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer.getCircularVerId());
 		}
-		this.getManagedBean().setSelectpanelItem(itemList);
+		this.getManagedBean().setSelectedpanelItems(itemList);
 		return pageView;
 	}
 
