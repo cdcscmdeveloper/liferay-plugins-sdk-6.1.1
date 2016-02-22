@@ -55,6 +55,7 @@
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
 				</td>
 			</tr>
+			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -66,7 +67,7 @@
 						disabled="true" /> <p:commandLink
 						oncomplete="dlgChargedPtj.show();"
 						action="#{contractRequestBackingBean.resetChargedPtjDetails}"
-						update=":form:chargeOrgProfileId,chargePtj,chargeResultPanel"
+						update=":form:chargeOrgProfileId,chargePtj,chargeResultPanel,dialogChargedPtj"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 						style="padding-left:10px">
 						<p:graphicImage value="/css/images/design/search.png" />
@@ -410,6 +411,7 @@
                      <p:ajax process="@this"/></p:inputText>
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
+       		         
        		         <p:commandButton id="chargePtjSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableChargePtj"  
        		            action="#{contractRequestBackingBean.searchChargedPtjDetails}" process="@this" /> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
