@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
@@ -101,6 +102,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -128,6 +130,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.QTFiledMapper;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -2012,6 +2015,42 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 		return msg;
+	}
+	
+	protected SmAddress cloneSmAddress(SmAddress address) {
+		log.info("cloneSmAddress : " + address);
+		
+		SmAddress newAddress = null;
+
+		if (address != null) {
+			try {
+				newAddress = (SmAddress) BeanUtils.cloneBean(address);
+				
+				if (newAddress != null) {
+					newAddress.setBrandNew(true);
+					newAddress.setAddressId(null);
+					
+					newAddress.setSmAssociateCompanies(null);
+					newAddress.setSmCompanyAddresses(null);
+					newAddress.setSmEquityCompanies(null);
+					newAddress.setSmFacilities(null);
+					newAddress.setSmPersonnelAddresses(null);
+					newAddress.setSmSupplierBanks(null);
+					newAddress.setSmSupplierBranches(null);
+					
+					setUserDetails(newAddress);
+				}
+			} catch (IllegalAccessException
+					| InstantiationException
+					| InvocationTargetException
+					| NoSuchMethodException e) {
+				e.printStackTrace();
+				log.error(e);
+				log.warn("clone " + address + ": " + address.getAddressId() + " failed.");
+			}
+		}
+		
+		return newAddress;
 	}
 	
 }
