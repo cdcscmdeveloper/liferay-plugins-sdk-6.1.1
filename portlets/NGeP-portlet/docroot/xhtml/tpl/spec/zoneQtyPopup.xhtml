@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="zoneQtyPopup"
+		header="#{lbl['lbl.tpl.spec.content.zone.quantity.title']}"
+		widgetVar="#{zoneQtyPopup}" modal="true" width="450"
+		height="290" closable="false">
+
+		<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
+			<div style="height: 250px;">
+				<h:panelGroup id="zoneQtyPnl">
+					<p:messages id="zoneQtyPopupMsg" showDetail="true"
+						autoUpdate="true" closable="true" showSummary="false"
+						severity="error, info" />
+
+					<ui:include src="zoneQty.xhtml" />
+				</h:panelGroup>
+			</div>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					action="#{templateSpecBackingBean.zoneQtyOkAction(templateSpecBean)}"
+					partialSubmit="true" process="@this, zoneQtyPnl"
+					update="zoneQtyPnl">
+					<f:setPropertyActionListener
+						target="#{templateSpecBean.specComponentId}"
+						value="#{templateSpecId}" />
+				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					partialSubmit="true" process="@this" update="@this"
+					action="#{templateSpecBackingBean.zoneQtyCancelAction(templateSpecBean)}"
+					oncomplete="#{zoneQtyPopup}.hide()" rendered="#{isQuestion and editable and (!isSpecificationReq or isSpecTypeTechnical)}" />
+			</div>
+		</c:if>
+	</p:dialog>
+</ui:composition>
