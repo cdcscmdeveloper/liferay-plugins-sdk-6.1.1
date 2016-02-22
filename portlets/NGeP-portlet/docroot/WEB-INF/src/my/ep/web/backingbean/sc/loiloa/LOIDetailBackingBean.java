@@ -4736,6 +4736,7 @@ public class LOIDetailBackingBean extends
 		BigDecimal offeredPrice = BigDecimal.valueOf(0d);
 		
 		ScQtProposalItem proposalItem = null;
+		ScQtRecommend recommend = null;
 		BigDecimal awardQuantity = null;
 		
 		List<ScQtRecommendDtl> recommendDtls = evalResultDtl.getScQtRecommendDtl();
@@ -4744,25 +4745,24 @@ public class LOIDetailBackingBean extends
 					.getItemName().equalsIgnoreCase(requestItem.getItemName())) {
 					
 				proposalItem = recommendDtl.getScQtProposalItem();
+				recommend = recommendDtl.getScQtRecommend();
 				awardQuantity = recommendDtl.getAwardQty();
+				break;
 			}
 		}
 
-		if (proposalItem != null) {
-			int offerQuantity = proposalItem.getOfferQuantity().intValue();
-			if (awardQuantity != null) {
-				offerQuantity = awardQuantity.intValue();
-			}
-			
-			BigDecimal offeredQuantity = new BigDecimal(offerQuantity);
-			offeredQuantity = offeredQuantity.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		if (proposalItem != null && recommend != null) {
+			if (awardQuantity == null) {
+				awardQuantity = recommend.getOrderQty();
+			}			
+			awardQuantity = awardQuantity.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			
 			BigDecimal finalPrice = proposalItem.getFinalPrice();
 			finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			
 			offeredPrice = TemplateSpecHelper.getInstance()
 					.calculateTotalAmount(requestItem.getTplSpecQuestion(),
-							finalPrice, offeredQuantity);
+							finalPrice, awardQuantity);
 			
 			if (offeredPrice != null) {
 				offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
