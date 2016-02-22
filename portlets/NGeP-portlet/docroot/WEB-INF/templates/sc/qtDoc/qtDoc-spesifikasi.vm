@@ -66,8 +66,9 @@
 	</tbody>
 </table>
 <br/>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
+
 #foreach( $tplspecMaster in $masters )
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tbody>
 		<tr>
 			<td width="15%" class="standard"><nobr>Tajuk Templat:</nobr></td>
@@ -75,59 +76,106 @@
 		</tr>
 		<tr>
 			<td width="15%" class="standard"><nobr>Jenis Item:</nobr></td>
-			<td class="standard">$itemType</td>
+			<td class="standard">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
 		</tr>
 		<tr>
 			<td width="15%" class="standard"><nobr>Jenis Barangan:</nobr></td>
-			<td class="standard">$localGoods</td>
+			<td class="standard">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
 		</tr>
 	</tbody>
-#end
 </table>
 <br/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-#foreach( $tplspecMaster1 in $masters )
 	<tbody>
 		<tr>
-            <th bgcolor="#6d839b" class="title border left">Item</th>
-            <th bgcolor="#6d839b" class="title border left">Spesifikasi</th>
+            <th bgcolor="#6d839b" class="title border left" rowspan="2">Item</th>
             <th bgcolor="#6d839b" class="title border left">UOM</th>
 			#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
-				<td bgcolor="#6d839b" class="title border left>Kekerapan / Unit Ukuran</td>
-				<td bgcolor="#6d839b" class="title border left>Bil. Unit Ukuran Sehari</td>
-				<td bgcolor="#6d839b" class="title border left>Bil. Unit Ukuran Sebulan</td>
-			#end
-            <th bgcolor="#6d839b" class="title border left">Jenis Harga</th>
+				<td bgcolor="#6d839b" class="title border left">Kekerapan / <br/>Unit Ukuran</td>
+				<td bgcolor="#6d839b" class="title border left">Bil. Unit <br/>Ukuran Sehari</td>
+				<td bgcolor="#6d839b" class="title border left">Bil. Unit <br/>Ukuran Sebulan</td>
+			#else
+            	<th bgcolor="#6d839b" class="title border left">Jenis Harga</th>
+            #end
+            #if ($tplspecMaster.qtyByZone && $tplspecMaster.tplSpecZone)
+            	<th bgcolor="#6d839b" class="title border left">Zon</th>
+            #end
             <th bgcolor="#6d839b" class="title border left-right">Kuantiti</th>
 		</tr>
-		#foreach( $tplspecQuestion in $tplspecMaster1.tplSpecQuestions )
+		<tr>
+			#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
+				#if ($tplspecMaster.qtyByZone && $tplspecMaster.tplSpecZone)
+	            	<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center;">Spesifikasi</th>
+	            #else
+	            	<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
+	            #end
+			#else
+            	#if ($tplspecMaster.qtyByZone && $tplspecMaster.tplSpecZone)
+	            	<th bgcolor="#6d839b" class="title border left" colspan="4" style="text-align: center;">Spesifikasi</th>
+	            #else
+	            	<th bgcolor="#6d839b" class="title border left" colspan="3" style="text-align: center;">Spesifikasi</th>
+	            #end
+            #end
+		</tr>
+		#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 		<tr>
 			#if ($tplspecQuestion.specCount > 0)
 			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount"><strong>$tplspecQuestion.clItem</strong></td>
 			#end
-			<td bgcolor="#f1f1f1" class="standard border-bottom left">$tplspecQuestion.clSpecDetail</td>
-			#if ($tplspecQuestion.questionType == "I")
+			#if ($tplspecQuestion.questionType == "S")
+				#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
+					#if ($tplspecMaster.qtyByZone && ($tplspecQuestion.clPriceTypeCode.parameterCode == "05" || $tplspecQuestion.clPriceTypeCode.parameterCode == "07" || $tplspecQuestion.clPriceTypeCode.parameterCode == "10"))
+						<td bgcolor="#f1f1f1" class="standard border-bottom left-right" colspan="8">$tplspecQuestion.clSpecDetail</td>
+					#else
+						<td bgcolor="#f1f1f1" class="standard border-bottom left-right" colspan="7">$tplspecQuestion.clSpecDetail</td>
+					#end
+				#else
+					#if ($tplspecMaster.qtyByZone && ($tplspecQuestion.clPriceTypeCode.parameterCode == "05" || $tplspecQuestion.clPriceTypeCode.parameterCode == "07" || $tplspecQuestion.clPriceTypeCode.parameterCode == "10"))
+						<td bgcolor="#f1f1f1" class="standard border-bottom left-right" colspan="5">$tplspecQuestion.clSpecDetail</td>
+					#else
+						<td bgcolor="#f1f1f1" class="standard border-bottom left-right" colspan="4">$tplspecQuestion.clSpecDetail</td>
+					#end
+				#end
+			#else			
 				<td bgcolor="#f1f1f1" class="standard border-bottom left">$tplspecQuestion.clUom.uomName</td>
 				#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
-					<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left">
+					<td bgcolor="#f1f1f1" class="standard border-bottom left" style="text-align: right;">
 						#if ($tplspecQuestion.clUomFrequency)
 							$tplspecQuestion.clUomFrequency
 						#end
 					</td>
-					<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left">
+					<td bgcolor="#f1f1f1" class="standard border-bottom left" style="text-align: right;">
 						#if ($tplspecQuestion.clUomPerDay)
 							$tplspecQuestion.clUomPerDay
 						#end
 					</td>
-					<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left">
+					<td bgcolor="#f1f1f1" class="standard border-bottom left" style="text-align: right;">
 						#if ($tplspecQuestion.clUomPerMonth)
 							$tplspecQuestion.clUomPerMonth
 						#end
 					</td>
+				#else
+					<td bgcolor="#f1f1f1" class="standard border-bottom left">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 				#end
-				<td bgcolor="#f1f1f1" class="standard border-bottom left">$bean.getParameterDesc($tplspecQuestion.clPriceTypeCode)</td>
-				<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left-right">
-					#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "03" || $tplspecQuestion.clPriceTypeCode.parameterCode == "07" || $tplspecQuestion.clPriceTypeCode.parameterCode == "09" || $tplspecQuestion.clPriceTypeCode.parameterCode == "10")
+				#if ($tplspecMaster.qtyByZone && ($tplspecQuestion.clPriceTypeCode.parameterCode == "05" || $tplspecQuestion.clPriceTypeCode.parameterCode == "07" || $tplspecQuestion.clPriceTypeCode.parameterCode == "10"))
+					<td bgcolor="#f1f1f1" class="standard border-bottom left">
+						#foreach( $tplSpecZoneQty in $tplspecQuestion.tplSpecZoneQties)
+							$tplSpecZoneQty.tplSpecZoneDtl.zoneName
+							<br/>
+						#end
+					</td>
+				#end
+				<td bgcolor="#f1f1f1" class="standard border-bottom left-right" style="text-align: right;">
+					#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "05")
+						#if ($tplspecMaster.qtyByZone)
+							#foreach( $tplSpecZoneQty in $tplspecQuestion.tplSpecZoneQties)
+								$tplSpecZoneQty.qty
+								<br/>	
+							#end
+						#else
+							$tplspecQuestion.clQuantity
+						#end
+					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "03" || $tplspecQuestion.clPriceTypeCode.parameterCode == "07" || $tplspecQuestion.clPriceTypeCode.parameterCode == "09" || $tplspecQuestion.clPriceTypeCode.parameterCode == "10")
 						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties)
 							#if ($tplSpecTierQtie.toQty)
 								$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty 
@@ -140,17 +188,13 @@
 						$tplspecQuestion.clQuantity
 					#end
 				</td>
-			#else
-				#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
-					<td colspan="6" bgcolor="#f1f1f1" class="standard border-bottom right"></td>
-				#else
-					<td colspan="3" bgcolor="#f1f1f1" class="standard border-bottom right"></td>
-				#end
 			#end
 		</tr>
 		#end
 	</tbody>
-#end
 </table>
+<br/>
+<br/>
+#end
 </body>
 </html>
