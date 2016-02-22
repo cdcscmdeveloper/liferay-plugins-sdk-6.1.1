@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -115,9 +114,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		 */
 	     private void initializeApproverList() {
 			if(getManagedBean().getApproverModel() == null) {
-			  	 List<PmUser> source = new ArrayList<PmUser>();
-				 List<PmUser> target = new ArrayList<PmUser>();
-				 getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
+				 getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(), new ArrayList<PmUser>()));
 			}
 		}
 	    

@@ -1085,20 +1085,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @return the navigate URL 
 	 */
 	public String goToContractView() {
-		Long contractVerId = Long.parseLong(
-				FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
+		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
 
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractVerId(contractVerId);
     	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
     	ctReqDTO.setViewOnly(true);
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();		
 		contractDetailsBB.getManagedBean().setViewContract(true);
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
-		contractDetailsBB.setValidateContractField(resDTO);
+		contractDetailsBB.setValidateContractField(ctReqDTO);
 		//contractDetailsBB.ConstructSideTabMenu();
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
 		contractDetailsBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
