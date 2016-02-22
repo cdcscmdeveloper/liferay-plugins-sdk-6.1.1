@@ -20,8 +20,14 @@
 						src="/xhtml/sc/quatationtender/quotationTenderHeader.xhtml" /></td>
 			</tr>
 			<tr>
-				<td width="100%" valign="top"><ui:include
-						src="/xhtml/sc/quatationtender/quotationTenderMainMenu.xhtml" /></td>
+				<c:if test="#{qTDetailBB.managedBean.createQt eq 'false'}">
+					<td width="100%" valign="top"><ui:include
+							src="/xhtml/sc/quatationtender/quotationTenderMainMenu.xhtml" /></td>
+				</c:if>
+				<c:if test="#{qTDetailBB.managedBean.createQt ne 'false'}">
+					<td width="100%" valign="top"><ui:include
+							src="/xhtml/sc/quatationtender/createquotationtender/createQuotationTenderMainMenu.xhtml" /></td>
+				</c:if>
 			</tr>
 		</table>
 	</ui:define>

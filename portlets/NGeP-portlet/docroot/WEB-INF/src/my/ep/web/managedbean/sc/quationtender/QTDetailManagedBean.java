@@ -26,7 +26,6 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -69,8 +68,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -82,13 +83,13 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
 
 import org.apache.log4j.Logger;
@@ -104,7 +105,7 @@ import org.primefaces.model.TreeNode;
 
 @ManagedBean(name = "qTDetailMB")
 @SessionScoped
-public class QTDetailManagedBean extends BaseManagedBean {
+public class QTDetailManagedBean extends QTBaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -113,8 +114,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailManagedBean.class);
 
-	/** The qt. */
-	private ScQt qt;
+	
 
 	/** The qt doc. */
 	private ScQtDoc qtDoc;
@@ -522,21 +522,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The is supplier validation. */
 	private boolean isSupplierValidation;
 
-	// Panel Information
-	/** The ct panel item. */
-	private CtPanelItem ctPanelItem;
 	
-	/** The ct circular ver. */
-	private CtCircularVer ctCircularVer;
+	
+	
 	
 	/** The panel item category. */
 	private String panelItemCategory;
 
-	/** The circular no. */
-	private String circularNo;
 	
-	/** The circular name. */
-	private String circularName;
 	
 	/** The item name. */
 	private String itemName;
@@ -544,11 +537,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The circular coverage. */
 	private String circularCoverage;
 	
-	/** The circular exp date. */
-	private Date circularExpDate;
 	
-	/** The circular type. */
-	private String circularType;
+	
+	
 
 	/** The ct panel zones. */
 	private List<CtPanelZone> ctPanelZones;
@@ -693,8 +684,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The ct contract. */
 	private CtContract ctContract = new CtContract();
 	
-	/** The selectpanel item. */
-	private List<CtPanelItem> selectpanelItem;
+	
 
 	// Committee Appointment
 	/** The tab title. */
@@ -1030,6 +1020,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
     private Object[] scTdObj;
     private boolean viewQtDetails;
+    
+    /** The circular ver. */
+  
+	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
+	private List<SelectItem> evaluationTypeItem;
+	private List<ScQtCategory> suppCriteriaopenList;
+	private String procuremntCategory;
+	private String fulfilmentType;
+	private int totalFrequency;
+	private List<ScQtProgressivePayment> progressivePaymentList;
+	private int totalProgressivePayment;
+	private List<ScQtSchedule> toBeRemoveSchedules;
+	private List<ScQtProgressivePayment> toBeRemoveProgPayments;
+	private List<ScQtSchedule> scheduleList;
+    private boolean createQt;
+    private ScQtRemark contractremark;
+    private List<ScQtRemark> scQtRemarksList;
+    private boolean isPanelChange;
+    private TreeNode rootZoanlTree;
+    private String tempZoneName;
+    private boolean isZoneLocation;
+    private String statecode;
+    private boolean selectedFlag;
+    private boolean isCheckAllList = Boolean.FALSE;
+ 
     
 	/**
 	 * Sets the panel suppliers.
@@ -2123,23 +2138,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtNumber = qtNumber;
 	}
 
-	/**
-	 * Gets the qt.
-	 *
-	 * @return the qt
-	 */
-	public ScQt getQt() {
-		return qt;
-	}
-
-	/**
-	 * Sets the qt.
-	 *
-	 * @param qt the new qt
-	 */
-	public void setQt(ScQt qt) {
-		this.qt = qt;
-	}
+	
 
 	/**
 	 * Gets the states.
@@ -3288,41 +3287,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the circular no.
-	 *
-	 * @return the circular no
-	 */
-	public String getCircularNo() {
-		return circularNo;
-	}
-
-	/**
-	 * Sets the circular no.
-	 *
-	 * @param circularNo the new circular no
-	 */
-	public void setCircularNo(String circularNo) {
-		this.circularNo = circularNo;
-	}
-
-	/**
-	 * Gets the circular name.
-	 *
-	 * @return the circular name
-	 */
-	public String getCircularName() {
-		return circularName;
-	}
-
-	/**
-	 * Sets the circular name.
-	 *
-	 * @param circularName the new circular name
-	 */
-	public void setCircularName(String circularName) {
-		this.circularName = circularName;
-	}
-
+	
 	/**
 	 * Gets the item name.
 	 *
@@ -4316,23 +4281,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.ctContract = ctContract;
 	}
 
-	/**
-	 * Gets the selectpanel item.
-	 *
-	 * @return the selectpanel item
-	 */
-	public List<CtPanelItem> getSelectpanelItem() {
-		return selectpanelItem;
-	}
-
-	/**
-	 * Sets the selectpanel item.
-	 *
-	 * @param selectpanelItem the new selectpanel item
-	 */
-	public void setSelectpanelItem(List<CtPanelItem> selectpanelItem) {
-		this.selectpanelItem = selectpanelItem;
-	}
+	
 
 	/**
 	 * Gets the sc qt sample submission.
@@ -4777,23 +4726,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.personnel = personnel;
 	}
 
-	/**
-	 * Gets the circular exp date.
-	 *
-	 * @return the circular exp date
-	 */
-	public Date getCircularExpDate() {
-		return circularExpDate;
-	}
-
-	/**
-	 * Sets the circular exp date.
-	 *
-	 * @param circularExpDate the new circular exp date
-	 */
-	public void setCircularExpDate(Date circularExpDate) {
-		this.circularExpDate = circularExpDate;
-	}
+	
 
 	/**
 	 * Gets the supplier selected tree node.
@@ -5927,41 +5860,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtActivityBeans = qtActivityBeans;
 	}
 
-	/**
-	 * Gets the ct panel item.
-	 *
-	 * @return the ct panel item
-	 */
-	public CtPanelItem getCtPanelItem() {
-		return ctPanelItem;
-	}
-
-	/**
-	 * Sets the ct panel item.
-	 *
-	 * @param ctPanelItem the new ct panel item
-	 */
-	public void setCtPanelItem(CtPanelItem ctPanelItem) {
-		this.ctPanelItem = ctPanelItem;
-	}
-
-	/**
-	 * Gets the ct circular ver.
-	 *
-	 * @return the ct circular ver
-	 */
-	public CtCircularVer getCtCircularVer() {
-		return ctCircularVer;
-	}
-
-	/**
-	 * Sets the ct circular ver.
-	 *
-	 * @param ctCircularVer the new ct circular ver
-	 */
-	public void setCtCircularVer(CtCircularVer ctCircularVer) {
-		this.ctCircularVer = ctCircularVer;
-	}
+	
+	
 
 	/**
 	 * Gets the panel item category.
@@ -5981,23 +5881,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.panelItemCategory = panelItemCategory;
 	}
 
-	/**
-	 * Gets the circular type.
-	 *
-	 * @return the circular type
-	 */
-	public String getCircularType() {
-		return circularType;
-	}
-
-	/**
-	 * Sets the circular type.
-	 *
-	 * @param circularType the new circular type
-	 */
-	public void setCircularType(String circularType) {
-		this.circularType = circularType;
-	}
+	
 
 	/**
 	 * Gets the ct panel zones.
@@ -6584,5 +6468,308 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setViewQtDetails(boolean viewQtDetails) {
 		this.viewQtDetails = viewQtDetails;
 	}
+
+
+	/**
+	 * @return the beans
+	 */
+	public List<ZonesBean> getBeans() {
+		return beans;
+	}
+
+	/**
+	 * @param beans the beans to set
+	 */
+	public void setBeans(List<ZonesBean> beans) {
+		this.beans = beans;
+	}
+
+	/**
+	 * @return the evaluationTypeItem
+	 */
+	public List<SelectItem> getEvaluationTypeItem() {
+		return evaluationTypeItem;
+	}
+
+	/**
+	 * @param evaluationTypeItem the evaluationTypeItem to set
+	 */
+	public void setEvaluationTypeItem(List<SelectItem> evaluationTypeItem) {
+		this.evaluationTypeItem = evaluationTypeItem;
+	}
+
+	/**
+	 * @return the suppCriteriaopenList
+	 */
+	public List<ScQtCategory> getSuppCriteriaopenList() {
+		return suppCriteriaopenList;
+	}
+
+	/**
+	 * @param suppCriteriaopenList the suppCriteriaopenList to set
+	 */
+	public void setSuppCriteriaopenList(List<ScQtCategory> suppCriteriaopenList) {
+		this.suppCriteriaopenList = suppCriteriaopenList;
+	}
+
+	/**
+	 * @return the procuremntCategory
+	 */
+	public String getProcuremntCategory() {
+		return procuremntCategory;
+	}
+
+	/**
+	 * @param procuremntCategory the procuremntCategory to set
+	 */
+	public void setProcuremntCategory(String procuremntCategory) {
+		this.procuremntCategory = procuremntCategory;
+	}
+
+	/**
+	 * @return the fulfilmentType
+	 */
+	public String getFulfilmentType() {
+		return fulfilmentType;
+	}
+
+	/**
+	 * @param fulfilmentType the fulfilmentType to set
+	 */
+	public void setFulfilmentType(String fulfilmentType) {
+		this.fulfilmentType = fulfilmentType;
+	}
+
+	/**
+	 * @return the totalFrequency
+	 */
+	public int getTotalFrequency() {
+		return totalFrequency;
+	}
+
+	/**
+	 * @param totalFrequency the totalFrequency to set
+	 */
+	public void setTotalFrequency(int totalFrequency) {
+		this.totalFrequency = totalFrequency;
+	}
+
+	/**
+	 * @return the progressivePaymentList
+	 */
+	public List<ScQtProgressivePayment> getProgressivePaymentList() {
+		return progressivePaymentList;
+	}
+
+	/**
+	 * @param progressivePaymentList the progressivePaymentList to set
+	 */
+	public void setProgressivePaymentList(
+			List<ScQtProgressivePayment> progressivePaymentList) {
+		this.progressivePaymentList = progressivePaymentList;
+	}
+
+	/**
+	 * @return the totalProgressivePayment
+	 */
+	public int getTotalProgressivePayment() {
+		return totalProgressivePayment;
+	}
+
+	/**
+	 * @param totalProgressivePayment the totalProgressivePayment to set
+	 */
+	public void setTotalProgressivePayment(int totalProgressivePayment) {
+		this.totalProgressivePayment = totalProgressivePayment;
+	}
+
+	/**
+	 * @return the toBeRemoveSchedules
+	 */
+	public List<ScQtSchedule> getToBeRemoveSchedules() {
+		return toBeRemoveSchedules;
+	}
+
+	/**
+	 * @param toBeRemoveSchedules the toBeRemoveSchedules to set
+	 */
+	public void setToBeRemoveSchedules(List<ScQtSchedule> toBeRemoveSchedules) {
+		this.toBeRemoveSchedules = toBeRemoveSchedules;
+	}
+
+	/**
+	 * @return the toBeRemoveProgPayments
+	 */
+	public List<ScQtProgressivePayment> getToBeRemoveProgPayments() {
+		return toBeRemoveProgPayments;
+	}
+
+	/**
+	 * @param toBeRemoveProgPayments the toBeRemoveProgPayments to set
+	 */
+	public void setToBeRemoveProgPayments(
+			List<ScQtProgressivePayment> toBeRemoveProgPayments) {
+		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
+	}
+
+	/**
+	 * @return the scheduleList
+	 */
+	public List<ScQtSchedule> getScheduleList() {
+		return scheduleList;
+	}
+
+	/**
+	 * @param scheduleList the scheduleList to set
+	 */
+	public void setScheduleList(List<ScQtSchedule> scheduleList) {
+		this.scheduleList = scheduleList;
+	}
+
+	/**
+	 * @return the createQt
+	 */
+	public boolean isCreateQt() {
+		return createQt;
+	}
+
+	/**
+	 * @param createQt the createQt to set
+	 */
+	public void setCreateQt(boolean createQt) {
+		this.createQt = createQt;
+	}
+
+	/**
+	 * @return the contractremark
+	 */
+	public ScQtRemark getContractremark() {
+		return contractremark;
+	}
+
+	/**
+	 * @param contractremark the contractremark to set
+	 */
+	public void setContractremark(ScQtRemark contractremark) {
+		this.contractremark = contractremark;
+	}
+
+	/**
+	 * @return the scQtRemarksList
+	 */
+	public List<ScQtRemark> getScQtRemarksList() {
+		return scQtRemarksList;
+	}
+
+	/**
+	 * @param scQtRemarksList the scQtRemarksList to set
+	 */
+	public void setScQtRemarksList(List<ScQtRemark> scQtRemarksList) {
+		this.scQtRemarksList = scQtRemarksList;
+	}
+
+	/**
+	 * @return the isPanelChange
+	 */
+	public boolean isPanelChange() {
+		return isPanelChange;
+	}
+
+	/**
+	 * @param isPanelChange the isPanelChange to set
+	 */
+	public void setPanelChange(boolean isPanelChange) {
+		this.isPanelChange = isPanelChange;
+	}
+
+	/**
+	 * @return the rootZoanlTree
+	 */
+	public TreeNode getRootZoanlTree() {
+		return rootZoanlTree;
+	}
+
+	/**
+	 * @param rootZoanlTree the rootZoanlTree to set
+	 */
+	public void setRootZoanlTree(TreeNode rootZoanlTree) {
+		this.rootZoanlTree = rootZoanlTree;
+	}
+
+	/**
+	 * @return the tempZoneName
+	 */
+	public String getTempZoneName() {
+		return tempZoneName;
+	}
+
+	/**
+	 * @param tempZoneName the tempZoneName to set
+	 */
+	public void setTempZoneName(String tempZoneName) {
+		this.tempZoneName = tempZoneName;
+	}
+
+	/**
+	 * @return the isZoneLocation
+	 */
+	public boolean isZoneLocation() {
+		return isZoneLocation;
+	}
+
+	/**
+	 * @param isZoneLocation the isZoneLocation to set
+	 */
+	public void setZoneLocation(boolean isZoneLocation) {
+		this.isZoneLocation = isZoneLocation;
+	}
+
+	/**
+	 * @return the statecode
+	 */
+	public String getStatecode() {
+		return statecode;
+	}
+
+	/**
+	 * @param statecode the statecode to set
+	 */
+	public void setStatecode(String statecode) {
+		this.statecode = statecode;
+	}
+
+	/**
+	 * @return the selectedFlag
+	 */
+	public boolean isSelectedFlag() {
+		return selectedFlag;
+	}
+
+	/**
+	 * @param selectedFlag the selectedFlag to set
+	 */
+	public void setSelectedFlag(boolean selectedFlag) {
+		this.selectedFlag = selectedFlag;
+	}
+
+	/**
+	 * @return the isCheckAllList
+	 */
+	public boolean isCheckAllList() {
+		return isCheckAllList;
+	}
+
+	/**
+	 * @param isCheckAllList the isCheckAllList to set
+	 */
+	public void setCheckAllList(boolean isCheckAllList) {
+		this.isCheckAllList = isCheckAllList;
+	}
+
+	
+
+	
+
+	
 
 }

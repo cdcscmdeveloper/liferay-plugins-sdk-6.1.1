@@ -19,7 +19,7 @@
 			rowKey="#{cateGory}">
 
 			<p:column selectionMode="multiple" style="width:1%"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
@@ -51,12 +51,12 @@
 				process="@this, openPnlId" partialSubmit="true"
 				update="@([id$=catCodePopup])" oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
 				process="@this, openPnlId" partialSubmit="true"
 				oncomplete="supplierOpencategoryDeletePopUp.show();"
 				update="@([id$=#{supplierOpencategoryDeleteId}])"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
 		</div>
 		<ui:param name="supplierOpencategoryDeleteId"
 			value="supplierOpencategoryDeleteId" />
@@ -105,7 +105,7 @@
 								value="#{lbl['lbl.sc.paidup']}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
 						<td><p:inputText size="30" maxlength="18"
-								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_MINIMUM_PAID_UP_CAPITAL)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
@@ -128,7 +128,7 @@
 						<td style="width: 210px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
-								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_MINIMUM_PAID_UP_CAPITAL)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
@@ -141,7 +141,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locLevels"
-								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_LOCATION_COVERAGE)}"
 								label="#{lbl['lbl.sc.location.level']}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
 								style="width: 236px;">
@@ -320,12 +320,12 @@
 				</h:panelGrid>
 				<div align="right" style="width: 100%">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_LOCATION_COVERAGE)}"
 						update="@([id$=zonePopupPanel])"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
 
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_LOCATION_COVERAGE)}"
 						process="@this,zoneyesDataTable" partialSubmit="true"
 						oncomplete="supplierZonalDeletePopUp.show();"
 						update="@([id$=#{supplierZonalDeleteId}])" />
