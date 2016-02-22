@@ -101,7 +101,7 @@ public class SmVirtualCertHelper {
 	 * @param cert
 	 * @return SmMofCert
 	 */
-	private SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert) {
+	public SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert) {
 		try{
 			String reportUrl = generateReportURL(reportFile, paramMap);
 			log.info("reportUrl>>>>>>>" + reportUrl);
@@ -163,7 +163,7 @@ public class SmVirtualCertHelper {
 		return resDTO.getSmMofCerts();
 	}
 	
-	private String getReportType(boolean isBumi){
+	public String getReportType(boolean isBumi){
 		if(isBumi){
 			return ReportConst.SM_VIRTUAL_VERIFICATION_BUMI_jsp;
 		}else{
@@ -171,7 +171,7 @@ public class SmVirtualCertHelper {
 		}
 	}
 	
-	private Map<String, String> getReportParam(SmMofCert cert){
+	public Map<String, String> getReportParam(SmMofCert cert){
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("PAPPLID", cert.getSmAppl().getApplId().toString());
 		
