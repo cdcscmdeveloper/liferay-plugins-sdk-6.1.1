@@ -54,6 +54,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.log4j.Logger;
 
@@ -488,14 +489,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		String paymentTaskId = null;
 		Object paymentBpmPojo = null;
 
-		/*if (paymentBean.getPaymentMap().containsKey(orderId)) {
-			List paymentDtls = paymentBean.getPaymentMap().get(orderId);
-			if (paymentDtls != null) {
-				paymentTaskId = (String) paymentDtls.get(0);
-				paymentBpmPojo = paymentDtls.get(1);
-			}
-		}*/
-
 		//Log for testing httpsession
 		getPaymentHttpSession();
 		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
@@ -651,7 +644,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				if(pymtResDTO.isSuccessful()){
-
+					//to auto generate mof cert
+					if(pyPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
+						try{
+							SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(pyPayment.getPyBill().getBillRefId());
+						}catch(Exception ex){
+							log.info("<<<<Payment - error when generate Virtual Cert>>>>" + ex.getMessage());
+						}
+					}
+					
 					try {
 						SmCommonUtil.paymentCurlIPN(httpServletRequest,true,merchantId,molIpnUrl);
 					} catch (Exception ex) {

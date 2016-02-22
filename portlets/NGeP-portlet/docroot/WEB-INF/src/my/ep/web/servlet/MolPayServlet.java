@@ -23,6 +23,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.log4j.Logger;
 
@@ -180,6 +181,17 @@ public class MolPayServlet extends HttpServlet {
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						if(nbcb.equals("1")){
+							//to auto generate mof cert
+							if(smPayment.getPyBill().getBillType().
+									equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) && 
+									validPayment){
+								try{
+									SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(smPayment.getPyBill().getBillRefId());
+								}catch(Exception ex){
+									log.info("<<<<MOLPayment - error when generate Virtual Cert>>>>" + ex.getMessage());
+								}
+							}
+							
 							log.info("Curl IPN - CBTOKEN:MPSTATOK " + nbcb);
 							PrintWriter out = res.getWriter();
 							out.print("CBTOKEN:MPSTATOK");
