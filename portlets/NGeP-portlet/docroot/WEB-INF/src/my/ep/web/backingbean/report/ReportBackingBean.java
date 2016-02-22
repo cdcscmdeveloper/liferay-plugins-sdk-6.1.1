@@ -461,6 +461,7 @@ public class ReportBackingBean extends
 	/** The doc type status items list. */
 	private List<SelectItem> docTypeStatusItemsList = new ArrayList<SelectItem>();
 
+	/** The doc type temp status items list. */
 	private List<SelectItem> docTypeTempStatusItemsList = new ArrayList<SelectItem>();
 
 	/** The local to date var. */
@@ -697,6 +698,15 @@ public class ReportBackingBean extends
 
 	/** The fl contract no. */
 	private String flContractNo;
+	
+	/** The fl physical contract no. */
+	private String flPhysicalContractNo;
+	
+	/** The fl loa physical no. */
+	private String flLoaPhysicalNo;
+	
+	/** The fl contract request no. */
+	private String flContractRequestNo;
 
 	/** The fl sst. */
 	private String flSst;
@@ -8595,13 +8605,19 @@ public class ReportBackingBean extends
 			doctype = ReportConst.DOC_TYPE_PR;
 		}
 
-		else if ((this.getReportValue() != null)
-				&& (this.getReportValue()
-						.equals(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL))) {
+		/*else if (this.getReportValue() != null
+				&& this.getReportValue().equals(
+						ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL)
+				|| this.getReportValue().equals(
+						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL)
+				|| this.getReportValue().equals(
+						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL)
+				|| this.getReportValue().equals(
+						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) {
 			doctype = ReportConst.DOC_TYPE_SD;
-		}
+		}*/
 
-		else if ((this.getReportValue() != null)
+		/*else if ((this.getReportValue() != null)
 				&& (this.getReportValue()
 						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL))) {
 			doctype = ReportConst.DOC_TYPE_SD;
@@ -8617,13 +8633,13 @@ public class ReportBackingBean extends
 				&& (this.getReportValue()
 						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL))) {
 			doctype = ReportConst.DOC_TYPE_SD;
-			/*
+			
 			 * }else
 			 * if((this.getReportValue()!=null)&&(this.getReportValue().equals
 			 * (ReportConst.FL_REC_NOTE_RPT_PO_VAL))){ doctype
 			 * =ReportConst.DOC_TYPE_FRN;
-			 */
-		} else if ((this.getReportValue() != null)
+			 
+		}*/ else if ((this.getReportValue() != null)
 				&& (this.getReportValue()
 						.equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))) {
 			docTypeStatusItemsList = new ArrayList<SelectItem>();
@@ -16867,6 +16883,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the doc type temp status items list.
+	 * 
 	 * @return the docTypeTempStatusItemsList
 	 */
 	public List<SelectItem> getDocTypeTempStatusItemsList() {
@@ -16874,12 +16892,71 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the doc type temp status items list.
+	 * 
 	 * @param docTypeTempStatusItemsList
 	 *            the docTypeTempStatusItemsList to set
 	 */
 	public void setDocTypeTempStatusItemsList(
 			List<SelectItem> docTypeTempStatusItemsList) {
 		this.docTypeTempStatusItemsList = docTypeTempStatusItemsList;
+	}
+
+	/**
+	 * Gets the fl physical contract no.
+	 * 
+	 * @return the flPhysicalContractNo
+	 */
+	public String getFlPhysicalContractNo() {
+		return flPhysicalContractNo;
+	}
+
+	/**
+	 * Sets the fl physical contract no.
+	 * 
+	 * @param flPhysicalContractNo
+	 *            the flPhysicalContractNo to set
+	 */
+	public void setFlPhysicalContractNo(String flPhysicalContractNo) {
+		this.flPhysicalContractNo = flPhysicalContractNo;
+	}
+
+	/**
+	 * Gets the fl loa physical no.
+	 * 
+	 * @return the flLoaPhysicalNo
+	 */
+	public String getFlLoaPhysicalNo() {
+		return flLoaPhysicalNo;
+	}
+
+	/**
+	 * Sets the fl loa physical no.
+	 * 
+	 * @param flLoaPhysicalNo
+	 *            the flLoaPhysicalNo to set
+	 */
+	public void setFlLoaPhysicalNo(String flLoaPhysicalNo) {
+		this.flLoaPhysicalNo = flLoaPhysicalNo;
+	}
+
+	/**
+	 * Gets the fl contract request no.
+	 * 
+	 * @return the flContractRequestNo
+	 */
+	public String getFlContractRequestNo() {
+		return flContractRequestNo;
+	}
+
+	/**
+	 * Sets the fl contract request no.
+	 * 
+	 * @param flContractRequestNo
+	 *            the flContractRequestNo to set
+	 */
+	public void setFlContractRequestNo(String flContractRequestNo) {
+		this.flContractRequestNo = flContractRequestNo;
 	}
 
 }
