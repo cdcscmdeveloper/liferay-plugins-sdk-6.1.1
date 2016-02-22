@@ -645,7 +645,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				if(pymtResDTO.isSuccessful()){
 					//to auto generate mof cert
-					if(pyPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
+					if(pyPayment.getPyBill().getBillType().
+							equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) && validPayment){
 						try{
 							SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(pyPayment.getPyBill().getBillRefId());
 						}catch(Exception ex){
