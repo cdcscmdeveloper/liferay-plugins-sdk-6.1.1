@@ -33,7 +33,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					partialSubmit="true" process="@this" update="@this"
 					action="#{templateSpecBackingBean.tierQtyCancelAction(templateSpecBean)}"
-					oncomplete="#{tierQtyPopup}.hide()" rendered="#{editable}" />
+					oncomplete="#{tierQtyPopup}.hide()" rendered="#{editable and (!isSpecificationReq or isSpecTypeTechnical)}" />
 			</div>
 		</c:if>
 	</p:dialog>
