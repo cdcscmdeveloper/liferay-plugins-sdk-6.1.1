@@ -3259,9 +3259,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			isEmpty = false;
 		}
 		
-		
-		
-		
 		//base on the flag, default list is either select all or empty
 		if(isEmpty && !isSearchable){
 			log.info("+ status "  + null);
@@ -3362,6 +3359,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					ISearchBean<PpPlan> searchBeanData = getSearchBeanData(searchBean);
 					ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
 					reqDTO.setSearchBean(searchBeanData);
+					
+					// status
+					if(getManagedBean().getPlanSearchBean().getStatus()!=null 
+							&& getManagedBean().getPlanSearchBean().getPlanType()!=null 
+							&& getManagedBean().getPlanSearchBean().getPlanType().getParameterCode()!=null){
+						log.info("+ getStatus "  + getManagedBean().getPlanSearchBean().getStatus());
+						reqDTO.setStatusId(getManagedBean().getPlanSearchBean().getStatus());
+						if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals( getManagedBean().getPlanSearchBean().getPlanType().getParameterCode())){
+							reqDTO.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+						}else if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals( getManagedBean().getPlanSearchBean().getPlanType().getParameterCode())){
+							reqDTO.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+						}
+					}
 					IProcurementPlanSO reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 					ProcurementPlanResDTO resDTO = reqSO.retrievePlanBySearchBean(reqDTO);
 					if (resDTO.isSuccessful()) {
@@ -3375,6 +3385,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 											&& isPlanner){
 	
 										ppPlan.setUpdatable(true);
+									}
+								}
+								
+								if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
+									if(ppPlan.getPpProcurementItems() != null && !ppPlan.getPpProcurementItems().isEmpty()){
+										ppPlan.setTitle(ppPlan.getPpProcurementItems().get(0).getProcurementTitle());
 									}
 								}
 							}
@@ -3718,15 +3734,34 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	
-	public  List<PmParameterDesc> retrievePplanType(){
+	public List<PmParameterDesc> retrievePplanType(){
 		log.info("retrievePplanType");		
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.PLAN_TYPE, null);
 	}
 	
 	public void changeSearchPlanType(String paramCode){
 		if(paramCode != null){
+			this.getManagedBean().getPlanSearchBean().setStatus(null);
 			this.getManagedBean().getPlanSearchBean().setPlanTitle(null);
 		}
+	}
+
+	
+	public SelectItem[] retrievePlanStatus(){
+		log.info("retrievePlanStatus");
+		SelectItem[] items = null;
+		if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(getManagedBean().getPlanSearchBean().getPlanType().getParameterCode())){
+			items =  getStatusDropdownValues(ModuleCodeConst.PROCUREMENT_PLAN, ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+		}else if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(getManagedBean().getPlanSearchBean().getPlanType().getParameterCode())){
+			items = getStatusDropdownValues(ModuleCodeConst.PROCUREMENT_PLAN, ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+		}else{
+			items = new SelectItem[1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
+		}
+		
+		return items;
 	}
 
 }

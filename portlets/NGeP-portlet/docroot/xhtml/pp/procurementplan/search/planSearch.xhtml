@@ -11,14 +11,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<br/>
 		<table class="ppTwoTable">
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/>
-				</td>
-				<td>
-					<p:inputText size="27" styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
-				</td>
-			</tr>
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pp.ministry']}"/>
 				</td>
 				<td><ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="60" 	
@@ -64,18 +56,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</tr>
 			<tr>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
-				</th>
-				<td>
-					<p:selectOneMenu id="somPlanYearSearch" label="#{lbl['lbl.pp.plan.year']}" 
-						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.year}"
-						>
-						<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions(false)}"/>
-					</p:selectOneMenu>
-				</td>				
-			</tr>
-			<tr>
-				<th>
 					<p:outputLabel value="#{lbl['lbl.pp.plan.type']}"/>
 				</th>
 				<td>
@@ -90,10 +70,30 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							<!-- <f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
 							<p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
 									update="somVotSearch"/> -->
-						<p:ajax event="change" process="@this" update="ppSearchTitle,@this" 
+						<p:ajax event="change" process="@this" update="ppSearchTitle,@this,ppSearchStatus" 
 							listener="#{pPlanBackingBean.changeSearchPlanType(pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode)}" /> 
 					</p:selectOneMenu>
 				</td>				
+			</tr>
+			<tr>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
+				</th>
+				<td>
+					<p:selectOneMenu id="somPlanYearSearch" label="#{lbl['lbl.pp.plan.year']}" 
+						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.year}"
+						>
+						<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions(false)}"/>
+					</p:selectOneMenu>
+				</td>				
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/>
+				</td>
+				<td>
+					<p:inputText size="27" styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
+				</td>
 			</tr>
 			<tr>
 				<td>
@@ -107,6 +107,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						value="#{pPlanBackingBean.managedBean.planSearchBean.planTitle}"/>
 				</td>				
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+				<td><p:selectOneMenu id="ppSearchStatus" 
+						disabled="#{empty pPlanBackingBean.managedBean.planSearchBean.planType or empty pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode}" 
+						value="#{pPlanBackingBean.managedBean.planSearchBean.status}">
+								<f:selectItems
+									value="#{pPlanBackingBean.retrievePlanStatus()}" />
+				</p:selectOneMenu></td>
+					
+					</tr>
 			<ui:remove>
 			<tr>
 				<th>
