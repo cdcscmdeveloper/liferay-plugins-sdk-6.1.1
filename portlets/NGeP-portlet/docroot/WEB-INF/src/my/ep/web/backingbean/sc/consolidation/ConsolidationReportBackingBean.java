@@ -825,7 +825,7 @@ public class ConsolidationReportBackingBean extends
 			BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
 					.calculateTotalAmount(requestItem.getTplSpecQuestion(),
 							proposalItem.getOfferPrice(),
-							proposalItem.getOfferQuantity());
+							scQtRecommend.getOrderQty());
 
 			evalResultDtl.getQtEvaluationResult()
 						 .setOfferedPrice(offeredPrice);
