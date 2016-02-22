@@ -812,9 +812,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	private void initializeApproverList() {
 		if(getManagedBean().getApproverModel() == null) {
-			List<PmUser> source = new ArrayList<PmUser>();
-			List<PmUser> target = new ArrayList<PmUser>();
-			getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
+			getManagedBean().setApproverModel(new DualListModel<PmUser>(new ArrayList<PmUser>(), new ArrayList<PmUser>()));
 		}
 	}
 	
