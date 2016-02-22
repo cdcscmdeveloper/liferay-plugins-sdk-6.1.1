@@ -4995,7 +4995,13 @@ public class DirectLOABackingBean extends
 		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
 		TplSpecZoneDtl specZoneDtl = specAnswer.getTplSpecSuppAnswer()
 				.getTplSpecZoneDtl();
-		BigDecimal qty = specQuestion.getClQuantity();
+		BigDecimal qty = null;
+		
+		if (specAnswer.getTplSpecZoneQty() != null) {
+			qty = specAnswer.getTplSpecZoneQty().getQty();
+		} else {
+			qty = specQuestion.getClQuantity();
+		}
 
 		jadualHarga.setZone(specZoneDtl != null ? specZoneDtl.getZoneName()
 				: "");
