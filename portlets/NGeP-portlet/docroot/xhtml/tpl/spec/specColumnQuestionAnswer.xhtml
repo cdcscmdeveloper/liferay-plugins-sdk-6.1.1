@@ -14,7 +14,8 @@
 			<p:inputText id="qty"
 				style="min-width:0px !important;width:35px; text-align:right;"
 				value="#{question.clQuantity}" required="#{isValidationReq}"
-				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}">
+				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
+				rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}">
 				<p:ajax partialSubmit="true" process="@this"
 					update="@this, qtyMsg, ansYearPG, ansPG, @(.calcAmount)"
 					listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, question.tplSpecAnswers[0], isItemTypeService)}" />
@@ -22,13 +23,26 @@
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}"
 					maxIntegerDigits="10" />
 			</p:inputText>
-			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil"
-				style="background-color:transparent !important; border:0px none;"
+			<p:commandLink id="tierQtyBtn" 
 				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
-				partialSubmit="true" process="@this,qty"
-				update="@([id$=tierQtyPopup])"
+				partialSubmit="true" process="@this,qty" update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}"
 				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
+				<p:graphicImage value="/css/images/design/ico-price.png"
+					style="vertical-align:middle" />
+				<f:setPropertyActionListener
+					target="#{templateSpecBean.selectedSpecQuestion}"
+					value="#{question}" />
+				<f:setPropertyActionListener
+					target="#{templateSpecBean.specComponentId}"
+					value="#{templateSpecId}" />
+			</p:commandLink>
+			<p:commandButton id="zoneQtyBtn" icon="ui-icon-pencil"
+				style="background-color:transparent !important; border:0px none;"
+				action="#{templateSpecBackingBean.zoneQtyPopupAction(templateSpecBean)}"
+				partialSubmit="true" process="@this"
+				update="@([id$=zoneQtyPopup])"
+				rendered="#{!empty templateSpecBean.specMaster.tplSpecZone and templateSpecBean.specMaster.qtyByZone}">
 				<f:setPropertyActionListener
 					target="#{templateSpecBean.selectedSpecQuestion}"
 					value="#{question}" />
