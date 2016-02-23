@@ -4348,7 +4348,7 @@ public class SmApplicationBackingBean extends
 	public void onTickOtherMachine() {
 		SmMachineDtl machine = (SmMachineDtl) EntityHelper
 				.getEntityByMultiplePropertiesFromList(getManagedBean()
-						.getSelectedMachine().getMachineDtlId(),
+						.getSelectedMachine(),
 						getManagedBean().getSmAppl().getSmMachineDtls(),
 						new String[] { "machineDtlId" }, null, null);
 		if (machine != null) {
