@@ -14493,7 +14493,30 @@ public class SpecificationBackingBean extends
 					qtCheckList.getScQtDoc().getTplSpecMaster(),
 					qtCheckList.getScQtDoc().getTplSpecMaster()
 							.getTplSpecQuestions());
-			validateDuplicateFinancialSpecs(qtCheckList, flowType);
+			
+			// copy scoring and estimated cost
+			List<ScQtCheckList> toBeRemovedList = validateDuplicateFinancialSpecs(qtCheckList, flowType);
+			if (toBeRemovedList != null && toBeRemovedList.size() > 0) {
+				TplSpecMaster oldSpecMaster = toBeRemovedList.get(0).getScQtDoc().getTplSpecMaster();
+				ITemplateSpecSO templateSpecSO;
+				
+				try {
+					templateSpecSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+									ITemplateSpecSO.class);
+					TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+					specReqDTO.setSpecMaster(oldSpecMaster);
+					specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+					oldSpecMaster = templateSpecSO.getTemplateMaster(specReqDTO)
+							.getSpecMaster();
+					
+					TemplateSpecHelper.getInstance().copySpecDetails(specMaster, oldSpecMaster);
+				} finally {
+					templateSpecSO = null;
+				}
+				
+			}
+			
 			updatedCheckLists.add(scQtCheckList);
 			updatedCheckLists.add(qtCheckList);
 			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
@@ -14633,11 +14656,11 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
-	private void validateDuplicateFinancialSpecs(ScQtCheckList financialSpecs,
+	private List<ScQtCheckList> validateDuplicateFinancialSpecs(ScQtCheckList financialSpecs,
 			String flowType) {
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
-		// this.getManagedBean().setActiveIndex(3);
+		List<ScQtCheckList> toBeRemovedList = new ArrayList<ScQtCheckList>();
 
 		try {
 			if (null == financialSpecs.getQtChecklistId()
@@ -14655,7 +14678,6 @@ public class SpecificationBackingBean extends
 								.getResultList()
 						&& !resDto.getFinSpecResultBean().getResultList()
 								.isEmpty()) {
-					List<ScQtCheckList> toBeRemovedList = new ArrayList<ScQtCheckList>();
 					for (ScQtCheckList financialspec : resDto
 							.getFinSpecResultBean().getResultList()) {
 						if (financialspec.getTitle().equalsIgnoreCase(
@@ -14678,6 +14700,7 @@ public class SpecificationBackingBean extends
 			specSO = null;
 		}
 
+		return toBeRemovedList;
 	}
 
 	private void removeDuplicateFinancialSpec(String flowType,
