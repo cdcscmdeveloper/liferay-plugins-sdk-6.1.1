@@ -18,7 +18,7 @@ public class CmApplicationUtil {
 		trckVO.setActionDesc(actionDesc);
 		trckVO.setActionedBy(user != null ? user.getUserId() : null);
 		trckVO.setActionedByRole(getUserRoleValue());       
-        trckVO.setDocId(cmSupplierItem.getCmItem().getItemId());
+        trckVO.setDocId(cmSupplierItem.getSupplierItemId());
 		trckVO.setDocType(CmConst.CM_DocType);
 		trckVO.setDocNo(cmSupplierItem.getCmItem().getExtensionCode());		
 		trckVO.setGroupId(null);		
