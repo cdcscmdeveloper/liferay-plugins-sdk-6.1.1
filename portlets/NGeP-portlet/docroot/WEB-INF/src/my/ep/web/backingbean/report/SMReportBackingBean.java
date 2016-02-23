@@ -581,8 +581,8 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmRegistrationNoView(true);
 			// rptGenBean.setSmMofRegNoView(true);
 			rptGenBean.setSmRegistrationTypeView(true);
-			rptGenBean.setSmNonMandatoryDateView(true);
-			rptGenBean.setSmMOFRegisteredDateView(true);
+			rptGenBean.setSmNonMandatoryDateView(true);			
+			rptGenBean.setSmAllRegisteredDateView(true);
 			break;
 		case ReportConst.SM_THRESHOLD:			
 			rptGenBean.setSmThresholdOrSupplierTransactionView(true);

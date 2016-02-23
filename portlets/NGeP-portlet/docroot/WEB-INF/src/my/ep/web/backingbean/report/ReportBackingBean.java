@@ -148,6 +148,22 @@ public class ReportBackingBean extends
 	 */
 	@PostConstruct
 	public void init() {
+		
+		
+			/*if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
+					|| ((this.getCommonMinistry() != null) && (this
+							.getCommonMinistry() != ReportConst.EMPTY_VAL))
+					|| ((this.getCommonPegaWaiPengawal() != null) && (this
+							.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
+					|| ((this.getCommonKumpulanPTJ() != null) && (this
+							.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
+					|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
+				this.setValuesEmpty(true);
+			} else {
+				this.setValuesEmpty(false);
+			}*/
+		
+		
 		if (this.getManagedBean().getSelectedMinistry() == null) {
 			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
 			if (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() == null) {
@@ -430,6 +446,8 @@ public class ReportBackingBean extends
 
 	/** The ministry id. */
 	private Long ministryId = null;
+	
+	boolean valuesEmpty=false;
 
 	/** The role code list. */
 	private List<String> roleCodeList = new ArrayList<String>();
@@ -466,7 +484,7 @@ public class ReportBackingBean extends
 
 	/** The local to date var. */
 	private String localToDateVar;
-
+	
 	/** The user id. */
 	private String userId;
 
@@ -7676,6 +7694,182 @@ public class ReportBackingBean extends
 		this.kumpulanPTJList = kumpulanPTJList;
 	}
 
+	
+	/**
+	 * Gets the checks if is by zonelist.
+	 * 
+	 * @return the isByZonelist
+	 */
+	public List<BigDecimal> getIsByZonelist() {
+		return isByZonelist;
+	}
+
+	/**
+	 * Sets the checks if is by zonelist.
+	 * 
+	 * @param isByZonelist
+	 *            the isByZonelist to set
+	 */
+	public void setIsByZonelist(List<BigDecimal> isByZonelist) {
+		this.isByZonelist = isByZonelist;
+	}
+
+	/**
+	 * Gets the rolecode acknowledge officer list.
+	 * 
+	 * @return the rolecodeAcknowledgeOfficerList
+	 */
+	public List<SelectItem> getRolecodeAcknowledgeOfficerList() {
+		return rolecodeAcknowledgeOfficerList;
+	}
+
+	/**
+	 * Sets the rolecode acknowledge officer list.
+	 * 
+	 * @param rolecodeAcknowledgeOfficerList
+	 *            the rolecodeAcknowledgeOfficerList to set
+	 */
+	public void setRolecodeAcknowledgeOfficerList(
+			List<SelectItem> rolecodeAcknowledgeOfficerList) {
+		this.rolecodeAcknowledgeOfficerList = rolecodeAcknowledgeOfficerList;
+	}
+
+	/**
+	 * Gets the rolecode pay officer list.
+	 * 
+	 * @return the rolecodePayOfficerList
+	 */
+	public List<SelectItem> getRolecodePayOfficerList() {
+		return rolecodePayOfficerList;
+	}
+
+	/**
+	 * Sets the rolecode pay officer list.
+	 * 
+	 * @param rolecodePayOfficerList
+	 *            the rolecodePayOfficerList to set
+	 */
+	public void setRolecodePayOfficerList(
+			List<SelectItem> rolecodePayOfficerList) {
+		this.rolecodePayOfficerList = rolecodePayOfficerList;
+	}
+
+	/**
+	 * Gets the fl acknowledge officer.
+	 * 
+	 * @return the flAcknowledgeOfficer
+	 */
+	public String getFlAcknowledgeOfficer() {
+		return flAcknowledgeOfficer;
+	}
+
+	/**
+	 * Sets the fl acknowledge officer.
+	 * 
+	 * @param flAcknowledgeOfficer
+	 *            the flAcknowledgeOfficer to set
+	 */
+	public void setFlAcknowledgeOfficer(String flAcknowledgeOfficer) {
+		this.flAcknowledgeOfficer = flAcknowledgeOfficer;
+	}
+
+	/**
+	 * Gets the fl paymentofficer.
+	 * 
+	 * @return the flPaymentofficer
+	 */
+	public String getFlPaymentofficer() {
+		return flPaymentofficer;
+	}
+
+	/**
+	 * Sets the fl paymentofficer.
+	 * 
+	 * @param flPaymentofficer
+	 *            the flPaymentofficer to set
+	 */
+	public void setFlPaymentofficer(String flPaymentofficer) {
+		this.flPaymentofficer = flPaymentofficer;
+	}
+
+	/**
+	 * Gets the doc type temp status items list.
+	 * 
+	 * @return the docTypeTempStatusItemsList
+	 */
+	public List<SelectItem> getDocTypeTempStatusItemsList() {
+		return docTypeTempStatusItemsList;
+	}
+
+	/**
+	 * Sets the doc type temp status items list.
+	 * 
+	 * @param docTypeTempStatusItemsList
+	 *            the docTypeTempStatusItemsList to set
+	 */
+	public void setDocTypeTempStatusItemsList(
+			List<SelectItem> docTypeTempStatusItemsList) {
+		this.docTypeTempStatusItemsList = docTypeTempStatusItemsList;
+	}
+
+	/**
+	 * Gets the fl physical contract no.
+	 * 
+	 * @return the flPhysicalContractNo
+	 */
+	public String getFlPhysicalContractNo() {
+		return flPhysicalContractNo;
+	}
+
+	/**
+	 * Sets the fl physical contract no.
+	 * 
+	 * @param flPhysicalContractNo
+	 *            the flPhysicalContractNo to set
+	 */
+	public void setFlPhysicalContractNo(String flPhysicalContractNo) {
+		this.flPhysicalContractNo = flPhysicalContractNo;
+	}
+
+	/**
+	 * Gets the fl loa physical no.
+	 * 
+	 * @return the flLoaPhysicalNo
+	 */
+	public String getFlLoaPhysicalNo() {
+		return flLoaPhysicalNo;
+	}
+
+	/**
+	 * Sets the fl loa physical no.
+	 * 
+	 * @param flLoaPhysicalNo
+	 *            the flLoaPhysicalNo to set
+	 */
+	public void setFlLoaPhysicalNo(String flLoaPhysicalNo) {
+		this.flLoaPhysicalNo = flLoaPhysicalNo;
+	}
+
+	/**
+	 * Gets the fl contract request no.
+	 * 
+	 * @return the flContractRequestNo
+	 */
+	public String getFlContractRequestNo() {
+		return flContractRequestNo;
+	}
+
+	/**
+	 * Sets the fl contract request no.
+	 * 
+	 * @param flContractRequestNo
+	 *            the flContractRequestNo to set
+	 */
+	public void setFlContractRequestNo(String flContractRequestNo) {
+		this.flContractRequestNo = flContractRequestNo;
+	}
+
+	
 	/**
 	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
 	 * 
@@ -9013,12 +9207,16 @@ public class ReportBackingBean extends
 				if (this.getCommonPtj() != null) {
 					lngPtjId = Long.parseLong(this.getCommonPtj());
 				}
-				/*
-				 * if (this.getManagedBean().getSelectedPTJ() != null) { if
-				 * (this.getManagedBean().getSelectedPTJ() .getOrgProfileId() !=
-				 * null) { lngPtjId = (this.getManagedBean().getSelectedPTJ()
-				 * .getOrgProfileId()); } else { lngPtjId =
-				 * this.getManagedBean().getPtjId(); } }
+				
+				/*if (this.getManagedBean().getSelectedPTJ() != null) {
+					if (this.getManagedBean().getSelectedPTJ()
+							.getOrgProfileId() != null) {
+						lngPtjId = (this.getManagedBean().getSelectedPTJ()
+								.getOrgProfileId());
+					} else {
+						lngPtjId = this.getManagedBean().getPtjId();
+					}
+				}
 				 */
 
 				// List<String> ptLst =
@@ -10316,7 +10514,7 @@ public class ReportBackingBean extends
 				// if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))
 				// {
 				getLtstMinistryList();
-				// getManagedBean().getRptGenBean().setCommonLOVBasedRoles(true);
+				getManagedBean().getRptGenBean().setCommonLOVBasedRoles(true);
 				getParameterCodeTypeString();
 				getManagedBean().getRptGenBean().setFlSupplierDropdownView(
 						false);
@@ -10456,17 +10654,10 @@ public class ReportBackingBean extends
 				// getLtstMinistryListByUserid();
 				getManagedBean().getRptGenBean().setFlTextBoxBasedRoles(true);
 				retrieveOnlyFPJMinistryList();
-				retrieveFPJPTJList();
-
-				/*
-				 * retrievePFPPList(); retrievePFJAList();
-				 */
-				/*
-				 * retrievePFJAList(); retrieveFPJPTJList();
-				 */
-				/*
-				 * retrievePFJAList(); retrieveFPJPTJList();
-				 */
+				retrieveFPJPTJList();				
+			/*	retrievePFPPList();
+				retrievePFJAList();*/
+				
 
 				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
 					getManagedBean().getRptGenBean()
@@ -11632,6 +11823,23 @@ public class ReportBackingBean extends
 				pmReportBackingBean.enableCriteriaVariablesByReportByPM(
 						rptGenBean, authoriztionList);
 			}
+			
+			if (this.getModuleValue()!=null && this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN)) {
+				if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
+						|| ((this.getCommonMinistry() != null) && (this
+								.getCommonMinistry() != ReportConst.EMPTY_VAL))
+						|| ((this.getCommonPegaWaiPengawal() != null) && (this
+								.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
+						|| ((this.getCommonKumpulanPTJ() != null) && (this
+								.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
+						|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
+					this.setValuesEmpty(false);
+				} else {
+					this.setValuesEmpty(true);
+				}
+			}
+			
+			
 			rptGenBean.isReportCategoryView();
 			getManagedBean().setRptGenBean(rptGenBean);
 			resetReportForm();
@@ -15052,6 +15260,9 @@ public class ReportBackingBean extends
 						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
 
 				|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
+			
+			this.setValuesEmpty(false);
+			
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPpPTJVar(ReportConst.FL_AMP_PTJ_NAME_EQ
@@ -15099,10 +15310,10 @@ public class ReportBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else {
-			throw new EpException(MessageConst.ERROR_REPORT_780003);
-
-		}
+		} else {		       
+				throw new EpException(MessageConst.ERROR_REPORT_780003);
+			}
+		
 	}
 
 	/**
@@ -16784,179 +16995,49 @@ public class ReportBackingBean extends
 		}
 		return isByZonelist;
 	}
+	
+	public void getRgegistartionTypeDates() {
+		
+		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
+		this.getManagedBean().getRptGenBean()
+				.setSmBasicRegisteredDateView(false);
+		this.getManagedBean().getRptGenBean().setSmMOFRegisteredDateView(false);
+		this.getManagedBean().getRptGenBean().setSmAllRegisteredDateView(false);
+		if (this.getSmRegistrationType() != null) {
+			this.getManagedBean().getRptGenBean()
+					.setSmNonMandatoryDateView(true);
+			if (this.getSmRegistrationType()
+					.endsWith(ReportConst.RPT_REG_BASIC)) {
+				this.getManagedBean().getRptGenBean()
+						.setSmBasicRegisteredDateView(true);
+			} else if (this.getSmRegistrationType().equals(
+					ReportConst.RPT_REG_MOF)) {
+				this.getManagedBean().getRptGenBean()
+						.setSmMOFRegisteredDateView(true);
+			}
+		} else {
+			this.getManagedBean().getRptGenBean()
+					.setSmNonMandatoryDateView(true);
+			this.getManagedBean().getRptGenBean()
+					.setSmAllRegisteredDateView(true);
+		}
 
-	/**
-	 * Gets the checks if is by zonelist.
-	 * 
-	 * @return the isByZonelist
-	 */
-	public List<BigDecimal> getIsByZonelist() {
-		return isByZonelist;
 	}
 
 	/**
-	 * Sets the checks if is by zonelist.
-	 * 
-	 * @param isByZonelist
-	 *            the isByZonelist to set
+	 * @return the valuesEmpty
 	 */
-	public void setIsByZonelist(List<BigDecimal> isByZonelist) {
-		this.isByZonelist = isByZonelist;
+	public boolean isValuesEmpty() {
+		return valuesEmpty;
 	}
 
 	/**
-	 * Gets the rolecode acknowledge officer list.
-	 * 
-	 * @return the rolecodeAcknowledgeOfficerList
+	 * @param valuesEmpty the valuesEmpty to set
 	 */
-	public List<SelectItem> getRolecodeAcknowledgeOfficerList() {
-		return rolecodeAcknowledgeOfficerList;
+	public void setValuesEmpty(boolean valuesEmpty) {
+		this.valuesEmpty = valuesEmpty;
 	}
 
-	/**
-	 * Sets the rolecode acknowledge officer list.
-	 * 
-	 * @param rolecodeAcknowledgeOfficerList
-	 *            the rolecodeAcknowledgeOfficerList to set
-	 */
-	public void setRolecodeAcknowledgeOfficerList(
-			List<SelectItem> rolecodeAcknowledgeOfficerList) {
-		this.rolecodeAcknowledgeOfficerList = rolecodeAcknowledgeOfficerList;
-	}
-
-	/**
-	 * Gets the rolecode pay officer list.
-	 * 
-	 * @return the rolecodePayOfficerList
-	 */
-	public List<SelectItem> getRolecodePayOfficerList() {
-		return rolecodePayOfficerList;
-	}
-
-	/**
-	 * Sets the rolecode pay officer list.
-	 * 
-	 * @param rolecodePayOfficerList
-	 *            the rolecodePayOfficerList to set
-	 */
-	public void setRolecodePayOfficerList(
-			List<SelectItem> rolecodePayOfficerList) {
-		this.rolecodePayOfficerList = rolecodePayOfficerList;
-	}
-
-	/**
-	 * Gets the fl acknowledge officer.
-	 * 
-	 * @return the flAcknowledgeOfficer
-	 */
-	public String getFlAcknowledgeOfficer() {
-		return flAcknowledgeOfficer;
-	}
-
-	/**
-	 * Sets the fl acknowledge officer.
-	 * 
-	 * @param flAcknowledgeOfficer
-	 *            the flAcknowledgeOfficer to set
-	 */
-	public void setFlAcknowledgeOfficer(String flAcknowledgeOfficer) {
-		this.flAcknowledgeOfficer = flAcknowledgeOfficer;
-	}
-
-	/**
-	 * Gets the fl paymentofficer.
-	 * 
-	 * @return the flPaymentofficer
-	 */
-	public String getFlPaymentofficer() {
-		return flPaymentofficer;
-	}
-
-	/**
-	 * Sets the fl paymentofficer.
-	 * 
-	 * @param flPaymentofficer
-	 *            the flPaymentofficer to set
-	 */
-	public void setFlPaymentofficer(String flPaymentofficer) {
-		this.flPaymentofficer = flPaymentofficer;
-	}
-
-	/**
-	 * Gets the doc type temp status items list.
-	 * 
-	 * @return the docTypeTempStatusItemsList
-	 */
-	public List<SelectItem> getDocTypeTempStatusItemsList() {
-		return docTypeTempStatusItemsList;
-	}
-
-	/**
-	 * Sets the doc type temp status items list.
-	 * 
-	 * @param docTypeTempStatusItemsList
-	 *            the docTypeTempStatusItemsList to set
-	 */
-	public void setDocTypeTempStatusItemsList(
-			List<SelectItem> docTypeTempStatusItemsList) {
-		this.docTypeTempStatusItemsList = docTypeTempStatusItemsList;
-	}
-
-	/**
-	 * Gets the fl physical contract no.
-	 * 
-	 * @return the flPhysicalContractNo
-	 */
-	public String getFlPhysicalContractNo() {
-		return flPhysicalContractNo;
-	}
-
-	/**
-	 * Sets the fl physical contract no.
-	 * 
-	 * @param flPhysicalContractNo
-	 *            the flPhysicalContractNo to set
-	 */
-	public void setFlPhysicalContractNo(String flPhysicalContractNo) {
-		this.flPhysicalContractNo = flPhysicalContractNo;
-	}
-
-	/**
-	 * Gets the fl loa physical no.
-	 * 
-	 * @return the flLoaPhysicalNo
-	 */
-	public String getFlLoaPhysicalNo() {
-		return flLoaPhysicalNo;
-	}
-
-	/**
-	 * Sets the fl loa physical no.
-	 * 
-	 * @param flLoaPhysicalNo
-	 *            the flLoaPhysicalNo to set
-	 */
-	public void setFlLoaPhysicalNo(String flLoaPhysicalNo) {
-		this.flLoaPhysicalNo = flLoaPhysicalNo;
-	}
-
-	/**
-	 * Gets the fl contract request no.
-	 * 
-	 * @return the flContractRequestNo
-	 */
-	public String getFlContractRequestNo() {
-		return flContractRequestNo;
-	}
-
-	/**
-	 * Sets the fl contract request no.
-	 * 
-	 * @param flContractRequestNo
-	 *            the flContractRequestNo to set
-	 */
-	public void setFlContractRequestNo(String flContractRequestNo) {
-		this.flContractRequestNo = flContractRequestNo;
-	}
-
+	
+	
 }
