@@ -338,6 +338,29 @@
 						</table>
 					</td>
 				</tr>
+				
+				<tr>
+					<td style="width: 23%;"><p:outputLabel
+							value="#{lbl['lbl.sc.request.note.header.method']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:selectOneMenu id="methodId"
+										label="#{lbl['lbl.sc.request.note.header.method ']}"
+										disabled="#{!isPendingSubmissionStatus}" required="true"
+										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.sourceMethod}"
+										style="margin-bottom: 5px;width:346px;">
+										<f:selectItems
+											value="#{purchaseInDefaultBackingBean.managedBean.sourceMethods}" />
+
+									</p:selectOneMenu> 
+								</td>
+								<td><p:message id="methodIdMsg" for="methodId" display="icon" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 			</table>
 		</h:panelGroup>
 

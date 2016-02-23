@@ -21,6 +21,7 @@ import javax.portlet.PortletRequest;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -38,7 +39,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
-import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -55,14 +55,18 @@ import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
+import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -164,19 +168,20 @@ public class PurchaseInDefaultBackingBean extends
 		// check contract item or panel item
 		if (vCmSupplierItem.getContractNo() != null) {
 			// contract item
-			ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
-			contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
-			contractItemReqDTO.setFetchSubEntity(Boolean.TRUE);
-			ContractItemResDTO contractItemResDTO = contractItemSO
-					.getContractItem(contractItemReqDTO);
-			if (contractItemResDTO.getCtContractItem() != null) {
-				scPurchaseInDefault.setContractedItem(contractItemResDTO
-						.getCtContractItem());
+			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+			purchaseInDefaultReqDTO.setContractItemId(vCmSupplierItem.getDocId());
+			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getContractItemByContractItemId(purchaseInDefaultReqDTO);
+			CtContractItem contractItem = resDTO.getCtContractItem();
+			if (contractItem != null) {
+				scPurchaseInDefault.setContractedItem(contractItem);
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
 				getManagedBean().setCheckContractItem(Boolean.TRUE);
+				
 			}
-			retrieveReasonDescListByCategory(Boolean.TRUE);
+			populatePidReason(resDTO.getCtPidReasonList(), resDTO.getCircularPidReasonList());
+//			retrieveReasonDescListByCategory(Boolean.TRUE);
+			
 		} else if (vCmSupplierItem.getCircularNo() != null) {
 			// panel item
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
@@ -201,10 +206,15 @@ public class PurchaseInDefaultBackingBean extends
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
 				purchaseInDefaultReqDTO.setPanelItem(ctPanelItem);
 				purchaseInDefaultReqDTO.setUserId(userId);
-				PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO
-						.getIsExceedMaxProcurementAmount(purchaseInDefaultReqDTO);
-				retrieveReasonDescListByCategory(defaultResDTO
-						.isExceedProcurementAmt());
+//				PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO
+//						.getIsExceedMaxProcurementAmount(purchaseInDefaultReqDTO);
+//				retrieveReasonDescListByCategory(defaultResDTO
+//						.isExceedProcurementAmt());
+				List<CtCircularPidReason> pidReason = new ArrayList<CtCircularPidReason>();
+				if(ctPanelItem.getCtCircularVer() != null) {
+					pidReason = ctPanelItem.getCtCircularVer().getCtCircularPidReason();
+				}
+				populatePidReason(null, pidReason);
 			}
 		}
 	
@@ -270,7 +280,10 @@ public class PurchaseInDefaultBackingBean extends
 		getManagedBean().setvCmSupplierItem(vCmSupplierItem);
 
 //		initialInformation(scPurchaseInDefault);
+		getManagedBean().setSourceMethods(
+				getSourceMethodDropdownCodeValues(null, false));
 		initializeApproverGroup();
+		
 		scPurchaseInDefault.setCreatedBy(user.getUserId());
 
 		// by default value as cheaper price
@@ -650,8 +663,45 @@ public class PurchaseInDefaultBackingBean extends
 	public void justificationTypeEvent() {
 		log.info("justificationTypeEvent : "
 				+ getManagedBean().getPurchaseInDefault().getReasonType()
-						.getReasonId());
-		if (getManagedBean().getPurchaseInDefault().getReasonType()
+						.getReasonCode());
+		
+		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IReasonSO.class);
+		
+		PmParameter reasonCategory = getParameterByTypeAndCode(ParameterTypeConst.REASON_CATEGORY, ReasonCategory.PID_JUSTIFICATION
+						.value());
+		
+		if(reasonCategory != null) {
+			// call PM API to check output for reason
+			ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+			reasonReqDTO.setReasonCategoryId(reasonCategory.getParameterId());
+			reasonReqDTO.setReasonCode(getManagedBean().getPurchaseInDefault().getReasonType()
+					.getReasonCode());
+			ReasonResDTO reasonResDTO = reasonSO.retrieveReasonByReasonCode(reasonReqDTO);
+			PmReason pmReason = reasonResDTO.getPmReason();
+			
+			if(pmReason != null) {
+				PmParameter conditionField = pmReason.getConditionField();
+				PmParameter sourceMethod = pmReason.getSourceMethod();
+				
+				if(conditionField!= null && conditionField.getParameterCode().equals(ParameterConst.PID_FIELD_MINIMUM_QUANTITY)) {
+					getManagedBean().setVisibleOrderQty(Boolean.TRUE);
+				} else {
+					getManagedBean().setVisibleOrderQty(Boolean.FALSE);
+				}
+				
+				if(sourceMethod == null) {
+					getManagedBean().setSourceMethods(
+							getSourceMethodDropdownCodeValues(null, true));
+				} else {
+					getManagedBean().setSourceMethods(
+							getSourceMethodDropdownCodeValues(sourceMethod.getParameterCode(), true));
+				}
+			}
+		}
+
+		/*if (getManagedBean().getPurchaseInDefault().getReasonType()
 				.getReasonCode() != null) {
 			if (getManagedBean().getPurchaseInDefault().getReasonType()
 					.getReasonCode().equalsIgnoreCase(ParameterConst.PID_CP)
@@ -670,7 +720,7 @@ public class PurchaseInDefaultBackingBean extends
 			} else {
 				getManagedBean().setVisibleOrderQty(Boolean.FALSE);
 			}
-		}
+		}*/
 		// update order qty
 		RequestContext.getCurrentInstance().update("reqDtlId");
 	}
@@ -811,6 +861,29 @@ public class PurchaseInDefaultBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * justification type drop down list for to select justification
+	 * 
+	 * @param isExceedProcAmt
+	 *            the is exceed procurement amt
+	 */
+	public void populatePidReason(List<CtPidReason> ctPidReasonList, List<CtCircularPidReason> circularReasonList) {
+		List<PmReasonDesc> results = new ArrayList<PmReasonDesc>();
+		if (CollectionUtils.isNotEmpty(ctPidReasonList)) {
+			for(CtPidReason pidReason : ctPidReasonList) {
+				PmReasonDesc reasonDesc = getReasonDescByReasonId(pidReason.getPmReason().getReasonId());
+				results.add(reasonDesc);
+			}
+		} else if(CollectionUtils.isNotEmpty(circularReasonList)){
+			for(CtCircularPidReason pidReason : circularReasonList) {
+				PmReasonDesc reasonDesc = getReasonDescByReasonId(pidReason.getPmReason().getReasonId());
+				results.add(reasonDesc);
+			}
+		}
+		getManagedBean().setJustifications(
+				getDropdownCodeValues(results));
+	}
 
 	/**
 	 * Gets the dropdown code values.
@@ -835,6 +908,47 @@ public class PurchaseInDefaultBackingBean extends
 		} finally {
 		}
 		return items;
+	}
+	
+	/**
+	 * Gets the Source method dropdown code values.
+	 * 
+	 * @param list
+	 *            the list
+	 * @return the dropdown code values
+	 */
+	private SelectItem[] getSourceMethodDropdownCodeValues(String sourceMethod, boolean isMethodSelected) {
+		SelectItem[] sourceMethodDropDown = null;
+		try {
+			if(isMethodSelected) {
+				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+				if(sourceMethod == null) {
+
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmParameter.parameterCode",
+									SearchOperator.OPERATOR_NOT_EQUALS.value(),
+									ParameterConst.PID_SOURCE_METHOD_CR));
+
+					sourceMethodDropDown = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SOURCING_METHOD, searchBean);
+				} else {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmParameter.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									sourceMethod));
+
+					sourceMethodDropDown = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SOURCING_METHOD, searchBean);
+				}
+			} else {
+				sourceMethodDropDown = new SelectItem[1];
+				sourceMethodDropDown[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+			}
+			
+			
+		} finally {
+		}
+		return sourceMethodDropDown;
 	}
 
 	/**

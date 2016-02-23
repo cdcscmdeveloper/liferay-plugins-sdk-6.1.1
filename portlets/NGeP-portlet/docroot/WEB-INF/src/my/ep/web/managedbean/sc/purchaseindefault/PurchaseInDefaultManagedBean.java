@@ -79,6 +79,9 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 
 	/** The justifications. */
 	private SelectItem[] justifications; // justification drop down
+	
+	/** The source methods. */
+	private SelectItem[] sourceMethods; // source methods drop down
 
 	/** The pid status. */
 	private PmStatus pidStatus;
@@ -364,6 +367,20 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	 */
 	public void setJustifications(SelectItem[] justifications) {
 		this.justifications = justifications;
+	}
+
+	/**
+	 * @return the sourceMethods
+	 */
+	public SelectItem[] getSourceMethods() {
+		return sourceMethods;
+	}
+
+	/**
+	 * @param sourceMethods the sourceMethods to set
+	 */
+	public void setSourceMethods(SelectItem[] sourceMethods) {
+		this.sourceMethods = sourceMethods;
 	}
 
 	/**
