@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
 	<p:panel id="requestNoteItemDetails" toggleable="true"
 		toggleSpeed="500">
 		<f:facet name="header">
@@ -127,7 +128,7 @@
 									rendered="#{requestNoteDtl.brandNew and !requestNoteDtl.reRecommend}"
 									disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' 
 									 	and requestNoteDtl.requestItem.quote.zonal eq 'false'
-									 	or requestNoteBackingBean.managedBean.viewOnly}"
+									 	or isViewOnly}"
 									conditionField="#{requestNoteDtl.conditionField}">
 								</ac:lov>
 								<ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM"
@@ -140,7 +141,7 @@
 									update="@form"
 									disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' 
 									 	and requestNoteDtl.requestItem.quote.zonal eq 'false'
-									 	or requestNoteBackingBean.managedBean.viewOnly}"
+									 	or isViewOnly}"
 									conditionField="#{requestNoteDtl.conditionField}"
 									rendered="#{!requestNoteDtl.brandNew or requestNoteDtl.reRecommend}">
 								</ac:lov>
@@ -204,7 +205,7 @@
 					<h:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}"
 						style="width:115px; margin-top: 8px;" id="prepareBy"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.loa.prepare.by']}"
-						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
+						disabled="#{isViewOnly}"
 						required="#{!requestNoteDtl.selected}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -225,11 +226,10 @@
 						<ac:iconTooltip id="deliveryTermId#{rowIndex}"
 							value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
 					</f:facet>
-					<p:inputText
-						style="width:20px;margin-top: 8px;"
+					<p:inputText style="width:20px;margin-top: 8px;"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 						size="6" maxlength="4"
-						disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag or requestNoteBackingBean.managedBean.viewOnly}"
+						disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag or isViewOnly}"
 						id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"
 						required="#{!requestNoteDtl.selected}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
@@ -245,7 +245,7 @@
 					<h:selectOneMenu id="procTypeCategory"
 						value="#{requestNoteDtl.procTypeCategoryId}"
 						style="width:130px;margin-top: 8px;" required="true"
-						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
+						disabled="#{isViewOnly}"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.procurment.type.category']}">
 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -269,7 +269,7 @@
 					</f:facet>
 					<p:inputTextarea id="procTypeCatTitle" rows="2"
 						label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
-						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
+						disabled="#{isViewOnly}"
 						value="#{requestNoteDtl.procurementTitle}" autoResize="false"
 						style="width:140px;">
 						<p:ajax event="blur" partialSubmit="true" process="@this"
@@ -285,13 +285,13 @@
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
 				partialSubmit="true" process="@this"
+				rendered="#{!isViewOnly}"
 				onsuccess="applyAllPopUp.show();" update="@([id$=applyAllPopUp])" />
 
-			<c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-					partialSubmit="true" onsuccess="deleteConformDlg.show();"
-					update="@([id$=requestListDataTable])" />
-			</c:if>
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+				rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
+				partialSubmit="true" onsuccess="deleteConformDlg.show();"
+				update="@([id$=requestListDataTable])" />
 		</div>
 	</p:panel>
 
@@ -319,9 +319,9 @@
 
 
 	<p:dialog id="applyAllItems" widgetVar="applyAllPopUp"
-		header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true" dynamic="true" 
-		closable="false" position="center"
-		resizable="false" styleClass="pop_up_top" width="1000">
+		header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true"
+		dynamic="true" closable="false" position="center" resizable="false"
+		styleClass="pop_up_top" width="1000">
 		<p:panel id="applyAll">
 			<ui:param name="isSourcheMethodAsSC"
 				value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
@@ -378,15 +378,14 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.sc.apply']}"
-				    style="margin-top: 10px;"
-					partialSubmit="true" process="@this applyAll"
-					onsuccess="applyAllPopUp.hide();"
+					style="margin-top: 10px;" partialSubmit="true"
+					process="@this applyAll" onsuccess="applyAllPopUp.hide();"
 					action="#{requestNoteBackingBean.applyForRequestNote}"
 					update="@([id$=requestListDataTable])" />
 
-				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true" 
-				    update="@form"
-					process="@this" action="#{requestNoteBackingBean.cancelApplyAllItemsPopup}"/>
+				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+					update="@form" process="@this"
+					action="#{requestNoteBackingBean.cancelApplyAllItemsPopup}" />
 			</div>
 		</p:panel>
 

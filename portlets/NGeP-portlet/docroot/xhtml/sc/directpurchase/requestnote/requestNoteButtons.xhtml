@@ -46,7 +46,7 @@
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 			id="backPrevious" partialSubmit="true" process="@this"
 			immediate="true" action="#{requestNoteBackingBean.backToPrevious}"
-			rendered="#{requestNoteBackingBean.managedBean.viewOnly}" />
+			rendered="#{isViewOnly}" />
 
 		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 			style="float:right;"
@@ -55,7 +55,7 @@
 			immediate="true" />
 	</div>
 	<h:panelGroup
-		rendered="#{!requestNoteBackingBean.managedBean.viewOnly}">
+		rendered="#{!isViewOnly}">
 		<div class="ppRightBtn">
 			<c:if test="#{empty requestNoteBackingBean.managedBean.taskId}">
 				<p:commandButton value="#{lbl['lbl.btn.item.search']}"
