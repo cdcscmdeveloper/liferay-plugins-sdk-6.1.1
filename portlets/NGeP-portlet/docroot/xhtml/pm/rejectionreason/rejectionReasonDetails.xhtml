@@ -163,7 +163,7 @@
 										<p:column style="width:80%;"
 											headerText="#{lbl['lbl.pm.reason.applicability']}">
 											<p:selectOneMenu id="docTypeID" required="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
-												label="#{lbl['lbl.pm.reason.applicability']}"
+												label="#{lbl['lbl.pm.reason.applicability']}" disabled="#{!PIDreason.brandNew}"
 												styleClass="ppDropDownWidthL" value="#{PIDreason.docType}">
 												<f:selectItems
 													value="#{rejectionReasonBackingBean.reasonApplicablityOptions()}" />
