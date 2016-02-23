@@ -470,6 +470,19 @@
 							<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 								rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.myIdResp']}"
+							style="white-space: normal;"
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
+							<p:commandLink onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{backingBean.viewMyIdentityResponse(person)}"
+								process="@this" rendered="#{empty person.identityResponseCode}"
+								partialSubmit="true" update=":form" style="padding-right:5px;" >
+									<p:graphicImage value="/css/images/design/icon_alert.png" title="#{lbl['lbl.sm.view.myidentity.response']}" />
+							</p:commandLink>
+							<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{not empty person.identityResponseCode}"/>
+						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
@@ -544,6 +557,10 @@
 		</p:panel>
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/branchCompanyInfoForm.xhtml" />
+		
+		<p:confirmDialog id="myIdentityDlg" closable="true"
+			message="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}"
+			header="#{lbl['lbl.sm.person.myIdResp']}" severity="alert" widgetVar="myIdentityDlg"/>
 	</h:panelGroup>
 
 </ui:composition>
