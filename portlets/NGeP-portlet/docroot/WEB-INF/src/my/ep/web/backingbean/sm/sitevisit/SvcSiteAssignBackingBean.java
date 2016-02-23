@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -122,6 +123,10 @@ public class SvcSiteAssignBackingBean extends
 					SmCommonUtil.assignTrackingDiaryValues(SupplierManagementConst.SVC_ASSIGN_SITEVISIT, 
 							this.getManagedBean().getSmAppl().getApplId(), this.getManagedBean().getSmAppl().getApplNo(), getUserRole()));
 			
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			log.info("******submitSiteVisitAssignment - getSmSupplier******" + pmUser.getUserId());
+			
+			reqDTO.setLogKey(new LogKey(pmUser.getUserId()));
 			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 
 			
