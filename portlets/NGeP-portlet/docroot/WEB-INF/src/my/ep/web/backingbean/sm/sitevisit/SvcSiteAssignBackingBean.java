@@ -19,7 +19,6 @@ import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvCategory;
@@ -59,8 +58,8 @@ public class SvcSiteAssignBackingBean extends
 	 * retrieve site visit assignment Info by applId
 	 * and populate on screen
 	 */
-	public void retrieveSiteAssignInfo() {
-		//this.getManagedBean().setAppId(1259020L);
+	public void retrieveSiteAssignInfo(Long applId) {
+		this.getManagedBean().setAppId(applId);
 		//Old Version - Working set
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
@@ -79,6 +78,8 @@ public class SvcSiteAssignBackingBean extends
 		setSiteVisitAddressesFacilityName();
 		getAllCategoryCode();
 		getWorkFlowInfo(getManagedBean().getAppId());
+		
+		
 	}
 	
 	
@@ -229,7 +230,7 @@ public class SvcSiteAssignBackingBean extends
 	//for local testing purpose
 	public void preRenderView(){
 		if(this.getManagedBean().getSmAppl() == null){
-			retrieveSiteAssignInfo();
+			//retrieveSiteAssignInfo();
 		}
 	}
 	

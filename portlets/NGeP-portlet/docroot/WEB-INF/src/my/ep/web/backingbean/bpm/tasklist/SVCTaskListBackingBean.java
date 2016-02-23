@@ -6,42 +6,22 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
-import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.SVCTaskListManagedBean;
-import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "svcTasklistBackingBean")
 @RequestScoped
@@ -86,10 +66,10 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		System.out.println("testNavigate.........");
 	}
 
-	public void navigateToSiteVisitAssignment() {
-		System.out.println("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+	public String navigateToSiteVisitAssignment() {
+		/*System.out.println("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
 		log.info("In navigateToSiteVisitAssignment");
-		String selectedApplNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selApplNo"); 
+		String selectedApplNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selApplId"); 
 		log.info("selectedApplNo: " + selectedApplNo);
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -130,7 +110,12 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 				e.printStackTrace();
 			}
 
-		}
+		}*/
+		Long selectedApplId = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selApplId")); 
+		SvcSiteAssignBackingBean svcAssignmentBB = new SvcSiteAssignBackingBean();
+		svcAssignmentBB.retrieveSiteAssignInfo(selectedApplId);
+		
+		return "/xhtml/sm/svcassignment/assignSiteVisitView.xhtml";
 	}
 
 	public void findDistrict() {
