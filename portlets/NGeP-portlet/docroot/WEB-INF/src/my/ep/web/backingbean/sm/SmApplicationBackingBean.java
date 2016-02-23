@@ -4555,8 +4555,8 @@ public class SmApplicationBackingBean extends
 	public void onTickOtherSystem() {
 		SmSupplierSystem system = (SmSupplierSystem) EntityHelper
 				.getEntityByMultiplePropertiesFromList(getManagedBean()
-						.getSelectedSystem().getSupplierSystemId(),
-						getManagedBean().getSmAppl().getSmSupplierSystems(),
+						.getSelectedSystem(), getManagedBean().getSmAppl()
+						.getSmSupplierSystems(),
 						new String[] { "supplierSystemId" }, null, null);
 		if (system != null) {
 			if (getManagedBean().isOthersSystem()) {
@@ -7506,13 +7506,17 @@ public class SmApplicationBackingBean extends
 					reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 					reqSO.submitPOorApproverReviewToBPM(reqDTO);
-					
-					//to auto generate mof cert
-					if(res.equalsIgnoreCase("Approve")){
-						try{
-							SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(getManagedBean().getSmAppl().getApplId());
-						}catch(Exception ex){
-							log.info("<<<<MOF Approval - error when generate Virtual Cert>>>>" + ex.getMessage());
+
+					// to auto generate mof cert
+					if (res.equalsIgnoreCase("Approve")) {
+						try {
+							SmVirtualCertHelper.getInstance()
+									.autoGenerateVirtualCert(
+											getManagedBean().getSmAppl()
+													.getApplId());
+						} catch (Exception ex) {
+							log.info("<<<<MOF Approval - error when generate Virtual Cert>>>>"
+									+ ex.getMessage());
 						}
 					}
 
