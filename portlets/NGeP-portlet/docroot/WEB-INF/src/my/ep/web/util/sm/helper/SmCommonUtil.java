@@ -2104,6 +2104,28 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
+	public static SmStaffTotal getStaffTotalByRevNoAndCategory(
+			List<SmStaffTotal> list, SmStaffTotal param, int revNo) {
+		SmStaffTotal retVal = null;
+
+		for (SmStaffTotal tmp : list) {
+			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& StringUtils.isNotBlank(tmp.getStaffCategory())
+					&& tmp.getStaffCategory().equals(param.getStaffCategory())
+					&& StringUtils.isNotBlank(tmp.getStaffCategory())
+					&& tmp.getStaffCategory().equals(param.getStaffCategory())) {
+
+				if (tmp.getRevNo().compareTo(new BigDecimal(revNo)) == 0) {
+					retVal = tmp;
+					break;
+				} else {
+					retVal = tmp;
+				}
+			}
+		}
+		return retVal;
+	}
+
 	/**
 	 * Get company basic by revision no
 	 * 
@@ -3367,7 +3389,7 @@ public class SmCommonUtil {
 		item.setValue(orgProfile.getOrgProfileId());
 		return item;
 	}
-	
+
 	private static SelectItem getSsmSelectItem() {
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		reqDTO.setOrgCode(my.ep.constant.sm.SupplierManagementConst.SSM_ORG_PROFILE_CODE);
