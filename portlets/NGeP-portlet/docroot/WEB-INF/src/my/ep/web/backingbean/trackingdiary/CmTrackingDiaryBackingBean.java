@@ -75,8 +75,9 @@ public class CmTrackingDiaryBackingBean extends
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getCmItem().getItemId()));
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getCmItem().getExtensionCode()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSupplierItemId()));
+			//searchBean.getDataFilterBeans().add(new SearchFilterBean("actionedBy",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSmSupplier().getSmPersonnel().getPmUser().getUserId()));
+				
 			System.out.println("TrackingDiaryReqDTO" +getManagedBean().getCmSupplierItem().getCmItem().getItemId());
 
 			reqDTO.setSearchBean(searchBean);
