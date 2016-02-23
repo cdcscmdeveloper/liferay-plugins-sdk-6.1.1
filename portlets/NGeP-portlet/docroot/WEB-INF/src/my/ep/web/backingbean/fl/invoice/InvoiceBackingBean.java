@@ -1815,11 +1815,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		 */
 		private void populateTaxAbleChargeLineData(){
 			
-			Map<String, TreeNode> lvl1TaxMap = new HashMap<String, TreeNode>();
+			Map<String, TreeNode> lvl1TaxMapTree = new HashMap<String, TreeNode>();
+			Map<String, TreeNode> lvl2TaxMapTree = new HashMap<String, TreeNode>();
 			Map<String, String> lvl3TaxMap = new HashMap<String, String>();
 			Map<String, TreeNode> lvl1OOSMap = new HashMap<String, TreeNode>();
-			BigDecimal grandTotalOrderAmt = new BigDecimal(0);
-			BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
 			BigDecimal grandTotalInvAmt = new BigDecimal(0);
 			TreeNode lv1TreeNode = null;
 			List<FlInvoiceItemSummary> taxList = new ArrayList<FlInvoiceItemSummary>(); 
@@ -1844,7 +1843,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			InvoiceChargeLineVO chargeLineLv1 = null;
 			TreeNode lv2TaxTreeNode = null;
 			for(FlInvoiceItemSummary invItemSummLv2 : taxList){
-				if(lvl1TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode())) {
+				if(lvl1TaxMapTree.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode())) {
 					chargeLineLv1 = new InvoiceChargeLineVO();
 					chargeLineLv1.setLevel(1);
 					chargeLineLv1.setFlInvoiceSummary(invItemSummLv2);
@@ -1857,28 +1856,32 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 								chargeLineLv3.setLevel(3);
 								chargeLineLv3.setFlInvoiceItem(invItemLv3);
 							}else{
-								grandTotalReceivedAmt = grandTotalReceivedAmt.add(invItemLv3.getReceivedAmt());
 								chargeLineLv3 = new InvoiceChargeLineVO();
 								chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
 								chargeLineLv3.setLevel(3);
 								chargeLineLv3.setFlInvoiceItem(invItemLv3);
-								new DefaultTreeNode(chargeLineLv3, lv2TaxTreeNode);
+								new DefaultTreeNode(chargeLineLv3, lvl2TaxMapTree.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()));
 								lvl3TaxMap.put(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemLv3.getGstFlag().getParameterCode(), invItemLv3.getGstFlag().getParameterCode());
+								grandTotalInvAmt = grandTotalInvAmt.add(invItemSummLv2.getInvAmt());	
 							}
 						}
 					}
 				} else {
+					
 					chargeLineLv1 = new InvoiceChargeLineVO();
 					chargeLineLv1.setLevel(1);
 					chargeLineLv1.setFlInvoiceSummary(invItemSummLv2);
 					
 					lv1TreeNode = new DefaultTreeNode(chargeLineLv1, getManagedBean().getTaxSectionItemRoot());
-					lvl1TaxMap.put(invItemSummLv2.getFlFulfilmentItem().getItemCode(), lv1TreeNode);
+					lvl1TaxMapTree.put(invItemSummLv2.getFlFulfilmentItem().getItemCode(), lv1TreeNode);
+					
+					grandTotalInvAmt = grandTotalInvAmt.add(invItemSummLv2.getInvAmt());
 					
 					InvoiceChargeLineVO chargeLineLv2 = new InvoiceChargeLineVO();
 					chargeLineLv2.setLevel(2);
 					chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
 					lv2TaxTreeNode = new DefaultTreeNode(chargeLineLv2, lv1TreeNode);
+					lvl2TaxMapTree.put(invItemSummLv2.getFlFulfilmentItem().getItemCode(), lv2TaxTreeNode);
 					for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
 						if(!invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
 							InvoiceChargeLineVO chargeLineLv3 = null;
@@ -1888,7 +1891,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 								chargeLineLv3.setLevel(3);
 								chargeLineLv3.setFlInvoiceItem(invItemLv3);
 							}else{
-								grandTotalReceivedAmt = grandTotalReceivedAmt.add(invItemLv3.getReceivedAmt());
 								chargeLineLv3 = new InvoiceChargeLineVO();
 								chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
 								chargeLineLv3.setLevel(3);
@@ -1899,17 +1901,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
-				grandTotalOrderAmt = grandTotalOrderAmt.add(invItemSummLv2.getOrderedAmt());
-				grandTotalInvAmt = grandTotalInvAmt.add(invItemSummLv2.getInvAmt());
-				
 			}
-			getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
-			getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
 			getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
 			
-			grandTotalOrderAmt = new BigDecimal(0);
-			grandTotalReceivedAmt = new BigDecimal(0);
-			grandTotalInvAmt = new BigDecimal(0);
+			BigDecimal grandTotalOosAmt = new BigDecimal(0);
 			for(FlInvoiceItemSummary invItemSummLv2 : outOfScopeList){
 				if(lvl1OOSMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode())) {
 					chargeLineLv1 = new InvoiceChargeLineVO();
@@ -1931,7 +1926,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						if(!invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
 							continue;
 						}
-						grandTotalReceivedAmt = grandTotalReceivedAmt.add(invItemLv3.getReceivedAmt());
 						InvoiceChargeLineVO chargeLineLv3 = new InvoiceChargeLineVO();
 						chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
 						chargeLineLv3.setLevel(3);
@@ -1939,14 +1933,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						new DefaultTreeNode(chargeLineLv3, lv2OosTreeNode);
 					}
 				}
-				
-				grandTotalOrderAmt = grandTotalOrderAmt.add(invItemSummLv2.getOrderedAmt());
-				grandTotalInvAmt = grandTotalInvAmt.add(invItemSummLv2.getInvAmt());
-				
-				
+				grandTotalOosAmt = grandTotalOosAmt.add(invItemSummLv2.getInvAmt());
 			}
-			getManagedBean().setOosReceivedAmtGrandTotal(grandTotalReceivedAmt);
-			getManagedBean().setOosInvAmtGrandTotal(grandTotalInvAmt);
+			getManagedBean().setOosInvAmtGrandTotal(grandTotalOosAmt);
 			//Clause under Invoice  Item page only display if any of the invoice item is 'RS'and 'OS'
 			
 			getManagedBean().setTaxItemTableClause(false);
