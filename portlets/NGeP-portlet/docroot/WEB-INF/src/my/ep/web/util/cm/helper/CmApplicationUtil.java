@@ -40,7 +40,7 @@ public class CmApplicationUtil {
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
-	private static String getUserRoleValue() {		
+	public static String getUserRoleValue() {		
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.CM_USER.value())) {
 			return RoleCode.CM_USER.value();
