@@ -784,7 +784,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
 		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(docType,
 				docId);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (resDTO != null && resDTO.getRemarksList() != null
 				&& !resDTO.getRemarksList().isEmpty()) {
 
@@ -873,7 +873,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void assignSelBank(SmSupplierBank shareBankBean) {
 		getManagedBean().setSelBankBranchName("");
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int i = 0;
 
 		if (!SmCommonUtil.isCollectionEmpty(shareBankBean
@@ -894,7 +894,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		getManagedBean().setChequeSignPersonnelName(sb.toString());
 
-		sb = new StringBuffer();
+		sb = new StringBuilder();
 		i = 0;
 		if (!SmCommonUtil.isCollectionEmpty(shareBankBean
 				.getSmSupplierBranchBanks())) {
@@ -1036,9 +1036,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
 
-		StringBuffer catL1 = new StringBuffer();
-		StringBuffer catL2 = new StringBuffer();
-		StringBuffer catL3 = new StringBuffer();
+		StringBuilder catL1 = new StringBuilder();
+		StringBuilder catL2 = new StringBuilder();
+		StringBuilder catL3 = new StringBuilder();
 		for (SmCompanyExperienceCat cat : consultantBean
 				.getSmCompanyExperienceCats()) {
 			if (cat.getPmCategoryL1() != null) {
@@ -1937,7 +1937,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public String getApplicationRejectionReason() {
 		String langCode = new FacesScopes().getUserLocale().getLanguage();
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int i = 1;
 		for (SmApplRejectReason rej : getManagedBean().getSmAppl()
 				.getSmApplRejectReasons()) {

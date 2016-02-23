@@ -480,7 +480,7 @@ public class SmCommonUtil {
 			}
 		}
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (per.isEquityOwner()) {
 			sb.append(
 					ResourceBundleUtils.getMessage(
@@ -910,7 +910,7 @@ public class SmCommonUtil {
 	private static void setAllBankSignatoriesNonBumi(
 			SmPersonnleCalcVO persCalcVo,
 			List<SmSupplierBank> smSupplierBankList) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		String bankSignatoryNonBumi = "";
 
 		if (smSupplierBankList != null
@@ -1576,10 +1576,10 @@ public class SmCommonUtil {
 	 */
 	public static void setRoleName(String supplierType,
 			List<SmPersonnel> smPersonnels) {
-		StringBuffer sb = null;
+		StringBuilder sb = null;
 		for (SmPersonnel smPersonnel : smPersonnels) {
 			smPersonnel.setRoleName("");
-			sb = new StringBuffer();
+			sb = new StringBuilder();
 			if (smPersonnel.isEquityOwner()) {
 				sb.append(
 						SmCommonUtil.getMessage(

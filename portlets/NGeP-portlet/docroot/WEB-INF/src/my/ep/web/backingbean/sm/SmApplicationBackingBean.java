@@ -1066,7 +1066,7 @@ public class SmApplicationBackingBean extends
 	public String onDisplayConfirmCanceMofRegistration() {
 		String page = null;
 		Locale locale = new FacesScopes().getUserLocale();
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean valid = true;
 		if (getManagedBean().getSupplierRemarks() == null
 				|| getManagedBean().getSupplierRemarks().trim() == "") {
@@ -1930,7 +1930,7 @@ public class SmApplicationBackingBean extends
 	 * Sets the SM application rejection reasons selected.
 	 */
 	private void setSmApplRejectionReasons() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int count = 0;
 		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
 		for (Long resId : getManagedBean().getReasonId()) {
@@ -2491,7 +2491,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierCategories()
 					.removeAll(catList);
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		String desc = null;
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.note.normal",
@@ -6533,7 +6533,7 @@ public class SmApplicationBackingBean extends
 	public String submitDeletePendingMofApplToBpm() {
 		IMofRegistrationSO regSo = null;
 		try {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for (Long resId : getManagedBean().getReasonId()) {
 				for (PmReasonDesc desc : getManagedBean().getReasonDescList()) {
 					if (desc.getPmReason().getReasonId().equals(resId)) {
@@ -7549,7 +7549,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private String getApproverListForSuccessMsg() {
-		StringBuffer bf = new StringBuffer();
+		StringBuilder bf = new StringBuilder();
 		String retVal = "";
 		SmAddress hqAddr = getHqAddress();
 		if (hqAddr != null) {
@@ -7722,7 +7722,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private void setBusinessAndHadApprovedSpecialCatcode() {
 		getManagedBean().setAlreadyBusinessSpecialCatcode(false);
-		StringBuffer bf = new StringBuffer();
+		StringBuilder bf = new StringBuilder();
 		if (!getManagedBean().getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				&& !SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
@@ -9336,7 +9336,7 @@ public class SmApplicationBackingBean extends
 	 * @return String - MY Identity status description value
 	 */
 	public String getMyIdentityStatusDescription(String identityResponseCode) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("lbl.sm.myIdentityCode.");
 		if (StringUtils.isNotBlank(identityResponseCode)) {
 			sb.append(identityResponseCode);
@@ -9790,7 +9790,7 @@ public class SmApplicationBackingBean extends
 	 * Validation for saving address for role staff
 	 */
 	private void validateSaveAddressForRoleStaff() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		if (getManagedBean().getShareHolderPermAddr().getSmAddress() != null) {
 			SmAddress permAddr = getManagedBean().getShareHolderPermAddr()
@@ -9824,7 +9824,7 @@ public class SmApplicationBackingBean extends
 	 * @param sb
 	 */
 	private void constructSaveStaffRoleAddressErrMsg(SmAddress smAddress,
-			String addressTypeKey, StringBuffer sb) {
+			String addressTypeKey, StringBuilder sb) {
 
 		if (StringUtils.isBlank(smAddress.getAddress1())) {
 			sb.append(

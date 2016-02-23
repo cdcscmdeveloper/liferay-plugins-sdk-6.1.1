@@ -107,7 +107,7 @@ public class SmApplicationNotificationUtil {
 	 */
 	public static String retriveCancelRegistrationMessageForNotification(
 			SmApplicationManagedBean managedBean) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveCancelRegistrationMessageForNotification *********");
 		sb.append("<table style=\"width:100%; border: 1px solid black;border-collapse: collapse;\">");
 		sb.append("<tr>");
@@ -185,8 +185,8 @@ public class SmApplicationNotificationUtil {
 	 */
 	public static String retriveCategoryMessageForNotification(
 			SmApplicationManagedBean managedBean) {
-		StringBuffer approvedCatCodes = new StringBuffer();
-		StringBuffer rejectedCatCodes = new StringBuffer();
+		StringBuilder approvedCatCodes = new StringBuilder();
+		StringBuilder rejectedCatCodes = new StringBuilder();
 		StringBuilder finalMsg = new StringBuilder();
 		boolean existsRejectedCodes = false;
 		rejectedCatCodes.append(SmCommonUtil.getMessage(

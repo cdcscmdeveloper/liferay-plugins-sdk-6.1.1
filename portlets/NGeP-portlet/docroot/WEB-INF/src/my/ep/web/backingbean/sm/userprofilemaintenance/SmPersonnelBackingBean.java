@@ -1351,7 +1351,7 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setPostCode(postCode);
 
 		MyIdentityResDTO resDTO = null;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("MessageConst.ERROR_MYIDENTITY_");
 
 		try {
