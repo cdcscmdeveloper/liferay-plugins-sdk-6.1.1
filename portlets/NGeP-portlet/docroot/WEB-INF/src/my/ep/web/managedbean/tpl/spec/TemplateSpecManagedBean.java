@@ -42,6 +42,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private String searchTemplateTypeUser;
 	private Long searchItemTypeId;
 	private Long searchSpecTypeId;
+	private boolean pidSQ;
 	
 	private List<TplSpecQuestion> tplSpecQuestions;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -219,4 +220,17 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 		this.docType = docType;
 	}
 
+	/**
+	 * @return the pidSQ
+	 */
+	public boolean isPidSQ() {
+		return pidSQ;
+	}
+
+	/**
+	 * @param pidSQ the pidSQ to set
+	 */
+	public void setPidSQ(boolean pidSQ) {
+		this.pidSQ = pidSQ;
+	}
 }
