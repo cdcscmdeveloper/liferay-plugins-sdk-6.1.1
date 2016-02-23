@@ -70,7 +70,7 @@
 						</h:outputText>
 					</f:facet>		
 				</f:facet>
-					<h:outputText value="#{chargeLineNode.flInvoiceSummary.invAmt}" id="invSumAmountTxt" rendered="#{chargeLineNode.level == 2}" style="float:right;">
+					<h:outputText value="#{chargeLineNode.flInvoiceItem.invAmt}" id="invSumAmountTxt" rendered="#{chargeLineNode.level == 2}" style="float:right;">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 					<p:inputText size="9" value="#{chargeLineNode.flInvoiceItem.invAmt}" maxlength="15" id="oosChargeInvAmt" label="#{lbl['lbl.fl.invoice.amount']}" 
