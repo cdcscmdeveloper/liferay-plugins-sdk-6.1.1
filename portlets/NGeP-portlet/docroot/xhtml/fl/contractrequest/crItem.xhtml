@@ -133,7 +133,7 @@
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-					partialSubmit="true" immediate="true"
+					partialSubmit="true" 
 					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					action="#{contractRequestBackingBean.removeAddRow()}"
 					oncomplete="delAddrDlg.hide();" />
@@ -275,7 +275,7 @@
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-					partialSubmit="true" immediate="true"
+					partialSubmit="true" 
 					action="#{contractRequestBackingBean.removeItemRow}"
 					update="deleteItemBtn,itemDataTable"
 					oncomplete="delItemDlg.hide();" />

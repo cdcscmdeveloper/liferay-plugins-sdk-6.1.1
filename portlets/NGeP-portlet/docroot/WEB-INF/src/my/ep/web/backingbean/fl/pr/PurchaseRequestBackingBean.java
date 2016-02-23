@@ -589,7 +589,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			return;
 		}
 		FlDeliveryAddress deliveryAddr = null;
-		int i = 0;
+		//int i = 0;
 		for (PmAddressType addrType : getManagedBean().getSelectedPmDelAddrList()) {
 			//Validate to eliminate duplicate address. 
 			boolean isAddressContains = isDeliveryAddressContains(addrType,
@@ -605,10 +605,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				deliveryAddr.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 				deliveryAddr.setPmUom(getManagedBean().getFulfilmentRequest().getPmUom());
 				deliveryAddr.setDeliveryTerm(getManagedBean().getFulfilmentRequest().getDeliveryTerm());
-				if(i==0) {
+				/*if(i==0) {
 					getManagedBean().setSelectedDelAddr(deliveryAddr);
 				}
-				i++;
+				i++;*/
 				if (null == getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 					getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 				}
@@ -622,6 +622,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		}
+		sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
+		getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		selectAddrEvent();
 	}
