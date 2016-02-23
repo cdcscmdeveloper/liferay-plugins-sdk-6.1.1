@@ -484,7 +484,7 @@ public class SmUpdateGstInfoBackingBean extends
 	 * Validate gst registration no, effective date and end date entered
 	 */
 	private void validateDeclare() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		SmGstSupplier gst = getManagedBean().getHqGstSupplier();
 		if (gst.getGstEndDate() != null
 				&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
@@ -500,7 +500,7 @@ public class SmUpdateGstInfoBackingBean extends
 	/**
 	 * Validate branch gst registration no, effective date and end date entered
 	 */
-	private void validateBranch(StringBuffer sb) {
+	private void validateBranch(StringBuilder sb) {
 		if (getManagedBean().getBranches() != null) {
 			for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 				if (brVO.getGst() != null && brVO.getGst().getIsCurrent()) {

@@ -355,7 +355,7 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			}
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		String desc = null;
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			desc = SmCommonUtil.getMessage("lbl.sm.categorycode.note.normal",
@@ -596,7 +596,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setOverLappedCategoryMsg("");
 		getManagedBean().setOverLappedCategoryExists(false);
 		int i = 0;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(SmCommonUtil.getMessage("lbl.sm.category.overlappingMsg",
 				null));
 		sb.append("<table>");
