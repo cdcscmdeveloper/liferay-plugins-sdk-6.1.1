@@ -90,7 +90,7 @@
 						<table>
 							<tr>
 								<td><p:selectOneRadio
-										disabled="#{!specificationBackingBean.managedBean.scQt.techEvaluationReq or specificationBackingBean.managedBean.specItemWeightageRequired}"
+										disabled="#{!specificationBackingBean.managedBean.qt.techEvaluationReq or specificationBackingBean.managedBean.specItemWeightageRequired}"
 										value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
 										<f:selectItems
 											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
