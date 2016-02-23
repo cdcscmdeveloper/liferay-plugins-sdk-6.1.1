@@ -22,7 +22,7 @@
 
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.cm.supp.name']}" /></td>
 								<td><p:inputText size="50"
 										value="#{cmTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
 							</tr>
@@ -78,13 +78,19 @@
 				width="100%" rows="10">
 
 				<ac:paginator for="supplierItemID"></ac:paginator>
+				<p:column>
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.supp.name']}"/>
+					</f:facet>
+				#{cmObject.getSmSupplier().getCompanyName()}
+				</p:column>
 
-				<p:column width="15%">
+				<!-- <p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					</f:facet>
 				<ac:labelDateTime value="#{cmObject.createdDate}" /> 
-				</p:column>
+				</p:column> -->
 				<p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.cm.item.code']}"/>
@@ -97,18 +103,13 @@
 					</f:facet>
 				#{cmObject.getCmItem().getItemName()} 
 				</p:column>
-<!-- 				<p:column> -->
-<!-- 					<f:facet name="header"> -->
-<!-- 					Status -->
-<!-- 				</f:facet> -->
-<!-- 				#{cmTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.catalogueItemStatus,cmObject.itemStatus)} -->
-<!-- 				</p:column> -->
-   				<p:column>
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.supplier.name']}"/>
-					</f:facet>
-				#{cmObject.getSmSupplier().getCompanyName()}
-				</p:column>
+ 				<p:column> 
+					<f:facet name="header"> 
+					<h:outputText value="#{lbl['lbl.cm.status.name']}"/> 
+				</f:facet> 
+ 				#{cmTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.getCatalogueItemStatus(),cmObject.itemStatus)}
+				</p:column> 
+   				
 				<p:column width="5%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.action']}"/>
