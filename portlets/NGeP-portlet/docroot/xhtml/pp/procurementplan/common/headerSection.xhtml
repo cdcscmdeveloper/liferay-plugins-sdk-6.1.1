@@ -38,7 +38,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 								action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.PROCUREMENT_PLAN,pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planNo,pPlanBackingBean.managedBean.selectedPlan.planId,pPlanBackingBean.managedBean.selectedPlan.status.statusId)}"
 								immediate="true" />&#160;&#160;
 					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-						<p:fileDownload value="#{pPlanBackingBean.generateReport(plan)}" />
+						<p:fileDownload value="#{pPlanBackingBean.generateReport(pPlanBackingBean.managedBean.selectedPlan)}" />
 					</p:commandLink>
 						</td>		
 				</c:if>
