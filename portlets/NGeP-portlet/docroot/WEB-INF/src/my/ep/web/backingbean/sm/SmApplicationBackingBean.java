@@ -6220,6 +6220,11 @@ public class SmApplicationBackingBean extends
 	public void viewSignatories(SmSupplierBank signAcctBean) {
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
+	
+	public void viewMyIdentityResponse(SmPersonnel per){
+		getManagedBean().setSelectedShareHolder(per);
+		RequestContext.getCurrentInstance().execute("myIdentityDlg.show()");
+	}
 
 	/**
 	 * Add or create a new SmSupplier bank object
