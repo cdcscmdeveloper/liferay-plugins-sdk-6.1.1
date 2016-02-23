@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.pp.procurementplan;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -80,6 +81,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.pp.procurementplan.ProcurementPlanManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -269,6 +271,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public String redirectToMaintainPlan(Long id) throws Exception{
 		log.info("redirectToMaintainPlan");
 		this.resetManagedBean();
+		this.getManagedBean().setViewMode(true);
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
 		if(id!=null && id>0){
@@ -465,6 +468,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setBpmStatusId(null);
 		this.getManagedBean().setInvitationYear("");
 		this.getManagedBean().setApprovedPlan(false);
+		this.getManagedBean().setViewMode(false);
 		
 		//EP
 		this.getManagedBean().setEpItemsB(null);
@@ -1948,11 +1952,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan));
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 			resDTO = reqSO.savePlan(reqDTO);
-			docType = 
-					ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode()) 
-					? ParameterConst.DOCTYPE_PLAN_PROCUREMENT
-					: ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
-					
+			docType = retrievePlanDocType(ppPlan);
 					
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully"); 
@@ -3762,6 +3762,46 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		return items;
+	}
+	
+	/**
+	 * Generate report based on doc type.
+	 *
+	 * @param docType the doc type
+	 * @param docNo the doc no
+	 */
+	public void generateReport(PpPlan plan) {
+		
+		Map<String, String> paramMap = new HashMap<String, String>();
+		//http://ngepdevrps01.ngep.com:5901/reports/rwservlet?ngepdev&report=PP_DETAIL_PROCUREMENT.jsp&PUSER=244074&PPTJ=263725&PYEAR=2016&PMINIS=my.ep.persistence.entity.pm.authorization.PmOrgProfile@282f131b&PREPORTID=PP_002&destype=cache&desformat=pdf
+		//PPTJ=263725&PMINIS=231618&PYEAR=2016&PREPORTID=PP_002
+//		paramMap.put("PREPORTID", "PP_002");
+		paramMap.put("PYEAR", plan.getPlanYear()+"");
+		paramMap.put("PPTJ", plan.getOrgProfile().getOrgProfileId()+"");
+//		paramMap.put("PMINIS", retrieveMinistryOrgProfile(plan.getOrgProfile().getOrgProfileId()).getOrgProfileId()+"");
+//		paramMap.put(ReportConst.PARAM_DOC_NO, docNo);
+		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		String reportName = null;
+		if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(plan.getPlanType().getParameterCode())) {
+			reportName = ReportConst.PP_NGEP_PP_DETAIL_PROCUREMENT;
+		} else if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(plan.getPlanType().getParameterCode())) {
+			reportName = ReportConst.PP_NGEP_PP_DETAIL_EXPENDITURE;
+		} 
+		if(reportName!=null) {
+			try {
+				generateReport(reportName, paramMap);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new EpException("Report is not available for this document.");
+		}
+	}
+	
+	public String retrievePlanDocType(PpPlan plan){
+		return ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode()) 
+		? ParameterConst.DOCTYPE_PLAN_PROCUREMENT
+		: ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
 	}
 
 }
