@@ -732,7 +732,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractZoneSO.class);
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 		FlDeliveryAddress deliveryAddr = null;
-		int i = 0;
+		//int i = 0;
 		for (PmAddressType addrType : getManagedBean().getSelectedAddrTypeList()) {
 			//Validate to eliminate duplicate address. 
 			boolean isAddressContains = isDeliveryAddressContains(addrType,getManagedBean().getFlRequest().getFlDeliveryAddresses());
@@ -770,10 +770,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				
 				deliveryAddr.setPmAddress(addrType.getPmAddress());
-				if(i==0) {
+				/*if(i==0) {
 					getManagedBean().setSelectedDelAddr(deliveryAddr);
 				}
-				i++;
+				i++;*/
 				if (null == getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 					getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 				}
@@ -786,6 +786,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}	
 		}
+		sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+		getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		selectAddrEvent();
 	}
