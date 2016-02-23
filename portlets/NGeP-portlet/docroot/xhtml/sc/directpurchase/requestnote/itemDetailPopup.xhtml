@@ -86,7 +86,7 @@
 						<table>
 							<tr>
 								<td><p:inputText size="25" styleClass="ppRightBtn"
-										disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
+										disabled="#{isViewOnly}"
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
 										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 										value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.quantity}">
@@ -114,7 +114,7 @@
 							value="#{lbl['lbl.sc.request.note.price.type']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><h:selectOneMenu id="priceType" style="width:217px;"
-							disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
+							disabled="#{isViewOnly}"
 							label="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
 							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.priceTypeId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -142,7 +142,7 @@
 
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton id="okBtn"
-					rendered="#{!requestNoteBackingBean.managedBean.viewOnly}"
+					rendered="#{!isViewOnly}"
 					value="#{lbl['lbl.sc.ok']}" process="@this itemDetailsId"
 					update="itemDetailsId, @([id$=requestNoteItemDetails])"
 					partialSubmit="true"
