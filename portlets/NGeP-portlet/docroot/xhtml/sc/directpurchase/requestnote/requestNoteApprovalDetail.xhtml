@@ -14,12 +14,12 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.approver.instuction']}" />
 		
-		<table border="0" cellspacing="0" cellpadding="0" width="202px">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td style="width: 19%;">  <h:outputLabel
+				<td style="width: 202px;">  <h:outputLabel
 						value="#{lbl['lbl.sc.ptj.approver.group']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /> </td>
-				<td><p:selectOneMenu style="width:300px; margin-bottom:5px;"
+				<td><p:selectOneMenu style="width:360px; margin-bottom:5px;"
 				        id="appGroupId"
 				        label="#{lbl['lbl.sc.ptj.approver.group']}"
 						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
@@ -39,7 +39,7 @@
 				        label="#{lbl['lbl.sc.approverName']}"
 						disabled="#{isPendingApprovalStatus or requestNoteBackingBean.managedBean.viewOnly}"
 						value="#{requestNoteBackingBean.managedBean.selectedApproverId}"
-						style="width:300px;">
+						style="width:360px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
 							value="#{requestNoteBackingBean.managedBean.approverList}"
