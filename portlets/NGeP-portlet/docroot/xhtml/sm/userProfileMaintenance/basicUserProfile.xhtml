@@ -187,9 +187,9 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.phone']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td>
-						<ac:phone id="basicBUPhone" isMobile="false" label="#{lbl['lbl.sm.userprofile.phone']}"
+						<ac:phone id="basicBUPhone" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneCountry}" 
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneArea}" 
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}"  
@@ -197,10 +197,10 @@
 					</td>
 
 					<td><p:outputLabel
-							value="#{lbl['lbl.sm.phoneno']}" /> <p:outputLabel
+							value="#{lbl['lbl.sm.mobileNo']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-						<ac:phone id="basicBUMobile" label="#{lbl['lbl.sm.userprofile.mobile']}"
+						<ac:phone id="basicBUMobile" label="#{lbl['lbl.sm.mobileNo']}"
 							countryCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileCountry}" 
 							areaCode="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileArea}" 
 							number="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}" 
