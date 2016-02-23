@@ -110,7 +110,7 @@
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-					partialSubmit="true" immediate="true"
+					partialSubmit="true" 
 					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					action="#{purchaseRequestBackingBean.removeAddRow()}"
 					oncomplete="delAddrDlg.hide();" />
