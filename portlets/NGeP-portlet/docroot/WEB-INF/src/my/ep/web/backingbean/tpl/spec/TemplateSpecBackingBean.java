@@ -552,7 +552,11 @@ public class TemplateSpecBackingBean extends
 	public SelectItem[] getFulfilmentTypeDropdownList(TplSpecMaster specMaster) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> filteredList = new ArrayList<String>();
-		filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+		
+		// For Pid SQ ,No periodic schedule
+		if(!getManagedBean().isPidSQ()){
+			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+		}
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 
 		searchBean.getDataFilterBeans().add(
