@@ -5214,12 +5214,7 @@ public class SpecificationBackingBean extends
 				} else {
 					scQt.setFulfilmentType(new PmParameter());
 				}
-				if (null == scQt.getPmProcurementCategory()) {
-					scQt.setPmProcurementCategory(new PmParameter());
-				}
-				if (null == scQt.getProcurementTypeCatId()) {
-					scQt.setProcurementTypeCatId(new PmParameter());
-				}
+				
 				this.getManagedBean().setPanelChange(scQt.isPanel());
 				this.getManagedBean().setQt(scQt);
 				if (scQt.isZonal()
@@ -11736,6 +11731,12 @@ public class SpecificationBackingBean extends
 			}
 			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
 					QTConstants.DOCTYPE_PREPARE_SPEC);
+			if(null == this.getManagedBean().getQt().getContractType()){
+				this.getManagedBean().getQt().setContractType(new PmParameter());
+			}
+			if(null == this.getManagedBean().getQt().getItemGroup()){
+				this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
+			}
 			if (null == this.getManagedBean().getQt().getFulfilmentType()) {
 
 				this.getManagedBean().getQt()
