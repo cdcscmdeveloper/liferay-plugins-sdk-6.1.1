@@ -734,7 +734,7 @@ public class TemplateSpecHelper {
 				.equals(templateSpecBean.getContentType())) {
 			List<TplSpecAnswer> specAnswers = null;
 
-			if (isPriceTypeStandard(specQuestion
+			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType()) && isPriceTypeStandard(specQuestion
 					.getClPriceTypeCode().getParameterCode())) {
 				TplSpecAnswer specAnswer = createNewSpecAnswer(
 						templateSpecBean, specQuestion, null, null);
@@ -823,5 +823,49 @@ public class TemplateSpecHelper {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * copy scoring and estimated cost during technical specification complete action.
+	 * 
+	 * @param newSpecMaster
+	 * 		the new specification master instance
+	 * @param oldSpecMaster
+	 * 		the old specification master instance
+	 */
+	public void copySpecDetails(TplSpecMaster newSpecMaster, TplSpecMaster oldSpecMaster) {
+		if (newSpecMaster != null && oldSpecMaster != null && 
+				newSpecMaster.getTplSpecQuestions() != null && oldSpecMaster.getTplSpecQuestions() != null &&
+				newSpecMaster.getTplSpecQuestions().size() > 0 && oldSpecMaster.getTplSpecQuestions().size() > 0) {
+			
+			List<TplSpecQuestion> oldSpecQuestions = new ArrayList<TplSpecQuestion>(oldSpecMaster.getTplSpecQuestions());
+			for (TplSpecQuestion newSpecQuestion : newSpecMaster.getTplSpecQuestions()) {
+				for (TplSpecQuestion oldSpecQuestion : oldSpecQuestions) {
+					if (newSpecQuestion.getClItem() != null && newSpecQuestion.getClItem().equals(oldSpecQuestion.getClItem())) {
+						copySpecQuestionDetails(newSpecQuestion, oldSpecQuestion);
+						oldSpecQuestions.remove(oldSpecQuestion);
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	private void copySpecQuestionDetails(TplSpecQuestion newSpecQuestion, TplSpecQuestion oldSpecQuestion) {
+		PmParameter scoreTypeCode = oldSpecQuestion.getScoreTypeCode();
+		
+		newSpecQuestion.setAnswerTypeCode(oldSpecQuestion.getAnswerTypeCode());
+		newSpecQuestion.setScoreTypeCode(scoreTypeCode);
+		newSpecQuestion.setMaxScore(oldSpecQuestion.getMaxScore());
+		newSpecQuestion.setWeightageReq(oldSpecQuestion.isWeightageReq());
+		newSpecQuestion.setWeightage(oldSpecQuestion.getWeightage());
+		
+		// copy tplSpecScorings
+		if (ParameterConst.SCORE_TYPE_AUTO.equals(scoreTypeCode.getParameterCode())) {
+			cloneTplSpecScoring(newSpecQuestion, oldSpecQuestion.getTplSpecScorings());
+		}
+		
+		// copy tplSpecEstimations
+		cloneTplSpecEstimation(newSpecQuestion, oldSpecQuestion.getTplSpecEstimations());
 	}
 }
