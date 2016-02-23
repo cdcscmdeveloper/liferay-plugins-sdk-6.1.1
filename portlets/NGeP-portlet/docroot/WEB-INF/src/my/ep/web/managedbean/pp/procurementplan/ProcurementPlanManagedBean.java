@@ -47,6 +47,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isSearch;
 	private boolean backAllow;
 	private boolean approvedPlan;
+	private boolean viewMode;
 	
 	private PpWorkflowStatus ppWorkflowStatus;
 	private String bpmStatusCreator;
@@ -1011,6 +1012,20 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 */
 	public void setDisabledPTJLov(boolean isDisabledPTJLov) {
 		this.isDisabledPTJLov = isDisabledPTJLov;
+	}
+
+	/**
+	 * @return the viewMode
+	 */
+	public boolean isViewMode() {
+		return viewMode;
+	}
+
+	/**
+	 * @param viewMode the viewMode to set
+	 */
+	public void setViewMode(boolean viewMode) {
+		this.viewMode = viewMode;
 	}
 
 }

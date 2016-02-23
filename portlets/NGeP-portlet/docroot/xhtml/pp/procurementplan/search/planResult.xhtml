@@ -13,10 +13,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<p:dataTable id="dtPlanResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" styleClass="ppTablePlanItem" rows="10"
 			rowIndexVar="rowIndex"  lazy="true" var="plan" value="#{pPlanBackingBean.ppPlanDataModel}">
 			<ac:paginator for="dtPlanResult" />
-			 <p:column headerText="#{lbl['lbl.pp.kumpulan.ptj']}" style="white-space:normal; width:25%;">  
+			 <p:column headerText="#{lbl['lbl.pp.kumpulan.ptj']}" style="white-space:normal; width:20%;">  
 	           	#{pPlanBackingBean.retrieveJabatanByOrgProfileId(plan.orgProfile.orgProfileId)}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pp.ptj']}" style="white-space:normal;  width:25%;" >  
+	        <p:column headerText="#{lbl['lbl.pp.ptj']}" style="white-space:normal;  width:20%;" >  
 	            #{plan.orgProfile!=null ? plan.orgProfile.pmOrgValidity.orgName : '-'}
 	        </p:column>
 	         <p:column headerText="#{lbl['lbl.pp.type']}">  
@@ -35,9 +35,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(plan.status.statusId) : pPlanBackingBean.getDefaultStatusDesc(plan.planType)}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pm.action']}" style="text-align:center;">  
+	        	<p:menuButton value="#{lbl['lbl.btn.option']}">
+						<p:menuitem value="#{plan.updatable ? lbl['lbl.btn.update'] : lbl['lbl.btn.view']}"  
+							     icon="ui-icon-view"
+							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}"/>
+						<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"								 
+								 icon="ui-icon-print" 
+								 action="#{pPlanBackingBean.generateReport(plan)}" />	
+				</p:menuButton>
+			<ui:remove>						
       		   <p:commandLink action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}">
 					<p:graphicImage value="#{!plan.updatable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
+				</ui:remove>
 	        </p:column>  
 	   	</p:dataTable> 
 	   	<br/>
