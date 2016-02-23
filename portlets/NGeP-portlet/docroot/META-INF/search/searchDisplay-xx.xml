@@ -1680,5 +1680,29 @@
 			</list>
 		</property>
 	</bean>
+	
+ <bean id="CT_CIRCULAR_PANEL" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="circularVerId" />
+
+	<property name="daoClass"
+		value="my.ep.persistence.dao.ct.circular.CtCircularVerDAO" />
+	<property name="searchMethod" value="findActiveCircularVer" />
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+				<property name="columnName" value="circularNo" />
+				<property name="bundleFile"
+					value="messageprovider-config.bundles.labels.labels" />
+				<property name="bundleKey" value="lbl.sc.circular.no" />
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+				<property name="columnName" value="name" />
+				<property name="bundleFile"
+					value="messageprovider-config.bundles.labels.labels" />
+				<property name="bundleKey" value="lbl.sc.circular.name" />
+			</bean>
+		</list>
+	</property>
+</bean>
 
 </beans>
