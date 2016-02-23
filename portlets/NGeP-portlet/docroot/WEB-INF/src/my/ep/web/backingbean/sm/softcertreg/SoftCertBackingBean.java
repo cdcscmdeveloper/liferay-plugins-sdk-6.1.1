@@ -918,7 +918,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * Validate uploaded supporting document
 	 */
 	private void validateUploadSuppDoc() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (getManagedBean().getSoftcertUploadSuppDocList() != null
 				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
 			for (SoftcertUploadSuppDocVO docVO : getManagedBean()

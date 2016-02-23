@@ -528,7 +528,7 @@ public class CommonApplBackingBean extends
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());
 			String suppRemarks = "";
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			if (resDTO != null && remResDTO.getRemarksList() != null
 					&& !remResDTO.getRemarksList().isEmpty()) {
 

@@ -330,7 +330,7 @@ public class SmApplicationUtil {
 	public static boolean validateSupportingDocs(List<SmApplSupportDoc> suppDocs) {
 		boolean validSupportDocs = true;
 		int i = 0;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("<br/>");
 		for (SmApplSupportDoc doc : suppDocs) {
 			if (doc.getPmDocument() != null
@@ -1966,7 +1966,7 @@ public class SmApplicationUtil {
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)
 				&& managedBean.getSmapplShareHolders() != null) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			boolean validShrHldrsCap = true;
 			int i = 0;
 			BigDecimal perShrSum = new BigDecimal(0);
@@ -2509,7 +2509,7 @@ public class SmApplicationUtil {
 	 */
 	public static String getSmRemarksByDocTypeAndId(String docType, Long docId) {
 		SmRemaksResDTO resDTO = getRemarksByDoc(docType, docId);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (resDTO != null && resDTO.getRemarksList() != null
 				&& !resDTO.getRemarksList().isEmpty()) {
 			sb.append(resDTO.getRemarksList().get(0).getRemark());
@@ -2602,7 +2602,7 @@ public class SmApplicationUtil {
 	 * @return String
 	 */
 	public static String getOverlappedCategoryMsg(Long supplierId, Long applId) {
-		StringBuffer msg = new StringBuffer();
+		StringBuilder msg = new StringBuilder();
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(supplierId);
 		reqDTO.setApplId(applId);
@@ -2690,7 +2690,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean, int currentTab) {
 		validSave = true;
 		int i = 0;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (SmApplSupportDoc doc : managedBean.getSmAppl()
 				.getSmApplSupportDocs()) {
 			if (doc.getVerifiedFlg() == null) {
@@ -3456,7 +3456,7 @@ public class SmApplicationUtil {
 							IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSupplierId(supplierId);
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			int i = 0;
 			sb.append(SmCommonUtil.getMessage(
 					"lbl.sm.category.pendingTransaction", null));

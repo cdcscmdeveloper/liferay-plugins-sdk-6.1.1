@@ -231,7 +231,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 					.getSelectedCategories(), getManagedBean().getSmSupplier()
 					.getSupplierId());
 			Boolean invalidRemarks = false;
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append(SmCommonUtil.getMessage("lbl.sm.category.deleteRemarks",
 					null));
 			int i = 0;
