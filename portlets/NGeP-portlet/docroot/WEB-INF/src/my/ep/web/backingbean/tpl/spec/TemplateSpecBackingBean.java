@@ -1507,10 +1507,6 @@ public class TemplateSpecBackingBean extends
 			tplSpecMaster.getSpecZoneQtiesToDelete().addAll(tplSpecZoneQties);
 		}
 		
-		if (oriSpecQuestion.getTplSpecZoneQties() != null && oriSpecQuestion.getTplSpecZoneQties().size() > 0) {
-			tplSpecZoneQties.addAll(oriSpecQuestion.getTplSpecZoneQties());
-		}
-		
 		selectedSpecQuestion.setTplSpecZoneQties(oriSpecQuestion.getTplSpecZoneQties());
 
 		templateSpecBean.setSelectedSpecQuestion(null);
