@@ -3556,7 +3556,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param statusId the status id
 	 * @return the purchase in default expired message
 	 */
-	private void getPurchaseInDefaultExpiredMessage(long statusId){
+	private void getPurchaseInDefaultExpiredMessage(Long statusId){
 		if(DPStatusConstants.PID_EXPIRED.equals(statusId)){
 			Locale locale = new FacesScopes().getUserLocale();
 			FacesContext.getCurrentInstance().addMessage(
