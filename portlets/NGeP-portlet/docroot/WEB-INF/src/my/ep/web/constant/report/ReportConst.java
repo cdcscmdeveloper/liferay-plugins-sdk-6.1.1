@@ -280,6 +280,9 @@ public class ReportConst {
 	public static final String PP_EXPEND_MINISTRY_BY_GOSO_VOT_LEVEL_RPT_VAL = "PP_007";
 	public static final String PP_EXPENDITURE_BPK_LEVEL_RPT_VAL = "PP_008";
 	public static final String PP_EXPENDITURE_UNPLANNED_LEVEL_RPT_VAL = "PP_009";
+	public static final String PP_NGEP_PP_DETAIL_PROCUREMENT = "PP_DETAIL_PROCUREMENT.jsp";
+	public static final String PP_NGEP_PP_DETAIL_EXPENDITURE = "PP_DETAIL_EXPENDITURE.jsp";
+	
 	// PM
 	public static final String PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL = "PM_001";
 	public static final String PM_LIST_OF_ORGANIZATION_RPT_VAL = "PM_002";
