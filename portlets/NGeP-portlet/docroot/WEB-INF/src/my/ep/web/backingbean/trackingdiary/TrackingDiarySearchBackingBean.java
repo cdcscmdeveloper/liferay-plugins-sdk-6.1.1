@@ -85,6 +85,12 @@ public class TrackingDiarySearchBackingBean extends BaseBackingBean<TrackingDiar
 				
 				BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);			
 				searchBean.getDataFilterBeans().add(multiFilterBean1);
+			}else if(getManagedBean().getModuleCode().equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN)) {
+				SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocType());
+				SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getDocId());
+				
+				BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);			
+				searchBean.getDataFilterBeans().add(multiFilterBean1);
 			}
 			
 			reqDTO.setSearchBean(searchBean);
