@@ -618,6 +618,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			return null;
 		}
 	}
+	
+	/**
+	 * Get reason description by reason.
+	 * 
+	 * @param reason
+	 *            the PmReason instance.
+	 * @return reason description
+	 */
+	public PmReasonDesc getReasonDescByReasonId(Long reasonId) {
+		if (reasonId != null) {
+			return ReasonHelper.getInstance().getReasonDescById(reasonId);
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * Get Parameter description by type and code.
@@ -646,6 +661,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			String parameterCode) {
 		return ParameterHelper.getInstance().getParameterByTypeAndCode(
 				parameterType, parameterCode);
+	}
+	
+	/**
+	 * Get parameter descs by parameter type and search bean for
+	 * dropdown.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return List<PmParameterDesc> 
+	 */
+	public List<PmParameterDesc> getParameterDescsByTypeAndSearchBean(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+	List<PmParameterDesc> parameterDescs = ParameterHelper
+			.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+		return parameterDescs;
 	}
 
 	/**
