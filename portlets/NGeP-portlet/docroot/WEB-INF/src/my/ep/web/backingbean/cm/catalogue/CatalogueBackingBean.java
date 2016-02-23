@@ -769,6 +769,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					}
 
 				}
+				
+				
+				
+				reqDTO.setUserId(pmUser.getUserId());
+
+				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+
+				statusReqDTO.setStatusId(CmConst.DRAFT);
+
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				reqDTO.setPmStatus(statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus());
+				reqDTO.setRoleCode(CmApplicationUtil.getUserRoleValue());
+				
 				CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
 				if(!resDTO.isSuccessful()) {					
 					throw new EpException(MessageConst.ERROR_715016);
