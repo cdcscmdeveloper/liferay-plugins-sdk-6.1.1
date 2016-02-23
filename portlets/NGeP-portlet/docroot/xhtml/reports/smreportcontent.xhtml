@@ -1886,8 +1886,8 @@
 									itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}"
 									itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
+								<p:ajax event="change" partialSubmit="true" update="@form"
+									listener="#{reportBackingBean.getRgegistartionTypeDates}" />
 							</p:selectOneMenu>
 						</c:if>
 
@@ -2122,7 +2122,7 @@
 									<tr>
 										<td><p:selectOneMenu
 												label="#{lbl['lbl.rpt.supportingDocumentMode']}"
-												id="smSupportingDocMode" 
+												id="smSupportingDocMode"
 												value="#{reportBackingBean.smSupportingDocumentMode}"
 												style="width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
@@ -2848,10 +2848,10 @@
 							value="#{lbl['lbl.rpt.mofRegNoFrom']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></TD>
 
-					<TD class="column8CheckClass"><p:inputText label="#{lbl['lbl.rpt.mofRegNoFrom']}"
-							id="smMofRegNoFrom" maxlength="16"
-							value="#{reportBackingBean.smMofRegNoFrom}" required="true"
-							style="width:289px;">
+					<TD class="column8CheckClass"><p:inputText
+							label="#{lbl['lbl.rpt.mofRegNoFrom']}" id="smMofRegNoFrom"
+							maxlength="16" value="#{reportBackingBean.smMofRegNoFrom}"
+							required="true" style="width:289px;">
 							<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 						</p:inputText></TD>
 					<TD><p:message id="smMofRegNoFromMsg" for="smMofRegNoFrom"
@@ -3612,6 +3612,16 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smMOFRegisteredDateView}">
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.mofregistereddatefrom']}" /></TD>
+					</c:if>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.smBasicRegisteredDateView}">
+						<TD class="columnGenClass"><p:outputLabel
+								value="#{lbl['lbl.rpt.registereddatefrom']}" /></TD>
+					</c:if>
+					<c:if
+						test="#{reportBackingBean.managedBean.rptGenBean.smAllRegisteredDateView}">
+						<TD class="columnGenClass"><p:outputLabel
+								value="#{lbl['lbl.rpt.allregistereddatefrom']}" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smLCMOFRegisteredDateView}">
