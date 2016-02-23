@@ -1091,6 +1091,12 @@ public class ReportsGenerateBean {
 
 	/** The sm mof registered date view. */
 	private boolean smMOFRegisteredDateView = false;
+	
+	/** The sm basic registered date view. */
+	private boolean smBasicRegisteredDateView = false;
+	
+	/** The sm all registered date view. */
+	private boolean smAllRegisteredDateView = false;
 
 	/** The sm all supplier type view. */
 	private boolean smAllSupplierTypeView = false;
@@ -3752,6 +3758,8 @@ public class ReportsGenerateBean {
 
 	/** The pp ptj view. */
 	private boolean ppPTJView = false;
+	
+	private boolean dummyValue=false;
 
 	/** The pp pega wai pengawal view. */
 	private boolean ppPegaWaiPengawalView = false;
@@ -19586,5 +19594,57 @@ public class ReportsGenerateBean {
 	 */
 	public void setFlContractReqView(boolean flContractReqView) {
 		this.flContractReqView = flContractReqView;
+	}
+
+	/**
+	 * Checks if is sm basic registered date view.
+	 * 
+	 * @return the smBasicRegisteredDateView
+	 */
+	public boolean isSmBasicRegisteredDateView() {
+		return smBasicRegisteredDateView;
+	}
+
+	/**
+	 * Sets the sm basic registered date view.
+	 * 
+	 * @param smBasicRegisteredDateView
+	 *            the smBasicRegisteredDateView to set
+	 */
+	public void setSmBasicRegisteredDateView(boolean smBasicRegisteredDateView) {
+		this.smBasicRegisteredDateView = smBasicRegisteredDateView;
+	}
+
+	/**
+	 * Checks if is sm all registered date view.
+	 * 
+	 * @return the smAllRegisteredDateView
+	 */
+	public boolean isSmAllRegisteredDateView() {
+		return smAllRegisteredDateView;
+	}
+
+	/**
+	 * Sets the sm all registered date view.
+	 * 
+	 * @param smAllRegisteredDateView
+	 *            the smAllRegisteredDateView to set
+	 */
+	public void setSmAllRegisteredDateView(boolean smAllRegisteredDateView) {
+		this.smAllRegisteredDateView = smAllRegisteredDateView;
+	}
+
+	/**
+	 * @return the dummyValue
+	 */
+	public boolean isDummyValue() {
+		return dummyValue;
+	}
+
+	/**
+	 * @param dummyValue the dummyValue to set
+	 */
+	public void setDummyValue(boolean dummyValue) {
+		this.dummyValue = dummyValue;
 	}
 }
