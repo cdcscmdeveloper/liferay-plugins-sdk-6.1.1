@@ -467,6 +467,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl().getSmStaffTotals() == null) {
 			getManagedBean().getSmAppl().setSmStaffTotals(
 					new ArrayList<SmStaffTotal>());
+		} else {
+			getManagedBean().getSmAppl().setSmStaffTotals(
+					getStaffTotalByRevNo());
 		}
 
 		// officeFacilityTypeFormViewOnly
@@ -2112,6 +2115,48 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		return activeCompanyBasic;
+	}
+
+	private List<SmStaffTotal> getStaffTotalByRevNo() {
+		List<SmStaffTotal> mainList = getManagedBean().getSmAppl()
+				.getSmStaffTotals();
+		List<SmStaffTotal> objList = new ArrayList<SmStaffTotal>();
+		SmStaffTotal obj = null;
+
+		if (mainList != null && !mainList.isEmpty()) {
+			if (getManagedBean().isViewApplicationHistory()) {
+				// appl history load by supplier role for revNo=1
+				if (getManagedBean().isSupplierUser()) {
+					for (SmStaffTotal param : mainList) {
+						obj = SmCommonUtil.getStaffTotalByRevNoAndCategory(
+								mainList, param, 1);
+						if (obj != null && !objList.contains(obj)) {
+							objList.add(obj);
+						}
+					}
+				}
+				// appl history load by po/approver role for revNo=2
+				else {
+					for (SmStaffTotal param : mainList) {
+						obj = SmCommonUtil.getStaffTotalByRevNoAndCategory(
+								mainList, param, 2);
+						if (obj != null && !objList.contains(obj)) {
+							objList.add(obj);
+						}
+					}
+				}
+			} else {
+				// supplier profile direct load to revNo=2
+				for (SmStaffTotal param : mainList) {
+					obj = SmCommonUtil.getStaffTotalByRevNoAndCategory(
+							mainList, param, 2);
+					if (obj != null && !objList.contains(obj)) {
+						objList.add(obj);
+					}
+				}
+			}
+		}
+		return objList;
 	}
 
 	private List<SmSupplierBank> getSupplierBankByRevNo() {
