@@ -88,7 +88,7 @@
 					value="#{bidItem.scBidSchedule.endDate}" style="width:92%"
 					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 					label="#{lbl['lbl.sc.bidding.end']}" showOn="button"
-					readonlyInput="true" maxMinute="0"
+					readonlyInput="true" 
 					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
@@ -154,7 +154,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.end']}" /></td>
 
 					<td><p:calendar showOn="button" id="multiSelectEndDateByItem"
-							readonlyInput="true" maxMinute="0"
+							readonlyInput="true" 
 							mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 							maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.endDate}"
