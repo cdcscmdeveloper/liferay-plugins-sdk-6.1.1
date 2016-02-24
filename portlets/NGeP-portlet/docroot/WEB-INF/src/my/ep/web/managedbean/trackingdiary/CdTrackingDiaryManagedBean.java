@@ -51,24 +51,25 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 
 				CodificationReqDTO reqDTO = new CodificationReqDTO();
 				if(getSearchDocumentNoValue()!=null && getSearchDocumentNoValue()!="") {
-					System.out.println("getSearchDocumentNoValue");
-					reqDTO.setExtSearchBean(searchBean);
+					System.out.println("getSearchDocumentNoValue:"+getSearchDocumentNoValue());
+				
 					reqDTO.setDocNo(getSearchDocumentNoValue());
 				}
 				if(getSearchUNSPSCExtensionCodeValue()!=null && getSearchUNSPSCExtensionCodeValue()!="") {
-					System.out.println("getSearchItemCodeValue");
-					reqDTO.setExtSearchBean(searchBean);
-					reqDTO.setUnspscCode(getSearchUNSPSCExtensionCodeValue());
+					System.out.println("getSearchItemCodeValue:"+getSearchUNSPSCExtensionCodeValue());
+					
+					reqDTO.setExtensionCode(getSearchUNSPSCExtensionCodeValue());
 				}
 				if(getSearchSupplierValue()!=null && getSearchSupplierValue()!="") {
 					System.out.println("getSearchSupplierValue");
-					reqDTO.setExtSearchBean(searchBean);
+					
 					reqDTO.setSupplierName(getSearchSupplierValue());
 				}
 //				if(getSearchStatusId()!=null) {
 //					System.out.println("getSearchStatusId"+getSearchStatusId());
 //					reqDTO.setst(getSearchStatusId());
 //				}
+				reqDTO.setExtSearchBean(searchBean);
 				System.out.println("*********b4***********");
 				CodificationResDTO resDTO = unspscSO.retrieveCodificationRequest(reqDTO);
 				System.out.println("*********after***********" + resDTO.getCodificationRequestResultBean().getTotalRecord());
