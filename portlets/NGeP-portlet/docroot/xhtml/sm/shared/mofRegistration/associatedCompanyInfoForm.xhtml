@@ -92,9 +92,10 @@
 					action="#{backingBean.assignNewAssocBean}" partialSubmit="true"
 					process="@this" update=":form:tt:asDisp" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					id="delAssocBtnId" disabled="#{empty backingBean.managedBean.smAppl.smAssociateCompanies}"
 					action="#{backingBean.deleteSelectedAssocCompanies}"
-					partialSubmit="true" process="assocInfPan" update=":form:tt:asoc" 
+					partialSubmit="true" process="assocInfPan" update=":form:tt:asoc,@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 			</div>
@@ -444,8 +445,9 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				id="assocCompPopUpSaveBtn"
 				action="#{backingBean.addOrUpdateAssocToSmAppl}"
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
 				partialSubmit="true" process="asDisp"
-				update=":form:tt:asoc, @([id$=Msg])" />
+				update=":form:tt:asoc, @([id$=Msg]),:#{p:component('delAssocBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelAssocCompanyFuntion}" />

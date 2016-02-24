@@ -96,7 +96,8 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
 					action="#{backingBean.deleteSelectedCompanyExperiences}"
-					update=":form:tt:consDt" partialSubmit="true" process="consInfPan" 
+					id="delConsExpBtnId" disabled="#{empty backingBean.managedBean.smAppl.smCompanyExperiences}"
+					update=":form:tt:consDt,@this" partialSubmit="true" process="consInfPan" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 			</div>
@@ -385,7 +386,8 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				id="consultProjPopUpSaveBtn"
 				actionListener="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
-				update=":form:tt:consDt, @([id$=Msg])" partialSubmit="true"
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
+				update=":form:tt:consDt, @([id$=Msg]),:#{p:component('delConsExpBtnId')}" partialSubmit="true"
 				process="consDialog" />
 
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
