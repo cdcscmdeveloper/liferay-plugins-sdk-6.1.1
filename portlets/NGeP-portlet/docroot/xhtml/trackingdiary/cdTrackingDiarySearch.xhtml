@@ -34,7 +34,7 @@
 										value="#{cdTrackingDiaryBackingBean.managedBean.searchUNSPSCExtensionCodeValue}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="15%"><p:outputLabel value="#{lbl['lbl.td.supplier.name']}" /></td>
+								<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.supp.name']}" /></td>
 								<td width="35%"><p:inputText size="50"
 										value="#{cdTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
 							</tr>
@@ -63,11 +63,17 @@
 
 				<ac:paginator for="unspscTableID"></ac:paginator>
 
-				<p:column width="15%">
+			<!-- 	<p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					</f:facet>
 				<ac:labelDateTime value="#{Obj[0]}" /> 
+				</p:column> -->
+				<p:column width="15%">
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.supp.name']}"/>
+					</f:facet>
+				#{Obj[6]}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
@@ -80,6 +86,12 @@
 					<h:outputText value="#{lbl['lbl.td.unspsc.extension.code']}"/>
 					</f:facet>
 				#{Obj[2]}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.status.name']}"/>
+					</f:facet>
+				#{cdTrackingDiaryBackingBean.getStatusDescById(Obj[7])}
 				</p:column>
 				<p:column width="5%">
 					<f:facet name="header">
