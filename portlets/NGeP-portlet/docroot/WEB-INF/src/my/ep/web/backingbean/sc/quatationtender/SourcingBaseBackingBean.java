@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -59,6 +60,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
+import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -75,6 +78,8 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -2053,4 +2058,41 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return newAddress;
 	}
 	
+	public List<CtPanelItemGroup> getPanelGroupItemsByCirculerVer(CtCircularVer circular) {
+		IPanelGroupItemSO ipanelGroupItemSO;
+		try {
+			PanelGroupItemReqDTO reqDTO = new PanelGroupItemReqDTO();
+			
+			ipanelGroupItemSO = (IPanelGroupItemSO) EpEjbBusinessDelegate
+					.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+							IPanelGroupItemSO.class);
+			if (null != circular) {
+				reqDTO.setCircularVerId(circular.getCircularVerId());
+								
+				PanelGroupItemResDTO resDTO = ipanelGroupItemSO
+						.retrievePanelGroupItemsByCircularVerId(reqDTO);
+				
+						return resDTO.getCtPanelItemGroupList();
+			}
+
+		} finally {
+
+		}
+		return null;
+
+	}
+	
+	
+	
+public List<PmUser> getUsersByRoleCode(String roleCode) {
+		
+		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO userReqDto = new UserReqDTO();
+		userReqDto.setRoleCode(roleCode);
+		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+		return userResDTO.getUserList();
+		
+	}
 }

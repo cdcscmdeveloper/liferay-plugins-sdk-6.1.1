@@ -639,9 +639,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	/** The budget approver name. */
 	private List<PmUser> budgetApproverName; // Drop down Listing for Approver
 												// Names
-	/** The comittee user name. */
-												private List<PmUser> comitteeUserName; // Drop down Listing for Approver
-											// Names
+	
 	/** The budget approval users. */
 											private DualListModel<PmUser> budgetApprovalUsers;
 	
@@ -1161,23 +1159,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 		this.briefingZoneBean = briefingZoneBean;
 	}
 
-	/**
-	 * Gets the comittee user name.
-	 *
-	 * @return the comittee user name
-	 */
-	public List<PmUser> getComitteeUserName() {
-		return comitteeUserName;
-	}
-
-	/**
-	 * Sets the comittee user name.
-	 *
-	 * @param comitteeUserName the new comittee user name
-	 */
-	public void setComitteeUserName(List<PmUser> comitteeUserName) {
-		this.comitteeUserName = comitteeUserName;
-	}
+	
 
 	/**
 	 * Gets the budget approver name.

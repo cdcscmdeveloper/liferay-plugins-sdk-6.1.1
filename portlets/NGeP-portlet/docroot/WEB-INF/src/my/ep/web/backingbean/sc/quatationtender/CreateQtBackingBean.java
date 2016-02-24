@@ -19,7 +19,6 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -32,8 +31,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
-import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -63,11 +60,8 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
-import my.ep.persistence.entity.sc.quationtender.ScCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -81,7 +75,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -118,6 +111,8 @@ public class CreateQtBackingBean extends
 	 */
 	public CreateQtBackingBean() {
 		log.info("inside constructor");
+		
+		log.info("@@@@@@@@@"+this.getManagedBean());
 
 	}
 
@@ -161,26 +156,13 @@ public class CreateQtBackingBean extends
 	}
 	
 	public void circularListSelect(CtCircularVer circular) {
-		IPanelGroupItemSO ipanelGroupItemSO;
-		try {
-			PanelGroupItemReqDTO reqDTO = new PanelGroupItemReqDTO();
+			
 			this.getManagedBean().getQt().setCircularVer(circular);
-			ipanelGroupItemSO = (IPanelGroupItemSO) EpEjbBusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-							IPanelGroupItemSO.class);
-			if (null != circular) {
-				reqDTO.setCircularVerId(circular.getCircularVerId());
-								
-				PanelGroupItemResDTO resDTO = ipanelGroupItemSO
-						.retrievePanelGroupItemsByCircularVerId(reqDTO);
-				this.getManagedBean().setPanelGroupItems(resDTO.getCtPanelItemGroupList());
+			
+				this.getManagedBean().setPanelGroupItems(getPanelGroupItemsByCirculerVer(circular));
 				this.getManagedBean().setCircularType(circular.getDocType());
 						
-			}
-
-		} finally {
-
-		}
+		
 
 	}
 	
@@ -310,7 +292,7 @@ public class CreateQtBackingBean extends
 			scQt.setContractType(new PmParameter());
 			scQt.setCircularVer(new CtCircularVer());
 			
-			getMinistrySpecificationSecretaryList();
+			this.getManagedBean().setMinistrySpecApprovers(getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
 			
 			this.getManagedBean().setQt(scQt);
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
@@ -709,17 +691,6 @@ public void setProcurementMode(ScQt scQt) {
 
 	}
 	
-	private void getMinistrySpecificationSecretaryList() {
-		
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.MSC_SECRETARY.value());
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		List<PmUser> ministrySpecification = userResDTO.getUserList();
-		this.getManagedBean().setComitteeUserName(ministrySpecification);
-	}
 	
 	/**
 	 * Retrieve parameter desc by type.
@@ -732,10 +703,7 @@ public void setProcurementMode(ScQt scQt) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 	}
 	
-	private IParameterSO getParameterSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-	}
+	
 	/**
 	 * Business owner next action.click next button in businessowner panel
 	 * selection.navigate to business owner tabs.

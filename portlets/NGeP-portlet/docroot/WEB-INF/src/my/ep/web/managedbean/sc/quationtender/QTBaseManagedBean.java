@@ -8,6 +8,7 @@ import java.util.List;
 
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -51,6 +52,9 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 	
 	/** The circular exp date. */
 	private Date circularExpDate;
+	
+	// Drop down Listing for Approver
+	private List<PmUser> ministrySpecApprovers; 
 
 	/**
 	 * @return the qt
@@ -167,5 +171,13 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedpanelItems(List<CtPanelItem> selectedpanelItems) {
 		this.selectedpanelItems = selectedpanelItems;
+	}
+
+	public List<PmUser> getMinistrySpecApprovers() {
+		return ministrySpecApprovers;
+	}
+
+	public void setMinistrySpecApprovers(List<PmUser> ministrySpecApprovers) {
+		this.ministrySpecApprovers = ministrySpecApprovers;
 	}
 }
