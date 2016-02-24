@@ -164,11 +164,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	/**
 	 * Pre-loading from Search Plan
 	 */
-	public void preLoading(){
+	public void preLoading(boolean isTrackingDiary){
 		log.info("preLoading");
 		this.getManagedBean().setBackAllow(true);
 		this.resetPageModeFlags();
 		this.resetManagedBean();
+		this.getManagedBean().setTrackingDiary(isTrackingDiary);
 		this.retrievePlanTypeMapper();
 		initialSearchPlan();
 		this.resetPlanSearchBean();
@@ -268,10 +269,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param id
 	 * @return xhtml
 	 */
-	public String redirectToMaintainPlan(Long id) throws Exception{
+	public String redirectToMaintainPlan(Long id,String action,boolean isTrackingDiary) throws Exception{
 		log.info("redirectToMaintainPlan");
 		this.resetManagedBean();
-		this.getManagedBean().setViewMode(true);
+		this.getManagedBean().setBtnValue(action);
+		this.getManagedBean().setTrackingDiary(isTrackingDiary);
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
 		if(id!=null && id>0){
@@ -313,16 +315,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadDefaultButtons");
 		//if status is approved
 		Long statusId = this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
-		if(isRolePlanner() && 
-				(ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
-				|| ProcurementPlanConst.PPE_APPROVED.equals(statusId) 
-				|| this.getManagedBean().getSelectedPlan().isBrandNew())){
-			//BPM buttons
-			String[] outcome = new String[2];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
-			this.getManagedBean().setOutComes(outcome);
-		}else{
+		if(isRolePlanner()){
+			if(this.getManagedBean().getSelectedPlan().isBrandNew()){
+				//BPM buttons
+				String[] outcome = new String[2];
+				outcome[0] = BpmOutcomeConst.BPM_SAVE;
+				outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
+				this.getManagedBean().setOutComes(outcome);
+			}else if(StringUtils.isNotBlank(getManagedBean().getBtnValue()) 
+					&& (ProcurementPlanConst.PPP_APPROVED.equals(statusId) 
+					|| ProcurementPlanConst.PPE_APPROVED.equals(statusId))){
+				if(ProcurementPlanConst.ACTION_UPDATE_BTN.equals(getManagedBean().getBtnValue())){
+					String[] outcome = new String[2];
+					outcome[0] = BpmOutcomeConst.BPM_SAVE;
+					outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
+					this.getManagedBean().setOutComes(outcome);
+				}else{
+					this.getManagedBean().setOutComes(null);
+				}
+			}	
+		}  
+		else{
 			this.getManagedBean().setOutComes(null);
 		}
 	}
@@ -468,7 +481,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setBpmStatusId(null);
 		this.getManagedBean().setInvitationYear("");
 		this.getManagedBean().setApprovedPlan(false);
-		this.getManagedBean().setViewMode(false);
+		this.getManagedBean().setBtnValue(null);
+		this.getManagedBean().setTrackingDiary(false);
 		
 		//EP
 		this.getManagedBean().setEpItemsB(null);
