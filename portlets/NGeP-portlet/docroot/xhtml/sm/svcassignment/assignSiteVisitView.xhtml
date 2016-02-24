@@ -91,7 +91,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.facility.name']}"
-					style="width: 30%;white-space: normal;">
+					style="width: 15%;white-space: normal;">
  					#{svc.smSvTask.smSvAddress.facilityName}
 				</p:column>
 
@@ -101,22 +101,6 @@
 						value="#{svcSiteAssignBackingBean.getSMFullAddress(svc.smSvTask.smSvAddress.smAddress)}"
 						escape="false" style="float : left" />
 				</p:column>
-
-				<ui:remove>
-				<p:column
-					headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
-					style="width: 30%;white-space: normal;">
-					<p:outputLabel value="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"></p:outputLabel>
-					<h:outputText value="*"
-						styleClass="mandatory" />&#160;&#160;
-					<p:calendar id="scheduleDateId" navigator="true" required="true"
-						label="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
-						value="#{svc.smSvTask.scheduleDate}"
-						mindate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-						size="30" showOn="button" />
-				</p:column>
-				</ui:remove>
 				
 				<p:column headerText="Site Visit Officer(s)">
 					<h:outputText value="#{lbl['lbl.sm.siteassign.expected.visiting.date']}" />
@@ -133,9 +117,8 @@
 							var="off" itemLabel="#{off.userName}" itemValue="#{off}"
 							converter="svoListConverter" />
 				</p:column>
-				
-				<p:column width="20%">
-						<p:inputTextarea rows="8" cols="60" style="width:auto;"
+				<p:column width="30%">
+						<p:inputTextarea rows="8" style="width:75%;"
 										maxlength="500" autoResize="false" id="Remark" label="#{lbl['lbl.sm.svc.remark']}"
 										value="#{svc.smSvTask.smRemark.remark}">
 										<f:validateLength maximum="500" />
