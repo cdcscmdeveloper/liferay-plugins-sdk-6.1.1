@@ -1,8 +1,10 @@
 package my.ep.web.integration.common;
 
+import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +18,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
-import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -38,16 +39,16 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
+import my.ep.persistence.entity.pm.common.PmInterfaceLog;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.py.PyBill;
+import my.ep.persistence.entity.py.PyPayment;
+import my.ep.persistence.entity.py.PyPaymentDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sm.SmBill;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmGstSupplier;
-import my.ep.persistence.entity.sm.SmPayment;
-import my.ep.persistence.entity.sm.SmPaymentDtl;
-import my.ep.persistence.entity.sm.SmPaymentResponse;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -85,7 +86,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.log4j.Logger;
 
 /*
-* author @Ganga prasad
+* author @P Ganga prasad
 */
 
 @SuppressWarnings({"rawtypes","unused"})
@@ -227,12 +228,13 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				sstInformation.setRecordType(0);
 				sstInformation.setSSTNumber(scLoa.getLoaNo());
 				sstInformation.setPhysicalSSTNumber(scLoa.getScLoiLoa().getFileNo());
-				sstInformation.setSapVendorCode(scLoa.getScLoiLoa().getSmSupplier().getSapVendorCode());
+//				sstInformation.setSapVendorCode(scLoa.getScLoiLoa().getSmSupplier().getSapVendorCode());
 				sstInformation.setKumpPtj(scLoa.getScLoiLoa().getPmOrgProfile().getPmOrgValidity().getOrgCode());
 				sstInformation.setSstAcknowledgeDate(fileUtility.formatDate(scLoa.getAckDate()));
-				sstInformation.setSstAmountwithGST(scLoa.getLoaAmt().add(scLoa.getGstAmt()));
+				sstInformation.setSstAmountwithGST(scLoa.getLoaAmt().add(scLoa.getGstAmt()!=null ? scLoa.getGstAmt() : new BigDecimal(0)));
 				sstInformation.setSstAmountwithoutGST(scLoa.getLoaAmt());
-				sstInformation.setPerihalSST(scLoa.getScQt().getQtTitle());
+//				sstInformation.setPerihalSST(scLoa.getScQt().getQtTitle());
+				sstInformation.setPerihalSST("Title");
 				if (null != scLoa.getScLoiLoa().getFileNo())
 					sstInformations.add(sstInformation);
 			}
@@ -505,13 +507,15 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		}
 	
 	@Override
-	public void masterDataVendorGfmasInbound() {
+	public void masterDataVendorGfmasInbound(String fileName,String transId) {
 		log.info("inside masterDataVendorGfmasInbound : APOVE");
-
-		String fileName = null;   
-		if (osbUtility.osbServiceCallInBound(ServiceCode.APOVE.value(),"")) {
+		String serviceCode = ServiceCode.APOVE.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;   
+		/*if (osbUtility.osbServiceCallInBound(ServiceCode.APOVE.value(),"")) {
 			Thread sleepThread =  sleepThread("APOVE",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.APOVE.value());
+			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.APOVE.value());*/
 				if(null!=fileName){
 					if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.APOVE.value(), fileName)){
 						sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
@@ -520,7 +524,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 							sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
 							encryption.decryptGmas(IntegrationConstants.FILE_PATH_LOCAL + fileName, IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName);
 					        
-						   BatchReqDTO<MasterDataVendor> batchReqDTO = new BatchReqDTO<MasterDataVendor>();
+						  /* BatchReqDTO<MasterDataVendor> batchReqDTO = new BatchReqDTO<MasterDataVendor>();
 						   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 						   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 						   batchReqDTO.setProcessId(ProcessCode.APOVE.value());
@@ -528,8 +532,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						   batchReqDTO.setFileName(fileName);
 						   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 						   batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
-						   
-						   fileUtility.setValuesToPmInterface(batchReqDTO);
+						   fileUtility.setValuesToPmInterface(batchReqDTO);*/
 						
 							List<MasterDataVendor> dataVendors = fileUtility.masterDataVendorFileInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName);
 
@@ -559,8 +562,15 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				log.info("masterDataVendorGfmasInbound updated ");
 			}
 
-		} else {
+//		} 
+			else {
 			log.info("file not available masterDataVendorGfmasInbound : APOVE");
+			
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
 			BatchReqDTO batchReqDTO = new BatchReqDTO();
 			batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
 			batchReqDTO.setProcessId(ProcessCode.APOVE.value());
@@ -572,72 +582,94 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	// Every 5 minutes we have to pick file and insert into DB Master Data
 	
 	@Override
-	public void pejabatPerakaunanGfmasInbound() {
+	public void pejabatPerakaunanGfmasInbound(String fileName,String transId) {
 
 		log.info("inside pejabatPerakaunanGfmasInbound :GLBAC");
-		String fileName = null;
-		if (osbUtility.osbServiceCallInBound(ServiceCode.GLBAC.value(),"")) {
-			Thread sleepThread =  sleepThread("GLBAC",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLBAC.value());
-			if(null!=fileName){
-				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLBAC.value(), fileName)){
-					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
-				}else{
-					if (sftpUtility.download(IntegrationConstants.FILE_PATH_LOCAL + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+		try{
+			String serviceCode = ServiceCode.GLBAC.value();
+			log.info("interfaceSO :"+interfaceSO);
+			PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+//			String fileName = null;
+//			if (osbUtility.osbServiceCallInBound(ServiceCode.GLBAC.value(),"")) {
+//				Thread sleepThread =  sleepThread("GLBAC",5000L);
+//				fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLBAC.value());
+				if(null!=fileName){
+					if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLBAC.value(), fileName)){
 						sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
-						encryption.decryptGmas(IntegrationConstants.FILE_PATH_LOCAL	+ fileName, IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName);
-					   
-						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
-						
-					   	List<AgOffice> agOfficeList = fileUtility.pejabatPerakaunanFileInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL+ fileName, fileName);
-						
-					    BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
-					    batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
-						batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
-						batchReqDTO.setProcessId(ProcessCode.GLBAC.value());
-						batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
-						batchReqDTO.setFileName(fileName);
-						batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
-						batchReqDTO.setServiceCode(ServiceCode.GLBAC.value());
-						fileUtility.setValuesToPmInterface(batchReqDTO);
+					}else{
+						if (sftpUtility.download(IntegrationConstants.FILE_PATH_LOCAL + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+							sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+							encryption.decryptGmas(IntegrationConstants.FILE_PATH_LOCAL	+ fileName, IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName);
 						   
-					   	AgOfficeReqDTO reqDTO = null;
-						PmAgOffice agOffice = null;
+							fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
+							
+						   	List<AgOffice> agOfficeList = fileUtility.pejabatPerakaunanFileInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL+ fileName, fileName);
+							
+//						    BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+//						    batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
+//							batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
+//							batchReqDTO.setProcessId(ProcessCode.GLBAC.value());
+//							batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+//							batchReqDTO.setFileName(fileName);
+//							batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+//							batchReqDTO.setServiceCode(ServiceCode.GLBAC.value());
+//							fileUtility.setValuesToPmInterface(batchReqDTO);
+							   
+						   	AgOfficeReqDTO reqDTO = null;
+							PmAgOffice agOffice = null;
 
-						for (AgOffice office : agOfficeList) {
-								reqDTO = new AgOfficeReqDTO();
-								agOffice = new PmAgOffice();
-								agOffice.setOfficeCode(office.getCode());
-								agOffice.setOfficeName(office.getDescription());
-								agOffice.setEffDate(new Timestamp(System.currentTimeMillis()));
-								agOffice.setCreatedBy(IntegrationConstants.BATCH_USER);
-								agOffice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-								agOffice.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
-								reqDTO.setAgOffice(agOffice);
-								agOfficeSO.saveOrUpdateAgOffice(reqDTO);
+							for (AgOffice office : agOfficeList) {
+									reqDTO = new AgOfficeReqDTO();
+									agOffice = new PmAgOffice();
+									agOffice.setOfficeCode(office.getCode());
+									agOffice.setOfficeName(office.getDescription());
+									agOffice.setEffDate(new Timestamp(System.currentTimeMillis()));
+									agOffice.setCreatedBy(IntegrationConstants.BATCH_USER);
+									agOffice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+									agOffice.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
+									reqDTO.setAgOffice(agOffice);
+									agOfficeSO.saveOrUpdateAgOffice(reqDTO);
+							}
 						}
+						log.info("pejabatPerakaunanGfmasInbound updated ");
 					}
-					log.info("pejabatPerakaunanGfmasInbound updated ");
+						
+					}
+//			}else
+			{
+				log.info("file not available pejabatPerakaunanGfmasInbound :GLBAC");
+				if(null!=pmInterfaceLogUpdate){
+					pmInterfaceLogUpdate.setFileName("N/A");
+					pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+					interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
 				}
-					
-				}
-		}else{
-			log.info("file not available pejabatPerakaunanGfmasInbound :GLBAC");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.GLBAC.value());
-			batchReqDTO.setProcessId(ProcessCode.GLBAC.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+				
+//				BatchReqDTO batchReqDTO = new BatchReqDTO();
+//				batchReqDTO.setServiceCode(ServiceCode.GLBAC.value());
+//				batchReqDTO.setProcessId(ProcessCode.GLBAC.value());
+//				insertRecordforEmptyDataIn(batchReqDTO);
+			}
+			
+		}catch (Exception ex){
+			System.out.println(ex);
+			
 		}
+		finally{
+			cleanUpResources();
+		}
+		
 	}
 
 	@Override
-	public void pegawaiPengawalGfmasInbound() {
+	public void pegawaiPengawalGfmasInbound(String fileName,String transId) {
 		log.info("inside pegawaiPengawalGfmasInbound :GLSEG");
-
-		String fileName = null;
-		if (osbUtility.osbServiceCallInBound(ServiceCode.GLSEG.value(),"")) {
-			Thread sleepThread = sleepThread("GLSEG",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLSEG.value());
+		String serviceCode = ServiceCode.GLSEG.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;
+//		if (osbUtility.osbServiceCallInBound(ServiceCode.GLSEG.value(),"")) {
+//			Thread sleepThread = sleepThread("GLSEG",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLSEG.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLSEG.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
@@ -651,7 +683,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						
 					   List<AgCtrlOfficer> agOfficeList = fileUtility.pegawaiPengawalInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
 					   
-					   BatchReqDTO<AgCtrlOfficer> batchReqDTO = new BatchReqDTO<AgCtrlOfficer>();
+					   /*BatchReqDTO<AgCtrlOfficer> batchReqDTO = new BatchReqDTO<AgCtrlOfficer>();
 					   batchReqDTO.setFileFTPStatus(1);
 					   batchReqDTO.setFileCreationStatus(1);
 					   batchReqDTO.setProcessId(ProcessCode.GLSEG.value());
@@ -659,7 +691,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					   batchReqDTO.setFileName(fileName);
 					   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 					   batchReqDTO.setServiceCode(ServiceCode.GLSEG.value());
-					   fileUtility.setValuesToPmInterface(batchReqDTO);
+					   fileUtility.setValuesToPmInterface(batchReqDTO);*/
 						
 						OrgProfileReqDTO orgProfileReqDTO = null;
 
@@ -701,12 +733,18 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					log.info("pegawaiPengawalGfmasInbound updated");
 					}
 				}
-			}else{
+//			}else
+			{
 			log.info("file not available pegawaiPengawalGfmasInbound :GLSEG");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.GLSEG.value());
-			batchReqDTO.setProcessId(ProcessCode.GLSEG.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.GLSEG.value());
+//			batchReqDTO.setProcessId(ProcessCode.GLSEG.value());
+//			insertRecordforEmptyDataIn(batchReqDTO);
 		}
 	}
 
@@ -728,15 +766,14 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	}
 
 	@Override
-	public void votGfmasInbound() {
-		
-	}
-	public void votGfmasInbound(String fileName1) {
+	public void votGfmasInbound(String fileName, String transId) {
 		log.info("inside votGfmasInbound :GLVOT");
-		String fileName = fileName1;
-		if (osbUtility.osbServiceCallInBound(ServiceCode.GLVOT.value(),"")) {
-			Thread sleepThread =  sleepThread("GLVOT",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_UPLOAD, ProcessCode.GLVOT.value());
+		String serviceCode = ServiceCode.GLVOT.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		if (osbUtility.osbServiceCallInBound(ServiceCode.GLVOT.value(),"")) {
+//			Thread sleepThread =  sleepThread("GLVOT",5000L);
+//			String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_UPLOAD, ProcessCode.GLVOT.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLVOT.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
@@ -747,7 +784,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					
 						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
 						
-					   BatchReqDTO<VotFund> batchReqDTO = new BatchReqDTO<VotFund>();
+					   /*BatchReqDTO<VotFund> batchReqDTO = new BatchReqDTO<VotFund>();
 					   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 					   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 					   batchReqDTO.setProcessId(ProcessCode.GLVOT.value());
@@ -755,8 +792,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					   batchReqDTO.setFileName(fileName);
 					   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 					   batchReqDTO.setServiceCode(ServiceCode.GLVOT.value());
-					   
-					   fileUtility.setValuesToPmInterface(batchReqDTO);
+					   fileUtility.setValuesToPmInterface(batchReqDTO);*/
 					   
 					   BatchResDTO<VotFund> batchResDTO = fileUtility.votInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
 					   EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
@@ -798,22 +834,32 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				}
 					
 				}
-			}else{
+//			}else
+			{
 			log.info("file not available votGfmasInbound :GLVOT");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.GLVOT.value());
-			batchReqDTO.setProcessId(ProcessCode.GLVOT.value());
-			insertRecordforEmptyDataOut(batchReqDTO);
+			
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.GLVOT.value());
+//			batchReqDTO.setProcessId(ProcessCode.GLVOT.value());
+//			insertRecordforEmptyDataOut(batchReqDTO);
 	}
 	}
 
 	@Override
-	public void votDanaGfmasInbound() {
+	public void votDanaGfmasInbound(String fileName,String transId) {
 		log.info("inside votDanaGfmasInbound :GLDNA");
-		String fileName = null;
-		if (osbUtility.osbServiceCallInBound(ServiceCode.GLDNA.value(),"")) {
-			Thread sleepThread =  sleepThread("GLDNA",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLDNA.value());
+		String serviceCode = ServiceCode.GLDNA.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;
+//		if (osbUtility.osbServiceCallInBound(ServiceCode.GLDNA.value(),"")) {
+//			Thread sleepThread =  sleepThread("GLDNA",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLDNA.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLDNA.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);					
@@ -824,7 +870,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						
 						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
 					
-					   BatchReqDTO<VotFund> batchReqDTO = new BatchReqDTO<VotFund>();
+					   /*BatchReqDTO<VotFund> batchReqDTO = new BatchReqDTO<VotFund>();
 					   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 					   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 					   batchReqDTO.setProcessId(ProcessCode.GLDNA.value());
@@ -832,7 +878,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					   batchReqDTO.setFileName(fileName);
 					   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
 					   batchReqDTO.setServiceCode(ServiceCode.GLDNA.value());
-					   fileUtility.setValuesToPmInterface(batchReqDTO);
+					   fileUtility.setValuesToPmInterface(batchReqDTO);*/
 					   
 						
 						 BatchResDTO<VotFund> batchResDTO = fileUtility.votDanaInPutStream(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
@@ -865,22 +911,32 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					log.info("votDanaGfmasInbound updated");
 				}
 				}
-			}else{
+//			}else
+			{
 			log.info("file not available votDanaGfmasInbound :GLDNA");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.GLDNA.value());
-			batchReqDTO.setProcessId(ProcessCode.GLDNA.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+			
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.GLDNA.value());
+//			batchReqDTO.setProcessId(ProcessCode.GLDNA.value());
+//			insertRecordforEmptyDataIn(batchReqDTO);
 		}
 	}
 
 	@Override
-	public void programAktivitiGfmasInbound() {
+	public void programAktivitiGfmasInbound(String fileName,String transId) {
 		log.info("inside programAktivitiGfmasInbound :GLPRG");
-		String fileName = null;
-		if (osbUtility.osbServiceCallInBound(ServiceCode.GLPRG.value(),"")) {
-			Thread sleepThread =  sleepThread("GLPRG",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLPRG.value());
+		String serviceCode = ServiceCode.GLPRG.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;
+//		if (osbUtility.osbServiceCallInBound(ServiceCode.GLPRG.value(),"")) {
+//			Thread sleepThread =  sleepThread("GLPRG",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.GLPRG.value());
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLPRG.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
@@ -891,7 +947,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					
 						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
 						
-					   BatchReqDTO<ProgramActivity> batchReqDTO = new BatchReqDTO<ProgramActivity>();
+					  /* BatchReqDTO<ProgramActivity> batchReqDTO = new BatchReqDTO<ProgramActivity>();
 					   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 					   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 					   batchReqDTO.setProcessId(ProcessCode.GLPRG.value());
@@ -899,7 +955,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					   batchReqDTO.setFileName(fileName);
 					   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 					   batchReqDTO.setServiceCode(ServiceCode.GLPRG.value());
-					   fileUtility.setValuesToPmInterface(batchReqDTO);
+					   fileUtility.setValuesToPmInterface(batchReqDTO);*/
 					
 					   BatchResDTO<ProgramActivity> batchResDTO = fileUtility.programAktiviti(IntegrationConstants.GMAS_DOWNLOAD_LOCAL  + fileName, fileName);
 					   EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
@@ -933,22 +989,32 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					log.info("programAktivitiGfmasInbound updated");
 					}
 				}
-			}else{
+//			}else
+			{
 			log.info("file not available programAktivitiGfmasInbound :GLPRG");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.GLPRG.value());
-			batchReqDTO.setProcessId(ProcessCode.GLPRG.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+			
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.GLPRG.value());
+//			batchReqDTO.setProcessId(ProcessCode.GLPRG.value());
+//			insertRecordforEmptyDataIn(batchReqDTO);
 		}
 	}
 
 	@Override
-	public void projectGfmasInbound() {
+	public void projectGfmasInbound(String fileName,String transId) {
 		log.info("inside projectGfmasInbound :GLPRJ");
-		String fileName = null;;
-		if (osbUtility.osbServiceCallInBound("GFM-240","")) {
-			Thread sleepThread =  sleepThread("GLPRJ",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPRJ");
+		String serviceCode = ServiceCode.GLPRJ.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;;
+//		if (osbUtility.osbServiceCallInBound("GFM-240","")) {
+//			Thread sleepThread =  sleepThread("GLPRJ",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPRJ");
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLPRJ.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);					
@@ -959,7 +1025,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					 
 						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
 						
-					   BatchReqDTO<Project> batchReqDTO = new BatchReqDTO<Project>();
+					  /* BatchReqDTO<Project> batchReqDTO = new BatchReqDTO<Project>();
 					   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 					   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 					   batchReqDTO.setProcessId(ProcessCode.GLPRJ.value());
@@ -967,7 +1033,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					   batchReqDTO.setFileName(fileName);
 					   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 					   batchReqDTO.setServiceCode(ServiceCode.GLPRJ.value());
-					   fileUtility.setValuesToPmInterface(batchReqDTO);
+					   fileUtility.setValuesToPmInterface(batchReqDTO);*/
 					
 					   BatchResDTO<Project> batchResDTO = fileUtility.project(IntegrationConstants.GMAS_DOWNLOAD_LOCAL +fileName, fileName);
 					   EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
@@ -1012,23 +1078,33 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					log.info("projectGfmasInbound updated");
 					}
 				}
-			}else{
+//			}else
+			{
 			log.info("file not available projectGfmasInbound :GLPRJ");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.GLPRJ.value());
-			batchReqDTO.setProcessId(ProcessCode.GLPRJ.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+			
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.GLPRJ.value());
+//			batchReqDTO.setProcessId(ProcessCode.GLPRJ.value());
+//			insertRecordforEmptyDataIn(batchReqDTO);
 		}
 	}
 
 	@Override
-	public void kodAkaunGfmasInbound() {
+	public void kodAkaunGfmasInbound(String fileName,String transId) {
 
 		log.info("inside kodAkaunGfmasInbound :GLGLC");
-		String fileName = null;
-		if (osbUtility.osbServiceCallInBound("GFM-260","")) {
-			Thread sleepThread =  sleepThread("GLGLC",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLGLC");
+		String serviceCode = ServiceCode.GLGLC.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;
+//		if (osbUtility.osbServiceCallInBound("GFM-260","")) {
+//			Thread sleepThread =  sleepThread("GLGLC",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLGLC");
 			if(null!=fileName){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLGLC.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);					
@@ -1039,7 +1115,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					
 						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
 						
-					   BatchReqDTO<Project> batchReqDTO = new BatchReqDTO<Project>();
+					   /*BatchReqDTO<Project> batchReqDTO = new BatchReqDTO<Project>();
 					   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 					   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 					   batchReqDTO.setProcessId(ProcessCode.GLGLC.value());
@@ -1047,7 +1123,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					   batchReqDTO.setFileName(fileName);
 					   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 					   batchReqDTO.setServiceCode(ServiceCode.GLGLC.value());
-					   fileUtility.setValuesToPmInterface(batchReqDTO);
+					   fileUtility.setValuesToPmInterface(batchReqDTO);*/
 					   
 					   BatchResDTO<GlAccount> batchResDTO = fileUtility.kodAkaun(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
 						EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
@@ -1087,23 +1163,31 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				log.info("kodAkaunGfmasInbound updated");
 				}
 				}
-		}else{
+//		}else
+		{
 			log.info("file not available kodAkaunGfmasInbound :GLGLC");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.GLGLC.value());
-			batchReqDTO.setProcessId(ProcessCode.GLGLC.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.GLGLC.value());
+//			batchReqDTO.setProcessId(ProcessCode.GLGLC.value());
+//			insertRecordforEmptyDataIn(batchReqDTO);
 		}
 	}
 
 	@Override
-	public void kumpulanPtjGfmasInbound() {
+	public void kumpulanPtjGfmasInbound(String fileName,String transId) {
 		log.info("inside kumpulanPtjGfmasInbound :GLPCG");
-
-		String fileName = null;
-		if (osbUtility.osbServiceCallInBound(ServiceCode.GLPCG.value(),"")) {
-			Thread sleepThread =  sleepThread("GLPCG",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPCG");
+		String serviceCode = ServiceCode.GLPCG.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;
+//		if (osbUtility.osbServiceCallInBound(ServiceCode.GLPCG.value(),"")) {
+//			Thread sleepThread =  sleepThread("GLPCG",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPCG");
 			if(fileName!=null){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLPCG.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);					
@@ -1118,7 +1202,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						BatchResDTO<PtjGroup> batchResDTO = fileUtility.kumpulanPTJ(IntegrationConstants.GMAS_DOWNLOAD_LOCAL	+fileName, fileName);
 						EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
 						
-						BatchReqDTO<PtjGroup> batchReqDTO = new BatchReqDTO<PtjGroup>();
+						/*BatchReqDTO<PtjGroup> batchReqDTO = new BatchReqDTO<PtjGroup>();
 						batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 						batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 						batchReqDTO.setProcessId(ProcessCode.GLPCG.value());
@@ -1126,7 +1210,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						batchReqDTO.setFileName(fileName);
 						batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 						batchReqDTO.setServiceCode(ServiceCode.GLPCG.value());
-						fileUtility.setValuesToPmInterface(batchReqDTO);
+						fileUtility.setValuesToPmInterface(batchReqDTO);*/
 					
 						List<PmOrgProfile> pmOrgProfileList = new ArrayList<PmOrgProfile>();
 
@@ -1174,23 +1258,32 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					}
 				}
 			}
-		}else{
+//		}else
+		{
 		log.info("file not available kumpulanPtjGfmasInbound :GLPCG");
-		BatchReqDTO batchReqDTO = new BatchReqDTO();
-		batchReqDTO.setServiceCode(ServiceCode.GLPCG.value());
-		batchReqDTO.setProcessId(ProcessCode.GLPCG.value());
-		insertRecordforEmptyDataIn(batchReqDTO);
+		
+		if(null!=pmInterfaceLogUpdate){
+			pmInterfaceLogUpdate.setFileName("N/A");
+			pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+			interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+		}
+//		BatchReqDTO batchReqDTO = new BatchReqDTO();
+//		batchReqDTO.setServiceCode(ServiceCode.GLPCG.value());
+//		batchReqDTO.setProcessId(ProcessCode.GLPCG.value());
+//		insertRecordforEmptyDataIn(batchReqDTO);
 		}
 	}
 
 	@Override
-	public void masterDataPtjGfmasInbound() {
+	public void masterDataPtjGfmasInbound(String fileName,String transId) {
 		log.info("inside masterDataPtjGfmasInbound :GLPTJ");
-
-		String fileName =  null;
-		if (osbUtility.osbServiceCallInBound("GFM-280","")) {
-			Thread sleepThread =  sleepThread("GLPTJ",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPTJ");
+		String serviceCode = ServiceCode.GLPTJ.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName =  null;
+//		if (osbUtility.osbServiceCallInBound("GFM-280","")) {
+//			Thread sleepThread =  sleepThread("GLPTJ",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPTJ");
 			if(fileName!=null){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.GLPTJ.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);					
@@ -1201,7 +1294,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						
 						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
 						
-						 BatchReqDTO<PtjGroup> batchReqDTO = new BatchReqDTO<PtjGroup>();
+						/* BatchReqDTO<PtjGroup> batchReqDTO = new BatchReqDTO<PtjGroup>();
 						 batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 						 batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 						 batchReqDTO.setProcessId(ProcessCode.GLPTJ.value());
@@ -1209,7 +1302,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						 batchReqDTO.setFileName(fileName);
 						 batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 						 batchReqDTO.setServiceCode(ServiceCode.GLPTJ.value());
-						 fileUtility.setValuesToPmInterface(batchReqDTO);
+						 fileUtility.setValuesToPmInterface(batchReqDTO);*/
 						
 						 BatchResDTO<OrgProfile> batchResDTO = fileUtility.masterDataPTJ(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
 						 EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
@@ -1272,24 +1365,32 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						log.info("masterDataPtjGfmasInbound updated");
 					}
 				}
-		}else{
+//		}else
+		{
 			log.info("file not available masterDataPtjGfmasInbound :GLPTJ");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.GLPTJ.value());
-			batchReqDTO.setProcessId(ProcessCode.GLPTJ.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+			
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.GLPTJ.value());
+//			batchReqDTO.setProcessId(ProcessCode.GLPTJ.value());
+//			insertRecordforEmptyDataIn(batchReqDTO);
 		}
 	}
 
 	@Override
-	public void kodBankGfmasInbound() {
-		
+	public void kodBankGfmasInbound(String fileName,String transId) {
 		log.info("inside kodBankGfmasInbound :CMBNK");
-
-		String fileName = null;
-		if (osbUtility.osbServiceCallInBound("GFM-360","")) {
-			Thread sleepThread =  sleepThread("CMBNK",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "CMBNK");
+		String serviceCode = ServiceCode.CMBNK.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;
+//		if (osbUtility.osbServiceCallInBound("GFM-360","")) {
+//			Thread sleepThread =  sleepThread("CMBNK",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "CMBNK");
 			if(fileName!=null){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.CMBNK.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);					
@@ -1300,7 +1401,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						
 						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
 						
-						BatchReqDTO<BankAccountInformation> batchReqDTO = new BatchReqDTO<BankAccountInformation>();
+						   /*BatchReqDTO<BankAccountInformation> batchReqDTO = new BatchReqDTO<BankAccountInformation>();
 						   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 						   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 						   batchReqDTO.setProcessId(ProcessCode.CMBNK.value());
@@ -1308,7 +1409,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						   batchReqDTO.setFileName(fileName);
 						   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 						   batchReqDTO.setServiceCode(ServiceCode.CMBNK.value());
-						   fileUtility.setValuesToPmInterface(batchReqDTO);
+						   fileUtility.setValuesToPmInterface(batchReqDTO);*/
 				
 						   BatchResDTO<BankAccountInformation> batchResDTO = fileUtility.kodBank(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName, fileName);
 						   EPErrorResponse errorResponse = batchResDTO.getErrorResponse();
@@ -1355,23 +1456,32 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					log.info("kodBankGfmasInbound updated");
 				}
 				}
-		}else{
+//		}else
+		{
 			log.info("file not available kodBankGfmasInbound :CMBNK");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.CMBNK.value());
-			batchReqDTO.setProcessId(ProcessCode.CMBNK.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+			
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.CMBNK.value());
+//			batchReqDTO.setProcessId(ProcessCode.CMBNK.value());
+//			insertRecordforEmptyDataIn(batchReqDTO);
 		}
 	}
 	
 	@Override
-	public void paymentGfmasInbound() {
+	public void paymentGfmasInbound(String fileName,String transId) {
 		log.info("inside paymentGfmasInbound :AP511");
-
-		String fileName = null;
-		if (osbUtility.osbServiceCallInBound("GFM-140","")) {
-			Thread sleepThread =  sleepThread("AP511",5000L);
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "AP511");
+		String serviceCode = ServiceCode.AP511.value();
+		PmInterfaceLog pmInterfaceLogUpdate = interfaceSO.retrieveInterfaceLogByServiceCodeAndTransId(serviceCode, transId);
+		
+//		String fileName = null;
+//		if (osbUtility.osbServiceCallInBound("GFM-140","")) {
+//			Thread sleepThread =  sleepThread("AP511",5000L);
+//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "AP511");
 			if(fileName!=null){
 				if(interfaceSO.retrieveInterfaceLogByServiceCodeAndFileName(ServiceCode.AP511.value(), fileName)){
 					sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);					
@@ -1382,7 +1492,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						
 						fileUtility.deleteFilefromAppServer(IntegrationConstants.FILE_PATH_LOCAL+ fileName);
 						
-						BatchReqDTO<PaymentInfo> batchReqDTO = new BatchReqDTO<PaymentInfo>();
+						/*BatchReqDTO<PaymentInfo> batchReqDTO = new BatchReqDTO<PaymentInfo>();
 						batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
 						batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
 						batchReqDTO.setProcessId(ProcessCode.AP511.value());
@@ -1390,7 +1500,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						batchReqDTO.setFileName(fileName);
 						batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 						batchReqDTO.setServiceCode(ServiceCode.AP511.value());
-						fileUtility.setValuesToPmInterface(batchReqDTO);
+						fileUtility.setValuesToPmInterface(batchReqDTO);*/
 						   
 						List<PaymentInfo> paymentInfoList = fileUtility.paymentInfo(IntegrationConstants.GMAS_DOWNLOAD_LOCAL + fileName);
 					
@@ -1407,12 +1517,19 @@ public class GfmasIntegration extends InitializeUtilityClz{
 				log.info("paymentGfmasInbound updated");
 				}
 				}
-			}else{
+//			}else
+			{
 			log.info("file not available paymentGfmasInbound :AP511");
-			BatchReqDTO batchReqDTO = new BatchReqDTO();
-			batchReqDTO.setServiceCode(ServiceCode.AP511.value());
-			batchReqDTO.setProcessId(ProcessCode.AP511.value());
-			insertRecordforEmptyDataIn(batchReqDTO);
+			
+			if(null!=pmInterfaceLogUpdate){
+				pmInterfaceLogUpdate.setFileName("N/A");
+				pmInterfaceLogUpdate.setCreatedDate(new Timestamp(new Date().getTime()));
+				interfaceSO.updateInterfaceLOg(pmInterfaceLogUpdate);
+			}
+//			BatchReqDTO batchReqDTO = new BatchReqDTO();
+//			batchReqDTO.setServiceCode(ServiceCode.AP511.value());
+//			batchReqDTO.setProcessId(ProcessCode.AP511.value());
+//			insertRecordforEmptyDataIn(batchReqDTO);
 			}
 	}
 //	public void softcertNotifications() {
@@ -1675,7 +1792,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	
 	// Receipt Information
 	@Override
-	public void receiptInformationGfmasOutbound() {
+	public void receiptInformationGfmasOutbound() {/*
 		
 	List<SmBill> smBillList =iPaymentSO.retrieveLatestBillByCreateDate();
 		
@@ -1693,17 +1810,17 @@ public class GfmasIntegration extends InitializeUtilityClz{
 			ReceiptInformation receiptInformation = null;
 			ReceiptHeader receiptHeader = null;
 
-			for(SmBill smBill :smBillList){
+			for(PyBill smBill :smBillList){
 			
 				receiptInformation = new ReceiptInformation();
 				
 				receiptInformation.setRecordType(IntegrationConstants.RECORD_TYPE_ZERO);
 				receiptInformation.setAgencyId(IntegrationConstants.AGENSI_ID_ePerolehan);  
-				receiptInformation.setTotalBillCount(smBill.getSmPayments().size());
+				receiptInformation.setTotalBillCount(smBill.getPyPayments().size());
 				
 				// Receipt Header Information
 				
-				for(SmPayment smPayment:smBill.getSmPayments()){
+				for(PyPayment smPayment:smBill.getPyPayments()){
 					
 					log.info("Receipt  Header....");
 					if (null!=smPayment.getReceiptNo()) {
@@ -1730,22 +1847,22 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						receiptHeader.setAlternateGlReconAcc(IntegrationConstants.EMPTY_TRING);
 						receiptHeader.setReceiptAmount(smPayment.getPaymentAmt()); // Amount  to be paid
 						receiptHeader.setBankInStatus("A"); // values will be A. bank in or B.to be bank in
-						receiptHeader.setReceiptDetailsCount(smBill.getSmBillDtls().size());
-						receiptHeader.setBillingCount(smPayment.getSmPaymentOrder().getSmPaymentResponses().size());
+						receiptHeader.setReceiptDetailsCount(smBill.getPyBillDtls().size());
+						receiptHeader.setBillingCount(smPayment.getPyPaymentOrder().getPyPaymentResponses().size());
 						if (!receiptHeaderList.contains(receiptHeader))
 							receiptHeaderList.add(receiptHeader);
 					}
 				}
 				receiptInformation.setReceiptHeaderList(receiptHeaderList);
 //					Receipt Details Information
-				for(SmPayment smPayment:smBill.getSmPayments()){
-					if(null!=smPayment.getSmPaymentDtls() && smPayment.getSmPaymentDtls().size()>0){
+				for(PyPayment smPayment:smBill.getPyPayments()){
+					if(null!=smPayment.getPyPaymentDtls() && smPayment.getPyPaymentDtls().size()>0){
 						receiptDetailList = new ArrayList<ReceiptDetails>();
 						ReceiptDetails receiptDetails = null;
 					    int recordCount =0;
 					    log.info("Receipt Details available ");
 						
-					    for(SmPaymentDtl smPaymentDtl:smPayment.getSmPaymentDtls()){
+					    for(PyPaymentDtl smPaymentDtl:smPayment.getPyPaymentDtls()){
 							receiptDetails = new ReceiptDetails();
 							receiptDetails.setRecordType(IntegrationConstants.RECORD_TYPE_TWO);
 							receiptDetails.setRecordNumber(recordCount);
@@ -1815,7 +1932,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		batchReqDTO.setBatchContent(receiptInformationList);
 		System.out.println("receiptInformationList :"+receiptInformationList.size());
 		fileUtility.receiptInformationFileOutPutStream(batchReqDTO);
-	}
+	*/}
 	
 	public void errorFileOutBound(EPErrorResponse errorResponse) {
 		
@@ -1853,7 +1970,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 	reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 	reqDTO.setServiceCode(reqDTO.getServiceCode());
 	reqDTO.setProcessId(reqDTO.getProcessId());
-	reqDTO.setFileName(IntegrationConstants.VAVLUE_NA);
+	reqDTO.setFileName(IntegrationConstants.EMPTY_TRING);
 	
 	fileUtility.setValuesToPmInterface(reqDTO);
 	
@@ -1873,9 +1990,218 @@ public class GfmasIntegration extends InitializeUtilityClz{
 		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 		batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
 		
-		batchReqDTO.setQueueMsgStatus(fileUtility.constructQueueMessage(ServiceCode.APOVE.value(), null, transId));
+		batchReqDTO.setQueueMsgStatus(fileUtility.constructQueueMessageOutbound(ServiceCode.APOVE.value(), null, transId));
 		   
 		fileUtility.setValuesToPmInterface(batchReqDTO);
 		
 	}
+
+	//New version
+	
+	@Override
+	public void pejabatPerakaunanGfmasInbound() {
+		
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLBAC.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLBAC.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void pegawaiPengawalGfmasInbound() {
+		
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLSEG.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLSEG.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void kumpulanPtjGfmasInbound() {
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLPCG.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLPCG.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void votDanaGfmasInbound() {
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLDNA .value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLDNA .value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void programAktivitiGfmasInbound() {
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLPRG.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLPRG.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void projectGfmasInbound() {
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLPRJ.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLPRJ.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void kodAkaunGfmasInbound() {
+		
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLGLC.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLGLC.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void masterDataPtjGfmasInbound() {
+		
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLPTJ.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLPTJ.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void kodBankGfmasInbound() {
+		
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.CMBNK.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.CMBNK.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void votGfmasInbound() {
+		
+		String transId = UUID.randomUUID().toString();
+		String serviceCode = ServiceCode.GLVOT.value();
+		String fileName = null;
+		
+		BatchReqDTO<AgOffice> batchReqDTO = new BatchReqDTO<AgOffice>();
+		batchReqDTO.setProcessId(ProcessCode.GLVOT.value());
+		batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
+		batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+		batchReqDTO.setServiceCode(serviceCode);
+		batchReqDTO.setTransId(transId);
+		int status = fileUtility.constructQueueMessageInbound(serviceCode,fileName,transId);
+		batchReqDTO.setQueueMsgStatus(status);
+		
+		insertRecordforEmptyDataIn(batchReqDTO);
+		
+	}
+
+	@Override
+	public void masterDataVendorGfmasInbound() {
+		
+	}
+
+	@Override
+	public void paymentGfmasInbound() {
+		
+	}
+
 }
