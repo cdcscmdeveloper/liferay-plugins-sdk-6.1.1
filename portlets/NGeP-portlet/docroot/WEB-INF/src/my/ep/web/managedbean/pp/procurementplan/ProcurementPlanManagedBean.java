@@ -47,7 +47,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isSearch;
 	private boolean backAllow;
 	private boolean approvedPlan;
-	private boolean viewMode;
+	private String btnValue;
 	
 	private PpWorkflowStatus ppWorkflowStatus;
 	private String bpmStatusCreator;
@@ -104,6 +104,8 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isDisabledMinistryLov = false;
 	private boolean isDisabledKumpulanPTJLov = false;
 	private boolean isDisabledPTJLov = false;
+	
+	private boolean isTrackingDiary;
 
 	/**
 	 * @return the epItemsB
@@ -1015,17 +1017,32 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * @return the viewMode
+	 * @return the btnValue
 	 */
-	public boolean isViewMode() {
-		return viewMode;
+	public String getBtnValue() {
+		return btnValue;
 	}
 
 	/**
-	 * @param viewMode the viewMode to set
+	 * @param btnValue the btnValue to set
 	 */
-	public void setViewMode(boolean viewMode) {
-		this.viewMode = viewMode;
+	public void setBtnValue(String btnValue) {
+		this.btnValue = btnValue;
 	}
+
+	/**
+	 * @return the isTrackingDiary
+	 */
+	public boolean isTrackingDiary() {
+		return isTrackingDiary;
+	}
+
+	/**
+	 * @param isTrackingDiary the isTrackingDiary to set
+	 */
+	public void setTrackingDiary(boolean isTrackingDiary) {
+		this.isTrackingDiary = isTrackingDiary;
+	}
+
 
 }

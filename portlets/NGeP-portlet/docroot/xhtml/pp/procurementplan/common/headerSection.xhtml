@@ -31,9 +31,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 					</p:commandButton>
 				</ui:repeat>
 				<c:if
-					test='#{pPlanBackingBean.managedBean.viewMode}'>
+					test='#{not empty pPlanBackingBean.managedBean.btnValue and ProcurementPlanConst.actionViewBtn eq pPlanBackingBean.managedBean.btnValue}'>
 						<td colspan="4" style="text-align: right">	
-							<p:commandLink
+							<p:commandLink rendered="#{pPlanBackingBean.managedBean.trackingDiary}"
 								value="#{lbl['lbl.td.doc.trackingDiary']}"
 								action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.PROCUREMENT_PLAN,pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planNo,pPlanBackingBean.managedBean.selectedPlan.planId,pPlanBackingBean.managedBean.selectedPlan.status.statusId)}"
 								immediate="true" />&#160;&#160;
