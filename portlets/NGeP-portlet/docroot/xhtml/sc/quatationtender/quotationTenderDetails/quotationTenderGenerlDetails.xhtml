@@ -48,7 +48,7 @@
 								conditionField="#{createQtBB.constrcutFieldsForPanel()}"
 								postUpdateListener="createQtBB.circularListSelect(qTDetailBB.managedBean.qt.circularVer)"
 								disabled="#{!scQt.panel}" /></td>
-						<td><p:outputLabel value="#{lbl['llbl.sc.spec.group.item']}" />
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.group.item']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 						<td><p:selectOneMenu id="panelItemId" required="#{isRequire}"
@@ -165,7 +165,7 @@
 						<f:selectItems
 							value="#{createQtBB.getQuotationTendervalues(ParameterTypeConst.quotationTenderType,scQt)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@form" listener="#{qTDetailBB.onChangeQtType}"></p:ajax>
+							update="@form" listener="#{createQtBB.onChangeQtType}"></p:ajax>
 					</p:selectOneRadio> <p:message id="tenderMsg" for="tenderType" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.open.for']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -174,7 +174,7 @@
 						<f:selectItems
 							value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@form" listener="#{createQtBB.openForChange(scQt)}"></p:ajax>
+							update="@form" listener="#{createQtBB.openForChange}"></p:ajax>
 					</p:selectOneRadio> <p:message id="openMsg" for="openFor" display="icon" /></td>
 			</tr>
 
