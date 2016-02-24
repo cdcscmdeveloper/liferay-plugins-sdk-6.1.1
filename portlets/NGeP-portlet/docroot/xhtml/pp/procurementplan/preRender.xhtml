@@ -8,6 +8,6 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	<ui:define name="contentSection">
-		<f:event listener="#{pPlanBackingBean.preLoading}" type="preRenderView" />
+		<f:event listener="#{pPlanBackingBean.preLoading(false)}" type="preRenderView" />
  	</ui:define>
 </ui:composition>

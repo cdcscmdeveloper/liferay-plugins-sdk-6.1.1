@@ -36,10 +36,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pm.action']}" style="text-align:center;">  
 	        	<p:menuButton value="#{lbl['lbl.btn.option']}">
-						<p:menuitem value="#{plan.updatable ? lbl['lbl.btn.update'] : lbl['lbl.btn.view']}"  
+						<p:menuitem value="#{lbl['lbl.btn.view']}"  
 							     icon="ui-icon-view"
-							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}"/>
-						<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"								 
+							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId,ProcurementPlanConst.actionViewBtn,pPlanBackingBean.managedBean.trackingDiary)}"/>
+						<p:menuitem value="#{lbl['lbl.btn.update']}"  
+							     icon="ui-icon-view" rendered="#{plan.updatable and not pPlanBackingBean.managedBean.trackingDiary}"
+							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId,ProcurementPlanConst.actionUpdateBtn,false)}"/>						
+			    		<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"								 
 								 icon="ui-icon-print" 
 								 action="#{pPlanBackingBean.generateReport(plan)}" />	
 				</p:menuButton>
