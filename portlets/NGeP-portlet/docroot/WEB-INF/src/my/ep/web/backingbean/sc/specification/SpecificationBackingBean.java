@@ -11657,7 +11657,7 @@ public class SpecificationBackingBean extends
 			if(null == scQt.getContractType()){
 				scQt.setContractType(new PmParameter());
 			}
-			if(null == scQt.getItemGroup()){
+			if(null == scQt.getItemGroup()&& scQt.isPanel()){
 				scQt.setItemGroup(new CtPanelItemGroup());
 			}
 			if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
@@ -11734,7 +11734,7 @@ public class SpecificationBackingBean extends
 			if(null == this.getManagedBean().getQt().getContractType()){
 				this.getManagedBean().getQt().setContractType(new PmParameter());
 			}
-			if(null == this.getManagedBean().getQt().getItemGroup()){
+			if(this.getManagedBean().getQt().isPanel() && null == this.getManagedBean().getQt().getItemGroup()){
 				this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
 			}
 			if (null == this.getManagedBean().getQt().getFulfilmentType()) {
@@ -11761,8 +11761,7 @@ public class SpecificationBackingBean extends
 	private SpecificationReqDTO constructSpecCommitteDtls() {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
 						.getFulfilmentType())
