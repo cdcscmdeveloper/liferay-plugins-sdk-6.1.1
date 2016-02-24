@@ -91,6 +91,7 @@ import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -1417,6 +1418,28 @@ public class SmCommonUtil {
 		reqDTO.setPersonnelId(smPersonnel.getPersonnelId());
 		retVal = reqSO.isPersonnelAlreadyDeactivate(reqDTO);
 		return retVal;
+	}
+
+	/**
+	 * Check if combination of business regNo,business type and authority Id
+	 * already exist
+	 * 
+	 * @param String
+	 *            regNo
+	 * @param String
+	 *            businessType
+	 * @param Long
+	 *            localAuthorityId
+	 * @return boolean
+	 */
+	public static boolean isRegNoAlreadyExist(String regNo,
+			String businessType, Long localAuthorityId) {
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setRegNo(regNo);
+		reqDTO.setBussinessType(businessType);
+		reqDTO.setLocalAuthorityId(localAuthorityId);
+		return SmServiceLookup.getSupplierSearchSO()
+				.checkIsSupplierRegNoAlreadyExist(reqDTO).isRegNoAlreadyExist();
 	}
 
 	/**
