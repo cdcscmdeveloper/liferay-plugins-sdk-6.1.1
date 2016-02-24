@@ -36,6 +36,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
+import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -59,6 +60,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
+import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
+import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -703,6 +706,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
+			
 			if(null == selectedScQt.getContractType()){
 				selectedScQt.setContractType(new PmParameter());
 			}
@@ -715,8 +719,9 @@ public class QTDetailBackingBean extends
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			this.getManagedBean().setQt(selectedScQt);
-			if (QTStatusConst.QT_PENDING_APPOINT_BO.equals(currentStatus)
-					|| QTStatusConst.QT_PENDING_SPECIFICATION_PREPARATION
+			
+			circularListSelect(selectedScQt.getCircularVer());
+			if ( QTStatusConst.QT_PENDING_SPECIFICATION_PREPARATION
 							.equals(currentStatus)
 					|| (QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
 							.getQtType())) {
@@ -932,6 +937,9 @@ public class QTDetailBackingBean extends
 				tabBean.getScQtApproval().setScQtApprovalRemarks(
 						finalizeRemarks(tabBean.getScQtApproval()
 								.getScQtApprovalRemarks()));
+				if(this.getManagedBean().getQt().isBrandNew()){
+				tabBean.getScQtApproval().setScQt(this.getManagedBean().getQt());
+				}
 				// setUserDetails(tabBean.getScQtApproval());
 
 				approvalList.add(tabBean.getScQtApproval());
@@ -1559,7 +1567,7 @@ public class QTDetailBackingBean extends
 		List<TabBean> committeTabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		Long qtId = scQt.getQtId();
-		if (null != qtId && null == committeTabs) {
+		if (null != qtId) {
 			String evaluationType = this.getManagedBean().getQt()
 					.getEvaluationType();
 			String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
@@ -1567,13 +1575,13 @@ public class QTDetailBackingBean extends
 
 			committeTabs = new ArrayList<TabBean>();
 			// BO and specification committe is common for both evaluations..
+
 			/*String tabType = ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER;
 			ScQtCommittee boCommitte = getQtCommiteDtlsByQtIdNType(tabType,
 					qtId);
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, boCommitte));*/
-
-			String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
+              String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
 			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType,
 					qtId);
 			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
@@ -1584,7 +1592,7 @@ public class QTDetailBackingBean extends
 
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, specCommitte));
-			 
+			
 			if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT <= currentStatus) {
 				// evaluation type is one tier only oc is added..
 				if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
@@ -1680,7 +1688,7 @@ public class QTDetailBackingBean extends
 				ScQtCommittee committee = null;
 				committeTabs.add(new TabBean(fcTitleName, tabType, committee));
 			}
-		} else if (null == committeTabs) { // formed only SC committee while creating the new QT. 
+		} else  { // formed only SC committee while creating the new QT. 
         
 			String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
 			ParameterHelper parameterHelper = ParameterHelper.getInstance();
@@ -1752,55 +1760,7 @@ public class QTDetailBackingBean extends
 		
 	}
 
-	/**
-	 * Copy bo members to spec committe.
-	 * 
-	 * @param specCommitte
-	 *            the spec committe
-	 * @param boCommitte
-	 *            the bo committe
-	 */
-	private void copyBoMembersToSpecCommitte(ScQtCommittee specCommitte,
-			ScQtCommittee boCommitte) {
-		List<ScCommitteeMember> spceMembers = specCommitte.getScCommittee()
-				.getScCommitteeMembers();
-		List<ScCommitteeMember> boMembers = boCommitte.getScCommittee()
-				.getScCommitteeMembers();
-		if (QTStatusConst.CMT_PENDING_SUBMISSION.equals(specCommitte
-				.getScCommittee().getCommitteStatus().getStatusId())
-				&& spceMembers.isEmpty()) {
-
-			for (ScCommitteeMember committeeMember : boMembers) {
-
-				try {
-					ScCommitteeMember specCommitteeMember = (ScCommitteeMember) BeanUtils
-							.cloneBean(committeeMember);
-					specCommitteeMember.setCommitteeMemberId(null);
-					specCommitteeMember.setChangedDate(null);
-					specCommitteeMember.setScCommittee(specCommitte
-							.getScCommittee());
-					specCommitteeMember.setScCommittee(specCommitte
-							.getScCommittee());
-					spceMembers.add(specCommitteeMember);
-
-				} catch (IllegalAccessException e) {
-					throw new EpException(
-							"Error while copying the members into spec");
-
-				} catch (InvocationTargetException e) {
-					throw new EpException(
-							"Error while copying the members into spec");
-				} catch (InstantiationException e) {
-					throw new EpException(
-							"Error while copying the members into spec");
-				} catch (NoSuchMethodException e) {
-					throw new EpException(
-							"Error while copying the members into spec");
-				}
-			}
-		}
-
-	}
+	
 
 	/**
 	 * Retrieve finalization committee types.
@@ -2405,11 +2365,14 @@ public class QTDetailBackingBean extends
 	 */
 	public void retrieveSuppQualificationTabDtl() {
 		debugLogger("retrieveSuppQualificationTabDtl");
+		
 		if (this.getManagedBean().getQt().isZonal()
 				&& this.getManagedBean().getQt().isPanel()) {
 			retrieveQuationTenderDetails(this.getManagedBean().getQt()
 					.getQtId(), QTConstants.DOCTYPE_QT);
 		}
+		if(!this.getManagedBean().getQt().isBrandNew()){
+		
 		IQTDetailSO QtDetailsSO;
 		QuationTenderResDTO tenderResDTO;
 		try {
@@ -2453,7 +2416,7 @@ public class QTDetailBackingBean extends
 							tenderResDTO.getStateCode());
 					this.getManagedBean().setQt(scQt);
 
-					if (null == scQt.getScQtSupplierCriteria()) {
+					/*if (null == scQt.getScQtSupplierCriteria()) {
 						this.getManagedBean().setSupplierCriteria(
 								new ScQtSupplierCriteria());
 						this.getManagedBean().getSupplierCriteria()
@@ -2461,7 +2424,7 @@ public class QTDetailBackingBean extends
 					} else {
 						this.getManagedBean().setSupplierCriteria(
 								scQt.getScQtSupplierCriteria());
-					}
+					}*/
 
 					if (scQt.isPanel()) {
 						if (null != scQt.getScQtSuppliers()) {
@@ -2610,6 +2573,7 @@ public class QTDetailBackingBean extends
 			}
 		} finally {
 
+		}
 		}
 	}
 
@@ -3216,6 +3180,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void retrieveQuationTenderDetails(Long qtId, String docType) {
 		debugLogger("retrieveQuationTenderDetails");
+		if(null != qtId){
 		// this.getManagedBean().setActiveIndex(0);
 		IQTDetailSO QtDetailsSO;
 		try {
@@ -3322,6 +3287,7 @@ public class QTDetailBackingBean extends
 		} finally {
 			QtDetailsSO = null;
 		}
+		}
 	}
 
 	/**
@@ -3358,8 +3324,7 @@ public class QTDetailBackingBean extends
 							.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
 					parameterReqDTO
 							.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
-					parameterResDTO = parameterSO
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					
 				} else if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 						.equalsIgnoreCase(commType)) {
 					parameterReqDTO = new ParameterReqDTO();
@@ -3367,8 +3332,7 @@ public class QTDetailBackingBean extends
 							.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
 					parameterReqDTO
 							.setParameterCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
-					parameterResDTO = parameterSO
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					
 				} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 						.equalsIgnoreCase(commType)) {
 					parameterReqDTO = new ParameterReqDTO();
@@ -3376,8 +3340,7 @@ public class QTDetailBackingBean extends
 							.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
 					parameterReqDTO
 							.setParameterCode(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
-					parameterResDTO = parameterSO
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					
 				} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(commType)) {
 					parameterReqDTO = new ParameterReqDTO();
@@ -3385,8 +3348,7 @@ public class QTDetailBackingBean extends
 							.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
 					parameterReqDTO
 							.setParameterCode(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
-					parameterResDTO = parameterSO
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					
 				} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(commType)) {
 					parameterReqDTO = new ParameterReqDTO();
@@ -3394,8 +3356,7 @@ public class QTDetailBackingBean extends
 							.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
 					parameterReqDTO
 							.setParameterCode(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
-					parameterResDTO = parameterSO
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					
 				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(commType)) {
 					parameterReqDTO = new ParameterReqDTO();
@@ -3403,10 +3364,11 @@ public class QTDetailBackingBean extends
 							.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
 					parameterReqDTO
 							.setParameterCode(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
-					parameterResDTO = parameterSO
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					
 				}
 
+				parameterResDTO = parameterSO
+						.retrieveParameterByTypeAndCode(parameterReqDTO);
 				qtCommitte = new ScQtCommittee();
 				qtCommitte.setScQt(this.getManagedBean().getQt());
 				setUserDetails(qtCommitte);
@@ -4962,29 +4924,28 @@ public class QTDetailBackingBean extends
 	 * } }
 	 */
 	
-	private void circularListSelect(CtCircularVer circular) {
-		ICircularDetailSO circularDetailSO;
+	public void circularListSelect(CtCircularVer circular) {
+		IPanelGroupItemSO ipanelGroupItemSO;
 		try {
-			if (null != circular && null != circular.getCircularVerId()) {
-			CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
+			PanelGroupItemReqDTO reqDTO = new PanelGroupItemReqDTO();
 			this.getManagedBean().getQt().setCircularVer(circular);
-			circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.CONTRACT_MANAGEMENT,
-							ICircularDetailSO.class);
-			
+			ipanelGroupItemSO = (IPanelGroupItemSO) EpEjbBusinessDelegate
+					.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+							IPanelGroupItemSO.class);
+			if (null != circular) {
 				reqDTO.setCircularVerId(circular.getCircularVerId());
-				reqDTO.setQuotationTender(true);
-				CircularDetailResDTO resDTO = circularDetailSO
-						.getPanelItemsByCircularVerId(reqDTO);
-				this.getManagedBean().setSelectedpanelItems(
-						resDTO.getPanelItemList());
+								
+				PanelGroupItemResDTO resDTO = ipanelGroupItemSO
+						.retrievePanelGroupItemsByCircularVerId(reqDTO);
+				this.getManagedBean().setPanelGroupItems(resDTO.getCtPanelItemGroupList());
 				this.getManagedBean().setCircularType(circular.getDocType());
-
+						
 			}
 
 		} finally {
 
 		}
+
 	}
+	
 }

@@ -210,7 +210,7 @@ public class CreateQtBackingBean extends
 				scQt.setQtType(null);
 				scQt.setZonal(false);
 				scQt.setPanelItemId(null);
-				
+				scQt.setItemGroup(null);
 				//this.getManagedBean().setCtPanelItem(null);
 				this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
 				if (supplierCriteria != null) {
@@ -261,7 +261,7 @@ public class CreateQtBackingBean extends
 			scQt.setPmProcurementCategory(new PmParameter());
 			scQt.setPanel(true);
 			
-			ScQtCommittee qtCommitte = new ScQtCommittee();
+			/*ScQtCommittee qtCommitte = new ScQtCommittee();
 			qtCommitte.setScQt(scQt);
 			setUserDetails(qtCommitte);
 			qtCommitte.setCommitteeActivities(null);
@@ -284,7 +284,7 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setScQtCommittee(qtCommitte);
 			this.getManagedBean().setScCommitteeMemberList(
 					qtCommitte.getScCommittee().getScCommitteeMembers());
-			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
+			this.getManagedBean().setCommitteMember(new ScCommitteeMember());*/
 			PmStatus status = new PmStatus();
 			status.setStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
 			scQt.setQtStatus(status);
@@ -304,17 +304,18 @@ public class CreateQtBackingBean extends
 			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
 			supplierCriteria.setScQt(scQt);
 			scQt.setScQtSupplierCriteria(supplierCriteria);
-			this.getManagedBean().setSupplierCriteria(supplierCriteria);
+							
 			
-			this.getManagedBean().setQt(scQt);
-			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
-					.getStatusId();
-			this.getManagedBean().setCurrentStatusId(currentStatus);
 			this.getManagedBean().setActiveIndex(0);
 			scQt.setContractType(new PmParameter());
 			scQt.setCircularVer(new CtCircularVer());
 			
 			getMinistrySpecificationSecretaryList();
+			
+			this.getManagedBean().setQt(scQt);
+			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
+					.getStatusId();
+			this.getManagedBean().setCurrentStatusId(currentStatus);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
