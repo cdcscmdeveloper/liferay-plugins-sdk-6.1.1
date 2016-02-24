@@ -33,7 +33,7 @@
 					</ui:repeat> <c:if
 						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
-							rendered="#{!specificationBackingBean.managedBean.readOnly}"
+						rendered="#{!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.assignedState}"
 							style="float:right;" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							action="#{specificationBackingBean.saveSpecificationDtls}">
