@@ -94,8 +94,10 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="certInfPan"
+					disabled="#{empty backingBean.managedBean.smAppl.smSupplierCerts}"
 					action="#{backingBean.deleteSelectedCerts}"
-					update=":form:tt:certDt" 
+					update=":form:tt:certDt,@this" 
+					id="delCertBtnId"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
 			</div>
@@ -266,7 +268,8 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				id="certSaveBtn" action="#{backingBean.addOrUpdateCertsToSmAppl}"
 				partialSubmit="true" process="certPop"
-				update=":form:tt:certDt, @([id$=Msg])" />
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;" 
+				update=":form:tt:certDt, @([id$=Msg]),:#{p:component('delCertBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelSupplierCertAction}"
 				partialSubmit="true" process="@this" />
