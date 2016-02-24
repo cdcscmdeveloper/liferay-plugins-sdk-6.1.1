@@ -79,6 +79,7 @@
 			<portlet id="pPlanProcurementPlan"></portlet>
 			<portlet id="pCreateProcurementPlan"></portlet>
 			<portlet id="pPlanProcurementPlanDet"></portlet>
+			<portlet id="pPlanProcurementPlanSearch"></portlet>
 		</category>
 		<!-- Procurement Plan - END -->
 		
