@@ -150,7 +150,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private List<PmUser> pmUserList;
 	
 	private PmUser selectedAckOfficer;
-	private boolean issuanceCogstrCheck;
+	private boolean issuanceCogstrCheck=false;
 	
 	
 	/**
