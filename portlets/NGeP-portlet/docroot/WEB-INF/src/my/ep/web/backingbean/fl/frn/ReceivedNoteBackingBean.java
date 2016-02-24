@@ -1195,7 +1195,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(sumTotalReceivedQty.doubleValue() == sumTotalOrderQty.doubleValue()){
 			getManagedBean().setLastFRNTaxInv(true); 
 		}
-		System.out.println("isLastFRNTaxInv: "+getManagedBean().isLastFRNTaxInv());
 		if(getManagedBean().isLastFRNTaxInv()){
 			IDesignatedAreaSO designatedAreaSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
 			IGstItemSO gstItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
@@ -1240,6 +1239,25 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					break;
 				}else{
 					getManagedBean().setLastFRNTaxInv(false); 
+				}
+			}
+			if(!getManagedBean().isLastFRNTaxInv()){
+				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
+				FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReqId(reqDTO);
+				for(FlFulfilmentNote note : resDTO.getFulfilmentNoteList()){
+					if(getManagedBean().isLastFRNTaxInv()){
+						break;
+					}
+					for(FlFulfilmentNoteItem frnItem : note.getFlFulfilmentNoteItem()) {
+						if(frnItem.isCoGSTRReq()){
+							getManagedBean().setLastFRNTaxInv(true);
+							break;
+						}else{
+							getManagedBean().setLastFRNTaxInv(false); 
+						}
+					}
 				}
 			}
 		}
