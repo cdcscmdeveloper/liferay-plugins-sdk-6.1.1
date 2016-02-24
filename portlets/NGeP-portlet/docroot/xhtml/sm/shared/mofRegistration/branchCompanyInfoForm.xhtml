@@ -146,6 +146,7 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="brnInfPan"
+					id="delBranchBtnId" disabled="#{empty backingBean.managedBean.smAppl.smSupplierBranches}"
 					action="#{backingBean.deleteSelectedBranches}" update=":form:tt:dt" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 
@@ -211,7 +212,8 @@
 				id="branchPopUpSaveBtn"
 				action="#{backingBean.addOrUpdateBranchToSmAppl}"
 				partialSubmit="true" process="banchDialog"
-				update=":form:tt:dt,:form:tt:personDt,@([id$=Msg])" />
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;" 
+				update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.assignCancelBranchBean}" />
