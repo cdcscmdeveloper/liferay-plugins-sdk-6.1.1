@@ -713,6 +713,10 @@ public class SimpleQuoteBackingBean extends
 					ParameterConst.LOCATION_LEVEL_DISTRICT);
 		}
 		
+		if (null == scQuote.getStartDate()) {
+			scQuote.setStartDate(new Date());
+		}
+		
 		// to get ptj
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if (user != null) {
@@ -4443,6 +4447,12 @@ public class SimpleQuoteBackingBean extends
 		// pid expiry date
 		if(directPurchaseDataType.getPidExpiryDate() != null){
 			getManagedBean().setPidExpiryDate(directPurchaseDataType.getPidExpiryDate().getTime());	
+			getManagedBean().setTaskExpiryDate(directPurchaseDataType.getPidExpiryDate());
+			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.TRUE);
+		} else{
+			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
+			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.FALSE);
 		}
 		
 		Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
@@ -4453,10 +4463,6 @@ public class SimpleQuoteBackingBean extends
 			getPurchaseInDefaultExpiredMessage(getManagedBean().getCurrentStatusId());
 		}
 		
-		if(directPurchaseDataType.getPidExpiryDate() != null) {
-			getManagedBean().setTaskExpiryDate(directPurchaseDataType.getPidExpiryDate());
-		}
-
 		getManagedBean().setPidApprovers(directPurchaseDataType.getPidApprover());
 		
 		quoteReqDTO.setQuoteId(quoteId);
