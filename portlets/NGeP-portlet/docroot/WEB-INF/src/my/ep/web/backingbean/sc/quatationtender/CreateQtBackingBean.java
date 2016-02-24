@@ -572,10 +572,10 @@ public void setProcurementMode(ScQt scQt) {
 	 * @param event
 	 *            (String Openfor)
 	 */
-	public void openForChange(AjaxBehaviorEvent event,ScQt scQt) {
+	public void openForChange(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
-		scQt.setOpenFor(type);
+		this.getManagedBean().getQt().setOpenFor(type);
 	}
 	
 	/**

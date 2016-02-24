@@ -1900,6 +1900,7 @@ public class QTDetailBackingBean extends
 		}
 		
 		ScQt scQt = this.getManagedBean().getQt();
+		circularListSelect(scQt.getCircularVer());
 		if (scQt.getQtStatus() != null
 				&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt.getQtStatus().getStatusId()) 
 				&& scQt.isPanel()
@@ -3198,7 +3199,7 @@ public class QTDetailBackingBean extends
 			tenderReqDTO.setBdgDtlsReq(true);
 			QuationTenderResDTO tenderResDTO = null;
 			ScQt scQt = this.getManagedBean().getQt();
-			circularListSelect(scQt.getCircularVer());
+			
 			if (null == scQt
 					|| (scQt.isZonal()
 					/* && !scQt.isPanel() */
