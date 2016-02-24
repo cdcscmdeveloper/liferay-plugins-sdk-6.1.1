@@ -57,7 +57,7 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 			svcBB.getManagedBean().setTaskId(taskId);
 			//svcBB.getManagedBean().setAppType(svObj.getAppType());
 			svcBB.getManagedBean().setBpmPojo(svObj);
-			svcBB.retrieveSiteAssignInfo();
+			svcBB.retrieveSiteAssignInfo(svObj.getDocumentId());
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svcassignment/assignSiteVisitView");
