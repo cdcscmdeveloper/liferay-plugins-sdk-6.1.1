@@ -25,7 +25,8 @@
 						src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
 					<div align="right" style="padding-top: 10px;">
 						<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							onclick="this.disabled=true;"
+							onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide()"
 							action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
 							update=":form" />
 					</div>
