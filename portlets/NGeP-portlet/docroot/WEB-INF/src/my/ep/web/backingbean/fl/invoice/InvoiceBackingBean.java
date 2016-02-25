@@ -22,6 +22,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -30,6 +31,7 @@ import org.primefaces.model.TreeNode;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -58,7 +60,6 @@ import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -1944,7 +1945,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						chargeLineLv1.setLevel(1);
 						chargeLineLv1.setFlInvoiceSummary(invItemSummLv2);
 						
-						lv1TreeNode = new DefaultTreeNode(chargeLineLv1, getManagedBean().getTaxSectionItemRoot());
+						lv1TreeNode = new DefaultTreeNode(chargeLineLv1, getManagedBean().getOutOfScopeSectionItemRoot());
 						lvl1OOSMap.put(invItemSummLv2.getFlFulfilmentItem().getItemCode(), lv1TreeNode);
 						
 						InvoiceChargeLineVO chargeLineLv2 = new InvoiceChargeLineVO();
