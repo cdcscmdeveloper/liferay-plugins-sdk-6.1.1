@@ -2133,6 +2133,8 @@ public class QTDetailBackingBean extends
 								this.getManagedBean().setPublicationApproval(qtApproval);
 							}
 						} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
+								.equals(approvalCategoryCode) ||
+								ParameterConst.APPROVAL_CATEGORY_PROCUREMENT_BOARD
 								.equals(approvalCategoryCode)) {
 							List<ScQtApproverSettings> approvalSettings = qtApproval
 									.getApproverSettings();
@@ -4843,7 +4845,9 @@ public class QTDetailBackingBean extends
 	}
 
 	public void circularListSelect(CtCircularVer circular) {
-
+		if (circular == null) {
+			circular = new CtCircularVer();
+		}
 		this.getManagedBean().getQt().setCircularVer(circular);
 
 		this.getManagedBean().setPanelGroupItems(
