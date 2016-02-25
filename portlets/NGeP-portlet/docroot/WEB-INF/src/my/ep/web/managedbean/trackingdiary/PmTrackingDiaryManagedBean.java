@@ -109,7 +109,16 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String selectedDocType2;
 	private Long selectedDocId;
 	private List<PmZone> zoneList;
+	private String backURL;
 	
+	public String getBackURL() {
+		return backURL;
+	}
+
+	public void setBackURL(String backURL) {
+		this.backURL = backURL;
+	}
+
 	/** The category code. */
 	private String categoryCode;
 	
@@ -990,17 +999,17 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 								getSelectedDocType()));
 				isSearchBeanEmpty = false;
 			}
-//			if (getSelectedDocId() != null) {
-//				searchBean.getDataFilterBeans().add(
-//						new SearchFilterBean("docId",
-//								SearchOperator.OPERATOR_EQUALS.value(),
-//								getSelectedDocId()));
-//			}
-			if(getFromDate() != null){
+			if (getSelectedDocId() != null) {
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("actionedDate",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-								getFromDate()));
+						new SearchFilterBean("docId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getSelectedDocId()));
+			}
+//			if(getFromDate() != null){
+//				searchBean.getDataFilterBeans().add(
+//						new SearchFilterBean("actionedDate",
+//								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+//								getFromDate()));
 //			searchBean.getDataFilterBeans().add(
 //					new SearchMultiFilterBean(new SearchFilterBean(
 //							"actionedDate", SearchOperator.OPERATOR_GREATER_EQUAL
@@ -1009,22 +1018,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 //									SearchOperator.OPERATOR_LESS_EQUAL.value(),
 //									getToDate(),
 //									SearchCondition.CONDITION_AND.value())));
-				isSearchBeanEmpty = false;
-			}
-			if(getToDate() != null){
-				Calendar calendar = Calendar.getInstance();
-			    calendar.setTime(getToDate());
-			    calendar.set(Calendar.HOUR_OF_DAY, 23);
-			    calendar.set(Calendar.MINUTE, 59);
-			    calendar.set(Calendar.SECOND, 0);
-			    
-			    Date toDate = new Timestamp(calendar.getTime().getTime());
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("actionedDate",
-								SearchOperator.OPERATOR_LESS_EQUAL.value(),
-								toDate));		
-				isSearchBeanEmpty = false;
-			}
+//				isSearchBeanEmpty = false;
+//			}
+//			if(getToDate() != null){
+//				Calendar calendar = Calendar.getInstance();
+//			    calendar.setTime(getToDate());
+//			    calendar.set(Calendar.HOUR_OF_DAY, 23);
+//			    calendar.set(Calendar.MINUTE, 59);
+//			    calendar.set(Calendar.SECOND, 0);
+//			    
+//			    Date toDate = new Timestamp(calendar.getTime().getTime());
+//				searchBean.getDataFilterBeans().add(
+//						new SearchFilterBean("actionedDate",
+//								SearchOperator.OPERATOR_LESS_EQUAL.value(),
+//								toDate));		
+//				isSearchBeanEmpty = false;
+//			}
 			System.out.println("TrackingDiaryReqDTO-docType"
 					+ getSelectedDocType());
 			System.out
