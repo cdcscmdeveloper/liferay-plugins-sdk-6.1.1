@@ -65,7 +65,8 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smDocDtPanel" partialSubmit="true"
-					action="#{backingBean.deleteSelectedDocks}" update=":form:tt:docDt" 
+					action="#{backingBean.deleteSelectedDocks}" update=":form:tt:docDt,@this" 
+					id="delDockyardBtnId" disabled="#{empty backingBean.managedBean.applDockyardFacilities}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
@@ -233,7 +234,8 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateDockYardToSmAppl}"
 				partialSubmit="true" process="dockYardDialog"
-				update=":form:tt:docDt, @([id$=Msg])" />
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
+				update=":form:tt:docDt, @([id$=Msg]),:#{p:component('delDockyardBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				process="@this" partialSubmit="true"
 				action="#{backingBean.cancelDockyardSaveorUpdate}"

@@ -84,9 +84,10 @@
 					action="#{backingBean.assignNewManufacturerBean}" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					partialSubmit="true" process="manuInfPan"
+					partialSubmit="true" process="manuInfPan" id="delManuBtnId"
+					disabled="#{empty backingBean.managedBean.smAppl.smManufacturingDtls}"
 					action="#{backingBean.deleteSelectedManufacturers}"
-					update=":form:tt:manDt" 
+					update=":form:tt:manDt,@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
@@ -193,7 +194,8 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateManufacturerToSmAppl}"
 				partialSubmit="true" process="manufactorDialog"
-				update=":form:tt:manDt, @([id$=Msg])" />
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
+				update=":form:tt:manDt, @([id$=Msg]),:#{p:component('delManuBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelManuSaveorUpdate}" process="@this"
 				partialSubmit="true" />
