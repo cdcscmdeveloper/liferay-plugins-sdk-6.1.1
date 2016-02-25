@@ -600,10 +600,8 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setQt(selectedScQt);
 
 			circularListSelect(selectedScQt.getCircularVer());
-			if (QTStatusConst.QT_PENDING_SPECIFICATION_PREPARATION
-					.equals(currentStatus)
-					|| (QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
-							.getQtType())) {
+			if ( QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
+							.getQtType()) {
 				this.getManagedBean().setEditable(
 						getEnableFlagByStatus(currentStatus, null, null));
 				ScQtCommittee committee = getQtCommiteDtlsByQtIdNType("BO",
@@ -832,7 +830,7 @@ public class QTDetailBackingBean extends
 		}
 
 		scQt.setScQtBriefings(null);
-		if (scQt.getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+		if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
 			// Setting the qtBreifing details to Qtdetails
 			List<BriefingZoneBean> beansList = this.getManagedBean()
 					.getBriefingZoneBean();
@@ -1490,7 +1488,7 @@ public class QTDetailBackingBean extends
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, specCommitte));
 
-			if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT <= currentStatus) {
+			if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
 				// evaluation type is one tier only oc is added..
 				if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
 					tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
@@ -1797,7 +1795,7 @@ public class QTDetailBackingBean extends
 		if (scQt.getQtStatus() != null
 				&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
 						.getQtStatus().getStatusId()) && scQt.isPanel()
-				&& scQt.getEstimatedAmount().intValue() < 50000) {
+		&& isOneTierThresHold(scQt.getEstimatedAmount())) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1861,10 +1859,9 @@ public class QTDetailBackingBean extends
 			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
-			if (currentStatus
-					.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
-					|| currentStatus
-							.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
+			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)) {
 
 				// check if its Pending Schedule and Documents , only execute
 				// this part
@@ -2124,7 +2121,7 @@ public class QTDetailBackingBean extends
 									approvalCategoryCode, qtApproval, settings));
 						} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 								.equals(approvalCategoryCode)) {
-							if (scQt.getQtStatus().getStatusId() >= QTStatusConst.QT_BRIEFING_SITE_VISIT) {
+							if (isQTStatusPublished(scQt.getQtStatus().getStatusId())) {
 								tabBeans.add(new TabBean(titleName,
 										approvalCategoryCode, qtApproval,
 										approverSettingDtls(
@@ -2132,11 +2129,8 @@ public class QTDetailBackingBean extends
 												scQt.getPmOrgProfile()
 														.getOrgProfileId(),
 												qtApproval)));
-							} else {
-								if (scQt.getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
-									this.getManagedBean()
-											.setPublicationApproval(qtApproval);
-								}
+							} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) {
+								this.getManagedBean().setPublicationApproval(qtApproval);
 							}
 						} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
 								.equals(approvalCategoryCode)) {
@@ -3768,7 +3762,7 @@ public class QTDetailBackingBean extends
 		case 8:
 			break;
 		case 9:
-			if (this.getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				reqDTO = prepareQTInfo();
 				reqDTO.getQtdetail().setModified(true);
 				reqDTO.setSaveFlow(true);
@@ -3844,12 +3838,9 @@ public class QTDetailBackingBean extends
 					}
 					break;
 
-				case 5:
-					if (!this.getManagedBean().isMaintanceFlow()) {
-						if (getManagedBean().getQt().getQtStatus()
-								.getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-								&& getManagedBean().getQt().getQtStatus()
-										.getStatusId() < QTStatusConst.QT_BRIEFING_SITE_VISIT) {
+			case 5:
+				if (!this.getManagedBean().isMaintanceFlow()) {
+					if (isQTStatusBtwScheduleDocAndBeforePublished(getManagedBean().getQt().getQtStatus().getStatusId())) {
 
 							detailSO.validateScheduleDetails(reqDTO);
 						}
@@ -3863,16 +3854,13 @@ public class QTDetailBackingBean extends
 					}
 					break;
 
-				case 7:
-					break;
-				case 8:
-					break;
-				case 9:
-					if (!this.getManagedBean().isMaintanceFlow()) {
-						if (getManagedBean().getQt().getQtStatus()
-								.getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-								&& getManagedBean().getQt().getQtStatus()
-										.getStatusId() < QTStatusConst.QT_BRIEFING_SITE_VISIT) {
+			case 7:
+				break;
+			case 8:
+				break;
+			case 9:
+				if (!this.getManagedBean().isMaintanceFlow()) {
+					if (isQTStatusBtwScheduleDocAndBeforePublished(getManagedBean().getQt().getQtStatus().getStatusId())) {
 
 							reqDTO.getQtdetail().setCallPTJValidation(true);
 							detailSO.validateApprovalDetails(reqDTO);
@@ -3904,21 +3892,21 @@ public class QTDetailBackingBean extends
 				break;
 
 			case 4:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retriveTechnicalSpecification();
 				} else {
 					retrieveBriefingSitevisitTabDtl();
 				}
 				break;
 			case 5:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retriveFinancialSpecification();
 				} else {
 					retrieveScheduleTabDtl();
 				}
 				break;
 			case 6:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retrieveActivitiesTabDtl();
 				} else {
 					retrieveDeductionPaymentTabDtl();
@@ -3926,7 +3914,7 @@ public class QTDetailBackingBean extends
 				}
 				break;
 			case 7:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retrieveDocumentTabDtl();
 				}
 				break;
@@ -3934,13 +3922,24 @@ public class QTDetailBackingBean extends
 				retrieveActivitiesTabDtl();
 				break;
 			case 9:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retrievePublicationApprovalTabDtl();
 				}
 				break;
 			}
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
+	}
+	
+	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
+		return isQTStatusInBetween(currentStatusId,
+				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+				QTStatusConst.QT_PENDING_PUBLICATION);
+	}
+	
+	private boolean isQTStatusGreaterThanOrEqualsScheduleDoc(Long currentStatusId) {
+		return isQTStatusGreaterThanOrEquals(currentStatusId,
+				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
 	}
 
 	/**
@@ -4087,10 +4086,6 @@ public class QTDetailBackingBean extends
 			return true;
 		}
 
-		if (QTStatusConst.QT_PENDING_SPECIFICATION_PREPARATION.equals(statusId)) {
-			return true;
-		}
-
 		if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(evalType)) {
 			if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(statusId)) {
 				return true;
@@ -4181,7 +4176,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt scQt = this.getManagedBean().getQt();
 
-			if (this.getManagedBean().getCurrentStatusId() >= QTStatusConst.QT_PENDING_PUBLICATION) {
+			if (isQTStatusGreaterThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.QT_PENDING_PUBLICATION)) {
 				quationTenderReqDTO.setQtId(scQt.getQtId());
 				quationTenderReqDTO
 						.setApprovalType(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
@@ -4282,8 +4277,7 @@ public class QTDetailBackingBean extends
 
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt qt = this.getManagedBean().getQt();
-			if (QTStatusConst.QT_BRIEFING_SITE_VISIT <= qt.getQtStatus()
-					.getStatusId()) {
+			if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
 				qt.setScQtCommittees(null);
 				qt.setScQtBriefings(null);
 				qt.setScQtStatus(null);
@@ -4549,9 +4543,8 @@ public class QTDetailBackingBean extends
 
 		PmStatus pmStatus = scQt.getQtStatus();
 		if (null != pmStatus) {
-			Long qtStatus = pmStatus.getStatusId();
-			if (qtStatus > QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
-					&& qtStatus < QTStatusConst.QT_BRIEFING_SITE_VISIT
+			Long currentStatusId = pmStatus.getStatusId();
+			if (isQTStatusInBetween(currentStatusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_PUBLICATION)
 					&& !this.getManagedBean().isMaintanceFlow()) {
 				return true;
 			}
@@ -4628,8 +4621,7 @@ public class QTDetailBackingBean extends
 		ScQtApproval approval = null;
 
 		if (!isFieldToBeEnabled) {
-
-			if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(statusId) > 0) {
+			if (isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION)) {
 
 				approval = getQtApprovalByCategory(approvals,
 						ParameterConst.APPROVAL_CATEGORY_BPK);

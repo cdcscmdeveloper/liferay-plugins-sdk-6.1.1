@@ -30,7 +30,7 @@
 						value="#{lbl['lbl.btn.print']}" type="button">
 						<p:printer target="financialCheckListBankStatement" />
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveBankCheckListScores}">
@@ -56,11 +56,11 @@
 					<tr>
 						<td style="width: 10%;"><p:outputLabel
 								value=" #{lbl['lbl.sc.spec.from.month']}"></p:outputLabel> <ui:fragment
-								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 							</ui:fragment></td>
 						<td><p:selectOneMenu required="true" style="width:100px;"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 								label="#{lbl['lbl.sc.spec.from.month']}"
 								value="#{specificationBackingBean.managedBean.fromMonth}">
 
@@ -69,7 +69,7 @@
 								<p:ajax event="change" update="toDetailsUpdate,amountdetails"
 									listener="#{specificationBackingBean.bankStatementsfromChange}"></p:ajax>
 							</p:selectOneMenu> <p:spacer width="1"></p:spacer> <p:selectOneMenu
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 								style="width:60px;"
 								value="#{specificationBackingBean.managedBean.startYear}">
 
@@ -123,14 +123,14 @@
 				<table>
 					<tr>
 						<td style="width: 200px;"><ui:fragment
-								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 								<p:outputLabel value="*" styleClass="mandatory"
 									style="float : left"></p:outputLabel>
 							</ui:fragment> <p:outputLabel style="float : left"
 								value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu required="true"
 								style="width: 180px;margin-bottom: 5px;"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 								label="#{lbl['lbl.sc.spec.asset.score.type']}"
 								id="bankStatementAutoScore"
 								value="#{specificationBackingBean.managedBean.checklistScoreType}">
@@ -165,14 +165,14 @@
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									process="@this,#{scoringPnlId}" partialSubmit="true"
 									oncomplete="scoreWidget.paginator.endLink.click();"
 									actionListener="#{specificationBackingBean.addScoring(50)}"
 									update="#{scoringPnlId}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									process="@this" partialSubmit="true"
 									oncomplete="financialBankStatementsDeletePopUp.show();"
 									update="@([id$=#{financiaBankStatementsDeleteId}])">
@@ -201,14 +201,14 @@
 						<table>
 							<tr>
 								<td style="width: 200px;"><ui:fragment
-										rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+										rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 										<p:outputLabel value="*" styleClass="mandatory"
 											style="float : left"></p:outputLabel>
 									</ui:fragment> <p:outputLabel style="float : left"
 										value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
 								<td><p:inputText id="bankStmtMaxScore" required="true"
 										style="text-align:right;"
-										disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
