@@ -4418,7 +4418,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * set true item row select check box
 	 */
 	public void itemRowUnselectCheckbox(AjaxBehaviorEvent e){
-		getManagedBean().setItemDeleteButtonShow(true);
+		//getManagedBean().setItemDeleteButtonShow(true);
+		if(null !=getManagedBean().getSelectedItemsRows() && getManagedBean().getSelectedItemsRows().size()>0){
+			getManagedBean().setItemDeleteButtonShow(false);
+		}else{
+			getManagedBean().setItemDeleteButtonShow(true);
+		}
 	}
 	
 	/**
