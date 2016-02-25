@@ -26,7 +26,8 @@
 			var="approverSettings">
 			<p:column headerText="#{lbl['lbl.sc.finalization.committee']}">
 				<c:choose>
-					<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate}">
+					<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate and 
+							qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryFinalizationCommittee}">
 						<p:selectOneMenu id="fcApprovalId"
 							value="#{approverSettings.committeType}"
 							style="width: 178px;margin-bottom: 5px;">
