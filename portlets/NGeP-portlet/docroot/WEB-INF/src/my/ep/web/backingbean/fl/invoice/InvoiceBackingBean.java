@@ -1822,29 +1822,32 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			Map<String, TreeNode> lvl1OOSMap = new HashMap<String, TreeNode>();
 			BigDecimal grandTotalInvAmt = new BigDecimal(0);
 			TreeNode lv1TreeNode = null;
-			boolean isTax = false; 
-			boolean isOutOfScope = false; 
+			List<FlInvoiceItemSummary> taxList = new ArrayList<FlInvoiceItemSummary>(); 
+			List<FlInvoiceItemSummary> outOfScopeList = new ArrayList<FlInvoiceItemSummary>(); 
 			
 			for(FlInvoiceItemSummary invoiceItemSummary : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
 				for(FlInvoiceItem invItem : invoiceItemSummary.getFlInvoiceItem()){
 					if(!invItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
-						isTax = true;
+						if(!taxList.contains(invoiceItemSummary)){
+							taxList.add(invoiceItemSummary);
+						}
 					}
 					if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
-						isOutOfScope = true;
+						if(!outOfScopeList.contains(invoiceItemSummary)){
+							outOfScopeList.add(invoiceItemSummary);
+						}
 					}
 				}
 			}
-			if(isTax){
+			if(!taxList.isEmpty()){
 				getManagedBean().setTaxSectionItemRoot(new DefaultTreeNode("root", null));
 			}
-			if(isOutOfScope){
+			if(!outOfScopeList.isEmpty()){
 				getManagedBean().setOutOfScopeSectionItemRoot(new DefaultTreeNode("root", null));
 			}
 			InvoiceChargeLineVO chargeLineLv1 = null;
 			TreeNode lv2TaxTreeNode = null;
-			if(isTax){
-				for(FlInvoiceItemSummary invItemSummLv2 : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+				for(FlInvoiceItemSummary invItemSummLv2 : taxList){
 					if(lvl1TaxMapTree.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode())) {
 //						chargeLineLv1 = new InvoiceChargeLineVO();
 //						chargeLineLv1.setLevel(1);
@@ -1907,13 +1910,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
-			}
 			
 			getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
 			
 			BigDecimal grandTotalOosAmt = new BigDecimal(0);
-			if(isOutOfScope){
-				for(FlInvoiceItemSummary invItemSummLv2 : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+				for(FlInvoiceItemSummary invItemSummLv2 : outOfScopeList){
 					if(lvl1OOSMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode())) {
 //						chargeLineLv1 = new InvoiceChargeLineVO();
 //						chargeLineLv1.setLevel(1);
@@ -1974,7 +1975,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						}
 					}
 				}
-			}
+			
 			
 			getManagedBean().setOosInvAmtGrandTotal(grandTotalOosAmt);
 			//Clause under Invoice  Item page only display if any of the invoice item is 'RS'and 'OS'
