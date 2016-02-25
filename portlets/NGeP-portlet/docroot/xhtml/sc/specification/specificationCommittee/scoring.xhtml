@@ -16,7 +16,7 @@
 			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="#{scoringPnlId}"
@@ -24,7 +24,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					value="#{checkListScoring.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
@@ -32,7 +32,7 @@
 			<p:column style="width:37%">
 				<f:facet name="header">
 					<ui:fragment
-						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.from']}" />
@@ -44,7 +44,7 @@
 				<p:inputText id="#{scoringPnlId}_fromRangeTN"
 					style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TN' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FN'}"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
@@ -55,7 +55,7 @@
 				<p:inputText id="#{scoringPnlId}_fromRangeTG"
 					style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'AL'}"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax process="@this" partialSubmit="true"
@@ -70,7 +70,7 @@
 				<p:inputText id="#{scoringPnlId}_fromRangeFG"
 					style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TN' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FN'}"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax process="@this" partialSubmit="true"
@@ -84,7 +84,7 @@
 			<p:column style="width:30%">
 				<f:facet name="header">
 					<ui:fragment
-						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.to']}" />
@@ -93,7 +93,7 @@
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toRangeNE" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL'}"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					required="#{index lt scoringList.size()-1}"
 					label="#{lbl['lbl.sc.to']}" value="#{checkListScoring.rangeTo}"
 					maxlength="18">
@@ -103,7 +103,7 @@
 
 				<p:inputText id="#{scoringPnlId}_toRangeBS" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'AL'}"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					required="#{index lt scoringList.size()-1}"
 					label="#{lbl['lbl.sc.to']}" value="#{checkListScoring.rangeTo}"
 					maxlength="18">
@@ -119,13 +119,13 @@
 			<p:column style="width:30%">
 				<f:facet name="header">
 					<ui:fragment
-						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.score']}" />
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toScore" style="text-align:right"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.score']}" value="#{checkListScoring.score}"
 					maxlength="18">
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>

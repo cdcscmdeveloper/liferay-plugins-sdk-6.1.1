@@ -33,7 +33,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -69,7 +68,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -1756,7 +1754,7 @@ public class QTCommitteBackingBean extends
 						new String[] { committee });
 			}
 		}
-		if (status.getStatusId() >= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
+		if (isQTStatusGreaterThan(status.getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 			for (String committee : committeCodes) {
 				if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 						.equalsIgnoreCase(committee)) {
@@ -1939,13 +1937,12 @@ public class QTCommitteBackingBean extends
 
 		} else {
 			String taskName = this.getManagedBean().getTaskName();
-			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
-					.equals(this.getManagedBean().getCurrentStatusId())
+			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(this.getManagedBean().getCurrentStatusId()))
 					&& !SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(taskName)) {
 				return true;
-			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0
+			} else if (isQTStatusAfterScheduleDoc(this.getManagedBean().getCurrentStatusId())
 					&& !(SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(taskName)
 							|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
@@ -1968,6 +1965,11 @@ public class QTCommitteBackingBean extends
 		}
 		return false;
 
+	}
+	
+	private boolean isQTStatusAfterScheduleDoc(Long currentStatusId) {
+		return isQTStatusGreaterThan(currentStatusId,
+				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
 	}
 
 	/**
@@ -1992,14 +1994,13 @@ public class QTCommitteBackingBean extends
 						.getManagedBean().getQt().getQtStatus().getStatusId())) {
 			return true;
 		} else {
-			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
-					.equals(this.getManagedBean().getCurrentStatusId())
+			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(this.getManagedBean().getCurrentStatusId()))
 					&& !SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getTaskName())) {
 				return true;
-			} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-					.compareTo(this.getManagedBean().getCurrentStatusId()) < 0
+			} else if (isQTStatusAfterScheduleDoc(this.getManagedBean().getCurrentStatusId())
 					&& !SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getTaskName())) {

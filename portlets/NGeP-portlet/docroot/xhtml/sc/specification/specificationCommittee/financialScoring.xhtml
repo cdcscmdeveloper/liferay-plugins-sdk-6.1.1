@@ -13,12 +13,12 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.weightage']}" />
 					<ui:fragment
-						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
 
 				<td><p:selectOneRadio id="finScoreWeight"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
@@ -46,7 +46,7 @@
 
 				<f:facet name="header">
 					<ui:fragment
-						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.max.score']}" />
@@ -61,7 +61,7 @@
 				<ui:fragment
 					rendered="#{((finance.definationType.parameterCode eq 'UP' or finance.definationType.parameterCode eq 'NA') and finance.scoringReq)}">
 					<p:inputText value="#{finance.qtScoreWeightage.score}"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						maxlength="18" required="true" label="#{lbl['lbl.sc.score']}"
 						id="finScoreWeightage" style="text-align:right">
 						<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
@@ -81,7 +81,7 @@
 						value="#{lbl['lbl.sc.spec.weight.weight.tooltip']}" />
 				</f:facet>
 				<p:inputText value="#{finance.qtScoreWeightage.weightage}"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					maxlength="5" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 
@@ -135,7 +135,7 @@
 							value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.checkFinancialPassingScore(specificationBackingBean.managedBean.financialScoreSetting)}" />
@@ -167,7 +167,7 @@
 				<p:row>
 					<p:column>
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.specOfferpricePackageFromVarieance(specificationBackingBean.managedBean.offerPricePackage)}" />
@@ -176,7 +176,7 @@
 
 					<p:column colspan="1">
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.specOfferpricePackageToVarieance(specificationBackingBean.managedBean.offerPricePackage)}" />
@@ -184,7 +184,7 @@
 					</p:column>
 					<p:column colspan="1">
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.specOfferpricePackageBelowScore(specificationBackingBean.managedBean.offerPricePackage)}" />
@@ -197,7 +197,7 @@
 					</p:column>
 					<p:column colspan="1">
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.specOfferpricePackageAboveScore(specificationBackingBean.managedBean.offerPricePackage)}" />
@@ -223,7 +223,7 @@
 						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.passingScore}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -255,7 +255,7 @@
 
 				<p:column colspan="1" style="font-weight: bold;">
 					<p:inputText style="text-align:right" maxlength="5"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.overallFin}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -270,7 +270,7 @@
 
 				<p:column colspan="1" style="font-weight: bold;">
 					<p:inputText style="text-align:right" maxlength="5"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.overallOtherFin}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -308,7 +308,7 @@
 					<table style="width: 500px;">
 						<tr>
 							<td colspan="2"><p:commandButton
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									oncomplete="financialUserScoringSchema.show();return false;"
 									value="#{lbl['lbl.txt.attach.files']}" partialSubmit="true"
 									process="@this">
@@ -338,7 +338,7 @@
 													styleClass="blue_font" immediate="true"
 													action="#{specificationBackingBean.downloadFile(attachFile)}" />
 												<p:commandLink
-												disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+												disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 													action="#{specificationBackingBean.deleteTechnicalFinacialUserScoringSchema('F')}"
 													immediate="true" update="@form">
 													<h:graphicImage styleClass="tasklist_title1"

@@ -29,7 +29,7 @@
 						value="#{lbl['lbl.btn.print']}" type="button">
 						<p:printer target="techCheckListGovtCompExp" />
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveCheckListScores}">
@@ -60,11 +60,11 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.spec.company.exp.since.year']} "></p:outputLabel>
 							<ui:fragment
-								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 							</ui:fragment></td>
 						<td><p:inputText id="techGovCompany"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 								label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
 								required="true" style="text-align:right;"
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
@@ -140,14 +140,14 @@
 				<table>
 					<tr>
 						<td width="150px"><ui:fragment
-								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+								rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 								<p:outputLabel value="*" styleClass="mandatory"
 									style="float : left" />
 							</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"
 								style="float : left" /></td>
 						<td><p:selectOneMenu id="techGovNoOfContractsAutoScore"
 								style="width:180px;margin-bottom: 5px;"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 								label="#{lbl['lbl.sc.spec.asset.score.type']}"
 								value="#{specificationBackingBean.managedBean.checklistScoreType}">
 								<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
@@ -180,14 +180,14 @@
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									process="@this,#{scoringPnlId}" partialSubmit="true"
 									oncomplete="scoreWidget.paginator.endLink.click();"
 									actionListener="#{specificationBackingBean.addScoring(10)}"
 									update="#{scoringPnlId}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									process="@this" partialSubmit="true"
 									oncomplete="technicalGovCompanyExperienceNoOfContractsDeletePopUp.show();"
 									update="@([id$=#{technicalGovCompanyExperienceNoOfContractsId}])">
@@ -215,14 +215,14 @@
 						<table>
 							<tr>
 								<td width="150px"><ui:fragment
-										rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+										rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 										<p:outputLabel value="*" styleClass="mandatory"
 											style="float : left" />
 									</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
 										style="float : left" /></td>
 								<td><p:inputText required="true" maxlength="18"
 										style="text-align:right;"
-										disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										label="#{lbl['lbl.sc.spec.max.score']}"
 										id="techGovCompanyContracts"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
@@ -246,7 +246,7 @@
 								value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu id="techGovNoOfYearsAutoScore"
 								style="width:180px;margin-bottom: 5px;"
-								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+								disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 								label="#{lbl['lbl.sc.spec.asset.score.type']}"
 								value="#{specificationBackingBean.managedBean.companyScoreType}">
 								<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
@@ -285,7 +285,7 @@
 									<p:column style="width:3px;text-align:center;">
 										<f:facet name="header">
 											<p:selectBooleanCheckbox
-												disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+												disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 												value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
 												<p:ajax partialSubmit="true" process="@this"
 													update="#{scoringPnlId}"
@@ -293,7 +293,7 @@
 											</p:selectBooleanCheckbox>
 										</f:facet>
 										<p:selectBooleanCheckbox
-											disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+											disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 											value="#{checkListScoring.selected}">
 											<p:ajax partialSubmit="true" process="@this" update="@this" />
 										</p:selectBooleanCheckbox>
@@ -301,7 +301,7 @@
 									<p:column style="width:37%">
 										<f:facet name="header">
 											<ui:fragment
-												rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+												rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 												<h:outputText value="* " styleClass="mandatory" />
 											</ui:fragment>
 											<h:outputText value="#{lbl['lbl.sc.from']}"
@@ -315,7 +315,7 @@
 
 										<p:inputText id="#{scoringPnlId}_fromRangeyears"
 											style="text-align:right"
-											disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+											disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 											label="#{lbl['lbl.sc.from']}" required="true"
 											value="#{checkListScoring.rangeFrom}" maxlength="18">
 											<p:ajax process="@this" partialSubmit="true"
@@ -329,7 +329,7 @@
 									<p:column style="width:30%">
 										<f:facet name="header">
 											<ui:fragment
-												rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+												rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 												<h:outputText value="* " styleClass="mandatory" />
 											</ui:fragment>
 											<h:outputText value="#{lbl['lbl.sc.to']}"
@@ -339,7 +339,7 @@
 										<p:inputText id="#{scoringPnlId}_toRangeTGYears"
 											style="text-align:right"
 											rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL'}"
-											disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+											disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 											required="#{index lt scoringList.size()-1}"
 											label="#{lbl['lbl.sc.to']}"
 											value="#{checkListScoring.rangeTo}" maxlength="18">
@@ -356,14 +356,14 @@
 									<p:column style="width:30%">
 										<f:facet name="header">
 											<ui:fragment
-												rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+												rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 												<h:outputText value="* " styleClass="mandatory" />
 											</ui:fragment>
 											<h:outputText value="#{lbl['lbl.sc.score']}" />
 										</f:facet>
 										<p:inputText id="#{scoringPnlId}_toScore"
 											style="text-align:right"
-											disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+											disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 											label="#{lbl['lbl.sc.score']}"
 											value="#{checkListScoring.score}" maxlength="18">
 											<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
@@ -378,14 +378,14 @@
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									process="@this,#{scoringPnlId}" partialSubmit="true"
 									oncomplete="scoreWidget.paginator.endLink.click();"
 									actionListener="#{specificationBackingBean.addScoringyears(11)}"
 									update="#{scoringPnlId}" />
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									styleClass="BtnSpacing"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									process="@this" partialSubmit="true"
 									oncomplete="technicalGovCompanyExperienceNoOfYearsDeletePopUp.show();"
 									update="@([id$=#{technicalGovCompanyExperienceNoOfYearsDeleteId}])">
@@ -414,13 +414,13 @@
 						<table>
 							<tr>
 								<td width="150px"><ui:fragment
-										rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+										rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 										<p:outputLabel value="*" styleClass="mandatory"
 											style="float : left"></p:outputLabel>
 									</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
 										style="float : left"></p:outputLabel></td>
 								<td><p:inputText style="text-align:right;"
-										disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+										disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 										value="#{specificationBackingBean.managedBean.scQtContractScore.score}"
 										maxlength="18" required="true"
 										label="#{lbl['lbl.sc.spec.max.score']}" id="techGovYrs">

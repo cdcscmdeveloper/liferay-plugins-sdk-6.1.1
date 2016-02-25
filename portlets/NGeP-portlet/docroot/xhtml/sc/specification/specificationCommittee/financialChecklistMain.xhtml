@@ -45,7 +45,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
-					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					rendered="#{stageTwofunctional.manditory !='true' and stageTwofunctional.definationType.parameterCode ne 'TS'}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwofunctional,index)}" />
@@ -109,7 +109,7 @@
 					<ui:fragment
 						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey  eq null)) or(stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode ne 'TS'))}">
 						<p:selectOneMenu style="width:100px;" required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							id="finhChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwofunctional.definationType.parameterId}">
 							<f:selectItems
@@ -144,7 +144,7 @@
 						rendered="#{((stageTwofunctional.pmDocument ne null and (stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' or stageTwofunctional.pmDocument.docDefinitionKey  eq null)) or(stageTwofunctional.pmDocument eq null and stageTwofunctional.definationType.parameterCode ne 'TS'))}">
 						
 						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq null}"
 							required="true" id="financialactionnull"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
@@ -157,7 +157,7 @@
 						</p:selectOneMenu>
 
 						<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
-							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode ne null}"
 							required="true" id="financialactionnotnullvalue"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
@@ -178,7 +178,7 @@
 				style="width:5%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreFinanceView">
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and   stageTwofunctional.action.parameterCode ne 'U') and !(stageTwofunctional.definationType.parameterCode eq 'TS' and stageTwofunctional.action.parameterCode eq 'I') and !(stageTwofunctional.definationType.parameterCode eq 'UP' and stageTwofunctional.action.parameterCode eq 'V'))}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialChecklistSpecificationStatus"
@@ -196,14 +196,14 @@
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'U' and stageTwofunctional.action.parameterCode ne 'V' and !fn:contains(stageTwofunctional.title,'Annual') and !fn:contains(stageTwofunctional.title,'Verification')}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialChecklistSpecificationStatus"
 							listener="#{specificationBackingBean.financialCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="actionView,financialChecklistSpecificationStatus"
@@ -227,7 +227,7 @@
 				<h:panelGroup id="uploadFinance">
 					<p:commandLink oncomplete="uploadS1Fin.show();return false;"
 						update="financeProposaltwo"
-						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}">
+						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and (specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()))}">
 						<h:graphicImage value="/css/images/design/upload.png" />
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
@@ -240,7 +240,7 @@
 						action="#{specificationBackingBean.downloadFile(stageTwofunctional.scQtCheckListAttachment)}" />
 
 					<p:commandLink
-						rendered="#{stageTwofunctional.scQtCheckListAttachment.fileName ne null and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
+						rendered="#{stageTwofunctional.scQtCheckListAttachment.fileName ne null and (specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						action="#{specificationBackingBean.deleteCheckListAttachmentFile(stageTwofunctional.scQtCheckListAttachment)}"
 						immediate="true" update="@form">
 						<h:graphicImage styleClass="tasklist_title1"
@@ -256,7 +256,7 @@
 			<p:column style="width:5%;text-align: center;">
 				<f:facet name="header">
 					<ui:fragment
-						rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						rendered="#{specificationBackingBean.isQTStatusChecklistScoring()}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
@@ -268,12 +268,12 @@
 						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD') and (stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'))}">
 
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or 
-						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION}">
+							rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
+						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()}">
 							<h:graphicImage value="/css/images/design/edit.png" />
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							rendered="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}">
 							<h:graphicImage value="/css/images/design/ico-view.png" />
 						</ui:fragment>
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
@@ -286,12 +286,12 @@
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.definationType.parameterCode eq 'SD' and stageTwofunctional.scoringReq}">
 
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or 
-						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION}">
+							rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
+						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()}">
 							<h:graphicImage value="/css/images/design/edit.png" />
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							rendered="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}">
 							<h:graphicImage value="/css/images/design/ico-view.png" />
 						</ui:fragment>
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
@@ -306,20 +306,20 @@
 		<div align="right">
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 				process="@this" partialSubmit="true"
 				oncomplete="stageTwoFinance.show();"
 				actionListener="#{specificationBackingBean.retriveFinancialStandardCheckList}"
 				update="stageTwoFinPopup" />
 			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 				process="@this,financeProposaltwo" partialSubmit="true"
 				action="#{specificationBackingBean.addFinancialCheckList}"
 				update="@all,financeProposaltwo" />
 
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 				process="@this" partialSubmit="true"
 				oncomplete="financialCheckListDeletePopUp.show();"
 				update="@([id$=#{financialCheckListDeleteId}])">
