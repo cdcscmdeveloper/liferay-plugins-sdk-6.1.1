@@ -309,9 +309,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	              }
 		
 	              // Retrieve Items
+	              ctBB.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
+	               ctBB.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
 	              if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
-	    	               ctBB.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
-	    	               ctBB.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
 	    	               ctBB.getManagedBean().setShowItem(null);
 	    	               ctBB.getManagedBean().setSelectedItem(null);
 	    	               ctBB.getManagedBean().setSelectedServiceItem(null);	    	  
