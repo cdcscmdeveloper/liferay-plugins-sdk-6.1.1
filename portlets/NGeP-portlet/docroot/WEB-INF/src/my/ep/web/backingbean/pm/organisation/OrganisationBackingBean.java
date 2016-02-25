@@ -221,6 +221,7 @@ public class OrganisationBackingBean extends
 
 		}
 		getManagedBean().setShowParentMsg(true);
+		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 		return NAV_TO_MAINTAIN;
 	}
 
