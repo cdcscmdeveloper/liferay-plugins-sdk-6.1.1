@@ -19,7 +19,6 @@ import java.util.Iterator;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -129,7 +128,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			       ContractReqDTO reqDTO = null;
 		           HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 				   HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-				        
 				   String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 				   String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
 				        
@@ -279,9 +277,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		 if (!getManagedBean().isViewOnly()) {
 			return CONTRACT_MAINT_PAGE;
 		 } else { // view suspension from notification
-			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.redirect(commonUrl + "notifications");
+				FacesContext.getCurrentInstance().getExternalContext().redirect(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL + "notifications"));
 			return null;
 		 }
 	 }
@@ -298,10 +294,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			 ContractResDTO resDTO = null;
 			 ContractAmendmentResDTO amendmentResDTO = null;
 			 try {
-				 		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-				 			ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				 		amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
-				 			ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+				 		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				 		amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 				 		ContractReqDTO reqDTO = new ContractReqDTO();
 				 		ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
 			
@@ -567,8 +561,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * Method to retrieve portal name from property file
     */
 	 public String getPortletTitle() {
-		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.suspension", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		return portletTitle;
+		return ResourceBundleUtils.getMessage("lbl.ct.contract.suspension", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 	 
 	 /**
@@ -615,25 +608,26 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * Call save suspension method once authentication done
     */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 			validateSuspensionDetails(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(getManagedBean().getContractVer().getDocType());
-			sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			sb.append(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+			sb.append(ContractConst.SEPRATE_LINE);
 			sb.append(outcome);			
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());			
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
+		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
-		} else {
+		}   else {
 			return saveContractSuspension(outcome);
 		}
 	}
