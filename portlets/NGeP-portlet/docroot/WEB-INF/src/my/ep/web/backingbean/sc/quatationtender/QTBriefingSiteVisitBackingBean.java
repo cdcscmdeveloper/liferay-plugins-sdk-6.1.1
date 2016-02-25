@@ -144,7 +144,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			Long stateId = this.getManagedBean().getQtBriefing().getAddress()
 					.getPmState().getStateId();
 			// PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
-			if (!this.getManagedBean().isStateCode() && divisionId == null) {
+			if (!this.getManagedBean().isState() && divisionId == null) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(stateId);
 				IDistrictSO reqSO = (IDistrictSO) BusinessDelegate
@@ -197,7 +197,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	 */
 	public void retrievePmDivisions() {
 		debugLogger("retrievePmDistrictList");
-		this.getManagedBean().setStateCode(false);
+		this.getManagedBean().setState(false);
 		if (null != this.getManagedBean().getQtBriefing()) {
 			/*
 			 * this.getManagedBean().getQtBriefing().getAddress()
@@ -213,7 +213,7 @@ public class QTBriefingSiteVisitBackingBean extends
 						.retrievePmStateByStateId(stateId);
 				if (ParameterConst.SARAK_SK_CODE.equalsIgnoreCase(pmState
 						.getStateCode())) {
-					this.getManagedBean().setStateCode(true);
+					this.getManagedBean().setState(true);
 					this.getManagedBean().setDivisionList(
 							PmCommonUtil.retrievePmDivisionList(stateId));
 				} else {

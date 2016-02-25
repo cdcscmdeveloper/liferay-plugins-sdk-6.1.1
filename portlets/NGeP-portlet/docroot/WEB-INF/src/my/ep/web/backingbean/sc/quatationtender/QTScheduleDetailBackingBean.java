@@ -170,7 +170,7 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void retrievePmDivisions() {
 		debugLogger("retrievePmDistrictList");
-		this.getManagedBean().setStateCode(false);
+		this.getManagedBean().setState(false);
 		if (null != this.getManagedBean().getScQtSampleSubmission()) {
 			Long stateId = this.getManagedBean().getScQtSampleSubmission()
 					.getAddress().getPmState().getStateId();
@@ -182,7 +182,7 @@ public class QTScheduleDetailBackingBean extends
 						.retrievePmStateByStateId(stateId);
 				if (ParameterConst.SARAK_SK_CODE.equalsIgnoreCase(pmState
 						.getStateCode())) {
-					this.getManagedBean().setStateCode(true);
+					this.getManagedBean().setState(true);
 					this.getManagedBean().setDivisionList(
 							PmCommonUtil.retrievePmDivisionList(stateId));
 				} else {
@@ -218,7 +218,7 @@ public class QTScheduleDetailBackingBean extends
 			}
 			Long stateId = this.getManagedBean().getScQtSampleSubmission()
 					.getAddress().getPmState().getStateId();
-			if (!this.getManagedBean().isStateCode() && divisionId == null) {
+			if (!this.getManagedBean().isState() && divisionId == null) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(stateId);
 				IDistrictSO reqSO = (IDistrictSO) BusinessDelegate
