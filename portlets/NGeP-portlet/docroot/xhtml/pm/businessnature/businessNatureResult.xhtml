@@ -44,11 +44,10 @@
 
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}"
 				style="width:5%;text-align:center;">
-
 				<p:commandLink rendered="#{businessNature.businessLevel!='50'}"
 					action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
 					style="margin-right: 10px;" update="@form">
-					<p:graphicImage title="#{lbl['lbl.pm.add.division.category']}"
+					<p:graphicImage title="#{businessNatureBackingBean.retrieveActionLabel(businessNature.businessLevel)}"
 						value="/css/images/design/add.png" />
 			</p:commandLink>
 
