@@ -14,7 +14,8 @@
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
-						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" onclick="this.disabled=true;"
+							onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
