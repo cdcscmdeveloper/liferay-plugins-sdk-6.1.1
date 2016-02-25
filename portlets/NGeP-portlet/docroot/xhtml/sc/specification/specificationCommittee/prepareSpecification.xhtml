@@ -38,12 +38,12 @@
 				<p:commandLink process="@this" partialSubmit="true"
 					action="#{specificationBackingBean.committeeSpecEditAction(index,financialSpec,'T')}">
 					<ui:fragment
-						rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or 
-						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION}">
+						rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
+						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()}">
 						<h:graphicImage value="/css/images/design/edit.png" />
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						rendered="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}">
 						<h:graphicImage value="/css/images/design/ico-view.png" />
 					</ui:fragment>
 
@@ -58,7 +58,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
 				styleClass="BtnSpacing"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
-				disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
+				disabled="#{((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
 				process="@this" partialSubmit="true"
 				oncomplete="createOwnerSpec.show();" update="@([id$=commiteeCreationSpec])"/>
 

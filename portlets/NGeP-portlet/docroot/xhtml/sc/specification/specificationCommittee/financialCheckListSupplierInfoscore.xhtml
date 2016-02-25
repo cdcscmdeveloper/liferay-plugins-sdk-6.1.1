@@ -43,12 +43,12 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
 								<ui:fragment
-									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
 									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 								</ui:fragment></td>
 							<td><p:inputText id="totalSuppliersScore" required="true"
 									style="text-align:right;"
-									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 									label="#{lbl['lbl.sc.spec.max.score']}"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
 									maxlength="18">

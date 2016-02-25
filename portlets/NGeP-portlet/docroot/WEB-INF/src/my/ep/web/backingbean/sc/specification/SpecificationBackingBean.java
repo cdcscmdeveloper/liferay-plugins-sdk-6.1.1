@@ -16721,4 +16721,22 @@ public class SpecificationBackingBean extends
 		}
 
 	}
+	
+	/**
+	 * Check status is checklist and scoring
+	 * 
+	 * @return
+	 */
+	public boolean isQTStatusChecklistScoring() {
+		return QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(getManagedBean().getCurrentStatusId());
+	}
+	
+	/**
+	 * Check status is checklist and scoring revision
+	 * 
+	 * @return
+	 */
+	public boolean isQTStatusChecklistScoringRevision() {
+		return QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(getManagedBean().getCurrentStatusId());
+	}
 }

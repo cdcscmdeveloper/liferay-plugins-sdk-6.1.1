@@ -58,6 +58,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
@@ -2082,9 +2083,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
-	
-	
-public List<PmUser> getUsersByRoleCode(String roleCode) {
+	public List<PmUser> getUsersByRoleCode(String roleCode) {
 		
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2094,5 +2093,30 @@ public List<PmUser> getUsersByRoleCode(String roleCode) {
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 		return userResDTO.getUserList();
 		
+	}
+	
+	protected boolean isQTStatusPublished(Long currentStatusId) {
+		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
+	}
+	
+	protected boolean isQTStatusGreaterThanOrEquals(Long currentStatusId, Long fromStatusId) {
+		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		
+		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
+	}
+	
+	protected boolean isQTStatusGreaterThan(Long currentStatusId, Long fromStatusId) {
+		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		
+		return orderedStatuses.indexOf(currentStatusId) > orderedStatuses.indexOf(fromStatusId);
+	}
+	
+	protected boolean isQTStatusInBetween(Long currentStatusId, Long fromStatusId, Long toStatusId) {
+		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		orderedStatuses = orderedStatuses.subList(
+				orderedStatuses.indexOf(fromStatusId), 
+				orderedStatuses.indexOf(toStatusId + 1));
+		
+		return orderedStatuses.contains(currentStatusId);
 	}
 }
