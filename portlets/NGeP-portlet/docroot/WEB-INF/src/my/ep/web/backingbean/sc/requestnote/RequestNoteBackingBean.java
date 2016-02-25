@@ -2373,7 +2373,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestSupplierItem scRequestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 			
 			if(priceTypeId != null && priceTypeId > 0){
-				if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
+				if(scRequestSupplierItem !=null 
+						&& scRequestSupplierItem.getSupplierItemPrices() != null 
+					    && scRequestSupplierItem.getSupplierItemPrices().size()>0){
 
 					for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
 						// zonal item price  
