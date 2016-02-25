@@ -17,7 +17,7 @@
 			<ac:paginator for="addressDataTable" />
 			<p:ajax event="rowSelect"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-				update=":form:itemDetPanelGroup,:form:deleteAddrBtn"
+				update=":form:itemDetPanelGroup"
 				listener="#{contractRequestBackingBean.selectAddrEvent()}" />			
 			<p:column rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}">
 				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
