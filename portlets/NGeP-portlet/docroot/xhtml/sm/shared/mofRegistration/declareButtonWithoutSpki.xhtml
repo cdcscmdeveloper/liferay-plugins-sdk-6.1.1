@@ -19,9 +19,9 @@
 			<p:commandButton id="yes" value="#{lbl['lbl.btn.download']}" ajax="false" onclick="printConfirm.hide()">
 				<p:fileDownload value="#{backingBean.printSupplierProfile()}" />
 			</p:commandButton>
-			<p:commandButton id="no" onclick="this.disabled=true;"
+			<p:commandButton id="no"
 				value="#{lbl['lbl.btn.proceed']}" onclick="printConfirm.hide()" 
-				onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide()"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{backingBean.submitSmApplToBpm(backingBean.managedBean.smAppl.applType)}" />
 		</div>
 
