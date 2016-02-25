@@ -14,7 +14,8 @@
 					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							onclick="this.disabled=true;"
+							onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />

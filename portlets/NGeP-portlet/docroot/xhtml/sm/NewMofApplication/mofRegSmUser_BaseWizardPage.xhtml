@@ -212,7 +212,8 @@
 												update=":form" onclick="mofApplDelConfirm.show()"
 												type="button" style="margin-bottom:5px;" />
 											<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												onclick="this.disabled=true;"
+												onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 												update=":form" style="margin-bottom:5px;" />
@@ -252,8 +253,8 @@
 													update=":form" onclick="mofApplDelConfirm.show()"
 													type="button" style="margin-bottom:5px;" />
 												<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-													onstart="blockWidget.show()"
-													oncomplete="blockWidget.hide()"
+													onclick="this.disabled=true;"
+													onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 													update=":form" style="margin-bottom:5px;" />
