@@ -1020,7 +1020,7 @@ public class QTDetailBackingBean extends
 		quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 
 		quationTenderReqDTO.setToBeRemoveList(this.getManagedBean()
-				.getToBeRemoveList());
+				.getToBeApprovalRemoveList());
 
 		List<ScQtDeduction> deductionRemoveList = this.getManagedBean()
 				.getRemoveDeductions();
@@ -2207,11 +2207,11 @@ public class QTDetailBackingBean extends
 						}
 					} else {
 						if (this.getManagedBean().getToBeRemoveList() == null) {
-							this.getManagedBean().setToBeRemoveList(
+							this.getManagedBean().setToBeApprovalRemoveList(
 									new ArrayList<ScQtApproval>());
 
 						}
-						this.getManagedBean().getToBeRemoveList()
+						this.getManagedBean().getToBeApprovalRemoveList()
 								.add(qtApproval);
 					}
 				}
