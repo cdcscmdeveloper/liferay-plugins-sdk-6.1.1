@@ -535,6 +535,7 @@ public class ProfileManagementBackingBean extends
 		} else {
 			initialUserProfile();
 		}
+		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 		return NAV_TO_MAINTAIN;
 	}
 

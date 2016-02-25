@@ -280,7 +280,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			loadPlanDetails(id, true);
 			loadDefaultButtons();
 		}
-
+		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 		return NAV_TO_MAINTAIN;
 	}
 	

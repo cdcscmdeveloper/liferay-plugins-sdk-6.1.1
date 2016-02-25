@@ -1031,4 +1031,29 @@ public class BusinessNatureBackingBean extends
 
 	}
 
+	public String retrieveActionLabel(String level){
+		String label = null;
+		if("10".equals(level)){
+			label = ResourceBundleUtils.getMessage(
+					"lbl.pm.add.division.category",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		}else if("20".equals(level)){
+			label = ResourceBundleUtils.getMessage(
+					"lbl.pm.add.group.category",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		}else if("30".equals(level)){
+			label = ResourceBundleUtils.getMessage(
+					"lbl.pm.add.class.category",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		}else if("40".equals(level)){
+			label = ResourceBundleUtils.getMessage(
+					"lbl.pm.add.item.category",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		}
+		return label;
+	}
 }
