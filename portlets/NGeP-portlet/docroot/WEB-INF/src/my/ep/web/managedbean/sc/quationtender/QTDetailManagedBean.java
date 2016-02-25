@@ -1256,6 +1256,8 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 
 	/** The state code. */
 	private String stateCode;
+	
+ private boolean isState;
 
 	/** The district code. */
 	private String districtCode;
@@ -1518,7 +1520,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	private boolean specNewable = Boolean.TRUE;
 
 	/** For Create Specification Screen. */
-	private QtnTenderSearchBean qtnTendertemplateSearchBean;
+	private QtnTenderSearchBean qtnTendertemplateSearchBean= new QtnTenderSearchBean();
 
 	/** The temp zone name. */
 	private String tempZoneName;
@@ -1556,7 +1558,8 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	
 	/** The selected flag. */
 	private boolean selectedFlag;
-
+	
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -8662,6 +8665,14 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 
 	public void setCheckAllList(boolean isCheckAllList) {
 		this.isCheckAllList = isCheckAllList;
+	}
+
+	public boolean isState() {
+		return isState;
+	}
+
+	public void setState(boolean isState) {
+		this.isState = isState;
 	}
 
 }
