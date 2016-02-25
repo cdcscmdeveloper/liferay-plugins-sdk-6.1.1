@@ -42,7 +42,7 @@
 		</p:inputText>	
 		<p:graphicImage id="#{phonePanelId}teleno"	value="/css/images/design/tooltips.png" /> 
 		<p:tooltip	id="#{phonePanelId}tfno" for="#{phonePanelId}teleno">
-			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telephoneno']}" />
+			<p:outputLabel escape="false" value="#{cc.attrs.isMobile ? lbl['tt.sm.registration.user.mobileno'] : lbl['tt.sm.registration.company.telephoneno']}"  />
 		</p:tooltip>
 		&#160;
 		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
