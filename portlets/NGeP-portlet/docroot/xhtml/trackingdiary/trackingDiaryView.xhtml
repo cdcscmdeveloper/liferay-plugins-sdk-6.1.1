@@ -1,0 +1,76 @@
+<ui:composition
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:tp="http://java.sun.com/jsf/composite/ep"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	
+	<ui:define name="contentSection">
+
+			
+		<p:panel>
+<table style="width: 100%">
+		<tr>
+			<td>
+			<div align="left" style="width: 100%">
+			    <p:commandButton value="#{lbl['lbl.btn.back']}" action="#{pmTrackingDiaryBackingBean.redirectToMainPage}"
+			  	 />
+			 </div>
+			 </td>
+			 <td>
+			 <div align="right" style="width: 100%">
+			  <p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
+				<p:fileDownload value="#{pmTrackingDiaryBackingBean.generateReport(pmTrackingDiaryBackingBean.managedBean.selectedDocType, pmTrackingDiaryBackingBean.managedBean.selectedDocId)}" />
+			</p:commandLink>
+			  </div>
+			 </td>
+		</tr>
+		</table>
+     <p:panel header="Trackng Diary Details" toggleable="true">
+			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{pmTrackingDiaryBackingBean.managedBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
+
+				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
+
+				<p:column width="15%">
+					<f:facet name="header">
+					Action Date
+					</f:facet>
+				#{trackingDiaryObj.actionedDate}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Action By
+					</f:facet>
+				#{pmTrackingDiaryBackingBean.getUserName(trackingDiaryObj.actionedBy)}
+				</p:column>
+					<p:column width="15%"> 
+				<f:facet name="header">
+				Role 
+				</f:facet> 
+			   #{pmTrackingDiaryBackingBean.getRoleDescByRoleCode(trackingDiaryObj.roleCode)}
+             	</p:column> 
+				<p:column width="25%">
+					<f:facet name="header">
+					Action/Description
+					</f:facet>
+				#{trackingDiaryObj.actionDesc}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Status
+					</f:facet>
+			  		#{pmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				</p:column>
+
+			</p:dataTable>
+			</p:panel>
+
+		</p:panel>			
+		
+</ui:define>
+</ui:composition>

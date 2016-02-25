@@ -293,6 +293,9 @@ public class ReportConst {
 	public static final String PM_LIST_OF_EXEMPTED_CONTRACTED_ITEMS_RPT_VAL = "PM_007";
 	public static final String PM_BPK_USER_PROFILE_RPT_VAL = "PM_008";
 	public static final String PM_BPK_ADMIN_PROFILE_RPT_VAL = "PM_009";
+	
+	//Tracking Diary - JSP
+	public static final String PM_TRACKING_DAIRY_REPORT_NAME = "TRACKING_DAIRY.jsp";
 
 	// JSP
 	public static final String FL_NGEP_PURCHASE_ORDER = "FL_NGEP_PURCHASE_ORDER.jsp";
@@ -875,11 +878,14 @@ public class ReportConst {
 	public static final String PARAM_KEY_UOM_ID = "uomid";
 	public static final String PARAM_KEY_USER_ID = "puser";
 	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
-	public static final String PARAM_DOC_NO = "PNO";
+	public static final String PARAM_DOC_NO = "PNO"; 
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_QUOTE_ID_EQ = "qtid";
 	public static final String PARAM_KEY_REPORT_ID = "preportid";
 	public static final String PARAM_RELIEF_ORDER_DOC_NO = "PRELIEFORDERNO";
+	public static final String PARAM_DOC_ID = "PDOCID"; 
+	public static final String PARAM_DOC_TYPE = "PDOCTYPE"; 
+	
 
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";

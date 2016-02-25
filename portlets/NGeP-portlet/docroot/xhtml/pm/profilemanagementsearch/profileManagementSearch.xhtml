@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:outputPanel id="pmSearch">
+		<table class="ppTwoTable">
+			
+		    <tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgType']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:selectOneMenu
+						id="somAccessApplOrgType" 
+						label="#{lbl['lbl.pm.organisation.orgType']}"
+						value="#{profileManagSearchBackingBean.managedBean.selectedOrgType}">
+						<f:selectItems
+							value="#{profileManagSearchBackingBean.getOrgTypeDropdownValues()}" />
+						<p:ajax event="change"
+							listener="#{profileManagSearchBackingBean.changeOrgType()}"
+							update=":form:lovOrg:lovOrg,@this" />
+					</p:selectOneMenu></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgName']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><ac:lov id="lovOrg"
+						lovId="PM_ORG_PROFILE" size="40" 
+						update="@form"
+						readonly="true"
+						disabled="#{empty profileManagSearchBackingBean.managedBean.selectedOrgType or not isBrandNew}"
+						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+						value="#{profileManagSearchBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
+						saveObject="profileManagSearchBackingBean.managedBean.selectedOrgProfile"
+						conditionField="#{profileManagSearchBackingBean.constructConditionFields()}"
+						postUpdateListener="profileManagSearchBackingBean.changeOrgUnit" /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th><p:outputLabel value="#{lbl['lbl.pm.access.app.request.type']}" />
+								<p:outputLabel value="* " styleClass="mandatory" /></th>
+							<td><p:selectOneMenu id="somReasonCat"
+									label="#{lbl['lbl.pm.reason.category']}"
+									styleClass="ppDropDownWidthM"
+									value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCategoryParam.parameterId}">
+									<f:selectItems
+										value="#{rejectionReasonBackingBean.reasonCategoryOptions()}" />
+									<p:ajax event="change"
+										listener="#{rejectionReasonBackingBean.reasonCategoryChange(true,
+							rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCategoryParam.parameterId)}"
+										update="pRejectReasonSearch" />
+				</p:selectOneMenu></td>
+								
+			</tr>
+			<tr>
+				
+			</tr>
+			<tr>
+				
+			</tr>
+			
+			<tr>
+				<td colspan="4">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{profileManagementBackingBean.searchUserProfile}"
+							update=":form:dtUserResult" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				        <p:commandButton value="#{lbl['lbl.btn.reset']}"  update=":form:opDefinedSearch, :form:dtUserResult" 
+				           	action="#{profileManagementBackingBean.resetUserProfileSearchBean}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				  	</div>
+				</td>
+			</tr>
+		</table>
+		  <ac:lovPopup />
+ 	</p:outputPanel>
+</ui:composition>
