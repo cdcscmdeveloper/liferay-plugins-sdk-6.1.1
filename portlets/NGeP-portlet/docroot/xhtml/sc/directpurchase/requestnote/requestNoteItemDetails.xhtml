@@ -205,8 +205,7 @@
 					<h:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}"
 						style="width:115px; margin-top: 8px;" id="prepareBy"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.loa.prepare.by']}"
-						disabled="#{isViewOnly}"
-						required="#{!requestNoteDtl.selected}">
+						disabled="#{isViewOnly}" required="#{!requestNoteDtl.selected}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
@@ -282,113 +281,148 @@
 			</p:dataTable>
 		</h:panelGrid>
 
+		<ui:param name="isSourcheMethodAsSC"
+			value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
+
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
 				partialSubmit="true" process="@this"
-				rendered="#{!isViewOnly}"
-				onsuccess="applyAllPopUp.show();" update="@([id$=applyAllPopUp])" />
+				rendered="#{!isViewOnly and isSourcheMethodAsSC}"
+				onsuccess="applyAllPopUp.show();" update="@([id$=applyAllItems])" />
+
+			<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
+				partialSubmit="true" process="@this"
+				rendered="#{!(isViewOnly or isSourcheMethodAsSC)}"
+				onsuccess="applyAllPopUpSQ.show();"
+				update="@([id$=applyAllItemsSQ])" />
+
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
 				rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}"
 				partialSubmit="true" onsuccess="deleteConformDlg.show();"
 				update="@([id$=requestListDataTable])" />
 		</div>
-	</p:panel>
 
-	<p:dialog id="deleteConformDlg" widgetVar="deleteConformDlg"
-		header="#{lbl['lbl.msg.confirm.delete.header']}" resizable="false"
-		width="400" height="100" closable="false" modal="true">
-		<table>
-			<tr>
-				<td align="center"><h:graphicImage
-						value="/css/images/design/exclamation.png" /> <p:outputLabel
-						value="#{lbl['lbl.msg.confirm.delete']}" /></td>
-			</tr>
-		</table>
-		<div class="ppRightBtn BtnSpacing">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"
-				update="@([id$=requestListDataTable])"
-				onsuccess="deleteConformDlg.hide();" partialSubmit="true"
-				process="@this"
-				actionListener="#{requestNoteBackingBean.deleteRequestNoteDtl}" />
-
-			<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-				process="@this" onclick="deleteConformDlg.hide();" type="button" />
-		</div>
-	</p:dialog>
-
-
-	<p:dialog id="applyAllItems" widgetVar="applyAllPopUp"
-		header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true"
-		dynamic="true" closable="false" position="center" resizable="false"
-		styleClass="pop_up_top" width="1000">
-		<p:panel id="applyAll">
-			<ui:param name="isSourcheMethodAsSC"
-				value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
-
-			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<p:dialog id="deleteConformDlg" widgetVar="deleteConformDlg"
+			header="#{lbl['lbl.msg.confirm.delete.header']}" resizable="false"
+			width="400" height="100" closable="false" modal="true">
+			<table>
 				<tr>
-					<td width="22%"><p:outputLabel
-							value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" /></td>
-					<td><h:selectOneMenu style="width:200px;"
-							value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
-							disabled="false">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{requestNoteBackingBean.managedBean.userList}"
-								var="user" itemLabel="#{user.userName}"
-								itemValue="#{user.userId}"></f:selectItems>
-						</h:selectOneMenu></td>
-
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.request.note.delivery.term']}" /></td>
-					<td><p:inputText id="periodId"
-							style="width:300px;text-align:right;margin-top: 7px;"
-							label="#{lbl['lbl.sc.request.note.delivery.term']}"
-							rendered="#{isSourcheMethodAsSC}"
-							value="#{requestNoteBackingBean.managedBean.periodValue}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.procurment.type.category']}"
-							rendered="#{isSourcheMethodAsSC}" /></td>
-					<td><h:selectOneMenu id="procTypeCategoryId"
-							value="#{requestNoteBackingBean.managedBean.procTypeCategoryId}"
-							style="width:200px;"
-							label="#{lbl['lbl.sc.procurment.type.category']}"
-							rendered="#{isSourcheMethodAsSC}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{requestNoteBackingBean.procTypeCategories}"
-								var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
-								itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
-						</h:selectOneMenu></td>
-
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.direct.purchase.title']}"
-							rendered="#{isSourcheMethodAsSC}" /></td>
-					<td><p:inputTextarea id="procTitle" rows="2"
-							label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
-							value="#{requestNoteBackingBean.managedBean.procTitle}"
-							autoResize="false" style="width:300px;" /></td>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.msg.confirm.delete']}" /></td>
 				</tr>
 			</table>
+			<div class="ppRightBtn BtnSpacing">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					update="@([id$=requestListDataTable])"
+					onsuccess="deleteConformDlg.hide();" partialSubmit="true"
+					process="@this"
+					actionListener="#{requestNoteBackingBean.deleteRequestNoteDtl}" />
 
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.sc.apply']}"
-					style="margin-top: 10px;" partialSubmit="true"
-					process="@this applyAll" onsuccess="applyAllPopUp.hide();"
-					action="#{requestNoteBackingBean.applyForRequestNote}"
-					update="@([id$=requestListDataTable])" />
-
-				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
-					update="@form" process="@this"
-					action="#{requestNoteBackingBean.cancelApplyAllItemsPopup}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					process="@this" onclick="deleteConformDlg.hide();" type="button" />
 			</div>
-		</p:panel>
+		</p:dialog>
 
-	</p:dialog>
+		<p:dialog id="applyAllItems" widgetVar="applyAllPopUp"
+			header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true"
+			dynamic="true" closable="false" position="center" resizable="false"
+			styleClass="pop_up_top" width="1000">
+			<p:panel id="applyAll">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td width="22%"><p:outputLabel
+								value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" /></td>
+						<td><h:selectOneMenu style="width:200px;"
+								value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
+								disabled="false">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{requestNoteBackingBean.managedBean.userList}"
+									var="user" itemLabel="#{user.userName}"
+									itemValue="#{user.userId}"></f:selectItems>
+							</h:selectOneMenu></td>
 
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.request.note.delivery.term']}" /></td>
+						<td><p:inputText id="periodId"
+								style="width:300px;text-align:right;margin-top: 7px;"
+								label="#{lbl['lbl.sc.request.note.delivery.term']}"
+								value="#{requestNoteBackingBean.managedBean.periodValue}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.procurment.type.category']}" /></td>
+						<td><h:selectOneMenu id="procTypeCategoryId"
+								value="#{requestNoteBackingBean.managedBean.procTypeCategoryId}"
+								style="width:200px;"
+								label="#{lbl['lbl.sc.procurment.type.category']}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{requestNoteBackingBean.procTypeCategories}"
+									var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+									itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
+							</h:selectOneMenu></td>
+
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.direct.purchase.title']}" /></td>
+						<td><p:inputTextarea id="procTitle" rows="2"
+								label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
+								value="#{requestNoteBackingBean.managedBean.procTitle}"
+								autoResize="false" style="width:300px;" /></td>
+					</tr>
+				</table>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.sc.apply']}"
+						style="margin-top: 10px;" partialSubmit="true"
+						process="@this applyAll" onsuccess="applyAllPopUp.hide();"
+						action="#{requestNoteBackingBean.applyForRequestNote}"
+						update="@([id$=requestListDataTable])" />
+
+					<p:commandButton value="#{lbl['lbl.sc.close']}"
+						partialSubmit="true" update="@form" process="@this"
+						action="#{requestNoteBackingBean.cancelApplyAllItemsPopup}" />
+				</div>
+			</p:panel>
+		</p:dialog>
+
+		<p:dialog id="applyAllItemsSQ" widgetVar="applyAllPopUpSQ"
+			header="#{lbl['lbl.sc.request.note.apply.all.items']}" modal="true"
+			dynamic="true" closable="false" position="center" resizable="false"
+			styleClass="pop_up_top" width="500">
+			<p:panel id="applyAllSQ">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" /></td>
+						<td><h:selectOneMenu style="width:200px;"
+								value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
+								disabled="false">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{requestNoteBackingBean.managedBean.userList}"
+									var="user" itemLabel="#{user.userName}"
+									itemValue="#{user.userId}"></f:selectItems>
+							</h:selectOneMenu></td>
+					</tr>
+				</table>
+
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.sc.apply']}"
+						style="margin-top: 10px;" partialSubmit="true"
+						process="@this applyAllSQ" onsuccess="applyAllPopUpSQ.hide();"
+						action="#{requestNoteBackingBean.applyForRequestNote}"
+						update="@([id$=requestListDataTable])" />
+
+					<p:commandButton value="#{lbl['lbl.sc.close']}"
+						partialSubmit="true" update="@form" process="@this"
+						onclick="applyAllPopUpSQ.hide();" />
+				</div>
+			</p:panel>
+		</p:dialog>
+	</p:panel>
 </ui:composition>
