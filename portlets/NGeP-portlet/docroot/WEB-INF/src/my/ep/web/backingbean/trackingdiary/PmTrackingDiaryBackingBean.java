@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.trackingdiary;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,16 +11,14 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
-import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -27,6 +26,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
@@ -59,6 +60,7 @@ import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -68,6 +70,11 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "pmTrackingDiaryBackingBean")
 @ViewScoped
@@ -182,6 +189,14 @@ public class PmTrackingDiaryBackingBean extends
 		this.getManagedBean().resetDocResultBean();
 	}
 	
+	public String getUserName(Long userId) {
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(userId);
+		UserResDTO resDTO = new UserResDTO();
+		IUserSO trackingDiarySO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		resDTO = trackingDiarySO.retrieveUserByUserId(reqDTO);
+		return resDTO.getPmUser().getUserName();
+	}
 	/**
 	 * reset search bean fields
 	 */
@@ -306,7 +321,79 @@ public class PmTrackingDiaryBackingBean extends
 		}
 		return zoneList;
 	}
+	/**
+	 * Generate report based on doc type.
+	 *
+	 * @param docType the doc type
+	 * @param docNo the doc no
+	 */
+	public void generateReport(String docType, String docId) {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		log.info("......docType="+docType);
+		log.info("......docId="+docId);
+		paramMap.put(ReportConst.PARAM_DOC_ID, docId);
+		paramMap.put(ReportConst.PARAM_DOC_TYPE, docType);
+		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
+		
+		if(docType !=null && docId !=null) {
+			try {
+				generateReport(reportName, paramMap);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new EpException("Report is not available for this document.");
+		}
+	}
+	
+	public void redirectToMainPage(){
+		log.info(".....redirectToMainPage.....");
+		log.info("............this.getManagedBean().getBackURL()"+this.getManagedBean().getBackURL());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, this.getManagedBean().getBackURL()); 
+//		return this.getManagedBean().getBackURL();
+	}
+	/**
+	 * Get Role description by role code and language.
+	 * 
+	 * @param roleCode
+	 *            the role code.
+	 * @param languageCode
+	 *            the role code.
+	 * @return role description
+	 */
+	public String getRoleDescByRoleCode(String roleCode) {
+		log.info("getRoleDescByRoleCode");
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
+	}
 
+	
+	public void redirectToTrackingDiary(String docType, Long docId, String url)  throws IOException,PortalException, SystemException{
+		System.out.println("...........redirectToTrackingDiary............");
+		System.out.println("...........docType:"+docType);
+		System.out.println("...........docId:"+docId);
+		System.out.println("...........url:"+url);
+		//search and redirect to trackingDiaryView.xhtml
+		this.getManagedBean().setSelectedDocType(docType);
+		this.getManagedBean().setSelectedDocId(docId);
+		this.getManagedBean().setBackURL(url);
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+//		FacesScopes facesScope = new FacesScopes();
+//		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+//		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+//		String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(
+//						themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+//		externalContext.redirect(commonUrl + "/tracking-diary-view");
+//		????????
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "/xhtml/trackingdiary/trackingDiaryView.xhtml");
+//		return "/xhtml/trackingdiary/trackingDiaryView.xhtml";
+		
+	}
 	public void onFunctionSelect() {
 		System.out.println("............onFunctionSelect..........this.getManagedBean().getFunctionType()...."+this.getManagedBean().getFunctionType());
 
