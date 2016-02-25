@@ -23,7 +23,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
@@ -40,7 +39,6 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -56,8 +54,6 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -123,7 +119,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	private CtTerminationReason[] selectedTerminationReasonsList;
 	private CtAgency selectedRecommendedAgency;
 	private IPagingDataModel<CtAgency> agencyDataModel = new AgencyPagingDataModel();	
-
+	SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 	 /**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
@@ -296,43 +292,41 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		IContractAmendmentSO amendmentSO = null;
 		ContractResDTO resDTO = null;
 		ContractAmendmentResDTO amendmentResDTO = null;
+		
 		try {
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
-			
-			if (this.getManagedBean().getContractVer().getCtContractAmount().isAgreement()) {
-				//Retrieve amendment
-				amendmentReqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
-				amendmentReqDTO.setAmendmentEffectiveDate(this.getManagedBean().getContractVer().getCtContractAmount().getEffDate());
-				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
-				
-				if (amendmentResDTO.getCtAmendment() != null) {
-					ctBB.getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
-				} else {
-					reqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
-					reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+					contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+					amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 					
-					resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
-					ctBB.getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
-				}				
-			} else {
-				ctBB.getManagedBean().setAgreementContractVer(this.getManagedBean().getContractVer());
+					if (this.getManagedBean().getContractVer().getCtContractAmount().isAgreement()) {
+							//Retrieve amendment
+							ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
+							amendmentReqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
+							amendmentReqDTO.setAmendmentEffectiveDate(this.getManagedBean().getContractVer().getCtContractAmount().getEffDate());
+							amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
+						
+							if (amendmentResDTO.getCtAmendment() != null) {
+								ctBB.getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+							} else {
+								ContractReqDTO reqDTO = new ContractReqDTO();
+								reqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
+								reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+								
+								resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
+								ctBB.getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+							}				
+					} else {
+						ctBB.getManagedBean().setAgreementContractVer(this.getManagedBean().getContractVer());
+					}
+			} catch(Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			} finally {
+				contractSO = null;
+				amendmentSO = null;
+				resDTO  = null;
+				amendmentResDTO = null;
 			}
-		} catch(Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		} finally {
-			contractSO = null;
-			amendmentSO = null;
-			resDTO  = null;
-			amendmentResDTO = null;
-		}
 	}
-	
-	 
 	
 	 /**
 	 * This method used to terminate contract
@@ -349,18 +343,17 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		 try{
 			 
 			validateContractTermination(outcome);
-			 
-			reqDTO = new ContractReqDTO();
-			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-					
+			reqDTO = new ContractReqDTO();		
 			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
 		   
-		    reqDTO.setToken(token);
+		    reqDTO.setToken( getFacesScopes().getBPMAuthenticationCtxToken());
 		    reqDTO.setOutcome(outcome);
 		    reqDTO.setTaskId(getManagedBean().getTaskId());
 		    reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		  
 		    getManagedBean().getContractVer().setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+		    reqDTO.setCtContract(getManagedBean().getCtContract());
+		    reqDTO.setCtContractVer(getManagedBean().getContractVer());
 		    
 		    if(getManagedBean().isRemedy()){
 		    	reqDTO.setTerminationAction(ContractConst.TR_LETTER_REMEDY);
@@ -370,9 +363,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		    	reqDTO.setTerminationAction(ContractConst.TR_LETTER_MUTUAL);
 		    }
 		         
-		    reqDTO.setCtContract(getManagedBean().getCtContract());
-		    reqDTO.setCtContractVer(getManagedBean().getContractVer());
-		    
 		    reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 		    reqDTO.setAttachments(getManagedBean().getAttachmentList());
@@ -429,105 +419,106 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * This method used to validate contract termination details
  */
 	public void validateContractTermination(String outcome){
-		this.getManagedBean().setAutoUpdate(true);
-		
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
- 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
- 			if((remark == null || remark.length() == 0)) {
- 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
- 			}
- 		}	
-		
-		if(getManagedBean().getContractVer().getCtTermination().getDecisionDate() == null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision.date", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}
-		
-		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-			if(getManagedBean().getContractVer().getCtTermination().getFileRefNo() == null
-					|| getManagedBean().getContractVer().getCtTermination().getFileRefNo().isEmpty()) {
-	 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-	 		}
-			// Decision = termination
-			if(this.getManagedBean().isTermination()) {
-				if(getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo() == null
-						|| getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo().isEmpty()) {
-		 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.last.remedy.file.no", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		 		}
-				
-				if (getManagedBean().getContractVer().getCtTermination().getLastRemedyDate() == null) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.last.remedy.notice.date", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				
-				if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null
-						|| getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.recommended.agency", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				
-				if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate() == null) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.recommended.agency.date", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-			}
+			this.getManagedBean().setAutoUpdate(true);
 			
-			// Decision = mutual termination
-			if(this.getManagedBean().isMutualTermination()) {
-				if (getManagedBean().getContractVer().getCtTermination().getFileName() == null 
-						|| getManagedBean().getContractVer().getCtTermination().getFileName().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.mutual.termination.agreement", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}		
-				// Mandatory to upload meeting minutes if the decision is Mutual Termination		
-				if(this.getManagedBean().getAttachmentList().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_750014);
-				}
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+	 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			if((remark == null || remark.length() == 0)) {
+	 				   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+					   ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	 			}
+	 		}	
+			
+			if(getManagedBean().getContractVer().getCtTermination().getDecisionDate() == null) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision.date", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		
-			if (!getManagedBean().isMutualTermination()) {
-				if (getManagedBean().getContractVer().getCtTermination().getRemedyStartDate() == null) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.start.date", 
+		    if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				   if(getManagedBean().getContractVer().getCtTermination().getFileRefNo() == null
+						|| getManagedBean().getContractVer().getCtTermination().getFileRefNo().isEmpty()) {
+		 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				
-				if (getManagedBean().getContractVer().getCtTermination().getRemedyEndDate() == null) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.end.date", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				
-				if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.ct.reason.termination", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}	
-			}
-		}
-		
-		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null && 
-				!getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-			  for(CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
-				   if(reason.getClauseNo().length() == 0){
-					   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
+		 		   }
+			
+				   // Decision = termination
+			       if(this.getManagedBean().isTermination()) {
+					        if(getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo() == null
+							    || getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo().isEmpty()) {
+			 				    throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.last.remedy.file.no", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				   }
-				   if(reason.getDescription().length() == 0){
-					   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.termination.desc", 
+			 		       }
+					
+						    if (getManagedBean().getContractVer().getCtTermination().getLastRemedyDate() == null) {
+							     throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.last.remedy.notice.date", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				   }
-			  }
-		}
+						    }
+				
+						    if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null
+								|| getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().isEmpty()) {
+							    throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.recommended.agency", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						   }
+				
+						   if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate() == null) {
+							    throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.recommended.agency.date", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						   }
+			       	}
+			
+			       	// Decision = mutual termination
+			       	if(this.getManagedBean().isMutualTermination()) {
+			       				if (getManagedBean().getContractVer().getCtTermination().getFileName() == null 
+			       						|| getManagedBean().getContractVer().getCtTermination().getFileName().isEmpty()) {
+			       					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.mutual.termination.agreement", 
+			       					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			       				}		
+							// Mandatory to upload meeting minutes if the decision is Mutual Termination		
+							if(this.getManagedBean().getAttachmentList().isEmpty()) {
+								throw new EpException(MessageConst.ERROR_750014);
+							}
+			       	}
 		
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
-			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
-		}
+			       	if (!getManagedBean().isMutualTermination()) {
+							if (getManagedBean().getContractVer().getCtTermination().getRemedyStartDate() == null) {
+								throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.start.date", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+				
+							if (getManagedBean().getContractVer().getCtTermination().getRemedyEndDate() == null) {
+								throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.end.date", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+				
+							if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+								throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.ct.reason.termination", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}	
+			       	}
+		    }
+		
+			if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null && 
+					!getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+					  for(CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
+						   if(reason.getClauseNo().length() == 0){
+							   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						   }
+						   if(reason.getDescription().length() == 0){
+							   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.termination.desc", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						   }
+					  }
+				}
+		
+				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
+					throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+				}
 	}
 	 
-	/**
+/*	*//**
 	 * This method to retrieve parameter code on the basis of parameter id
-    */
+    *//*
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
 		
 		 IParameterSO parameterSO = null;
@@ -548,36 +539,37 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			 parameterSO = null;
 		 }
 		 return null;
-	 } 
+	 } */
 	 
 	 /**
 		 * This method is used to change the type of termination 
 		 * such as termination, mutual termination and termination remedy
 	    */
 	 public void changeField() {
-		try {
-			flush();
-			//getManagedBean().getContractVer().getCtTermination().setRemedyStartDate(null);
-		    String parameterCode = retrieveParameterById(new Long(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()));
-			if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
-				  getManagedBean().setRemedy(true);
-			} else if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
-				  getManagedBean().setTermination(true);
-				  if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null 
-							|| getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length() == 0) {
-					  	if (getManagedBean().getContractVer().getCtAgencies() != null 
-					  			&& getManagedBean().getContractVer().getCtAgencies().size() == 1) {
-					  		getManagedBean().getContractVer().getCtTermination().setRecommendedAgency(
-					  				getManagedBean().getContractVer().getCtAgencies().get(0).getOrgProfile().getOrgName());
-					  	}
-					}
-			} else if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_MUTUAL_TERMINATE)) {
-				  getManagedBean().setMutualTermination(true);
-			}
+		
+		 try {
+			       flush();
+			       //getManagedBean().getContractVer().getCtTermination().setRemedyStartDate(null);
+		           String parameterCode = ParameterHelper.getInstance().getPmParameterById(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()).getParameterCode();
+			       if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
+				          getManagedBean().setRemedy(true);
+			       } else if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
+				           getManagedBean().setTermination(true);
+				            if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null 
+							      || getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length() == 0) {
+					                	if (getManagedBean().getContractVer().getCtAgencies() != null 
+					  			            && getManagedBean().getContractVer().getCtAgencies().size() == 1) {
+					  		                     getManagedBean().getContractVer().getCtTermination().setRecommendedAgency(
+					  				            getManagedBean().getContractVer().getCtAgencies().get(0).getOrgProfile().getOrgName());
+					  	               }
+					          }
+			        } else if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_MUTUAL_TERMINATE)) {
+				           getManagedBean().setMutualTermination(true);
+			         }
 						
-		 } catch (Exception e) {
-			System.out.println(e);
-		 }
+		       } catch (Exception e) {
+			         System.out.println(e);
+		       }
 	 }
 	  
 	 /**
@@ -600,43 +592,42 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	  */
 	 public List<SelectItem> getDecisionTypeList() {
 		 if (decisionTypeList == null) {
-			boolean remedy = false;
-			decisionTypeList = new ArrayList<SelectItem>();
-			ISearchBean<PmParameterDesc> searchBean = null;
-			IContractSO contractSO = null;
-			 ContractResDTO resDTO = null;
-			try {
-				       contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);			
-				       ContractReqDTO reqDTO = new ContractReqDTO();
-				       reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-				       resDTO = contractSO.retrieveTerminationHistoryList(reqDTO);
+			      boolean remedy = false;
+			      decisionTypeList = new ArrayList<SelectItem>();
+			      ISearchBean<PmParameterDesc> searchBean = null;
+			      IContractSO contractSO = null;
+			      ContractResDTO resDTO = null;
+			       try {
+						       contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);			
+						       ContractReqDTO reqDTO = new ContractReqDTO();
+						       reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+						       resDTO = contractSO.retrieveTerminationHistoryList(reqDTO);
 				
-				       for (CtTermination ctTermination : resDTO.getTerminationHistoryList()) {
-					            if (ctTermination.getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
-						              reqDTO = new ContractReqDTO();
-						              reqDTO.setDocId(ctTermination.getCtContractVer().getContractVerId());
-						              reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-						              PmStatus status = contractSO.retrieveWorkflowStatus(reqDTO).getCtWorkflowStatus().getPmStatus();
-					             	  if (status.getStatusId().longValue() == ContractStatusConst.FT_APPROVED.longValue()) {
-							                remedy = true;
-							                break;
-						              }
-					          }
-				        }			
+				               for (CtTermination ctTermination : resDTO.getTerminationHistoryList()) {
+					                   if (ctTermination.getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
+								              reqDTO = new ContractReqDTO();
+								              reqDTO.setDocId(ctTermination.getCtContractVer().getContractVerId());
+								              reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+								              PmStatus status = contractSO.retrieveWorkflowStatus(reqDTO).getCtWorkflowStatus().getPmStatus();
+							             	  if (status.getStatusId().longValue() == ContractStatusConst.FT_APPROVED.longValue()) {
+									                remedy = true;
+									                break;
+								              }
+					                   	}
+				               }			
 				       
-				       List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
-						   ParameterTypeConst.TERMINATION_DECISION_TYPE, searchBean);
+				       List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().
+				    		   getParameterDescListBySearchBean(ParameterTypeConst.TERMINATION_DECISION_TYPE, searchBean);
 				
-				       decisionTypeList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-						     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				       decisionTypeList.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+				    		   "lbl.txt.select",  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
 			           for (PmParameterDesc parameterDesc : parameterDescs) {
 			    	        if (!getManagedBean().isViewContract() && !remedy 
 			    			    && parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
 			    		        continue;
 			        	    }
-			    	       decisionTypeList.add(new SelectItem(
-			    			   parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName()));
+			    	       decisionTypeList.add(new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName()));
 			         }
 			   } catch (Exception e) {
 				          e.printStackTrace();
@@ -671,127 +662,125 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		IAddressSO addressSO =  null;
 		VelocityContext context = null;
 		String vmFile = null;
-		String content = null;
 		StringBuffer  ministryJabatan = new StringBuffer();
 		
 		try {
-			validateViewNotice();
-			if (isViewNoticeFlag()) {
-				addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
-				context = new VelocityContext();			
-				getManagedBean().setEditorValue("");
-				String imgUrl = getServerUrl()+ "css/images/gov.png";
-				if(getManagedBean().isTermination()) {				
-					vmFile = "/ct/termination/termination-notice.vm";
-				}else if(getManagedBean().isMutualTermination()) {
-					vmFile = "/ct/termination/mutual-termination-notice.vm";
-				}if(getManagedBean().isRemedy()) {			
-					vmFile = "/ct/termination/remedy-notice.vm";
-				}
+			      validateViewNotice();
+			      if (isViewNoticeFlag()) {
+				         addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+				         context = new VelocityContext();			
+				         getManagedBean().setEditorValue("");
+				      //   String imgUrl = getServerUrl()+ "css/images/gov.png";
+				         if(getManagedBean().isTermination()) {				
+					           vmFile = "/ct/termination/termination-notice.vm";
+				         }else if(getManagedBean().isMutualTermination()) {
+					          vmFile = "/ct/termination/mutual-termination-notice.vm";
+				         }if(getManagedBean().isRemedy()) {			
+					          vmFile = "/ct/termination/remedy-notice.vm";
+				         }
 				
-				getManagedBean().setEditorValue("");
-				if(vmFile !=null) {
-					SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-									
-					AddressReqDTO addressReqDTO = new AddressReqDTO();
-					addressReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-					addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-					AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
-					PmAddressType pmAddressType = null;
-					if(addressResDTO.getAddressTypeList().size()>0) {
-						pmAddressType = addressResDTO.getAddressTypeList().get(0);
-					}
-					if(imgUrl != null){
-					   context.put("imgUrl",imgUrl);
-					}
-					context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-					String jabtanName = retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-					if(!jabtanName.isEmpty()) {
-					      ministryJabatan.append(jabtanName);
-					      ministryJabatan.append(" / ");
-					}
+						getManagedBean().setEditorValue("");
+						if(vmFile !=null) {
+							  AddressReqDTO addressReqDTO = new AddressReqDTO();
+					          addressReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+					          addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+					          AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
+					          PmAddressType pmAddressType = null;
+					          if(addressResDTO.getAddressTypeList().size()>0) {
+						            pmAddressType = addressResDTO.getAddressTypeList().get(0);
+					          }
+					
+					          if(getServerUrl() != null){
+					               context.put("imgUrl",getServerUrl()+ "css/images/gov.png" );
+					          }
+					
+					          context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+					          String jabtanName = retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+					          if(!jabtanName.isEmpty()) {
+					                  ministryJabatan.append(jabtanName);
+					                  ministryJabatan.append(" / ");
+					          }
 				
-					PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-					if(ministryOrgProfile!=null) {
-						ministryJabatan.append(ministryOrgProfile.getOrgName());
-						context.put("ministryName", ministryOrgProfile.getOrgName());
-					}
+					          PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+					          if(ministryOrgProfile!=null) {
+						           ministryJabatan.append(ministryOrgProfile.getOrgName());
+						           context.put("ministryName", ministryOrgProfile.getOrgName());
+					          }
 					
-					context.put("ministryJabatanName", ministryJabatan );					
-					context.put("decisionDate", getManagedBean().getContractVer().getCtTermination().getDecisionDate());
+					         context.put("ministryJabatanName", ministryJabatan );					
+					         context.put("decisionDate", getManagedBean().getContractVer().getCtTermination().getDecisionDate());
+	
+					         if(pmAddressType!=null) {
+						           context.put("ptjAddress", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
+						           context.put("telNo", pmAddressType.getPmAddress().getPhoneNo());
+						           context.put("faxNo", pmAddressType.getPmAddress().getFaxNo());						
+					         } else {
+						           context.put("ptjAddress", "");
+						           context.put("telNo", "");
+						           context.put("faxNo", "");
+					        }
+					  
+					         if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
+						          context.put("fileRefNo", getManagedBean().getContractVer().getCtTermination().getFileRefNo());
+					         }
 					
-					
-					
-					if(pmAddressType!=null) {
-						context.put("ptjAddress", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
-						context.put("telNo", pmAddressType.getPmAddress().getPhoneNo());
-						context.put("faxNo", pmAddressType.getPmAddress().getFaxNo());						
-					} else {
-						context.put("ptjAddress", "");
-						context.put("telNo", "");
-						context.put("faxNo", "");
-					}
-					if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
-						context.put("fileRefNo", getManagedBean().getContractVer().getCtTermination().getFileRefNo());
-					}
-					if(getManagedBean().getContractVer().getCtTermination().getNoticeDate()!=null) {
-						context.put("noticeDate", df.format(getManagedBean().getContractVer().getCtTermination().getNoticeDate()));
-					}	else {
+					         if(getManagedBean().getContractVer().getCtTermination().getNoticeDate()!=null) {
+						            context.put("noticeDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getNoticeDate()));
+					         }	else {
 								getManagedBean().getContractVer().getCtTermination().setNoticeDate(new Date());
-								context.put("noticeDate",df.format(new Date()));
-					}
-					context.put("supplierName",getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-					SmAddress smAddress = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress();
-					context.put("supplierAddress",formAddress(smAddress.getAddress1(), smAddress.getAddress2(), smAddress.getAddress3(), smAddress.getAddress4()));
-					context.put("contractTitle",getManagedBean().getCtContract().getContractName());
-					if(getManagedBean().getContractVer().getContractPhysicalNo()==null) {
-						context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
-					} else {
-						context.put("contractPhysicalNo",getManagedBean().getContractVer().getContractPhysicalNo());
-					}
-					context.put("contractNo",getManagedBean().getCtContract().getContractNo());
-				//	context.put("currentDate",dateFormat.format(date));
-					context.put("reasonList", getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons());
+								context.put("noticeDate",dateformat.format(new Date()));
+					        }
 					
-					if(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()!=null) {
-						context.put("remedyStartDate",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()));
-					}
-					if(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()!=null) {
-						context.put("remedyEndDate",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
-					}				
-					if(getManagedBean().getContractVer().getApprover()!=null) {
-						context.put("approverName", getManagedBean().getContractVer().getApprover().getUserName());
-						context.put("approverDesignation", getManagedBean().getContractVer().getApprover().getDesignation());
-					} else {
-						context.put("approverName", "");
-						context.put("approverDesignation", "");
-					}
-					// Extra For Termination Notice
-					context.put("contractAmount", getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString());
-					context.put("effDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-					context.put("expDate", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-					if(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()!=null) {
-						context.put("lastRemedyDate", df.format(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()));
-					}
-					if(getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo()!=null && getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo().length()>0) {
-						context.put("lastRemedyFileNo", getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo());
-					}
-					if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency()!=null && getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length()>0) {
-						context.put("recommendAgency", getManagedBean().getContractVer().getCtTermination().getRecommendedAgency());
-					}		
-					if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()!=null) {
-						context.put("recommendAgencyDate", df.format(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()));
-					}			
-					if (vmFile != null && context != null) {
-						content = DocumentGenerator.getInstance().getHtmlFromVelocity(
-								vmFile, context);
-					}				
-					getManagedBean().setEditorValue(content);
-					RequestContext.getCurrentInstance().execute("noticeDlg.show()");
+					         context.put("supplierName",getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+					         SmAddress smAddress = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress();
+					         context.put("supplierAddress",formAddress(smAddress.getAddress1(), smAddress.getAddress2(), smAddress.getAddress3(), smAddress.getAddress4()));
+					         context.put("contractTitle",getManagedBean().getCtContract().getContractName());
+					         if(getManagedBean().getContractVer().getContractPhysicalNo()==null) {
+						          context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
+					         } else {
+						         context.put("contractPhysicalNo",getManagedBean().getContractVer().getContractPhysicalNo());
+					        }
+					
+					         context.put("contractNo",getManagedBean().getCtContract().getContractNo());
+				            //	context.put("currentDate",dateFormat.format(date));
+					        context.put("reasonList", getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons());
+					
+					        if(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()!=null) {
+						         context.put("remedyStartDate",dateformat.format(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()));
+					        }
+					       if(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()!=null) {
+						        context.put("remedyEndDate",dateformat.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
+					       }				
+					       if(getManagedBean().getContractVer().getApprover()!=null) {
+						         context.put("approverName", getManagedBean().getContractVer().getApprover().getUserName());
+						         context.put("approverDesignation", getManagedBean().getContractVer().getApprover().getDesignation());
+					       } else {
+						        context.put("approverName", "");
+						        context.put("approverDesignation", "");
+					       }
+							// Extra For Termination Notice
+							context.put("contractAmount", getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString());
+							context.put("effDate", dateformat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+							context.put("expDate", dateformat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+							if(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()!=null) {
+								context.put("lastRemedyDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()));
+							}
+							if(getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo()!=null && getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo().length()>0) {
+								context.put("lastRemedyFileNo", getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo());
+							}
+							if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency()!=null && getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length()>0) {
+								context.put("recommendAgency", getManagedBean().getContractVer().getCtTermination().getRecommendedAgency());
+							}		
+							if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()!=null) {
+								context.put("recommendAgencyDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()));
+							}					
+						getManagedBean().setEditorValue(DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context));
+						RequestContext.getCurrentInstance().execute("noticeDlg.show()");
 				}
 			}
 		} finally {
 			addressSO = null;
+			context = null;
 		}
 	}
 	
@@ -984,18 +973,14 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				Date currentDate = DateUtils.getCurrentDateWithoutTime();
 				// Filter By - Org effDate
 				searchBean.getDataFilterBeans()
-						.add(new SearchFilterBean("effDate",
-								SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+						.add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
 
 				// Filter By - Org expDate
 				searchBean.getDataFilterBeans().add(
 						new SearchMultiFilterBean(new SearchFilterBean(
-								"expDate",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								"expDate", SearchOperator.OPERATOR_GREATER_EQUAL.value(),
 								currentDate), new SearchFilterBean(
-								"expDate",
-								SearchOperator.OPERATOR_IS_NULL.value(), null,
-								SearchCondition.CONDITION_OR.value())));
+								"expDate", SearchOperator.OPERATOR_IS_NULL.value(), null,SearchCondition.CONDITION_OR.value())));
 				
 				if (getManagedBean().getPtjCodeName() != null
 						&& (getManagedBean().getPtjCodeNameSearchValue() != null || getManagedBean().getPtjCodeNameSearchValue().equalsIgnoreCase(""))) {
@@ -1060,33 +1045,29 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FT_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FT_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
-			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)
-					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
-			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_CENTRAL)
-					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-				userRole = RoleCode.BPK_CCA.value();
-			}
-		} else if (getManagedBean().getTaskName() != null
+			        if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+			        		ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				               userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			       } else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					      ParameterConst.CONTRACT_TYPE_CENTRAL)&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				             userRole = RoleCode.BPK_CCA.value();
+			       }
+		  } else if (getManagedBean().getTaskName() != null
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FT_HT_NAME)) {
-			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)
-					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
-				userRole = RoleCode.CT_APPROVER.value();
-			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_CENTRAL)
-					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-				userRole = RoleCode.BPK_CC_APPROVER.value();
-			}
-		}
+			        if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					   ParameterConst.CONTRACT_TYPE_MINISTRY)&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				        userRole = RoleCode.CT_APPROVER.value();
+			       } else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					   ParameterConst.CONTRACT_TYPE_CENTRAL)&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				         userRole = RoleCode.BPK_CC_APPROVER.value();
+			       }
+		   }
 
-		if (userRole == null) {
-			throw new EpException(MessageConst.ERROR_750040);
-		} else {
-			return userRole;
-		}
+		  if (userRole == null) {
+		   	    throw new EpException(MessageConst.ERROR_750040);
+		   } else {
+			   return userRole;
+		  }
 	}
 	
 	/**
@@ -1116,19 +1097,10 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * This method used to retrieve portal information 
 	 */
     private String getServerUrl() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance()
-				.getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext
-				.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil
-				.getOriginalServletRequest(PortalUtil
-						.getHttpServletRequest(portletRequest));
+		 PortletRequest portletRequest = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length()
-				- httpServletRequest.getRequestURI().length())
-				+ httpServletRequest.getContextPath() + "/";
-
-		return url;
+		return requestURL.substring(0, requestURL.length()	- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
 	}
     
     /**
@@ -1228,27 +1200,35 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * Call save suspension method once authentication done
     */
 	public String gpkiSignAction(String outcome) throws Exception{
-		 if (BpmOutcomeConst.BPM_ENDORSE.equals(outcome)) {
-			validateContractTermination(outcome);
-			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(getManagedBean().getContractVer().getDocType());
-			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-			sb.append(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
-			sb.append(outcome);			
-			getManagedBean().setTextBeforeSign(sb.toString());	
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			return null;
+		 if (BpmOutcomeConst.BPM_ENDORSE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+				validateContractTermination(outcome);
+				//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
+				sb.append(ContractConst.SEPRATE_LINE);
+				if(getManagedBean().isRemedy()){
+					  sb.append(ContractConst.TR_LETTER_REMEDY);
+			     } else if(getManagedBean().isTermination()){
+				     sb.append(ContractConst.TR_LETTER_TERMINATE);
+				 } else if(getManagedBean().isMutualTermination()) {
+				     sb.append(ContractConst.TR_LETTER_MUTUAL);
+				 }
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(outcome);		
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+				getManagedBean().setTextBeforeSign(sb.toString());	
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
 		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
-			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
-			return null;
+				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+				return null;
 		} else {
-			return saveContractTermination(outcome);
+			    return saveContractTermination(outcome);
 		}
 	}
 	
