@@ -1454,7 +1454,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO = new ContractReqDTO();
 			reqDTO.setContractId(contractId);
             reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
-            reqDTO = new ContractReqDTO();
+            //reqDTO = new ContractReqDTO();
             reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
             reqDTO.setUpdateAction(true);
 			SupplierBackingBean supplierBB =  new SupplierBackingBean();
