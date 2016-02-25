@@ -138,7 +138,7 @@
 					<td><p:inputText size="15" style="text-align:right;"
 							styleClass="colFloatRight" id="receivedAmtVal"
 							label="#{lbl['lbl.fl.received.amount']}"
-							disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View'}"
+							disabled="true"
 							rendered="#{!receivedNoteBackingBean.managedBean.isItemTypeProduct()}"
 							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedAmt}">
 							<p:ajax update="receivedAmtVal"
