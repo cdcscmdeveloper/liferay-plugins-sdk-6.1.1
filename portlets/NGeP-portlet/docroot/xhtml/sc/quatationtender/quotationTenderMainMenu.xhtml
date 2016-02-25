@@ -35,7 +35,7 @@
 					 --><p:menuitem value="#{lbl['lbl.sc.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.briefing.sv']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
