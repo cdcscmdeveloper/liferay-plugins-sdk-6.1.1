@@ -181,7 +181,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
-import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -193,7 +192,7 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
+import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -224,7 +223,7 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "specificationBackingBean")
 @ViewScoped
 public class SpecificationBackingBean extends
-		SourcingBaseBackingBean<SpecificationManagedBean> {
+		SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	/** The search circular. */
 	private IPagingDataModel<CtCircularVer> searchCircular = new SearchCircularPagingDataModel();
@@ -11411,13 +11410,13 @@ public class SpecificationBackingBean extends
 
 			}
 
-			CreateQtBackingBean backingBean= new CreateQtBackingBean();
-			backingBean.getManagedBean().setPanelGroupItems(
+			
+			this.getManagedBean().setPanelGroupItems(
 					getPanelGroupItemsByCirculerVer(this.getManagedBean()
 							.getQt().getCircularVer()));
 			
 			if(this.getManagedBean().getQt().getSpecApprovalReq()){
-				backingBean.getManagedBean().setMinistrySpecApprovers(getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
+				this.getManagedBean().setMinistrySpecApprovers(getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
 			}
 
 			fc.getApplication()
