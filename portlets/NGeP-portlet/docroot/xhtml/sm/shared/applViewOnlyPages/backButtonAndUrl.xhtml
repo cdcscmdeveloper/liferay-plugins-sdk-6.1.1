@@ -16,7 +16,7 @@
 				</td>
 				<td style="text-align: right;">
 					<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.resubmitUrl and viewSmApplBackingBean.managedBean.supplierUser}">
-						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						<p:commandLink onclick="blockWidget.show()"
 							action="#{viewSmApplBackingBean.redirectToResubmit()}" 
 							process="@this" partialSubmit="true" update=":form" 
 							value="#{lbl['lbl.sm.resubmit']}"/>&#160;&#160;

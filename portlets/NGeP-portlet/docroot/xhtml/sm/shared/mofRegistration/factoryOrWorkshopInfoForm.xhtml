@@ -72,7 +72,8 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="smFacilityFactoryDtPanel"
 					action="#{backingBean.deleteSelectedFactories}"
-					update=":form:tt:facDt" 
+					id="delFactoryBtnId" disabled="#{empty backingBean.managedBean.applFactoryFacilities}"
+					update=":form:tt:facDt,@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
@@ -241,7 +242,8 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateFactoryToSmAppl}"
 				partialSubmit="true" process="factoryDialog"
-				update=":form:tt:facDt, @([id$=Msg])" />
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
+				update=":form:tt:facDt, @([id$=Msg]),:#{p:component('delFactoryBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelFactorySaveorUpdate}"

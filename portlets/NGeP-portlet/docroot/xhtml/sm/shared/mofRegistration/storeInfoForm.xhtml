@@ -62,7 +62,8 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="smStrDtPanel" partialSubmit="true"
 					action="#{backingBean.deleteSelectedStores}"
-					update=":form:tt:storeDt" 
+					id="delStoreBtnId" disabled="#{empty backingBean.managedBean.applStoreFacilities}"
+					update=":form:tt:storeDt,@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
@@ -229,7 +230,8 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateStoreToSmAppl}"
 				partialSubmit="true" process="storeDialog"
-				update=":form:tt:storeDt, @([id$=Msg])" />
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
+				update=":form:tt:storeDt, @([id$=Msg]),:#{p:component('delStoreBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				process="@this" partialSubmit="true"
 				action="#{backingBean.cancelStoreSaveorUpdate}"
