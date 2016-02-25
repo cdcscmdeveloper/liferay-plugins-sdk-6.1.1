@@ -96,7 +96,8 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryFinalizationCommittee}">
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryFinalizationCommittee or
+				qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryProcurementBoard}">
 			<ui:param name="fcaApprovalTab"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean}" />
 			<ui:param name="fcaApprovalRemarkList"

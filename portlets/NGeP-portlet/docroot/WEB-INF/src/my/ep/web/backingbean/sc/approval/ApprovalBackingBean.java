@@ -160,6 +160,8 @@ public class ApprovalBackingBean extends
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_PTJ);
 		approvalCategories
 				.add(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+		approvalCategories
+		.add(ParameterConst.APPROVAL_CATEGORY_PROCUREMENT_BOARD);
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_OTHERS);
 
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
