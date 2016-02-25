@@ -96,8 +96,9 @@
 					partialSubmit="true" action="#{backingBean.assignNewMachineryBean}" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					action="#{backingBean.deleteSelectedMachinery}"
-					partialSubmit="true" process="machInfPan" update=":form:tt:macDt" 
+					action="#{backingBean.deleteSelectedMachinery}" id="delMachBtnId"
+					disabled="#{empty backingBean.managedBean.smAppl.smMachineDtls}"
+					partialSubmit="true" process="machInfPan" update=":form:tt:macDt,@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 			<br />
@@ -348,7 +349,8 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateMachineToSmAppl}"
 				partialSubmit="true" process="equipmentDialog"
-				update=":form:tt:macDt, @([Id$=Msg])" />
+				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
+				update=":form:tt:macDt, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this" update="machineOutPanelId"
 				action="#{backingBean.cancelMachineSaveorUpdate}" />
