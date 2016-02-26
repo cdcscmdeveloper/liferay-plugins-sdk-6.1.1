@@ -30,6 +30,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -59,6 +60,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -80,6 +82,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
+import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -339,6 +342,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	/**
+	 * Get MofCert by applId
+	 * 
+	 * @return SmMofCert
+	 */
+	public SmMofCert getMofCert() {
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+		return SmServiceLookup.getVirtualCertSO()
+				.retrieveMofCertByApplId(reqDTO).getSmMofCert();
+	}
+
+	/**
 	 * Set tab value for first load
 	 */
 	public void setTabParam() {
@@ -445,7 +460,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().setLocalAuthority(item.getLabel());
 		}
 		if (getManagedBean().isViewSupplierProfile()) {
-			getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+			getManagedBean().setSmMofCert(getMofCert());
+			if (getManagedBean().getSmMofCert() == null) {
+				getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+			}
 		}
 		getManagedBean().setReviewApplicationExist(true);
 	}

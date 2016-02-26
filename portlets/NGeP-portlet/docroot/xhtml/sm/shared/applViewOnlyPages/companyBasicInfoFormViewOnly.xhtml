@@ -13,15 +13,34 @@
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.no']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.mofNo}" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.smMofAccount.mofNo}" 
+								rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.mofNo}" 
+								rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}"/>
+						</td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.startDate']}" /></td>
-						<td><ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.effDate}" /></td>
+						<td>
+							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.effDate}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.effDate}" />
+							</p:outputPanel>
+						</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.epno']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smSupplier.epNo}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.endDate']}" /></td>
-						<td><ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.expDate}" /></td>
+						<td>
+							<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofCert.expDate}" />
+							</p:outputPanel>
+							<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.smMofCert}">
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smMofAccount.expDate}" />
+							</p:outputPanel>
+						</td>
 					</tr>
 					<tr>
 						<td colspan="4" height="20"></td>
