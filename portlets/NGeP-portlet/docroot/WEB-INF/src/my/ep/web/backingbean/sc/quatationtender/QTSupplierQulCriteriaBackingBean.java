@@ -191,7 +191,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	private void populateSupplierSearchCriteria(SupplierSearchBean supplierSearchBean, ISearchBean<SmSupplier> searchBean) {
 		debugLogger("populateSupplierSearchCriteria");
 		if (supplierSearchBean != null) {
-			List<ScQtCategory> scQtCategoryList = getManagedBean().getSuppCriteriarestrictedList();
+			List<ScQtCategory> scQtCategoryList = getManagedBean().getQtCategoryList();
 			if(scQtCategoryList != null && scQtCategoryList.size() > 0){
 				SearchFilterBean categoryCodeIdFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 				categoryCodeIdFilterBean.setSearchField("smAppl.smSupplierCategories.pmCategoryL3.categoryL3Id");
@@ -248,56 +248,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		qtCategoryList.add(category);
 	}
 
-	/**
-	 * To add empty row to Restricted Tender Category Code data table.
-	 * 
-	 * @param pmCategoryL3 the pmCategoryL3 instance
-	 */
-	public void addNewRestrictedCategoryAction(PmCategoryL3 pmCategoryL3) {
-		debugLogger("addNewRestrictedCategoryAction");
-		List<ScQtCategory> scQtCategories = this.getManagedBean()
-				.getSuppCriteriarestrictedList();
-		if (scQtCategories == null) {
-			scQtCategories = new ArrayList<ScQtCategory>();
-			this.getManagedBean().setSuppCriteriarestrictedList(scQtCategories);
-		}
-		validateDuplicateCategoryCode(pmCategoryL3, scQtCategories);
-		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
-		ScQtCategory category = new ScQtCategory();
-		category.setScQt(this.getManagedBean().getQt());
-		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
-		category.setPmCategoryL2(pmCategoryL2);
-		category.setPmCategoryL3(pmCategoryL3);
-		scQtCategories.add(category);
-	}
+	
 
-	/**
-	 * To Remove Restricted Tender Category codes from data table.
-	 */
-	public void deleteRestrictedCategoryAction() {
-		debugLogger("deleteRestrictedCategoryAction");
-		List<ScQtCategory> removeList = this.getManagedBean().getTobeRemoveCategoryCodes();
-		if (removeList == null) {
-			removeList = new ArrayList<ScQtCategory>();
-		}
-		List<ScQtCategory> restrictedList = this.getManagedBean()
-				.getSuppCriteriarestrictedList();
-		if (null == restrictedList) {
-			restrictedList = new ArrayList<ScQtCategory>();
-		}
-		List<ScQtCategory> restrictedSelectList = this.getManagedBean()
-				.getSelectedRestrictedCategoryList();
-		if (null == restrictedSelectList || restrictedSelectList.isEmpty()) {
-			throw new EpException(MessageConst.ERROR_760146);
-		}
-		for (ScQtCategory category : restrictedSelectList) {
-			restrictedList.remove(category);
-			removeList.add(category);
-		}
-		this.getManagedBean().getQt().setScQtCategorys(restrictedList);
-		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
-	}
-
+	
 	/**
 	 * To remove categoryCode from data table
 	 */
@@ -412,7 +365,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public void searchRestrictedSupplierPopupAction() {
 		debugLogger("searchRestrictedSupplierPopupAction");
-		List<ScQtCategory> scQtCategoryList = getManagedBean().getSuppCriteriarestrictedList();
+		List<ScQtCategory> scQtCategoryList = getManagedBean().getQtCategoryList();
 		getManagedBean().getSupplierSearchBean().setScQtCategoryList(scQtCategoryList);
 		getManagedBean().getSupplierSearchBean().setSupplierName(null);
 		getManagedBean().getSupplierSearchBean().setMofAccountNo(null);

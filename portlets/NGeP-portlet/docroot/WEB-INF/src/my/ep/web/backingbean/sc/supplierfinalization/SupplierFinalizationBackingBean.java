@@ -48,6 +48,8 @@ import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.tpl.doc.ITemplateDocSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -83,6 +85,8 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
@@ -3101,9 +3105,14 @@ public class SupplierFinalizationBackingBean extends
 		boolean isPanel = false;
 		if (scQt.isPanel()) {
 			isPanel = true;
-			List<CtPanelItem> panelList = new ArrayList<CtPanelItem>();
-			panelList.add(scQt.getScQtSupplierCriteria().getCtPanelItem());
-			context.put("ctCircularVer", scQt.getScQtSupplierCriteria().getCtPanelItem().getCtCircularVer());
+			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+			specReqDTO.setQtId(scQt.getQtId());
+			ITemplateSpecSO templateSpecSO=EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+			TemplateSpecResDTO templateSpecResDTO = templateSpecSO
+					.retrievePanelItemsByQtId(specReqDTO);
+
+			List<CtPanelItem> panelList = templateSpecResDTO.getCtPanelItems();
+			context.put("ctCircularVer", scQt.getCircularVer());
 			context.put("panelList", panelList);
 			context.put("bean", this);
 		} else {
