@@ -157,12 +157,13 @@ public class CreateQtBackingBean extends
 	
 	public void circularListSelect(CtCircularVer circular) {
 			
+		if(null != circular){
 			this.getManagedBean().getQt().setCircularVer(circular);
 			
 				this.getManagedBean().setPanelGroupItems(getPanelGroupItemsByCirculerVer(circular));
 				this.getManagedBean().setCircularType(circular.getDocType());
 						
-		
+		}
 
 	}
 	
@@ -195,9 +196,7 @@ public class CreateQtBackingBean extends
 				scQt.setItemGroup(null);
 				//this.getManagedBean().setCtPanelItem(null);
 				this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
-				if (supplierCriteria != null) {
-					supplierCriteria.setCtPanelItem(null);
-				}
+				
 			}
 		}
 
@@ -212,6 +211,7 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().getQt().setPanel(false);
 		} else {
 			this.getManagedBean().getQt().setPanel(true);
+			circularListSelect(this.getManagedBean().getQt().getCircularVer());
 		}
 
 	}
@@ -375,7 +375,7 @@ public class CreateQtBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> qtTypes = new ArrayList<String>();
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_INTERNATIONAL);
-		if (null != scQt
+		if (null != scQt &&null != scQt.getProcurementMode()
 				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
 						.getProcurementMode().getParameterCode())) {
 			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
@@ -758,8 +758,7 @@ public void setProcurementMode(ScQt scQt) {
 					this.getManagedBean().setSuppCriteriaopenList(new ArrayList<ScQtCategory>());
 					supplierCriteria = new ScQtSupplierCriteria();
 					supplierCriteria.setScQt(scQt);
-					supplierCriteria.setCtPanelItem(this.getManagedBean()
-							.getCtPanelItem());
+					
 					//scQt.setCircularVer(this.getManagedBean().getCircularVer());
 					if (null == scQt.getZoneLocationLevel()) {
 						scQt.setZoneLocationLevel(new PmParameter());
@@ -789,32 +788,7 @@ public void setProcurementMode(ScQt scQt) {
 					} else {
 						
 						CtPanelItem ctPanelItem = this.getManagedBean().getCtPanelItem();
-						if (null != ctPanelItem) {
-							if (supplierCriteria != null
-									&& !supplierCriteria.getCtPanelItem().getPanelItemId()
-											.equals(ctPanelItem.getPanelItemId())) {
-								supplierCriteria.setCtPanelItem(ctPanelItem);
-										
-								if (null == scQt.getZoneLocationLevel()) {
-									scQt.setZoneLocationLevel(new PmParameter());
-								}
-								scQt.setZoneLocationLevel(ctPanelItem.getLocationLevelId());
-								// removespecDtls();
-								if (null == scQt.getPmProcurementCategory()) {
-									scQt.setPmProcurementCategory(new PmParameter());
-								}
-								if (null == scQt.getProcurementTypeCatId()) {
-										scQt.setProcurementTypeCatId(new PmParameter());
-								}
-								scQt.setZonal(false);
-								retriveZonesOrSuppliersByItem();
-								if (null != this.getManagedBean().getZoneGeneralTrees()
-										&& !this.getManagedBean().getZoneGeneralTrees()
-												.isEmpty()) {
-									scQt.setZonal(true);
-								}
-							}
-						}
+						if (null != ctPanelItem) {}
 					}
 				}
 			}
