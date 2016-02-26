@@ -6,70 +6,75 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.category.code.list']}"
-		toggleable="true">
-		
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.category.code.list.instruction']}" escape="false" />
+	<p:panel header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
 
-		<p:dataTable id="restrictedPnlId" var="restrcitedCateGory"
-			widgetVar="restrictedCategoryCodes"
-			value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList}"
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.category.code.list.instruction']}"
+			escape="false" />
+
+		<p:dataTable id="restrictedPnlId" var="cateGory"
+			widgetVar="restrictedPnlId"
+			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
 			rowIndexVar="index" rows="10"
-			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedRestrictedCategoryList}"
-			rowKey="#{restrcitedCateGory}">
+			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
+			rowKey="#{cateGory}">
 
-			<p:column selectionMode="multiple" style="width:1%" />
+			<p:column selectionMode="multiple" style="width:1%"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
-				#{restrcitedCateGory.pmCategoryL1.categoryL1Code}#{restrcitedCateGory.pmCategoryL2.categoryL2Code}#{restrcitedCateGory.pmCategoryL3.categoryL3Code}
+				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.main.category']}"
 				style="white-space: normal;">
-				<h:outputText
-					value="#{restrcitedCateGory.pmCategoryL1.categoryName}" />
+				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 				style="white-space: normal;">
-				<h:outputText
-					value="#{restrcitedCateGory.pmCategoryL2.categoryName}" />
+				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 				style="white-space: normal;">
-				<h:outputText
-					value="#{restrcitedCateGory.pmCategoryL3.categoryName}" />
+				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.category.type']}">
 				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(restrcitedCateGory.pmCategoryL3.categoryTypeCode)}" />
+					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
 
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
-				process="@this, restrictedPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				styleClass="BtnSpacing" process="@this, openPnlId"
+				partialSubmit="true" update="@([id$=catCodePopup])"
 				oncomplete="catCodePopup.show();"
-				action="#{categoryCodeSearchBackingBean.renewSesionObject}" 
-				rendered1="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-				process="@this, restrictedPnlId" partialSubmit="true"
-				oncomplete="supplierRestrictedCategoryDeletePopUp.show();"
-				update="@([id$=#{supplierRestrictedCategoryDeleteId}])"
-				rendered1="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
+				action="#{categoryCodeSearchBackingBean.renewSesionObject}"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				styleClass="BtnSpacing" process="@this, openPnlId"
+				partialSubmit="true"
+				oncomplete="supplierOpencategoryDeletePopUp.show();"
+				update="@([id$=#{supplierOpencategoryDeleteId}])"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
 		</div>
-		<ui:param name="supplierRestrictedCategoryDeleteId" value="supplierRestrictedCategoryDeleteId" />
-		<ac:confirmationPopup id="#{supplierRestrictedCategoryDeleteId}"
-			widget="supplierRestrictedCategoryDeletePopUp"
-			okAction="qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction" width="33%"
-			height="100" title="#{lbl['lbl.sc.category.code']}"
+		<ui:param name="supplierOpencategoryDeleteId"
+			value="supplierOpencategoryDeleteId" />
+		<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
+			widget="supplierOpencategoryDeletePopUp"
+			okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes"
+			width="33%" height="100" title="#{lbl['lbl.sc.category.code']}"
 			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
-			update="@([id$=restrictedPnlId])" />
-			
-		<ac:categoryCodePopup 
-			okAction="qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction"
+			update="@([id$=openPnlId])" />
+		<ac:categoryCodePopup
+			okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
 			update="@([id$=restrictedPnlId])" />
 	</p:panel>
+
+
+
+
 </ui:composition>
