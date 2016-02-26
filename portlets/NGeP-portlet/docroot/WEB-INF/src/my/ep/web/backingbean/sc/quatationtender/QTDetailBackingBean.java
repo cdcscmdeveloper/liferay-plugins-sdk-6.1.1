@@ -757,8 +757,8 @@ public class QTDetailBackingBean extends
 			} else if (this.getManagedBean().getQt().getQtType()
 					.equals(QTConstants.RESTRICTED_TYPE)) {
 				List<ScQtCategory> restrictedList = this.getManagedBean()
-						.getSuppCriteriarestrictedList();
-				if (restrictedList != null && !restrictedList.isEmpty()) {
+						.getQtCategoryList();
+				if (CollectionUtils.isNotEmpty(restrictedList)) {
 
 					scQt.setScQtCategorys(restrictedList);
 				}

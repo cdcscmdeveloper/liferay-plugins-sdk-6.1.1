@@ -366,12 +366,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	/** The supplier search bean. */
 	private SupplierSearchBean supplierSearchBean;
 
-	// supplier Qualification Criteria List and variables
-	/** The supp criteriarestricted list. */
-	private List<ScQtCategory> suppCriteriarestrictedList;
-
-	/** The selected restricted category list. */
-	private List<ScQtCategory> selectedRestrictedCategoryList;
+	
 
 	/** The selected category list. */
 	private List<ScQtCategory> selectedCategoryList;
@@ -5033,26 +5028,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 		this.citys = citys;
 	}
 
-	/**
-	 * Gets the supp criteriarestricted list.
-	 * 
-	 * @return the supp criteriarestricted list
-	 */
-	public List<ScQtCategory> getSuppCriteriarestrictedList() {
-		return suppCriteriarestrictedList;
-	}
-
-	/**
-	 * Sets the supp criteriarestricted list.
-	 * 
-	 * @param suppCriteriarestrictedList
-	 *            the new supp criteriarestricted list
-	 */
-	public void setSuppCriteriarestrictedList(
-			List<ScQtCategory> suppCriteriarestrictedList) {
-		this.suppCriteriarestrictedList = suppCriteriarestrictedList;
-	}
-
+	
 	/**
 	 * Gets the sc qt checklist.
 	 * 
@@ -5092,25 +5068,6 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 		this.scQtApprovalRequestList = scQtApprovalRequestList;
 	}
 
-	/**
-	 * Gets the selected restricted category list.
-	 * 
-	 * @return the selected restricted category list
-	 */
-	public List<ScQtCategory> getSelectedRestrictedCategoryList() {
-		return selectedRestrictedCategoryList;
-	}
-
-	/**
-	 * Sets the selected restricted category list.
-	 * 
-	 * @param selectedRestrictedCategoryList
-	 *            the new selected restricted category list
-	 */
-	public void setSelectedRestrictedCategoryList(
-			List<ScQtCategory> selectedRestrictedCategoryList) {
-		this.selectedRestrictedCategoryList = selectedRestrictedCategoryList;
-	}
 
 	/**
 	 * Gets the approval type.
