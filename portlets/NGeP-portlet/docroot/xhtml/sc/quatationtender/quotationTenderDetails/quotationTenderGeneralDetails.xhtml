@@ -119,7 +119,7 @@
 						<tr>
 							<td><p:inputText id="fileno"
 									label="#{lbl['lbl.sc.qt.fileno']}" required="#{isRequire}"
-									value="#{scQt.fileNo}" size="25" maxlength="50"
+									value="#{scQt.fileNo}" size="29" maxlength="50"
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO)}">
 									<p:ajax event="blur" partialSubmit="true" update="@this"
 										listener="#{createQtBB.setFileNo(scQt)}"></p:ajax>
@@ -131,7 +131,7 @@
 				<td style="width: 164px;"><p:outputLabel
 						value="#{lbl['lbl.sc.created.date']}" /></td>
 				<td><p:inputText value="#{scQt.createdDate}" disabled="true"
-						size="25">
+						size="34">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
@@ -140,7 +140,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" /></td>
 				<td><p:inputText id="estprice" style="text-align:right;"
-						value="#{scQt.estimatedAmount}" size="25"
+						value="#{scQt.estimatedAmount}" size="29"
 						disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_ESTMT_AMT)}">
 						<p:ajax event="blur" partialSubmit="true" update="@form"
 							listener="#{createQtBB.setProcurementMode(scQt)}">
@@ -152,7 +152,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 				<td><p:inputText
 						value="#{createQtBB.getParameterDesc(scQt.procurementMode)}"
-						disabled="true" size="25" readonly="true" /></td>
+						disabled="true" size="34" readonly="true" /></td>
 			</tr>
 
 			<tr>
@@ -198,7 +198,7 @@
 						value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="procCategory" required="#{isRequire}"
-						style="margin-bottom:5px;width:303px;"
+						style="margin-bottom:5px;width:250px;"
 						label="#{lbl['lbl.sc.procurement.category']}"
 						value="#{scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
@@ -236,7 +236,7 @@
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.max.proposal']}" /></td>
-				<td><p:inputText id="proposalId" size="25"
+				<td><p:inputText id="proposalId" size="29"
 						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
 						value="#{scQt.maxProposal}"
 						style="text-align:right;margin-bottom: 5px;">
@@ -293,10 +293,10 @@
 					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon" /></td>
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /></td>
-				<td><p:inputText id="contractBo" size="32" maxlength="3"
+				<td><p:inputText id="contractBo" size="34" maxlength="3"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{scQt.contractDuration}"
-						style="text-align:right;margin-bottom:5px;width:292px;">
+						style="text-align:right;margin-bottom:5px;">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@this" />
 					</p:inputText> <p:message id="completionBo" for="contractBo" display="icon"></p:message></td>
