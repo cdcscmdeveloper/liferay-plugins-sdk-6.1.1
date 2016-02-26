@@ -40,7 +40,7 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 	/** The selectpanel item. */
 	private List<CtPanelItemGroup> panelGroupItems;
 	
-	private List<CtPanelItem> selectedpanelItems;
+	private List<CtPanelItem> panelItems;
 	
 	
 	
@@ -159,19 +159,7 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 		this.panelGroupItems = panelGroupItems;
 	}
 
-	/**
-	 * @return the selectedpanelItems
-	 */
-	public List<CtPanelItem> getSelectedpanelItems() {
-		return selectedpanelItems;
-	}
-
-	/**
-	 * @param selectedpanelItems the selectedpanelItems to set
-	 */
-	public void setSelectedpanelItems(List<CtPanelItem> selectedpanelItems) {
-		this.selectedpanelItems = selectedpanelItems;
-	}
+	
 
 	public List<PmUser> getMinistrySpecApprovers() {
 		return ministrySpecApprovers;
@@ -179,5 +167,13 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 
 	public void setMinistrySpecApprovers(List<PmUser> ministrySpecApprovers) {
 		this.ministrySpecApprovers = ministrySpecApprovers;
+	}
+
+	public List<CtPanelItem> getPanelItems() {
+		return panelItems;
+	}
+
+	public void setPanelItems(List<CtPanelItem> panelItems) {
+		this.panelItems = panelItems;
 	}
 }

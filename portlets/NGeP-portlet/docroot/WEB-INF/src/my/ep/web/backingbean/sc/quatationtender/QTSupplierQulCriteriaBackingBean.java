@@ -1,5 +1,6 @@
 /* 
  ***************************************************   
+
  * Product nextgen ePerolehan 
  * 
  * Release 1.00    
@@ -396,9 +397,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 					QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 					ScQt scQt = getManagedBean().getQt();
 					reqDTO.setQtId(scQt.getQtId());
-					QuationTenderResDTO resDTO = qtDetailsSO.retrieveScQtSupplierByQtId(reqDTO);
-					List<ScQtSupplier> dbList = resDTO.getSupplierResultBean().getResultList();
-					getManagedBean().getQtSupplierList().addAll(dbList);
+					QuationTenderResDTO resDTO = qtDetailsSO.retriveQualifiedRestrictedSuppliers(reqDTO);
+					List<ScQtSupplier> restrictedSuppleirs = resDTO.getRestrictedSuppliers();
+					getManagedBean().getQtSupplierList().addAll(restrictedSuppleirs);
 				} finally {
 					qtDetailsSO = null;
 				}
@@ -977,11 +978,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 			this.getManagedBean().setCtZoneSupplierList(
 					supplierResDTO.getCtPanelSuppliers());
 			List<CtPanelItem> itemList = this.getManagedBean()
-					.getSelectedpanelItems();
+					.getPanelItemList();
 			itemList = new ArrayList<CtPanelItem>();
 			itemList.add(this.getManagedBean().getCtPanelItem());
 
-			this.getManagedBean().setSelectedpanelItems(itemList);
+			this.getManagedBean().setPanelItemList(itemList);
 		}
 	}
 
@@ -1546,7 +1547,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public String viewCircularAttachments() {
 		debugLogger("viewCircularAttachments");
-		List<CtPanelItem> itemList = this.getManagedBean().getSelectedpanelItems();
+		List<CtPanelItem> itemList = this.getManagedBean().getPanelItemList();
 		itemList = new ArrayList<CtPanelItem>();
 		itemList.add(this.getManagedBean().getCtPanelItem());
 		CtCircularVer ctCircularVer = this.getManagedBean().getQt().getCircularVer();
@@ -1557,7 +1558,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/quatationtender/quatationtendercreation.xhtml");
 			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer.getCircularVerId());
 		}
-		this.getManagedBean().setSelectedpanelItems(itemList);
+		this.getManagedBean().setPanelItemList(itemList);
 		return pageView;
 	}
 
