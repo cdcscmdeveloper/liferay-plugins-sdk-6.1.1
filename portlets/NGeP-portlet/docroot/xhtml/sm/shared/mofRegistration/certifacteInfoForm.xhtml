@@ -141,139 +141,143 @@
 		header="#{lbl['lbl.sm.cert.certDiaHdrMsg']}" widgetVar="certDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
 		id="certPop" closable="false">
-		<p:messages id="suppCertInfoMsg" showSummary="false" showDetail="true"
-			autoUpdate="true" closable="true" />
-
-
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.cert.certType']}"
-						value="#{backingBean.managedBean.selectedCert.certTypeId}"
-						id="certTypeId" rendered="true">
-						<f:selectItems value="#{backingBean.getDropdownValues('CRT')}" />
-						<p:ajax event="change" partialSubmit="true" process="@this"
-							update="certBody" listener="#{backingBean.assignCertBodyList}" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedCert.supplierCertId}"
-						oriValue="#{backingBean.managedBean.latestCert.certTypeId}" 
-						currValue="#{backingBean.managedBean.selectedCert.certTypeId}" 
-						alertValue="#{(not empty backingBean.managedBean.latestCert.certTypeId) ?
-							backingBean.getCertTypeLabelById(backingBean.managedBean.latestCert.certTypeId)
-							: lbl['lbl.txt.na']}"/>
-					<p:message id="certTypeMsg" for="certTypeId" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="certBody" required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.cert.certBody']}"
-						value="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="certBody"
-							value="#{backingBean.managedBean.certBodyLs}"
-							itemValue="#{certBody.certBodyId}"
-							itemLabel="#{certBody.bodyName}" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCert.supplierCertId}"
-						oriValue="#{backingBean.managedBean.latestCert.pmCertBody.certBodyId}" 
-						currValue="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}" 
-						alertValue="#{backingBean.getProfBodyByIdFromList(backingBean.managedBean.latestCert.pmCertBody.certBodyId)}" />
-					<p:message id="certBodyMsg" for="certBody" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="certName"
-						required="#{backingBean.managedBean.valueReqd}"
-						label=" #{lbl['lbl.sm.cert.certName']}"
-						value="#{backingBean.managedBean.selectedCert.certName}" size="35" />
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedCert.supplierCertId}"
-						oriValue="#{backingBean.managedBean.latestCert.certName}" 
-						currValue="#{backingBean.managedBean.selectedCert.certName}" 
-						alertValue="#{backingBean.managedBean.latestCert.certName}"/>
-					<p:message id="certNameMsg" for="certName" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:calendar id="stDate" showOn="button" navigator="true"
-						display="inline" required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.cert.strtDate']}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="-99:+0" readonlyInput="true"
-						maxdate="#{CommonConstants.CURRENT_DATE}"
-						value="#{backingBean.managedBean.selectedCert.certStartDate}" />
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedCert.supplierCertId}"
-						oriValue="#{backingBean.managedBean.latestCert.certStartDate}" 
-						currValue="#{backingBean.managedBean.selectedCert.certStartDate}" 
-						alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestCert.certStartDate)}"/>
-					<p:message id="certStrttMsg" for="stDate" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']}" /></td>
-				<td><p:calendar id="endDate" showOn="button" navigator="true"
-						display="inline"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="-99:+10" readonlyInput="true"
-						value="#{backingBean.managedBean.selectedCert.certEndDate}" /> 
+		
+		<p:outputPanel layout="block" id="certBlockPanel">
+			<p:messages id="suppCertInfoMsg" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+	
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.cert.certType']}"
+							value="#{backingBean.managedBean.selectedCert.certTypeId}"
+							id="certTypeId" rendered="true">
+							<f:selectItems value="#{backingBean.getDropdownValues('CRT')}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								update="certBody" listener="#{backingBean.assignCertBodyList}" />
+						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 								and not empty backingBean.managedBean.selectedCert.supplierCertId}"
-							oriValue="#{backingBean.managedBean.latestCert.certEndDate}" 
-							currValue="#{backingBean.managedBean.selectedCert.certEndDate}" 
-							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestCert.certEndDate)}"/>
-						<p:message
-						id="certEndDtMsg" for="endDate" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.rating']}" /></td>
-				<td><p:inputText size="35" maxlength="2" id="certRatingVal"
-						validatorMessage="#{lbl['lbl.sm.cert.rating']} - #{lbl['lbl.sm.invalidNo']}"
-						value="#{backingBean.managedBean.selectedCert.certScore}">
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedCert.supplierCertId}"
-						oriValue="#{backingBean.managedBean.latestCert.certScore}" 
-						currValue="#{backingBean.managedBean.selectedCert.certScore}" 
-						alertValue="#{backingBean.managedBean.latestCert.certScore}"/>
-					<p:message id="certRatingValMsg" for="certRatingVal"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-
-		</table>
-
-		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				id="certSaveBtn" action="#{backingBean.addOrUpdateCertsToSmAppl}"
-				partialSubmit="true" process="certPop"
-				onclick="this.disabled=true;" oncomplete="this.disabled=false;" 
-				update=":form:tt:certDt, @([id$=Msg]),:#{p:component('delCertBtnId')}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				action="#{backingBean.cancelSupplierCertAction}"
-				partialSubmit="true" process="@this" />
-		</div>
-
+							oriValue="#{backingBean.managedBean.latestCert.certTypeId}" 
+							currValue="#{backingBean.managedBean.selectedCert.certTypeId}" 
+							alertValue="#{(not empty backingBean.managedBean.latestCert.certTypeId) ?
+								backingBean.getCertTypeLabelById(backingBean.managedBean.latestCert.certTypeId)
+								: lbl['lbl.txt.na']}"/>
+						<p:message id="certTypeMsg" for="certTypeId" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							id="certBody" required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.cert.certBody']}"
+							value="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="certBody"
+								value="#{backingBean.managedBean.certBodyLs}"
+								itemValue="#{certBody.certBodyId}"
+								itemLabel="#{certBody.bodyName}" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCert.supplierCertId}"
+							oriValue="#{backingBean.managedBean.latestCert.pmCertBody.certBodyId}" 
+							currValue="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}" 
+							alertValue="#{backingBean.getProfBodyByIdFromList(backingBean.managedBean.latestCert.pmCertBody.certBodyId)}" />
+						<p:message id="certBodyMsg" for="certBody" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="certName"
+							required="#{backingBean.managedBean.valueReqd}"
+							label=" #{lbl['lbl.sm.cert.certName']}"
+							value="#{backingBean.managedBean.selectedCert.certName}" size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedCert.supplierCertId}"
+							oriValue="#{backingBean.managedBean.latestCert.certName}" 
+							currValue="#{backingBean.managedBean.selectedCert.certName}" 
+							alertValue="#{backingBean.managedBean.latestCert.certName}"/>
+						<p:message id="certNameMsg" for="certName" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:calendar id="stDate" showOn="button" navigator="true"
+							display="inline" required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.cert.strtDate']}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+0" readonlyInput="true"
+							maxdate="#{CommonConstants.CURRENT_DATE}"
+							value="#{backingBean.managedBean.selectedCert.certStartDate}" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedCert.supplierCertId}"
+							oriValue="#{backingBean.managedBean.latestCert.certStartDate}" 
+							currValue="#{backingBean.managedBean.selectedCert.certStartDate}" 
+							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestCert.certStartDate)}"/>
+						<p:message id="certStrttMsg" for="stDate" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']}" /></td>
+					<td><p:calendar id="endDate" showOn="button" navigator="true"
+							display="inline"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+10" readonlyInput="true"
+							value="#{backingBean.managedBean.selectedCert.certEndDate}" /> 
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges 
+									and not empty backingBean.managedBean.selectedCert.supplierCertId}"
+								oriValue="#{backingBean.managedBean.latestCert.certEndDate}" 
+								currValue="#{backingBean.managedBean.selectedCert.certEndDate}" 
+								alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestCert.certEndDate)}"/>
+							<p:message
+							id="certEndDtMsg" for="endDate" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.rating']}" /></td>
+					<td><p:inputText size="35" maxlength="2" id="certRatingVal"
+							validatorMessage="#{lbl['lbl.sm.cert.rating']} - #{lbl['lbl.sm.invalidNo']}"
+							value="#{backingBean.managedBean.selectedCert.certScore}">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						</p:inputText> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedCert.supplierCertId}"
+							oriValue="#{backingBean.managedBean.latestCert.certScore}" 
+							currValue="#{backingBean.managedBean.selectedCert.certScore}" 
+							alertValue="#{backingBean.managedBean.latestCert.certScore}"/>
+						<p:message id="certRatingValMsg" for="certRatingVal"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+	
+			</table>
+	
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					id="certSaveBtn" action="#{backingBean.addOrUpdateCertsToSmAppl}"
+					partialSubmit="true" process="certBlockPanel"
+					onclick="certBlockWidget.show();" oncomplete="certBlockWidget.hide();" 
+					update=":form:tt:certDt, @([id$=Msg]),:#{p:component('delCertBtnId')}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					action="#{backingBean.cancelSupplierCertAction}"
+					partialSubmit="true" process="@this" />
+			</div>
+			<p:blockUI block="certBlockPanel" widgetVar="certBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
 	</p:dialog>
 </ui:composition>
