@@ -1224,8 +1224,9 @@ public class ProfilePersonalizationBackingBean extends
 				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setLoginId(getManagedBean().getSelectedUser().getLoginId());		
-				reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+				reqDTO.setLoginId(getManagedBean().getSelectedUser().getLoginId());	
+				reqDTO.setUserLocale(getFacesScopes().getUserLocale());
+//				reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				UserResDTO resDTO = userSO.getPasswordPolicyInfo(reqDTO);
 				if(resDTO.isSuccessful() && resDTO.getPolicyInfos() != null){
 					StringBuilder sb = new StringBuilder();					
@@ -1241,7 +1242,33 @@ public class ProfilePersonalizationBackingBean extends
 						sb.append("<br/>");
 					}
 					getManagedBean().setPasswordPolicy(sb.toString());
-				}				
+				} else if(!resDTO.isSuccessful()){
+					StringBuilder sb = new StringBuilder();					
+					sb.append("<b>");
+					sb.append(ResourceBundleUtils.getMessage(
+							"lbl.pm.profiles.cp.tooltip",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+					sb.append("</b><br/>");
+					for (String policy : resDTO.getPolicyInfos()) {
+						sb.append("&#160;&#8226;&#160; ");
+						sb.append(policy);
+						sb.append("<br/>");
+					}
+					getManagedBean().setPasswordPolicy(sb.toString());
+//					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_WARN, null,ResourceBundleUtils.getMessage(
+													"lbl.pm.profiles.pass.policy.tooltip.err", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale())));
+					
+//					throw new EpException(ResourceBundleUtils.getMessage(
+//							"lbl.pm.profiles.pass.policy.tooltip.err", 
+//							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//							new FacesScopes().getUserLocale()));
+				}
 			}finally{
 					userSO = null;
 			}
