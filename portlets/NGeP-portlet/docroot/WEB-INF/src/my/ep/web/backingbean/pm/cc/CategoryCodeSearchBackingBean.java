@@ -26,6 +26,7 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -305,7 +306,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 						SearchOperator.OPERATOR_LIKE.value(),
 						categoryDesciption,
 						true);
-				l1SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+				//l1SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
 				BaseSearchFilterBean l2SearchFilterBean = new SearchFilterBean("pmCategoryL2.categoryName",
 						SearchOperator.OPERATOR_LIKE.value(),
 						categoryDesciption,
@@ -317,13 +318,32 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 						true);
 				l3SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
 				
+				// Filter By - category level 3 record status
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				// Filter By - category level 2 record status
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmCategoryL2.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				// Filter By - category level 1 record status
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmCategoryL2.pmCategoryL1.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
 				searchBean.getDataFilterBeans().add(
 						new SearchMultiFilterBean(
 								new SearchMultiFilterBean(
 										l1SearchFilterBean,
-										SearchCondition.CONDITION_OR.value(),
 										l2SearchFilterBean),
-								SearchCondition.CONDITION_OR.value(),
 								l3SearchFilterBean));
 
 				// Order by categoryName
