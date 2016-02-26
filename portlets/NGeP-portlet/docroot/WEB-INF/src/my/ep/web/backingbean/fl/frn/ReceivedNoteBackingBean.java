@@ -663,6 +663,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isLastFRNTaxInv()){
 				getManagedBean().setSelectedTabIndex(1);
+				onTabChange(getManagedBean().getSelectedTabIndex());
 				throw new EpException(MessageConst.ERROR_745078);
 			}
 		}
