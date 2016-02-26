@@ -156,6 +156,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private SmMachineDtl selectedMachine;
 	private SmAssociationBody selectedAssocBody;
 	private SmMofAccount smMofAccount;
+	private SmMofCert smMofCert;
 	private List<SmFacility> applFactoryFacilities;
 	private List<SmFacility> applDockyardFacilities;
 	private List<SmFacility> applWorkShopFacilities;
@@ -215,7 +216,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		shareHolderOffAddr.setSmAddress(defaultAddr);
 		shareHolderResdAddr = new SmPersonnelAddress();
 		shareHolderResdAddr.setSmAddress(defaultAddr);
-		
+
 		currDate = new Date();
 
 	}
@@ -1209,6 +1210,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setLocalAuthority(String localAuthority) {
 		this.localAuthority = localAuthority;
+	}
+
+	public SmMofCert getSmMofCert() {
+		return smMofCert;
+	}
+
+	public void setSmMofCert(SmMofCert smMofCert) {
+		this.smMofCert = smMofCert;
 	}
 
 }
