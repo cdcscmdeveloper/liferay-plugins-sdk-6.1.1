@@ -478,8 +478,6 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQtCheckSt2techProposal(null);
 					supplierCriteria = new ScQtSupplierCriteria();
 					supplierCriteria.setScQt(scQt);
-					supplierCriteria.setCtPanelItem(this.getManagedBean()
-							.getCtPanelItem());
 					if (null == scQt.getZoneLocationLevel()) {
 						scQt.setZoneLocationLevel(new PmParameter());
 					}
@@ -511,52 +509,7 @@ public class SpecificationBackingBean extends
 
 						RequestContext.getCurrentInstance().execute(
 								"panelApprovalDlgs.show()");
-					} else {
-						if (null != this.getManagedBean().getCtPanelItem()) {
-							if (supplierCriteria != null
-									&& !supplierCriteria
-											.getCtPanelItem()
-											.getPanelItemId()
-											.equals(this.getManagedBean()
-													.getCtPanelItem()
-													.getPanelItemId())) {
-								supplierCriteria.setCtPanelItem(this
-										.getManagedBean().getCtPanelItem());
-								if (null == scQt.getZoneLocationLevel()) {
-									scQt.setZoneLocationLevel(new PmParameter());
-								}
-								scQt.setZoneLocationLevel(this.getManagedBean()
-										.getCtPanelItem().getLocationLevelId());
-								removespecDtls();
-								if (null == this.getManagedBean().getQt()
-										.getPmProcurementCategory()) {
-									this.getManagedBean()
-											.getQt()
-											.setPmProcurementCategory(
-													new PmParameter());
-								}
-								if (null == this.getManagedBean().getQt()
-										.getProcurementTypeCatId()) {
-									this.getManagedBean()
-											.getQt()
-											.setProcurementTypeCatId(
-													new PmParameter());
-								}
-								this.getManagedBean().getQt().setZonal(false);
-								retriveZonesOrSuppliersByItem();
-								if (null != this.getManagedBean()
-										.getZoneGeneralTrees()
-										&& !this.getManagedBean()
-												.getZoneGeneralTrees()
-												.isEmpty()) {
-									this.getManagedBean().getQt()
-											.setZonal(true);
-								}
-							}
-
-						}
-						return "/xhtml/sc/specification/businessOwner/businessOwnerTabMenu.xhtml?faces-redirect=true";
-					}
+					} 
 
 				}
 
@@ -1584,8 +1537,8 @@ public class SpecificationBackingBean extends
 								.isEmpty()) {
 					tenderResDTO = QtDetailsSO
 							.retriveQTSuppQulCriDetails(tenderReqDTO);
-					List<ScQtCategory> categoryResults = tenderResDTO
-							.getCategoryResultBean().getResultList();
+					List<ScQtCategory> categoryResults = tenderResDTO.getCategories();
+							;
 					if (isNotNullOREmpty(categoryResults)) {
 						this.getManagedBean().setSuppCriteriaopenList(
 								categoryResults);
@@ -1598,14 +1551,12 @@ public class SpecificationBackingBean extends
 					if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
 							.equalsIgnoreCase(scQt.getQtType())
 							&& type.equalsIgnoreCase("SC")) {
-						if (tenderResDTO.getSupplierResultBean()
-								.getTotalRecord() > 0) {
+						if (CollectionUtils.isNotEmpty(tenderResDTO.getRestrictedSuppliers())) {
 							this.getManagedBean().setRestrictedSupplierList(
-									tenderResDTO.getSupplierResultBean()
-											.getResultList());
+									tenderResDTO.getRestrictedSuppliers());
 							this.getManagedBean().setTotalSuppliers(
-									tenderResDTO.getSupplierResultBean()
-											.getTotalRecord());
+									tenderResDTO.getRestrictedSuppliers()
+											.size());
 						}
 					}
 
@@ -1790,27 +1741,9 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setAllStateCode(
 						tenderResDTO.getStateCode());
 				this.getManagedBean().setQt(scQt);
-				if (null != scQt.getScQtSupplierCriteria()
-						&& null != scQt.getScQtSupplierCriteria()
-								.getCtPanelItem()) {
-					this.getManagedBean().setCtPanelItem(
-							scQt.getScQtSupplierCriteria().getCtPanelItem());
-					if (null != scQt.getScQtSupplierCriteria().getCtPanelItem()
-							.getCtCircularVer()) {
-						this.getManagedBean().setCtCircularVer(
-								scQt.getScQtSupplierCriteria().getCtPanelItem()
-										.getCtCircularVer());
-					}
-					this.getManagedBean().setPanelItemCategory(
-							scQt.getScQtSupplierCriteria().getCtPanelItem()
-									.getItemCategoryId().getParameterCode());
-					List<CtPanelItem> panelList = this.getManagedBean()
-							.getSelectpanelItem();
-					panelList = new ArrayList<CtPanelItem>();
-
-					panelList.add(this.getManagedBean().getQt()
-							.getScQtSupplierCriteria().getCtPanelItem());
-					this.getManagedBean().setSelectpanelItem(panelList);
+				
+					
+					
 				}
 				if (null != this.getManagedBean().getCtCircularVer()) {
 					this.getManagedBean().setCircularExpDate(
@@ -1830,7 +1763,7 @@ public class SpecificationBackingBean extends
 								.isEmpty()) {
 					retriveZonesOrSuppliersByItem();
 				}
-			}
+			
 		} finally {
 
 		}
@@ -3941,20 +3874,7 @@ public class SpecificationBackingBean extends
 					getManagedBean().getQt().getPmProcurementCategory()
 							.getParameterId());
 		}
-		if (getManagedBean().getQt().isPanel()) {
-			ScQtSupplierCriteria supplierCriteria = getManagedBean().getQt()
-					.getScQtSupplierCriteria();
-			if (null != supplierCriteria
-					&& null != supplierCriteria.getCtPanelItem()) {
-				if (null != supplierCriteria.getCtPanelItem().getItemType()) {
-					this.getManagedBean().setSearchItemTypeId(
-							supplierCriteria.getCtPanelItem().getItemType()
-									.getParameterId());
-				}
-			}
-		} else {
-			this.getManagedBean().setSearchItemTypeId(null);
-		}
+		
 	}
 
 	/**
@@ -4925,31 +4845,7 @@ public class SpecificationBackingBean extends
 					retriveNonpanelZoneDtls(tenderResDTO.getZoneDetails());
 
 				}
-				if (null == this.getManagedBean().getPanelItemCategory()
-						|| "".equals(this.getManagedBean()
-								.getPanelItemCategory())) {
-					if (this.getManagedBean().getQt().isPanel()) {
-						if (null != this.getManagedBean().getQt()
-								.getScQtSupplierCriteria()
-								&& null != this.getManagedBean().getQt()
-										.getScQtSupplierCriteria()
-										.getCtPanelItem()
-								&& null != this.getManagedBean().getQt()
-										.getScQtSupplierCriteria()
-										.getCtPanelItem().getItemCategoryId()) {
-
-							this.getManagedBean().setPanelItemCategory(
-									this.getManagedBean().getQt()
-											.getScQtSupplierCriteria()
-											.getCtPanelItem()
-											.getItemCategoryId()
-											.getParameterCode());
-
-						}
-					}
-
-				}
-
+				
 				if (null != scQt.getEstimatedAmount()) {
 					// setProcurementMode(scQt);
 					populateEvaluationTypes(scQt);
@@ -5165,8 +5061,7 @@ public class SpecificationBackingBean extends
 				if (supplierCriteria != null
 						&& this.getManagedBean().getQt().isPanel() != this
 								.getManagedBean().isPanelChange()) {
-					supplierCriteria.setCtPanelItem(this.getManagedBean()
-							.getCtPanelItem());
+					
 					if (null == scQt.getZoneLocationLevel()) {
 						scQt.setZoneLocationLevel(new PmParameter());
 					}
@@ -5186,13 +5081,8 @@ public class SpecificationBackingBean extends
 
 				} else {
 					if (supplierCriteria != null
-							&& !supplierCriteria
-									.getCtPanelItem()
-									.getPanelItemId()
-									.equals(this.getManagedBean()
-											.getCtPanelItem())) {
-						supplierCriteria.setCtPanelItem(this.getManagedBean()
-								.getCtPanelItem());
+							) {
+						
 						if (null == scQt.getZoneLocationLevel()) {
 							scQt.setZoneLocationLevel(new PmParameter());
 						}

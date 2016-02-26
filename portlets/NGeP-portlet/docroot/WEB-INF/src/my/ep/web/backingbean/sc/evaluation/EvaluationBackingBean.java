@@ -9192,14 +9192,12 @@ public class EvaluationBackingBean extends
 			tenderReqDTO.setQtId(qt.getQtId());
 			tenderResDTO = detailsSO
 					.retriveQualifiedRestrictedSuppliers(tenderReqDTO);
-			if (null != tenderResDTO
-					&& null != tenderResDTO.getSupplierResultBean()
-					&& null != tenderResDTO.getSupplierResultBean()
-							.getResultList()
-					&& !tenderResDTO.getSupplierResultBean().getResultList()
-							.isEmpty()) {
-				totalSuppliers = String.valueOf(tenderResDTO
-						.getSupplierResultBean().getTotalRecord());
+			if (CollectionUtils.isNotEmpty(tenderResDTO.getRestrictedSuppliers())
+					
+					) {
+								
+				totalSuppliers = String.valueOf(tenderResDTO.
+						getRestrictedSuppliers().size());
 
 			}
 		}

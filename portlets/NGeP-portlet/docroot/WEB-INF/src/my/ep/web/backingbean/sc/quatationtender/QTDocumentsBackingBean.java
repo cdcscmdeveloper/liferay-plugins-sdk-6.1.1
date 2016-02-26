@@ -2246,8 +2246,8 @@ public class QTDocumentsBackingBean extends
 			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
 			QuationTenderResDTO tenderResDTO = QtDetailsSO
 					.retriveQTSuppQulCriDetails(tenderReqDTO);
-			categoryResults = tenderResDTO.getCategoryResultBean()
-					.getResultList();
+			categoryResults = tenderResDTO.getCategories()
+					;
 			if (null != tenderResDTO.getLocationDetails()) {
 				context.put("locality", tenderResDTO.getLocationDetails());
 			}
