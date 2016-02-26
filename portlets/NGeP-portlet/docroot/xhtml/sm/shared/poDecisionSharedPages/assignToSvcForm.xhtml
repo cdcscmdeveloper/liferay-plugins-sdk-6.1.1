@@ -91,16 +91,14 @@
 			<c:choose>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'B'}">
 					<p:commandButton value="#{lbl['lbl.btn.submit']}"
-						partialSubmit="true" process="svcDialog"
-						onclick="this.disabled=true;"
-						oncomplete="this.disabled=false;" 
+						partialSubmit="true" process="assignSvcBlockPanel"
+						onclick="assignSvcBlockWidget.show()" oncomplete="assignSvcBlockWidget.hide();"
 						action="#{backingBean.submitPODescisionForSiteVisit('svcDialog','SITE_VISIT')}" />
 				</c:when>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
 					<p:commandButton value="#{lbl['lbl.btn.submit']}"
-						partialSubmit="true" process="svcDialog"
-						onclick="this.disabled=true;"
-						oncomplete="this.disabled=false;" 
+						partialSubmit="true" process="assignSvcBlockPanel"
+						onclick="assignSvcBlockWidget.show()" oncomplete="assignSvcBlockWidget.hide();"
 						action="#{backingBean.submitPODescisionForSiteVisit('svcDialog','SITE_VISIT_AFTER_APPROVE')}" />
 				</c:when>
 				<c:otherwise>

@@ -7094,7 +7094,6 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
-		RequestContext.getCurrentInstance().reset(":form:tt:" + dialog);
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 	}
 
