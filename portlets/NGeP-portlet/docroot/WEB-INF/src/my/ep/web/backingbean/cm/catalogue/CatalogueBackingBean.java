@@ -4235,19 +4235,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(CmConst.PUBLISHED);
-
-			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-
+			
 			for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {					
 				reqDTO.setSupplierItemId(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getSupplierItemId());	
-				//reqDTO.setItemStatus("U");
-				log.info("tracking diary for catalog Items to Publish:submitToReviewItems");
-				reqDTO.setTrackingStatus(true);
-
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
-
+				
+			
 				resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 
 				//				CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
@@ -4594,11 +4586,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
 					catalog.getCmStandardPricing().setStartDate(dateNow);
 				}
+				
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
+
 
 
 				if (catalog.isReviewRequired()) {
+					
+					log.info("tracking diary for catalog Items to Pending approval:submitToReviewItems");
+					statusReqDTO.setStatusId(CmConst.PENDING);
+
+					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+					reqDTO.setTrackingStatus(true);
+
+					reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), CmConst.SUPPLIER_ITEM_APPROVEL,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+
 					catalog.setItemStatus("P");
 				} else {
+					
+					log.info("tracking diary for catalog Items to Publish:submitToReviewItems");
+					statusReqDTO.setStatusId(CmConst.DIRECT_PUBLISHED);
+
+					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+					reqDTO.setTrackingStatus(true);
+
+					reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+
+					
 					catalog.setItemStatus("U");
 				}
 
@@ -4632,7 +4647,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
 						.get(0).getSupplierId());
 				this.getManagedBean().getDraftSearchDataModel().reloadData();
-
+				List<CmSupplierItem> suppLs = new ArrayList<CmSupplierItem>();
+				this.getManagedBean().setCloneCmSupplierItemLs(suppLs);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, "",
