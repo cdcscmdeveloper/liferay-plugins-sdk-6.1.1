@@ -51,7 +51,7 @@
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 		</p:selectOneMenu>
 		<p:graphicImage id="#{phonePanelId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile}" /> 
-		<p:tooltip	id="#{phonePanelId}tftelco" for="telcoCompId">
+		<p:tooltip	id="#{phonePanelId}tftelco" for="#{phonePanelId}telco">
 			<table><tr><td width="300px">
 			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telco']}" />
 			</td></tr></table>
