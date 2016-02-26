@@ -120,7 +120,7 @@
 	
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="@form" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{bb.submitRegistration}">
 				<f:param name="disableValidation" value="true" />
 		</p:commandButton>
