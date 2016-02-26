@@ -1894,18 +1894,18 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						InvoiceChargeLineVO chargeLineLv3 = null;
 						for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
 							if(!invItemLv3.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.TAX_CODE_OUT_OF_SCOPE)){
-//								if(lvl3TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemLv3.getGstFlag().getParameterCode())) {
-//									InvoiceChargeLineVO retrieveLv3 = lvl3TaxMap.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemLv3.getGstFlag().getParameterCode());
-//									BigDecimal totalReceivedQty = retrieveLv3.getFlInvoiceItem().getReceivedQty().add(invItemLv3.getReceivedQty());
-//									retrieveLv3.getFlInvoiceItem().setReceivedQty(totalReceivedQty);
-//								}else{
+								if(lvl3TaxMap.containsKey(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemLv3.getGstFlag().getParameterCode())) {
+									InvoiceChargeLineVO retrieveLv3 = lvl3TaxMap.get(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemLv3.getGstFlag().getParameterCode());
+									BigDecimal totalReceivedQty = retrieveLv3.getFlInvoiceItem().getReceivedQty().add(invItemLv3.getReceivedQty());
+									retrieveLv3.getFlInvoiceItem().setReceivedQty(totalReceivedQty);
+								}else{
 									chargeLineLv3 = new InvoiceChargeLineVO();
 									chargeLineLv3.setFlInvoiceSummary(invItemSummLv2);
 									chargeLineLv3.setLevel(3);
 									chargeLineLv3.setFlInvoiceItem(invItemLv3);
 									new DefaultTreeNode(chargeLineLv3, lv2TaxTreeNode);
 									lvl3TaxMap.put(invItemSummLv2.getFlFulfilmentItem().getItemCode()+invItemLv3.getGstFlag().getParameterCode(),chargeLineLv3);
-//								}
+								}
 									grandTotalInvAmt = grandTotalInvAmt.add(invItemLv3.getInvAmt());
 							}
 						}
