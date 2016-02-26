@@ -176,7 +176,7 @@
 		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
 		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="bankDialog">
-		<p:outputPanel id="bankDetailsPanel">
+		<p:outputPanel id="bankDetailsPanel" layout="block">
 			<p:messages id="suppBankAcctInfoMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="true" />
 			<table style="width: 100%">
@@ -542,10 +542,14 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				partialSubmit="true" process=":form:tt:bankDialog"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
+				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
 				update=":form:tt:bankDt , :form:tt:sfieldset, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelSmBankFunctions}" />
 		</div>
+		<p:blockUI block="bankDetailsPanel" widgetVar="bankDetailsPanelWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 	</p:dialog>
 </ui:composition>

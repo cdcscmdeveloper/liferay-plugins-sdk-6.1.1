@@ -130,336 +130,342 @@
 		header="#{lbl['lbl.sm.equiComp.dialHdr']}" id="eqiCompDialog"
 		widgetVar="eqiCompDialog" resizable="false" closable="false"
 		showEffect="fade" hideEffect="fade" modal="true">
-		<!-- <p:panel header="Associated Company Details"> -->
-		<p:messages id="suppEquiCompInfoMsg" showSummary="false"
-			showDetail="true" autoUpdate="true" closable="true" />
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.compName']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.equiComp.compName']}" id="supEquiCompName"
-						value="#{backingBean.managedBean.selectedEquityCompany.companyName}"
-						size="35" />
+		
+		<p:outputPanel layout="block" id="equiCompBlockPanel">
+			<p:messages id="suppEquiCompInfoMsg" showSummary="false"
+				showDetail="true" autoUpdate="true" closable="true" />
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.compName']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.equiComp.compName']}" id="supEquiCompName"
+							value="#{backingBean.managedBean.selectedEquityCompany.companyName}"
+							size="35" />
+							<ac:smFieldChangeAlert 
+								isShow="#{backingBean.managedBean.showFieldChanges}"
+								oriValue="#{backingBean.managedBean.latestEquityCompany.companyName}" 
+								currValue="#{backingBean.managedBean.selectedEquityCompany.companyName}" 
+								alertValue="#{backingBean.managedBean.latestEquityCompany.companyName}"/>
+							<p:message id="supEquiCompNameMsg"
+							for="supEquiCompName" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.regNo']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="20"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.equiComp.regNo']}" id="suppEquiCompRegNo"
+							value="#{backingBean.managedBean.selectedEquityCompany.regNo}"
+							size="35" > 
+							<p:ajax event="blur" process="@this" update="suppEquiMofNoId" partialSubmit="true"
+									listener="#{backingBean.onBlurSetMofNo(backingBean.managedBean.selectedEquityCompany)}"/>
+							</p:inputText>
+							<p:message id="suppEquiCompRegNoMsg"
+							for="suppEquiCompRegNo" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
+					<td>
+						<p:inputText value="#{backingBean.managedBean.selectedEquityCompany.mofNo}"
+							readonly="true" size="35" id="suppEquiMofNoId"/>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="equiCompShrAmt"
+							disabled="#{!backingBean.managedBean.valueReqd}"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.equiComp.shrAmt']}"
+							validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+							value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}"
+							size="35">
+							<f:validateDoubleRange for="contractorContractVal"
+								minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+								maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							<p:ajax event="blur" update="equiCompShrAmt, equiCompShrPer"
+								listener="#{backingBean.calculateEquityCompanyPercent}" />
+						</p:inputText> 
 						<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges}"
-							oriValue="#{backingBean.managedBean.latestEquityCompany.companyName}" 
-							currValue="#{backingBean.managedBean.selectedEquityCompany.companyName}" 
-							alertValue="#{backingBean.managedBean.latestEquityCompany.companyName}"/>
-						<p:message id="supEquiCompNameMsg"
-						for="supEquiCompName" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.regNo']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="20"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.equiComp.regNo']}" id="suppEquiCompRegNo"
-						value="#{backingBean.managedBean.selectedEquityCompany.regNo}"
-						size="35" > 
-						<p:ajax event="blur" process="@this" update="suppEquiMofNoId" partialSubmit="true"
-								listener="#{backingBean.onBlurSetMofNo(backingBean.managedBean.selectedEquityCompany)}"/>
+							isShow="#{backingBean.managedBean.showFieldChanges 
+								and not empty backingBean.managedBean.selectedEquityCompany.equityCompanyId}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.shareAmt}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.shareAmt}" 
+							alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestEquityCompany.shareAmt)}"/>
+						<p:message id="equiCompShrAmtMsg" for="equiCompShrAmt"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']}" /></td>
+					<td><p:inputText id="equiCompShrPer"
+							value="#{backingBean.managedBean.selectedEquityCompany.sharePercentage}"
+							size="10" readonly="true" disabled="true">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
-						<p:message id="suppEquiCompRegNoMsg"
-						for="suppEquiCompRegNo" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
-				<td>
-					<p:inputText value="#{backingBean.managedBean.selectedEquityCompany.mofNo}"
-						readonly="true" size="35" id="suppEquiMofNoId"/>
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="equiCompShrAmt"
-						disabled="#{!backingBean.managedBean.valueReqd}"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.equiComp.shrAmt']}"
-						validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
-						value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}"
-						size="35">
-						<f:validateDoubleRange for="contractorContractVal"
-							minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-							maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						<p:ajax event="blur" update="equiCompShrAmt, equiCompShrPer"
-							listener="#{backingBean.calculateEquityCompanyPercent}" />
-					</p:inputText> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges 
-							and not empty backingBean.managedBean.selectedEquityCompany.equityCompanyId}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.shareAmt}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.shareAmt}" 
-						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestEquityCompany.shareAmt)}"/>
-					<p:message id="equiCompShrAmtMsg" for="equiCompShrAmt"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']}" /></td>
-				<td><p:inputText id="equiCompShrPer"
-						value="#{backingBean.managedBean.selectedEquityCompany.sharePercentage}"
-						size="10" readonly="true" disabled="true">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.sharePercentage}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.sharePercentage}" 
-						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestEquityCompany.sharePercentage)}"/>
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.addr']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="35"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.equiComp.addr']}" id="suppEquiCompAddr"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
-						size="35" /> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
-							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address1}" 
-							currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}" 
-							alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address1}"/>
-						<p:message id="suppEquiCompAddrMsg"
-						for="suppEquiCompAddr" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td></td>
-				<td><p:inputText maxlength="35"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}"
-						size="35" />
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address2}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}" 
-						alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address2}"/>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><p:inputText maxlength="35"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}"
-						size="35" />
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address3}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}" 
-						alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address3}"/>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><p:inputText maxlength="35"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address4}"
-						size="35" />
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address4}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.address4}" 
-						alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address4}"/>
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="equiCountry"
-							value="#{backingBean.managedBean.countryItems}" />
-						<p:ajax event="change" process="@this"
-							listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-							update="equiState,equiDist,equiCity,postCodeSuppEquiPanelId" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedEquityCompany.equityCompanyId}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmCountry.countryId}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId}" 
-						alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
-						 	not empty backingBean.managedBean.latestEquityCompany.smAddress) ?
-							backingBean.getCountryLabelById(backingBean.managedBean.latestEquityCompany.smAddress.pmCountry.countryId)
-							: lbl['lbl.txt.na']}"/>
-					<p:message id="suppEquiCompCntryMsg" for="suppEquiCompCntry"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.state']}"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.stateId}"
-						id="equiState">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="equiState"
-							value="#{backingBean.managedBean.equiCompanyStates}" />
-						<p:ajax event="change" process="@this"
-							listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-							update="equiDist,equiCity" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmState.stateId}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateId}" 
-						alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
-						 	not empty backingBean.managedBean.latestEquityCompany.smAddress) ?
-							backingBean.getStateLabelById(backingBean.managedBean.latestEquityCompany.smAddress.pmState.stateId)
-							: lbl['lbl.txt.na']}"/>
-					<p:message id="equiStateMsg" for="equiState" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="equiDist" required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.district']}"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.districtId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="equiDist"
-							value="#{backingBean.managedBean.equiCompanyDistricts}" />
-						<p:ajax event="change" process="@this"
-							listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-							update="equiCity" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmDistrict.districtId}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtId}" 
-						alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
-						 	not empty backingBean.managedBean.latestEquityCompany.smAddress) ?
-							backingBean.getDistrictLabelById(backingBean.managedBean.latestEquityCompany.smAddress.pmDistrict.districtId)
-							: lbl['lbl.txt.na']}"/>
-					<p:message id="equiDistMsg" for="equiDist" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="equiCity" required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.towncity']}"
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.cityId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="equiCity"
-							value="#{backingBean.managedBean.equiCompanyCities}" />
-						<p:ajax event="change" process="@this"
-							listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-							update="equiCity" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmCity.cityId}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityId}" 
-						alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
-						 	not empty backingBean.managedBean.latestEquityCompany.smAddress) ?
-							backingBean.getCityLabelById(backingBean.managedBean.latestEquityCompany.smAddress.pmCity.cityId)
-							: lbl['lbl.txt.na']}"/>
-					<p:message id="equiCityMsg" for="equiCity" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:outputPanel id="postCodeSuppEquiPanelId">
-						<p:outputPanel
-							rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId==backingBean.managedBean.myCountryId}">
-							<p:inputText maxlength="5"
-								required="#{backingBean.managedBean.valueReqd}"
-								label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy"
-								value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
-								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-								size="35">
-								<f:validator validatorId="postcodeValidator" />
-							</p:inputText>
+							oriValue="#{backingBean.managedBean.latestEquityCompany.sharePercentage}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.sharePercentage}" 
+							alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestEquityCompany.sharePercentage)}"/>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.addr']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="35"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.equiComp.addr']}" id="suppEquiCompAddr"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}"
+							size="35" /> 
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
-								oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.postcode}" 
-								currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
-								alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.postcode}"/>
-							<p:message id="suppEquiCompPostCodeMyMsg"
-								for="suppEquiCompPostCodeMy" showSummary="true"
-								showDetail="false" display="icon" />
-						</p:outputPanel>
-						<p:outputPanel
-							rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId!=backingBean.managedBean.myCountryId}">
-							<p:inputText maxlength="10"
-								required="#{backingBean.managedBean.valueReqd}"
-								label="#{lbl['lbl.sm.postcode']}"
-								id="suppEquiCompPostCodeForeign"
-								value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
-								size="35">
-							</p:inputText>
-							<ac:smFieldChangeAlert 
-								isShow="#{backingBean.managedBean.showFieldChanges}"
-								oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.postcode}" 
-								currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
-								alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.postcode}"/>
-							<p:message id="suppEquiCompPostCodeForeignMsg"
-								for="suppEquiCompPostCodeForeign" showSummary="true"
-								showDetail="false" display="icon" />
-						</p:outputPanel>
-					</p:outputPanel></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td>
-					<ac:phone id="suppEquiCompPhnNo" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
-					countryCode="#{backingBean.managedBean.selectedEquityCompany.phoneCountry}" 
-					areaCode="#{backingBean.managedBean.selectedEquityCompany.phoneArea}" 
-					number="#{backingBean.managedBean.selectedEquityCompany.phoneNo}"  
-					validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.phoneNo}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.phoneNo}" 
-						alertValue="#{backingBean.managedBean.latestEquityCompany.phoneNo}"/>
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td>
-					<ac:phone id="suppEquiCompFaxNo" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
-					countryCode="#{backingBean.managedBean.selectedEquityCompany.faxCountry}" 
-					areaCode="#{backingBean.managedBean.selectedEquityCompany.faxArea}" 
-					number="#{backingBean.managedBean.selectedEquityCompany.faxNo}"  
-					validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" /> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestEquityCompany.faxNo}" 
-						currValue="#{backingBean.managedBean.selectedEquityCompany.faxNo}" 
-						alertValue="#{backingBean.managedBean.latestEquityCompany.faxNo}"/>
-				</td>
-			</tr>
-
-		</table>
-		<!-- </p:panel> -->
-		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateEquityCompanyToSmAppl}"
-				partialSubmit="true" process=":form:tt:eqiCompDialog"
-				update=":form:tt:eqiComDt, @([id$=Msg])" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				partialSubmit="true" process="@this"
-				action="#{backingBean.cancelEquiCompFuntionc}" />
-		</div>
+								oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address1}" 
+								currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}" 
+								alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address1}"/>
+							<p:message id="suppEquiCompAddrMsg"
+							for="suppEquiCompAddr" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td></td>
+					<td><p:inputText maxlength="35"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}"
+							size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address2}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}" 
+							alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address2}"/>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText maxlength="35"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}"
+							size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address3}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}" 
+							alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address3}"/>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText maxlength="35"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address4}"
+							size="35" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address4}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.address4}" 
+							alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address4}"/>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="equiCountry"
+								value="#{backingBean.managedBean.countryItems}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+								update="equiState,equiDist,equiCity,postCodeSuppEquiPanelId" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedEquityCompany.equityCompanyId}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmCountry.countryId}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId}" 
+							alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
+							 	not empty backingBean.managedBean.latestEquityCompany.smAddress) ?
+								backingBean.getCountryLabelById(backingBean.managedBean.latestEquityCompany.smAddress.pmCountry.countryId)
+								: lbl['lbl.txt.na']}"/>
+						<p:message id="suppEquiCompCntryMsg" for="suppEquiCompCntry"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+	
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.state']}"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.stateId}"
+							id="equiState">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="equiState"
+								value="#{backingBean.managedBean.equiCompanyStates}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+								update="equiDist,equiCity" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmState.stateId}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateId}" 
+							alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
+							 	not empty backingBean.managedBean.latestEquityCompany.smAddress) ?
+								backingBean.getStateLabelById(backingBean.managedBean.latestEquityCompany.smAddress.pmState.stateId)
+								: lbl['lbl.txt.na']}"/>
+						<p:message id="equiStateMsg" for="equiState" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							id="equiDist" required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.district']}"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.districtId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="equiDist"
+								value="#{backingBean.managedBean.equiCompanyDistricts}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+								update="equiCity" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmDistrict.districtId}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtId}" 
+							alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
+							 	not empty backingBean.managedBean.latestEquityCompany.smAddress) ?
+								backingBean.getDistrictLabelById(backingBean.managedBean.latestEquityCompany.smAddress.pmDistrict.districtId)
+								: lbl['lbl.txt.na']}"/>
+						<p:message id="equiDistMsg" for="equiDist" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							id="equiCity" required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.towncity']}"
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.cityId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="equiCity"
+								value="#{backingBean.managedBean.equiCompanyCities}" />
+							<p:ajax event="change" process="@this"
+								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+								update="equiCity" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmCity.cityId}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityId}" 
+							alertValue="#{(not empty backingBean.managedBean.latestEquityCompany and 
+							 	not empty backingBean.managedBean.latestEquityCompany.smAddress) ?
+								backingBean.getCityLabelById(backingBean.managedBean.latestEquityCompany.smAddress.pmCity.cityId)
+								: lbl['lbl.txt.na']}"/>
+						<p:message id="equiCityMsg" for="equiCity" showSummary="true"
+							showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:outputPanel id="postCodeSuppEquiPanelId">
+							<p:outputPanel
+								rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId==backingBean.managedBean.myCountryId}">
+								<p:inputText maxlength="5"
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy"
+									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
+									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+									size="35">
+									<f:validator validatorId="postcodeValidator" />
+								</p:inputText>
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges}"
+									oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.postcode}" 
+									currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
+									alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.postcode}"/>
+								<p:message id="suppEquiCompPostCodeMyMsg"
+									for="suppEquiCompPostCodeMy" showSummary="true"
+									showDetail="false" display="icon" />
+							</p:outputPanel>
+							<p:outputPanel
+								rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId!=backingBean.managedBean.myCountryId}">
+								<p:inputText maxlength="10"
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.postcode']}"
+									id="suppEquiCompPostCodeForeign"
+									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
+									size="35">
+								</p:inputText>
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges}"
+									oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.postcode}" 
+									currValue="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
+									alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.postcode}"/>
+								<p:message id="suppEquiCompPostCodeForeignMsg"
+									for="suppEquiCompPostCodeForeign" showSummary="true"
+									showDetail="false" display="icon" />
+							</p:outputPanel>
+						</p:outputPanel></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+					<td>
+						<ac:phone id="suppEquiCompPhnNo" isMobile="false" label="#{lbl['lbl.sm.phoneno']}"
+						countryCode="#{backingBean.managedBean.selectedEquityCompany.phoneCountry}" 
+						areaCode="#{backingBean.managedBean.selectedEquityCompany.phoneArea}" 
+						number="#{backingBean.managedBean.selectedEquityCompany.phoneNo}"  
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.phoneNo}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.phoneNo}" 
+							alertValue="#{backingBean.managedBean.latestEquityCompany.phoneNo}"/>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+					<td>
+						<ac:phone id="suppEquiCompFaxNo" isMobile="false" label="#{lbl['lbl.sm.faxno']}"
+						countryCode="#{backingBean.managedBean.selectedEquityCompany.faxCountry}" 
+						areaCode="#{backingBean.managedBean.selectedEquityCompany.faxArea}" 
+						number="#{backingBean.managedBean.selectedEquityCompany.faxNo}"  
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" /> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriValue="#{backingBean.managedBean.latestEquityCompany.faxNo}" 
+							currValue="#{backingBean.managedBean.selectedEquityCompany.faxNo}" 
+							alertValue="#{backingBean.managedBean.latestEquityCompany.faxNo}"/>
+					</td>
+				</tr>
+	
+			</table>
+			<!-- </p:panel> -->
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					action="#{backingBean.addOrUpdateEquityCompanyToSmAppl}"
+					partialSubmit="true" process=":form:tt:eqiCompDialog"
+					onclick="equiCompBlockWidget.show();" oncomplete="equiCompBlockWidget.hide();"
+					update=":form:tt:eqiComDt, @([id$=Msg])" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					partialSubmit="true" process="@this"
+					action="#{backingBean.cancelEquiCompFuntionc}" />
+			</div>
+			<p:blockUI block="equiCompBlockPanel" widgetVar="equiCompBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
 	</p:dialog>
 </ui:composition>
