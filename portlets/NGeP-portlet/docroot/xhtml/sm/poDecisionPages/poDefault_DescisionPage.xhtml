@@ -38,17 +38,17 @@
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:rejectDialog" partialSubmit="true"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<p:commandButton onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()"
+								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
 								value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 								partialSubmit="true" process="@this"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
 							<p:commandButton onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()"
+								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
 								value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 								partialSubmit="true" process="@this"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
@@ -64,7 +64,7 @@
 								action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:rejectDialog" partialSubmit="true"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 						</c:when>
@@ -72,7 +72,7 @@
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:rejectDialog" partialSubmit="true"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<p:commandButton
@@ -96,14 +96,14 @@
 								action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:rejectDialog" partialSubmit="true"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton
 									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this"
+									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 									action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
 							</c:if>
@@ -111,7 +111,7 @@
 								<p:commandButton
 									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this"
+									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 							</c:if>
@@ -261,59 +261,78 @@
 		header="#{lbl['lbl.sm.assign.site.visit']}" widgetVar="svcDialog"
 		id="svcDialog" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-
-		<ui:include
-			src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
+		
+		<p:outputPanel layout="block" id="assignSvcBlockPanel">
+			<ui:include src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
+			<p:blockUI block="assignSvcBlockPanel" widgetVar="assignSvcBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
 
 	</p:dialog>
 	<p:dialog width="650px" header="#{lbl['lbl.sm.submit.to.approver']}"
 		closable="false" id="submitApprvrDialog" height="350px"
 		widgetVar="submitApprvrDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-
-		<ui:include
-			src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				oncomplete="submitApprvrDialog.hide();" update=":form"
-				action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				action="#{backingBean.cancelPOEscalationToApprover}" />
-		</div>
+		
+		<p:outputPanel layout="block" id="poEscalateBlockPanel">
+			<ui:include
+				src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
+					onclick="poEscalateBlockWidget.show()" oncomplete="poEscalateBlockWidget.hide();submitApprvrDialog.hide();" 
+					action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" process="poEscalateBlockPanel"/>
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					action="#{backingBean.cancelPOEscalationToApprover}" />
+			</div>
+			<p:blockUI block="poEscalateBlockPanel" widgetVar="poEscalateBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
+		
 	</p:dialog>
 	<p:dialog width="750px" header="#{lbl['lbl.sm.approve.application']}"
 		closable="false" id="approveDialog" widgetVar="approveDialog"
 		height="250px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-
-		<ui:include
-			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="approveDialog.hide();"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
-				action="#{backingBean.finalDecisionApproveOrRejectAppln('approveDialog','APPROVE')}"
-				partialSubmit="true" process="approveDialog" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				action="#{backingBean.cancelFinalApproveOrReject('approveDialog')}"
-				partialSubmit="true" process="@this" />
-		</div>
+		
+		<p:outputPanel layout="block" id="poApprovedBlockPanel">
+			<ui:include
+				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
+					onclick="poApprovedBlockWidget.show()" oncomplete="poApprovedBlockWidget.hide()" 
+					action="#{backingBean.finalDecisionApproveOrRejectAppln('approveDialog','APPROVE')}"
+					partialSubmit="true" process="poApprovedBlockPanel" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					action="#{backingBean.cancelFinalApproveOrReject('approveDialog')}"
+					partialSubmit="true" process="@this" />
+			</div>
+			<p:blockUI block="poApprovedBlockPanel" widgetVar="poApprovedBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
 	</p:dialog>
 	<p:dialog width="1000px" header="#{lbl['lbl.sm.reject.application']}"
-		closable="false" id="rejectDialog" widgetVar="rejectDialog"
+		closable="false" id="rejectDialogId" widgetVar="rejectDialog"
 		height="350px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-
-		<ui:include
-			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-				update="@form" onclick="rejectDialog.hide();"
-				partialSubmit="true" process="rejectDialog"
-				action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
-				partialSubmit="true" process="@this" />
-		</div>
+		
+		<p:outputPanel layout="block" id="poRejectBlockPanel">
+			<ui:include
+				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					onclick="poRejectBlockWidget.show()" oncomplete="poRejectBlockWidget.hide()"
+					update="@([id$=Msg])" partialSubmit="true" process="rejectDialogId"
+					action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
+					partialSubmit="true" process="@this" />
+			</div>
+			<p:blockUI block="poRejectBlockPanel" widgetVar="poRejectBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
 	</p:dialog>
 </ui:composition>
