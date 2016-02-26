@@ -16,8 +16,8 @@
 			<td style="white-space: nowrap; float: right;">
 			    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
 			    	disabled="#{(bb.managedBean.blacklist and not empty bb.managedBean.currentPersonBlacklist) 
-			    		or (!bb.managedBean.blacklist and empty bb.managedBean.currentPersonBlacklist)}"
-			    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{bb.onClickSubmit}"/>
+			    		or (!bb.managedBean.blacklist and empty bb.managedBean.currentPersonBlacklist)}" 
+			    	onclick="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{bb.onClickSubmit}"/>
 			</td>
 		</tr>
 		<tr height="10"><td height="10"></td></tr>
