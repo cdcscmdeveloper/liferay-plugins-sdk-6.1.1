@@ -26,16 +26,12 @@
 
 		+
 		<p:inputText value="#{cc.attrs.countryCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.country.code']}" 
-			required="#{cc.attrs.required}" id="countryCodeCompId" disabled="#{cc.attrs.disabled}">
-			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
-		</p:inputText>
+			required="#{cc.attrs.required}" id="countryCodeCompId" disabled="#{cc.attrs.disabled}" />
 		<p:inputText value="#{cc.attrs.areaCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.area.code']}"
-			required="#{cc.attrs.required}" id="areaCodeCompId" disabled="#{cc.attrs.disabled}">
-			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
-		</p:inputText>
+			required="#{cc.attrs.required}" id="areaCodeCompId" disabled="#{cc.attrs.disabled}" />
 		<p:inputText value="#{cc.attrs.number}" size="10" maxlength="10" disabled="#{cc.attrs.disabled}"
 			required="#{cc.attrs.required}" id="phoneNoCompId"  label="#{cc.attrs.label}">
-			<p:ajax process="@this" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
+			<p:ajax process="@this,countryCodeCompId,areaCodeCompId" update="#{cc.attrs.id}" partialSubmit="true" event="blur" />
 			<f:validator validatorId="phoneValidator" />
 			<f:attribute name="isMobileName" value="#{cc.attrs.isMobile ? 'Y' : 'N'}" />
 	        <f:attribute name="labelName" value="#{cc.attrs.label}" />
