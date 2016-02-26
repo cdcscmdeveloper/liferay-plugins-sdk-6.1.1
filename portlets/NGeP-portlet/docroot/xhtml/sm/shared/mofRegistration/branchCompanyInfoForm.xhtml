@@ -194,30 +194,36 @@
 	<p:dialog width="550px" height="500px" style="z-index:-1;"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
 		id="banchDialog" resizable="false" modal="true" closable="false">
-		<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
-			autoUpdate="true" closable="true" />
-		<ui:fragment
-			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K' or backingBean.managedBean.smAppl.supplierType eq 'J'}">
-			<ui:include src="branchDetailsTablePage.xhtml" />
-			<ui:include src="gstBranchInfoForm.xhtml" />
-		</ui:fragment>
-		<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
-			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'MKM'}">
-			<ui:include src="branchDetailsTablePageConsultant.xhtml" />
-		</p:panel>
-
-		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				id="branchPopUpSaveBtn"
-				action="#{backingBean.addOrUpdateBranchToSmAppl}"
-				partialSubmit="true" process="banchDialog"
-				onclick="this.disabled=true;" oncomplete="this.disabled=false;" 
-				update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				partialSubmit="true" process="@this"
-				action="#{backingBean.assignCancelBranchBean}" />
-		</div>
+		
+		<p:outputPanel layout="block" id="branchBlockPanel">
+			<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<ui:fragment
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K' or backingBean.managedBean.smAppl.supplierType eq 'J'}">
+				<ui:include src="branchDetailsTablePage.xhtml" />
+				<ui:include src="gstBranchInfoForm.xhtml" />
+			</ui:fragment>
+			<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq 'MKM'}">
+				<ui:include src="branchDetailsTablePageConsultant.xhtml" />
+			</p:panel>
+	
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					id="branchPopUpSaveBtn"
+					action="#{backingBean.addOrUpdateBranchToSmAppl}"
+					partialSubmit="true" process="banchDialog"
+					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
+					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					partialSubmit="true" process="@this"
+					action="#{backingBean.assignCancelBranchBean}" />
+			</div>
+			<p:blockUI block="branchBlockPanel" widgetVar="branchBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
 	</p:dialog>
 	
 	<p:dialog id="gstBrUploadDialog" widgetVar="gstBrUploadDialog" modal="true"

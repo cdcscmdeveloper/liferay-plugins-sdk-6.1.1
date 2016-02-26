@@ -144,203 +144,208 @@
 		widgetVar="contDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="contDialog"
 		width="850px" height="500px">
-		<p:messages id="contractPrjMsg" showSummary="false" showDetail="true"
-			autoUpdate="true" closable="true" />
-
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 30%"><p:outputLabel
-						value="#{lbl['lbl.sm.projDtls.projTitle']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:inputText maxlength="500"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
-						value="#{backingBean.managedBean.selectedCompanyExperience.title}"
-						size="35">
-					</p:inputText> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-						oriValue="#{backingBean.managedBean.latestCompanyExperience.title}" 
-						currValue="#{backingBean.managedBean.selectedCompanyExperience.title}" 
-						alertValue="#{backingBean.managedBean.latestCompanyExperience.title}"/>
-					<p:message id="supCntrPrjTtlMsg" for="supCntrPrjTtl"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.contrVal']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-
-				<td colspan="2"><p:inputText
-						label="#{lbl['lbl.sm.projDtls.contrVal']}"
-						disabled="#{!backingBean.managedBean.valueReqd}"
-						id="contractorContractVal" maxlength="17"
-						required="#{backingBean.managedBean.valueReqd}"
-						validatorMessage="#{lbl['lbl.sm.projDtls.contrVal']} - #{lbl['lbl.sm.minAmt.validMsg']}"
-						value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
-						size="35">
-						<f:validateDoubleRange for="contractorContractVal"
-							minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
-							maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						<p:ajax process="@this" partialSubmit="true"
-							update="@this,contractorContractValMsg" />
-					</p:inputText> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-						oriValue="#{backingBean.managedBean.latestCompanyExperience.contractValue}" 
-						currValue="#{backingBean.managedBean.selectedCompanyExperience.contractValue}" 
-						alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestCompanyExperience.contractValue)}"/>
-					<p:message id="contractorContractValMsg"
-						for="contractorContractVal" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.payMthd']}" />
-				</td>
-				<td colspan="2"><p:selectOneMenu
-						label="#{lbl['lbl.sm.projDtls.payMthd']}" id="supCntrctPayMthd"
-						value="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItems value="#{backingBean.getDropdownValues('PYM')}" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-						oriValue="#{backingBean.managedBean.latestCompanyExperience.paymentMethodId}" 
-						currValue="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}" 
-						alertValue="#{backingBean.getLabelFromSelectItems(backingBean.managedBean.latestCompanyExperience.paymentMethodId,'PYM')}"/>
-					<p:message id="supCntrctPayMthdMsg" for="supCntrctPayMthd"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procMode']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:selectOneMenu
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.projDtls.procMode']}" id="supCntrPrcMod"
-						value="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItems value="#{backingBean.getDropdownValues('PM')}" />
-					</p:selectOneMenu> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-						oriValue="#{backingBean.managedBean.latestCompanyExperience.procurementModeId}" 
-						currValue="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}" 
-						alertValue="#{backingBean.getLabelFromSelectItems(backingBean.managedBean.latestCompanyExperience.procurementModeId,'PM')}"/>
-					<p:message id="supCntrPrcModMsg" for="supCntrPrcMod"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
-				<td style="width: 39%"><p:selectOneRadio
-						value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
-							itemValue="F" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
-							itemValue="O" />
-					</p:selectOneRadio>
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-						oriValue="#{backingBean.managedBean.latestCompanyExperience.clientType}" 
-						currValue="#{backingBean.managedBean.selectedCompanyExperience.clientType}" 
-						alertValue="#{empty backingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
-						(backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
-						? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
-				</td>
-				<td>&#160; <p:graphicImage id="tooltip"
-						style="padding-bottom : 7px;" value="/css/images/design/tooltips.png" /> <p:tooltip id="toolinfo" for="tooltip">
-						<p:outputLabel escape="false"
-							value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
-					</p:tooltip>&#160;
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:inputTextarea maxlength="255"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.projDtls.statBody']}" id="supCntrStuBdy"
-						value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
-						cols="36">
-						<f:validateLength maximum="255" />
-					</p:inputTextarea> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-						oriValue="#{backingBean.managedBean.latestCompanyExperience.clientName}" 
-						currValue="#{backingBean.managedBean.selectedCompanyExperience.clientName}" 
-						alertValue="#{backingBean.managedBean.latestCompanyExperience.clientName}"/>
-					<p:message id="supCntrStuBdyMsg" for="supCntrStuBdy"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.projDtls.workProgress']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:selectOneRadio
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.projDtls.workProgress']}" id="supCntrPrgSts"
-						value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}"
-							itemValue="P" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}"
-							itemValue="S" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}"
-							itemValue="F" />
-					</p:selectOneRadio> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-						oriValue="#{backingBean.managedBean.latestCompanyExperience.progressStatus}" 
-						currValue="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}" 
-						alertValue="#{empty backingBean.managedBean.latestCompanyExperience.progressStatus ? lbl['lbl.sm.no.available'] :
-						(backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' 
-						? lbl['lbl.sm.projDtls.inProgress'] : (
-						backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' ? lbl['lbl.sm.projDtls.success'] 
-						: lbl['lbl.sm.projDtls.fail']))}"/>
-					<p:message id="supCntrPrgStsMsg" for="supCntrPrgSts"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procDate']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:calendar showOn="button" navigator="true"
-						display="inline" readonlyInput="true"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.projDtls.procDate']}" id="supCntrPrcDate"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="-99:+0"
-						value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" />
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-						oriValue="#{backingBean.managedBean.latestCompanyExperience.procurementDate}" 
-						currValue="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" 
-						alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestCompanyExperience.procurementDate)}"/>
-					<p:message id="supCntrPrcDateMsg" for="supCntrPrcDate"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-		</table>
-		<ui:include src="compExperienceCategoriesInfoPanelForm.xhtml" />
-		<br />
-
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				id="contractProjPopUpSaveBtn"
-				action="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
-				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
-				update=":form:tt:contDt, @([id$=Msg]),:#{p:component('delContExpBtnId')}" partialSubmit="true"
-				process="contDialog" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				partialSubmit="true" process="@this"
-				action="#{backingBean.cancelCompExpFunctions}">
-			</p:commandButton>
-		</div>
-
+		
+		<p:outputPanel layout="block" id="contExpBlockPanel">
+			<p:messages id="contractPrjMsg" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+	
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							value="#{lbl['lbl.sm.projDtls.projTitle']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td colspan="2"><p:inputText maxlength="500"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
+							value="#{backingBean.managedBean.selectedCompanyExperience.title}"
+							size="35">
+						</p:inputText> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.title}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.title}" 
+							alertValue="#{backingBean.managedBean.latestCompanyExperience.title}"/>
+						<p:message id="supCntrPrjTtlMsg" for="supCntrPrjTtl"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.contrVal']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+	
+					<td colspan="2"><p:inputText
+							label="#{lbl['lbl.sm.projDtls.contrVal']}"
+							disabled="#{!backingBean.managedBean.valueReqd}"
+							id="contractorContractVal" maxlength="17"
+							required="#{backingBean.managedBean.valueReqd}"
+							validatorMessage="#{lbl['lbl.sm.projDtls.contrVal']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+							value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
+							size="35">
+							<f:validateDoubleRange for="contractorContractVal"
+								minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
+								maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							<p:ajax process="@this" partialSubmit="true"
+								update="@this,contractorContractValMsg" />
+						</p:inputText> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.contractValue}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.contractValue}" 
+							alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestCompanyExperience.contractValue)}"/>
+						<p:message id="contractorContractValMsg"
+							for="contractorContractVal" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.payMthd']}" />
+					</td>
+					<td colspan="2"><p:selectOneMenu
+							label="#{lbl['lbl.sm.projDtls.payMthd']}" id="supCntrctPayMthd"
+							value="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItems value="#{backingBean.getDropdownValues('PYM')}" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.paymentMethodId}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}" 
+							alertValue="#{backingBean.getLabelFromSelectItems(backingBean.managedBean.latestCompanyExperience.paymentMethodId,'PYM')}"/>
+						<p:message id="supCntrctPayMthdMsg" for="supCntrctPayMthd"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procMode']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td colspan="2"><p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.projDtls.procMode']}" id="supCntrPrcMod"
+							value="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItems value="#{backingBean.getDropdownValues('PM')}" />
+						</p:selectOneMenu> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.procurementModeId}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}" 
+							alertValue="#{backingBean.getLabelFromSelectItems(backingBean.managedBean.latestCompanyExperience.procurementModeId,'PM')}"/>
+						<p:message id="supCntrPrcModMsg" for="supCntrPrcMod"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
+					<td style="width: 39%"><p:selectOneRadio
+							value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
+								itemValue="F" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
+								itemValue="O" />
+						</p:selectOneRadio>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.clientType}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.clientType}" 
+							alertValue="#{empty backingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
+							(backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
+							? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
+					</td>
+					<td>&#160; <p:graphicImage id="tooltip"
+							style="padding-bottom : 7px;" value="/css/images/design/tooltips.png" /> <p:tooltip id="toolinfo" for="tooltip">
+							<p:outputLabel escape="false"
+								value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
+						</p:tooltip>&#160;
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td colspan="2"><p:inputTextarea maxlength="255"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.projDtls.statBody']}" id="supCntrStuBdy"
+							value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
+							cols="36">
+							<f:validateLength maximum="255" />
+						</p:inputTextarea> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.clientName}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.clientName}" 
+							alertValue="#{backingBean.managedBean.latestCompanyExperience.clientName}"/>
+						<p:message id="supCntrStuBdyMsg" for="supCntrStuBdy"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.projDtls.workProgress']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td colspan="2"><p:selectOneRadio
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.projDtls.workProgress']}" id="supCntrPrgSts"
+							value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}"
+								itemValue="P" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}"
+								itemValue="S" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}"
+								itemValue="F" />
+						</p:selectOneRadio> 
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.progressStatus}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}" 
+							alertValue="#{empty backingBean.managedBean.latestCompanyExperience.progressStatus ? lbl['lbl.sm.no.available'] :
+							(backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' 
+							? lbl['lbl.sm.projDtls.inProgress'] : (
+							backingBean.managedBean.latestCompanyExperience.progressStatus eq 'P' ? lbl['lbl.sm.projDtls.success'] 
+							: lbl['lbl.sm.projDtls.fail']))}"/>
+						<p:message id="supCntrPrgStsMsg" for="supCntrPrgSts"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procDate']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td colspan="2"><p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.projDtls.procDate']}" id="supCntrPrcDate"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+0"
+							value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" />
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.procurementDate}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" 
+							alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestCompanyExperience.procurementDate)}"/>
+						<p:message id="supCntrPrcDateMsg" for="supCntrPrcDate"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+			</table>
+			<ui:include src="compExperienceCategoriesInfoPanelForm.xhtml" />
+			<br />
+	
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					id="contractProjPopUpSaveBtn"
+					action="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
+					onclick="contExpBlockWidget.show();" oncomplete="contExpBlockWidget.hide();"
+					update=":form:tt:contDt, @([id$=Msg]),:#{p:component('delContExpBtnId')}" partialSubmit="true"
+					process="contDialog" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					partialSubmit="true" process="@this"
+					action="#{backingBean.cancelCompExpFunctions}">
+				</p:commandButton>
+			</div>
+			<p:blockUI block="contExpBlockPanel" widgetVar="contExpBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
 	</p:dialog>
 </ui:composition>
