@@ -37,7 +37,7 @@ public class FLReportBackingBean extends
 	 */
 	public void enableCriteriaVariablesByReportByFL(
 			ReportsGenerateBean rptGenBean, List<String> authoriztionList) {
-
+		    rptGenBean.setConditionGenerateButton(true);
 		switch (getManagedBean().getReportValue().trim()) {
 		case ReportConst.CON_REQ_RPT_MIN_VAL:
 			rptGenBean.setFlMinistryView(true);
