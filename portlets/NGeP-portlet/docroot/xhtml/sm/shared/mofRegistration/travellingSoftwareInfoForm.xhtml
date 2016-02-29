@@ -134,10 +134,9 @@
 		header="#{lbl['lbl.sm.travelling.system.diaHdr']}" widgetVar="systemDialog"
 		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="systemDialog">
-
-		<p:messages id="systemDialogMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
 		
-		<p:outputPanel id="systemOutPanelId">
+		<p:outputPanel id="systemOutPanelId" layout="block">
+			<p:messages id="systemDialogMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
 			<table style="width: 100%">
 				<tr>
 					<td style="border-style: none !important;float: right !important;">
@@ -191,11 +190,14 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateSystemToSmAppl}"
 				partialSubmit="true" process="systemDialog"
-				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
+				onclick="systemOutWidget.show();" oncomplete="systemOutWidget.hide();"
 				update=":form:tt:systemDt, @([Id$=Msg]),:#{p:component('delSystemBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelSystemSaveorUpdate}" />
 		</div>
+		<p:blockUI block="systemOutPanelId" widgetVar="systemOutWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 	</p:dialog>
 </ui:composition>
