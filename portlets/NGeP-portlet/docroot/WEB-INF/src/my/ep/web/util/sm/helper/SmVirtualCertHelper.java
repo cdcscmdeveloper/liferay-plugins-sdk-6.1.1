@@ -158,7 +158,7 @@ public class SmVirtualCertHelper {
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setApplId(applId);
 		
-		VirtualCertResDTO resDTO = reqSO.retrieveMofCertByApplId(reqDTO);
+		VirtualCertResDTO resDTO = reqSO.retrieveMofCertsByApplId(reqDTO);
 		
 		return resDTO.getSmMofCerts();
 	}
