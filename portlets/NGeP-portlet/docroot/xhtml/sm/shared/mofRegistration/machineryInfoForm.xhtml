@@ -142,7 +142,7 @@
 		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="equipmentDialog">
 		
-		<p:outputPanel id="machineOutPanelId">
+		<p:outputPanel id="machineOutPanelId" layout="block">
 			<p:messages id="equipmentDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="true" />
 	
@@ -349,11 +349,14 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateMachineToSmAppl}"
 				partialSubmit="true" process="equipmentDialog"
-				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
+				onclick="machineOutWidget.show();" oncomplete="machineOutWidget.hide();"
 				update=":form:tt:macDt, @([Id$=Msg]),:#{p:component('delMachBtnId')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this" update="machineOutPanelId"
 				action="#{backingBean.cancelMachineSaveorUpdate}" />
 		</div>
+		<p:blockUI block="machineOutPanelId" widgetVar="machineOutWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 	</p:dialog>
 </ui:composition>

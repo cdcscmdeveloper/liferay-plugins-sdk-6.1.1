@@ -25,7 +25,7 @@
 					partialSubmit="true" update="@form" 
 					action="#{smUpdateGstInfoBackingBean.onDeclareGst}"
 					disabled="#{smUpdateGstInfoBackingBean.isDisableDeclareButton()}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
 				</p:commandButton>
 			</div>
 		</p:outputPanel>
