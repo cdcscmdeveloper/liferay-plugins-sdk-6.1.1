@@ -9,6 +9,8 @@ import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constants.SMProcessNameConst;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
+import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
+import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.sitevisit.CommonSiteVisitManagedBean;
@@ -43,31 +45,51 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 		
 		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO.getBPMTaskDetails(reqDTO);
 		//SMDisciplinaryActionDataType disActObj = (SMDisciplinaryActionDataType) resDTO.getPojo();
-		SMSiteVisitDataType svObj = (SMSiteVisitDataType) resDTO.getPojo();
+		Object svObj =  null;
+		Long docId = null;
+		String svTaskId = null;
+		
+		if (resDTO.getPojo() instanceof SMMOFRegDataType) {
+			svObj = resDTO.getPojo();
+			SMMOFRegDataType mofRegDT = (SMMOFRegDataType) resDTO.getPojo();
+			docId = mofRegDT.getDocumentId();
+			svTaskId = mofRegDT.getSvoTaskId();
+		}else if(resDTO.getPojo() instanceof SMMOFAccMainDataType) {
+			svObj = resDTO.getPojo();
+			SMMOFAccMainDataType mofRegMainDT = (SMMOFAccMainDataType) resDTO.getPojo();
+			docId = mofRegMainDT.getDocumentId();
+			//svTaskId = mofRegMainDT.get
+		}else if(resDTO.getPojo() instanceof SMSiteVisitDataType){
+			svObj = resDTO.getPojo();
+			SMSiteVisitDataType siteVisitDT = (SMSiteVisitDataType) resDTO.getPojo();
+			docId = siteVisitDT.getDocumentId();
+			svTaskId = siteVisitDT.getSvoTaskId();
+		}
+		
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 		
 		log.info("----------Common SIte Visit--------" + resDTO.getTaskName());
-		if(resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.ASSIGN_SITE_VISIT)){
+		if(resDTO.getTaskName().equalsIgnoreCase("Assign Site Visit")){
 			SvcSiteAssignBackingBean svcBB = new SvcSiteAssignBackingBean();
 			svcBB.renewSesionObject();
 			
-			log.info("------Assign Site Visit AppID-------------" + svObj.getDocumentId());
-			svcBB.getManagedBean().setAppId(svObj.getDocumentId());
+			log.info("------Assign Site Visit AppID-------------" + docId);
+			svcBB.getManagedBean().setAppId(docId);
 			svcBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svcBB.getManagedBean().setTaskId(taskId);
 			//svcBB.getManagedBean().setAppType(svObj.getAppType());
 			svcBB.getManagedBean().setBpmPojo(svObj);
-			svcBB.retrieveSiteAssignInfo(svObj.getDocumentId());
+			svcBB.retrieveSiteAssignInfo(docId);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svcassignment/assignSiteVisitView");
 		}else if(resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT)){
-			log.info("------Complete Site Visit Report-------------" + svObj.getDocumentId());
+			log.info("------Complete Site Visit Report-------------" + docId);
 			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
 			svoBB.renewSesionObject();
-
+			log.info("Document id>>>>" + docId);
 			//svoBB.getManagedBean().setAppId(svObj.getDocumentId());
-			svoBB.getManagedBean().setSvTaskId(Long.valueOf(svObj.getSvoTaskId()));
+			svoBB.getManagedBean().setSvTaskId(Long.valueOf(svTaskId));
 			svoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svoBB.getManagedBean().setTaskId(taskId);
 			//svoBB.getManagedBean().setAppType(svObj.getAppType());

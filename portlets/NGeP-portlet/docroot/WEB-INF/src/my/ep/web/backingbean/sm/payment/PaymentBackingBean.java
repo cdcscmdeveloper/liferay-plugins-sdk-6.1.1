@@ -910,7 +910,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 
 			pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			pymtReqDTO.setBpmPojo(getManagedBean().getBpmPojo());
 			pymtReqDTO.setToken(token);
 
 			FacesScopes fs = new FacesScopes();
@@ -919,6 +919,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 			pymtReqDTO.setBackEndUpdate(false);
 
+			log.info("Debug payment>>>>>");
+			
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
 			showPaymentResponse(status, ordId, null);
