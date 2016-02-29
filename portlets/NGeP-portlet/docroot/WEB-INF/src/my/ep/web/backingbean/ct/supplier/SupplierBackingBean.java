@@ -662,24 +662,23 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * @see    Exception
      */
 	public String changeBankRequestSignAction(String outcome) throws Exception {
-//    	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-//    	StringBuilder sb = null;
-//		 if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()) {
-//			validateChangeBankRequest(outcome);		
-//			sb = new StringBuilder();
-//			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
-//			sb.append(getManagedBean().getContractVer().getDocType());
-//			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-//			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-//			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
-//			sb.append(outcome);			
-//			getManagedBean().setTextBeforeSign(sb.toString());	
-//			getManagedBean().setButtonAction(outcome);
-//			getManagedBean().setAutoUpdate(Boolean.FALSE);
-//			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-//			return null;
-//		} else if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
-    	if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
+           	  StringBuilder sb = null;
+  		      if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()) {
+           			validateChangeBankRequest(outcome);		
+         			sb = new StringBuilder();
+        			sb.append(getManagedBean().getContractVer().getCtContract().getContractNo());
+        			sb.append(ContractConst.SEPRATE_LINE);
+            		sb.append(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
+            		sb.append(ContractConst.SEPRATE_LINE);
+            		sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+            		sb.append(ContractConst.SEPRATE_LINE);
+            		sb.append(getManagedBean().getContractVer().getCtContract().getSmSupplier().getRegNo());
+        			getManagedBean().setTextBeforeSign(sb.toString());	
+        			getManagedBean().setButtonAction(outcome);
+        			getManagedBean().setAutoUpdate(Boolean.FALSE);
+        			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+        			return null;
+		} else  if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && isSupplierRole()) {
 			validateChangeBankRequest(outcome);	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);			
@@ -725,20 +724,24 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	public String factoringRequestSignAction(String outcome) throws Exception {
         	StringBuilder sb = null;
     	    if ((BpmOutcomeConst.BPM_ENDORSE.equals(outcome) || 
-    	    		BpmOutcomeConst.BPM_REJECT.equals(outcome)) && !isSupplierRole()) {
-    		          validateFactoringRequest(outcome);
-			          sb = new StringBuilder();
-			          sb.append(getManagedBean().getContractNo());
-					  sb.append(ContractConst.SEPRATE_LINE);
-					  sb.append(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-					  sb.append(ContractConst.SEPRATE_LINE);
-					  sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
-					  sb.append(ContractConst.SEPRATE_LINE);
-					  sb.append(df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
-					  sb.append(ContractConst.SEPRATE_LINE);
-					  sb.append(df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate()));		
-					  sb.append(ContractConst.SEPRATE_LINE);
-			      	  sb.append(outcome);			
+    		   BpmOutcomeConst.BPM_REJECT.equals(outcome)) && !isSupplierRole()) {
+	                validateFactoringRequest(outcome);
+	                sb = new StringBuilder();
+	                sb.append(getManagedBean().getContractNo());
+			        sb.append(ContractConst.SEPRATE_LINE);
+			        sb.append(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+			        sb.append(ContractConst.SEPRATE_LINE);
+			        if(getManagedBean().isRemoveFactoring()) {
+				           sb.append("REMOVE");
+				           sb.append(ContractConst.SEPRATE_LINE);
+			        } else {
+			        	    sb.append("REQUESY");
+				           sb.append(ContractConst.SEPRATE_LINE);
+			        }
+			        	
+			          sb.append(outcome);		
+			          sb.append(ContractConst.SEPRATE_LINE);
+			         sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());    
 			          getManagedBean().setTextBeforeSign(sb.toString());	
 			          getManagedBean().setButtonAction(outcome);
 			          getManagedBean().setAutoUpdate(Boolean.FALSE);

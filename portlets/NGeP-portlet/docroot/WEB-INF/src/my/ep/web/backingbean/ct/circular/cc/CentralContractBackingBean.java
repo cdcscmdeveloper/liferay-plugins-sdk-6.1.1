@@ -877,14 +877,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * return list object itemlist 
 	 * */
 	public List<CtItemPrice> getItemPrice() {
-		 List<CtItemPrice> itemPriceList = new ArrayList<CtItemPrice>();
 	 	 if(this.getManagedBean().getZonePriceMap().size() > 0 && this.getManagedBean().getSelectedZoneItems() != null) {
-		           itemPriceList =  getManagedBean().getZonePriceMap().get(this.getManagedBean().getSelectedZoneItems());
+	 		       return  getManagedBean().getZonePriceMap().get(this.getManagedBean().getSelectedZoneItems());
 		    }else if(this.getManagedBean().getSelectedCircularItem() != null && this.getManagedBean().getSelectedCircularItem().getCtContractItem() != null
 		    		&& this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices() != null){
-		         itemPriceList = this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices();
+		    	return this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices();
 	    	}
-		return itemPriceList;
+		return new ArrayList<CtItemPrice>();
 	}
 	
 	/**
@@ -970,26 +969,25 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		List<CtItemPrice> itemPriceList = new ArrayList<CtItemPrice>();
 		   if(this.getManagedBean().getSelectedCircularItem() != null && this.getManagedBean().getSelectedCircularItem() != null
 				&& this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices() != null){
-			       for(CtItemPrice price :this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices()){
-			    	   this.getManagedBean().getContractItemZones().add(price.getCtContractZone()); 
-			      	   if(getManagedBean().getZonePriceMap().containsKey(price.getCtContractZone())) {
-				         itemPriceList = getManagedBean().getZonePriceMap().get(price.getCtContractZone());
-				         itemPriceList.add(price);
-				         getManagedBean().getZonePriceMap().put(price.getCtContractZone(), itemPriceList);
-			      } else {
-				        itemPriceList = new ArrayList<CtItemPrice>();
-				        itemPriceList.add(price);
-				        getManagedBean().getZonePriceMap().put(price.getCtContractZone(), itemPriceList);
-			      }
-			  
-			}
-		    Set<CtContractZone> s= new HashSet<CtContractZone>();
-			s.addAll(this.getManagedBean().getContractItemZones());         
-			this.getManagedBean().getContractItemZones().clear();
-			this.getManagedBean().getContractItemZones().addAll(s); 
-			
-		  } 
-	}
+			             for(CtItemPrice price :this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices()){
+			    	                this.getManagedBean().getContractItemZones().add(price.getCtContractZone()); 
+			      	                if(getManagedBean().getZonePriceMap().containsKey(price.getCtContractZone())) {
+				                          itemPriceList = getManagedBean().getZonePriceMap().get(price.getCtContractZone());
+				                          itemPriceList.add(price);
+				                         getManagedBean().getZonePriceMap().put(price.getCtContractZone(), itemPriceList);
+			                      } else {
+				                          itemPriceList = new ArrayList<CtItemPrice>();
+				                          itemPriceList.add(price);
+				                         getManagedBean().getZonePriceMap().put(price.getCtContractZone(), itemPriceList);
+			                      }
+			            }
+		  
+			             Set<CtContractZone> s= new HashSet<CtContractZone>();
+			             s.addAll(this.getManagedBean().getContractItemZones());         
+			             this.getManagedBean().getContractItemZones().clear();
+			             this.getManagedBean().getContractItemZones().addAll(s); 
+		      } 
+	  }
 	
 	/**
 	 * The method used to construct the zone into tree map
@@ -998,25 +996,26 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		
 		TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
 		TreeNode zoneNode =  null;
-		if(this.getManagedBean().getSelectedZoneItems() != null) {
-			   zoneNode = new DefaultTreeNode("zone", new CentralItemZones(this.getManagedBean().getSelectedZoneItems().getZoneName()), rootLocationTree);
+		if(getManagedBean().getSelectedZoneItems() != null) {
+			   zoneNode = new DefaultTreeNode("zone", new CentralItemZones(getManagedBean().getSelectedZoneItems().getZoneName()), rootLocationTree);
 			   TreeNode stateNode = null;
 			   List<PmState> state = new ArrayList<PmState>();
-			   if(this.getManagedBean().getSelectedZoneItems().getCtContractZoneDtls() != null 
-					   && this.getManagedBean().getSelectedZoneItems().getCtContractZoneDtls().size() > 0) {
-				 for(CtContractZoneDtl zoneDtl : this.getManagedBean().getSelectedZoneItems().getCtContractZoneDtls()) {
-						 if(zoneDtl.getState() != null){
-							  if(!state.contains(zoneDtl.getState())){
-								  stateNode = new DefaultTreeNode("state",new CentralItemZones(zoneDtl.getState()) , zoneNode);
-							   }state.add(zoneDtl.getState());
-						    } 
-				    if(zoneDtl.getDistrict() != null){
-					   new DefaultTreeNode("district", new CentralItemZones(zoneDtl.getDistrict()), stateNode);
-				   }
-				 }
-			  }
+			   if(getManagedBean().getSelectedZoneItems().getCtContractZoneDtls() != null 
+					   && getManagedBean().getSelectedZoneItems().getCtContractZoneDtls().size() > 0) {
+				       for(CtContractZoneDtl zoneDtl : getManagedBean().getSelectedZoneItems().getCtContractZoneDtls()) {
+						       if(zoneDtl.getState() != null){
+							           if(!state.contains(zoneDtl.getState())){
+								              stateNode = new DefaultTreeNode("state",new CentralItemZones(zoneDtl.getState()) , zoneNode);
+							           }
+							         state.add(zoneDtl.getState());
+						        } 
+				         if(zoneDtl.getDistrict() != null){
+					            new DefaultTreeNode("district", new CentralItemZones(zoneDtl.getDistrict()), stateNode);
+				          }
+				    }
+			    }
 			}
-		 this.getManagedBean().setCentralZoneTrees(rootLocationTree);
+		 getManagedBean().setCentralZoneTrees(rootLocationTree);
 	  }
    
    /**
@@ -1200,8 +1199,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 * Method to retrieve portal name from property file
 	    */
 	public String getPortletTitle() {
-		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cc.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		return portletTitle;
+		return ResourceBundleUtils.getMessage("lbl.ct.cc.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 	
 	/**
@@ -1210,15 +1208,29 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * Call save central circular method once authentication done
     */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 			validateCircular(outcome);
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getCircularVer().getCircularNo());
-			sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
-			sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
+			sb.append(ContractConst.SEPRATE_LINE);
+		    if(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null){
+				  sb.append(ContractConst.CIRCULAR_UPDATE);
+				  sb.append(ContractConst.SEPRATE_LINE);
+				  sb.append(df.format(getManagedBean().getCircularVer().getExtendStartDate()));
+				  sb.append(ContractConst.SEPRATE_LINE);
+				  sb.append(df.format(getManagedBean().getCircularVer().getExtendEndDate()));
+				  sb.append(ContractConst.SEPRATE_LINE);
+		     } else {
+			      sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
+			      sb.append(ContractConst.SEPRATE_LINE);
+			      sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
+			      sb.append(ContractConst.SEPRATE_LINE);
+		     }
 			sb.append(outcome);
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setAction(outcome);
@@ -1250,13 +1262,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		    reqDTO.setOrgType(OrganizationType.MINISTRY.value());	
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
-		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
 		   
-		    items = new SelectItem[list.size()+1];
+		    items = new SelectItem[resDTO.getOrgProfileList().size()+1];
 		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		    
-		  	for (PmOrgProfile orgProfile : list) {
+		  	for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
 			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
 			return items;
@@ -1279,19 +1290,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		try {
 		    int i = 1;
 		    if(getManagedBean().getMinistryProfileId() != null) {
-		         IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
-		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		         IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
 				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
 				
-			    List<Object[]> list = resDTO.getOrgProfileDDList();
-			    items = new SelectItem[list.size() + 1];
+			    items = new SelectItem[resDTO.getOrgProfileDDList().size() + 1];
 			    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				
-			     for(Object[] objects : list){
+			     for(Object[] objects : resDTO.getOrgProfileDDList()){
 			         items[i++] = new SelectItem(Long.parseLong(objects[0].toString()), objects[1].toString());
 				}
 			  return items;

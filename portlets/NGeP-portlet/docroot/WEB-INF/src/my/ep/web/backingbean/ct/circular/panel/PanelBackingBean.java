@@ -2199,27 +2199,41 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @see    Exception
      */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
-			validateCircular(outcome);
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getCircularVer().getCircularNo());
-			sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
-			sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
-			sb.append(outcome);
-			getManagedBean().setTextBeforeSign(sb.toString());
-			// set action
-			getManagedBean().setAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			return null;
-		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
-			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
-			return null;
-		} else {
-			return savePanelCircular(outcome);
-		}
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+			    validateCircular(outcome);
+			    SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			    // Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
+			    StringBuilder sb = new StringBuilder();
+			    sb.append(getManagedBean().getCircularVer().getCircularNo());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    if(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null){
+				      sb.append(ContractConst.CIRCULAR_UPDATE);
+				      sb.append(ContractConst.SEPRATE_LINE);
+				      sb.append(df.format(getManagedBean().getCircularVer().getExtendStartDate()));
+					  sb.append(ContractConst.SEPRATE_LINE);
+					  sb.append(df.format(getManagedBean().getCircularVer().getExtendEndDate()));
+					  sb.append(ContractConst.SEPRATE_LINE);
+		        }else{
+			         sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
+			         sb.append(ContractConst.SEPRATE_LINE);
+			         sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
+			         sb.append(ContractConst.SEPRATE_LINE);
+		        }
+			    sb.append(outcome);
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+			    getManagedBean().setTextBeforeSign(sb.toString());
+			    // set action
+			    getManagedBean().setAction(outcome);
+			    getManagedBean().setAutoUpdate(Boolean.FALSE);
+			    RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			 return null;
+		   } else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
+			     RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+			     return null;
+		   } else {
+			   return savePanelCircular(outcome);
+		  }
 	}
 	
 	/**
