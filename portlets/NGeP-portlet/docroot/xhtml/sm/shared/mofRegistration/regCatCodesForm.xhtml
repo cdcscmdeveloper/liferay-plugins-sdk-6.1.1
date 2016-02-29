@@ -34,13 +34,13 @@
 				</p:column>
 				<p:column style="width :350px;white-space : normal">
 					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
+						value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{empty aprvdCatBean.categoryL1Name ? aprvdCatBean.pmCategoryL1.categoryName : aprvdCatBean.categoryL1Name}" />
 					<br />
 					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
+						value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{empty aprvdCatBean.categoryL2Name ? aprvdCatBean.pmCategoryL2.categoryName : aprvdCatBean.categoryL2Name}" />
 					<br />
 					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
+						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
 				</p:column>
 				<p:column style="width : 20%;white-space : normal">
 					<h:outputText value="#{lbl['lbl.sm.no.available']}"

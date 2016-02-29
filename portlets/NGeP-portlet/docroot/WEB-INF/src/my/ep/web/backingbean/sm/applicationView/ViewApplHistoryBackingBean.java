@@ -72,6 +72,22 @@ public class ViewApplHistoryBackingBean extends
 						"", null);
 	}
 
+	/**
+	 * View revision application by approver for task that is not claimed
+	 * 
+	 * @param String
+	 *            applNo
+	 */
+	public void viewUnClaimTask(String applNo) {
+		getManagedBean().setViewApplicationHistory(true);
+		getManagedBean().setViewSupplierProfile(true);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplNo(applNo);
+		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
+		setApplication(smAppl);
+	}
+
 	public void redirectToResubmit() {
 		SmCommonUtil.redirectToExternalUrl(getManagedBean().getResubmitUrl());
 	}

@@ -35,6 +35,7 @@ import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
@@ -45,6 +46,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 
@@ -79,8 +81,16 @@ public class CommonApplBackingBean extends
 				.getBPMTaskDetails(reqDTO);
 
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
-
-		if (resDTO.getTaskName()
+		
+		if (isRedirectToViewOnlyApplication(isClaim, resDTO)) {
+			ViewApplHistoryBackingBean backingBean = new ViewApplHistoryBackingBean();
+			backingBean.viewUnClaimTask(resDTO.getDocNumber());
+			SmCommonUtil
+					.redirectToPage(
+							"/xhtml/sm/revisionSmApplView/viewApplicationHistory/smViewUnClaimTask.xhtml",
+							"", null);
+		}
+		else if (resDTO.getTaskName()
 				.equalsIgnoreCase(SMProcessNameConst.VERIFY_SUPP_DOC)) {
 			SdoReviewBackingBean sdoBB = new SdoReviewBackingBean();
 			Object bpmObj = new Object();
@@ -697,6 +707,28 @@ public class CommonApplBackingBean extends
 			siteVisitTask(resDTO,taskId);
 		}
 
+	}
+	
+	private boolean isRedirectToViewOnlyApplication(boolean isClaim,
+			BpmResponseDTO resDTO) {
+		boolean retVal = false;
+		if (!isClaim
+				&& (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.RESPOND_PO_INQUIRY)
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_ESCALATED)
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL)
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_APPL_SPLCAT)
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL) || resDTO
+						.getTaskName()
+						.equalsIgnoreCase(
+								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE))) {
+			retVal = true;
+		}
+		return retVal;
 	}
 	
 	private void siteVisitTask(BpmResponseDTO resDTO,String taskId){
