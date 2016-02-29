@@ -28,6 +28,7 @@ import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofappcandata.SMMOFAppCanDataType;
 import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
+import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.util.MessageUtils;
@@ -36,6 +37,8 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
+import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
+import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.backingbean.sm.supportingdocinquiry.SupportingDocInquiryBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -155,7 +158,7 @@ public class CommonApplBackingBean extends
 			Object bpmObj = new Object();
 			PaymentBackingBean paymentBB = new PaymentBackingBean();
 			
-			if (resDTO.getProcessName().equalsIgnoreCase(
+/*			if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
@@ -167,7 +170,8 @@ public class CommonApplBackingBean extends
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
 			}
-
+*/	
+			bpmObj = resDTO.getPojo();
 			log.info("Doc No>>>>>" + resDTO.getDocNumber());
 			paymentBB.getManagedBean().setDocNo(resDTO.getDocNumber());
 			paymentBB.getManagedBean().setTaskId(taskId);
@@ -314,6 +318,78 @@ public class CommonApplBackingBean extends
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
+				// TODO Remove this code and get the applicationType From DB
+				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
+						+ resDTO.getDocNumber());
+				log.info("**** APPLICATION TYPE ******"
+						+ resDTO.getDocNumber().charAt(1));
+				log.info(" *** DOCUMENT ID FROM THE BPM IS ******"
+						+ smObj.getDocumentId());
+				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				mofResDto = retriveApplicationById(smObj.getDocumentId());
+				SmAppl appl = mofResDto.getSmAppl();
+				log.info("********Review Application Escalted for new mof********");
+				log.info("********getTaskId********" + taskId);
+				log.info("********getTaskName********"
+						+ this.getManagedBean().getTaskName());
+				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+				smApplBB.getManagedBean();
+				// TODO get the status from BPM for the header part
+				BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
+				String currentStatus = bpmBean.applicationStatus(resDTO
+						.getDocStatus());
+				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
+				if (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_APPL_SPLCAT)
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								SMProcessNameConst.VERIFY_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+					smApplBB.getManagedBean().setPoUser(true);
+					smApplBB.getManagedBean().setSupplierUser(false);
+					smApplBB.getManagedBean().setApproverUser(false);
+				} else if (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+					smApplBB.getManagedBean().setPoUser(false);
+					smApplBB.getManagedBean().setSupplierUser(false);
+					smApplBB.getManagedBean().setApproverUser(true);
+					smApplBB.getManagedBean().setReviewSiteVisit(
+							smObj.isSiteVisitComplete());
+				}
+				if (resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.VERIFY_APPL)
+						|| resDTO
+								.getTaskName()
+								.equalsIgnoreCase(
+										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
+					log.info("*** This is po or approver action after site visit *** ");
+					smApplBB.getManagedBean().setReviewSiteVisit(true);
+				} else if (!resDTO.getTaskName().equalsIgnoreCase(
+						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
+					log.info("*** This is po or approver for normal review without site visit *** ");
+					smApplBB.getManagedBean().setReviewSiteVisit(false);
+				}
+				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+						appl, mofResDto.getSmSupplier());
+
+				smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
+				if (smObj.getSupplierList() != null) {
+					smApplBB.getManagedBean().setSupplierToPOList(
+							smObj.getSupplierList());
+				}
+				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
+				smApplBB.getManagedBean().setTaskId(taskId);
+				setNavigationForSmDecision(appl.getApplType(), smApplBB);
+			}else if (resDTO.getProcessName().equalsIgnoreCase(
+					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)){
+				//TODO: new added by andrew - temporary solve the new implementation
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
@@ -611,8 +687,67 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/portletViewMode.xhtml");
+		}else if(resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT)){
+			siteVisitTask(resDTO,taskId);
 		}
 
+	}
+	
+	private void siteVisitTask(BpmResponseDTO resDTO,String taskId){
+		Object svObj =  null;
+		Long docId = null;
+		String svTaskId = null;
+		
+		if (resDTO.getPojo() instanceof SMMOFRegDataType) {
+			svObj = resDTO.getPojo();
+			SMMOFRegDataType mofRegDT = (SMMOFRegDataType) resDTO.getPojo();
+			docId = mofRegDT.getDocumentId();
+			svTaskId = mofRegDT.getSvoTaskId();
+		}else if(resDTO.getPojo() instanceof SMMOFAccMainDataType) {
+			svObj = resDTO.getPojo();
+			SMMOFAccMainDataType mofRegMainDT = (SMMOFAccMainDataType) resDTO.getPojo();
+			docId = mofRegMainDT.getDocumentId();
+			//svTaskId = mofRegMainDT.get
+		}else if(resDTO.getPojo() instanceof SMSiteVisitDataType){
+			svObj = resDTO.getPojo();
+			SMSiteVisitDataType siteVisitDT = (SMSiteVisitDataType) resDTO.getPojo();
+			docId = siteVisitDT.getDocumentId();
+			svTaskId = siteVisitDT.getSvoTaskId();
+		}
+		
+		this.getManagedBean().setTaskName(resDTO.getTaskName());
+		
+		log.info("----------Common SIte Visit--------" + resDTO.getTaskName());
+		if(resDTO.getTaskName().equalsIgnoreCase("Assign Site Visit")){
+			SvcSiteAssignBackingBean svcBB = new SvcSiteAssignBackingBean();
+			svcBB.renewSesionObject();
+			
+			log.info("------Assign Site Visit AppID-------------" + docId);
+			svcBB.getManagedBean().setAppId(docId);
+			svcBB.getManagedBean().setBpmAction(resDTO.getAction());
+			svcBB.getManagedBean().setTaskId(taskId);
+			//svcBB.getManagedBean().setAppType(svObj.getAppType());
+			svcBB.getManagedBean().setBpmPojo(svObj);
+			svcBB.retrieveSiteAssignInfo(docId);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svcassignment/assignSiteVisitView");
+		}else if(resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT)){
+			log.info("------Complete Site Visit Report-------------" + docId);
+			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
+			svoBB.renewSesionObject();
+			log.info("Document id>>>>" + docId);
+			//svoBB.getManagedBean().setAppId(svObj.getDocumentId());
+			svoBB.getManagedBean().setSvTaskId(Long.valueOf(svTaskId));
+			svoBB.getManagedBean().setBpmAction(resDTO.getAction());
+			svoBB.getManagedBean().setTaskId(taskId);
+			//svoBB.getManagedBean().setAppType(svObj.getAppType());
+			svoBB.getManagedBean().setBpmPojo(svObj);
+			svoBB.retrieveSiteVisitInfo("");
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svositevisit/siteVisitMain");
+		}
 	}
 
 	public void updateAmount() {
