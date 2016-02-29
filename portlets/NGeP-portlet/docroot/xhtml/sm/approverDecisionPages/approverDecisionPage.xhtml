@@ -59,9 +59,9 @@
 		<p:separator />
 
 		<div style="width: 100%" align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
+			<p:commandButton value="#{lbl['lbl.sm.button.approve']}" disabled="#{!backingBean.managedBean.claimTask}"
 				onclick="approveAppCanDialog.show();" />
-			<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+			<p:commandButton value="#{lbl['lbl.sm.button.reject']}" disabled="#{!backingBean.managedBean.claimTask}"
 				update="rejectAppCanDialog" partialSubmit="true" process="@this"
 				action="#{backingBean.approveOrRejectMofCancellation('rejectAppCanDialog')}" />
 

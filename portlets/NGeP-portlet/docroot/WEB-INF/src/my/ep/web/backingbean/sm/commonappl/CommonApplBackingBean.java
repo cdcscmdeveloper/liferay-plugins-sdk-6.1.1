@@ -575,6 +575,7 @@ public class CommonApplBackingBean extends
 			}
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
+			smApplBB.getManagedBean().setClaimTask(isClaim);
 			smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
 			SmAttachmentResDTO attResDto = new SmAttachmentResDTO();
 			attResDto = retriveSmAttachmentByDocIdAndType(smApplBB
