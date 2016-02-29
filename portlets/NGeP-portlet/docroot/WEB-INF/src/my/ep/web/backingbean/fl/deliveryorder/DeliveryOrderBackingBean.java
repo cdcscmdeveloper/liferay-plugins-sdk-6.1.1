@@ -324,6 +324,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					}
 					
 				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();

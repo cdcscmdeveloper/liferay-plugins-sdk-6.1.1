@@ -212,6 +212,8 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 				commonBackingBean.getManagedBean().setParamMap(paramMap);
 				return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 			}	
+		} else {
+			throw new EpException(MessageConst.ERROR_700020);
 		} 
 			
 		return null;

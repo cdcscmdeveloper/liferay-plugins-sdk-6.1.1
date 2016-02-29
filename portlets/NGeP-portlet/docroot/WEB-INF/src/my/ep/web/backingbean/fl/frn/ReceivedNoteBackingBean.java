@@ -286,6 +286,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
 					setFulfilmentNoteField(resDTO);
 				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		} finally {
 			receivedNoteSO = null;
