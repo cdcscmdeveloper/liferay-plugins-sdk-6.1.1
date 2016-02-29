@@ -378,6 +378,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 					setFulfilmentRequestField(resDTO);
 				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
 			} 
 		}  finally {
 			fulfilmentRequestSO = null;

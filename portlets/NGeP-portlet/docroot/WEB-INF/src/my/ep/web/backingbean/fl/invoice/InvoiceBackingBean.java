@@ -342,6 +342,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						getFactoringDtl(); 
 					}
 				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		}finally {
 			invoiceSO = null;

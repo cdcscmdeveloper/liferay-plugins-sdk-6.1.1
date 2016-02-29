@@ -161,6 +161,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					MessageUtils.getMessage(messageId, 
 							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_STOP_DELIVERY), resDTO.getFlStopInstr().getStopInstrNo()}, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		} else {
+			throw new EpException(MessageConst.ERROR_700020);
 		}
 		renewSesionObject();
 		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {

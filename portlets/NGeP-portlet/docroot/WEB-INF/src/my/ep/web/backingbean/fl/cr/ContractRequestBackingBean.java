@@ -444,6 +444,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					resDTO = iFulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 					setFulfilmentRequestField(resDTO);
 				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
 			} 
 
 		}  finally {

@@ -230,6 +230,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						MessageUtils.getMessage(messageId, 
 								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
