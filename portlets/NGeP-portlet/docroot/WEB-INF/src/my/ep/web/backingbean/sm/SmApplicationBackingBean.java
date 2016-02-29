@@ -4348,9 +4348,9 @@ public class SmApplicationBackingBean extends
 	public void onTickOtherMachine() {
 		SmMachineDtl machine = (SmMachineDtl) EntityHelper
 				.getEntityByMultiplePropertiesFromList(getManagedBean()
-						.getSelectedMachine(),
-						getManagedBean().getSmAppl().getSmMachineDtls(),
-						new String[] { "machineDtlId" }, null, null);
+						.getSelectedMachine(), getManagedBean().getSmAppl()
+						.getSmMachineDtls(), new String[] { "machineDtlId" },
+						null, null);
 		if (machine != null) {
 			if (getManagedBean().isOthersMachine()) {
 				getManagedBean().getSelectedMachine().setMachine(null);
@@ -6220,8 +6220,8 @@ public class SmApplicationBackingBean extends
 	public void viewSignatories(SmSupplierBank signAcctBean) {
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
-	
-	public void viewMyIdentityResponse(SmPersonnel per){
+
+	public void viewMyIdentityResponse(SmPersonnel per) {
 		getManagedBean().setSelectedShareHolder(per);
 		RequestContext.getCurrentInstance().execute("myIdentityDlg.show()");
 	}
@@ -7385,6 +7385,7 @@ public class SmApplicationBackingBean extends
 								cat.setApprovedDate(new Date());
 							}
 							cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
+							setCategoryNameForApprovedCategory(cat);
 							setSupplierCategoryEffectiveDate(cat,
 									getManagedBean().getSmAppl().getApplType());
 						} else {
@@ -7554,6 +7555,40 @@ public class SmApplicationBackingBean extends
 			reqSO = null;
 		}
 		return retMsg;
+	}
+
+	private void setCategoryNameForApprovedCategory(SmSupplierCategory cat) {
+		CategoryCodeReqDTO reqDTO = null;
+		if (cat.getPmCategoryL1() != null
+				&& cat.getPmCategoryL1().getCategoryL1Id() != null) {
+			reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL1Id(cat.getPmCategoryL1().getCategoryL1Id());
+			PmCategoryL1 l1 = SmServiceLookup.getCategoryCodeSO()
+					.retrieveCategoryL1DtlById(reqDTO).getCategoryL1();
+			if (l1 != null) {
+				cat.setCategoryL1Name(l1.getCategoryName());
+			}
+		}
+		if (cat.getPmCategoryL2() != null
+				&& cat.getPmCategoryL2().getCategoryL2Id() != null) {
+			reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL2Id(cat.getPmCategoryL2().getCategoryL2Id());
+			PmCategoryL2 l2 = SmServiceLookup.getCategoryCodeSO()
+					.retrieveCategoryL2DtlById(reqDTO).getCategoryL2();
+			if (l2 != null) {
+				cat.setCategoryL2Name(l2.getCategoryName());
+			}
+		}
+		if (cat.getPmCategoryL3() != null
+				&& cat.getPmCategoryL3().getCategoryL3Id() != null) {
+			reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL3Id(cat.getPmCategoryL3().getCategoryL3Id());
+			PmCategoryL3 l3 = SmServiceLookup.getCategoryCodeSO()
+					.retrieveCategoryL3DtlById(reqDTO).getCategoryL3();
+			if (l3 != null) {
+				cat.setCategoryL3Name(l3.getCategoryName());
+			}
+		}
 	}
 
 	private String getApproverListForSuccessMsg() {
