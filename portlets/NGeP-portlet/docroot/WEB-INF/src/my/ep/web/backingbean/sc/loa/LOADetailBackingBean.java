@@ -3349,6 +3349,7 @@ public class LOADetailBackingBean extends
 		int index = freqSchedule.indexOf(schedule);
 		freqSchedule.set(index, schedule);
 		this.getManagedBean().setScheduleList(freqSchedule);
+		getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
 	}
 
 	/**
