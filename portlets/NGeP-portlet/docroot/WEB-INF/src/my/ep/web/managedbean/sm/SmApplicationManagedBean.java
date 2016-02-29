@@ -408,6 +408,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean branchSameAsHq;
 	private String facAddresSameAs;
 	private List<SelectItem> addrSameAsItems;
+	private boolean claimTask;
 
 	private boolean showNewChanges;
 
@@ -3192,5 +3193,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAddrSameAsItems(List<SelectItem> addrSameAsItems) {
 		this.addrSameAsItems = addrSameAsItems;
+	}
+
+	public boolean isClaimTask() {
+		return claimTask;
+	}
+
+	public void setClaimTask(boolean claimTask) {
+		this.claimTask = claimTask;
 	}
 }
