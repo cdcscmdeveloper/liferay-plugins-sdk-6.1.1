@@ -63,6 +63,7 @@ public class CommonApplBackingBean extends
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+		boolean isClaim = Boolean.valueOf(originalServletRequest.getParameter("claim"));
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 
 		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
@@ -205,6 +206,7 @@ public class CommonApplBackingBean extends
 				// smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
+				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision("RS", smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
@@ -229,6 +231,7 @@ public class CommonApplBackingBean extends
 				// smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
+				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision("RS", smApplBB);
 			}
 
@@ -315,6 +318,7 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
+				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
@@ -386,6 +390,7 @@ public class CommonApplBackingBean extends
 				}
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
+				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			}else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)){
@@ -458,6 +463,7 @@ public class CommonApplBackingBean extends
 				}
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
+				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			}
 
