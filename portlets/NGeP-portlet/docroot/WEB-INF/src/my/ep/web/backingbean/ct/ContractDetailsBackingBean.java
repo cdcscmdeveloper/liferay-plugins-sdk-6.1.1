@@ -962,19 +962,26 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
      */
     public String gpkiSignAction(String outcome) throws Exception {
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-			validateCtContractVer(outcome);
-			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
-			StringBuilder sb = new StringBuilder();
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(ctBB.getManagedBean().getContractVer().getDocType());
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			sb.append(ctBB.getManagedBean().getCtContractAmount().getContractAmount());
-			sb.append(outcome);			
-			getManagedBean().setTextBeforeSign(sb.toString());	
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			   validateCtContractVer(outcome);
+			   //Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			    StringBuilder sb = new StringBuilder();
+			    sb.append(ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(ctBB.getManagedBean().getContractVer().getDocType());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(ctBB.getManagedBean().getCtContractAmount().getContractAmount());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(outcome);		
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());		
+			    getManagedBean().setTextBeforeSign(sb.toString());	
+			    getManagedBean().setButtonAction(outcome);
+			    getManagedBean().setAutoUpdate(Boolean.FALSE);
+			    RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
