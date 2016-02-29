@@ -7288,20 +7288,18 @@ public class SmApplicationUtil {
 	 */
 	public static List<SelectItem> getSelectedCategoryTypeItems(SmAppl appl) {
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		String[] relatedCatTypeCode = new String[] {
-				ParameterConst.CATEGORY_TYPE_DOCKYARD,
-				ParameterConst.CATEGORY_TYPE_WORKSHOP,
-				ParameterConst.CATEGORY_TYPE_PRINTING,
-				ParameterConst.CATEGORY_TYPE_MANUFACTURING };
 		List<SelectItem> categoryTypeItems = new ArrayList<SelectItem>();
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-						&& Arrays.asList(relatedCatTypeCode).contains(
-								cat.getPmCategoryL3().getCategoryTypeCode()
-										.getParameterCode())) {
+						&& Arrays
+								.asList(my.ep.constant.sm.SupplierManagementConst.SM_CAT_TYPE_MACHINERY)
+								.contains(
+										cat.getPmCategoryL3()
+												.getCategoryTypeCode()
+												.getParameterCode())) {
 					SelectItem catType = (SelectItem) EntityHelper
 							.getEntityBySinglePropertyFromList(cat
 									.getPmCategoryL3().getCategoryTypeCode()
@@ -7378,11 +7376,6 @@ public class SmApplicationUtil {
 	 */
 	public static boolean validateMachineDetails(boolean valid, int currentTab,
 			SmApplicationManagedBean bean) {
-		String[] relatedCatTypeCode = new String[] {
-				ParameterConst.CATEGORY_TYPE_DOCKYARD,
-				ParameterConst.CATEGORY_TYPE_WORKSHOP,
-				ParameterConst.CATEGORY_TYPE_PRINTING,
-				ParameterConst.CATEGORY_TYPE_MANUFACTURING };
 		SmAppl appl = bean.getSmAppl();
 		PmParameterDesc desc = null;
 		String language = new FacesScopes().getUserLocale().getLanguage();
@@ -7392,9 +7385,12 @@ public class SmApplicationUtil {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-						&& Arrays.asList(relatedCatTypeCode).contains(
-								cat.getPmCategoryL3().getCategoryTypeCode()
-										.getParameterCode())) {
+						&& Arrays
+								.asList(my.ep.constant.sm.SupplierManagementConst.SM_CAT_TYPE_MACHINERY)
+								.contains(
+										cat.getPmCategoryL3()
+												.getCategoryTypeCode()
+												.getParameterCode())) {
 					desc = (PmParameterDesc) EntityHelper
 							.getEntityBySinglePropertyFromList(language, cat
 									.getPmCategoryL3().getCategoryTypeCode()
@@ -7484,8 +7480,8 @@ public class SmApplicationUtil {
 		appl.setSmApplInquiries(new ArrayList<SmApplInquiry>());
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSmAppl(appl);
-		appl = SmServiceLookup.getMofRegistrationSO()
-				.updateSmAppl(reqDTO).getSmAppl();
+		appl = SmServiceLookup.getMofRegistrationSO().updateSmAppl(reqDTO)
+				.getSmAppl();
 		return appl;
 	}
 

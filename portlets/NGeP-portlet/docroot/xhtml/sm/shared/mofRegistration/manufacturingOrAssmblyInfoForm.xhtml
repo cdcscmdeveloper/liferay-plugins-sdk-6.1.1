@@ -131,74 +131,80 @@
 		header="#{lbl['lbl.sm.manufacture.diaHdr']}"
 		widgetVar="manufactorDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="manufactorDialog">
-		<p:messages id="manufactorDialogMsg" showSummary="false"
-			showDetail="true" autoUpdate="true" closable="true" />
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prdType']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.manufacture.prdType']}" id="smManuProdType"
-						maxlength="50"
-						value="#{backingBean.managedBean.selectedManufacturer.goodsType}"
-						size="35" /> <p:message id="smManuProdTypeMsg"
-						for="smManuProdType" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.brand']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.manufacture.brand']}" id="smManuBrdType"
-						maxlength="50"
-						value="#{backingBean.managedBean.selectedManufacturer.brand}"
-						size="35" /> <p:message id="smManuBrdTypeMsg" for="smManuBrdType"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prodCap']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="6"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.manufacture.prodCap']}" id="smManuProdCap"
-						value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}"
-						size="35">
-
-					</p:inputText> <p:message id="smManuProdCapMsg" for="smManuProdCap"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.mesUnit']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td valign="top"><p:selectOneMenu
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.manufacture.mesUnit']}" id="smManuMesUnit"
-						value="#{backingBean.managedBean.selectedManufacturer.pmUom.uomId}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{backingBean.managedBean.uomSelectItems}"
-							var="select" itemLabel="select.label" itemValue="select.value" />
-					</p:selectOneMenu> <p:message id="smManuMesUnitMsg" for="smManuMesUnit"
-						showSummary="true" showDetail="false" display="icon" /></td>
-
-			</tr>
-
-		</table>
-
-		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateManufacturerToSmAppl}"
-				partialSubmit="true" process="manufactorDialog"
-				onclick="this.disabled=true;" oncomplete="this.disabled=false;"
-				update=":form:tt:manDt, @([id$=Msg]),:#{p:component('delManuBtnId')}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				action="#{backingBean.cancelManuSaveorUpdate}" process="@this"
-				partialSubmit="true" />
-		</div>
+		
+		<p:outputPanel layout="block" id="manuFacBlockPanel">
+			<p:messages id="manufactorDialogMsg" showSummary="false"
+				showDetail="true" autoUpdate="true" closable="true" />
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prdType']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.manufacture.prdType']}" id="smManuProdType"
+							maxlength="50"
+							value="#{backingBean.managedBean.selectedManufacturer.goodsType}"
+							size="35" /> <p:message id="smManuProdTypeMsg"
+							for="smManuProdType" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.brand']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.manufacture.brand']}" id="smManuBrdType"
+							maxlength="50"
+							value="#{backingBean.managedBean.selectedManufacturer.brand}"
+							size="35" /> <p:message id="smManuBrdTypeMsg" for="smManuBrdType"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prodCap']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="6"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.manufacture.prodCap']}" id="smManuProdCap"
+							value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}"
+							size="35">
+	
+						</p:inputText> <p:message id="smManuProdCapMsg" for="smManuProdCap"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.mesUnit']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td valign="top"><p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.manufacture.mesUnit']}" id="smManuMesUnit"
+							value="#{backingBean.managedBean.selectedManufacturer.pmUom.uomId}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{backingBean.managedBean.uomSelectItems}"
+								var="select" itemLabel="select.label" itemValue="select.value" />
+						</p:selectOneMenu> <p:message id="smManuMesUnitMsg" for="smManuMesUnit"
+							showSummary="true" showDetail="false" display="icon" /></td>
+	
+				</tr>
+	
+			</table>
+	
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					action="#{backingBean.addOrUpdateManufacturerToSmAppl}"
+					partialSubmit="true" process="manufactorDialog"
+					onclick="storeBlockWidget.show();" oncomplete="storeBlockWidget.hide();"
+					update=":form:tt:manDt, @([id$=Msg]),:#{p:component('delManuBtnId')}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					action="#{backingBean.cancelManuSaveorUpdate}" process="@this"
+					partialSubmit="true" />
+			</div>
+			<p:blockUI block="manuFacBlockPanel" widgetVar="manuFacBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
 	</p:dialog>
 </ui:composition>
