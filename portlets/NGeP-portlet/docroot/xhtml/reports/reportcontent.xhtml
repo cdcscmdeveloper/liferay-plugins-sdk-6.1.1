@@ -10,6 +10,8 @@
 <style type="text/css">
 /*   
   This is for space removal allignement for All Modules.
+  Note:  Please don't do the code refactor for the CSS
+         if we do we will get the compilation errors.
 */
 
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'CM'}">
@@ -533,18 +535,40 @@ width:32.5%;
 											</c:if>
 										</div>
 										<h:panelGroup id="rptbtnGroup" style="margin-top:10px;">
-											<div align="right" style="margin-bottom: -3%;">
+											<div align="right">
+												<c:if
+													test="#{reportBackingBean.managedBean.rptGenBean.conditionGenerateButton}">
+													<p:commandButton onstart="blkReportContent.show();"
+														oncomplete="blkReportContent.hide();"
+														value="#{lbl['lbl.rpt.generate']}"
+														rendered="#{!reportBackingBean.valuesEmpty}"
+														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
+														ajax="false" update="@form" partialSubmit="true">
+														<p:fileDownload
+															value="#{reportBackingBean.generateReport()}" />
+													</p:commandButton>
 
-												<p:commandButton onstart="blkReportContent.show();"
-													oncomplete="blkReportContent.hide();"
-													value="#{lbl['lbl.rpt.generate']}"
-													disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
-													ajax="false"
-													onclick="handleLocalesDialogComplete(xhr, status, args)"
-													update="@form" partialSubmit="true" process="@form">
-													<p:fileDownload
-														value="#{reportBackingBean.generateReport()}" />
-												</p:commandButton>
+													<p:commandButton onstart="blkReportContent.show();"
+														oncomplete="blkReportContent.hide();"
+														value="#{lbl['lbl.rpt.generate']}"
+														rendered="#{reportBackingBean.valuesEmpty}"
+														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
+														ajax="true" update="@form" partialSubmit="true">
+														<p:fileDownload
+															value="#{reportBackingBean.generateReport()}" />
+													</p:commandButton>
+												</c:if>
+												<c:if
+													test="#{reportBackingBean.managedBean.rptGenBean.generateButton}">
+													<p:commandButton onstart="blkReportContent.show();"
+														id="falseGenerate" oncomplete="blkReportContent.hide();"
+														value="#{lbl['lbl.rpt.generate']}"
+														disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView or reportBackingBean.managedBean.rptGenBean.scLOAContentView}"
+														ajax="false" update="@form" partialSubmit="true">
+														<p:fileDownload
+															value="#{reportBackingBean.generateReport()}" />
+													</p:commandButton>
+												</c:if>
 												<p:commandButton value="#{lbl['lbl.btn.reset']}"
 													action="#{reportBackingBean.resetReportForm}"
 													update="@form" partialSubmit="true" process="@form" />

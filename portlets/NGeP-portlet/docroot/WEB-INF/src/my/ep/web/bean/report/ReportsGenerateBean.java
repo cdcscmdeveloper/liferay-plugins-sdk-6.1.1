@@ -83,12 +83,21 @@ public class ReportsGenerateBean {
 
 	/** The to date view. */
 	private boolean toDateView = false;
+	
+	/** The condition generate button. */
+	private boolean conditionGenerateButton=false;
+	
+	/** The generate button. */
+	private boolean generateButton=false;
 
 	/** The approved date view. */
 	private boolean approvedDateView = false;
 
 	/** The lng user id. */
 	private long lngUserId;
+	
+	/** The Str language. */
+	private String strLanguage="";
 
 	/** The lev one cat lst1. */
 	private List<SelectItem> levOneCatLst1 = new ArrayList<SelectItem>();
@@ -3759,6 +3768,7 @@ public class ReportsGenerateBean {
 	/** The pp ptj view. */
 	private boolean ppPTJView = false;
 	
+	/** The dummy value. */
 	private boolean dummyValue=false;
 
 	/** The pp pega wai pengawal view. */
@@ -19635,6 +19645,8 @@ public class ReportsGenerateBean {
 	}
 
 	/**
+	 * Checks if is dummy value.
+	 * 
 	 * @return the dummyValue
 	 */
 	public boolean isDummyValue() {
@@ -19642,9 +19654,71 @@ public class ReportsGenerateBean {
 	}
 
 	/**
-	 * @param dummyValue the dummyValue to set
+	 * Sets the dummy value.
+	 * 
+	 * @param dummyValue
+	 *            the dummyValue to set
 	 */
 	public void setDummyValue(boolean dummyValue) {
 		this.dummyValue = dummyValue;
 	}
+
+	/**
+	 * Checks if is condition generate button.
+	 * 
+	 * @return the conditionGenerateButton
+	 */
+	public boolean isConditionGenerateButton() {
+		return conditionGenerateButton;
+	}
+
+	/**
+	 * Sets the condition generate button.
+	 * 
+	 * @param conditionGenerateButton
+	 *            the conditionGenerateButton to set
+	 */
+	public void setConditionGenerateButton(boolean conditionGenerateButton) {
+		this.conditionGenerateButton = conditionGenerateButton;
+	}
+
+	/**
+	 * Checks if is generate button.
+	 * 
+	 * @return the generateButton
+	 */
+	public boolean isGenerateButton() {
+		return generateButton;
+	}
+
+	/**
+	 * Sets the generate button.
+	 * 
+	 * @param generateButton
+	 *            the generateButton to set
+	 */
+	public void setGenerateButton(boolean generateButton) {
+		this.generateButton = generateButton;
+	}
+
+	/**
+	 * Gets the str language.
+	 * 
+	 * @return the strLanguage
+	 */
+	public String getStrLanguage() {
+		return strLanguage;
+	}
+
+	/**
+	 * Sets the str language.
+	 * 
+	 * @param strLanguage
+	 *            the strLanguage to set
+	 */
+	public void setStrLanguage(String strLanguage) {
+		this.strLanguage = strLanguage;
+	}
+
+	
 }

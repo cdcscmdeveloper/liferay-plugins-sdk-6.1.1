@@ -56,6 +56,15 @@ public class ReportMangedBean extends BaseManagedBean {
 
 	/** The report title. */
 	private String reportTitle;
+	
+	/** The report code. */
+	private String reportCode;
+	
+	/** The values empty. */
+	boolean valuesEmpty=false;
+	
+	/** The error value. */
+	boolean errorValue=false;
 
 	/** The month map. */
 	private HashMap<String, String> monthMap = new HashMap<String, String>();
@@ -597,6 +606,63 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public void setPtjId(Long ptjId) {
 		this.ptjId = ptjId;
+	}
+
+	/**
+	 * Checks if is values empty.
+	 * 
+	 * @return the valuesEmpty
+	 */
+	public boolean isValuesEmpty() {
+		return valuesEmpty;
+	}
+
+	/**
+	 * Sets the values empty.
+	 * 
+	 * @param valuesEmpty
+	 *            the valuesEmpty to set
+	 */
+	public void setValuesEmpty(boolean valuesEmpty) {
+		this.valuesEmpty = valuesEmpty;
+	}
+
+	/**
+	 * Checks if is error value.
+	 * 
+	 * @return the errorValue
+	 */
+	public boolean isErrorValue() {
+		return errorValue;
+	}
+
+	/**
+	 * Sets the error value.
+	 * 
+	 * @param errorValue
+	 *            the errorValue to set
+	 */
+	public void setErrorValue(boolean errorValue) {
+		this.errorValue = errorValue;
+	}
+
+	/**
+	 * Gets the report code.
+	 * 
+	 * @return the reportCode
+	 */
+	public String getReportCode() {
+		return reportCode;
+	}
+
+	/**
+	 * Sets the report code.
+	 * 
+	 * @param reportCode
+	 *            the reportCode to set
+	 */
+	public void setReportCode(String reportCode) {
+		this.reportCode = reportCode;
 	}
 
 }

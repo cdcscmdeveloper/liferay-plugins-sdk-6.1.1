@@ -44,6 +44,7 @@ public class PPReportBackingBean extends
 	 */
 	public void enableCriteriaVariablesByReportByPP(
 			ReportsGenerateBean rptGenBean, List<String> authoriztionList) {
+		    rptGenBean.setConditionGenerateButton(true);
 		switch (getManagedBean().getReportValue().trim()) {
 
 		case ReportConst.PP_PROCUREMENT_PTJ_LEVEL_RPT_VAL:
