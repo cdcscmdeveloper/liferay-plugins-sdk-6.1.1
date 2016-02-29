@@ -16,6 +16,9 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.approved.or.reject.msg']}" 
+			rendered="#{!backingBean.managedBean.claimTask}" escape="false"/><br />
 
 		<ui:include src="approverCompanyInfo.xhtml" />
 		<ui:include src="approverContactInfo.xhtml" />
