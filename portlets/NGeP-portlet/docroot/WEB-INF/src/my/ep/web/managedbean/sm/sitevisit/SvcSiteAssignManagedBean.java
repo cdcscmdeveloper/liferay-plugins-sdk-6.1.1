@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSvCategory;
@@ -27,7 +26,7 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private Long appId;
 	private String[] bpmAction;
 	private String taskId;
-	private SMSiteVisitDataType bpmPojo;
+	private Object bpmPojo;
 	private DualListModel<PmUser> svoUserList;  
 	private String currDate;
 	
@@ -71,11 +70,11 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 		this.taskId = taskId;
 	}
 
-	public SMSiteVisitDataType getBpmPojo() {
+	public Object getBpmPojo() {
 		return bpmPojo;
 	}
 
-	public void setBpmPojo(SMSiteVisitDataType bpmPojo) {
+	public void setBpmPojo(Object bpmPojo) {
 		this.bpmPojo = bpmPojo;
 	}
 
