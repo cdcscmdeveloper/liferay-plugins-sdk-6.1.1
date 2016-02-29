@@ -1608,12 +1608,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(ctBackingBean.getManagedBean().getContractVer().getDocType());
-			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
-			sb.append(action);			
+		    sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+		    sb.append(ContractConst.SEPRATE_LINE);
+		    sb.append(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+		    sb.append(ContractConst.SEPRATE_LINE);
+		    if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+		    	sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+		    }else {
+		    	sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		    }
+		    sb.append(ContractConst.SEPRATE_LINE);
+		    sb.append(newOverallContractAmt());
+		    sb.append(ContractConst.SEPRATE_LINE);
+		    sb.append(action);		
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(action);
 		} 
@@ -1630,14 +1641,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
      */
 	public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
-			chkComplyAP201Rule();
-    	    setSecretary();
-			validateContractAmendment(outcome);
-			// Temp setTextBeforeSign : DocNo+Type
-			StringBuilder sb = new StringBuilder();
-			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
-			sb.append(outcome);
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+			    chkComplyAP201Rule();
+    	        setSecretary();
+			    validateContractAmendment(outcome);
+			    // Temp setTextBeforeSign : DocNo+Type
+			    StringBuilder sb = new StringBuilder();
+			    sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+			    	sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+				    sb.append(ContractConst.SEPRATE_LINE);
+				    sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+			    }else {
+			    	sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				    sb.append(ContractConst.SEPRATE_LINE);
+				    sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			    }
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(newOverallContractAmt());
+			    sb.append(ContractConst.SEPRATE_LINE);
+			    sb.append(outcome);		
+			    sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());	
+			    sb.append(outcome);
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setButtonAction(outcome);
