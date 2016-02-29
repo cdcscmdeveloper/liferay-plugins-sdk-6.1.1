@@ -115,6 +115,8 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		SvcSiteAssignBackingBean svcAssignmentBB = new SvcSiteAssignBackingBean();
 		svcAssignmentBB.retrieveSiteAssignInfo(selectedApplId);
 		
+		
+		
 		return "/xhtml/sm/svcassignment/assignSiteVisitView.xhtml";
 	}
 
@@ -154,13 +156,5 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 	public void setResultList(List<SmAppl> resultList) {
 		this.resultList = resultList;
 	}
-
-
-
-
-
-
-
-
 
 }
