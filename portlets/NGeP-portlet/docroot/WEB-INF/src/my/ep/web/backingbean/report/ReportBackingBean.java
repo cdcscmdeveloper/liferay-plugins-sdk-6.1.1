@@ -141,63 +141,8 @@ public class ReportBackingBean extends
 	 * Instantiates a new report backing bean.
 	 */
 	public ReportBackingBean() {
+
 	}
-
-	/**
-	 * Inits the.
-	 */
-	@PostConstruct
-	public void init() {
-		
-		
-			/*if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
-					|| ((this.getCommonMinistry() != null) && (this
-							.getCommonMinistry() != ReportConst.EMPTY_VAL))
-					|| ((this.getCommonPegaWaiPengawal() != null) && (this
-							.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
-					|| ((this.getCommonKumpulanPTJ() != null) && (this
-							.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
-					|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
-				this.setValuesEmpty(true);
-			} else {
-				this.setValuesEmpty(false);
-			}*/
-		
-		
-		if (this.getManagedBean().getSelectedMinistry() == null) {
-			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedMinistry()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-
-		if (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
-			this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedPegwaiPengawal()
-					.getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedPegwaiPengawal()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-
-		if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
-			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedKumpulanPTJ()
-					.getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedKumpulanPTJ()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-		if (this.getManagedBean().getSelectedPTJ() == null) {
-			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedPTJ()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-	}
-
 	/** The module value. */
 	private String moduleValue;
 
@@ -446,8 +391,8 @@ public class ReportBackingBean extends
 
 	/** The ministry id. */
 	private Long ministryId = null;
-	
-	boolean valuesEmpty=false;
+
+	boolean valuesEmpty = false;
 
 	/** The role code list. */
 	private List<String> roleCodeList = new ArrayList<String>();
@@ -484,7 +429,7 @@ public class ReportBackingBean extends
 
 	/** The local to date var. */
 	private String localToDateVar;
-	
+
 	/** The user id. */
 	private String userId;
 
@@ -716,13 +661,13 @@ public class ReportBackingBean extends
 
 	/** The fl contract no. */
 	private String flContractNo;
-	
+
 	/** The fl physical contract no. */
 	private String flPhysicalContractNo;
-	
+
 	/** The fl loa physical no. */
 	private String flLoaPhysicalNo;
-	
+
 	/** The fl contract request no. */
 	private String flContractRequestNo;
 
@@ -7694,7 +7639,6 @@ public class ReportBackingBean extends
 		this.kumpulanPTJList = kumpulanPTJList;
 	}
 
-	
 	/**
 	 * Gets the checks if is by zonelist.
 	 * 
@@ -7868,8 +7812,50 @@ public class ReportBackingBean extends
 	public void setFlContractRequestNo(String flContractRequestNo) {
 		this.flContractRequestNo = flContractRequestNo;
 	}
-
 	
+	
+	/**
+	 * Inits the.
+	 */
+
+	@PostConstruct
+	public void init() {
+
+		if (this.getManagedBean().getSelectedMinistry() == null) {
+			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedMinistry()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+
+		if (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
+			this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedPegwaiPengawal()
+					.getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedPegwaiPengawal()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+
+		if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
+			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedKumpulanPTJ()
+					.getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedKumpulanPTJ()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+		if (this.getManagedBean().getSelectedPTJ() == null) {
+			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
+				this.getManagedBean().getSelectedPTJ()
+						.setPmOrgValidity(new PmOrgValidity());
+			}
+		}
+	}
+	
+
 	/**
 	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
 	 * 
@@ -8799,41 +8785,38 @@ public class ReportBackingBean extends
 			doctype = ReportConst.DOC_TYPE_PR;
 		}
 
-		/*else if (this.getReportValue() != null
-				&& this.getReportValue().equals(
-						ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL)
-				|| this.getReportValue().equals(
-						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL)
-				|| this.getReportValue().equals(
-						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL)
-				|| this.getReportValue().equals(
-						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) {
-			doctype = ReportConst.DOC_TYPE_SD;
-		}*/
+		/*
+		 * else if (this.getReportValue() != null &&
+		 * this.getReportValue().equals(
+		 * ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL) ||
+		 * this.getReportValue().equals(
+		 * ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL) ||
+		 * this.getReportValue().equals(
+		 * ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL) ||
+		 * this.getReportValue().equals(
+		 * ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) { doctype =
+		 * ReportConst.DOC_TYPE_SD; }
+		 */
 
-		/*else if ((this.getReportValue() != null)
-				&& (this.getReportValue()
-						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL))) {
-			doctype = ReportConst.DOC_TYPE_SD;
-		}
-
-		else if ((this.getReportValue() != null)
-				&& (this.getReportValue()
-						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL))) {
-			doctype = ReportConst.DOC_TYPE_SD;
-		}
-
-		else if ((this.getReportValue() != null)
-				&& (this.getReportValue()
-						.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL))) {
-			doctype = ReportConst.DOC_TYPE_SD;
-			
-			 * }else
-			 * if((this.getReportValue()!=null)&&(this.getReportValue().equals
-			 * (ReportConst.FL_REC_NOTE_RPT_PO_VAL))){ doctype
-			 * =ReportConst.DOC_TYPE_FRN;
-			 
-		}*/ else if ((this.getReportValue() != null)
+		/*
+		 * else if ((this.getReportValue() != null) && (this.getReportValue()
+		 * .equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL))) { doctype
+		 * = ReportConst.DOC_TYPE_SD; }
+		 * 
+		 * else if ((this.getReportValue() != null) && (this.getReportValue()
+		 * .equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL))) {
+		 * doctype = ReportConst.DOC_TYPE_SD; }
+		 * 
+		 * else if ((this.getReportValue() != null) && (this.getReportValue()
+		 * .equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL))) { doctype
+		 * = ReportConst.DOC_TYPE_SD;
+		 * 
+		 * }else if((this.getReportValue()!=null)&&(this.getReportValue().equals
+		 * (ReportConst.FL_REC_NOTE_RPT_PO_VAL))){ doctype
+		 * =ReportConst.DOC_TYPE_FRN;
+		 * 
+		 * }
+		 */else if ((this.getReportValue() != null)
 				&& (this.getReportValue()
 						.equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))) {
 			docTypeStatusItemsList = new ArrayList<SelectItem>();
@@ -8865,12 +8848,12 @@ public class ReportBackingBean extends
 			if (this.getReportValue().equals(
 					ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL)
 					|| this.getReportValue().equals(
-							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) {				
-					for (SelectItem item : docTypeStatusItemsList) {
-						if (!item.getLabel().equalsIgnoreCase(
-								ReportConst.STATUS_CANCELLED))
-							docTypeTempStatusItemsList.add(item);
-					}
+							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) {
+				for (SelectItem item : docTypeStatusItemsList) {
+					if (!item.getLabel().equalsIgnoreCase(
+							ReportConst.STATUS_CANCELLED))
+						docTypeTempStatusItemsList.add(item);
+				}
 				docTypeStatusItemsList.clear();
 				docTypeStatusItemsList.addAll(docTypeTempStatusItemsList);
 				docTypeTempStatusItemsList.clear();
@@ -9204,11 +9187,12 @@ public class ReportBackingBean extends
 				}
 			} else {
 				Long lngPtjId = null;
-				if (this.getCommonPtj() != null) {
-					lngPtjId = Long.parseLong(this.getCommonPtj());
-				}
-				
-				/*if (this.getManagedBean().getSelectedPTJ() != null) {
+				/*
+				 * if (this.getCommonPtj() != null) { lngPtjId =
+				 * Long.parseLong(this.getCommonPtj()); }
+				 */
+
+				if (this.getManagedBean().getSelectedPTJ() != null) {
 					if (this.getManagedBean().getSelectedPTJ()
 							.getOrgProfileId() != null) {
 						lngPtjId = (this.getManagedBean().getSelectedPTJ()
@@ -9217,7 +9201,6 @@ public class ReportBackingBean extends
 						lngPtjId = this.getManagedBean().getPtjId();
 					}
 				}
-				 */
 
 				// List<String> ptLst =
 				// reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
@@ -10190,7 +10173,8 @@ public class ReportBackingBean extends
 	public void preRenderView() {
 		log.info("ReportBackingBean-preRenderView");
 		rptGenBean = new ReportsGenerateBean();
-		getManagedBean().setRptGenBean(rptGenBean);
+		rptGenBean.setStrLanguage(strLanguage);
+		getManagedBean().setRptGenBean(rptGenBean);		
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		getManagedBean().setReportValue(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -10513,7 +10497,7 @@ public class ReportBackingBean extends
 							.contains(highRoleCodeList.get(0)))) {
 				// if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))
 				// {
-				getLtstMinistryList();
+				// getLtstMinistryList();
 				getManagedBean().getRptGenBean().setCommonLOVBasedRoles(true);
 				getParameterCodeTypeString();
 				getManagedBean().getRptGenBean().setFlSupplierDropdownView(
@@ -10654,10 +10638,9 @@ public class ReportBackingBean extends
 				// getLtstMinistryListByUserid();
 				getManagedBean().getRptGenBean().setFlTextBoxBasedRoles(true);
 				retrieveOnlyFPJMinistryList();
-				retrieveFPJPTJList();				
-			/*	retrievePFPPList();
-				retrievePFJAList();*/
-				
+				retrieveFPJPTJList();
+				retrievePFPPList();
+				retrievePFJAList();
 
 				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
 					getManagedBean().getRptGenBean()
@@ -11727,12 +11710,14 @@ public class ReportBackingBean extends
 						label = pmReport.getReportTitle();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
+						
 					} else if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitleMalay());
+						
 					}
 					this.setSubModule(pmReport.getSubModule());
 				} else {
@@ -11742,16 +11727,19 @@ public class ReportBackingBean extends
 						label = pmReport.getReportTitle();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
+						
 					} else if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
+						
 					}
 				}
 				this.setReportName(label);
 				reportFileNameJSP = pmReport.getReportFilename();
+				this.getManagedBean().setReportCode(pmReport.getReportCode());
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 
 			}
@@ -11824,22 +11812,7 @@ public class ReportBackingBean extends
 						rptGenBean, authoriztionList);
 			}
 			
-			if (this.getModuleValue()!=null && this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN)) {
-				if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
-						|| ((this.getCommonMinistry() != null) && (this
-								.getCommonMinistry() != ReportConst.EMPTY_VAL))
-						|| ((this.getCommonPegaWaiPengawal() != null) && (this
-								.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
-						|| ((this.getCommonKumpulanPTJ() != null) && (this
-								.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
-						|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
-					this.setValuesEmpty(false);
-				} else {
-					this.setValuesEmpty(true);
-				}
-			}
-			
-			
+			//checkEmptyValuesForLovs();			
 			rptGenBean.isReportCategoryView();
 			getManagedBean().setRptGenBean(rptGenBean);
 			resetReportForm();
@@ -11847,9 +11820,9 @@ public class ReportBackingBean extends
 				changeSoftCertSelection();
 			}
 			getGenBusCompanyData();
-			if (pmReport != null) {
+			/*if (pmReport != null) {
 				getDefaultValuesFromAndToDate(pmReport.getReportCode());
-			}
+			}*/
 			retrieveDates();
 			madatoryIndicator();
 			retrieveAllMinistry();
@@ -12411,6 +12384,32 @@ public class ReportBackingBean extends
 		scYearList = rptGenBean.generateCommonYearList();
 		return scYearList;
 	}
+	
+	public void onChangeValues(){		
+		if (this.getPpYear() != null && this.getPpYear()!= ReportConst.EMPTY_VAL) {
+			this.setValuesEmpty(false);
+		}
+	}
+	
+	public void onChangeValuesForLOVs() {
+		
+		if (this.getPpYear() != null && this.getPpYear()!= ReportConst.EMPTY_VAL) {		
+			if ((this.getManagedBean().getSelectedPTJ() != null && this
+					.getManagedBean().getSelectedPTJ().getPmOrgValidity()
+					.getOrgName() != null)
+					|| (this.getManagedBean().getSelectedMinistry() != null && this
+							.getManagedBean().getSelectedMinistry()
+							.getPmOrgValidity().getOrgName() != null)
+					|| (this.getManagedBean().getSelectedKumpulanPTJ() != null && this
+							.getManagedBean().getSelectedKumpulanPTJ()
+							.getPmOrgValidity().getOrgName() != null)
+					|| (this.getManagedBean().getSelectedPegwaiPengawal() != null && this
+							.getManagedBean().getSelectedPegwaiPengawal()
+							.getPmOrgValidity().getOrgName() != null)) {
+				this.setValuesEmpty(false);
+			}
+		}
+	}
 
 	/**
 	 * Created to date update.
@@ -12516,7 +12515,7 @@ public class ReportBackingBean extends
 						.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
 			mofRegNoNumericValidation();
 		}
-
+		
 		rptGenBean = new ReportsGenerateBean();
 		if ((this.getModuleValue() != null)
 				&& (getManagedBean().getReportValue() != null)) {
@@ -12657,87 +12656,21 @@ public class ReportBackingBean extends
 					// throw new EpException("MOF No. is mandatory.");
 					throw new EpException(MessageConst.ERROR_REPORT_780029);
 				}
-			}
-
-			// For FL,CT and PP # for setting the Only LOV's values
-			if (this.getModuleValue().equalsIgnoreCase(
-					ModuleCodeConst.CONTRACT_MANAGEMENT)
-					|| this.getModuleValue().equalsIgnoreCase(
-							ModuleCodeConst.PROCUREMENT_PLAN)
-					|| this.getModuleValue().equalsIgnoreCase(
-							ModuleCodeConst.ORDER_FULFILLMENT)) {
-				if (this.getManagedBean().getRptGenBean()
-						.isCommonLOVBasedRoles()) {
-
-					if (this.getManagedBean().getSelectedMinistry() != null) {
-						if (this.getManagedBean().getSelectedMinistry()
-								.getOrgProfileId() != null) {
-							this.setCommonMinistry(this.getManagedBean()
-									.getSelectedMinistry().getOrgProfileId()
-									.toString());
-						}
-					} else {
-						this.getManagedBean().setSelectedMinistry(
-								new PmOrgProfile());
-						if (this.getManagedBean().getSelectedMinistry()
-								.getPmOrgValidity() == null) {
-							this.getManagedBean().getSelectedMinistry()
-									.setPmOrgValidity(new PmOrgValidity());
-						}
+			}			
+					
+			if (this.getModuleValue() != null
+					&& (this.getModuleValue()
+							.equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN))) {
+				if (this.isValuesEmpty()) {
+					if ((this.getPpYear() == null || this.getPpYear().isEmpty())) {						
+						throw new EpException(MessageConst.ERROR_REPORT_780030);
 					}
-
-					if (this.getManagedBean().getSelectedPegwaiPengawal() != null) {
-						if (this.getManagedBean().getSelectedPegwaiPengawal()
-								.getOrgProfileId() != null) {
-							this.setCommonPegaWaiPengawal(this.getManagedBean()
-									.getSelectedPegwaiPengawal()
-									.getOrgProfileId().toString());
-						}
-					} else {
-						this.getManagedBean().setSelectedPegwaiPengawal(
-								new PmOrgProfile());
-						if (this.getManagedBean().getSelectedPegwaiPengawal()
-								.getPmOrgValidity() == null) {
-							this.getManagedBean().getSelectedPegwaiPengawal()
-									.setPmOrgValidity(new PmOrgValidity());
-						}
-					}
-
-					if (this.getManagedBean().getSelectedKumpulanPTJ() != null) {
-						if (this.getManagedBean().getSelectedKumpulanPTJ()
-								.getOrgProfileId() != null) {
-							this.setCommonKumpulanPTJ(this.getManagedBean()
-									.getSelectedKumpulanPTJ().getOrgProfileId()
-									.toString());
-						}
-					} else {
-						this.getManagedBean().setSelectedKumpulanPTJ(
-								new PmOrgProfile());
-						if (this.getManagedBean().getSelectedKumpulanPTJ()
-								.getPmOrgValidity() == null) {
-							this.getManagedBean().getSelectedKumpulanPTJ()
-									.setPmOrgValidity(new PmOrgValidity());
-						}
-
-					}
-					if (this.getManagedBean().getSelectedPTJ() != null) {
-						if (this.getManagedBean().getSelectedPTJ()
-								.getOrgProfileId() != null) {
-							this.setCommonPtj(this.getManagedBean()
-									.getSelectedPTJ().getOrgProfileId()
-									.toString());
-						}
-					} else {
-						this.getManagedBean()
-								.setSelectedPTJ(new PmOrgProfile());
-						if (this.getManagedBean().getSelectedPTJ()
-								.getPmOrgValidity() == null) {
-							this.getManagedBean().getSelectedPTJ()
-									.setPmOrgValidity(new PmOrgValidity());
-						}
-					}
+				}else{
+					this.setValuesEmpty(true);
 				}
 			}
+
+			reloadLovsValues();
 
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
@@ -12808,6 +12741,7 @@ public class ReportBackingBean extends
 			 */
 			// externalContext.addResponseCookie("primefaces.download", "true",
 			// Collections.<String, Object>emptyMap());
+			
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			externalContext.addResponseCookie("primefaces.download",
@@ -12822,7 +12756,86 @@ public class ReportBackingBean extends
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 
-		// return "/xhtml/reports/reportcontent.xhtml";
+		
+	}
+
+	private void reloadLovsValues() {
+		// For FL,CT and PP # for setting the Only LOV's values
+		if (this.getModuleValue().equalsIgnoreCase(
+				ModuleCodeConst.CONTRACT_MANAGEMENT)
+				|| this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.PROCUREMENT_PLAN)
+				|| this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.ORDER_FULFILLMENT)) {
+			if (this.getManagedBean().getRptGenBean().isCommonLOVBasedRoles()) {
+
+				if (this.getManagedBean().getSelectedMinistry() != null) {
+					if (this.getManagedBean().getSelectedMinistry()
+							.getOrgProfileId() != null) {
+						this.setCommonMinistry(this.getManagedBean()
+								.getSelectedMinistry().getOrgProfileId()
+								.toString());
+					}
+				} else {
+					this.getManagedBean().setSelectedMinistry(
+							new PmOrgProfile());
+					if (this.getManagedBean().getSelectedMinistry()
+							.getPmOrgValidity() == null) {
+						this.getManagedBean().getSelectedMinistry()
+								.setPmOrgValidity(new PmOrgValidity());
+					}
+				}
+
+				if (this.getManagedBean().getSelectedPegwaiPengawal() != null) {
+					if (this.getManagedBean().getSelectedPegwaiPengawal()
+							.getOrgProfileId() != null) {
+						this.setCommonPegaWaiPengawal(this.getManagedBean()
+								.getSelectedPegwaiPengawal().getOrgProfileId()
+								.toString());
+					}
+				} else {
+					this.getManagedBean().setSelectedPegwaiPengawal(
+							new PmOrgProfile());
+					if (this.getManagedBean().getSelectedPegwaiPengawal()
+							.getPmOrgValidity() == null) {
+						this.getManagedBean().getSelectedPegwaiPengawal()
+								.setPmOrgValidity(new PmOrgValidity());
+					}
+				}
+
+				if (this.getManagedBean().getSelectedKumpulanPTJ() != null) {
+					if (this.getManagedBean().getSelectedKumpulanPTJ()
+							.getOrgProfileId() != null) {
+						this.setCommonKumpulanPTJ(this.getManagedBean()
+								.getSelectedKumpulanPTJ().getOrgProfileId()
+								.toString());
+					}
+				} else {
+					this.getManagedBean().setSelectedKumpulanPTJ(
+							new PmOrgProfile());
+					if (this.getManagedBean().getSelectedKumpulanPTJ()
+							.getPmOrgValidity() == null) {
+						this.getManagedBean().getSelectedKumpulanPTJ()
+								.setPmOrgValidity(new PmOrgValidity());
+					}
+
+				}
+				if (this.getManagedBean().getSelectedPTJ() != null) {
+					if (this.getManagedBean().getSelectedPTJ()
+							.getOrgProfileId() != null) {
+						this.setCommonPtj(this.getManagedBean()
+								.getSelectedPTJ().getOrgProfileId().toString());
+					}
+				} else {
+					this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
+					if (this.getManagedBean().getSelectedPTJ()
+							.getPmOrgValidity() == null) {
+						this.getManagedBean().getSelectedPTJ()
+								.setPmOrgValidity(new PmOrgValidity());
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -13043,7 +13056,7 @@ public class ReportBackingBean extends
 		 * ().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))
 		 */
 		{
-
+			
 			if ((this.getCtSupplierName() != null)
 					&& (this.getCtSupplierName() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -13260,7 +13273,7 @@ public class ReportBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else {
+		} else {			
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -13276,6 +13289,7 @@ public class ReportBackingBean extends
 				|| (getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
 						.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
+			
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
@@ -13341,6 +13355,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getUserIdVar());
 
 			} else {
+				
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} /*
@@ -13485,7 +13500,6 @@ public class ReportBackingBean extends
 			 * .toString().equals(ReportConst.EMPTY_VAL)))) { throw new
 			 * EpException(MessageConst.ERROR_REPORT_780003); } }
 			 */
-
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE))
@@ -14087,6 +14101,7 @@ public class ReportBackingBean extends
 			}
 		} else if (!getManagedBean().getRptGenBean()
 				.isSmMandatoryDOCSupplierTypeView()) {
+		
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -14186,6 +14201,7 @@ public class ReportBackingBean extends
 						}
 					}
 				}
+				
 				if ((this.getScCreatedToMonth() != null)
 						&& (this.getScCreatedFromMonth() != null)) {
 					rptGenBean
@@ -14503,6 +14519,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
+			
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -14589,7 +14606,7 @@ public class ReportBackingBean extends
 				 * .handleNavigation(context, null, pageUrl);
 				 */
 			}
-
+			
 			if ((this.getCmRequestNumber() != null)
 					&& (this.getCmRequestNumber() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -14744,6 +14761,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
+			
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 
 			/*
@@ -14836,7 +14854,7 @@ public class ReportBackingBean extends
 						.getFlContractRequest() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPurchaseOrderNo() != null) && (this
 						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL))) {
-
+		
 			if ((this.getFlContractNo() != null)
 					&& (this.getFlContractNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -15242,6 +15260,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
+			
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -15251,18 +15270,8 @@ public class ReportBackingBean extends
 	 */
 	public void generatePPReport() {
 		log.info("ReportBackingBean-generatePPReport");
-		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
-				|| ((this.getCommonMinistry() != null) && (this
-						.getCommonMinistry() != ReportConst.EMPTY_VAL))
-				|| ((this.getCommonPegaWaiPengawal() != null) && (this
-						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
-				|| ((this.getCommonKumpulanPTJ() != null) && (this
-						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
 
-				|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
-			
-			this.setValuesEmpty(false);
-			
+		if (checkDefaultValuesForPP()) {
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPpPTJVar(ReportConst.FL_AMP_PTJ_NAME_EQ
@@ -15310,10 +15319,10 @@ public class ReportBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else {		       
-				throw new EpException(MessageConst.ERROR_REPORT_780003);
-			}
-		
+		} else {
+		  	   	throw new EpException(MessageConst.ERROR_REPORT_780003);
+		}
+
 	}
 
 	/**
@@ -15371,7 +15380,7 @@ public class ReportBackingBean extends
 
 				|| ((this.getPmProfileStatus() != null) && (this
 						.getPmProfileStatus() != ReportConst.EMPTY_VAL))) {
-
+			this.setValuesEmpty(false);
 			if ((this.getPmServiceType() != null)
 					&& (this.getPmServiceType() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -15550,6 +15559,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
+			this.setValuesEmpty(true);
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -15745,272 +15755,293 @@ public class ReportBackingBean extends
 	public void resetReportForm() {
 		log.info("ReportBackingBean-resetReportForm");
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
-		getManagedBean().getRptGenBean().setCmMofRegView(false);
-		getManagedBean().getRptGenBean().setCmBasicRegView(false);
-		getManagedBean().getRptGenBean().setSmMofRegView(false);
-		getManagedBean().getRptGenBean().setSmBasicRegView(false);
-		getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
-		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
-		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
-		getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-		this.setFromDate(null);
-		this.setToDate(null);
-		this.setScQuotationId(null);
-		this.setScQuotationNo(null);
-		this.setScPaymentId(null);
-		this.getManagedBean().setLoaReportDocumentList(
-				new ArrayList<ScLoaReport>());
-		this.setScLOAIdNo(null);
-		this.setCmItemType(null);
-		this.setCmItemStatus(null);
-		this.setCmUnspscCode(null);
-		this.setCmUnspscTitle(null);
-		// this.setCmUnspscTitle(null);
-		this.setCmCompanyName(null);
-		this.setCmRegistrationType(null);
-		this.setCmItemCategory(null);
-		this.setCmItemName(null);
-		this.setCmRequestNumber(null);
-		this.setCmEpNumber(null);
-		this.setCmBusinessRegNo(null);
-		this.setCmIcNumber(null);
-		this.setCmMofNumber(null);
-		this.setCmExtentionCode(null);
-		this.setCmExtentionType(null);
-		this.setCmExtentionBrand(null);
-		this.setCmExtentionMeasurment(null);
-		this.setCmExtentionColour(null);
-		this.setCmProofIdentity(null);
-		this.setCmSupplOrAdmin(null);
-		this.setCmGroupOne(null);
-		this.setCmExtentionBrand(null);
-		this.setCmExtentionType(null);
-		this.setCmExtentionMeasurment(null);
-		this.setCmExtentionColour(null);
-		brandList = new ArrayList<SelectItem>();
-		extTypeList = new ArrayList<SelectItem>();
-		measurmentList = new ArrayList<SelectItem>();
-		colorList = new ArrayList<SelectItem>();
-		this.setFlItmType(null);
-		this.setCommonPtj(null);
-		this.setFlContractNo(null);
-		this.setFlSst(null);
-		this.setFlJabatan(null);
-		this.setCommonMinistry(null);
-		this.setFlSupplier(null);
-		this.setFlStatus(null);
-		this.setFlDuration(null);
-		this.setFlRecievingOfficer(null);
-		this.setFlDeliveryAddress(null);
-		this.setFlRecNoteNo(null);
-		this.setFlContractType(null);
-		this.setFlRequisitioner(null);
-		this.setFlAcknowledgeOfficer(null);
-		this.setFlPaymentofficer(null);
-		this.setFlMtoContract(null);
-		this.setFlInvoiceNo(null);
-		this.setFlDeductionType(null);
-		this.setFlCrNo(null);
-		this.setFlApproverName(null);
-		this.setFlDocumentType(null);
-		this.setFlCriteria(null);
-		this.setFlScoring(null);
-		this.setFlPkpNo(null);
-		this.setFlStopInstructionNo(null);
-		this.setFlInvoiceNo(null);
-		this.setFlSupplierInvoiceNo(null);
-		this.setFlPaymentAdviceNo(null);
-		this.setFlDeliveryOrderNo(null);
-		this.setFlSupplierDeliveryOrderNo(null);
-		this.setFlItemCode(null);
-		this.setFlPoAmount(null);
-		this.setFlPrNo(null);
-		this.setFlPmo(null);
-		this.setFlItemName(null);
-		/*
-		 * this.ministryList = new ArrayList<SelectItem>();
-		 * this.pegaWaiPengawalList = new ArrayList<SelectItem>();
-		 * this.kumpulanPTJList= new ArrayList<SelectItem>(); this.ptjList = new
-		 * ArrayList<SelectItem>();
-		 */
-		this.getManagedBean().setSelectedMinistry(null);
-		this.getManagedBean().setSelectedPegwaiPengawal(null);
-		this.getManagedBean().setSelectedKumpulanPTJ(null);
-		this.getManagedBean().setSelectedPTJ(null);
-		this.setSmApplicationNo(null);
-		if ((allRoleCodesList != null)
-				&& (allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN) || allRoleCodesList
-						.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))) {
+		if (this.getModuleValue() != null) {
+			if ((this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.CONTRACT_MANAGEMENT) || this
+					.getModuleValue().equalsIgnoreCase(
+							ModuleCodeConst.ORDER_FULFILLMENT))) {
+				checkEmptyValuesForLovs();
+			}
+			getManagedBean().getRptGenBean().setCmMofRegView(false);
+			getManagedBean().getRptGenBean().setCmBasicRegView(false);
+			getManagedBean().getRptGenBean().setSmMofRegView(false);
+			getManagedBean().getRptGenBean().setSmBasicRegView(false);
+			getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
+			getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
+			getManagedBean().getRptGenBean()
+					.setCmExtentionMeasurmentView(false);
+			getManagedBean().getRptGenBean().setCmExtentionColourView(false);
+			this.setFromDate(null);
+			this.setToDate(null);
+			this.setScQuotationId(null);
+			this.setScQuotationNo(null);
+			this.setScPaymentId(null);
+			this.getManagedBean().setLoaReportDocumentList(
+					new ArrayList<ScLoaReport>());
+			this.setScLOAIdNo(null);
+			this.setCmItemType(null);
+			this.setCmItemStatus(null);
+			this.setCmUnspscCode(null);
+			this.setCmUnspscTitle(null);
+			// this.setCmUnspscTitle(null);
+			this.setCmCompanyName(null);
+			this.setCmRegistrationType(null);
+			this.setCmItemCategory(null);
+			this.setCmItemName(null);
+			this.setCmRequestNumber(null);
+			this.setCmEpNumber(null);
+			this.setCmBusinessRegNo(null);
+			this.setCmIcNumber(null);
+			this.setCmMofNumber(null);
+			this.setCmExtentionCode(null);
+			this.setCmExtentionType(null);
+			this.setCmExtentionBrand(null);
+			this.setCmExtentionMeasurment(null);
+			this.setCmExtentionColour(null);
+			this.setCmProofIdentity(null);
+			this.setCmSupplOrAdmin(null);
+			this.setCmGroupOne(null);
+			this.setCmExtentionBrand(null);
+			this.setCmExtentionType(null);
+			this.setCmExtentionMeasurment(null);
+			this.setCmExtentionColour(null);
+			brandList = new ArrayList<SelectItem>();
+			extTypeList = new ArrayList<SelectItem>();
+			measurmentList = new ArrayList<SelectItem>();
+			colorList = new ArrayList<SelectItem>();
+			this.setFlItmType(null);
+			this.setCommonPtj(null);
+			this.setFlContractNo(null);
+			this.setFlSst(null);
+			this.setFlJabatan(null);
+			this.setCommonMinistry(null);
+			this.setFlSupplier(null);
+			this.setFlStatus(null);
+			this.setFlDuration(null);
+			this.setFlRecievingOfficer(null);
+			this.setFlDeliveryAddress(null);
+			this.setFlRecNoteNo(null);
+			this.setFlContractType(null);
+			this.setFlRequisitioner(null);
+			this.setFlAcknowledgeOfficer(null);
+			this.setFlPaymentofficer(null);
+			this.setFlMtoContract(null);
+			this.setFlInvoiceNo(null);
+			this.setFlDeductionType(null);
+			this.setFlCrNo(null);
+			this.setFlApproverName(null);
+			this.setFlDocumentType(null);
+			this.setFlCriteria(null);
+			this.setFlScoring(null);
+			this.setFlPkpNo(null);
+			this.setFlStopInstructionNo(null);
+			this.setFlInvoiceNo(null);
+			this.setFlSupplierInvoiceNo(null);
+			this.setFlPaymentAdviceNo(null);
+			this.setFlDeliveryOrderNo(null);
+			this.setFlSupplierDeliveryOrderNo(null);
+			this.setFlItemCode(null);
+			this.setFlPoAmount(null);
+			this.setFlPrNo(null);
+			this.setFlPmo(null);
+			this.setFlItemName(null);
+			/*
+			 * this.ministryList = new ArrayList<SelectItem>();
+			 * this.pegaWaiPengawalList = new ArrayList<SelectItem>();
+			 * this.kumpulanPTJList= new ArrayList<SelectItem>(); this.ptjList =
+			 * new ArrayList<SelectItem>();
+			 */
+			this.getManagedBean().setSelectedMinistry(null);
+			this.getManagedBean().setSelectedPegwaiPengawal(null);
+			this.getManagedBean().setSelectedKumpulanPTJ(null);
+			this.getManagedBean().setSelectedPTJ(null);
+			this.setSmApplicationNo(null);
+			if ((allRoleCodesList != null)
+					&& (allRoleCodesList
+							.contains(ReportConst.ROLE_CODE_EP_ADMIN) || allRoleCodesList
+							.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))) {
+				this.setSmZone(null);
+			}
+			this.setSmSupplierType(null);
+			this.setSmRTReportType(null);
+			this.setSmSupplierName(null);
+			smMofRegistrationFeeList = new ArrayList<SelectItem>();
+			smProcessingFeeList = new ArrayList<SelectItem>();
+			smSoftCertificateFeeList = new ArrayList<SelectItem>();
+			this.setSmMofRegNo(null);
+			this.setSmRegistrationStatus(null);
+			this.setSmBusCompTypeRegistrationStatus(null);
+			this.registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
+			this.smBusCompanyTypeList = new ArrayList<SelectItem>();
+			this.setSmBusPaidUpCapitalFrm(null);
+			this.setSmBusPaidUpCapitalTo(null);
+			this.setSmcategory(null);
+			this.setSmCode(null);
+			this.setSmBusCompanyType(null);
+			this.setSmMainCategory(null);
+			this.setSmSubCategory(null);
+			this.setSmSubCategoryDivision(null);
+			this.setSmApplicationStatus(null);
+			this.setSmPaymentType(null);
+			this.setSmApplicationType(null);
 			this.setSmZone(null);
+			this.setSmState(null);
+			this.setSmDistrict(null);
+			this.setSmSVOUser(null);
+			this.setSmReportType(null);
+			this.setSmProcessingType(null);
+			this.setSmReceiptNo(null);
+			this.setSmProcessingOfficerName(null);
+			this.setSmPaymentMethod(null);
+			this.setSmFromMonth(null);
+			this.setSmToMonth(null);
+			this.setSmCompanyName(null);
+			this.setSmPaymentTo(null);
+			this.setSmRegistrationType(null);
+			this.setSmCreatedFromYear(null);
+			this.setSmCreatedToYear(null);
+			this.setSmYearText(null);
+			this.setSmMofRegNoFrom(null);
+			this.setSmMofRegNoTo(null);
+			this.setSmPaidUpCapitalFrm(null);
+			this.setSmPaidUpCapitalTo(null);
+			this.setSmPaidUpCapitalNaccum(null);
+			this.setSmRole(null);
+			this.setSmEpNo(null);
+			this.setSmRegistrationNo(null);
+			this.setSmSupportingDocumentMode(null);
+			this.setSmPersonnelRole(null);
+			this.setSmSupportingDocumentStatus(null);
+			this.setSmIdentificationType(null);
+			this.setSmIdentificationNumber(null);
+			this.setSmCancellationBy(null);
+			this.setSmThresholdFromYear(null);
+			this.setSmThresholdToYear(null);
+			this.setSmRequestExpiryDate(null);
+			this.setSmUserName(null);
+			this.setSmProfileStatus(null);
+			this.setFlContractOrder(null);
+			this.setFlContractRequest(null);
+			this.setFlPurchaseOrderNo(null);
+			this.setScCreatedToYear(null);
+			this.setScCreatedToMonth(null);
+			this.setScCreatedFromYear(null);
+			this.setScCreatedFromMonth(null);
+			this.setScDeskOfficer(null);
+			this.setScPtj(null);
+			this.setScStatus(null);
+			this.setScPublishFromDate(null);
+			this.setScPublishToDate(null);
+			this.setScSoneCrtdFromDate(null);
+			this.setScSoneCrtdToDate(null);
+			this.setScRequisenerId(null);
+			this.setScSupplier(null);
+			this.setScLogin(null);
+			this.setScPIno(null);
+			this.setScSoneStatus(null);
+			this.setScPrcRptGroup(null);
+			this.setScPIDtlsPrcRptGroup(null);
+			this.setScProcurementType(null);
+			this.setScProcessRptQuotationNo(null);
+			this.setScCommonStatus(null);
+			this.setScPurchaseInDefaultStatus(null);
+			this.setScSimpleQuoteStatus(null);
+			this.setScRequestNoteStatus(null);
+			this.setScLAPRNPURCHDEFAULTGroup(null);
+			this.setScSimpleQuoteDtlGroup(null);
+			this.setScREQUESTNOTESUMMARYGroup(null);
+			this.setScPIDNo(null);
+			this.setScContractOrPKPType(null);
+			this.setScContractOrPKPNo(null);
+			this.setScContractOrPKPName(null);
+			this.setScRequestQuoteNo(null);
+			this.setScSOAStatus(null);
+			this.setScSimpleQuoteType(null);
+			this.setScLOANo(null);
+			scProcureAllList = new ArrayList<SelectItem>();
+			scQuotationList = new ArrayList<SelectItem>();
+			scTenderList = new ArrayList<SelectItem>();
+			scRstrctdTndrList = new ArrayList<SelectItem>();
+			this.setCtContractNo(null);
+			this.setCtPhysicalContractNo(null);
+			this.setCtAgreement(null);
+			this.setCtStatus(null);
+			this.setCtStatusTwo(null);
+			this.setCtTerminationType(null);
+			this.setCtComplete(null);
+			this.setCtGroupOne(null);
+			this.setCtGroupTwo(null);
+			this.setCtGroupThree(null);
+			this.setCtProductService(null);
+			this.setCtLoanNo(null);
+			this.setCtLOAPhysicalNo(null);
+			this.setCtSubType(null);
+			this.setCtUserType(null);
+			this.setCtProcurementMode(null);
+			this.setCtCircularNo(null);
+			this.setCtCircularName(null);
+			this.setCtCircularType(null);
+			this.setCtCircularEffectiveFromDate(null);
+			this.setCtCircularEffectiveToDate(null);
+			this.setCtSupplierName(null);
+			ctSubTypeList = new ArrayList<SelectItem>();
+			this.setFlGroupOne(null);
+			this.setFlGroupTwo(null);
+			this.setFlGroupThree(null);
+			this.setFlGroupFour(null);
+			this.setFlGroupFive(null);
+			this.setFlGroupSix(null);
+			this.setFlGroupSeven(null);
+			this.setFlGroupEight(null);
+			this.setFlGroupNine(null);
+			this.setFlGroupTen(null);
+			this.setFlGroupEleven(null);
+			this.setFlGroupTwelve(null);
+			this.setFlGroupThirteen(null);
+			this.setFlGroupFourteen(null);
+			this.setFlGroupFifteen(null);
+			this.setFlGroupSixteen(null);
+			this.setFlGroupSeventeen(null);
+			this.setPpMinistry(null);
+			this.setPpPTJ(null);
+			this.setPpYear(null);
+			this.setMinistryName(null);
+			this.setPmServiceType(null);
+			this.setPmBusinessRegNo(null);
+			this.setPmStatus(null);
+			this.setPmFinancialOrgName(null);
+			this.setPmEpNo(null);
+			this.setPmOrgCategory(null);
+			this.setPmOrgType(null);
+			this.setPmOrgName(null);
+			this.setPmOrgCode(null);
+			this.setPmItemName(null);
+			this.setPmItemCode(null);
+			this.setPmCompanyName(null);
+			this.setPmIdentificationNo(null);
+			this.setPmUserName(null);
+			this.setPmRoleCode(null);
+			this.setPmContractNo(null);
+			this.setPmPhysicalContractNo(null);
+			this.setPmLOANo(null);
+			this.setPmPhysicalLOANo(null);
+			this.setPmZone(null);
+			this.setPmProfileStatus(null);
+			// changeReportType();
+			retrieveDates();
+			applicationStatusDateChange();
+			if (this.getModuleValue() != null) {
+				if ((!this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.CONTRACT_MANAGEMENT)
+						|| !this.getModuleValue().equalsIgnoreCase(
+								ModuleCodeConst.ORDER_FULFILLMENT) || !this
+						.getModuleValue().equalsIgnoreCase(
+								ModuleCodeConst.PROCUREMENT_PLAN))) {
+					checkEmptyValuesForLovs();
+				}}
+				
 		}
-		this.setSmSupplierType(null);
-		this.setSmRTReportType(null);
-		this.setSmSupplierName(null);
-		smMofRegistrationFeeList = new ArrayList<SelectItem>();
-		smProcessingFeeList = new ArrayList<SelectItem>();
-		smSoftCertificateFeeList = new ArrayList<SelectItem>();
-		this.setSmMofRegNo(null);
-		this.setSmRegistrationStatus(null);
-		this.setSmBusCompTypeRegistrationStatus(null);
-		this.registrationStatusListOfBusCompType = new ArrayList<SelectItem>();
-		this.smBusCompanyTypeList = new ArrayList<SelectItem>();
-		this.setSmBusPaidUpCapitalFrm(null);
-		this.setSmBusPaidUpCapitalTo(null);
-		this.setSmcategory(null);
-		this.setSmCode(null);
-		this.setSmBusCompanyType(null);
-		this.setSmMainCategory(null);
-		this.setSmSubCategory(null);
-		this.setSmSubCategoryDivision(null);
-		this.setSmApplicationStatus(null);
-		this.setSmPaymentType(null);
-		this.setSmApplicationType(null);
-		this.setSmZone(null);
-		this.setSmState(null);
-		this.setSmDistrict(null);
-		this.setSmSVOUser(null);
-		this.setSmReportType(null);
-		this.setSmProcessingType(null);
-		this.setSmReceiptNo(null);
-		this.setSmProcessingOfficerName(null);
-		this.setSmPaymentMethod(null);
-		this.setSmFromMonth(null);
-		this.setSmToMonth(null);
-		this.setSmCompanyName(null);
-		this.setSmPaymentTo(null);
-		this.setSmRegistrationType(null);
-		this.setSmCreatedFromYear(null);
-		this.setSmCreatedToYear(null);
-		this.setSmYearText(null);
-		this.setSmMofRegNoFrom(null);
-		this.setSmMofRegNoTo(null);
-		this.setSmPaidUpCapitalFrm(null);
-		this.setSmPaidUpCapitalTo(null);
-		this.setSmPaidUpCapitalNaccum(null);
-		this.setSmRole(null);
-		this.setSmEpNo(null);
-		this.setSmRegistrationNo(null);
-		this.setSmSupportingDocumentMode(null);
-		this.setSmPersonnelRole(null);
-		this.setSmSupportingDocumentStatus(null);
-		this.setSmIdentificationType(null);
-		this.setSmIdentificationNumber(null);
-		this.setSmCancellationBy(null);
-		this.setSmThresholdFromYear(null);
-		this.setSmThresholdToYear(null);
-		this.setSmRequestExpiryDate(null);
-		this.setSmUserName(null);
-		this.setSmProfileStatus(null);
-		this.setFlContractOrder(null);
-		this.setFlContractRequest(null);
-		this.setFlPurchaseOrderNo(null);
-		this.setScCreatedToYear(null);
-		this.setScCreatedToMonth(null);
-		this.setScCreatedFromYear(null);
-		this.setScCreatedFromMonth(null);
-		this.setScDeskOfficer(null);
-		this.setScPtj(null);
-		this.setScStatus(null);
-		this.setScPublishFromDate(null);
-		this.setScPublishToDate(null);
-		this.setScSoneCrtdFromDate(null);
-		this.setScSoneCrtdToDate(null);
-		this.setScRequisenerId(null);
-		this.setScSupplier(null);
-		this.setScLogin(null);
-		this.setScPIno(null);
-		this.setScSoneStatus(null);
-		this.setScPrcRptGroup(null);
-		this.setScPIDtlsPrcRptGroup(null);
-		this.setScProcurementType(null);
-		this.setScProcessRptQuotationNo(null);
-		this.setScCommonStatus(null);
-		this.setScPurchaseInDefaultStatus(null);
-		this.setScSimpleQuoteStatus(null);
-		this.setScRequestNoteStatus(null);
-		this.setScLAPRNPURCHDEFAULTGroup(null);
-		this.setScSimpleQuoteDtlGroup(null);
-		this.setScREQUESTNOTESUMMARYGroup(null);
-		this.setScPIDNo(null);
-		this.setScContractOrPKPType(null);
-		this.setScContractOrPKPNo(null);
-		this.setScContractOrPKPName(null);
-		this.setScRequestQuoteNo(null);
-		this.setScSOAStatus(null);
-		this.setScSimpleQuoteType(null);
-		this.setScLOANo(null);
-		scProcureAllList = new ArrayList<SelectItem>();
-		scQuotationList = new ArrayList<SelectItem>();
-		scTenderList = new ArrayList<SelectItem>();
-		scRstrctdTndrList = new ArrayList<SelectItem>();
-		this.setCtContractNo(null);
-		this.setCtPhysicalContractNo(null);
-		this.setCtAgreement(null);
-		this.setCtStatus(null);
-		this.setCtStatusTwo(null);
-		this.setCtTerminationType(null);
-		this.setCtComplete(null);
-		this.setCtGroupOne(null);
-		this.setCtGroupTwo(null);
-		this.setCtGroupThree(null);
-		this.setCtProductService(null);
-		this.setCtLoanNo(null);
-		this.setCtLOAPhysicalNo(null);
-		this.setCtSubType(null);
-		this.setCtUserType(null);
-		this.setCtProcurementMode(null);
-		this.setCtCircularNo(null);
-		this.setCtCircularName(null);
-		this.setCtCircularType(null);
-		this.setCtCircularEffectiveFromDate(null);
-		this.setCtCircularEffectiveToDate(null);
-		this.setCtSupplierName(null);
-		ctSubTypeList = new ArrayList<SelectItem>();
-		this.setFlGroupOne(null);
-		this.setFlGroupTwo(null);
-		this.setFlGroupThree(null);
-		this.setFlGroupFour(null);
-		this.setFlGroupFive(null);
-		this.setFlGroupSix(null);
-		this.setFlGroupSeven(null);
-		this.setFlGroupEight(null);
-		this.setFlGroupNine(null);
-		this.setFlGroupTen(null);
-		this.setFlGroupEleven(null);
-		this.setFlGroupTwelve(null);
-		this.setFlGroupThirteen(null);
-		this.setFlGroupFourteen(null);
-		this.setFlGroupFifteen(null);
-		this.setFlGroupSixteen(null);
-		this.setFlGroupSeventeen(null);
-		this.setPpMinistry(null);
-		this.setPpPTJ(null);
-		this.setPpYear(null);
-		this.setMinistryName(null);
-		this.setPmServiceType(null);
-		this.setPmBusinessRegNo(null);
-		this.setPmStatus(null);
-		this.setPmFinancialOrgName(null);
-		this.setPmEpNo(null);
-		this.setPmOrgCategory(null);
-		this.setPmOrgType(null);
-		this.setPmOrgName(null);
-		this.setPmOrgCode(null);
-		this.setPmItemName(null);
-		this.setPmItemCode(null);
-		this.setPmCompanyName(null);
-		this.setPmIdentificationNo(null);
-		this.setPmUserName(null);
-		this.setPmRoleCode(null);
-		this.setPmContractNo(null);
-		this.setPmPhysicalContractNo(null);
-		this.setPmLOANo(null);
-		this.setPmPhysicalLOANo(null);
-		this.setPmZone(null);
-		this.setPmProfileStatus(null);
-		// changeReportType();
-		retrieveDates();
-		applicationStatusDateChange();
+
 	}
 
 	/**
@@ -17002,9 +17033,9 @@ public class ReportBackingBean extends
 		}
 		return isByZonelist;
 	}
-	
+
 	public void getRgegistartionTypeDates() {
-		
+
 		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
 		this.getManagedBean().getRptGenBean()
 				.setSmBasicRegisteredDateView(false);
@@ -17039,12 +17070,191 @@ public class ReportBackingBean extends
 	}
 
 	/**
-	 * @param valuesEmpty the valuesEmpty to set
+	 * @param valuesEmpty
+	 *            the valuesEmpty to set
 	 */
 	public void setValuesEmpty(boolean valuesEmpty) {
 		this.valuesEmpty = valuesEmpty;
 	}
 
-	
-	
+	public void checkEmptyValuesForLovs() {
+		if (this.getModuleValue() != null) {
+			getDefaultValuesFromAndToDate(this.getManagedBean().getReportCode());
+			if ((this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.CONTRACT_MANAGEMENT) || this
+					.getModuleValue().equalsIgnoreCase(
+							ModuleCodeConst.ORDER_FULFILLMENT))) {
+				if (((this.getFromDate() != null) && (this.getFromDate()
+							.toString() != ReportConst.EMPTY_VAL))
+					|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))) {
+					/* if (checkDefaultValues()){ */
+					if (this.isValuesEmpty()) {
+						if (!this.isValuesEmpty()) {
+							this.setValuesEmpty(true);
+						} else if (!this.isValuesEmpty()) {
+							this.setValuesEmpty(true);
+						} else {
+							this.setValuesEmpty(false);
+						}
+					} else {
+						this.setValuesEmpty(false);
+					}
+				}
+			} else if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.PROCUREMENT_PLAN)) {
+				if (checkDefaultValuesForPP()) {
+					if (this.isValuesEmpty()) {
+						this.setValuesEmpty(false);
+					} else {
+						this.setValuesEmpty(true);
+					}
+				} else{
+					this.setValuesEmpty(true);
+				}
+			}
+		}
+	}
+
+	private boolean checkDefaultValuesForPP() {
+		return ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this
+						.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPegaWaiPengawal() != null) && (this
+						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonKumpulanPTJ() != null) && (this
+						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
+				|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL));
+	}
+
+	private boolean checkDefaultValuesForAllModules() {
+		return ((this.getCtContrMontrStatus() != null) && (this
+				.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtUserType() != null) && (this
+						.getCtUserType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtSubType() != null) && (this
+						.getCtSubType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtProductService() != null) && (this
+						.getCtProductService() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtLOAPhysicalNo() != null) && (this
+						.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this
+						.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPegaWaiPengawal() != null) && (this
+						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonKumpulanPTJ() != null) && (this
+						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPtj() != null) && (this
+						.getCommonPtj() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtContractNo() != null) && (this
+						.getCtContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtPhysicalContractNo() != null) && (this
+						.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtAgreement() != null) && (this
+						.getCtAgreement() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtStatus() != null) && (this.getCtStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtStatusTwo() != null) && (this
+						.getCtStatusTwo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtTerminationType() != null) && (this
+						.getCtTerminationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtComplete() != null) && (this
+						.getCtComplete() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularNo() != null) && (this
+						.getCtCircularNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularName() != null) && (this
+						.getCtCircularName() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularType() != null) && (this
+						.getCtCircularType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtSupplierName() != null) && (!this
+						.getCtSupplierName().equals(
+								ReportConst.CT_GROUP_VAL_ALL)))
+				|| ((this.getFromDate() != null) && (this.getFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularEffectiveFromDate() != null) && (this.getCtCircularEffectiveFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularEffectiveToDate() != null) && (this.getCtCircularEffectiveToDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtProcurementMode() != null) && (this
+						.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPtj() != null) && (this
+						.getCommonPtj() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractNo() != null) && (this
+						.getFlContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSst() != null) && (this.getFlSst() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlJabatan() != null) && (this
+						.getFlJabatan() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this
+						.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPegaWaiPengawal() != null) && (this
+						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonKumpulanPTJ() != null) && (this
+						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSupplier() != null) && (this
+						.getFlSupplier() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlStatus() != null) && (this.getFlStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDuration() != null) && (this
+						.getFlDuration() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlRecievingOfficer() != null) && (this
+						.getFlRecievingOfficer() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeliveryAddress() != null) && (this
+						.getFlDeliveryAddress() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlRecNoteNo() != null) && (this
+						.getFlRecNoteNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractType() != null) && (this
+						.getFlContractType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlRequisitioner() != null) && (this
+						.getFlRequisitioner() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlAcknowledgeOfficer() != null) && (this
+						.getFlAcknowledgeOfficer() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPaymentofficer() != null) && (this
+						.getFlPaymentofficer() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlMtoContract() != null) && (this
+						.getFlMtoContract() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlInvoiceNo() != null) && (this
+						.getFlInvoiceNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSupplierInvoiceNo() != null) && (this
+						.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPaymentAdviceNo() != null) && (this
+						.getFlPaymentAdviceNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeductionType() != null) && (this
+						.getFlDeductionType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlCrNo() != null) && (this.getFlCrNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlApproverName() != null) && (this
+						.getFlApproverName() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDocumentType() != null) && (this
+						.getFlDocumentType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlCriteria() != null) && (this
+						.getFlCriteria() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlScoring() != null) && (this
+						.getFlScoring() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPkpNo() != null) && (this.getFlPkpNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlStopInstructionNo() != null) && (this
+						.getFlStopInstructionNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeliveryOrderNo() != null) && (this
+						.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSupplierDeliveryOrderNo() != null) && (this
+						.getFlSupplierDeliveryOrderNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlItemCode() != null) && (this
+						.getFlItemCode() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPoAmount() != null) && (this
+						.getFlPoAmount() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPrNo() != null) && (this.getFlPrNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPmo() != null) && (this.getFlPmo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlItemName() != null) && (this
+						.getFlItemName() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlItmType() != null) && (this
+						.getFlItmType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFromDate() != null) && (this.getFromDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getToDate() != null) && (this.getToDate()
+						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractOrder() != null) && (this
+						.getFlContractOrder() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractRequest() != null) && (this
+						.getFlContractRequest() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPurchaseOrderNo() != null) && (this
+						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL));
+	}
+
 }

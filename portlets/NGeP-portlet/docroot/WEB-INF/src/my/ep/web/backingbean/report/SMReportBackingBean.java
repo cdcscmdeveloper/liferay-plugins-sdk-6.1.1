@@ -97,6 +97,7 @@ public class SMReportBackingBean extends
 	public void enableCriteriaVariablesByReportBySM(
 			ReportsGenerateBean rptGenBean, List<String> authoriztionList) {
 		log.info("SMReportBackingBean-enableCriteriaVariablesByReportBySM");
+		    rptGenBean.setGenerateButton(true);		
 		switch (getManagedBean().getReportValue().trim()) {
 
 		case ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL:			
@@ -174,6 +175,12 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmFromMonthView(true);
 			rptGenBean.setSmMandatoryCreatedFromYearView(true);
 			rptGenBean.setSmMandatoryYearFromReportTypeView(true);
+			/*if(rptGenBean.getStrLanguage().equals("en")){
+				rptGenBean.setSmMandatoryYearFromReportTypeViewForEN(true);
+			}else{
+				rptGenBean.setSmMandatoryYearFromReportTypeViewForMY(true);
+			}*/
+			
 			// rptGenBean.setSmMandatoryFromDateView(true);
 			// rptGenBean.setSmMandatoryDateView(true);
 			// rptGenBean.setSmMandatoryCreatedFromYearView(true);

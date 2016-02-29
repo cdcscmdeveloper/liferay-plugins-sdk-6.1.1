@@ -7,43 +7,202 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-
+<ac:lovPopup />
 	<div class="columnFlTableClass">
 		<table style="width: 100%;">
 			<tr>
 				<td width="100%"><h:panelGrid id="flReportCriteria" columns="4"
 						style="width:85%;">
-
-
-
+						
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flMinistryView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.ministry']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu id="flMinistry"
-								value="#{reportBackingBean.commonMinistry}"
-								style="margin-top:5px;width:300px;">
+							test="#{flReportBackingBean.managedBean.rptGenBean.commonLOVBasedRoles}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flMinistryView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel>
+											</td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><ac:lov id="lovMinistry"
+													lovId="PM_ORG_PROFILE_REPORT" size="44" update="@form"
+													headerText="#{lbl['lbl.rpt.ministry']}"
+													value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+													saveObject="reportBackingBean.managedBean.selectedMinistry"
+													conditionField="#{reportBackingBean.constructMinistryConditionFields()}" /></td>
+											<td><p:message id="lovMinistryMsg" for="lovMinistry"
+													display="icon" /></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flPegaWaiPengawalView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel
+													value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><ac:lov id="lovPegaWaiPengawal"
+													lovId="PM_ORG_PROFILE_REPORT" size="44" update="@form"
+													headerText="#{lbl['lbl.rpt.pegawaipengawal']}"
+													value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"
+													saveObject="reportBackingBean.managedBean.selectedPegwaiPengawal"
+													conditionField="#{reportBackingBean.constructPegwaiPengawalConditionFields()}" /></td>
+											<td><p:message id="lovPegaWaiPengawalMsg"
+													for="lovPegaWaiPengawal" display="icon" /></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flKumpulanPTJView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel
+													value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><ac:lov id="lovKumpulanPTJ"
+													lovId="PM_ORG_PROFILE_REPORT" size="44" update="@form"
+													headerText="#{lbl['lbl.rpt.kumpulan.ptj']}"
+													value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+													saveObject="reportBackingBean.managedBean.selectedKumpulanPTJ"
+													conditionField="#{reportBackingBean.constructKumpulanPTJConditionFields()}" /></td>
+											<td><p:message id="lovKumpulanPTJMsg"
+													for="lovKumpulanPTJ" display="icon" /></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
 
-								<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>
-								<p:ajax event="change"
-									listener="#{reportBackingBean.retrieveFMIPTJList}"
-									process="@this" partialSubmit="true" update="@all" />
-							</p:selectOneMenu>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flPtjView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><ac:lov id="lovPTJ" lovId="PM_ORG_PROFILE_REPORT"
+													size="44" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
+													postUpdateListener="reportBackingBean.roleCodeUsersSetup()"
+													value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+													saveObject="reportBackingBean.managedBean.selectedPTJ"
+													conditionField="#{reportBackingBean.constructPTJConditionFields()}" /></td>
+											<td><p:message id="lovPTJMsg" for="lovPTJ"
+													display="icon" /></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
 						</c:if>
 
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flPtjView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu id="flPtj"
-								value="#{reportBackingBean.commonPtj}"
-								style="margin-top:5px;width:300px;">
-
-								<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>
-								<p:ajax event="change"
-									listener="#{reportBackingBean.roleCodeUsersSetup()}"
-									partialSubmit="true" update="@form" />
-							</p:selectOneMenu>
+							test="#{flReportBackingBean.managedBean.rptGenBean.flTextBoxBasedRoles}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flMinistryView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:selectOneMenu style="width:300px;"
+													value="#{reportBackingBean.commonMinistry}">
+													<f:selectItems value="#{reportBackingBean.ministryList}" />
+												</p:selectOneMenu></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flPegaWaiPengawalView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel
+													value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:selectOneMenu style="width:300px;"
+													value="#{reportBackingBean.commonPegaWaiPengawal}">
+													<f:selectItems
+														value="#{reportBackingBean.pegaWaiPengawalList}" />
+												</p:selectOneMenu></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flKumpulanPTJView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel
+													value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column style="width:275px;">
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:selectOneMenu style="width:300px;"
+													value="#{reportBackingBean.commonKumpulanPTJ}">
+													<f:selectItems value="#{reportBackingBean.kumpulanPTJList}" />
+												</p:selectOneMenu></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flPtjView}">
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
+										</tr>
+									</table>
+								</p:column>
+								<p:column>
+									<table style="width: 100%;">
+										<tr style="width: 100%;">
+											<td><p:selectOneMenu style="width:300px;"
+													value="#{reportBackingBean.commonPtj}">
+													<f:selectItems value="#{reportBackingBean.ptjList}" />
+												</p:selectOneMenu></td>
+										</tr>
+									</table>
+								</p:column>
+							</c:if>
 						</c:if>
 
 						<c:if
@@ -82,7 +241,7 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
-						
+
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flPhysicalContractNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.physicalcontractno']}"
@@ -93,7 +252,7 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
-						
+
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flLoaPhysicalNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.loaphysicalno']}"
@@ -104,7 +263,7 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
-						
+
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flContractReqView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.flContractRequest']}"
@@ -115,7 +274,7 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
-						
+
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flSstView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.sstScreen']}"
@@ -907,7 +1066,7 @@
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 									itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
-							<!-- 	<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+								<!-- 	<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem> -->
@@ -1925,7 +2084,8 @@
 										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
 									<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.ackofficername']}"
 										itemValue="#{lbl['lbl.rpt.ackofficername']}"></f:selectItem>
-									 --><f:selectItem
+									 -->
+									<f:selectItem
 										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
 									<p:ajax event="change" partialSubmit="true"
@@ -2169,7 +2329,8 @@
 										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
 									<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.requistioner']}"
 										itemValue="#{lbl['lbl.rpt.requistioner']}"></f:selectItem>
-									 --><f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+									 -->
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
 										itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
 									<p:ajax event="change" partialSubmit="true"
 										update="@([id$=Msg])" />
@@ -2635,7 +2796,7 @@
 								<f:selectItem
 									itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
 									itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
-							<!-- 	<f:selectItem itemLabel="#{lbl['lbl.rpt.cancelledby']}"
+								<!-- 	<f:selectItem itemLabel="#{lbl['lbl.rpt.cancelledby']}"
 									itemValue="#{lbl['lbl.rpt.cancelledby']}"></f:selectItem> -->
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />

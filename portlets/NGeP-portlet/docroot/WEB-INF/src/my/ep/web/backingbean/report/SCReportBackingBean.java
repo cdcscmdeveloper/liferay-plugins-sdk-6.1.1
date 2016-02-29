@@ -83,6 +83,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	 */
 	public void enableCriteriaVariablesByReportBySC(ReportsGenerateBean rptGenBean,	List<String> authoriztionList,List<SelectItem> approverNayakTarafList){
 			//rptGenBean.retriveStatus();
+		     rptGenBean.setGenerateButton(true);
 		switch (getManagedBean().getReportValue().trim()) {
 		 	case ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL:
 		 		rptGenBean.setScQuotationNoView(true);	

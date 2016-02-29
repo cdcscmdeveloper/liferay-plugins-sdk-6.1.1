@@ -37,6 +37,7 @@ public class PMReportBackingBean extends
 	 */
 	public void enableCriteriaVariablesByReportByPM(
 			ReportsGenerateBean rptGenBean, List<String> authoriztionList) {
+		    rptGenBean.setGenerateButton(true);
 		switch (getManagedBean().getReportValue().trim()) {
 
 		case ReportConst.PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL:
