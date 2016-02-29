@@ -298,7 +298,6 @@ public class OrganisationBackingBean extends
 			
 			PmParameter orgTypeParameter = 
 					ParameterHelper.getInstance().getPmParameterById(Long.valueOf(oSearchBean.getOrgTypeCode()));
-			Set<Long> orgProfileSet = null;
 			if(orgTypeParameter != null && orgProfile != null
 					&& ParameterTypeConst.ORGANISATION_TYPES.equals(orgTypeParameter.getParameterType())){
 			   if(OrganizationType.MINISTRY.value().equals(orgTypeParameter.getParameterCode())){
@@ -966,7 +965,7 @@ public class OrganisationBackingBean extends
 				}
 				
 			}
-			//For Statutory Body, GLC, State Govt and Local Authority
+			//For Ministry, Statutory Body, GLC, State Govt and Local Authority 
 			if (getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.STATE_GOVERNMENT.value())
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
@@ -976,7 +975,9 @@ public class OrganisationBackingBean extends
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.LOCAL_AUTHORITY.value())
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())) {
+							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.MINISTRY.value())) {
 				validateUniqueOrgCode(orgProfile,getManagedBean().getOrgType());
 				validateUniqueOrgName(orgProfile,getManagedBean().getOrgType());
 			}
@@ -2413,17 +2414,21 @@ public class OrganisationBackingBean extends
 		IOrgProfileSO orgSO  = null;
 		try{			
 			ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();			
-			List<String> otherOrgTypes = new ArrayList<String>();
-			otherOrgTypes.add(OrganizationType.STATE_GOVERNMENT.value());
-			otherOrgTypes.add(OrganizationType.LOCAL_AUTHORITY.value());
-			otherOrgTypes.add(OrganizationType.GOVERNMENT_LINK_COMPANIES.value());
-			otherOrgTypes.add(OrganizationType.STATUTORY_BODIES.value());
-			otherOrgTypes.add(OrganizationType.STATUTORY_BODIES_STATE.value());
+			List<String> searchOrgTypes = new ArrayList<String>();
+			if(OrganizationType.MINISTRY.value().equals(orgType)){
+				searchOrgTypes.add(OrganizationType.MINISTRY.value());//added ministry
+			}else{
+				searchOrgTypes.add(OrganizationType.STATE_GOVERNMENT.value());
+				searchOrgTypes.add(OrganizationType.LOCAL_AUTHORITY.value());
+				searchOrgTypes.add(OrganizationType.GOVERNMENT_LINK_COMPANIES.value());
+				searchOrgTypes.add(OrganizationType.STATUTORY_BODIES.value());
+				searchOrgTypes.add(OrganizationType.STATUTORY_BODIES_STATE.value());
+			}	
 			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("orgTypeCode.parameterCode",
 							SearchOperator.OPERATOR_IN.value(),
-							otherOrgTypes));
+							searchOrgTypes));
 			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgValidity.orgName",
