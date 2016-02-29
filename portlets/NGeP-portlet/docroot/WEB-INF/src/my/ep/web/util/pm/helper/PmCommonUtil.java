@@ -1778,4 +1778,37 @@ public class PmCommonUtil {
 	}
 	
 	
+	
+	/**
+	 * retrieve pmUser by idNo
+	 * 
+	 * @param idNo
+	 * @return PmUser
+	 */
+	public static PmUser retrieveUserByIdNo(String idNo) {
+		PmUser pmUser = new PmUser();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setIdentificationNo(idNo);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			resDTO = userSO
+					.retriveUserProfileByIdNo(reqDTO);
+			
+
+			if (resDTO.isSuccessful()) {
+				pmUser = resDTO.getPmUser();
+			}
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770053, new String[] {
+					idNo.toString(), e.getMessage() });
+		} finally {
+			userSO = null;
+		}
+		return pmUser;
+	}
+	
 }
