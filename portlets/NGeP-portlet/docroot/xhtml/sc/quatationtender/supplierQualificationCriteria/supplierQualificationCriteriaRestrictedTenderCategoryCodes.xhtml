@@ -49,13 +49,13 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				styleClass="BtnSpacing" process="@this, openPnlId"
+				styleClass="BtnSpacing" process="@this, restrictedPnlId"
 				partialSubmit="true" update="@([id$=catCodePopup])"
 				oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				styleClass="BtnSpacing" process="@this, openPnlId"
+				styleClass="BtnSpacing" process="@this, restrictedPnlId"
 				partialSubmit="true"
 				oncomplete="supplierOpencategoryDeletePopUp.show();"
 				update="@([id$=#{supplierOpencategoryDeleteId}])"
@@ -68,7 +68,7 @@
 			okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes"
 			width="33%" height="100" title="#{lbl['lbl.sc.category.code']}"
 			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
-			update="@([id$=openPnlId])" />
+			update="@([id$=restrictedPnlId])" />
 		<ac:categoryCodePopup
 			okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
 			update="@([id$=restrictedPnlId])" />
