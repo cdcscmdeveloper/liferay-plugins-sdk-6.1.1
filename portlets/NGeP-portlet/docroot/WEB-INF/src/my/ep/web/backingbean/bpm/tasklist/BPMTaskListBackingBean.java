@@ -23,6 +23,7 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.PPProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.constants.SMProcessNameConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -77,8 +78,9 @@ public class BPMTaskListBackingBean extends
 		// Procurement Plan - End
 
 		// Supplier Management - Start
-		temp.put("Disciplinary Action", "disciplinary-action");
+		//temp.put("Disciplinary Action", "disciplinary-action");
 		temp.put("Site Visit Manage", "site-visit");
+		temp.put("MOF Supplier Site Visit", "mof-application");
 		temp.put("MOF Supplier Registration", "mof-application");
 		temp.put("MOF Account Maintain", "mof-application");
 		temp.put("Start MOF Supplier Registration", "mof-application");

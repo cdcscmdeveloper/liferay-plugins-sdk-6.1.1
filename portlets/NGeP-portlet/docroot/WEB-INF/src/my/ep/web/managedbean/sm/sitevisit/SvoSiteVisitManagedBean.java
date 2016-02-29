@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -37,7 +35,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private long appId;
 	private String[] bpmAction;
 	private String taskId;
-	private SMSiteVisitDataType bpmPojo;
+	private Object bpmPojo;
 	private int activeIndex;
 	private SmSvTask smSvTask;
 	private SmSvAddress selectedSmSvAddress;
@@ -113,11 +111,11 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmAppl smAppl;
 	private Map<String, List<SmSvTask>> templateTaskMap;
 
-	public SMSiteVisitDataType getBpmPojo() {
+	public Object getBpmPojo() {
 		return bpmPojo;
 	}
 
-	public void setBpmPojo(SMSiteVisitDataType bpmPojo) {
+	public void setBpmPojo(Object bpmPojo) {
 		this.bpmPojo = bpmPojo;
 	}
 
