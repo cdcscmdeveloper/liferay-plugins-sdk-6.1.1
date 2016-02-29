@@ -75,13 +75,13 @@
 				<td colspan="3"><p:inputTextarea id="title1"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_TITLE)}"
 						label="#{lbl['lbl.sc.title']}" required="#{isRequire}"
-						value="#{scQt.qtTitle}" cols="110" rows="3"
+						value="#{scQt.qtTitle}" cols="130" rows="3"
 						valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}"
-						style=" margin-bottom:5px; width: 93%; " maxlength="1000">
+						style=" margin-bottom:5px;" maxlength="1000">
 						<f:ajax></f:ajax>
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
 			</tr>
-
+			<c:if test="#{scQt.brandNew}">
 			<tr>
 				<td style="width: 200px;" valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.ptj']}" /> <p:outputLabel value="*"
@@ -90,9 +90,11 @@
 						lovId="PM_ORG_PROFILE_AUTH_TYPE" headerText="#{lbl['lbl.sc.ptj']}"
 						saveObject="scQt.pmOrgProfile"
 						value="#{scQt.pmOrgProfile.orgName}"
-						size="115" readonly="true" conditionField="recordStatus^1" /> <p:message
+						size="125" readonly="true" 
+						conditionField="recordStatus^1" /> <p:message
 						id="ptjMsg" for="ptjProfAuthId" display="icon" /></td>
 			</tr>
+			</c:if>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td>
@@ -208,11 +210,13 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 				</td>
 				<td><ui:fragment
 						rendered="#{createQtBB.isOneTierThresHold(scQt.estimatedAmount)}">
-						<p:selectOneRadio value="#{scQt.evaluationType}">
+						<p:selectOneRadio value="#{scQt.evaluationType}" required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 							<f:selectItems
 								value="#{qTDetailBB.managedBean.evaluationTypeItem}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
@@ -224,7 +228,8 @@
 							<tr>
 								<td><p:selectOneRadio id="evalType"
 										label=" #{lbl['lbl.sc.evaluation.type']}"
-										value="#{scQt.evaluationType}">
+										value="#{scQt.evaluationType}"
+										required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 										<f:selectItems
 											value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
 									</p:selectOneRadio></td>
@@ -239,7 +244,8 @@
 				<td><p:inputText id="proposalId" size="29"
 						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
 						value="#{scQt.maxProposal}"
-						style="text-align:right;margin-bottom: 5px;">
+						style="text-align:right;margin-bottom: 5px;"
+						disabled="true">
 					</p:inputText></td>
 				<td />
 				<td />
