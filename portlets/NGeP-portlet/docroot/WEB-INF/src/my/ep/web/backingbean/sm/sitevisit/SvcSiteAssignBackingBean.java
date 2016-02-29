@@ -79,8 +79,6 @@ public class SvcSiteAssignBackingBean extends
 		setSiteVisitAddressesFacilityName();
 		getAllCategoryCode();
 		getWorkFlowInfo(getManagedBean().getAppId());
-		
-		
 	}
 	
 	
@@ -92,6 +90,7 @@ public class SvcSiteAssignBackingBean extends
 	public String submitSiteVisitAssignment(String action){
 		log.info("----------------------submitSiteVisitAssignment start----------------");
 		
+
 		//try{
 			SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 			ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
@@ -111,11 +110,21 @@ public class SvcSiteAssignBackingBean extends
 				}
 			}
 			
+			List<String> bpmSupplierList = new ArrayList<String>();
+			PmUser user = SmCommonUtil.getUserByUserId(getManagedBean().getSmAppl().getCreatedBy());
+			if(user == null){
+				throw new EpException("Supplier List cannot be null");
+			}
+			log.info("Supplier Login ID = " + user.getLoginId());
+			bpmSupplierList.add(user.getLoginId());
+			
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setBpmPojo(getManagedBean().getBpmPojo());
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setToken(token);
+			reqDTO.setBpmSupplierList(bpmSupplierList);
+
 			
 			System.out.println("<<<<<reqDTO.setSmAppl>>>>" + reqDTO.getSmAppl().getApplNo());
 			System.out.println("<<<<<reqDTO.setSmAppl>>>>" + reqDTO.getSmAppl().getApplId());
