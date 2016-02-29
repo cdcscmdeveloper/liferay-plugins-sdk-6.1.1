@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
 public class BPMTaskListManagedBean extends BaseManagedBean {
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
-	private Map bpmMap = new HashMap();
+	private static Map bpmMap = null;
 	private String processName;
 	private String[] action;
 
@@ -91,14 +91,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.taskList = taskList;
 	}
 
-	public Map getBpmMap() {
-		return bpmMap;
-	}
-
-	public void setBpmMap(Map bpmMap) {
-		this.bpmMap = bpmMap;
-	}
-
+	
 	public String getProcessName() {
 		return processName;
 	}
@@ -511,7 +504,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setViewBy(getViewByGroup());
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
 				reqDTO.setIsClaimed(false);
-				
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
@@ -668,6 +660,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setSelectedStatusDescAdvance(PmStatusDesc selectedStatusDescAdvance) {
 		this.selectedStatusDescAdvance = selectedStatusDescAdvance;
+	}
+
+	public static Map getBpmMap() {
+
+		return bpmMap;
+	}
+
+	public static void setBpmMap(Map bpmMap) {
+		BPMTaskListManagedBean.bpmMap = bpmMap;
 	}
 	
 	
