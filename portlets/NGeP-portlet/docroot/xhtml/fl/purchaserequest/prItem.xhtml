@@ -111,7 +111,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true" 
-					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
+					update="deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					action="#{purchaseRequestBackingBean.removeAddRow()}"
 					oncomplete="delAddrDlg.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
