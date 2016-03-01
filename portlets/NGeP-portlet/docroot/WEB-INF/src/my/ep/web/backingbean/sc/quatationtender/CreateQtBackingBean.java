@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -278,7 +279,7 @@ public class CreateQtBackingBean extends
 			qtStatus.setScQt(scQt);
 			qtStatus.setPmStatus(status);
 			qtStatus.setCurrent(Boolean.TRUE);
-			qtStatus.setDocType(QTConstants.DOCTYPE_QT);
+			qtStatus.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
 			qtStatuses.add(qtStatus);
 			scQt.setScQtStatus(qtStatuses);
@@ -396,19 +397,19 @@ public class CreateQtBackingBean extends
  * @param scQt
  *            (ScQt scQt)
  */
-public void setProcurementMode(ScQt scQt) {
+public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 	IParameterSO parameterSo = null;
 	try {
 		parameterSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 
-		boolean isQuotationThresHold = isQuotationThresHold(scQt
-				.getEstimatedAmount());
+		BigDecimal estimatedAmount = scQt.getEstimatedAmount();
+		boolean isQuotationThresHold = isQuotationThresHold(amount);
 		ScQtSupplierCriteria scQtSupplierCriteria = scQt
 				.getScQtSupplierCriteria();
 
-		if (null == scQt.getEstimatedAmount()
-				|| scQt.getEstimatedAmount().intValue() <= 20000) {
+		if (null == amount
+				|| isPurchaseRequestThresHold(amount)) {
 			throw new EpException(MessageConst.ERROR_760024,
 					new String[] { "20000" });
 		}
@@ -428,23 +429,25 @@ public void setProcurementMode(ScQt scQt) {
 				.retrieveParameterByTypeAndCode(parameterReqDTO);
 		scQt.setProcurementMode(parameterResDTO.getPmParameter());
 
-		// QT Type
-		scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+		if (estimatedAmount == null) {
+			// QT Type
+			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);	
+			
+			// Open For
+			if (isQuotationThresHold
+					&& isOpenForBumiputraThresHold(amount)) {
+				scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+			} else {
+				scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+			}
 
-		// Open For
-		if (isQuotationThresHold
-				&& isOpenForBumiputraThresHold(scQt.getEstimatedAmount())) {
-			scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
-		} else {
-			scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-		}
+			// Evaluation Type
+			if (isQuotationThresHold
+					&& isOneTierThresHold(amount)) {
+				scQt.setEvaluationType(null);
 
-		// Evaluation Type
-		if (isQuotationThresHold
-				&& isOneTierThresHold(scQt.getEstimatedAmount())) {
-			scQt.setEvaluationType(null);
-
-			populateEvaluationTypes(scQt);
+				populateEvaluationTypes(scQt, amount);
+			}			
 		}
 
 		// All State
@@ -490,9 +493,9 @@ public void setProcurementMode(ScQt scQt) {
 	 * @param scQt
 	 *            (ScQt scQt)
 	 */
-	public void populateEvaluationTypes(ScQt scQt) {
+	public void populateEvaluationTypes(ScQt scQt, BigDecimal estimatedAmount) {
 		
-		if (isOneTierThresHold(scQt.getEstimatedAmount())) {
+		if (isOneTierThresHold(estimatedAmount)) {
 
 			List<SelectItem> itemList = new ArrayList<SelectItem>();
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SC_EVALUATION_TYPE);
