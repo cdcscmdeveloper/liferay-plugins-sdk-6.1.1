@@ -15,7 +15,7 @@
 		</p:blockUI>
 		<p:messages id="messages" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" escape="false" />
-		<p:panel
+		<p:panel id="cancelMofPanelId"
 			header="#{lbl['lbl.sm.mof.reg.cancel']} - #{backingBean.managedBean.smAppl.applNo}">
 			<br />
 			<table style="width: 100%; float: center">
@@ -45,9 +45,9 @@
 							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" /></td>
 				</tr>
 			</table>
-			<div align="right" style="width: 99%" class="button-wrapper">
+			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					action="#{backingBean.onDisplayConfirmCanceMofRegistration}" update="@([id$=Msg])" />
+					action="#{backingBean.onDisplayConfirmCanceMofRegistration}" update="@([id$=Msg])" id="submitBtnId"/>
 			</div>
 		</p:panel>
 		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
