@@ -494,7 +494,7 @@ public class ApprovalBackingBean extends
 		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagFinalization());
-			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_PROCUREMENT_BOARD;
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes);
 
@@ -557,10 +557,14 @@ public class ApprovalBackingBean extends
 		this.getManagedBean().setAction(action);
 		logger.info("Task Name : " + this.getManagedBean().getTaskName());
 		if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
+			boolean isRevised = false;
+			boolean isApproved = false;
+			boolean isRejected = false;
 			for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
-				if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
-						.equalsIgnoreCase(approvalRequest.getApproverAction()
-								.getParameterCode())) {
+				String approverAction = approvalRequest.getApproverAction().getParameterCode();
+				
+				if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED.equalsIgnoreCase(approverAction) ||
+						ParameterConst.RESTR_APPROVAL_DECISION_TYPE_REVISE.equalsIgnoreCase(approverAction)) {
 					List<ScQtApprovalRemark> remarks = this.getManagedBean()
 							.getScQtApproval().getScQtApprovalRemarks();
 					if (null != remarks) {
@@ -572,17 +576,25 @@ public class ApprovalBackingBean extends
 							}
 						}
 					}
-					RequestContext.getCurrentInstance().execute("reviceApprovalDlg.show()");
-				} else if (ParameterConst.APPROVAL_DECISION_TYPE_APPROVED
-						.equalsIgnoreCase(approvalRequest.getApproverAction()
-								.getParameterCode())) {
-					RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-				} else if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
-						.equalsIgnoreCase(approvalRequest.getApproverAction()
-								.getParameterCode())) {
-					RequestContext.getCurrentInstance().execute("rejectApprovalDlg.show()");
+					isRevised = true;
+					
+				} else if (ParameterConst.APPROVAL_DECISION_TYPE_APPROVED.equalsIgnoreCase(approverAction) ||
+						ParameterConst.RESTR_APPROVAL_DECISION_TYPE_AGREED.equalsIgnoreCase(approverAction) ||
+						ParameterConst.RESTR_APPROVAL_DECISION_TYPE_PROCEED.equalsIgnoreCase(approverAction)) {
+					isApproved = true;
+					
+				} else if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED.equalsIgnoreCase(approverAction)) {
+					isRejected = true;
 				}
 			}
+			
+			if (isRevised) {
+				RequestContext.getCurrentInstance().execute("reviceApprovalDlg.show()");
+			} else if (isApproved) {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else if (isRejected) {
+				RequestContext.getCurrentInstance().execute("rejectApprovalDlg.show()");
+			} 
 		} else {
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				List<ScQtApprovalRemark> remarks = this.getManagedBean()
