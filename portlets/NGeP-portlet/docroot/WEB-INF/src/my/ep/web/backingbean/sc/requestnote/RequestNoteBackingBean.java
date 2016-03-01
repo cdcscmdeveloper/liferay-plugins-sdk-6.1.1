@@ -439,7 +439,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				ScRequestNoteRemark.class));
 
 		initializeApproverGroup();
-//		initialInformation(requestNote);
 	}
 	
 	/**
@@ -955,7 +954,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				ScRequestNoteRemark.class));
 
 		initializeApproverGroup();
-       //initialInformation(requestNote);
 	}
 
 	/**
@@ -1753,7 +1751,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		initializeApproverGroup();
 		
-       //initialInformation(requestNote);
 		getManagedBean().setRequestNote(requestNote);
 	
 		try {
@@ -2183,43 +2180,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return user;
 	}
 	
-	 /**
- 	  * gets approver pick list in request note
- 	  * 
- 	  * @param requestNote the request note
- 	  */
- 	public void initialInformation(ScRequestNote requestNote){
-		 /*   DualListModel<PmUser>	approvalUsers;
-			UserReqDTO userReqDto = new UserReqDTO();
-			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
-			
-			if(requestNote.getPmOrgProfile() != null){
-			   userReqDto.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
-			}
-			
-			UserResDTO userResDTO = getUserSO().retrieveUserListByRole(userReqDto);*/
-			//List<PmUser> availableApprover	=	userResDTO.getUserList();
-			//List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
-			
-			/*if ( requestNote != null && requestNote.getApprover()().size() > 0) {
-			   for (int i = 0; i < requestNote.getApprovalUsers().size(); i++) {
-				    selectedApprover.add(requestNote.getApprovalUsers().get(i).getPmUser());
-				    for (int j = 0; j < availableApprover.size(); j++) {
-					    if (requestNote.getApprovalUsers().get(i).getPmUser().getUserId()
-							.equals(availableApprover.get(j).getUserId())) {
-						availableApprover.remove(availableApprover.get(j));
-					}
-				}
-			}
-		    approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
-			getManagedBean().setApprovalUsers(approvalUsers);
-			} else {
-				approvalUsers = new DualListModel<PmUser>(availableApprover, selectedApprover);
-				getManagedBean().setApprovalUsers(approvalUsers);
-			}*/
-	   }		
-	
-	
 	/**
 	 * Checks if is supplier user.
 	 *
@@ -2280,8 +2240,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 					// request Note Items
 					requestNoteItems.add(requestItem);
-					//call initialInformation &  fulfilmentTypeEvent methods based on ptj
-					//initialInformation(scRequestNoteDtl.getScRequestNote());
 					//fulfilmentTypeEvent(scRequestNoteDtl);
 				}
 			}
