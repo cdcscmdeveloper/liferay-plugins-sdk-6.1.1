@@ -1411,6 +1411,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * Check if one tier threshold
+	 * 
+	 * @param estimatedAmount
+	 * 		the estimated amount
+	 * @return	the indicator is one tier threshold
+	 */
 	public boolean isOneTierThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
@@ -1428,6 +1435,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * Check if bumiputra threshold
+	 * 
+	 * @param estimatedAmount
+	 * 		the estimated amount
+	 * @return	the indicator is bumiputra threshold
+	 */
 	public boolean isOpenForBumiputraThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
@@ -1458,6 +1472,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * Check if quotation threshold
+	 * 
+	 * @param estimatedAmount
+	 * 		the estimated amount
+	 * @return	the indicator is quotation threshold
+	 */
 	public boolean isQuotationThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
@@ -1477,6 +1498,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 
 			return true;
+
+		} finally {
+			ruleSO = null;
+		}
+	}
+	
+	/**
+	 * Check if purchase request threshold
+	 * 
+	 * @param estimatedAmount
+	 * 		the estimated amount
+	 * @return	the indicator is purchase request threshold
+	 */
+	public boolean isPurchaseRequestThresHold(BigDecimal estimatedAmount) {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
+			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
+			return ruleSO.compareAValueWithRuleTypeValues(reqDTO)
+					.isCompareValueResult();
 
 		} finally {
 			ruleSO = null;
@@ -2095,23 +2140,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 	}
 	
-	protected boolean isQTStatusPublished(Long currentStatusId) {
+	public boolean isQTStatusPublished(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
 	}
 	
-	protected boolean isQTStatusGreaterThanOrEquals(Long currentStatusId, Long fromStatusId) {
+	public boolean isQTStatusGreaterThanOrEquals(Long currentStatusId, Long fromStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		
 		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
 	}
 	
-	protected boolean isQTStatusGreaterThan(Long currentStatusId, Long fromStatusId) {
+	public boolean isQTStatusGreaterThan(Long currentStatusId, Long fromStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		
 		return orderedStatuses.indexOf(currentStatusId) > orderedStatuses.indexOf(fromStatusId);
 	}
 	
-	protected boolean isQTStatusInBetween(Long currentStatusId, Long fromStatusId, Long toStatusId) {
+	public boolean isQTStatusInBetween(Long currentStatusId, Long fromStatusId, Long toStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		orderedStatuses = orderedStatuses.subList(
 				orderedStatuses.indexOf(fromStatusId), 
