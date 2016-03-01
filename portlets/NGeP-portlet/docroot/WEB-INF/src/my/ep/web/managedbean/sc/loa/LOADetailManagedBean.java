@@ -264,6 +264,12 @@ public class LOADetailManagedBean extends BaseManagedBean {
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
     
+    /** The temp loa no. */
+    private String tempLoaNo;
+    
+    /** The temp file path. */
+    private String tempFilePath;
+    
     /**
      * Gets the spki backing bean.
      *
@@ -1490,4 +1496,33 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public void setTrackingDairyView(boolean trackingDairyView) {
 		this.trackingDairyView = trackingDairyView;
 	}
+
+	/**
+	 * @return the tempLoaNo
+	 */
+	public String getTempLoaNo() {
+		return tempLoaNo;
+	}
+
+	/**
+	 * @param tempLoaNo the tempLoaNo to set
+	 */
+	public void setTempLoaNo(String tempLoaNo) {
+		this.tempLoaNo = tempLoaNo;
+	}
+
+	/**
+	 * @return the tempFilePath
+	 */
+	public String getTempFilePath() {
+		return tempFilePath;
+	}
+
+	/**
+	 * @param tempFilePath the tempFilePath to set
+	 */
+	public void setTempFilePath(String tempFilePath) {
+		this.tempFilePath = tempFilePath;
+	}
+	
 }
