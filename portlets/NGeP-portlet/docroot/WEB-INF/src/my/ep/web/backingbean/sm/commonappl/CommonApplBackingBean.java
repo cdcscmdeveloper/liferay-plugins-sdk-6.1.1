@@ -84,6 +84,7 @@ public class CommonApplBackingBean extends
 		
 		if (isRedirectToViewOnlyApplication(isClaim, resDTO)) {
 			ViewApplHistoryBackingBean backingBean = new ViewApplHistoryBackingBean();
+			backingBean.getManagedBean().setTaskId(taskId);
 			backingBean.viewUnClaimTask(resDTO.getDocNumber());
 			SmCommonUtil
 					.redirectToPage(
@@ -114,6 +115,7 @@ public class CommonApplBackingBean extends
 			sdoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			sdoBB.getManagedBean().setTaskId(taskId);
 			sdoBB.getManagedBean().setBpmPojo(bpmObj);
+			sdoBB.getManagedBean().setClaimTask(isClaim);
 			sdoBB.viewSupportingDocument();
 
 			FacesContext fc = FacesContext.getCurrentInstance();

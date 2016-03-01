@@ -196,6 +196,14 @@ public class SmApplicationBackingBean extends
 				+ applicationType);
 		SmApplicationUtil.setNavigationForApplTnCPage(applicationType);
 	}
+	
+	/**
+	 * Claim bpm task
+	 */
+	public void onClickClaimButton(){
+		claimBpmTask();
+		getManagedBean().setClaimTask(true);
+	}
 
 	/**
 	 * Pre-render re-submission questionnaire page.

@@ -270,6 +270,48 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			return false;
 		}
 	}
+	
+	public void claimBpmTask(){
+		try{
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+
+			String taskId = FacesContext.getCurrentInstance().getExternalContext()
+					.getRequestParameterMap().get("taskId");
+
+			FacesScopes face = new FacesScopes();
+			Object token = face.getBPMAuthenticationCtxToken();
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setTaskId(taskId);
+			reqDTO.setCtxToken(token);
+			bpmSO.claimTask(reqDTO);
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
+		}
+	}
+	
+	public void releaseBpmTask()  {
+		System.out.println("**********releaseTask");
+		try{
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+
+			String taskId = FacesContext.getCurrentInstance().getExternalContext()
+					.getRequestParameterMap().get("taskId");
+
+			FacesScopes face = new FacesScopes();
+			Object token = face.getBPMAuthenticationCtxToken();
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setTaskId(taskId);
+			reqDTO.setCtxToken(token);
+			bpmSO.releaseTask(reqDTO);
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
+		}
+
+	}
 
 	/*
 	 * protected <RETURN_CLASS extends BaseEntity> List<RETURN_CLASS>
