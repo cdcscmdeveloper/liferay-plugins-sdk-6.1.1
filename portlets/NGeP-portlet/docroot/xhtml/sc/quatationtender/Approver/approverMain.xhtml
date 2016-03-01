@@ -71,7 +71,8 @@
 		</c:if>
 
 		<c:if
-			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryFinalizationCommittee}">
+			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryFinalizationCommittee or
+				approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryProcurementBoard}">
 			<ui:include src="requestPTJdetails.xhtml" />
 			<ui:include src="FinalaizationCommitteeApproval.xhtml" />
 			<ui:include src="approveremarksdetails.xhtml" />
