@@ -196,11 +196,11 @@ public class SmApplicationBackingBean extends
 				+ applicationType);
 		SmApplicationUtil.setNavigationForApplTnCPage(applicationType);
 	}
-	
+
 	/**
 	 * Claim bpm task
 	 */
-	public void onClickClaimButton(){
+	public void onClickClaimButton() {
 		claimBpmTask();
 		getManagedBean().setClaimTask(true);
 	}
@@ -4778,7 +4778,7 @@ public class SmApplicationBackingBean extends
 	public boolean disableEpRoleDropDown(SmPersonnel smPersonnel) {
 		boolean retVal = false;
 		SmPersonnel prevPersonnel = getPrevApprovedPersonnel(smPersonnel);
-		if (StringUtils.isNotBlank(smPersonnel.getEpRole())
+		if (!StringUtils.isBlank(smPersonnel.getEpRole())
 				&& (smPersonnel.getEpRole().equals(
 						RoleCode.MOF_SUPPLIER_ADMIN.value())
 						|| smPersonnel.getEpRole().equals(
@@ -4787,15 +4787,17 @@ public class SmApplicationBackingBean extends
 								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
 			retVal = true;
 		} else if (prevPersonnel != null
-				&& StringUtils.isNotBlank(prevPersonnel.getEpRole())
+				&& !StringUtils.isBlank(prevPersonnel.getEpRole())
 				&& ((prevPersonnel.getEpRole().equals(
 						RoleCode.MOF_SUPPLIER_USER.value()) || prevPersonnel
 						.getEpRole().equals(RoleCode.FL_USER.value())) && prevPersonnel
 						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
 				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 			retVal = true;
-		} else if (!retVal && prevPersonnel != null
-				&& !prevPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
+		} else if (!retVal
+				&& prevPersonnel != null
+				&& !(prevPersonnel.getEpRole() != null && prevPersonnel
+						.getEpRole().equals(RoleCode.CM_USER.value()))) {
 			retVal = true;
 		}
 		return retVal;
@@ -9752,7 +9754,7 @@ public class SmApplicationBackingBean extends
 		SmPersonnel retVal = null;
 
 		if (currPersonnel != null
-				&& StringUtils.isNotBlank(currPersonnel.getIdentificationNo())
+				&& !StringUtils.isBlank(currPersonnel.getIdentificationNo())
 				&& prevPersonnels != null && !prevPersonnels.isEmpty()) {
 			for (SmPersonnel prevPersonnel : prevPersonnels) {
 				if (prevPersonnel.getIdentificationNo().equals(
