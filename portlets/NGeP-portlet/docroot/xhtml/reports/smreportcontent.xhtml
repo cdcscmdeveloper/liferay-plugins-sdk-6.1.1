@@ -2621,23 +2621,38 @@
 						</c:if>
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smReportTypeTwoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.reportType']}" />
-							<p:selectOneMenu value="#{reportBackingBean.smReportType}"
-								style="width:300px;">
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.deletependingapplverifi']}"
-									itemValue="V"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.deletependingapplapprove']}"
-									itemValue="A"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.deletependingapplreject']}"
-									itemValue="R"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
+							<p:column>
+								<table style="width: 100%;">
+									<tr style="width: 100%;">
+										<td><p:outputLabel value="#{lbl['lbl.rpt.reportType']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:selectOneMenu
+												value="#{reportBackingBean.smReportType}"
+												label="#{lbl['lbl.rpt.reportType']}" id="smRptType"
+												required="true" style="width:300px;">
+												<f:selectItem
+													itemLabel="#{lbl['lbl.rpt.deletependingapplverifi']}"
+													itemValue="V"></f:selectItem>
+												<f:selectItem
+													itemLabel="#{lbl['lbl.rpt.deletependingapplapprove']}"
+													itemValue="A"></f:selectItem>
+												<f:selectItem
+													itemLabel="#{lbl['lbl.rpt.deletependingapplreject']}"
+													itemValue="R"></f:selectItem>
+												<p:ajax event="change" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:selectOneMenu></td>
+										<td><p:message id="smRptTypeMsg" for="smRptType"
+												display="icon" showDetail="false" /></td>
+									</tr>
+								</table>
+							</p:column>
 						</c:if>
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smProfileStatusView}">
@@ -3444,7 +3459,7 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
-						 <c:if
+						<c:if
 							test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRecievedReportTypeView}">
 							<p:selectOneMenu label="#{lbl['lbl.rpt.receivedyearfrom']}"
 								id="MandatoryFromYear"
@@ -3477,8 +3492,7 @@
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
-						</c:if>					
-						 <c:if
+						</c:if> <c:if
 							test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryYearFromReportTypeViewForMY}">
 							<p:selectOneMenu label="#{lbl['lbl.rpt.yearfrom']}"
 								id="MandatoryFromYear"
@@ -3489,8 +3503,7 @@
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
-						</c:if>
-						 <c:if
+						</c:if> <c:if
 							test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryYearFromReportTypeView}">
 							<p:selectOneMenu label="#{lbl['lbl.rpt.yearfrom']}"
 								id="MandatoryFromYear"
