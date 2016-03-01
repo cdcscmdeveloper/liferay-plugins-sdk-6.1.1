@@ -279,7 +279,6 @@ public class PurchaseInDefaultBackingBean extends
 		getManagedBean().setConditionField(sb.toString());
 		getManagedBean().setvCmSupplierItem(vCmSupplierItem);
 
-//		initialInformation(scPurchaseInDefault);
 		getManagedBean().setSourceMethods(
 				getSourceMethodDropdownCodeValues(null, false));
 		initializeApproverGroup();
@@ -950,52 +949,6 @@ public class PurchaseInDefaultBackingBean extends
 		}
 		return sourceMethodDropDown;
 	}
-
-	/**
-	 * Initializing information for approver pick list
-	 * 
-	 * @param purchaseInDefault
-	 *            the purchase in default
-	 *//*
-	public void initialInformation(ScPurchaseInDefault purchaseInDefault) {
-		DualListModel<PmUser> approvalUsers;
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
-		if (purchaseInDefault.getPmOrgProfile() != null) {
-			userReqDto.setOrgProfileId(purchaseInDefault.getPmOrgProfile()
-					.getOrgProfileId());
-		}
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		List<PmUser> availableApprover = userResDTO.getUserList();
-		List<PmUser> selectedApprover = new ArrayList<PmUser>();
-		approvalUsers = new DualListModel<PmUser>(availableApprover,
-				selectedApprover);
-
-		if (purchaseInDefault.getApprovalUsers().size() > 0
-				&& purchaseInDefault != null) {
-			for (int i = 0; i < purchaseInDefault.getApprovalUsers().size(); i++) {
-				selectedApprover.add(purchaseInDefault.getApprovalUsers()
-						.get(i).getPmUser());
-				for (int j = 0; j < availableApprover.size(); j++) {
-					if (purchaseInDefault.getApprovalUsers().get(i).getPmUser()
-							.getUserId()
-							.equals(availableApprover.get(j).getUserId())) {
-						availableApprover.remove(availableApprover.get(j));
-					}
-				}
-			}
-			approvalUsers = new DualListModel<PmUser>(availableApprover,
-					selectedApprover);
-			getManagedBean().setApprovalUsers(approvalUsers);
-		} else {
-			approvalUsers = new DualListModel<PmUser>(availableApprover,
-					selectedApprover);
-			getManagedBean().setApprovalUsers(approvalUsers);
-		}
-	}*/
 	
 	/**
 	 * Method get approver group and approver List.
@@ -1101,7 +1054,6 @@ public class PurchaseInDefaultBackingBean extends
 				purchaseInDefault.getCurrentStatus(),
 				purchaseInDefault.getRemarks(), ScPIDRemark.class));
 
-//		initialInformation(purchaseInDefault);
 		initializeApproverGroup();
 		retrieveReasonDescListByCategory(Boolean.TRUE);
 		justificationTypeEvent();
@@ -1168,7 +1120,6 @@ public class PurchaseInDefaultBackingBean extends
 				}
 
 				getManagedBean().setPurchaseInDefault(purchaseInDefault);
-//				initialInformation(purchaseInDefault);
 				initializeApproverGroup();
 				retrieveReasonDescListByCategory(true);
 				justificationTypeEvent();
