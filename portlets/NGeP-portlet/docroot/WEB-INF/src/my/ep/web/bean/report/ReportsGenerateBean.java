@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import javax.faces.model.SelectItem;
 
 import java.util.HashMap;
@@ -74,6 +76,9 @@ public class ReportsGenerateBean {
 
 	/** The month map. */
 	private HashMap<String, String> monthMap = new HashMap<String, String>();
+	
+	/** The month map my. */
+	private HashMap<SelectItem, SelectItem> monthMapMy = new HashMap<SelectItem, SelectItem>();
 
 	/** The status lst. */
 	private Object[] statusLst;
@@ -404,6 +409,15 @@ public class ReportsGenerateBean {
 	private boolean cmFromDateView = false;
 	/** The cm item type view. */
 	private boolean cmItemTypeView = false;
+	
+	/** The cm item type view only. */
+	private boolean cmItemTypeViewOnly=false;
+	
+	/** The cm role supp item type view. */
+	private boolean cmRoleSuppItemTypeView=false;
+	
+	/** The cm role supp group one view. */
+	private boolean cmRoleSuppGroupOneView=false;
 
 	/** The cm item status view. */
 	private boolean cmItemStatusView = false;
@@ -14634,6 +14648,7 @@ public class ReportsGenerateBean {
 		return yearList;
 	}
 
+	
 	/**
 	 * Generate common month list.
 	 * 
@@ -14662,6 +14677,179 @@ public class ReportsGenerateBean {
 		}
 		return monthList;
 	}
+	
+	
+	/**
+	 * Generate common month list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 *//*
+	public List<SelectItem> generateCommonMonthList(String lang) {
+		monthList = new ArrayList<SelectItem>();
+		if ((lang != null) && (lang.equalsIgnoreCase("en"))) {
+			String month = ReportConst.EMPTY_VAL;
+			int monthNoInt;
+			String monthNoStr = ReportConst.EMPTY_VAL;
+			DateFormatSymbols dfs = new DateFormatSymbols(); 
+			  			
+			String[] months = dfs.getMonths();
+			for (int i = 0; i <= 11; i++) {
+				monthNoInt = i + 1;
+				if (monthNoInt < 10) {
+					monthNoStr = ReportConst.ZERO_VAL + monthNoInt;
+				} else {
+					monthNoStr = monthNoInt + ReportConst.EMPTY_VAL;
+				}
+				month = months[i];
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(month);
+				selectItem.setValue(monthNoStr);
+				monthList.add(selectItem);
+				monthMap.put(monthNoStr, month);
+			}
+		} else if ((lang != null) && (lang.equalsIgnoreCase("ms"))) {
+			
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel("Januari");
+			selectItem.setValue("January");
+			monthList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem.setLabel("Februari");
+			selectItem.setValue("February");
+			monthList.add(selectItem1);
+			SelectItem selectItem2 = new SelectItem();
+			selectItem.setLabel("Mac");
+			selectItem.setValue("March");
+			monthList.add(selectItem2);
+			SelectItem selectItem3 = new SelectItem();
+			selectItem.setLabel("April");
+			selectItem.setValue("April");
+			monthList.add(selectItem3);
+			SelectItem selectItem4 = new SelectItem();
+			selectItem.setLabel("Mei");
+			selectItem.setValue("May");
+			monthList.add(selectItem4);
+			SelectItem selectItem5 = new SelectItem();
+			selectItem.setLabel("Jun");
+			selectItem.setValue("June");
+			monthList.add(selectItem5);
+			SelectItem selectItem6 = new SelectItem();
+			selectItem.setLabel("Julai");
+			selectItem.setValue("July");
+			monthList.add(selectItem6);
+			SelectItem selectItem7 = new SelectItem();
+			selectItem.setLabel("Ogos");
+			selectItem.setValue("August");
+			monthList.add(selectItem7);
+			SelectItem selectItem8 = new SelectItem();
+			selectItem.setLabel("September");
+			selectItem.setValue("September");
+			monthList.add(selectItem8);
+			SelectItem selectItem9 = new SelectItem();
+			selectItem.setLabel("Oktober");
+			selectItem.setValue("October");
+			monthList.add(selectItem9);
+			SelectItem selectItem10 = new SelectItem();
+			selectItem.setLabel("November");
+			selectItem.setValue("November");
+			monthList.add(selectItem10);
+			SelectItem selectItem11 = new SelectItem();
+			selectItem.setLabel("Disember");
+			selectItem.setValue("December");
+			monthList.add(selectItem11);
+			
+			monthMapMy.putAll(monthList);
+		}
+		return monthList;
+	}*/
+	
+	
+	
+	/**
+	 * Generate month list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 */
+	public List<SelectItem> generateMonthList(String language){
+		monthList = new ArrayList<SelectItem>();
+		if((language!=null)&&(language.equalsIgnoreCase("en"))){
+				
+			String month = ReportConst.EMPTY_VAL;
+			int monthNoInt;
+			String monthNoStr= ReportConst.EMPTY_VAL;
+	        DateFormatSymbols dfs = new DateFormatSymbols();
+	        String[] months = dfs.getMonths();        
+	       for (int i = 0; i <= 11; i++) {
+	    	   monthNoInt= i+1;
+	    	   if(monthNoInt<10){
+	    		   monthNoStr=ReportConst.ZERO_VAL+monthNoInt;
+	    	   }else{
+	    		   monthNoStr=monthNoInt+ReportConst.EMPTY_VAL;
+	    	   }
+	            month = months[i];            
+	            SelectItem selectItem= new SelectItem();
+	            selectItem.setLabel(month);
+	            selectItem.setValue(monthNoStr);
+	            monthList.add(selectItem);
+	        } 
+		}else if((language!=null)&&(language.equalsIgnoreCase("ms"))){
+			SelectItem selectItem= new SelectItem();
+            selectItem.setLabel("Januari");
+            selectItem.setValue("01");
+            monthList.add(selectItem);
+            SelectItem selectItem1= new SelectItem();
+            selectItem.setLabel("Februari");
+            selectItem.setValue("02");
+            monthList.add(selectItem1);
+            SelectItem selectItem2= new SelectItem();
+            selectItem.setLabel("Mac");
+            selectItem.setValue("03");
+            monthList.add(selectItem2);
+            SelectItem selectItem3= new SelectItem();
+            selectItem.setLabel("April");
+            selectItem.setValue("04");
+            monthList.add(selectItem3);
+            SelectItem selectItem4= new SelectItem();
+            selectItem.setLabel("Mei");
+            selectItem.setValue("05");
+            monthList.add(selectItem4);
+            SelectItem selectItem5= new SelectItem();
+            selectItem.setLabel("Jun");
+            selectItem.setValue("06");
+            monthList.add(selectItem5);
+            SelectItem selectItem6= new SelectItem();
+            selectItem.setLabel("Julai");
+            selectItem.setValue("07");
+            monthList.add(selectItem6);
+            SelectItem selectItem7= new SelectItem();
+            selectItem.setLabel("Ogos");
+            selectItem.setValue("08");
+            monthList.add(selectItem7);
+            SelectItem selectItem8= new SelectItem();
+            selectItem.setLabel("September");
+            selectItem.setValue("09");
+            monthList.add(selectItem8);
+            SelectItem selectItem9= new SelectItem();
+            selectItem.setLabel("Oktober");
+            selectItem.setValue("10");
+            monthList.add(selectItem9);
+            SelectItem selectItem10= new SelectItem();
+            selectItem.setLabel("November");
+            selectItem.setValue("11");
+            monthList.add(selectItem10);
+            SelectItem selectItem11= new SelectItem();
+            selectItem.setLabel("Disember");
+            selectItem.setValue("12");
+            monthList.add(selectItem11);
+		}
+        return monthList;
+	}
+	
+	
 
 	/**
 	 * Generate common year list.
@@ -19718,6 +19906,63 @@ public class ReportsGenerateBean {
 	 */
 	public void setStrLanguage(String strLanguage) {
 		this.strLanguage = strLanguage;
+	}
+
+	/**
+	 * Checks if is cm role supp item type view.
+	 * 
+	 * @return the cmRoleSuppItemTypeView
+	 */
+	public boolean isCmRoleSuppItemTypeView() {
+		return cmRoleSuppItemTypeView;
+	}
+
+	/**
+	 * Sets the cm role supp item type view.
+	 * 
+	 * @param cmRoleSuppItemTypeView
+	 *            the cmRoleSuppItemTypeView to set
+	 */
+	public void setCmRoleSuppItemTypeView(boolean cmRoleSuppItemTypeView) {
+		this.cmRoleSuppItemTypeView = cmRoleSuppItemTypeView;
+	}
+
+	/**
+	 * Checks if is cm role supp group one view.
+	 * 
+	 * @return the cmRoleSuppGroupOneView
+	 */
+	public boolean isCmRoleSuppGroupOneView() {
+		return cmRoleSuppGroupOneView;
+	}
+
+	/**
+	 * Sets the cm role supp group one view.
+	 * 
+	 * @param cmRoleSuppGroupOneView
+	 *            the cmRoleSuppGroupOneView to set
+	 */
+	public void setCmRoleSuppGroupOneView(boolean cmRoleSuppGroupOneView) {
+		this.cmRoleSuppGroupOneView = cmRoleSuppGroupOneView;
+	}
+
+	/**
+	 * Checks if is cm item type view only.
+	 * 
+	 * @return the cmItemTypeViewOnly
+	 */
+	public boolean isCmItemTypeViewOnly() {
+		return cmItemTypeViewOnly;
+	}
+
+	/**
+	 * Sets the cm item type view only.
+	 * 
+	 * @param cmItemTypeViewOnly
+	 *            the cmItemTypeViewOnly to set
+	 */
+	public void setCmItemTypeViewOnly(boolean cmItemTypeViewOnly) {
+		this.cmItemTypeViewOnly = cmItemTypeViewOnly;
 	}
 
 	
