@@ -100,8 +100,6 @@ public class SchedulerConstants {
 	
 	// EPERUNDING OUT BOUND
 	
-	public static final String EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC = "Job run once daily 1 AM";
-
 	public static final String EPERUNDING_CONSULTANT_PROFILE_JOB = "CONSULTANT PROFILE JOB";
 
 	public static final String EPERUNDING_ASSOCIATED_COMPANY_JOB = "ASSOCIATED COMPANY JOB";
@@ -153,6 +151,8 @@ public class SchedulerConstants {
 	
 	public static final String GFMAS_MASTER_DATA = "MATERIAL MASTER DATA JOB";
 	
+	public static final String GFMAS_RECEIPT_INFORMATION = "RECEIPT INFORMATION JOB";
+	
 //	1GFMAS IN BOUND
 	
 	public static final String GFMAS_MASTER_DATA_INBOUND = "MASTER DATA JOB(Inbound)";
@@ -160,18 +160,22 @@ public class SchedulerConstants {
 	public static final String GFMAS_PAYMENT_INFORMATION_INBOUND = "PAYMENT INFORMATION JOB(Inbound)";
 
 	// PHIS OUT BOUND
-	public static final String PHIS_PM_CONTINUOUS_JOB_DESC = "Job run every 5 minutes";
-	public static final String PHIS_SM_CONTINUOUS_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
-	public static final String PHIS_CM_CONTINUOUS_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
-	public static final String PHIS_FL_CONTINUOUS_JOB_DESC = "Job runs every 1 hour";
+	
+	public static final String EPERUNDING_INTEGRATION_JOB_DESC = "Job run once daily after 1 AM";
+	
+	public static final String PHIS_PM_JOB_DESC = "Job run every 5 minutes";
+	public static final String PHIS_DELIVERY_ADDRESS_JOB_DESC = "Job runs every 1 hour";
+	public static final String PHIS_CM_JOB_DESC = "Job run twice daily 9 AM and 9 PM";
+	public static final String PHIS_FL_JOB_DESC = "Job runs every 1 hour";
+	public static final String PHIS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 8 AM and 8 PM";
 
-	public static final String GFMAS_PM_CONTINUOUS_JOB_DESC = "Job run every 5 minutes";
-	public static final String GFMAS_SM_CONTINUOUS_JOB_DESC = "Job run every 5 minute";
-	public static final String GFMAS_SC_CONTINUOUS_JOB_DESC = "Job run once daily 8 AM";
-	public static final String GFMAS_FL_CONTINUOUS_JOB_DESC = "Job runs every 1 hour";
-
-	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB = "GFMAS OUT SM JOB";
-	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB_DESC = "Job run every 5 minute";
+	public static final String GFMAS_PM_IN_JOB_DESC = "Job run every 5 minutes";
+	public static final String GFMAS_SM_IN_JOB_DESC = "Job run every 5 minute";
+	public static final String GFMAS_SC_OUT_JOB_DESC = "Job run once daily 8 AM";
+	public static final String GFMAS_FL_IN_JOB_DESC = "Job runs every 1 hour";
+	public static final String GFMAS_SM_OUT_JOB_DESC = "Job run every 5 minute";
+	public static final String GFMAS_SM_RECEIPT_OUT_JOB_DESC = "Job runs every 1 hour";
+	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 8 AM and 8 PM";
 
 	// NOTIFICATIONS
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB = "NOTIFICATION JOB GROUP";

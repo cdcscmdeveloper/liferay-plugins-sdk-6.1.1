@@ -1,8 +1,9 @@
 package my.ep.web.scheduler.job.gfmas;
 
+import my.ep.biz.service.intg.gfmas.IGfmasServiceSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
-import my.ep.web.integration.common.BatchTemplate;
-import my.ep.web.integration.common.GfmasIntegration;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -21,8 +22,11 @@ public class MasterDataVendorOutboundJob implements Job {
 			throws JobExecutionException {
 
 		log.info("MasterDataVendorOutboundJob start");
-		BatchTemplate batchTemplate = new GfmasIntegration();
-		batchTemplate.masterDataVendorGfmasOutbound();
+		IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IGfmasServiceSO.class);
+		
+		gfmasServiceSO.masterDataVendorGfmasOutbound();
 		log.info("MasterDataVendorOutboundJob end");
 
 	}

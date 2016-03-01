@@ -28,14 +28,14 @@ public class CmSchedulerServlet extends HttpServlet {
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.PHIS_MASTER_DATA,
 				SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-				MasterDataMaterialJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound1"));
+				MasterDataMaterialJob.class, SchedulerConstants.PHIS_CM_JOB_DESC,
+				EpPropertiesUtils.getInstance().getProperty("phis.cm.outbound"));
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.PHIS_MASTER_DATA_MATERIAL,
 				SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
-				MasterDataMaterialInformationJob.class, SchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound1"));
+				MasterDataMaterialInformationJob.class, SchedulerConstants.PHIS_MASTERDATA_MATERIAL_JOB_DESC,
+				EpPropertiesUtils.getInstance().getProperty("phis.cm.outbound"));
 
 		///CM Expired Item
 		EpSchedulerHelper.scheduleJob(new JobKey(
@@ -44,6 +44,7 @@ public class CmSchedulerServlet extends HttpServlet {
 				CmUpdateExpiredItemJob.class, SchedulerConstants.CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC,
 				SchedulerConstants.CM_EXPIRED_ITEM_TIMER);
 
+		
 		///CM Drop Doc Sequence
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.CM_EXPIRED_ITEM_TIMER_JOB,
