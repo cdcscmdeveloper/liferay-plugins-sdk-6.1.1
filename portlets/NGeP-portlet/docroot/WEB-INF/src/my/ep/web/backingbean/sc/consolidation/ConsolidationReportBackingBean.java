@@ -30,6 +30,7 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -56,6 +57,8 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
@@ -1651,11 +1654,24 @@ public class ConsolidationReportBackingBean extends
 		boolean isPanel = false;
 		if (scQt.isPanel()) {
 			isPanel = true;
-			List<CtPanelItem> panelList = new ArrayList<CtPanelItem>();
-			panelList.add(scQt.getScQtSupplierCriteria().getCtPanelItem());
-			context.put("ctCircularVer", scQt.getScQtSupplierCriteria().getCtPanelItem().getCtCircularVer());
-			context.put("panelList", panelList);
-			context.put("bean", this);
+			
+			ITemplateSpecSO templateSpecSO = null;
+			try {
+				templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
+				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+				specReqDTO.setQtId(scQt.getQtId());
+				TemplateSpecResDTO templateSpecResDTO = templateSpecSO
+						.retrievePanelItemsByQtId(specReqDTO);	
+				CtPanelItem panelItem = templateSpecResDTO.getCtPanelItems().get(0);
+				List<CtPanelItem> panelList = new ArrayList<CtPanelItem>();
+				panelList.add(panelItem);
+				context.put("ctCircularVer", panelItem.getCtCircularVer());
+				context.put("panelList", panelList);
+				context.put("bean", this);				
+			} catch (Exception e) {
+				templateSpecSO = null;
+			}
 		} else {
 			
 		}
