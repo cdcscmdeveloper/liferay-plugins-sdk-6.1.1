@@ -188,6 +188,7 @@ public class QTFiledMapper {
 		// QT_PENDING_SCHEDULE_DOCUMENT
 		QT_PENDING_SCHEDULE_DOCUMENT(
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
+						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_BSVDETAILS,
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
@@ -202,7 +203,9 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_QT_TYPE,
 						QTFieldConst.FILED_QT_OPEN_FOR,
 						QTFieldConst.FILED_QT_EVALUATION_TYPE,
-						QTFieldConst.FILED_QT_EXISTING_CONTRACT}), 
+						QTFieldConst.FILED_QT_EXISTING_CONTRACT,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD}), 
 				
 		// QT_REVISION_PUBLICATION
 		QT_REVISION_PUBLICATION(
@@ -217,7 +220,9 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS,
 						QTFieldConst.FILED_QT_PUB_APPROVAL,
-						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID });
+						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD});
 
 		private Long statusId;
 		private String[] toBeEnableFields;
