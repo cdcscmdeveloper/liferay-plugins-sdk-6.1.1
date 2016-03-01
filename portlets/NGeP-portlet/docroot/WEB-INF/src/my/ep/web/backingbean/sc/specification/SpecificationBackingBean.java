@@ -1890,7 +1890,7 @@ public class SpecificationBackingBean extends
 		try {
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			reqDTO.setDocType(QTConstants.DOCTYPE_QT);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
@@ -4480,17 +4480,25 @@ public class SpecificationBackingBean extends
 					populateEvaluationTypes(scQt);
 				}
 			} else {
-				if (this.getManagedBean().getQt().getEstimatedAmount() == null) {
-					qtDetailsSO = BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION,
-									IQTDetailSO.class);
+				ScQt scQt = this.getManagedBean().getQt();
+				qtDetailsSO = BusinessDelegate.getInstance()
+						.getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTDetailSO.class);
+				
+				if (scQt.getEstimatedAmount() == null) {
 					BigDecimal estimatedAmount = qtDetailsSO
 							.getdecryptedEstAmount(qtId);
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estimatedAmount);
-					this.getManagedBean().getQt()
-							.setDecryptedEstAmt(estimatedAmount);
+					scQt.setEstimatedAmount(estimatedAmount);
+					scQt.setDecryptedEstAmt(estimatedAmount);
+					
+					
+				}
+				
+				if (scQt.getTmpExpectedIntendedPrice() == null) {
+					BigDecimal tmpExpectedIntendedPrice = qtDetailsSO
+							.getDecryptedExpectedIntendedPrice(qtId);
+					scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
 				}
 			}
 
@@ -11619,6 +11627,11 @@ public class SpecificationBackingBean extends
 				break;
 
 			}
+			
+			if(this.getManagedBean().getQt().getSpecApprovalReq()){
+				this.getManagedBean().setMinistrySpecApprovers(getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
+			}
+			
 			if (getManagedBean().getTempIndex() < activeIndex) {
 				getManagedBean().setTempIndex(activeIndex);
 			}
@@ -12219,7 +12232,7 @@ public class SpecificationBackingBean extends
 	 * @return the doc type by task name
 	 */
 	private String getDocTypeByTaskName(String taskName) {
-		String DOC_TYPE = QTConstants.DOCTYPE_QT;
+		String DOC_TYPE = ParameterConst.DOCTYPE_QUOTATION;
 		return DOC_TYPE;
 	}
 
@@ -12929,7 +12942,7 @@ public class SpecificationBackingBean extends
 				// this.getManagedBean().setCheckListTitle("");
 				// ScQtCheckList localCheckList=savedCheckLists.get(0);
 				setTechnicalCheckList(savedCheckLists.get(0),
-						QTConstants.DOCTYPE_QT);
+						ParameterConst.DOCTYPE_QUOTATION);
 				// return
 				// "/xhtml/sc/specification/businessOwner/businessOwnerTabMenu.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
@@ -13278,6 +13291,7 @@ public class SpecificationBackingBean extends
 		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		ScQt scQt = this.getManagedBean().getQt();
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 			if (null == scQtCheckList.getTitle()
 					|| "".equalsIgnoreCase(scQtCheckList.getTitle())) {
@@ -13304,7 +13318,7 @@ public class SpecificationBackingBean extends
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			// Code to construct financial checklist..
-			ScQt scQt = this.getManagedBean().getQt();
+			
 			if (scQt.isZonal()) {
 				ScQtSupplierCriteria supplierCriteria = scQt
 						.getScQtSupplierCriteria();
@@ -13429,9 +13443,9 @@ public class SpecificationBackingBean extends
 			scQtCheckList.setPmEvalStatus(evalStatus);
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
-			reqDTO.setEstimatedPrice(this.getManagedBean().getQt()
-					.getEstimatedAmount());
 			updatedCheckLists.add(scQtCheckList);
+			
+			reqDTO.setScQt(scQt);
 
 		}
 
@@ -13488,6 +13502,10 @@ public class SpecificationBackingBean extends
 
 		// Need to redirect particualr page..
 		if (resDTO.isSuccessful()) {
+			if (resDTO.getScQt() != null) {
+				this.getManagedBean().setQt(resDTO.getScQt());
+			}
+			
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
 			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
 				// retriveTechnicalSpecification();
