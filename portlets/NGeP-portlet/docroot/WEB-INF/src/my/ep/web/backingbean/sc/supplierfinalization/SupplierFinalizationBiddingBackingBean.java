@@ -446,7 +446,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 		if (recommendType.equals(
 				ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
-			reqDTO.setDocType(QTConstants.DOCTYPE_QT);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			retrieveRecommendedSuppliersByPkg(reqDTO);
 		} else if (recommendType.equals(
 				ParameterConst.RECOMMEND_TYPE_ITEM)) {
