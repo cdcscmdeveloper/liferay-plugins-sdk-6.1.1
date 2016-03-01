@@ -176,7 +176,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private String bondPercentage;
 	
 	/** The total frequency. */
-	private int totalFrequency;
+	private Integer totalFrequency;
 	
 	/** The schedule list. */
 	private List<ScQtSchedule> scheduleList;
@@ -188,7 +188,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<SelectItem> yearsDisplayList;
 	
 	/** The total progressive payment. */
-	private int totalProgressivePayment;
+	private Integer totalProgressivePayment;
 	
 	/** The progressive payment list. */
 	private List<ScQtProgressivePayment> progressivePaymentList;
@@ -1002,7 +1002,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @return the total frequency
 	 */
-	public int getTotalFrequency() {
+	public Integer getTotalFrequency() {
 		return totalFrequency;
 	}
 
@@ -1011,7 +1011,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @param totalFrequency the new total frequency
 	 */
-	public void setTotalFrequency(int totalFrequency) {
+	public void setTotalFrequency(Integer totalFrequency) {
 		this.totalFrequency = totalFrequency;
 	}
 
@@ -1110,7 +1110,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @return the total progressive payment
 	 */
-	public int getTotalProgressivePayment() {
+	public Integer getTotalProgressivePayment() {
 		return totalProgressivePayment;
 	}
 
@@ -1119,7 +1119,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @param totalProgressivePayment the new total progressive payment
 	 */
-	public void setTotalProgressivePayment(int totalProgressivePayment) {
+	public void setTotalProgressivePayment(Integer totalProgressivePayment) {
 		this.totalProgressivePayment = totalProgressivePayment;
 	}
 
