@@ -133,9 +133,11 @@ public class PPReportBackingBean extends
 			List<String> authoriztionList) {
 		if (authoriztionList != null) {
 			if (authoriztionList.contains(ReportConst.ROLE_CODE_BPK_OFFICER)) {
+				rptGenBean.setCommonLOVBasedRoles(true);
 				rptGenBean.setPpMandatoryView(true);
 				rptGenBean.setPpMinistryView(true);
 			} else {
+				rptGenBean.setCommonLOVBasedRoles(true);
 				rptGenBean.setPpNonMandatoryView(true);
 				rptGenBean.setPpMinistryView(true);
 			}
