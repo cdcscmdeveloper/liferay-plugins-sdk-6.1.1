@@ -245,7 +245,12 @@
 .column7CheckClass {
 	width: 38%;
 }
-
+<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryYearFromReportTypeViewForMY
+               || smReportBackingBean.managedBean.rptGenBean.smMandatoryRegisteredReportTypeDateViewForMY}">
+.column7CheckClass {
+	width: 32%;
+}
+</c:if>
 .column8CheckClass {
 	width: 27.2%;
 }
