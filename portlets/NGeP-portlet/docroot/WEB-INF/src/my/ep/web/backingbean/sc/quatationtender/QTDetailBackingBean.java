@@ -582,7 +582,6 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setMaintanceFlow(true);
 			reqDTO.setQtId(qtId);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
 
@@ -1025,7 +1024,7 @@ public class QTDetailBackingBean extends
 		// save.
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
-		quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+		quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 
 		quationTenderReqDTO.setToBeRemoveList(this.getManagedBean()
 				.getToBeApprovalRemoveList());
@@ -1756,7 +1755,7 @@ public class QTDetailBackingBean extends
 
 			}
 			this.getManagedBean().setActiveIndex(1);
-			retrieveQuationTenderDetails(new Long(qtId), null);
+			retrieveQuationTenderDetails(new Long(qtId));
 			if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 					.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
@@ -1788,7 +1787,7 @@ public class QTDetailBackingBean extends
 			SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
 			qtId = quationDataType.getQtId().longValue();
 			// retrieveFinalizationSecratryDtl(qtId);
-			retrieveQuationTenderDetails(new Long(qtId), null);
+			retrieveQuationTenderDetails(new Long(qtId));
 		}
 
 		if (null == this.getManagedBean().getQt().getProcurementMode()) {
@@ -1992,7 +1991,7 @@ public class QTDetailBackingBean extends
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setPayLoad(payLoad);
-				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				FacesScopes facesScope = new FacesScopes();
 				qtReqDTO.setPmUser(facesScope.getUserSessionBean());
 				qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
@@ -2274,7 +2273,7 @@ public class QTDetailBackingBean extends
 		if (this.getManagedBean().getQt().isZonal()
 				&& this.getManagedBean().getQt().isPanel()) {
 			retrieveQuationTenderDetails(this.getManagedBean().getQt()
-					.getQtId(), QTConstants.DOCTYPE_QT);
+					.getQtId());
 		}
 		IQTDetailSO QtDetailsSO;
 		QuationTenderResDTO tenderResDTO;
@@ -2314,8 +2313,8 @@ public class QTDetailBackingBean extends
 							if (CollectionUtils.isEmpty( this.getManagedBean().getQtSupplierList())) {
 								this.getManagedBean().setQtSupplierList(
 										tenderResDTO.getRestrictedSuppliers());
-								this.getManagedBean().setTotalSupplier(
-										tenderResDTO.getRestrictedSuppliers().size());
+								this.getManagedBean().setTotalSupplier(tenderResDTO.getRestrictedSuppliers() != null ?
+										tenderResDTO.getRestrictedSuppliers().size() : 0);
 							}
 						}
 		
@@ -3017,7 +3016,7 @@ public class QTDetailBackingBean extends
 	 * @param docType
 	 *            the doc type
 	 */
-	public void retrieveQuationTenderDetails(Long qtId, String docType) {
+	public void retrieveQuationTenderDetails(Long qtId) {
 		debugLogger("retrieveQuationTenderDetails");
 		if (null != qtId) {
 			// this.getManagedBean().setActiveIndex(0);
@@ -3028,11 +3027,6 @@ public class QTDetailBackingBean extends
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 				tenderReqDTO.setMaintanceFlow(this.getManagedBean()
 						.isMaintanceFlow());
-				if (null == docType || "".equalsIgnoreCase(docType)) {
-					tenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-				} else {
-					tenderReqDTO.setDocType(docType);
-				}
 				tenderReqDTO.setQtId(qtId);
 				tenderReqDTO.setBdgDtlsReq(true);
 				QuationTenderResDTO tenderResDTO = null;
@@ -3127,6 +3121,12 @@ public class QTDetailBackingBean extends
 								.getdecryptedEstAmount(qtId);
 						scQt.setEstimatedAmount(estimatedAmount);
 						scQt.setDecryptedEstAmt(estimatedAmount);
+					}
+					
+					if (scQt.getTmpExpectedIntendedPrice() == null) {
+						BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
+								.getDecryptedExpectedIntendedPrice(qtId);
+						scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
 					}
 					// this.getManagedBean().setContractType(scQt.getContractType());
 				}
@@ -3393,7 +3393,7 @@ public class QTDetailBackingBean extends
 						.equals(QTConstants.OPEN_TYPE)) {
 
 			retrieveQuationTenderDetails(this.getManagedBean().getQt()
-					.getQtId(), "QT");
+					.getQtId());
 			ScQtSupplierCriteria supplierCriteria = this.getManagedBean()
 					.getQt().getScQtSupplierCriteria();
 			List<TplSpecZoneDtl> businessOwnerZone = this.getManagedBean()
@@ -3586,7 +3586,7 @@ public class QTDetailBackingBean extends
 			 * this.getManagedBean().getTaskName() == null ? true : false);
 			 */
 
-			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId(), null);
+			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId());
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			// this.getManagedBean().setQt(resDTO.getQtDetail());
 			break;
@@ -3803,7 +3803,7 @@ public class QTDetailBackingBean extends
 			case 0:
 				// detailSO.validateateQTDetails(reqDTO);
 				retrieveQuationTenderDetails(this.getManagedBean().getQt()
-						.getQtId(), null);
+						.getQtId());
 				
 				circularListSelect(this.getManagedBean().getQt().getCircularVer());
 				getUsersByRoleCode(RoleCode.MSC_SECRETARY.value());
@@ -4266,7 +4266,7 @@ public class QTDetailBackingBean extends
 				pmStatus.setStatusId(QTStatusConst.QT_CANCELLED);
 				qtStatus.setPmStatus(pmStatus);
 				qtStatus.setCurrent(Boolean.TRUE);
-				qtStatus.setDocType(QTConstants.DOCTYPE_QT);
+				qtStatus.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 
 				for (ScQtStatus status : scQt.getScQtStatus()) {
 					status.setCurrent(Boolean.FALSE);
