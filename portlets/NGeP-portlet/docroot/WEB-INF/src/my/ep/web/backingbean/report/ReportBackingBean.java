@@ -12669,6 +12669,18 @@ public class ReportBackingBean extends
 					this.setValuesEmpty(true);
 				}
 			}
+			
+			if (this.getModuleValue() != null
+					&& (this.getModuleValue()
+							.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
+				if (this.getReportValue() != null
+						&& (this.getReportValue().trim()
+								.equalsIgnoreCase(ReportConst.LST_ITM_CODE_RPT_VAL))) {
+					this.setFromDate(null);
+					this.setToDate(null);
+				}
+			}
+			
 
 			reloadLovsValues();
 
