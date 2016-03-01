@@ -11,22 +11,31 @@
 		rendered="#{(scQt.zonal !='false')}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 300px"><p:outputLabel
+				<td style="width: 270px"><p:outputLabel
 						value="#{lbl['lbl.sc.zone.location.level']}" /> <p:outputLabel
 						value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td>
 					<table>
 						<tr>
-							<td><p:selectOneMenu id="locationLevels" required="true"
-									label="#{lbl['lbl.sc.zone.location.level']}"
-									value="#{scQt.zoneLocationLevel.parameterId}"
-									style="width: 303px;">
-
-									<f:selectItems
-										value="#{createQtBB.getDropdownLocationValues(ParameterTypeConst.locationLevel,scQt)}" />
-									<p:ajax event="change" update="generalLocationList"
-										listener="#{createQtBB.selectZoneLocationLevel}"></p:ajax>
-								</p:selectOneMenu> <p:message id="withzone" for="locationLevels" display="icon"></p:message>
+							<td>
+								<c:choose>
+									<c:when test="#{!zoneCoverageReadonly}">
+										<p:selectOneMenu id="locationLevels" required="true"
+											label="#{lbl['lbl.sc.zone.location.level']}"
+											value="#{scQt.zoneLocationLevel.parameterId}"
+											style="width: 215px;">
+		
+											<f:selectItems
+												value="#{createQtBB.getDropdownLocationValues(ParameterTypeConst.locationLevel,scQt)}" />
+											<p:ajax event="change" update="generalLocationList"
+												listener="#{createQtBB.selectZoneLocationLevel}"></p:ajax>
+										</p:selectOneMenu>
+										<p:message id="withzone" for="locationLevels" display="icon"></p:message>
+									</c:when>
+									<c:otherwise>
+										<p:inputText id="locLvlTxt" value="#{createQtBB.getParameterDesc(scQt.zoneLocationLevel)}" size="29" disabled="true" />
+									</c:otherwise>
+								</c:choose>
 							</td>
 							<td style="margin-top: -3px"><ac:iconTooltip
 									value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /></td>
@@ -76,7 +85,7 @@
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:10%;text-align: center;">
 						<p:commandLink
-							disabled="#{qTDetailBB.managedBean.readOnly}"
+							rendered="#{!qTDetailBB.managedBean.readOnly and !zoneCoverageReadonly}"
 							actionListener="#{createQtBB.editZones(zoneTree,index,scQt)}"
 							process="@this" update="@([id$=dlgId])"
 							oncomplete="ZoneGeneral.show();">
@@ -85,6 +94,7 @@
 					</p:column>
 				</p:dataTable>
 			</h:panelGrid>
+			<c:if test="#{!qTDetailBB.managedBean.readOnly and !zoneCoverageReadonly}">
 			<div align="right" style="width: 100%">
 				<p:selectBooleanCheckbox id="checkAllZonesList"
 					style="float:left;margin-top: 13px;margin-right: -4px;">
@@ -97,11 +107,9 @@
 					style="float:left;margin-top: 12px;;margin-left: 10px;" />
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 					styleClass="BtnSpacing" update="@([id$=zonePopupGeneral])"
-					disabled="#{qTDetailBB.managedBean.readOnly}"
 					actionListener="#{createQtBB.showGeneralZonesPopup}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
 					styleClass="BtnSpacing" partialSubmit="true"
-					disabled="#{qTDetailBB.managedBean.readOnly}"
 					oncomplete="zonesNonpanelDeletePopUp.show();"
 					update="@([id$=#{zonesNonpanelDeleteId}])" />
 			</div>
@@ -112,6 +120,7 @@
 				height="100" title="#{lbl['lbl.sc.qt.zone.location.info']}"
 				content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
 				update="@([id$=zoneGeneralDataTable])" />
+			</c:if>
 		</h:panelGroup>
 	</p:panel>
 
