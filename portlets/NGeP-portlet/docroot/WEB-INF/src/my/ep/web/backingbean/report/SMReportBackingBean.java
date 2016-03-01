@@ -123,7 +123,12 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL:
 			rptGenBean.generateCommonYearList();
 			rptGenBean.setSmMandatoryCreatedFromYearView(true);
-			rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);
+			//rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);
+			if(rptGenBean.getStrLanguage().equalsIgnoreCase("en")){
+				rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);
+			}else{
+				rptGenBean.setSmMandatoryRegisteredReportTypeDateViewForMY(true);
+			}
 			break;
 		case ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL:
 			rptGenBean.retrieveCategoryLevOne1();		
@@ -168,18 +173,19 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL:			
 			rptGenBean.setSmTotalNoOfYearlyARView(true);
 			rptGenBean.generateCommonMonthList();
+			//rptGenBean.generateCommonMonthList(rptGenBean.getStrLanguage());
 			rptGenBean.generateCommonYearList();
 			getManagedBean().setMonthMap(rptGenBean.getMonthMap());
 			rptGenBean.setSmExtraTwoColumnView(true);
 			// rptGenBean.setSmMandatoryReportTypeView(true);
 			rptGenBean.setSmFromMonthView(true);
 			rptGenBean.setSmMandatoryCreatedFromYearView(true);
-			rptGenBean.setSmMandatoryYearFromReportTypeView(true);
-			/*if(rptGenBean.getStrLanguage().equals("en")){
-				rptGenBean.setSmMandatoryYearFromReportTypeViewForEN(true);
+			//rptGenBean.setSmMandatoryYearFromReportTypeView(true);
+			if(rptGenBean.getStrLanguage().equalsIgnoreCase("en")){
+				rptGenBean.setSmMandatoryYearFromReportTypeView(true);
 			}else{
 				rptGenBean.setSmMandatoryYearFromReportTypeViewForMY(true);
-			}*/
+			}
 			
 			// rptGenBean.setSmMandatoryFromDateView(true);
 			// rptGenBean.setSmMandatoryDateView(true);
