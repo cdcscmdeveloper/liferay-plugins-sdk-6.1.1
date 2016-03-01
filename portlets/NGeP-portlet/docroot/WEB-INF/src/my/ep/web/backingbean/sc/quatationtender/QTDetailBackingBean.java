@@ -3844,7 +3844,7 @@ public class QTDetailBackingBean extends
 				}
 				break;
 			case 7:
-				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
+				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retrieveDocumentTabDtl();
 				}
 				break;
