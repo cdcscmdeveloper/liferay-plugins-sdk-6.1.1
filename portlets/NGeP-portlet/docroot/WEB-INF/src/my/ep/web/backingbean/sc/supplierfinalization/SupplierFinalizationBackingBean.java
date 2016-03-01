@@ -854,7 +854,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO = validateInfo(2);
 			}
-			validateFinalizationReports(true);
+			validateFinalizationReports(reqDTO);
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
@@ -885,7 +885,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	private void validateFinalizationReports(boolean isSaveAction) {
+	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO) {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
@@ -899,20 +899,23 @@ public class SupplierFinalizationBackingBean extends
 						.equals(report.getDocCategory()) && 
 						(report.getScQtFinalizationReportAttachment() == null ||
 							report.getScQtFinalizationReportAttachment().getFileName() == null)) {
-					//TODO : Remove the report (if saveAction == true)
-//					if (isSaveAction) {
-//						toBeRemovedReports.add(report);
-//					} else {
-//
-//					}
-					navigateToBriefingPaperTab();
-					throw new EpException(MessageConst.ERROR_760386);
+					
+					// Remove report for save action
+					if (reqDTO != null) {
+						report.setDeleted(true);
+						toBeRemovedReports.add(report);
+					} else {
+						navigateToBriefingPaperTab();
+						throw new EpException(MessageConst.ERROR_760386);
+					}
 				}
 			}
 			
 			if (toBeRemovedReports.size() > 0) {
 				finalizationReports.removeAll(
 							toBeRemovedReports);
+				reqDTO.setRemovedFinalizationReports(
+								   toBeRemovedReports);
 			}
 		}
 	}
@@ -1793,7 +1796,7 @@ public class SupplierFinalizationBackingBean extends
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(getManagedBean().getCurrentStatusId())) {
 				
-				validateFinalizationReports(false);
+				validateFinalizationReports(null);
 				
 				if (CollectionUtils.isNotEmpty(meetingList)) {
 					boolean atleastOneMeetingIsDone = false;
