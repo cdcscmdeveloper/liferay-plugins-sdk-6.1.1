@@ -4,29 +4,28 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<div align="left" class="header-info  header-spacing" style="width:100%">
+
+	<div align="left" class="header-info  header-spacing"
+		style="width: 100%">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="10%">
-				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.no']}" />
-			</td>
-			<td class="header-info-text">
-				#{directLOABackingBean.managedBean.scLoa.loaNo}
-			</td>
-			<td width="10%">
-				<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
-			</td>
-			<td class="header-info-text">
-				#{directLOABackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}
-			</td>
-			<td width="10%">
-				<h:outputLabel value="#{lbl['lbl.sc.status']}" />
-			</td>
-			<td class="header-info-text">
-				#{directLOABackingBean.getStatusDescById(directLOABackingBean.managedBean.scLoa.pmStatus.statusId)}
-			</td>
-		</tr>
+			<tr>
+				<td width="10%"><h:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>
+				<td class="header-info-text">
+					#{directLOABackingBean.managedBean.scLoa.brandNew ?
+					lbl['lbl.sc.system.generated'] :
+					directLOABackingBean.managedBean.scLoa.loaNo}</td>
+				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+				</td>
+				<td class="header-info-text">
+					#{directLOABackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}
+				</td>
+				<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
+				</td>
+				<td class="header-info-text">
+					#{directLOABackingBean.getStatusDescById(directLOABackingBean.managedBean.scLoa.pmStatus.statusId)}
+				</td>
+			</tr>
 		</table>
 	</div>
 </ui:composition>
