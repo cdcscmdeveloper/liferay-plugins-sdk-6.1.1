@@ -48,7 +48,6 @@ import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -3147,7 +3146,6 @@ public class SupplierFinalizationBackingBean extends
 				qtDtlSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 				qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				qtReqDTO.setBdgDtlsReq(true);
 				QuationTenderResDTO qtResDTO = new QuationTenderResDTO();

@@ -794,7 +794,7 @@ public class ApprovalBackingBean extends
 				qtReqDTO.setApprovalFlow(true);
 				qtReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				IQTDetailSO detailSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
@@ -1364,7 +1364,7 @@ public class ApprovalBackingBean extends
 
 			qtReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+			qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			IQTDetailSO detailSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTDetailSO.class);
