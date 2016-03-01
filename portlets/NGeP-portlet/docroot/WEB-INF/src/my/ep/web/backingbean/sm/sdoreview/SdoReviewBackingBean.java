@@ -150,6 +150,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		return retVal;
 	}
 	
+	public void onClickClaimButton(){
+		claimBpmTask();
+		getManagedBean().setClaimTask(true);
+	}
+	
 	/**
 	 * submit SDO Review Action
 	 * @param String resAction

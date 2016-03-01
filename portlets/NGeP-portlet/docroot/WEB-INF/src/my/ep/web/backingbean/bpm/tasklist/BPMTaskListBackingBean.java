@@ -853,21 +853,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 		System.out.println("**********claimTask");
 		try{
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-
-			String taskId = FacesContext.getCurrentInstance().getExternalContext()
-					.getRequestParameterMap().get("taskId");
-
-			FacesScopes face = new FacesScopes();
-			Object token = face.getBPMAuthenticationCtxToken();
-
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setTaskId(taskId);
-			reqDTO.setCtxToken(token);
-			bpmSO.claimTask(reqDTO);
-
-
+			claimBpmTask();
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		}catch(Exception e){
@@ -884,21 +870,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	public String releaseTask()  {
 		System.out.println("**********releaseTask");
 		try{
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-
-			String taskId = FacesContext.getCurrentInstance().getExternalContext()
-					.getRequestParameterMap().get("taskId");
-
-			FacesScopes face = new FacesScopes();
-			Object token = face.getBPMAuthenticationCtxToken();
-
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setTaskId(taskId);
-			reqDTO.setCtxToken(token);
-			bpmSO.releaseTask(reqDTO);
-
-
+			releaseBpmTask();
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		}catch(Exception e){

@@ -14,6 +14,11 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<!-- HEADER -->
 		<ui:param name="supplierName" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo" value="#{sdoReviewBackingBean.managedBean.smAppl.applNo}" />
@@ -21,14 +26,20 @@
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 		
 		<p:messages id="messages" showDetail="true" autoUpdate="#{empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.submit.msg']}" rendered="#{!sdoReviewBackingBean.managedBean.claimTask}"/><br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" 
-				disabled="#{sdoReviewBackingBean.managedBean.supportingDocMap.size() lt 1}" 
+				disabled="#{!sdoReviewBackingBean.managedBean.claimTask or sdoReviewBackingBean.managedBean.supportingDocMap.size() lt 1}" 
 				update="inquiryDlg" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" update="receiveCalIdMsg"
-				disabled="#{!empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" action="#{sdoReviewBackingBean.showVerifyConfirmation}">
+				disabled="#{!sdoReviewBackingBean.managedBean.claimTask or !empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" 
+				action="#{sdoReviewBackingBean.showVerifyConfirmation}">
 				<f:param name="disableValidation" value="true" />
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{sdoReviewBackingBean.onClickClaimButton}" update="@form" process="@this"
+				rendered="#{!sdoReviewBackingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+				<f:param name="taskId" value="#{sdoReviewBackingBean.managedBean.taskId}" />
 			</p:commandButton>
 		</div>
 		

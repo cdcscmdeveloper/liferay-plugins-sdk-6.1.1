@@ -19,6 +19,13 @@
 		
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.approved.or.reject.msg']}" 
 			rendered="#{!backingBean.managedBean.claimTask}" escape="false"/><br />
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{backingBean.onClickClaimButton}" update="@form" process="@this"
+				rendered="#{!backingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+				<f:param name="taskId" value="#{backingBean.managedBean.taskId}" />
+			</p:commandButton>
+		</div>
 
 		<ui:include src="approverCompanyInfo.xhtml" />
 		<ui:include src="approverContactInfo.xhtml" />
