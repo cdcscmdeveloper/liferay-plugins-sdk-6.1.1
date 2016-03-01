@@ -1687,7 +1687,6 @@ public class ConsolidationReportBackingBean extends
 				qtDtlSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 				qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				qtReqDTO.setBdgDtlsReq(true);
 				QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
