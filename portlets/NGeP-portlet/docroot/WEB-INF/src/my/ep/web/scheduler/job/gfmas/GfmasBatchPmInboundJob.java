@@ -1,8 +1,9 @@
 package my.ep.web.scheduler.job.gfmas;
 
+import my.ep.biz.service.intg.gfmas.IGfmasServiceSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
-import my.ep.web.integration.common.BatchTemplate;
-import my.ep.web.integration.common.GfmasIntegration;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
@@ -18,21 +19,17 @@ public class GfmasBatchPmInboundJob implements Job {
 	public static Logger log = EpLogger
 			.getLogger(GfmasBatchPmInboundJob.class);
 
-	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
-		}
-		log.info(message);
-	}
-
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("GfmasBatchPmInboundJob  : Start");
-
-		BatchTemplate batchTemplate = new GfmasIntegration();
-		batchTemplate.gfmasInboundServices();
 		
+		IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IGfmasServiceSO.class);
+		
+		gfmasServiceSO.gfmasInboundServices();
+
 		log.info("GfmasBatchPmInboundJob  : End");
 		
 	}
