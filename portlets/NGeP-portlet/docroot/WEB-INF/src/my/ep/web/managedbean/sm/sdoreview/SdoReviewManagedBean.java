@@ -37,6 +37,7 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private String zoneCode;
 	private Map<Long,SmApplSupportDoc> supportingDocMap;
 	private SmGstSupplier smGstSupplier;
+	private boolean claimTask;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -165,6 +166,14 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
 		this.smGstSupplier = smGstSupplier;
+	}
+
+	public boolean isClaimTask() {
+		return claimTask;
+	}
+
+	public void setClaimTask(boolean claimTask) {
+		this.claimTask = claimTask;
 	}
 
 	
