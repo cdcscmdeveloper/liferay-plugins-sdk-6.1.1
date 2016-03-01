@@ -787,6 +787,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory year from report type view. */
 	private boolean smMandatoryYearFromReportTypeView = false;
+	
+	/** The sm mandatory year from report type view for my. */
+	private boolean smMandatoryYearFromReportTypeViewForMY=false;
 
 	/** The sm mandatory company name view. */
 	private boolean smMandatoryCompanyNameView = false;
@@ -829,6 +832,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory registered report type date view. */
 	private boolean smMandatoryRegisteredReportTypeDateView = false;
+	
+	/** The sm mandatory registered report type date view for my. */
+	private boolean smMandatoryRegisteredReportTypeDateViewForMY=false;
 
 	/** The sm mandatory zone view. */
 	private boolean smMandatoryZoneView = false;
@@ -19963,6 +19969,46 @@ public class ReportsGenerateBean {
 	 */
 	public void setCmItemTypeViewOnly(boolean cmItemTypeViewOnly) {
 		this.cmItemTypeViewOnly = cmItemTypeViewOnly;
+	}
+
+	/**
+	 * Checks if is sm mandatory year from report type view for my.
+	 * 
+	 * @return the smMandatoryYearFromReportTypeViewForMY
+	 */
+	public boolean isSmMandatoryYearFromReportTypeViewForMY() {
+		return smMandatoryYearFromReportTypeViewForMY;
+	}
+
+	/**
+	 * Sets the sm mandatory year from report type view for my.
+	 * 
+	 * @param smMandatoryYearFromReportTypeViewForMY
+	 *            the smMandatoryYearFromReportTypeViewForMY to set
+	 */
+	public void setSmMandatoryYearFromReportTypeViewForMY(
+			boolean smMandatoryYearFromReportTypeViewForMY) {
+		this.smMandatoryYearFromReportTypeViewForMY = smMandatoryYearFromReportTypeViewForMY;
+	}
+
+	/**
+	 * Checks if is sm mandatory registered report type date view for my.
+	 * 
+	 * @return the smMandatoryRegisteredReportTypeDateViewForMY
+	 */
+	public boolean isSmMandatoryRegisteredReportTypeDateViewForMY() {
+		return smMandatoryRegisteredReportTypeDateViewForMY;
+	}
+
+	/**
+	 * Sets the sm mandatory registered report type date view for my.
+	 * 
+	 * @param smMandatoryRegisteredReportTypeDateViewForMY
+	 *            the smMandatoryRegisteredReportTypeDateViewForMY to set
+	 */
+	public void setSmMandatoryRegisteredReportTypeDateViewForMY(
+			boolean smMandatoryRegisteredReportTypeDateViewForMY) {
+		this.smMandatoryRegisteredReportTypeDateViewForMY = smMandatoryRegisteredReportTypeDateViewForMY;
 	}
 
 	
