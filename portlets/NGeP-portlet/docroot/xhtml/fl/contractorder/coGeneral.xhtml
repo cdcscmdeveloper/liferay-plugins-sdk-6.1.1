@@ -74,10 +74,10 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
-				<td><p:selectBooleanCheckbox
+				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" rendered="false" /></td>
+				<td><p:selectBooleanCheckbox rendered="false"
 						value="#{flOrderBB.managedBean.flRequest.ctContract.mto}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/></td>
+						disabled="true" /><!-- <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/> --></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
