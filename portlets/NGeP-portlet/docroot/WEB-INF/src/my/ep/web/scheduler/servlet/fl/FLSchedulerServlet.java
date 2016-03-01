@@ -21,12 +21,12 @@ public class FLSchedulerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		
 		// Expire the contract that no more effective. 
-	/*	EpSchedulerHelper.scheduleJob(new JobKey(
+		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.GFMAS_PAYMENT_INFORMATION_INBOUND,
 				SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 				PaymentInformationJob.class,
 				SchedulerConstants.GFMAS_FL_CONTINUOUS_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("phis.fl.outbound"));*/
+				EpPropertiesUtils.getInstance().getProperty("1gfmas.fl.inbound"));
 	}
 
 
