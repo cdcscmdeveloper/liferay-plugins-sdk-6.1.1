@@ -47,9 +47,9 @@
 						style="width:85%;">
 
 						<c:if
-							test="#{cmReportBackingBean.managedBean.rptGenBean.cmItemTypeView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.itemType']}"
-								style="width:123px;" />
+							test="#{cmReportBackingBean.managedBean.rptGenBean.cmItemTypeViewOnly}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemType']}"     
+								style="width:65px;margin-left: -39px;" />
 							<p:selectOneMenu value="#{reportBackingBean.cmItemType}"
 								style="margin-top:5px;width:150px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
@@ -62,6 +62,41 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
+						
+						<c:if
+							test="#{cmReportBackingBean.managedBean.rptGenBean.cmItemTypeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.itemType']}"
+								style="width:168px;" />
+							<p:selectOneMenu value="#{reportBackingBean.cmItemType}"
+								style="margin-top:5px;width:150px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.productLabel']}"
+									itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.serviceLabel']}"
+									itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+						
+						<c:if
+							test="#{cmReportBackingBean.managedBean.rptGenBean.cmRoleSuppItemTypeView}">						
+							<p:outputLabel value="#{lbl['lbl.rpt.itemType']}"
+								style="width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.cmItemType}"
+								style="margin-top:5px;width:150px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.productLabel']}"
+									itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.serviceLabel']}"
+									itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+						
 						<c:if
 							test="#{cmReportBackingBean.managedBean.rptGenBean.cmItemStatusView}">
 							<h:outputLabel value="#{lbl['lbl.rpt.itemStatus']}"
@@ -170,6 +205,22 @@
 							test="#{cmReportBackingBean.managedBean.rptGenBean.cmGroupOneView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
 								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.cmGroupOne}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.itemType']}"
+									itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.unspscCodeScreen']}"
+									itemValue="#{lbl['lbl.rpt.unspsccode']}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
+							test="#{cmReportBackingBean.managedBean.rptGenBean.cmRoleSuppGroupOneView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+								style="margin-top:5px;width:308px;" />
 							<p:selectOneMenu value="#{reportBackingBean.cmGroupOne}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"

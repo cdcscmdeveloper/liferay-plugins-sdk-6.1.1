@@ -42,25 +42,33 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setCmUnspscTitleView(true);
 				rptGenBean.setCmCatelogDateView(true);
 				rptGenBean.setCmPublishedDateView(true);
-				
+				rptGenBean.setCmGroupOneView(true);
 				if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
+					rptGenBean.setCmItemTypeView(false);
+					rptGenBean.setCmGroupOneView(false);
+					rptGenBean.setCmRoleSuppItemTypeView(true);
+					rptGenBean.setCmRoleSuppGroupOneView(true);
 					rptGenBean.setCmCompanyNameView(false);
 					rptGenBean.setCmRegistrationTypeView(false);
 					}else {
 						rptGenBean.setCmCompanyNameView(true);
 						rptGenBean.setCmRegistrationTypeView(true);	
 					}
-					rptGenBean.setCmGroupOneView(true);
+					
 				
 	            break;
 	        case ReportConst.LST_APPR_CAT_ITM_RPT_VAL:	        		
-				rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);		
-				
-					rptGenBean.setCmItemTypeView(true);
+				 rptGenBean.setCmUnspscCodeView(true);
+				 rptGenBean.setCmUnspscTitleView(true);
+				 rptGenBean.setCmItemTypeView(true);
+				 rptGenBean.setCmGroupOneView(true);	
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 					rptGenBean.setCmCompanyNameView(false);
 					rptGenBean.setCmRegistrationTypeView(false);
+					rptGenBean.setCmItemTypeView(false);
+					rptGenBean.setCmGroupOneView(false);
+					rptGenBean.setCmRoleSuppItemTypeView(true);
+					rptGenBean.setCmRoleSuppGroupOneView(true);
 					rptGenBean.setCmCatelogDateView(true);					
 					rptGenBean.setCmSubmittedDateView(true);
 					}else {
@@ -69,7 +77,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 						rptGenBean.setCmCatelogDateView(true);		
 						rptGenBean.setCmApprovedDateView(true);
 					}
-					rptGenBean.setCmGroupOneView(true);					
+									
 	            break;
 	        case ReportConst.LST_REJ_CAT_ITM_RPT_VAL:			
 				rptGenBean.setCmUnspscCodeView(true);
@@ -77,14 +85,19 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setCmCatelogDateView(true);
 				rptGenBean.setCmSubmittedDateView(true);	
 					rptGenBean.setCmItemTypeView(true);
+					rptGenBean.setCmGroupOneView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
 						rptGenBean.setCmRegistrationTypeView(false);
+						rptGenBean.setCmItemTypeView(false);
+						rptGenBean.setCmGroupOneView(false);
+						rptGenBean.setCmRoleSuppItemTypeView(true);
+						rptGenBean.setCmRoleSuppGroupOneView(true);
 						}else {
 							rptGenBean.setCmCompanyNameView(true);
 							rptGenBean.setCmRegistrationTypeView(true);	
 						}
-					rptGenBean.setCmGroupOneView(true);
+					
 	            break;
 	        case ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL:		
 				rptGenBean.setCmUnspscCodeView(true);
@@ -92,14 +105,19 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setCmCatelogDateView(true);
 				rptGenBean.setCmSubmittedDateView(true);
 					rptGenBean.setCmItemTypeView(true);
+					rptGenBean.setCmGroupOneView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
 						rptGenBean.setCmRegistrationTypeView(false);
+						rptGenBean.setCmItemTypeView(false);
+						rptGenBean.setCmGroupOneView(false);
+						rptGenBean.setCmRoleSuppItemTypeView(true);
+						rptGenBean.setCmRoleSuppGroupOneView(true);
 						}else {
 							rptGenBean.setCmCompanyNameView(true);
 							rptGenBean.setCmRegistrationTypeView(true);	
 						}
-					rptGenBean.setCmGroupOneView(true);
+					
 	            break;
 	        case ReportConst.LST_EXP_CAT_ITM_RPT_VAL:	        		
 				rptGenBean.setCmUnspscCodeView(true);
@@ -107,14 +125,19 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setCmCatelogDateView(true);
 				rptGenBean.setCmExpiredDateView(true);
 					rptGenBean.setCmItemTypeView(true);
+					rptGenBean.setCmGroupOneView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
 						rptGenBean.setCmRegistrationTypeView(false);
+						rptGenBean.setCmItemTypeView(false);
+						rptGenBean.setCmGroupOneView(false);
+						rptGenBean.setCmRoleSuppItemTypeView(true);
+						rptGenBean.setCmRoleSuppGroupOneView(true);
 						}else {
 							rptGenBean.setCmCompanyNameView(true);
 							rptGenBean.setCmRegistrationTypeView(true);	
 						}
-					rptGenBean.setCmGroupOneView(true);
+					
 	            break;
 	        case ReportConst.TOT_CAT_ITM_STS_RPT_VAL:	        	
 	        	rptGenBean.setCmCatelogDateView(true);
@@ -144,7 +167,9 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setCmCatelogDateView(true);
 				rptGenBean.setCmPublishedDateView(true);
 					rptGenBean.setCmItemTypeView(true);
-					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
+					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){						
+						rptGenBean.setCmItemTypeView(false);
+						rptGenBean.setCmItemTypeViewOnly(true);
 						rptGenBean.setCmCompanyNameView(false);
 						rptGenBean.setCmRegistrationTypeView(false);
 						}else {
@@ -172,6 +197,8 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setCmPublishedDateView(true);
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
+						rptGenBean.setCmItemTypeView(false);
+						rptGenBean.setCmItemTypeViewOnly(true);
 						rptGenBean.setCmCompanyNameView(false);
 						rptGenBean.setCmRegistrationTypeView(false);
 						}else {
