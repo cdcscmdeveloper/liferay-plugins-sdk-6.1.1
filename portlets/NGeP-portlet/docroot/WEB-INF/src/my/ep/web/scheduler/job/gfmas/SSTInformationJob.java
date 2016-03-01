@@ -1,8 +1,9 @@
 package my.ep.web.scheduler.job.gfmas;
 
+import my.ep.biz.service.intg.gfmas.IGfmasServiceSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
-import my.ep.web.integration.common.BatchTemplate;
-import my.ep.web.integration.common.GfmasIntegration;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -20,8 +21,11 @@ public class SSTInformationJob implements Job {
 			throws JobExecutionException {
 
 		log.info("SSTInformationJob start");
-		BatchTemplate batchTemplate = new GfmasIntegration();
-		batchTemplate.sstInformationGfmas();
+		IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IGfmasServiceSO.class);
+		
+		gfmasServiceSO.sstInformationGfmas();
 		log.info("SSTInformationJob end");
 
 	}

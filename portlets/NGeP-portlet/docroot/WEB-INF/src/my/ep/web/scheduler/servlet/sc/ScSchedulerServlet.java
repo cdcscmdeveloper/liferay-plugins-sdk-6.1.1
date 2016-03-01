@@ -66,9 +66,10 @@ public class ScSchedulerServlet extends HttpServlet {
 				ProposalValidityExpiaryJob.class,"Job run every day at 12:05 AM", "0 05 0 * * ?");
 
 		EpSchedulerHelper.scheduleJob(
-				new JobKey(SchedulerConstants.GFMAS_SST_INFORMATION,SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+				new JobKey(SchedulerConstants.GFMAS_SST_INFORMATION,
+				SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 				SSTInformationJob.class,
-				SchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
+				SchedulerConstants.GFMAS_SC_OUT_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));
 	}
 
