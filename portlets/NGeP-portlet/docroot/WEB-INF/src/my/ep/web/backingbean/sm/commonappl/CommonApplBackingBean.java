@@ -85,10 +85,11 @@ public class CommonApplBackingBean extends
 		if (isRedirectToViewOnlyApplication(isClaim, resDTO)) {
 			ViewApplHistoryBackingBean backingBean = new ViewApplHistoryBackingBean();
 			backingBean.getManagedBean().setTaskId(taskId);
+			backingBean.getManagedBean().setClaimTask(isClaim);
 			backingBean.viewUnClaimTask(resDTO.getDocNumber());
 			SmCommonUtil
 					.redirectToPage(
-							"/xhtml/sm/revisionSmApplView/viewApplicationHistory/smViewUnClaimTask.xhtml",
+							"/xhtml/sm/revisionSmApplView/unclaimtaskView/smViewUnClaimTask.xhtml",
 							"", null);
 		}
 		else if (resDTO.getTaskName()
