@@ -11697,13 +11697,19 @@ public class ReportBackingBean extends
 			 * FacesScopes().getUserLocale()); //String language = "ms";
 			 */
 			if (null != pmReport) {
-				String label = ReportConst.EMPTY_VAL;
+				
+					String label = ReportConst.EMPTY_VAL;
+				
+				if (strLanguage != null && !strLanguage.isEmpty() ) {
+					rptGenBean.setStrLanguage(strLanguage);
+				}
 				if ((null != pmReport.getSubModule())
 						&& (ReportConst.EMPTY_VAL != pmReport.getSubModule())) {
 					/*
 					 * label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
 					 * + pmReport.getSubModule();
 					 */
+					
 					if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
@@ -11711,12 +11717,14 @@ public class ReportBackingBean extends
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
 						
+						
 					} else if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitleMalay());
+						
 						
 					}
 					this.setSubModule(pmReport.getSubModule());
