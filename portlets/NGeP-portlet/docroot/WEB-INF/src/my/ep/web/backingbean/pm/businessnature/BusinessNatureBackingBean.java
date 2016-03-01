@@ -1032,7 +1032,7 @@ public class BusinessNatureBackingBean extends
 	}
 
 	public String retrieveActionLabel(String level){
-		String label = null;
+		String label = "";
 		if("10".equals(level)){
 			label = ResourceBundleUtils.getMessage(
 					"lbl.pm.add.division.category",
