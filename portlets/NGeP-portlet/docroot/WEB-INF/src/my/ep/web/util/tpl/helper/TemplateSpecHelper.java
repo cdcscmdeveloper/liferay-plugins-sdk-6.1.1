@@ -861,7 +861,7 @@ public class TemplateSpecHelper {
 		newSpecQuestion.setWeightage(oldSpecQuestion.getWeightage());
 		
 		// copy tplSpecScorings
-		if (ParameterConst.SCORE_TYPE_AUTO.equals(scoreTypeCode.getParameterCode())) {
+		if (scoreTypeCode != null && ParameterConst.SCORE_TYPE_AUTO.equals(scoreTypeCode.getParameterCode())) {
 			cloneTplSpecScoring(newSpecQuestion, oldSpecQuestion.getTplSpecScorings());
 		}
 		
