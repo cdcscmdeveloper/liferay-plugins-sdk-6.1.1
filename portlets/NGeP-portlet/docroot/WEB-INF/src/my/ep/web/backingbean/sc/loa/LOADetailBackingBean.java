@@ -3152,35 +3152,33 @@ public class LOADetailBackingBean extends
 			}
 		}
 	}
-
 	
 	/**
 	 * Adds the schedule details in Fulfillment Schedule.
 	 */
 	public void addScheduleDetails() {
-
 		try {
-
+			Integer totalFrequency = getManagedBean().getTotalFrequency();
 			int year = Calendar.getInstance().get(Calendar.YEAR);
-			List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
+			List<ScQtSchedule> freqSchedules = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
-			if (null == freqSchedule) {
-				freqSchedule = new ArrayList<ScQtSchedule>();
+			
+			if (null == freqSchedules) {
+				freqSchedules = new ArrayList<ScQtSchedule>();
+			}
+			
+			if(null == totalFrequency){
+				totalFrequency = new Integer(0);
 			}
 
-			if (freqSchedule.size() > this.getManagedBean().getTotalFrequency()) {
-
-				List<ScQtSchedule> localSchedule = new ArrayList<ScQtSchedule>();
-				for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
-					localSchedule.add(freqSchedule.get(j));
-
+			if (freqSchedules.size() > totalFrequency) {
+				List<ScQtSchedule> localSchedules = new ArrayList<ScQtSchedule>();
+				for (int j = 0; j < totalFrequency; j++) {
+					localSchedules.add(freqSchedules.get(j));
 				}
-				this.getManagedBean().getScLoa()
-						.setScQtSchedules(localSchedule);
+				this.getManagedBean().getScLoa().setScQtSchedules(localSchedules);
 			} else {
-				for (int i = freqSchedule.size(); i < this.getManagedBean()
-						.getTotalFrequency(); i++) {
-
+				for (int i = freqSchedules.size(); i < totalFrequency; i++) {
 					ScQtSchedule schedule = new ScQtSchedule();
 					schedule.setStartYear(String.valueOf(year));
 					schedule.setEndYear(String.valueOf(year));
@@ -3188,13 +3186,11 @@ public class LOADetailBackingBean extends
 					PmParameter parameter = this.getParameterByTypeAndCode(ParameterTypeConst.SCHEDULE_TYPE, ParameterConst.SCHEDULE_TYPE_PERIODIC);
 					schedule.setScheduleType(parameter);					
 					setUserDetails(schedule);
-					freqSchedule.add(schedule);
+					freqSchedules.add(schedule);
 				}
-				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
+				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedules);
 			}
-
 		} finally {
-
 		}
 	}
 
@@ -3958,41 +3954,38 @@ public class LOADetailBackingBean extends
 	 */
 	public void addProgressiveDetails() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
+		Integer totalProgressivePayment = getManagedBean().getTotalProgressivePayment();
 		ScLoa scLoa = getManagedBean().getScLoa();
-		List<ScQtProgressivePayment> progressive = this.getManagedBean()
+		List<ScQtProgressivePayment> progressivePayList = this.getManagedBean()
 				.getProgressivePaymentList();
 
-		if (null == progressive) {
-			progressive = new ArrayList<ScQtProgressivePayment>();
-
+		if (null == progressivePayList) {
+			progressivePayList = new ArrayList<ScQtProgressivePayment>();
 		}
 
-		if (progressive.size() > this.getManagedBean()
-				.getTotalProgressivePayment()) {
-
+		if(null == totalProgressivePayment){
+			totalProgressivePayment = new Integer(0);
+		}
+		if (progressivePayList.size() > totalProgressivePayment) {
 			List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
-			for (int j = 0; j < this.getManagedBean()
-					.getTotalProgressivePayment(); j++) {
-				progressiveList.add(progressive.get(j));
-
+			for (int j = 0; j < totalProgressivePayment ; j++) {
+				progressiveList.add(progressivePayList.get(j));
 			}
+
 			this.getManagedBean().setProgressivePaymentList(progressiveList);
 		} else {
-			for (int i = progressive.size(); i < this.getManagedBean()
-					.getTotalProgressivePayment(); i++) {
-
+			for (int i = progressivePayList.size(); i < totalProgressivePayment ; i++) {
 				ScQtProgressivePayment payment = new ScQtProgressivePayment();
 				payment.setStartYear(String.valueOf(year));
 				payment.setEndYear(String.valueOf(year));
 				payment.setPhaseNo(BigDecimal.valueOf(i + 1));
 				payment.setScLoa(scLoa);
-				// payment.setScheduleType(new BigDecimal(1));
-
 				setUserDetails(payment);
-				progressive.add(payment);
+				progressivePayList.add(payment);
 			}
-			this.getManagedBean().setProgressivePaymentList(progressive);
+			this.getManagedBean().setProgressivePaymentList(progressivePayList);
 		}
+
 	}
 
 	/**
@@ -5187,15 +5180,15 @@ public class LOADetailBackingBean extends
 		String actualFilePath = getActualFilePathLoaNo(scLoa);
 		if(!StringUtils.isBlank(tempFilePath)){
 			// /docuRepo/dev/ngep/2016/SC/LB16000001565237 
-			//StringBuilder tFilePath = new StringBuilder("c:");
-			StringBuilder tFilePath = new StringBuilder();
+			StringBuilder tFilePath = new StringBuilder("c:");
+			//StringBuilder tFilePath = new StringBuilder();
 			tFilePath.append(tempFilePath);
 			//create source File object
 			File oldName = new File(tFilePath.toString());
 
 			//create destination File object
-			//StringBuilder aFilePath = new StringBuilder("c:");
-			StringBuilder aFilePath = new StringBuilder();
+			StringBuilder aFilePath = new StringBuilder("c:");
+			//StringBuilder aFilePath = new StringBuilder();
 			aFilePath.append(actualFilePath);
 			File newName = new File(aFilePath.toString());
 			boolean isFileRenamed = oldName.renameTo(newName);
