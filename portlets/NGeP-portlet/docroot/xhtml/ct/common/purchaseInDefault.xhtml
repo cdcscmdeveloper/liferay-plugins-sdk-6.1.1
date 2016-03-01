@@ -15,7 +15,8 @@
 	                     rowKey="#{pidObj}" selection="#{ctBackingBean.managedBean.selectedPidReason}">
 				       <ac:paginator for="purchaseInDefaultTable" />
 				       <p:column selectionMode="multiple"
-				             style="width:5%;text-align:center" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.disableAmendDetails}">
+				             style="width:5%;text-align:center" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.disableAmendDetails
+				             and !ctBackingBean.managedBean.contractVer.panel}">
 				        </p:column>
 				        <p:column style="width:50%;" 
 				            headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
@@ -34,13 +35,13 @@
 		               </p:column>  
 				 </p:dataTable>
 	             <div class="ppRightBtn"> 
-			         <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   disabled="#{ctBackingBean.managedBean.contractVer.panel}"
+			         <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"
 				          partialSubmit="true" action="#{ctBackingBean.addPurchaseInDefault()}" update="purchaseInDefaultTable" 
 				         oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!ctBackingBean.managedBean.viewContract
-				         	and !ctBackingBean.managedBean.disableAmendDetails}"/>	
-				     <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" disabled="#{ctBackingBean.managedBean.contractVer.panel}"
+				         	and !ctBackingBean.managedBean.disableAmendDetails and !ctBackingBean.managedBean.contractVer.panel}"/>	
+				     <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true"
 			             onsuccess="delPidPurchaseDlg.show()" rendered="#{!ctBackingBean.managedBean.viewContract
-			             	and !ctBackingBean.managedBean.disableAmendDetails}"/>			
+			             	and !ctBackingBean.managedBean.disableAmendDetails and !ctBackingBean.managedBean.contractVer.panel}"/>			
 		        </div>
 		        <p:dialog id="delPidPurchaseDlg"   styleClass="screen-title" 
 		             widgetVar="delPidPurchaseDlg"  modal="true" width="330">  
