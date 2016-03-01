@@ -4,6 +4,7 @@
 package my.ep.web.constant.sm;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,17 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 public class SupplierManagementConst {
 
+	public static final Map<String, String> APPLICATION_BASE_PAGE_BY_TYPE;
+    static {
+        Map<String, String> tmp = new HashMap<String, String>();
+        tmp.put("N", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+        tmp.put("C", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+        tmp.put("A", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+        tmp.put("B", "/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+        tmp.put("U", "/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+        tmp.put("R", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+        APPLICATION_BASE_PAGE_BY_TYPE = Collections.unmodifiableMap(tmp);
+    }
 	// Navigation
 	public static final String PROCEED_MOF_REG = "mofRegSmUser_BaseWizardPage";
 	public static final String PROCEED_MOF_REG_TNC_PAGE = "/xhtml/sm/NewMofApplication/newMofApplTermsAndConditionsPage.xhtml";
