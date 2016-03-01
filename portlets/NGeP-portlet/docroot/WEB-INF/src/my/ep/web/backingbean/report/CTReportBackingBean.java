@@ -45,6 +45,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -65,6 +66,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -87,6 +89,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusThreeView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -108,6 +111,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -128,6 +132,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -147,6 +152,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -166,6 +172,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -185,6 +192,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -204,6 +212,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -224,6 +233,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -244,6 +254,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -263,6 +274,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -294,6 +306,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusThreeView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -313,6 +326,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusThreeView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -332,6 +346,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusThreeView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -351,6 +366,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusThreeView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
@@ -371,6 +387,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtAgreementView(true);
 			rptGenBean.setCtStatusTwoView(true);
 			rptGenBean.setCtLoanNoView(true);
+			rptGenBean.setCommonLOVBasedRoles(true);
 			rptGenBean.setCtMinistryView(true);
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
