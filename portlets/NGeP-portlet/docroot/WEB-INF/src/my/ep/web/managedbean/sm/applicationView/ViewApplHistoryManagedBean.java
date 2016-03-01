@@ -23,6 +23,7 @@ public class ViewApplHistoryManagedBean extends
 	 */
 	private static final long serialVersionUID = 1191700333390541593L;
 	private SmAppl selectedApplHistory;
+	private boolean claimTask;
 	private IPagingDataModel<Object[]> smSupplierDataModel = new SmSupplierPagingDataModel();
 
 	public ViewApplHistoryManagedBean() {
@@ -99,6 +100,14 @@ public class ViewApplHistoryManagedBean extends
 
 	public void setSelectedApplHistory(SmAppl selectedApplHistory) {
 		this.selectedApplHistory = selectedApplHistory;
+	}
+
+	public boolean isClaimTask() {
+		return claimTask;
+	}
+
+	public void setClaimTask(boolean claimTask) {
+		this.claimTask = claimTask;
 	}
 
 }

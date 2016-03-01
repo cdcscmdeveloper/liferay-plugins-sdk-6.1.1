@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -33,7 +34,8 @@ import org.apache.commons.lang3.StringUtils;
 public class ViewApplHistoryBackingBean extends
 		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> {
 
-	public static VirtualCertBackingBean instance;
+	public static VirtualCertBackingBean virtualCertInstance;
+	public static CommonApplBackingBean commonApplInstance;
 
 	/**
 	 * Pre-render for View Application History
@@ -86,6 +88,14 @@ public class ViewApplHistoryBackingBean extends
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
 		setApplication(smAppl);
+	}
+
+	/**
+	 * On click claim task button
+	 */
+	public void onClickClaimButton() {
+		claimBpmTask();
+		getCommonApplInstance().preRenderView();
 	}
 
 	public void redirectToResubmit() {
@@ -164,7 +174,7 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	public void printVirtualCert(SmMofCert cert) {
 		try {
-			getInstance().printVirtualCert(cert);
+			getVirtualCertInstance().printVirtualCert(cert);
 		} catch (IOException e) {
 			throw new EpException(e.getMessage());
 		}
@@ -194,11 +204,24 @@ public class ViewApplHistoryBackingBean extends
 	 * 
 	 * @return VirtualCertBackingBean
 	 */
-	public static VirtualCertBackingBean getInstance() {
-		if (instance == null) {
-			instance = new VirtualCertBackingBean();
+	public static VirtualCertBackingBean getVirtualCertInstance() {
+		if (virtualCertInstance == null) {
+			virtualCertInstance = new VirtualCertBackingBean();
 		}
-		return instance;
+		return virtualCertInstance;
+
+	}
+
+	/**
+	 * Get CommonApplBackingBean instance
+	 * 
+	 * @return CommonApplBackingBean
+	 */
+	public static CommonApplBackingBean getCommonApplInstance() {
+		if (commonApplInstance == null) {
+			commonApplInstance = new CommonApplBackingBean();
+		}
+		return commonApplInstance;
 
 	}
 

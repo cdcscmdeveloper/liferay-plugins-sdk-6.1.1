@@ -25,35 +25,40 @@
 				
 				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.view.msg']}" escape="false"/><br />
 				
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{viewSmApplBackingBean.onClickClaimButton}" update="@form" process="@this"
+						rendered="#{!viewSmApplBackingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<f:param name="taskId" value="#{viewSmApplBackingBean.managedBean.taskId}" />
+						<f:param name="claim" value="true" />
+					</p:commandButton>
+				</div>
+				
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step1ViewProfileCompanyInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step1ViewProfileCompanyInfo.xhtml" />
 				</c:if>
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step2ViewProfileBranchCompanyInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step2ViewProfileBranchCompanyInfo.xhtml" />
 				</c:if>
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step4ViewProfilePersonnelInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step4ViewProfilePersonnelInfo.xhtml" />
 				</c:if>
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step3ViewProfileCaptialAndEquityStatusInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step3ViewProfileCaptialAndEquityStatusInfo.xhtml" />
 				</c:if>
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step5ViewProfileBankInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step5ViewProfileBankInfo.xhtml" />
 				</c:if>
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step6ViewProfileCategoryCodesInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step6ViewProfileCategoryCodesInfo.xhtml" />
 				</c:if>
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step6.1ViewProfileFactoryInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step6.1ViewProfileFactoryInfo.xhtml" />
 				</c:if>
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step6.2ViewProfileEquipmentInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step6.2ViewProfileEquipmentInfo.xhtml" />
 				</c:if>
 				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step7ViewProfileSupportingDocumentsInfo.xhtml" />
-				</c:if>
-				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-					<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step8ViewVirtualCertInfo.xhtml" />
+					<ui:include src="/xhtml/sm/revisionSmApplView/unclaimtaskView/step7ViewProfileSupportingDocumentsInfo.xhtml" />
 				</c:if>
 			</ac:smPanel>
 		</p:outputPanel>
