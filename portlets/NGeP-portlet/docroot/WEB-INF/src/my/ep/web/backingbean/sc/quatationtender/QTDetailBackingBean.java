@@ -84,7 +84,6 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
-import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -583,15 +582,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setMaintanceFlow(true);
 			reqDTO.setQtId(qtId);
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
-			ScQt selectedScQt = resDTO.getQtDetail();
-
-		
-			if(null == selectedScQt.getMinistrySpecSecrataryId()){
-				selectedScQt.setMinistrySpecSecrataryId(new PmUser());
-			}
-				this.getManagedBean().setMinistrySpecApprovers(
-						getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
-			
+			ScQt selectedScQt = resDTO.getQtDetail();		
 
 			if (null == selectedScQt.getContractType()) {
 				selectedScQt.setContractType(new PmParameter());
@@ -612,7 +603,6 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			this.getManagedBean().setQt(selectedScQt);
 
-			circularListSelect(selectedScQt.getCircularVer());
 			if ( QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
 							.getQtType()) {
 				this.getManagedBean().setEditable(
@@ -1800,7 +1790,7 @@ public class QTDetailBackingBean extends
 		}
 
 		ScQt scQt = this.getManagedBean().getQt();
-		circularListSelect(scQt.getCircularVer());
+		
 		if (scQt.getQtStatus() != null
 				&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
 						.getQtStatus().getStatusId()) && scQt.isPanel()
@@ -1814,10 +1804,6 @@ public class QTDetailBackingBean extends
 									new FacesScopes().getUserLocale())));
 		}
 
-		if (this.getManagedBean().getQt().getSpecApprovalReq()) {
-			this.getManagedBean().setMinistrySpecApprovers(
-					getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
-		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
@@ -3072,8 +3058,6 @@ public class QTDetailBackingBean extends
 									 * suppCriteria.getCtPanelItem
 									 * ().getPanelItemId());
 									 */
-
-									circularListSelect(scQt.getCircularVer());
 								}
 
 								if (tenderResDTO.getQtDetail().isZonal()) {
@@ -3127,6 +3111,7 @@ public class QTDetailBackingBean extends
 						BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
 								.getDecryptedExpectedIntendedPrice(qtId);
 						scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
+						scQt.setDecExpectedIntendedPrice(tmpExpectedIntendedPrice);
 					}
 					// this.getManagedBean().setContractType(scQt.getContractType());
 				}
@@ -3804,9 +3789,6 @@ public class QTDetailBackingBean extends
 				// detailSO.validateateQTDetails(reqDTO);
 				retrieveQuationTenderDetails(this.getManagedBean().getQt()
 						.getQtId());
-				
-				circularListSelect(this.getManagedBean().getQt().getCircularVer());
-				getUsersByRoleCode(RoleCode.MSC_SECRETARY.value());
 				break;
 			case 1:
 				retrieveSuppQualificationTabDtl();
@@ -4770,18 +4752,6 @@ public class QTDetailBackingBean extends
 		scTdObj[4] = scQt.getQtStatus().getStatusId();
 		scTdObj[5] = scQt.getQtTitle();
 		this.getManagedBean().setScTdObj(scTdObj);
-	}
-
-	public void circularListSelect(CtCircularVer circular) {
-
-		if(null != circular){
-		this.getManagedBean().getQt().setCircularVer(circular);
-
-		this.getManagedBean().setPanelGroupItems(
-				getPanelGroupItemsByCirculerVer(circular));
-		this.getManagedBean().setCircularType(circular.getDocType());
-		}
-
 	}
 
 }
