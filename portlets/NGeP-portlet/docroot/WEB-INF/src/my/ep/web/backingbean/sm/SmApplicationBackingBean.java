@@ -4794,11 +4794,6 @@ public class SmApplicationBackingBean extends
 						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
 				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 			retVal = true;
-		} else if (!retVal
-				&& prevPersonnel != null
-				&& !(prevPersonnel.getEpRole() != null && prevPersonnel
-						.getEpRole().equals(RoleCode.CM_USER.value()))) {
-			retVal = true;
 		}
 		return retVal;
 	}
