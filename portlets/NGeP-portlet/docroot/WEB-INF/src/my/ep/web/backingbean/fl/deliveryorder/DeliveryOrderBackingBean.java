@@ -659,9 +659,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * @return the portlet title
 	 */
 	public String getPortletTitle() {
-		String portletTitle = " Fulfilment Document Maintenance";
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,getFacesScopes().getUserLocale());
 		if(getManagedBean().isModificationCancel()) {
-			portletTitle = "Fulfilment Document Maintenance";
+			portletTitle = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,getFacesScopes().getUserLocale());
 		}
 		return portletTitle;
 	}
