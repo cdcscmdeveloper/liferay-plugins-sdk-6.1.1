@@ -24,7 +24,7 @@
 						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
 						process="@form" />
 					<p:menuitem value="#{lbl['lbl.sc.activities']}"
-						action="#{qTDetailBB.qtDetailsTabChange(8)}" update="@form"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form" />
 
 				</p:tabMenu></td>
@@ -47,7 +47,7 @@
 							src="/xhtml/sc/quatationtender/approval/approvalCheckBox.xhtml" />
 					</c:if>
 
-					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8'}">
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 						<ui:include
 							src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 					</c:if>
