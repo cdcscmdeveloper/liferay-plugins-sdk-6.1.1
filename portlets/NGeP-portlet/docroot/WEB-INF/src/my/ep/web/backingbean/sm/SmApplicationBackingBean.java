@@ -4778,6 +4778,8 @@ public class SmApplicationBackingBean extends
 	public boolean disableEpRoleDropDown(SmPersonnel smPersonnel) {
 		boolean retVal = false;
 		SmPersonnel prevPersonnel = getPrevApprovedPersonnel(smPersonnel);
+
+		// disabled drop down for Admin
 		if (!StringUtils.isBlank(smPersonnel.getEpRole())
 				&& (smPersonnel.getEpRole().equals(
 						RoleCode.MOF_SUPPLIER_ADMIN.value())
@@ -4786,13 +4788,9 @@ public class SmApplicationBackingBean extends
 						.getEpRole().equals(
 								RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
 			retVal = true;
-		} else if (prevPersonnel != null
-				&& !StringUtils.isBlank(prevPersonnel.getEpRole())
-				&& ((prevPersonnel.getEpRole().equals(
-						RoleCode.MOF_SUPPLIER_USER.value()) || prevPersonnel
-						.getEpRole().equals(RoleCode.FL_USER.value())) && prevPersonnel
-						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
-				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
+		}
+		// disabled drop down if softcert processing
+		else if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
 			retVal = true;
 		}
 		return retVal;
