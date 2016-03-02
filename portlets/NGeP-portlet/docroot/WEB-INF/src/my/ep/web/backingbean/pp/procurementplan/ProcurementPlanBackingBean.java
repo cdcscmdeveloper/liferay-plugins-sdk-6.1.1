@@ -383,7 +383,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					|| ProcurementPlanConst.PPE_APPROVED.equals(status) ){
 				this.getManagedBean().setModeReview(false);
 				this.getManagedBean().setModeReviewEditable(false);
-				if(isRolePlanner()){
+				if(isRolePlanner() 
+						&& !(getManagedBean().getBtnValue() != null 
+						&& ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue()))){
 					this.getManagedBean().getSelectedPlan().setUpdatable(true);
 					this.getManagedBean().setModeEditable(true);
 				}
