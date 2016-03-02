@@ -274,8 +274,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 						&& !pmzone.getPmZoneStates().isEmpty()) {
 					for (PmZoneState state : pmzone.getPmZoneStates()) {
 						for (PmState pmState : stList) {
-							if (state.getPmState().getStateId() == pmState
-									.getStateId()) {
+							if (state.getPmState().getStateId().equals(pmState
+									.getStateId())) {
 								pmState.setExistingState(true);
 							} else {
 								pmState.setExistingState(false);
