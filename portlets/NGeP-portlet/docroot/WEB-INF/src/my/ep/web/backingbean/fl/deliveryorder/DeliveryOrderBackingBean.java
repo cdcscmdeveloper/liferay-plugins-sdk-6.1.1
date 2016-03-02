@@ -285,28 +285,28 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						messageId = MessageConst.INFO_700007;
 						//messagePrefix = "Cancellation for ";
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 						messageId = MessageConst.INFO_700008;
 						//messagePrefix = "Cancellation for ";
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 						messageId = MessageConst.INFO_700011;
 						//messagePrefix = "Update for ";
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
 						messageId = MessageConst.INFO_700043;
 						//messagePrefix = "Update for ";
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					} else {
 						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 							messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						}
 						messageId = MessageConst.INFO_700005;
-						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
 							MessageUtils.getMessage(messageId, 
@@ -316,9 +316,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				} else {
 					messageId = MessageConst.INFO_700043;
 					String message = "";
-					for(String deliveryOrderNo : resDTO.getDeliveryOrderNoList()) {
+					for(String supplierDORef : resDTO.getSupplierDeliveryOrderNoList()) {
 						message = MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), deliveryOrderNo}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), supplierDORef}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message));
 					}
@@ -331,15 +331,15 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				renewSesionObject();
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					Map<String, String> paramMap = new HashMap<String, String>();
-					String deliveryOrderNoList = "";
-					for(String deliveryOrderNo : resDTO.getDeliveryOrderNoList()) {
-						if(deliveryOrderNo.length()==0) {
-							deliveryOrderNoList = deliveryOrderNo;
+					String supplierDORefList = "";
+					for(String supplierDORef : resDTO.getSupplierDeliveryOrderNoList()) {
+						if(supplierDORef.length()==0) {
+							supplierDORefList = supplierDORef;
 						} else {
-							deliveryOrderNoList = deliveryOrderNoList + "," + deliveryOrderNo;
+							supplierDORefList = supplierDORefList + "," + supplierDORef;
 						}
 					}
-					paramMap.put(ReportConst.PARAM_DOC_NO, deliveryOrderNoList);
+					paramMap.put(ReportConst.PARAM_DOC_NO, supplierDORefList);
 					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 					CommonBackingBean commonBackingBean = new CommonBackingBean();
 					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_DELIVERY);
