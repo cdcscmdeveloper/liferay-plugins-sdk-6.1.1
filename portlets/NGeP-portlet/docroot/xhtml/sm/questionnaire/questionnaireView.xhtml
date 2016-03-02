@@ -8,6 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:panel header="#{lbl['lbl.sm.questionaire.answer.header']}" id="questionPanel">
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%">
@@ -90,7 +93,8 @@
 		<div align="right">
 			<p:commandButton
 				action="#{questionnaireBackingBean.submitQuestionnaire}"
-				value="#{lbl['lbl.btn.submit']}" />
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				update="@form" value="#{lbl['lbl.btn.submit']}" />
 		</div>
 	</ui:define>
 </ui:composition>
