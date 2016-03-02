@@ -159,21 +159,31 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 		this.panelGroupItems = panelGroupItems;
 	}
 
-	
-
-	public List<PmUser> getMinistrySpecApprovers() {
-		return ministrySpecApprovers;
-	}
-
-	public void setMinistrySpecApprovers(List<PmUser> ministrySpecApprovers) {
-		this.ministrySpecApprovers = ministrySpecApprovers;
-	}
-
+	/**
+	 * @return the panelItems
+	 */
 	public List<CtPanelItem> getPanelItems() {
 		return panelItems;
 	}
 
+	/**
+	 * @param panelItems the panelItems to set
+	 */
 	public void setPanelItems(List<CtPanelItem> panelItems) {
 		this.panelItems = panelItems;
+	}
+
+	/**
+	 * @return the ministrySpecApprovers
+	 */
+	public List<PmUser> getMinistrySpecApprovers() {
+		return ministrySpecApprovers;
+	}
+
+	/**
+	 * @param ministrySpecApprovers the ministrySpecApprovers to set
+	 */
+	public void setMinistrySpecApprovers(List<PmUser> ministrySpecApprovers) {
+		this.ministrySpecApprovers = ministrySpecApprovers;
 	}
 }
