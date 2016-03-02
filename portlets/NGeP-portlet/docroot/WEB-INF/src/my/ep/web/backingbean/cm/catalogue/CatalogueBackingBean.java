@@ -5468,6 +5468,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
+			supplierReqDTO.setAllStatuses(true);
 
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
