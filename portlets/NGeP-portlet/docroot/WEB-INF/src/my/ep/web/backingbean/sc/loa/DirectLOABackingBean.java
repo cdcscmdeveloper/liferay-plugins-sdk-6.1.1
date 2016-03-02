@@ -217,7 +217,7 @@ public class DirectLOABackingBean extends
 		try {
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-
+			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE, reqDTO);
 
 			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
@@ -242,7 +242,11 @@ public class DirectLOABackingBean extends
 			scLoa = resDTO.getLoa();
 			if (resDTO.isSuccessful()
 					&& null == this.getManagedBean().getTaskId()) {
-				RenameTempLoaNoRepoDirByLoaNo(scLoa);
+				if (QTStatusConst.LOA_PENDING_SUBMISSION
+						.equals(statusId)) {
+					// rename temporary Loa No folder name in docRepo
+					RenameTempLoaNoRepoDirByLoaNo(scLoa);
+				}
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
@@ -6159,12 +6163,15 @@ public class DirectLOABackingBean extends
 
 	private String splitFilePath(String filePath){
 		StringBuilder path = new StringBuilder();
-		String[] filePathArr = filePath.split("/");
-		for (int i = 0; i < filePathArr.length-2 ; i++) {
-			path.append(filePathArr[i]).append("/");
+		if(!StringUtils.isBlank(filePath)){
+			String[] filePathArr = filePath.split("/");
+			for (int i = 0; i < filePathArr.length-2 ; i++) {
+				path.append(filePathArr[i]).append("/");
+			}
+			path.deleteCharAt(path.toString().length()-1);
 		}
-		path.deleteCharAt(path.toString().length()-1);
 		return path.toString();
 	}
+
 
 }

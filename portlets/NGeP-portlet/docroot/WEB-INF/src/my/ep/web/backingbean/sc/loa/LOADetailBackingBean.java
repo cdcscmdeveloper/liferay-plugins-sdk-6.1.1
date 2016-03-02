@@ -2459,9 +2459,12 @@ public class LOADetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
-				// rename temporary Loa No folder name in docRepo
-				RenameTempLoaNoRepoDirByLoaNo(scLoa);
-				
+				if (QTStatusConst.LOA_PENDING_SUBMISSION
+						.equals(statusId)) {
+					// rename temporary Loa No folder name in docRepo
+					RenameTempLoaNoRepoDirByLoaNo(scLoa);
+				}
+
 				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
 					editSupplierLOAAction(scLoa.getLoaId());
@@ -5225,11 +5228,13 @@ public class LOADetailBackingBean extends
 
 	private String splitFilePath(String filePath){
 		StringBuilder path = new StringBuilder();
-		String[] filePathArr = filePath.split("/");
-		for (int i = 0; i < filePathArr.length-2 ; i++) {
-			path.append(filePathArr[i]).append("/");
+		if(!StringUtils.isBlank(filePath)){
+			String[] filePathArr = filePath.split("/");
+			for (int i = 0; i < filePathArr.length-2 ; i++) {
+				path.append(filePathArr[i]).append("/");
+			}
+			path.deleteCharAt(path.toString().length()-1);
 		}
-		path.deleteCharAt(path.toString().length()-1);
 		return path.toString();
 	}
 
