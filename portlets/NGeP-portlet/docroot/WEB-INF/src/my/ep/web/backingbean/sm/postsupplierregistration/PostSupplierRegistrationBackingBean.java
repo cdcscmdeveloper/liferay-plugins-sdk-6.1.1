@@ -134,7 +134,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
 					if(workFlowStatus != null && 
 						(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED || 
-						workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL)){
+						workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL)){
 						path = mofSupplierFlowAfterApproval(supplier);
 					}else{
 						path = MOF_REG_PATH;
