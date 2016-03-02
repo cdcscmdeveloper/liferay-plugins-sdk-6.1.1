@@ -40,7 +40,7 @@
 				<p:spacer width="5" />
 				<p:commandLink oncomplete="suppDetailsPopup.show();return false;" process="@this" 
 				disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
-					update="@([id$=suppDetailsPopup])">
+					update="@([id$=suppDetailsPopupId])">
 					
 					<p:graphicImage library="/css/images/design/evaluate.png" title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
 					

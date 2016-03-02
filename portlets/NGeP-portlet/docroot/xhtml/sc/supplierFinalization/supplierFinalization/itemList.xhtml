@@ -91,7 +91,7 @@
 						<p:dataList var="recommendDetail" value="#{item.recommendDtls}" type="none">								   
 							<p:column rendered="#{recommendDetail.recordStatusFlg == DbValueConst.recordStatusActive}">
 								<p:commandLink oncomplete="suppDetailsPopup.show(); return false;" process="@this" 
-							     			   update="@([id$=suppDetailsPopup])">
+							     			   update="@([id$=suppDetailsPopupId])">
 								     <f:setPropertyActionListener value="#{recommendDetail.supplier}" 
 								      							  target="#{supplierDetailBackingBean.smSupplier}" />
 								     <h:outputText value="#{recommendDetail.scQtProposalAmount.scQtProposal.supplierNo}" />

@@ -108,7 +108,7 @@
 				
 				<p:column>
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-								   process="@this" update="@([id$=suppDetailsPopup])" 
+								   process="@this" update="@([id$=suppDetailsPopupId])" 
 								   style="float:right;">
 						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 												   	 target="#{supplierDetailBackingBean.smSupplier}" />
@@ -244,7 +244,7 @@
 				
 				<p:column>
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-								   process="@this" update="@([id$=suppDetailsPopup])" 
+								   process="@this" update="@([id$=suppDetailsPopupId])" 
 								   style="float:right;">
 						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 												   	 target="#{supplierDetailBackingBean.smSupplier}" />
@@ -409,7 +409,7 @@
 				
 				<p:column>
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-								   process="@this" update="@([id$=suppDetailsPopup])" 
+								   process="@this" update="@([id$=suppDetailsPopupId])" 
 								   style="float:right;">
 						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 												   	 target="#{supplierDetailBackingBean.smSupplier}" />
