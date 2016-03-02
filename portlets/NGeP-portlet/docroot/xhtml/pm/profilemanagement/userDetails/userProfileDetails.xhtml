@@ -190,7 +190,7 @@
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
-										size="30" maxlength="12"
+										size="23" maxlength="12"
 										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
 										<f:validateRegex pattern="[0-9]{12}" />
 										<p:ajax event="change"
@@ -205,7 +205,7 @@
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
-										size="30" maxlength="15">
+										size="23" maxlength="15">
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
 											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
