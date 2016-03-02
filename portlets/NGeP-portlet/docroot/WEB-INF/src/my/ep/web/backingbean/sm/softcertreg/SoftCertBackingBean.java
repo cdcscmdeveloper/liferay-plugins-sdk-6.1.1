@@ -639,9 +639,17 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				// set rejected or failed softcert request reason
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
+					personnel.setDisableRowSelection(false);
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
 					SmCommonUtil.setRejectedPersonnelSoftcert(personnel,
 							supplierId);
+
+					// set supplier tmp if rejected or failed
+					if (!StringUtils.isBlank(personnel.getEpRole())
+							&& personnel.getEpRole().equals(
+									RoleCode.SUPPLIER_TEMP.value())) {
+						getManagedBean().setSupplierTmpPersonnel(personnel);
+					}
 				}
 
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
@@ -686,8 +694,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Disable row select for all personnel if SUPPLIER_TEMP haven't request for
-	 * softcert
+	 * Disable row select for all personnel except for SUPPLIER_TEMP if
+	 * SUPPLIER_TEMP haven't request for softcert
 	 * 
 	 * @param List
 	 *            <SmPersonnel> personnels
@@ -697,7 +705,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		if (getManagedBean().getSupplierTmpPersonnel() != null
 				&& getManagedBean().getSupplierTmpPersonnel().getPersonnelId() != null) {
 			for (SmPersonnel per : personnels) {
-				per.setDisableRowSelection(true);
+				if (per.getPersonnelId().compareTo(
+						getManagedBean().getSupplierTmpPersonnel()
+								.getPersonnelId()) != 0) {
+					per.setDisableRowSelection(true);
+				}
 			}
 		}
 	}
