@@ -24,7 +24,6 @@ import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofappcandata.SMMOFAppCanDataType;
 import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -107,9 +106,9 @@ public class CommonApplBackingBean extends
 
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
-				bpmObj = (SMMOFAccMainDataType) resDTO.getPojo();
+				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				sdoBB.getManagedBean().setAppId(
-						(long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
+						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
 			}
 			// sdoBB.getManagedBean().setAppId((long) bpmObj.getDocumentId());
@@ -138,7 +137,7 @@ public class CommonApplBackingBean extends
 			// int documentId = 0;
 			// if (resDTO.getProcessName()
 			// .equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
-			// SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
+			// SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO
 			// .getPojo();
 			// documentId = smObj.getDocumentId();
 			//
@@ -180,9 +179,9 @@ public class CommonApplBackingBean extends
 
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
-				bpmObj = (SMMOFAccMainDataType) resDTO.getPojo();
+				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
-						(long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
+						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 			}
 */	
 			bpmObj = resDTO.getPojo();
@@ -203,7 +202,7 @@ public class CommonApplBackingBean extends
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName()
 					.equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
-				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
+				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO
 						.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
@@ -264,7 +263,7 @@ public class CommonApplBackingBean extends
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName()
 					.equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
-				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
+				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO
 						.getPojo();
 
 				// TODO Remove this code and get the applicationType From DB
@@ -393,6 +392,7 @@ public class CommonApplBackingBean extends
 					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
+				log.info("mofResDto.getSmSupplier()>>>" + mofResDto.getSmSupplier());
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
 
@@ -516,7 +516,7 @@ public class CommonApplBackingBean extends
 					+ resDTO.getProcessName());
 			// if (resDTO.getProcessName().equalsIgnoreCase(
 			// "Start MOF Account Maintain")) {
-			SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
+			SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO
 					.getPojo();
 			// TODO Remove this code and get the applicationType From DB
 			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
@@ -659,9 +659,9 @@ public class CommonApplBackingBean extends
 
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
-				bpmObj = (SMMOFAccMainDataType) resDTO.getPojo();
+				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				suppDocIn.getManagedBean().setAppId(
-						(long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
+						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
 			}
 
@@ -690,9 +690,9 @@ public class CommonApplBackingBean extends
 
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
-				bpmObj = (SMMOFAccMainDataType) resDTO.getPojo();
+				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
-						(long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
+						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 			}
 
 			log.info("Doc No>>>>>" + resDTO.getDocNumber());
@@ -745,9 +745,9 @@ public class CommonApplBackingBean extends
 			SMMOFRegDataType mofRegDT = (SMMOFRegDataType) resDTO.getPojo();
 			docId = mofRegDT.getDocumentId();
 			svTaskId = mofRegDT.getSvoTaskId();
-		}else if(resDTO.getPojo() instanceof SMMOFAccMainDataType) {
+		}else if(resDTO.getPojo() instanceof SMMOFRegDataType) {
 			svObj = resDTO.getPojo();
-			SMMOFAccMainDataType mofRegMainDT = (SMMOFAccMainDataType) resDTO.getPojo();
+			SMMOFRegDataType mofRegMainDT = (SMMOFRegDataType) resDTO.getPojo();
 			docId = mofRegMainDT.getDocumentId();
 			//svTaskId = mofRegMainDT.get
 		}else if(resDTO.getPojo() instanceof SMSiteVisitDataType){
