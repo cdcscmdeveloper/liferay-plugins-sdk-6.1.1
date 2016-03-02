@@ -43,10 +43,16 @@ import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.pm.common.PmInterfaceLog;
-import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.web.integration.common.BatchReqDTO;
+import my.ep.web.integration.common.BatchResDTO;
+import my.ep.web.integration.common.Encryption;
+import my.ep.web.integration.common.ErrorMessages;
+import my.ep.web.integration.common.InitializeSO;
+import my.ep.web.integration.common.IntegrationConstants;
+import my.ep.web.integration.common.InterfaceRowLength;
+import my.ep.web.integration.common.OsbUtility;
+import my.ep.web.integration.common.ProcessCode;
+import my.ep.web.integration.common.ServiceCode;
 import my.ep.web.integration.eperunding.AssociatedCompany;
 import my.ep.web.integration.eperunding.BoardOfDirector;
 import my.ep.web.integration.eperunding.BranchCompany;
@@ -93,6 +99,10 @@ import my.ep.web.integration.phis.PhisGlAccount;
 import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
+import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.pm.common.PmInterfaceLog;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.web.util.DateUtils;
 
 import org.apache.log4j.Logger;
@@ -357,6 +367,9 @@ public class FileUtility extends InitializeSO{
 					}
 					lineNo++;
 				}
+				
+				//create error file
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -1365,7 +1378,7 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(ServiceCode.EPE04.value(),fileName);
 			
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE04.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE04.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			 
@@ -1482,7 +1495,7 @@ public class FileUtility extends InitializeSO{
 			//once upload is done cal web service osb integration to transfer file.
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE01.value(),fileName);
 			
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE01.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE01.value(),fileName, transId));
 				
 			setValuesToPmInterface(reqDTO);
 			
@@ -1507,11 +1520,31 @@ public class FileUtility extends InitializeSO{
 	 * @param transId 
 	 * @return
 	 */
-	public int constructQueueMessage(String serviceCode, String fileName, String transId) {
+	public int constructQueueMessageOutbound(String serviceCode, String fileName, String transId) {
 		JMSReqDTO jmsReqDTO = new JMSReqDTO();
 		jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
 		jmsReqDTO.setTextMessage(true);
 		jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageOutbound(serviceCode,fileName, transId));
+		
+		JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
+		
+		if(jmsResDTO.isSuccessful()){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+	
+	/**
+	 * @param fileName
+	 * @param transId 
+	 * @return
+	 */
+	public int constructQueueMessageInbound(String serviceCode, String fileName, String transId) {
+		JMSReqDTO jmsReqDTO = new JMSReqDTO();
+		jmsReqDTO.setQueueName("queue/Batch_Outbound_Queue");
+		jmsReqDTO.setTextMessage(true);
+		jmsReqDTO.setTextMessage(jaxbUtility.getMarshalMessageInbound(serviceCode,fileName, transId));
 		
 		JMSResDTO jmsResDTO = remoteClientSO.sendMessageToJBossQueue(jmsReqDTO);
 		
@@ -1569,7 +1602,7 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE07.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE07.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE07.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			log.info("createAuthorizedSignatory end");
@@ -1665,7 +1698,7 @@ public class FileUtility extends InitializeSO{
 			// Thread will sleep for 3 seconds before putting message into JMS Queue
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE06.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE06.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			
@@ -1753,7 +1786,7 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE05.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE05.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE05.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			
@@ -1829,7 +1862,7 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE08.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE08.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE08.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			
@@ -1896,7 +1929,7 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE09.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE09.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE09.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			
@@ -1972,7 +2005,7 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE10.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE10.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE10.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			
@@ -2036,7 +2069,7 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE11.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE11.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE11.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			
@@ -2122,7 +2155,7 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE03.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE03.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE03.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			
@@ -2204,7 +2237,7 @@ public class FileUtility extends InitializeSO{
 //			osbUtility.osbServiceCallOutBound(ServiceCode.EPE02.value(),fileName);
 			
 			// Call JMS send method to send to the Queue.
-			reqDTO.setQueueMsgStatus(constructQueueMessage(ServiceCode.EPE02.value(),fileName, transId));
+			reqDTO.setQueueMsgStatus(constructQueueMessageOutbound(ServiceCode.EPE02.value(),fileName, transId));
 			
 			setValuesToPmInterface(reqDTO);
 			

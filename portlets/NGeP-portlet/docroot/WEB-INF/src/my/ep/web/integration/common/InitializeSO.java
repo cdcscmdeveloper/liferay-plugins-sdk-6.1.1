@@ -1,5 +1,8 @@
 package my.ep.web.integration.common;
 
+import java.util.HashMap;
+
+import my.ep.biz.service.IGenericSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.integration.jms.IRemoteClientSO;
@@ -24,95 +27,103 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 /*
  *@author P Ganga prasad
  */
 
 public class InitializeSO {
+	protected static HashMap<String,IGenericSO> SOMap = new HashMap<String,IGenericSO>();
 
-	protected IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IVotFundSO votFundSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IVotFundSO.class);
-	protected IProgramActivitySO programActivitySO = BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IProgramActivitySO programActivitySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IProgramActivitySO.class);
-	protected IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IProjectSetiaSO projectSetiaSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IProjectSetiaSO.class);
-	protected IGlAccountSO glAccountSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IGlAccountSO glAccountSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IGlAccountSO.class);
-	protected ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-			.getInstance()
-			.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+	protected static ICodificationSO codificationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
 					ICodificationSO.class);
-	protected IAddressSO addressSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IAddressSO addressSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAddressSO.class);
-	protected IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
-	protected IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IConfigGeneralSO configGeneralSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IConfigGeneralSO.class);
-	protected IPaymentMatchSO paymentSO = (IPaymentMatchSO) BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+	protected static IPaymentMatchSO paymentSO = (IPaymentMatchSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 					IPaymentMatchSO.class);
 
-	protected IParameterSO parameterSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IParameterSO.class);
 
-	protected ISmRemarksSO smRemarksSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-					ISmRemarksSO.class);
+	protected static ISmRemarksSO smRemarksSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRemarksSO.class);
 
-	protected ISupplierSearchSO supplierSearchSO = BusinessDelegate
-			.getInstance().getServiceObject(
+	protected static ISupplierSearchSO supplierSearchSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT,
 					ISupplierSearchSO.class);
 
-	protected IAgOfficeSO agOfficeSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IAgOfficeSO agOfficeSO =EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAgOfficeSO.class);
-	protected IFinancialOrgSO financialOrgSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IFinancialOrgSO financialOrgSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IFinancialOrgSO.class);
-	protected IFLOsbSO flOsbSO = BusinessDelegate
-			.getInstance()
-			.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFLOsbSO.class);
+	protected static IFLOsbSO flOsbSO =EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFLOsbSO.class);
 
-	protected IQTAwardSO qtAwardSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+	protected static IQTAwardSO qtAwardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTAwardSO.class);
 
-	protected IPaymentSO iPaymentSO = (IPaymentSO) BusinessDelegate
-			.getInstance().getServiceObject(
+	protected static IPaymentSO iPaymentSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, IPaymentSO.class);
 
-	protected IRequestItemSO reqItemSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+	protected static IRequestItemSO reqItemSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IRequestItemSO.class);
 
-	protected IPmInterfaceSO interfaceSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	protected static IPmInterfaceSO interfaceSO = (IPmInterfaceSO)EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IPmInterfaceSO.class);
 
-	protected IVendorCodeSO iVendorCodeSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-					IVendorCodeSO.class);
-	protected IRegistrationSO registrationSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-					IRegistrationSO.class);
-	protected IRemoteClientSO remoteClientSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.MDB, IRemoteClientSO.class);
-	protected ISupplierGstSO supplierGstSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class); 
+	protected static IVendorCodeSO iVendorCodeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IVendorCodeSO.class);
+	protected static IRegistrationSO registrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IRegistrationSO.class);
+	protected static IRemoteClientSO remoteClientSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB,
+					IRemoteClientSO.class);
+	protected static ISupplierGstSO supplierGstSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+	
 
+	
 	public InitializeSO() {
 		super();
+		
+	
+	}
+
+	@SuppressWarnings("unused")
+	public void cleanUpResources() {
+		IVotFundSO votFundSO = null;
+		IProgramActivitySO programActivitySO = null;
+		IProjectSetiaSO projectSetiaSO = null;
+		IGlAccountSO glAccountSO = null;
+		ICodificationSO codificationSO = null;
+		IAddressSO addressSO = null;
+		IOrgProfileSO orgProfileSO = null;
+		IConfigGeneralSO configGeneralSO = null;
+		IPaymentMatchSO paymentSO = null;
+		IParameterSO parameterSO = null;
+		ISmRemarksSO smRemarksSO = null;
+		ISupplierSearchSO supplierSearchSO = null;
+		IAgOfficeSO agOfficeSO = null;
+		IFinancialOrgSO financialOrgSO = null;
+		IFLOsbSO flOsbSO = null;
+		IQTAwardSO qtAwardSO = null;
+		IPaymentSO iPaymentSO = null;
+		IRequestItemSO reqItemSO = null;
+		IPmInterfaceSO interfaceSO = null;
+		IVendorCodeSO iVendorCodeSO = null;
+		IRegistrationSO registrationSO = null;
+		IRemoteClientSO remoteClientSO = null;
 	}
 
 }
