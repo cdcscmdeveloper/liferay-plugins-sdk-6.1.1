@@ -57,7 +57,7 @@
 										update=":form:panelItemId"
 										saveObject="qTDetailBB.managedBean.qt.circularVer"
 										value="#{scQt.circularVer.circularNo}"
-										size="25" readonly="true"
+										size="24" readonly="true"
 										conditionField="#{createQtBB.constrcutFieldsForPanel()}"
 										postUpdateListener="createQtBB.circularListSelect(qTDetailBB.managedBean.qt.circularVer)"
 										disabled="#{!scQt.panel}" />
@@ -76,7 +76,7 @@
 									<p:selectOneMenu id="panelItemId" required="#{isRequire}"
 										label="#{lbl['lbl.sc.spec.group.item']}"
 										value="#{scQt.itemGroup.panelItemGroupId}"
-										style="width: 226px;margin-bottom: 5px;">
+										style="width: 210px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="#{null}" />
 										<f:selectItems value="#{createQtBB.panelGroupItems}"
@@ -119,7 +119,7 @@
 						lovId="PM_ORG_PROFILE_AUTH_TYPE" headerText="#{lbl['lbl.sc.ptj']}"
 						saveObject="scQt.pmOrgProfile"
 						value="#{scQt.pmOrgProfile.orgName}"
-						size="125" readonly="true" 
+						size="102" readonly="true" 
 						conditionField="recordStatus^1" /> <p:message
 						id="ptjMsg" for="ptjProfAuthId" display="icon" /></td>
 			</tr>
@@ -282,7 +282,7 @@
 								required="#{isRequire}"
 								label="#{lbl['lbl.sc.procurment.type.category']}"
 								value="#{scQt.procurementTypeCatId.parameterId}"
-								style="width: 215px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
@@ -301,7 +301,7 @@
 					<c:choose>
 						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_CATEGORY)}">
 							<p:selectOneMenu id="procCategory" required="#{isRequire}"
-								style="margin-bottom:5px;width:226px;"
+								style="margin-bottom:5px;width:210px;"
 								label="#{lbl['lbl.sc.procurement.category']}"
 								value="#{scQt.pmProcurementCategory.parameterId}">
 								<f:selectItems
@@ -363,7 +363,7 @@
 						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CONTRACT_TYPE)}">
 							<p:selectOneMenu id="contractType"
 								value="#{scQt.contractType.parameterId}"
-								style="width: 216px;margin-bottom: 5px;"
+								style="width: 205px;margin-bottom: 5px;"
 								label="#{lbl['lbl.sc.loiloa.loa.cont.type']}"
 								required="true">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -411,7 +411,7 @@
 							<p:selectOneMenu required="#{isRequire}" id="fulfilId"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 216px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
@@ -537,7 +537,7 @@
 													required="#{isRequire}"
 													label="#{lbl['lbl.sc.ministry.spec.secretary']}"
 													value="#{scQt.ministrySpecSecrataryId.userId}"
-													style="width: 226px;margin-bottom: 5px;">
+													style="width: 210px;margin-bottom: 5px;">
 													<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 														itemValue="#{null}" />
 													<f:selectItems
