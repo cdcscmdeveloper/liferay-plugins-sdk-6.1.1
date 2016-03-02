@@ -3805,25 +3805,16 @@ public class QTDetailBackingBean extends
 
 			case 4:
 				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
-					retriveTechnicalSpecification();
+					retrieveActivitiesTabDtl();
 				} else {
 					retrieveBriefingSitevisitTabDtl();
 				}
 				break;
 			case 5:
-				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
-					retriveFinancialSpecification();
-				} else {
-					retrieveScheduleTabDtl();
-				}
+				retrieveScheduleTabDtl();
 				break;
 			case 6:
-				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
-					retrieveActivitiesTabDtl();
-				} else {
-					retrieveDeductionPaymentTabDtl();
-					// retrieveActivitiesTabDtl(); // Kenny - temporary
-				}
+				retrieveDeductionPaymentTabDtl();
 				break;
 			case 7:
 				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
