@@ -310,7 +310,7 @@
 					<td><p:outputLabel value="&#160;" /></td>
 					<td>
 						<p:commandButton value="#{lbl['lbl.sm.receive.all']}" style="float:right;"			    		
-				    		action="#{sdoReviewBackingBean.receiveAllSuppDoc}"
+				    		action="#{sdoReviewBackingBean.receiveAllSuppDoc}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}"
 				    		update=":form:btnInquiryId,:form:btnSubmitId,:form:dtSuppDoc" process="@this" partialSubmit="true">
 				    	</p:commandButton>
 					</td>
@@ -336,13 +336,14 @@
 		        </p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
-					<p:selectBooleanCheckbox value="#{suppDoc.received}">
+					<p:selectBooleanCheckbox value="#{suppDoc.received}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
 						<p:ajax event="change" update=":form:btnInquiryId,:form:btnSubmitId" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.remark']}">
-					<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" label="#{lbl['lbl.sm.remark']}" autoResize="false" maxlength="100">
+					<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" label="#{lbl['lbl.sm.remark']}" 
+						autoResize="false" maxlength="100" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
 						<f:validateLength maximum="100" />
 					</p:inputTextarea>
 				</p:column>
