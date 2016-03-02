@@ -24,7 +24,7 @@
 		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{bb.submitMaintenance}" update="@([id$=Msg])" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
 				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
 		</div>
