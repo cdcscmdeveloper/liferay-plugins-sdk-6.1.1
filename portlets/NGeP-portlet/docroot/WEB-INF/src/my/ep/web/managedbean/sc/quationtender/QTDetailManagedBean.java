@@ -114,8 +114,7 @@ import org.primefaces.model.TreeNode;
  * 
  * @Author VidyasagarReddy
  */
-
-@ManagedBean(name = "qTDetailMB")
+@ManagedBean
 @SessionScoped
 public class QTDetailManagedBean extends QTBaseManagedBean {
 
