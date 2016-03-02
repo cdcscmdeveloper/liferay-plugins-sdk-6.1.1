@@ -185,7 +185,9 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</td>
 						<td><p:inputText id="expIntendedPrice" style="text-align:right;"
-								value="#{scQt.tmpExpectedIntendedPrice}" size="29">
+								value="#{scQt.tmpExpectedIntendedPrice}" size="29"
+								required="true"
+								label="#{lbl['lbl.sc.spec.expected.intended.price']}">
 								<p:ajax event="blur" partialSubmit="true" update="@form"
 									listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice)}">
 								</p:ajax>
@@ -193,6 +195,7 @@
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
+							<p:message id="expIntendedPriceMsg" for="expIntendedPrice" display="icon" />
 						</td>
 						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 						<td><p:inputText
@@ -237,13 +240,20 @@
 				<td>
 					<c:choose>
 						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_QT_TYPE)}">
-							<p:selectOneRadio required="#{isRequire}" id="tenderType"
-								label="#{lbl['lbl.sc.qttentype']}" value="#{scQt.qtType}">
-								<f:selectItems
-									value="#{createQtBB.getQuotationTendervalues(ParameterTypeConst.quotationTenderType,scQt)}" />
-								<p:ajax event="change" process="@this" partialSubmit="true"
-									update="@form" listener="#{createQtBB.onChangeQtType}"></p:ajax>
-							</p:selectOneRadio> <p:message id="tenderMsg" for="tenderType" display="icon" />
+							<table>
+								<tr>
+									<td>
+										<p:selectOneRadio required="#{isRequire}" id="tenderType"
+											label="#{lbl['lbl.sc.qttentype']}" value="#{scQt.qtType}">
+											<f:selectItems
+												value="#{createQtBB.getQuotationTendervalues(ParameterTypeConst.quotationTenderType,scQt)}" />
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												update="@form" listener="#{createQtBB.onChangeQtType}"></p:ajax>
+										</p:selectOneRadio>
+									</td>
+									<td><p:message id="tenderMsg" for="tenderType" display="icon" /></td>
+								</tr>
+							</table>
 						</c:when>
 						<c:otherwise>
 							<p:inputText id="qtTypeTxt" value="#{createQtBB.getParameterDesc(ParameterTypeConst.quotationTenderType, scQt.qtType)}" size="29" disabled="true" />
@@ -255,14 +265,20 @@
 				<td>
 					<c:choose>
 						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_OPEN_FOR)}">
-							<p:selectOneRadio required="#{isRequire}" id="openFor"
-								label="#{lbl['lbl.sc.open.for']}" value="#{scQt.openFor}">
-								<f:selectItems
-									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
-								<p:ajax event="change" process="@this" partialSubmit="true"
-									update="@form" listener="#{createQtBB.openForChange}"></p:ajax>
-							</p:selectOneRadio> 
-							<p:message id="openMsg" for="openFor" display="icon" />
+							<table>
+								<tr>
+									<td>
+										<p:selectOneRadio required="#{isRequire}" id="openFor"
+											label="#{lbl['lbl.sc.open.for']}" value="#{scQt.openFor}">
+											<f:selectItems
+												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												update="@form" listener="#{createQtBB.openForChange}"></p:ajax>
+										</p:selectOneRadio> 
+									</td>
+									<td><p:message id="openMsg" for="openFor" display="icon" /></td>
+								</tr>
+							</table>
 						</c:when>
 						<c:otherwise>
 							<p:inputText id="openForTxt" value="#{createQtBB.getParameterDesc(ParameterTypeConst.scOpenFor, scQt.openFor)}" size="30" disabled="true" />
@@ -335,6 +351,7 @@
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
 										</p:selectOneRadio></td>
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
+									<td style="margin-top: -3px"><ac:iconTooltip value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
 								</tr>
 							</table>
 						</c:when>
