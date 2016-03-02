@@ -419,6 +419,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
 	public static final long PM_STATUS_PENDING_REVIEW_CANCELLATION = 20301;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED = 20116;
+	public static final long PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL = 20117;
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = "BASICINFO";
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = "BRANCHINFO";
