@@ -70,7 +70,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 					&& hashAccessApplId.equals(
 							PmCommonUtil.hashString(String.valueOf(accessAppl.getAccessApplId())))
 							&& isLatestActivationEmail(createdTimeParam, accessAppl)) {
-				Date latestApproved = null;
+				Date latestApproved = new Date();
 				if(accessAppl.getCompanyProfileStatus() != null && accessAppl.getMarketResearchStatus() !=null){
 					if(accessAppl.getCompanyProfileStatus().getChangedDate().
 							after(accessAppl.getMarketResearchStatus().getChangedDate())){
