@@ -3210,8 +3210,10 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setSpecificationRemarks(
 							new ArrayList<ScQtSpecificationRemark>());
 					if (null != this.getManagedBean().getCurrentStatusId()
-							&& this.getManagedBean().getCurrentStatusId()
-									.equals(60401L)) {
+							&& (this.getManagedBean().getCurrentStatusId()
+									.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) 
+								|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
+								|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION))) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
 								.getCurrentWorkFlowStatus(), this
@@ -3234,8 +3236,9 @@ public class SpecificationBackingBean extends
 								.isEmpty()) {
 					this.getManagedBean().setSpecificationRemarks(remarkList);
 					if (null != this.getManagedBean().getCurrentStatusId()
-							&& this.getManagedBean().getCurrentStatusId()
-									.equals(60401L)) {
+							&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
+									|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
+									|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION))) {
 						initializeRemarks(this.getManagedBean().getQt(), this
 								.getManagedBean().getQt()
 								.getCurrentWorkFlowStatus(), this
@@ -10788,116 +10791,50 @@ public class SpecificationBackingBean extends
 
 		}
 
-		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
-				.getManagedBean().getTaskName())
-				|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
-						.equalsIgnoreCase(this.getManagedBean().getTaskName())
-				|| SCProcessNameConst.SPECIFICATION_APPROVAL
-						.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
-			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
-					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(quotationTenderDataType.getQtId()
+				.longValue());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO
+				.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+		CommitteResDTO resDTO = committeSO
+				.retrieveCommitteMemberByUserId(committeReqDTO);
+		ScCommitteeMember member = resDTO.getCommMember();
+		if (null != member) {
 
-			if (SCProcessNameConst.SPECIFICATION_APPROVAL.equalsIgnoreCase(this
-					.getManagedBean().getTaskName())) {
-				loadPrepareSpecDetails(quotationTenderDataType.getQtId()
-						.longValue(), getDocTypeByTaskName(this
-						.getManagedBean().getTaskName()));
-				this.getManagedBean().setActiveIndex(4);
+			if (member
+					.getMemberRole()
+					.getParameterCode()
+					.equalsIgnoreCase(
+							ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+				this.getManagedBean().setReadOnly(false);
+
+			} else {
+
+				this.getManagedBean().setReadOnly(true);
 			}
-			ScQt scQt = this.getManagedBean().getQt();
+		}
+		retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
+				QTConstants.DOCTYPE_PREPARE_SPEC);
+		if (null == this.getManagedBean().getQt().getContractType()) {
+			this.getManagedBean().getQt()
+					.setContractType(new PmParameter());
+		}
+		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
 
-			if (null == scQt.getContractType()) {
-				scQt.setContractType(new PmParameter());
-			}
-			if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
-					.getManagedBean().getTaskName())
-					|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
-							.equalsIgnoreCase(this.getManagedBean()
-									.getTaskName())) {
-				if (null != scQt.getSpecApprovalReq()
-						&& scQt.getSpecApprovalReq() == true) {
-					retriveApprovalRemarks();
-				}
-
-			}
-			// TODO Need to check all this business logic rules
-			if (null == scQt.getEstimatedAmount()) {
-				this.getManagedBean().getQt().setPanel(true);
-				this.getManagedBean().getQt()
-						.setOpenFor(ParameterConst.OPEN_FOR_ALL);
-				this.getManagedBean().getQt()
-						.setPmProcurementCategory(new PmParameter());
-			}
-			if (null == scQt.getZoneLocationLevel()) {
-				this.getManagedBean().getQt()
-						.setZoneLocationLevel(new PmParameter());
-			}
-
-			if (this.getManagedBean().getQt().isPanel()
-					&& null == this.getManagedBean().getQt()
-							.getEstimatedAmount()) {
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
-			} else if ((this.getManagedBean().getQt().isPanel() && null != this
-					.getManagedBean().getQt().getEstimatedAmount())
-					|| (!this.getManagedBean().getQt().isPanel() && null != this
-							.getManagedBean().getQt().getEstimatedAmount())) {
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								QTConstants.BO_SPEC_CREATION_PAGE);
-			}
-
-		} else {
-
-			PmUser curLogedInUser = facesScopes.getUserSessionBean();
-			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
-			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-			committeReqDTO.setQtId(quotationTenderDataType.getQtId()
-					.longValue());
-			committeReqDTO.setUser(curLogedInUser);
-			committeReqDTO
-					.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
-			CommitteResDTO resDTO = committeSO
-					.retrieveCommitteMemberByUserId(committeReqDTO);
-			ScCommitteeMember member = resDTO.getCommMember();
-			if (null != member) {
-
-				if (member
-						.getMemberRole()
-						.getParameterCode()
-						.equalsIgnoreCase(
-								ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-					this.getManagedBean().setReadOnly(false);
-
-				} else {
-
-					this.getManagedBean().setReadOnly(true);
-				}
-			}
-			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
-					QTConstants.DOCTYPE_PREPARE_SPEC);
-			if (null == this.getManagedBean().getQt().getContractType()) {
-				this.getManagedBean().getQt()
-						.setContractType(new PmParameter());
-			}
-			if (null == this.getManagedBean().getQt().getFulfilmentType()) {
-
-				this.getManagedBean().getQt()
-						.setFulfilmentType(new PmParameter());
-
-			}
-
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							QTConstants.SPECIFICICATON_COMM_PREPARATION);
+			this.getManagedBean().getQt()
+					.setFulfilmentType(new PmParameter());
 
 		}
+
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						QTConstants.SPECIFICICATON_COMM_PREPARATION);
 
 	}
 
@@ -11263,19 +11200,10 @@ public class SpecificationBackingBean extends
 				scQt.setScQtDeliveryLocs(null);
 			}
 		}
-		if (null != this.getManagedBean().getCurrentStatusId()
-				&& !this.getManagedBean().getCurrentStatusId().equals(60401L)) {
-			List<ScQtSpecificationRemark> remarks = this.getManagedBean()
-					.getSpecificationRemarks();
-			if (null != remarks) {
-				for (int i = 0; i < remarks.size(); i++) {
-					String userRemark = remarks.get(i).getRemark();
-					if (null == userRemark || "".equals(userRemark)) {
-						remarks.remove(i);
-					}
-				}
-			}
-		}
+		List<ScQtSpecificationRemark> remarks = super.finalizeRemarks(this.getManagedBean()
+				.getSpecificationRemarks());
+		scQt.setScQtSpecificationRemarks(remarks);
+		
 		if (null != localChecklist && localChecklist.size() > 0) {
 
 		} else {
@@ -11655,7 +11583,7 @@ public class SpecificationBackingBean extends
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
-		if (member.getMemberRole().getParameterCode()
+		if (member != null && member.getMemberRole().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(action);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -11685,7 +11613,8 @@ public class SpecificationBackingBean extends
 				}
 
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
-					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
@@ -11727,7 +11656,7 @@ public class SpecificationBackingBean extends
 														.getMessage(
 																getMessgeConstant(action),
 																new String[] {
-																		"Specification Preparation And Scoring For",
+																	getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
 																		qt.getQtNo() },
 																MessageUtils.BUNDLE_COMMON_MESSAGES,
 																new FacesScopes()
@@ -11735,9 +11664,7 @@ public class SpecificationBackingBean extends
 
 						return CommonUIConst.ACKNOWLEDGE_PAGE;
 					}
-				}
-
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
 					SpecificationResDTO resDTO = updateSpecCommitteDtls(action,
 							null);
 					if (resDTO.isSuccessful()) {
@@ -11753,11 +11680,35 @@ public class SpecificationBackingBean extends
 														.getMessage(
 																getMessgeConstant(action),
 																new String[] {
-																		"Specification Preparation And Scoring For",
+																	getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
 																		qt.getQtNo() },
 																MessageUtils.BUNDLE_COMMON_MESSAGES,
 																new FacesScopes()
 																		.getUserLocale())));
+
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					}
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					SpecificationResDTO resDTO = updateSpecCommitteDtls(action,
+							null);
+					if (resDTO.isSuccessful()) {
+						ScQt qt = resDTO.getScQt();
+						FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMessgeConstant(action),
+														new String[] {
+																getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
+																qt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 
 						return CommonUIConst.ACKNOWLEDGE_PAGE;
 					}
@@ -12443,18 +12394,8 @@ public class SpecificationBackingBean extends
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 
-			List<ScQtSpecificationRemark> remarks = this.getManagedBean()
-					.getSpecificationRemarks();
-			if (null != remarks) {
-				for (int i = 0; i < remarks.size(); i++) {
-					String userRemark = remarks.get(i).getRemark();
-					if (null == userRemark || "".equals(userRemark)) {
-						// throw new EpException(MessageConst.ERROR_760154);
-						remarks.remove(i);
-					}
-
-				}
-			}
+			List<ScQtSpecificationRemark> remarks = super.finalizeRemarks(getManagedBean()
+					.getSpecificationRemarks());
 
 			if (null != remarks) {
 				ScQt localScQt = spReqDTO.getScQt();
@@ -12585,7 +12526,7 @@ public class SpecificationBackingBean extends
 															.getManagedBean()
 															.getLocalOutCome()),
 													new String[] {
-															"Specification Preparation And Scoring For",
+														getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
 															qt.getQtNo() },
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
@@ -12655,7 +12596,7 @@ public class SpecificationBackingBean extends
 															.getManagedBean()
 															.getLocalOutCome()),
 													new String[] {
-															"Specification Preparation And Scoring For",
+														getMessageCommon("lbl.sc.specification.preparation.and.scoring.for"),
 															qt.getQtNo() },
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()

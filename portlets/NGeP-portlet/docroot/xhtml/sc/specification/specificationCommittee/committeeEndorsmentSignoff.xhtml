@@ -82,7 +82,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
-		rendered="#{specificationBackingBean.managedBean.currentStatusId eq '60401' or specificationBackingBean.managedBean.currentStatusId eq '60405' or specificationBackingBean.managedBean.currentStatusId eq '60402'}">
+		rendered="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL}">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -106,10 +106,10 @@
 								<td></td>
 								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
 										maxlength="1000"
-										readonly="#{specificationBackingBean.managedBean.currentStatusId ne '60401'}"
-										rendered="#{remarkVar.remarkId eq null and specificationBackingBean.managedBean.currentStatusId eq '60401'}" />
+										readonly="#{specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT and specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_MSC_APPROVAL and specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION}"
+										rendered="#{remarkVar.remarkId eq null and (specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)}" />
 									<h:outputText value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null and (specificationBackingBean.managedBean.currentStatusId eq '60405' or specificationBackingBean.managedBean.currentStatusId eq '60402' or specificationBackingBean.managedBean.currentStatusId eq '60401')}"
+										rendered="#{remarkVar.remarkId ne null and (specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL)}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
 								</td>
 							</tr>
