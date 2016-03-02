@@ -40,7 +40,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<f:facet name="header">
 					Action Date
 					</f:facet>
-				#{trackingDiaryObj.actionedDate}
+					<ac:labelDateTime value="#{trackingDiaryObj.actionedDate}" /> 
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
@@ -54,7 +54,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</f:facet> 
 			   #{pmTrackingDiaryBackingBean.getRoleDescByRoleCode(trackingDiaryObj.roleCode)}
              	</p:column> 
-				<p:column width="25%">
+				<p:column style="white-space: normal!important;" width="25%">
 					<f:facet name="header">
 					Action/Description
 					</f:facet>
