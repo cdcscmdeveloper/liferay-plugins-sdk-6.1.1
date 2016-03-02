@@ -206,7 +206,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					messageId = MessageConst.INFO_700011;
 					if(!hasFactoringUserRole() && CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode)){
-						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.government",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+//						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.government",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 					}else if(CommonConstants.LANGUAGE_CODE_MALAY.equals(languageCode)){
 //						messagePrefix=" "+ResourceBundleUtils.getMessage("lbl.fl.government",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 					}
