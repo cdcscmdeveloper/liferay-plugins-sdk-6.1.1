@@ -9,7 +9,6 @@ import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constants.SMProcessNameConst;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
-import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -54,9 +53,9 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 			SMMOFRegDataType mofRegDT = (SMMOFRegDataType) resDTO.getPojo();
 			docId = mofRegDT.getDocumentId();
 			svTaskId = mofRegDT.getSvoTaskId();
-		}else if(resDTO.getPojo() instanceof SMMOFAccMainDataType) {
+		}else if(resDTO.getPojo() instanceof SMMOFRegDataType ) {
 			svObj = resDTO.getPojo();
-			SMMOFAccMainDataType mofRegMainDT = (SMMOFAccMainDataType) resDTO.getPojo();
+			SMMOFRegDataType  mofRegMainDT = (SMMOFRegDataType ) resDTO.getPojo();
 			docId = mofRegMainDT.getDocumentId();
 			//svTaskId = mofRegMainDT.get
 		}else if(resDTO.getPojo() instanceof SMSiteVisitDataType){
