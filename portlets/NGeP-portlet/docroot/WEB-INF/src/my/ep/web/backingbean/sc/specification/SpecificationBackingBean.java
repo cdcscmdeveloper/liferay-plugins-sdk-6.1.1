@@ -117,7 +117,6 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
@@ -4499,6 +4498,7 @@ public class SpecificationBackingBean extends
 					BigDecimal tmpExpectedIntendedPrice = qtDetailsSO
 							.getDecryptedExpectedIntendedPrice(qtId);
 					scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
+					scQt.setDecExpectedIntendedPrice(tmpExpectedIntendedPrice);
 				}
 			}
 
@@ -10809,9 +10809,6 @@ public class SpecificationBackingBean extends
 			if (null == scQt.getContractType()) {
 				scQt.setContractType(new PmParameter());
 			}
-			if (null == scQt.getItemGroup() && scQt.isPanel()) {
-				scQt.setItemGroup(new CtPanelItemGroup());
-			}
 			if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
 					.getManagedBean().getTaskName())
 					|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
@@ -10888,25 +10885,11 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getQt()
 						.setContractType(new PmParameter());
 			}
-			if (this.getManagedBean().getQt().isPanel()
-					&& null == this.getManagedBean().getQt().getItemGroup()) {
-				this.getManagedBean().getQt()
-						.setItemGroup(new CtPanelItemGroup());
-			}
 			if (null == this.getManagedBean().getQt().getFulfilmentType()) {
 
 				this.getManagedBean().getQt()
 						.setFulfilmentType(new PmParameter());
 
-			}
-
-			
-			this.getManagedBean().setPanelGroupItems(
-					getPanelGroupItemsByCirculerVer(this.getManagedBean()
-							.getQt().getCircularVer()));
-			
-			if(this.getManagedBean().getQt().getSpecApprovalReq()){
-				this.getManagedBean().setMinistrySpecApprovers(getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
 			}
 
 			fc.getApplication()
@@ -11626,10 +11609,6 @@ public class SpecificationBackingBean extends
 				// retriveTechnicalCheckList();
 				break;
 
-			}
-			
-			if(this.getManagedBean().getQt().getSpecApprovalReq()){
-				this.getManagedBean().setMinistrySpecApprovers(getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
 			}
 			
 			if (getManagedBean().getTempIndex() < activeIndex) {

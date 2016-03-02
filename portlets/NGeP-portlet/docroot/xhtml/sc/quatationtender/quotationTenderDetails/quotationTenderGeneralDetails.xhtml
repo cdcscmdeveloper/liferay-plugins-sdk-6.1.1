@@ -79,7 +79,7 @@
 										style="width: 226px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="#{null}" />
-										<f:selectItems value="#{createQtBB.managedBean.panelGroupItems}"
+										<f:selectItems value="#{createQtBB.panelGroupItems}"
 											var="panelItem" itemLabel="#{panelItem.groupName}"
 											itemValue="#{panelItem.panelItemGroupId}" />
 		
@@ -508,7 +508,9 @@
 								label="#{lbl['lbl.sc.qt.req.approval.specification']}">
 								<f:selectItems
 									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-								<p:ajax event="change" process="@this" update="@this,approvalSpeclbl,approvalSpecTxt" />
+								<p:ajax event="change" 
+									partialSubmit="true" process="@this" update="@this,approvalSpeclbl,approvalSpecTxt" 
+									listener="#{createQtBB.ministrySpecSecretaryRequiredChanged(scQt)}" />
 							</p:selectOneRadio>
 						</c:when>
 						<c:otherwise>
@@ -539,7 +541,7 @@
 													<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 														itemValue="#{null}" />
 													<f:selectItems
-														value="#{createQtBB.managedBean.ministrySpecApprovers}"
+														value="#{createQtBB.ministrySpecApprovers}"
 														var="appName" itemLabel="#{appName.userName}"
 														itemValue="#{appName.userId}" />
 												</p:selectOneMenu></td>

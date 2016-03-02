@@ -156,14 +156,25 @@ public class CreateQtBackingBean extends
 		return conditionString.toString();
 	}
 	
+	/**
+	 * Circular changed event.
+	 * 
+	 * @param circular
+	 * 		the CtCircularVer instance
+	 */
 	public void circularListSelect(CtCircularVer circular) {
+		if (null != circular) {
+			ScQt scQt = getManagedBean().getQt();
+			scQt.setCircularVer(circular);
+			scQt.setItemGroup(new CtPanelItemGroup());
 			
-		if(null != circular){
-			this.getManagedBean().getQt().setCircularVer(circular);
-			
-				this.getManagedBean().setPanelGroupItems(getPanelGroupItemsByCirculerVer(circular));
-				this.getManagedBean().setCircularType(circular.getDocType());
-						
+			List<CtPanelItemGroup> panelGroupItems = null;
+			if (circular.getCircularVerId() != null) {
+				panelGroupItems = getPanelGroupItemsByCirculerVer(circular);
+			}
+			getManagedBean().setPanelGroupItems(panelGroupItems);
+			getManagedBean().setCircularType(circular.getDocType());
+
 		}
 
 	}
@@ -199,6 +210,8 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
 				
 			}
+		} else {
+			circularListSelect(new CtCircularVer());
 		}
 
 	}
@@ -212,7 +225,6 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().getQt().setPanel(false);
 		} else {
 			this.getManagedBean().getQt().setPanel(true);
-			circularListSelect(this.getManagedBean().getQt().getCircularVer());
 		}
 
 	}
@@ -238,7 +250,6 @@ public class CreateQtBackingBean extends
 			}
 			scQt.setProcurementMode(new PmParameter());
 			scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			scQt.setMinistrySpecSecrataryId(new PmUser());
 			scQt.setProcurementTypeCatId(new PmParameter());
 			scQt.setFulfilmentType(new PmParameter());
 			scQt.setPmProcurementCategory(new PmParameter());
@@ -283,7 +294,6 @@ public class CreateQtBackingBean extends
 			List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
 			qtStatuses.add(qtStatus);
 			scQt.setScQtStatus(qtStatuses);
-			scQt.setItemGroup(new CtPanelItemGroup());
 			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
 			supplierCriteria.setScQt(scQt);
 			scQt.setScQtSupplierCriteria(supplierCriteria);
@@ -292,8 +302,6 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setActiveIndex(0);
 			scQt.setContractType(new PmParameter());
 			scQt.setCircularVer(new CtCircularVer());
-			
-			this.getManagedBean().setMinistrySpecApprovers(getUsersByRoleCode(RoleCode.MSC_SECRETARY.value()));
 			
 			this.getManagedBean().setQt(scQt);
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
@@ -309,10 +317,46 @@ public class CreateQtBackingBean extends
 	}
 	
 	/**
+	 * Get list of Panel Item Group.
+	 * 
+	 * @return	the list of CtPanelItemGroup instance
+	 */
+	public List<CtPanelItemGroup> getPanelGroupItems() {
+		List<CtPanelItemGroup> panelGroupItems = getManagedBean().getPanelGroupItems();
+		
+		if (panelGroupItems == null || panelGroupItems.size() == 0) {
+			CtCircularVer circularVer = getManagedBean().getQt().getCircularVer();
+			
+			if (circularVer != null) {
+				panelGroupItems = getPanelGroupItemsByCirculerVer(circularVer);
+				
+				getManagedBean().setPanelGroupItems(panelGroupItems);	
+			}
+		}
+		return panelGroupItems;
+	}
+	
+	/**
+	 * Get list of Ministry Spec Approver.
+	 * 
+	 * @return	the list of PmUser instance
+	 */
+	public List<PmUser> getMinistrySpecApprovers() {
+		List<PmUser> ministrySpecApprovers = getManagedBean().getMinistrySpecApprovers();
+		
+		if (ministrySpecApprovers == null || ministrySpecApprovers.size() == 0) {
+			ministrySpecApprovers = getUsersByRoleCode(RoleCode.MSC_SECRETARY.value());
+			
+			getManagedBean().setMinistrySpecApprovers(ministrySpecApprovers);
+		}
+		return ministrySpecApprovers;
+	}
+	
+	/**
 	 * Zone radio change.change zone location level radio in business owner.
 	 * 
-	 * @param event
-	 *            (boolean zoneLocationlevel).
+	 * @param scQt
+	 * 		the scQt instance
 	 */
 	public void zoneRadioChange(ScQt scQt) {
 		
@@ -361,6 +405,18 @@ public class CreateQtBackingBean extends
 		scQt.setScQtSupplierCriteria(supplierCriteria);
 		//this.getManagedBean().setQt(scQt);
 
+	}
+	
+	/**
+	 * Ministry Specification Secretary Required radio change.
+	 * 
+	 * @param scQt
+	 * 		the scQt instance
+	 */
+	public void ministrySpecSecretaryRequiredChanged(ScQt scQt) {
+		if (scQt.getSpecApprovalReq()) {
+			scQt.setMinistrySpecSecrataryId(new PmUser());
+		}
 	}
 	
 	/**
