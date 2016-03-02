@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sc.loa;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -130,6 +132,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -239,7 +242,7 @@ public class DirectLOABackingBean extends
 			scLoa = resDTO.getLoa();
 			if (resDTO.isSuccessful()
 					&& null == this.getManagedBean().getTaskId()) {
-
+				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
@@ -277,7 +280,6 @@ public class DirectLOABackingBean extends
 		} finally {
 			// qtAwardSO = null;
 		}
-
 	}
 
 	/**
@@ -341,17 +343,15 @@ public class DirectLOABackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getLoa();
-
+				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				successMessage(MessageConst.INFO_700026,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 						scLoa.getLoaNo(), Boolean.TRUE);
 			}
-
 		} finally {
 			// qtAwardSO = null;
 		}
-
 	}
 
 	/**
@@ -921,26 +921,24 @@ public class DirectLOABackingBean extends
 			throw new EpException(MessageConst.ERROR_760158);
 		}
 	}
-
+	
 	/**
 	 * Handle file upload.
-	 * 
-	 * @param event
-	 *            the event
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 *
+	 * @param event the event
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
+		ScLoa scLoa = this.getManagedBean().getScLoa();
 		if (event.getFile() != null) {
 			String attachmentDocType = getManagedBean().getAttachmentDocType();
 			ScAttachment scAttachment = null;
 
 			if (ParameterConst.DOCTYPE_LETTER_OF_AWARD
 					.equals(attachmentDocType)) {
-				ScLoa scLoa = this.getManagedBean().getScLoa();
+				
 				ScLoaAttachment scLoaAttachment = scLoa.getScLoaAttachment();
 				if (null == scLoaAttachment) {
 					scLoaAttachment = new ScLoaAttachment();
@@ -949,7 +947,13 @@ public class DirectLOABackingBean extends
 					scLoa.setScLoaAttachment(scLoaAttachment);
 				}
 
-				scLoaAttachment.setDocNo(scLoa.getLoaNo());
+				if(StringUtils.isBlank(scLoa.getLoaNo())){
+					// Generate Loa Temp No.
+					scLoaAttachment.setDocNo(getQtAwardSO().generateLoaTempNo());	
+				} else{
+					scLoaAttachment.setDocNo(scLoa.getLoaNo());	
+				}
+
 				scLoaAttachment.setScLoa(scLoa);
 				scAttachment = scLoaAttachment;
 
@@ -965,14 +969,25 @@ public class DirectLOABackingBean extends
 					selectedScLoaReport
 							.setScLoaReportAttachment(scLoaReportAttachment);
 				}
-
-				scLoaReportAttachment.setDocNo(selectedScLoaReport.getScLoa()
-						.getLoaNo());
+				
+				if (StringUtils.isBlank(scLoa.getLoaNo())) {
+					// Generate Loa Temporary No.
+					if(null == getManagedBean().getTempLoaNo()){
+						getManagedBean().setTempLoaNo(getQtAwardSO().generateLoaTempNo());
+						scLoaReportAttachment.setDocNo(getManagedBean().getTempLoaNo());
+					} else{
+						scLoaReportAttachment.setDocNo(getManagedBean().getTempLoaNo());
+					}
+					
+				} else{
+					scLoaReportAttachment.setDocNo(scLoa.getLoaNo());
+				}
 				scLoaReportAttachment.setScLoaReport(selectedScLoaReport);
 				scAttachment = scLoaReportAttachment;
 			}
 
 			uploadAttachment(event.getFile(), scAttachment);
+			getManagedBean().setTempFilePath(getActualFilePath(scAttachment));
 		}
 	}
 
@@ -6095,6 +6110,61 @@ public class DirectLOABackingBean extends
 			days  = Integer.valueOf(configRuleValue.getRuleValue());
 		}
 		return days;
+	}
+	
+	private void RenameTempLoaNoRepoDirByLoaNo(ScLoa scLoa){
+		String tempFilePath = splitFilePath(getManagedBean().getTempFilePath());
+		String actualFilePath = getActualFilePathLoaNo(scLoa);
+		if(!StringUtils.isBlank(tempFilePath)){
+			// /docuRepo/dev/ngep/2016/SC/LB16000001565237 
+			//StringBuilder tFilePath = new StringBuilder("c:");
+			StringBuilder tFilePath = new StringBuilder();
+			tFilePath.append(tempFilePath);
+			//create source File object
+			File oldName = new File(tFilePath.toString());
+
+			//create destination File object
+			//StringBuilder aFilePath = new StringBuilder("c:");
+			StringBuilder aFilePath = new StringBuilder();
+			aFilePath.append(actualFilePath);
+			File newName = new File(aFilePath.toString());
+			boolean isFileRenamed = oldName.renameTo(newName);
+			if(isFileRenamed)
+				log.info("Temporary Loa No folder has been renamed.");
+			else
+				log.info("Temporary Loa No folder has not been renamed.");
+
+		}
+	}
+
+	private String getActualFilePathLoaNo(ScLoa loa) {
+		String  actualFilePath = "";
+		List<ScLoaReport> scLoaReports = loa.getScLoaReports();
+		if (scLoaReports != null && scLoaReports.size() > 0) {
+			for (ScLoaReport scLoaReport : scLoaReports) {
+				if (null == scLoaReport.getPmDocument()) {
+					if (scLoaReport.getScLoaReportAttachment() != null) {
+						String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
+								EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+						StringBuilder path = new StringBuilder(docRepoBaseDir);
+						path.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+						path.append(scLoaReport.getScLoaReportAttachment().getFilePath());
+						actualFilePath = splitFilePath(path.toString());
+					}
+				}	
+			}
+		}
+		return actualFilePath;
+	}
+
+	private String splitFilePath(String filePath){
+		StringBuilder path = new StringBuilder();
+		String[] filePathArr = filePath.split("/");
+		for (int i = 0; i < filePathArr.length-2 ; i++) {
+			path.append(filePathArr[i]).append("/");
+		}
+		path.deleteCharAt(path.toString().length()-1);
+		return path.toString();
 	}
 
 }

@@ -218,8 +218,10 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The item type id. */
 	private long itemTypeId = 1;// Item type Id
 
+	/** The prodsc qt doc. */
 	private ScQtDoc prodscQtDoc;
 
+	/** The servicesc qt doc. */
 	private ScQtDoc servicescQtDoc;
 
 	
@@ -290,6 +292,12 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private ScLoaReport branchInfoReport;
     
 	private boolean displayAlert;
+	
+    /** The temp loa no. */
+    private String tempLoaNo;
+    
+    /** The temp file path. */
+    private String tempFilePath;
 	
 	/**
 	 * Gets the spki backing bean.
@@ -1600,5 +1608,33 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setDisplayAlert(boolean displayAlert) {
 		this.displayAlert = displayAlert;
+	}
+
+	/**
+	 * @return the tempLoaNo
+	 */
+	public String getTempLoaNo() {
+		return tempLoaNo;
+	}
+
+	/**
+	 * @param tempLoaNo the tempLoaNo to set
+	 */
+	public void setTempLoaNo(String tempLoaNo) {
+		this.tempLoaNo = tempLoaNo;
+	}
+
+	/**
+	 * @return the tempFilePath
+	 */
+	public String getTempFilePath() {
+		return tempFilePath;
+	}
+
+	/**
+	 * @param tempFilePath the tempFilePath to set
+	 */
+	public void setTempFilePath(String tempFilePath) {
+		this.tempFilePath = tempFilePath;
 	}
 }
