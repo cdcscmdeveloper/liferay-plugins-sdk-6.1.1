@@ -16,6 +16,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
@@ -75,6 +76,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> committeeEndorsementList;
 	private List<ScQtCommitteRemarks> committeeRemarkList;
 	private List<ScQtFinalizationRemarks> finalizationRemarks;
+	private List<ScQtFinalizationEndorsementRemarks> finalizationEndorsementRemarks;
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	private List<ScQtMeetingAttendance> deletedMeetingAttendanceList;
@@ -362,6 +364,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setFinalizationRemarks(
 			List<ScQtFinalizationRemarks> finalizationRemarks) {
 		this.finalizationRemarks = finalizationRemarks;
+	}
+
+	/**
+	 * @return the finalizationEndorsementRemarks
+	 */
+	public List<ScQtFinalizationEndorsementRemarks> getFinalizationEndorsementRemarks() {
+		return finalizationEndorsementRemarks;
+	}
+
+	/**
+	 * @param finalizationEndorsementRemarks
+	 *            the finalizationEndorsementRemarks to set
+	 */
+	public void setFinalizationEndorsementRemarks(
+			List<ScQtFinalizationEndorsementRemarks> finalizationEndorsementRemarks) {
+		this.finalizationEndorsementRemarks = finalizationEndorsementRemarks;
 	}
 
 	/**
