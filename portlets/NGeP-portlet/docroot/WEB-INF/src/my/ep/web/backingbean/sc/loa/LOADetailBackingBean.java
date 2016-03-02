@@ -2515,6 +2515,7 @@ public class LOADetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
+				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				renewSesionObject();
 				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 						scLoa.getLoaNo(), Boolean.TRUE);
@@ -4805,6 +4806,8 @@ public class LOADetailBackingBean extends
 		} else {
 			prepareSignerInfo();
 		}
+		checkPerformanceBondMandatory();
+		checkAgreementMandatory();
 	}
 	
 	public boolean isGSTRegActive() {
@@ -5180,15 +5183,15 @@ public class LOADetailBackingBean extends
 		String actualFilePath = getActualFilePathLoaNo(scLoa);
 		if(!StringUtils.isBlank(tempFilePath)){
 			// /docuRepo/dev/ngep/2016/SC/LB16000001565237 
-			StringBuilder tFilePath = new StringBuilder("c:");
-			//StringBuilder tFilePath = new StringBuilder();
+			//StringBuilder tFilePath = new StringBuilder("c:");
+			StringBuilder tFilePath = new StringBuilder();
 			tFilePath.append(tempFilePath);
 			//create source File object
 			File oldName = new File(tFilePath.toString());
 
 			//create destination File object
-			StringBuilder aFilePath = new StringBuilder("c:");
-			//StringBuilder aFilePath = new StringBuilder();
+			//StringBuilder aFilePath = new StringBuilder("c:");
+			StringBuilder aFilePath = new StringBuilder();
 			aFilePath.append(actualFilePath);
 			File newName = new File(aFilePath.toString());
 			boolean isFileRenamed = oldName.renameTo(newName);
