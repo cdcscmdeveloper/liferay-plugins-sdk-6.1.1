@@ -115,6 +115,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
@@ -408,6 +409,7 @@ public class SupplierFinalizationBackingBean extends
 
 		initializeCommitteeRemarks();
 		initializeFinalizationRemarks();
+		initializeFinalizationEndorsementRemarks();
 		
 		if (this.getManagedBean().getResetSupplierList() == null) {
 			this.getManagedBean().setResetSupplierList(
@@ -441,7 +443,20 @@ public class SupplierFinalizationBackingBean extends
 
 		// Finalization Remarks list
 		getManagedBean().setFinalizationRemarks(remarks);		
-	}	
+	}
+	
+	private void initializeFinalizationEndorsementRemarks() {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+
+		// Retrieve finalization endorsement remarks
+		List<ScQtFinalizationEndorsementRemarks> remarks = initializeRemarks(scQtFinalization,
+								null, scQtFinalization.getScQtFinalizationEndorsementRemarks(), 
+								ScQtFinalizationEndorsementRemarks.class);
+		scQtFinalization.setScQtFinalizationEndorsementRemarks(remarks);
+
+		// Finalization Endorsement Remarks list
+		getManagedBean().setFinalizationEndorsementRemarks(remarks);		
+	}		
 
 	private void navigateToCommitteeEndorsementTab() {
 		this.getManagedBean().setActiveIndex(
@@ -1021,6 +1036,11 @@ public class SupplierFinalizationBackingBean extends
 					List<ScQtFinalizationRemarks> finalizationRemarks 
 							= finalizeRemarks(getManagedBean().getFinalizationRemarks());
 					scQtFinalization.setScQtFinalizationRemarks(finalizationRemarks);
+					
+					List<ScQtFinalizationEndorsementRemarks> finalizationEndorsementRemarks
+							= finalizeRemarks(getManagedBean().getFinalizationEndorsementRemarks());
+					scQtFinalization.setScQtFinalizationEndorsementRemarks(
+											 finalizationEndorsementRemarks);
 					setUserDetails(scQtFinalization);
 	
 					reqDTO.setScQtCommittee(_scQtCommittee);
