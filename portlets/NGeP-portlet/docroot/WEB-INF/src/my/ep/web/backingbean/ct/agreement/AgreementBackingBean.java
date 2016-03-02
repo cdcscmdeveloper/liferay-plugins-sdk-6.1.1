@@ -71,8 +71,6 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
-import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
@@ -553,6 +551,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setCtContractVer(getManagedBean().getAgreementContractVer());
 			reqDTO.setAgreement(getManagedBean().getCtAgreement());
+			if (this.getManagedBean().getPmDigiSign() != null) {
+		    	reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+		    }
 			
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -839,16 +840,21 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
     public String gpkiSignAction(String outcome) throws Exception {
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 			validateAgreement(outcome);
-			CtContractVer contractVer = getManagedBean().getContractVer();
-			CtContract contract = getManagedBean().getCtContract();
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(contract.getContractNo());
-			sb.append(contractVer.getDocType());
-			sb.append(contractVer.getCtContractValue().getEffDate());
-			sb.append(contractVer.getCtContractValue().getExpDate());
-			sb.append(contractVer.getCtContractAmount().getContractAmount());
+			sb.append(getManagedBean().getCtContract().getContractNo());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(getManagedBean().getContractVer().getDocType());
+			sb.append(ContractConst.SEPRATE_LINE);
+			if(getManagedBean().isApproveFinalAgreement()){
+				sb.append(ContractConst.AGREEMENT_FINAL);
+			} else {
+				sb.append(ContractConst.AGREEMENT_DRAFT);
+			}
+			sb.append(ContractConst.SEPRATE_LINE);
 			sb.append(outcome);
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);

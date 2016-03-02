@@ -309,8 +309,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	              }
 		
 	              // Retrieve Items
-	              ctBB.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
-	               ctBB.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
+	              ctBB.getManagedBean().getCtItemList().clear();
+	               ctBB.getManagedBean().getCtItemServiceList().clear();
 	              if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
 	    	               ctBB.getManagedBean().setShowItem(null);
 	    	               ctBB.getManagedBean().setSelectedItem(null);
@@ -961,7 +961,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @see    Exception
      */
     public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			   validateCtContractVer(outcome);
 			   //Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			    StringBuilder sb = new StringBuilder();
