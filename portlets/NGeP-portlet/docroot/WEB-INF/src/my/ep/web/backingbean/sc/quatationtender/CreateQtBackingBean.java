@@ -198,7 +198,7 @@ public class CreateQtBackingBean extends
 			if (null != supplierCriteria
 					&& null != supplierCriteria.getQtSupplierCriteriaId()
 					&& (isPanel != this.getManagedBean().isPanelChange())) {
-				RequestContext.getCurrentInstance().execute("panelApprovalDlgs.show()");
+				//RequestContext.getCurrentInstance().execute("panelApprovalDlgs.show()");
 
 			} else {
 				scQt.setCircularVer(null);
