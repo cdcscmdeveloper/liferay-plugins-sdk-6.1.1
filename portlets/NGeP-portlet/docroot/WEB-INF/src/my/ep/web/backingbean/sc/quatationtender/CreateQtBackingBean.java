@@ -1938,18 +1938,14 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		 */
 		public List<PmParameterDesc> getContractTypes() {
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-			// check logged in user org type
-			boolean  isMinistry =  retrievePmUserOrgTypeByUserId();
+			// check logged in user allow central contract.
+			boolean  isAllowCentralContract =  isAllowCentralContract();
 
-			if(isMinistry){
+			if(!isAllowCentralContract){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.CONTRACT_TYPE_MINISTRY));
-			} else{
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
-			}
+								SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
+			} 
 
 			List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
 					.getParameterDescListBySearchBean(
@@ -1959,13 +1955,12 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		}
 		
 		/**
-		 * Retrieve pm user org type by user id.
-		 * to check user org type 
-		 * @return true, if successful
+		 * is Allow Central Contract
+		 * 
+		 * @return 
 		 */
-		private boolean retrievePmUserOrgTypeByUserId(){
-			boolean isMinistry  = Boolean.TRUE;
-			PmParameter  orgTypeCode = null;
+		private boolean isAllowCentralContract(){
+			boolean allowCentralContract  = false;
 			IUserSO userSO = null;
 			try {
 				UserReqDTO reqDTO = new UserReqDTO();
@@ -1975,12 +1970,11 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 				if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
 					for (PmUserOrg pmUserOrg :  resDTO.getUserOrgList()) {
-						if( pmUserOrg.getPmOrgProfile().getOrgTypeCode() != null){
-							orgTypeCode   = pmUserOrg.getPmOrgProfile().getOrgTypeCode();
-							if(ParameterConst.ORG_TYPE_BPK_HQ.equalsIgnoreCase(orgTypeCode.getParameterCode()) || 
-									ParameterConst.ORG_TYPE_PMS_SABAH.equalsIgnoreCase(orgTypeCode.getParameterCode()) ||
-									ParameterConst.ORG_TYPE_PMS_SARAWAK.equalsIgnoreCase(orgTypeCode.getParameterCode())){
-								isMinistry  = Boolean.FALSE;
+						if( pmUserOrg.getPmOrgProfile() != null){
+							Boolean isBPK = pmUserOrg.getPmOrgProfile().getBpk();
+							if(isBPK != null  && isBPK){
+								allowCentralContract  = true;
+								break;
 							}
 						}
 					}
@@ -1988,7 +1982,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 			}finally{
 				userSO = null;
 			}
-			return isMinistry;		
+			return allowCentralContract;		
 		}
 		
 		/**
