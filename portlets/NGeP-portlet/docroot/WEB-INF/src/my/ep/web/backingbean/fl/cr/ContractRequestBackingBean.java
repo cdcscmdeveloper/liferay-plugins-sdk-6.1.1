@@ -2103,7 +2103,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(null == flItemAddr.getOrderedQty()){
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 			} else {
-				if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
+				// skip the validation if the CR is from PID
+				if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode()) && getManagedBean().getFlRequest().getScPurchaseInDefault()==null){
 					if(flItemAddr.getOrderedQty().doubleValue() != flItemAddr.getScRequestItem().getQuantity().doubleValue()){
 						flItemAddr.setOrderedQty(BigDecimal.ZERO);
 						flItemAddr.setOrderedAmt(BigDecimal.ZERO);
@@ -2472,7 +2473,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				initializeApproverGroup();
 			}
 			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
-			getManagedBean().setAutoUpdate(false);
 			getManagedBean().setEmailValidate(true);
 			hideItemAddButtons();
 		} else if(selectedTabIndex==2){
