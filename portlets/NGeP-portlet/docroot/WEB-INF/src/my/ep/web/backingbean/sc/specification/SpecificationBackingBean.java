@@ -1395,7 +1395,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setAllStateCode(
 						tenderResDTO.getStateCode());
 				this.getManagedBean().setQt(scQt);
-				
+				//this.getManagedBean().getCtCircularVer(this.getManagedBean().getQt().getCircularVer());
 					
 					
 				}
@@ -14459,7 +14459,7 @@ public class SpecificationBackingBean extends
 		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
 		itemList = new ArrayList<CtPanelItem>();
 		itemList.add(this.getManagedBean().getCtPanelItem());
-		CtCircularVer ctCircularVer = this.getManagedBean().getCtCircularVer();
+		CtCircularVer ctCircularVer = this.getManagedBean().getQt().getCircularVer();
 		String pageView = "";
 		if (null != ctCircularVer) {
 
