@@ -259,12 +259,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					"remove-factoring-company");
 
 			// Added for qt..
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.PREPARE_SPECIFICATION, SourcingConstants.NAV_PAGE_PREPARE_SPECIFICATION);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.CONSOLIDATE_SPECIFICATION, SourcingConstants.NAV_PAGE_PREPARE_SPECIFICATION);
-			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
-					+ SCProcessNameConst.SPECIFICATION_APPROVAL, SourcingConstants.NAV_PAGE_PREPARE_SPECIFICATION);
+			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
+					+ SCProcessNameConst.SPECIFICATION_APPROVAL, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					+ SCProcessNameConst.PREPARE_QT_DETAILS, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
