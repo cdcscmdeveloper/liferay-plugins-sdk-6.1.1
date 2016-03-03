@@ -105,7 +105,7 @@
 						value="#{lbl['lbl.fl.frn.act.received.date']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 190px;"><p:calendar mode="popup" showOn="button" id="receivedDate" label="#{lbl['lbl.fl.frn.act.received.date']}" required="true"
-						disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}"
 						rendered="#{receivedNoteBackingBean.managedBean.buttonVal ne 'Cancel' or  receivedNoteBackingBean.managedBean.buttonVal ne 'View'}"
 						readonlyInput="true"
 						size="10"
@@ -141,7 +141,7 @@
 						style="text-align: top" /><p:outputLabel rendered="#{receivedNoteBackingBean.isReceivingOfficer()}" 
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width:350px; margin-bottom:5px;" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
-						disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View'}" label="#{lbl['lbl.fl.acknowledgeOfficer']}"
+						disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}" label="#{lbl['lbl.fl.acknowledgeOfficer']}"
 						value="#{receivedNoteBackingBean.managedBean.userLoginId}">
 						<f:selectItems
 							value="#{receivedNoteBackingBean.getAcknowledgeOfficerDropdown()}" />

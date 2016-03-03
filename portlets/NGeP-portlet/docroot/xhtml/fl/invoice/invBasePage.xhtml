@@ -40,13 +40,17 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						action="#{invoiceBackingBean.backToPervious}" /></td>
-				<td colspan="4" style="text-align: right;"><ui:repeat
-						var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{invoiceBackingBean.signingAction(bpmAction)}" />
-					</ui:repeat></td>
+				<td colspan="4" style="text-align: right;">
+				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+						<ui:define name="outComeSection">
+							<ui:repeat var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
+								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+								<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+								styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								action="#{invoiceBackingBean.signingAction(bpmAction)}" />
+							</ui:repeat>
+						</ui:define>
+					</ui:decorate></td>
 			<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
