@@ -79,7 +79,7 @@
 						value="#{specificationBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
 						style="width:215px;margin-bottom: 5px;">
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel,specificationBackingBean.managedBean.qt)}" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
@@ -147,7 +147,7 @@
 						value="#{specificationBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
 						style="width: 250px;">
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel,specificationBackingBean.managedBean.qt)}" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
