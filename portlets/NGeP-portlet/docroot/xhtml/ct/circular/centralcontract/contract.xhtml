@@ -66,24 +66,15 @@
 				              disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}" onsuccess="delCtContractDlg.show()" />
 		           </div>
 
-		<p:dialog id="delCtContractDlg"
-			styleClass="screen-title" widgetVar="delCtContractDlg" modal="true"
-			width="330">
-			<h:panelGrid columns="3">
-				<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain" />
-				<p:spacer width="10" />
-				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-			</h:panelGrid>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					 update="@([id$=contractListPnl])"
-					process="@all"
-					actionListener="#{centralContractBackingBean.deleteCircularContract()}"
-					onclick="delCtContractDlg.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="delCtContractDlg.hide();"
-					type="button" />
-			</div>
-		</p:dialog>
+		          <p:confirmDialog id="delCtContractDlg" widgetVar="delCtContractDlg"  message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+			             <div class="ppRightBtn">
+				              <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=contractListPnl])"
+					              process="@all" actionListener="#{centralContractBackingBean.deleteCircularContract()}"
+					              onclick="delCtContractDlg.hide();" />
+				                  <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="delCtContractDlg.hide();" type="button" />
+			            </div>
+		          </p:confirmDialog>
 
 		<p:spacer height="20" />
 		<p:outputPanel id="circularItemsPanel">

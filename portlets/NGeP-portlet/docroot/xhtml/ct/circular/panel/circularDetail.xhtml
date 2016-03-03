@@ -18,125 +18,165 @@
 	<h:panelGroup id="groupPaneId">
 	      
 	      <p:panel rendered="#{panelBackingBean.managedBean.circularVer.pid}"
-	            id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
-	             <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj"
-	                   value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" 
-	                   rowKey="#{pidObj}" selection="#{panelBackingBean.managedBean.ctCircularPidReasons}">
-				       <ac:paginator for="pidTableId" />
-				       <p:column selectionMode="multiple"
-				             style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}">
-				        </p:column>
-				        <p:column style="width:50%;" 
-				            headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
-		                        <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" 
-		                            disabled="#{panelBackingBean.managedBean.viewContract}" style="width:360px;float:left;text-align:left;">
-			                          <f:selectItems value="#{panelBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
-			                          <p:ajax event="change" partialSubmit="true" update="pidTableId"></p:ajax>
-			                    </p:selectOneMenu>
-			          </p:column> 
-		              <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" id="updatePidPurchase"  styleClass="column-align-center" style="width:45%;">
-		                      <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"
-		                           style="width:350px;float:left;text-align:left;" disabled="#{panelBackingBean.managedBean.viewContract}" 
-		                           rendered="#{panelBackingBean.PidPurchaseTypeOther(pidObj.pmReason.reasonId)}">
-		                           </p:inputText>  
-		               </p:column>  
-				 </p:dataTable>
-	             <div class="ppRightBtn"> 
+	                id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
+	                <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj"
+	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" 
+	                        rowKey="#{pidObj}" selection="#{panelBackingBean.managedBean.ctCircularPidReasons}">
+				                  <ac:paginator for="pidTableId" />
+				                  <p:ajax event="toggleSelect"
+                                       listener="#{panelBackingBean.onToggleSelect}" update=":form:delPidPanelBtn" />
+                                  <p:ajax event="rowSelect"
+                                       listener="#{panelBackingBean.onRowSelect}" update=":form:delPidPanelBtn" />
+			                      <p:ajax event="rowSelectCheckbox" 
+			                           listener="#{panelBackingBean.onRowSelect}" update=":form:delPidPanelBtn" />
+                                  <p:ajax event="rowUnselectCheckbox"  
+                                      listener="#{panelBackingBean.onRowUnselect}" update=":form:delPidPanelBtn" />
+				                 <p:column selectionMode="multiple"
+				                         style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				       
+				                 <p:column style="width:50%;" 
+				                         headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
+		                                 <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" 
+		                                         disabled="#{panelBackingBean.managedBean.viewContract}" style="width:360px;float:left;text-align:left;">
+			                                     <f:selectItems value="#{panelBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
+			                                    <p:ajax event="change" partialSubmit="true" update="pidTableId"></p:ajax>
+			                             </p:selectOneMenu>
+			                   </p:column> 
+		              
+		                        <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" 
+		                             id="updatePidPurchase"  styleClass="column-align-center" style="width:45%;">
+		                                 <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"  style="width:350px;float:left;
+		                                       text-align:left;" disabled="#{panelBackingBean.managedBean.viewContract}" 
+		                                      rendered="#{panelBackingBean.PidPurchaseTypeOther(pidObj.pmReason.reasonId)}">
+		                                </p:inputText>  
+		                      </p:column>  
+				     </p:dataTable>
+	            
+	              <div class="ppRightBtn"> 
 			         <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
-				          partialSubmit="true" action="#{panelBackingBean.addPurchaseInDefault()}" update="pidTableId" 
-				         oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>	
-				     <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" 
-			             onsuccess="delPidPurchaseDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>			
+				            partialSubmit="true" action="#{panelBackingBean.addPurchaseInDefault()}" update="pidTableId" 
+				            oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>	
+				     <p:commandButton id="delPidPanelBtn"  value="#{lbl['lbl.btn.delete']}" process="@this"  
+				           partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+			              onsuccess="delPidPurchaseDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>			
 		        </div>
-		        <p:dialog id="delPidPurchaseDlg"   styleClass="screen-title" 
-		             widgetVar="delPidPurchaseDlg"  modal="true" width="330">  
-                     <h:panelGrid columns="3">
-                           <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			               <p:spacer width="10"/>
-                           <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                     </h:panelGrid>
+		        
+		        <p:confirmDialog id="delPidPurchaseDlg" widgetVar="delPidPurchaseDlg"  message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                      <div class="ppRightBtn">
-		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=pidTableId])"
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:pidTableId,:form:delPidPanelBtn"
 		                    process="@all" actionListener="#{panelBackingBean.deletePidPurchase()}" onclick="delPidPurchaseDlg.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPidPurchaseDlg.hide();" type="button" />
 		            </div>
-               </p:dialog>  		
+               </p:confirmDialog>
 	      </p:panel>
 	      
 	      <p:panel id="contactPerson" 
 	           header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" >
-		       <p:dataTable id="contactPersonDt" var="data" rowKey="#{data}" 
-		            value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index" 
-			        selection="#{panelBackingBean.managedBean.selectedContactPersons}" widgetVar="contactPersonObj">
-			        <ac:paginator for="contactPersonDt" />
-			        <p:column selectionMode="multiple" style="width:3%" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			        <p:column style="width:20%;" styleClass="column-align-center" >
-			               <f:facet name="header">
-			                   <h:outputText value="#{lbl['lbl.ct.contact.person.name']}" styleClass="required"/>
-			               </f:facet>
-				          <p:inputText value="#{data.name}"  onkeypress="if (event.keyCode == 13) { return false; }"
-					           style="width:95%;" maxlength="20"  disabled="#{panelBackingBean.managedBean.viewContract}"  />
-			        </p:column>
-			        <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;" styleClass="column-align-center" >
-				          <p:inputText value="#{data.address}" onkeypress="if (event.keyCode == 13) { return false; }"   
-				        	  style="width:95%;" maxlength="200"   disabled="#{panelBackingBean.managedBean.viewContract}"/>
-			        </p:column>
-			        <p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;" styleClass="column-align-center" >
-				         <p:inputText id="email" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" 
-				              disabled="#{panelBackingBean.managedBean.viewContract}" style="width:95%;" 
-				              onkeypress="if (event.keyCode == 13) { return false; }"  maxlength="100" value="#{data.email}" />
-			         </p:column>
-			         <p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;" styleClass="column-align-center" >
-				           <p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" 
-				               validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.tel']}" maxlength="100"
-				               disabled="#{panelBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
-			         </p:column>
-		      </p:dataTable>
-		      <div class="ppRightBtn"> 
-			        <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   partialSubmit="true" 
-				          action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" 
-				          oncomplete="contactPersonObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			         <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" 
+		             <p:dataTable id="contactPersonDt" var="data" rowKey="#{data}" 
+		                    value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index" 
+			                selection="#{panelBackingBean.managedBean.selectedContactPersons}" widgetVar="contactPersonObj">
+			                     <ac:paginator for="contactPersonDt" />
+			                     <p:ajax event="toggleSelect"
+                                       listener="#{panelBackingBean.onToggleSelect}" update=":form:ctPersonDelBtn" />
+                                  <p:ajax event="rowSelect"
+                                       listener="#{panelBackingBean.onRowSelect}" update=":form:ctPersonDelBtn" />
+			                      <p:ajax event="rowSelectCheckbox" 
+			                           listener="#{panelBackingBean.onRowSelect}" update=":form:ctPersonDelBtn" />
+                                  <p:ajax event="rowUnselectCheckbox"  
+                                      listener="#{panelBackingBean.onRowUnselect}" update=":form:ctPersonDelBtn" />
+			                     <p:column selectionMode="multiple" 
+			                           style="width:3%" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+			        
+			                     <p:column style="width:20%;" styleClass="column-align-center" >
+			                             <f:facet name="header">
+			                                  <h:outputText value="#{lbl['lbl.ct.contact.person.name']}" styleClass="required"/>
+			                            </f:facet>
+				                        <p:inputText value="#{data.name}"  onkeypress="if (event.keyCode == 13) { return false; }"
+					                          style="width:95%;" maxlength="20"  disabled="#{panelBackingBean.managedBean.viewContract}"  />
+			                    </p:column>
+			        
+			                    <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;" styleClass="column-align-center" >
+				                     <p:inputText value="#{data.address}" onkeypress="if (event.keyCode == 13) { return false; }"   
+				        	                style="width:95%;" maxlength="200"   disabled="#{panelBackingBean.managedBean.viewContract}"/>
+			                    </p:column>
+			        
+			                   <p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;" styleClass="column-align-center" >
+				                      <p:inputText id="email" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" 
+				                           disabled="#{panelBackingBean.managedBean.viewContract}" style="width:95%;" 
+				                           onkeypress="if (event.keyCode == 13) { return false; }"  maxlength="100" value="#{data.email}" />
+			                   </p:column>
+			         
+			                   <p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;" styleClass="column-align-center" >
+				                       <p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" 
+				                             validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.tel']}" maxlength="100"
+				                             disabled="#{panelBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
+			                   </p:column>
+		         </p:dataTable>
+		      
+		        <div class="ppRightBtn"> 
+			        <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
+				          action="#{panelBackingBean.addContactPerson()}" update=":form:contactPersonDt" 
+				          oncomplete="contactPersonObj.paginator.endLink.click();" 
+				          rendered="#{!panelBackingBean.managedBean.viewContract}" partialSubmit="true" />
+			         <p:commandButton id="ctPersonDelBtn"  value="#{lbl['lbl.btn.delete']}" process="@this"  
+			              partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 			             onsuccess="delCtPersonDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
 		      </div>
-		      <p:dialog id="delCtPersonDlg" 
-		             styleClass="screen-title" widgetVar="delCtPersonDlg"  modal="true" width="330">  
-                     <h:panelGrid columns="3">
-                         <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			             <p:spacer width="10"/>
-                         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                     </h:panelGrid>
+		   
+		      <p:confirmDialog id="delCtPersonDlg" widgetVar="delCtPersonDlg"  message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                      <div class="ppRightBtn">
-		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=contactPersonDt])"
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:contactPersonDt, :form:ctPersonDelBtn"
 		                     process="@all" actionListener="#{panelBackingBean.deleteContactPerson()}" onclick="delCtPersonDlg.hide();"/>
 			             <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCtPersonDlg.hide();" type="button" />
 		             </div>
-               </p:dialog>  		
+             </p:confirmDialog>	
            </p:panel>
 	
-	<p:panel id="cancelCircularPnl" header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" rowIndexVar="index" 
-			value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}"
-			selection="#{panelBackingBean.managedBean.selectedCancelCirculars}" >
-			<ac:paginator for="cancelCircularDt" />		
-			<p:column selectionMode="multiple" style="width:3%" 
-				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
-				<h:outputText value="#{data.circularVer.circularNo}"  style="float:left;"/>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center" >
-				<h:outputText value="#{data.circularVer.name}" style="float:left;" />
-			</p:column>	
-		</p:dataTable>
-		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}"  oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
-				actionListener="#{panelBackingBean.addCancelCircularListener()}" 
-				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true" 
-				action="#{panelBackingBean.deleteCancelCircular()}" update="cancelCircularDt" 
-				rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
-		</div>	
-	</p:panel>
+	<p:panel id="cancelCircularPnl" 
+	      header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
+		    <p:dataTable id="cancelCircularDt" var="data" 
+			        value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}" rowKey="#{data}"
+			        selection="#{panelBackingBean.managedBean.selectedCancelCirculars}"  rowIndexVar="index" >
+			               <ac:paginator for="cancelCircularDt" />		
+			               <p:ajax event="toggleSelect"
+                                  listener="#{panelBackingBean.onToggleSelect}" update=":form:cancelCircularDtBtn" />
+                            <p:ajax event="rowSelect"
+                                   listener="#{panelBackingBean.onRowSelect}" update=":form:cancelCircularDtBtn" />
+			                 <p:ajax event="rowSelectCheckbox" 
+			                        listener="#{panelBackingBean.onRowSelect}" update=":form:cancelCircularDtBtn" />
+                              <p:ajax event="rowUnselectCheckbox"  
+                                    listener="#{panelBackingBean.onRowUnselect}" update=":form:cancelCircularDtBtn" />
+			                  <p:column selectionMode="multiple" style="width:3%" 
+				                    rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+			
+			                  <p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
+				                     <h:outputText value="#{data.circularVer.circularNo}"  style="float:left;"/>
+			                  </p:column>
+			
+			                  <p:column headerText="#{lbl['lbl.ct.circular.name']}" styleClass="column-align-center" >
+				                   <h:outputText value="#{data.circularVer.name}" style="float:left;" />
+			                  </p:column>	
+		         </p:dataTable>
+		
+		         <div class="ppRightBtn"> 
+		                   <p:commandButton value="#{lbl['lbl.btn.add']}"  oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
+				                 actionListener="#{panelBackingBean.addCancelCircularListener()}"  rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+			               <p:commandButton id="cancelCircularDtBtn"  value="#{lbl['lbl.btn.delete']}"  
+			                      process="@this" partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+				                  rendered="#{!panelBackingBean.managedBean.viewContract}" onsuccess="cancelCircularDltDlg.show()"/>				
+		           </div>	
+		           
+		            <p:confirmDialog id="cancelCircularDlt" widgetVar="cancelCircularDltDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                   severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                           <div class="ppRightBtn">
+		                    <p:commandButton value="#{lbl['lbl.btn.yes']}"   action="#{panelBackingBean.deleteCancelCircular}" 
+		                         update=":form:cancelCircularDt, :form:cancelCircularDtBtn" partialSubmit="true"  oncomplete="cancelCircularDltDlg.hide();"/>
+			                <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="cancelCircularDltDlg.hide();" />
+		             </div>
+                 </p:confirmDialog>
+	       </p:panel>
 	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
 		styleClass="pop_up_top" modal="true" width="550" height="350">
 			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" 
