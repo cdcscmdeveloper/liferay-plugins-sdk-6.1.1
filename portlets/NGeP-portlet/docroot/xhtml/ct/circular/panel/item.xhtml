@@ -213,58 +213,70 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:spacer height="40" />
 		<p:outputPanel id="itemZone">
 		    <h:panelGroup rendered="#{panelBackingBean.managedBean.selectionOfZone}">
-		     <p:outputLabel value="#{lbl['lbl.ct.sublabel.panel.coverage']}" style="float:left; font-weight:bold; padding-top:25px;"/>
-			 <div style="clear:both" />
-			 <table style="width: 100%">
-				<tr>
-					<td style="width: 120px;"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
-					<td><p:selectOneMenu id="locationLevels" style="width:178px;" disabled="#{panelBackingBean.managedBean.viewContract}"
-							value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
-							<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-							<p:ajax event="change" listener="#{panelBackingBean.selectLocation}" process="@this" update=":form:zoneGeneralDataTable"/>
-						</p:selectOneMenu>
-					</td>
-				</tr>
-			</table>
+		                <p:outputLabel value="#{lbl['lbl.ct.sublabel.panel.coverage']}" style="float:left; font-weight:bold; padding-top:25px;"/>
+			            <div style="clear:both" />
+			            <table style="width: 100%">
+				            <tr>
+								<td style="width: 120px;"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
+								<td><p:selectOneMenu id="locationLevels" style="width:178px;" disabled="#{panelBackingBean.managedBean.viewContract}"
+										value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
+										<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+										<p:ajax event="change" listener="#{panelBackingBean.selectLocation}" process="@this" update=":form:zoneGeneralDataTable"/>
+									</p:selectOneMenu>
+								</td>
+							</tr>
+						</table>
 		  
-		      <p:spacer height="20" />
-		     <p:dataTable id="zoneGeneralDataTable" value="#{panelBackingBean.managedBean.selectedPanelItems.ctPanelZones}" 
-		        var="panelZoneVar" selectionMode="single" widgetVar="panelZoneObj"
-		        selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
-			    <ac:paginator for="zoneGeneralDataTable" />
-			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" 
-			        process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
-					<p:column style="width:60%" styleClass="column-align-center" >
-				    	<f:facet name="header">
-				    	     <h:outputText value="#{lbl['lbl.ct.location']}" styleClass="required"/>
-				    	</f:facet>
-				    	 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
-					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%" styleClass="column-align-center" >
-                      <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"  
-                         disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:100px;">
-				         <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-			             <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-			          </p:selectOneMenu>
-                    </p:column>
-					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%" styleClass="column-align-center" >
-					  <p:commandLink
-						actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
-						process="@this" update=":form:ZoneGeneral"
-						oncomplete="ZoneGeneral.show();">
-						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					  </p:commandLink>
-					</p:column>
-			</p:dataTable>
-		   <div class="ppRightBtn">
-		   <p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this" update="@([id$=zonePopupGeneral])"
-					oncomplete="ZoneGeneral.show();"
-					actionListener="#{panelBackingBean.showGeneralZoneLocationPopup}"
-					rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-		  <p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.btn.delete']}"  process="@this"
-		     onsuccess="delZoneDlg.show();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-	    </div>	
+				      <p:spacer height="20" />
+				     <p:dataTable id="zoneGeneralDataTable" value="#{panelBackingBean.managedBean.selectedPanelItems.ctPanelZones}" 
+				                var="panelZoneVar" selectionMode="single" widgetVar="panelZoneObj"
+				                selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
+									    <ac:paginator for="zoneGeneralDataTable" />
+									    <p:ajax event="rowSelect" update=":form:itemSupplier" 
+									         process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
+					                   
+					                   <p:column style="width:60%" styleClass="column-align-center" >
+				    	                   <f:facet name="header">
+				    	                       <h:outputText value="#{lbl['lbl.ct.location']}" styleClass="required"/>
+				    	                 </f:facet>
+				    	                 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
+					                 </p:column>
+                    
+                                     <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%" styleClass="column-align-center" >
+                                          <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"  
+                                               disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:100px;">
+				                                 <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+			                                    <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
+			                             </p:selectOneMenu>
+                                    </p:column>
+					
+					               <p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%" styleClass="column-align-center" >
+					                   <p:commandLink
+						                   actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
+						                   process="@this" update=":form:ZoneGeneral"
+					                    	oncomplete="ZoneGeneral.show();">
+						                <p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+					                 </p:commandLink>
+					            </p:column>
+			
+			         </p:dataTable>
+		           
+		             <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" update="@([id$=zonePopupGeneral])"
+					           oncomplete="ZoneGeneral.show();" actionListener="#{panelBackingBean.showGeneralZoneLocationPopup}"
+					           rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+		                 <p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.btn.delete']}"  process="@this"
+		                      onsuccess="delZoneDlg.show();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+	              </div>	
+	    
+	         <p:confirmDialog id="delZoneDlg" widgetVar="cancelCircularSupDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		           <div class="ppRightBtn">
+				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=zoneGeneralDataTable],[id$=itemSupplier])"
+				       process="@all" actionListener="#{panelBackingBean.deletePanelZone()}" onclick="delZoneDlg.hide();"/>
+					 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delZoneDlg.hide();" type="button" />
+				   </div>
+        </p:confirmDialog>
 	  </h:panelGroup>
 	  <p:dialog id="ZoneGeneral" header="#{lbl['lbl.ct.add.location']}" widgetVar="ZoneGeneral" 
 	  	styleClass="pop_up_top" modal="true" width="600" height="500">
@@ -314,20 +326,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	</div>
 	</p:panel>
 	   </p:dialog>
-	   
-	   <p:dialog id="delZoneDlg"
-		    styleClass="screen-title" widgetVar="delZoneDlg"  modal="true" width="330">  
-            <h:panelGrid columns="3">
-              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			  <p:spacer width="10"/>
-              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=zoneGeneralDataTable],[id$=itemSupplier])"
-		       process="@all" actionListener="#{panelBackingBean.deletePanelZone()}" onclick="delZoneDlg.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delZoneDlg.hide();" type="button" />
-		   </div>
-        </p:dialog>  		
        </p:outputPanel>
 		<p:spacer height="40" />
 		<p:outputPanel id="itemSupplier">
@@ -340,6 +338,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			          value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
 		              selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" >
 			          <ac:paginator for="itemSupplierDt" />
+			            <p:ajax event="toggleSelect"
+                                  listener="#{panelBackingBean.onToggleSelect}" update=":form:deleteSupplierBtn" />
+                            <p:ajax event="rowSelect"
+                                   listener="#{panelBackingBean.onRowSelect}" update=":form:deleteSupplierBtn" />
+			                 <p:ajax event="rowSelectCheckbox" 
+			                        listener="#{panelBackingBean.onRowSelect}" update=":form:deleteSupplierBtn" />
+                              <p:ajax event="rowUnselectCheckbox"  
+                                    listener="#{panelBackingBean.onRowUnselect}" update=":form:deleteSupplierBtn" />
 				      <p:column selectionMode="multiple" style="width:2%" 
 				      		rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				
@@ -397,21 +403,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						update=":form:itemSupplierDt" 
 						rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				<p:commandButton id="deleteSupplierBtn" value="#{lbl['lbl.btn.delete']}" 
-				     	 process="@this" onclick="delSupplierDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				         disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
+				     	 process="@this" onclick="cancelCircularSupDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 		   </div>
-	      <p:dialog id="delSupplierDlg" widgetVar="delSupplierDlg"
-		   styleClass="screen-title" modal="true" width="330">  
-           <h:panelGrid columns="3">
-             <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			   <p:spacer width="10"/>
-              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
+	        <p:confirmDialog id="cancelCircularSupDlt" widgetVar="cancelCircularSupDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=itemSupplierDt])" process="@all"
-		        actionListener="#{panelBackingBean.deletePanelSupplier()}" onclick="delSupplierDlg.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delSupplierDlg.hide();" type="button" />
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:itemSupplierDt,:form:deleteSupplierBtn" process="@all"
+		        actionListener="#{panelBackingBean.deletePanelSupplier()}" onclick="cancelCircularSupDlg.hide();"/>
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="cancelCircularSupDlg.hide();" type="button" />
 		  </div>
-        </p:dialog>
+        </p:confirmDialog>
         <!-- Supplier Details PopUp -->
 		<ui:include src="/xhtml/ct/circular/panel/supplierDetailsPopUp.xhtml" />
 	    </h:panelGroup>	
