@@ -2386,6 +2386,10 @@ public class SmApplicationBackingBean extends
 				getPrevApprovedPersonnel(getManagedBean()
 						.getSelectedShareHolder()), getManagedBean()
 						.getSelectedShareHolder());
+		getManagedBean()
+				.setDisableRoleSelection(
+						disableEpRoleDropDown(getManagedBean()
+								.getSelectedShareHolder()));
 	}
 
 	/**
@@ -4790,7 +4794,8 @@ public class SmApplicationBackingBean extends
 			retVal = true;
 		}
 		// disabled drop down if softcert processing
-		else if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+		else if (prevPersonnel != null
+				&& prevPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
 			retVal = true;
 		}
 		return retVal;
@@ -4922,6 +4927,10 @@ public class SmApplicationBackingBean extends
 
 		// set personnel field change value
 		SmFieldChangeUtil.initPersonnelChangeField(getManagedBean());
+
+		// disable or enable role selection
+		getManagedBean().setDisableRoleSelection(
+				disableEpRoleDropDown(shareHolderBean));
 
 	}
 
@@ -5164,6 +5173,8 @@ public class SmApplicationBackingBean extends
 
 		// reset previous approved personnel because not exist for new personnel
 		getManagedBean().setLatestPersonnel(null);
+
+		getManagedBean().setDisableRoleSelection(false);
 
 	}
 
@@ -9738,12 +9749,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private SmPersonnel getPrevApprovedPersonnel(SmPersonnel currPersonnel) {
 		List<SmPersonnel> prevPersonnels = getManagedBean()
-				.getPrevApprovedPersonnels() == null
-				|| getManagedBean().getPrevApprovedPersonnels().isEmpty() ? SmCommonUtil
-				.getBasicPersonnelsBySupplierId(getManagedBean().getSmAppl()
-						.getSmSupplier().getSupplierId()) : getManagedBean()
 				.getPrevApprovedPersonnels();
-
 		SmPersonnel retVal = null;
 
 		if (currPersonnel != null
