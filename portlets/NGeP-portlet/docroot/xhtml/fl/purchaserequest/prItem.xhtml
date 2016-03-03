@@ -34,6 +34,9 @@
 					disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
 					<p:graphicImage value="/css/images/design/ico-view-edit.png" />
+					<f:setPropertyActionListener
+					target="#{purchaseRequestBackingBean.managedBean.required}"
+					value="true" />
 				</p:commandLink>
 				<h:outputText rendered="#{address.addressType != null}" style="text-align:left; float:left;"
 					value="#{purchaseRequestBackingBean.getFullAddress(address.addressType.pmAddress)}" />
@@ -347,12 +350,37 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="postCode"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.postcode']}" maxlength="10"
+							label="#{lbl['lbl.fl.postcode']}" maxlength="5"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.postcode}"
 							validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"
-							size="34" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							size="10" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 					<td><p:message for="postCode" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="contactPerson"
+							required="#{purchaseRequestBackingBean.managedBean.required}"
+							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="85"
+							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).contactName}"
+							size="35"
+							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"></p:inputText>
+							</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/>
+							<p:message for="contactPerson" display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="manAddress" label="#{lbl['lbl.fl.manual.add.delivery.add']}"
+							required="#{purchaseRequestBackingBean.managedBean.required}"
+							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="delAddByDistrict"
+								value="#{purchaseRequestBackingBean.managedBean.manualAddrList}" />
+						</p:selectOneMenu>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address']}"/>
+						<p:message for="manAddress" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.email']}" /> <p:outputLabel value="*"
@@ -370,64 +398,40 @@
        				</td>
        				<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
        				<p:message for="email" display="icon" /></td>
-       				
-					<td><p:outputLabel value="#{lbl['lbl.fl.manual.add.delivery.add']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="manAddress" label="#{lbl['lbl.fl.manual.add.delivery.add']}"
-							required="#{purchaseRequestBackingBean.managedBean.required}"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
-							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems var="delAddByDistrict"
-								value="#{purchaseRequestBackingBean.managedBean.manualAddrList}" />
-						</p:selectOneMenu>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address']}"/>
-						<p:message for="manAddress" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.telno']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="telNo"
-							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.telno']}" maxlength="20"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).phoneNo}"
-							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
-							size="35"
-							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
-							</td>
-							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
-							<p:message for="telNo" display="icon" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="contactPerson"
-							required="#{purchaseRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="20"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).contactName}"
-							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
-							size="35"></p:inputText>
-							</td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/>
-							<p:message for="contactPerson" display="icon" /></td>			
+					<td><ac:phone id="telNo" isMobile="false" label="#{lbl['lbl.fl.telno']}"
+						countryCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).phoneCountry}" 
+						areaCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).phoneArea}" 
+						number="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).phoneNo}"  
+						validatorMessage="#{lbl['lbl.fl.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}" 
+						required="#{purchaseRequestBackingBean.managedBean.required}"/>
+						</td>
+					<td></td>	
+					
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
-					<td><p:inputText maxlength="20"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).faxNo}"
-							 validatorMessage="#{lbl['lbl.fl.fax.no.msg']}"
-							size="35" 
-							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
-							</td>
-							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fax.no']}"/></td>
+					<td class="tdContent"><ac:phone id="faxNo" isMobile="false"
+							label="#{lbl['lbl.fl.faxno']}"
+							countryCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).faxCountry}"
+							areaCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).faxArea}"
+							number="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).faxNo}"
+							validatorMessage="#{lbl['lbl.fl.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}" /></td>
+					<td></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
-					<td><p:inputText maxlength="20"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).mobileNo}"
-							validatorMessage="#{lbl['lbl.fl.mobile.no.msg']}"
-							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$"
-							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></p:inputText>
-							</td>
-							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mobile.no']}"/></td>
+					<td class="tdContent"><ac:phone id="mobileNo" isMobile="false"
+							label="#{lbl['lbl.fl.mobile']}"
+							countryCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).mobileCountry}"
+							areaCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).mobileArea}"
+							number="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).mobileNo}"
+							validatorMessage="#{lbl['lbl.fl.mobile']} - #{lbl['lbl.pm.profiles.invalidNo']}" /></td>
+					<td></td>
+							<td></td>
 				</tr>
 			</table>
 		</p:panel>
