@@ -93,6 +93,9 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
@@ -894,6 +897,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().remove(terminationReason);
 			}
 		 selectedTerminationReasonsList = null;	
+		 getManagedBean().setButtonHideActive(true);
 	 }
 	 
 	 /**
@@ -1254,4 +1258,22 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			CtTerminationReason[] selectedTerminationReasonsList) {
 		this.selectedTerminationReasonsList = selectedTerminationReasonsList;
 	}
+	
+	/**
+     * Method to set boolean value for checkbox 
+     * @param pass ajax event type
+     * Set boolean value for user action 
+     * */
+	
+	public void onToggleSelect(ToggleSelectEvent event) {
+		getManagedBean().setButtonHideActive(false);
+	}
+	
+	public void onRowSelect(SelectEvent event) {
+		getManagedBean().setButtonHideActive(false);
+	}
+ 
+    public void onRowUnselect(UnselectEvent event) {
+    	getManagedBean().setButtonHideActive(true);
+    }
 }

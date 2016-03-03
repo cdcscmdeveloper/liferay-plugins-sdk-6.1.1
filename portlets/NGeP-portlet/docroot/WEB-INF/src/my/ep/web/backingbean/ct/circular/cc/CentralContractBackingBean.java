@@ -37,6 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
@@ -423,6 +426,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			try {
 			     	getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
 				   getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());
+				   getManagedBean().setButtonHideActive(true);
 			} catch (Exception e) {
 				   e.printStackTrace();
 				   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1055,6 +1059,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void deleteContactPerson(){
 		try {
 			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
+			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1370,6 +1375,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				  getManagedBean().getCircularVer().getCtExemptedOrgs().remove(selectedExemptedOrgs[i]);
 			} 
 			selectedExemptedOrgs = null;
+			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1672,9 +1678,28 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		public void deletePidPurchase(){
 				try {
 					getManagedBean().getCircularVer().getCtCircularPidReason().removeAll(getManagedBean().getCtCircularPidReasons());
+					getManagedBean().setButtonHideActive(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 				}
 			}
+		
+		/**
+	     * Method to set boolean value for checkbox 
+	     * @param pass ajax event type
+	     * Set boolean value for user action 
+	     * */
+		
+		public void onToggleSelect(ToggleSelectEvent event) {
+			getManagedBean().setButtonHideActive(false);
+		}
+		
+		public void onRowSelect(SelectEvent event) {
+			getManagedBean().setButtonHideActive(false);
+		}
+	 
+	    public void onRowUnselect(UnselectEvent event) {
+	    	getManagedBean().setButtonHideActive(true);
+	    }
 }
