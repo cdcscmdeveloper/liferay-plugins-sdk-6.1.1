@@ -34,15 +34,19 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
-				<td colspan="4" style="text-align: right"><ui:repeat
+				<td colspan="4" style="text-align: right">
+				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">	
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button" 
 							update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{flOrderBB.signingAction(bpmAction)}" />
-					</ui:repeat>
-					</td>
+						</ui:repeat>
+					</ui:define>
+				</ui:decorate></td>
 							<c:if test='#{flOrderBB.managedBean.buttonVal eq "Update"}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.update']}" 
