@@ -985,6 +985,11 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
 
+		// check whether its site visit after approval
+		getManagedBean().setSiteVisitAfterApproval(
+				SmCommonUtil.isSiteVisitAfterApproved(getManagedBean()
+						.getSmAppl()));
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}

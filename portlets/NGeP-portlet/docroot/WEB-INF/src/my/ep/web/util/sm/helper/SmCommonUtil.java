@@ -1926,6 +1926,34 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Check if site visit after approval application
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return boolean
+	 */
+	public static boolean isSiteVisitAfterApproved(SmAppl smAppl) {
+		boolean retVal = false;
+		SmWorkflowStatus wf = SmCommonUtil.getCurrentActiveWokFlowStatus(smAppl
+				.getApplId());
+		if (wf != null
+				&& wf.getPmStatus() != null
+				&& wf.getPmStatus().getStatusId() != null
+				&& (wf.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED) == 0 || wf
+						.getPmStatus()
+						.getStatusId()
+						.compareTo(
+								SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) == 0)) {
+			retVal = true;
+
+		}
+		return retVal;
+	}
+
+	/**
 	 * Get the latest GST rate from Pm Config Rule Value
 	 * 
 	 * @return BigDecimal
@@ -2937,10 +2965,10 @@ public class SmCommonUtil {
 
 	public static void checkEmailDomainWithExceptionMsg(String emailOwner,
 			String email) {
-//		if (StringUtils.isNotBlank(email) && !isValidEmailDomain(email)) {
-//			throw new EpException(MessageConst.ERROR_721115, new String[] {
-//					email, emailOwner });
-//		}
+		// if (StringUtils.isNotBlank(email) && !isValidEmailDomain(email)) {
+		// throw new EpException(MessageConst.ERROR_721115, new String[] {
+		// email, emailOwner });
+		// }
 	}
 
 	public static boolean isValidEmailDomain(String email) {
