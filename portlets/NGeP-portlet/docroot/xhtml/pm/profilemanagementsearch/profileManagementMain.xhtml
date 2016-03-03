@@ -10,11 +10,15 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 >
 	
 	<ui:define name="contentSection">
-		<p:panel id="pProMngSearch" header="#{lbl['lbl.pm.search.user']}" toggleable="true">
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		 <!--<p:panel id="pProMngSearch" header="#{lbl['lbl.pm.search.user']}" toggleable="true"> -->
 		<!-- Search -->
 	    <ui:include src="/xhtml/pm/profilemanagementsearch/profileManagementSearch.xhtml" />
-	</p:panel>
+	<!-- </p:panel> -->
 	<!-- Result -->
-	<ui:include src="/xhtml/pm/profilemanagementsearch/profileManagementResult.xhtml" />
+	 <ui:include src="/xhtml/pm/profilemanagementsearch/profileManagementResult.xhtml" />
 	</ui:define>
 </ui:composition>
