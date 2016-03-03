@@ -434,10 +434,10 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="contactPerson"
 							required="#{contractRequestBackingBean.managedBean.required}"
-							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="20"
+							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="85"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).contactName}"
 							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
-							size="85"></p:inputText>
+							size="35"></p:inputText>
 							</td>
 					<td><ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/>
 							<p:message for="contactPerson" display="icon" /></td>	
