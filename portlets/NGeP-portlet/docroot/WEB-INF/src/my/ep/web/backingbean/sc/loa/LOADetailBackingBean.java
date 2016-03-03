@@ -4796,7 +4796,6 @@ public class LOADetailBackingBean extends
 		
 		getManagedBean().setOverallContractAmt(
 				overallCtAmount(getManagedBean().getScLoa().getLoaAmt(), gstAmount));
-						
 		if (null != getManagedBean().getContractSignerUser()
 				&& getManagedBean().getContractSignerUser().getUserId() != null) {
 
@@ -4809,12 +4808,13 @@ public class LOADetailBackingBean extends
 		} else {
 			prepareSignerInfo();
 		}
+		getManagedBean().getScLoa().setOverallContractAmt(getManagedBean().getOverallContractAmt());
 		checkPerformanceBondMandatory();
 		checkAgreementMandatory();
 	}
 	
 	public boolean isGSTRegActive() {
-		boolean isActive = Boolean.TRUE;
+		boolean isActive = Boolean.FALSE;
 		ScLoa scLoa = getManagedBean().getScLoa();
 		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
 		getManagedBean().setRenderRemainder(false);
@@ -4822,13 +4822,12 @@ public class LOADetailBackingBean extends
 												DbValueConst.RECORD_STATUS_ACTIVE)) {
 			if (null != scLoa.getGstEffDate()){
 				if(scLoa.getGstEffDate().compareTo(new Date()) <= 0){
-					isActive = Boolean.FALSE;
+					isActive = Boolean.TRUE;
 				}else {
 					getManagedBean().setRenderRemainder(isActive);
 				}
 			}
 		}
-		
 		return isActive;
 	}
 	
