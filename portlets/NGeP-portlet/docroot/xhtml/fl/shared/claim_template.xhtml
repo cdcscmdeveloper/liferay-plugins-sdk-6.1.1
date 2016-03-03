@@ -4,14 +4,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
-
-			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
+			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" rendered="#{bpmTasklistBackingBean.managedBean.groupTask eq 'true' and !bpmTasklistBackingBean.managedBean.claim}"
 				action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
 				update="@form"></p:commandButton>
-			<h:panelGroup rendered="#{bpmTasklistBackingBean.managedBean.claim}"> 
-			<ui:insert name="outComeSection" />
-
-</h:panelGroup>
-
+			<h:panelGroup rendered="#{bpmTasklistBackingBean.managedBean.groupTask eq 'false' or bpmTasklistBackingBean.managedBean.claim}"> 
+				<ui:insert name="outComeSection" />
+			</h:panelGroup>
 
 </ui:composition>
