@@ -10878,7 +10878,139 @@ public class SpecificationBackingBean extends
 				scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 			}
 		}
+		ScQtSupplierCriteria qtSupplierCriteria = scQt
+				.getScQtSupplierCriteria();
 
+		if (!scQt.isPanel() && null != qtSupplierCriteria) {
+			if (scQt.isZonal()
+					&& scQt.getQtType().equals(QTConstants.OPEN_TYPE)) {
+
+				List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
+						this.getManagedBean().getZoneGeneralTrees(), null);
+
+				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
+					// TODO Code needs to be remove
+					setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
+					List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
+					for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
+						qtSupplierCriteria.getQtZoneCriterias().setModified(
+								true);
+						tplSpecZoneDtl.setTplSpecZone(qtSupplierCriteria
+								.getQtZoneCriterias());
+						zoneLocal.add(tplSpecZoneDtl);
+					}
+					qtSupplierCriteria.getQtZoneCriterias()
+							.setScQtSupplierCriteria(qtSupplierCriteria);
+					qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
+							zoneLocal);
+				} else {
+					if (null != scQt.getScQtSupplierCriteria()
+							.getQtZoneCriterias()) {
+						qtSupplierCriteria.getQtZoneCriterias()
+								.setTplSpecZoneDtls(null);
+
+					}
+				}
+				qtSupplierCriteria.setScQt(scQt);
+				// TODO Need to remove below code...
+				setUserDetails(qtSupplierCriteria);
+				scQt.setScQtSupplierCriteria(qtSupplierCriteria);
+			}
+			/*if (QTConstants.OPEN_TYPE.equals(scQt.getQtType())
+					&& !scQt.getScQtSupplierCriteria().isAllState()) {
+				List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) convertTreeNodesToLocationCriteria(
+						this.getManagedBean().getZoneTrees(),
+						qtSupplierCriteria);
+				if (locCriteria != null && !locCriteria.isEmpty()) {
+					scQt.getScQtSupplierCriteria().setScQtLocCriteria(
+							locCriteria);
+				} else {
+					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+				}
+			}*/
+
+			/*if (QTConstants.OPEN_TYPE.equals(scQt.getQtType())
+					&& ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt
+							.getProcurementMode().getParameterCode())
+					&& this.getManagedBean().getQt().getScQtSupplierCriteria()
+							.isAllState()) {
+				if (null != qtSupplierCriteria) {
+
+					qtSupplierCriteria.setLocationLevel(null);
+					qtSupplierCriteria.setScQtLocCriteria(null);
+				}
+			}*/
+
+			qtSupplierCriteria.setScQt(scQt);
+			// TODO Need to remove below code...
+			setUserDetails(qtSupplierCriteria);
+			scQt.setScQtSupplierCriteria(qtSupplierCriteria);
+
+		/*	if (QTConstants.OPEN_TYPE.equalsIgnoreCase(scQt.getQtType())) {
+				List<ScQtCategory> openList = this.getManagedBean()
+						.getSuppCriteriaopenList();
+				if (null != openList && !openList.isEmpty()) {
+					scQt.setScQtCategorys(openList);
+				}
+			} else if (QTConstants.RESTRICTED_TYPE.equalsIgnoreCase(scQt
+					.getQtType())) {
+				scQt.setZonal(false);
+				scQt.setZoneLocationLevel(null);
+				if (null != scQt.getScQtSupplierCriteria()) {
+					scQt.getScQtSupplierCriteria().setAllState(false);
+					scQt.getScQtSupplierCriteria().setLocationLevel(null);
+					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+					if (null != scQt.getScQtSupplierCriteria()
+							.getQtZoneCriterias()) {
+						qtSupplierCriteria.getQtZoneCriterias()
+								.setTplSpecZoneDtls(null);
+						qtSupplierCriteria.setQtZoneCriterias(null);
+					}
+
+				}
+
+				List<ScQtCategory> openList = this.getManagedBean()
+						.getSuppCriteriaopenList();
+				if (null != openList && !openList.isEmpty()) {
+					scQt.setScQtCategorys(openList);
+				}
+
+			}*/
+		} else if (scQt.isPanel()) {
+
+			List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
+					this.getManagedBean().getZoneGeneralTrees(), null);
+
+			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
+				if (null != scQt.getScQtSupplierCriteria()
+						&& null == scQt.getScQtSupplierCriteria()
+								.getQtZoneCriterias()) {
+					scQt.getScQtSupplierCriteria().setQtZoneCriterias(
+							new ScQtZoneCriteria());
+				}
+				ScQtZoneCriteria zoneCriteria = scQt.getScQtSupplierCriteria()
+						.getQtZoneCriterias();
+				zoneCriteria.setScQtSupplierCriteria(scQt
+						.getScQtSupplierCriteria());
+				// TODO: Need to remove
+				setUserDetails(zoneCriteria);
+				List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
+				for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
+					zoneCriteria.setModified(true);
+					tplSpecZoneDtl.setTplSpecZone(zoneCriteria);
+					zoneLocal.add(tplSpecZoneDtl);
+				}
+				scQt.setZonal(true);
+				qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
+						zoneLocal);
+
+			}
+
+			// scQt.setZoneLocationLevel(null);
+			scQt.getScQtSupplierCriteria().setLocationLevel(null);
+			scQt.setQtType(QTConstants.OPEN_TYPE);
+
+		}
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
@@ -11304,6 +11436,7 @@ public class SpecificationBackingBean extends
 					.getToBeRemoveSchedules());
 			specReqDTO.setToBeRemoveProgressivePayments(this.getManagedBean()
 					.getToBeRemoveProgPayments());
+		boolean isAssignedState=this.getManagedBean().isAssignedState();	
 			switch (activeIndex) {
 			case 0:
 				ScQt scQt = constructSpecCommitteDtls().getScQt();
@@ -11398,6 +11531,8 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
+				retriveSpecdetails(resDTO.getScQt().getQtId(),
+						QTConstants.DOCTYPE_PREPARE_SPEC);
 				retriveTechnicalScoring();
 				break;
 
@@ -11431,6 +11566,8 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
+				retriveSpecdetails(resDTO.getScQt().getQtId(),
+						QTConstants.DOCTYPE_PREPARE_SPEC);
 				retriveFinancialScoring();
 				break;
 
@@ -11466,6 +11603,8 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
+				retriveSpecdetails(resDTO.getScQt().getQtId(),
+						QTConstants.DOCTYPE_PREPARE_SPEC);
 				retriveRecommendationDetails();
 				break;
 
@@ -11493,6 +11632,8 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
+				retriveSpecdetails(resDTO.getScQt().getQtId(),
+						QTConstants.DOCTYPE_PREPARE_SPEC);
 				retriveDeliveryDetails();
 				break;
 
@@ -11510,7 +11651,10 @@ public class SpecificationBackingBean extends
 					renewSesionObject();
 					this.getManagedBean().setQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
+					retriveSpecdetails(resDTO.getScQt().getQtId(),
+							QTConstants.DOCTYPE_PREPARE_SPEC);
 					retriveFulfilmentDtls();
+					//retriveSupplierQualificationCriteria("SC");
 					// retriveCommitteeEndorsment();
 					// retriveTechnicalCheckList();
 				} else {
@@ -11520,6 +11664,8 @@ public class SpecificationBackingBean extends
 					renewSesionObject();
 					this.getManagedBean().setQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
+					retriveSpecdetails(resDTO.getScQt().getQtId(),
+							QTConstants.DOCTYPE_PREPARE_SPEC);
 					// retriveFulfilmentDtls();
 					retriveCommitteeEndorsment();
 				}
@@ -11533,6 +11679,8 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
+				retriveSpecdetails(resDTO.getScQt().getQtId(),
+						QTConstants.DOCTYPE_PREPARE_SPEC);
 				retriveCommitteeEndorsment();
 				// retriveTechnicalCheckList();
 				break;
@@ -11551,6 +11699,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setOutComes(outComes);
 			this.getManagedBean().setReadOnly(readonly);
 			this.getManagedBean().setPayLoad(quotationTenderDataType);
+			this.getManagedBean().setAssignedState(isAssignedState);
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */
