@@ -430,27 +430,63 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	/**
      * The method used to check whether contract is services with LOA signed 
-     * before 01/04/2015.
+     * before GST effective date (01/04/2015).
 	 * 
 	 * @return true, if contract is services and LOA is signed before 01/04/2015
 	 *         false, if contract is not services or LOA is not signed before 01/04/2015
      */
-	public boolean chkProcurementTypeService() {		
+	public boolean imposedServiceTaxCondition() {
 		try {
-			if(getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory() != null &&
-					getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode() != null) {
-		        	if(getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(
-				   ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE) && 
-				   DateUtils.isDateGreaterOrEqual(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT,"01/04/2015"), getManagedBean().getContractVer().getCtContract().getAckDate())){
-			   return true;
+			if (getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory() != null
+					&& getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode() != null) {
+				if (getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(
+						ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)) {
+					if (getManagedBean().getContractVer().getCtContract().getAckDate().getTime() < getGstLaunchDate().getTime()) {
+						return true;
+					}
                 }
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-	
+		}	
 		return false;
+	}
+	
+	/**
+	 * The method used to check whether current date is before the GST relief due date (31/03/2017).
+	 * 
+	 * @return true, if current date is before or equal 31/03/2017
+	 *         false, if current date is after 31/03/2017
+	 */
+	public boolean isBeforeGstReliefDueDate() {
+		try {
+			if (DateUtils.getCurrentDateWithoutTime().getTime() <= getGstReliefDueDate().getTime()) {
+				return true;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
+	 * The method used to set the alert flag when the original contract imposed service tax.
+     */
+	public void chkServiceTaxAlert() {
+		try {
+			if (isBeforeGstReliefDueDate()	// currentDate <= 31/3/2017
+					&& imposedServiceTaxCondition()	// ack_date < 01/04/2015 & procurement category = Service
+					&& isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())	// supplier gst is effective
+					&& !getManagedBean().getContractVer().getCtContractValue().isServiceTax()	// imposed_service_tax = No
+					&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() > getGstReliefDueDate().getTime()) {	// contract_end_date > 31/3/2017
+				getManagedBean().setServiceTaxAlertFlg(true);				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -1769,8 +1805,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		 * calculate over all amount with GST
 	     */
 		 public void calculateOrverAllAmt(){
-		    	if(getManagedBean().getCtContractAmount()!= null && getManagedBean().getCtContractAmount().getGstAmount() !=  null){
-		    		 getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));    
+		    	if(getManagedBean().getCtContractAmount()!= null) {
+		    		BigDecimal gstAmt = BigDecimal.ZERO;
+		    		BigDecimal contractAmt = BigDecimal.ZERO;
+		    		
+		    		if (getManagedBean().getCtContractAmount().getGstAmount() != null)
+		    			gstAmt = getManagedBean().getCtContractAmount().getGstAmount();
+		    		
+		    		if (getManagedBean().getCtContractAmount().getContractAmount() != null)
+		    			contractAmt = getManagedBean().getCtContractAmount().getContractAmount();
+		    		
+		    		getManagedBean().setGstTotalAmount(gstAmt.add(contractAmt));
 		    	}
 		    	// Recalculate the performance bond amount
 		    	if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
@@ -2516,5 +2561,72 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    			}
 	    		}
 	    	}	  
-	  }	  
+	  }
+	  
+	  /**
+	   * The method used to verify contract is with GST.
+	   * 
+	   * @param gstEffDate  the gst effective date
+	   * 
+	   * @return true, if contract is with GST
+	   *         false, if contract is without GST
+	   */
+	  public boolean isContractWithGst(Date gstEffDate) {
+		  if (gstEffDate != null && gstEffDate.getTime() <= DateUtils.getCurrentDateWithoutTime().getTime())
+			  return true;
+		  else
+			  return false;
+	  }
+	  
+	  /**
+	   * The method used to retrieve GST Launch Date.
+	   * 
+	   * @return gst launch date
+	   */
+	  public Date getGstLaunchDate() {
+		  try {
+			  return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_LAUNCH_DATE);
+		  } catch (Exception e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
+		  return null;
+	  }
+		
+	  /**
+	   * The method used to retrieve GST Relief Due Date.
+	   * 
+	   * @return gst relief due date
+	   */
+	  public Date getGstReliefDueDate() {
+		  try {
+			  return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_RELIEF_DUE_DATE);
+		  } catch (Exception e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
+		  return null;
+	  }
+	  
+	  /**
+	   * The method used to 
+	   * calculate over all amount with GST
+	   */
+	  public void onChangeServiceTax() {
+		  chkServiceTaxAlert();
+		  getManagedBean().setDisableContractAmount(true);
+		  
+		  if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			  getManagedBean().setDisableGstAmount(false);			  
+			  if (getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
+				  getManagedBean().setDisableContractAmount(false);
+			  } else {
+				  if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= getGstReliefDueDate().getTime()) {
+					  getManagedBean().setDisableGstAmount(true);
+				  }
+			  }
+		  } else {
+			  getManagedBean().setDisableGstAmount(true);
+		  }
+	  }
 }

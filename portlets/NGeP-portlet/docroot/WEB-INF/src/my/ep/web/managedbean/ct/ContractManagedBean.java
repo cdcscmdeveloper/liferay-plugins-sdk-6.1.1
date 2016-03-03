@@ -95,7 +95,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<CtContractItem> ctItemList;
 	
 	private CtContractAmount ctContractAmount;	
-	private boolean disableGstAmount;
+	private boolean disableGstAmount;	
+	private boolean disableContractAmount = true;
 	private boolean chkConceValue;
 	private boolean chkJustification;
 	
@@ -112,6 +113,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	 private List<CtPidReason> selectedPidReason;
 	 
 	  private boolean updateContract = false;
+	  private boolean serviceTaxAlertFlg = false;
 	
 	/**
 	 * @return the fileDirectory
@@ -715,7 +717,21 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableGstAmount(boolean disableGstAmount) {
 		this.disableGstAmount = disableGstAmount;
 	}
-	
+		
+	/**
+	 * @return the disableContractAmount
+	 */
+	public boolean isDisableContractAmount() {
+		return disableContractAmount;
+	}
+
+	/**
+	 * @param disableContractAmount the disableContractAmount to set
+	 */
+	public void setDisableContractAmount(boolean disableContractAmount) {
+		this.disableContractAmount = disableContractAmount;
+	}
+
 	/**
 	 * @return the chkConceValue
 	 */
@@ -901,4 +917,17 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.selectedPidReason = selectedPidReason;
 	}
 
+	/**
+	 * @return the serviceTaxAlertFlg
+	 */
+	public boolean isServiceTaxAlertFlg() {
+		return serviceTaxAlertFlg;
+	}
+
+	/**
+	 * @param serviceTaxAlertFlg the serviceTaxAlertFlg to set
+	 */
+	public void setServiceTaxAlertFlg(boolean serviceTaxAlertFlg) {
+		this.serviceTaxAlertFlg = serviceTaxAlertFlg;
+	}
 }

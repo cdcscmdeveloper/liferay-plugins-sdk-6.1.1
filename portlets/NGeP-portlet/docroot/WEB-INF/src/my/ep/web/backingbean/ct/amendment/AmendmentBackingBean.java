@@ -368,6 +368,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					
 					if (taskId == null) {
 						ConstructTabSideMenu();
+						
+						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+							ctBackingBean.chkServiceTaxAlert();
+						}
+						
 						return;
 					}
 		
@@ -796,7 +801,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.PROGRESSIVE_SCHEDULE);
 					}
 				    
-					if (isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+					if (ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				    	if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
 				    		ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 						}
@@ -1094,33 +1099,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								    ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			           }
 		     }/*Remark validation end*/
-		   
-		 //Validation for PID
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
-					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid() && 
-					(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() == null || ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() == 0)) {
-				  throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			
-		// Validation for PID Reason
-    		if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null && ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
-    			for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
-    			   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
-    				   throw new EpException(MessageConst.ERROR_100022, 
-    							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
-    									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-    			   }
-    			   if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
-    				   if(reason.getReasonDesc().isEmpty()){
-    					   throw new EpException(MessageConst.ERROR_100022, 
-    								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
-    										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-    				   }
-    			   }
-    			}
-    		}
 	
 		     /*validation for other  selection*/
 	         if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
@@ -1128,6 +1106,53 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        	 if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
 	                     throw new EpException(MessageConst.ERROR_750033);
                  }
+	        	 
+	        	//Validation for PID
+	 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
+	 					ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid() && 
+	 					(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() == null || ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() == 0)) {
+	 				  throw new EpException(MessageConst.ERROR_100022, 
+	 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+	 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	 			}
+	 			
+	 			// Validation for PID Reason
+	     		if(ctBackingBean.getManagedBean().getContractVer().getCtPidReasons() != null && ctBackingBean.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
+	     			for(CtPidReason reason : ctBackingBean.getManagedBean().getContractVer().getCtPidReasons()){
+	     			   if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
+	     				   throw new EpException(MessageConst.ERROR_100022, 
+	     							new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
+	     									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     			   }
+	     			   if(ctBackingBean.PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+	     				   if(reason.getReasonDesc().isEmpty()){
+	     					   throw new EpException(MessageConst.ERROR_100022, 
+	     								new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason.desc", 
+	     										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     				   }
+	     			   }
+	     			}
+	     		}
+	     		
+	     		// Validation for GST amount before GST Relief Due Date
+//	    		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+//	    				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+//	    			if (ctBackingBean.isBeforeGstReliefDueDate()
+//	    					&& ctBackingBean.imposedServiceTaxCondition()
+//	    					&& ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
+//	    					&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
+//	    				if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
+//	    					 throw new EpException(MessageConst.ERROR_100022, 
+//	    								new String[]{ResourceBundleUtils.getMessage("lbl.ct.gst.amt", 
+//	    										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//	    				}				
+//	    				if (ctBackingBean.getManagedBean().getCtContractAmount().getContractAmount() == null) {
+//	    					 throw new EpException(MessageConst.ERROR_100022, 
+//	    								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.amount", 
+//	    										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//	    				}
+//	    			}
+//	    		}
 	        	 
 	     		// Validation for Deduction
 	     		if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null && ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
@@ -4360,7 +4385,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}				
 			context.put("newContractValue", amountDF.format(contractValue));
 			
-			if (isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			if (ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				context.put("newGSTAmout", amountDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount()));
 				context.put("newOverallAmt", amountDF.format(contractValue.add(
 						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount())));
@@ -4616,13 +4641,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("bondAmt200k", false);
 			}
 			
-			context.put("contractWithGst", isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate()));
+			context.put("contractWithGst", ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate()));
 			String gstRegNo = "TB";
 			String gstEffDate = "TB";
 			String gstDeclareDate = "TB";
 			BigDecimal overallAmt = scLoa.getLoaAmt();
 			
-			if (isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+			if (ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 				context.put("contractAmt", amountDF.format(overallAmt));
 				context.put("contractAmtTxt", (scLoa.getLoaAmt() != null && scLoa.getLoaAmt().doubleValue() != 0) ? NumberWordUtil.convert(amountNoCommaDF.format(overallAmt)) : ""); 
 				

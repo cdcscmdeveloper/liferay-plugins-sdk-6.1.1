@@ -32,7 +32,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -171,22 +170,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 			}
 		};
 		Collections.sort(ctItemCeilingQty, comparator);
-	}
-	
-	/**
-	 * The method used to verify contract is with GST.
-	 * 
-	 * @param gstEffDate  the gst effective date
-	 * 
-	 * @return true, if contract is with GST
-	 *         false, if contract is without GST
-	 */
-	public boolean isContractWithGst(Date gstEffDate) {
-		if (gstEffDate != null && gstEffDate.getTime() <= DateUtils.getCurrentDateWithoutTime().getTime())
-			return true;
-		else
-			return false;
-	}
+	}	
 	
 	/**
 	 * The method used to verify the login user is supplier.
