@@ -5087,11 +5087,14 @@ public class SmApplicationUtil {
 	 */
 	public void removeNotApplicableInformationBeforeSave(
 			SmApplicationManagedBean bean) {
-		removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
-				.getBasicCompanyFacility().getFacilityType());
-		removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
-		removeTravellingSoftwareIfNotApplicable(bean);
-		removeEquipmentIfNotApplicable(bean.getSmAppl());
+		//only check for application not in site visit after approved
+		if(!bean.isSiteVisitAfterApproval()){
+			removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
+					.getBasicCompanyFacility().getFacilityType());
+			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
+			removeTravellingSoftwareIfNotApplicable(bean);
+			removeEquipmentIfNotApplicable(bean.getSmAppl());
+		}
 	}
 
 	/**
