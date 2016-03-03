@@ -392,6 +392,7 @@ public class ReportBackingBean extends
 	/** The ministry id. */
 	private Long ministryId = null;
 
+	/** The values empty. */
 	boolean valuesEmpty = false;
 
 	/** The role code list. */
@@ -10636,7 +10637,7 @@ public class ReportBackingBean extends
 							.equals(ReportConst.PARAM_CODE_TYPE_FPJ))) {
 				// retrieveFPJMinistryList();
 				// getLtstMinistryListByUserid();
-				getManagedBean().getRptGenBean().setFlTextBoxBasedRoles(true);
+				getManagedBean().getRptGenBean().setTextBoxBasedRoles(true);
 				retrieveOnlyFPJMinistryList();
 				retrieveFPJPTJList();
 				retrievePFPPList();
@@ -12393,12 +12394,18 @@ public class ReportBackingBean extends
 		return scYearList;
 	}
 	
+	/**
+	 * On change values.
+	 */
 	public void onChangeValues(){		
 		if (this.getPpYear() != null && this.getPpYear()!= ReportConst.EMPTY_VAL) {
 			this.setValuesEmpty(false);
 		}
 	}
 	
+	/**
+	 * On change values for lo vs.
+	 */
 	public void onChangeValuesForLOVs() {
 		
 		if (this.getPpYear() != null && this.getPpYear()!= ReportConst.EMPTY_VAL) {		
@@ -12779,6 +12786,9 @@ public class ReportBackingBean extends
 		
 	}
 
+	/**
+	 * Reload lovs values.
+	 */
 	private void reloadLovsValues() {
 		// For FL,CT and PP # for setting the Only LOV's values
 		if (this.getModuleValue().equalsIgnoreCase(
@@ -13297,6 +13307,62 @@ public class ReportBackingBean extends
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
+	
+	/**
+	 * Gets the calendar month name by no.
+	 * 
+	 * @param monthNo
+	 *            the month no
+	 * @return the calendar month name by no
+	 */
+	private String getCalendarMonthNameByNo(String monthNo) {
+
+		int month = Integer.parseInt(monthNo);
+		String monthString = "";
+
+		switch (month) {
+		case 1:
+			monthString = "January";
+			break;
+		case 2:
+			monthString = "February";
+			break;
+		case 3:
+			monthString = "March";
+			break;
+		case 4:
+			monthString = "April";
+			break;
+		case 5:
+			monthString = "May";
+			break;
+		case 6:
+			monthString = "June";
+			break;
+		case 7:
+			monthString = "July";
+			break;
+		case 8:
+			monthString = "August";
+			break;
+		case 9:
+			monthString = "September";
+			break;
+		case 10:
+			monthString = "October";
+			break;
+		case 11:
+			monthString = "November";
+			break;
+		case 12:
+			monthString = "December";
+			break;
+		default:
+			monthString = "Invalid month";
+			break;
+		}
+		return monthString;
+	}
 
 	/**
 	 * generateSMReport - Generate SUPPLIER MANAGEMENT module reports.
@@ -13347,15 +13413,17 @@ public class ReportBackingBean extends
 			}
 			if ((this.getSmFromMonth() != null)
 					&& (this.getSmFromMonth() != ReportConst.EMPTY_VAL)) {
-				String month = getManagedBean().getMonthMap().get(
-						this.getSmFromMonth());
+				/*String month = getManagedBean().getMonthMap().get(
+						this.getSmFromMonth());*/
+				String month = getCalendarMonthNameByNo(this.getSmFromMonth());
 				rptGenBean.setSmFromMonthVar(ReportConst.AMP_SM_FROM_DATE_EQ
 						+ month);
 			}
 			if ((this.getSmToMonth() != null)
 					&& (this.getSmToMonth() != ReportConst.EMPTY_VAL)) {
-				String month = getManagedBean().getMonthMap().get(
-						this.getSmToMonth());
+				/*String month = getManagedBean().getMonthMap().get(
+						this.getSmToMonth());*/
+				String month = getCalendarMonthNameByNo(this.getSmFromMonth());
 				rptGenBean.setSmToMonthVar(ReportConst.AMP_SM_TO_DATE_EQ
 						+ month);
 			}
@@ -17054,6 +17122,11 @@ public class ReportBackingBean extends
 		return isByZonelist;
 	}
 
+	/**
+	 * Gets the rgegistartion type dates.
+	 * 
+	 * @return the rgegistartion type dates
+	 */
 	public void getRgegistartionTypeDates() {
 
 		this.getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
@@ -17083,6 +17156,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Checks if is values empty.
+	 * 
 	 * @return the valuesEmpty
 	 */
 	public boolean isValuesEmpty() {
@@ -17090,6 +17165,8 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Sets the values empty.
+	 * 
 	 * @param valuesEmpty
 	 *            the valuesEmpty to set
 	 */
@@ -17097,6 +17174,9 @@ public class ReportBackingBean extends
 		this.valuesEmpty = valuesEmpty;
 	}
 
+	/**
+	 * Check empty values for lovs.
+	 */
 	public void checkEmptyValuesForLovs() {
 		if (this.getModuleValue() != null) {
 			getDefaultValuesFromAndToDate(this.getManagedBean().getReportCode());
@@ -17135,6 +17215,11 @@ public class ReportBackingBean extends
 		}
 	}
 
+	/**
+	 * Check default values for pp.
+	 * 
+	 * @return true, if successful
+	 */
 	private boolean checkDefaultValuesForPP() {
 		return ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this
@@ -17146,6 +17231,11 @@ public class ReportBackingBean extends
 				|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL));
 	}
 
+	/**
+	 * Check default values for all modules.
+	 * 
+	 * @return true, if successful
+	 */
 	private boolean checkDefaultValuesForAllModules() {
 		return ((this.getCtContrMontrStatus() != null) && (this
 				.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
