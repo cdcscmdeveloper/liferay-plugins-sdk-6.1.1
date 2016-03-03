@@ -40,14 +40,20 @@
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<c:if
 						test='#{flOrderBB.managedBean.outComes ne "null"}'>		
-				<td colspan="4" style="text-align: right"><ui:repeat
-						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}"
+				<td colspan="4" style="text-align: right">
+					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+						<ui:define name="outComeSection">
+							<ui:repeat
+							var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							update="@form"
 							action="#{flOrderBB.signingAction(bpmAction)}" />
-					</ui:repeat> </td></c:if><c:if
+							</ui:repeat> 
+						</ui:define>
+					</ui:decorate>
+					</td></c:if><c:if
 						test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
 						<td colspan="4" style="text-align: right">
 						<p:commandButton value="STOP FULFILMENT" update="@form"
