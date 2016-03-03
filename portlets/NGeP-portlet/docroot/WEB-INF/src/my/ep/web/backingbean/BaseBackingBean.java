@@ -1323,7 +1323,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				log.info("====groupTask null==="
 						+ resDTO.isGroupTask());
 				this.getManagedBean().setReadOnly(false);
-				bb.getManagedBean().setClaim(false);
+				bb.getManagedBean().setClaim(true);
 				bb.getManagedBean().setGroupTask(false);
 			}
 			
