@@ -410,6 +410,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> addrSameAsItems;
 	private boolean claimTask;
 	private boolean disableRoleSelection;
+	private boolean siteVisitAfterApproval;
 
 	private boolean showNewChanges;
 
@@ -3210,5 +3211,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisableRoleSelection(boolean disableRoleSelection) {
 		this.disableRoleSelection = disableRoleSelection;
+	}
+
+	public boolean isSiteVisitAfterApproval() {
+		return siteVisitAfterApproval;
+	}
+
+	public void setSiteVisitAfterApproval(boolean siteVisitAfterApproval) {
+		this.siteVisitAfterApproval = siteVisitAfterApproval;
 	}
 }
