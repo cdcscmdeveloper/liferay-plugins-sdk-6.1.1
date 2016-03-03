@@ -409,6 +409,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String facAddresSameAs;
 	private List<SelectItem> addrSameAsItems;
 	private boolean claimTask;
+	private boolean disableRoleSelection;
 
 	private boolean showNewChanges;
 
@@ -3201,5 +3202,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setClaimTask(boolean claimTask) {
 		this.claimTask = claimTask;
+	}
+
+	public boolean isDisableRoleSelection() {
+		return disableRoleSelection;
+	}
+
+	public void setDisableRoleSelection(boolean disableRoleSelection) {
+		this.disableRoleSelection = disableRoleSelection;
 	}
 }

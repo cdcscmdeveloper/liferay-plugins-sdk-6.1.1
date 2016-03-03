@@ -5670,10 +5670,13 @@ public class SmApplicationUtil {
 	public static List<SmPersonnel> getPrevApprovedPersonnelDirectorOwner(
 			SmAppl smAppl) {
 		List<SmPersonnel> prevApprovedPersonnelsDirectorOwner = new ArrayList<SmPersonnel>();
-		if (!smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-				&& !smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+		if (smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			prevApprovedPersonnelsDirectorOwner = SmCommonUtil
+					.getBasicPersonnelsBySupplierId(smAppl.getSmSupplier()
+							.getSupplierId());
+		} else if (!smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
 			String prevApplNo = smAppl.getApprovedSerFile() == null ? ""
 					: smAppl.getApprovedSerFile().substring(
