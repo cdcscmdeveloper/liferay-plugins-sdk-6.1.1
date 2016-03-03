@@ -193,9 +193,14 @@ public class PmTrackingDiaryBackingBean extends
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
 		UserResDTO resDTO = new UserResDTO();
-		IUserSO trackingDiarySO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
-		resDTO = trackingDiarySO.retrieveUserByUserId(reqDTO);
-		return resDTO.getPmUser().getUserName();
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		resDTO = userSO.retrieveUserByUserId(reqDTO);
+		if(userSO != null && resDTO.getPmUser() !=null){
+			return resDTO.getPmUser().getUserName();
+		}else{
+			return "";
+		}
+		
 	}
 	/**
 	 * reset search bean fields
@@ -371,27 +376,23 @@ public class PmTrackingDiaryBackingBean extends
 	}
 
 	
-	public void redirectToTrackingDiary(String docType, Long docId, String url)  throws IOException,PortalException, SystemException{
+	public void redirectToTrackingDiary(String docType, Long docId)  throws IOException,PortalException, SystemException{
 		System.out.println("...........redirectToTrackingDiary............");
 		System.out.println("...........docType:"+docType);
 		System.out.println("...........docId:"+docId);
-		System.out.println("...........url:"+url);
+
 		//search and redirect to trackingDiaryView.xhtml
 		this.getManagedBean().setSelectedDocType(docType);
 		this.getManagedBean().setSelectedDocId(docId);
-		this.getManagedBean().setBackURL(url);
-		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
-//		FacesScopes facesScope = new FacesScopes();
-//		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
-//		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-//		String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(
-//						themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
-//		externalContext.redirect(commonUrl + "/tracking-diary-view");
-//		????????
+
 		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
+		log.info("fc.getViewRoot().getViewId()="+fc.getViewRoot().getViewId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "/xhtml/trackingdiary/trackingDiaryView.xhtml");
-//		return "/xhtml/trackingdiary/trackingDiaryView.xhtml";
+
 		
 	}
 	public void onFunctionSelect() {
