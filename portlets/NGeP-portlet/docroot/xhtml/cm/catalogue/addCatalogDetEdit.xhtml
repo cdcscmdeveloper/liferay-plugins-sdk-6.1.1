@@ -27,29 +27,6 @@
 	</script>
 
 
-	<h:panelGroup
-		rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-		<script>
-			$(function() {
-				$('#slides').slidesjs({
-					width : 940,
-					height : 528,
-					navigation : {
-						effect : "fade"
-					},
-					pagination : {
-						effect : "fade"
-					},
-					effect : {
-						fade : {
-							speed : 400
-						}
-					}
-				});
-			});
-		</script>
-	</h:panelGroup>
-
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="false"></p:messages>
 
@@ -61,7 +38,8 @@
 
 		<div style="text-align: right; min-height: 40px;">
 			<div style="float: left; clear: both;">
-				<p:commandButton value="#{lbl['lbl.cm.back']}" rendered="#{!unspscCodeBackingBean.supplierTemp}"
+				<p:commandButton value="#{lbl['lbl.cm.back']}"
+					rendered="#{!unspscCodeBackingBean.supplierTemp}"
 					action="#{catalogueBackingBean.navigate}">
 				</p:commandButton>
 			</div>
@@ -147,35 +125,65 @@
 					<td rowspan="10"><h:outputText styleClass="instruction"
 							value="#{lbl['lbl.cm.instruction.related.image']}"
 							rendered="#{unspscCodeBackingBean.allSupplier}" /><br /> <h:panelGroup
-							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-							<div
-								style="display: block; width: 120px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
-						</h:panelGroup> 
-						
-						<h:panelGroup
-							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 1 }">
-							<div style="width: 250px;height:150px;">
-								<ui:repeat var="cmImage"
-									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<p:graphicImage styleClass="catImageStyle" 
-									value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
-									
-								</ui:repeat>
-								
-								
+							id="refereshImageId">
+
+							<h:panelGroup
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
+								<div
+									style="display: block; width: 120px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
+							</h:panelGroup>
+
+							<h:panelGroup
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 1 }">
+
+								<div style="width: 250px; height: 150px;">
+									<ui:repeat var="cmImage"
+										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+										<p:graphicImage styleClass="catImageStyle"
+											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
+
+									</ui:repeat>
+
+
 								</div>
-						</h:panelGroup>
-						
-						<h:panelGroup
-							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
-							<div id="slides" style="width: 250px;">
-								<ui:repeat var="cmImage"
-									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<p:graphicImage styleClass="catImageStyle" 
-									value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
-									
-								</ui:repeat>
-							</div>
+							</h:panelGroup>
+
+							<h:panelGroup
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
+
+								<script>
+			$(function() {
+				$('#slides').slidesjs({
+					width : 940,
+					height : 528,
+					navigation : {
+						effect : "fade"
+					},
+					pagination : {
+						effect : "fade"
+					},
+					effect : {
+						fade : {
+							speed : 400
+						}
+					}
+				});
+			});
+		</script>
+
+
+								<div id="slides" style="width: 250px;">
+									<ui:repeat var="cmImage"
+										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+										<p:graphicImage styleClass="catImageStyle"
+											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
+
+									</ui:repeat>
+								</div>
+
+
+
+							</h:panelGroup>
 						</h:panelGroup> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
 							title="#{lbl['lbl.cm.upload']}"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
@@ -230,7 +238,8 @@
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
-					<td><p:inputText size="35" label="#{lbl['lbl.cm.min.order']}" maxlength="6"
+					<td><p:inputText size="35" label="#{lbl['lbl.cm.min.order']}"
+							maxlength="6"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"
 							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
@@ -257,8 +266,7 @@
 			</table>
 		</p:panel>
 
-		<p:remoteCommand name="refresh" id="refresh"
-			action="#{catalogueBackingBean.refreshImage}" />
+
 
 		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
 			width="700px" resizable="false" styleClass="pop_up_top">
@@ -272,8 +280,9 @@
 				invalidSizeMessage="#{catalogueBackingBean.getInvalidFileSize()}"
 				label="#{lbl['lbl.btn.choose']}" mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"
+				update=":form:deleteImage, :form:refereshImageId"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP files are accepted"
-				oncomplete="refresh();" multiple="true">
+				multiple="true">
 			</p:fileUpload>
 		</p:dialog>
 
