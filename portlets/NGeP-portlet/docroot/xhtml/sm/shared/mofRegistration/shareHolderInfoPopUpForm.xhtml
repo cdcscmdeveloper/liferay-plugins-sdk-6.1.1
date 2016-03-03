@@ -379,10 +379,11 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
 		id="shrPrivPanel">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.disabled.role.msg']}" rendered="#{backingBean.managedBean.disableRoleSelection}"/>
+		<p:outputPanel rendered="#{backingBean.managedBean.validSmUserLimit}">
+			<br /><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" escape="false"/><br />
+		</p:outputPanel>
 		<table>
-			<p:outputPanel rendered="#{backingBean.managedBean.validSmUserLimit}">
-				<tr><td colspan="3"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" escape="false"/></td></tr>
-			</p:outputPanel>
 			<p:outputPanel rendered="#{!backingBean.managedBean.validSmUserLimit or (backingBean.managedBean.validSmUserLimit and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1')}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
@@ -414,12 +415,13 @@
 			</p:outputPanel>
 		</table>
 		<table>
+			<tr><td></td></tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
 				<td><p:selectOneMenu id="smPersnEpRole"
 						label="#{lbl['lbl.sm.userprofile.eprole']}"
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
-						disabled="#{backingBean.disableEpRoleDropDown(backingBean.managedBean.selectedShareHolder)}"
+						disabled="#{backingBean.managedBean.disableRoleSelection}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
