@@ -1314,7 +1314,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					existingApprovers.add(actor.getPmUser().getUserId());
 				}
 				
-				if(RoleCode.PLAN_OFFICER.value().equals(actor.getRoleCode().getRoleCode())){
+				if(RoleCode.PLAN_OFFICER.value().equals(actor.getRoleCode().getRoleCode()) && isRolePlanner()){
 					actor.setPmUser(getFacesScopes().getUserSessionBean());					
 				}
 			}
