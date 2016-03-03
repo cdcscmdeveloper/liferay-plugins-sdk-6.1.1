@@ -73,12 +73,12 @@ public class ReportsGenerateBean {
 
 	/** The month list. */
 	private List<SelectItem> monthList = new ArrayList<SelectItem>();
-
+	
 	/** The month map. */
 	private HashMap<String, String> monthMap = new HashMap<String, String>();
 	
 	/** The month map my. */
-	private HashMap<SelectItem, SelectItem> monthMapMy = new HashMap<SelectItem, SelectItem>();
+	//private HashMap<SelectItem, SelectItem> monthMapMy = new HashMap<SelectItem, SelectItem>();
 
 	/** The status lst. */
 	private Object[] statusLst;
@@ -1215,7 +1215,7 @@ public class ReportsGenerateBean {
 	private boolean ppLOVBasedRoles = false;
 
 	/** The fl text box based roles. */
-	private boolean flTextBoxBasedRoles = false;
+	private boolean textBoxBasedRoles = false;
 
 	/** The fl supplier view. */
 	private boolean flSupplierView = false;
@@ -14660,12 +14660,26 @@ public class ReportsGenerateBean {
 	 * 
 	 * @return the list
 	 */
-	public List<SelectItem> generateCommonMonthList() {
+	/**
+	 * Generate common month list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 */
+	public List<SelectItem> generateCommonMonthList(String lang) {
 		monthList = new ArrayList<SelectItem>();
+		//lang = ReportConst.MALAY_LANGUAGE_CODE;
+		Locale locale = null;
+		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
+		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
+		}
 		String month = ReportConst.EMPTY_VAL;
 		int monthNoInt;
 		String monthNoStr = ReportConst.EMPTY_VAL;
-		DateFormatSymbols dfs = new DateFormatSymbols();
+		DateFormatSymbols dfs = new DateFormatSymbols(locale);
 		String[] months = dfs.getMonths();
 		for (int i = 0; i <= 11; i++) {
 			monthNoInt = i + 1;
@@ -14683,7 +14697,6 @@ public class ReportsGenerateBean {
 		}
 		return monthList;
 	}
-	
 	
 	/**
 	 * Generate common month list.
@@ -14783,7 +14796,7 @@ public class ReportsGenerateBean {
 	public List<SelectItem> generateMonthList(String language){
 		monthList = new ArrayList<SelectItem>();
 		if((language!=null)&&(language.equalsIgnoreCase("en"))){
-				
+			
 			String month = ReportConst.EMPTY_VAL;
 			int monthNoInt;
 			String monthNoStr= ReportConst.EMPTY_VAL;
@@ -18712,8 +18725,8 @@ public class ReportsGenerateBean {
 	 * 
 	 * @return the flTextBoxBasedRoles
 	 */
-	public boolean isFlTextBoxBasedRoles() {
-		return flTextBoxBasedRoles;
+	public boolean isTextBoxBasedRoles() {
+		return textBoxBasedRoles;
 	}
 
 	/**
@@ -18722,8 +18735,8 @@ public class ReportsGenerateBean {
 	 * @param flTextBoxBasedRoles
 	 *            the flTextBoxBasedRoles to set
 	 */
-	public void setFlTextBoxBasedRoles(boolean flTextBoxBasedRoles) {
-		this.flTextBoxBasedRoles = flTextBoxBasedRoles;
+	public void setTextBoxBasedRoles(boolean textBoxBasedRoles) {
+		this.textBoxBasedRoles = textBoxBasedRoles;
 	}
 
 	/**

@@ -18,6 +18,10 @@ import java.text.SimpleDateFormat;
 public class ReportConst {
 
 	// public static final String MOD_SC_TTL = "lbl.module.supplierSelection";
+	public static final String MALAY_LANGUAGE_CODE = "ms";
+	public static final String MALAYSIA_COUNTRY_CODE = "MY";
+	public static final String ENG_LANGUAGE_CODE = "en";
+	public static final String ENG_COUNTRY_CODE = "EN";	
 	public static final String MOD_SC_TTL = "lbl.module.quotationtender";
 	public static final String MOD_DP_TTL = "lbl.module.directpurchase";
 	public static final String MOD_CM_TTL = "lbl.module.catalogueManagement";
@@ -959,6 +963,8 @@ public class ReportConst {
 	public static final String ROLE_CODE_RECEIVING_OFFICER = "RECEIVING_OFFICER";
 	public static final String ROLE_CODE_ACKNOWLEDGE_OFFICER = "ACKNOWLEDGE_OFFICER";
 	public static final String ROLE_CODE_PAY_OFFICER = "PAY_OFFICER";
+	public static final String ROLE_CODE_PLAN_APPROVER = "PLAN_APPROVER";
+	public static final String ROLE_CODE_FULFILMENT_APPROVER = "FULFILMENT_APPROVER";
 	public static final String STATUS_CANCELLED="Cancelled";
 
 	public static final String ROLE_CODE_UPS_PO = "UPS_PO";

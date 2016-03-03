@@ -7,112 +7,144 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div class="columnCtTableClass">
+
+		<table style="width: 100%; height: 100%;">
+			<c:if
+				test="#{ctReportBackingBean.managedBean.rptGenBean.commonLOVBasedRoles}">
+				<c:if
+					test="#{ctReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
+					<tr>
+						<td style="width: 18.5%;"><p:outputLabel
+								value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
+						<td><ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE_REPORT"
+								size="60" update="@form" headerText="#{lbl['lbl.rpt.ministry']}"
+								value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+								saveObject="reportBackingBean.managedBean.selectedMinistry"
+								conditionField="#{reportBackingBean.constructMinistryConditionFields()}"
+								postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" /></td>
+						<td><p:message id="lovMinistryMsg" for="lovMinistry"
+								display="icon" /></td>
+					</tr>
+				</c:if>
+				<c:if
+					test="#{ctReportBackingBean.managedBean.rptGenBean.ctPegaWaiPengawalView}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel>
+						</td>
+						<td><ac:lov id="lovPegaWaiPengawal"
+								lovId="PM_ORG_PROFILE_REPORT" size="60" update="@form"
+								headerText="#{lbl['lbl.rpt.pegawaipengawal']}"
+								value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"
+								saveObject="reportBackingBean.managedBean.selectedPegwaiPengawal"
+								conditionField="#{reportBackingBean.constructPegwaiPengawalConditionFields()}"
+								postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" /></td>
+						<td><p:message id="lovPegaWaiPengawalMsg"
+								for="lovPegaWaiPengawal" display="icon" /></td>
+					</tr>
+				</c:if>
+				<c:if
+					test="#{ctReportBackingBean.managedBean.rptGenBean.ctKumpulanPTJView}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
+						<td><ac:lov id="lovKumpulanPTJ" lovId="PM_ORG_PROFILE_REPORT"
+								size="60" update="@form"
+								headerText="#{lbl['lbl.rpt.kumpulan.ptj']}"
+								value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+								saveObject="reportBackingBean.managedBean.selectedKumpulanPTJ"
+								conditionField="#{reportBackingBean.constructKumpulanPTJConditionFields()}"
+								postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" /></td>
+						<td><p:message id="lovKumpulanPTJMsg" for="lovKumpulanPTJ"
+								display="icon" /></td>
+					</tr>
+				</c:if>
+				<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctPtjView}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
+						<td><ac:lov id="lovPTJ" lovId="PM_ORG_PROFILE_REPORT"
+								size="60" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
+								value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+								saveObject="reportBackingBean.managedBean.selectedPTJ"
+								conditionField="#{reportBackingBean.constructPTJConditionFields()}"
+								postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" /></td>
+						<td><p:message id="lovPTJMsg" for="lovPTJ" display="icon" /></td>
+					</tr>
+				</c:if>
+			</c:if>
+		</table>
+
+		<table style="width: 100%; height: 100%;">
+			<c:if
+				test="#{ppReportBackingBean.managedBean.rptGenBean.textBoxBasedRoles}">
+				<c:if
+					test="#{ppReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
+					<tr>
+						<td style="width: 18.5%;"><p:outputLabel
+								value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
+						<td><p:selectOneMenu style="width:400px;" id="lovCtMinistry"
+								value="#{reportBackingBean.commonMinistry}">
+								<f:selectItems value="#{reportBackingBean.ministryList}" />
+							</p:selectOneMenu></td>
+						<td><p:message id="lovCtMinistryMsg" for="lovCtMinistry"
+								display="icon" /></td>
+
+					</tr>
+                &#160;
+				</c:if>
+				<c:if
+					test="#{ppReportBackingBean.managedBean.rptGenBean.ctPegaWaiPengawalView}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel>
+						</td>
+						<td><p:selectOneMenu style="width:400px;"
+								id="lovCtPegaWaiPengawal"
+								value="#{reportBackingBean.commonPegaWaiPengawal}">
+								<f:selectItems value="#{reportBackingBean.pegaWaiPengawalList}" />
+							</p:selectOneMenu></td>
+						<td><p:message id="lovCtPegaWaiPengawalMsg"
+								for="lovCtPegaWaiPengawal" display="icon" /></td>
+
+
+					</tr>
+	             &#160;
+				</c:if>
+				<c:if
+					test="#{ppReportBackingBean.managedBean.rptGenBean.ctKumpulanPTJView}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
+
+						<td><p:selectOneMenu style="width:400px;"
+								id="lovCtKumpulanPTJ"
+								value="#{reportBackingBean.commonKumpulanPTJ}">
+								<f:selectItems value="#{reportBackingBean.kumpulanPTJList}" />
+							</p:selectOneMenu></td>
+
+						<td><p:message id="lovCtKumpulanPTJMsg"
+								for="lovCtKumpulanPTJ" display="icon" /></td>
+
+					</tr>
+					&#160;
+					
+				</c:if>
+				<c:if test="#{ppReportBackingBean.managedBean.rptGenBean.ctPtjView}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
+						<td><p:selectOneMenu style="width:400px;" id="lovCtPTJ"
+								value="#{reportBackingBean.commonPtj}">
+								<f:selectItems value="#{reportBackingBean.ptjList}" />
+							</p:selectOneMenu></td>
+						<td><p:message id="lovCtPTJMsg" for="lovCtPTJ" display="icon" /></td>
+
+
+					</tr>
+					&#160;
+				</c:if>
+			</c:if>
+		</table>
+
 		<table style="width: 100%;">
 			<tr>
 				<td width="100%"><h:panelGrid id="ctReportCriteria" columns="4"
 						style="width:77%;">
-						<c:if
-							test="#{ctReportBackingBean.managedBean.rptGenBean.commonLOVBasedRoles}">
-							<c:if
-								test="#{ctReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
-								<p:column>
-									<table style="width: 100%;">
-										<tr style="width: 100%;">
-											<td><p:outputLabel value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel>
-											</td>
-										</tr>
-									</table>
-								</p:column>
-								<p:column>
-									<table style="width: 100%;">
-										<tr style="width: 100%;">
-											<td><ac:lov id="lovMinistry"
-													lovId="PM_ORG_PROFILE_REPORT" size="32" update="@form"
-													headerText="#{lbl['lbl.rpt.ministry']}"
-													value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
-													saveObject="reportBackingBean.managedBean.selectedMinistry"
-													conditionField="#{reportBackingBean.constructMinistryConditionFields()}" /></td>
-											<td><p:message id="lovMinistryMsg" for="lovMinistry"
-													display="icon" /></td>
-										</tr>
-									</table>
-								</p:column>
-							</c:if>
-							<c:if
-								test="#{ctReportBackingBean.managedBean.rptGenBean.ctPegaWaiPengawalView}">
-								<p:column>
-									<table style="width: 100%;">
-										<tr style="width: 100%;">
-											<td><p:outputLabel
-													value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel></td>
-										</tr>
-									</table>
-								</p:column>
-								<p:column>
-									<table style="width: 100%;">
-										<tr style="width: 100%;">
-											<td><ac:lov id="lovPegaWaiPengawal"
-													lovId="PM_ORG_PROFILE_REPORT" size="32" update="@form"
-													headerText="#{lbl['lbl.rpt.pegawaipengawal']}"
-													value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"
-													saveObject="reportBackingBean.managedBean.selectedPegwaiPengawal"
-													conditionField="#{reportBackingBean.constructPegwaiPengawalConditionFields()}" /></td>
-											<td><p:message id="lovPegaWaiPengawalMsg"
-													for="lovPegaWaiPengawal" display="icon" /></td>
-										</tr>
-									</table>
-								</p:column>
-							</c:if>
-							<c:if
-								test="#{ctReportBackingBean.managedBean.rptGenBean.ctKumpulanPTJView}">
-								<p:column>
-									<table style="width: 100%;">
-										<tr style="width: 100%;">
-											<td><p:outputLabel
-													value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
-										</tr>
-									</table>
-								</p:column>
-								<p:column>
-									<table style="width: 100%;">
-										<tr style="width: 100%;">
-											<td><ac:lov id="lovKumpulanPTJ"
-													lovId="PM_ORG_PROFILE_REPORT" size="32" update="@form"
-													headerText="#{lbl['lbl.rpt.kumpulan.ptj']}"
-													value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
-													saveObject="reportBackingBean.managedBean.selectedKumpulanPTJ"
-													conditionField="#{reportBackingBean.constructKumpulanPTJConditionFields()}" /></td>
-											<td><p:message id="lovKumpulanPTJMsg"
-													for="lovKumpulanPTJ" display="icon" /></td>
-										</tr>
-									</table>
-								</p:column>
-							</c:if>
-
-							<c:if
-								test="#{ctReportBackingBean.managedBean.rptGenBean.ctPtjView}">
-								<p:column>
-									<table style="width: 100%;">
-										<tr style="width: 100%;">
-											<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
-										</tr>
-									</table>
-								</p:column>
-								<p:column>
-									<table style="width: 100%;">
-										<tr style="width: 100%;">
-											<td><ac:lov id="lovPTJ" lovId="PM_ORG_PROFILE_REPORT"
-													size="32" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"													
-													value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
-													saveObject="reportBackingBean.managedBean.selectedPTJ"
-													conditionField="#{reportBackingBean.constructPTJConditionFields()}" /></td>
-											<td><p:message id="lovPTJMsg" for="lovPTJ"
-													display="icon" /></td>
-										</tr>
-									</table>
-								</p:column>
-							</c:if>
-						</c:if>
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctSupplierNameView}">
 							<c:if
@@ -564,6 +596,7 @@
 					</h:panelGrid></td>
 			</tr>
 		</table>
+
 	</div>
 	<div>
 		<c:if
