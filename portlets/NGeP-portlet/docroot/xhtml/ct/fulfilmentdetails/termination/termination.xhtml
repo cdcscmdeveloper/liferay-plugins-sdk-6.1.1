@@ -164,53 +164,64 @@
 		 </h:panelGrid>
          <p:spacer height="15"/>
          <h:panelGrid style="width:100%">
-		   <p:dataTable id="terminationReason" var="data" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.ctTerminationReasons}" 
-			 dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
-			 <ac:paginator for="terminationReason" />
-			     <p:column selectionMode="multiple" style="width:1%;" rendered="#{!terminationBackingBean.managedBean.viewContract}"/>  
-		         <p:column style="width:35%;">
-		             <f:facet name="header">
-					        <h:outputText value="* " styleClass="mandatory" rendered="#{!terminationBackingBean.managedBean.mutualTermination}" />
-					       <h:outputText value="#{lbl['lbl.ct.clause.no']}" />
-				        </f:facet>
-		              <p:inputTextarea id="cluseId" value="#{data.clauseNo}"  rows="2" style="width:95%;" autoResize="false"
-		              disabled="#{terminationBackingBean.managedBean.viewContract}"
-		              onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,500);"/>
-                 </p:column>
-		        <p:column  style="width:65%;">
-		            <f:facet name="header">
-					        <h:outputText value="* " styleClass="mandatory" rendered="#{!terminationBackingBean.managedBean.mutualTermination}" />
-					       <h:outputText value="#{lbl['lbl.ct.termination.desc']}"  />
-				        </f:facet>
-		           <p:inputTextarea id="descId" value="#{data.description}" rows="2" style="width:95%;" autoResize="false"
-		              disabled="#{terminationBackingBean.managedBean.viewContract}"
-		              onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);"/>
-		        </p:column> 
-		   </p:dataTable>
-		 </h:panelGrid>
-		   <div class="ppRightBtn"> 
-		      <p:commandButton value="#{lbl['lbl.btn.add']}"  process="@form" partialSubmit="true"
-		      	 rendered="#{!terminationBackingBean.managedBean.viewContract}"
-		         action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason"/>
-		      <p:spacer width="2"/>
-		        <p:commandButton value="#{lbl['lbl.btn.delete']}"  process="@form" onclick="dlgTerminationReason.show()"
-		        	rendered="#{!terminationBackingBean.managedBean.viewContract}">
-			  </p:commandButton> 
-	   	  </div>
-	   	   <p:dialog id="dlgTerminationReason" widgetVar="dlgTerminationReason" styleClass="screen-title"  
-            modal="true" width="330">  
-            <h:panelGrid columns="3">
-               <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			   <p:spacer width="10"/>
-               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-             </h:panelGrid>
-             <div class="ppRightBtn">
-		        <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="terminationReason" process="@form" 
-			      action="#{terminationBackingBean.deleteTerminateReason}" onclick="dlgTerminationReason.hide();"/>
-			    <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgTerminationReason.hide();" type="button" />
-		    </div>
-         </p:dialog>
+		   <p:dataTable id="terminationReason" var="data" 
+		             value="#{terminationBackingBean.managedBean.contractVer.ctTermination.ctTerminationReasons}" 
+			         dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
+			               <ac:paginator for="terminationReason" />
+			                <p:ajax event="toggleSelect" 
+			                     listener="#{centralContractBackingBean.onToggleSelect}" update=":form:terReasonDelBtn" />
+			                <p:ajax event="rowSelect"
+                                listener="#{centralContractBackingBean.onRowSelect}" update=":form:terReasonDelBtn" />
+			                <p:ajax event="rowSelectCheckbox"
+			                     listener="#{centralContractBackingBean.onRowSelect}" update=":form:terReasonDelBtn" />
+                            <p:ajax event="rowUnselectCheckbox"  
+                                 listener="#{centralContractBackingBean.onRowUnselect}" update=":form:terReasonDelBtn" />
+			                <p:column selectionMode="multiple"
+			                    style="width:1%;" rendered="#{!terminationBackingBean.managedBean.viewContract}"/>  
+		        
+		                     <p:column style="width:35%;">
+		                           <f:facet name="header">
+					                     <h:outputText value="* " styleClass="mandatory" rendered="#{!terminationBackingBean.managedBean.mutualTermination}" />
+					                     <h:outputText value="#{lbl['lbl.ct.clause.no']}" />
+				                  </f:facet>
+		                          <p:inputTextarea id="cluseId" value="#{data.clauseNo}"  rows="2" 
+		                                disabled="#{terminationBackingBean.managedBean.viewContract}" autoResize="false"
+		                                onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,500);" style="width:95%;" />
+                            </p:column>
+		     
+		                    <p:column  style="width:65%;">
+		                          <f:facet name="header">
+					                    <h:outputText value="* " styleClass="mandatory" rendered="#{!terminationBackingBean.managedBean.mutualTermination}" />
+					                    <h:outputText value="#{lbl['lbl.ct.termination.desc']}"  />
+				                  </f:facet>
+		                          <p:inputTextarea id="descId" value="#{data.description}" rows="2" 
+		                               disabled="#{terminationBackingBean.managedBean.viewContract}" autoResize="false"
+		                               onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" style="width:95%;" />
+		                      </p:column> 
+		            </p:dataTable>
+		      </h:panelGrid>
+		      <div class="ppRightBtn"> 
+		             <p:commandButton value="#{lbl['lbl.btn.add']}"  
+		      	            rendered="#{!terminationBackingBean.managedBean.viewContract}" partialSubmit="true"
+		                    action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason" process="@form" />
+		                    <p:spacer width="2"/>
+		              <p:commandButton id="terReasonDelBtn" value="#{lbl['lbl.btn.delete']}"  process="@form"
+		                      disabled="#{terminationBackingBean.managedBean.buttonHideActive}"
+                            onclick="dlgTerminationReason.show()" rendered="#{!terminationBackingBean.managedBean.viewContract}">
+			          </p:commandButton> 
+	   	     </div>
+	   	     <p:confirmDialog id="dlgTerminationReason" widgetVar="dlgTerminationReason"  appendToBody="true" 
+	   	           message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+			       <div class="ppRightBtn">
+				         <p:commandButton value="#{lbl['lbl.btn.yes']}" 
+					             partialSubmit="true"  update=":form:terminationReason, :form:terReasonDelBtn"
+					             action="#{terminationBackingBean.deleteTerminateReason}"
+					             oncomplete="dlgTerminationReason.hide();" />
+				          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgTerminationReason.hide();" />	
+			       </div>
+			</p:confirmDialog>
      </p:panel>
+	
 	<p:dialog header="#{lbl['lbl.ct.notice']}" widgetVar="noticeDlg" modal="true" height="450" width="820" styleClass="pop_up_top">
 		<p:editor controls="print" id="editorDisplay" value="#{terminationBackingBean.managedBean.editorValue}" width="800" height="430" />
 	</p:dialog>
