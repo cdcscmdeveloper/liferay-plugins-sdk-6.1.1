@@ -143,6 +143,7 @@ public class ReportBackingBean extends
 	public ReportBackingBean() {
 
 	}
+
 	/** The module value. */
 	private String moduleValue;
 
@@ -7813,8 +7814,7 @@ public class ReportBackingBean extends
 	public void setFlContractRequestNo(String flContractRequestNo) {
 		this.flContractRequestNo = flContractRequestNo;
 	}
-	
-	
+
 	/**
 	 * Inits the.
 	 */
@@ -7855,7 +7855,6 @@ public class ReportBackingBean extends
 			}
 		}
 	}
-	
 
 	/**
 	 * retrieveLOAStatusList- will retrieve LOA status(SOA Status) list.
@@ -10175,7 +10174,7 @@ public class ReportBackingBean extends
 		log.info("ReportBackingBean-preRenderView");
 		rptGenBean = new ReportsGenerateBean();
 		rptGenBean.setStrLanguage(strLanguage);
-		getManagedBean().setRptGenBean(rptGenBean);		
+		getManagedBean().setRptGenBean(rptGenBean);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		getManagedBean().setReportValue(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -11698,10 +11697,10 @@ public class ReportBackingBean extends
 			 * FacesScopes().getUserLocale()); //String language = "ms";
 			 */
 			if (null != pmReport) {
-				
-					String label = ReportConst.EMPTY_VAL;
-				
-				if (strLanguage != null && !strLanguage.isEmpty() ) {
+
+				String label = ReportConst.EMPTY_VAL;
+
+				if (strLanguage != null && !strLanguage.isEmpty()) {
 					rptGenBean.setStrLanguage(strLanguage);
 				}
 				if ((null != pmReport.getSubModule())
@@ -11710,23 +11709,21 @@ public class ReportBackingBean extends
 					 * label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
 					 * + pmReport.getSubModule();
 					 */
-					
+
 					if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
-						
-						
+
 					} else if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitleMalay());
-						
-						
+
 					}
 					this.setSubModule(pmReport.getSubModule());
 				} else {
@@ -11736,14 +11733,14 @@ public class ReportBackingBean extends
 						label = pmReport.getReportTitle();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
-						
+
 					} else if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
-						
+
 					}
 				}
 				this.setReportName(label);
@@ -11820,8 +11817,8 @@ public class ReportBackingBean extends
 				pmReportBackingBean.enableCriteriaVariablesByReportByPM(
 						rptGenBean, authoriztionList);
 			}
-			
-			//checkEmptyValuesForLovs();			
+
+			// checkEmptyValuesForLovs();
 			rptGenBean.isReportCategoryView();
 			getManagedBean().setRptGenBean(rptGenBean);
 			resetReportForm();
@@ -11829,9 +11826,10 @@ public class ReportBackingBean extends
 				changeSoftCertSelection();
 			}
 			getGenBusCompanyData();
-			/*if (pmReport != null) {
-				getDefaultValuesFromAndToDate(pmReport.getReportCode());
-			}*/
+			/*
+			 * if (pmReport != null) {
+			 * getDefaultValuesFromAndToDate(pmReport.getReportCode()); }
+			 */
 			retrieveDates();
 			madatoryIndicator();
 			retrieveAllMinistry();
@@ -12393,22 +12391,24 @@ public class ReportBackingBean extends
 		scYearList = rptGenBean.generateCommonYearList();
 		return scYearList;
 	}
-	
+
 	/**
 	 * On change values.
 	 */
-	public void onChangeValues(){		
-		if (this.getPpYear() != null && this.getPpYear()!= ReportConst.EMPTY_VAL) {
+	public void onChangeValues() {
+		if (this.getPpYear() != null
+				&& this.getPpYear() != ReportConst.EMPTY_VAL) {
 			this.setValuesEmpty(false);
 		}
 	}
-	
+
 	/**
 	 * On change values for lo vs.
 	 */
 	public void onChangeValuesForLOVs() {
-		
-		if (this.getPpYear() != null && this.getPpYear()!= ReportConst.EMPTY_VAL) {		
+
+		if (this.getPpYear() != null
+				&& this.getPpYear() != ReportConst.EMPTY_VAL) {
 			if ((this.getManagedBean().getSelectedPTJ() != null && this
 					.getManagedBean().getSelectedPTJ().getPmOrgValidity()
 					.getOrgName() != null)
@@ -12530,7 +12530,7 @@ public class ReportBackingBean extends
 						.equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
 			mofRegNoNumericValidation();
 		}
-		
+
 		rptGenBean = new ReportsGenerateBean();
 		if ((this.getModuleValue() != null)
 				&& (getManagedBean().getReportValue() != null)) {
@@ -12671,20 +12671,20 @@ public class ReportBackingBean extends
 					// throw new EpException("MOF No. is mandatory.");
 					throw new EpException(MessageConst.ERROR_REPORT_780029);
 				}
-			}			
-					
+			}
+
 			if (this.getModuleValue() != null
 					&& (this.getModuleValue()
 							.equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN))) {
 				if (this.isValuesEmpty()) {
-					if ((this.getPpYear() == null || this.getPpYear().isEmpty())) {						
+					if ((this.getPpYear() == null || this.getPpYear().isEmpty())) {
 						throw new EpException(MessageConst.ERROR_REPORT_780030);
 					}
-				}else{
+				} else {
 					this.setValuesEmpty(true);
 				}
 			}
-			
+
 			if (this.getModuleValue() != null
 					&& (this.getModuleValue()
 							.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
@@ -12695,7 +12695,6 @@ public class ReportBackingBean extends
 					this.setToDate(null);
 				}
 			}
-			
 
 			reloadLovsValues();
 
@@ -12768,7 +12767,7 @@ public class ReportBackingBean extends
 			 */
 			// externalContext.addResponseCookie("primefaces.download", "true",
 			// Collections.<String, Object>emptyMap());
-			
+
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 			externalContext.addResponseCookie("primefaces.download",
@@ -12783,7 +12782,6 @@ public class ReportBackingBean extends
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 
-		
 	}
 
 	/**
@@ -13086,7 +13084,7 @@ public class ReportBackingBean extends
 		 * ().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))
 		 */
 		{
-			
+
 			if ((this.getCtSupplierName() != null)
 					&& (this.getCtSupplierName() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -13303,11 +13301,11 @@ public class ReportBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else {			
+		} else {
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
-	
+
 	/**
 	 * Gets the calendar month name by no.
 	 * 
@@ -13375,7 +13373,7 @@ public class ReportBackingBean extends
 				|| (getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
 						.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
-			
+
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
@@ -13413,16 +13411,20 @@ public class ReportBackingBean extends
 			}
 			if ((this.getSmFromMonth() != null)
 					&& (this.getSmFromMonth() != ReportConst.EMPTY_VAL)) {
-				/*String month = getManagedBean().getMonthMap().get(
-						this.getSmFromMonth());*/
+				/*
+				 * String month = getManagedBean().getMonthMap().get(
+				 * this.getSmFromMonth());
+				 */
 				String month = getCalendarMonthNameByNo(this.getSmFromMonth());
 				rptGenBean.setSmFromMonthVar(ReportConst.AMP_SM_FROM_DATE_EQ
 						+ month);
 			}
 			if ((this.getSmToMonth() != null)
 					&& (this.getSmToMonth() != ReportConst.EMPTY_VAL)) {
-				/*String month = getManagedBean().getMonthMap().get(
-						this.getSmToMonth());*/
+				/*
+				 * String month = getManagedBean().getMonthMap().get(
+				 * this.getSmToMonth());
+				 */
 				String month = getCalendarMonthNameByNo(this.getSmFromMonth());
 				rptGenBean.setSmToMonthVar(ReportConst.AMP_SM_TO_DATE_EQ
 						+ month);
@@ -13443,7 +13445,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getUserIdVar());
 
 			} else {
-				
+
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} /*
@@ -13626,7 +13628,12 @@ public class ReportBackingBean extends
 								.getReportValue()
 								.trim()
 								.equalsIgnoreCase(
-										ReportConst.SM_COLLECTION_CLASSIFICATION_CODE_RPT_VAL)) {
+										ReportConst.SM_COLLECTION_CLASSIFICATION_CODE_RPT_VAL)
+						|| getManagedBean()
+								.getReportValue()
+								.trim()
+								.equalsIgnoreCase(
+										ReportConst.SM_REVENUE_COLLECTION_RPT_VAL)) {
 
 					if ((this.getSmCode() != null)
 							&& (this.getSmCode() != ReportConst.EMPTY_VAL)) {
@@ -14189,7 +14196,7 @@ public class ReportBackingBean extends
 			}
 		} else if (!getManagedBean().getRptGenBean()
 				.isSmMandatoryDOCSupplierTypeView()) {
-		
+
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -14289,7 +14296,7 @@ public class ReportBackingBean extends
 						}
 					}
 				}
-				
+
 				if ((this.getScCreatedToMonth() != null)
 						&& (this.getScCreatedFromMonth() != null)) {
 					rptGenBean
@@ -14607,7 +14614,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			
+
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -14694,7 +14701,7 @@ public class ReportBackingBean extends
 				 * .handleNavigation(context, null, pageUrl);
 				 */
 			}
-			
+
 			if ((this.getCmRequestNumber() != null)
 					&& (this.getCmRequestNumber() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -14849,7 +14856,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			
+
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 
 			/*
@@ -14942,7 +14949,7 @@ public class ReportBackingBean extends
 						.getFlContractRequest() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPurchaseOrderNo() != null) && (this
 						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL))) {
-		
+
 			if ((this.getFlContractNo() != null)
 					&& (this.getFlContractNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -15348,7 +15355,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			
+
 			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
@@ -15408,7 +15415,7 @@ public class ReportBackingBean extends
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-		  	   	throw new EpException(MessageConst.ERROR_REPORT_780003);
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 
 	}
@@ -16126,8 +16133,9 @@ public class ReportBackingBean extends
 						.getModuleValue().equalsIgnoreCase(
 								ModuleCodeConst.PROCUREMENT_PLAN))) {
 					checkEmptyValuesForLovs();
-				}}
-				
+				}
+			}
+
 		}
 
 	}
@@ -17185,8 +17193,9 @@ public class ReportBackingBean extends
 					.getModuleValue().equalsIgnoreCase(
 							ModuleCodeConst.ORDER_FULFILLMENT))) {
 				if (((this.getFromDate() != null) && (this.getFromDate()
-							.toString() != ReportConst.EMPTY_VAL))
-					|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))) {
+						.toString() != ReportConst.EMPTY_VAL))
+						|| ((this.getToDate() != null) && (this.getToDate()
+								.toString() != ReportConst.EMPTY_VAL))) {
 					/* if (checkDefaultValues()){ */
 					if (this.isValuesEmpty()) {
 						if (!this.isValuesEmpty()) {
@@ -17208,7 +17217,7 @@ public class ReportBackingBean extends
 					} else {
 						this.setValuesEmpty(true);
 					}
-				} else{
+				} else {
 					this.setValuesEmpty(true);
 				}
 			}
@@ -17239,10 +17248,8 @@ public class ReportBackingBean extends
 	private boolean checkDefaultValuesForAllModules() {
 		return ((this.getCtContrMontrStatus() != null) && (this
 				.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtUserType() != null) && (this
-						.getCtUserType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtSubType() != null) && (this
-						.getCtSubType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtUserType() != null) && (this.getCtUserType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtSubType() != null) && (this.getCtSubType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtProductService() != null) && (this
 						.getCtProductService() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL))
@@ -17254,23 +17261,17 @@ public class ReportBackingBean extends
 						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonKumpulanPTJ() != null) && (this
 						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
-				|| ((this.getCommonPtj() != null) && (this
-						.getCommonPtj() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtContractNo() != null) && (this
-						.getCtContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtContractNo() != null) && (this.getCtContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtPhysicalContractNo() != null) && (this
 						.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtAgreement() != null) && (this
-						.getCtAgreement() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtAgreement() != null) && (this.getCtAgreement() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtStatus() != null) && (this.getCtStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtStatusTwo() != null) && (this
-						.getCtStatusTwo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtTerminationType() != null) && (this
 						.getCtTerminationType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtComplete() != null) && (this
-						.getCtComplete() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtCircularNo() != null) && (this
-						.getCtCircularNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularNo() != null) && (this.getCtCircularNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtCircularName() != null) && (this
 						.getCtCircularName() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtCircularType() != null) && (this
@@ -17281,36 +17282,30 @@ public class ReportBackingBean extends
 				|| ((this.getFromDate() != null) && (this.getFromDate()
 						.toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtCircularEffectiveFromDate() != null) && (this.getCtCircularEffectiveFromDate()
-						.toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtCircularEffectiveToDate() != null) && (this.getCtCircularEffectiveToDate()
-						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularEffectiveFromDate() != null) && (this
+						.getCtCircularEffectiveFromDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtCircularEffectiveToDate() != null) && (this
+						.getCtCircularEffectiveToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtProcurementMode() != null) && (this
 						.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getCommonPtj() != null) && (this
-						.getCommonPtj() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlContractNo() != null) && (this
-						.getFlContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractNo() != null) && (this.getFlContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSst() != null) && (this.getFlSst() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlJabatan() != null) && (this
-						.getFlJabatan() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlJabatan() != null) && (this.getFlJabatan() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this
 						.getCommonMinistry() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonPegaWaiPengawal() != null) && (this
 						.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonKumpulanPTJ() != null) && (this
 						.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlSupplier() != null) && (this
-						.getFlSupplier() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSupplier() != null) && (this.getFlSupplier() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlStatus() != null) && (this.getFlStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDuration() != null) && (this
-						.getFlDuration() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDuration() != null) && (this.getFlDuration() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlRecievingOfficer() != null) && (this
 						.getFlRecievingOfficer() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDeliveryAddress() != null) && (this
 						.getFlDeliveryAddress() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlRecNoteNo() != null) && (this
-						.getFlRecNoteNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlRecNoteNo() != null) && (this.getFlRecNoteNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlContractType() != null) && (this
 						.getFlContractType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlRequisitioner() != null) && (this
@@ -17321,8 +17316,7 @@ public class ReportBackingBean extends
 						.getFlPaymentofficer() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlMtoContract() != null) && (this
 						.getFlMtoContract() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlInvoiceNo() != null) && (this
-						.getFlInvoiceNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlInvoiceNo() != null) && (this.getFlInvoiceNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSupplierInvoiceNo() != null) && (this
 						.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPaymentAdviceNo() != null) && (this
@@ -17334,10 +17328,8 @@ public class ReportBackingBean extends
 						.getFlApproverName() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDocumentType() != null) && (this
 						.getFlDocumentType() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlCriteria() != null) && (this
-						.getFlCriteria() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlScoring() != null) && (this
-						.getFlScoring() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlCriteria() != null) && (this.getFlCriteria() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlScoring() != null) && (this.getFlScoring() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPkpNo() != null) && (this.getFlPkpNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlStopInstructionNo() != null) && (this
 						.getFlStopInstructionNo() != ReportConst.EMPTY_VAL))
@@ -17345,20 +17337,15 @@ public class ReportBackingBean extends
 						.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSupplierDeliveryOrderNo() != null) && (this
 						.getFlSupplierDeliveryOrderNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlItemCode() != null) && (this
-						.getFlItemCode() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlPoAmount() != null) && (this
-						.getFlPoAmount() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlItemCode() != null) && (this.getFlItemCode() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPoAmount() != null) && (this.getFlPoAmount() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPrNo() != null) && (this.getFlPrNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPmo() != null) && (this.getFlPmo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlItemName() != null) && (this
-						.getFlItemName() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlItmType() != null) && (this
-						.getFlItmType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlItemName() != null) && (this.getFlItemName() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlItmType() != null) && (this.getFlItmType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFromDate() != null) && (this.getFromDate()
 						.toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getToDate() != null) && (this.getToDate()
-						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlContractOrder() != null) && (this
 						.getFlContractOrder() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlContractRequest() != null) && (this
