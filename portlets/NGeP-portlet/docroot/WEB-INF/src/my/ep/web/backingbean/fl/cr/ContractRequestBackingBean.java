@@ -537,6 +537,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void removeAddRow(){
 		if(null !=getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			getManagedBean().setDeleteButtonHide(true);
 			Iterator<FlDeliveryAddress> delAddressIterator=getManagedBean().getFlRequest().getFlDeliveryAddresses().iterator();
 			while(delAddressIterator.hasNext()){
 				FlDeliveryAddress  deliveryAddress=delAddressIterator.next();
