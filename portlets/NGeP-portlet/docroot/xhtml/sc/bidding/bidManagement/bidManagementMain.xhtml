@@ -12,9 +12,7 @@
 
 	<ui:define name="contentSection">
 		<ui:param name="isZonal"
-			value="#{!biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName eq null}" />
-
-
+			value="#{!empty biddingBB.managedBean.scheduledBid.tplSpecZoneDtl}" />
 		<ui:param name="isViewByPackage"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'P'}" />
 		<ui:param name="isViewByItem"
@@ -93,18 +91,18 @@
 						<td style="width: 15%"></td>
 
 					</tr>
-					<c:if test="#{isZonal}">
+					<c:if test="#{isZonal}"> 
 						<tr>
 							<td style="width: 15%"><p:outputLabel id="zoneNameLbl"
 									value="#{lbl['lbl.sc.zone.name']}" /></td>
 							<td style="width: 15%"><p:inputText id="zoneNameLabel"
 									disabled="true" size="15"
 									value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName}" />
-								<p:spacer width="5"></p:spacer> <p:commandLink id="zoneName"
+								 <p:commandLink id="zoneName"
 									oncomplete="zoneLocPopup.show();" partialSubmit="true"
 									process="@this" update="@([id$=zoneLocPopup])">
-									<p:graphicImage library="ep/images/design" name="evaluate.png"
-										value="/resources/ep/images/design/evaluate.png" />
+									<p:graphicImage id="zoneDtlId"  title="#{lbl['lbl.sc.zone.details']}"
+										value="#{CommonUIConstant.imagePathUptoDesign}/evaluate.png" />
 									<f:setPropertyActionListener
 										target="#{zoneLocationBackingBean.tplSpecZoneDtl}"
 										value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl}" />
@@ -112,7 +110,7 @@
 							<td style="width: 15%"></td>
 							<td style="width: 15%"></td>
 						</tr>
-					</c:if>
+					 </c:if> 
 
 
 					<tr>
@@ -125,7 +123,7 @@
 						<td style="width: 15%"></td>
 						<td style="width: 15%"></td>
 					</tr>
-				</table>
+					</table>
 			</div>
 
 		</p:panel>
@@ -138,8 +136,8 @@
 		</c:if>
 
 
-		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" rendered="false"
-			header="#{lbl['lb.sc.zone.details']}" modal="true" width="350"
+		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" rendered="true"
+			header="#{lbl['lbl.sc.zone.details']}" modal="true" width="350"
 			height="200">
 			<ui:include
 				src="/xhtml/sc/bidding/bidManagement/BMByItemZoneLocationPopup.xhtml" />
