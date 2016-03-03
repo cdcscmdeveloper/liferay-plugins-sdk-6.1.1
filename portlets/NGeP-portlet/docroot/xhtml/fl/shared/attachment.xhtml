@@ -11,7 +11,7 @@
 					value="#{lbl['lbl.txt.attachment']}" /></td>
 			<td class="TableFieldRight"><p:commandButton
 					oncomplete="uploadDlg.show();return false;" 
-					disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks()}"
+					disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks() or !bpmTasklistBackingBean.managedBean.claim}"
 					update="lampiran,uploadDlg" partialSubmit="true" value="#{lbl['lbl.fl.attach.files']}" /></td>
 		</tr>
 		<tr>

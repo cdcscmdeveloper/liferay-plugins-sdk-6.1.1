@@ -28,7 +28,7 @@
 							<td>
 								<p:inputTextarea cols="40" 
 									value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
-									disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks()}"
+									disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks() or !bpmTasklistBackingBean.managedBean.claim}"
 									autoResize="false"
 									onkeyup="limitTextArea(this,1000);"
 									onkeydown="limitTextArea(this,1000);">
