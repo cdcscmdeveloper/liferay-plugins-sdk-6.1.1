@@ -42,7 +42,12 @@
 					</td>
 					<td>
 						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				value="#{ctBackingBean.managedBean.ctContractAmount.contractAmount}"  disabled="true">
+			   				value="#{ctBackingBean.managedBean.ctContractAmount.contractAmount}"
+			   				disabled="#{ctBackingBean.managedBean.viewContract
+						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
+						     		or ctBackingBean.managedBean.disableContractAmount}">
+				   			<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
@@ -188,7 +193,7 @@
 		   </h:panelGrid>
 		    <h:panelGrid columns="3">
 			       <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.contractVer.panel
-			       		or  ctBackingBean.managedBean.disableAmendDetails}" 
+			       		or ctBackingBean.getValueFromAmendment() or  ctBackingBean.managedBean.disableAmendDetails}" 
 			             value="#{ctBackingBean.managedBean.contractVer.ctContractValue.pid}"  style="text-align:top;">
 			              <p:ajax event="change"  update=":form:purchaseInDefaultPanel" process="@this"></p:ajax>
 			         </p:selectBooleanCheckbox>
