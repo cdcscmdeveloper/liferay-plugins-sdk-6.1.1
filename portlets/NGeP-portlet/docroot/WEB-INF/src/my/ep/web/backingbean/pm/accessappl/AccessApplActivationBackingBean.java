@@ -16,6 +16,9 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAccessAppl;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -70,7 +73,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 					&& hashAccessApplId.equals(
 							PmCommonUtil.hashString(String.valueOf(accessAppl.getAccessApplId())))
 							&& isLatestActivationEmail(createdTimeParam, accessAppl)) {
-				Date latestApproved = new Date();
+				Date latestApproved = null;
 				if(accessAppl.getCompanyProfileStatus() != null && accessAppl.getMarketResearchStatus() !=null){
 					if(accessAppl.getCompanyProfileStatus().getChangedDate().
 							after(accessAppl.getMarketResearchStatus().getChangedDate())){
@@ -83,6 +86,14 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 				}else if(accessAppl.getMarketResearchStatus() !=null){
 					latestApproved = accessAppl.getMarketResearchStatus().getChangedDate();
 				}
+				
+				if(latestApproved == null){
+					log.info("****Invalid latestApproved - null******");
+					PmCommonUtil.redirectToPage(
+							ACCESS_APPL_OUTPUT_MSG,
+							MessageConst.INFO_721031,null);
+				}
+				
 				long applDateInMilis = latestApproved.getTime();
 				long dayInMilis = 1000 * 60 * 60 * 24;
 
@@ -141,6 +152,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	
 	
 	public String activateAccount() {
+		//validateActivationAccessAppl();
 		String keyStr = getManagedBean().getAccessAppl().getAccessApplId()
 				+ activationKey;
 		String hashStr = PmCommonUtil.hashString(keyStr);
@@ -206,6 +218,32 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	 */
 	public void setActivationKey(String activationKey) {
 		this.activationKey = activationKey;
+	}
+	
+	private void validateActivationAccessAppl(){
+		log.info("validateActivationAccessAppl");
+		PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
+		
+		PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
+		if(user != null){
+			PmUserOrg currentUserOrg = null;
+			for(PmUserOrg userOrg : user.getPmUserOrgs()){
+				if(DbValueConst.RECORD_STATUS_ACTIVE == userOrg.getRecordStatusFlg().intValue()){
+					currentUserOrg = userOrg;
+					break;
+				}
+			}
+			
+			if(currentUserOrg != null){
+				if(!currentUserOrg.getPmOrgProfile().getOrgProfileId()
+						.equals(accessAppl.getOrgProfile().getOrgProfileId())){
+					throw new EpException(MessageConst.ERROR_770217,
+							new String[] {currentUserOrg.getPmOrgProfile().getOrgName()});
+				}
+			}
+		}
+		
+		
 	}
 
 }

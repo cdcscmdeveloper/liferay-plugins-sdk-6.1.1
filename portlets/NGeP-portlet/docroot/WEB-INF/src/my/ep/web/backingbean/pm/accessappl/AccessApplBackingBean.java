@@ -540,10 +540,12 @@ public class AccessApplBackingBean extends
 					boolean hasMrRole = false;
 					boolean hasCpRole = false;
 					for(PmUserRole userRole : currentUserOrg.getPmUserRoles()){
-						if(RoleCode.MARKET_RESEARCH.value().equals(userRole.getPmRole().getRoleCode())){
-							hasMrRole = true;
-						}else if(RoleCode.COMPANY_PROFILE.value().equals(userRole.getPmRole().getRoleCode())){
-							hasCpRole = true;
+						if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg().intValue()){
+							if(RoleCode.MARKET_RESEARCH.value().equals(userRole.getPmRole().getRoleCode())){
+								hasMrRole = true;
+							}else if(RoleCode.COMPANY_PROFILE.value().equals(userRole.getPmRole().getRoleCode())){
+								hasCpRole = true;
+							}
 						}
 					}
 					
