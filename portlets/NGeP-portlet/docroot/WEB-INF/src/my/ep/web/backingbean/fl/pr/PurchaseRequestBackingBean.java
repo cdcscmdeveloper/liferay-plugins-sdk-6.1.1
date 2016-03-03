@@ -763,6 +763,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		List<FlFulfilmentItemAddr> flItemAddrList = null;
 				
 		if(null !=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			getManagedBean().setDeleteButtonHide(true);
 			//removal itemAddrList from tier and zonaltier map
 			for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
