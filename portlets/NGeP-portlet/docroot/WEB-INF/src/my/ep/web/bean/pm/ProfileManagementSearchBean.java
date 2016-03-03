@@ -6,6 +6,9 @@ public class ProfileManagementSearchBean {
 
 	private Long selectedOrgType;
 	private PmOrgProfile selectedOrgProfile;
+	private Boolean companyProfile;
+	private Boolean marketResearch;
+	private Long appStatusId;
 	private String identificationNo;
 	private String userName;
 	
@@ -32,6 +35,30 @@ public class ProfileManagementSearchBean {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public Boolean getCompanyProfile() {
+		return companyProfile;
+	}
+	public Boolean getMarketResearch() {
+		return marketResearch;
+	}
+	public void setCompanyProfile(Boolean companyProfile) {
+		this.companyProfile = companyProfile;
+	}
+	public void setMarketResearch(Boolean marketResearch) {
+		this.marketResearch = marketResearch;
+	}
+	public void setCompanyProfile(boolean companyProfile) {
+		this.companyProfile = companyProfile;
+	}
+	public void setMarketResearch(boolean marketResearch) {
+		this.marketResearch = marketResearch;
+	}
+	public Long getAppStatusId() {
+		return appStatusId;
+	}
+	public void setAppStatusId(Long appStatusId) {
+		this.appStatusId = appStatusId;
 	}
 	
 	

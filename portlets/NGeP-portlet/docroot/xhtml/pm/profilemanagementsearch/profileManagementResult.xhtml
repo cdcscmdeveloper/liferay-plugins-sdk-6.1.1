@@ -11,35 +11,32 @@
 	<p:panel id="pmResult" header="#{lbl['lbl.pm.user.result']}" toggleable="true">
 		<p:dataTable id="dtPmResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			rowIndexVar="rowIndex"  lazy="true" rows="10"
-			value="#{profileManagementBackingBean.userOrgDataModel}"
-			var="userOrg">
-			<ac:paginator for="dtUserResult" />
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.orgname']}" style="width :25%;white-space : normal">			
-				#{profileManagementBackingBean.retrieveOrgName(userOrg.pmOrgProfile)}
+			value="#{profileManagSearchBackingBean.managedBean.accessAPPLDataModel}"
+			var="accessAPPL">
+			<ac:paginator for="dtPmResult" />
+			<p:column headerText="#{lbl['lbl.pm.access.app.result.createdDate']}" style="width :25%;white-space : normal">			
+				<ac:labelDateTime value="#{accessAPPL.createdDate}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" style="width :15%;white-space : normal">
-				#{userOrg.pmUser.identificationNo}
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.organization.type']}" style="width :25%;white-space : normal">
+			 #{profileManagSearchBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, accessAPPL.orgTypeCode.parameterCode)}			
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" style="width :25%;white-space : normal">
-				#{userOrg.pmUser.userName}
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.organization.name']}" style="width :25%;white-space : normal">			
+				#{profileManagSearchBackingBean.retrieveOrgName(accessAPPL.orgProfile)}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" style="width :10%;white-space : normal">
-				#{userOrg.designation}
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.username']}" style="width :25%;white-space : normal">
+				#{accessAPPL.applicantName}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.idno']}" style="width :15%;white-space : normal">
+				#{accessAPPL.identificationNo}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.user.status']}" width="10%">
-				#{(userOrg.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
-			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.role']}" style="width:5%;text-align:center;">
-				<p:commandLink  action="#{profileManagementBackingBean.getListOfAssignedRoles(userOrg)}" oncomplete="dlRoleList.show();" update=":form:opRoleList" >
-					<p:graphicImage value="/css/images/design/ico-user-role.png"/>
-				</p:commandLink>
+			<p:column headerText="#{lbl['lbl.pm.access.app.result.status']}" width="10%">
+			 <c:when test="#{not empty accessAPPL.workFlowStatus}" >
+		    	  #{profileManagSearchBackingBean.getStatusDescById(accessAPPL.workFlowStatus.pmStatus.statusId)}
+			  </c:when>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
-				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userOrg.pmUser.userId, userOrg)}" >
-					<p:graphicImage value="/css/images/design/edit.png"/>
-				</p:commandLink>
+				
 			</p:column>
 			
 		</p:dataTable>
