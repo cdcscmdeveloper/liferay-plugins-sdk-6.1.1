@@ -132,7 +132,7 @@
 							<td>
 								<c:choose>
 									<c:when test="#{!zoneCoverageReadonly}">
-										<p:selectOneRadio value="#{scQt.zonal}" >
+										<p:selectOneRadio value="#{scQt.zonal}" disabled="#{scQt.panel}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 											<p:ajax event="change" partialSubmit="true"
