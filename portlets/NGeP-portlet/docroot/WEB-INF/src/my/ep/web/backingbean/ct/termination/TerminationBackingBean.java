@@ -244,7 +244,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 						ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 						ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-						if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+						if (ctBB.isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 							if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 								ctBB.getManagedBean().getContractVer().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 							}

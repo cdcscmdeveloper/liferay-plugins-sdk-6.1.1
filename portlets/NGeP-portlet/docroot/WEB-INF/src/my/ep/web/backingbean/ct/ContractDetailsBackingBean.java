@@ -250,8 +250,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					getManagedBean().setWarningPercentage(null);
 				}
+				
+				if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+						&& ctBB.getManagedBean().isServiceTaxAlertFlg()) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
+									MessageUtils.getMessage(MessageConst.INFO_758004,
+											MessageUtils.BUNDLE_COMMON_MESSAGES, 
+											new FacesScopes().getUserLocale())));
+					ctBB.getManagedBean().setServiceTaxAlertFlg(false);				
+				}
+				
 				return;
-			}		
+			}
 			
 			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			getManagedBean().setSelectedTabIndex(0);
@@ -479,24 +490,35 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 				ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-				
-				if (isContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+
+		    	ctBB.getManagedBean().setDisableContractAmount(true);
+				if (ctBB.isContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 					if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null) {
 			    		ctBB.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 					}
 			    	ctBB.getManagedBean().setGstCheckingGUI(true);
 			    	ctBB.getManagedBean().setDisableGstAmount(true);
 			    	
-			    	// If the GST is effective and the Amount has been keyed in by user in sourcing,0
-					// the value must generate into Fulfilment Details and non-editable.
-			    	if (!ctBB.getManagedBean().isViewContract()
-			    			&& ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaGstAmount() == null) {
-			    		// Only allow to change during FD creation and FD Update
-			    		if (resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)
-			    				|| resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
-				    		ctBB.getManagedBean().setDisableGstAmount(false);
+			    	if (!ctBB.getManagedBean().isViewContract()) {
+			    		// If the GST is effective and the Amount has been keyed in by user in sourcing,0
+			    		// the value must generate into Fulfilment Details and non-editable.
+			    		if (ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaGstAmount() == null
+			    				&& (resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+					    				|| resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
+			    			ctBB.getManagedBean().setDisableGstAmount(false);
 			    		}
-					}	    	
+			    		
+			    		// If original contract is fulfilled imposed service tax rule
+			    		if (ctBB.isBeforeGstReliefDueDate() && ctBB.imposedServiceTaxCondition()) {
+			    			if (ctBB.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
+			    				ctBB.getManagedBean().setDisableContractAmount(false);
+			    			} else {
+			    				if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBB.getGstReliefDueDate().getTime()) {
+			    					ctBB.getManagedBean().setDisableGstAmount(true);
+			    				}
+			    			}
+			    		}
+			    	}
 			    } else {
 			    	ctBB.getManagedBean().setGstCheckingGUI(false);
 			    }	
@@ -668,6 +690,28 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				   }
 			   }
+			}
+		}
+		
+		// Validation for GST amount before GST Relief Due Date
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			if (ctBB.isBeforeGstReliefDueDate()
+					&& ctBB.imposedServiceTaxCondition()
+					&& ctBB.isContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
+					&& ctBB.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
+				if (ctBB.getManagedBean().getCtContractAmount().getGstAmount() == null
+						|| ctBB.getManagedBean().getCtContractAmount().getGstAmount().doubleValue() == 0) {
+					 throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.gst.amt", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}				
+				if (ctBB.getManagedBean().getCtContractAmount().getContractAmount() == null
+						|| ctBB.getManagedBean().getCtContractAmount().getContractAmount().doubleValue() == 0) {
+					 throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.amount", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
 			}
 		}
 		// Validation for Deduction
@@ -1399,10 +1443,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			     reqDTO.setUpdateAction(true);
 			     getManagedBean().setUpdateContract(true);
 			
-		         setValidateContractField(reqDTO);		    
+		         setValidateContractField(reqDTO);
 		         getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		    
 		         ctBB.getManagedBean().setUpdateContract(true);
 		         ctBB.getManagedBean().setViewContract(false);
+		         ctBB.chkServiceTaxAlert();
 	             getManagedBean().setExternalPageUrl(null);
 	             getManagedBean().setSelectedTabIndex(0);	     
 			     return CONTRACT_PAGE;
@@ -1432,7 +1477,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setExternalPageUrl(null);
 		
-		if (isContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
+		if (ctBB.isContractWithGst(trBB.getCtBB().getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
 			if (trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null) {
 				trBB.getCtBB().getManagedBean().getContractVer().getCtContractAmount().setContractAmount(BigDecimal.ZERO);
 			}
