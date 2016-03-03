@@ -133,7 +133,7 @@
 							styleClass="colFloatRight"
 							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedQty}"
 							maxlength="14" size="15"
-							disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}">
+							disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or !bpmTasklistBackingBean.managedBean.claim}">
 							<p:ajax event="blur" update="selectedItemSection" process="@this"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								listener="#{receivedNoteBackingBean.retrieveReceivedAmt()}" />

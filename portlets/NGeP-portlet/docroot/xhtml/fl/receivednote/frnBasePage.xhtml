@@ -41,16 +41,21 @@
 						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
 						action="#{receivedNoteBackingBean.backAction}" /></td>
 				<td colspan="4" style="text-align: right">
-					<ui:repeat
-						var="bpmAction"
-						value="#{receivedNoteBackingBean.managedBean.outComes}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<ui:param name="immediateValue" value="#{bpmAction=='SAVE' or 
+					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+						<ui:define name="outComeSection">
+							<ui:repeat
+							var="bpmAction"
+							value="#{receivedNoteBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<ui:param name="immediateValue" value="#{bpmAction=='SAVE' or 
 							(bpmAction=='REJECT' and receivedNoteBackingBean.isReceivingOfficer())?'true':'false'}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button" immediate="#{immediateValue}"
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button" immediate="#{immediateValue}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{receivedNoteBackingBean.gpkiSignAction(bpmAction)}"/>
-					</ui:repeat>
+							</ui:repeat>
+						</ui:define>
+					</ui:decorate>
+					
 					<c:if
 						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
 						<td colspan="4" style="text-align: right"><p:commandButton

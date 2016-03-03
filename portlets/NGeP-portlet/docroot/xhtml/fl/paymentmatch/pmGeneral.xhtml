@@ -181,9 +181,9 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}/#{paymentMatchBackingBean.managedBean.invoiceDate}">
 					</p:inputText>
 					<p:inputText size="24" maxlength="24"
-						disabled="#{paymentMatchBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{paymentMatchBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}"
-						required="true"
+						required="#{bpmTasklistBackingBean.managedBean.claim}"
 						label="#{lbl['lbl.fl.payment.match.payment.desc']}">
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.desc']}"/></td>

@@ -85,7 +85,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="highlight-mark" value="#{lbl['lbl.fl.po.factored']} " /></td>
-				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null or flOrderBB.managedBean.fulfilmentOrder.status.statusId eq FulfilmentStatusCont.poPendingRejAck or flOrderBB.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" 
+				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null or flOrderBB.managedBean.fulfilmentOrder.status.statusId eq FulfilmentStatusCont.poPendingRejAck or flOrderBB.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G or !bpmTasklistBackingBean.managedBean.claim}" 
 						value="#{flOrderBB.managedBean.factoringCheck}">
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
