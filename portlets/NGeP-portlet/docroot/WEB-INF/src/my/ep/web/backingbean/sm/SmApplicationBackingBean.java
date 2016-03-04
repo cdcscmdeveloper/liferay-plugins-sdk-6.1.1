@@ -6985,6 +6985,8 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
 		}
 		assignValReqdToTrue();
+		getManagedBean().getSmAppl().setBumi(
+				getManagedBean().getSmAppl().getSmSupplier().isBumi());
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
