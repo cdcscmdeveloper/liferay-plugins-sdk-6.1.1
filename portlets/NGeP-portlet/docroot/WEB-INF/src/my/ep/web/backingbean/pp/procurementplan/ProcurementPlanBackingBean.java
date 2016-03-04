@@ -1313,10 +1313,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				if(RoleCode.PLAN_APPROVER.value().equals(actor.getRoleCode().getRoleCode())){
 					existingApprovers.add(actor.getPmUser().getUserId());
 				}
-				
-				if(RoleCode.PLAN_OFFICER.value().equals(actor.getRoleCode().getRoleCode()) && isRolePlanner()){
-					actor.setPmUser(getFacesScopes().getUserSessionBean());					
-				}
 			}
 			
 			//New Plan Actors
@@ -1402,19 +1398,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			log.info("addPlanActors");
 			if(ppPlan.getPpPlanActors()==null){
 				ppPlan.setPpPlanActors(new ArrayList<PpPlanActor>());
-			}			
-			//Officer
-			log.info("addOfficer");
-			//Add Selected Actor
-			PpPlanActor planActor = null;
-			PmRole pmRole = new PmRole();
-			pmRole.setRoleCode(RoleCode.PLAN_OFFICER.value());	
-			planActor = new PpPlanActor();
-			planActor.setUserSeq(1);
-			planActor.setPmUser(getFacesScopes().getUserSessionBean());
-			planActor.setRoleCode(pmRole);
-			ppPlan.addPpPlanActors(planActor);
-			
+			}
 			//Verifier
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 				if(this.getManagedBean().getVerifierModel()!=null 
@@ -1422,8 +1406,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						&& !this.getManagedBean().getVerifierModel().getTarget().isEmpty()){
 					log.info("addVerifier");
 					//Add Selected Actor
-					planActor = null;
-					pmRole = new PmRole();
+					PpPlanActor planActor = null;
+					PmRole pmRole = new PmRole();
 					pmRole.setRoleCode(RoleCode.PLAN_VERFICATION_OFFICER.value());
 					int seq = 1;
 					for(PmUser user:this.getManagedBean().getVerifierModel().getTarget()){
@@ -1443,8 +1427,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					&& !this.getManagedBean().getApproverModel().getTarget().isEmpty()){
 				log.info("addApprover");
 				//Add Selected Actor
-				planActor = null;
-				pmRole = new PmRole();
+				PpPlanActor planActor = null;
+				PmRole pmRole = new PmRole();
 				pmRole.setRoleCode(RoleCode.PLAN_APPROVER.value());
 				int seq = 1;
 				for(PmUser user:this.getManagedBean().getApproverModel().getTarget()){
@@ -3835,4 +3819,5 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		? ParameterConst.DOCTYPE_PLAN_PROCUREMENT
 		: ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
 	}
+
 }
