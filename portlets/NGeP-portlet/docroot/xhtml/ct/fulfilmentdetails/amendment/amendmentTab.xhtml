@@ -67,7 +67,7 @@
 		</p:blockUI>			
 		  <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
 		<h:panelGroup id="panelHeaderException">
-		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
+		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
 			 <ui:include src="amendmentButtons.xhtml" />
 		     <ui:include src="amendmentHeader.xhtml" />
 		  </h:panelGroup>

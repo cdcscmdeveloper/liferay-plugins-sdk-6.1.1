@@ -90,7 +90,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}" >
-					<p:ajax event="change" update=":form"  process="@form" 
+					<p:ajax event="change" update=":form"  process="@form" listener="#{amendmentBackingBean.onChangeOther}"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
@@ -246,7 +246,8 @@
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
 				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;" required="true" label="#{lbl['lbl.ct.new.gst.amt']}"  
 				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
-				   disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+				   disabled="#{ctBackingBean.managedBean.disableAmendDetails
+				   		or ctBackingBean.managedBean.disableGstAmount}"
 				   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}">
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
