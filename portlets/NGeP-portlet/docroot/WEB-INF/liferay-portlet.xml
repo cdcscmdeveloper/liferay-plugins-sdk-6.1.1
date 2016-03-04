@@ -2372,6 +2372,16 @@
 	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 	 	<css-class-wrapper>consolidationReport-portlet</css-class-wrapper>
 	 </portlet>	 
+	  <portlet>
+	 	<portlet-name>ptjGfmasInbound</portlet-name>
+	 	<icon>/icon.png</icon>
+	 	<instanceable>false</instanceable>
+	 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+
+	 	<css-class-wrapper>
+	 		ptjGfmasInbound-portlet
+	 	</css-class-wrapper>
+	 </portlet>
 	 
 	 <role-mapper>
 		<role-name>administrator</role-name>
