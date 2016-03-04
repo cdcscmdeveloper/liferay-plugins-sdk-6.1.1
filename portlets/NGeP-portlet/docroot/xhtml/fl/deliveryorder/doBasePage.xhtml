@@ -98,7 +98,7 @@
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink 
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderId,createDOBackingBean.managedBean.flDeliveryOrder.status.statusId)}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderId)}"
 						immediate="true" />&#160;&#160;
 					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 						<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo,flDocumentManagedBean.taxable)}" />

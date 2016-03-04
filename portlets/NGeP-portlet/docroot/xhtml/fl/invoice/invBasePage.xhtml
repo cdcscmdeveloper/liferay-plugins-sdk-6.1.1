@@ -72,7 +72,7 @@
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink 
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceNo,invoiceBackingBean.managedBean.invoice.invoiceId,invoiceBackingBean.managedBean.invoice.status.statusId)}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceId)}"
 						immediate="true" />&#160;&#160;
 					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 						<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceNo,invoiceBackingBean.managedBean.taxable)}" />
