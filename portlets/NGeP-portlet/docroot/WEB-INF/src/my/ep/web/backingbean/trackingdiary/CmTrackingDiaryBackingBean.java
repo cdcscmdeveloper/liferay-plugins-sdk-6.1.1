@@ -85,6 +85,11 @@ public class CmTrackingDiaryBackingBean extends
 			try {
 				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
 				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
+				CmTrackingDiaryBackingBean bb = new CmTrackingDiaryBackingBean();
+				for(PmTrackingDiary diary : resDTO.getResultBean().getResultList()){
+					bb.getManagedBean().setDocId(diary.getDocId());
+				}
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -166,6 +171,8 @@ public class CmTrackingDiaryBackingBean extends
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
+	
+	
 
 }
 
