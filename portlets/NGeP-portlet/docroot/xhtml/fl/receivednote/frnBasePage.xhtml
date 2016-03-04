@@ -32,9 +32,12 @@
 			postSignAction="#{receivedNoteBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{receivedNoteBackingBean.enableAutoUpdate()}" 
 		/>
-		<f:event listener="#{receivedNoteBackingBean.preRenderView}"
+		<f:event listener="#{receivedNoteBackingBean.preRenderView}" 
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="#{receivedNoteBackingBean.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
+		<ui:decorate
+					template="/WEB-INF/facelets/templates/claim_template.xhtml">
+					<ui:define name="outComeSection">
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
@@ -77,7 +80,7 @@
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink 
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteId,receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId)}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteId)}"
 						immediate="true" />&#160;&#160;
 					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false" rendered="#{receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId==FulfilmentStatusCont.fnAcknowledged}">
 						<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeFulfilmentNote,receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo,flDocumentManagedBean.taxable)}" />
@@ -87,6 +90,8 @@
 				</td>
 			</tr>
 		</table>
+			</ui:define>
+				</ui:decorate>
 		<ui:include src="frnReviewHeaderPage.xhtml" />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
