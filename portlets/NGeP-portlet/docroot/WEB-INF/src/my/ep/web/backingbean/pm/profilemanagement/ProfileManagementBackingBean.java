@@ -2867,7 +2867,7 @@ public class ProfileManagementBackingBean extends
 							"recordStatusFlg",
 							SearchOperator.OPERATOR_IN.value(), 
 							new ArrayList<Integer>(Arrays
-									.asList(DbValueConst.RECORD_STATUS_SUSPENDED,
+									.asList(DbValueConst.RECORD_STATUS_ACTIVE,
 											DbValueConst.RECORD_STATUS_SUSPENDED))));
 		}
 		//
