@@ -93,6 +93,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
@@ -7854,6 +7855,18 @@ public class ReportBackingBean extends
 						.setPmOrgValidity(new PmOrgValidity());
 			}
 		}
+		
+		if (this.getManagedBean().getSelectedOrgType() == null) {
+			this.getManagedBean().setSelectedOrgType(new PmParameter());
+		}
+		
+		/*if (this.getManagedBean().getSelectedOrgProfile()== null) {
+			this.getManagedBean().setSelectedOrgProfile(new PmOrgProfile());
+			if (this.getManagedBean().getSelectedOrgProfile().getSmSupplier() == null) {
+				this.getManagedBean().getSelectedOrgProfile()
+						.setSmSupplier(new SmSupplier());
+			}
+		}*/
 	}
 
 	/**
@@ -10637,10 +10650,10 @@ public class ReportBackingBean extends
 				// retrieveFPJMinistryList();
 				// getLtstMinistryListByUserid();
 				getManagedBean().getRptGenBean().setTextBoxBasedRoles(true);
-				retrieveOnlyFPJMinistryList();
-				retrieveFPJPTJList();
+				retrieveOnlyFPJMinistryList();				
 				retrievePFPPList();
 				retrievePFJAList();
+				retrieveFPJPTJList();
 
 				if (getManagedBean().getRptGenBean().isFlSupplierView()) {
 					getManagedBean().getRptGenBean()
@@ -10978,7 +10991,8 @@ public class ReportBackingBean extends
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> ptjLst = reportSO.retrievePFPPList(lngUserId);
+			String ministryId=this.getCommonMinistry();
+			List<Object[]> ptjLst = reportSO.retrievePFPPList(lngUserId,ministryId);
 			if (ptjLst.size() > 0) {
 				if (ptjLst.size() > 2) {
 					SelectItem selectItem1 = new SelectItem();
@@ -11133,9 +11147,10 @@ public class ReportBackingBean extends
 			for (Object[] object : minstryLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
-				selectItem.setValue(object[1].toString());
+				selectItem.setValue(object[1].toString());			
 				ministryList.add(selectItem);
 			}
+			this.setCommonMinistry(ministryList.get(0).getValue().toString());
 		}
 		return ministryList;
 	}
@@ -12697,6 +12712,8 @@ public class ReportBackingBean extends
 			}
 
 			reloadLovsValues();
+			
+			//this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
 
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
@@ -17352,6 +17369,18 @@ public class ReportBackingBean extends
 						.getFlContractRequest() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPurchaseOrderNo() != null) && (this
 						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL));
+	}
+	
+	public String constructConditionFields() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterId^");
+		sb.append(getManagedBean().getSelectedOrgType().getParameterId());
+		sb.append("|recordStatus^1");
+		log.info("....getManagedBean().getSelectedOrgType().getParameterCode()="
+				+ getManagedBean().getSelectedOrgType().getParameterCode());
+		
+		return sb.toString();
 	}
 
 }
