@@ -5015,32 +5015,58 @@ public class SmApplicationUtil {
 		managedBean.setShowStorePanel(false);
 		managedBean.setShowFactoryPanel(false);
 		managedBean.setShowWorkShopPanel(false);
-		for (SmSupplierCategory cat : managedBean.getSmAppl()
-				.getSmSupplierCategories()) {
-			if (cat.isSpecialCategory()
-					&& cat.getPmCategoryL3() != null
-					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-					&& cat.getPmCategoryL3().getCategoryTypeCode()
-							.getParameterId() != null
-					&& cat.getRecordStatusFlg() != null
-					&& cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-				String facType = "";
-				if (cat.getPmCategoryL3().getFacilityType() != null) {
-					facType = cat.getPmCategoryL3().getFacilityType();
+
+		// if site after approval, show panel if facility type has records
+		if (managedBean.isSiteVisitAfterApproval()) {
+			for (SmFacility facility : managedBean.getSmAppl()
+					.getSmFacilities()) {
+				if (!StringUtils.isBlank(facility.getFacilityType())) {
+					if (facility.getFacilityType().equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
+						managedBean.setShowFactoryPanel(true);
+					} else if (facility.getFacilityType().equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
+						managedBean.setShowStorePanel(true);
+					} else if (facility.getFacilityType().equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
+						managedBean.setShowWorkShopPanel(true);
+					} else if (facility.getFacilityType().equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
+						managedBean.setShowDockyardPanel(true);
+					}
 				}
-				if (facType
-						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
-					managedBean.setShowFactoryPanel(true);
-				} else if (facType
-						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
-					managedBean.setShowStorePanel(true);
-				} else if (facType
-						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
-					managedBean.setShowWorkShopPanel(true);
-				} else if (facType
-						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
-					managedBean.setShowDockyardPanel(true);
+			}
+		}
+		// if not site visit after approval, check based on pending activation
+		// cat code
+		else {
+			for (SmSupplierCategory cat : managedBean.getSmAppl()
+					.getSmSupplierCategories()) {
+				if (cat.isSpecialCategory()
+						&& cat.getPmCategoryL3() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
+						&& cat.getPmCategoryL3().getCategoryTypeCode()
+								.getParameterId() != null
+						&& cat.getRecordStatusFlg() != null
+						&& cat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					String facType = "";
+					if (cat.getPmCategoryL3().getFacilityType() != null) {
+						facType = cat.getPmCategoryL3().getFacilityType();
+					}
+					if (facType
+							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
+						managedBean.setShowFactoryPanel(true);
+					} else if (facType
+							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
+						managedBean.setShowStorePanel(true);
+					} else if (facType
+							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
+						managedBean.setShowWorkShopPanel(true);
+					} else if (facType
+							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
+						managedBean.setShowDockyardPanel(true);
+					}
 				}
 			}
 		}
