@@ -30,17 +30,17 @@
 
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'PP'}">
 .columnPpTableClass {
-	margin-top: 0%;
+	margin-top: -1%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'CT'}">
 .columnCtTableClass {
-	margin-top: 0%;
+	margin-top: -1%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'DP'}">
 .columnScTableClass {
-	margin-top: 0%;
+	margin-top: -1%;
 }
 /* for 'Direct Purchase' Report of 'LOA Content Report' allignement */
 .columnDPMarginTopClass {
@@ -50,17 +50,17 @@
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'SC'}">
 .columnScTableClass {
-	margin-top: 0%;
+	margin-top: -2%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'PM'}">
 .columnPmTableClass {
-	margin-top: 0%;
+	margin-top: -2%;
 }
 </c:if>
 <c:if test="#{reportBackingBean.managedBean.moduleNameValue eq 'FL'}">
 .columnFlTableClass {
-	margin-top: 0%;
+	margin-top: -2%;
 }
 </c:if>
 
@@ -540,7 +540,7 @@ width:32.5%;
 											</c:if>
 										</div>
 										<h:panelGroup id="rptbtnGroup" style="margin-top:10px;">
-											<div align="right">
+											<div align="right" style="margin-bottom: -4%;">
 												<c:if
 													test="#{reportBackingBean.managedBean.rptGenBean.conditionGenerateButton}">
 													<p:commandButton onstart="blkReportContent.show();"
