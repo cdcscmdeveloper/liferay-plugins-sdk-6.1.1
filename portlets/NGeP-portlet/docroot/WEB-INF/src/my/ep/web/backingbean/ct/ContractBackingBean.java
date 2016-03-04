@@ -39,6 +39,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -808,6 +811,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
    			this.getManagedBean().getContractVer().getCtSchedules().remove(ctSchedule);
    		}
    		selectedSchedule = null;	
+   		getManagedBean().setButtonHideActive(true);
+   	}
+   	
+   	public void deleteProgressiveDetails(){
+   		for (int i = 0; i < selectedProgressive.length; i++) {
+   			CtProgressivePayment ctProgressivePayments  = selectedProgressive [i];
+   			this.getManagedBean().getContractVer().getCtProgressivePayments().remove(ctProgressivePayments);
+   		}
+   		selectedSchedule = null;	
+   		getManagedBean().setButtonHideActive(true);
    	}
        
        /**
@@ -1112,6 +1125,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			 this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().remove(clause);
 		}
 		selectedDeductionClauses = null;
+		getManagedBean().setButtonHideActive(true);
 	}
 
 	public CtDeductionClause[] getSelectedDeductionClauses() {
@@ -1923,12 +1937,38 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			/**
 			 * The method used to select all added performance bond(s).
 		     */
-			public void selectAllBond() {
-				if (getManagedBean().isSelectAll()) {
+			public void selectAllBond(AjaxBehaviorEvent e) {
+				
 					for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
-						bonds.setSelectedCheckBox(true);
+						if (getManagedBean().isSelectAll()) {
+						      bonds.setSelectedCheckBox(true);
+					} else{
+						bonds.setSelectedCheckBox(false);
 					}
 				}
+				
+				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideActive(false);
+				}else{
+					getManagedBean().setButtonHideActive(true);
+				}	
+			}
+			
+			public void selectAllDeduction(AjaxBehaviorEvent e) {
+				
+					for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
+						if (getManagedBean().isSelectAll()) {
+						        deduct.setSelectedCheckBox(true);
+					       }else {
+					    	   deduct.setSelectedCheckBox(false);
+					       }
+				}
+				
+				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideActive(false);
+				}else{
+					getManagedBean().setButtonHideActive(true);
+				}	
 			}
 			
 			/**
@@ -2483,7 +2523,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	  public void deletePidPurchase(){
 		  try {
 				  getManagedBean().getContractVer().getCtPidReasons().removeAll(getManagedBean().getSelectedPidReason());
-		   } catch (Exception e) {
+		          getManagedBean().setButtonHideActive(true);
+		  } catch (Exception e) {
 				  e.printStackTrace();
 				  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		   }
@@ -2560,7 +2601,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    				}
 	    			}
 	    		}
-	    	}	  
+	    	}	     
 	  }
 	  
 	  /**
@@ -2629,4 +2670,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			  getManagedBean().setDisableGstAmount(true);
 		  }
 	  }
+	  
+	  /**
+	     * Method to set boolean value for checkbox 
+	     * @param pass ajax event type
+	     * Set boolean value for user action 
+	     * */
+		
+		public void onToggleSelect(ToggleSelectEvent event) {
+			getManagedBean().setButtonHideActive(false);
+		}
+		
+		public void onRowSelect(SelectEvent event) {
+			getManagedBean().setButtonHideActive(false);
+		}
+	 
+	    public void onRowUnselect(UnselectEvent event) {
+	    	getManagedBean().setButtonHideActive(true);
+	    }
 }
