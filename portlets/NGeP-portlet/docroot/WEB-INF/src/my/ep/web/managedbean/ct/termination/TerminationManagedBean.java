@@ -50,6 +50,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private boolean remedy;
 	private boolean autoUpdate = true;
 	private boolean viewContract = false;
+	private boolean  buttonHideActive = true;
 
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -374,5 +375,13 @@ public class TerminationManagedBean extends BaseManagedBean {
 	 */
 	public void setPtjCodeNameSearchValue(String ptjCodeNameSearchValue) {
 		this.ptjCodeNameSearchValue = ptjCodeNameSearchValue;
+	}
+
+	public boolean isButtonHideActive() {
+		return buttonHideActive;
+	}
+
+	public void setButtonHideActive(boolean buttonHideActive) {
+		this.buttonHideActive = buttonHideActive;
 	}
 }
