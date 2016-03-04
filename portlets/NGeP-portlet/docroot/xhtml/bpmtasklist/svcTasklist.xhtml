@@ -54,7 +54,6 @@
 
 		</div>
 
-
 		<p:panel id="rspl">
 			<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				lazy="true" var="appl">
@@ -63,9 +62,9 @@
 
 				<p:column headerText="Application No">
 
-					<p:commandLink id="navL" value="#{appl.applId}"
+					<p:commandLink id="navL" value="#{appl.applNo}"
 						action="#{svcTasklistBackingBean.navigateToSiteVisitAssignment}">
-						<f:param name="selApplId" value="#{appl.applNo}"></f:param>
+						<f:param name="selApplId" value="#{appl.applId}"></f:param>
 					</p:commandLink>
 
 				</p:column>
