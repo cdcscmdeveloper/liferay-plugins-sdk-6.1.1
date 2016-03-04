@@ -9,9 +9,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -55,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -92,7 +95,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 	/** The search category. */
 	private IPagingDataModel<Object[]> categoryDataModel = new SearchCategoryPagingDataModel();
-	
+
 	private SupportDocumentSearchBean supportDocSearchBean;
 	private OrganisationSearchBean organisationSearchBean;
 	private UserProfilesSearchBean userProfileSearchBean;
@@ -110,7 +113,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long selectedDocId;
 	private List<PmZone> zoneList;
 	private String backURL;
-	
+
 	public String getBackURL() {
 		return backURL;
 	}
@@ -121,10 +124,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 	/** The category code. */
 	private String categoryCode;
-	
+
 	/** The category desc. */
 	private String categoryDesc;
-	
+
 	/** The pm category level. */
 	private Integer pmCategoryLevel;
 
@@ -160,7 +163,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		return categoryDataModel;
 	}
 
-	public void setCategoryDataModel(IPagingDataModel<Object[]> categoryDataModel) {
+	public void setCategoryDataModel(
+			IPagingDataModel<Object[]> categoryDataModel) {
 		this.categoryDataModel = categoryDataModel;
 	}
 
@@ -189,8 +193,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	public UserGroupSearchBean getUserGroupSearchBean() {
-		
-		if(userGroupSearchBean == null){
+
+		if (userGroupSearchBean == null) {
 			userGroupSearchBean = new UserGroupSearchBean();
 		}
 		return userGroupSearchBean;
@@ -346,7 +350,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setOrganisationSearchBean(
 			OrganisationSearchBean organisationSearchBean) {
-		
+
 		this.organisationSearchBean = organisationSearchBean;
 	}
 
@@ -423,7 +427,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void resetUOMResultBean() {
 		this.setUomDataModel(new UOMPagingDataModel());
 	}
-	
+
 	/**
 	 * reset result bean fields
 	 */
@@ -451,21 +455,21 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void resetDocResultBean() {
 		this.setPmDocumentDataModel(new PmDocumentDataModel());
 	}
-	
+
 	/**
 	 * reset result bean fields
 	 */
 	public void resetCatResultBean() {
 		this.setCategoryDataModel(new SearchCategoryPagingDataModel());
 	}
-	
+
 	/**
 	 * reset result bean fields
 	 */
 	public void resetFOrgResultBean() {
 		this.setFinancialOrgDataModel(new FinancialOrgPagingDataModel());
 	}
-	
+
 	// pagination for user profile search list
 	private class UserPagingDataModel extends PagingDataModel<PmUser> {
 		private static final long serialVersionUID = 1L;
@@ -522,6 +526,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			}
 		}
 	}
+
 	/**
 	 * The Class SearchCategoryPagingDataModel.
 	 */
@@ -551,33 +556,53 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				if (getPmCategoryLevel() != null
 						&& getPmCategoryLevel().intValue() > 0) {
-					
+
 					reqDTO.setPmCategoryLevel(getPmCategoryLevel());
-					
-				if (getCategoryCode() != null && !getCategoryCode().isEmpty()) {
-					switch(getPmCategoryLevel()){
-					case 1 : { reqDTO.setMainCatCode(getCategoryCode()); break;}
-					case 2 : {reqDTO.setSubCatCode(getCategoryCode()); break;}
-					case 3 : {reqDTO.setSubDivCode(getCategoryCode()); break;}
+
+					if (getCategoryCode() != null
+							&& !getCategoryCode().isEmpty()) {
+						switch (getPmCategoryLevel()) {
+						case 1: {
+							reqDTO.setMainCatCode(getCategoryCode());
+							break;
+						}
+						case 2: {
+							reqDTO.setSubCatCode(getCategoryCode());
+							break;
+						}
+						case 3: {
+							reqDTO.setSubDivCode(getCategoryCode());
+							break;
+						}
+						}
 					}
-				}
-				if (getCategoryDesc() != null && !getCategoryDesc().isEmpty()) {
-					switch(getPmCategoryLevel()){
-					case 1 : {reqDTO.setMainCatDesc(getCategoryDesc()); break;}
-					case 2 : {reqDTO.setSubCatDesc(getCategoryDesc()); break;}
-					case 3 : {reqDTO.setSubDivDesc(getCategoryDesc()); break;}
+					if (getCategoryDesc() != null
+							&& !getCategoryDesc().isEmpty()) {
+						switch (getPmCategoryLevel()) {
+						case 1: {
+							reqDTO.setMainCatDesc(getCategoryDesc());
+							break;
+						}
+						case 2: {
+							reqDTO.setSubCatDesc(getCategoryDesc());
+							break;
+						}
+						case 3: {
+							reqDTO.setSubDivDesc(getCategoryDesc());
+							break;
+						}
+						}
 					}
-				}
 
 					reqDTO.setSearchBeanObject(searchBean);
 					CategoryCodeResDTO resDTO = categoryCodeSO
 							.searchAllCategory(reqDTO);
 
 					if (resDTO.isSuccessful()) {
-			
+
 						return resDTO.getCategoryResultBean();
 					}
-				}else {
+				} else {
 					return new SearchResultBean();
 				}
 
@@ -591,6 +616,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 		}
 	}
+
 	// /////////////////////////////////////////////////
 	// pagination for user org search list
 	private class UserOrgPagingDataModel extends PagingDataModel<PmOrgProfile> {
@@ -606,49 +632,54 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			log.info("pageChangeListener");
 			try {
 				if (getOrganisationSearchBean().getOrgProfile() != null)
-//					log.info("......getOrganisationSearchBean().getOrgProfile().getOrgProfileId()="
-//							+ getOrganisationSearchBean().getOrgProfile()
-//									.getOrgProfileId());
-				
-				if (getOrganisationSearchBean().getOrgType() != null
-						&& getOrganisationSearchBean().getOrgName() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("orgTypeCode.parameterId",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getOrganisationSearchBean().getOrgType()
-									.getParameterId()));
-			
+					// log.info("......getOrganisationSearchBean().getOrgProfile().getOrgProfileId()="
+					// + getOrganisationSearchBean().getOrgProfile()
+					// .getOrgProfileId());
+
+					if (getOrganisationSearchBean().getOrgType() != null
+							&& getOrganisationSearchBean().getOrgName() != null) {
+						searchBean
+								.getDataFilterBeans()
+								.add(new SearchFilterBean(
+										"orgTypeCode.parameterId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										getOrganisationSearchBean()
+												.getOrgType().getParameterId()));
+
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("pmOrgValidity.orgName",
 										SearchOperator.OPERATOR_LIKE.value(),
-										getOrganisationSearchBean().getOrgName()));
-						
+										getOrganisationSearchBean()
+												.getOrgName()));
+
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("recordStatus",
-										SearchOperator.OPERATOR_EQUALS.value(),1));
-						
-					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-					reqDTO.setOrgProfileSearchBean(searchBean);
-					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IOrgProfileSO.class);
-					OrgProfileResDTO resDto = orgProfileSO
-							.searchOrgProfile(reqDTO);
-					// log.info("......resDto.getPmOrgProfile()="+resDto.getPmOrgProfile());
-					if (resDto != null && resDto.isSuccessful()) {
-						// SearchResultBean<PmOrgProfile> searchResultBean = new
-						// SearchResultBean<PmOrgProfile>();
-						// List<PmOrgProfile> resultList= new
-						// ArrayList<PmOrgProfile>();
-						// resultList.add(resDto.getPmOrgProfile());
-						// searchResultBean.setTotalRecord(1);
-						// searchResultBean.setResultList(resultList);
-						return resDto.getOrgProfileResultBean();
+										SearchOperator.OPERATOR_EQUALS.value(),
+										1));
+
+						OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+						reqDTO.setOrgProfileSearchBean(searchBean);
+						IOrgProfileSO orgProfileSO = BusinessDelegate
+								.getInstance().getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT,
+										IOrgProfileSO.class);
+						OrgProfileResDTO resDto = orgProfileSO
+								.searchOrgProfile(reqDTO);
+						// log.info("......resDto.getPmOrgProfile()="+resDto.getPmOrgProfile());
+						if (resDto != null && resDto.isSuccessful()) {
+							// SearchResultBean<PmOrgProfile> searchResultBean =
+							// new
+							// SearchResultBean<PmOrgProfile>();
+							// List<PmOrgProfile> resultList= new
+							// ArrayList<PmOrgProfile>();
+							// resultList.add(resDto.getPmOrgProfile());
+							// searchResultBean.setTotalRecord(1);
+							// searchResultBean.setResultList(resultList);
+							return resDto.getOrgProfileResultBean();
+						}
+					} else {
+						return new SearchResultBean();
 					}
-				} else {
-					return new SearchResultBean();
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -656,73 +687,80 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 
 	}
-	
+
 	// pagination for UserGroup search list
-		private class USGPagingDataModel extends PagingDataModel<PmUserGroup> {
-			private static final long serialVersionUID = 1L;
+	private class USGPagingDataModel extends PagingDataModel<PmUserGroup> {
+		private static final long serialVersionUID = 1L;
 
-			public USGPagingDataModel() {
-				super("dtUSGResult");
+		public USGPagingDataModel() {
+			super("dtUSGResult");
+		}
+
+		@Override
+		protected ISearchResultBean<PmUserGroup> pageChangeListener(
+				ISearchBean<PmUserGroup> searchBean) {
+			log.info("pageChangeListener");
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
 			}
-
-			@Override
-			protected ISearchResultBean<PmUserGroup> pageChangeListener(
-					ISearchBean<PmUserGroup> searchBean) {
-				log.info("pageChangeListener");
-				if (log.isDebugEnabled()) {
-					log.debug("pageChangeListener");
-				}
-				IUserGroupSO groupSO;
-				try {
+			IUserGroupSO groupSO;
+			try {
 				if (getUserGroupSearchBean().getPtjName() != null
-							&& !"".equalsIgnoreCase(getUserGroupSearchBean().getPtjName())) {
+						&& !"".equalsIgnoreCase(getUserGroupSearchBean()
+								.getPtjName())) {
 					SearchFilterBean codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					codesSearchBean
 							.setSearchField("pmOrgProfile.pmOrgValidity.orgName");
 					codesSearchBean.setCaseInsensitive(true);
-					codesSearchBean.setSearchValue(getUserGroupSearchBean().getPtjName());
+					codesSearchBean.setSearchValue(getUserGroupSearchBean()
+							.getPtjName());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
-					
+
 					if (getUserGroupSearchBean().getGroupCode() != null
-							&& !"".equalsIgnoreCase(getUserGroupSearchBean().getGroupCode())) {
+							&& !"".equalsIgnoreCase(getUserGroupSearchBean()
+									.getGroupCode())) {
 						codesSearchBean = new SearchFilterBean(
 								SearchOperator.OPERATOR_LIKE.value());
 						codesSearchBean.setSearchField("groupCode");
-						codesSearchBean.setSearchValue(getUserGroupSearchBean().getGroupCode());
+						codesSearchBean.setSearchValue(getUserGroupSearchBean()
+								.getGroupCode());
 						codesSearchBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(codesSearchBean);
 					}
 
 					if (getUserGroupSearchBean().getGroupName() != null
-							&& !"".equalsIgnoreCase(getUserGroupSearchBean().getGroupName())) {
+							&& !"".equalsIgnoreCase(getUserGroupSearchBean()
+									.getGroupName())) {
 						codesSearchBean = new SearchFilterBean(
 								SearchOperator.OPERATOR_LIKE.value());
 						codesSearchBean.setSearchField("groupName");
-						codesSearchBean.setSearchValue(getUserGroupSearchBean().getGroupName());
+						codesSearchBean.setSearchValue(getUserGroupSearchBean()
+								.getGroupName());
 						codesSearchBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(codesSearchBean);
 					}
 
+					UserGroupReqDTO reqDTO = new UserGroupReqDTO();
+					reqDTO.setUserGroupSearchBean(searchBean);
+					groupSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IUserGroupSO.class);
+					UserGroupResDTO resDTO = groupSO.retrieveUserGroups(reqDTO);
+					ISearchResultBean<PmUserGroup> iSearchResultBean = resDTO
+							.getUserGroupResultBean();
+					return iSearchResultBean;
 
-						UserGroupReqDTO reqDTO = new UserGroupReqDTO();
-						reqDTO.setUserGroupSearchBean(searchBean);
-						 groupSO = EpEjbBusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-										IUserGroupSO.class);
-						UserGroupResDTO resDTO = groupSO.retrieveUserGroups(reqDTO);
-						ISearchResultBean<PmUserGroup> iSearchResultBean = resDTO
-								.getUserGroupResultBean();
-						return iSearchResultBean;
-
-					} else {
-						return new SearchResultBean();
-					}
-				} finally {
-					groupSO = null;
+				} else {
+					return new SearchResultBean();
 				}
+			} finally {
+				groupSO = null;
 			}
 		}
+	}
+
 	// pagination for UOM search list
 	private class UOMPagingDataModel extends PagingDataModel<PmUom> {
 		private static final long serialVersionUID = 1L;
@@ -923,7 +961,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 		public ISearchResultBean<PmFinancialOrg> pageChangeListener(
 				ISearchBean<PmFinancialOrg> searchBean) {
-			
+
 			boolean isSearchBeanEmpty = true;
 			IFinancialOrgSO financialOrgSO;
 			try {
@@ -938,20 +976,20 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					isSearchBeanEmpty = false;
 				}
 				if (!isSearchBeanEmpty) {
-				reqDTO.setFinancialSearchBean(searchBean);
-				financialOrgSO = (IFinancialOrgSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IFinancialOrgSO.class);
-				FinancialOrgResDTO resDto = financialOrgSO
-						.searchFinancialOrgData(reqDTO);
+					reqDTO.setFinancialSearchBean(searchBean);
+					financialOrgSO = (IFinancialOrgSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IFinancialOrgSO.class);
+					FinancialOrgResDTO resDto = financialOrgSO
+							.searchFinancialOrgData(reqDTO);
 
-				if (resDto.isSuccessful()) {
-					return resDto.getFinaceialOrgResultBean();
+					if (resDto.isSuccessful()) {
+						return resDto.getFinaceialOrgResultBean();
+					}
+				} else {
+					return new SearchResultBean();
 				}
-			} else {
-				return new SearchResultBean();
-			}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -977,21 +1015,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			boolean isSearchBeanEmpty = true;
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 
-//			log.info("...............isMultiRuleType()=" + isMultiRuleType());
+			// log.info("...............isMultiRuleType()=" +
+			// isMultiRuleType());
 			log.info("...............getSelectedDocType()="
 					+ getSelectedDocType());
-//			if (isMultiRuleType() && getSelectedDocType2() != null
-//					&& !getSelectedDocType2().isEmpty()) {
-//
-//				searchBean.getDataFilterBeans().add(
-//						new SearchMultiFilterBean(new SearchFilterBean(
-//								"docType", SearchOperator.OPERATOR_EQUALS
-//										.value(), getSelectedDocType()),
-//								new SearchFilterBean("docType",
-//										SearchOperator.OPERATOR_EQUALS.value(),
-//										getSelectedDocType2(),
-//										SearchCondition.CONDITION_OR.value())));
-//			} else {
+			// if (isMultiRuleType() && getSelectedDocType2() != null
+			// && !getSelectedDocType2().isEmpty()) {
+			//
+			// searchBean.getDataFilterBeans().add(
+			// new SearchMultiFilterBean(new SearchFilterBean(
+			// "docType", SearchOperator.OPERATOR_EQUALS
+			// .value(), getSelectedDocType()),
+			// new SearchFilterBean("docType",
+			// SearchOperator.OPERATOR_EQUALS.value(),
+			// getSelectedDocType2(),
+			// SearchCondition.CONDITION_OR.value())));
+			// } else {
 			if (getSelectedDocType() != null) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("docType",
@@ -1005,86 +1044,81 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getSelectedDocId()));
 			}
-//			if(getFromDate() != null){
-//				searchBean.getDataFilterBeans().add(
-//						new SearchFilterBean("actionedDate",
-//								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-//								getFromDate()));
-//			searchBean.getDataFilterBeans().add(
-//					new SearchMultiFilterBean(new SearchFilterBean(
-//							"actionedDate", SearchOperator.OPERATOR_GREATER_EQUAL
-//									.value(), getFromDate()),
-//							new SearchFilterBean("actionedDate",
-//									SearchOperator.OPERATOR_LESS_EQUAL.value(),
-//									getToDate(),
-//									SearchCondition.CONDITION_AND.value())));
-//				isSearchBeanEmpty = false;
-//			}
-//			if(getToDate() != null){
-//				Calendar calendar = Calendar.getInstance();
-//			    calendar.setTime(getToDate());
-//			    calendar.set(Calendar.HOUR_OF_DAY, 23);
-//			    calendar.set(Calendar.MINUTE, 59);
-//			    calendar.set(Calendar.SECOND, 0);
-//			    
-//			    Date toDate = new Timestamp(calendar.getTime().getTime());
-//				searchBean.getDataFilterBeans().add(
-//						new SearchFilterBean("actionedDate",
-//								SearchOperator.OPERATOR_LESS_EQUAL.value(),
-//								toDate));		
-//				isSearchBeanEmpty = false;
-//			}
+			BaseSearchFilterBean SearchFilterBean1 = new SearchFilterBean(
+					"docType", SearchOperator.OPERATOR_EQUALS.value(),
+					getSelectedDocType());
+			BaseSearchFilterBean SearchFilterBean2 = new SearchFilterBean(
+					"docId", SearchOperator.OPERATOR_EQUALS.value(),
+					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
+			BaseSearchFilterBean SearchFilterBean3 = new SearchFilterBean(
+					"groupDocType", SearchOperator.OPERATOR_EQUALS.value(),
+					getSelectedDocType());
+			BaseSearchFilterBean SearchFilterBean4 = new SearchFilterBean(
+					"groupId", SearchOperator.OPERATOR_EQUALS.value(),
+					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
+
+			// ////////////////////
+
+			BaseSearchFilterBean SearchFilterBeanAnd1 = new SearchMultiFilterBean(
+					SearchFilterBean1, SearchFilterBean2);
+			BaseSearchFilterBean SearchFilterBeanAnd2 = new SearchMultiFilterBean(
+					SearchFilterBean3, SearchFilterBean4);
+
+			SearchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
+			SearchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
+			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(SearchFilterBeanAnd1, SearchFilterBeanAnd2));
+			// //////////////////////////
 			System.out.println("TrackingDiaryReqDTO-docType"
 					+ getSelectedDocType());
 			System.out
 					.println("TrackingDiaryReqDTO-docId" + getSelectedDocId());
-             if(!isSearchBeanEmpty){
-			reqDTO.setSearchBean(searchBean);
-			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
-			try {
-				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
-						.getInstance().getServiceObject("cc",
-								ITrackingDiarySO.class);
-				resDTO = trackingDiarySO
-						.retrieveTrackingDiaryBySearchBean(reqDTO);
-				// if(isMultiRuleType() && getSelectedDocType2() != null &&
-				// !getSelectedDocType2().isEmpty()){
-				// SearchResultBean<PmTrackingDiary> searchResultBean = new
-				// SearchResultBean<PmTrackingDiary>();
-				// int totalRecordResult1 =
-				// resDTO.getResultBean().getTotalRecord();
-				// searchResultBean.setResultList(resDTO.getResultBean().getResultList());
-				// //retrive second round of Tracking Diary with
-				// selectedDocType2
-				// TrackingDiaryReqDTO reqDTO2 = new TrackingDiaryReqDTO();
-				// searchBean.getDataFilterBeans().add(
-				// new SearchFilterBean("docType",
-				// SearchOperator.OPERATOR_EQUALS.value(),
-				// getSelectedDocType2()));
-				// reqDTO2.setSearchBean(searchBean);
-				// TrackingDiaryResDTO resDTO2 = new TrackingDiaryResDTO();
-				// trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
-				// .getInstance().getServiceObject("cc",
-				// ITrackingDiarySO.class);
-				// resDTO2 = trackingDiarySO
-				// .retrieveTrackingDiaryBySearchBean(reqDTO2);
-				// searchResultBean.setTotalRecord(resDTO2.getResultBean().getTotalRecord()
-				// + totalRecordResult1);
-				// searchResultBean.getResultList().addAll(resDTO2.getResultBean().getResultList());//add
-				// this result to previous list
-				// return searchResultBean;
-				// }
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (!isSearchBeanEmpty) {
+				reqDTO.setSearchBean(searchBean);
+				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
+				try {
+					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
+							.getInstance().getServiceObject("cc",
+									ITrackingDiarySO.class);
+					resDTO = trackingDiarySO
+							.retrieveTrackingDiaryBySearchBean(reqDTO);
+					// if(isMultiRuleType() && getSelectedDocType2() != null &&
+					// !getSelectedDocType2().isEmpty()){
+					// SearchResultBean<PmTrackingDiary> searchResultBean = new
+					// SearchResultBean<PmTrackingDiary>();
+					// int totalRecordResult1 =
+					// resDTO.getResultBean().getTotalRecord();
+					// searchResultBean.setResultList(resDTO.getResultBean().getResultList());
+					// //retrive second round of Tracking Diary with
+					// selectedDocType2
+					// TrackingDiaryReqDTO reqDTO2 = new TrackingDiaryReqDTO();
+					// searchBean.getDataFilterBeans().add(
+					// new SearchFilterBean("docType",
+					// SearchOperator.OPERATOR_EQUALS.value(),
+					// getSelectedDocType2()));
+					// reqDTO2.setSearchBean(searchBean);
+					// TrackingDiaryResDTO resDTO2 = new TrackingDiaryResDTO();
+					// trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
+					// .getInstance().getServiceObject("cc",
+					// ITrackingDiarySO.class);
+					// resDTO2 = trackingDiarySO
+					// .retrieveTrackingDiaryBySearchBean(reqDTO2);
+					// searchResultBean.setTotalRecord(resDTO2.getResultBean().getTotalRecord()
+					// + totalRecordResult1);
+					// searchResultBean.getResultList().addAll(resDTO2.getResultBean().getResultList());//add
+					// this result to previous list
+					// return searchResultBean;
+					// }
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// System.out.println("resDTO.getResultBean()====================================: "+
+				// resDTO.getResultBean().getTotalRecord());
+				return resDTO.getResultBean();
+			} else {
+				return new SearchResultBean();
 			}
-             
-			// System.out.println("resDTO.getResultBean()====================================: "+
-			// resDTO.getResultBean().getTotalRecord());
-			return resDTO.getResultBean();
-             }else{
-            	 return new SearchResultBean();
-             }
 
 		}
 	}
