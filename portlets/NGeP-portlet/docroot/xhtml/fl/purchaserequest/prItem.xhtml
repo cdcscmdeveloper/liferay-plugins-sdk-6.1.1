@@ -183,24 +183,31 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="width:148px;text-align:center">
-					<p:commandLink oncomplete="reqItemInfo.show();" process="@this" 
-					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
-					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
-					<p:graphicImage value="/css/images/ico-info.png"
-						title="#{lbl['lbl.fl.request.item.info']}" />
-					</p:commandLink>				
-					<p:inputText value="#{flItem.orderedQty}" size="13" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}" 
-						style="text-align:right" styleClass="colFloatRight" maxlength="#{flItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
+				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}"
+					style="width:148px;text-align:center">
+					<p:inputText value="#{flItem.orderedQty}" size="13" id="orderedQty"
+						label="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right"
+						styleClass="colFloatLeft"
+						maxlength="#{flItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
-						onkeypress="if (event.keyCode == 13) { return false; }" >
+						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
-						<f:attribute name="max" value="#{purchaseRequestBackingBean.getItemMaxQuantity(flItem.scRequestItem.uom)}"/>						
+						<f:attribute name="pattern"
+							value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+						<f:attribute name="max"
+							value="#{purchaseRequestBackingBean.getItemMaxQuantity(flItem.scRequestItem.uom)}" />
 						<f:validator validatorId="quantityDoubleRangeValidator" />
-						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange),unitPrice,orderedQty,itemDataTable"
-							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+						<p:ajax event="blur"
+							update="subTotalTxt,@(.orderSummaryChange),unitPrice,orderedQty,itemDataTable"
+							process="@this" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
+						<p:commandLink oncomplete="reqItemInfo.show();" process="@this"
+							action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
+							update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
+							<p:graphicImage value="/css/images/ico-info.png"
+								title="#{lbl['lbl.fl.request.item.info']}" />
+						</p:commandLink>
 					</p:inputText>
 					<p:message for="orderedQty" display="icon" />
 				</p:column>
