@@ -2860,6 +2860,15 @@ public class ProfileManagementBackingBean extends
 			userSearchBean.setSearchValue(upSearchBean.getUserOrgStatus());
 			searchBean.getDataFilterBeans().add(userSearchBean);
 			isEmpty = false;
+		}else{
+			logger.info("+ status 1 and 0");
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"recordStatusFlg",
+							SearchOperator.OPERATOR_IN.value(), 
+							new ArrayList<Integer>(Arrays
+									.asList(DbValueConst.RECORD_STATUS_SUSPENDED,
+											DbValueConst.RECORD_STATUS_SUSPENDED))));
 		}
 		//
 		// logger.info("+ status try only " + null);
