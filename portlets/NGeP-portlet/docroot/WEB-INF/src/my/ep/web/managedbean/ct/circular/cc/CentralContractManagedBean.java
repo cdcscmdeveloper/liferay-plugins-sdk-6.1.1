@@ -75,6 +75,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private boolean fromCircularNotice;
 	private boolean autoUpdate = true;
 	private boolean circularExtension;
+	private boolean ButtonHideActive = true;
 	
 	private TreeNode centralZoneTrees;
 	private PmDigiSign pmDigiSign;
@@ -99,6 +100,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
 	private Map<Long, PmUser> userMap;
 	private List<CtCircularPidReason> ctCircularPidReasons;
+	
 	/**
 	 * @return the updateAction
 	 */
@@ -784,5 +786,13 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setCtCircularPidReasons(
 			List<CtCircularPidReason> ctCircularPidReasons) {
 		this.ctCircularPidReasons = ctCircularPidReasons;
+	}
+
+	public boolean isButtonHideActive() {
+		return ButtonHideActive;
+	}
+
+	public void setButtonHideActive(boolean buttonHideActive) {
+		ButtonHideActive = buttonHideActive;
 	}
 }
