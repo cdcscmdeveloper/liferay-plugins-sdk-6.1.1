@@ -9,8 +9,16 @@
 	<p:messages id="applicationApprovedRemarksMsg" showSummary="false"
 		showDetail="true" autoUpdate="true" closable="true" />
 	<table style="width: 100%">
-		<tr>
-			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+			<tr>
+				<td style="border-style: none !important;float: right !important;">
+					<p:selectBooleanCheckbox value="#{backingBean.managedBean.smAppl.bumi}" />
+				</td>
+				<td valign="top" style="border-style: none !important;white-space: normal;">
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.bumi.tick.msg']}" />
+				</td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 
@@ -26,8 +34,8 @@
 
 					</p:selectOneMenu> <p:message id="approveSelBoxMsg" for="approveSelBox"
 						showSummary="true" showDetail="false" display="icon" /></td>
-			</c:if>
-		</tr>
+			</tr>
+		</c:if>
 		<tr>
 			<td style="vertical-align: top"><p:outputLabel
 					value="#{lbl['lbl.sm.remarks.approval']}" /></td>
