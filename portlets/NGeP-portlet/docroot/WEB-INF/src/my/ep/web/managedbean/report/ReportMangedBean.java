@@ -63,6 +63,9 @@ public class ReportMangedBean extends BaseManagedBean {
 	/** The values empty. */
 	boolean valuesEmpty=false;
 	
+	/** The ministry id. */
+	private String ministryId;
+	
 	/** The error value. */
 	boolean errorValue=false;
 
@@ -707,6 +710,25 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public PmParameter getSelectedOrgType() {
 		return selectedOrgType;
+	}
+
+	/**
+	 * Gets the ministry id.
+	 * 
+	 * @return the ministryId
+	 */
+	public String getMinistryId() {
+		return ministryId;
+	}
+
+	/**
+	 * Sets the ministry id.
+	 * 
+	 * @param ministryId
+	 *            the ministryId to set
+	 */
+	public void setMinistryId(String ministryId) {
+		this.ministryId = ministryId;
 	}
 
 }
