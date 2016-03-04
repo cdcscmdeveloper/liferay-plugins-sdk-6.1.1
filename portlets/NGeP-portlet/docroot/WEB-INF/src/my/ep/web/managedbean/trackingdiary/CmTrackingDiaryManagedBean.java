@@ -31,6 +31,7 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 	private Date searchCreatedFromDuration;
 	private Date searchCreatedToDuration;
 	private CmSupplierItem cmSupplierItem;
+	private Long docId;
 
 	private IPagingDataModel<CmSupplierItem> cmDocumentDataModel 	= new SearchPagingDataModel();
 
@@ -166,6 +167,22 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 		
 	
 	}
+
+	/**
+	 * @return the docId
+	 */
+	public Long getDocId() {
+		return docId;
+	}
+
+	/**
+	 * @param docId the docId to set
+	 */
+	public void setDocId(Long docId) {
+		this.docId = docId;
+	}
+	
+	
 	
 
 }
