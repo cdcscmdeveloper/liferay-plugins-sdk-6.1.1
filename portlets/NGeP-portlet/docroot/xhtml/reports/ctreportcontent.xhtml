@@ -14,10 +14,10 @@
 				<c:if
 					test="#{ctReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
 					<tr>
-						<td style="width: 18.5%;"><p:outputLabel
+						<td style="width: 15.3%;"><p:outputLabel
 								value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
 						<td><ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE_REPORT"
-								size="60" update="@form" headerText="#{lbl['lbl.rpt.ministry']}"
+								size="66" update="@form" headerText="#{lbl['lbl.rpt.ministry']}"
 								value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
 								saveObject="reportBackingBean.managedBean.selectedMinistry"
 								conditionField="#{reportBackingBean.constructMinistryConditionFields()}"
@@ -47,7 +47,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
 						<td><ac:lov id="lovKumpulanPTJ" lovId="PM_ORG_PROFILE_REPORT"
-								size="60" update="@form"
+								size="66" update="@form"
 								headerText="#{lbl['lbl.rpt.kumpulan.ptj']}"
 								value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
 								saveObject="reportBackingBean.managedBean.selectedKumpulanPTJ"
@@ -61,7 +61,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
 						<td><ac:lov id="lovPTJ" lovId="PM_ORG_PROFILE_REPORT"
-								size="60" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
+								size="66" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
 								value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 								saveObject="reportBackingBean.managedBean.selectedPTJ"
 								conditionField="#{reportBackingBean.constructPTJConditionFields()}"
@@ -80,7 +80,7 @@
 					<tr>
 						<td style="width: 18.5%;"><p:outputLabel
 								value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
-						<td><p:selectOneMenu style="width:400px;" id="lovCtMinistry"
+						<td><p:selectOneMenu style="width:515px;" id="lovCtMinistry"
 								value="#{reportBackingBean.commonMinistry}">
 								<f:selectItems value="#{reportBackingBean.ministryList}" />
 							</p:selectOneMenu></td>
@@ -95,7 +95,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel>
 						</td>
-						<td><p:selectOneMenu style="width:400px;"
+						<td><p:selectOneMenu style="width:515px;"
 								id="lovCtPegaWaiPengawal"
 								value="#{reportBackingBean.commonPegaWaiPengawal}">
 								<f:selectItems value="#{reportBackingBean.pegaWaiPengawalList}" />
@@ -112,7 +112,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
 
-						<td><p:selectOneMenu style="width:400px;"
+						<td><p:selectOneMenu style="width:515px;"
 								id="lovCtKumpulanPTJ"
 								value="#{reportBackingBean.commonKumpulanPTJ}">
 								<f:selectItems value="#{reportBackingBean.kumpulanPTJList}" />
@@ -128,7 +128,7 @@
 				<c:if test="#{ppReportBackingBean.managedBean.rptGenBean.ctPtjView}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
-						<td><p:selectOneMenu style="width:400px;" id="lovCtPTJ"
+						<td><p:selectOneMenu style="width:515px;" id="lovCtPTJ"
 								value="#{reportBackingBean.commonPtj}">
 								<f:selectItems value="#{reportBackingBean.ptjList}" />
 							</p:selectOneMenu></td>

@@ -19,7 +19,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -104,6 +104,12 @@ public class ReportMangedBean extends BaseManagedBean {
 
 	/** The selected ptj. */
 	private PmOrgProfile selectedPTJ;
+
+	/** The selected org profile. */
+	private PmOrgProfile selectedOrgProfile;
+	
+	/** The selected org type. */
+	private PmParameter selectedOrgType;
 
 	/** The ptj id. */
 	private Long ptjId = null;
@@ -663,6 +669,44 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public void setReportCode(String reportCode) {
 		this.reportCode = reportCode;
+	}
+	
+	/**
+	 * Gets the selected org profile.
+	 * 
+	 * @return the selectedOrgProfile
+	 */
+	public PmOrgProfile getSelectedOrgProfile() {
+		return selectedOrgProfile;
+	}
+
+	/**
+	 * Sets the selected org profile.
+	 * 
+	 * @param selectedOrgProfile
+	 *            the selectedOrgProfile to set
+	 */
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
+	}
+
+	/**
+	 * Sets the selected org type.
+	 * 
+	 * @param selectedOrgType
+	 *            the selectedOrgType to set
+	 */
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
+	}
+
+	/**
+	 * Gets the selected org type.
+	 * 
+	 * @return the selectedOrgType
+	 */
+	public PmParameter getSelectedOrgType() {
+		return selectedOrgType;
 	}
 
 }
