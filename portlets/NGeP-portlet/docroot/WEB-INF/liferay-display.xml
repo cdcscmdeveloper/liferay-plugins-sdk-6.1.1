@@ -202,6 +202,11 @@
 			<portlet id="codificationStatusDetails"></portlet>
 			<portlet id="itemCodeSearchPortal"></portlet>
 		</category>
+		
+		
+		<category name="GfMas">
+			<portlet id="ptjGfmasInbound"></portlet>
+		</category>
 
 
 
