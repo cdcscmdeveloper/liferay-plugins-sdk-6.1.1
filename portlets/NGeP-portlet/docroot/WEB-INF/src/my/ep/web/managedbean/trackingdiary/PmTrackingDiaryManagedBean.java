@@ -1019,31 +1019,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			// isMultiRuleType());
 			log.info("...............getSelectedDocType()="
 					+ getSelectedDocType());
-			// if (isMultiRuleType() && getSelectedDocType2() != null
-			// && !getSelectedDocType2().isEmpty()) {
-			//
-			// searchBean.getDataFilterBeans().add(
-			// new SearchMultiFilterBean(new SearchFilterBean(
-			// "docType", SearchOperator.OPERATOR_EQUALS
-			// .value(), getSelectedDocType()),
-			// new SearchFilterBean("docType",
-			// SearchOperator.OPERATOR_EQUALS.value(),
-			// getSelectedDocType2(),
-			// SearchCondition.CONDITION_OR.value())));
-			// } else {
-			if (getSelectedDocType() != null) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("docType",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								getSelectedDocType()));
-				isSearchBeanEmpty = false;
-			}
-			if (getSelectedDocId() != null) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("docId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								getSelectedDocId()));
-			}
+			
 			BaseSearchFilterBean SearchFilterBean1 = new SearchFilterBean(
 					"docType", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocType());
@@ -1072,7 +1048,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					+ getSelectedDocType());
 			System.out
 					.println("TrackingDiaryReqDTO-docId" + getSelectedDocId());
-			if (!isSearchBeanEmpty) {
+			if (isSearchBeanEmpty) {
 				reqDTO.setSearchBean(searchBean);
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
