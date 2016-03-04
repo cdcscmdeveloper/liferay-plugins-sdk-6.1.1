@@ -73,6 +73,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private boolean differentModule;
 	private boolean circularExtension;
 	private int index = -1;
+	private boolean buttonHideActiveDel = true;
 	
 	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode rootZoanlTree;
@@ -888,5 +889,13 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setCtCircularPidReasons(
 			List<CtCircularPidReason> ctCircularPidReasons) {
 		this.ctCircularPidReasons = ctCircularPidReasons;
+	}
+
+	public boolean isButtonHideActiveDel() {
+		return buttonHideActiveDel;
+	}
+
+	public void setButtonHideActiveDel(boolean buttonHideActiveDel) {
+		this.buttonHideActiveDel = buttonHideActiveDel;
 	}
 }
