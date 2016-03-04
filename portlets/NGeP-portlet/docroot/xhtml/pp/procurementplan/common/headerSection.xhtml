@@ -35,7 +35,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 						<td colspan="4" style="text-align: right">	
 						<p:commandLink rendered="#{pPlanBackingBean.managedBean.trackingDiary}"
 								value="#{lbl['lbl.td.doc.trackingDiary']}"
-								action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planId,pPlanBackingBean.retrievePageViewId())}"
+								action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planId)}"
 								immediate="true" />
 							<ui:remove>
 							<p:commandLink rendered="#{pPlanBackingBean.managedBean.trackingDiary}"
