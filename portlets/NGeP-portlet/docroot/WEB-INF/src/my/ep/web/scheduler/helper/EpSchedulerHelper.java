@@ -33,31 +33,33 @@ public class EpSchedulerHelper {
 
 		if (StringUtils.isNotBlank(cronExpression)) {
 			try {
-				// specify the job' s details..
-				final JobDetail job = JobBuilder.newJob(jobClass)
-						.withIdentity(jobKey).withDescription(jobDetailDesc)
-						.build();
-
-				// specify trigger
-				final CronTrigger cronTrigger = TriggerBuilder
-						.newTrigger()
-						.withSchedule(
-								CronScheduleBuilder
-										.cronSchedule(cronExpression)).build();
 
 				// start scheduler if not started yet
 				if (!EpSchedulerHelper.getScheduler().isStarted()) {
 					EpSchedulerHelper.getScheduler().start();
 				}
 
-				// schedule the job
+				// check if job already exist
 				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
+					// specify the job' s details..
+					final JobDetail job = JobBuilder.newJob(jobClass)
+							.withIdentity(jobKey).withDescription(jobDetailDesc)
+							.build();
+
+					// specify trigger
+					final CronTrigger cronTrigger = TriggerBuilder
+							.newTrigger()
+							.withSchedule(
+									CronScheduleBuilder
+											.cronSchedule(cronExpression)).build();
+					//schedule new job
 					EpSchedulerHelper.getScheduler().scheduleJob(job,
 							cronTrigger);
 				} else {
-//					Trigger trigger = getTriggerByJobKey(jobKey);
-//					EpSchedulerHelper.getScheduler().rescheduleJob(
-//							trigger.getKey(), trigger);
+					//reschedule existing job
+					Trigger trigger = getTriggerByJobKey(jobKey);
+					EpSchedulerHelper.getScheduler().rescheduleJob(
+							trigger.getKey(), trigger);
 				}
 
 			} catch (final SchedulerException e) {
