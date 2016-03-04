@@ -53,7 +53,7 @@
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,purchaseRequestBackingBean.managedBean.fulfilmentRequest.docType,purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo,purchaseRequestBackingBean.managedBean.fulfilmentRequest.fulfilmentReqId,purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(purchaseRequestBackingBean.managedBean.fulfilmentRequest.docType,purchaseRequestBackingBean.managedBean.fulfilmentRequest.fulfilmentReqId)}"
 						immediate="true" />
 					</td>		
 				</c:if>

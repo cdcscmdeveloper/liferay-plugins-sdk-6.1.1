@@ -44,7 +44,7 @@
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypeReliefOrder,reliefOrderBB.managedBean.flReliefOrder.reliefOrderId,reliefOrderBB.managedBean.flReliefOrder.reliefOrderId,reliefOrderBB.managedBean.flReliefOrder.status.statusId)}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeReliefOrder,reliefOrderBB.managedBean.flReliefOrder.reliefOrderId)}"
 						immediate="true" />
 					</td>		
 				</c:if>	

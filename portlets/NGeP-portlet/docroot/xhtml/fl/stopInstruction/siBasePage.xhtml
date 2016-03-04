@@ -65,7 +65,7 @@
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink 
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.ORDER_FULFILLMENT,ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrNo,stopInstrBB.managedBean.stopInstr.stopInstrId,stopInstrBB.managedBean.stopInstr.pmStatus.statusId)}"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrId)}"
 						immediate="true" />&#160;&#160;
 					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 						<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrNo,flDocumentManagedBean.taxable)}" />
