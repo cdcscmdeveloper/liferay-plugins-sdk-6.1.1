@@ -369,8 +369,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (taskId == null) {
 						ConstructTabSideMenu();
 						
-						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
-							ctBackingBean.chkServiceTaxAlert();
+						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+								&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
+							FacesContext.getCurrentInstance().addMessage(null,
+									new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
+											MessageUtils.getMessage(MessageConst.INFO_758004,
+													MessageUtils.BUNDLE_COMMON_MESSAGES, 
+													new FacesScopes().getUserLocale())));
+							ctBackingBean.getManagedBean().setServiceTaxAlertFlg(false);				
 						}
 						
 						return;
@@ -806,6 +812,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				    		ctBackingBean.getManagedBean().getCtContractAmount().setGstAmount(BigDecimal.ZERO);
 						}
 				    	ctBackingBean.getManagedBean().setGstCheckingGUI(true);
+				    	// If original contract is fulfilled imposed service tax rule
+			    		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+			    				&& ctBackingBean.isBeforeGstReliefDueDate()
+			    				&& ctBackingBean.imposedServiceTaxCondition()
+			    				&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()
+			    				&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= ctBackingBean.getGstReliefDueDate().getTime()) {
+			    			ctBackingBean.getManagedBean().setDisableGstAmount(true);
+			    		}
 				    } else {
 				    	ctBackingBean.getManagedBean().setGstCheckingGUI(false);
 				    }
@@ -1135,24 +1149,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     		}
 	     		
 	     		// Validation for GST amount before GST Relief Due Date
-//	    		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-//	    				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-//	    			if (ctBackingBean.isBeforeGstReliefDueDate()
-//	    					&& ctBackingBean.imposedServiceTaxCondition()
-//	    					&& ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
-//	    					&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
-//	    				if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
-//	    					 throw new EpException(MessageConst.ERROR_100022, 
-//	    								new String[]{ResourceBundleUtils.getMessage("lbl.ct.gst.amt", 
-//	    										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-//	    				}				
-//	    				if (ctBackingBean.getManagedBean().getCtContractAmount().getContractAmount() == null) {
-//	    					 throw new EpException(MessageConst.ERROR_100022, 
-//	    								new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.amount", 
-//	    										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-//	    				}
-//	    			}
-//	    		}
+	     		if (ctBackingBean.isBeforeGstReliefDueDate()
+	     				&& ctBackingBean.imposedServiceTaxCondition()
+	     				&& ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
+	     				&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
+	     			if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null
+	     					|| ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount().doubleValue() == 0) {
+	     				throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.gst.amt", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	     			}
+	     		}
 	        	 
 	     		// Validation for Deduction
 	     		if(ctBackingBean.getManagedBean().getContractVer().getCtDeductions() != null && ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0){
@@ -2049,16 +2056,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
 				
 				if (amendmentResDTO.getCtAmendment() != null) {
-					getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+					ctBackingBean.getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
 				} else {
 					reqDTO.setContractId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId());
 					reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
 					
 					resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
-					getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+					ctBackingBean.getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
 				}				
 			} else {
-				getManagedBean().setAgreementContractVer(ctBackingBean.getManagedBean().getContractVer());
+				ctBackingBean.getManagedBean().setAgreementContractVer(ctBackingBean.getManagedBean().getContractVer());
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -5243,6 +5250,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     	}
     	return false;
     }
+	
+	/**
+     * The method used to check base on service contract rules
+     * when Others is selected/not selected
+     */
+	public void onChangeOther() {
+		if (ctBackingBean.isBeforeGstReliefDueDate() && ctBackingBean.imposedServiceTaxCondition()) {
+			ctBackingBean.onChangeServiceTax();
+		}
+	}
 	
 	/**
 	 * Gets the days by rules.
