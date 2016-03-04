@@ -37,68 +37,68 @@ public class RoleHelper {
 		return instance;
 	}
 	
-	/**
-	 * Get a list of role description by org code
-	 * 
-	 * @param orgTypeCode
-	 * 			the Org Type Code
-	 * @return list of PmRoleDesc
-	 */
-	public List<PmRoleDesc> getRoleDescList(String orgTypeCode) {
-		debugLogger("getRoleDescList.orgTypeCode: " + orgTypeCode);
-		
-		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		String key = new StringBuilder()
-			.append(orgTypeCode)
-			.append(KEY_SEPARATOR)
-			.append(languageCode)
-			.toString();
-		
-		debugLogger("key: " + key);
-		
-		// Get the role description list from map.
-		List<PmRoleDesc> list =roleListMap.get(key);
-		
-		debugLogger("list: " + list);
-		
-		if (list == null) {
-			IRoleSO roleSO;
-			
-			try {
-				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
-				
-				RoleReqDTO reqDTO = new RoleReqDTO();
-				reqDTO.setOrgTypeCode(orgTypeCode);
-				reqDTO.setLanguage(languageCode);
-				
-				// Get role description list from db.
-				RoleResDTO resDTO = roleSO.retrieveRoleDecsListByOrgCode(reqDTO);
-				
-			    list = resDTO.getRoleList();
-			    
-			    String roleKey;
-			    for (PmRoleDesc pmRoleDesc : list) {
-			    	roleKey = getRoleKey(
-			    			pmRoleDesc.getPmRole().getRoleCode(), 
-			    			languageCode);
-			    	
-			    	roleMap.put(roleKey, pmRoleDesc);
-				}
-			    
-			    // Put role description list into map.
-			    roleListMap.put(key, list);
-				
-				debugLogger("put into list: " + list);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
-			} finally {
-				roleSO = null;
-			}
-		}
-		
-		return list;
-	}
+//	/**
+//	 * Get a list of role description by org code
+//	 * 
+//	 * @param orgTypeCode
+//	 * 			the Org Type Code
+//	 * @return list of PmRoleDesc
+//	 */
+//	public List<PmRoleDesc> getRoleDescList(String orgTypeCode) {
+//		debugLogger("getRoleDescList.orgTypeCode: " + orgTypeCode);
+//		
+//		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+//		String key = new StringBuilder()
+//			.append(orgTypeCode)
+//			.append(KEY_SEPARATOR)
+//			.append(languageCode)
+//			.toString();
+//		
+//		debugLogger("key: " + key);
+//		
+//		// Get the role description list from map.
+//		List<PmRoleDesc> list =roleListMap.get(key);
+//		
+//		debugLogger("list: " + list);
+//		
+//		if (list == null) {
+//			IRoleSO roleSO;
+//			
+//			try {
+//				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+//				
+//				RoleReqDTO reqDTO = new RoleReqDTO();
+//				reqDTO.setOrgTypeCode(orgTypeCode);
+//				reqDTO.setLanguage(languageCode);
+//				
+//				// Get role description list from db.
+//				RoleResDTO resDTO = roleSO.retrieveRoleDecsListByOrgCode(reqDTO);
+//				
+//			    list = resDTO.getRoleList();
+//			    
+//			    String roleKey;
+//			    for (PmRoleDesc pmRoleDesc : list) {
+//			    	roleKey = getRoleKey(
+//			    			pmRoleDesc.getPmRole().getRoleCode(), 
+//			    			languageCode);
+//			    	
+//			    	roleMap.put(roleKey, pmRoleDesc);
+//				}
+//			    
+//			    // Put role description list into map.
+//			    roleListMap.put(key, list);
+//				
+//				debugLogger("put into list: " + list);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				throw new EpException(e.getMessage());
+//			} finally {
+//				roleSO = null;
+//			}
+//		}
+//		
+//		return list;
+//	}
 	
 	/**
 	 * Get role description by status id.
