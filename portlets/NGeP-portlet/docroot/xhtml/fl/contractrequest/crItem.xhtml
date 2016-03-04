@@ -233,7 +233,7 @@
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:center;width:154px">
 					<p:inputText value="#{item.orderedQty}" size="14" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}"
 						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal=='View')}"
-						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" style="text-align:right" styleClass="colFloatRight" 
+						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" style="text-align:right" styleClass="colFloatLeft" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />
