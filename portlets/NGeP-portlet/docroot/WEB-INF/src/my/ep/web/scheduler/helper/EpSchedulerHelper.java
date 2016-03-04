@@ -54,6 +54,10 @@ public class EpSchedulerHelper {
 				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
 					EpSchedulerHelper.getScheduler().scheduleJob(job,
 							cronTrigger);
+				} else {
+//					Trigger trigger = getTriggerByJobKey(jobKey);
+//					EpSchedulerHelper.getScheduler().rescheduleJob(
+//							trigger.getKey(), trigger);
 				}
 
 			} catch (final SchedulerException e) {
@@ -68,8 +72,8 @@ public class EpSchedulerHelper {
 		try {
 			JobDetail job = EpSchedulerHelper.getScheduler().getJobDetail(
 					jobKey);
-			
-			if(job!=null){
+
+			if (job != null) {
 				trigger = TriggerBuilder.newTrigger().startNow().forJob(job)
 						.build();
 
