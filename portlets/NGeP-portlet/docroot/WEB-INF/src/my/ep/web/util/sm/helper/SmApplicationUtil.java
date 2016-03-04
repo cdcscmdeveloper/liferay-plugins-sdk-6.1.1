@@ -1241,7 +1241,8 @@ public class SmApplicationUtil {
 
 		}
 		if (managedBean.getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				&& !managedBean.isSiteVisitAfterApproval()) {
 			validSave = valiateNewCategoryAdded(managedBean);
 			if (!validSave) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -5087,8 +5088,8 @@ public class SmApplicationUtil {
 	 */
 	public void removeNotApplicableInformationBeforeSave(
 			SmApplicationManagedBean bean) {
-		//only check for application not in site visit after approved
-		if(!bean.isSiteVisitAfterApproval()){
+		// only check for application not in site visit after approved
+		if (!bean.isSiteVisitAfterApproval()) {
 			removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
 					.getBasicCompanyFacility().getFacilityType());
 			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl());
