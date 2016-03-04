@@ -75,9 +75,16 @@ public class CdTrackingDiaryBackingBean extends
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
+			CdTrackingDiaryBackingBean bb = new CdTrackingDiaryBackingBean();
 			try {
 				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
 				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
+				
+				for(PmTrackingDiary diary:resDTO.getResultBean().getResultList()){
+					
+					bb.getManagedBean().setDocId(diary.getDocId());
+				}
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
