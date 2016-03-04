@@ -3835,11 +3835,4 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		? ParameterConst.DOCTYPE_PLAN_PROCUREMENT
 		: ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
 	}
-	
-	public String retrievePageViewId() {
-		log.debug("retrievePageViewId()");
-		FacesContext fc = FacesContext.getCurrentInstance();
-		return(fc.getViewRoot().getViewId());
-	}
-
 }
