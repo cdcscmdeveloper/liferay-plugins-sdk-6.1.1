@@ -26,105 +26,103 @@
 			</p:inputText>
 		</h:panelGrid>
 		 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
-			  value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"
-			  rowKey="#{rowKeyObj}">
-			  <ac:paginator for="tableBond" />
-			  
-			 <p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract}">
-			 <f:facet name="header">
-					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this"
-							update="tableBond" listener="#{ctBackingBean.selectAllBond()}" />
-					</p:selectBooleanCheckbox>
-				</f:facet>
-				<p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
-				</p:selectBooleanCheckbox>
-		      </p:column>
-			
-			<p:column style="width:10%;"  styleClass="column-align-center">
-				  <f:facet name="header">
-				        <h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
-				</f:facet>
-				<p:inputText value="#{varBond.refNo}" maxlength="50" 
-					disabled="#{ctBackingBean.managedBean.viewContract}" style="width:85px;" >
-					<p:ajax process="@this"></p:ajax>
-					</p:inputText>
-			</p:column>
-		
-			<p:column style="width:23%;"  styleClass="column-align-center">
-				<f:facet name="header">
-				        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
-				</f:facet>
+			  value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"  rowKey="#{rowKeyObj}">
+					  <ac:paginator for="tableBond" />
+					 <p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract}">
+					 <f:facet name="header">
+							<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
+								<p:ajax partialSubmit="true" process="@this"
+									 update=":form:tableBond,  :form:delPdBtn" listener="#{ctBackingBean.selectAllBond}" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
+						<p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox">
+							<p:ajax event="change"  update="@this, :form:delPdBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}" />
+						</p:selectBooleanCheckbox>
+				      </p:column>
+					
+					<p:column style="width:10%;"  styleClass="column-align-center">
+						  <f:facet name="header">
+						        <h:outputText value="#{lbl['lbl.ct.ref.no']}"  styleClass="required"/>
+						</f:facet>
+						<p:inputText value="#{varBond.refNo}" maxlength="50" 
+							disabled="#{ctBackingBean.managedBean.viewContract}" style="width:85px;" >
+							<p:ajax process="@this"></p:ajax>
+							</p:inputText>
+					</p:column>
 				
-				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-				    style="width:195px;" disabled="#{ctBackingBean.managedBean.viewContract}">
-					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
-					   <p:ajax process="@this"></p:ajax>
-				</p:selectOneMenu>
-			</p:column>
-			
-			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
-				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
-				    disabled="#{ctBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						<p:ajax process="@this"></p:ajax>
-				</p:inputText>
-			</p:column>
-			
-			<p:column style="width:8%;" styleClass="column-align-center">
-				<f:facet name="header">
-				        <h:outputText value="#{lbl['lbl.ct.effective.date']}"  styleClass="required"/>
-				</f:facet>
-				
-				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
-					disabled="#{ctBackingBean.managedBean.viewContract}"
-					showOn="button" readonlyInput="true" navigator="true"
-					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
-					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
-					 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
-				</p:calendar>
-			</p:column>
-			
-			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
-				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
-				    readonlyInput="true" disabled="true"  navigator="true" 
-					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-				    <f:attribute name="startDate" value="#{varBond.effDate}" />
-                    <f:validator validatorId="primeDateRangeValidator" />
-			    </p:calendar>
-			</p:column>
-			
-			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:35%;">
-				
-				
-				<h:panelGroup id="uploadBondPg" columns="2">
-					<p:commandButton oncomplete="uploadBondDlg.show();return false;" 
-					   process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
-							rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null}" 
-					     style="float:left;" icon="iconAttachment">
-					</p:commandButton>
-					<h:commandLink
-						title="#{varBond.fileName}"
-						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
-						style="float:left;" styleClass="blue_font"
-						action="#{ctBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
-					<p:commandLink rendered="#{varBond.fileName != null and !ctBackingBean.managedBean.viewContract}" style="float:left;" 
-					  action="#{ctBackingBean.setIndexProperty(index)}"
-					   process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
-			   				<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			 	</p:commandLink>
-				</h:panelGroup>
-			</p:column>
+					<p:column style="width:23%;"  styleClass="column-align-center">
+						<f:facet name="header">
+						        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
+						</f:facet>
+						
+						<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
+						    style="width:195px;" disabled="#{ctBackingBean.managedBean.viewContract}">
+							   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
+							   <p:ajax process="@this"></p:ajax>
+						</p:selectOneMenu>
+					</p:column>
+					
+					<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
+						<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
+						    disabled="#{ctBackingBean.managedBean.viewContract}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this"></p:ajax>
+						</p:inputText>
+					</p:column>
+					
+					<p:column style="width:8%;" styleClass="column-align-center">
+						<f:facet name="header">
+						        <h:outputText value="#{lbl['lbl.ct.effective.date']}"  styleClass="required"/>
+						</f:facet>
+						
+						<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
+							disabled="#{ctBackingBean.managedBean.viewContract}"
+							showOn="button" readonlyInput="true" navigator="true"
+							mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+							maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+							 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
+						</p:calendar>
+					</p:column>
+					
+					<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}" styleClass="column-align-center">
+						<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
+						    readonlyInput="true" disabled="true"  navigator="true" 
+							size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						    <f:attribute name="startDate" value="#{varBond.effDate}" />
+		                    <f:validator validatorId="primeDateRangeValidator" />
+					    </p:calendar>
+					</p:column>
+					
+					<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:35%;">
+						
+						
+						<h:panelGroup id="uploadBondPg" columns="2">
+							<p:commandButton oncomplete="uploadBondDlg.show();return false;" 
+							   process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
+									rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null}" 
+							     style="float:left;" icon="iconAttachment">
+							</p:commandButton>
+							<h:commandLink
+								title="#{varBond.fileName}"
+								value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
+								style="float:left;" styleClass="blue_font"
+								action="#{ctBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
+							<p:commandLink rendered="#{varBond.fileName != null and !ctBackingBean.managedBean.viewContract}" style="float:left;" 
+							  action="#{ctBackingBean.setIndexProperty(index)}"
+							   process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
+					   				<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+					 	</p:commandLink>
+						</h:panelGroup>
+					</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			
-				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this,tableBond" 
+				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this" 
 				  rendered="#{!ctBackingBean.managedBean.viewContract
 				  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeAmendmentWithoutSupplement}" 
-				     action="#{ctBackingBean.addBondDetails}" update="@all">
+				     action="#{ctBackingBean.addBondDetails}" update=":form:tableBond" partialSubmit="true">
 					<p:tooltip for="addPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
 					</p:tooltip>
@@ -133,6 +131,7 @@
 		  
 			     <p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" 
 			          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
+			          disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 				      rendered="#{!ctBackingBean.managedBean.viewContract
 				      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeAmendmentWithoutSupplement}" >
 					<p:tooltip for="delPdBtn">
@@ -155,37 +154,26 @@
 			</p:fileUpload>
 		
 		</p:dialog>
-		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
-			styleClass="screen-title"
-			modal="true" width="330">
-			<h:panelGrid columns="3">
-				<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-				<p:spacer width="10" />
-				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-			</h:panelGrid>
+		    <p:confirmDialog id="dlgPerformDel" widgetVar="dlgPerformDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="tableBond" 
-		         process="@this" actionListener="#{ctBackingBean.removePerformanceBond()}" onclick="dlgPerformDel.hide();">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableBond, :form:delPdBtn" partialSubmit="true"
+		         process="@this" actionListener="#{ctBackingBean.removePerformanceBond()}" oncomplete="dlgPerformDel.hide();">
 		         <f:setPropertyActionListener
 					target="#{ctBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
 			</div>
-		</p:dialog>
+		</p:confirmDialog>
 		
-		<p:dialog id="deleteBondAttachment" widgetVar="deleteBondAttachmentDlg"
-      	      styleClass="screen-title" modal="true" width="330">  
-      	        <h:panelGrid columns="3">
- 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-		   	<p:spacer width="10"/>
-            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
-     	</h:panelGrid>
+		   <p:confirmDialog id="deleteBondAttachmentDlg" widgetVar="deleteBondAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 		<div class="ppRightBtn">
 	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this" partialSubmit="true" update=":form:tableBond"
 	     	actionListener="#{ctBackingBean.deleteBondAttachement()}" immediate="true"
-	     	onclick="deleteBondAttachmentDlg.hide();"/>
+	     	oncomplete="deleteBondAttachmentDlg.hide();"/>
 		 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteBondAttachmentDlg.hide();" type="button" />
 	   </div>
- 	</p:dialog>	
+ 	</p:confirmDialog>
 	</p:panel>
 </ui:composition>
 
