@@ -6430,10 +6430,14 @@ public class SmApplicationBackingBean extends
 						.getSmAppl()
 						.getApplType()
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-			boolean validNewCatAdded = SmApplicationUtil
-					.valiateNewCategoryAdded(getManagedBean());
-			if (!validNewCatAdded) {
-				throw new EpException(MessageConst.ERROR_722570);
+			// exclude site visit after approval because the catcode already
+			// approved
+			if (!getManagedBean().isSiteVisitAfterApproval()) {
+				boolean validNewCatAdded = SmApplicationUtil
+						.valiateNewCategoryAdded(getManagedBean());
+				if (!validNewCatAdded) {
+					throw new EpException(MessageConst.ERROR_722570);
+				}
 			}
 		}
 		initiateSmApplicationTask();
