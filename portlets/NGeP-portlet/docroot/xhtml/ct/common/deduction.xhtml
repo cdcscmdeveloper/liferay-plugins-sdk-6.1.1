@@ -17,9 +17,17 @@
 		         value="#{ctBackingBean.managedBean.contractVer.ctDeductions}" rowKey="#{datas}" 
 		         selectionMode="single" selection="#{ctBackingBean.managedBean.selectedDeduction}">	
 		         	<ac:paginator for="tableDeduction" />
-		   	       <p:ajax event="rowSelect" update=":form:clauseDescp" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
+		   	       <p:ajax event="rowSelect"  
+                       update=":form:clauseDescp" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 		       
 		           <p:column style="width:25px;" rendered="#{!ctBackingBean.managedBean.viewContract}">
+		              <f:facet name="header">
+							<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
+								<p:ajax partialSubmit="true" process="@this"
+									 update=":form:tableDeduction,  :form:delDeductionBtn" listener="#{ctBackingBean.selectAllDeduction}" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
+		           
 		                   <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 		                          value="#{datas.selectedCheckBox}" styleClass="myCustomChekBox">
 		           		          <p:ajax event="change" update=":form:delDeductionBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}"></p:ajax>
@@ -66,81 +74,86 @@
 		   <div class="ppRightBtn">
                     <p:commandButton id="addDeductionBtn" value="#{lbl['lbl.btn.add']}" 
                        disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-                       process="@form"  action="#{ctBackingBean.addDeduction()}" update=":form:tableDeduction"/>
-		  	        <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.btn.delete']}" process="@form" 
-		  	            disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}"  onclick="dlgDeduction.show()"/>
+                       process="@this"  partialSubmit="true" action="#{ctBackingBean.addDeduction()}" update=":form:tableDeduction"/>
+		  	        <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true"
+		  	            disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}"  onsuccess="dlgDeduction.show()"/>
 		  	</div>
 		  	</c:if>
-		  	<p:dialog id="dlgDeduction" widgetVar="dlgDeduction" modal="true" width="330" styleClass="screen-title">  
-             <h:panelGrid columns="3">
-                  <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			         <p:spacer width="10"/>
-                     <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-             </h:panelGrid>
+		  <p:confirmDialog id="dlgDeduction" widgetVar="dlgDeduction" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}"> 
              <div class="ppRightBtn">
-		            <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableDeduction, :form:clauseDescp" 
-		                 process="@form"  actionListener="#{ctBackingBean.deleteDeductionDetails()}" onclick="dlgDeduction.hide();"/>
+		            <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableDeduction, :form:clauseDescp,form:delDeductionBtn" 
+		                 process="@form"  actionListener="#{ctBackingBean.deleteDeductionDetails()}" oncomplete="dlgDeduction.hide();"/>
 			        <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeduction.hide();" type="button" />
 		      </div>
-        </p:dialog>  
+      </p:confirmDialog>
 	       <p:outputPanel id="clauseDescp">  
-	            <h:panelGroup rendered="#{ctBackingBean.managedBean.selectedDeduction != null}">
-	               <p:spacer height="20"/>
-     	           <p:dataTable id="tableClause" var="data" 
-     	               value="#{ctBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
-        	           selection="#{ctBackingBean.selectedDeductionClauses}"  rowKey="#{data}"> 
-                       <ac:paginator for="tableClause" />   
-                            <p:column selectionMode="multiple"   style="width:2%; vertical-align:top;" 
-                               disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
-                               rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
-        	                         ParameterConst.deductionTypeAdvancePayment or !ctBackingBean.managedBean.viewContract}">
-        	                         </p:column>
+	                <h:panelGroup rendered="#{ctBackingBean.managedBean.selectedDeduction != null}">
+	                      <p:spacer height="20"/>
+     	                  <p:dataTable id="tableClause" var="data" 
+     	                         value="#{ctBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
+        	                      selection="#{ctBackingBean.selectedDeductionClauses}"  rowKey="#{data}"> 
+                                   <ac:paginator for="tableClause" />   
+                                   <p:ajax event="toggleSelect" 
+			                              listener="#{ctBackingBean.onToggleSelect}" update=":form:delDeductionClauseBtn" />
+			                      <p:ajax event="rowSelect"
+                                       listener="#{ctBackingBean.onRowSelect}" update=":form:delDeductionClauseBtn" />
+			                      <p:ajax event="rowSelectCheckbox" 
+			                             listener="#{ctBackingBean.onRowSelect}" update=":form:delDeductionClauseBtn" />
+                                  <p:ajax event="rowUnselectCheckbox" 
+                                         listener="#{ctBackingBean.onRowUnselect}" update=":form:delDeductionClauseBtn" />
+                            
+                                  <p:column selectionMode="multiple"    style="width:25px; vertical-align:top;" 
+                                         disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
+                                         rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
+        	                              ParameterConst.deductionTypeAdvancePayment or !ctBackingBean.managedBean.viewContract}">
+        	                       </p:column>
                            
-                             <p:column style="white-space:normal;width:98%;">
-			                   	<f:facet name="header">
-						            <h:outputText value="#{lbl['lbl.ct.deduction.clause.desc']}"/>
-				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
-				               	</f:facet>
-                                 <h:outputText escape="false" value="#{data.clauseDescription}" 
-                                   rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
-                                 <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
-                                     disabled="#{ctBackingBean.managedBean.flgPaymentTracking or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
-                                     rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" styleClass="ui-inputtextarea">
-        	                     <p:ajax process="@this"/>
-        	                   </p:inputTextarea>
-                           </p:column>    
+                             
+                                    <p:column style="white-space:normal;width:98%;">
+			                         	  <f:facet name="header">
+						                        <h:outputText value="#{lbl['lbl.ct.deduction.clause.desc']}"/>
+				               	          	   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
+				               	          </f:facet>
+                                          <h:outputText escape="false" value="#{data.clauseDescription}" 
+                                               rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
+                                          <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
+                                               disabled="#{ctBackingBean.managedBean.flgPaymentTracking or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
+                                               rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" styleClass="ui-inputtextarea">
+        	                                  <p:ajax process="@this"/>
+        	                              </p:inputTextarea>
+                                     </p:column>    
            
                       </p:dataTable>
+                    
                       <div class="ppRightBtn"> 
-                          <c:if test="#{ctBackingBean.managedBean.selectedDeduction != null and 
-                                ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode  != ParameterConst.deductionTypeAdvancePayment and
-        	                    !ctBackingBean.managedBean.viewContract }">
-        	                <p:commandButton id="addDeductionClauseBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
-        	                    disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-        	                    action="#{ctBackingBean.addDeductionClause()}" update=":form:tableClause">
-        	                  	<p:tooltip for="addDeductionClauseBtn">
-							    	<h:outputText value="#{lbl['lbl.ct.tooltip.add.clause']}" escape="false" />
-								</p:tooltip>
-							</p:commandButton>
-		  	                <p:commandButton id="delDeductionClauseBtn"  
-		  	                       disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-		  	                      value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgDeductionClause.show()">
-							</p:commandButton>
-                         </c:if>
+	                          <c:if test="#{ctBackingBean.managedBean.selectedDeduction != null and 
+	                                ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode  != ParameterConst.deductionTypeAdvancePayment and
+	        	                    !ctBackingBean.managedBean.viewContract }">
+	        	                
+	        	                <p:commandButton id="addDeductionClauseBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
+	        	                    disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+	        	                    action="#{ctBackingBean.addDeductionClause()}" update=":form:tableClause">
+	        	                  	<p:tooltip for="addDeductionClauseBtn">
+								    	<h:outputText value="#{lbl['lbl.ct.tooltip.add.clause']}" escape="false" />
+									</p:tooltip>
+								</p:commandButton>
+			  	                
+			  	                <p:commandButton id="delDeductionClauseBtn"  
+			  	                       disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}"
+			  	                      value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" onsuccess="dlgDeductionClause.show()">
+								</p:commandButton>
+	                         </c:if>
                     </div>
+                     <p:confirmDialog id="dlgDeductionClause" widgetVar="dlgDeductionClause" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                          <div class="ppRightBtn">
+		                      <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableClause, :form:delDeductionClauseBtn" 
+		                            process="@this"  partialSubmit="true" actionListener="#{ctBackingBean.deleteClauseDetails()}" oncomplete="dlgDeductionClause.hide();"/>
+			                  <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeductionClause.hide();" type="button" />
+		               </div>
+                   </p:confirmDialog>
                 </h:panelGroup>
-                 <p:dialog id="dlgDeductionClause" widgetVar="dlgDeductionClause" modal="true" width="330" styleClass="screen-title">  
-                   <h:panelGrid columns="3">
-                  <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			         <p:spacer width="10"/>
-                     <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-             </h:panelGrid>
-             <div class="ppRightBtn">
-		            <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableClause" 
-		                 process="@form"  actionListener="#{ctBackingBean.deleteClauseDetails()}" onclick="dlgDeductionClause.hide();"/>
-			        <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeductionClause.hide();" type="button" />
-		      </div>
-        </p:dialog>  
              </p:outputPanel>
          </p:panel>      
 	    <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">

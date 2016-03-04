@@ -205,15 +205,15 @@
 		      	            rendered="#{!terminationBackingBean.managedBean.viewContract}" partialSubmit="true"
 		                    action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason" process="@form" />
 		                    <p:spacer width="2"/>
-		              <p:commandButton id="terReasonDelBtn" value="#{lbl['lbl.btn.delete']}"  process="@form"
+		              <p:commandButton id="terReasonDelBtn" value="#{lbl['lbl.btn.delete']}"  process="@this" partialSubmit="true"
 		                      disabled="#{terminationBackingBean.managedBean.buttonHideActive}"
-                            onclick="dlgTerminationReason.show()" rendered="#{!terminationBackingBean.managedBean.viewContract}">
+                            onsuccess="dlgTerminationReason.show()" rendered="#{!terminationBackingBean.managedBean.viewContract}">
 			          </p:commandButton> 
 	   	     </div>
 	   	     <p:confirmDialog id="dlgTerminationReason" widgetVar="dlgTerminationReason"  appendToBody="true" 
 	   	           message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 			       <div class="ppRightBtn">
-				         <p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				         <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
 					             partialSubmit="true"  update=":form:terminationReason, :form:terReasonDelBtn"
 					             action="#{terminationBackingBean.deleteTerminateReason}"
 					             oncomplete="dlgTerminationReason.hide();" />
