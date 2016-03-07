@@ -174,6 +174,9 @@ public class CreateQtBackingBean extends
 			}
 			getManagedBean().setPanelGroupItems(panelGroupItems);
 			getManagedBean().setCircularType(circular.getDocType());
+			this.getManagedBean().setCircularExpDate(circular.getEndDate());
+			this.getManagedBean().setCircularNo(circular.getCircularNo());
+			this.getManagedBean().setCircularName(circular.getName());
 
 		}
 
