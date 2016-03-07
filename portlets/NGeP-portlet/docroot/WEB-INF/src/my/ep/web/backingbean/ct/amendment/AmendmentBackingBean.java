@@ -369,7 +369,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (taskId == null) {
 						ConstructTabSideMenu();
 						
-						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+						if (ctBackingBean.getManagedBean().getContractVer() != null
+								&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
+								&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 								&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
 							FacesContext.getCurrentInstance().addMessage(null,
 									new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
