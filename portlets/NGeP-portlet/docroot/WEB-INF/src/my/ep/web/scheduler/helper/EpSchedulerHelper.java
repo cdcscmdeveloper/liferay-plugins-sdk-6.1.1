@@ -1,5 +1,8 @@
 package my.ep.web.scheduler.helper;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import my.ep.factory.EpLogger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -88,15 +91,16 @@ public class EpSchedulerHelper {
 
 						// update job description
 						if (!oldJob.getDescription().equals(jobDetailDesc)) {
-							EpSchedulerHelper.getScheduler().deleteJob(
-									oldJob.getKey());
 
 							JobDetail newJob = JobBuilder.newJob(jobClass)
 									.withIdentity(jobKey)
 									.withDescription(jobDetailDesc).build();
 
+							Set<CronTrigger> newTriggerSet = new HashSet<CronTrigger>();
+							newTriggerSet.add(newTrigger);
+
 							EpSchedulerHelper.getScheduler().scheduleJob(
-									newJob, newTrigger);
+									newJob, newTriggerSet, true);
 						}
 
 					}
