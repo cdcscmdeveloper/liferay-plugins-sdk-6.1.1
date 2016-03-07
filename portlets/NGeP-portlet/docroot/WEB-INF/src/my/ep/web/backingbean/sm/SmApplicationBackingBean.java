@@ -7233,11 +7233,13 @@ public class SmApplicationBackingBean extends
 	public String submitPOorApproverReviewToBPM(String res) {
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
+		boolean isBumi = getManagedBean().getSmAppl().isBumi();
 		try {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
 					.getStatusId();
 			retriveCurrentAppl();
+			getManagedBean().getSmAppl().setBumi(isBumi);
 			// validate personnels email domain
 			SmApplicationUtil
 					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
