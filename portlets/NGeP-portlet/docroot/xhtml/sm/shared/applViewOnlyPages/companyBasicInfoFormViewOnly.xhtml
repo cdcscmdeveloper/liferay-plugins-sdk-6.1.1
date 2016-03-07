@@ -65,6 +65,16 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td><ac:labelDate value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}" styleClass="outputLabel-view"/></td>
 				</tr>
+				<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.original}">
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.isbumi']}" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
+						</td>
+						<td colspan="2"></td>
+					</tr>
+				</p:outputPanel>
 				
 				<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses}">
 					<tr>
