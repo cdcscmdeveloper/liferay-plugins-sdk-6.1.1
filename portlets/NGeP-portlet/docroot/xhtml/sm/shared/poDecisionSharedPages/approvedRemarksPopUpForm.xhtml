@@ -12,7 +12,8 @@
 		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 			<tr>
 				<td style="border-style: none !important;float: right !important;">
-					<p:selectBooleanCheckbox value="#{backingBean.managedBean.smAppl.bumi}" />
+					<p:selectBooleanCheckbox value="#{backingBean.managedBean.smAppl.bumi}" 
+						disabled="#{backingBean.managedBean.smAppl.applType eq 'B'}"/>
 				</td>
 				<td valign="top" style="border-style: none !important;white-space: normal;">
 					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.bumi.tick.msg']}" />

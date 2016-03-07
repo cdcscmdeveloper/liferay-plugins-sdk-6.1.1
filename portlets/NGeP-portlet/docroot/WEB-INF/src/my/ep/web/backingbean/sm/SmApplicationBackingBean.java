@@ -6987,6 +6987,10 @@ public class SmApplicationBackingBean extends
 		assignValReqdToTrue();
 		getManagedBean().getSmAppl().setBumi(
 				getManagedBean().getSmAppl().getSmSupplier().isBumi());
+		if (getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			getManagedBean().getSmAppl().setBumi(true);
+		}
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
@@ -7239,7 +7243,7 @@ public class SmApplicationBackingBean extends
 			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
 					.getStatusId();
 			retriveCurrentAppl();
-			getManagedBean().getSmAppl().setBumi(isBumi);
+
 			// validate personnels email domain
 			SmApplicationUtil
 					.checkPersonnelsEmailDomainWithExceptionMsg(getManagedBean()
@@ -7371,6 +7375,8 @@ public class SmApplicationBackingBean extends
 					// set SME Status
 					SmApplicationUtil
 							.setSmeStatus(getManagedBean().getSmAppl());
+
+					getManagedBean().getSmAppl().setBumi(isBumi);
 
 					if (pmStatId != null) {
 						for (PmStatusDesc desc : getManagedBean()
