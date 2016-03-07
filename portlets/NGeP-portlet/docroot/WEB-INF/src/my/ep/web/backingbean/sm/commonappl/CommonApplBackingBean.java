@@ -708,7 +708,7 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/portletViewMode.xhtml");
 		}else if(resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.COMPLETE_SV_REPORT)){
-			siteVisitTask(resDTO,taskId);
+			siteVisitTask(resDTO,taskId, isClaim);
 		}
 
 	}
@@ -735,7 +735,7 @@ public class CommonApplBackingBean extends
 		return retVal;
 	}
 	
-	private void siteVisitTask(BpmResponseDTO resDTO,String taskId){
+	private void siteVisitTask(BpmResponseDTO resDTO,String taskId, boolean isClaim){
 		Object svObj =  null;
 		Long docId = null;
 		String svTaskId = null;
@@ -786,6 +786,7 @@ public class CommonApplBackingBean extends
 			//svoBB.getManagedBean().setAppType(svObj.getAppType());
 			svoBB.getManagedBean().setBpmPojo(svObj);
 			svoBB.retrieveSiteVisitInfo("");
+			svoBB.getManagedBean().setClaimTask(isClaim);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svositevisit/siteVisitMain");
