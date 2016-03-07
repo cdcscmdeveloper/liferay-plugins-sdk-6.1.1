@@ -10974,8 +10974,15 @@ public class ReportBackingBean extends
 				}
 			}
 		}
-		this.getManagedBean().setPtjId(
-				(Long.valueOf(ptjList.get(0).getValue().toString())));
+		if (ptjList.size() > 0) {
+			if (ptjList.size() > 2) {
+				this.getManagedBean().setPtjId(
+						(Long.valueOf(ptjList.get(1).getValue().toString())));
+			} else if (ptjList.size()>=1) {
+				this.getManagedBean().setPtjId(
+						(Long.valueOf(ptjList.get(0).getValue().toString())));
+			}
+		}
 		return ptjList;
 	}
 
