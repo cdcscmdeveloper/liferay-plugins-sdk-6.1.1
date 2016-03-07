@@ -87,9 +87,8 @@
 							update=":form:dtPmResult" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()" />
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							update="@form"
-							action="#{profileManagSearchBackingBean.resetProfileManagSearchBean}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+							update="@form" partialSubmit="true" process="@this"
+							action="#{profileManagSearchBackingBean.resetProfileManagSearchBean}" />
 					</div>
 				</td>
 			</tr>
