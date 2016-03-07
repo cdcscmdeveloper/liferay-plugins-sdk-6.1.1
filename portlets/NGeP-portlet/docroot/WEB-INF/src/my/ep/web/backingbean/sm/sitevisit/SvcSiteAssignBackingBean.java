@@ -352,10 +352,20 @@ public class SvcSiteAssignBackingBean extends
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		
 		getManagedBean().setCategoryLs(new ArrayList<SmSvCategory>());
+		
+		List<String> tempCatLs = new ArrayList<String>();
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
 			if(svTask.getSmSvCategories().size() > 0){
 				for(SmSvCategory svCategory : svTask.getSmSvCategories()){
-					getManagedBean().getCategoryLs().add(svCategory);
+					StringBuilder catrStr = new StringBuilder();
+					catrStr.append(svCategory.getPmCategoryL1().getCategoryL1Code());
+					catrStr.append(svCategory.getPmCategoryL2().getCategoryL2Code());
+					catrStr.append(svCategory.getPmCategoryL3().getCategoryL3Code());
+					
+					if(!tempCatLs.contains(catrStr.toString())){
+						getManagedBean().getCategoryLs().add(svCategory);
+						tempCatLs.add(catrStr.toString());
+					}
 				}
 			}
 		}
