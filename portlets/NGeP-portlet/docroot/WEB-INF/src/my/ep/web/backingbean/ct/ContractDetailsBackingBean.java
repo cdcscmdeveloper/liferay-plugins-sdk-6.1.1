@@ -251,7 +251,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					getManagedBean().setWarningPercentage(null);
 				}
 				
-				if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				if (ctBB.getManagedBean().getContractVer().getDocType() != null
+						&& ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 						&& ctBB.getManagedBean().isServiceTaxAlertFlg()) {
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
