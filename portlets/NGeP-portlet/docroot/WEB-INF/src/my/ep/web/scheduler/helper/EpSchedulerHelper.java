@@ -31,7 +31,9 @@ public class EpSchedulerHelper {
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
 
-		if (StringUtils.isNotBlank(cronExpression)) {
+		if (jobClass != null && jobKey != null
+				&& !StringUtils.isBlank(cronExpression)
+				&& !StringUtils.isBlank(jobDetailDesc)) {
 			try {
 
 				// start scheduler if not started yet
@@ -53,16 +55,52 @@ public class EpSchedulerHelper {
 									CronScheduleBuilder
 											.cronSchedule(cronExpression))
 							.build();
+
 					// schedule new job
 					EpSchedulerHelper.getScheduler().scheduleJob(job,
 							cronTrigger);
 				} else {
-					// reschedule existing job
-					Trigger trigger = getTriggerByJobKey(jobKey);
-					if (trigger != null) {
-						EpSchedulerHelper.getScheduler().rescheduleJob(
-								trigger.getKey(), trigger);
+					// Get existing job
+					JobDetail oldJob = EpSchedulerHelper.getScheduler()
+							.getJobDetail(jobKey);
+
+					// update job desc if got change
+					if (oldJob != null) {
+
+						// retrieve the trigger
+						CronTrigger oldTrigger = (CronTrigger) getTriggerByJobKey(jobKey);
+						CronTrigger newTrigger = oldTrigger;
+
+						// obtain a builder that would produce the trigger
+						TriggerBuilder tb = oldTrigger.getTriggerBuilder();
+
+						// update trigger cron expression
+						if (oldTrigger != null
+								&& !oldTrigger.getCronExpression().equals(
+										cronExpression)) {
+							newTrigger = (CronTrigger) tb.withSchedule(
+									CronScheduleBuilder
+											.cronSchedule(cronExpression))
+									.build();
+							EpSchedulerHelper.getScheduler().rescheduleJob(
+									oldTrigger.getKey(), newTrigger);
+						}
+
+						// update job description
+						if (!oldJob.getDescription().equals(jobDetailDesc)) {
+							EpSchedulerHelper.getScheduler().deleteJob(
+									oldJob.getKey());
+
+							JobDetail newJob = JobBuilder.newJob(jobClass)
+									.withIdentity(jobKey)
+									.withDescription(jobDetailDesc).build();
+
+							EpSchedulerHelper.getScheduler().scheduleJob(
+									newJob, newTrigger);
+						}
+
 					}
+
 				}
 
 			} catch (final SchedulerException e) {
