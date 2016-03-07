@@ -11,7 +11,7 @@
 				<p:commandButton oncomplete="uploadDlg.show();return false;"
 					update="lampiran, uploadDlg" value="#{lbl['lbl.ct.upload.attach.files']}"
 					disabled="#{ctBackingBean.managedBean.viewContract
-						or (amendmentBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 			</td>
 		</tr>
 		<tr>
@@ -39,7 +39,7 @@
 									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)
 												and !ctBackingBean.managedBean.viewContract}"
 									disabled="#{ctBackingBean.managedBean.viewContract
-										or (amendmentBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
+										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
 			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
 			 	 			</td>
