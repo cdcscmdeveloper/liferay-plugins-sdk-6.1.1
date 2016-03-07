@@ -55,7 +55,7 @@
 			    update=":form:loaContentDt" action="#{amendmentBackingBean.addLoaContents}" 
 			    disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"/>
 			<p:spacer width="1" />
-			<p:commandButton id="delLoaContentBtn" value="#{lbl['lbl.btn.delete']}" 
+			<p:commandButton id="delLoaContentBtn" value="#{lbl['lbl.ct.delete']}" 
 			  process="@form" onclick="dlgDocumentDel.show();" rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
 			    disabled="#{amendmentBackingBean.managedBean.selectedScLoaReports == null or  (amendmentBackingBean.managedBean.selectedScLoaReports != null  and 
 			            amendmentBackingBean.managedBean.selectedScLoaReports.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined)

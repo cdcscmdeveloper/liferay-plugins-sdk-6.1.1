@@ -51,7 +51,7 @@
 				          partialSubmit="true" action="#{ctBackingBean.addPurchaseInDefault()}" update="purchaseInDefaultTable" 
 				         oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!ctBackingBean.managedBean.viewContract
 				         	and !ctBackingBean.managedBean.disableAmendDetails and !ctBackingBean.managedBean.contractVer.panel}"/>	
-				     <p:commandButton id="deleteCtPidBtn" value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true"
+				     <p:commandButton id="deleteCtPidBtn" value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true"
 				          disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 			             onsuccess="delPidPurchaseDlg.show()" rendered="#{!ctBackingBean.managedBean.viewContract
 			             	and !ctBackingBean.managedBean.disableAmendDetails and !ctBackingBean.managedBean.contractVer.panel}"/>			

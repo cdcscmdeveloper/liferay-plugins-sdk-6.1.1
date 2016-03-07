@@ -56,7 +56,7 @@
 			         <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
 				            partialSubmit="true" action="#{panelBackingBean.addPurchaseInDefault()}" update="pidTableId" 
 				            oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>	
-				     <p:commandButton id="delPidPanelBtn"  value="#{lbl['lbl.btn.delete']}" process="@this"  
+				     <p:commandButton id="delPidPanelBtn"  value="#{lbl['lbl.ct.delete']}" process="@this"  
 				           partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 			              onsuccess="delPidPurchaseDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>			
 		        </div>
@@ -119,7 +119,7 @@
 				          action="#{panelBackingBean.addContactPerson()}" update=":form:contactPersonDt" 
 				          oncomplete="contactPersonObj.paginator.endLink.click();" 
 				          rendered="#{!panelBackingBean.managedBean.viewContract}" partialSubmit="true" />
-			         <p:commandButton id="ctPersonDelBtn"  value="#{lbl['lbl.btn.delete']}" process="@this"  
+			         <p:commandButton id="ctPersonDelBtn"  value="#{lbl['lbl.ct.delete']}" process="@this"  
 			              partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 			             onsuccess="delCtPersonDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
 		      </div>
@@ -163,7 +163,7 @@
 		         <div class="ppRightBtn"> 
 		                   <p:commandButton value="#{lbl['lbl.btn.add']}"  oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
 				                 actionListener="#{panelBackingBean.addCancelCircularListener()}"  rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			               <p:commandButton id="cancelCircularDtBtn"  value="#{lbl['lbl.btn.delete']}"  
+			               <p:commandButton id="cancelCircularDtBtn"  value="#{lbl['lbl.ct.delete']}"  
 			                      process="@this" partialSubmit="true"  disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 				                  rendered="#{!panelBackingBean.managedBean.viewContract}" onsuccess="cancelCircularDltDlg.show()"/>				
 		           </div>	

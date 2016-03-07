@@ -147,7 +147,7 @@
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
        		</p:commandButton>
-			 <p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" process="@this"
+			 <p:commandButton id="delBtn" value="#{lbl['lbl.ct.delete']}" process="@this"
 			 	onsuccess="dlgDel.show()" 
 			 	disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}" 
 			 	rendered="#{!ctBackingBean.managedBean.viewContract}" >
@@ -182,7 +182,7 @@
 						update=":form:deliveryAddressTbl"
 						disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
-					 <p:commandButton id="delAddressBtn" value="#{lbl['lbl.btn.delete']}" 
+					 <p:commandButton id="delAddressBtn" value="#{lbl['lbl.ct.delete']}" 
 				     	 process="@this" onclick="delAddressDlg.show()"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 				     	 rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 				</div>

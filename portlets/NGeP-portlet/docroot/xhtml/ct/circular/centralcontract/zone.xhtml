@@ -28,7 +28,7 @@
 					<div class="ppRightBtn"> 
 						<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="false" 
 							action="#{centralContractBackingBean.addCircularZone('C')}" update="circularZoneDt" />
-						<p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.btn.delete']}"  onsuccess="delZoneDlg.show()" 
+						<p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.ct.delete']}"  onsuccess="delZoneDlg.show()" 
 							disabled="#{centralContractBackingBean.managedBean.selectedCircularZone == null}" />				
 					</div>		
 					<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}" severity="alert" widgetVar="delZoneDlg"
@@ -64,7 +64,7 @@
 							<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 								disabled="#{centralContractBackingBean.managedBean.selectedCircularZone == null}"
 								action="#{centralContractBackingBean.addCircularZoneDtl()}" update="circularZoneDtlDt" />	
-							<p:commandButton id="deleteZoneDtlBtn" value="#{lbl['lbl.btn.delete']}"  onsuccess="delStateDlg.show()" 
+							<p:commandButton id="deleteZoneDtlBtn" value="#{lbl['lbl.ct.delete']}"  onsuccess="delStateDlg.show()" 
 								disabled="#{centralContractBackingBean.managedBean.selectedCircularZoneDtl == null}" />			
 						</div>							
 						<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}" severity="alert" widgetVar="delStateDlg"
@@ -99,7 +99,7 @@
 					<div class="ppRightBtn"> 
 						<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="false" 
 							action="#{centralContractBackingBean.addCircularZone('I')}" update="itemZoneDt" />
-						<p:commandButton id="deleteItemZoneBtn" value="#{lbl['lbl.btn.delete']}" onsuccess="delItemZoneDlg.show()" 
+						<p:commandButton id="deleteItemZoneBtn" value="#{lbl['lbl.ct.delete']}" onsuccess="delItemZoneDlg.show()" 
 							disabled="#{centralContractBackingBean.managedBean.selectedItemZone == null}" />				
 					</div>		
 					<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}" severity="alert" widgetVar="delItemZoneDlg"
@@ -135,7 +135,7 @@
 							<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 								disabled="#{centralContractBackingBean.managedBean.selectedItemZone == null}"
 								action="#{centralContractBackingBean.addItemZoneDtl()}" update="itemZoneDtlDt" />	
-							<p:commandButton id="deleteItemZoneDtlBtn" value="#{lbl['lbl.btn.delete']}"  onsuccess="delItemZoneDtlDlg.show()" 
+							<p:commandButton id="deleteItemZoneDtlBtn" value="#{lbl['lbl.ct.delete']}"  onsuccess="delItemZoneDtlDlg.show()" 
 								disabled="#{centralContractBackingBean.managedBean.selectedItemZoneDtl == null}" />			
 						</div>							
 						<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}" severity="alert" widgetVar="delItemZoneDtlDlg"

@@ -131,7 +131,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 		                   update=":form:panelItemDt" action="#{panelBackingBean.addPanelItem()}"
 		                   rendered="#{!panelBackingBean.managedBean.viewContract}" oncomplete="panelItemObj.paginator.endLink.click();"/>
-		<p:commandButton id="deleteItemBtn" value="#{lbl['lbl.btn.delete']}"   process="@this"
+		<p:commandButton id="deleteItemBtn" value="#{lbl['lbl.ct.delete']}"   process="@this"
 			              onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.buttonHideActive}" 
 			              rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 	 </div>
@@ -192,7 +192,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 					action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" 
 					oncomplete="panelItemSpecObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true"
 				    onsuccess="delPanelItemSpecDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
 				<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="itemSpecDlg.hide();" />
 			</div>
@@ -265,7 +265,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		                 <p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" update="@([id$=zonePopupGeneral])"
 					           oncomplete="ZoneGeneral.show();" actionListener="#{panelBackingBean.showGeneralZoneLocationPopup}"
 					           rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-		                 <p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.btn.delete']}"  process="@this"
+		                 <p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.ct.delete']}"  process="@this"
 		                      onsuccess="delZoneDlg.show();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 	              </div>	
 	    
@@ -402,7 +402,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						saveObject="panelBackingBean.managedBean.supplierList"
 						update=":form:itemSupplierDt" 
 						rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-				<p:commandButton id="deleteSupplierBtn" value="#{lbl['lbl.btn.delete']}" 
+				<p:commandButton id="deleteSupplierBtn" value="#{lbl['lbl.ct.delete']}" 
 				         disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 				     	 process="@this" onclick="cancelCircularSupDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 		   </div>
