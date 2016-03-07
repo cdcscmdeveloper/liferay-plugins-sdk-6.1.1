@@ -22,7 +22,10 @@
 						oncomplete="blockWidget.hide();"
 						rendered="#{amendmentBackingBean.managedBean.taskId==null}"
 						action="#{amendmentBackingBean.backAction}" /></td>
-				<td class="ppRightBtn"><p:commandButton
+				<td class="ppRightBtn">
+					<ui:decorate template="/xhtml/ct/shared/claim_template.xhtml">
+					<ui:define name="outComeSection">
+					<p:commandButton
 						value="#{lbl['lbl.btn.print']}" styleClass="ui-button"
 						update=":form:panelHeaderException" onclick="printBtn.jq.click();"
 						actionListener="#{amendmentBackingBean.showCompleteButton()}"
@@ -46,7 +49,10 @@
 							action="#{amendmentBackingBean.gpkiSignAction(outcome)}"
 							actionListener="#{spkiBackingBean.getChallengeQuestions}"
 							rendered="#{!amendmentBackingBean.managedBean.memberSignOff and amendmentBackingBean.isSupplierRole()}" />
-					</ui:repeat></td>
+					</ui:repeat>
+					</ui:define>
+					</ui:decorate>
+					</td>
 			</tr>
 		</table>
 	<p:remoteCommand update=":form:panelHeaderException"
