@@ -560,7 +560,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				    	return CommonUIConst.ACKNOWLEDGE_PAGE;
 				    }
 			} else {
-				throw new EpException(ContractConst.FAILED);
+				throw new EpException(MessageConst.ERROR_700020);
 			}
 		} finally {
 			supplierSO = null;		
