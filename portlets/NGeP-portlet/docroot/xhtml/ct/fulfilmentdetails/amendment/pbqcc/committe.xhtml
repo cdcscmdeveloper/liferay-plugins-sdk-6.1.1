@@ -101,7 +101,7 @@
 		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"  update="modelDialog"
 		             action="#{amendmentBackingBean.fetchCommitteMembers()}" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
 		             rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
-		          <p:commandButton value="#{lbl['lbl.btn.delete']}"  onsuccess="dlgDel.show();" partialSubmit="true"
+		          <p:commandButton value="#{lbl['lbl.ct.delete']}"  onsuccess="dlgDel.show();" partialSubmit="true"
 		             process="@this"  disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
 		             rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
 		     </div>

@@ -61,7 +61,7 @@
 				           oncomplete="contractDlg.show();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
 				           actionListener="#{centralContractBackingBean.addCircularContractListener()}"
 				           update="contractDlg"/>
-			              <p:commandButton id="deleteContractBtn" value="#{lbl['lbl.btn.delete']}" process="@this"
+			              <p:commandButton id="deleteContractBtn" value="#{lbl['lbl.ct.delete']}" process="@this"
 				              rendered="#{!centralContractBackingBean.managedBean.viewContract}"
 				              disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}" onsuccess="delCtContractDlg.show()" />
 		           </div>

@@ -46,7 +46,7 @@
 		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"
 		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
-		       <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true"  
+		       <p:commandButton value="#{lbl['lbl.ct.delete']}" process="@form" partialSubmit="true"  
 		          onclick="dlgMeetingDetails.show();" update="meetingTable"
 		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
 		    </div>

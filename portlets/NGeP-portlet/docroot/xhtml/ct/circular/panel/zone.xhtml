@@ -25,7 +25,7 @@
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="false" icon="ui-icon-add"
 				action="#{panelBackingBean.addCircularZone()}" update="circularZoneDt" />
-			<p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" onsuccess="delZoneDlg.show()" 
+			<p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.ct.delete']}" icon="ui-icon-delete" onsuccess="delZoneDlg.show()" 
 				disabled="#{panelBackingBean.managedBean.selectedCircularZone == null}" />				
 		</div>		
 		<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}" severity="alert" widgetVar="delZoneDlg"
@@ -66,7 +66,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
 					disabled="#{panelBackingBean.managedBean.selectedCircularZone == null}"
 					action="#{panelBackingBean.addCircularZoneDtl()}" update="circularZoneDtlDt" />	
-				<p:commandButton id="deleteZoneDtlBtn" value="#{lbl['lbl.btn.delete']}"  onsuccess="delStateDlg.show()" 
+				<p:commandButton id="deleteZoneDtlBtn" value="#{lbl['lbl.ct.delete']}"  onsuccess="delStateDlg.show()" 
 					disabled="#{panelBackingBean.managedBean.selectedCircularZoneDtl == null}" />			
 			</div>							
 			<p:confirmDialog message="#{lbl['lbl.ct.dialog.confirm.message']}" severity="alert" widgetVar="delStateDlg"

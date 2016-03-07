@@ -205,7 +205,7 @@
 		      	            rendered="#{!terminationBackingBean.managedBean.viewContract}" partialSubmit="true"
 		                    action="#{terminationBackingBean.addTerminateReason()}" update="terminationReason" process="@form" />
 		                    <p:spacer width="2"/>
-		              <p:commandButton id="terReasonDelBtn" value="#{lbl['lbl.btn.delete']}"  process="@this" partialSubmit="true"
+		              <p:commandButton id="terReasonDelBtn" value="#{lbl['lbl.ct.delete']}"  process="@this" partialSubmit="true"
 		                      disabled="#{terminationBackingBean.managedBean.buttonHideActive}"
                             onsuccess="dlgTerminationReason.show()" rendered="#{!terminationBackingBean.managedBean.viewContract}">
 			          </p:commandButton> 
