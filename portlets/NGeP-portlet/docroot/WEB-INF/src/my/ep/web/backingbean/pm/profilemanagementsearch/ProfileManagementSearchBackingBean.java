@@ -29,6 +29,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
 
+
 /**
  * The backing bean for Profile Management Search
  * 
@@ -51,6 +52,7 @@ public class ProfileManagementSearchBackingBean extends
 		
 	public void preLoadingAccessAPL() {
 		log.info("preLoadingAccessAPL");
+		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -73,7 +75,8 @@ public class ProfileManagementSearchBackingBean extends
 
 		return this.appTypeSearchBean;
 	}
-
+	
+	
 //	public SelectItem[] getApplicationStatus() {
 //		String paramCode = this.getManagedBean().getSelectedAppTypeParamCode();
 //		Long[] statusIds = null;
@@ -223,10 +226,12 @@ public class ProfileManagementSearchBackingBean extends
 	if(paramCode != null){
 	    if(paramCode.equals(ParameterConst.DOCTYPE_MARKET_RESEARCH)){
 		  this.getManagedBean().getProfileManagSearchBean().setMarketResearch(true);
+		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(false);
 		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(null);
 		  statusIds = mrStatusIds;
 	    }else if(paramCode.equals(ParameterConst.DOCTYPE_COMPANY_PROFILE)){
 	    	this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(true);
+	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(false);
 	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(null);
 	    	 statusIds = cpStatusIds;
 	    }
