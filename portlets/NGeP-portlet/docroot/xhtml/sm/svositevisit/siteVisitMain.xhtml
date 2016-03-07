@@ -27,6 +27,9 @@
 		<!-- 		<ui:include src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /> -->
 		<ui:param name="viewFlag" value="false" />
 		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		
 		<table class="customTbl">
 			<tr valign="top">
@@ -36,13 +39,21 @@
 				<td  style="width:80%" align="left"><p:outputPanel id="pnlDisplay">
 					<p:messages id="messages" showDetail="true" autoUpdate="#{empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
 					<div align="right">
-						<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReport('')}" >
+						<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReport('')}" 
+						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}">
 						</p:commandButton>
 
 						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" action="#{svoSiteVisitBackingBean.submitDialogShow}" 
-							rendered="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
+							rendered="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}" 
+							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}">
 							<f:param name="disableValidation" value="true" />
 						</p:commandButton>
+						
+						<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{svoSiteVisitBackingBean.onClickClaimButton}" update="@form" process="@this"
+							rendered="#{!svoSiteVisitBackingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+							<f:param name="taskId" value="#{svoSiteVisitBackingBean.managedBean.taskId}" />
+						</p:commandButton>
+						
 					</div>
 					<ui:param name="template" value="#{svoSiteVisitBackingBean.managedBean.indexPageMap[svoSiteVisitBackingBean.managedBean.activeIndex]}" />
 						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
