@@ -464,9 +464,14 @@ public class SupplierFinalizationBackingBean extends
 		retrieveEndorsementCommitteeDetails();
 	}
 	
-	private void navigateToEndorsementReportTab() {
+	public void navigateToEndorsementReportTab() {
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getEndorsementReportActiveIndex());
+		try {
+			getSuppFinalizationEndorsementReportStreamContent();
+		} catch (Exception e) {
+			log.error(e);
+		}
 	}	
 
 	/*
@@ -2473,7 +2478,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	 
-    public StreamedContent getSuppFinalizationEndorsementReportStreamContent() throws Exception {
+    public void getSuppFinalizationEndorsementReportStreamContent() throws Exception {
 		debugLogger("getSuppFinalizationEndorsementReportStreamContent");
 		ScQtFinalizationReportAttachment reportAttachment = new ScQtFinalizationReportAttachment();
 		reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
@@ -2483,7 +2488,7 @@ public class SupplierFinalizationBackingBean extends
 		StreamedContent streamContent = getAttachmentStreamContent(
 				reportAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
-		return streamContent;
+		getManagedBean().setEndorsementReportStream(streamContent);
     }	
 
 	public ScQtFinalizationReportAttachment generateDocumentAttachment(
@@ -3765,6 +3770,15 @@ public class SupplierFinalizationBackingBean extends
 //		context.put("secretary", secretaryName);
 		context.put("member", memberName);
 		
+		StringBuilder endorsementRemarks = new StringBuilder();
+		if (CollectionUtils.isNotEmpty(
+				getManagedBean().getFinalizationEndorsementRemarks())) {
+			for (ScQtFinalizationEndorsementRemarks remarks
+						: getManagedBean().getFinalizationEndorsementRemarks()) {
+				endorsementRemarks.append(remarks.getRemark() + "\n");
+			}
+		}
+		context.put("endorsementRemarks", endorsementRemarks);
 		context.put("reportDTO", reportDTO);
 		context.put("zoneDetailsMap", zoneDetailsMap);
 		context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
@@ -5972,8 +5986,8 @@ public class SupplierFinalizationBackingBean extends
 			menuItem.setStyle("width:15%;");
 			menuItem.setTransient(true);
 			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");
+//			menuItem.setProcess("@form");
+//			menuItem.setUpdate("@form");
 			menuItem.setOncomplete(tabMenuChangeCommonAction
 					+ (tabIndex++) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);	

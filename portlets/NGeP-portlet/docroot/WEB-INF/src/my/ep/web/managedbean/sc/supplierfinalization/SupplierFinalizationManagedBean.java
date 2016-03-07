@@ -146,6 +146,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean refinalizedAndBiddingAward;
 	private boolean disableFwdToHighAuthorityOption;
 	
+	private StreamedContent endorsementReportStream;
+	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
 	private TplSpecZoneDtl currentZone;
@@ -950,6 +952,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectionMode(String selectionMode) {
 		this.selectionMode = selectionMode;
+	}
+
+	/**
+	 * @return the endorsementReportStream
+	 */
+	public StreamedContent getEndorsementReportStream() {
+		return endorsementReportStream;
+	}
+
+	/**
+	 * @param endorsementReportStream
+	 *            the endorsementReportStream to set
+	 */
+	public void setEndorsementReportStream(
+			StreamedContent endorsementReportStream) {
+		this.endorsementReportStream = endorsementReportStream;
 	}
 
 	/**
