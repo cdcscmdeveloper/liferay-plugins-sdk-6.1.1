@@ -76,7 +76,7 @@
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" 
 													disabled="#{ctBackingBean.managedBean.viewContract 
-														or (amendmentBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}"  autoResize="false" 
+														or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}"  autoResize="false" 
 													onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);">
 											 	</h:inputTextarea>
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
@@ -99,7 +99,7 @@
 				        	<p:commandButton oncomplete="uploadDlg2.show();return false;"
 					        	update="lampiran1, uploadDlg2" value="#{lbl['lbl.ct.upload.attach.files']}"
 					        	disabled="#{ctBackingBean.managedBean.viewContract
-					        		or (amendmentBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
+					        		or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 			           	</td>
 		           	</tr>
 		            <tr>
