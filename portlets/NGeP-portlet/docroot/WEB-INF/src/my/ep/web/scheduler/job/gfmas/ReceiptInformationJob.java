@@ -25,7 +25,7 @@ public class ReceiptInformationJob implements Job {
 				.getServiceObject(ModuleCodeConst.INTEGRATION,
 						IGfmasServiceSO.class);
 		
-		gfmasServiceSO.receiptInformationGfmasOutbound();
+//		gfmasServiceSO.receiptInformationGfmasOutbound();
 		log.info("ReceiptInformationJob end");
 
 	}
