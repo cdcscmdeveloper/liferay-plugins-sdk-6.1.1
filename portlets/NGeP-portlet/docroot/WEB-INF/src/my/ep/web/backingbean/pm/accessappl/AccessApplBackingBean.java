@@ -168,7 +168,48 @@ public class AccessApplBackingBean extends
 		}finally{
 			accessApplSO = null;
 		}
-		
+		this.getManagedBean().setShowTrackingDairy(false);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, ACCESS_APPL_MAIN_PAGE);
+	}
+	
+	public void redirectToAccessApplView(Long accessApplId, Integer statusId) {
+		log.info("redirectToAccessApplView");
+		renewSesionObject();
+		IAccessApplSO accessApplSO = null;
+		try{
+			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IAccessApplSO.class);
+			
+			AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+			reqDTO.setAccessApplId(accessApplId);
+			AccessApplResDTO resDTO = accessApplSO.retrieveAccessApplById(reqDTO);
+			if(resDTO.isSuccessful()){
+				PmAccessAppl accessAppl = resDTO.getAccessAppl();
+				accessAppl.setCurrentStatus(statusId != null ? statusId : 0);
+				if(accessAppl.isMarketResearch()){
+					accessAppl.setDocType("MR");
+				}else if(accessAppl.isCompanyProfile()){
+					accessAppl.setDocType("CP");
+				}
+				getManagedBean().setAccessAppl(accessAppl);
+				if(accessAppl.getAccessApplDocs() != null){
+					getManagedBean().setAccessApplDocList(accessAppl.getAccessApplDocs());
+				}
+				if(accessAppl.getOrgProfile() !=null){
+					getManagedBean().setSelectedOrgProfile(accessAppl.getOrgProfile());
+					getManagedBean().setSelectedOrgType(accessAppl.getOrgProfile().getOrgTypeCode().getParameterId());
+				}			
+				
+			}
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
+		}finally{
+			accessApplSO = null;
+		}
+		this.getManagedBean().setShowTrackingDairy(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, ACCESS_APPL_MAIN_PAGE);
@@ -184,6 +225,7 @@ public class AccessApplBackingBean extends
 		accessAppl.setPmState(state);
 		accessAppl.setPreferedLanguage(getFacescopes().getUserLocale().getLanguage());
 		getManagedBean().setAccessAppl(accessAppl);
+		this.getManagedBean().setShowTrackingDairy(false);
 		if(accessAppl.isBrandNew()){
 			retrieveSuppDocList();
 		}
