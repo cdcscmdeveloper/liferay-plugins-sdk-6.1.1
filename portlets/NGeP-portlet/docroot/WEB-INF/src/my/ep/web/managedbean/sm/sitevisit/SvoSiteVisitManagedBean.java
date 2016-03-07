@@ -110,6 +110,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private Long svTaskId;
 	private SmAppl smAppl;
 	private Map<String, List<SmSvTask>> templateTaskMap;
+	
+	private boolean claimTask;
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -629,6 +631,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setSelectedAttachmentTemplId(Long selectedAttachmentTemplId) {
 		this.selectedAttachmentTemplId = selectedAttachmentTemplId;
+	}
+
+	public boolean isClaimTask() {
+		return claimTask;
+	}
+
+	public void setClaimTask(boolean claimTask) {
+		this.claimTask = claimTask;
 	}
 
 }
