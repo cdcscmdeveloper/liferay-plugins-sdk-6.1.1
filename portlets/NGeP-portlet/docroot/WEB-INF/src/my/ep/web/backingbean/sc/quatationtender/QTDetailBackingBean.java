@@ -439,7 +439,11 @@ public class QTDetailBackingBean extends
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			List<TabBean> committeTabs = this.getManagedBean()
+					.getScCommitteeMemberTabList();
 			validateQtDetails();
+			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
@@ -1583,19 +1587,21 @@ public class QTDetailBackingBean extends
 				committeTabs.add(new TabBean(fcTitleName, tabType, committee));
 			}
 		} else { // formed only SC committee while creating the new QT.
-
-			String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
-			ParameterHelper parameterHelper = ParameterHelper.getInstance();
-			committeTabs = new ArrayList<TabBean>();
-			String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
-			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType,
-					qtId);
-			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
-					.getScCommittee().getCommitteStatus().getStatusId())) {
-				this.getManagedBean().setCloneNeeded(true);
+			if (CollectionUtils.isEmpty(this.getManagedBean()
+					.getScCommitteeMemberTabList())) {
+				String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
+				ParameterHelper parameterHelper = ParameterHelper.getInstance();
+				committeTabs = new ArrayList<TabBean>();
+				String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
+				ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(
+						tabType, qtId);
+				if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
+						.getScCommittee().getCommitteStatus().getStatusId())) {
+					this.getManagedBean().setCloneNeeded(true);
+				}
+				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
+						parameterType, tabType), tabType, specCommitte));
 			}
-			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
-					parameterType, tabType), tabType, specCommitte));
 		}
 
 		this.getManagedBean().setScCommitteeMemberTabList(committeTabs);

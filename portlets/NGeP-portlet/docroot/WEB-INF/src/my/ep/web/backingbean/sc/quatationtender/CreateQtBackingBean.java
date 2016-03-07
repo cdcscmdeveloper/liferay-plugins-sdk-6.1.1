@@ -395,6 +395,7 @@ public class CreateQtBackingBean extends
 			}
 
 			this.getManagedBean().setZoneGeneralTrees(null);
+			this.getManagedBean().setZoneLocation(false);
 			this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
 			/*if (null != supplierCriteria
 					&& supplierCriteria.isBrandNew() == false
@@ -404,7 +405,7 @@ public class CreateQtBackingBean extends
 		}
 
 		scQt.setScQtSupplierCriteria(supplierCriteria);
-		//this.getManagedBean().setQt(scQt);
+		this.getManagedBean().setQt(scQt);
 
 	}
 	
@@ -2017,6 +2018,5 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		scQt.getFileNo();
 		
 	}
-	
 	
 }

@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+<!-- 
 	<ui:fragment
 		rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeBusinessOwner}">
 
@@ -16,7 +16,7 @@
 		<ui:include src="businessOwnerCommittee.xhtml" />
 
 	</ui:fragment>
-
+ -->
 	<ui:fragment
 		rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization and qTDetailBB.managedBean.selectedTabBean.tabType ne ParameterConst.committeeTypeBusinessOwner}">
 		<ui:param name="committe"
@@ -39,18 +39,18 @@
 				oncomplete="committeeAppointmentDeletePopUp.show();"
 				update="@([id$=#{committeeAppointmentDeleteId}],[id$=#{scmemberInfoDtls}])"
 				rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}" />
-
+            <ui:param name="isRender" value="#{qTCommitteBackingBean.renderECOrTECButton()}"></ui:param>
 			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}" styleClass="BtnSpacing"
 				process="@this, specificationcommitteeid"
 				update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
-				rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
+				rendered="#{isRender and qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
 				actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
 				title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}" styleClass="BtnSpacing"
 				process="@this, specificationcommitteeid"
 				update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
-				rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 1 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
+				rendered="#{isRender and qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 1 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
 				actionListener="#{qTCommitteBackingBean.addCloneToEcDtl}"
 				title="#{lbl['lbl.sc.qt.clone.to.ec.tooltip']}" />
 		</div>
