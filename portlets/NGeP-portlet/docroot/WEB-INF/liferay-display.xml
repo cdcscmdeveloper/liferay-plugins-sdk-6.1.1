@@ -69,7 +69,7 @@
             <portlet id="pmAccessApplication"></portlet>	
             <portlet id="accessApplicationDtl"></portlet>	
             <portlet id="accessApplicationActivation"></portlet>
-           			
+           	<portlet id="pmAccessApplicationSearch"></portlet>
 			
 		</category>
 		<!-- Profile Management - END -->		
