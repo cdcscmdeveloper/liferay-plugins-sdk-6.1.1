@@ -272,10 +272,10 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 	private TreeNode[] selectedLocNodes;
 
 	/** The circular exp date. */
-	private Date circularExpDate;
+	//private Date circularExpDate;
 
 	/** The circular type. */
-	private String circularType;
+	//private String circularType;
 
 	// template Specification variables
 	/** The standard template. */
@@ -2209,24 +2209,7 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 		this.templateSpecBean = templateSpecBean;
 	}
 
-	/**
-	 * Gets the circular type.
-	 * 
-	 * @return the circular type
-	 */
-	public String getCircularType() {
-		return circularType;
-	}
-
-	/**
-	 * Sets the circular type.
-	 * 
-	 * @param circularType
-	 *            the new circular type
-	 */
-	public void setCircularType(String circularType) {
-		this.circularType = circularType;
-	}
+	
 
 	/**
 	 * Gets the index.
@@ -3837,24 +3820,7 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 		this.ctpanelSupplier = ctpanelSupplier;
 	}
 
-	/**
-	 * Gets the circular exp date.
-	 * 
-	 * @return the circular exp date
-	 */
-	public Date getCircularExpDate() {
-		return circularExpDate;
-	}
-
-	/**
-	 * Sets the circular exp date.
-	 * 
-	 * @param circularExpDate
-	 *            the new circular exp date
-	 */
-	public void setCircularExpDate(Date circularExpDate) {
-		this.circularExpDate = circularExpDate;
-	}
+	
 
 	/**
 	 * Gets the contractremark.
