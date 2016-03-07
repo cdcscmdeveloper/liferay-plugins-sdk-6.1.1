@@ -22,11 +22,16 @@ public class MasterDataVendorOutboundJob implements Job {
 			throws JobExecutionException {
 
 		log.info("MasterDataVendorOutboundJob start");
-		IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IGfmasServiceSO.class);
-		
-		gfmasServiceSO.masterDataVendorGfmasOutbound();
+		IGfmasServiceSO  gfmasServiceSO;
+		try {
+			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IGfmasServiceSO.class);
+			
+			gfmasServiceSO.masterDataVendorGfmasOutbound();
+		} finally{
+			gfmasServiceSO = null;
+		}
 		log.info("MasterDataVendorOutboundJob end");
 
 	}
