@@ -2415,4 +2415,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			//}
 		}
 	}
+	
+	public void onClickClaimButton(){
+		claimBpmTask();
+		getManagedBean().setClaimTask(true);
+	}
 }
