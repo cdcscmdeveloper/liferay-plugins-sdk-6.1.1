@@ -132,7 +132,7 @@
 				</table>
 			</h:panelGroup>
 			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.business.company.name']}" />
 				<p:inputText size="45"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
@@ -240,6 +240,12 @@
 				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}" rows="10"
 				width="100%">
 				<ac:paginator for="flDocListDt" />
+				
+				<p:column
+					headerText="#{lbl['lbl.fl.doc.maintain.order.type']}" style="white-space:normal;" >
+					<h:outputText
+						value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentOrderType, flDocument.orderType)}" />
+				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.doc.maintain.doc.type']}" style="white-space:normal;" >
 					<h:outputText
