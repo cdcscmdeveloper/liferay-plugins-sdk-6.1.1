@@ -762,7 +762,7 @@ public class QTDetailBackingBean extends
 		if (scQt.getScQtSupplierCriteria() != null
 				&& !scQt.getScQtSupplierCriteria().isAllState()) {
 			List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
-					this.getManagedBean().getZoneTrees(), null);
+					this.getManagedBean().getZoneTrees(), scQt.getScQtSupplierCriteria());
 			if (null != locCriteria && !locCriteria.isEmpty()) {
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
 			} else {
@@ -2927,9 +2927,7 @@ public class QTDetailBackingBean extends
 											.getPmDivision());
 									criteria.setPmState(((ScQtLocCriteria) treeNode2
 											.getData()).getPmState());
-									criteria.setScQtSupplierCriteria(this
-											.getManagedBean()
-											.getSupplierCriteria());
+									criteria.setScQtSupplierCriteria(supplierCriteria);
 									setUserDetails(criteria);
 									results.add(criteria);
 								}
@@ -2940,8 +2938,7 @@ public class QTDetailBackingBean extends
 										.getData()).getPmDistrict());
 								criteria.setPmState(((ScQtLocCriteria) treeNode2
 										.getData()).getPmState());
-								criteria.setScQtSupplierCriteria(this
-										.getManagedBean().getSupplierCriteria());
+								criteria.setScQtSupplierCriteria(supplierCriteria);
 								setUserDetails(criteria);
 								results.add(criteria);
 							}
@@ -2949,8 +2946,7 @@ public class QTDetailBackingBean extends
 					} else {
 						ScQtLocCriteria criteria = (ScQtLocCriteria) treeNode2
 								.getData();
-						criteria.setScQtSupplierCriteria(this.getManagedBean()
-								.getSupplierCriteria());
+						criteria.setScQtSupplierCriteria(supplierCriteria);
 						setUserDetails(criteria);
 						results.add(criteria);
 					}
