@@ -1444,8 +1444,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	/** The local out come. */
 	private String localOutCome;
 
-	/** The is zone location. */
-	private boolean isZoneLocation;
+	
 
 	/** The specification remarks. */
 	private List<ScQtSpecificationRemark> specificationRemarks;
@@ -8598,15 +8597,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	public void setPanelChange(boolean isPanelChange) {
 		this.isPanelChange = isPanelChange;
 	}
-
-	public boolean isZoneLocation() {
-		return isZoneLocation;
-	}
-
-	public void setZoneLocation(boolean isZoneLocation) {
-		this.isZoneLocation = isZoneLocation;
-	}
-
+	
 	public String getTempZoneName() {
 		return tempZoneName;
 	}
