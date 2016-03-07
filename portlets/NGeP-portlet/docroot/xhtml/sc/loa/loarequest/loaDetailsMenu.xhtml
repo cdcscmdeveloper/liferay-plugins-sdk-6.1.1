@@ -522,13 +522,12 @@
 			</td>
 		</tr>
 			<tr>
-				<c:if test="#{isDocTypeQuotation}">
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.loiloa.loa.req.agree']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-					</td>
-					<td>
-						<table>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.req.agree']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td>
+					<table>
 						<tr>
 							<td>
 								<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
@@ -544,9 +543,8 @@
 								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
 							</td>
 						</tr>
-						</table>
-					</td>
-				</c:if>
+					</table>
+				</td>
 				<h:panelGroup id="followLoaAmtId"
 					rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeCentral}">
 					<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.is.follow.loa.amt']}" /> </td>
