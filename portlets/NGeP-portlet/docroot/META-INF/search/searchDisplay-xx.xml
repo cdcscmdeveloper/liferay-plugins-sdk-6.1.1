@@ -431,6 +431,32 @@
 		</property>
 	</bean>
 	
+	<bean id="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.regno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	
 	<bean id="PM_ORG_PROFILE_AUTH_TYPE" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />
 
@@ -994,6 +1020,31 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="CM_ITEM_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="itemId" />
+		<property name="daoClass" value="my.ep.persistence.dao.cm.catalog.ItemDAO" />
+		<!-- <property name="searchMethod" value="" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="extensionCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.itemcode" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="itemName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.itemname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
 
 	<bean id="CT_CONTRACT_ITEM" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="contractItemId" />
