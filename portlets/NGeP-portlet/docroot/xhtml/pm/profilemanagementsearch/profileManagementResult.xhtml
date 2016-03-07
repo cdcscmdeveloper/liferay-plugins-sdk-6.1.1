@@ -15,28 +15,34 @@
 			var="accessAPPL">
 			<ac:paginator for="dtPmResult" />
 			<p:column headerText="#{lbl['lbl.pm.access.app.result.createdDate']}" style="width :25%;white-space : normal">			
-				<ac:labelDateTime value="#{accessAPPL.createdDate}" />
+				<ac:labelDateTime value="#{accessAPPL[1]}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.organization.type']}" style="width :25%;white-space : normal">
-			 #{profileManagSearchBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, accessAPPL.orgTypeCode.parameterCode)}			
+			#{accessAPPL[2]}
+			 #{profileManagSearchBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, accessAPPL[2])}			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.organization.name']}" style="width :25%;white-space : normal">			
-				#{profileManagSearchBackingBean.retrieveOrgName(accessAPPL.orgProfile)}
+				#{accessAPPL[3]}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.username']}" style="width :25%;white-space : normal">
-				#{accessAPPL.applicantName}
+				#{accessAPPL[4]}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.idno']}" style="width :15%;white-space : normal">
-				#{accessAPPL.identificationNo}
+				#{accessAPPL[5]}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.access.app.result.status']}" width="10%">
-			 <c:when test="#{not empty accessAPPL.workFlowStatus}" >
-		    	  #{profileManagSearchBackingBean.getStatusDescById(accessAPPL.workFlowStatus.pmStatus.statusId)}
+			 <c:when test="#{not empty accessAPPL[5]}" >
+		    	  #{profileManagSearchBackingBean.getStatusDescById(accessAPPL[6])}
 			  </c:when>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
-				
+				<p:commandLink partialSubmit="true" process="@this"
+						action="#{accessApplBackingBean.redirectToAccessApplView(accessAPPL[0], accessAPPL[6])}"
+						style="padding-right :5px;" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.txt.view']}" />
+					</p:commandLink>
 			</p:column>
 			
 		</p:dataTable>

@@ -31,6 +31,12 @@
 							</p:commandButton>
 							</td>
 						</ui:repeat>
+						<td><p:commandLink value="#{lbl['lbl.td.tracking.diary']}" 
+							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(accessApplBackingBean.managedBean.accessAppl.docType, accessApplBackingBean.managedBean.accessAppl.accessApplId)}"
+							rendered="#{accessApplBackingBean.managedBean.showTrackingDairy}">
+							
+						</p:commandLink>
+					</td>
 				</tr>
 			</table>
 			</p:outputPanel>	

@@ -47,39 +47,81 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 
 	private PmOrgProfile selectedOrgProfile;
 	// Paging for listing
-	private IPagingDataModel<PmAccessAppl> accessAPPLDataModel = new AccessAPPLPagingDataModel();
+	private IPagingDataModel<Object[]> accessAPPLDataModel = new AccessAPPLPagingDataModel();
 
-	public IPagingDataModel<PmAccessAppl> getAccessAPPLDataModel() {
+	public IPagingDataModel<Object[]> getAccessAPPLDataModel() {
 		return accessAPPLDataModel;
 	}
 
 	public void setAccessAPPLDataModel(
-			IPagingDataModel<PmAccessAppl> accessAPPLDataModel) {
+			IPagingDataModel<Object[]> accessAPPLDataModel) {
 		this.accessAPPLDataModel = accessAPPLDataModel;
 	}
+	/**
+	 * get search bean
+	 * 
+	 * @return ISearchBean<PmAccessAppl>
+	 */
+	private void fillRequestDTO(AccessApplReqDTO applReqDTO) {
+		log.info("fillRequestDTO - Start");
+		ProfileManagementSearchBean pmSearchBean = this.getProfileManagSearchBean();
 
+		if (pmSearchBean.getSelectedOrgProfile() != null) {
+			log.info("..pmSearchBean.getSelectedOrgProfile().getOrgProfileId()="
+					+ pmSearchBean.getSelectedOrgProfile().getOrgProfileId());
+			applReqDTO.setOrgProfileId(pmSearchBean.getSelectedOrgProfile().getOrgProfileId());	
+		}
+
+		if (this.getSelectedOrgType() != null) {
+			log.info("+ getSelectedOrgType " + getSelectedOrgType());
+			applReqDTO.setOrgTypeId(this.getSelectedOrgType());	
+		}
+
+		// IdentificationNO
+		if (pmSearchBean.getIdentificationNo() != null
+				&& !"".equalsIgnoreCase(pmSearchBean.getIdentificationNo())) {
+			log.info("+ identificationNo " + pmSearchBean.getIdentificationNo());
+			applReqDTO.setIdentificationNo(pmSearchBean.getIdentificationNo());
+		}
+		// User Name
+		if (pmSearchBean.getUserName() != null
+				&& !"".equalsIgnoreCase(pmSearchBean.getUserName())) {
+			log.info("+ userName " + pmSearchBean.getUserName());
+			applReqDTO.setUserName(pmSearchBean.getUserName());
+		}
+
+		if (pmSearchBean.getCompanyProfile() != null
+				&& pmSearchBean.getCompanyProfile()) {
+			applReqDTO.setCompanyProfile(1);
+		}else if (pmSearchBean.getMarketResearch() != null
+				&& pmSearchBean.getMarketResearch()) {
+			applReqDTO.setMarketResearch(1);
+		}
+
+	}
 	// pagination for profile management search list
 	private class AccessAPPLPagingDataModel extends
-			PagingDataModel<PmAccessAppl> {
+			PagingDataModel<Object[]> {
 		private static final long serialVersionUID = 1L;
 
 		public AccessAPPLPagingDataModel() {
 			super("dtPmResult");
 			log.info("....AccessAPPLPagingDataModel");
 		}
-
+		
 		@Override
-		protected ISearchResultBean<PmAccessAppl> pageChangeListener(
-				ISearchBean<PmAccessAppl> searchBean) {
+		protected ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 			log.info("....pageChangeListener");
 			IAccessApplSO accessApplSO = null;
 			if (getSelectedAppTypeParamCode() != null) {
 				try {
-					ISearchBean<PmAccessAppl> searchBeanData = getSearchBeanData(searchBean);
+//					ISearchBean<Object[]> searchBeanData = getSearchBeanData(searchBean);
 					log.info("....after getsearchbean");
 					log.info("....getProfileManagSearchBean().getAppStatusId()="+getProfileManagSearchBean().getAppStatusId());
 					AccessApplReqDTO applReqDTO = new AccessApplReqDTO();
-					applReqDTO.setAccessApplSearch(searchBeanData);
+					fillRequestDTO(applReqDTO);
+					applReqDTO.setAccessApplSearch(searchBean);
 					applReqDTO.setAppStatusId(getProfileManagSearchBean()
 							.getAppStatusId());
 					applReqDTO.setDocType(getSelectedAppTypeParamCode());
@@ -110,8 +152,8 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 	 * 
 	 * @return ISearchBean<PmAccessAppl>
 	 */
-	private ISearchBean<PmAccessAppl> getSearchBeanData(
-			ISearchBean<PmAccessAppl> searchBean) {
+	private ISearchBean<Object[]> getSearchBeanData(
+			ISearchBean<Object[]> searchBean) {
 		log.info("getSearchBeanData - Start");
 		boolean isEmpty = true;
 		ProfileManagementSearchBean pmSearchBean = this

@@ -50,6 +50,7 @@ public class AccessApplManagedBean extends BaseManagedBean{
 	private List<PmAccessApplDoc> accessApplDocList;
 	private String remarks;
 	private Map<PmAccessApplDoc, FileUploadEvent> fileEventMapper;
+	private boolean showTrackingDairy = false;
 	
 	public AccessApplManagedBean(){}
 
@@ -234,4 +235,14 @@ public class AccessApplManagedBean extends BaseManagedBean{
 	public void setFileEventMapper(Map<PmAccessApplDoc, FileUploadEvent> fileEventMapper) {
 		this.fileEventMapper = fileEventMapper;
 	}
+
+	public boolean isShowTrackingDairy() {
+		return showTrackingDairy;
+	}
+
+	public void setShowTrackingDairy(boolean showTrackingDairy) {
+		this.showTrackingDairy = showTrackingDairy;
+	}
+	
+	
 }
