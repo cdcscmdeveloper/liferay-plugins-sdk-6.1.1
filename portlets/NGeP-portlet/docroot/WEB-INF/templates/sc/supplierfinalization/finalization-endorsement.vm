@@ -477,6 +477,12 @@
 	#end
 	
 	<tr>
+		<td style='font-weight:bold;font-family: Albertus Medium;'>
+			<br/><br/> Ulasan : $!endorsementRemarks <br/><br/>
+		</td>
+	</tr>
+		
+	<tr>
 		<td><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Pengerusi $!committeeType <br />
 		Kementerian Keselamatan Dalam Negeri <br /> $!chairPerson <br/>
 		---------------- </span>
