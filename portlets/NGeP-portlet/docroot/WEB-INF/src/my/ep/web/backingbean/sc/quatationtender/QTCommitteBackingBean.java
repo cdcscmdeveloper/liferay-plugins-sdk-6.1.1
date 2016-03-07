@@ -2149,4 +2149,10 @@ public class QTCommitteBackingBean extends
 		}
 		return email;
 	}
+	
+	public boolean renderECOrTECButton(){
+	
+		return QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(this
+				.getManagedBean().getCurrentStatusId());
+	}
 }
