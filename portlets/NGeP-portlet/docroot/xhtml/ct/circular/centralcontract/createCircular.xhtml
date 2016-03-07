@@ -56,7 +56,7 @@
 			                 <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
 				                     partialSubmit="true" action="#{centralContractBackingBean.addPurchaseInDefault()}" update=":form:pidTableId" 
 				                     oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>	
-				              <p:commandButton id="delPidBtn" value="#{lbl['lbl.btn.delete']}" process="@this"  
+				              <p:commandButton id="delPidBtn" value="#{lbl['lbl.ct.delete']}" process="@this"  
 				                     disabled="#{centralContractBackingBean.managedBean.buttonHideActive}" partialSubmit="true" 
 			                         onsuccess="delPidPurchaseDlg.show()" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>			
 		             </div>
@@ -123,7 +123,7 @@
 			                    <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 			                         action="#{centralContractBackingBean.addContactPerson()}" update="contactPersonDt" widgetVar="addContactPersonBtn"
 			 	                    oncomplete="contactPersonObj.paginator.endLink.click();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			                    <p:commandButton id="delCtPerson"   value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" 
+			                    <p:commandButton id="delCtPerson"   value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true" 
 			                          disabled="#{centralContractBackingBean.managedBean.buttonHideActive}"
 			                          onsuccess="delCtPersonDlg.show()" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>				
 		                </div>
@@ -172,7 +172,7 @@
        	            </p:commandButton>
        	            <p:commandButton id="delExemptedBtn" process="@form" 
        	            rendered="#{!centralContractBackingBean.managedBean.viewContract}"  
-		                  value="#{lbl['lbl.btn.delete']}"   onsuccess="dlgExemptedDel.show()"
+		                  value="#{lbl['lbl.ct.delete']}"   onsuccess="dlgExemptedDel.show()"
 		                    disabled="#{centralContractBackingBean.managedBean.buttonHideActive}">
 		            </p:commandButton>
 	         </div>
@@ -318,7 +318,7 @@
 				  <p:commandButton  process="@form" id="cancelCircularDelBtn"
 				          disabled="#{centralContractBackingBean.managedBean.buttonHideActive}"
 				         rendered="#{!centralContractBackingBean.managedBean.viewContract}"  
-		                  value="#{lbl['lbl.btn.delete']}"   onsuccess="circularDeleteDlg.show()"/>			
+		                  value="#{lbl['lbl.ct.delete']}"   onsuccess="circularDeleteDlg.show()"/>			
 		</div>		
 		   <p:confirmDialog id="cancelCircularDelete" widgetVar="circularDeleteDlg" 
 	   	       message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true"

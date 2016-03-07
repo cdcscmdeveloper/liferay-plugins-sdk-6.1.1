@@ -117,7 +117,7 @@
 					</p:tooltip>
               </p:commandButton>
 		      <p:spacer width="1"/>
-		      <p:commandButton id="delContentBtn" value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgDocumentDel.show();"
+		      <p:commandButton id="delContentBtn" value="#{lbl['lbl.ct.delete']}" process="@form" onclick="dlgDocumentDel.show();"
 		      		disabled="#{!(agreementBackingBean.managedBean.selectedAgreementContent!=null and 
 		      		agreementBackingBean.managedBean.selectedAgreementContent.contentType.parameterCode==ParameterConst.agreementUserUploadDoc)}">
 		      		<p:tooltip for="delContentBtn">

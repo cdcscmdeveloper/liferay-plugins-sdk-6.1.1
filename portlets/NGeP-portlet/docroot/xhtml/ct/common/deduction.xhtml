@@ -75,7 +75,7 @@
                     <p:commandButton id="addDeductionBtn" value="#{lbl['lbl.btn.add']}" 
                        disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
                        process="@this"  partialSubmit="true" action="#{ctBackingBean.addDeduction()}" update=":form:tableDeduction"/>
-		  	        <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true"
+		  	        <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true"
 		  	            disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}"  onsuccess="dlgDeduction.show()"/>
 		  	</div>
 		  	</c:if>
@@ -141,7 +141,7 @@
 			  	                
 			  	                <p:commandButton id="delDeductionClauseBtn"  
 			  	                       disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}"
-			  	                      value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" onsuccess="dlgDeductionClause.show()">
+			  	                      value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true" onsuccess="dlgDeductionClause.show()">
 								</p:commandButton>
 	                         </c:if>
                     </div>
