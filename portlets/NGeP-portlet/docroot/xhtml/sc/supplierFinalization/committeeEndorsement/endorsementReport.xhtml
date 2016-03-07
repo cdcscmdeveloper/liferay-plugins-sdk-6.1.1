@@ -6,6 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<p:remoteCommand name="updateEndorsementReport" partialSubmit="true" process="@form" 
+					 update="@form" action="#{suppFinalizationBackingBean.navigateToEndorsementReportTab}" />
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" styleClass="header-spacing">
 		<table style="width: 100%" id="endorsementRemarksList">
 			<tr>
@@ -37,7 +39,7 @@
 								<td>
 									<p:inputTextarea cols="40" value="#{remarkVar.remark}" 
 										disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-										<p:ajax partialSubmit="true" process="@this" update="@this"/>
+										<p:ajax partialSubmit="true" process="@this" update="@this" />
 									</p:inputTextarea> 
 								</td>
 							</tr>
@@ -45,9 +47,20 @@
 					</p:dataGrid>
 				</td>
 			</tr>
+			<tr>
+				<td></td>
+				<td class="TableFieldRight">
+					<p:commandButton value="#{lbl['lbl.sc.btn.refresh']}" process="@form" update="@([id$=endorsementReportContentId])" 
+									 action="#{suppFinalizationBackingBean.getSuppFinalizationEndorsementReportStreamContent}" />
+				</td>
+			</tr>
 		</table>
 	</p:panel>	
 	<br/>
-	<p:media value="#{suppFinalizationBackingBean.suppFinalizationEndorsementReportStreamContent}"
-			 width="100%" height="500px" player="pdf" styleClass="header-spacing" />
+	
+	<p:outputPanel id="endorsementReportContentId">
+		<p:media value="#{suppFinalizationBackingBean.managedBean.endorsementReportStream}"
+				 width="100%" height="500px" player="pdf" styleClass="header-spacing">
+		</p:media>
+	</p:outputPanel>
 </ui:composition>
