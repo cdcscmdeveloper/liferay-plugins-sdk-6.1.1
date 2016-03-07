@@ -55,6 +55,9 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 	
 	// Drop down Listing for Approver
 	private List<PmUser> ministrySpecApprovers; 
+	
+	/** The is zone location. */
+	private boolean isZoneLocation;
 
 	/**
 	 * @return the qt
@@ -185,5 +188,19 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistrySpecApprovers(List<PmUser> ministrySpecApprovers) {
 		this.ministrySpecApprovers = ministrySpecApprovers;
+	}
+
+	/**
+	 * @return the isZoneLocation
+	 */
+	public boolean isZoneLocation() {
+		return isZoneLocation;
+	}
+
+	/**
+	 * @param isZoneLocation the isZoneLocation to set
+	 */
+	public void setZoneLocation(boolean isZoneLocation) {
+		this.isZoneLocation = isZoneLocation;
 	}
 }
