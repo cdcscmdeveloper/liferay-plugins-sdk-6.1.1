@@ -1191,10 +1191,8 @@ public class SpecificationBackingBean extends
 					List<ScQtCategory> categoryResults = tenderResDTO
 							.getCategories();
 					;
-					if (isNotNullOREmpty(categoryResults)) {
-						this.getManagedBean().setSuppCriteriaopenList(
-								categoryResults);
-					}
+					this.getManagedBean().setSuppCriteriaopenList(
+							categoryResults);
 					ScQt scQt = tenderResDTO.getQtDetail();
 					this.getManagedBean().setAllStateCode(
 							tenderResDTO.getStateCode());
