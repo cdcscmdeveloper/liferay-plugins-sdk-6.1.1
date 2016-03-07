@@ -11719,7 +11719,7 @@ public class ReportBackingBean extends
 			 * FacesScopes().getUserLocale()); //String language = "ms";
 			 */
 			if (null != pmReport) {
-
+				
 				String label = ReportConst.EMPTY_VAL;
 
 				if (strLanguage != null && !strLanguage.isEmpty()) {
@@ -11731,11 +11731,12 @@ public class ReportBackingBean extends
 					 * label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
 					 * + pmReport.getSubModule();
 					 */
-
+				
 					if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
+						log.info(" Report Name in EN : "+label);
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
 
@@ -11743,6 +11744,7 @@ public class ReportBackingBean extends
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
+						log.info("Report Name in MY : "+label);
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitleMalay());
 
@@ -11753,6 +11755,7 @@ public class ReportBackingBean extends
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
+						log.info("Report Name in EN : "+label);
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
 
@@ -11760,8 +11763,9 @@ public class ReportBackingBean extends
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
+						log.info("Report Name in MY : "+label);
 						this.getManagedBean().setReportTitle(
-								pmReport.getReportTitle());
+								pmReport.getReportTitleMalay());
 
 					}
 				}
