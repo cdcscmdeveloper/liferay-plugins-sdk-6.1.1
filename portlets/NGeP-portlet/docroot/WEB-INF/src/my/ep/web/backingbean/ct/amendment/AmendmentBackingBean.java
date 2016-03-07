@@ -369,9 +369,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (taskId == null) {
 						ConstructTabSideMenu();
 						
-						if (ctBackingBean.getManagedBean().getContractVer() != null
-								&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null
-								&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 								&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
 							FacesContext.getCurrentInstance().addMessage(null,
 									new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
@@ -1155,10 +1153,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     				&& ctBackingBean.imposedServiceTaxCondition()
 	     				&& ctBackingBean.isContractWithGst(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
 	     				&& ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
-	     			if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null
-	     					|| ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount().doubleValue() == 0) {
+	     			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() == null
+	     					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().doubleValue() == 0) {
 	     				throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.gst.amt", 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.new.gst.amt", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	     			}
 	     		}
