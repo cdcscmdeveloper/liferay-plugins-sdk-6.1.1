@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:dialog widgetVar="addPanelItem" modal="true" width="950"
+		height="600" position="top"
+		header="#{lbl['lbl.sc.spec.create.specification']}">
+
+		<p:messages id="addPanelItemMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" severity="error, info" />
+
+
+		<h:panelGroup id="circularPanel">
+			<h:panelGroup>
+				<ui:include src="searchCircularPanel.xhtml"></ui:include>
+			</h:panelGroup>
+		</h:panelGroup>
+
+	</p:dialog>
+</ui:composition>
