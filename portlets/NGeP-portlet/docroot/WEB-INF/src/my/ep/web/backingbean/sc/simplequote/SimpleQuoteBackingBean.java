@@ -4861,8 +4861,21 @@ public class SimpleQuoteBackingBean extends
 
 			} catch (EpException e) {
 				String message = e.getMessage();
+				if (MessageConst.ERROR_760390.equals(message)) {
+					Locale userLocale = new FacesScopes().getUserLocale();
+					message = MessageUtils.getMessage(e.getMessage(),
+							e.getParameters(),
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
 
-				if (MessageConst.ERROR_760034.equals(message)) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+					// hide the save & submit button when Simple quote is not start yet
+					// in supplier view
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+				} else if (MessageConst.ERROR_760034.equals(message)) {
 					Locale userLocale = new FacesScopes().getUserLocale();
 					message = MessageUtils.getMessage(e.getMessage(),
 							e.getParameters(),
