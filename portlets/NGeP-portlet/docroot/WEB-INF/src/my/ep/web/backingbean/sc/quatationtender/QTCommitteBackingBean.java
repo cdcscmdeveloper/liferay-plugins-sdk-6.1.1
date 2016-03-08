@@ -605,6 +605,7 @@ public class QTCommitteBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760121);
 		}
+		Collections.sort(memberList);
 		scCommittee.setScCommitteeMembers(memberList);
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 
@@ -1560,7 +1561,7 @@ public class QTCommitteBackingBean extends
 		*/}
 
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
-		java.util.Collections.sort(scCommittee.getScCommitteeMembers());
+		Collections.sort(scCommittee.getScCommitteeMembers());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 
 		// Specification Committee validation
