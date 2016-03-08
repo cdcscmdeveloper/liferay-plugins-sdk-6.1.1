@@ -2021,24 +2021,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return	the PmOrgProfile instance
 	 */
 	public PmOrgProfile getPTJOrgProfileByLoginUser() {
-		IOrgProfileSO orgProfileSO = null;
 		PmOrgProfile pmOrgProfile = null;
-		try {
-			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
-			if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
-				pmOrgProfile = pmOrgProfiles.get(0);
-			}
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			IOrgProfileSO orgProfileSO = null;
+			try {
+				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
+					pmOrgProfile = pmOrgProfiles.get(0);
+				}
 
-		} finally {
-			orgProfileSO = null;
+			} finally {
+				orgProfileSO = null;
+			}	
 		}
 		
 		return pmOrgProfile;
