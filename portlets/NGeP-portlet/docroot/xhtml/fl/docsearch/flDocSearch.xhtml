@@ -116,9 +116,9 @@
 						<td><p:selectOneMenu id="statusId"
 								value="#{flDocumentBackingBean.managedBean.statusDescId}"
 								style="width: 314px;">
-								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>
 								<f:selectItems
 									value="#{flDocumentBackingBean.getStatusDropdownValues('FL',flDocumentBackingBean.managedBean.searchDocType)}" />
+								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
 							</p:selectOneMenu></td>
 						<td style="width: 250px;"><p:outputLabel
 								value="#{lbl['lbl.fl.financial.year']}" /></td>
