@@ -36,6 +36,7 @@ public class ReportConst {
 	public static final String SM_MOD_VAL = "SM";
 	public static final String CT_MOD_VAL = "CT";
 	public static final String PP_MOD_VAL = "PP";
+	public static final String FL_SUB_MOD_MINISTRY_VAL="MC";
 	// SC Module reports start
 	public static final String SPPPP_PEMATUHAN_OC_RPT_VAL = "SC_001";
 	public static final String KPPP1_PEMATUHAN_OC_RPT_VAL = "SC_002";
@@ -742,6 +743,7 @@ public class ReportConst {
 	public static final String FL_AMP_PTJ_NAME_EQ = "&PPTJ=";
 	public static final String FL_AMP_SST_NO_EQ = "&PLOA=";
 	public static final String FL_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
+	public static final String FL_AMP_CONTRACT_SYSTEM_EQ = "&PPKPNAME=";
 	public static final String FL_AMP_REPORT_ID_EQ = "&PREPORTID=";
 	public static final String FL_AMP_USER_ID_EQ = "&PUSER=";
 	public static final String FL_AMP_STOP_INSTR_NO_EQ = "&PSINO=";

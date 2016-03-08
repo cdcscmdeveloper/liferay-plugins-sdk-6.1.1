@@ -96,7 +96,10 @@ public class ReportsGenerateBean {
 	private boolean generateButton=false;
 
 	/** The approved date view. */
-	private boolean approvedDateView = false;
+	private boolean approvedDateView = false;	
+	
+	/** The report category. */
+	private String reportCategory="";
 
 	/** The lng user id. */
 	private long lngUserId;
@@ -1189,6 +1192,9 @@ public class ReportsGenerateBean {
 
 	/** The fl contract no view. */
 	private boolean flContractNoView =false;
+	
+	/** The fl contract system view. */
+	private boolean flContractSystemView =false;
 	
 	/** The fl physical contract no view. */
 	private boolean flPhysicalContractNoView =false;
@@ -3909,6 +3915,9 @@ public class ReportsGenerateBean {
 
 	/** The contract no tot var. */
 	private String contractNoTotVar = ReportConst.EMPTY_VAL;
+	
+	/** The contract system tot var. */
+	private String contractSystemTotVar = ReportConst.EMPTY_VAL;
 
 	/** The sst tot var. */
 	private String sstTotVar = ReportConst.EMPTY_VAL;
@@ -20182,6 +20191,63 @@ public class ReportsGenerateBean {
 	public void setFlGroupEighteenAdditionalView(
 			boolean flGroupEighteenAdditionalView) {
 		this.flGroupEighteenAdditionalView = flGroupEighteenAdditionalView;
+	}
+
+	/**
+	 * Gets the report category.
+	 * 
+	 * @return the reportCategory
+	 */
+	public String getReportCategory() {
+		return reportCategory;
+	}
+
+	/**
+	 * Sets the report category.
+	 * 
+	 * @param reportCategory
+	 *            the reportCategory to set
+	 */
+	public void setReportCategory(String reportCategory) {
+		this.reportCategory = reportCategory;
+	}
+
+	/**
+	 * Checks if is fl contract system view.
+	 * 
+	 * @return the flContractSystemView
+	 */
+	public boolean isFlContractSystemView() {
+		return flContractSystemView;
+	}
+
+	/**
+	 * Sets the fl contract system view.
+	 * 
+	 * @param flContractSystemView
+	 *            the flContractSystemView to set
+	 */
+	public void setFlContractSystemView(boolean flContractSystemView) {
+		this.flContractSystemView = flContractSystemView;
+	}
+
+	/**
+	 * Gets the contract system tot var.
+	 * 
+	 * @return the contractSystemTotVar
+	 */
+	public String getContractSystemTotVar() {
+		return contractSystemTotVar;
+	}
+
+	/**
+	 * Sets the contract system tot var.
+	 * 
+	 * @param contractSystemTotVar
+	 *            the contractSystemTotVar to set
+	 */
+	public void setContractSystemTotVar(String contractSystemTotVar) {
+		this.contractSystemTotVar = contractSystemTotVar;
 	}
 
 	
