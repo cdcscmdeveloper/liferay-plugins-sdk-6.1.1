@@ -1918,10 +1918,7 @@ public class QTCommitteBackingBean extends
 		 */
 
 		if (this.getManagedBean().isMaintanceFlow()) {
-			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
-					.getManagedBean().getCurrentStatusId())) {
-				return true;
-			} else if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(this
+			 if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(this
 					.getManagedBean().getCurrentStatusId())) {
 				if (DateUtils.getDaysDifference(new Date(), this
 						.getManagedBean().getQt().getClosingDate()) <= 7
@@ -1990,11 +1987,7 @@ public class QTCommitteBackingBean extends
 	}
 
 	public boolean isEnableCloneButton() {
-		if (this.getManagedBean().isMaintanceFlow()
-				&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
-						.getManagedBean().getQt().getQtStatus().getStatusId())) {
-			return true;
-		} else {
+		
 			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
 					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(this.getManagedBean().getCurrentStatusId()))
 					&& !SCProcessNameConst.REVISE_COMMITTEE
@@ -2007,7 +2000,6 @@ public class QTCommitteBackingBean extends
 									.getTaskName())) {
 				return true;
 			}
-		}
 		if (!getManagedBean().isDeskOfficer()){
 			return true;
 		}
