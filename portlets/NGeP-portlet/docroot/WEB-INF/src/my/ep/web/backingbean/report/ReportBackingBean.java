@@ -7855,18 +7855,18 @@ public class ReportBackingBean extends
 						.setPmOrgValidity(new PmOrgValidity());
 			}
 		}
-		
+
 		if (this.getManagedBean().getSelectedOrgType() == null) {
 			this.getManagedBean().setSelectedOrgType(new PmParameter());
 		}
-		
-		/*if (this.getManagedBean().getSelectedOrgProfile()== null) {
-			this.getManagedBean().setSelectedOrgProfile(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedOrgProfile().getSmSupplier() == null) {
-				this.getManagedBean().getSelectedOrgProfile()
-						.setSmSupplier(new SmSupplier());
-			}
-		}*/
+
+		/*
+		 * if (this.getManagedBean().getSelectedOrgProfile()== null) {
+		 * this.getManagedBean().setSelectedOrgProfile(new PmOrgProfile()); if
+		 * (this.getManagedBean().getSelectedOrgProfile().getSmSupplier() ==
+		 * null) { this.getManagedBean().getSelectedOrgProfile()
+		 * .setSmSupplier(new SmSupplier()); } }
+		 */
 	}
 
 	/**
@@ -8796,20 +8796,17 @@ public class ReportBackingBean extends
 				&& (this.getReportValue()
 						.equals(ReportConst.PUR_REQ_RPT_PO_VAL))) {
 			doctype = ReportConst.DOC_TYPE_PR;
+		} else if (this.getReportValue() != null
+				&& this.getReportValue().equals(
+						ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL)
+				|| this.getReportValue().equals(
+						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL)
+				|| this.getReportValue().equals(
+						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL)
+				|| this.getReportValue().equals(
+						ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) {
+			doctype = ReportConst.DOC_TYPE_SD;
 		}
-
-		/*
-		 * else if (this.getReportValue() != null &&
-		 * this.getReportValue().equals(
-		 * ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL) ||
-		 * this.getReportValue().equals(
-		 * ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL) ||
-		 * this.getReportValue().equals(
-		 * ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL) ||
-		 * this.getReportValue().equals(
-		 * ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) { doctype =
-		 * ReportConst.DOC_TYPE_SD; }
-		 */
 
 		/*
 		 * else if ((this.getReportValue() != null) && (this.getReportValue()
@@ -10650,7 +10647,7 @@ public class ReportBackingBean extends
 				// retrieveFPJMinistryList();
 				// getLtstMinistryListByUserid();
 				getManagedBean().getRptGenBean().setTextBoxBasedRoles(true);
-				retrieveOnlyFPJMinistryList();				
+				retrieveOnlyFPJMinistryList();
 				retrievePFPPList();
 				retrievePFJAList();
 				retrieveFPJPTJList();
@@ -10731,6 +10728,10 @@ public class ReportBackingBean extends
 			} else if ((getManagedBean().getRptGenBean().isFlGroupTenView())) {
 				getManagedBean().getRptGenBean().setFlGroupTenWithoutSupplView(
 						true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTenAdditionalView())) {
+				getManagedBean().getRptGenBean().setFlGroupTenWithoutSupplView(
+						true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupElevenView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupElevenWithoutSupplView(true);
@@ -10738,14 +10739,31 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean()
 						.setFlGroupTwelveWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwelveAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwelveWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
 					.isFlGroupThirteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupThirteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupThirteenAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupThirteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupThirteenAckRecView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupThirteenWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
 					.isFlGroupFourteenView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupFourteenWithoutSupplView(true);
-			} else if ((getManagedBean().getRptGenBean().isFlGroupFifteenView())) {
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupFourteenAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupFourteenWithoutSupplView(true);
+			}
+			else if ((getManagedBean().getRptGenBean().isFlGroupFifteenView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupFifteenWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupSixteenView())) {
@@ -10757,6 +10775,10 @@ public class ReportBackingBean extends
 						.setFlGroupSeventeenWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
 					.isFlGroupEighteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupEighteenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupEighteenAdditionalView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupEighteenWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
@@ -10826,6 +10848,10 @@ public class ReportBackingBean extends
 			} else if ((getManagedBean().getRptGenBean().isFlGroupTenView())) {
 				getManagedBean().getRptGenBean().setFlGroupTenWithSupplView(
 						true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTenAdditionalView())) {
+				getManagedBean().getRptGenBean().setFlGroupTenWithSupplView(
+						true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupElevenView())) {
 				getManagedBean().getRptGenBean().setFlGroupElevenWithSupplView(
 						true);
@@ -10833,11 +10859,27 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean().setFlGroupTwelveWithSupplView(
 						true);
 			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwelveAdditionalView())) {
+				getManagedBean().getRptGenBean().setFlGroupTwelveWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean()
 					.isFlGroupThirteenView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupThirteenWithSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupThirteenAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupThirteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupThirteenAckRecView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupThirteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
 					.isFlGroupFourteenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupFourteenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupFourteenAdditionalView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupFourteenWithSupplView(true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupFifteenView())) {
@@ -10855,7 +10897,11 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean()
 						.setFlGroupEighteenWithSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
-					.isFlGroupNineteenView())) {
+					.isFlGroupEighteenAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupEighteenWithSupplView(true);
+			}
+			else if ((getManagedBean().getRptGenBean().isFlGroupNineteenView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupNineteenWithSupplView(true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupTwentyView())) {
@@ -10978,7 +11024,7 @@ public class ReportBackingBean extends
 			if (ptjList.size() > 2) {
 				this.getManagedBean().setPtjId(
 						(Long.valueOf(ptjList.get(1).getValue().toString())));
-			} else if (ptjList.size()>=1) {
+			} else if (ptjList.size() >= 1) {
 				this.getManagedBean().setPtjId(
 						(Long.valueOf(ptjList.get(0).getValue().toString())));
 			}
@@ -10998,8 +11044,9 @@ public class ReportBackingBean extends
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			String ministryId=this.getCommonMinistry();
-			List<Object[]> ptjLst = reportSO.retrievePFPPList(lngUserId,ministryId);
+			String ministryId = this.getCommonMinistry();
+			List<Object[]> ptjLst = reportSO.retrievePFPPList(lngUserId,
+					ministryId);
 			if (ptjLst.size() > 0) {
 				if (ptjLst.size() > 2) {
 					SelectItem selectItem1 = new SelectItem();
@@ -11154,7 +11201,7 @@ public class ReportBackingBean extends
 			for (Object[] object : minstryLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
-				selectItem.setValue(object[1].toString());			
+				selectItem.setValue(object[1].toString());
 				ministryList.add(selectItem);
 			}
 			this.setCommonMinistry(ministryList.get(0).getValue().toString());
@@ -11719,7 +11766,7 @@ public class ReportBackingBean extends
 			 * FacesScopes().getUserLocale()); //String language = "ms";
 			 */
 			if (null != pmReport) {
-				
+
 				String label = ReportConst.EMPTY_VAL;
 
 				if (strLanguage != null && !strLanguage.isEmpty()) {
@@ -11731,12 +11778,12 @@ public class ReportBackingBean extends
 					 * label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
 					 * + pmReport.getSubModule();
 					 */
-				
+
 					if ((strLanguage != null)
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
-						log.info(" Report Name in EN : "+label);
+						log.info(" Report Name in EN : " + label);
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
 
@@ -11744,7 +11791,7 @@ public class ReportBackingBean extends
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
-						log.info("Report Name in MY : "+label);
+						log.info("Report Name in MY : " + label);
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitleMalay());
 
@@ -11755,7 +11802,7 @@ public class ReportBackingBean extends
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.ENG_LANG))) {
 						label = pmReport.getReportTitle();
-						log.info("Report Name in EN : "+label);
+						log.info("Report Name in EN : " + label);
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitle());
 
@@ -11763,7 +11810,7 @@ public class ReportBackingBean extends
 							&& (strLanguage
 									.equalsIgnoreCase(ReportConst.MALAY_LANG))) {
 						label = pmReport.getReportTitleMalay();
-						log.info("Report Name in MY : "+label);
+						log.info("Report Name in MY : " + label);
 						this.getManagedBean().setReportTitle(
 								pmReport.getReportTitleMalay());
 
@@ -12723,8 +12770,8 @@ public class ReportBackingBean extends
 			}
 
 			reloadLovsValues();
-			
-			//this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+
+			// this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
 
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
@@ -17381,7 +17428,7 @@ public class ReportBackingBean extends
 				|| ((this.getFlPurchaseOrderNo() != null) && (this
 						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL));
 	}
-	
+
 	public String constructConditionFields() {
 
 		StringBuilder sb = new StringBuilder();
@@ -17390,7 +17437,7 @@ public class ReportBackingBean extends
 		sb.append("|recordStatus^1");
 		log.info("....getManagedBean().getSelectedOrgType().getParameterCode()="
 				+ getManagedBean().getSelectedOrgType().getParameterCode());
-		
+
 		return sb.toString();
 	}
 
