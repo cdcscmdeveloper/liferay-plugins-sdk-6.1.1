@@ -6,6 +6,7 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -13,6 +14,8 @@ import org.quartz.JobExecutionException;
 /*
  * @author P Ganga prasad
  */
+
+@DisallowConcurrentExecution
 public class MasterDataVendorOutboundJob implements Job {
 
 	public static Logger log = EpLogger
@@ -24,7 +27,7 @@ public class MasterDataVendorOutboundJob implements Job {
 		log.info("MasterDataVendorOutboundJob start");
 		IGfmasServiceSO  gfmasServiceSO;
 		try {
-			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+			  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IGfmasServiceSO.class);
 			
