@@ -2168,4 +2168,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return orderedStatuses.contains(currentStatusId);
 	}
+	
+	public boolean isCurrentCommitteeGreaterThanOrEquals(String currentCommittee, String otherCommittee) {
+		List<String> committeesOrder = Arrays.asList(SourcingConstants.COMMITTEES_ORDER);
+		
+		return committeesOrder.indexOf(currentCommittee) >= committeesOrder.indexOf(otherCommittee);
+	}
+	
 }
