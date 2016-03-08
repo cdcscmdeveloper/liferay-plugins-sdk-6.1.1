@@ -23,7 +23,7 @@
 										<p:selectOneMenu id="locationLevels" required="true"
 											label="#{lbl['lbl.sc.zone.location.level']}"
 											value="#{scQt.zoneLocationLevel.parameterId}"
-											style="width: 215px;">
+											style="width: 205px;">
 		
 											<f:selectItems
 												value="#{createQtBB.getDropdownLocationValues(ParameterTypeConst.locationLevel,scQt)}" />
@@ -33,7 +33,7 @@
 										<p:message id="withzone" for="locationLevels" display="icon"></p:message>
 									</c:when>
 									<c:otherwise>
-										<p:inputText id="locLvlTxt" value="#{createQtBB.getParameterDesc(scQt.zoneLocationLevel)}" size="29" disabled="true" />
+										<p:inputText id="locLvlTxt" value="#{createQtBB.getParameterDesc(scQt.zoneLocationLevel)}" style="width:195px" disabled="true" />
 									</c:otherwise>
 								</c:choose>
 							</td>
