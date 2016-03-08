@@ -674,6 +674,10 @@ public class QTDetailBackingBean extends
 
 			setScQtTrackingDairyObject(scQt);
 			this.getManagedBean().setViewQtDetails(viewQT);
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean()
+					.getCurrentStatusId())) {
+				this.getManagedBean().setCreateQt(true);
+			}
 					} finally {
 			detailSO = null;
 		}
