@@ -1932,7 +1932,10 @@ public class QTCommitteBackingBean extends
 					.getManagedBean().getCurrentStatusId())) {
 				return true;
 			}
-
+			 
+			if (!getManagedBean().isDeskOfficer()) {
+				return true;
+			}
 		} else {
 			String taskName = this.getManagedBean().getTaskName();
 			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
@@ -1956,9 +1959,6 @@ public class QTCommitteBackingBean extends
 		} else if (QTStatusConst.CMT_COMPLETED.equals(committeStatus)
 				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 						.equalsIgnoreCase(commType)) {
-			return true;
-		}
-		if (!getManagedBean().isDeskOfficer()){
 			return true;
 		}
 		return false;
@@ -1988,6 +1988,11 @@ public class QTCommitteBackingBean extends
 
 	public boolean isEnableCloneButton() {
 		
+		if (this.getManagedBean().isMaintanceFlow()) {
+			if (!getManagedBean().isDeskOfficer()){
+				return true;
+			}
+		} else {
 			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
 					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(this.getManagedBean().getCurrentStatusId()))
 					&& !SCProcessNameConst.REVISE_COMMITTEE
@@ -2000,9 +2005,8 @@ public class QTCommitteBackingBean extends
 									.getTaskName())) {
 				return true;
 			}
-		if (!getManagedBean().isDeskOfficer()){
-			return true;
 		}
+		
 		return false;
 	}
 
