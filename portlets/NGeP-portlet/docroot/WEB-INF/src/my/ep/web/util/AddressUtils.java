@@ -4,6 +4,7 @@
 package my.ep.web.util;
 
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sm.SmAddress;
 
 /**
@@ -117,8 +118,8 @@ public class AddressUtils {
 	}
 
 	/**
-	 * Get Full Address based on SmAddress
-	 * @param smAddress
+	 * Get Full Address based on PmAddress
+	 * @param PmAddress
 	 * @return full address
 	 */
 	public static String getFullAddress(PmAddress pmAddress) {
@@ -190,6 +191,54 @@ public class AddressUtils {
 			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
 				address.append(smAddress.getAddress4());
 			}
+		}
+		return address.toString();
+	}
+	
+	/**
+	 * Get Full Address based on PpAddress
+	 * @param ppAddress
+	 * @return full address
+	 */
+	public static String getFullAddress(PpAddress ppAddress) {
+		StringBuilder address = new StringBuilder();
+		if(ppAddress!=null) {
+			if (ppAddress.getAddressName() != null && ppAddress.getAddressName().length() > 0 && !ppAddress.getAddressName().equals("-")) {
+				address.append(ppAddress.getAddressName());
+				address.append(separator);
+			}
+			if (ppAddress.getAddress1() != null && ppAddress.getAddress1().length() > 0) {
+				address.append(address.length() > 0 ? System.getProperty("line.separator") : "");
+				address.append(ppAddress.getAddress1());
+				address.append(separator);
+			}
+			if (ppAddress.getAddress2() != null && ppAddress.getAddress2().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(ppAddress.getAddress2());
+				address.append(separator);
+			}
+			if (ppAddress.getAddress3() != null && ppAddress.getAddress3().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(ppAddress.getAddress3());
+				address.append(separator);
+			}
+			if (ppAddress.getAddress4() != null && ppAddress.getAddress4().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(ppAddress.getAddress4());
+				address.append(separator);
+			}
+			if (ppAddress.getPostcode() != null && ppAddress.getPostcode().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(ppAddress.getPostcode());
+				address.append(separator);
+			}
+			if (ppAddress.getPmCity() != null && ppAddress.getPmCity().getCityName() !=null && ppAddress.getPmCity().getCityName().length() > 0) {
+				address.append(ppAddress.getPmCity().getCityName());
+				address.append(separator);
+			}
+			if (ppAddress.getPmState() != null && ppAddress.getPmState().getStateName() !=null && ppAddress.getPmState().getStateName().length() > 0) {
+				address.append(ppAddress.getPmState().getStateName());
+			}						
 		}
 		return address.toString();
 	}
