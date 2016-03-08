@@ -60,7 +60,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -214,6 +213,7 @@ public class CreateQtBackingBean extends
 				
 			}
 		} else {
+			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 			circularListSelect(new CtCircularVer());
 		}
 
@@ -257,6 +257,7 @@ public class CreateQtBackingBean extends
 			scQt.setFulfilmentType(new PmParameter());
 			scQt.setPmProcurementCategory(new PmParameter());
 			scQt.setPanel(true);
+			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 			
 			/*ScQtCommittee qtCommitte = new ScQtCommittee();
 			qtCommitte.setScQt(scQt);
@@ -586,23 +587,26 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 	public void onChangeQtType(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
+		ScQt scQt = this.getManagedBean().getQt();
 
 		this.getManagedBean().setSuppCriteriaopenList(
 				new ArrayList<ScQtCategory>());
 		if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(type)) {
 
-			if (null != this.getManagedBean().getQt()
-					.getScQtSupplierCriteria()
-					&& null == this.getManagedBean().getQt()
-							.getScQtSupplierCriteria().getLocationLevel()) {
-				this.getManagedBean().getQt().getScQtSupplierCriteria()
+			if (null != scQt.getScQtSupplierCriteria()
+					&& null == scQt.getScQtSupplierCriteria().getLocationLevel()) {
+				scQt.getScQtSupplierCriteria()
 						.setLocationLevel(new PmParameter());
 			}
 
-		} else if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
-				.equalsIgnoreCase(type)) {
-			this.getManagedBean().setSupplierLocationList(
-					getManagedBean().getExistingSupplierLocationList());
+		} else {
+			if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+					.equalsIgnoreCase(type)) {
+				this.getManagedBean().setSupplierLocationList(
+						getManagedBean().getExistingSupplierLocationList());
+				
+			}
+			scQt.setZonal(false);
 		}
 
 		this.getManagedBean().getQt().setQtType(type);
