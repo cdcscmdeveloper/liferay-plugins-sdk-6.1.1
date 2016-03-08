@@ -121,10 +121,12 @@
 							for="techChecklistTitlenullType" display="icon"></p:message>
 					</ui:fragment>
 
-					<ui:fragment rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
+					<ui:fragment
+						rendered="#{stageTwoTechnical.pmDocument eq null and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
 						<p:selectOneMenu style="width:100px;" required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-							id="techChecklistTitletypenotnullType" label="#{lbl['lbl.sc.type']}"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+							id="techChecklistTitletypenotnullType"
+							label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -285,7 +287,7 @@
 				<!-- </h:panelGroup> -->
 			</p:column>
 		</p:dataTable>
-	
+
 
 		<div align="right">
 			<p:commandButton styleClass="BtnSpacing"
@@ -295,17 +297,21 @@
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="compilencestageTwo" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				process="@this" styleClass="BtnSpacing" update="@([id$=commiteeCreationSpec])"
+				rendered="#{!specificationBackingBean.managedBean.qt.panel}"
+				process="@this" styleClass="BtnSpacing"
+				update="@([id$=commiteeCreationSpec])"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
 				disabled="#{((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.qt.panel))}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				styleClass="BtnSpacing"
 				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 				process="@this,stageTwotechProposal"
 				action="#{specificationBackingBean.addTechnicalCheckList}"
 				update="@all,stageTwotechProposal" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				styleClass="BtnSpacing"
 				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 				process="@this" partialSubmit="true"
 				oncomplete="technicalCheckListDeletePopUp.show();"
@@ -318,6 +324,12 @@
 					value="#{false}" />
 			</p:commandButton>
 
+			<p:commandButton styleClass="BtnSpacing"
+				rendered="#{specificationBackingBean.managedBean.qt.panel}"
+				disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+				value="#{lbl['lbl.sc.spec.btn.add.panel.item']}" process="@this"
+				actionListener="#{specificationBackingBean.circularListSelect(specificationBackingBean.managedBean.qt.circularVer)}"
+				oncomplete="addPanelItem.show();" update="@([id$=circularPanel])" />
 
 		</div>
 		<ui:param name="technicalCheckListDeleteId"
@@ -332,8 +344,9 @@
 		<ui:include src="technicalCheckListStandardCheckList.xhtml" />
 	</p:panel>
 
-	<ui:include src="/xhtml/sc/boSctemplatespec/createCommitteeTemplate.xhtml"></ui:include>
+	<ui:include
+		src="/xhtml/sc/boSctemplatespec/createCommitteeTemplate.xhtml"></ui:include>
 
-
+	<ui:include src="addPanelItemsPopup.xhtml"></ui:include>
 
 </ui:composition>
