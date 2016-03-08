@@ -723,8 +723,10 @@ public class QTDetailBackingBean extends
 				TabBean tabBean = committeTabs.get(i);
 				if (!SourcingConstants.COMMITTE_TYPE_FINALIZATION
 						.equals(tabBean.getTabType())) {
-
-					qtCommitteList.add(tabBean.getScQtCommittee());
+					ScQtCommittee qtCommittee = tabBean.getScQtCommittee();
+					
+					qtCommittee.setScQt(scQt);	// set latest saved scQt object.
+					qtCommitteList.add(qtCommittee);
 				}
 			}
 		}
