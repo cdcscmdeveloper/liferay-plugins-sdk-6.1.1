@@ -1465,7 +1465,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	private String divisionCode;
 
 	/** The select ct panel item. */
-	private CtPanelItem selectCtPanelItem;
+	private List<CtPanelItem> selectCtPanelItem;
 
 	/** The spec complete. */
 	private boolean specComplete;
@@ -8239,13 +8239,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 		this.divisionId = divisionId;
 	}
 
-	public CtPanelItem getSelectCtPanelItem() {
-		return selectCtPanelItem;
-	}
-
-	public void setSelectCtPanelItem(CtPanelItem selectCtPanelItem) {
-		this.selectCtPanelItem = selectCtPanelItem;
-	}
+	
 
 	public boolean isSpecComplete() {
 		return specComplete;
@@ -8620,6 +8614,20 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 
 	public void setState(boolean isState) {
 		this.isState = isState;
+	}
+
+	/**
+	 * @return the selectCtPanelItem
+	 */
+	public List<CtPanelItem> getSelectCtPanelItem() {
+		return selectCtPanelItem;
+	}
+
+	/**
+	 * @param selectCtPanelItem the selectCtPanelItem to set
+	 */
+	public void setSelectCtPanelItem(List<CtPanelItem> selectCtPanelItem) {
+		this.selectCtPanelItem = selectCtPanelItem;
 	}
 
 }
