@@ -665,6 +665,9 @@ public class ReportBackingBean extends
 	/** The fl contract no. */
 	private String flContractNo;
 
+	/** The fl contract system. */
+	private String flContractSystem;
+
 	/** The fl physical contract no. */
 	private String flPhysicalContractNo;
 
@@ -9899,6 +9902,7 @@ public class ReportBackingBean extends
 		this.setSubModule(null);
 		this.setReportName(ReportConst.EMPTY_VAL);
 		getManagedBean().setRptGenBean(rptGenBean);
+		rptGenBean.setReportCategory(this.getReportCategory());
 		resetReportForm();
 		/*
 		 * String language =
@@ -10762,8 +10766,7 @@ public class ReportBackingBean extends
 					.isFlGroupFourteenAdditionalView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupFourteenWithoutSupplView(true);
-			}
-			else if ((getManagedBean().getRptGenBean().isFlGroupFifteenView())) {
+			} else if ((getManagedBean().getRptGenBean().isFlGroupFifteenView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupFifteenWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupSixteenView())) {
@@ -10900,8 +10903,8 @@ public class ReportBackingBean extends
 					.isFlGroupEighteenAdditionalView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupEighteenWithSupplView(true);
-			}
-			else if ((getManagedBean().getRptGenBean().isFlGroupNineteenView())) {
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupNineteenView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupNineteenWithSupplView(true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupTwentyView())) {
@@ -14962,6 +14965,8 @@ public class ReportBackingBean extends
 		log.info("ReportBackingBean-generateFLReport");
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlContractNo() != null) && (this.getFlContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractSystem() != null) && (this
+						.getFlContractSystem() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSst() != null) && (this.getFlSst() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlJabatan() != null) && (this.getFlJabatan() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this
@@ -15030,6 +15035,12 @@ public class ReportBackingBean extends
 				rptGenBean
 						.setContractNoTotVar(ReportConst.FL_AMP_CONTRACT_NO_EQ
 								+ this.getFlContractNo());
+			}
+			if ((this.getFlContractSystem() != null)
+					&& (this.getFlContractSystem() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setContractSystemTotVar(ReportConst.FL_AMP_CONTRACT_SYSTEM_EQ
+								+ this.getFlContractSystem());
 			}
 			if ((this.getFlSst() != null)
 					&& (this.getFlSst() != ReportConst.EMPTY_VAL)) {
@@ -15368,6 +15379,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getItemCategoryTotVar()
 						+ rptGenBean.getProofIdentityTotVar()
 						+ rptGenBean.getContractNoTotVar()
+						+ rptGenBean.getContractSystemTotVar()						
 						+ rptGenBean.getSstTotVar()
 						+ rptGenBean.getJabatanTotVar()
 						+ rptGenBean.getMinistryTotVar()
@@ -15982,6 +15994,7 @@ public class ReportBackingBean extends
 			this.setFlItmType(null);
 			this.setCommonPtj(null);
 			this.setFlContractNo(null);
+			this.setFlContractSystem(null);
 			this.setFlSst(null);
 			this.setFlJabatan(null);
 			this.setCommonMinistry(null);
@@ -17429,6 +17442,11 @@ public class ReportBackingBean extends
 						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL));
 	}
 
+	/**
+	 * Construct condition fields.
+	 * 
+	 * @return the string
+	 */
 	public String constructConditionFields() {
 
 		StringBuilder sb = new StringBuilder();
@@ -17439,6 +17457,25 @@ public class ReportBackingBean extends
 				+ getManagedBean().getSelectedOrgType().getParameterCode());
 
 		return sb.toString();
+	}
+
+	/**
+	 * Gets the fl contract system.
+	 * 
+	 * @return the flContractSystem
+	 */
+	public String getFlContractSystem() {
+		return flContractSystem;
+	}
+
+	/**
+	 * Sets the fl contract system.
+	 * 
+	 * @param flContractSystem
+	 *            the flContractSystem to set
+	 */
+	public void setFlContractSystem(String flContractSystem) {
+		this.flContractSystem = flContractSystem;
 	}
 
 }
