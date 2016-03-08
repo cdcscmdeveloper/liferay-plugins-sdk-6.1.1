@@ -686,6 +686,7 @@ public class SPDetailBackingBean extends
 												.compareTo(
 														BigDecimal.valueOf(0)) > 0) {
 									isContainPrice = true;
+									break;
 								}
 							}
 
