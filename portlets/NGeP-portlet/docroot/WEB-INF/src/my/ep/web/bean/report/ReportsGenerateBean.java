@@ -961,6 +961,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory supporting document mode view. */
 	private boolean smMandatorySupportingDocumentModeView = false;
+	
+	/** The sm mandatory supporting document mode view my. */
+	private boolean smMandatorySupportingDocumentModeViewMY=false;
 
 	/** The sm cd mandatory all supplier type view. */
 	private boolean smCDMandatoryAllSupplierTypeView = false;
@@ -1393,6 +1396,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group ten view. */
 	private boolean flGroupTenView = false;
+	
+	/** The fl group ten additional view. */
+	private boolean flGroupTenAdditionalView = false;
 
 	/** The fl group ten with suppl req app view. */
 	private boolean flGroupTenWithSupplReqAppView = false;
@@ -1414,6 +1420,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group twelve view. */
 	private boolean flGroupTwelveView = false;
+	
+	/** The fl group twelve additional view. */
+	private boolean flGroupTwelveAdditionalView = false;
 
 	/** The fl group twelve without suppl view. */
 	private boolean flGroupTwelveWithoutSupplView = false;
@@ -1423,6 +1432,12 @@ public class ReportsGenerateBean {
 
 	/** The fl group thirteen view. */
 	private boolean flGroupThirteenView = false;
+	
+	/** The fl group thirteen additional view. */
+	private boolean flGroupThirteenAdditionalView = false;
+	
+	/** The fl group thirteen ack rec view. */
+	private boolean flGroupThirteenAckRecView=false;
 
 	/** The fl group thirteen without suppl view. */
 	private boolean flGroupThirteenWithoutSupplView = false;
@@ -1435,6 +1450,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group fourteen view. */
 	private boolean flGroupFourteenView = false;
+	
+	/** The fl group fourteen additional view. */
+	private boolean flGroupFourteenAdditionalView = false;
 	
 	/** The fl group fourteen all rolecodes with pp suppl view. */
 	private boolean flGroupFourteenAllRolecodesWithPPSupplView=false;
@@ -1495,6 +1513,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group eighteen view. */
 	private boolean flGroupEighteenView = false;
+	
+	/** The fl group eighteen additional view. */
+	private boolean flGroupEighteenAdditionalView = false;
 
 	/** The fl group eighteen without suppl view. */
 	private boolean flGroupEighteenWithoutSupplView = false;
@@ -14658,6 +14679,8 @@ public class ReportsGenerateBean {
 	/**
 	 * Generate common month list.
 	 * 
+	 * @param lang
+	 *            the lang
 	 * @return the list
 	 */
 	/**
@@ -18732,8 +18755,8 @@ public class ReportsGenerateBean {
 	/**
 	 * Sets the fl text box based roles.
 	 * 
-	 * @param flTextBoxBasedRoles
-	 *            the flTextBoxBasedRoles to set
+	 * @param textBoxBasedRoles
+	 *            the new text box based roles
 	 */
 	public void setTextBoxBasedRoles(boolean textBoxBasedRoles) {
 		this.textBoxBasedRoles = textBoxBasedRoles;
@@ -20022,6 +20045,143 @@ public class ReportsGenerateBean {
 	public void setSmMandatoryRegisteredReportTypeDateViewForMY(
 			boolean smMandatoryRegisteredReportTypeDateViewForMY) {
 		this.smMandatoryRegisteredReportTypeDateViewForMY = smMandatoryRegisteredReportTypeDateViewForMY;
+	}
+
+	/**
+	 * Checks if is sm mandatory supporting document mode view my.
+	 * 
+	 * @return the smMandatorySupportingDocumentModeViewMY
+	 */
+	public boolean isSmMandatorySupportingDocumentModeViewMY() {
+		return smMandatorySupportingDocumentModeViewMY;
+	}
+
+	/**
+	 * Sets the sm mandatory supporting document mode view my.
+	 * 
+	 * @param smMandatorySupportingDocumentModeViewMY
+	 *            the smMandatorySupportingDocumentModeViewMY to set
+	 */
+	public void setSmMandatorySupportingDocumentModeViewMY(
+			boolean smMandatorySupportingDocumentModeViewMY) {
+		this.smMandatorySupportingDocumentModeViewMY = smMandatorySupportingDocumentModeViewMY;
+	}
+
+	/**
+	 * Checks if is fl group twelve additional view.
+	 * 
+	 * @return the flGroupTwelveAdditionalView
+	 */
+	public boolean isFlGroupTwelveAdditionalView() {
+		return flGroupTwelveAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group twelve additional view.
+	 * 
+	 * @param flGroupTwelveAdditionalView
+	 *            the flGroupTwelveAdditionalView to set
+	 */
+	public void setFlGroupTwelveAdditionalView(boolean flGroupTwelveAdditionalView) {
+		this.flGroupTwelveAdditionalView = flGroupTwelveAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group thirteen additional view.
+	 * 
+	 * @return the flGroupThirteenAdditionalView
+	 */
+	public boolean isFlGroupThirteenAdditionalView() {
+		return flGroupThirteenAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group thirteen additional view.
+	 * 
+	 * @param flGroupThirteenAdditionalView
+	 *            the flGroupThirteenAdditionalView to set
+	 */
+	public void setFlGroupThirteenAdditionalView(
+			boolean flGroupThirteenAdditionalView) {
+		this.flGroupThirteenAdditionalView = flGroupThirteenAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group thirteen ack rec view.
+	 * 
+	 * @return the flGroupThirteenAckRecView
+	 */
+	public boolean isFlGroupThirteenAckRecView() {
+		return flGroupThirteenAckRecView;
+	}
+
+	/**
+	 * Sets the fl group thirteen ack rec view.
+	 * 
+	 * @param flGroupThirteenAckRecView
+	 *            the flGroupThirteenAckRecView to set
+	 */
+	public void setFlGroupThirteenAckRecView(boolean flGroupThirteenAckRecView) {
+		this.flGroupThirteenAckRecView = flGroupThirteenAckRecView;
+	}
+
+	/**
+	 * Checks if is fl group fourteen additional view.
+	 * 
+	 * @return the flGroupFourteenAdditionalView
+	 */
+	public boolean isFlGroupFourteenAdditionalView() {
+		return flGroupFourteenAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group fourteen additional view.
+	 * 
+	 * @param flGroupFourteenAdditionalView
+	 *            the flGroupFourteenAdditionalView to set
+	 */
+	public void setFlGroupFourteenAdditionalView(
+			boolean flGroupFourteenAdditionalView) {
+		this.flGroupFourteenAdditionalView = flGroupFourteenAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group ten additional view.
+	 * 
+	 * @return the flGroupTenAdditionalView
+	 */
+	public boolean isFlGroupTenAdditionalView() {
+		return flGroupTenAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group ten additional view.
+	 * 
+	 * @param flGroupTenAdditionalView
+	 *            the flGroupTenAdditionalView to set
+	 */
+	public void setFlGroupTenAdditionalView(boolean flGroupTenAdditionalView) {
+		this.flGroupTenAdditionalView = flGroupTenAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group eighteen additional view.
+	 * 
+	 * @return the flGroupEighteenAdditionalView
+	 */
+	public boolean isFlGroupEighteenAdditionalView() {
+		return flGroupEighteenAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group eighteen additional view.
+	 * 
+	 * @param flGroupEighteenAdditionalView
+	 *            the flGroupEighteenAdditionalView to set
+	 */
+	public void setFlGroupEighteenAdditionalView(
+			boolean flGroupEighteenAdditionalView) {
+		this.flGroupEighteenAdditionalView = flGroupEighteenAdditionalView;
 	}
 
 	
