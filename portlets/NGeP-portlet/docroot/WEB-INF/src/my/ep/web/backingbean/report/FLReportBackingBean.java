@@ -658,7 +658,8 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
 			// rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupTwelveView(true);
+			//rptGenBean.setFlGroupTwelveView(true);
+			rptGenBean.setFlGroupTwelveAdditionalView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlDeliveryOrderDateView(true);
 			break;
@@ -670,12 +671,12 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPegaWaiPengawalView(true);
 			rptGenBean.setFlKumpulanPTJView(true);
 			rptGenBean.setFlPtjView(true);
-			//rptGenBean.setFlAcknowledgeOfficerView(true);
+			rptGenBean.setFlAcknowledgeOfficerView(true);
 			// rptGenBean.setFlDeliveryAddressView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlPkpNoView(true);
 			// rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupTwelveView(true);
+			rptGenBean.setFlGroupTwelveAdditionalView(true);
 			rptGenBean.setFlRecNoteNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlFRNCreatedDateView(true);
@@ -688,10 +689,10 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPkpNoView(true);
-			//rptGenBean.setFlAcknowledgeOfficerView(true);
+			rptGenBean.setFlAcknowledgeOfficerView(true);
 			// rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupThirteenView(true);
-			//rptGenBean.setFlGroupThirteenWithSupplAckRecView(true);
+			//rptGenBean.setFlGroupThirteenView(true);
+			rptGenBean.setFlGroupThirteenAckRecView(true);			
 			rptGenBean.setFlDeliveryOrderNoView(true);
 			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
@@ -745,10 +746,10 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlPaymentAdviceNoView(true);
 			rptGenBean.setFlStatusView(true);
-			//rptGenBean.setFlPayOfficerView(true);
+			rptGenBean.setFlPayOfficerView(true);
 			// rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupFourteenView(true);
-			//rptGenBean.setFlGroupFourteenWithSupplPaymentOffView(true);
+			//rptGenBean.setFlGroupFourteenView(true);	
+			rptGenBean.setFlGroupFourteenAdditionalView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlPurchaseOrderCreatedDateView(true);
 			break;
@@ -759,11 +760,11 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlKumpulanPTJView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
-			//rptGenBean.setFlApproverNameView(true);
+			rptGenBean.setFlApproverNameView(true);
 			// rptGenBean.setFromDateView(true);
 			rptGenBean.setToDateView(true);
-			rptGenBean.setFlGroupTenView(true);
-			//rptGenBean.setFlGroupTenWithSupplReqAppView(true);
+			//rptGenBean.setFlGroupTenView(true);	
+			rptGenBean.setFlGroupTenAdditionalView(true);			
 			rptGenBean.setFlPrNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlPurchaseRequestRejectionDateView(true);
@@ -778,7 +779,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPkpNoView(true);
 			// rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupTwentyThreeView(true);
-			//rptGenBean.setFlApproverNameView(true);
+			rptGenBean.setFlApproverNameView(true);
 			//rptGenBean.setFlGroupTwentyThreeWithSupplCancelView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlPurchaseOrderCancellationDateView(true);
@@ -808,14 +809,15 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlRecievingOfficerView(true);
 			rptGenBean.setFlRecNoteNoView(true);
-			//rptGenBean.setFlAcknowledgeOfficerView(true);
+			rptGenBean.setFlAcknowledgeOfficerView(true);
 			/*
 			 * rptGenBean.setFlContractNoView(true);
 			 * rptGenBean.setFlSstView(true);
 			 */
 
 			// rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupThirteenView(true);
+			//rptGenBean.setFlGroupThirteenView(true);
+			rptGenBean.setFlGroupThirteenAdditionalView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlFRNCancellationDateView(true);
 			break;
@@ -891,13 +893,13 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlPegaWaiPengawalView(true);
 			rptGenBean.setFlKumpulanPTJView(true);
 			rptGenBean.setFlPtjView(true);
-			//rptGenBean.setFlApproverNameView(true);
+			rptGenBean.setFlApproverNameView(true);
 			/*
 			 * rptGenBean.setFlContractNoView(true);
 			 * rptGenBean.setFlSstView(true);
 			 */
 			// rptGenBean.setFromDateView(true);
-			//rptGenBean.setFlStatusView(true);
+			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlStopInstructionNoView(true);
@@ -953,13 +955,13 @@ public class FLReportBackingBean extends
 			 * rptGenBean.setFlContractNoView(true);
 			 * rptGenBean.setFlSstView(true);
 			 */
-			//rptGenBean.setFlStatusView(true);
+			rptGenBean.setFlStatusView(true);
 			// rptGenBean.setFromDateView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlStopInstructionNoView(true);
-			rptGenBean.setFlGroupEighteenView(true);
-			//rptGenBean.setFlGroupEighteenWithSupplApproverView(true);
+			//rptGenBean.setFlGroupEighteenView(true);
+			rptGenBean.setFlGroupEighteenAdditionalView(true);			
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlStopInstructionCreatedDateView(true);
 			break;
