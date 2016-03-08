@@ -2378,7 +2378,6 @@ public class QTDetailBackingBean extends
 					} else {
 					
 					if (CollectionUtils.isEmpty(this.getManagedBean().getPanelItemList())) {
-						//TODO Need to get it from API 
 						this.getManagedBean().setPanelItemList(tenderResDTO.getPanelItems());
 					}
 					if (null != this.getManagedBean().getQt().getCircularVer()) {
@@ -2395,8 +2394,7 @@ public class QTDetailBackingBean extends
 								this.getManagedBean().getQt().getCircularVer()
 										.getDocType());
 					}
-					if (null != this.getManagedBean().getZoneGeneralTrees()
-							&& this.getManagedBean().getZoneGeneralTrees()
+					if (this.getManagedBean().getZoneGeneralTrees()
 									.isEmpty()) {
 						retriveZonesByCircularNo();
 					}
