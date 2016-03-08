@@ -35,6 +35,8 @@ public class SchedulerConstants {
 	public static final String AGREEMENT_EXPIRATION_REMINDER = "AGREEMENT COMPLETION EXPIRATION REMINDER";
 	public static final String PERFORMANCE_BOND_EXPIRATION_REMINDER = "PERFORMANCE BOND EXPIRATION REMINDER";
 	public static final String REMEDY_EXPIRATION_REMINDER = "REMEDY EXPIRATION REMINDER";
+	public static final String IMPOSED_SERVICE_TAX_REMINDER = "IMPOSED SERVICE TAX REMINDER";
+	
 	// CT Job Description
 	public static final String UPDATE_EXPIRED_CONTRACT_JOB_DESC = "Job run every day at 00:01 AM to expire the contract that no more effective.";
 	public static final String UPDATE_EXPIRED_FACTORING_JOB_DESC = "Job run every day at 00:01 AM to expire the factoring that no more effective.";
@@ -43,7 +45,8 @@ public class SchedulerConstants {
 	public static final String CONTRACT_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Contract Notification to contract admin and selected approvers.";
 	public static final String AGREEMENT_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Agreement Completion Notification to contract admin and selected approvers.";
 	public static final String PERFORMANCE_BOND_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Performance Bond Notification to contract admin and selected approvers.";
-	public static final String REMEDY_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to expire the send Remedy Notification to contract admin and selected approvers.";
+	public static final String REMEDY_EXPIRATION_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Remedy Notification to contract admin and selected approvers.";
+	public static final String IMPOSED_SERVICE_TAX_REMINDER_JOB_DESC = "Job run every day at 00:01 AM to send Imposed Service Tax Notification to contract admin.";
 
 	// PM Module Constants
 	// PM Job Group ID
