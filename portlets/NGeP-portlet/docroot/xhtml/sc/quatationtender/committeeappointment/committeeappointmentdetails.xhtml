@@ -5,10 +5,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="isQTStatusChecklistAndAfter" value="#{qTDetailBB.isQTStatusGreaterThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
 
 	<p:panel header="#{lbl['lbl.sc.qt.committee.appointment']}" toggleable="true">
-		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId  ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}">
+		<c:if test="#{isQTStatusChecklistAndAfter}">
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 130px"><p:outputLabel
@@ -22,23 +23,21 @@
 			</table>
 
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" />
-		</ui:fragment>
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.clone']}" rendered="#{!qTCommitteBackingBean.isEnableCloneButton()}"
-				action="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
-				update="@all"
-				title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />
-		</div>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.clone']}" rendered="#{!qTCommitteBackingBean.isEnableCloneButton()}"
+					action="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
+					update="@all"
+					title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />
+			</div>
+			<ui:include src="clonecommitteeappointment.xhtml" />
+		</c:if>
 		
 		<p:remoteCommand name="committeTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.committeTabChangeAction}" />
 		
 		<p:tabMenu id="committeTabMenu"
 			activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}"
-			model="#{qTDetailBB.managedBean.menuModel}">
-			<f:param></f:param>
-
-		</p:tabMenu>
-
+			model="#{qTDetailBB.managedBean.menuModel}" />
+			
 		<ui:include src="committeeappointmenttabList.xhtml" />
 		
 		<h:panelGroup rendered="#{qTDetailBB.managedBean.taskName eq 'Revise Committee'}">
