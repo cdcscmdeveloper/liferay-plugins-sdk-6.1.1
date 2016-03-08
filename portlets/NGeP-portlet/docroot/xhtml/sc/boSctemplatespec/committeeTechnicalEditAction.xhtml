@@ -137,6 +137,7 @@
 
 			<ac:templateSpec
 				newable="#{specificationBackingBean.managedBean.specNewable}"
+				removable="#{specificationBackingBean.managedBean.specNewable}"
 				editable="#{((specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 				templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 
