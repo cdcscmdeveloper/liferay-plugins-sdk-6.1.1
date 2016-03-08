@@ -70,17 +70,17 @@
 		</p:dataTable>
 		<div align="right">
 
-			<p:commandButton value="Add" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 				action="#{zoneBackingBean.addState}" immediate="true" update="searchStateId"
 				/>
-			<p:commandButton value="Delete"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this,selectedStateId" partialSubmit="true"
 				action="#{zoneBackingBean.deleteState}" update="selectedStateId" />
 
 
 		</div>
 	</p:panel>
-	<p:dialog id="stateSearch" header="SELECT STATE"
+	<p:dialog id="stateSearch" header="#{lbl['lbl.pm.zone.select.state']}"
 		widgetVar="statelistpopup" modal="true" width="600" height="300"
 		resizable="false" closable="false">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
@@ -105,12 +105,12 @@
 		</p:dataTable>
 		<p:spacer height="15"></p:spacer>
 		<div align="right">
-			<p:commandButton value="OK" action="#{zoneBackingBean.okZoneAction}"
+			<p:commandButton value="#{lbl['lbl.btn.select']}" action="#{zoneBackingBean.okZoneAction}"
 				ajax="true" 
 				update="selectedStateId,searchStateId"
 				process="@this, stateSearch"  />
                
-			<p:commandButton value="Cancel"  process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"  process="@this"
 				action="#{zoneBackingBean.cancleZone}" />
 		</div>
 	</p:dialog>
