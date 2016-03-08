@@ -1963,27 +1963,32 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		 */
 		private boolean isAllowCentralContract(){
 			boolean allowCentralContract  = false;
-			IUserSO userSO = null;
-			try {
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			Long userId = new FacesScopes().getUserSessionBean().getUserId();
+			
+			if (userId != null) {
+				IUserSO userSO = null;
+				try {
+					UserReqDTO reqDTO = new UserReqDTO();
+					reqDTO.setUserId(userId);
+					userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
-				if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
-					for (PmUserOrg pmUserOrg :  resDTO.getUserOrgList()) {
-						if( pmUserOrg.getPmOrgProfile() != null){
-							Boolean isBPK = pmUserOrg.getPmOrgProfile().getBpk();
-							if(isBPK != null  && isBPK){
-								allowCentralContract  = true;
-								break;
+					if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
+						for (PmUserOrg pmUserOrg :  resDTO.getUserOrgList()) {
+							if( pmUserOrg.getPmOrgProfile() != null){
+								Boolean isBPK = pmUserOrg.getPmOrgProfile().getBpk();
+								if(isBPK != null  && isBPK){
+									allowCentralContract  = true;
+									break;
+								}
 							}
 						}
 					}
+				}finally{
+					userSO = null;
 				}
-			}finally{
-				userSO = null;
 			}
+			
 			return allowCentralContract;		
 		}
 		
