@@ -13,6 +13,7 @@ import my.ep.web.scheduler.job.ct.CtContractNotificationJob;
 import my.ep.web.scheduler.job.ct.CtExpireCircularJob;
 import my.ep.web.scheduler.job.ct.CtExpireContractJob;
 import my.ep.web.scheduler.job.ct.CtExpireFactoringJob;
+import my.ep.web.scheduler.job.ct.CtImposedServiceTaxNotificationJob;
 import my.ep.web.scheduler.job.ct.CtPBNotificationJob;
 import my.ep.web.scheduler.job.ct.CtRemedyNotificationJob;
 
@@ -94,6 +95,14 @@ public class CtSchedulerServlet extends HttpServlet {
 				SchedulerConstants.CT_JOB_GROUP),
 				CtRemedyNotificationJob.class,
 				SchedulerConstants.REMEDY_EXPIRATION_REMINDER_JOB_DESC,
-				SchedulerConstants.TRIGGER_TIME);			
+				SchedulerConstants.TRIGGER_TIME);
+		
+		// Send Imposed Service Tax Notification to contract admin.
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				SchedulerConstants.IMPOSED_SERVICE_TAX_REMINDER,
+				SchedulerConstants.CT_JOB_GROUP),
+				CtImposedServiceTaxNotificationJob.class,
+				SchedulerConstants.IMPOSED_SERVICE_TAX_REMINDER_JOB_DESC,
+				SchedulerConstants.TRIGGER_TIME);
 	}
 }
