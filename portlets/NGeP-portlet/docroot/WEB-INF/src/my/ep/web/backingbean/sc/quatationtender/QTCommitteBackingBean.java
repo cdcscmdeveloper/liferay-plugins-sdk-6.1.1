@@ -1803,7 +1803,12 @@ public class QTCommitteBackingBean extends
 			throw new EpException(MessageConst.ERROR_760146);
 		}
 
-		List<ScCommitteeMember> committeeMembers = new ArrayList<ScCommitteeMember>();
+		List<ScCommitteeMember> committeeMembers = getManagedBean().getToBeDelCommitteMemebers();
+		
+		if (committeeMembers == null) {
+			committeeMembers = new ArrayList<ScCommitteeMember>();	
+		}
+		
 		ScCommittee scCommitte = bean.getScQtCommittee().getScCommittee();
 		scCommitte.getScCommitteeMembers().removeAll(selectedList);
 		if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
