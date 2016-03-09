@@ -47,7 +47,7 @@
     	
  
 	    <tr>
-			 <td width="35%"><b>Site Visit Address</b></td>
+			 <td width="35%" valign="top"><b>Site Visit Address</b></td>
 			 <td>$addressFormatter.getAddress($svAddress.smAddress)</td>
 		</tr>
 		    	
