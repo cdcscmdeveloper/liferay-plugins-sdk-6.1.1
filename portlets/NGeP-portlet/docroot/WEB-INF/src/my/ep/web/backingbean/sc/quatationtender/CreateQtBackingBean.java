@@ -25,6 +25,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -43,6 +44,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -176,11 +179,21 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setCircularExpDate(circular.getEndDate());
 			this.getManagedBean().setCircularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
+			deleteTemplateSpecs(scQt);
 
 		}
 
 	}
-	
+	private void deleteTemplateSpecs(ScQt scQt) {
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setScQt(scQt);
+		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		SpecificationResDTO resDTO= specSO.deleteTemplateSpecs(reqDTO);
+		this.getManagedBean().setQt(resDTO.getScQt());
+		this.getManagedBean().setScQtCheckSt2techProposal(null);
+		this.getManagedBean().setScQtCheckSt2financeProposalList(null);
+	}
 	/**
 	 * Panel conformation.change panel(Yes/No) radion button in business owner.
 	 * 
@@ -2022,7 +2035,17 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 
 		}
-
+	/**
+	 * Panel Group Item by User from drop down& Set into Sc.
+	 * 
+	 * 
+	 */
+	public void changePanelGroupItem() {
+		ScQt scQt = getManagedBean().getQt();
+		if(null!=scQt.getItemGroup() && null!=scQt.getItemGroup().getPanelItemGroupId()){
+			deleteTemplateSpecs(scQt);
+		}
+	}
 		
 	public void setFileNo(ScQt scQt) {
 		scQt.getFileNo();
