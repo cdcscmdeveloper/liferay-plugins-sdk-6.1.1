@@ -1067,48 +1067,48 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return boolean
 	 */
 	private void checkExistingBusinessRegNo(){
-//		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-//		IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
-//		reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
-//		RegistrationResDTO resDTO = reqSO.retrieveActiveSupplierByRegNo(reqDTO);
-//		
-//		if(resDTO.getSmSuppliers().size() > 0 ){
-//			//Appl Type is MOF
-//			if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
-//				for(SmSupplier supplier : resDTO.getSmSuppliers()){
-//					if(getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType())){
-//						log.info("MOF - Contain same supplier type");
-//						String labelText = null;
-//						if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-//							labelText = SmCommonUtil.getMessage("lbl.sm.contractor", null);
-//						}else{
-//							labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
-//						}
-//						
-//						throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,getManagedBean().getSmSupp().getRegNo()});
-//					}
-//					
-//					if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-//						if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-//							throw new EpException(MessageConst.ERROR_721042,new String[]{getManagedBean().getSmSupp().getRegNo()});
-//						}
-//					}
-//				}
-//			}
-//			else{
-//				//Appl Type is BASIC
-//				for(SmSupplier supplier : resDTO.getSmSuppliers()){
-//					if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-//						throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-//					}
-//					
-//					if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-//						throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-//					}
-//				}
-//			}
-//		}
-		validateBusinessRegNoWithBussTypeAndLocalAuth();
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
+		reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
+		RegistrationResDTO resDTO = reqSO.retrieveActiveSupplierByRegNo(reqDTO);
+		
+		if(resDTO.getSmSuppliers().size() > 0 ){
+			//Appl Type is MOF
+			if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+				for(SmSupplier supplier : resDTO.getSmSuppliers()){
+					if(getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType())){
+						log.info("MOF - Contain same supplier type");
+						String labelText = null;
+						if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+							labelText = SmCommonUtil.getMessage("lbl.sm.contractor", null);
+						}else{
+							labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
+						}
+						
+						throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,getManagedBean().getSmSupp().getRegNo()});
+					}
+					
+					if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+						if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
+							throw new EpException(MessageConst.ERROR_721042,new String[]{getManagedBean().getSmSupp().getRegNo()});
+						}
+					}
+				}
+			}
+			else{
+				//Appl Type is BASIC
+				for(SmSupplier supplier : resDTO.getSmSuppliers()){
+					if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+						throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+					}
+					
+					if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
+						throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
+					}
+				}
+			}
+		}
+//		validateBusinessRegNoWithBussTypeAndLocalAuth();
 	}
 	
 	/**
