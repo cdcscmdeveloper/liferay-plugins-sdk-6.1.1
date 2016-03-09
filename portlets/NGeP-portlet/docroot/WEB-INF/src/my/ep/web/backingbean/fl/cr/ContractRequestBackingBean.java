@@ -3753,17 +3753,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		for(CtContractItem ctContractItem : flRequest.getCtContract().getLatestContractVer().getCtContractItems()){
 			if(ctContractItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
-				if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
-					BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
-					if(flOrederedQty.doubleValue() >  ctContractItem.getMinimumOrderQty()){
-						throw new EpException(ctContractItem.getScRequestItem().getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is more than maximum quantity " +ctContractItem.getMinimumOrderQty());
-					}
-				}
+//				if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
+//					BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
+//					if(flOrederedQty.doubleValue() >  ctContractItem.getMinimumOrderQty()){
+//						throw new EpException(ctContractItem.getScRequestItem().getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is more than maximum quantity " +ctContractItem.getMinimumOrderQty());
+//					}
+//				}
 			}else{
 				if(quantityMap.containsKey(ctContractItem.getScRequestItem().getRequestNoteItemId())){
 					BigDecimal flOrederedQty =  quantityMap.get(ctContractItem.getScRequestItem().getRequestNoteItemId());
 					if(flOrederedQty.doubleValue() <  ctContractItem.getMinimumOrderQty()){
-						throw new EpException(ctContractItem.getScRequestItem().getItemName() +" (" + flOrederedQty.doubleValue() + ")" + " is lesser than minimum quantity " +ctContractItem.getMinimumOrderQty());
+						throw new EpException(MessageConst.ERROR_745075, new String[]{flOrederedQty.toString(),ctContractItem.getScRequestItem().getItemName(),Double.toString(ctContractItem.getMinimumOrderQty())});
 					}
 				}
 			}
