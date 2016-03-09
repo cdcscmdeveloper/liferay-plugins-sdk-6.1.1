@@ -33,7 +33,7 @@
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>Company Address</b></td>
+	        <td width="30%" valign="top"><b>Company Address</b></td>
 	        <td>$addrLiines</td>
     	</tr>
     	
