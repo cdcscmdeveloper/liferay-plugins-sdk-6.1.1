@@ -49,7 +49,10 @@
 				invalidFileMessage="#{lbl['lbl.pm.access.app.upload.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.pm.access.app.upload.fileSize.errmsg']}"
 				fileUploadListener="#{accessApplBackingBean.handleFileUpload}"
-				update="@this,:form:suppDocPnl" oncomplete="accessApplUploadDlg.hide();" />
+				update="@this,:form:suppDocPnl" oncomplete="accessApplUploadDlg.hide();"
+				uploadLabel="#{lbl['lbl.btn.upload']}" 
+		   		label="#{lbl['lbl.btn.choose']}" 
+		   		cancelLabel="#{lbl['lbl.btn.cancel']}" />
 		</p:dialog>
 		
 		<p:dialog id="deleteAttachmentDlg" widgetVar="deleteAttachmentDlg"
