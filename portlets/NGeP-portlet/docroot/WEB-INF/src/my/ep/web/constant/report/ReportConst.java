@@ -37,6 +37,9 @@ public class ReportConst {
 	public static final String CT_MOD_VAL = "CT";
 	public static final String PP_MOD_VAL = "PP";
 	public static final String FL_SUB_MOD_MINISTRY_VAL="MC";
+	public static final String FL_SUB_MOD_CENTRAL_VAL="CC";
+	public static final String FL_SUB_MOD_PURCHASE_VAL="PO";
+	public static final String FL_SUB_MOD_PANEL_VAL="PA";
 	// SC Module reports start
 	public static final String SPPPP_PEMATUHAN_OC_RPT_VAL = "SC_001";
 	public static final String KPPP1_PEMATUHAN_OC_RPT_VAL = "SC_002";
