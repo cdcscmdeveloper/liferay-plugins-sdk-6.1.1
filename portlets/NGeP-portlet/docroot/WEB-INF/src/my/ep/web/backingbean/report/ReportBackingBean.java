@@ -9903,9 +9903,9 @@ public class ReportBackingBean extends
 		this.setReportName(ReportConst.EMPTY_VAL);
 		getManagedBean().setRptGenBean(rptGenBean);
 		rptGenBean.setReportCategory(this.getReportCategory());
-		
+
 		// tool tips for FL Submodules(like Ex: CC,PO,PA)
-		//checkToolTipsConditonForFLSubmodule();
+		// checkToolTipsConditonForFLSubmodule();
 		resetReportForm();
 		/*
 		 * String language =
@@ -9948,15 +9948,15 @@ public class ReportBackingBean extends
 		if (this.getReportCategory() != null) {
 			if (this.getReportCategory().equalsIgnoreCase(
 					ReportConst.FL_SUB_MOD_CENTRAL_VAL)) {
-				//this.getManagedBean().getRptGenBean().setToolTipForCC(true);
+				// this.getManagedBean().getRptGenBean().setToolTipForCC(true);
 				this.getRptGenBean().setToolTipForCC(true);
 			} else if (this.getReportCategory().equalsIgnoreCase(
 					ReportConst.FL_SUB_MOD_PURCHASE_VAL)) {
-				//this.getManagedBean().getRptGenBean().setToolTipForPO(true);
+				// this.getManagedBean().getRptGenBean().setToolTipForPO(true);
 				this.getRptGenBean().setToolTipForPO(true);
 			} else if (this.getReportCategory().equalsIgnoreCase(
 					ReportConst.FL_SUB_MOD_PANEL_VAL)) {
-				//this.getManagedBean().getRptGenBean().setToolTipForPA(true);
+				// this.getManagedBean().getRptGenBean().setToolTipForPA(true);
 				this.getRptGenBean().setToolTipForPA(true);
 			}
 		}
@@ -10260,13 +10260,13 @@ public class ReportBackingBean extends
 					|| this.getModuleValue().equalsIgnoreCase(
 							ModuleCodeConst.CONTRACT_MANAGEMENT)
 					|| this.getModuleValue().equalsIgnoreCase(
-							ModuleCodeConst.ORDER_FULFILLMENT)) {				
+							ModuleCodeConst.ORDER_FULFILLMENT)) {
 				this.getManagedBean().getRptGenBean()
 						.setCmMadatoryIndicatorView(false);
 				this.getManagedBean().getRptGenBean()
 						.setMadatoryIndicatorView(true);
 				this.getManagedBean().getRptGenBean()
-				.setInstructionInfoView(true);
+						.setInstructionInfoView(true);
 
 			} else {
 				this.getManagedBean().getRptGenBean()
@@ -10752,7 +10752,17 @@ public class ReportBackingBean extends
 			} else if ((getManagedBean().getRptGenBean().isFlGroupTwoView())) {
 				getManagedBean().getRptGenBean().setFlGroupTwoWithoutSupplView(
 						true);
-			} else if ((getManagedBean().getRptGenBean().isFlGroupThreeView())) {
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwoAdditionalView())) {
+				getManagedBean().getRptGenBean().setFlGroupTwoWithoutSupplView(
+						true);
+			}
+
+			else if ((getManagedBean().getRptGenBean().isFlGroupThreeView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupThreeWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupThreeAdditionalView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupThreeWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupFourView())) {
@@ -10764,10 +10774,20 @@ public class ReportBackingBean extends
 			} else if ((getManagedBean().getRptGenBean().isFlGroupSixView())) {
 				getManagedBean().getRptGenBean().setFlGroupSixWithoutSupplView(
 						true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupSixAdditionalView())) {
+				getManagedBean().getRptGenBean().setFlGroupSixWithoutSupplView(
+						true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupSevenView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupSevenWithoutSupplView(true);
-			} else if ((getManagedBean().getRptGenBean().isFlGroupEightView())) {
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupSevenAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupSevenWithoutSupplView(true);
+			}
+
+			else if ((getManagedBean().getRptGenBean().isFlGroupEightView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupEightWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupNineView())) {
@@ -10856,11 +10876,25 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean()
 						.setFlGroupTwentyFiveWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyFiveAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyFiveWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
 					.isFlGroupTwentySixView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupTwentySixWithoutSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentySixAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentySixWithoutSupplView(true);
+			}
+
+			else if ((getManagedBean().getRptGenBean()
 					.isFlGroupTwentySevenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentySevenWithoutSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentySevenAdditionalView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupTwentySevenWithoutSupplView(true);
 			}
@@ -10871,7 +10905,15 @@ public class ReportBackingBean extends
 			} else if ((getManagedBean().getRptGenBean().isFlGroupTwoView())) {
 				getManagedBean().getRptGenBean().setFlGroupTwoWithSupplView(
 						true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwoAdditionalView())) {
+				getManagedBean().getRptGenBean().setFlGroupTwoWithSupplView(
+						true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupThreeView())) {
+				getManagedBean().getRptGenBean().setFlGroupThreeWithSupplView(
+						true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupThreeAdditionalView())) {
 				getManagedBean().getRptGenBean().setFlGroupThreeWithSupplView(
 						true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupFourView())) {
@@ -10883,10 +10925,20 @@ public class ReportBackingBean extends
 			} else if ((getManagedBean().getRptGenBean().isFlGroupSixView())) {
 				getManagedBean().getRptGenBean().setFlGroupSixWithSupplView(
 						true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupSixAdditionalView())) {
+				getManagedBean().getRptGenBean().setFlGroupSixWithSupplView(
+						true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupSevenView())) {
 				getManagedBean().getRptGenBean().setFlGroupSevenWithSupplView(
 						true);
-			} else if ((getManagedBean().getRptGenBean().isFlGroupEightView())) {
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupSevenAdditionalView())) {
+				getManagedBean().getRptGenBean().setFlGroupSevenWithSupplView(
+						true);
+			}
+
+			else if ((getManagedBean().getRptGenBean().isFlGroupEightView())) {
 				getManagedBean().getRptGenBean().setFlGroupEightWithSupplView(
 						true);
 			} else if ((getManagedBean().getRptGenBean().isFlGroupNineView())) {
@@ -10975,11 +11027,23 @@ public class ReportBackingBean extends
 				getManagedBean().getRptGenBean()
 						.setFlGroupTwentyFiveWithSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentyFiveAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentyFiveWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
 					.isFlGroupTwentySixView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupTwentySixWithSupplView(true);
 			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentySixAdditionalView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentySixWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
 					.isFlGroupTwentySevenView())) {
+				getManagedBean().getRptGenBean()
+						.setFlGroupTwentySevenWithSupplView(true);
+			} else if ((getManagedBean().getRptGenBean()
+					.isFlGroupTwentySevenAdditionalView())) {
 				getManagedBean().getRptGenBean()
 						.setFlGroupTwentySevenWithSupplView(true);
 			}
@@ -11870,7 +11934,7 @@ public class ReportBackingBean extends
 				this.getManagedBean().setReportCode(pmReport.getReportCode());
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 
-			}			
+			}
 			retrieveHighRoleCodeByUser();
 			retrieveAllRoleCodesByUser();
 			retrieveZoneByUser();
@@ -13549,7 +13613,7 @@ public class ReportBackingBean extends
 				 * String month = getManagedBean().getMonthMap().get(
 				 * this.getSmToMonth());
 				 */
-				String month = getCalendarMonthNameByNo(this.getSmFromMonth());
+				String month = getCalendarMonthNameByNo(this.getSmToMonth());
 				rptGenBean.setSmToMonthVar(ReportConst.AMP_SM_TO_DATE_EQ
 						+ month);
 			}

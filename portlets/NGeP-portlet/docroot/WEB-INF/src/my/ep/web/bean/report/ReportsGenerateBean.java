@@ -1337,6 +1337,9 @@ public class ReportsGenerateBean {
 	/** The fl group two view. */
 	private boolean flGroupTwoView = false;	
 	
+	/** The fl group two additional view. */
+	private boolean flGroupTwoAdditionalView = false;	
+	
 	/** The fl group two with suppl all view. */
 	private boolean flGroupTwoWithSupplAllView=false;
 
@@ -1348,6 +1351,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group three view. */
 	private boolean flGroupThreeView = false;
+	
+	/** The fl group three additional view. */
+	private boolean flGroupThreeAdditionalView = false;	
 
 	/** The fl group three without suppl view. */
 	private boolean flGroupThreeWithoutSupplView = false;
@@ -1378,6 +1384,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group six view. */
 	private boolean flGroupSixView = false;
+	
+	/** The fl group six additional view. */
+	private boolean flGroupSixAdditionalView = false;
 
 	/** The fl group six without suppl view. */
 	private boolean flGroupSixWithoutSupplView = false;
@@ -1387,6 +1396,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group seven view. */
 	private boolean flGroupSevenView = false;
+	
+	/** The fl group seven additional view. */
+	private boolean flGroupSevenAdditionalView = false;
 
 	/** The fl group seven without suppl view. */
 	private boolean flGroupSevenWithoutSupplView = false;
@@ -1663,6 +1675,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty five view. */
 	private boolean flGroupTwentyFiveView = false;
+	
+	/** The fl group twenty five additional view. */
+	private boolean flGroupTwentyFiveAdditionalView = false;
 
 	/** The fl group twenty five without suppl view. */
 	private boolean flGroupTwentyFiveWithoutSupplView = false;
@@ -1678,6 +1693,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty six view. */
 	private boolean flGroupTwentySixView = false;
+	
+	/** The fl group twenty six additional view. */
+	private boolean flGroupTwentySixAdditionalView = false;
 
 	/** The fl group twenty six without suppl view. */
 	private boolean flGroupTwentySixWithoutSupplView = false;
@@ -1693,6 +1711,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty seven view. */
 	private boolean flGroupTwentySevenView = false;
+	
+	/** The fl group twenty seven additional view. */
+	private boolean flGroupTwentySevenAdditionalView = false;
 
 	/** The fl group three with suppl plr view. */
 	private boolean flGroupThreeWithSupplPLRView = false;
@@ -20336,6 +20357,142 @@ public class ReportsGenerateBean {
 	 */
 	public void setInstructionInfoView(boolean instructionInfoView) {
 		this.instructionInfoView = instructionInfoView;
+	}
+
+	/**
+	 * Checks if is fl group three additional view.
+	 * 
+	 * @return the flGroupThreeAdditionalView
+	 */
+	public boolean isFlGroupThreeAdditionalView() {
+		return flGroupThreeAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group three additional view.
+	 * 
+	 * @param flGroupThreeAdditionalView
+	 *            the flGroupThreeAdditionalView to set
+	 */
+	public void setFlGroupThreeAdditionalView(boolean flGroupThreeAdditionalView) {
+		this.flGroupThreeAdditionalView = flGroupThreeAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group two additional view.
+	 * 
+	 * @return the flGroupTwoAdditionalView
+	 */
+	public boolean isFlGroupTwoAdditionalView() {
+		return flGroupTwoAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group two additional view.
+	 * 
+	 * @param flGroupTwoAdditionalView
+	 *            the flGroupTwoAdditionalView to set
+	 */
+	public void setFlGroupTwoAdditionalView(boolean flGroupTwoAdditionalView) {
+		this.flGroupTwoAdditionalView = flGroupTwoAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group six additional view.
+	 * 
+	 * @return the flGroupSixAdditionalView
+	 */
+	public boolean isFlGroupSixAdditionalView() {
+		return flGroupSixAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group six additional view.
+	 * 
+	 * @param flGroupSixAdditionalView
+	 *            the flGroupSixAdditionalView to set
+	 */
+	public void setFlGroupSixAdditionalView(boolean flGroupSixAdditionalView) {
+		this.flGroupSixAdditionalView = flGroupSixAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group twenty five additional view.
+	 * 
+	 * @return the flGroupTwentyFiveAdditionalView
+	 */
+	public boolean isFlGroupTwentyFiveAdditionalView() {
+		return flGroupTwentyFiveAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group twenty five additional view.
+	 * 
+	 * @param flGroupTwentyFiveAdditionalView
+	 *            the flGroupTwentyFiveAdditionalView to set
+	 */
+	public void setFlGroupTwentyFiveAdditionalView(
+			boolean flGroupTwentyFiveAdditionalView) {
+		this.flGroupTwentyFiveAdditionalView = flGroupTwentyFiveAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group seven additional view.
+	 * 
+	 * @return the flGroupSevenAdditionalView
+	 */
+	public boolean isFlGroupSevenAdditionalView() {
+		return flGroupSevenAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group seven additional view.
+	 * 
+	 * @param flGroupSevenAdditionalView
+	 *            the flGroupSevenAdditionalView to set
+	 */
+	public void setFlGroupSevenAdditionalView(boolean flGroupSevenAdditionalView) {
+		this.flGroupSevenAdditionalView = flGroupSevenAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group twenty six additional view.
+	 * 
+	 * @return the flGroupTwentySixAdditionalView
+	 */
+	public boolean isFlGroupTwentySixAdditionalView() {
+		return flGroupTwentySixAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group twenty six additional view.
+	 * 
+	 * @param flGroupTwentySixAdditionalView
+	 *            the flGroupTwentySixAdditionalView to set
+	 */
+	public void setFlGroupTwentySixAdditionalView(
+			boolean flGroupTwentySixAdditionalView) {
+		this.flGroupTwentySixAdditionalView = flGroupTwentySixAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group twenty seven additional view.
+	 * 
+	 * @return the flGroupTwentySevenAdditionalView
+	 */
+	public boolean isFlGroupTwentySevenAdditionalView() {
+		return flGroupTwentySevenAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group twenty seven additional view.
+	 * 
+	 * @param flGroupTwentySevenAdditionalView
+	 *            the flGroupTwentySevenAdditionalView to set
+	 */
+	public void setFlGroupTwentySevenAdditionalView(
+			boolean flGroupTwentySevenAdditionalView) {
+		this.flGroupTwentySevenAdditionalView = flGroupTwentySevenAdditionalView;
 	}
 
 	
