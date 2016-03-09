@@ -10247,19 +10247,39 @@ public class ReportBackingBean extends
 	 */
 	public void madatoryIndicator() {
 		log.info("ReportBackingBean-madatoryIndicator");
-		if ((null != this.getReportValue())
-				&& (this.getModuleValue()
-						.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
-			getManagedBean().getRptGenBean().setCmMadatoryIndicatorView(true);
-			getManagedBean().getRptGenBean().setMadatoryIndicatorView(false);
-		} else {
-			getManagedBean().getRptGenBean().setCmMadatoryIndicatorView(false);
-			getManagedBean().getRptGenBean().setMadatoryIndicatorView(true);
+
+		if (null != this.getModuleValue()) {
+			if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT)) {
+				this.getManagedBean().getRptGenBean()
+						.setCmMadatoryIndicatorView(true);
+				this.getManagedBean().getRptGenBean()
+						.setMadatoryIndicatorView(false);
+			} else if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.PROCUREMENT_PLAN)
+					|| this.getModuleValue().equalsIgnoreCase(
+							ModuleCodeConst.CONTRACT_MANAGEMENT)
+					|| this.getModuleValue().equalsIgnoreCase(
+							ModuleCodeConst.ORDER_FULFILLMENT)) {				
+				this.getManagedBean().getRptGenBean()
+						.setCmMadatoryIndicatorView(false);
+				this.getManagedBean().getRptGenBean()
+						.setMadatoryIndicatorView(true);
+				this.getManagedBean().getRptGenBean()
+				.setInstructionInfoView(true);
+
+			} else {
+				this.getManagedBean().getRptGenBean()
+						.setCmMadatoryIndicatorView(false);
+				this.getManagedBean().getRptGenBean()
+						.setMadatoryIndicatorView(true);
+			}
 		}
-		if ((null != this.getReportValue())
-				&& (this.getReportValue()
-						.equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))) {
-			getManagedBean().getRptGenBean().setMadatoryIndicatorView(true);
+		if (null != this.getReportValue()) {
+			if (this.getReportValue().equalsIgnoreCase(
+					ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL)) {
+				getManagedBean().getRptGenBean().setMadatoryIndicatorView(true);
+			}
 		}
 	}
 
