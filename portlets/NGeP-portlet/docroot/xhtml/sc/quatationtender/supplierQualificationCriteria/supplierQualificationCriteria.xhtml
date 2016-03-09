@@ -5,6 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:param name="suppQualificationReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
+	<ui:param name="locCoverageReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_LOCATION_COVERAGE)}" />
+	<ui:param name="categoryCodeReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CATEGORY_CODE)}" />
+	
 	<h:panelGroup id="suppQualPG">
 		<c:if
 			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == ParameterTypeConst.quotationTenderTypeOpen 
