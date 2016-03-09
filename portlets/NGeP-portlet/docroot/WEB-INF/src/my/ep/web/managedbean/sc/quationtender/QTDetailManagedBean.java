@@ -860,13 +860,6 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	
 	
 	private List<ScQtApproval> toBeApprovalRemoveList;
-
-	
-	
-	
-	/** The root zoanl tree. */
-	private TreeNode rootZoanlTree;
-	
 	
 	/** The sc qt remarks. */
 	private ScQtRemark scQtRemarks;
@@ -1012,20 +1005,12 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	/** The root location tree. */
 	private TreeNode rootLocationTree;
 
-	
-
-	/** The zone name. */
-	private String zoneName;
-
 	/** The panel zone select. */
 	private TreeNode panelZoneSelect;
 
 	/** The zone trees. */
 	private List<TreeNode> zoneTrees = new ArrayList<TreeNode>();
-
-	/** The zone general trees. */
-	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
-
+	
 	/** The zones list. */
 	private List<TreeNode> zonesList = new ArrayList<TreeNode>();
 
@@ -1517,8 +1502,6 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 
 	/** The temp zone name. */
 	private String tempZoneName;
-
-	private boolean isCheckAllList = Boolean.FALSE;
 
 	/** The financial Item score setting. */
 	private ScQtScoreSetting finacialItemScoreSetting;
@@ -2302,25 +2285,6 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	 */
 	public void setRootLocationTree(TreeNode rootLocationTree) {
 		this.rootLocationTree = rootLocationTree;
-	}
-
-	/**
-	 * Gets the zone name.
-	 * 
-	 * @return the zone name
-	 */
-	public String getZoneName() {
-		return zoneName;
-	}
-
-	/**
-	 * Sets the zone name.
-	 * 
-	 * @param zoneName
-	 *            the new zone name
-	 */
-	public void setZoneName(String zoneName) {
-		this.zoneName = zoneName;
 	}
 
 	/**
@@ -8447,14 +8411,6 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 		this.isFinancialUserScoringSchema = isFinancialUserScoringSchema;
 	}
 
-	public List<TreeNode> getZoneGeneralTrees() {
-		return zoneGeneralTrees;
-	}
-
-	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
-		this.zoneGeneralTrees = zoneGeneralTrees;
-	}
-
 	public List<ScQtLocCriteria> getSupplierLocationList() {
 		return supplierLocationList;
 	}
@@ -8502,15 +8458,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	public void setFulfilmentType(String fulfilmentType) {
 		this.fulfilmentType = fulfilmentType;
 	}
-
-	public TreeNode getRootZoanlTree() {
-		return rootZoanlTree;
-	}
-
-	public void setRootZoanlTree(TreeNode rootZoanlTree) {
-		this.rootZoanlTree = rootZoanlTree;
-	}
-
+	
 	public List<ScQtSchedule> getScheduleList() {
 		return scheduleList;
 	}
@@ -8598,14 +8546,6 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 
 	public void setTempZoneName(String tempZoneName) {
 		this.tempZoneName = tempZoneName;
-	}
-
-	public boolean isCheckAllList() {
-		return isCheckAllList;
-	}
-
-	public void setCheckAllList(boolean isCheckAllList) {
-		this.isCheckAllList = isCheckAllList;
 	}
 
 	public boolean isState() {
