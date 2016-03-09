@@ -1953,8 +1953,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 //			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 //            reqDTO.setUserRole(getOneRoleByStatus(ppPlan));
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			reqDTO.setPmUser(pmUser);
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPpRemark(remark);
 			reqDTO.setPpRemarks(itemRemarks);
 			reqDTO.setJustifications(justifications);
@@ -3620,15 +3619,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	
 	public String retrievePpBillingAddr() {
-		AddressReqDTO reqDTO = new AddressReqDTO();
-		reqDTO.setOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
-		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
-		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-		if(resDTO.getAddressTypeList() !=null && !resDTO.getAddressTypeList().isEmpty()){
-			return getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress());
+		if(getManagedBean().getSelectedPlan().getOrgProfileAddress() != null){
+			return getPpFullAddress(getManagedBean().getSelectedPlan().getOrgProfileAddress());
 		}else{
-			return "";
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(resDTO.getAddressTypeList() !=null && !resDTO.getAddressTypeList().isEmpty()){
+				return getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress());
+			}else{
+				return "";
+			}
 		}
 	}
 	
