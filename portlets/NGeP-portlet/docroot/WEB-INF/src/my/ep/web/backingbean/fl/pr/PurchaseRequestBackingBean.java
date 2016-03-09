@@ -1597,7 +1597,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void editManualAddress(FlDeliveryAddress flDelAddress){//retrieveCountryList();
 		getManagedBean().setEmailValidate(false);
 		getManagedBean().setFlManualAddress(flDelAddress);
-
+		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDivision()==null) {
+			getManagedBean().getFlManualAddress().getFlAddress().setPmDivision(new PmDivision());
+		}
 		retrieveCountryList();
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(flDelAddress.getFlAddress().getPmCountry().getCountryId());
@@ -1608,7 +1610,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 		
-		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDivision()!=null && getManagedBean().getFlManualAddress().getFlAddress().getPmDivision().getDivisionId()!=null) {
+		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDivision().getDivisionId()!=null) {
 			DivisionReqDTO divReqDTO= new DivisionReqDTO();
 			divReqDTO.setStateId(flDelAddress.getFlAddress().getPmState().getStateId());
 			IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
