@@ -64,10 +64,6 @@
 					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[4] and empty smAppl[6]}"/>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.application.no']}">
-					<h:outputText value="#{smAppl[0]}" />
-				</p:column>
-				
 				<p:column headerText="#{lbl['lbl.sm.isbumi']}">
 					<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{smAppl[7] eq '1'}"/>
 					<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{smAppl[7] eq '0'}"/>
