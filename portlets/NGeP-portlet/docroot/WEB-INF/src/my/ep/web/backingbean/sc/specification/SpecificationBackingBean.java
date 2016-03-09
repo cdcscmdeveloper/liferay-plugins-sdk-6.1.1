@@ -1388,26 +1388,24 @@ public class SpecificationBackingBean extends
 				tenderResDTO = QtDetailsSO
 						.retriveQTSuppQulCriDetails(tenderReqDTO);
 				ScQt scQt = tenderResDTO.getQtDetail();
+				CtCircularVer ctCircularVer = scQt.getCircularVer();
 				this.getManagedBean().setAllStateCode(
 						tenderResDTO.getStateCode());
 				this.getManagedBean().setQt(scQt);
 				// this.getManagedBean().getCtCircularVer(this.getManagedBean().getQt().getCircularVer());
 
-			}
-			if (null != this.getManagedBean().getCtCircularVer()) {
-				this.getManagedBean().setCircularExpDate(
-						this.getManagedBean().getCtCircularVer().getEndDate());
-				this.getManagedBean().setCircularNo(
-						this.getManagedBean().getCtCircularVer()
-								.getCircularNo());
-				this.getManagedBean().setCircularName(
-						this.getManagedBean().getCtCircularVer().getName());
-				this.getManagedBean().setCircularType(
-						this.getManagedBean().getCtCircularVer().getDocType());
-			}
-			if (null != this.getManagedBean().getZoneGeneralTrees()
-					&& this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
-				retriveZonesOrSuppliersByItem();
+				this.getManagedBean().setPanelItemList(tenderResDTO.getPanelItems());
+				
+				if (null != ctCircularVer) {
+					this.getManagedBean().setCircularExpDate(ctCircularVer.getEndDate());
+					this.getManagedBean().setCircularNo(ctCircularVer.getCircularNo());
+					this.getManagedBean().setCircularName(ctCircularVer.getName());
+					this.getManagedBean().setCircularType(ctCircularVer.getDocType());
+				}
+				if (null != this.getManagedBean().getZoneGeneralTrees()
+						&& this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+					retriveZonesOrSuppliersByItem();
+				}
 			}
 
 		} finally {
