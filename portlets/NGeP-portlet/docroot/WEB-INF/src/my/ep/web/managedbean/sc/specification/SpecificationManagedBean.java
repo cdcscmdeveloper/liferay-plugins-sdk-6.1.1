@@ -226,20 +226,11 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 	/** The root location tree. */
 	private TreeNode rootLocationTree;
 
-	/** The root zoanl tree. */
-	private TreeNode rootZoanlTree;
-
-	/** The zone name. */
-	private String zoneName;
-
 	/** The panel zone select. */
 	private TreeNode panelZoneSelect;
 
 	/** The zone trees. */
 	private List<TreeNode> zoneTrees = new ArrayList<TreeNode>();
-
-	/** The zone general trees. */
-	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 
 	/** The zones list. */
 	private List<TreeNode> zonesList = new ArrayList<TreeNode>();
@@ -738,8 +729,6 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 
 	/** The temp zone name. */
 	private String tempZoneName;
-
-	private boolean isCheckAllList = Boolean.FALSE;
 
 	/** The financial Item score setting. */
 	private ScQtScoreSetting finacialItemScoreSetting;
@@ -1700,24 +1689,6 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 		this.rootLocationTree = rootLocationTree;
 	}
 
-	/**
-	 * Gets the zone name.
-	 * 
-	 * @return the zone name
-	 */
-	public String getZoneName() {
-		return zoneName;
-	}
-
-	/**
-	 * Sets the zone name.
-	 * 
-	 * @param zoneName
-	 *            the new zone name
-	 */
-	public void setZoneName(String zoneName) {
-		this.zoneName = zoneName;
-	}
 
 	/**
 	 * Gets the zone trees.
@@ -2480,25 +2451,6 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 	}
 
 	/**
-	 * Gets the zone general trees.
-	 * 
-	 * @return the zone general trees
-	 */
-	public List<TreeNode> getZoneGeneralTrees() {
-		return zoneGeneralTrees;
-	}
-
-	/**
-	 * Sets the zone general trees.
-	 * 
-	 * @param zoneGeneralTrees
-	 *            the new zone general trees
-	 */
-	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
-		this.zoneGeneralTrees = zoneGeneralTrees;
-	}
-
-	/**
 	 * Gets the selected general tree nodes.
 	 * 
 	 * @return the selected general tree nodes
@@ -3031,25 +2983,6 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 	 */
 	public void setTabActiveIndex(int tabActiveIndex) {
 		this.tabActiveIndex = tabActiveIndex;
-	}
-
-	/**
-	 * Gets the root zoanl tree.
-	 * 
-	 * @return the root zoanl tree
-	 */
-	public TreeNode getRootZoanlTree() {
-		return rootZoanlTree;
-	}
-
-	/**
-	 * Sets the root zoanl tree.
-	 * 
-	 * @param rootZoanlTree
-	 *            the new root zoanl tree
-	 */
-	public void setRootZoanlTree(TreeNode rootZoanlTree) {
-		this.rootZoanlTree = rootZoanlTree;
 	}
 
 	/**
@@ -4858,21 +4791,6 @@ public class SpecificationManagedBean extends QTBaseManagedBean {
 	 */
 	public void setTempZoneName(String tempZoneName) {
 		this.tempZoneName = tempZoneName;
-	}
-
-	/**
-	 * @return the isCheckAllList
-	 */
-	public boolean isCheckAllList() {
-		return isCheckAllList;
-	}
-
-	/**
-	 * @param isCheckAllList
-	 *            the isCheckAllList to set
-	 */
-	public void setCheckAllList(boolean isCheckAllList) {
-		this.isCheckAllList = isCheckAllList;
 	}
 
 	/**
