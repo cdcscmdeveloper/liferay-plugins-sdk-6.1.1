@@ -219,8 +219,6 @@ public class CreateQtBackingBean extends
 
 			} else {
 				scQt.setCircularVer(null);
-				scQt.setQtType(null);
-				scQt.setZonal(false);
 				scQt.setPanelItemId(null);
 				scQt.setItemGroup(null);
 				//this.getManagedBean().setCtPanelItem(null);
@@ -375,10 +373,10 @@ public class CreateQtBackingBean extends
 	 * @param scQt
 	 * 		the scQt instance
 	 */
-	public void zoneRadioChange(ScQt scQt) {
+	/*public void zoneRadioChange(ScQt scQt) {
 		
-		/*Boolean isZonal = (Boolean) event.getComponent().getAttributes()
-				.get("value");*/
+		Boolean isZonal = (Boolean) event.getComponent().getAttributes()
+				.get("value");
 		Boolean isZonal = scQt.isZonal();
 		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
 		if (null == supplierCriteria) {
@@ -398,11 +396,11 @@ public class CreateQtBackingBean extends
 			if (supplierCriteria.isAllState() == true) {
 				this.getManagedBean().setZoneTrees(null);
 			}
-			/*if (null != supplierCriteria
+			if (null != supplierCriteria
 					&& supplierCriteria.isBrandNew() == false
 					&& scQt.isPanel() == false) {
 				updateTechnicalAndFinacialSpecStatusZoneLocationChange(zoneCriteria);
-			}*/
+			}
 		} else {
 			this.getManagedBean().setZoneGeneralTrees(null);
 			supplierCriteria.setQtZoneCriterias(null);
@@ -413,17 +411,17 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setZoneGeneralTrees(null);
 			this.getManagedBean().setZoneLocation(false);
 			this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
-			/*if (null != supplierCriteria
+			if (null != supplierCriteria
 					&& supplierCriteria.isBrandNew() == false
 					&& scQt.isPanel() == false) {
 				updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
-			}*/
+			}
 		}
 
 		scQt.setScQtSupplierCriteria(supplierCriteria);
 		this.getManagedBean().setQt(scQt);
 
-	}
+	}*/
 	
 	/**
 	 * Ministry Specification Secretary Required radio change.
