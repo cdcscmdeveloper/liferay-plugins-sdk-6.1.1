@@ -45,13 +45,13 @@
 
 			</tr>
 		</table>
-
-
+		<ui:param name="zoneGeneralTrees"
+			value="#{specificationBackingBean.managedBean.zoneGeneralTrees!= null?specificationBackingBean.managedBean.zoneGeneralTrees : qTDetailBB.managedBean.zoneGeneralTrees}"/>
 		<h:panelGroup
 			rendered="#{scQt.zonal !='false'}">
 			<h:panelGrid width="100%">
 				<p:dataTable id="zoneGeneralDataTable" rows="10"
-					value="#{qTDetailBB.managedBean.zoneGeneralTrees}"
+					value="#{zoneGeneralTrees}"
 					var="zoneTree" style="width:100%" rowIndexVar="index"
 					rowKey="#{zoneTree}">
 
