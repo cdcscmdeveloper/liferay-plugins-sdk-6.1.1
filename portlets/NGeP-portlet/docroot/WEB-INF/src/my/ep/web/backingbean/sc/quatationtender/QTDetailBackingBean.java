@@ -126,6 +126,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -785,17 +786,26 @@ public class QTDetailBackingBean extends
 			scQt.setScQtSupplierCriteria(this.getManagedBean()
 					.getSupplierCriteria());
 		}
-		if (!scQt.isPanel() && scQt.isZonal()) {
-			if (this.getManagedBean().isPaidupcapital()) {
-				if (null != scQt.getScQtSupplierCriteria()) {
-					if (null != scQt.getScQtSupplierCriteria()
-							.getQtZoneCriterias()) {
-						scQt.getScQtSupplierCriteria()
-								.getQtZoneCriterias()
-								.setScQtSupplierCriteria(
-										this.getManagedBean()
-												.getSupplierCriteria());
+		if (scQt.isZonal()) {
+			if (null != scQt.getScQtSupplierCriteria() && scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+				ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
+				ScQtZoneCriteria qtZoneCriteria = supplierCriteria.getQtZoneCriterias();
+				
+				if (qtZoneCriteria.isBrandNew()) {
+					qtZoneCriteria.setScQtSupplierCriteria(supplierCriteria);
+					setUserDetails(qtZoneCriteria);	
+				}
+				
+				List<TplSpecZoneDtl> specZoneDtls = convertTreeNodesToZoneCriteria(
+						this.getManagedBean().getZoneGeneralTrees(), null);
+
+				if (specZoneDtls != null && !specZoneDtls.isEmpty()) {					
+					for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
+						tplSpecZoneDtl.setTplSpecZone(qtZoneCriteria);
 					}
+					qtZoneCriteria.setTplSpecZoneDtls(specZoneDtls);
+				} else {
+					qtZoneCriteria.setTplSpecZoneDtls(null);
 				}
 			}
 		}
