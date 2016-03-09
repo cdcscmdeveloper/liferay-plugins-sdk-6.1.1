@@ -38,10 +38,8 @@
 					target="#{purchaseRequestBackingBean.managedBean.required}"
 					value="true" />
 				</p:commandLink>
-				<h:outputText rendered="#{address.addressType != null}" style="text-align:left; float:left;"
-					value="#{purchaseRequestBackingBean.getFullAddress(address.addressType.pmAddress)}" />
-				<h:outputText rendered="#{address.addressType eq null}" style="text-align:left; float:left;"
-					value="#{purchaseRequestBackingBean.getFullAddress(address.pmAddress)}" />
+				<h:outputText style="text-align:left; float:left;"
+					value="#{purchaseRequestBackingBean.getFullAddress(address.flAddress)}" />
 			</p:column>
 			
 
@@ -240,7 +238,7 @@
 					<td width="220"><p:selectOneMenu id="manCountry"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.country']}"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmCountry.countryId}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="countryList"
@@ -257,7 +255,7 @@
 					<td width="220"><p:selectOneMenu id="manState"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.state']}"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmState.stateId}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="stateList"
@@ -276,13 +274,13 @@
 					<td><p:inputText id="address1" label="#{lbl['lbl.fl.address']}"
 							maxlength="255"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address1}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address1}"
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
 					<td><p:message for="address1" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 					<td><p:selectOneMenu id="manDivison"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmDivision.divisionId}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmDivision.divisionId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
@@ -300,7 +298,7 @@
 				<tr>
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address2}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address2}"
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
@@ -309,7 +307,7 @@
 					<td><p:selectOneMenu id="manDistrict"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.district']}"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmDistrict.districtId}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmDistrict.districtId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="districtList"
@@ -328,7 +326,7 @@
 				<tr>
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address3}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address3}"
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
@@ -337,7 +335,7 @@
 					<td><p:selectOneMenu id="manCity"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.city']}"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmCity.cityId}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.pmCity.cityId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="cityList"
@@ -349,7 +347,7 @@
 				<tr>
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address4}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.address4}"
 							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></td>
 					<td></td>
@@ -358,7 +356,7 @@
 					<td><p:inputText id="postCode"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.postcode']}" maxlength="5"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.postcode}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.postcode}"
 							validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"
 							size="10" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
@@ -370,7 +368,7 @@
 					<td><p:inputText id="contactPerson"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="85"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).contactName}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactPerson}"
 							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"></p:inputText>
 							</td>
@@ -380,7 +378,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manAddress" label="#{lbl['lbl.fl.manual.add.delivery.add']}"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.receivingGrp.addressTypeId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="delAddByDistrict"
@@ -395,7 +393,7 @@
 					<td><p:inputText id="email"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.email']}" maxlength="80"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).email}"
+							value="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactEmail}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
 							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
@@ -410,9 +408,9 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.telno']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><ac:phone id="telNo" isMobile="false" label="#{lbl['lbl.fl.telno']}"
-						countryCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).phoneCountry}" 
-						areaCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).phoneArea}" 
-						number="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).phoneNo}"  
+						countryCode="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactPhoneCountry}" 
+						areaCode="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactPhoneArea}" 
+						number="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactPhoneNo}"  
 						validatorMessage="#{lbl['lbl.fl.telno']} - #{lbl['lbl.fl.invalidNo']}" 
 						required="#{purchaseRequestBackingBean.managedBean.required}"/>
 						</td>
@@ -423,9 +421,9 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
 					<td class="tdContent"><ac:phone id="faxNo" isMobile="false"
 							label="#{lbl['lbl.fl.faxno']}"
-							countryCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).faxCountry}"
-							areaCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).faxArea}"
-							number="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).faxNo}"
+							countryCode="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactFaxCountry}"
+							areaCode="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactFaxArea}"
+							number="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactFaxNo}"
 							validatorMessage="#{lbl['lbl.fl.faxno']} - #{lbl['lbl.fl.invalidNo']}" /></td>
 					<td></td>
 				</tr>
@@ -433,9 +431,9 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td class="tdContent"><ac:phone id="mobileNo" isMobile="false"
 							label="#{lbl['lbl.fl.mobile']}"
-							countryCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).mobileCountry}"
-							areaCode="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).mobileArea}"
-							number="#{purchaseRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).mobileNo}"
+							countryCode="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactMobileCountry}"
+							areaCode="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddres.contactMobileArea}"
+							number="#{purchaseRequestBackingBean.managedBean.flManualAddress.flAddress.contactMobileNo}"
 							validatorMessage="#{lbl['lbl.fl.mobile']} - #{lbl['lbl.fl.invalidNo']}" /></td>
 					<td></td>
 							<td></td>

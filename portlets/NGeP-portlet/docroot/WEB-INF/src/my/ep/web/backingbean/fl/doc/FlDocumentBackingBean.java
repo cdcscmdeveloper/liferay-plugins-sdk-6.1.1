@@ -439,9 +439,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if(resDTO.getFlOrder().isFactored()){
 				flOrderBB.getManagedBean().setRemoveFactoring(true);
 			}
-			if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
-				flOrderBB.getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-			}
+//			if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){//TODO remove if no error
+//				flOrderBB.getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
+//			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
@@ -479,9 +479,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if(resDTO.getFlOrder().isFactored()) {
 				flOrderBB.getManagedBean().setFactoringCheck("true");
 				flOrderBB.getFactoringCompanyDtl();
-				if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
-					flOrderBB.getFactoringAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-				}				
+//				if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){//TODO
+//					flOrderBB.getFactoringAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
+//				}				
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.initializeRemarkAndAttachement(null, resDTO.getRemarkList(), resDTO.getAttachmentList());

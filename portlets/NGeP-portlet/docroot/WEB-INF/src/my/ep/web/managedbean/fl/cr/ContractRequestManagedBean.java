@@ -199,7 +199,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmDivision> divisionList;
 	private List<PmCity> cityList;
 	private List<PmDistrict> districtList;
-	private FlDeliveryAddress flManulaAddress;
 	//tab menu
 	private int selectedTabIndex;
 	// manual address
@@ -1390,22 +1389,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public List<PmDistrict> getDistrictList() {
 		return districtList;
-	}
-
-
-	/**
-	 * @return the flManulaAddress
-	 */
-	public FlDeliveryAddress getFlManulaAddress() {
-		return flManulaAddress;
-	}
-
-
-	/**
-	 * @param flManulaAddress the flManulaAddress to set
-	 */
-	public void setFlManulaAddress(FlDeliveryAddress flManulaAddress) {
-		this.flManulaAddress = flManulaAddress;
 	}
 
 

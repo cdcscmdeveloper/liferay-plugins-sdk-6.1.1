@@ -19,12 +19,19 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -35,8 +42,6 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
@@ -45,15 +50,13 @@ import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
-import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -64,14 +67,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdjustmentItemNodeVO;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
-
 // TODO: Auto-generated Javadoc
 /**
  * Managed Bean for Debit Adjustment Note.
@@ -81,7 +76,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "danBackingBean")
 @RequestScoped
-public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustmentNoteManagedBean> {
+public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<DebitAdjustmentNoteManagedBean> {
 	
 	/** The log. */
 	private static Logger log = Logger.getLogger(DebitAdjustmentNoteBackingBean.class);
@@ -92,14 +87,6 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	/** The Constant NAV_INVOICE. */
 	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
 	
-	/**
-	 * Gets the faces scopes.
-	 *
-	 * @return the faces scopes
-	 */
-	private FacesScopes getFacesScopes(){
-		return new FacesScopes();
-	}
 	
 	/**
 	 * save,submit the Debit Adjustment Note
@@ -221,11 +208,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			statusReqDTO.setStatusId(FulfilmentStatusConst.DN_PENDING_APPROVAL);
 			getManagedBean().getAdjustment().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 		}
-		if(getManagedBean().getAdjustment().getFlOrder().isFactored()){
-			getFactoringBranchDtl();
-		}else{
+//		if(getManagedBean().getAdjustment().getFlOrder().isFactored()){
+//			getFactoringBranchDtl();
+//		}else{
 			getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
-		}
+//		}
 		
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		if(adjustment.getFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
@@ -262,35 +249,35 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	 *
 	 * @return the factoring branch dtl
 	 */
-	public void getFactoringBranchDtl(){
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-		getManagedBean().setBranchName(null);
-		getManagedBean().setSupplierAddress(null);
-		getManagedBean().setPhoneNo(null);
-		getManagedBean().setFaxNo(null);
-		getManagedBean().setContactPerson(null);
-		getManagedBean().setContactEmail(null);
-		getManagedBean().setContactPhoneNo(null);
-		
-		//reset back to HQ info
-		AddressReqDTO reqDTO = new AddressReqDTO();
-		reqDTO.setFinancialOrgId(getManagedBean().getAdjustment().getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-		if(!resDTO.getAddressTypeList().isEmpty()){
-			getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-			getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-			getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-			if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
-				PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-				getManagedBean().setContactPerson(pmContact.getContactName());
-				getManagedBean().setContactEmail(pmContact.getEmail());
-				getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-			}
-		}
-		getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
-
-	}
+//	public void getFactoringBranchDtl(){
+//		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+//		getManagedBean().setBranchName(null);
+//		getManagedBean().setSupplierAddress(null);
+//		getManagedBean().setPhoneNo(null);
+//		getManagedBean().setFaxNo(null);
+//		getManagedBean().setContactPerson(null);
+//		getManagedBean().setContactEmail(null);
+//		getManagedBean().setContactPhoneNo(null);
+//		
+//		//reset back to HQ info
+//		AddressReqDTO reqDTO = new AddressReqDTO();
+//		reqDTO.setFinancialOrgId(getManagedBean().getAdjustment().getFlOrder().getPmFinancialOrg().getFinancialOrgId());
+//		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+//		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+//		if(!resDTO.getAddressTypeList().isEmpty()){
+//			getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+//			getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+//			getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+//			if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
+//				PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+//				getManagedBean().setContactPerson(pmContact.getContactName());
+//				getManagedBean().setContactEmail(pmContact.getEmail());
+//				getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+//			}
+//		}
+//		getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
+//
+//	}
 	
 	/**
 	 * call this method as user select charge line row

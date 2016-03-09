@@ -32,7 +32,7 @@
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" 
 				style="white-space:normal;width:298px" >
 				<h:outputText
-					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
+					value="#{createDOBackingBean.getFullAddress(doDelAddress.flAddress)}" />
 			</p:column>
 			<p:column style="white-space:normal;width:195px;">
 				<h:outputText value="#{lbl['lbl.fl.do.start.date']}" />
@@ -237,7 +237,7 @@
 						value="#{lbl['lbl.fl.delivery.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="3"
 						style=" margin-bottom:5px;" disabled="true" autoResize="false"
-						value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.selectedDelAddr.pmAddress)}" />
+						value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.selectedDelAddr.flAddress)}" />
 				</td>
 			</tr>
 		</table>

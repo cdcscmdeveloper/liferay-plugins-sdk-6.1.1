@@ -164,7 +164,7 @@
 					<td valign="top" style="width: 137px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.address']}" /></td>
 					<td><p:inputTextarea rows="5" cols="50" autoResize="false"
-							value="#{danBackingBean.getFullAddress(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.smAddress)}"
+							value="#{danBackingBean.getFullAddress(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress)}"
 							style="margin-bottom:5px;" disabled="true" /></td>
 				</tr>
 				<tr>
@@ -174,11 +174,11 @@
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
-										value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.phoneNo}" /></td>
+										value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.phoneNo}" /></td>
 								<td style="width: 65px;white-space: nowrap;"><p:outputLabel
 										value="#{lbl['lbl.fl.faxno']}" /></td>
 								<td><p:inputText size="20" disabled="true"
-										value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.faxNo}" /></td>
+										value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.faxNo}" /></td>
 							</tr>
 						</table></td>
 				</tr>
@@ -186,19 +186,19 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 					<td><p:inputText size="50" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.contactPerson}" /></td>
+							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.email']}" /></td>
 					<td><p:inputText size="50"  disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.contactEmail}" /></td>
+							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td><p:inputText size="15" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactPhoneNo}" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -221,7 +221,7 @@
 					<td valign="top" style="width: 137px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.address']}" /></td>
 					<td><p:inputTextarea cols="50" rows="5"
-							style="margin-bottom:5px;" disabled="true" value="#{danBackingBean.managedBean.supplierAddress}"/></td>
+							style="margin-bottom:5px;" disabled="true" value="#{danBackingBean.getFullAddress(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress)}"/></td>
 				</tr>
 				<tr>
 					<td style="width: 100px;"><p:outputLabel

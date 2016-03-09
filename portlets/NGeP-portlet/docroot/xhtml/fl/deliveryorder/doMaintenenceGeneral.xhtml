@@ -134,7 +134,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td rowspan="1"><p:inputTextarea cols="53" rows="8" disabled="true"
 						style=" margin-bottom:5px;" autoResize="false"
-						value="#{flOrderBB.getFullAddress(createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.smAddress)}" /></td>
+						value="#{flOrderBB.getFullAddress(createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress)}" /></td>
 				<td style="width: 140px;vertical-align: top;"><p:outputLabel
 						value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td style="vertical-align: top;"><p:inputText size="15" disabled="true" value="#{createDOBackingBean.managedBean.fulfilmentRequest.submissionDate}"><f:convertDateTime
@@ -147,11 +147,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.phoneNo}" /></td>
+									value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.phoneNo}" /></td>
 							<td style="width: 92px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.faxNo}" /></td>
+									value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -159,18 +159,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="51"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactPerson}" /></td>
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="51"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactEmail}" /></td>
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="19"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactPhoneNo}" /></td>
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>

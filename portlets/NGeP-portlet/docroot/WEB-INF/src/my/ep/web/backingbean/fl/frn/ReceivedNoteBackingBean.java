@@ -1228,8 +1228,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				// Set GSL Type
 				DesignatedAreaReqDTO daReqDTO = new DesignatedAreaReqDTO();
 				DesignatedAreaResDTO daResDTO = new DesignatedAreaResDTO();
-				daReqDTO.setFromAddressId(getManagedBean().getFulfilmentNote().getFlRequest().getFlSupplierDtl().getSmAddress().getAddressId());
-				daReqDTO.setToAddressId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getFlDeliveryAddress().getPmAddress().getAddressId());
+				daReqDTO.setFromAddressId(getManagedBean().getFulfilmentNote().getFlRequest().getFlSupplierDtl().getFlAddress().getAddressId());
+				daReqDTO.setToAddressId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getFlDeliveryAddress().getPmAddressId());
 				daReqDTO.setActualReceivedDate(getManagedBean().getFulfilmentNote().getReceivedDate());
 				daResDTO = designatedAreaSO.retrieveGSLParam(daReqDTO);
 				if(daResDTO.isSuccessful()) {

@@ -188,6 +188,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean declarationCheck;
 	
 	private String taskDeadLine;
+	private FlDeliveryAddress flManualAddress;
 	
 	//getItems
 	/** The request note with dtls list. */
@@ -258,9 +259,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	/** The pm city. */
 	private PmCity pmCity ;
-	
-	/** The fl manula address. */
-	private FlDeliveryAddress flManulaAddress;
 	
 	/** The charge check. */
 	private String chargeCheck ="false";
@@ -1460,24 +1458,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmAddressType(PmAddressType pmAddressType) {
 		this.pmAddressType = pmAddressType;
-	}
-
-	/**
-	 * Gets the fl manula address.
-	 *
-	 * @return the flManulaAddress
-	 */
-	public FlDeliveryAddress getFlManulaAddress() {
-		return flManulaAddress;
-	}
-
-	/**
-	 * Sets the fl manula address.
-	 *
-	 * @param flManulaAddress the flManulaAddress to set
-	 */
-	public void setFlManulaAddress(FlDeliveryAddress flManulaAddress) {
-		this.flManulaAddress = flManulaAddress;
 	}
 
 	/**
@@ -3337,6 +3317,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
 		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
+	}
+
+	public FlDeliveryAddress getFlManualAddress() {
+		return flManualAddress;
+	}
+
+	public void setFlManualAddress(FlDeliveryAddress flManualAddress) {
+		this.flManualAddress = flManualAddress;
 	}
 
 }
