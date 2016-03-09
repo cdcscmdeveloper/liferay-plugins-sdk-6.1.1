@@ -140,13 +140,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>
 	        <p:column>
-       			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}" 
+       			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}"
        				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}" 
 		  			id="itEstAmt" styleClass="amountRight" label="#{lbl['lbl.pp.estimated.amount']}"
-		  			required="#{!empty param['disableValidation']}">
+		  			required="#{!empty param['disableValidation']}"
+		  			onkeypress="if (event.keyCode == 13) { return false; }">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		  			<f:attribute name="max" value="99999999999"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculatePpGrandTotal}"
-						update=":form:hiddenGtEstAmt, itEstAmt" 
+						update=":form:hiddenGtEstAmt, itEstAmt,itEstAmtMsg" 
 		  				oncomplete="updatePpFooter();"/>
 		  		</p:inputText>
 		  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
