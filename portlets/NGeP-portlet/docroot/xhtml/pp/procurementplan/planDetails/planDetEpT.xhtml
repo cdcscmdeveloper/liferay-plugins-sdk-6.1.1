@@ -131,10 +131,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
    				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itBudgetAmt" styleClass="amountRight" label="#{lbl['lbl.pp.total.approved.budget']}" 
-		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
+		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}"
+		  			onkeypress="if (event.keyCode == 13) { return false; }">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		  			<f:attribute name="max" value="99999999999"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votTanggungan)}"
-		  				update=":form:hiddenGtBudgetAmtT, :form:hiddenGtNonAllocAmtT, otNonAllocAmt, itBudgetAmt" oncomplete="updateEpFooterT();" 
+		  				update=":form:hiddenGtBudgetAmtT, :form:hiddenGtNonAllocAmtT, otNonAllocAmt, itBudgetAmt,itBudgetAmtMsg" oncomplete="updateEpFooterT();" 
 		  				 />
 		  		</p:inputText>
 		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
@@ -142,10 +145,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
    				<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itPlanAmt" styleClass="amountRight" label="#{lbl['lbl.pp.budget.spend.ep']}"
-		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
+		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}"
+		  			onkeypress="if (event.keyCode == 13) { return false; }">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		  			<f:attribute name="max" value="99999999999"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votTanggungan)}"
-		  				update=":form:hiddenGtPlanAmtT, :form:hiddenGtNonAllocAmtT, otNonAllocAmt, itPlanAmt" oncomplete="updateEpFooterT();"   />
+		  				update=":form:hiddenGtPlanAmtT, :form:hiddenGtNonAllocAmtT, otNonAllocAmt, itPlanAmt,itPlanAmtMsg" oncomplete="updateEpFooterT();"   />
 		  		</p:inputText>
 		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
 	        </p:column>
