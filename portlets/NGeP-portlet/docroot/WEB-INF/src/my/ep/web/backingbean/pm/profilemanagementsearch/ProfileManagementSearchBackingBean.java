@@ -60,7 +60,7 @@ public class ProfileManagementSearchBackingBean extends
 	public ISearchBean<PmParameterDesc> getAppTypeSearchBean() {
 		if (this.appTypeSearchBean == null) {
 			this.appTypeSearchBean = super.createSearchBean(
-					PmParameterDesc.class, "somAppType");
+					PmParameterDesc.class, "accessAppType");
 
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
