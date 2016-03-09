@@ -10,26 +10,29 @@
 			<table style="width: 100%;">
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.circular.no']}" /></td>
-					<td><p:inputText size="66"
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularNo}"
-						disabled="true"  />
+					<td>
+						<p:inputText style="width:750px;"
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularNo}"
+							disabled="true"  />
 						<p:spacer width="5" />
+							
 						<p:commandLink value="#{lbl['lbl.sc.circular.attach']}" 
-						style="margin-right:20px;" process="@form,yesmainpanel"
-						partialSubmit="true" update="circularItemDetails"
-						action="#{qTSupplierQulCriteriaBackingBean.viewCircularAttachments}" /></td>
+							style="margin-right:20px;" process="@form,yesmainpanel"
+							partialSubmit="true" update="circularItemDetails"
+							action="#{qTSupplierQulCriteriaBackingBean.viewCircularAttachments(view.viewId)}" />
+					</td>
 				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.circular.name']}" /></td>
-					<td colspan="3"><p:inputTextarea rows="3" cols="75" style="margin-bottom:5px;width :73%;"
+					<td><p:inputTextarea rows="3" cols="75" style="margin-bottom:5px;width :750px;"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularName}"
 						disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.circular.exp.date']}" /></td>
-					<td colspan="3"><p:inputText
+					<td><p:inputText style="width:750px;"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularExpDate}"
-						disabled="true" size="66">
+						disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
