@@ -37,7 +37,7 @@
 			<ac:lov id="lovSupplier" lovId="PM_ORG_PROFILE_WITH_SUPPLIER"
 				size="35" readonly="true" disabled="#{!(feeObj.brandNew)}"
 				label="#{lbl['lbl.pm.settings.fee.org.suplier.name']}"
-				headerText="Supplier"
+				headerText="#{lbl['lbl.pm.settings.fee.org.suplier']}"
 				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
 				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].orgProfileId"
 				value="#{feeObj.orgProfileId.smSupplier.companyName}">

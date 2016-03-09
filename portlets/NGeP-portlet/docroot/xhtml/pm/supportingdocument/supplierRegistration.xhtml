@@ -33,7 +33,7 @@
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.document.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></th>
-					<td><p:inputTextarea id="itaDocName"
+					<td><p:inputTextarea id="itaDocName" disabled="#{!(supportDocBackingBean.managedBean.selectedDocument.brandNew)}"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.docName}"
 							label="#{lbl['lbl.pm.document.name']}" autoResize="false"
 							cols="50" rows="5" maxlength="1000"
