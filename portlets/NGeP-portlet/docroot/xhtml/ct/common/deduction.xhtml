@@ -78,15 +78,15 @@
 		  	        <p:commandButton id="delDeductionBtn" value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true"
 		  	            disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}"  onsuccess="dlgDeduction.show()"/>
 		  	</div>
-		  	</c:if>
-		  <p:confirmDialog id="dlgDeduction" widgetVar="dlgDeduction" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		  	<p:confirmDialog id="dlgDeduction" widgetVar="dlgDeduction" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}"> 
              <div class="ppRightBtn">
 		            <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableDeduction,:form:clauseDescp,:form:delDeductionBtn" 
 		                 process="@form"  actionListener="#{ctBackingBean.deleteDeductionDetails()}" oncomplete="dlgDeduction.hide();"/>
 			        <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeduction.hide();" type="button" />
 		      </div>
-      </p:confirmDialog>
+             </p:confirmDialog>
+		  	</c:if>
 	       <p:outputPanel id="clauseDescp">  
 	                <h:panelGroup rendered="#{ctBackingBean.managedBean.selectedDeduction != null}">
 	                      <p:spacer height="20"/>
@@ -104,9 +104,9 @@
                                          listener="#{ctBackingBean.onRowUnselect}" update=":form:delDeductionClauseBtn" />
                             
                                   <p:column selectionMode="multiple"    style="width:2%; vertical-align:top;" 
-                                         disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
-                                         rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
-        	                              ParameterConst.deductionTypeAdvancePayment or !ctBackingBean.managedBean.viewContract}">
+                                         disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract}"
+                                         rendered="#{!ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
+        	                              ParameterConst.deductionTypeAdvancePayment }">
         	                       </p:column>
                            
                              
@@ -143,16 +143,18 @@
 			  	                       disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}"
 			  	                      value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true" onsuccess="dlgDeductionClause.show()">
 								</p:commandButton>
-	                         </c:if>
+								
+								<p:confirmDialog id="dlgDeductionClause" widgetVar="dlgDeductionClause" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                                        severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                    <div class="ppRightBtn">
+		                                    <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableClause,:form:delDeductionClauseBtn" 
+		                                          process="@this"  partialSubmit="true" actionListener="#{ctBackingBean.deleteClauseDetails()}" oncomplete="dlgDeductionClause.hide();"/>
+			                               <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeductionClause.hide();" type="button" />
+		                           </div>
+                                  </p:confirmDialog>
+	                        </c:if>
                     </div>
-                     <p:confirmDialog id="dlgDeductionClause" widgetVar="dlgDeductionClause" message="#{lbl['lbl.msg.confirm.delete']}" 	
-                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-                          <div class="ppRightBtn">
-		                      <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableClause, :form:delDeductionClauseBtn" 
-		                            process="@this"  partialSubmit="true" actionListener="#{ctBackingBean.deleteClauseDetails()}" oncomplete="dlgDeductionClause.hide();"/>
-			                  <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeductionClause.hide();" type="button" />
-		               </div>
-                   </p:confirmDialog>
+                     
                 </h:panelGroup>
              </p:outputPanel>
          </p:panel>      
