@@ -43,7 +43,7 @@
 				<th><p:outputLabel
 						value="#{lbl['lbl.pm.access.app.request.type']}" /> <p:outputLabel
 						value="* " styleClass="mandatory" /></th>
-				<td><p:selectOneMenu id="somAppType" required="true"
+				<td><p:selectOneMenu id="accessAppType" required="true"
 						label="#{lbl['lbl.pm.access.app.request.type']}"
 						styleClass="ppDropDownWidthL"
 						value="#{profileManagSearchBackingBean.managedBean.selectedAppTypeParamCode}">
@@ -51,7 +51,7 @@
 							value="#{profileManagSearchBackingBean.applicationTypeOptions()}" />
 						<p:ajax event="change"
 							listener="#{profileManagSearchBackingBean.appTypeChange()}"
-							update="somAppStatus" />
+							update="accessAppType" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
