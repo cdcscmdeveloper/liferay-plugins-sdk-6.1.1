@@ -3,8 +3,11 @@
  */
 package my.ep.web.managedbean.sc.quationtender;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.primefaces.model.TreeNode;
 
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -42,8 +45,6 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 	
 	private List<CtPanelItem> panelItems;
 	
-	
-	
 	/** The circular no. */
 	private String circularNo;
 	
@@ -58,7 +59,19 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 	
 	/** The is zone location. */
 	private boolean isZoneLocation;
+	
+	/** The zone name. */
+	private String zoneName;
+	
+	/** The root zoanl tree. */
+	private TreeNode rootZoanlTree;
+	
+	private boolean isCheckAllList = Boolean.FALSE;
+	
+	/** The zone general trees. */
+	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 
+	
 	/**
 	 * @return the qt
 	 */
@@ -202,5 +215,61 @@ public abstract class QTBaseManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneLocation(boolean isZoneLocation) {
 		this.isZoneLocation = isZoneLocation;
+	}
+
+	/**
+	 * @return the zoneName
+	 */
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	/**
+	 * @param zoneName the zoneName to set
+	 */
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
+
+	/**
+	 * @return the rootZoanlTree
+	 */
+	public TreeNode getRootZoanlTree() {
+		return rootZoanlTree;
+	}
+
+	/**
+	 * @param rootZoanlTree the rootZoanlTree to set
+	 */
+	public void setRootZoanlTree(TreeNode rootZoanlTree) {
+		this.rootZoanlTree = rootZoanlTree;
+	}
+
+	/**
+	 * @return the isCheckAllList
+	 */
+	public boolean isCheckAllList() {
+		return isCheckAllList;
+	}
+
+	/**
+	 * @param isCheckAllList the isCheckAllList to set
+	 */
+	public void setCheckAllList(boolean isCheckAllList) {
+		this.isCheckAllList = isCheckAllList;
+	}
+
+	/**
+	 * @return the zoneGeneralTrees
+	 */
+	public List<TreeNode> getZoneGeneralTrees() {
+		return zoneGeneralTrees;
+	}
+
+	/**
+	 * @param zoneGeneralTrees the zoneGeneralTrees to set
+	 */
+	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
+		this.zoneGeneralTrees = zoneGeneralTrees;
 	}
 }
