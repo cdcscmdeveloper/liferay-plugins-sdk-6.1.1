@@ -4519,6 +4519,7 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setPanelChange(scQt.isPanel());
 				this.getManagedBean().setQt(scQt);
+				this.getManagedBean().setQtCategoryList(scQt.getScQtCategorys());
 				if (scQt.isZonal()
 
 						&& null != this.getManagedBean().getZoneGeneralTrees()
@@ -10962,6 +10963,17 @@ public class SpecificationBackingBean extends
 				scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 			}
 		}
+		
+		if (!scQt.isPanel()) {
+			String qtType = scQt.getQtType();
+			if (qtType.equals(QTConstants.OPEN_TYPE) || qtType.equals(QTConstants.RESTRICTED_TYPE)) {
+				List<ScQtCategory> qtCategories = this.getManagedBean()
+						.getQtCategoryList();
+				
+				scQt.setScQtCategorys(qtCategories);
+			} 
+		}
+		
 		scQt = saveZonesBeforeTemplateSpec(scQt);
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 
