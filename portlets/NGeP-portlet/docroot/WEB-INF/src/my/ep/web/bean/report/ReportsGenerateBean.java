@@ -121,6 +121,9 @@ public class ReportsGenerateBean {
 
 	/** The madatory indicator view. */
 	private boolean madatoryIndicatorView = false;
+	
+	/** The instruction info view. */
+	private boolean instructionInfoView=false;
 
 	/** The cm madatory indicator view. */
 	private boolean cmMadatoryIndicatorView = false;
@@ -20314,6 +20317,25 @@ public class ReportsGenerateBean {
 	 */
 	public void setToolTipForPA(boolean toolTipForPA) {
 		this.toolTipForPA = toolTipForPA;
+	}
+
+	/**
+	 * Checks if is instruction info view.
+	 * 
+	 * @return the instructionInfoView
+	 */
+	public boolean isInstructionInfoView() {
+		return instructionInfoView;
+	}
+
+	/**
+	 * Sets the instruction info view.
+	 * 
+	 * @param instructionInfoView
+	 *            the instructionInfoView to set
+	 */
+	public void setInstructionInfoView(boolean instructionInfoView) {
+		this.instructionInfoView = instructionInfoView;
 	}
 
 	
