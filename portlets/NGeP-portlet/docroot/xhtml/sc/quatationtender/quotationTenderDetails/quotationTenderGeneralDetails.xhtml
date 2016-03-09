@@ -274,7 +274,7 @@
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 											<p:ajax event="change" partialSubmit="true"
 												update="generalLocationList" process="@this"
-												listener="#{createQtBB.zoneRadioChange(scQt)}"></p:ajax>
+												listener="#{specificationBackingBean.zoneRadioChange(scQt)}"></p:ajax>
 										</p:selectOneRadio>
 									</c:when>
 									<c:otherwise>
@@ -517,12 +517,11 @@
 			</c:if>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.qt.req.approval.specification']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+						value="#{lbl['lbl.sc.qt.req.approval.specification']}" /></td>
 				<td>
 					<c:choose>
 						<c:when test="#{!qtStatusAfterChecklistScoring}">
-							<p:selectOneRadio required="#{isRequire}"
+							<p:selectOneRadio disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}"
 								value="#{scQt.specApprovalReq}" 
 								label="#{lbl['lbl.sc.qt.req.approval.specification']}">
 								<f:selectItems
