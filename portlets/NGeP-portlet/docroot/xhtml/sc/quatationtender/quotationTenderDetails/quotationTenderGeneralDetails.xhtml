@@ -517,11 +517,13 @@
 			</c:if>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.qt.req.approval.specification']}" /></td>
+						value="#{lbl['lbl.sc.qt.req.approval.specification']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<c:choose>
 						<c:when test="#{!qtStatusAfterChecklistScoring}">
 							<p:selectOneRadio disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}"
+							    required="#{isRequire}"
 								value="#{scQt.specApprovalReq}" 
 								label="#{lbl['lbl.sc.qt.req.approval.specification']}">
 								<f:selectItems
