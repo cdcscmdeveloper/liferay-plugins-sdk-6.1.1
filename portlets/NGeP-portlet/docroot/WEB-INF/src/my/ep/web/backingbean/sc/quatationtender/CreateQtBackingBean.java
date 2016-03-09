@@ -434,15 +434,16 @@ public class CreateQtBackingBean extends
 		
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> qtTypes = new ArrayList<String>();
-		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_INTERNATIONAL);
+		
 		if (null != scQt &&null != scQt.getProcurementMode()
 				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
 						.getProcurementMode().getParameterCode())) {
 			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
 		}
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
 
 		return super.getRadioButtonCodeValuesBySearchBean(quotationTenderType,
 				searchBean);
