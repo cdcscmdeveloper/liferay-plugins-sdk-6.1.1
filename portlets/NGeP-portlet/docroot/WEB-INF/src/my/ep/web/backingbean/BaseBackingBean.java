@@ -51,6 +51,7 @@ import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -1057,6 +1058,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	
 	public String getPpFullAddress(PpAddress ppAddress) {
 		return AddressUtils.getFullAddress(ppAddress);
+	}
+	
+	public String getCtFullAddress(CtAddress ctAddress) {
+		return AddressUtils.getFullAddress(ctAddress);
 	}
 
 	public void handleException(Exception exception) {
