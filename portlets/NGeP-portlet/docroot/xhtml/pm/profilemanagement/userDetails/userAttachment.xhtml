@@ -42,23 +42,17 @@
 			</p:commandButton>
 		</div>
 		<p:dialog id="dlAttachment" widgetVar="dlAttachment" modal="true"
-			resizable="false" width="700px" height="200" styleClass="pop_up_top"
-			header="#{lbl['lbl.pm.profiles.authorisation.choose.file']}">		
-			<p:outputPanel id="opAttachment">
-				<table class="ppOneTable">
-					<tr>
-						<td>
-						  <p:fileUpload oncomplete="dlAttachment.hide();" update="dtAttachment"
-						  	fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" 
-						  	mode="advanced" sizeLimit="1000000" 
-		            		allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-							invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			            	fileLimit="1" dragDropSupport="false" uploadLabel="#{lbl['lbl.btn.confirm']}" 
-		   					label="#{lbl['lbl.btn.browse']}"/>	            	
-						</td>
-					</tr>
-				</table>
-			</p:outputPanel>
+			resizable="false" width="700px" height="200" position="top" style="z-index:-1;"
+			header="#{lbl['lbl.pm.profiles.authorisation.choose.file']}">	
+			<p:fileUpload oncomplete="dlAttachment.hide();" update="dtAttachment"
+				fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" 
+				mode="advanced" sizeLimit="1000000" 
+		        allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			    fileLimit="1" dragDropSupport="false" uploadLabel="#{lbl['lbl.btn.upload']}" 
+		   		label="#{lbl['lbl.btn.choose']}" cancelLabel="#{lbl['lbl.btn.cancel']}"/>	            	
+				
 		</p:dialog>	
+		
 	</p:panel>
 </ui:composition>	
