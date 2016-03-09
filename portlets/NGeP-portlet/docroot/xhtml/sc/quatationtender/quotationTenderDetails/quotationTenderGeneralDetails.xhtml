@@ -81,7 +81,7 @@
 											var="panelItem" itemLabel="#{panelItem.groupName}"
 											itemValue="#{panelItem.panelItemGroupId}" />
 		
-										<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+										<p:ajax event="change" process="@this" partialSubmit="true" listener="#{createQtBB.changePanelGroupItem}"></p:ajax>
 									</p:selectOneMenu>
 									<p:message id="panelIteMsgId" for="panelItemId" display="icon" />
 								</c:when>
