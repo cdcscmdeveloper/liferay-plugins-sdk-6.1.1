@@ -10,9 +10,9 @@
 		<table class="ppTwoTable">
 
 			<tr>
-				<th class="tdTitle"><p:outputLabel
+				<th><p:outputLabel
 						value="#{lbl['lbl.pm.access.app.request.organization.type']}" /></th>
-				<td class="tdContent"><p:selectOneMenu
+				<td><p:selectOneMenu
 						id="somAccessApplOrgType" styleClass="ppDropDownWidthL"
 						label="#{lbl['lbl.pm.organisation.orgType']}"
 						value="#{profileManagSearchBackingBean.managedBean.selectedOrgType}">
@@ -22,19 +22,21 @@
 							listener="#{profileManagSearchBackingBean.changeOrgType()}"
 							update=":form:pmSearch" />
 					</p:selectOneMenu></td>
+					<th></th>
 				<td></td>
 			</tr>
 			<tr>
-				<th class="tdTitle"><p:outputLabel
+				<th><p:outputLabel
 						value="#{lbl['lbl.pm.access.app.request.organization.name']}" /></th>
-				<td class="tdContent"><ac:lov id="lovOrg"
-						lovId="PM_ORG_PROFILE" size="40" update="@form" readonly="true"
+				<td><ac:lov id="lovOrg"
+						lovId="PM_ORG_PROFILE" size="56" update="@form" readonly="true"
 						disabled="#{empty profileManagSearchBackingBean.managedBean.selectedOrgType}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{profileManagSearchBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
 						saveObject="profileManagSearchBackingBean.managedBean.selectedOrgProfile"
 						conditionField="#{profileManagSearchBackingBean.constructConditionFields()}"
 						postUpdateListener="profileManagSearchBackingBean.changeOrgUnit" /></td>
+				<th></th>
 				<td></td>
 			</tr>
 			<tr>
@@ -62,6 +64,8 @@
 						<f:selectItems
 							value="#{profileManagSearchBackingBean.getApplicationStatus()}" />
 					</p:selectOneMenu></td>
+					<th></th>
+				<td></td>
 			</tr>
 			<tr>
 				<th><p:outputLabel
@@ -70,6 +74,8 @@
 						label="#{lbl['lbl.pm.access.app.request.idno']}"
 						value="#{profileManagSearchBackingBean.managedBean.profileManagSearchBean.identificationNo}"
 						size="30" maxlength="15" /></td>
+				<th></th>
+				<td></td>
 			</tr>
 			<tr>
 				<th><p:outputLabel
@@ -77,7 +83,9 @@
 				<td><p:inputText id="apUserName" styleClass="ppDisplayTextL"
 						label="#{lbl['lbl.pm.access.app.request.username']}"
 						value="#{profileManagSearchBackingBean.managedBean.profileManagSearchBean.userName}"
-						size="30" maxlength="15" /></td>
+						size="60" maxlength="15" /></td>
+				<th></th>
+				<td></td>
 			</tr>
 			<tr>
 				<td colspan="4">

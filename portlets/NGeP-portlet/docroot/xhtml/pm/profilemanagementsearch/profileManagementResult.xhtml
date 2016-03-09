@@ -31,7 +31,7 @@
 				#{accessAPPL[5]}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.access.app.result.status']}" width="10%">
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.status']}" width="10%">
 			 <c:when test="#{not empty accessAPPL[5]}" >
 		    	  #{profileManagSearchBackingBean.getStatusDescById(accessAPPL[6])}
 			  </c:when>
@@ -44,7 +44,6 @@
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.txt.view']}" />
 					</p:commandLink>
 			</p:column>
-			
 		</p:dataTable>
 		
 	</p:panel>
