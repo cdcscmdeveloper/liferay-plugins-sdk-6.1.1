@@ -179,15 +179,42 @@
 						</c:if>						
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flContractSystemView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.contractandsystem']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="400"
-								value="#{reportBackingBean.flContractSystem}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
+							<p:column>
+								<table style="width: 100%;">
+									<tr style="width: 100%;">
+										<td><p:outputLabel
+												value="#{lbl['lbl.rpt.contractandsystem']}" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:inputText maxlength="20" id="contractSysTypeId"
+												label="#{lbl['lbl.rpt.contractandsystem']}"
+												value="#{reportBackingBean.flContractSystem}"
+												style="margin-top:5px;width:290px;">
+												<p:ajax event="blur" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:inputText></td>
+										<td><p:graphicImage id="typeofcontractsystem"
+												value="/css/images/design/tooltips.png" /> <p:tooltip
+												rendered="#{reportBackingBean.rptGenBean.toolTipForCC}"
+												value="#{lbl['lbl.rpt.tooltipforcccontract']}" id="contractsyscc"
+												for="typeofcontractsystem">
+											</p:tooltip>&#160;<p:tooltip
+												rendered="#{reportBackingBean.rptGenBean.toolTipForPO}"
+												value="#{lbl['lbl.rpt.tooltipforpoandpacontract']}"
+												id="contractsyspo" for="typeofcontractsystem">
+											</p:tooltip>&#160;<p:tooltip value="#{lbl['lbl.rpt.tooltipforpoandpacontract']}"
+												rendered="#{reportBackingBean.rptGenBean.toolTipForPA}"
+												id="contractsyspa" for="typeofcontractsystem">
+											</p:tooltip>&#160;<p:message id="contractSysTypeIdMsg"
+												for="contractSysTypeId" display="icon" /></td>
+									</tr>
+								</table>
+							</p:column>
 						</c:if>
-
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flPhysicalContractNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.physicalcontractno']}"
@@ -499,15 +526,42 @@
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
-
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flPkpNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.pkpNoScreen']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="20" value="#{reportBackingBean.flPkpNo}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
+							<p:column>
+								<table style="width: 100%;">
+									<tr style="width: 100%;">
+										<td><p:outputLabel value="#{lbl['lbl.rpt.pkpNoScreen']}" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:inputText maxlength="20" id="pkpNoId"
+												label="#{lbl['lbl.rpt.pkpNoScreen']}"
+												value="#{reportBackingBean.flPkpNo}"
+												style="margin-top:5px;width:290px;">
+												<p:ajax event="blur" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:inputText></td>
+										<td><p:graphicImage id="typeofpkpNo"
+												value="/css/images/design/tooltips.png" /> <p:tooltip
+												rendered="#{reportBackingBean.rptGenBean.toolTipForCC}"
+												value="#{lbl['lbl.rpt.tooltipforcc']}" id="pkpNoCc"
+												for="typeofpkpNo">
+											</p:tooltip>&#160; <p:tooltip
+												rendered="#{reportBackingBean.rptGenBean.toolTipForPO}"
+												value="#{lbl['lbl.rpt.tooltipforpoandpa']}" id="pkpNoPo"
+												for="typeofpkpNo">
+											</p:tooltip>&#160; <p:tooltip value="#{lbl['lbl.rpt.tooltipforpoandpa']}"
+												rendered="#{reportBackingBean.rptGenBean.toolTipForPA}"
+												id="pkpNoPa" for="typeofpkpNo">
+											</p:tooltip>&#160; <p:message id="pkpNoIdMsg" for="pkpNoId"
+												display="icon" /></td>
+									</tr>
+								</table>
+							</p:column>
 						</c:if>
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flDeliveryOrderNoView}">
@@ -1937,7 +1991,6 @@
 								</p:selectOneMenu>
 							</c:if>
 						</c:if>
-						
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupElevenView}">
 							<c:if
@@ -2511,7 +2564,7 @@
 								</p:selectOneMenu>
 							</c:if>
 						</c:if>
-						
+
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupEighteenAdditionalView}">
 							<c:if
@@ -2527,8 +2580,8 @@
 										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
 										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-									itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
+										itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
 									<f:selectItem
 										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
@@ -2548,8 +2601,8 @@
 
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
 										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-									itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
+										itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
 									<f:selectItem
 										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>

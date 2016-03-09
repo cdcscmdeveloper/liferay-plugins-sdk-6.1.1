@@ -94,6 +94,15 @@ public class ReportsGenerateBean {
 	
 	/** The generate button. */
 	private boolean generateButton=false;
+	
+	/** The tool tip for cc. */
+	private boolean toolTipForCC=false;
+	
+	/** The tool tip for po. */
+	private boolean toolTipForPO=false;
+	
+	/** The tool tip for pa. */
+	private boolean toolTipForPA=false;
 
 	/** The approved date view. */
 	private boolean approvedDateView = false;	
@@ -20248,6 +20257,63 @@ public class ReportsGenerateBean {
 	 */
 	public void setContractSystemTotVar(String contractSystemTotVar) {
 		this.contractSystemTotVar = contractSystemTotVar;
+	}
+
+	/**
+	 * Checks if is tool tip for cc.
+	 * 
+	 * @return the toolTipForCC
+	 */
+	public boolean isToolTipForCC() {
+		return toolTipForCC;
+	}
+
+	/**
+	 * Sets the tool tip for cc.
+	 * 
+	 * @param toolTipForCC
+	 *            the toolTipForCC to set
+	 */
+	public void setToolTipForCC(boolean toolTipForCC) {
+		this.toolTipForCC = toolTipForCC;
+	}
+
+	/**
+	 * Checks if is tool tip for po.
+	 * 
+	 * @return the toolTipForPO
+	 */
+	public boolean isToolTipForPO() {
+		return toolTipForPO;
+	}
+
+	/**
+	 * Sets the tool tip for po.
+	 * 
+	 * @param toolTipForPO
+	 *            the toolTipForPO to set
+	 */
+	public void setToolTipForPO(boolean toolTipForPO) {
+		this.toolTipForPO = toolTipForPO;
+	}
+
+	/**
+	 * Checks if is tool tip for pa.
+	 * 
+	 * @return the toolTipForPA
+	 */
+	public boolean isToolTipForPA() {
+		return toolTipForPA;
+	}
+
+	/**
+	 * Sets the tool tip for pa.
+	 * 
+	 * @param toolTipForPA
+	 *            the toolTipForPA to set
+	 */
+	public void setToolTipForPA(boolean toolTipForPA) {
+		this.toolTipForPA = toolTipForPA;
 	}
 
 	

@@ -9903,6 +9903,9 @@ public class ReportBackingBean extends
 		this.setReportName(ReportConst.EMPTY_VAL);
 		getManagedBean().setRptGenBean(rptGenBean);
 		rptGenBean.setReportCategory(this.getReportCategory());
+		
+		// tool tips for FL Submodules(like Ex: CC,PO,PA)
+		//checkToolTipsConditonForFLSubmodule();
 		resetReportForm();
 		/*
 		 * String language =
@@ -9936,6 +9939,27 @@ public class ReportBackingBean extends
 			}
 		}
 		return reportList;
+	}
+
+	/**
+	 * Check tool tips conditon for fl submodule.
+	 */
+	private void checkToolTipsConditonForFLSubmodule() {
+		if (this.getReportCategory() != null) {
+			if (this.getReportCategory().equalsIgnoreCase(
+					ReportConst.FL_SUB_MOD_CENTRAL_VAL)) {
+				//this.getManagedBean().getRptGenBean().setToolTipForCC(true);
+				this.getRptGenBean().setToolTipForCC(true);
+			} else if (this.getReportCategory().equalsIgnoreCase(
+					ReportConst.FL_SUB_MOD_PURCHASE_VAL)) {
+				//this.getManagedBean().getRptGenBean().setToolTipForPO(true);
+				this.getRptGenBean().setToolTipForPO(true);
+			} else if (this.getReportCategory().equalsIgnoreCase(
+					ReportConst.FL_SUB_MOD_PANEL_VAL)) {
+				//this.getManagedBean().getRptGenBean().setToolTipForPA(true);
+				this.getRptGenBean().setToolTipForPA(true);
+			}
+		}
 	}
 
 	/**
@@ -11713,6 +11737,8 @@ public class ReportBackingBean extends
 			rptGenBean = new ReportsGenerateBean();
 			// rptGenBean.setReportCategoryView(this.isReportCategoryView());
 		}
+		// tool tips for FL Submodules(like Ex: CC,PO,PA)
+		checkToolTipsConditonForFLSubmodule();
 		getManagedBean().setModuleNameValue(this.getModuleValue());
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
@@ -11824,7 +11850,7 @@ public class ReportBackingBean extends
 				this.getManagedBean().setReportCode(pmReport.getReportCode());
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 
-			}
+			}			
 			retrieveHighRoleCodeByUser();
 			retrieveAllRoleCodesByUser();
 			retrieveZoneByUser();
@@ -15379,7 +15405,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getItemCategoryTotVar()
 						+ rptGenBean.getProofIdentityTotVar()
 						+ rptGenBean.getContractNoTotVar()
-						+ rptGenBean.getContractSystemTotVar()						
+						+ rptGenBean.getContractSystemTotVar()
 						+ rptGenBean.getSstTotVar()
 						+ rptGenBean.getJabatanTotVar()
 						+ rptGenBean.getMinistryTotVar()
