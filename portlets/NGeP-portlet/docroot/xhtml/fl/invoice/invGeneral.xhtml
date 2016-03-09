@@ -71,8 +71,8 @@
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}"
 				style="white-space:normal;width:480px;text-align:center;">
 				<h:outputText style="text-align:left; float:left;"
-					rendered="#{delOrder.flDeliveryAddress.addressType != null}"
-					value="#{invoiceBackingBean.getFullAddress(delOrder.flDeliveryAddress.pmAddress)}" />
+					rendered="#{delOrder.flDeliveryAddress.flAddress != null}"
+					value="#{invoiceBackingBean.getFullAddress(delOrder.flDeliveryAddress.flAddress)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supplierDeliveryOrderNo']}"
 				style="white-space:normal;text-align:center;">
@@ -169,7 +169,7 @@
 						value="#{lbl['lbl.fl.address']}" /></td>
 				<td ><p:inputTextarea rows="5" cols="47"
 						style="margin-bottom:5px;" disabled="true" autoResize="false"
-						value="#{invoiceBackingBean.getFullAddress(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.smAddress)}" /></td>
+						value="#{invoiceBackingBean.getFullAddress(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress)}" /></td>
 			    <td style="vertical-align: top;"><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
 				<td style="vertical-align: top;"><p:selectBooleanCheckbox disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored}">
@@ -191,11 +191,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="13"
 									disabled="true"
-									value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.phoneNo}" /></td>
+									value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.phoneNo}" /></td>
 							<td style="width: 80px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="14" disabled="true"
-									value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.faxNo}" /></td>
+									value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -203,18 +203,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.contactPerson}" /></td>
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.contactEmail}" /></td>
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactPhoneNo}" /></td>
 			</tr>			
 		</table>
 	</p:panel>
@@ -227,13 +227,13 @@
 				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
 				<td style="width: 170px;"><p:outputLabel
 						value="#{lbl['lbl.fl.invoice.acc.bank']}" /></td>
-				<td><p:inputText size="55" disabled="true" value="#{invoiceBackingBean.managedBean.accountNoName}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.bank.name']}"/></td>
+				<td><p:inputText size="55" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.bank.name']}"/></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
-						value="Address" /></td>
+						value="#{lbl['lbl.fl.address']}" /></td>
 				<td><p:inputTextarea cols="47" rows="5" autoResize="false"
-						value="#{invoiceBackingBean.managedBean.supplierAddress}"
+						value="#{invoiceBackingBean.managedBean.getFullAddress(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress)}"
 						style="margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 			<tr>
@@ -243,11 +243,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="13"
 									disabled="true"
-									value="#{invoiceBackingBean.managedBean.phoneNo}" /></td>
+									value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.phoneNo}" /></td>
 							<td style="width: 80px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="11" disabled="true"
-									value="#{invoiceBackingBean.managedBean.faxNo}" /></td>
+									value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -255,19 +255,19 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.contactPerson}" /></td>
+						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText size="45"
-						value="#{invoiceBackingBean.managedBean.contactEmail}"
+						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactEmail}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.contactPhoneNo}" /></td>
+						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>

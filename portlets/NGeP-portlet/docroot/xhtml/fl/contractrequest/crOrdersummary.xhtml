@@ -15,10 +15,8 @@
 				<p:rowToggler />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="width: 350px;white-space:normal;">
-				<h:outputText rendered="#{delAddressSummary.addressType != null}"
-					value="#{contractRequestBackingBean.getFullAddress(delAddressSummary.addressType.pmAddress)}" />
-				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
-					value="#{contractRequestBackingBean.getFullAddress(delAddressSummary.pmAddress)}" />			
+				<h:outputText rendered="#{delAddressSummary.flAddress != null}"
+					value="#{contractRequestBackingBean.getFullAddress(delAddressSummary.flAddress)}" />
 			</p:column>
 			<p:column style="white-space:normal;" >
 			<table style="width : 100%;" class="noBorder">

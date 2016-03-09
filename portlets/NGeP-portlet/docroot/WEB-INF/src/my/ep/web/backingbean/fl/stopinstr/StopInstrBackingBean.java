@@ -582,8 +582,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					// Set GSL Type
 					DesignatedAreaReqDTO daReqDTO = new DesignatedAreaReqDTO();
 					DesignatedAreaResDTO daResDTO = new DesignatedAreaResDTO();
-					daReqDTO.setFromAddressId(getManagedBean().getStopInstr().getFlRequest().getFlSupplierDtl().getSmAddress().getAddressId());
-					daReqDTO.setToAddressId(fulfilmentNote.getFlDeliveryOrder().getFlDeliveryAddress().getPmAddress().getAddressId());
+					daReqDTO.setFromAddressId(getManagedBean().getStopInstr().getFlRequest().getFlSupplierDtl().getFlAddress().getAddressId());
+					daReqDTO.setToAddressId(fulfilmentNote.getFlDeliveryOrder().getFlDeliveryAddress().getPmAddressId());
 					daReqDTO.setActualReceivedDate(fulfilmentNote.getReceivedDate());
 					daResDTO = designatedAreaSO.retrieveGSLParam(daReqDTO);
 					if(daResDTO.isSuccessful()) {
