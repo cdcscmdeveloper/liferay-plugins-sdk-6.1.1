@@ -175,15 +175,34 @@
 						</c:if>
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctPhysicalContractNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.physicalcontractno']}"
-								style="margin-top:5px;width:279px;" />
-							<p:inputText maxlength="30"
-								value="#{reportBackingBean.ctPhysicalContractNo}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
+							<p:column>
+								<table style="width: 100%;">
+									<tr style="width: 100%;">
+										<td><p:outputLabel
+												value="#{lbl['lbl.rpt.physicalcontractno']}" /></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:inputText maxlength="30" id="phycontractId"
+												label="#{lbl['lbl.rpt.physicalcontractno']}"
+												value="#{reportBackingBean.ctPhysicalContractNo}"
+												style="margin-top:5px;width:290px;">
+												<p:ajax event="blur" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:inputText></td>
+										<td><p:graphicImage id="phycontractno"
+												value="/css/images/design/tooltips.png" /> <p:tooltip
+												value="#{lbl['lbl.rpt.tooltipforphycontract']}"
+												id="phycontractct" for="phycontractno">
+											</p:tooltip>&#160; <p:message id="phycontractIdMsg" for="phycontractId"
+												display="icon" /></td>
+									</tr>
+								</table>
+							</p:column>
 						</c:if>
-
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
 							<p:outputLabel value="" style="margin-top:5px;width:162px;" />
