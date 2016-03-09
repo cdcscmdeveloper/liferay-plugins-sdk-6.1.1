@@ -176,7 +176,7 @@
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
-						</c:if>						
+						</c:if>
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flContractSystemView}">
 							<p:column>
@@ -200,13 +200,14 @@
 										<td><p:graphicImage id="typeofcontractsystem"
 												value="/css/images/design/tooltips.png" /> <p:tooltip
 												rendered="#{reportBackingBean.rptGenBean.toolTipForCC}"
-												value="#{lbl['lbl.rpt.tooltipforcccontract']}" id="contractsyscc"
-												for="typeofcontractsystem">
+												value="#{lbl['lbl.rpt.tooltipforcccontract']}"
+												id="contractsyscc" for="typeofcontractsystem">
 											</p:tooltip>&#160;<p:tooltip
 												rendered="#{reportBackingBean.rptGenBean.toolTipForPO}"
 												value="#{lbl['lbl.rpt.tooltipforpoandpacontract']}"
 												id="contractsyspo" for="typeofcontractsystem">
-											</p:tooltip>&#160;<p:tooltip value="#{lbl['lbl.rpt.tooltipforpoandpacontract']}"
+											</p:tooltip>&#160;<p:tooltip
+												value="#{lbl['lbl.rpt.tooltipforpoandpacontract']}"
 												rendered="#{reportBackingBean.rptGenBean.toolTipForPA}"
 												id="contractsyspa" for="typeofcontractsystem">
 											</p:tooltip>&#160;<p:message id="contractSysTypeIdMsg"
@@ -784,32 +785,61 @@
 						</c:if>
 
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySixWithAllSupplView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu value="#{reportBackingBean.flGroupOne}"
-								style="margin-top:5px;width:300px;">
+							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySixAdditionalView}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySixWithSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupOne}"
+									style="margin-top:5px;width:300px;">
 
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-									itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
-									itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
-								<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem> -->
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
+										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySixWithoutSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupOne}"
+									style="margin-top:5px;width:300px;">
+
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
+										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
 						</c:if>
 
 						<c:if
@@ -895,36 +925,67 @@
 						</c:if>
 
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwoWithSupplPPRView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu value="#{reportBackingBean.flGroupTwo}"
-								style="margin-top:5px;width:300px;">
+							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwoAdditionalView}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwoWithSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupTwo}"
+									style="margin-top:5px;width:300px;">
 
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-									itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
-									itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
-								<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem> -->
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-									itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
+										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+										itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwoWithoutSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupTwo}"
+									style="margin-top:5px;width:300px;">
+
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
+										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+										itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
 						</c:if>
-
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwoWithSupplAllView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
@@ -1010,6 +1071,10 @@
 									<f:selectItem
 										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
 									<p:ajax event="change" partialSubmit="true"
 										update="@([id$=Msg])" />
 								</p:selectOneMenu>
@@ -1036,43 +1101,15 @@
 									<f:selectItem
 										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
 									<p:ajax event="change" partialSubmit="true"
 										update="@([id$=Msg])" />
 								</p:selectOneMenu>
 							</c:if>
 						</c:if>
-
-						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentyFourWithAllSupplView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu value="#{reportBackingBean.flGroupTwo}"
-								style="margin-top:5px;width:300px;">
-
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-									itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
-									itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-									itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
-								<!-- 	<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem> -->
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
-						</c:if>
-
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupThreeView}">
 							<c:if
@@ -1116,6 +1153,65 @@
 								</p:selectOneMenu>
 							</c:if>
 						</c:if>
+
+						<c:if
+							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupThreeAdditionalView}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupThreeWithSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupThree}"
+									style="margin-top:5px;width:300px;">
+
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+										itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupThreeWithoutSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupThree}"
+									style="margin-top:5px;width:300px;">
+
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+										itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
+						</c:if>
+
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupThreeAllRolecodesWithoutSupplView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
@@ -1158,36 +1254,6 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
-
-						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupThreeWithSupplPLRView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu value="#{reportBackingBean.flGroupThree}"
-								style="margin-top:5px;width:300px;">
-
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-									itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-								<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem> -->
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-									itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
-						</c:if>
-
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupThreeWithSupplAllView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
@@ -1474,33 +1540,60 @@
 						</c:if>
 
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupSixWithSupplPRAView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu value="#{reportBackingBean.flGroupSix}"
-								style="margin-top:5px;width:300px;">
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-									itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-								<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-									itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem> -->
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
+							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupSixAdditionalView}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupSixWithSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupSix}"
+									style="margin-top:5px;width:300px;">
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
+										itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupSixWithoutSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupSix}"
+									style="margin-top:5px;width:300px;">
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
+										itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
 						</c:if>
-
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentyFiveView}">
 							<c:if
@@ -1547,34 +1640,65 @@
 						</c:if>
 
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentyFiveWithAllSupplView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu value="#{reportBackingBean.flGroupSix}"
-								style="margin-top:5px;width:300px;">
+							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentyFiveAdditionalView}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentyFiveWithSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupSix}"
+									style="margin-top:5px;width:300px;">
 
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-									itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
-									itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-								<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-									itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem> -->
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
+										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
+										itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentyFiveWithoutSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupSix}"
+									style="margin-top:5px;width:300px;">
+
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
+										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
+										itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
 						</c:if>
 
 						<c:if
@@ -1654,32 +1778,57 @@
 						</c:if>
 
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySevenWithAllSupplView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu value="#{reportBackingBean.flGroupFifteen}"
-								style="margin-top:5px;width:300px;">
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-									itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-								<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem> -->
+							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySevenAdditionalView}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySevenWithSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupFifteen}"
+									style="margin-top:5px;width:300px;">
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySevenWithoutSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupFifteen}"
+									style="margin-top:5px;width:300px;">
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
 
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
 						</c:if>
-
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentySevenWithAllPPRFSupplView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
@@ -1795,32 +1944,62 @@
 						</c:if>
 
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupSevenWithAllSupplView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:160px;" />
-							<p:selectOneMenu value="#{reportBackingBean.flGroupSeven}"
-								style="margin-top:5px;width:300px;">
+							test="#{flReportBackingBean.managedBean.rptGenBean.flGroupSevenAdditionalView}">
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupSevenWithSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupSeven}"
+									style="margin-top:5px;width:300px;">
 
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-									itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-									itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-								<f:selectItem
-									itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
-								<!-- <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-									itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem> -->
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-									itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
-								<p:ajax event="change" partialSubmit="true"
-									update="@([id$=Msg])" />
-							</p:selectOneMenu>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+										itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
+							<c:if
+								test="#{flReportBackingBean.managedBean.rptGenBean.flGroupSevenWithoutSupplView}">
+								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+									style="margin-top:5px;width:160px;" />
+								<p:selectOneMenu value="#{reportBackingBean.flGroupSeven}"
+									style="margin-top:5px;width:300px;">
+
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+										itemValue="#{null}"></f:selectItem>
+
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+										itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+										itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+									<f:selectItem
+										itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
+										itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+										itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"
+										update="@([id$=Msg])" />
+								</p:selectOneMenu>
+							</c:if>
 						</c:if>
 
 						<c:if
@@ -2331,7 +2510,7 @@
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
 										itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.paymentofficername']}"
-									itemValue="#{lbl['lbl.rpt.paymentofficername']}"></f:selectItem>
+										itemValue="#{lbl['lbl.rpt.paymentofficername']}"></f:selectItem>
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
 										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
@@ -2350,7 +2529,7 @@
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 										itemValue="#{null}"></f:selectItem>
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.paymentofficername']}"
-									itemValue="#{lbl['lbl.rpt.paymentofficername']}"></f:selectItem>
+										itemValue="#{lbl['lbl.rpt.paymentofficername']}"></f:selectItem>
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNoScreen']}"
 										itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
