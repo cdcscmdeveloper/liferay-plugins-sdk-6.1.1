@@ -35,9 +35,7 @@
 		<f:event listener="#{receivedNoteBackingBean.preRenderView}" 
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="#{receivedNoteBackingBean.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
-		<ui:decorate
-					template="/WEB-INF/facelets/templates/claim_template.xhtml">
-					<ui:define name="outComeSection">
+		
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
@@ -90,8 +88,7 @@
 				</td>
 			</tr>
 		</table>
-			</ui:define>
-				</ui:decorate>
+			
 		<ui:include src="frnReviewHeaderPage.xhtml" />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
