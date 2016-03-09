@@ -1560,8 +1560,21 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = null;
 		try {
 			String itemName="";
-			for(CtPanelItem item:panelItems){
-				itemName=itemName.concat(item.getItemName());
+			if(panelItems.size()==1){
+				CtPanelItem item=panelItems.get(0);
+				if(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC.equals(item.getItemCategoryId().getParameterCode())){
+					String description=item.getCtPanelItemGroup().getGroupName();
+					itemName=description;
+				}
+				else if(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL.equals(item.getItemCategoryId().getParameterCode())){
+					String description=item.getCtPanelItemGroup().getGroupName();
+					itemName=description.concat(item.getItemName());
+				}
+				//System.out.println("====display concat itemname==="+itemName);
+			}else{
+				CtPanelItem item=panelItems.get(0);
+				String description=item.getCtPanelItemGroup().getGroupName();
+				itemName=description;
 				//System.out.println("====display concat itemname==="+itemName);
 			}
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
