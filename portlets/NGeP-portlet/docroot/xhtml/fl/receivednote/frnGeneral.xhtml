@@ -82,7 +82,7 @@
 						id="delAddrText1" cols="55" rows="7" maxlength="500"
 						style=" margin-bottom:5px;" disabled="true"
 						autoResize="false"
-						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.pmAddress)}" />
+						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.flAddress)}" />
 				</td>
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.fl.frn.dl.ordered.date']}" /></td>
@@ -220,7 +220,7 @@
 				<td><p:inputTextarea cols="55" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
 						autoResize="false"
-						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.smAddress)}" /></td>
+						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
@@ -229,11 +229,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.phoneNo}" /></td>
+									value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.phoneNo}" /></td>
 							<td style="width: 88px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.faxNo}" /></td>
+									value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -241,18 +241,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.contactPerson}" /></td>
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.contactEmail}" /></td>
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.flAddress.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>

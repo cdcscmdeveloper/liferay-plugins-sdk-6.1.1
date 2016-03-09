@@ -102,8 +102,8 @@
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}"
 				style="white-space:normal;width:480px;text-align:center;">
 				<h:outputText style="text-align:left; float:left;"
-					rendered="#{delOrder.flDeliveryAddress.addressType != null}"
-					value="#{paymentMatchBackingBean.getFullAddress(delOrder.flDeliveryAddress.pmAddress)}" />
+					rendered="#{delOrder.flDeliveryAddress.flAddress != null}"
+					value="#{paymentMatchBackingBean.getFullAddress(delOrder.flDeliveryAddress.flAddress)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}"
 				style="white-space:normal;text-align:center;">
@@ -273,7 +273,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="55" rows="8" disabled="true"
 						style=" margin-bottom:5px;" autoResize="false"
-						value="#{paymentMatchBackingBean.getFullAddress(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.smAddress)}" /></td>
+						value="#{paymentMatchBackingBean.getFullAddress(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
@@ -282,11 +282,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.phoneNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.phoneNo}" /></td>
 							<td style="width: 88px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.faxNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -294,18 +294,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.contactPerson}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.contactEmail}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>

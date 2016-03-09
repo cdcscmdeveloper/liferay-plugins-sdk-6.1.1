@@ -28,11 +28,23 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.dtl.CtContractValue;
+import my.ep.persistence.entity.fl.FlAddress;
+import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -54,6 +66,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	
 	/** The log. **/
 	private static Logger log = Logger.getLogger(FulfilmentBaseBackingBean.class);
+	private static String separator = ", ";
 
 	/**
 	 * get faces scopes
@@ -272,6 +285,314 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			return true;
 		else
 			return false;
+	}
+	
+	protected void updateSupplierBranchAddress(SmSupplierBranch supplierBranch,FlSupplierDtl supplierDtl){
+		FlAddress flAddress = supplierDtl.getFlAddress();
+		SmAddress smAddress = supplierBranch.getSmAddress();
+		flAddress.setAddress1(smAddress.getAddress1());
+		flAddress.setAddress2(smAddress.getAddress2());
+		flAddress.setAddress3(smAddress.getAddress3());
+		flAddress.setAddress4(smAddress.getAddress4());
+		flAddress.setMapLatitude(smAddress.getMapLatitude());
+		flAddress.setMapLongitude(smAddress.getMapLongitude());
+		flAddress.setPmCity(smAddress.getPmCity());
+		flAddress.setPmCountry(smAddress.getPmCountry());
+		flAddress.setPmDistrict(smAddress.getPmDistrict());
+		flAddress.setPmDivision(smAddress.getPmDivision());
+		flAddress.setPmState(smAddress.getPmState());
+		flAddress.setPostcode(smAddress.getPostcode());
+		
+		flAddress.setFaxNo(supplierBranch.getFaxNo());
+		flAddress.setFaxArea(supplierBranch.getFaxArea());
+		flAddress.setFaxCountry(supplierBranch.getFaxCountry());
+		flAddress.setPhoneNo(supplierBranch.getPhoneNo());
+		flAddress.setPhoneArea(supplierBranch.getPhoneArea());
+		flAddress.setPhoneCountry(supplierBranch.getPhoneCountry());
+		
+		flAddress.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
+		flAddress.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
+		flAddress.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
+		flAddress.setContactPerson(supplierBranch.getSmPersonnel().getName());
+		flAddress.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
+		flAddress.setContactFaxArea(supplierBranch.getSmPersonnel().getFaxArea());
+		flAddress.setContactFaxCountry(supplierBranch.getSmPersonnel().getFaxCountry());
+		flAddress.setContactMobileArea(supplierBranch.getSmPersonnel().getMobileArea());
+		flAddress.setContactMobileCountry(supplierBranch.getSmPersonnel().getMobileCountry());
+		flAddress.setContactPhoneArea(supplierBranch.getSmPersonnel().getPhoneArea());
+		flAddress.setContactPhoneCountry(supplierBranch.getSmPersonnel().getPhoneCountry());
+		
+		supplierDtl.setBranchName(supplierBranch.getBranchName());
+		supplierDtl.setBranchCode(supplierBranch.getBranchCode());
+				
+	}
+	
+	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl, SmSupplier supplier){
+		FlAddress flAddress = supplierDtl.getFlAddress();
+		for(SmCompanyAddress smCompanyAddress : supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
+			if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+				SmAddress smAddress = smCompanyAddress.getSmAddress();
+				flAddress.setAddress1(smAddress.getAddress1());
+				flAddress.setAddress2(smAddress.getAddress2());
+				flAddress.setAddress3(smAddress.getAddress3());
+				flAddress.setAddress4(smAddress.getAddress4());
+				flAddress.setMapLatitude(smAddress.getMapLatitude());
+				flAddress.setMapLongitude(smAddress.getMapLongitude());
+				flAddress.setPmCity(smAddress.getPmCity());
+				flAddress.setPmCountry(smAddress.getPmCountry());
+				flAddress.setPmDistrict(smAddress.getPmDistrict());
+				flAddress.setPmDivision(smAddress.getPmDivision());
+				flAddress.setPmState(smAddress.getPmState());
+				flAddress.setPostcode(smAddress.getPostcode());
+				flAddress.setFaxNo(supplier.getSmAppl().getSmCompanyBasic().getFaxNo());
+				flAddress.setFaxArea(supplier.getSmAppl().getSmCompanyBasic().getFaxArea());
+				flAddress.setFaxCountry(supplier.getSmAppl().getSmCompanyBasic().getFaxCountry());
+				flAddress.setPhoneNo(supplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
+				flAddress.setPhoneArea(supplier.getSmAppl().getSmCompanyBasic().getPhoneArea());
+				flAddress.setPhoneCountry(supplier.getSmAppl().getSmCompanyBasic().getPhoneCountry());
+			}
+		}
+		for(SmPersonnel smPersonnel: supplier.getSmAppl().getSmPersonnels()){
+			if(smPersonnel.isContactPerson()){
+				flAddress.setContactEmail(smPersonnel.getEmail());
+				flAddress.setContactFaxNo(smPersonnel.getFaxNo());
+				flAddress.setContactMobileNo(smPersonnel.getMobileNo());
+				flAddress.setContactPerson(smPersonnel.getName());
+				flAddress.setContactPhoneNo(smPersonnel.getPhoneNo());
+				flAddress.setContactFaxArea(smPersonnel.getFaxArea());
+				flAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
+				flAddress.setContactMobileArea(smPersonnel.getMobileArea());
+				flAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
+				flAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
+				flAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
+				
+			}
+		}
+	}
+	
+	protected void convertCtAddressToFlAddress(FlFulfilmentRequest flRequest,FlSupplierDtl supplierDtl){
+		CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue();
+		if(ctSupplierDtl.getSupplierBranch() != null){
+			supplierDtl.setBranchCode(null);
+			supplierDtl.setBranchName(ctSupplierDtl.getSupplierBranch());
+		}else{
+			supplierDtl.setBranchCode(null);
+			supplierDtl.setBranchName(null);
+		}
+		FlAddress flAddress = new FlAddress();
+		SmAddress smAddress = ctSupplierDtl.getSupplierAddress();//TODO change to ctAddress when ready
+		flAddress.setAddress1(smAddress.getAddress1());
+		flAddress.setAddress2(smAddress.getAddress2());
+		flAddress.setAddress3(smAddress.getAddress3());
+		flAddress.setAddress4(smAddress.getAddress4());
+		flAddress.setMapLatitude(smAddress.getMapLatitude());
+		flAddress.setMapLongitude(smAddress.getMapLongitude());
+		flAddress.setPmCity(smAddress.getPmCity());
+		flAddress.setPmCountry(smAddress.getPmCountry());
+		flAddress.setPmDistrict(smAddress.getPmDistrict());
+		if(smAddress.getPmDivision()!=null){
+			flAddress.setPmDivision(smAddress.getPmDivision());
+		}
+		
+		flAddress.setPmState(smAddress.getPmState());
+		flAddress.setPostcode(smAddress.getPostcode());
+		
+		flAddress.setFaxNo("");//TODO change to ctaddress when ready
+		flAddress.setFaxArea("");
+		flAddress.setFaxCountry("");
+		flAddress.setPhoneNo("");
+		flAddress.setPhoneArea("");
+		flAddress.setPhoneCountry("");
+
+//		for(SmPersonnel smPersonnel: flRequest.getCtContract().getSmSupplier().getSmAppl().getSmPersonnels()){//TODO change when ready
+//			if(smPersonnel.isContactPerson()){
+//				flAddress.setContactEmail(smPersonnel.getEmail());
+//				flAddress.setContactFaxNo(smPersonnel.getFaxNo());
+//				flAddress.setContactMobileNo(smPersonnel.getMobileNo());
+//				flAddress.setContactPerson(smPersonnel.getName());
+//				flAddress.setContactPhoneNo(smPersonnel.getPhoneNo());
+//				flAddress.setContactFaxArea(smPersonnel.getFaxArea());
+//				flAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
+//				flAddress.setContactMobileArea(smPersonnel.getMobileArea());
+//				flAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
+//				flAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
+//				flAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
+//				break;
+//			}
+//		}
+		supplierDtl.setFlAddress(flAddress);
+	}
+	
+	protected FlAddress convertPmAddressToFlAddress(PmAddress pmAddress){
+		FlAddress flAddress = new FlAddress();
+
+				flAddress.setAddress1(pmAddress.getAddress1());
+				flAddress.setAddress2(pmAddress.getAddress2());
+				flAddress.setAddress3(pmAddress.getAddress3());
+				flAddress.setAddress4(pmAddress.getAddress4());
+				flAddress.setMapLatitude(pmAddress.getMapLatitude());
+				flAddress.setMapLongitude(pmAddress.getMapLongitude());
+				flAddress.setPmCity(pmAddress.getPmCity());
+				flAddress.setPmCountry(pmAddress.getPmCountry());
+				flAddress.setPmDistrict(pmAddress.getPmDistrict());
+				if(pmAddress.getPmDivision()!=null){
+					flAddress.setPmDivision(pmAddress.getPmDivision());
+				}
+				flAddress.setPmState(pmAddress.getPmState());
+				flAddress.setPostcode(pmAddress.getPostcode());
+				flAddress.setFaxNo(pmAddress.getFaxNo());
+				flAddress.setFaxArea(pmAddress.getFaxArea());
+				flAddress.setFaxCountry(pmAddress.getFaxCountry());
+				flAddress.setPhoneNo(pmAddress.getPhoneNo());
+				flAddress.setPhoneArea(pmAddress.getPhoneArea());
+				flAddress.setPhoneCountry(pmAddress.getPhoneCountry());
+	
+		return flAddress;
+		
+	}
+	
+	protected FlAddress convertFinAccAddressToFlAddress(PmAddressType pmAddressType){
+		FlAddress flAddress = new FlAddress();
+		PmAddress pmAddress = pmAddressType.getPmAddress();
+				flAddress.setAddress1(pmAddress.getAddress1());
+				flAddress.setAddress2(pmAddress.getAddress2());
+				flAddress.setAddress3(pmAddress.getAddress3());
+				flAddress.setAddress4(pmAddress.getAddress4());
+				flAddress.setMapLatitude(pmAddress.getMapLatitude());
+				flAddress.setMapLongitude(pmAddress.getMapLongitude());
+				flAddress.setPmCity(pmAddress.getPmCity());
+				flAddress.setPmCountry(pmAddress.getPmCountry());
+				flAddress.setPmDistrict(pmAddress.getPmDistrict());
+				if(pmAddress.getPmDivision()!=null){
+					flAddress.setPmDivision(pmAddress.getPmDivision());
+				}
+				flAddress.setPmState(pmAddress.getPmState());
+				flAddress.setPostcode(pmAddress.getPostcode());
+				flAddress.setFaxNo(pmAddress.getFaxNo());
+				flAddress.setFaxArea(pmAddress.getFaxArea());
+				flAddress.setFaxCountry(pmAddress.getFaxCountry());
+				flAddress.setPhoneNo(pmAddress.getPhoneNo());
+				flAddress.setPhoneArea(pmAddress.getPhoneArea());
+				flAddress.setPhoneCountry(pmAddress.getPhoneCountry());
+				
+				if(!pmAddressType.getPmContacts().isEmpty() ){
+					PmContact pmContact = pmAddressType.getPmContacts().get(0);
+					flAddress.setContactEmail(pmContact.getEmail());
+					flAddress.setContactFaxNo(pmContact.getFaxNo());
+					flAddress.setContactMobileNo(pmContact.getMobileNo());
+					flAddress.setContactPerson(pmContact.getContactName());
+					flAddress.setContactPhoneNo(pmContact.getPhoneNo());
+					flAddress.setContactFaxArea(pmContact.getFaxArea());
+					flAddress.setContactFaxCountry(pmContact.getFaxCountry());
+					flAddress.setContactMobileArea(pmContact.getMobileArea());
+					flAddress.setContactMobileCountry(pmContact.getMobileCountry());
+					flAddress.setContactPhoneArea(pmContact.getPhoneArea());
+					flAddress.setContactPhoneCountry(pmContact.getPhoneCountry());
+				}
+	
+		return flAddress;
+		
+	}
+	
+	/**
+	 * Get Full Address based on SmAddress
+	 * @param flAddress
+	 * @return full address
+	 */
+	public String getFullAddress(FlAddress flAddress) {
+		StringBuilder address = new StringBuilder();
+		if(flAddress!=null) {
+			if (flAddress.getAddressName() != null && flAddress.getAddressName().length() > 0 && !flAddress.getAddressName().equals("-")) {
+				address.append(flAddress.getAddressName());
+				address.append(separator);
+			}
+			if (flAddress.getAddress1() != null && flAddress.getAddress1().length() > 0) {
+				address.append(address.length() > 0 ? System.getProperty("line.separator") : "");
+				address.append(flAddress.getAddress1());
+				address.append(separator);
+			}
+			if (flAddress.getAddress2() != null && flAddress.getAddress2().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(flAddress.getAddress2());
+				address.append(separator);
+			}
+			if (flAddress.getAddress3() != null && flAddress.getAddress3().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(flAddress.getAddress3());
+				address.append(separator);
+			}
+			if (flAddress.getAddress4() != null && flAddress.getAddress4().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(flAddress.getAddress4());
+				address.append(separator);
+			}
+			if (flAddress.getPostcode() != null && flAddress.getPostcode().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(flAddress.getPostcode());
+				address.append(separator);
+			}
+			if (flAddress.getPmCity() != null && flAddress.getPmCity().getCityName() !=null && flAddress.getPmCity().getCityName().length() > 0) {
+				address.append(flAddress.getPmCity().getCityName());
+				address.append(separator);
+			}
+			if (flAddress.getPmState() != null && flAddress.getPmState().getStateName() !=null && flAddress.getPmState().getStateName().length() > 0) {
+				address.append(flAddress.getPmState().getStateName());
+			}						
+		}
+		return address.toString();
+	}
+	
+	/**
+	 * Get Full Address based on pmAddress
+	 * @param pmAddress
+	 * @return full address
+	 */
+	public String getPmFullAddress(PmAddress pmAddress) {
+		StringBuilder address = new StringBuilder();
+		if(pmAddress!=null) {
+			if (pmAddress.getAddressName() != null && pmAddress.getAddressName().length() > 0) {
+				address.append(pmAddress.getAddressName());
+				address.append(separator);
+			}
+			if (pmAddress.getAddress1() != null && pmAddress.getAddress1().length() > 0) {
+				address.append(pmAddress.getAddress1());
+				address.append(separator);
+			}
+			if (pmAddress.getAddress2() != null && pmAddress.getAddress2().length() > 0) {
+				address.append(pmAddress.getAddress2());
+				address.append(separator);
+			}
+			if (pmAddress.getAddress3() != null && pmAddress.getAddress3().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(pmAddress.getAddress3());
+				address.append(separator);
+			}
+			if (pmAddress.getAddress4() != null && pmAddress.getAddress4().length() > 0) {
+				address.append(pmAddress.getAddress4());
+				address.append(separator);
+			}
+			
+			if (pmAddress.getPmDistrict() != null && pmAddress.getPmDistrict().getDistrictName() !=null && pmAddress.getPmDistrict().getDistrictName().length() > 0) {
+				address.append(pmAddress.getPmDistrict().getDistrictName());
+				address.append(separator);
+			}
+			
+			if (pmAddress.getPostcode() != null && pmAddress.getPostcode().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(pmAddress.getPostcode());
+				address.append(" ");
+			}
+			if (pmAddress.getPmCity() != null && pmAddress.getPmCity().getCityName() !=null && pmAddress.getPmCity().getCityName().length() > 0) {
+				address.append(pmAddress.getPmCity().getCityName());
+				address.append(separator);
+			}
+
+			if (pmAddress.getPmState() != null && pmAddress.getPmState().getStateName() !=null && pmAddress.getPmState().getStateName().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(pmAddress.getPmState().getStateName());
+			}			
+		}
+		return address.toString();
 	}
 	
 }

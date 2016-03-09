@@ -296,7 +296,7 @@
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true" 
-				value="#{reliefOrderBB.getFullAddress(reliefOrderBB.managedBean.flRequest.flSupplierDtl.smAddress)}"
+				value="#{reliefOrderBB.getFullAddress(reliefOrderBB.managedBean.flRequest.flSupplierDtl.flAddress)}"
 						style=" margin-bottom:5px;"
 						 /></td>
 			</tr>
@@ -396,7 +396,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
-						value="#{reliefOrderBB.getFullAddress(reliefOrderBB.managedBean.flRequest.flSupplierDtl.smAddress)}" /></td>
+						value="#{reliefOrderBB.getFullAddress(reliefOrderBB.managedBean.flRequest.flSupplierDtl.flAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
@@ -405,11 +405,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
-									value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
+									value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.phoneNo}" /></td>
 							<td style="width: 72px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
+									value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -417,18 +417,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.contactPerson}" /></td>
+						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.contactEmail}" /></td>
+						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>

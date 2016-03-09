@@ -143,7 +143,7 @@
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
 						autoResize="false"
-						value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.flRequest.flSupplierDtl.smAddress)}" /></td>
+						value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
@@ -152,11 +152,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
+									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.phoneNo}" /></td>
 							<td style="width: 71px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
+									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -164,18 +164,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPerson}" /></td>
+						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactEmail}" /></td>
+						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddres.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -187,7 +187,7 @@
 					<td style="width: 141px;"><p:outputLabel
 							value="#{lbl['lbl.fl.factoring.company']}" /></td>
 					<td><p:inputText disabled="true" size="75"
-						value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
+						value="#{flOrderBB.managedBean.fulfilmentOrder.factoringOrgName}" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><p:outputLabel
@@ -195,7 +195,7 @@
 					<td><p:inputTextarea cols="50" rows="8" disabled="true"
 							style=" margin-bottom:5px;"
 							autoResize="false"
-							value="#{flOrderBB.managedBean.rfcAddress}" /></td>
+							value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.fulfilmentOrder.factoringAddress)}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 100px;"><p:outputLabel
@@ -204,11 +204,11 @@
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
-										value="#{flOrderBB.managedBean.rfcPhoneNo}" /></td>
+										value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.phoneNo}" /></td>
 								<td style="width: 71px;"><p:outputLabel
 										value="#{lbl['lbl.fl.faxno']}" /></td>
 								<td><p:inputText size="15" disabled="true"
-										value="#{flOrderBB.managedBean.rfcFaxNo}" /></td>
+										value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.faxNo}" /></td>
 							</tr>
 						</table></td>
 				</tr>
@@ -216,18 +216,18 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.managedBean.rfcContactPerson}" /></td>
+							value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPerson}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.email']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.managedBean.rfcContactEmail}" /></td>
+							value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactEmail}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td><p:inputText disabled="true" size="25"
-							value="#{flOrderBB.managedBean.rfcContactPhoneNo}" /></td>
+							value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPhoneNo}" /></td>
 				</tr>
 			</table>
 		</p:panel>
