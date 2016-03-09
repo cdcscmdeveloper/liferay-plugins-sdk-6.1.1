@@ -52,7 +52,7 @@
       	                   <ac:lov id="uomLovId"
 							lovId="PM_ORG_PROFILE_FPJ" size="60"
 							update=":form:orgCodeUpdate,:form:userPanelId"
-							headerText="Org Profile Lov"
+							headerText="#{lbl['lbl.pm.ug.info.ptj.list']}"
 							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}"
 							saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
@@ -129,7 +129,7 @@
 		
 		<div style="text-align: right;">
 				<ac:lov id="usergrouping" lovId="PM_USER"
-						headerText="User Selection"
+						headerText="#{lbl['lbl.pm.ug.info.users']}"
 						buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
 						saveObject="usergroupBackingBean.managedBean.users"
 						postUpdateListener="usergroupBackingBean.userGroupListner"
