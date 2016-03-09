@@ -12263,10 +12263,13 @@ public class SpecificationBackingBean extends
 	 * @param event
 	 *            (boolean zoneLocationlevel).
 	 */
-	public void zoneRadioChange(AjaxBehaviorEvent event) {
-		Boolean isZonal = (Boolean) event.getComponent().getAttributes()
+	public void zoneRadioChange(ScQt scQt) {
+		
+	/*	Boolean isZonal = (Boolean) event.getComponent().getAttributes()
 				.get("value");
-		ScQt scQt = this.getManagedBean().getQt();
+		ScQt scQt = this.getManagedBean().getQt();*/
+		
+		Boolean isZonal = scQt.isZonal();
 		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
 		if (null == supplierCriteria) {
 			supplierCriteria = new ScQtSupplierCriteria();
