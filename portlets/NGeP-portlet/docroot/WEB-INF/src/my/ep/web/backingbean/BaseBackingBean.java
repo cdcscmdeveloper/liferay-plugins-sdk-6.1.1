@@ -1060,7 +1060,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return AddressUtils.getFullAddress(ppAddress);
 	}
 	
-	public String getCtFullAddress(CtAddress ctAddress) {
+	public String getFullAddress(CtAddress ctAddress) {
 		return AddressUtils.getFullAddress(ctAddress);
 	}
 
