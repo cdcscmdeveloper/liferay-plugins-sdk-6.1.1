@@ -1479,22 +1479,14 @@ public class QTDetailBackingBean extends
 		List<TabBean> committeTabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		Long qtId = scQt.getQtId();
-		if (null != qtId) {
+		if (null == committeTabs) {
 			String evaluationType = this.getManagedBean().getQt()
 					.getEvaluationType();
 			String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
 			ParameterHelper parameterHelper = ParameterHelper.getInstance();
 
 			committeTabs = new ArrayList<TabBean>();
-			// BO and specification committe is common for both evaluations..
 
-			/*
-			 * String tabType = ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER;
-			 * ScQtCommittee boCommitte = getQtCommiteDtlsByQtIdNType(tabType,
-			 * qtId); committeTabs.add(new
-			 * TabBean(parameterHelper.getParameterDesc( parameterType,
-			 * tabType), tabType, boCommitte));
-			 */
 			String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
 			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType,
 					qtId);
@@ -1502,7 +1494,6 @@ public class QTDetailBackingBean extends
 					.getScCommittee().getCommitteStatus().getStatusId())) {
 				this.getManagedBean().setCloneNeeded(true);
 			}
-			// copyBoMembersToSpecCommitte(specCommitte, boCommitte);
 
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, specCommitte));
@@ -1602,23 +1593,7 @@ public class QTDetailBackingBean extends
 				ScQtCommittee committee = null;
 				committeTabs.add(new TabBean(fcTitleName, tabType, committee));
 			}
-		} else { // formed only SC committee while creating the new QT.
-			if (CollectionUtils.isEmpty(this.getManagedBean()
-					.getScCommitteeMemberTabList())) {
-				String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
-				ParameterHelper parameterHelper = ParameterHelper.getInstance();
-				committeTabs = new ArrayList<TabBean>();
-				String tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
-				ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(
-						tabType, qtId);
-				if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
-						.getScCommittee().getCommitteStatus().getStatusId())) {
-					this.getManagedBean().setCloneNeeded(true);
-				}
-				committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
-						parameterType, tabType), tabType, specCommitte));
-			}
-		}
+		} 
 
 		this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 
