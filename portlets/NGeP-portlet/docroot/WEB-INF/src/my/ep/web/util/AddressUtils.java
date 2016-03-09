@@ -3,6 +3,7 @@
  */
 package my.ep.web.util;
 
+import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -239,6 +240,55 @@ public class AddressUtils {
 			if (ppAddress.getPmState() != null && ppAddress.getPmState().getStateName() !=null && ppAddress.getPmState().getStateName().length() > 0) {
 				address.append(ppAddress.getPmState().getStateName());
 			}						
+		}
+		return address.toString();
+	}
+	
+	/**
+	 * Get Full Address based on CtAddress
+	 * @param ctAddress
+	 * @return full address
+	 */
+	public static String getFullAddress(CtAddress ctAddress) {
+		StringBuilder address = new StringBuilder();
+		if(ctAddress!=null) {
+			if (ctAddress.getAddress1() != null && ctAddress.getAddress1().length() > 0) {
+				address.append(ctAddress.getAddress1());
+				address.append(separator);
+			}
+			if (ctAddress.getAddress2() != null && ctAddress.getAddress2().length() > 0) {
+				address.append(ctAddress.getAddress2());
+				address.append(separator);
+			}
+			if (ctAddress.getAddress3() != null && ctAddress.getAddress3().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(ctAddress.getAddress3());
+				address.append(separator);
+			}
+			if (ctAddress.getAddress4() != null && ctAddress.getAddress4().length() > 0) {
+				address.append(ctAddress.getAddress4());
+				address.append(separator);
+			}
+			
+			if (ctAddress.getPmDistrict() != null && ctAddress.getPmDistrict().getDistrictName() !=null && ctAddress.getPmDistrict().getDistrictName().length() > 0) {
+				address.append(ctAddress.getPmDistrict().getDistrictName());
+				address.append(separator);
+			}
+			
+			if (ctAddress.getPostcode() != null && ctAddress.getPostcode().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(ctAddress.getPostcode());
+				address.append(" ");
+			}
+			if (ctAddress.getPmCity() != null && ctAddress.getPmCity().getCityName() !=null && ctAddress.getPmCity().getCityName().length() > 0) {
+				address.append(ctAddress.getPmCity().getCityName());
+				address.append(separator);
+			}
+
+			if (ctAddress.getPmState() != null && ctAddress.getPmState().getStateName() !=null && ctAddress.getPmState().getStateName().length() > 0) {
+				address.append(System.getProperty("line.separator"));
+				address.append(ctAddress.getPmState().getStateName());
+			}			
 		}
 		return address.toString();
 	}
