@@ -633,6 +633,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 		deliveryAddr.setPmAddressId(manualAddr.getAddressId());//for display RO use
 //		deliveryAddr.setAddressType(pmAddressType);//TODO will be remove after fladdress is ready
+		deliveryAddr.setFlAddress(manualAddr);
 		
 		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
 		CityReqDTO cityReqDTO = new CityReqDTO();
