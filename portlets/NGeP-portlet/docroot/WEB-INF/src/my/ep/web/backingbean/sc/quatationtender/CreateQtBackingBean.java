@@ -227,6 +227,7 @@ public class CreateQtBackingBean extends
 			}
 		} else {
 			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+			scQt.setOpenFor(null);
 			circularListSelect(new CtCircularVer());
 		}
 
