@@ -282,17 +282,6 @@
 							</p:column>
 						</c:if>
 						<c:if
-							test="#{flReportBackingBean.managedBean.rptGenBean.flLoaPhysicalNoView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.loaphysicalno']}"
-								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="100"
-								value="#{reportBackingBean.flLoaPhysicalNo}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
-						</c:if>
-
-						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flContractReqView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.flContractRequest']}"
 								style="margin-top:5px;width:160px;" />
