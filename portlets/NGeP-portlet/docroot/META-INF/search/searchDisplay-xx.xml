@@ -923,6 +923,21 @@
 					<property name="searchable" value="false" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.effDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.program.valid.from" />
+					<property name="searchable" value="false" />								
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.expDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.program.valid.to" />
+					<property name="searchable" value="false" />
+				</bean>					
 			</list>
 		</property>
 	</bean>
@@ -948,6 +963,21 @@
 					<property name="bundleKey" value="lbl.pm.prog.activity.desc" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.effDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.program.valid.from" />
+					<property name="searchable" value="false" />								
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.expDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.program.valid.to" />
+					<property name="searchable" value="false" />
+				</bean>								
 			</list>
 		</property>
 	</bean>
