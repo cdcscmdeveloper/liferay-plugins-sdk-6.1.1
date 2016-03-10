@@ -79,7 +79,9 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
-						QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL}),
+						QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL,
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT}),
+						
 						
 		// Pending QT Schedule & Document
 		QT_PENDING_SCHEDULE_DOCUMENT(
