@@ -18,7 +18,7 @@
 		</tr>
 		<tr>
 		<td align="right">
-			<c:if test="#{qTDetailBB.managedBean.taskId eq null and !qTDetailBB.managedBean.createQt}">
+			<c:if test="#{qTDetailBB.managedBean.taskId eq null and qTDetailBB.managedBean.maintanceFlow}">
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 					action="#{qTDetailBB.gotoQtSearchPage}"
 					partialSubmit="true"
