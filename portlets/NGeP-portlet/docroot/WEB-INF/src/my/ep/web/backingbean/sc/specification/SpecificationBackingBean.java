@@ -10952,7 +10952,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
 
 		}
-
+		this.getManagedBean().setLoginRoleType("SC");
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
@@ -11410,6 +11410,7 @@ public class SpecificationBackingBean extends
 			String panelItemCategory = this.getManagedBean()
 					.getPanelItemCategory();
 			boolean specNewable = this.getManagedBean().isSpecNewable();
+			String loginRoleType=this.getManagedBean().getLoginRoleType();
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
 					.getDeliveryLocRemoveList();
@@ -11699,6 +11700,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setReadOnly(readonly);
 			this.getManagedBean().setPayLoad(quotationTenderDataType);
 			this.getManagedBean().setAssignedState(isAssignedState);
+			this.getManagedBean().setLoginRoleType(loginRoleType);
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */
