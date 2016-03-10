@@ -1556,29 +1556,42 @@ public class SpecificationBackingBean extends
 	private void createCircularItemSpec(List<CtPanelItem> panelItems) {
 		IParameterSO parameterSo = null;
 		try {
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
+			TplSpecMaster specMaster = new TplSpecMaster();
 			String itemName="";
+			String panelCoverage="";
 			if(panelItems.size()==1){
 				CtPanelItem item=panelItems.get(0);
 				if(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC.equals(item.getItemCategoryId().getParameterCode())){
 					String description=item.getCtPanelItemGroup().getGroupName();
 					itemName=description;
+					panelCoverage=item.getPanelCoverageId().getParameterCode();
+					checkPanelItemIsZonalOrNonzonal(panelCoverage,item);
 				}
 				else if(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL.equals(item.getItemCategoryId().getParameterCode())){
 					String description=item.getCtPanelItemGroup().getGroupName();
 					itemName=description.concat(item.getItemName());
+					panelCoverage=item.getPanelCoverageId().getParameterCode();
+					//locationLevel=item.getLocationLevelId().getParameterCode();
+					checkPanelItemIsZonalOrNonzonal(panelCoverage,item);
+				
+					
 				}
 				//System.out.println("====display concat itemname==="+itemName);
 			}else{
 				CtPanelItem item=panelItems.get(0);
 				String description=item.getCtPanelItemGroup().getGroupName();
 				itemName=description;
+				panelCoverage=item.getPanelCoverageId().getParameterCode();
+				checkPanelItemIsZonalOrNonzonal(panelCoverage,item);
 				//System.out.println("====display concat itemname==="+itemName);
 			}
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ScQtCheckList checkList = new ScQtCheckList();
 			ScQtDoc scqtDocDest = new ScQtDoc();
-			TplSpecMaster specMaster = new TplSpecMaster();
+			
 
 			ParameterReqDTO specType = new ParameterReqDTO();
 			specType.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
@@ -1798,8 +1811,7 @@ public class SpecificationBackingBean extends
 						.updateZoneDtl(specMaster, null);
 			}
 
-			TemplateSpecBean templateSpecBean = getManagedBean()
-					.getTemplateSpecBean();
+		
 			List<ScQtCheckList> technicalCheckList = this.getManagedBean()
 					.getScQtCheckSt2techProposal();
 			if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
@@ -1817,6 +1829,32 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSpecItemWeightageRequired(false);
 			}
 			templateSpecBean.setSpecMaster(specMaster);
+			if (this.getManagedBean().getQt().isZonal()
+					&& this.getManagedBean().getQt().getQtType()
+							.equals(QTConstants.OPEN_TYPE)) {
+				retriveSpecdetails(this.getManagedBean().getQt().getQtId(),
+						QTConstants.DOCTYPE_PREPARE_SPEC);
+				List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
+						this.getManagedBean().getZoneGeneralTrees(), null);
+				ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
+				if (businessOwnerZone != null
+						&& !businessOwnerZone.isEmpty()) {
+
+					for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
+						supplierCriteria.getQtZoneCriterias().setModified(
+								true);
+						tplSpecZoneDtl.setTplSpecZone(supplierCriteria
+								.getQtZoneCriterias());
+
+					}
+					//templateSpecBean.setSpecMaster(specMaster);
+					templateSpecBean.getSpecMaster().setTplSpecZone(
+							supplierCriteria.getQtZoneCriterias());
+					templateSpecBean.getSpecMaster().getTplSpecZone()
+							.setTplSpecZoneDtls(businessOwnerZone);
+				}
+
+			}
 			this.getManagedBean().setScQtChecklist(checkList);
 			//QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 			//List<ScQtDoc> qtDocs = new ArrayList<ScQtDoc>();
@@ -5890,6 +5928,7 @@ public class SpecificationBackingBean extends
 					if (null == this.getManagedBean().getPanelItemCategory()
 							|| "".equals(this.getManagedBean()
 									.getPanelItemCategory())) {
+						this.getManagedBean().setCtPanelItem(null);
 						retriveSupplierQualificationCriteria("SC");
 
 					}
@@ -16108,10 +16147,104 @@ public class SpecificationBackingBean extends
 				break;
 			}
 		}
+		if(selectedPanelItems.size()>1){
+			String panelCoverage="";
+			String localPanelCoverage="";
+			String locationLevel="";
+			String locallocationLevel="";
+			for(CtPanelItem checkItem:selectedPanelItems){
+				panelCoverage=checkItem.getPanelCoverageId().getParameterCode();
+				locationLevel=checkItem.getLocationLevelId().getParameterCode();
+				if("".equals(localPanelCoverage) || !localPanelCoverage.equals(panelCoverage)){
+					if(null!=localPanelCoverage && !"".equals(localPanelCoverage)){
+					throw new EpException(MessageConst.ERROR_760395);
+					}else{
+						localPanelCoverage=panelCoverage;
+					}
+				}
+				if("".equals(locallocationLevel) || !locallocationLevel.equals(locationLevel)){
+					if(null!=locallocationLevel && !"".equals(locallocationLevel)){
+					throw new EpException(MessageConst.ERROR_760396);
+					}else{
+						locallocationLevel=locationLevel;
+					}
+				}
+				
+				else{
+					locallocationLevel=locationLevel;
+					localPanelCoverage=panelCoverage;
+				}
+				log.info("===panelCoverage"+panelCoverage+"localPanelCoverage"+localPanelCoverage);
+				log.info("===locationLevel"+locationLevel+"locallocationLevel"+locallocationLevel);
+			}
+			
+		}
 		
+		List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+			boolean istechnicalSpec = isAtleastTechnicalSpec(technicalCheckList);
+			if(istechnicalSpec){
+				String ZonalType="";
+				boolean zonal=this.getManagedBean().getQt().isZonal();
+				if(zonal){
+					ZonalType=QTConstants.CT_PANEL_ZONE_COVERAGE;
+				}else{
+					ZonalType=QTConstants.CT_PANEL_ALL_COVERAGE;
+				}
+				for(CtPanelItem checkItem:selectedPanelItems){
+				String	panelCoverage=checkItem.getPanelCoverageId().getParameterCode();
+				if(!ZonalType.equalsIgnoreCase(panelCoverage)){
+					if(QTConstants.CT_PANEL_ZONE_COVERAGE.equalsIgnoreCase(ZonalType)){
+					throw new EpException(MessageConst.ERROR_760397);
+					}else{
+						throw new EpException(MessageConst.ERROR_760398);
+					}
+				}
+				}
+					
+			}
+		}
 		this.getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance().execute("addPanelItem.hide()");
 		createCircularItemSpec(selectedPanelItems);
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 	}
+
+	
+	
+	private void checkPanelItemIsZonalOrNonzonal(String panelCoverage,CtPanelItem item){
+		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
+		if(QTConstants.CT_PANEL_ZONE_COVERAGE.equalsIgnoreCase(panelCoverage)){
+			
+			if (null == supplierCriteria) {
+				supplierCriteria = new ScQtSupplierCriteria();
+			}
+			ScQtZoneCriteria zoneCriteria = supplierCriteria
+					.getQtZoneCriterias();
+			if (null == zoneCriteria) {
+				zoneCriteria = new ScQtZoneCriteria();
+				zoneCriteria.setScQtSupplierCriteria(supplierCriteria);
+				supplierCriteria.setQtZoneCriterias(zoneCriteria);
+			}
+			this.getManagedBean().getQt().setZonal(true);
+			this.getManagedBean().getQt().setZoneLocationLevel(item.getLocationLevelId());
+			if(this.getManagedBean().getQt()
+					.isZonal()
+					&& null != supplierCriteria
+					&& null != supplierCriteria.getQtZoneCriterias() && null == supplierCriteria
+					.getQtZoneCriterias().getSpecZoneId()) {
+				this.getManagedBean().setCtPanelItem(item);
+				retriveZonesOrSuppliersByItem();
+					}
+		
+		}else{
+			this.getManagedBean().getQt().setZonal(false);
+			this.getManagedBean().getQt().setZoneLocationLevel(item.getLocationLevelId());
+			this.getManagedBean().setCtPanelItem(item);
+			retriveZonesOrSuppliersByItem();
+		}
+		
+	}
+
 }
