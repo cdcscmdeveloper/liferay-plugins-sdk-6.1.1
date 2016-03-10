@@ -3532,7 +3532,7 @@ public class QTDetailBackingBean extends
 
 		String taskName = this.getManagedBean().getTaskName();
 		boolean isCreateQt = this.getManagedBean().isCreateQt();
-
+		boolean isMaintFlow = this.getManagedBean().isMaintanceFlow();
 		String zonelocationLevel = this.getManagedBean().getStateCodes();
 		String locationLevel = this.getManagedBean().getLocalLevelCode();
 
@@ -3548,7 +3548,8 @@ public class QTDetailBackingBean extends
 		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean()
 				.getTemplateSpecZoneDtls();
 		QuationTenderReqDTO reqDTO = null;
-		switch (activeIndex) {
+		int changedIndexNumber = manipulateIndexNumber(activeIndex);
+		switch (changedIndexNumber) {
 		case 0:
 			reqDTO = prepareQTInfo();
 			reqDTO.setSaveFlow(true);
@@ -3693,6 +3694,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setPendingRevision(pendingRevision);
 		this.getManagedBean().setPayLoad(payLoad);
 		this.getManagedBean().setCreateQt(isCreateQt);
+		this.getManagedBean().setMaintanceFlow(isMaintFlow);
 		if (isCreateQt) {
 			this.getManagedBean().setOutComes(
 					new String[] { ResourceBundleUtils.getMessage(
@@ -4735,5 +4737,100 @@ public class QTDetailBackingBean extends
 		scTdObj[5] = scQt.getQtTitle();
 		this.getManagedBean().setScTdObj(scTdObj);
 	}
+	
+	public void qtChklistMaintenanceTabChange(Integer activeIndex) {
+		
+		int priviousIndex = this.getManagedBean().getActiveIndex();
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+		QuationTenderReqDTO reqDTO = prepareQTInfo();
+		boolean isAuditor = this.isAuditor();
+		if (priviousIndex != activeIndex) {
+			if (!isAuditor) {
+				switch (priviousIndex) {
+				case 0:
+					detailSO.validateateQTDetails(reqDTO);
+					// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
+					break;
+				case 1:
+					break;
 
+				case 2:
+					detailSO.validateApprovalDetails(reqDTO);
+					break;
+				case 3:
+					if (isinvokeValidations(getManagedBean().getQt())) {
+						detailSO.validateDeductionDtls(reqDTO);
+					}
+					break;
+
+				case 4:
+
+					break;
+
+				case 5:
+
+					break;
+
+				}
+			}
+			switch (activeIndex) {
+			case 0:
+
+				retrieveQuationTenderDetails(this.getManagedBean().getQt()
+						.getQtId());
+				break;
+			case 1:
+				retrieveCommitteeAppointmentTabDtl(false);
+				break;
+
+			case 2:
+				retrieveApprovalTabDtl();
+				break;
+			case 3:
+				retrieveDeductionPaymentTabDtl();
+				break;
+			case 4:
+				retrieveDocumentTabDtl();
+				break;
+			case 5:
+				retrieveActivitiesTabDtl();
+				break;
+			}
+			this.getManagedBean().setActiveIndex(activeIndex);
+
+		}
+	}
+	
+	public boolean isMaintancePendingChklistStatus(){
+		
+		boolean isPresent = false;
+		if (this.getManagedBean().isMaintanceFlow()) {
+			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(this
+					.getManagedBean().getQt().getQtStatus().getStatusId())) {
+				isPresent = true;
+			}
+		}
+	return isPresent;	
+	}
+	
+	public int manipulateIndexNumber(int activeIndex){
+		
+		int changedIndex = activeIndex;
+		if (isMaintancePendingChklistStatus()) {
+			if (activeIndex == 1) {
+				changedIndex = QTConstants.COMMITTE_TAB_INDEX;
+			} else if (activeIndex == 2) {
+				changedIndex = QTConstants.APPROVAL_TAB_INDEX;;
+			} else if (activeIndex == 3) {
+				changedIndex = QTConstants.DEDUCTION_TAB_INDEX;
+			} else if (activeIndex == 4) {
+				changedIndex = QTConstants.DOCUMENTS_TAB_INDEX;
+			} else if (activeIndex == 5) {
+				changedIndex = QTConstants.ACTIVE_TAB_INDEX;
+			} 
+		}
+		return changedIndex;
+		
+	}
 }
