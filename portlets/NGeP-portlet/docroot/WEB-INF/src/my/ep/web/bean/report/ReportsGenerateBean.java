@@ -73,12 +73,13 @@ public class ReportsGenerateBean {
 
 	/** The month list. */
 	private List<SelectItem> monthList = new ArrayList<SelectItem>();
-	
+
 	/** The month map. */
 	private HashMap<String, String> monthMap = new HashMap<String, String>();
-	
+
 	/** The month map my. */
-	//private HashMap<SelectItem, SelectItem> monthMapMy = new HashMap<SelectItem, SelectItem>();
+	// private HashMap<SelectItem, SelectItem> monthMapMy = new
+	// HashMap<SelectItem, SelectItem>();
 
 	/** The status lst. */
 	private Object[] statusLst;
@@ -88,42 +89,42 @@ public class ReportsGenerateBean {
 
 	/** The to date view. */
 	private boolean toDateView = false;
-	
+
 	/** The condition generate button. */
-	private boolean conditionGenerateButton=false;
-	
+	private boolean conditionGenerateButton = false;
+
 	/** The generate button. */
-	private boolean generateButton=false;
-	
+	private boolean generateButton = false;
+
 	/** The tool tip for cc. */
-	private boolean toolTipForCC=false;
-	
+	private boolean toolTipForCC = false;
+
 	/** The tool tip for po. */
-	private boolean toolTipForPO=false;
-	
+	private boolean toolTipForPO = false;
+
 	/** The tool tip for pa. */
-	private boolean toolTipForPA=false;
+	private boolean toolTipForPA = false;
 
 	/** The approved date view. */
-	private boolean approvedDateView = false;	
-	
+	private boolean approvedDateView = false;
+
 	/** The report category. */
-	private String reportCategory="";
+	private String reportCategory = "";
 
 	/** The lng user id. */
 	private long lngUserId;
-	
+
 	/** The Str language. */
-	private String strLanguage="";
+	private String strLanguage = "";
 
 	/** The lev one cat lst1. */
 	private List<SelectItem> levOneCatLst1 = new ArrayList<SelectItem>();
 
 	/** The madatory indicator view. */
 	private boolean madatoryIndicatorView = false;
-	
+
 	/** The instruction info view. */
-	private boolean instructionInfoView=false;
+	private boolean instructionInfoView = false;
 
 	/** The cm madatory indicator view. */
 	private boolean cmMadatoryIndicatorView = false;
@@ -424,15 +425,15 @@ public class ReportsGenerateBean {
 	private boolean cmFromDateView = false;
 	/** The cm item type view. */
 	private boolean cmItemTypeView = false;
-	
+
 	/** The cm item type view only. */
-	private boolean cmItemTypeViewOnly=false;
-	
+	private boolean cmItemTypeViewOnly = false;
+
 	/** The cm role supp item type view. */
-	private boolean cmRoleSuppItemTypeView=false;
-	
+	private boolean cmRoleSuppItemTypeView = false;
+
 	/** The cm role supp group one view. */
-	private boolean cmRoleSuppGroupOneView=false;
+	private boolean cmRoleSuppGroupOneView = false;
 
 	/** The cm item status view. */
 	private boolean cmItemStatusView = false;
@@ -802,9 +803,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory year from report type view. */
 	private boolean smMandatoryYearFromReportTypeView = false;
-	
+
 	/** The sm mandatory year from report type view for my. */
-	private boolean smMandatoryYearFromReportTypeViewForMY=false;
+	private boolean smMandatoryYearFromReportTypeViewForMY = false;
 
 	/** The sm mandatory company name view. */
 	private boolean smMandatoryCompanyNameView = false;
@@ -847,9 +848,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory registered report type date view. */
 	private boolean smMandatoryRegisteredReportTypeDateView = false;
-	
+
 	/** The sm mandatory registered report type date view for my. */
-	private boolean smMandatoryRegisteredReportTypeDateViewForMY=false;
+	private boolean smMandatoryRegisteredReportTypeDateViewForMY = false;
 
 	/** The sm mandatory zone view. */
 	private boolean smMandatoryZoneView = false;
@@ -976,9 +977,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory supporting document mode view. */
 	private boolean smMandatorySupportingDocumentModeView = false;
-	
+
 	/** The sm mandatory supporting document mode view my. */
-	private boolean smMandatorySupportingDocumentModeViewMY=false;
+	private boolean smMandatorySupportingDocumentModeViewMY = false;
 
 	/** The sm cd mandatory all supplier type view. */
 	private boolean smCDMandatoryAllSupplierTypeView = false;
@@ -1138,10 +1139,10 @@ public class ReportsGenerateBean {
 
 	/** The sm mof registered date view. */
 	private boolean smMOFRegisteredDateView = false;
-	
+
 	/** The sm basic registered date view. */
 	private boolean smBasicRegisteredDateView = false;
-	
+
 	/** The sm all registered date view. */
 	private boolean smAllRegisteredDateView = false;
 
@@ -1203,19 +1204,19 @@ public class ReportsGenerateBean {
 	private List<SelectItem> ptjListForAuthorizer = new ArrayList<SelectItem>();
 
 	/** The fl contract no view. */
-	private boolean flContractNoView =false;
-	
+	private boolean flContractNoView = false;
+
 	/** The fl contract system view. */
-	private boolean flContractSystemView =false;
-	
+	private boolean flContractSystemView = false;
+
 	/** The fl physical contract no view. */
-	private boolean flPhysicalContractNoView =false;
-	
+	private boolean flPhysicalContractNoView = false;
+
 	/** The fl loa physical no view. */
-	private boolean flLoaPhysicalNoView =false;
-	
+	private boolean flLoaPhysicalNoView = false;
+
 	/** The fl contract req view. */
-	private boolean flContractReqView=false;
+	private boolean flContractReqView = false;
 
 	/** The fl sst view. */
 	private boolean flSstView = false;
@@ -1327,6 +1328,9 @@ public class ReportsGenerateBean {
 
 	/** The fl group one view. */
 	private boolean flGroupOneView = false;
+	
+	/** The fl group one additional view. */
+	private boolean flGroupOneAdditionalView=false;
 
 	/** The fl group one with suppl view. */
 	private boolean flGroupOneWithSupplView = false;
@@ -1335,13 +1339,19 @@ public class ReportsGenerateBean {
 	private boolean flGroupOneWithoutSupplView = false;
 
 	/** The fl group two view. */
-	private boolean flGroupTwoView = false;	
+	private boolean flGroupTwoView = false;
 	
+	/** The fl group two contract order view. */
+	private boolean flGroupTwoContractOrderView =false;
+	
+	/** The fl group two extra view. */
+	private boolean flGroupTwoExtraView = false;
+
 	/** The fl group two additional view. */
-	private boolean flGroupTwoAdditionalView = false;	
-	
+	private boolean flGroupTwoAdditionalView = false;
+
 	/** The fl group two with suppl all view. */
-	private boolean flGroupTwoWithSupplAllView=false;
+	private boolean flGroupTwoWithSupplAllView = false;
 
 	/** The fl group two without suppl view. */
 	private boolean flGroupTwoWithoutSupplView = false;
@@ -1352,8 +1362,26 @@ public class ReportsGenerateBean {
 	/** The fl group three view. */
 	private boolean flGroupThreeView = false;
 	
+	/** The fl group three payment match view. */
+	private boolean flGroupThreePaymentMatchView = false;
+	
+	/** The fl group three contract order view. */
+	private boolean flGroupThreeContractOrderView = false;
+	
+	/** The fl group three new view. */
+	private boolean flGroupThreeNewView = false;
+	
+	/** The fl group three payment view. */
+	private boolean flGroupThreePaymentView=false;
+	
+	/** The fl group three payment cc view. */
+	private boolean flGroupThreePaymentCCView=false;
+
+	/** The fl group three extra view. */
+	private boolean flGroupThreeExtraView = false;
+
 	/** The fl group three additional view. */
-	private boolean flGroupThreeAdditionalView = false;	
+	private boolean flGroupThreeAdditionalView = false;
 
 	/** The fl group three without suppl view. */
 	private boolean flGroupThreeWithoutSupplView = false;
@@ -1385,6 +1413,9 @@ public class ReportsGenerateBean {
 	/** The fl group six view. */
 	private boolean flGroupSixView = false;
 	
+	/** The fl group six extra view. */
+	private boolean flGroupSixExtraView = false;
+
 	/** The fl group six additional view. */
 	private boolean flGroupSixAdditionalView = false;
 
@@ -1396,7 +1427,7 @@ public class ReportsGenerateBean {
 
 	/** The fl group seven view. */
 	private boolean flGroupSevenView = false;
-	
+
 	/** The fl group seven additional view. */
 	private boolean flGroupSevenAdditionalView = false;
 
@@ -1426,7 +1457,7 @@ public class ReportsGenerateBean {
 
 	/** The fl group ten view. */
 	private boolean flGroupTenView = false;
-	
+
 	/** The fl group ten additional view. */
 	private boolean flGroupTenAdditionalView = false;
 
@@ -1450,7 +1481,7 @@ public class ReportsGenerateBean {
 
 	/** The fl group twelve view. */
 	private boolean flGroupTwelveView = false;
-	
+
 	/** The fl group twelve additional view. */
 	private boolean flGroupTwelveAdditionalView = false;
 
@@ -1462,12 +1493,12 @@ public class ReportsGenerateBean {
 
 	/** The fl group thirteen view. */
 	private boolean flGroupThirteenView = false;
-	
+
 	/** The fl group thirteen additional view. */
 	private boolean flGroupThirteenAdditionalView = false;
-	
+
 	/** The fl group thirteen ack rec view. */
-	private boolean flGroupThirteenAckRecView=false;
+	private boolean flGroupThirteenAckRecView = false;
 
 	/** The fl group thirteen without suppl view. */
 	private boolean flGroupThirteenWithoutSupplView = false;
@@ -1481,11 +1512,14 @@ public class ReportsGenerateBean {
 	/** The fl group fourteen view. */
 	private boolean flGroupFourteenView = false;
 	
+	/** The fl group fourteen extra view. */
+	private boolean flGroupFourteenExtraView = false;
+
 	/** The fl group fourteen additional view. */
 	private boolean flGroupFourteenAdditionalView = false;
-	
+
 	/** The fl group fourteen all rolecodes with pp suppl view. */
-	private boolean flGroupFourteenAllRolecodesWithPPSupplView=false;
+	private boolean flGroupFourteenAllRolecodesWithPPSupplView = false;
 
 	/** The fl group fourteen without suppl view. */
 	private boolean flGroupFourteenWithoutSupplView = false;
@@ -1543,7 +1577,7 @@ public class ReportsGenerateBean {
 
 	/** The fl group eighteen view. */
 	private boolean flGroupEighteenView = false;
-	
+
 	/** The fl group eighteen additional view. */
 	private boolean flGroupEighteenAdditionalView = false;
 
@@ -1576,27 +1610,27 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty one view. */
 	private boolean flGroupTwentyOneView = false;
-	
+
 	/** The fl group three with contract order suppl view. */
-	private boolean flGroupThreeWithContractOrderSupplView=false;
-	
+	private boolean flGroupThreeWithContractOrderSupplView = false;
+
 	/** The fl group twenty five with all contract ord suppl view. */
-	private boolean flGroupTwentyFiveWithAllContractOrdSupplView=false;
-	
+	private boolean flGroupTwentyFiveWithAllContractOrdSupplView = false;
+
 	/** The fl group two with suppl contract view. */
-	private boolean flGroupTwoWithSupplContractView=false;	
-	
+	private boolean flGroupTwoWithSupplContractView = false;
+
 	/** The fl group twenty two with all suppl view. */
-	private boolean flGroupTwentyTwoWithAllSupplView=false;
-	
+	private boolean flGroupTwentyTwoWithAllSupplView = false;
+
 	/** The fl group nineteen with all suppl view. */
-	private boolean flGroupNineteenWithAllSupplView=false;
-	
+	private boolean flGroupNineteenWithAllSupplView = false;
+
 	/** The fl group twenty with all suppl view. */
-	private boolean flGroupTwentyWithAllSupplView=false;
-	
+	private boolean flGroupTwentyWithAllSupplView = false;
+
 	/** The fl group twenty one with all suppl view. */
-	private boolean flGroupTwentyOneWithAllSupplView=false;
+	private boolean flGroupTwentyOneWithAllSupplView = false;
 
 	/** The fl group twenty one without suppl view. */
 	private boolean flGroupTwentyOneWithoutSupplView = false;
@@ -1675,7 +1709,7 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty five view. */
 	private boolean flGroupTwentyFiveView = false;
-	
+
 	/** The fl group twenty five additional view. */
 	private boolean flGroupTwentyFiveAdditionalView = false;
 
@@ -1693,7 +1727,7 @@ public class ReportsGenerateBean {
 
 	/** The fl group twenty six view. */
 	private boolean flGroupTwentySixView = false;
-	
+
 	/** The fl group twenty six additional view. */
 	private boolean flGroupTwentySixAdditionalView = false;
 
@@ -1712,6 +1746,9 @@ public class ReportsGenerateBean {
 	/** The fl group twenty seven view. */
 	private boolean flGroupTwentySevenView = false;
 	
+	/** The fl group twenty seven extra view. */
+	private boolean flGroupTwentySevenExtraView = false;
+
 	/** The fl group twenty seven additional view. */
 	private boolean flGroupTwentySevenAdditionalView = false;
 
@@ -3847,9 +3884,9 @@ public class ReportsGenerateBean {
 
 	/** The pp ptj view. */
 	private boolean ppPTJView = false;
-	
+
 	/** The dummy value. */
-	private boolean dummyValue=false;
+	private boolean dummyValue = false;
 
 	/** The pp pega wai pengawal view. */
 	private boolean ppPegaWaiPengawalView = false;
@@ -3948,7 +3985,7 @@ public class ReportsGenerateBean {
 
 	/** The contract no tot var. */
 	private String contractNoTotVar = ReportConst.EMPTY_VAL;
-	
+
 	/** The contract system tot var. */
 	private String contractSystemTotVar = ReportConst.EMPTY_VAL;
 
@@ -14717,7 +14754,6 @@ public class ReportsGenerateBean {
 		return yearList;
 	}
 
-	
 	/**
 	 * Generate common month list.
 	 * 
@@ -14734,7 +14770,7 @@ public class ReportsGenerateBean {
 	 */
 	public List<SelectItem> generateCommonMonthList(String lang) {
 		monthList = new ArrayList<SelectItem>();
-		//lang = ReportConst.MALAY_LANGUAGE_CODE;
+		// lang = ReportConst.MALAY_LANGUAGE_CODE;
 		Locale locale = null;
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
 			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
@@ -14762,22 +14798,73 @@ public class ReportsGenerateBean {
 		}
 		return monthList;
 	}
-	
+
 	/**
 	 * Generate common month list.
 	 * 
 	 * @param language
 	 *            the language
 	 * @return the list
-	 *//*
-	public List<SelectItem> generateCommonMonthList(String lang) {
+	 */
+	/*
+	 * public List<SelectItem> generateCommonMonthList(String lang) { monthList
+	 * = new ArrayList<SelectItem>(); if ((lang != null) &&
+	 * (lang.equalsIgnoreCase("en"))) { String month = ReportConst.EMPTY_VAL;
+	 * int monthNoInt; String monthNoStr = ReportConst.EMPTY_VAL;
+	 * DateFormatSymbols dfs = new DateFormatSymbols();
+	 * 
+	 * String[] months = dfs.getMonths(); for (int i = 0; i <= 11; i++) {
+	 * monthNoInt = i + 1; if (monthNoInt < 10) { monthNoStr =
+	 * ReportConst.ZERO_VAL + monthNoInt; } else { monthNoStr = monthNoInt +
+	 * ReportConst.EMPTY_VAL; } month = months[i]; SelectItem selectItem = new
+	 * SelectItem(); selectItem.setLabel(month);
+	 * selectItem.setValue(monthNoStr); monthList.add(selectItem);
+	 * monthMap.put(monthNoStr, month); } } else if ((lang != null) &&
+	 * (lang.equalsIgnoreCase("ms"))) {
+	 * 
+	 * SelectItem selectItem = new SelectItem(); selectItem.setLabel("Januari");
+	 * selectItem.setValue("January"); monthList.add(selectItem); SelectItem
+	 * selectItem1 = new SelectItem(); selectItem.setLabel("Februari");
+	 * selectItem.setValue("February"); monthList.add(selectItem1); SelectItem
+	 * selectItem2 = new SelectItem(); selectItem.setLabel("Mac");
+	 * selectItem.setValue("March"); monthList.add(selectItem2); SelectItem
+	 * selectItem3 = new SelectItem(); selectItem.setLabel("April");
+	 * selectItem.setValue("April"); monthList.add(selectItem3); SelectItem
+	 * selectItem4 = new SelectItem(); selectItem.setLabel("Mei");
+	 * selectItem.setValue("May"); monthList.add(selectItem4); SelectItem
+	 * selectItem5 = new SelectItem(); selectItem.setLabel("Jun");
+	 * selectItem.setValue("June"); monthList.add(selectItem5); SelectItem
+	 * selectItem6 = new SelectItem(); selectItem.setLabel("Julai");
+	 * selectItem.setValue("July"); monthList.add(selectItem6); SelectItem
+	 * selectItem7 = new SelectItem(); selectItem.setLabel("Ogos");
+	 * selectItem.setValue("August"); monthList.add(selectItem7); SelectItem
+	 * selectItem8 = new SelectItem(); selectItem.setLabel("September");
+	 * selectItem.setValue("September"); monthList.add(selectItem8); SelectItem
+	 * selectItem9 = new SelectItem(); selectItem.setLabel("Oktober");
+	 * selectItem.setValue("October"); monthList.add(selectItem9); SelectItem
+	 * selectItem10 = new SelectItem(); selectItem.setLabel("November");
+	 * selectItem.setValue("November"); monthList.add(selectItem10); SelectItem
+	 * selectItem11 = new SelectItem(); selectItem.setLabel("Disember");
+	 * selectItem.setValue("December"); monthList.add(selectItem11);
+	 * 
+	 * monthMapMy.putAll(monthList); } return monthList; }
+	 */
+
+	/**
+	 * Generate month list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 */
+	public List<SelectItem> generateMonthList(String language) {
 		monthList = new ArrayList<SelectItem>();
-		if ((lang != null) && (lang.equalsIgnoreCase("en"))) {
+		if ((language != null) && (language.equalsIgnoreCase("en"))) {
+
 			String month = ReportConst.EMPTY_VAL;
 			int monthNoInt;
 			String monthNoStr = ReportConst.EMPTY_VAL;
-			DateFormatSymbols dfs = new DateFormatSymbols(); 
-			  			
+			DateFormatSymbols dfs = new DateFormatSymbols();
 			String[] months = dfs.getMonths();
 			for (int i = 0; i <= 11; i++) {
 				monthNoInt = i + 1;
@@ -14791,149 +14878,59 @@ public class ReportsGenerateBean {
 				selectItem.setLabel(month);
 				selectItem.setValue(monthNoStr);
 				monthList.add(selectItem);
-				monthMap.put(monthNoStr, month);
 			}
-		} else if ((lang != null) && (lang.equalsIgnoreCase("ms"))) {
-			
+		} else if ((language != null) && (language.equalsIgnoreCase("ms"))) {
 			SelectItem selectItem = new SelectItem();
 			selectItem.setLabel("Januari");
-			selectItem.setValue("January");
+			selectItem.setValue("01");
 			monthList.add(selectItem);
 			SelectItem selectItem1 = new SelectItem();
 			selectItem.setLabel("Februari");
-			selectItem.setValue("February");
+			selectItem.setValue("02");
 			monthList.add(selectItem1);
 			SelectItem selectItem2 = new SelectItem();
 			selectItem.setLabel("Mac");
-			selectItem.setValue("March");
+			selectItem.setValue("03");
 			monthList.add(selectItem2);
 			SelectItem selectItem3 = new SelectItem();
 			selectItem.setLabel("April");
-			selectItem.setValue("April");
+			selectItem.setValue("04");
 			monthList.add(selectItem3);
 			SelectItem selectItem4 = new SelectItem();
 			selectItem.setLabel("Mei");
-			selectItem.setValue("May");
+			selectItem.setValue("05");
 			monthList.add(selectItem4);
 			SelectItem selectItem5 = new SelectItem();
 			selectItem.setLabel("Jun");
-			selectItem.setValue("June");
+			selectItem.setValue("06");
 			monthList.add(selectItem5);
 			SelectItem selectItem6 = new SelectItem();
 			selectItem.setLabel("Julai");
-			selectItem.setValue("July");
+			selectItem.setValue("07");
 			monthList.add(selectItem6);
 			SelectItem selectItem7 = new SelectItem();
 			selectItem.setLabel("Ogos");
-			selectItem.setValue("August");
+			selectItem.setValue("08");
 			monthList.add(selectItem7);
 			SelectItem selectItem8 = new SelectItem();
 			selectItem.setLabel("September");
-			selectItem.setValue("September");
+			selectItem.setValue("09");
 			monthList.add(selectItem8);
 			SelectItem selectItem9 = new SelectItem();
 			selectItem.setLabel("Oktober");
-			selectItem.setValue("October");
+			selectItem.setValue("10");
 			monthList.add(selectItem9);
 			SelectItem selectItem10 = new SelectItem();
 			selectItem.setLabel("November");
-			selectItem.setValue("November");
+			selectItem.setValue("11");
 			monthList.add(selectItem10);
 			SelectItem selectItem11 = new SelectItem();
 			selectItem.setLabel("Disember");
-			selectItem.setValue("December");
+			selectItem.setValue("12");
 			monthList.add(selectItem11);
-			
-			monthMapMy.putAll(monthList);
 		}
 		return monthList;
-	}*/
-	
-	
-	
-	/**
-	 * Generate month list.
-	 * 
-	 * @param language
-	 *            the language
-	 * @return the list
-	 */
-	public List<SelectItem> generateMonthList(String language){
-		monthList = new ArrayList<SelectItem>();
-		if((language!=null)&&(language.equalsIgnoreCase("en"))){
-			
-			String month = ReportConst.EMPTY_VAL;
-			int monthNoInt;
-			String monthNoStr= ReportConst.EMPTY_VAL;
-	        DateFormatSymbols dfs = new DateFormatSymbols();
-	        String[] months = dfs.getMonths();        
-	       for (int i = 0; i <= 11; i++) {
-	    	   monthNoInt= i+1;
-	    	   if(monthNoInt<10){
-	    		   monthNoStr=ReportConst.ZERO_VAL+monthNoInt;
-	    	   }else{
-	    		   monthNoStr=monthNoInt+ReportConst.EMPTY_VAL;
-	    	   }
-	            month = months[i];            
-	            SelectItem selectItem= new SelectItem();
-	            selectItem.setLabel(month);
-	            selectItem.setValue(monthNoStr);
-	            monthList.add(selectItem);
-	        } 
-		}else if((language!=null)&&(language.equalsIgnoreCase("ms"))){
-			SelectItem selectItem= new SelectItem();
-            selectItem.setLabel("Januari");
-            selectItem.setValue("01");
-            monthList.add(selectItem);
-            SelectItem selectItem1= new SelectItem();
-            selectItem.setLabel("Februari");
-            selectItem.setValue("02");
-            monthList.add(selectItem1);
-            SelectItem selectItem2= new SelectItem();
-            selectItem.setLabel("Mac");
-            selectItem.setValue("03");
-            monthList.add(selectItem2);
-            SelectItem selectItem3= new SelectItem();
-            selectItem.setLabel("April");
-            selectItem.setValue("04");
-            monthList.add(selectItem3);
-            SelectItem selectItem4= new SelectItem();
-            selectItem.setLabel("Mei");
-            selectItem.setValue("05");
-            monthList.add(selectItem4);
-            SelectItem selectItem5= new SelectItem();
-            selectItem.setLabel("Jun");
-            selectItem.setValue("06");
-            monthList.add(selectItem5);
-            SelectItem selectItem6= new SelectItem();
-            selectItem.setLabel("Julai");
-            selectItem.setValue("07");
-            monthList.add(selectItem6);
-            SelectItem selectItem7= new SelectItem();
-            selectItem.setLabel("Ogos");
-            selectItem.setValue("08");
-            monthList.add(selectItem7);
-            SelectItem selectItem8= new SelectItem();
-            selectItem.setLabel("September");
-            selectItem.setValue("09");
-            monthList.add(selectItem8);
-            SelectItem selectItem9= new SelectItem();
-            selectItem.setLabel("Oktober");
-            selectItem.setValue("10");
-            monthList.add(selectItem9);
-            SelectItem selectItem10= new SelectItem();
-            selectItem.setLabel("November");
-            selectItem.setValue("11");
-            monthList.add(selectItem10);
-            SelectItem selectItem11= new SelectItem();
-            selectItem.setLabel("Disember");
-            selectItem.setValue("12");
-            monthList.add(selectItem11);
-		}
-        return monthList;
 	}
-	
-	
 
 	/**
 	 * Generate common year list.
@@ -20124,7 +20121,8 @@ public class ReportsGenerateBean {
 	 * @param flGroupTwelveAdditionalView
 	 *            the flGroupTwelveAdditionalView to set
 	 */
-	public void setFlGroupTwelveAdditionalView(boolean flGroupTwelveAdditionalView) {
+	public void setFlGroupTwelveAdditionalView(
+			boolean flGroupTwelveAdditionalView) {
 		this.flGroupTwelveAdditionalView = flGroupTwelveAdditionalView;
 	}
 
@@ -20495,5 +20493,233 @@ public class ReportsGenerateBean {
 		this.flGroupTwentySevenAdditionalView = flGroupTwentySevenAdditionalView;
 	}
 
-	
+	/**
+	 * Checks if is fl group three extra view.
+	 * 
+	 * @return the flGroupThreeExtraView
+	 */
+	public boolean isFlGroupThreeExtraView() {
+		return flGroupThreeExtraView;
+	}
+
+	/**
+	 * Sets the fl group three extra view.
+	 * 
+	 * @param flGroupThreeExtraView
+	 *            the flGroupThreeExtraView to set
+	 */
+	public void setFlGroupThreeExtraView(boolean flGroupThreeExtraView) {
+		this.flGroupThreeExtraView = flGroupThreeExtraView;
+	}
+
+	/**
+	 * Checks if is fl group two extra view.
+	 * 
+	 * @return the flGroupTwoExtraView
+	 */
+	public boolean isFlGroupTwoExtraView() {
+		return flGroupTwoExtraView;
+	}
+
+	/**
+	 * Sets the fl group two extra view.
+	 * 
+	 * @param flGroupTwoExtraView
+	 *            the flGroupTwoExtraView to set
+	 */
+	public void setFlGroupTwoExtraView(boolean flGroupTwoExtraView) {
+		this.flGroupTwoExtraView = flGroupTwoExtraView;
+	}
+
+	/**
+	 * Checks if is fl group twenty seven extra view.
+	 * 
+	 * @return the flGroupTwentySevenExtraView
+	 */
+	public boolean isFlGroupTwentySevenExtraView() {
+		return flGroupTwentySevenExtraView;
+	}
+
+	/**
+	 * Sets the fl group twenty seven extra view.
+	 * 
+	 * @param flGroupTwentySevenExtraView
+	 *            the flGroupTwentySevenExtraView to set
+	 */
+	public void setFlGroupTwentySevenExtraView(boolean flGroupTwentySevenExtraView) {
+		this.flGroupTwentySevenExtraView = flGroupTwentySevenExtraView;
+	}
+
+	/**
+	 * Checks if is fl group fourteen extra view.
+	 * 
+	 * @return the flGroupFourteenExtraView
+	 */
+	public boolean isFlGroupFourteenExtraView() {
+		return flGroupFourteenExtraView;
+	}
+
+	/**
+	 * Sets the fl group fourteen extra view.
+	 * 
+	 * @param flGroupFourteenExtraView
+	 *            the flGroupFourteenExtraView to set
+	 */
+	public void setFlGroupFourteenExtraView(boolean flGroupFourteenExtraView) {
+		this.flGroupFourteenExtraView = flGroupFourteenExtraView;
+	}
+
+	/**
+	 * Checks if is fl group three new view.
+	 * 
+	 * @return the flGroupThreeNewView
+	 */
+	public boolean isFlGroupThreeNewView() {
+		return flGroupThreeNewView;
+	}
+
+	/**
+	 * Sets the fl group three new view.
+	 * 
+	 * @param flGroupThreeNewView
+	 *            the flGroupThreeNewView to set
+	 */
+	public void setFlGroupThreeNewView(boolean flGroupThreeNewView) {
+		this.flGroupThreeNewView = flGroupThreeNewView;
+	}
+
+	/**
+	 * Checks if is fl group one additional view.
+	 * 
+	 * @return the flGroupOneAdditionalView
+	 */
+	public boolean isFlGroupOneAdditionalView() {
+		return flGroupOneAdditionalView;
+	}
+
+	/**
+	 * Sets the fl group one additional view.
+	 * 
+	 * @param flGroupOneAdditionalView
+	 *            the flGroupOneAdditionalView to set
+	 */
+	public void setFlGroupOneAdditionalView(boolean flGroupOneAdditionalView) {
+		this.flGroupOneAdditionalView = flGroupOneAdditionalView;
+	}
+
+	/**
+	 * Checks if is fl group three payment view.
+	 * 
+	 * @return the flGroupThreePaymentView
+	 */
+	public boolean isFlGroupThreePaymentView() {
+		return flGroupThreePaymentView;
+	}
+
+	/**
+	 * Sets the fl group three payment view.
+	 * 
+	 * @param flGroupThreePaymentView
+	 *            the flGroupThreePaymentView to set
+	 */
+	public void setFlGroupThreePaymentView(boolean flGroupThreePaymentView) {
+		this.flGroupThreePaymentView = flGroupThreePaymentView;
+	}
+
+	/**
+	 * Checks if is fl group three payment cc view.
+	 * 
+	 * @return the flGroupThreePaymentCCView
+	 */
+	public boolean isFlGroupThreePaymentCCView() {
+		return flGroupThreePaymentCCView;
+	}
+
+	/**
+	 * Sets the fl group three payment cc view.
+	 * 
+	 * @param flGroupThreePaymentCCView
+	 *            the flGroupThreePaymentCCView to set
+	 */
+	public void setFlGroupThreePaymentCCView(boolean flGroupThreePaymentCCView) {
+		this.flGroupThreePaymentCCView = flGroupThreePaymentCCView;
+	}
+
+	/**
+	 * Checks if is fl group two contract order view.
+	 * 
+	 * @return the flGroupTwoContractOrderView
+	 */
+	public boolean isFlGroupTwoContractOrderView() {
+		return flGroupTwoContractOrderView;
+	}
+
+	/**
+	 * Sets the fl group two contract order view.
+	 * 
+	 * @param flGroupTwoContractOrderView
+	 *            the flGroupTwoContractOrderView to set
+	 */
+	public void setFlGroupTwoContractOrderView(boolean flGroupTwoContractOrderView) {
+		this.flGroupTwoContractOrderView = flGroupTwoContractOrderView;
+	}
+
+	/**
+	 * Checks if is fl group three contract order view.
+	 * 
+	 * @return the flGroupThreeContractOrderView
+	 */
+	public boolean isFlGroupThreeContractOrderView() {
+		return flGroupThreeContractOrderView;
+	}
+
+	/**
+	 * Sets the fl group three contract order view.
+	 * 
+	 * @param flGroupThreeContractOrderView
+	 *            the flGroupThreeContractOrderView to set
+	 */
+	public void setFlGroupThreeContractOrderView(
+			boolean flGroupThreeContractOrderView) {
+		this.flGroupThreeContractOrderView = flGroupThreeContractOrderView;
+	}
+
+	/**
+	 * Checks if is fl group six extra view.
+	 * 
+	 * @return the flGroupSixExtraView
+	 */
+	public boolean isFlGroupSixExtraView() {
+		return flGroupSixExtraView;
+	}
+
+	/**
+	 * Sets the fl group six extra view.
+	 * 
+	 * @param flGroupSixExtraView
+	 *            the flGroupSixExtraView to set
+	 */
+	public void setFlGroupSixExtraView(boolean flGroupSixExtraView) {
+		this.flGroupSixExtraView = flGroupSixExtraView;
+	}
+
+	/**
+	 * Checks if is fl group three payment match view.
+	 * 
+	 * @return the flGroupThreePaymentMatchView
+	 */
+	public boolean isFlGroupThreePaymentMatchView() {
+		return flGroupThreePaymentMatchView;
+	}
+
+	/**
+	 * Sets the fl group three payment match view.
+	 * 
+	 * @param flGroupThreePaymentMatchView
+	 *            the flGroupThreePaymentMatchView to set
+	 */
+	public void setFlGroupThreePaymentMatchView(boolean flGroupThreePaymentMatchView) {
+		this.flGroupThreePaymentMatchView = flGroupThreePaymentMatchView;
+	}
+
 }
