@@ -2870,6 +2870,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
+		getManagedBean().setVotFundCode("");
 		getManagedBean().setPmPrgActivity(null);
 		getManagedBean().setPmSubSetia(null);
 //		if(null != getManagedBean().getPmSubSetia()){
@@ -2878,6 +2879,34 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 //			getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
 //			getManagedBean().getPmSubSetia().setFinancingType(null);
 //		}			
+		if(pmVotFund!=null && !"".equalsIgnoreCase(pmVotFund.getVotFundType())){
+			if(VotFundType.BEKALAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.TANGGUNGAN.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
+				getManagedBean().setProgramLov(true);
+			} else if(VotFundType.PEMBANGUNAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.SETIA.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
+				getManagedBean().setProjectLov(true);
+			}
+		}
+	}
+	
+	/**
+	 * Check vot lov.
+	 */
+	public void checkVotLov(BaseEntity entity){
+		getManagedBean().setProgramLov(false);
+		getManagedBean().setProjectLov(false);
+		getManagedBean().setVotFundDisplay(true);
+		
+		if(null != getManagedBean().getPmVoteFund()){
+			getManagedBean().setVotFundId(getManagedBean().getPmVoteFund().getVotFundId());
+			if(!"".equalsIgnoreCase(getManagedBean().getPmVoteFund().getVotFundCode())){
+				getManagedBean().getPmVoteFund().setVotFundCode("");
+				getManagedBean().getPmVoteFund().getVotFundCode();
+			}
+		}
+		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
+		getManagedBean().setVotFundCode(pmVotFund.getVotFundCode());
+		getManagedBean().setPmPrgActivity(null);
+		getManagedBean().setPmSubSetia(null);
 		if(pmVotFund!=null && !"".equalsIgnoreCase(pmVotFund.getVotFundType())){
 			if(VotFundType.BEKALAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.TANGGUNGAN.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
 				getManagedBean().setProgramLov(true);
@@ -3672,6 +3701,5 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void setSelectedPmOrgProfile(PmOrgProfile selectedPmOrgProfile) {
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
-	
 	
 }

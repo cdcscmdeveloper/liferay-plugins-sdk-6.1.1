@@ -169,7 +169,7 @@
 					</p:selectOneMenu></td>
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:selectOneMenu id="votCode1" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
-						value="#{contractRequestBackingBean.managedBean.votFundId}"
+						value="#{contractRequestBackingBean.managedBean.votFundId}" rendered="false"
 						style="width: 115px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="votCodeList"
@@ -180,13 +180,25 @@
 							listener="#{contractRequestBackingBean.checkVotFundDropdown}"
 							update="fundLov,pmActiveLov,projectLov,setiaCode,subSetiaCode,cpCode" />
 					</p:selectOneMenu>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+					<h:panelGroup styleClass="votCode2" id="votCode2">
+					<ac:lov id="pmVotCode"
+						lovId="PM_VOT" headerText="#{lbl['lbl.fl.vot']}"
+						saveObject="contractRequestBackingBean.managedBean.pmVoteFund"
+						update=":form:fundLov,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
+						readonly="true"	size="7"
+						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}" 
+						postUpdateListener="contractRequestBackingBean.checkVotLov" 
+						conditionField="pmOrgProfile.orgProfileId^#{contractRequestBackingBean.retrieveJabatanOrgProfile(contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgProfileId).orgProfileId}"
+						value="#{contractRequestBackingBean.managedBean.votFundCode}"	
+						tooltip="#{lbl['lbl.fl.tooltip.vot.code']}" >
+					</ac:lov>
+					</h:panelGroup>					
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td> 
 					<td><h:panelGroup styleClass="fundLov" id="fundLov"><ac:lov id="fund"
 						lovId="PM_VOT_FUND" headerText="#{lbl['lbl.fl.fund.code']}"
 						saveObject="contractRequestBackingBean.managedBean.pmVoteFund"
-						update=":form:votCode1,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
+						update=":form:votCode1,:form:votCode2,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
 						readonly="true"
 						size="4"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}" 
