@@ -382,8 +382,7 @@
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
-						</c:if>
-					
+						</c:if>					
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctLOAPhysicalNoView}">
 							<p:column>
@@ -415,8 +414,6 @@
 								</table>
 							</p:column>
 						</c:if>
-						
-						
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctCircularNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.crclrnolabel']}"
