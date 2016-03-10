@@ -1023,6 +1023,58 @@
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.fl.title" />
 				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.effDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.fund.valid.from" />
+					<property name="searchable" value="false" />								
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.expDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.fund.valid.to" />
+					<property name="searchable" value="false" />
+				</bean>				
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="PM_VOT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="votFundId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.common.votfund.VotFundDAO" />
+		<property name="searchMethod" value="retrieveVotList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="votFundCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.desc" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.effDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.valid.from" />
+					<property name="searchable" value="false" />								
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName" value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.expDate)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.vot.valid.to" />
+					<property name="searchable" value="false" />
+				</bean>						
 			</list>
 		</property>
 	</bean>
