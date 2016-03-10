@@ -1531,6 +1531,7 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	private int ministryRemarksSize;
 	private boolean isTechnicalUserScoringSchema;
 	private boolean isFinancialUserScoringSchema;
+	private String loginRoleType;
 	
 	/** The selected flag. */
 	private boolean selectedFlag;
@@ -8568,6 +8569,20 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	 */
 	public void setSelectCtPanelItem(List<CtPanelItem> selectCtPanelItem) {
 		this.selectCtPanelItem = selectCtPanelItem;
+	}
+
+	/**
+	 * @return the loginRoleType
+	 */
+	public String getLoginRoleType() {
+		return loginRoleType;
+	}
+
+	/**
+	 * @param loginRoleType the loginRoleType to set
+	 */
+	public void setLoginRoleType(String loginRoleType) {
+		this.loginRoleType = loginRoleType;
 	}
 
 }
