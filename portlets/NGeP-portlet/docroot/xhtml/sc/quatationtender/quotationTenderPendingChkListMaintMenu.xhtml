@@ -1,0 +1,83 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+							styleClass="sidemenu"
+							activeIndex="#{qTDetailBB.managedBean.activeIndex}">
+							
+						<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(0)}" update="@form"
+							process="@form" />
+							
+						<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(1)}" update="@form"
+							process="@form" />
+							
+						<p:menuitem value="#{lbl['lbl.sc.approval']}"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(2)}" update="@form"
+							process="@form" />
+							
+						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(3)}" update="@form"
+							process="@form"  />
+							
+						<p:menuitem value="#{lbl['lbl.sc.qt.documents']}"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(4)}" update="@form"
+							process="@form" />
+							 
+						<p:menuitem value="#{lbl['lbl.sc.activities']}"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(5)}" update="@form"
+							process="@form"  />
+					</p:tabMenu></td>
+					
+					<td width="80%" valign="top"><h:panelGroup id="menuQTContent">
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
+							<ui:include
+								src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '1'}">
+							<ui:include
+								src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '2'}">
+							<ui:include
+								src="/xhtml/sc/quatationtender/approval/approvalCheckBox.xhtml" />
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '3'}">
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+							<ui:include
+								src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+							<ui:include
+								src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
+						</c:if>
+						</h:panelGroup></td>
+				</tr>
+			</table>
+			
+	<p:dialog id="attach" widgetVar="attachDlg1" modal="true"
+		resizable="false" width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.txt.choose.files']}">
+
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{qTDocumentsBackingBean.handleFileAttachment}"
+			mode="advanced" id="uploadattachmentid"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			update="menuQTContent" oncomplete="attachDlg1.hide()">
+		</p:fileUpload>
+	</p:dialog>
+
+</ui:composition>
