@@ -584,17 +584,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				deliveryAddr = new FlDeliveryAddress();
 				deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 				deliveryAddr.setPmAddressId(addrType.getPmAddress().getAddressId());//TODO remove comment when no error hit
-//				deliveryAddr.setAddressType(addrType);//TODO remove comment when no error hit
 				deliveryAddr.setStartDate(getManagedBean().getFulfilmentRequest().getStartDate());
 				deliveryAddr.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 				deliveryAddr.setPmUom(getManagedBean().getFulfilmentRequest().getPmUom());
 				deliveryAddr.setDeliveryTerm(getManagedBean().getFulfilmentRequest().getDeliveryTerm());
 				
 				deliveryAddr.setFlAddress(convertPmAddressToFlAddress(addrType.getPmAddress()));//TODO NEW
-				/*if(i==0) {
-					getManagedBean().setSelectedDelAddr(deliveryAddr);
-				}
-				i++;*/
 				if (null == getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 					getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 				}
@@ -1652,7 +1647,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param flDelAddress the fl del address
 	 */
 	public void receivingOfficerList(FlDeliveryAddress flDelAddress){
-		Long addressId = flDelAddress.getFlAddress().getAddressId();
+		Long addressId = flDelAddress.getPmAddressId();
 		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
