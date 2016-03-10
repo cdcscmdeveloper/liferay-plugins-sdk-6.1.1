@@ -16,7 +16,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" /></th>
 				<td><p:inputText id="itaDisplayPiror"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.displaySeq}"
-						required="true" label="#{lbl['lbl.pm.display.priority']}" maxlength="5"
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.display.priority']}" maxlength="5"
 						/> <ac:iconTooltip
 						value="#{lbl['lbl.pm.tooltip.display.priority']}" /> <p:message
 						id="itaDisplayPirorMsg" for="itaDisplayPiror" display="icon" /></td>
@@ -32,7 +32,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td colspan="3">
 					<p:inputTextarea value="#{supportDocBackingBean.managedBean.selectedDocument.docName}"
 						label="#{lbl['lbl.pm.document.name']}" autoResize="false"
-				 		cols="50" rows="5" maxlength="255" required="true" id="itaDocName" />
+				 		cols="50" rows="5" maxlength="255" required="#{!empty param['disableValidation']}" id="itaDocName" />
 			 		<p:message id="itaDocNameMsg" for="itaDocName" display="icon" />
 				</td>
 			</tr>
@@ -42,7 +42,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu  styleClass="ppDropDownWidthM"  required="true"  
+					<p:selectOneMenu  styleClass="ppDropDownWidthM"  required="#{!empty param['disableValidation']}"
 				     	disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						id="somDocDefinition" label="#{lbl['lbl.pm.document.definition']}" 
 						value="#{supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId}"	>
@@ -66,7 +66,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu  required="true"  id="somSupplierAction" 
+					<p:selectOneMenu  required="#{!empty param['disableValidation']}"  id="somSupplierAction" 
 				        disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.action']}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.checklistActionCode.parameterId}">
@@ -80,7 +80,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneRadio value="#{supportDocBackingBean.managedBean.selectedDocument.scoringReq}"
-						label="#{lbl['lbl.pm.scoring.required']}" id="sorScoringReq" required="true">
+						label="#{lbl['lbl.pm.scoring.required']}" id="sorScoringReq" required="#{!empty param['disableValidation']}">
 						<f:selectItems value="#{supportDocBackingBean.getYesNoOptions()}" />
 					</p:selectOneRadio> 
 					<p:message id="sorScoringReqMsg" for="sorScoringReq" display="icon" />
@@ -92,7 +92,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somDocStatus" required="true"
+					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somDocStatus" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.pm.status']}"  disabled="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
 						<f:selectItems  value="#{supportDocBackingBean.getActiveAndInactiveStatusOptions()}"/>
@@ -126,7 +126,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							value="#{supportDocBackingBean.getParameterDesc(restrict.procurementCatCode)}"
 							rendered="#{!restrict.brandNew}" />
 				    	<p:selectOneMenu styleClass="ppDropDownWidthL" 
-				    		id="somProcurementType" required="true"
+				    		id="somProcurementType" required="#{!empty param['disableValidation']}"
 				    		label="#{lbl['lbl.pm.procurement.category']}"
 							value="#{restrict.procurementCatCode.parameterId}"
 							rendered= "#{restrict.brandNew}"> 
