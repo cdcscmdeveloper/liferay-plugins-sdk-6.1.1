@@ -153,9 +153,10 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	
 	public String activateAccount() {
 		//validateActivationAccessAppl();
-		String keyStr = getManagedBean().getAccessAppl().getAccessApplId()
-				+ activationKey;
-		String hashStr = PmCommonUtil.hashString(keyStr);
+		StringBuilder keyStr = new StringBuilder();
+		keyStr.append(getManagedBean().getAccessAppl().getAccessApplId());
+		keyStr.append(activationKey);
+		String hashStr = PmCommonUtil.hashString(keyStr.toString());
 		if (!hashStr.equals(getManagedBean().getEncryptActivationKey())) {
 			throw new EpException(MessageConst.ERROR_721040);
 		} else {
