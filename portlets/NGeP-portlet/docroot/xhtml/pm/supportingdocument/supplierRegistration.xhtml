@@ -18,7 +18,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></th>
 					<td><p:inputText id="itaDisplayPiror"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.displaySeq}"
-							required="true" label="#{lbl['lbl.pm.display.priority']}"
+							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.display.priority']}"
 							maxlength="5" /> <ac:iconTooltip
 							value="#{lbl['lbl.pm.tooltip.display.priority']}" /> <p:message
 							id="itaDisplayPirorMsg" for="itaDisplayPiror" display="icon" />
@@ -84,7 +84,7 @@
 							label="#{lbl['lbl.pm.supplier.zone']}"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.pmZone.zoneId}"
 							disabled="#{!(supportDocBackingBean.managedBean.selectedDocument.brandNew)}"
-							required1="#{!empty param['disableValidation']}">
+							required="#{!empty param['disableValidation']}">
 							<c:if
 								test="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -107,7 +107,7 @@
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.status']}" /></th>
 					<td><p:selectOneMenu styleClass="ppDropDownWidthM"
-							id="somDocStatus" required="true" label="#{lbl['lbl.pm.status']}"
+							id="somDocStatus" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.status']}"
 							disabled="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
 							<f:selectItems

@@ -26,7 +26,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:selectOneMenu id="somDocCategory" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId}"
 							label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
-							required="true">
+							required="#{!empty param['disableValidation']}">
 							<f:selectItems  value="#{supportDocBackingBean.documentCategoryWithoutSupplierDoc(true)}"/>
 							<p:ajax event="change" update="opDocDetails" listener="#{supportDocBackingBean.docCategoryChange}"/>
 						</p:selectOneMenu>
@@ -46,7 +46,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:selectOneMenu id="somDocCategory1" 
 							value="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId}"
 							label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
-							required="true">
+							required="#{!empty param['disableValidation']}">
 							<f:selectItems  value="#{supportDocBackingBean.documentCategoryWithoutSupplierDoc(true)}"/>
 							<p:ajax event="change" update="opDocDetails" listener="#{supportDocBackingBean.docCategoryChange}"/>
 						</p:selectOneMenu>
