@@ -205,5 +205,8 @@ public interface QTConstants {
 	public static final String CHAIRPERSON = "_CHAIRPERSON";
 	
 	public static final String REPLACE_CHAR = "_";
+	public static final String CT_PANEL_ZONE_COVERAGE = "Z";
+	public static final String CT_PANEL_ALL_COVERAGE = "A";
+	
 
 }
