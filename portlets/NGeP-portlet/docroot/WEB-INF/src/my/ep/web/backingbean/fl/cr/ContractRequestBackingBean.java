@@ -726,7 +726,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 					getManagedBean().setZonal(true);
 					ContractZoneReqDTO zoneReqDTO = new ContractZoneReqDTO();
-					zoneReqDTO.setPmAddress(addrType.getPmAddress());
+					zoneReqDTO.setFlAddress(convertPmAddressToFlAddress(addrType.getPmAddress()));
 					zoneReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
 					ContractZoneResDTO zoneResDTO = contractZoneSO.getDeliveryTermByAddress(zoneReqDTO);
 					
