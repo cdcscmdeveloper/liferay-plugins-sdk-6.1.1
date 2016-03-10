@@ -169,7 +169,7 @@
 					</p:selectOneMenu></td>
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:selectOneMenu id="votCode1" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
-						value="#{purchaseRequestBackingBean.managedBean.votFundId}"
+						value="#{purchaseRequestBackingBean.managedBean.votFundId}" rendered="false"
 						style="width: 115px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="votCodeList"
@@ -180,13 +180,25 @@
 							listener="#{purchaseRequestBackingBean.checkVotFundDropdown}"
 							update="fundLov,pmActiveLov,projectLov,setiaCode,subSetiaCode,cpCode" />
 					</p:selectOneMenu>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+					<h:panelGroup styleClass="votCode2" id="votCode2">
+					<ac:lov id="pmVotCode"
+						lovId="PM_VOT" headerText="#{lbl['lbl.fl.vot']}"
+						saveObject="purchaseRequestBackingBean.managedBean.pmVoteFund"
+						update=":form:fundLov,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
+						readonly="true"	size="7"
+						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}" 
+						postUpdateListener="purchaseRequestBackingBean.checkVotLov" 
+						conditionField="pmOrgProfile.orgProfileId^#{purchaseRequestBackingBean.retrieveJabatanOrgProfile(purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgProfileId).orgProfileId}"
+						value="#{purchaseRequestBackingBean.managedBean.votFundCode}"	
+						tooltip="#{lbl['lbl.fl.tooltip.vot.code']}" >
+					</ac:lov>
+					</h:panelGroup>
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td> 
 					<td><h:panelGroup styleClass="fundLov" id="fundLov"><ac:lov id="fund"
 						lovId="PM_VOT_FUND" headerText="#{lbl['lbl.fl.fund.code']}"
 						saveObject="purchaseRequestBackingBean.managedBean.pmVoteFund"
-						update=":form:votCode1,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
+						update=":form:votCode1,:form:votCode2,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
 						readonly="true"
 						size="4"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}" 
