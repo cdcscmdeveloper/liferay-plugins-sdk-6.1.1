@@ -47,10 +47,8 @@
 						process="@this" partialSubmit="true" update="@([id$=catCodePopup])" style="float:right;"
 						oncomplete="catCodePopup.show();" action="#{categoryCodeSearchBackingBean.renewSesionObject}">								
 			</p:commandButton>
-
-        <ac:categoryCodePopup okAction="supportDocBackingBean.updateCategoryL3"
-						update=":form:tvDocRestriction:dtCat" />
-
 		</div>
+		  <ac:categoryCodePopup okAction="supportDocBackingBean.updateCategoryL3"
+						update=":form:tvDocRestriction:dtCat" />
 	</p:outputPanel>
 </ui:composition>
