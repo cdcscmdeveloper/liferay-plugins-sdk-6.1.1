@@ -360,7 +360,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<c:if test="#{isEditableStatus and isDocTypeQuotation}">
+				<c:if test="#{isEditableStatus and !isDocTypeQuotation}">
 					<p:selectOneMenu id="contractType"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId}"
 						style="width: 282px;margin-bottom: 5px;"
@@ -379,7 +379,7 @@
 					</p:selectOneMenu>
 					<p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</c:if>
-				<c:if test="#{!isEditableStatus or !isDocTypeQuotation}">
+				<c:if test="#{!isEditableStatus or isDocTypeQuotation}">
 					<p:inputText 
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.contractType)}"
 						disabled="true" size="35" />
