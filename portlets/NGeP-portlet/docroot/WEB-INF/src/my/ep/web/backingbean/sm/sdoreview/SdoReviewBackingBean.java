@@ -50,7 +50,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	private static final int inquiryTextLength = 2500;
 	
 	public SdoReviewBackingBean() {
-		
+		SmCommonUtil.setMDCUserId();
 	}
 
 	private FacesScopes getFacesScopes() {
@@ -184,22 +184,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			}
 
 
-
-			String actionDesc = null;
-			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
-				actionDesc = SupplierManagementConst.SDO_SEND_INQUIRY;
-			}else{
-				actionDesc = SupplierManagementConst.SDO_SUBMIT_APPL;
-			}
-
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 			ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
 			reqDTO.setApplId(this.getManagedBean().getAppId());
 			reqDTO.setOutcome(resAction);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(
-					actionDesc, this.getManagedBean().getAppId(), this.getManagedBean().getSmAppl().getApplNo(), getUserRole()));
+			
 
 			log.info("-----------SDO----------" + reqDTO.getOutcome());
 			log.info("-----------SDO Review----------" + reqDTO.getTaskId());
