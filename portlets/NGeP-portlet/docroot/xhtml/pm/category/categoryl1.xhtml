@@ -71,6 +71,7 @@
 					<h:outputText value="#{lbl['lbl.pm.desc']}" />
 				</h:panelGroup>
 				<p:inputText
+					disabled="#{!categoryBackingBean.managedBean.newCategory}"
 					value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryName}"
 					size="120" />
 
