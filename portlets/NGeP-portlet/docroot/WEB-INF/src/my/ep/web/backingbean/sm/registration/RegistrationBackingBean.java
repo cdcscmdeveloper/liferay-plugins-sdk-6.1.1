@@ -572,10 +572,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		
-		//insert tracking diary
-		reqDTO.setTrackingDiaryVO(SmCommonUtil.assignTrackingDiaryValues(
-					 SupplierManagementConst.SUPP_REGISTRATION,smAppl.getApplId(), null, RoleCode.SUPPLIER_TEMP.value()));
-		
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 		

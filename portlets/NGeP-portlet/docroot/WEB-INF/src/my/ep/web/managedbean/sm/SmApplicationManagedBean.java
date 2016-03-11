@@ -411,6 +411,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean claimTask;
 	private boolean disableRoleSelection;
 	private boolean siteVisitAfterApproval;
+	private boolean poInquiryRespond;
 
 	private boolean showNewChanges;
 
@@ -3219,5 +3220,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSiteVisitAfterApproval(boolean siteVisitAfterApproval) {
 		this.siteVisitAfterApproval = siteVisitAfterApproval;
+	}
+
+	public boolean isPoInquiryRespond() {
+		return poInquiryRespond;
+	}
+
+	public void setPoInquiryRespond(boolean poInquiryRespond) {
+		this.poInquiryRespond = poInquiryRespond;
 	}
 }

@@ -3,7 +3,6 @@ package my.ep.web.backingbean.sm.supportingdocinquiry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -12,7 +11,6 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryReqDTO;
@@ -35,6 +33,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -45,7 +44,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	private static Logger log = Logger.getLogger(SupportingDocInquiryBackingBean.class);
 
 	public SupportingDocInquiryBackingBean(){
-
+		SmCommonUtil.setMDCUserId();
 	}
 	
 	/**
@@ -173,8 +172,6 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(
-					SupplierManagementConst.SUPP_SEND_INQUIRY_SDO, this.getManagedBean().getAppId(), this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo(), getUserRole()));
 
 			SupportingDocInquiryResDTO resDTO = reqSO.updateInquiry(reqDTO);
 			//SupportingDocInquiryResDTO resDTO = new SupportingDocInquiryResDTO();
@@ -229,8 +226,10 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		} else if (facesScopes
 				.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 			return RoleCode.BASIC_SUPPLIER_USER.value();
-		} else {
-			return null;
+		} else if(facesScopes.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			return RoleCode.SUPPLIER_TEMP.value();
+		}else{
+			return StringUtils.EMPTY;
 		}
 	}
 	

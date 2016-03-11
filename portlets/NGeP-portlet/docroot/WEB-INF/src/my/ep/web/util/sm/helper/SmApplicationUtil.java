@@ -5828,7 +5828,7 @@ public class SmApplicationUtil {
 	 *            - SmApplicationManagedBean object
 	 * @return the user role value as String
 	 */
-	private static String getUserRoleValue(SmApplicationManagedBean managedBean) {
+	public static String getUserRoleValue(SmApplicationManagedBean managedBean) {
 		if (managedBean.isPoUser()) {
 			return RoleCode.UPS_PO.value();
 		} else if (managedBean.isApproverUser()) {
