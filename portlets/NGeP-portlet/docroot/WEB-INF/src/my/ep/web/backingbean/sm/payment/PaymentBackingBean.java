@@ -29,6 +29,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -56,6 +57,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
@@ -316,6 +318,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public String submitPayment() {
 		log.debug("********submitPayment******");
+		String paymentType = StringUtils.EMPTY;
 		if (this.getManagedBean().getPyBill() != null) {
 			List<PmParameterDesc> paymentModeLs = SmCommonUtil
 					.retrieveParameterDescList(
@@ -360,9 +363,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				paymentDtl.setPyPayment(payment);
 				paymentDtl.setPaidAmt(newBillDtl.getItemPrice());
 				setPaymentChargeLineByType(paymentDtl);
-				
 				pymDtlList.add(paymentDtl);
 				totalAmount = totalAmount.add(newBillDtl.getItemPrice());
+				if(newBillDtl.getItemCode()!=null){
+					paymentType = newBillDtl.getItemCode().getParameterCode();
+				}
 			}
 			
 			totalAmount = totalAmount.add(getManagedBean().getGstAmount())
@@ -389,6 +394,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setSmBill(pyBill);
+			reqDTO.setPaymentType(paymentType);
+			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IPaymentSO.class);
@@ -430,7 +437,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			this.setvCode(vc);
 			this.getManagedBean().setTotalAmount(ttlAmt);
 			
-			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
+			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo(),paymentType);
 			
 /*			List paymentDtls = new ArrayList();
 			paymentDtls.add(0, this.getManagedBean().getTaskId());
@@ -464,6 +471,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				.getMethod("getOriginalHttpServletRequest");
 		HttpServletRequest httpServletRequest = (HttpServletRequest) method
 				.invoke(pr, new Object[] {});*/
+		String paymentType = StringUtils.EMPTY;
+		SmAppl appl = null;
 		
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
@@ -493,6 +502,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		getPaymentHttpSession();
 		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
 		paymentBpmPojo = (Object)session.getAttribute("paymentBpmPojo");
+		paymentType = (String)session.getAttribute("paymentType");
+		appl = (SmAppl)session.getAttribute("smAppl");
 		
 		log.info("paymentBean.getPaymentTaskId(): " + paymentTaskId);
 		log.info("paymentBean.getPaymentBpmPojo(): " + paymentBpmPojo);
@@ -641,6 +652,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
 				pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 				pymtReqDTO.setBackEndUpdate(false);
+				pymtReqDTO.setRespondFromPaymentGateway(true);
+				pymtReqDTO.setPaymentType(paymentType);
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				if(pymtResDTO.isSuccessful()){
@@ -786,6 +799,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public void tempPaymentSuccess() {
 		log.info("********submitPayment******");
+		String paymentType = StringUtils.EMPTY;
 		if (this.getManagedBean().getPyBill() != null) {
 			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList(
 					"SM", SupplierManagementConst.PM_STATUS_PAYMENT,
@@ -822,6 +836,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				
 				pymDtlList.add(paymentDtl);
 				totalAmount = totalAmount.add(newBillDtl.getItemPrice());
+				if(newBillDtl.getItemCode()!=null){
+					paymentType = newBillDtl.getItemCode().getParameterCode();
+				}
 			}
 
 			totalAmount = totalAmount.add(getManagedBean().getGstAmount())
@@ -847,6 +864,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setSmBill(pyBill);
+			reqDTO.setPaymentType(paymentType);
+			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 
 			// create Payment
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
@@ -918,6 +937,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
 			pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 			pymtReqDTO.setBackEndUpdate(false);
+			pymtReqDTO.setPaymentType(paymentType);
 
 			log.info("Debug payment>>>>>");
 			
@@ -1035,7 +1055,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		this.paymentBean = paymentBean;
 	}*/
 	
-	private void setPaymentHttpSession(String taskId, Object bpmPojo){
+	private void setPaymentHttpSession(String taskId, Object bpmPojo,String paymentType){
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
@@ -1045,6 +1065,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		//session.setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo());
 		session.setAttribute("paymentBpmTaskId", taskId);
 		session.setAttribute("paymentBpmPojo", bpmPojo);
+		session.setAttribute("paymentType", paymentType);
+		session.setAttribute("smAppl", getManagedBean().getSmAppl());
 	}
 	
 	private void getPaymentHttpSession(){
@@ -1144,6 +1166,23 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			paymentDtl.setPyPaymentChargeLines(paymentChargeLineLs);
 		}
 	
+	}
+	
+	private String getSupplierRoleByUserId(SmAppl appl,Long userId) {
+		String retVal = StringUtils.EMPTY;
+		if (userId != null
+				&& !EntityHelper.isCollectionEmpty(appl
+						.getSmPersonnels())) {
+			for (SmPersonnel personnel : appl
+					.getSmPersonnels()) {
+				if (personnel.getPmUser() != null
+						&& personnel.getPmUser().getUserId() != null
+						&& personnel.getPmUser().getUserId().compareTo(userId) == 0) {
+					retVal = personnel.getEpRole();
+				}
+			}
+		}
+		return retVal;
 	}
 	
 	
