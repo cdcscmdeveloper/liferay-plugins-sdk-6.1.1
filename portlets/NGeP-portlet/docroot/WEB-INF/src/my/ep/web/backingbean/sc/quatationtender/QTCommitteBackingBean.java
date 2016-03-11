@@ -1921,10 +1921,11 @@ public class QTCommitteBackingBean extends
 		 * .getManagedBean().getQt().getQtStatus().getStatusId()) <= 0) { return
 		 * true; }
 		 */
-
+		Long currentStatusId = this
+				.getManagedBean().getCurrentStatusId();
 		if (this.getManagedBean().isMaintanceFlow()) {
-			 if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(this
-					.getManagedBean().getCurrentStatusId())) {
+			
+			 if (QTStatusConst.QT_PROPOSAL_PREPARATION.equals(currentStatusId)) {
 				if (DateUtils.getDaysDifference(new Date(), this
 						.getManagedBean().getQt().getClosingDate()) <= 7
 						&& (QTStatusConst.CMT_PENDING_SUBMISSION
@@ -1933,8 +1934,11 @@ public class QTCommitteBackingBean extends
 
 					return true;
 				}
-			} else if (QTStatusConst.QT_EVALUATION_PROPOSAL <= (this
-					.getManagedBean().getCurrentStatusId())) {
+			} else if (QTStatusConst.QT_EVALUATION_PROPOSAL <= (currentStatusId)) {
+				if(!QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(currentStatusId)){
+					return true;
+				}
+			}  else if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)) {
 				return true;
 			}
 			 
@@ -1971,8 +1975,16 @@ public class QTCommitteBackingBean extends
 	}
 	
 	private boolean isQTStatusAfterScheduleDoc(Long currentStatusId) {
-		return isQTStatusGreaterThan(currentStatusId,
-				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+		
+		boolean isQtStatusAfterSchedule = false;
+		if(isQTStatusGreaterThan(currentStatusId,
+				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+			if(!QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(currentStatusId)){
+				isQtStatusAfterSchedule = true;
+			}
+		}
+		
+		return isQtStatusAfterSchedule;
 	}
 
 	/**
@@ -1993,13 +2005,15 @@ public class QTCommitteBackingBean extends
 
 	public boolean isEnableCloneButton() {
 		
+		Long currentSatatusId = this.getManagedBean().getCurrentStatusId();
 		if (this.getManagedBean().isMaintanceFlow()) {
-			if (!getManagedBean().isDeskOfficer()){
+			if (!getManagedBean().isDeskOfficer()
+					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentSatatusId)) {
 				return true;
 			}
 		} else {
-			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
-					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(this.getManagedBean().getCurrentStatusId()))
+			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentSatatusId)
+					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentSatatusId))
 					&& !SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getTaskName())) {
