@@ -358,8 +358,11 @@
 						value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterId}"
 						style="width: 284px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
-							value="#{directLOABackingBean.contractTypes}" />
+							value="#{directLOABackingBean.contractTypes}"
+							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+							itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 						<p:ajax event="change"
 							listener="#{directLOABackingBean.contractTypeChanged()}"
 							partialSubmit="true" process="@this"
