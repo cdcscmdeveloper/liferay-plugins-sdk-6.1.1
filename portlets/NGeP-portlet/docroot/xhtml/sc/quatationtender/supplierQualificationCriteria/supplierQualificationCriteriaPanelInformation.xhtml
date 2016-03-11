@@ -78,13 +78,17 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
-					style="width:15%">
-					<h:outputText value="#{panelItem.minimumOrderQty}" />
+					style="width:15%; text-align:right;">
+					<h:outputText value="#{panelItem.minimumOrderQty}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItem.pmUom.uomCode)}" />
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
-					style="width:20%">
-					<h:outputText value="#{panelItem.maxProcureAmt}" />
+					style="width:20%; text-align:right;">
+					<h:outputText value="#{panelItem.maxProcureAmt}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
