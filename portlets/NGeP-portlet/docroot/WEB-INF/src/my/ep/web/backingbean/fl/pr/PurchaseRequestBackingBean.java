@@ -1809,7 +1809,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IParameterSO parameterSO = null;
 		try {
 			getManagedBean().setSelectChargeLineRow(false);
-			if(null == getManagedBean().getVotFundId()){
+			if(null == getManagedBean().getVotFundId() || getManagedBean().getVotFundId().longValue()==0){
 				getManagedBean().setVotFundId(getManagedBean().getPmVoteFund().getVotFundId());
 			}
 			if(null != getManagedBean().getGosodo()){
@@ -1969,7 +1969,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Charge line validation before update charge line .
 	 */
 	private void chargeLineValidation() {
-		if(getManagedBean().getVotFundId()==null) {
+		if(getManagedBean().getVotFundId()==null || getManagedBean().getVotFundId().longValue()==0) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{
 					ResourceBundleUtils.getMessage("lbl.fl.charge.vot.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
@@ -3384,7 +3384,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		AddressReqDTO reqDTO = new AddressReqDTO();
 		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-			Long addressId = delAddr.getFlAddress().getAddressId();
+			Long addressId = delAddr.getPmAddressId();
 			if(delAddr.getReceivingGrp()!=null && delAddr.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
 				reqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 				reqDTO.setAddressTypeId(delAddr.getReceivingGrp().getAddressTypeId());
