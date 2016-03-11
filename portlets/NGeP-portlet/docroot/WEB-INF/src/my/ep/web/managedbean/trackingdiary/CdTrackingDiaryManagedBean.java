@@ -27,6 +27,7 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	private String searchUNSPSCExtensionCodeValue;
 	private Long searchStatusId;
 	private Object[] object;
+	private Long docId;
 	
 	private IPagingDataModel<Object[]> cdDocumentDataModel 	= new SearchPagingDataModel();
 
@@ -144,6 +145,24 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 		this.setSearchStatusId(null);
 		this.setCdDocumentDataModel(new SearchPagingDataModel());
 	}
+
+	/**
+	 * @return the docId
+	 */
+	public Long getDocId() {
+		return docId;
+	}
+
+	/**
+	 * @param docId the docId to set
+	 */
+	public void setDocId(Long docId) {
+		this.docId = docId;
+	}
+
+	
+	
+	
 	
 	
 	
