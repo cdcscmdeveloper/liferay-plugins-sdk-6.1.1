@@ -282,6 +282,7 @@
 					<td><p:inputText style="width:41%" required="true"
 							id="catCodeDescId" label="#{lbl['lbl.pm.desc']}" valueChangeListener="#{categoryBackingBean.categoryNameChanges}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
+							disabled="#{!categoryBackingBean.managedBean.newCategory}"
 							size="33" /> <p:message id="catCodeDescIdMsg"
 							for="catCodeDescId" showSummary="true" showDetail="false"
 							display="icon" /></td>

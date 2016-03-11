@@ -74,6 +74,7 @@
 				</h:panelGroup>
 				
 				<p:inputText style="width:300px;"
+					disabled="#{!categoryBackingBean.managedBean.newCategory}"
 					value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryName}"
 					size="170" />
 
@@ -93,26 +94,21 @@
 
 		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
 			id="catParent">
-			<h:panelGrid columns="4"
-				columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5">
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.main.category.code']}" /></td>
+					<td><p:inputText
+						value="#{categoryBackingBean.managedBean.pmCategoryL2.pmCategoryL1.categoryL1Code}"
+						size="15" disabled="true" readonly="true" /></td>
 
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.main.category.code']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{categoryBackingBean.managedBean.pmCategoryL2.pmCategoryL1.categoryL1Code}"
-					size="15" disabled="true" readonly="true" />
-
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.main.category.desc']}" />
-				</h:panelGroup>
-				<p:inputText
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.main.category.desc']}" /></td>
+					<td><p:inputText
 					value="#{categoryBackingBean.managedBean.pmCategoryL2.pmCategoryL1.categoryName}"
-					size="120" disabled="true" readonly="true" />
-
-
-			</h:panelGrid>
+					size="90" disabled="true" readonly="true" /></td>
+				</tr>
+			</table>
 		</p:panel>
 
 		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
