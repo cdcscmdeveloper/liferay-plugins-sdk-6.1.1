@@ -1997,6 +1997,9 @@ public class QTCommitteBackingBean extends
 				.getStatusId();
 
 		if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(currentQtStatus) >= 0) {
+			
+			return true;
+		} else if (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(currentQtStatus)){
 			return true;
 		}
 
