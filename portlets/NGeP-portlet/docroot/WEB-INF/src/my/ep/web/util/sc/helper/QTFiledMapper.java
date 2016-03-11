@@ -80,7 +80,8 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL,
-						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT}),
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FILED_QT_DOCUMENTS}),
 						
 						
 		// Pending QT Schedule & Document
@@ -236,6 +237,21 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_EXISTING_CONTRACT,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD}), 
+						
+		//QT_PENDING_SCHEDULE_REVISION				
+		QT_PENDING_SCHEDULE_REVISION(
+				QTStatusConst.QT_PENDING_SCHEDULE_REVISION, new String[] {
+						QTFieldConst.FILED_QT_TITLE,
+						QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
+						QTFieldConst.FILED_QT_EVALUATION_TYPE,
+						QTFieldConst.FILED_QT_EXISTING_CONTRACT,
+						QTFieldConst.FILED_QT_LOCATION_COVERAGE,
+						QTFieldConst.FILED_QT_BSVDETAILS,
+						QTFieldConst.FILED_QT_PUBLISH_DATE,
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FILED_QT_DOCUMENTS,
+						QTFieldConst.FILED_QT_PUB_APPROVAL}),
 				
 		// QT_REVISION_PUBLICATION
 		QT_REVISION_PUBLICATION(
@@ -253,7 +269,7 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD});
-
+		
 		private Long statusId;
 		private String[] toBeEnableFields;
 
