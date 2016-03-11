@@ -1726,6 +1726,7 @@ public class SpecificationBackingBean extends
 				}
 
 				// tplSpecQuestion.setTplSpecMaster(specMaster);
+				tplSpecQuestion.setCtPanelItem(panelItem);
 				tplSpecQuestion.setClItem(panelItem.getItemName());
 				tplSpecQuestion.setClSpecDetail(panelItem.getSpecification());
 				tplSpecQuestion.setClUom(panelItem.getPmUom());
