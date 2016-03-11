@@ -251,6 +251,7 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS,
+						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_PUB_APPROVAL}),
 				
 		// QT_REVISION_PUBLICATION
