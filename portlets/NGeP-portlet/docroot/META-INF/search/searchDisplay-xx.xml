@@ -1838,4 +1838,27 @@
 	</property>
 </bean>
 
+	<bean id="DIRECT_LOA_QT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="qtId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.sc.quationtender.QTDetailDAO" />
+		<property name="searchMethod" value="retrieveMigratedQT" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="qtNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.qtn.no" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="qtTitle" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.title" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
 </beans>
