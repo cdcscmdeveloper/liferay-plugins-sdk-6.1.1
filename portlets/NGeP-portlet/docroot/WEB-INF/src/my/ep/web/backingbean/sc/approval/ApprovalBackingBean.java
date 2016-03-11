@@ -65,6 +65,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
@@ -490,6 +491,14 @@ public class ApprovalBackingBean extends
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
 			
 			this.setDefaultDateTime(this.getManagedBean().getQt());
+			if(isPublishDateExceded()){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								null, ResourceBundleUtils.getMessage(
+										"lbl.sc.publish.date.exceded.msg", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())));
+			}
 
 		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
@@ -1489,5 +1498,26 @@ public class ApprovalBackingBean extends
 			}
 		}
 		return false;
+	}
+	
+	private boolean isPublishDateExceded() {
+		
+		boolean isExceded = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		Date publishDate = DateUtils.setDefaultDateTime(scQt.getPublishDate());
+		if (new Date(System.currentTimeMillis()).after(publishDate)) {
+			isExceded = true;
+		} else {
+			Date today = new Date();
+			long days = DateUtils.getDaysDifference(today, publishDate);
+			if (days == 0) {
+				Long durationInMills = DateUtils.getDateDiffInMillis(
+						DateUtils.getCurrentDate(), publishDate);
+				if (durationInMills < 0) {
+					isExceded = true;
+				}
+			}
+		}
+		return isExceded;
 	}
 }
