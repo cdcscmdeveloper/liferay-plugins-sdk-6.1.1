@@ -2207,6 +2207,51 @@ public class DirectLOABackingBean extends
 		}
 		return conditionField;
 	}
+	
+	/**
+	 * construct the ConditionFields based on MinistryProfile
+	 * 
+	 * @return orgProfileId
+	 */
+	public String constuctQTConditionFields() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(ParameterConst.DOCTYPE_QUOTATION);
+		sb.append("%");
+		String qtNoPrefix = sb.toString();
+		
+		// Filter By - pmStatus
+		StringBuilder conditionFieldSb = new StringBuilder();
+		conditionFieldSb.append("qtNo^");
+		conditionFieldSb.append(qtNoPrefix);
+		conditionFieldSb.append("^");
+		conditionFieldSb.append(SearchOperator.OPERATOR_NOT_LIKE.value());
+		
+		// Filter By - current'
+		conditionFieldSb.append("|");
+		conditionFieldSb.append("scQtStatus.current^");
+		conditionFieldSb.append(true);
+		
+		// Filter By - non awarded QT
+		conditionFieldSb.append("|");
+		conditionFieldSb.append("scQtStatus.pmStatus.statusId^");
+		conditionFieldSb.append(QTStatusConst.QT_AWARDED);
+		conditionFieldSb.append("^");
+		conditionFieldSb.append(SearchOperator.OPERATOR_NOT_EQUALS.value());
+		
+		PmOrgProfile ministryOrg = this.getManagedBean().getScQt()
+				.getPmOrgProfile();
+		if (null != ministryOrg) {
+			Long ministryOrgProfileId = ministryOrg.getOrgProfileId();
+			
+			// Filter By - PTJ
+			conditionFieldSb.append("|");
+			conditionFieldSb.append("pmOrgProfile.orgProfileId^");
+			conditionFieldSb.append(ministryOrgProfileId);
+		}
+		
+		return conditionFieldSb.toString();
+	}
 
 	/**
 	 * Retrieve parameter desc by type.

@@ -161,6 +161,19 @@
 						update="@form"
 						conditionField="#{directLOABackingBean.constuctConditionFields()}" /></td>
 			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td colspan="3"><ac:lov id="directLoaQT" lovId="DIRECT_LOA_QT"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="#{lbl['lbl.sc.qtn.list']}"
+						selectionMode="single"
+						saveObject="directLOABackingBean.managedBean.scLoa.scQt"
+						readonly="true" size="35"
+						value="#{directLOABackingBean.managedBean.scLoa.scQt.qtNo}"
+						update="@form"
+						conditionField="#{directLOABackingBean.constuctQTConditionFields()}" /></td>
+			</tr>
+			
 			<tr>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
