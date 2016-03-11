@@ -3752,8 +3752,8 @@ public class QTDetailBackingBean extends
 
 			case 5:
 				if (!this.getManagedBean().isMaintanceFlow()) {
-					if (isQTStatusBtwScheduleDocAndBeforePublished(getManagedBean().getQt().getQtStatus().getStatusId())) {
-
+					Long currentStatusId = getManagedBean().getQt().getQtStatus().getStatusId();
+					if (isQTStatusBtwScheduleDocAndBeforePublished(currentStatusId)) {
 							detailSO.validateScheduleDetails(reqDTO);
 						}
 					}
@@ -4569,6 +4569,11 @@ public class QTDetailBackingBean extends
 					return (!this.getManagedBean().isDeskOfficer());
 				}
 			}
+		}
+		if (!this.getManagedBean().isMaintanceFlow()
+				&& QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(this
+						.getManagedBean().getQt().getQtStatus().getStatusId())) {
+			return (!this.getManagedBean().isDeskOfficer());
 		}
 		return true;
 	}

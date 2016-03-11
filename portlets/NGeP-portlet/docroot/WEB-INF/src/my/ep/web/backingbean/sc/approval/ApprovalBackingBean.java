@@ -105,7 +105,8 @@ public class ApprovalBackingBean extends
 
 	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
-
+    
+	private static final String  MESSAGE_KEY = "lbl.sc.publish.date.exceded.msg";
 	/**
 	 * Instantiates a new approval backing bean.
 	 */
@@ -493,9 +494,9 @@ public class ApprovalBackingBean extends
 			this.setDefaultDateTime(this.getManagedBean().getQt());
 			if(isPublishDateExceded()){
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								null, ResourceBundleUtils.getMessage(
-										"lbl.sc.publish.date.exceded.msg", 
+										MESSAGE_KEY, 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 										new FacesScopes().getUserLocale())));
 			}
