@@ -359,7 +359,7 @@
 						style="width: 284px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItems
-							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.contractType)}" />
+							value="#{directLOABackingBean.contractTypes}" />
 						<p:ajax event="change"
 							listener="#{directLOABackingBean.contractTypeChanged()}"
 							partialSubmit="true" process="@this"
