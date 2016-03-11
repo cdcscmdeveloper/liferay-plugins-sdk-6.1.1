@@ -29,7 +29,7 @@
 								<f:selectItems
 									value="#{qTDetailBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change"
-									listener="#{createQtBB.panelConformation(scQt)}" process="@this"
+									listener="#{createQtBB.panelConformation(scQt)}" process="@this,panelTitle"
 									partialSubmit="true" update="@form"></p:ajax>
 							</p:selectOneRadio>
 							<p:message id="selectPanelTitleId" for="panelTitle" display="icon" />
@@ -587,4 +587,24 @@
 			src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderZones.xhtml" />
 	</h:panelGroup>
 
+	<p:dialog id="revicepanelDlgs" widgetVar="panelApprovalDlgs"
+			header="#{lbl['lbl.sc.dialog.confirm.header.panelNonPanel']}"  resizable="false" width="500"
+			height="200" closable="false">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" />
+						<p:outputLabel 
+							value="#{lbl['lbl.sc.dialog.confirm.business.owner.panelNonpanel']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this" partialSubmit="true" update="@form"
+					action="#{createQtBB.panelConformationDelete}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"  process="@this" partialSubmit="true" update="@form"
+					actionListener="#{createQtBB.panelNoConformation}"
+					oncomplete="panelApprovalDlgs.hide();" />
+			</div>
+		</p:dialog>
 </ui:composition>
