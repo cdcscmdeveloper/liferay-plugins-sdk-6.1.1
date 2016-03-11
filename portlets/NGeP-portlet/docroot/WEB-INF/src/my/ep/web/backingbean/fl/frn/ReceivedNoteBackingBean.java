@@ -189,6 +189,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			reqDTO.setOutcome(action);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			if(getManagedBean().getSelectedAckOfficer()==null) {
+				setSelectedAckOfficer();
+			} 
 			reqDTO.setSelectedAckOfficer(getManagedBean().getSelectedAckOfficer());
 			if(flBB.getManagedBean().getRemarkList().size()>1) {
 				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
