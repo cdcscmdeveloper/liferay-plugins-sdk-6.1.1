@@ -3452,23 +3452,25 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private void checkPRThresholdPerItem(){
 		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 		IFlItemSummarySO itemSummSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-		Map<ScRequestItem, BigDecimal> itemAmtMap = new HashMap<ScRequestItem, BigDecimal>();
+		Map<Long, ScRequestItem> requestItemMap = new HashMap<Long, ScRequestItem>();
+		Map<Long, BigDecimal> itemAmtMap = new HashMap<Long, BigDecimal>();
 		for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()){
 				if(itemAmtMap.containsKey(item.getScRequestItem().getRequestNoteItemId())){
-					itemAmtMap.put(item.getScRequestItem(), itemAmtMap.get(item.getScRequestItem()).add(new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue())));
+					itemAmtMap.put(item.getScRequestItem().getRequestNoteItemId(), itemAmtMap.get(item.getScRequestItem().getRequestNoteItemId()).add(new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue())));
 				}else{
-					itemAmtMap.put(item.getScRequestItem(), new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue()));
+					itemAmtMap.put(item.getScRequestItem().getRequestNoteItemId(), new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue()));
+					requestItemMap.put(item.getScRequestItem().getRequestNoteItemId(), item.getScRequestItem());
 				}
 			}
 		}
 		double thresoldAmt = 0;
-		for(Map.Entry<ScRequestItem, BigDecimal> map : itemAmtMap.entrySet() ){
+		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
-			summReq.setItemId(map.getKey().getCmItem().getItemId());
+			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
 			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
@@ -3481,7 +3483,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(sumAmt.doubleValue() > thresoldAmt){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740004, 
-									new String[]{map.getKey().getItemName(),getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),String.valueOf(Calendar.getInstance().get(Calendar.YEAR))}, 
+									new String[]{requestItemMap.get(map.getKey()).getItemName(),getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),String.valueOf(Calendar.getInstance().get(Calendar.YEAR))}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			}
