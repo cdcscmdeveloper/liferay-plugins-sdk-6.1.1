@@ -2739,18 +2739,19 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO;
 		DualListModel<ScQtApproverSettings> dualListModel = null;
 		try {
-			if (null == this.getManagedBean().getPublicationApproval()) {
+			ScQt scQt = getManagedBean().getQt();
+			ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
+			
+			if (null == publicationApproval) {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
-				ScQt scQt = getManagedBean().getQt();
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(scQt.getQtId());
 				reqDTO.setApprovalType(ParameterConst.APPROVAL_CATEGORY_PTJ);
 				QuationTenderResDTO resDTO = detailSO
 						.retrieveApprovalDtlsByQtIdNType(reqDTO);
-				ScQtApproval publicationApproval = resDTO.getQtApproval();
+				publicationApproval = resDTO.getQtApproval();
 				if (publicationApproval == null) {
 					publicationApproval = new ScQtApproval();
 					publicationApproval
@@ -2776,26 +2777,29 @@ public class QTDetailBackingBean extends
 					publicationApproval.setScQtApprovalDtls(approvalDtls);
 					publicationApproval.setApprovalCategory(parameter);
 
-				} else {
-					publicationApproval
-							.setScQtApprovalRemarks(initializeRemarks(
-									publicationApproval, scQt
-											.getCurrentWorkFlowStatus(),
-									publicationApproval
-											.getScQtApprovalRemarks(),
-									ScQtApprovalRemark.class));
-
-				}
-				dualListModel = approverSettingDtls(
-						RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
-								.getOrgProfileId(), publicationApproval);
-				this.getManagedBean().setPublicationApprovals(dualListModel);
+				} 
+				
 				this.getManagedBean().setPublicationApproval(
 						publicationApproval);
 				log.info("Remark Size : "
 						+ this.getManagedBean().getPublicationApproval()
 								.getScQtApprovalRemarks().size());
-			}
+			} 
+			
+			// set up approval pick list
+			dualListModel = approverSettingDtls(
+					RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
+							.getOrgProfileId(), publicationApproval);
+			this.getManagedBean().setPublicationApprovals(dualListModel);
+			
+			// set up remark.
+			publicationApproval
+			.setScQtApprovalRemarks(initializeRemarks(
+					publicationApproval, scQt
+							.getCurrentWorkFlowStatus(),
+					publicationApproval
+							.getScQtApprovalRemarks(),
+					ScQtApprovalRemark.class));
 		} finally {
 			detailSO = null;
 		}
