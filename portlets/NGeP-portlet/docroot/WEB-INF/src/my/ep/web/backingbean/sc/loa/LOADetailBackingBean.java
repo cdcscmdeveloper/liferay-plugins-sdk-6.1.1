@@ -81,7 +81,6 @@ import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -4537,32 +4536,6 @@ public class LOADetailBackingBean extends
 				.handleNavigation(fc, null, QTConstants.LOA_PAGE);
 
 	}
-	
-	/**
-	 * Contract type drop down values.
-	 * @return the list
-	 */
-	public List<PmParameterDesc> getContractTypes() {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		// check logged in user org type
-		boolean  isMinistry =  retrievePmUserOrgTypeByUserId();
-
-		if(isMinistry){
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.CONTRACT_TYPE_MINISTRY));
-		} else{
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
-		}
-
-		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
-				.getParameterDescListBySearchBean(
-						ParameterTypeConst.CONTRACT_TYPE, searchBean);
-
-		return contractTypes;
-	}
 
 	/**
 	 * Retrieve org profile by org type.
@@ -4602,41 +4575,6 @@ public class LOADetailBackingBean extends
 			pmOrgProfile =  orgProfileResDTO.getPmOrgProfile();
 		}
 		return pmOrgProfile;
-	}
-	
-	
-	
-	/**
-	 * Retrieve pm user org type by user id.
-	 * to check user org type 
-	 * @return true, if successful
-	 */
-	private boolean retrievePmUserOrgTypeByUserId(){
-		boolean isMinistry  = Boolean.TRUE;
-		PmParameter  orgTypeCode = null;
-		IUserSO userSO = null;
-		try {
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-
-			if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
-				for (PmUserOrg pmUserOrg :  resDTO.getUserOrgList()) {
-					if( pmUserOrg.getPmOrgProfile().getOrgTypeCode() != null){
-						orgTypeCode   = pmUserOrg.getPmOrgProfile().getOrgTypeCode();
-						if(ParameterConst.ORG_TYPE_BPK_HQ.equalsIgnoreCase(orgTypeCode.getParameterCode()) || 
-								ParameterConst.ORG_TYPE_PMS_SABAH.equalsIgnoreCase(orgTypeCode.getParameterCode()) ||
-								ParameterConst.ORG_TYPE_PMS_SARAWAK.equalsIgnoreCase(orgTypeCode.getParameterCode())){
-							isMinistry  = Boolean.FALSE;
-						}
-					}
-				}
-			}
-		}finally{
-			userSO = null;
-		}
-		return isMinistry;		
 	}
 	
 	

@@ -84,6 +84,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -2173,6 +2174,64 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		List<String> committeesOrder = Arrays.asList(SourcingConstants.COMMITTEES_ORDER);
 		
 		return committeesOrder.indexOf(currentCommittee) >= committeesOrder.indexOf(otherCommittee);
+	}
+	
+	/**
+	 * Contract type drop down values.
+	 * @return the list
+	 */
+	public List<PmParameterDesc> getContractTypes() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		// check logged in user allow central contract.
+		boolean  isAllowCentralContract =  isAllowCentralContract();
+
+		if(!isAllowCentralContract){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
+		} 
+
+		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(
+						ParameterTypeConst.CONTRACT_TYPE, searchBean);
+
+		return contractTypes;
+	}
+	
+	/**
+	 * is Allow Central Contract
+	 * 
+	 * @return 
+	 */
+	private boolean isAllowCentralContract(){
+		boolean allowCentralContract  = false;
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			IUserSO userSO = null;
+			try {
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(userId);
+				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+				if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
+					for (PmUserOrg pmUserOrg :  resDTO.getUserOrgList()) {
+						if( pmUserOrg.getPmOrgProfile() != null){
+							Boolean isBPK = pmUserOrg.getPmOrgProfile().getBpk();
+							if(isBPK != null  && isBPK){
+								allowCentralContract  = true;
+								break;
+							}
+						}
+					}
+				}
+			}finally{
+				userSO = null;
+			}
+		}
+		
+		return allowCentralContract;		
 	}
 	
 }
