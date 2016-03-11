@@ -2669,7 +2669,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSelectChargeLineRow(false);
 		IParameterSO parameterSO = null;
 		try {
-			if(null == getManagedBean().getVotFundId()){
+			if(null == getManagedBean().getVotFundId() || getManagedBean().getVotFundId().longValue()==0){
 				getManagedBean().setVotFundId(getManagedBean().getPmVoteFund().getVotFundId());
 			}
 			if(null != getManagedBean().getGosodo()){
@@ -2746,7 +2746,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	
 	private void chargeLineValidation() {
-		if(getManagedBean().getVotFundId()==null) {
+		if(getManagedBean().getVotFundId()==null || getManagedBean().getVotFundId().longValue()==0) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{
 					ResourceBundleUtils.getMessage("lbl.fl.charge.vot.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
