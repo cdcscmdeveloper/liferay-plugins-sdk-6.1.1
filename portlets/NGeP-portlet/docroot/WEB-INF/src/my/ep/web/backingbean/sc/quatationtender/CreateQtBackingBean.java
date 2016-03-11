@@ -65,6 +65,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -178,10 +179,11 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setCircularExpDate(circular.getEndDate());
 			this.getManagedBean().setCircularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
+			getManagedBean().setQt(scQt);
 			if(null!=scQt.getItemGroup() && null!=scQt.getItemGroup().getPanelItemGroupId()){
-			deleteTemplateSpecs(scQt);
+			deleteTemplateSpecs(getManagedBean().getQt());
 			}
-
+			
 		}
 
 	}
@@ -202,32 +204,41 @@ public class CreateQtBackingBean extends
 	 *            (boolean panelType).
 	 */
 	public void panelConformation(ScQt scQt) {
-		
-		Boolean isPanel = this.getManagedBean().getQt().isPanel();
-		/*Boolean isPanel = (Boolean) event.getComponent().getAttributes()
-				.get("value");*/
+
+		Boolean isPanel = scQt.isPanel();
+		/*
+		 * Boolean isPanel = (Boolean) event.getComponent().getAttributes()
+		 * .get("value");
+		 */
 		scQt.setPanel(isPanel);
-		
+
 		if (!isPanel) {
-			
-			ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
-			if (null != supplierCriteria
-					&& null != supplierCriteria.getQtSupplierCriteriaId()
-					&& (isPanel != this.getManagedBean().isPanelChange())) {
-				//RequestContext.getCurrentInstance().execute("panelApprovalDlgs.show()");
+			if (scQt.isBrandNew() == false) {
+				this.getManagedBean().setQt(scQt);
+				RequestContext.getCurrentInstance().execute(
+						"panelApprovalDlgs.show()");
 
 			} else {
 				scQt.setCircularVer(null);
 				scQt.setPanelItemId(null);
 				scQt.setItemGroup(null);
-				//this.getManagedBean().setCtPanelItem(null);
-				this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
-				
+				this.getManagedBean().setCtPanelItem(null);
+				this.getManagedBean().setQt(scQt);
+				setDataNull();
 			}
 		} else {
-			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
-			scQt.setOpenFor(null);
-			circularListSelect(new CtCircularVer());
+			if (scQt.isBrandNew() == false) {
+				this.getManagedBean().setQt(scQt);
+				circularListSelect(new CtCircularVer());
+				RequestContext.getCurrentInstance().execute(
+						"panelApprovalDlgs.show()");
+			} else {
+				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				scQt.setOpenFor(null);
+				this.getManagedBean().setQt(scQt);
+				circularListSelect(new CtCircularVer());
+				setDataNull();
+			}
 		}
 
 	}
@@ -239,6 +250,8 @@ public class CreateQtBackingBean extends
 		Boolean panel = this.getManagedBean().getQt().isPanel();
 		if (panel) {
 			this.getManagedBean().getQt().setPanel(false);
+			this.getManagedBean().getQt().setCircularVer(null);
+			this.getManagedBean().getQt().setItemGroup(null);
 		} else {
 			this.getManagedBean().getQt().setPanel(true);
 		}
@@ -2049,6 +2062,88 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 							.getLoginRoleType())){
 				deleteTemplateSpecs(scQt);
 				}
+		}
+	}
+	
+	
+	public void panelConformationDelete() {
+				this.getManagedBean().getQt().setZonal(false);
+				this.getManagedBean().getQt().setZoneLocationLevel(null);
+				setDataNull();
+				removespecDtls();
+				if (null == this.getManagedBean().getQt()
+						.getPmProcurementCategory()) {
+					this.getManagedBean().getQt()
+							.setPmProcurementCategory(new PmParameter());
+				}
+				if (null == this.getManagedBean().getQt()
+						.getZoneLocationLevel()) {
+					this.getManagedBean().getQt()
+							.setZoneLocationLevel(new PmParameter());
+				}
+				if (null == this.getManagedBean().getQt()
+						.getProcurementTypeCatId()) {
+					this.getManagedBean().getQt()
+							.setProcurementTypeCatId(new PmParameter());
+				}if(this.getManagedBean().getQt().isPanel()){
+					this.getManagedBean().getQt().setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+					this.getManagedBean().getQt().setOpenFor(null);
+					circularListSelect(new CtCircularVer());
+					if(null==this.getManagedBean().getQt().getItemGroup()){
+						this.getManagedBean().getQt().setItemGroup(new CtPanelItemGroup());
+					}
+				}
+				this.getManagedBean().getQt().setZonal(false);
+				RequestContext.getCurrentInstance().execute(
+								"panelApprovalDlgs.hide()");
+	}
+	private void setDataNull(){
+		getManagedBean().setZoneGeneralTrees(null);
+		getManagedBean().setZoneTrees(null);
+		this.getManagedBean().setScQtCheckSt2techProposal(null);
+		this.getManagedBean().setScQtCheckSt2financeProposalList(null);
+		this.getManagedBean().setSuppCriteriaopenList(null);
+	}
+	
+	/**
+	 * Removespec dtls.change Panle yes to no or no to yes delete all the
+	 * existing information.
+	 */
+	private void removespecDtls() {
+		IQTSpecSO specSo = null;
+		try {
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			if (null != this.getManagedBean().getExistingSupplierLocationList()
+					&& !this.getManagedBean().getExistingSupplierLocationList()
+							.isEmpty()) {
+				this.getManagedBean()
+						.setSupplierLocationList(
+								this.getManagedBean()
+										.getExistingSupplierLocationList());
+				List<ScQtLocCriteria> qtLocCriteriaRemoveList = this
+						.getManagedBean().getSupplierLocationList();
+				if (null != qtLocCriteriaRemoveList
+						&& !qtLocCriteriaRemoveList.isEmpty()) {
+					for (ScQtLocCriteria criteria : qtLocCriteriaRemoveList) {
+						criteria.setDeleted(true);
+					}
+				}
+				reqDTO.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
+			}
+
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			SpecificationResDTO resDTO = specSo.removeBOSpecDetails(reqDTO);
+			this.getManagedBean().setQt(resDTO.getScQt());
+			this.getManagedBean().setExistingSupplierLocationList(
+					new ArrayList<ScQtLocCriteria>());
+			this.getManagedBean().setSupplierLocationList(
+					new ArrayList<ScQtLocCriteria>());
+			this.getManagedBean().setSuppCriteriaopenList(
+					new ArrayList<ScQtCategory>());
+		} finally {
+			specSo = null;
 		}
 	}
 		
