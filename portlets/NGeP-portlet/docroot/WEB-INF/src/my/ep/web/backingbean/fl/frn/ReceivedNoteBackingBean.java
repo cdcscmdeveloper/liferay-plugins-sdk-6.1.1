@@ -1137,6 +1137,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	}
 	
 	private void setFulfilmentNoteField(FulfilmentResDTO resDTO){
+		if(resDTO.getFulfilmentNote() != null){
+			getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+		}
 		getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		flBB.getManagedBean().setHideRemarks(false);
@@ -1295,8 +1298,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					if(contractSupplierResDTO.getFactoring() != null){
 						resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
 						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
-							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring());
 						}
 					}else{
 						resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);

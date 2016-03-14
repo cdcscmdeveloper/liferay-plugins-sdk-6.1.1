@@ -634,8 +634,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					if(contractSupplierResDTO.getFactoring() != null){
 						resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
 						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
-							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring());
 						}
 					}else{
 						resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);

@@ -44,7 +44,6 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
@@ -69,8 +68,6 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -99,12 +96,10 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -490,10 +485,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 							contractSupplierResDTO.getFactoring();
 							getManagedBean().getInvoice().getFlFulfilmentOrder().setFactored(DbValueConst.FLAG_YES);
 							if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrg(contractSupplierResDTO.getFactoring().getFinancialOrg());
+								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrgId(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 								//getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 							}
-							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
 							if(finOrgResDTO.isSuccessful()) {
 								if(finOrgResDTO.getPmAddressType()!=null){
@@ -518,7 +513,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 							}
 						} else {
 							getManagedBean().getInvoice().getFlFulfilmentOrder().setFactored(DbValueConst.FLAG_NO);
-							getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrg(null);
 						}
 					}	
 				}
@@ -1132,7 +1126,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 //		getManagedBean().setContactPhoneNo(null);
 		
 		//HQ info
-		finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+		finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 		finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
 		
 		if(finOrgResDTO.isSuccessful()) {

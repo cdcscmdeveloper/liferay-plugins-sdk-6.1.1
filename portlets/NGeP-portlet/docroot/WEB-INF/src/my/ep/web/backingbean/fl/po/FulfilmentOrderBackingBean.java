@@ -68,7 +68,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.AddressType;
@@ -163,8 +162,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(reqDTO.isContractRequest() == Boolean.FALSE){
 				if(getManagedBean().getFactoringCheck().equalsIgnoreCase("true")) {
 					getManagedBean().getFulfilmentOrder().setFactored(true);
-				} else {
-					getManagedBean().getFulfilmentOrder().setPmFinancialOrg(null);
 				}
 			}
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
@@ -274,15 +271,20 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
 			if("true".equalsIgnoreCase(getManagedBean().getFactoringCheck())){
-				if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId()){
+				if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrgId()){
 					throw new EpException(MessageConst.ERROR_745062);
 				}
 			}			
 		}
 		if(getManagedBean().isRemoveFactoring() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+			FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
+			finReqDTO.setFinancialOrgId(getManagedBean().getFulfilmentOrder().getPmFinancialOrgId());
+			FinancialOrgResDTO finResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finReqDTO);
+			
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getPmOrgProfiles().get(0).getOrgProfileId());
+			userReqDTO.setOrgProfileId(finResDTO.getPmFinancialOrg().getPmOrgProfiles().get(0).getOrgProfileId());
 			UserResDTO userResDTO = userSO.retrieveUserListByOrgProfileId(userReqDTO);
 			if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.factoringUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
@@ -405,7 +407,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					if(contractSupplierResDTO.getFactoring() != null){
 						getManagedBean().getFlRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
 						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-							getManagedBean().getFulfilmentOrder().setPmFinancialOrg(contractSupplierResDTO.getFactoring().getFinancialOrg());
+							getManagedBean().getFulfilmentOrder().setPmFinancialOrgId(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 							getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 						}
 					}else{
@@ -587,9 +589,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @return the factoring company dtl
 	 */
 	public void getFactoringCompanyDtl(){
-		if(getManagedBean().getFulfilmentOrder().getPmFinancialOrg() == null){
-			getManagedBean().getFulfilmentOrder().setPmFinancialOrg(new PmFinancialOrg());
-		}
 		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setServiceType(ParameterConst.BANK_SERVICES_FACTORING_COMPANY);
@@ -1060,8 +1059,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						if(contractSupplierResDTO.getFactoring() != null){
 							resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
 							if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-								contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
-								crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+								crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring());
 							}
 						}else{
 							resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
