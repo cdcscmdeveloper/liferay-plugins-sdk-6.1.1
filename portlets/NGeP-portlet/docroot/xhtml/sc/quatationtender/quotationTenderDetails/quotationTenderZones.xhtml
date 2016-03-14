@@ -45,13 +45,11 @@
 
 			</tr>
 		</table>
-		<ui:param name="zoneGeneralTrees"
-			value="#{specificationBackingBean.managedBean.zoneGeneralTrees!= null?specificationBackingBean.managedBean.zoneGeneralTrees : qTDetailBB.managedBean.zoneGeneralTrees}"/>
 		<h:panelGroup
 			rendered="#{scQt.zonal !='false'}">
 			<h:panelGrid width="100%">
 				<p:dataTable id="zoneGeneralDataTable" rows="10"
-					value="#{zoneGeneralTrees}"
+					value="#{createQtBB.managedBean.zoneGeneralTrees}"
 					var="zoneTree" style="width:100%" rowIndexVar="index"
 					rowKey="#{zoneTree}">
 
@@ -131,6 +129,7 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
 		<h:panelGroup id="zonePopupGeneral">
+			<h:panelGroup rendered="#{!empty createQtBB.managedBean.rootZoanlTree}">
 			<table styleClass="noBorders tr,noBorders td" border="0">
 				<TR>
 					<td style="width: 35%" valign="top"><p:outputLabel
@@ -141,8 +140,8 @@
 							<tr>
 								<td><p:inputText size="50" id="zoneNameId"
 										label="#{lbl['lbl.sc.zone.name']}" maxlength="50"
-										required="#{qTDetailBB.managedBean.zoneLocation}"
-										value="#{qTDetailBB.managedBean.zoneName}"></p:inputText></td>
+										required="#{createQtBB.managedBean.zoneLocation}"
+										value="#{createQtBB.managedBean.zoneName}"></p:inputText></td>
 								<td><p:message id="zoneNameMsg" for="zoneNameId"
 										display="icon" /></td>
 							</tr>
@@ -156,9 +155,9 @@
 					<TD>
 						<div style="height: 300px; overflow-y: scroll;">
 							<p:tree id="treeZoneGeneralPopup"
-								value="#{qTDetailBB.managedBean.rootZoanlTree}"
+								value="#{createQtBB.managedBean.rootZoanlTree}"
 								var="location"
-								selection="#{qTDetailBB.managedBean.selectedGeneralTreeNodes}"
+								selection="#{createQtBB.managedBean.selectedGeneralTreeNodes}"
 								selectionMode="checkbox">
 								<p:treeNode type="state">
 									<h:outputText value="#{location.pmState.stateName}" />
@@ -180,10 +179,10 @@
 					<TD></TD>
 					<TD><p:selectBooleanCheckbox id="popupCheck"
 							style="float:left;margin-top: 13px;margin-right: -4px;"
-							value="#{qTDetailBB.managedBean.checkAllList}">
+							value="#{createQtBB.managedBean.checkAllList}">
 							<p:ajax event="change" partialSubmit="true" process="@all"
 								update=":form:treeZoneGeneralPopup"
-								listener="#{createQtBB.checkAllZoneGeneralPopUp(qTDetailBB.managedBean.checkAllList)}" />
+								listener="#{createQtBB.checkAllZoneGeneralPopUp(createQtBB.managedBean.checkAllList)}" />
 						</p:selectBooleanCheckbox> <p:spacer width="1" /> <h:outputText
 							value="#{lbl['lbl.sc.spec.check.all']}"
 							style="float:left;margin-top: 12px;;margin-left: 10px;" /> <p:commandButton
@@ -197,6 +196,7 @@
 						</p:commandButton></TD>
 				</TR>
 			</table>
+			</h:panelGroup>
 		</h:panelGroup>
 	</p:dialog>
 </ui:composition>
