@@ -1934,10 +1934,8 @@ public class QTCommitteBackingBean extends
 
 					return true;
 				}
-			} else if (QTStatusConst.QT_EVALUATION_PROPOSAL <= (currentStatusId)) {
-				if(!QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(currentStatusId)){
-					return true;
-				}
+			} else if (isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
+				return true;
 			}  else if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)) {
 				return true;
 			}
