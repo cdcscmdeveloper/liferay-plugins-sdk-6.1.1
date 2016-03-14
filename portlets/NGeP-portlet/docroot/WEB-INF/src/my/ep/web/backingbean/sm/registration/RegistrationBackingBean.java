@@ -2434,19 +2434,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void validateCaptcha (FacesContext context, UIComponent component, Object value) {
-		String captchaAnswer = (String) value;
-		if(captchaAnswer == null || captchaAnswer.length() == 0) {
-			log.error("Captcha is null");
-			throw new ValidatorException(new FacesMessage(
-				    FacesMessage.SEVERITY_ERROR, null,
-				    SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721046, null)));
-			
-		}
-		if(!captchaAnswer.equals(this.getManagedBean().getCaptchaText())) {
-			log.error("Captcha is wrong");
-			throw new ValidatorException(new FacesMessage(
-				    FacesMessage.SEVERITY_ERROR, null,
-				    SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721047, null)));
+		String skipValidator= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("skipValidator");
+		if (skipValidator == null) {
+			String captchaAnswer = (String) value;
+			if(captchaAnswer == null || captchaAnswer.length() == 0) {
+				log.error("Captcha is null");
+				throw new ValidatorException(new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721046, null)));
+
+			}
+
+			if(captchaAnswer != null && captchaAnswer.length() > 0) {
+				if(!captchaAnswer.equals(this.getManagedBean().getCaptchaText())) {
+					log.error("Captcha is wrong");
+					throw new ValidatorException(new FacesMessage(
+							FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721047, null)));
+				}
+			}
 		}
 	}
 }
