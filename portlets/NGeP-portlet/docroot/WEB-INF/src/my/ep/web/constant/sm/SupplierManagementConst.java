@@ -556,6 +556,10 @@ public class SupplierManagementConst {
 	public static final String SUPP_TYPE_CONSULTANT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONSULTANT;
 	public static final String SUPP_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_BASIC;
 	public static final String SUPP_TYPE_GOVT_TO_GOVT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT;
+	
+	public static final String SITE_VISIT_ASSIGNMENT_TYPE_ALL = "C";
+	public static final String SITE_VISIT_ASSIGNMENT_TYPE_BEFORE = "B";
+	public static final String SITE_VISIT_ASSIGNMENT_TYPE_AFTER = "A";
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
@@ -1022,5 +1026,18 @@ public class SupplierManagementConst {
 	public double getMAX_EXP_RANGE() {
 		return MAX_EXP_RANGE;
 	}
+
+	public String getSiteVisitAssignmentTypeAll() {
+		return SITE_VISIT_ASSIGNMENT_TYPE_ALL;
+	}
+
+	public String getSiteVisitAssignmentTypeBefore() {
+		return SITE_VISIT_ASSIGNMENT_TYPE_BEFORE;
+	}
+
+	public String getSiteVisitAssignmentTypeAfter() {
+		return SITE_VISIT_ASSIGNMENT_TYPE_AFTER;
+	}
+
 
 }
