@@ -186,7 +186,7 @@
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
-							<h:outputText value="#{quoteSupplier.smSupplier.companyName}" />
+							<h:outputText value="#{quoteSupplier.supplierName}" />
 						</p:column>
 					</p:dataTable>
 
@@ -233,7 +233,7 @@
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
-							<h:outputText value="#{data.smSupplier.companyName}" />
+							<h:outputText value="#{data.supplierName}" />
 						</p:column>
 
 					</p:dataTable>
@@ -277,12 +277,12 @@
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.mof.no']}" style="width:10%">
-							<h:outputText value="#{quoteSupplier.mofNumber}" />
+							<h:outputText value="#{data.mofNumber}" />
 
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.supplier']}" style="width:30%">
-							<h:outputText value="#{data.smSupplier.companyName}" />
+							<h:outputText value="#{data.supplierName}" />
 						</p:column>
 						<c:if test="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}">
 							<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:20%">
