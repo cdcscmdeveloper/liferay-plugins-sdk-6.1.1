@@ -1750,7 +1750,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}catch(Exception ex){
 			String message = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 			if(message != null){
-				throw new EpException(message);
+				throw new EpException("MyIdentity: " + message);
 			}else{
 				throw new EpException("MyIdentity: " + ex.getMessage());
 			}
