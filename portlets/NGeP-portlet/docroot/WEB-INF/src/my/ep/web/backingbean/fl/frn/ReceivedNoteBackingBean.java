@@ -374,6 +374,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 						flFulfilmentNoteItem.setTotalRecvAmount(flFulfilmentNoteItem.getReceivedAmt());
 						flFulfilmentNoteItem.setTotalRecvQty(flFulfilmentNoteItem.getReceivedQty());
 					}
+					if(getManagedBean().getFulfilmentNote().getApprover() == null){
+						reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
+						getManagedBean().getFulfilmentNote().setApprover(receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO)) ;
+					}
 				} else {
 					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 					resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -445,6 +449,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				checkLastTaxFRN();//Issuance of CoGSTR
 			}
+			getAcknowledgeOfficerDropdown();
 			
 			// Set evaluation
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
