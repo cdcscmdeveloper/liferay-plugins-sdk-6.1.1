@@ -14,7 +14,7 @@
 				<td style="width: 14%;"><h:outputLabel
 						value="#{lbl['lbl.pm.category.level']}" /> <h:outputLabel value="*"
 						styleClass="mandatory" /> </td>
-				<td><p:selectOneMenu style="width:215px;margin-bottom:5px;"
+				<td><p:selectOneMenu
 						label="#{lbl['lbl.pm.category.level']}"
 						value="#{businessNatureBackingBean.managedBean.categoryLvl}">
 						<f:selectItems
@@ -25,82 +25,76 @@
 			</tr>
 
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"></h:outputLabel></td>
+				<td><h:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"/></td>
 				<td><p:inputText
 						value="#{businessNatureBackingBean.managedBean.secLevelCode}"
 						size="30" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.secname']}"></h:outputLabel></td>
+				<td><h:outputLabel value="#{lbl['lbl.pm.bn.secname']}"/></td>
 				<td><p:inputText
 						value="#{businessNatureBackingBean.managedBean.secLevelName}"
 						size="50" /></td>
 			</tr>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.divcode']}"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 10}"></h:outputLabel></td>
+			<c:if test="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 10}">
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.pm.bn.divcode']}" /></td>
 
-				<td><p:inputText
+					<td><p:inputText
 						value="#{businessNatureBackingBean.managedBean.divLevelCode}"
-						size="30"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 10}" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.divname']}"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 10}"></h:outputLabel>
-				</td>
-				<td><p:inputText
+						size="30"/></td>
+					<td><h:outputLabel value="#{lbl['lbl.pm.bn.divname']}"/>
+					</td>
+					<td><p:inputText
 						value="#{businessNatureBackingBean.managedBean.divLevelName}"
-						size="50"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 10}" />
-				</td>
-			</tr>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.groupcode']}"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 20}"></h:outputLabel></td>
-				<td><p:inputText
-						value="#{businessNatureBackingBean.managedBean.groupLevelCode}"
-						size="30"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 20}" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.groupname']}"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 20}"></h:outputLabel>
-				</td>
-				<td><p:inputText
-						value="#{businessNatureBackingBean.managedBean.groupLevelName}"
-						size="50"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 20}" />
-				</td>
-			</tr>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.classcode']}"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 30}"></h:outputLabel></td>
-				<td><p:inputText
-						value="#{businessNatureBackingBean.managedBean.classLevelCode}"
-						size="30"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 30}" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.classname']}"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 30}"></h:outputLabel>
-				</td>
-				<td><p:inputText
-						value="#{businessNatureBackingBean.managedBean.classLevelName}"
-						size="50"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 30}" /></td>
-			</tr>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.itemcode']}"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}"></h:outputLabel></td>
-				<td><p:inputText
-						value="#{businessNatureBackingBean.managedBean.itemLevelCode}"
-						size="30"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.pm.bn.itemname']}"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}"></h:outputLabel></td>
-				<td><p:inputText
-						value="#{businessNatureBackingBean.managedBean.itemLevelName}"
-						size="50"
-						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}" /></td>
-			</tr>
+						size="50" />
+					</td>
+				</tr>
+			</c:if> 
+			<c:if test="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 20}">
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.pm.bn.groupcode']}"/></td>
+					<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.groupLevelCode}"
+							size="30" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.pm.bn.groupname']}" />
+					</td>
+					<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.groupLevelName}"
+							size="50"/>
+					</td>
+				</tr>
+			</c:if>
+			<c:if test="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 30}">
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.pm.bn.classcode']}"/></td>
+					<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.classLevelCode}"
+							size="30" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.pm.bn.classname']}"/>
+					</td>
+					<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.classLevelName}"
+							size="50" /></td>
+				</tr>
+			</c:if>
+			
+			<c:if test="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}">
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.pm.bn.itemcode']}"/></td>
+					<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.itemLevelCode}"
+							size="30"/></td>
+					<td><h:outputLabel value="#{lbl['lbl.pm.bn.itemname']}"/></td>
+					<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.itemLevelName}"
+							size="50"/></td>
+				</tr>
+			</c:if>
+			
 			<tr>
 				<td width="20%"><h:outputLabel
 						value="#{lbl['lbl.pm.search.status']}">
 					</h:outputLabel></td>
-				<td><p:selectOneMenu style="width:215px"
+				<td><p:selectOneMenu
 						value="#{businessNatureBackingBean.managedBean.status}">
 						<f:selectItems
 							value="#{businessNatureBackingBean.getBusinessNatureStatus()}" />
