@@ -4123,23 +4123,6 @@ public class QTDetailBackingBean extends
 	}
 
 	/**
-	 * Constuct condition fields.
-	 * 
-	 * @return the string
-	 */
-	public String constuctConditionFields() {
-		if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
-			Long orgProfileId = this.getManagedBean().getQt().getPmOrgProfile()
-					.getOrgProfileId();
-			if (null != orgProfileId) {
-				return "quotationTender.pmOrgProfile.orgProfileId^"
-						+ orgProfileId;
-			}
-		}
-		return "";
-	}
-
-	/**
 	 * Gets the latest bsv date.
 	 * 
 	 * @param bsvDetails
@@ -4345,72 +4328,6 @@ public class QTDetailBackingBean extends
 	}
 
 	/**
-	 * Update qt ammend ment dtls.
-	 * 
-	 * @param componentId
-	 *            the component id
-	 * @param oldValue
-	 *            the old value
-	 * @param newValue
-	 *            the new value
-	 */
-	private void updateQtAmmendMentDtls(String componentId, Object oldValue,
-			Object newValue) {
-		QtAmendMentBean amendMentBean = this.getManagedBean()
-				.getAmendMentBean();
-		if (null == amendMentBean) {
-			amendMentBean = new QtAmendMentBean();
-		}
-		if ("title1".equalsIgnoreCase(componentId)) {
-
-			if (null == amendMentBean.getOldTitle()) {
-				amendMentBean.setOldTitle((String) oldValue);
-
-			}
-
-			amendMentBean.setNewTitle((String) newValue);
-
-		} else if ("estprice".equalsIgnoreCase(componentId)) {
-
-			if (null == amendMentBean.getOldEstmtPrice()) {
-				amendMentBean.setOldEstmtPrice((BigDecimal) oldValue);
-
-			}
-			amendMentBean.setNewEstmtPrice((BigDecimal) newValue);
-			if (!amendMentBean.getOldEstmtPrice().equals(
-					amendMentBean.getNewEstmtPrice())) {
-				amendMentBean.setPTJApprovalReq(true);
-			}
-		} else if ("proposalvalidity".equalsIgnoreCase(componentId)) {
-
-			if (0 == amendMentBean.getOldValidityPeriodDays()) {
-				amendMentBean.setOldValidityPeriodDays((Integer) oldValue);
-
-			}
-			if (amendMentBean.getOldValidityPeriodDays() != amendMentBean
-					.getNewValidityPeriodDays()) {
-
-			}
-			amendMentBean.setNewValidityPeriodDays((Integer) newValue);
-
-		} else if ("publishperiod".equalsIgnoreCase(componentId)) {
-
-			if (0 == amendMentBean.getOldPublishPeriodDays()) {
-				amendMentBean.setOldPublishPeriodDays((Integer) oldValue);
-
-			}
-
-			amendMentBean.setNewPublishPeriodDays((Integer) newValue);
-			if (amendMentBean.getOldPublishPeriodDays() != amendMentBean
-					.getNewPublishPeriodDays()) {
-				amendMentBean.setPTJApprovalReq(true);
-			}
-		}
-
-		this.getManagedBean().setAmendMentBean(amendMentBean);
-	}
-
-	/**
 	 * Gets the qt approval by category.
 	 * 
 	 * @param approvals
@@ -4450,27 +4367,6 @@ public class QTDetailBackingBean extends
 			}
 		}
 		return false;
-
-	}
-
-	public void publishPeriodDaysChanged(ValueChangeEvent changeEvent) {
-
-		updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
-				changeEvent.getOldValue(), changeEvent.getNewValue());
-
-	}
-
-	public void estimateAmtChanged(ValueChangeEvent changeEvent) {
-
-		updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
-				changeEvent.getOldValue(), changeEvent.getNewValue());
-
-	}
-
-	public void proposalValidityChanged(ValueChangeEvent changeEvent) {
-
-		updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
-				changeEvent.getOldValue(), changeEvent.getNewValue());
 
 	}
 
@@ -4666,13 +4562,6 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
-	}
-
-	public void qtMaiantanceValueChangeListner(ValueChangeEvent event) {
-
-		updateQtAmmendMentDtls(event.getComponent().getId(),
-				event.getOldValue(), event.getNewValue());
-
 	}
 
 	private void updateApprovalDetails(ScQt scQt) {
