@@ -10,17 +10,25 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.SVCTaskListManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "svcTasklistBackingBean")
@@ -33,10 +41,6 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SVCTaskListBackingBean.class);
 	private List<SmAppl> resultList = new ArrayList<SmAppl>(); 
-
-
-
-
 
 
 	public SVCTaskListBackingBean(){
@@ -56,8 +60,11 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 
 
 	public void searchAction() {
-		
-		System.out.println("*********searchAction*********");
+		if(StringUtils.isBlank(getManagedBean().getApplNo()) && StringUtils.isBlank(getManagedBean().getSupplierName()) 
+			&& StringUtils.isBlank(getManagedBean().getEpNo()) && getManagedBean().getDistrictId() == 0 && 
+			getManagedBean().getStateId() == 0){
+			throw new EpException(MessageConst.ERROR_721048);
+		}
 		
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
@@ -155,6 +162,22 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 
 	public void setResultList(List<SmAppl> resultList) {
 		this.resultList = resultList;
+	}
+	
+	public SmWorkflowStatus getWorkflowInfoByApplId(Long applId){
+		ISmWorkFlowStatusSO reqSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		reqDTO.setApplId(applId);
+		SmWorkFlowStatusResDTO resDTO = reqSO.retrieveCurrentWorkFlowStatusByDocId(reqDTO);
+		SmWorkflowStatus workFlowStatus = resDTO.getWorkflowStatus();
+		
+		//if(worskFlowStatus != null){
+			//SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+			
+			//return sdf.format(worskFlowStatus.getCreatedDate());
+		//}
+		
+		return workFlowStatus;
 	}
 
 }
