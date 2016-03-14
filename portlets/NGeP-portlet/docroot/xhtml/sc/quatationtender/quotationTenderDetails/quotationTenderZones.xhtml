@@ -183,17 +183,24 @@
 							<p:ajax event="change" partialSubmit="true" process="@all"
 								update=":form:treeZoneGeneralPopup"
 								listener="#{createQtBB.checkAllZoneGeneralPopUp(createQtBB.managedBean.checkAllList)}" />
-						</p:selectBooleanCheckbox> <p:spacer width="1" /> <h:outputText
+						</p:selectBooleanCheckbox> <p:spacer width="1" /> 
+						<h:outputText
 							value="#{lbl['lbl.sc.spec.check.all']}"
-							style="float:left;margin-top: 12px;;margin-left: 10px;" /> <p:commandButton
+							style="float:left;margin-top: 12px;;margin-left: 10px;" /> 
+						<p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" style="float:right;"
-							styleClass="BtnSpacing" onclick="ZoneGeneral.hide();" process="@this"/>
-						&#160;&#160; <p:commandButton value="#{lbl['lbl.btn.ok']}"
+							styleClass="BtnSpacing" onclick="ZoneGeneral.hide();" process="@this">
+							<f:setPropertyActionListener target="#{createQtBB.managedBean.zoneLocation}" value="false" />
+							<f:setPropertyActionListener target="#{createQtBB.managedBean.autoUpdate}" value="true" />
+						</p:commandButton>
+						&#160;&#160; 
+						<p:commandButton value="#{lbl['lbl.btn.ok']}"
 							style="float:right;" process="@all"
 							update="@this, zoneGeneralDataTable,zonePopupGeneral"
 							styleClass="BtnSpacing"
 							action="#{createQtBB.updateZoneGeneralLocation}">
-						</p:commandButton></TD>
+						</p:commandButton>
+					</TD>
 				</TR>
 			</table>
 			</h:panelGroup>
