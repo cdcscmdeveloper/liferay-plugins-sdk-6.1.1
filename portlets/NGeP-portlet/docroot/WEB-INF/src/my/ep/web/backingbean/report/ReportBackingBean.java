@@ -15665,11 +15665,7 @@ public class ReportBackingBean extends
 		log.info("ReportBackingBean-generatePPReport");
 
 		if (checkDefaultValuesForPP()) {
-			if ((this.getCommonPtj() != null)
-					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setPpPTJVar(ReportConst.FL_AMP_PTJ_NAME_EQ
-						+ this.getCommonPtj());
-			}
+			
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
 
@@ -15680,15 +15676,20 @@ public class ReportBackingBean extends
 			if ((this.getCommonPegaWaiPengawal() != null)
 					&& (this.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL)) {
 
-				rptGenBean.setPpPegaiPengawaiVar(ReportConst.FL_AMP_MINISTRY_EQ
+				rptGenBean.setPpPegaiPengawaiVar(ReportConst.FL_AMP_PEGAWAI_PENGAWAI_EQ
 						+ this.getCommonPegaWaiPengawal());
 			}
 
 			if ((this.getCommonKumpulanPTJ() != null)
 					&& (this.getCommonKumpulanPTJ() != ReportConst.EMPTY_VAL)) {
 
-				rptGenBean.setPpKumpulanVar(ReportConst.FL_AMP_MINISTRY_EQ
+				rptGenBean.setPpKumpulanVar(ReportConst.FL_AMP_KUMPULAN_EQ
 						+ this.getCommonKumpulanPTJ());
+			}			
+			if ((this.getCommonPtj() != null)
+					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPpPTJVar(ReportConst.FL_AMP_PTJ_NAME_EQ
+						+ this.getCommonPtj());
 			}
 
 			if ((this.getPpYear() != null)
