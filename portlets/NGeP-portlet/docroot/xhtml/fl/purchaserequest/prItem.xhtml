@@ -141,7 +141,11 @@
 				value="#{purchaseRequestBackingBean.managedBean.showAllItemsRows}"
 				rowKey="#{flItem}">
 				<ac:paginator for="itemDataTable" />
-				<p:column headerText="#{lbl['lbl.fl.gst']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.fl.gst']}" /><br/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.flag']}"/>
+					</f:facet>				
 					<p:selectBooleanCheckbox value="#{flItem.gst}"
 						disabled="#{(purchaseRequestBackingBean.managedBean.selectedDelAddr == null or 
 							flItem.orderedQty == 0) or purchaseRequestBackingBean.managedBean.buttonVal=='View'}">
