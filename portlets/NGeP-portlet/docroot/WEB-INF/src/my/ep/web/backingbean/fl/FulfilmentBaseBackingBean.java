@@ -28,6 +28,7 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
@@ -380,46 +381,41 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			supplierDtl.setBranchName(null);
 		}
 		FlAddress flAddress = new FlAddress();
-		SmAddress smAddress = ctSupplierDtl.getSupplierAddress();//TODO change to ctAddress when ready
-		flAddress.setAddress1(smAddress.getAddress1());
-		flAddress.setAddress2(smAddress.getAddress2());
-		flAddress.setAddress3(smAddress.getAddress3());
-		flAddress.setAddress4(smAddress.getAddress4());
-		flAddress.setMapLatitude(smAddress.getMapLatitude());
-		flAddress.setMapLongitude(smAddress.getMapLongitude());
-		flAddress.setPmCity(smAddress.getPmCity());
-		flAddress.setPmCountry(smAddress.getPmCountry());
-		flAddress.setPmDistrict(smAddress.getPmDistrict());
-		if(smAddress.getPmDivision()!=null){
-			flAddress.setPmDivision(smAddress.getPmDivision());
+		CtAddress ctAddress = ctSupplierDtl.getCtSupplierAddress();
+		flAddress.setAddress1(ctAddress.getAddress1());
+		flAddress.setAddress2(ctAddress.getAddress2());
+		flAddress.setAddress3(ctAddress.getAddress3());
+		flAddress.setAddress4(ctAddress.getAddress4());
+		flAddress.setMapLatitude(ctAddress.getMapLatitude());
+		flAddress.setMapLongitude(ctAddress.getMapLongitude());
+		flAddress.setPmCity(ctAddress.getPmCity());
+		flAddress.setPmCountry(ctAddress.getPmCountry());
+		flAddress.setPmDistrict(ctAddress.getPmDistrict());
+		if(ctAddress.getPmDivision()!=null){
+			flAddress.setPmDivision(ctAddress.getPmDivision());
 		}
 		
-		flAddress.setPmState(smAddress.getPmState());
-		flAddress.setPostcode(smAddress.getPostcode());
+		flAddress.setPmState(ctAddress.getPmState());
+		flAddress.setPostcode(ctAddress.getPostcode());
 		
-		flAddress.setFaxNo("");//TODO change to ctaddress when ready
-		flAddress.setFaxArea("");
-		flAddress.setFaxCountry("");
-		flAddress.setPhoneNo("");
-		flAddress.setPhoneArea("");
-		flAddress.setPhoneCountry("");
+		flAddress.setFaxNo(ctAddress.getFaxNo());
+		flAddress.setFaxArea(ctAddress.getFaxArea());
+		flAddress.setFaxCountry(ctAddress.getFaxCountry());
+		flAddress.setPhoneNo(ctAddress.getPhoneNo());
+		flAddress.setPhoneArea(ctAddress.getPhoneArea());
+		flAddress.setPhoneCountry(ctAddress.getPhoneCountry());
 
-//		for(SmPersonnel smPersonnel: flRequest.getCtContract().getSmSupplier().getSmAppl().getSmPersonnels()){//TODO change when ready
-//			if(smPersonnel.isContactPerson()){
-//				flAddress.setContactEmail(smPersonnel.getEmail());
-//				flAddress.setContactFaxNo(smPersonnel.getFaxNo());
-//				flAddress.setContactMobileNo(smPersonnel.getMobileNo());
-//				flAddress.setContactPerson(smPersonnel.getName());
-//				flAddress.setContactPhoneNo(smPersonnel.getPhoneNo());
-//				flAddress.setContactFaxArea(smPersonnel.getFaxArea());
-//				flAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
-//				flAddress.setContactMobileArea(smPersonnel.getMobileArea());
-//				flAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
-//				flAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
-//				flAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
-//				break;
-//			}
-//		}
+		flAddress.setContactEmail(ctAddress.getContactEmail());
+		flAddress.setContactFaxNo(ctAddress.getContactFaxNo());
+		flAddress.setContactMobileNo(ctAddress.getContactMobileNo());
+		flAddress.setContactPerson(ctAddress.getContactPerson());
+		flAddress.setContactPhoneNo(ctAddress.getContactPhoneNo());
+		flAddress.setContactFaxArea(ctAddress.getContactFaxArea());
+		flAddress.setContactFaxCountry(ctAddress.getContactFaxCountry());
+		flAddress.setContactMobileArea(ctAddress.getContactMobileArea());
+		flAddress.setContactMobileCountry(ctAddress.getContactMobileCountry());
+		flAddress.setContactPhoneArea(ctAddress.getContactPhoneArea());
+		flAddress.setContactPhoneCountry(ctAddress.getContactPhoneCountry());
 		supplierDtl.setFlAddress(flAddress);
 	}
 	

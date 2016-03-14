@@ -134,6 +134,7 @@ import my.ep.jaxb.fl.phis.codata.FLPHISContractOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
@@ -144,6 +145,7 @@ import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -1031,8 +1033,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					contractSupplierResDTO.getFactoring();
 					resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
 					if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-						contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
-						getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+						getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring());
 					}
 				}else{
 					resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
@@ -1146,8 +1147,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ContractResDTO contractResDTO = contractSO.retrieveContract(ctDTO);
 			getManagedBean().getFlRequest().setCtContract(contractResDTO.getContract());
 			if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring()){
-				if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring().getFinancialOrg()){
-					getSelectedFactoringCompDtl(getManagedBean().getFlRequest().getCtContract().getCtFactoring().getFinancialOrg().getFinancialOrgId());
+				if( null != getManagedBean().getFlRequest().getCtContract().getCtFactoring().getFinancialOrgAddress()){
+					getSelectedFactoringCompDtl(getManagedBean().getFlRequest().getCtContract().getCtFactoring());
 				}
 			}else{
 				getManagedBean().getFlRequest().getCtContract().setFactored(false);
@@ -1317,38 +1318,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
 			supplierDtl.setMofNo(ctSupplierSO.retrieveSupplierMOFNoByContractId(flRequest.getCtContract().getContractId()));
 			
-			
 			CtContractValue ctSupplierDtl = flRequest.getCtContract().getLatestContractVer().getCtContractValue();
 			//TODO NEW 
 			convertCtAddressToFlAddress(flRequest,supplierDtl);
-//			if(flRequest.getCtContract().getLatestContractVer().getCtContractValue().getSupplierBranch() != null){
-//				supplierDtl.setBranchCode(null);
-//				supplierDtl.setBranchName(ctSupplierDtl.getSupplierBranch());
-//			}else{
-//				supplierDtl.setBranchCode(null);
-//				supplierDtl.setBranchName(null);
-//				//getManagedBean().setGstRegistrationDate(flRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getGstRegistrationDate());
-//				//getManagedBean().setGstRegistrationNo(flRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getGstRegistrationNo());
-//			}
-			
-//			supplierDtl.setFaxNo(ctSupplierDtl.getSupplierFaxNo());
 			supplierDtl.setFlFulfilmentRequest(flRequest);
-//			supplierDtl.setPhoneNo(ctSupplierDtl.getSupplierPhoneNo());
-//			supplierDtl.setContactEmail(ctSupplierDtl.getSupplierEmail());
-//			supplierDtl.setContactMobileNo(ctSupplierDtl.getSupplierMobileNo());
-//			supplierDtl.setContactPerson(ctSupplierDtl.getSupplierContact());
-//			supplierDtl.setSmAddress(ctSupplierDtl.getSupplierAddress());
 			supplierDtl.setSupplierName(ctSupplierDtl.getSupplierName());
-//			for(SmPersonnel smPersonnel: flRequest.getCtContract().getSmSupplier().getSmAppl().getSmPersonnels()){
-//				if(smPersonnel.isContactPerson()){
-//					supplierDtl.setContactFaxNo(null);
-//					supplierDtl.setContactPhoneNo(null);
-//				}
-//			}
 			
 			flRequest.setFlSupplierDtl(supplierDtl);
 		}
-		
 	}
 	
 	private void populateItemsForSelectedAddress() {
@@ -3780,8 +3757,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * Get selected factoring company details from profile management service object
 	 * @param financialOrgId
 	 */
-	public void getSelectedFactoringCompDtl(Long financialOrgId){
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+	public void getSelectedFactoringCompDtl(CtFactoring ctFactoring){
+		CtAddress factoringAddress = ctFactoring.getFinancialOrgAddress();
 		getManagedBean().setFacSupplierAddress(null);
 		getManagedBean().setPhoneNo(null);
 		getManagedBean().setFaxNo(null);
@@ -3789,24 +3766,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setContactEmail(null);
 		getManagedBean().setContactPhoneNo(null);
 		
-		if(financialOrgId!=null) {
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialOrgId(financialOrgId);
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-			
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if(!resDTO.getAddressTypeList().isEmpty()){
-				getManagedBean().setFacSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
-					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-					getManagedBean().setContactPerson(pmContact.getContactName());
-					getManagedBean().setContactEmail(pmContact.getEmail());
-					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-				}
-			}
-		}
+		getManagedBean().setFacSupplierAddress(getFullAddress(factoringAddress));
+		getManagedBean().setPhoneNo(factoringAddress.getPhoneNo());
+		getManagedBean().setFaxNo(factoringAddress.getFaxNo());
+		getManagedBean().setContactPerson(factoringAddress.getContactPerson());
+		getManagedBean().setContactEmail(factoringAddress.getContactEmail());
+		getManagedBean().setContactPhoneNo(factoringAddress.getContactPhoneNo());
 	}
 	
 	/**

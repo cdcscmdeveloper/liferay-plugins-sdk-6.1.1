@@ -438,7 +438,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 
 		//reset back to HQ info
 		AddressReqDTO reqDTO = new AddressReqDTO();
-		reqDTO.setFinancialOrgId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+		reqDTO.setFinancialOrgId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getPmFinancialOrgId());
 		reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 
 		AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
