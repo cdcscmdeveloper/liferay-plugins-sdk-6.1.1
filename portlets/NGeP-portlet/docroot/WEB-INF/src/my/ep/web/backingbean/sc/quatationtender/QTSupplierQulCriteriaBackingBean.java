@@ -588,30 +588,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 			this.getManagedBean().setZoneTrees(null);
 		}
 	}
-	
-	/**
-	 * Method to set the location level drop down values.
-	 *
-	 * @param event the event
-	 */
-	public void selectLocation(AjaxBehaviorEvent event) {
-		debugLogger("selectLocation");
-		Long location = (Long) event.getComponent().getAttributes()
-				.get("value");
-		if (null != location) {
-			if (this.getManagedBean().getQt().isZonal()) {
-				if (null != this.getManagedBean().getQt().getZoneLocationLevel()) {
-					this.getManagedBean().getQt().getZoneLocationLevel()
-					.setParameterId(location);
-				}
-				if (null != this.getManagedBean().getZoneGeneralTrees()
-						&& !this.getManagedBean().getZoneGeneralTrees()
-								.isEmpty()) {
-					this.getManagedBean().setZoneGeneralTrees(null);
-				}
-			}
-		}
-	}
 
 	/**
 	 * Method to set the location level drop down values.
