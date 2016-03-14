@@ -244,18 +244,19 @@
 	<p:dialog width="1050px" header="#{lbl['lbl.sm.send.enquiry']}"
 		id="sendInqDialog" widgetVar="sendInqDialog" resizable="false"
 		showEffect="fade" hideEffect="fade" modal="true" closable="false">
-
-		<ui:include
-			src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
-				update=":form"
-				disabled="#{backingBean.managedBean.missinDocs.size() == 0}"
-				oncomplete="sendInqDialog.hide();"
-				action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				onclick="sendInqDialog.hide();" />
-		</div>
+		
+		<p:outputPanel layout="block" id="poEnquiryBlockPanel">
+			<ui:include src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
+					update="@([id$=Msg])" process="poEnquiryBlockPanel"
+					disabled="#{backingBean.managedBean.missinDocs.size() == 0}"
+					onclick="poEnquiryBlockPanel.show()" oncomplete="poEnquiryBlockPanel.hide();sendInqDialog.hide();" 
+					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					onclick="sendInqDialog.hide();" />
+			</div>
+		</p:outputPanel>
 	</p:dialog>
 	<p:dialog width="1000px" height="450px" closable="false"
 		header="#{lbl['lbl.sm.assign.site.visit']}" widgetVar="svcDialog"
