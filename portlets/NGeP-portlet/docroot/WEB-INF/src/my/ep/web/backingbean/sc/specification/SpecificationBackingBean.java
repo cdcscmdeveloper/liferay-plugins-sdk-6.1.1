@@ -858,7 +858,11 @@ public class SpecificationBackingBean extends
 				specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 				specSo.validateSpecCommitteGeneralInfo(specReqDTO);
 			}
-
+			if (this.getManagedBean().isZoneSpecUpdate()) {
+				ZonesUpdateWarningMessage(this.getManagedBean()
+						.isZonesWarnMessageUpdate());
+				validatePrepareQtChecklist();
+			}
 			break;
 		case 1:
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
