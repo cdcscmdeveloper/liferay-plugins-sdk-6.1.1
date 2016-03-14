@@ -580,12 +580,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					}
 				}		
 			}
-			if(ParameterConst.ITEM_TYPE_SERVICE.equalsIgnoreCase(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode())){
-				if(frnItem.getReceivedAmt().doubleValue() <= 0) {
-						throw new EpException(MessageConst.ERROR_100033, new String[]{
-								ResourceBundleUtils.getMessage("lbl.fl.received.amount.message",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-				}		
-			}
 		}
 		
 		Date today = new Date();
