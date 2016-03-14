@@ -72,7 +72,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			if(accessAppl != null  
 					&& hashAccessApplId.equals(
 							PmCommonUtil.hashString(String.valueOf(accessAppl.getAccessApplId())))
-							&& isLatestActivationEmail(createdTimeParam, accessAppl)) {
+							&& isLatestActivationEmail(createdTimeParam, accessAppl) && validateUserActive(accessAppl)) {
 				Date latestApproved = null;
 				if(accessAppl.getCompanyProfileStatus() != null && accessAppl.getMarketResearchStatus() !=null){
 					if(accessAppl.getCompanyProfileStatus().getChangedDate().
@@ -114,7 +114,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 							MessageConst.INFO_721031,null);
 				}
 			}else{
-				log.info("****Invalid Access Appl - not found******");
+				log.info("****Invalid Access Appl******");
 				PmCommonUtil.redirectToPage(
 						ACCESS_APPL_OUTPUT_MSG,
 						MessageConst.INFO_721031,null);
@@ -245,6 +245,15 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 		}
 		
 		
+	}
+	
+	private boolean validateUserActive(PmAccessAppl accessAppl){
+		boolean isValid = true;
+		PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
+		if(user!=null){
+			isValid = false;
+		}
+		return isValid;
 	}
 
 }
