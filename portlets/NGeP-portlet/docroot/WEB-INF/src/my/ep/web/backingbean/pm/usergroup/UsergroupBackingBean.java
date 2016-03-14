@@ -523,10 +523,12 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						userGroup.getPmOrgProfile().getOrgCode(),
 						userGroup.getPmOrgProfile().getOrgName()});
 			}
+			
+			//validate duplicate group name (Role and PTJ)
+			findDuplicateGroupName();
 		}
 		
-		//validate duplicate group name (Role and PTJ)
-		findDuplicateGroupName();
+		
 		
 		
 	}
