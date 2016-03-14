@@ -1139,7 +1139,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String lblApplType = SmCommonUtil.getApplTypeDesc(svTask.getSmAppl().getApplType());
 		//Locale locale = new Locale("en");
 		String applType = ResourceBundleUtils.getMessage(lblApplType,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
-		SmAddress compAddress = svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
+		SmAddress compAddress = svTask.getSmSvAddress().getSmAddress();
 		
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
