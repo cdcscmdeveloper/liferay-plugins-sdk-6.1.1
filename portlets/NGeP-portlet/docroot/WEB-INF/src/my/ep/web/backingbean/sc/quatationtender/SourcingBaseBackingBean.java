@@ -47,7 +47,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -67,8 +66,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -85,8 +82,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.common.PmCategoryL1;
-import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -962,109 +957,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return false;
 	}
 
-	/**
-	 * To update categoryCodel1..to scqtCategory..
-	 * 
-	 * @param qtCategory
-	 */
-	public void updatedQtCategoryL1Code(ScQtCategory qtCategory) {
-
-		ICategoryCodeSO codeSo = getCategoryCodeSO();
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		if (!isNullOrEmpty(qtCategory.getPmCategoryL1().getCategoryL1Code())) {
-			reqDTO.setMainCatCode(qtCategory.getPmCategoryL1()
-					.getCategoryL1Code());
-			CategoryCodeResDTO resDto = codeSo.retrieveCategoryL1ByCode(reqDTO);
-			PmCategoryL1 categoryL1 = resDto.getCategoryL1();
-			if (null == categoryL1) {
-				throw new EpException("No category Code exists");
-			}
-			qtCategory.setPmCategoryL1(categoryL1);
-			if (!isNullOrEmpty(qtCategory.getPmCategoryL2().getCategoryL2Code())) {
-				reqDTO.setCategoryL1Id(categoryL1.getCategoryL1Id());
-				reqDTO.setSubCatCode(qtCategory.getPmCategoryL2()
-						.getCategoryL2Code());
-				CategoryCodeResDTO categoryCodeResDTO = codeSo
-						.retrieveCategoryL2ListByCode(reqDTO);
-				List<PmCategoryL2> categoryL2List = categoryCodeResDTO
-						.getCategoryL2List();
-				if (null != categoryL2List && !categoryL2List.isEmpty()) {
-					qtCategory.setPmCategoryL2(categoryCodeResDTO
-							.getCategoryL2List().get(0));
-				} else {
-					throw new EpException(MessageConst.ERROR_760132);
-				}
-			}
-		} else {
-
-			qtCategory.setPmCategoryL1(new PmCategoryL1());
-			// qtCategory.setPmCategoryL2(new PmCategoryL2());
-
-		}
-
-	}
-
-	/**
-	 * To update categoryCodel2..to scqtCategory..
-	 * 
-	 * @param qtCategory
-	 */
-	public void updatedQtCategoryL2Code(ScQtCategory qtCategory) {
-		ICategoryCodeSO codeSo = getCategoryCodeSO();
-		if (!isNullOrEmpty(qtCategory.getPmCategoryL1().getCategoryL1Code())
-				&& !isNullOrEmpty(qtCategory.getPmCategoryL2()
-						.getCategoryL2Code())) {
-			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			reqDTO.setCategoryL1Id(qtCategory.getPmCategoryL1()
-					.getCategoryL1Id());
-			reqDTO.setSubCatCode(qtCategory.getPmCategoryL2()
-					.getCategoryL2Code());
-			CategoryCodeResDTO categoryCodeResDTO = codeSo
-					.retrieveCategoryL2ListByCode(reqDTO);
-			List<PmCategoryL2> categoryL2List = categoryCodeResDTO
-					.getCategoryL2List();
-			if (null != categoryL2List && !categoryL2List.isEmpty()) {
-				qtCategory.setPmCategoryL2(categoryCodeResDTO
-						.getCategoryL2List().get(0));
-			} else {
-				throw new EpException(MessageConst.ERROR_760133);
-			}
-		} else {
-			qtCategory.setPmCategoryL2(new PmCategoryL2());
-		}
-
-	}
-
-	private ICategoryCodeSO getCategoryCodeSO() {
-		return EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
-	}
-
 	protected boolean isNullOrEmpty(String str) {
 		if (null == str || "".equals(str)) {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * To construct category condition field
-	 * 
-	 * @param category
-	 * @return String instance
-	 */
-	public String constructCondtionFields(ScQtCategory category) {
-		StringBuffer buffer = new StringBuffer();
-		if (!isNullOrEmpty(category.getPmCategoryL1().getCategoryL1Code())) {
-			buffer.append("pmCategoryL2.pmCategoryL1.categoryL1Code ^");
-			buffer.append(category.getPmCategoryL1().getCategoryL1Code());
-			buffer.append("|");
-		}
-		if (!isNullOrEmpty(category.getPmCategoryL2().getCategoryL2Code())) {
-			buffer.append("pmCategoryL2.categoryL2Code ^");
-			buffer.append(category.getPmCategoryL2().getCategoryL2Code());
-		}
-		return buffer.toString();
 	}
 
 	/**
