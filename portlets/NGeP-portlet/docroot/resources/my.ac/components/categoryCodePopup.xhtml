@@ -23,10 +23,10 @@
 		<h:panelGroup id="catCodePnl">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="20%">
+				<td width="25%">
 					<p:outputLabel value="#{lbl['lbl.sc.category.code.search.by']}" />
 				</td>
-				<td width="80%">
+				<td width="75%">
 					<p:selectOneRadio id="searchBy"
 						value="#{categoryCodeSearchBackingBean.managedBean.searchBy}" styleClass="commonLabel">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeSearchBy)}" />
@@ -81,12 +81,13 @@
 			<p:panel header="#{lbl['lbl.pm.search.category']}" toggleable="true">
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
-					<td width="20%">
+					<td width="25%">
 						<p:outputLabel value="#{lbl['lbl.sc.category.description']}" />
 					</td>
-					<td width="80%">
+					<td width="75%">
 						<p:inputText id="catDecsr" value="#{categoryCodeSearchBackingBean.managedBean.categoryDesciption}" 
-							size="74" maxlength="100" />
+							maxlength="100"
+							style="width:475px;" />
 						<p:message id="catDecsrMsg" for="catDecsr" display="icon" />
 					</td>
 				</tr>
