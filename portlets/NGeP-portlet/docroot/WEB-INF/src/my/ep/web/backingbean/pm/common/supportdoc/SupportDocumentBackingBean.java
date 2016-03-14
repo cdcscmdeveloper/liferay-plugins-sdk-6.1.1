@@ -1943,7 +1943,7 @@ public class SupportDocumentBackingBean extends
 								SearchOperator.OPERATOR_NOT_EQUALS.value(),
 								pmDocument.getDocumentId()));
 			}
-			if (searchDocument(searchBean)) {
+			if (searchDocument(searchBean) && DbValueConst.RECORD_STATUS_ACTIVE == pmDocument.getRecordStatusFlg().intValue()) {
 				throw new EpException(MessageConst.ERROR_770089);
 			}
 
