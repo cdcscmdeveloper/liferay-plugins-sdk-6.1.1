@@ -2211,6 +2211,7 @@ public class QTDetailBackingBean extends
 				approvalItem.setUpdate("@this");
 				approvalItem.setPartialSubmit(true);
 				approvalItem.setProcess("@this");
+				approvalItem.setTransient(true);
 				approvalItem
 						.setOncomplete("approvalTabChangeAction([ {name : 'selectedApprovalTabIndex', value : "
 								+ approvalTabIndex + "}]);");
@@ -3539,7 +3540,8 @@ public class QTDetailBackingBean extends
 		boolean isMaintFlow = this.getManagedBean().isMaintanceFlow();
 		String zonelocationLevel = this.getManagedBean().getStateCodes();
 		String locationLevel = this.getManagedBean().getLocalLevelCode();
-
+        boolean isDeskOfficer = this.getManagedBean().isDeskOfficer();
+        boolean isViewQtDetails = this.getManagedBean().isViewQtDetails();
 		boolean pendingRevision = this.getManagedBean().isPendingRevision();
 
 		QuationTenderResDTO resDTO = null;
@@ -3699,6 +3701,8 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setPayLoad(payLoad);
 		this.getManagedBean().setCreateQt(isCreateQt);
 		this.getManagedBean().setMaintanceFlow(isMaintFlow);
+		this.getManagedBean().setDeskOfficer(isDeskOfficer);
+		this.getManagedBean().setViewQtDetails(isViewQtDetails);
 		if (isCreateQt) {
 			this.getManagedBean().setOutComes(
 					new String[] { ResourceBundleUtils.getMessage(
