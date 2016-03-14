@@ -33,5 +33,12 @@
 		  <managed-bean-class>my.ep.constant.sm.DisciplinaryActionConst</managed-bean-class>
 		  <managed-bean-scope>application</managed-bean-scope>
  	</managed-bean>
+ 	
+ 	<managed-bean>
+		  <description>Supplier Management Constants</description>
+		  <managed-bean-name>SupplierMgmtConst</managed-bean-name>
+		  <managed-bean-class>my.ep.constant.sm.SupplierManagementConst</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean>
 </faces-config>
 
