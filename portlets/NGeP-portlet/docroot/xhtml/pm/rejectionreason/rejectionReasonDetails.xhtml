@@ -54,7 +54,7 @@
 						    	#{reasonDesc.pmLanguage.languageName}
 					        </p:column>
 							<p:column headerText="* #{lbl['lbl.pm.reason.desc']}">
-								<p:inputTextarea id="itReasonDesc"
+								<p:inputTextarea id="itReasonDesc" disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 									value="#{reasonDesc.reasonDesc}" cols="50" rows="5"
 									required="true" maxlength="255"
 									label="#{lbl['lbl.pm.reason.desc']}" autoResize="false" />

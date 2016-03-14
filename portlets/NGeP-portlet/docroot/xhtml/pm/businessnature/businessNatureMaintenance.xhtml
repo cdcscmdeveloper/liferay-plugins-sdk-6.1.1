@@ -41,18 +41,14 @@
 							value="*" styleClass="mandatory" /></td>
 					<td style="padding: 5px 0px;"><p:inputTextarea row="40"
 							cols="80"
+							disabled="#{!businessNatureBackingBean.managedBean.brandNew}"
 							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelName}"
 							size="30" maxlength="500" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel /></td>
-					<td><p:outputLabel /></td>
-				</tr>
+				</tr>				
 				<tr>
 					<td style="width: 10%;"><p:outputLabel
 							value="#{lbl['lbl.pm.profiles.search.status']}" /></td>
-					<td><p:selectOneMenu id="statusBusiness"
-							style="width:178px;margin-bottom:5px;"
+					<td><p:selectOneMenu id="statusBusiness"						
 							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.recordStatusFlg}"
 							disabled="#{businessNatureBackingBean.managedBean.brandNew}">
 							<f:selectItems
@@ -65,184 +61,131 @@
 		<p:panel header="#{lbl['lbl.pm.parent.category']}" id="parentCategory"
 			toggleable="true"
 			rendered="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel &gt; '10'}">
-
-
+			
 			<!-- Division -->
-
-			<h:panelGrid columns="4"
-				columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5"
-				rendered="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel == '20'}">
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.seccode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.secname']}" />
-				</h:panelGroup>
-				<ac:lov id="bnLovId" lovId="PM_BUSINESS_NATURE_ADV" size="100"
-					update=":#{p:component('parentCategory')}"
-					headerText="Business Nature Lov"
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}"
-					saveObject="businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature"
-					conditionField="recordStatus^1" disabled="true">
-				</ac:lov>
-
-			</h:panelGrid>
+			<c:if test="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel == '20'}">				
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.seccode']}" /></td>
+						<td><p:inputText
+						value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}"
+						disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.secname']}" /></td>
+						<td><p:inputText
+						value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}"
+						size="100" disabled="true" /></td>
+					</tr>
+				</table>
+			</c:if>
 
 			<!-- Group -->
-
-			<h:panelGrid columns="4"
-				columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5"
-				rendered="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel == '30'}">
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.seccode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.secname']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.divcode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.divname']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-
-			</h:panelGrid>
-
+			<c:if test="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel == '30'}">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.secname']}" /></td>
+						<td><p:inputText
+						value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
+						size="100" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.divcode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.divname']}" /></td>
+						<td><p:inputText
+						value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}"
+						size="100" disabled="true" /></td>
+					</tr>
+				</table>
+			</c:if>
+			
 			<!-- Class -->
-
-			<h:panelGrid columns="4"
-				columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5"
-				rendered="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel == '40'}">
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.seccode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.secname']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.divcode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.divname']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.groupcode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.groupname']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-			</h:panelGrid>
+			<c:if test="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel == '40'}">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.secname']}" /></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
+							size="100" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.divcode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.divname']}" /></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
+							size="100" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.groupcode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.groupname']}" /></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}"
+							size="100" disabled="true" /></td>
+					</tr>
+				</table>
+			</c:if>
+			
 
 			<!-- Item -->
-
-			<h:panelGrid columns="4"
-				columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5"
-				rendered="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel == '50'}">
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.seccode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.secname']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.divcode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.divname']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.groupcode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.groupname']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.classcode']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}"
-					disabled="true" size="5" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="#{lbl['lbl.pm.bn.classname']}" />
-				</h:panelGroup>
-				<p:inputText
+			<c:if test="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel == '50'}">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.secname']}" /></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
+							size="100" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.divcode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.divname']}" /></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
+							size="100" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.groupcode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.groupname']}" /></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.parentBusinessNature.levelName}"
+							size="100" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.classcode']}"/></td>
+						<td><p:inputText
+							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}"
+							disabled="true" size="5" /></td>
+						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.classname']}" /></td>
+						<td><p:inputText
 					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}"
-					size="100" disabled="true" />
-			</h:panelGrid>
-
-			<ac:lovPopup />
-
+					size="100" disabled="true" /></td>
+					</tr>
+				</table>	
+			</c:if>
 		</p:panel>
 		<c:if test="#{!businessNatureBackingBean.managedBean.newcategory}">
 			<p:panel header="#{lbl['lbl.pm.detail.category']}"
