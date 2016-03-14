@@ -22,7 +22,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomname']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText
+				<td><p:inputText disabled="#{!unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}"
 						value="#{unitOfMeasurementBackingBean.managedBean.pmUom.uomName}"
 						size="30" maxlength="50" /></td>
 			</tr>
