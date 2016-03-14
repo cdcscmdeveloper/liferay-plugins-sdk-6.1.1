@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.web.backingbean.bpm.tasklist.SVCTaskListBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -26,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
 @ManagedBean(name = "svcTasklistMB")
 @SessionScoped
 public class SVCTaskListManagedBean extends BaseManagedBean {
-	
+	private static final long serialVersionUID = 1L;
 	
 	private String applNo;
 	private List<PmState> stateList;
@@ -34,6 +35,8 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 	private long stateId;
 	private long districtId;
 	private String supplierName;
+	private String epNo;
+	private String siteVisitType;
 	
 	private IPagingDataModel<SmAppl> searchDataModel = new SearchPagingDataModel();
 
@@ -67,7 +70,9 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 			System.out.println("getStateId:"+bb.getManagedBean().getStateId());
 			System.out.println("getDistrictId:"+bb.getManagedBean().getDistrictId());
 			System.out.println("getSupplierName:"+bb.getManagedBean().getSupplierName());
-			if (bb.getManagedBean().getDistrictId()==0 && bb.getManagedBean().getStateId()==0 && StringUtils.isBlank(bb.getManagedBean().getApplNo()) && StringUtils.isBlank(bb.getManagedBean().getSupplierName()) ) {
+			System.out.println("getSitevisitType:"+bb.getManagedBean().getSiteVisitType());
+			if (bb.getManagedBean().getDistrictId()==0 && bb.getManagedBean().getStateId()==0 && StringUtils.isBlank(bb.getManagedBean().getApplNo()) && 
+					StringUtils.isBlank(bb.getManagedBean().getSupplierName()) && StringUtils.isBlank(bb.getManagedBean().getEpNo())) {
 				System.out.println("******SearchResultBean******");
 				return new SearchResultBean();
 			}
@@ -79,6 +84,8 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 				SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 				reqDTO.setApplNo(bb.getManagedBean().getApplNo());
 				reqDTO.setSupplierName(bb.getManagedBean().getSupplierName());
+				reqDTO.setEpNo(bb.getManagedBean().getEpNo());
+				reqDTO.setSiteVisitStatuses(getSiteVisitStatusesByType(bb.getManagedBean().getSiteVisitType()));
 
 				if(bb.getManagedBean().getDistrictId() >0){
 					reqDTO.setDistrictId(bb.getManagedBean().getDistrictId());
@@ -91,6 +98,7 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				reqDTO.setSearchBean(searchBean);
+				
 
 				SiteAssignResDTO resDTO = siteAssignSO.retrievesSiteVisitTasks(reqDTO);
 
@@ -106,7 +114,25 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 
 	}
 	
-	
+	private List<Long> getSiteVisitStatusesByType(String svType){
+		List<Long> statusLs = new ArrayList<Long>();
+		
+		 switch(svType)
+	      {
+	         case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL :
+	        	statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL);
+	 			statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL); 
+	            break;
+	         case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_BEFORE :
+	        	 statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL);
+	        	 break;
+	         case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_AFTER :
+	        	 statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL);
+	            break;
+	      }
+
+		 return statusLs;
+	}
 	
 	
 	public IPagingDataModel<SmAppl> getSearchDataModel() {
@@ -152,6 +178,18 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 	}
 	public void setSupplierName(String supplierName) {
 		this.supplierName = supplierName;
+	}
+	public String getEpNo() {
+		return epNo;
+	}
+	public void setEpNo(String epNo) {
+		this.epNo = epNo;
+	}
+	public String getSiteVisitType() {
+		return siteVisitType;
+	}
+	public void setSiteVisitType(String siteVisitType) {
+		this.siteVisitType = siteVisitType;
 	}
 	
 	
