@@ -9,17 +9,31 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-
-
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<table style="width: 100%;">
 			<tr>
-				<td width="15%"><p:outputLabel value="Application No"></p:outputLabel></td>
+				<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.application.no']}"></p:outputLabel></td>
 				<td width="35%"><p:inputText style="width:80%;"
 						value="#{svcTasklistBackingBean.managedBean.applNo}" /></td>
 				<td width="15%"><p:outputLabel
 						value="#{lbl['lbl.cm.supplier.name']}"></p:outputLabel></td>
 				<td width="35%"><p:inputText style="width:80%;"
 						value="#{svcTasklistBackingBean.managedBean.supplierName}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.epno']}"></p:outputLabel></td>
+				<td><p:inputText style="width:80%;"
+						value="#{svcTasklistBackingBean.managedBean.epNo}" /></td>
+						
+				<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.site.visit.status']}"></p:outputLabel></td>
+				<td>
+				<p:selectOneMenu value="#{svcTasklistBackingBean.managedBean.siteVisitType}">
+					<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeAll}" itemLabel="ALL" />
+					<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeBefore}" itemLabel="Before" />
+					<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeAfter}" itemLabel="After" />
+				</p:selectOneMenu>
+				</td>
 			</tr>
 
 			<tr>
@@ -51,35 +65,45 @@
 			<p:commandButton id="schBtn"
 				action="#{svcTasklistBackingBean.searchAction}" value="Search"
 				update="rspl" />
-
 		</div>
 
 		<p:panel id="rspl">
 			<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				lazy="true" var="appl">
-
+		
 				<ac:paginator for="rsDt"></ac:paginator>
-
-				<p:column headerText="Application No">
-
-					<p:commandLink id="navL" value="#{appl.applNo}"
-						action="#{svcTasklistBackingBean.navigateToSiteVisitAssignment}">
-						<f:param name="selApplId" value="#{appl.applId}"></f:param>
-					</p:commandLink>
-
+	
+				<p:column headerText="#{lbl['lbl.sm.application.no']}">
+					<h:outputText value="#{appl.applNo}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.epno']}">
+					<h:outputText value="#{appl.smSupplier.epNo}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.cm.supplier.name']}">
-
 					<h:outputText value="#{appl.smSupplier.companyName}"></h:outputText>
-
 				</p:column>
-
-
-
-
-				<p:column headerText="test">
-					<h:outputText value="#{appl.applId}"></h:outputText>
+				
+				<ui:param name="workFlowInfo" value="#{svcTasklistBackingBean.getWorkflowInfoByApplId(appl.applId)}"></ui:param>
+				<p:column headerText="#{lbl['lbl.sm.siteassign.site.visit.status']}">
+					<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" 
+						rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentBeforeApproval}" />
+					
+					<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" 
+						rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentAfterApproval}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.created.date']}">
+					<ac:labelDateTime value="#{workFlowInfo.createdDate}" /> 
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.action']}">
+					<p:commandLink id="navL"
+						action="#{svcTasklistBackingBean.navigateToSiteVisitAssignment}">
+						<f:param name="selApplId" value="#{appl.applId}"></f:param>
+						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>
