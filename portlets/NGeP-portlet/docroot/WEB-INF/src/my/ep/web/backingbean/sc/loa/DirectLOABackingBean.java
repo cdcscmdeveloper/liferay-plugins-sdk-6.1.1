@@ -2049,21 +2049,22 @@ public class DirectLOABackingBean extends
 	public void mofNoListener(SmMofAccount mofAccount) {
 		debugLogger("mofNoListener");
 
+		SmSupplier smSupplier = mofAccount.getSmSupplier();
 		getManagedBean().getScLoa().getScLoiLoa()
-				.setSmSupplier(mofAccount.getSmSupplier());
+				.setSmSupplier(smSupplier);
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setMofNo(mofAccount.getMofNo());
 		getManagedBean().getScLoa().getScLoiLoa()
-				.setSupplierName(mofAccount.getSmSupplier().getCompanyName());
+				.setSupplierName(smSupplier.getCompanyName());
 		getManagedBean().getScLoa().getScLoiLoa()
-				.setEpNo(mofAccount.getSmSupplier().getEpNo());
+				.setEpNo(smSupplier.getEpNo());
 		this.getManagedBean().getProdTemplateSpecBean()
-				.setSupplier(mofAccount.getSmSupplier());
+				.setSupplier(smSupplier);
 
 		this.getManagedBean().getSpecTemplateSpecBean()
-				.setSupplier(mofAccount.getSmSupplier());
+				.setSupplier(smSupplier);
 		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
-		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
 
 		DirectAwardResDTO resDTO = getQtDirectAwardSO()
 				.retrieveSmPersonnelDtlsBySupplierId(reqDTO);
@@ -2077,6 +2078,14 @@ public class DirectLOABackingBean extends
 			getManagedBean().setSelectedSupplierBranchName("HQ");
 			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
 			handleBranchDetailsChanged();
+		}
+		
+		ScQt scQt = getManagedBean().getScQt();
+		if(scQt != null) {
+			ScLoiLoa scLoiLoa = getSupplierLoiLoaByDocId(smSupplier.getSupplierId(), scQt.getQtId());
+			if(scLoiLoa != null) {
+				getManagedBean().getScLoa().setScLoiLoa(scLoiLoa);
+			}
 		}
 	}
 
@@ -2129,7 +2138,37 @@ public class DirectLOABackingBean extends
 				.setMofNo(
 						resDTO.getSmSupplier().getSmMofAccounts().get(0)
 								.getMofNo());
+		
+		ScQt scQt = getManagedBean().getScQt();
+		if(scQt != null && scQt.getQtNo() != null &&
+				!scQt.getQtNo().startsWith(ParameterConst.DOCTYPE_QUOTATION)) {
+			ScLoiLoa scLoiLoa = getSupplierLoiLoaByDocId(suSmSupplier.getSupplierId(), scQt.getQtId());
+			if(scLoiLoa != null) {
+				getManagedBean().getScLoa().setScLoiLoa(scLoiLoa);
+			}
+		}
 
+	}
+	
+	/**
+	 * On QT Selected. If supplier is also selected, retrieve exist ScLoiLoa for 
+	 * selected QT and selected Supplier if exist.
+	 * 
+	 * @param suSmSupplier
+	 *            the su sm supplier
+	 */
+	public void onQTSelected(ScQt scQt) {
+		debugLogger("onQTSelected");
+		// TODO ministry name cleared after selected QT.
+		populateMinistryBasedOnLoginUser();
+		SmSupplier smSupplier = getManagedBean().getScLoa().getScLoiLoa()
+				.getSmSupplier();
+		if(smSupplier != null) {
+			ScLoiLoa scLoiLoa = getSupplierLoiLoaByDocId(smSupplier.getSupplierId(), scQt.getQtId());
+			if(scLoiLoa != null) {
+				getManagedBean().getScLoa().setScLoiLoa(scLoiLoa);
+			}
+		}
 	}
 
 	/**
@@ -2226,18 +2265,6 @@ public class DirectLOABackingBean extends
 		conditionFieldSb.append(qtNoPrefix);
 		conditionFieldSb.append("^");
 		conditionFieldSb.append(SearchOperator.OPERATOR_NOT_LIKE.value());
-		
-		// Filter By - current'
-		conditionFieldSb.append("|");
-		conditionFieldSb.append("scQtStatus.current^");
-		conditionFieldSb.append(true);
-		
-		// Filter By - non awarded QT
-		conditionFieldSb.append("|");
-		conditionFieldSb.append("scQtStatus.pmStatus.statusId^");
-		conditionFieldSb.append(QTStatusConst.QT_AWARDED);
-		conditionFieldSb.append("^");
-		conditionFieldSb.append(SearchOperator.OPERATOR_NOT_EQUALS.value());
 		
 		PmOrgProfile ministryOrg = this.getManagedBean().getScQt()
 				.getPmOrgProfile();
@@ -6216,6 +6243,16 @@ public class DirectLOABackingBean extends
 			path.deleteCharAt(path.toString().length()-1);
 		}
 		return path.toString();
+	}
+	
+	private ScLoiLoa getSupplierLoiLoaByDocId(Long supplierId, Long docId) {
+		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_DIRECT_NEGO);
+		reqDTO.setSourceId(docId);
+		reqDTO.setSupplierId(supplierId);
+		DirectAwardResDTO resDTO = getQtDirectAwardSO().retrieveLoiLoaByDocumentAndSupplier(reqDTO);
+		
+		return resDTO.getScLoiLoa();
 	}
 
 

@@ -167,10 +167,11 @@
 				<td colspan="3"><ac:lov id="directLoaQT" lovId="DIRECT_LOA_QT"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="#{lbl['lbl.sc.qtn.list']}"
 						selectionMode="single"
-						saveObject="directLOABackingBean.managedBean.scLoa.scQt"
+						saveObject="directLOABackingBean.managedBean.scQt"
 						readonly="true" size="35"
-						value="#{directLOABackingBean.managedBean.scLoa.scQt.qtNo}"
+						value="#{directLOABackingBean.managedBean.scQt.qtNo}"
 						update="@form"
+						postUpdateListener="directLOABackingBean.onQTSelected(directLOABackingBean.managedBean.scQt)"
 						conditionField="#{directLOABackingBean.constuctQTConditionFields()}" /></td>
 			</tr>
 			
