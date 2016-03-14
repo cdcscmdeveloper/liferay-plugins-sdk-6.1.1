@@ -571,6 +571,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		boolean isQuotationThresHold = isQuotationThresHold(amount);
 		ScQtSupplierCriteria scQtSupplierCriteria = scQt
 				.getScQtSupplierCriteria();
+		String qtType = scQt.getQtType();
 
 		if (null == amount
 				|| isPurchaseRequestThresHold(amount)) {
@@ -612,11 +613,23 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 				populateEvaluationTypes(scQt, amount);
 			}			
+		} else {
+			if (isQuotationThresHold) {
+				// QT Type
+				if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER.equalsIgnoreCase(qtType)) {
+					qtType = ParameterConst.QUOTATION_TENDER_TYPE_OPEN;
+					scQt.setQtType(qtType);	
+				}
+				
+				// Evaluation Type
+				if (isOneTierThresHold(amount) && ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType())) {
+					scQt.setEvaluationType(ParameterConst.EVALUATION_TYPES_ONE_TIER);
+				}
+			}
 		}
 
 		// All State
-		if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(scQt
-				.getQtType())) {
+		if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(qtType)) {
 			if (null != scQtSupplierCriteria) {
 				if (!isQuotationThresHold
 						&& getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR) {
@@ -637,8 +650,8 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		// Reset zones details
 		if (null != scQtSupplierCriteria
 				&& ((scQtSupplierCriteria.isAllState() && ParameterConst.QUOTATION_TENDER_TYPE_OPEN
-						.equalsIgnoreCase(scQt.getQtType())) || ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
-						.equalsIgnoreCase(scQt.getQtType()))) {
+						.equalsIgnoreCase(qtType)) || ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+						.equalsIgnoreCase(qtType))) {
 			if (null != getManagedBean().getExistingSupplierLocationList()) {
 				this.getManagedBean().setSupplierLocationList(
 						getManagedBean().getExistingSupplierLocationList());
