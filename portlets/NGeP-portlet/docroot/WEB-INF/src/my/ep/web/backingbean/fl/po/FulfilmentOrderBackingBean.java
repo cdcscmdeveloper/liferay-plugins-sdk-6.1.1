@@ -239,9 +239,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					CommonBackingBean commonBackingBean = new CommonBackingBean();
 					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_PURCHASE_ORDER);
 					if(!getManagedBean().isContractRequest()){
-						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.flPurchaseOrderNo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+						commonBackingBean.getManagedBean().setReportDisplayName(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_ORDER));
 					}else{
-						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.flContractOrder",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+						commonBackingBean.getManagedBean().setReportDisplayName(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER));
 					}
 					
 					commonBackingBean.getManagedBean().setParamMap(paramMap);
