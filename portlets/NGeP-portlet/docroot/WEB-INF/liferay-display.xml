@@ -201,6 +201,9 @@
 			<portlet id="ZoneMaintenancePortlet"></portlet>
 			<portlet id="codificationStatusDetails"></portlet>
 			<portlet id="itemCodeSearchPortal"></portlet>
+			<portlet id="cmTrackingDiary"></portlet>
+			
+			
 		</category>
 		
 		
