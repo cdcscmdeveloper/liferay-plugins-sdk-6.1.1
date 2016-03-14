@@ -78,7 +78,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private String taskDescGroup;
 	
-	private Boolean claim;
+	private Boolean claim = true;
 	
 	private PmStatusDesc selectedStatusDesc;
 	private PmStatusDesc selectedStatusDescAdvance;
@@ -383,6 +383,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if(getSelectedOrgProfile()!=null){
 					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
 				}
+				System.out.println("getSelectedStatusDesc()"+getSelectedStatusDesc());
+				
 				
 				reqDTO.setAssignment("MY");
 				reqDTO.setCtxToken(token);
@@ -502,6 +504,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				reqDTO.setViewBy(getViewByGroup());
+				
+				//System.out.println("***status**"+getSelectedStatusDescAdvance().getStatusName());
+				
+				
+				//reqDTO.setStatusList(statusList);
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_GROUP);
 				reqDTO.setIsClaimed(false);
 				reqDTO.setCtxToken(token);
