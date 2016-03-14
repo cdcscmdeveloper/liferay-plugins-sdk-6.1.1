@@ -137,7 +137,7 @@
 									readonly="true"
 									postUpdateListener="requestNoteBackingBean.afterSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
-									value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
+									value="#{requestNoteDtl.scRequestSupplierItem.supplierName}"
 									update="@form"
 									disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' 
 									 	and requestNoteDtl.requestItem.quote.zonal eq 'false'

@@ -4064,6 +4064,7 @@ public class SimpleQuoteBackingBean extends
 				ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 				quoteSupplier.setSmSupplier(supplier);
 				quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
+				quoteSupplier.setSupplierName(supplier.getCompanyName());
 				quoteSupplier.setQuote(quote);
 				
 				getManagedBean().setSupplierList(supplierList);
