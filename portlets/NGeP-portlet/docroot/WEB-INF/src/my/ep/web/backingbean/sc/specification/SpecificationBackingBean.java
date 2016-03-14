@@ -2038,7 +2038,7 @@ public class SpecificationBackingBean extends
 	 * Retrieve technical check list.retrieve all the Technical CheckList menu
 	 * information and display in Specification committee.
 	 */
-	private void retriveTechnicalCheckList() {
+	public void retriveTechnicalCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
 
@@ -2098,7 +2098,7 @@ public class SpecificationBackingBean extends
 	 * Retrieve financial check list.retrieve all the Financial CheckList menu
 	 * information and display in Specification committee.
 	 */
-	private void retriveFinancialCheckList() {
+	public void retriveFinancialCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
 
@@ -12310,85 +12310,6 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Gets the doc type by task name.
-	 * 
-	 * @param taskName
-	 *            the task name
-	 * @return the doc type by task name
-	 */
-	private String getDocTypeByTaskName(String taskName) {
-		String DOC_TYPE = ParameterConst.DOCTYPE_QUOTATION;
-		return DOC_TYPE;
-	}
-
-	/**
-	 * Zone radio change.change zone location level radio in business owner.
-	 * 
-	 * @param event
-	 *            (boolean zoneLocationlevel).
-	 */
-	public void zoneRadioChange(ScQt scQt) {
-		
-	/*	Boolean isZonal = (Boolean) event.getComponent().getAttributes()
-				.get("value");
-		ScQt scQt = this.getManagedBean().getQt();*/
-		
-		Boolean isZonal = scQt.isZonal();
-		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
-		if (null == supplierCriteria) {
-			supplierCriteria = new ScQtSupplierCriteria();
-		}
-		if (isZonal) {
-			ScQtZoneCriteria zoneCriteria = supplierCriteria
-					.getQtZoneCriterias();
-			if (null == zoneCriteria) {
-				zoneCriteria = new ScQtZoneCriteria();
-				zoneCriteria.setScQtSupplierCriteria(supplierCriteria);
-				supplierCriteria.setQtZoneCriterias(zoneCriteria);
-			}
-			// supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
-			supplierCriteria.setScQtLocCriteria(null);
-			scQt.setZoneLocationLevel(new PmParameter());
-			if (supplierCriteria.isAllState() == true) {
-				this.getManagedBean().setZoneTrees(null);
-			}
-			if (null != supplierCriteria
-					&& supplierCriteria.isBrandNew() == false
-					&& scQt.isPanel() == false) {
-				if (null != this.getManagedBean().getLoginRoleType()
-						&& !"".equals(this.getManagedBean().getLoginRoleType())
-						&& "SC".equalsIgnoreCase(this.getManagedBean()
-								.getLoginRoleType())){
-				updateTechnicalAndFinacialSpecStatusZoneLocationChange(zoneCriteria);
-				}
-			}
-		} else {
-			this.getManagedBean().setZoneGeneralTrees(null);
-			supplierCriteria.setQtZoneCriterias(null);
-			if (null == supplierCriteria.getLocationLevel()) {
-				supplierCriteria.setLocationLevel(new PmParameter());
-			}
-
-			this.getManagedBean().setZoneGeneralTrees(null);
-			this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
-			if (null != supplierCriteria
-					&& supplierCriteria.isBrandNew() == false
-					&& scQt.isPanel() == false) {
-				if (null != this.getManagedBean().getLoginRoleType()
-						&& !"".equals(this.getManagedBean().getLoginRoleType())
-						&& "SC".equalsIgnoreCase(this.getManagedBean()
-								.getLoginRoleType())){
-				updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
-				}
-			}
-		}
-
-		scQt.setScQtSupplierCriteria(supplierCriteria);
-		this.getManagedBean().setQt(scQt);
-
-	}
-
-	/**
 	 * Gets the role type dropdown values.display item type(product/Service)in
 	 * template spec dropdown.
 	 * 
@@ -15665,86 +15586,6 @@ public class SpecificationBackingBean extends
 
 			prevScore = currScoring;
 		}
-	}
-
-	private void updateTechnicalAndFinacialSpecStatusZoneLocationChange(
-			ScQtZoneCriteria zoneCriteria) {
-		try {
-
-			List<ScQtCheckList> technicalSpecCheckList = this.getManagedBean()
-					.getScQtCheckSt2techProposal();
-			if (null == technicalSpecCheckList
-					|| technicalSpecCheckList.isEmpty()) {
-				retriveTechnicalCheckList();
-				technicalSpecCheckList = this.getManagedBean()
-						.getScQtCheckSt2techProposal();
-			}
-
-			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
-					.getScQtCheckSt2financeProposalList();
-			if (null == financialSpecCheckList
-					|| financialSpecCheckList.isEmpty()) {
-				retriveFinancialCheckList();
-				financialSpecCheckList = this.getManagedBean()
-						.getScQtCheckSt2financeProposalList();
-			}
-			if (null != financialSpecCheckList
-					&& !financialSpecCheckList.isEmpty()) {
-				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
-				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
-					if (QTConstants.TEMPLETE_SPEC_CODE
-							.equalsIgnoreCase(financialchecklist.getDefinationType()
-									.getParameterCode())) {
-					financialchecklist.setPmStatus(status);
-					
-				}
-			}
-			}
-			if (null != technicalSpecCheckList
-					&& !technicalSpecCheckList.isEmpty()) {
-				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
-				boolean zonelevelChange = false;
-				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
-					zonelevelChange = true;
-					//technicalchecklist.setPmStatus(status);
-					if (QTConstants.TEMPLETE_SPEC_CODE
-							.equalsIgnoreCase(technicalchecklist.getDefinationType()
-									.getParameterCode())) {
-						technicalchecklist.setPmStatus(status);
-					
-				}
-				}
-				if (zonelevelChange) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_WARN,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.WARN_760357,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-				}
-
-			}
-
-		} finally {
-
-		}
-
-	}
-
-	private PmStatus getPmStatus(Long statusId) {
-		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStatusSO.class);
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setStatusId(statusId);
-		return iStatusSO.retrieveStatusByStatusId(reqDTO).getPmStatus();
 	}
 
 	/**

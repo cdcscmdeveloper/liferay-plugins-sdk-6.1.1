@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<ui:param name="scQt" value="#{specificationBackingBean.managedBean.qt!= null?specificationBackingBean.managedBean.qt : qTDetailBB.managedBean.qt}" />
+	<ui:param name="scQt" value="#{createQtBB.managedBean.qt}" />
 	<ui:param name="isRequire" value="#{!qTDetailBB.isAuditor()}"></ui:param>
-	<ui:param name="readOnly" value="#{qTDetailBB.managedBean.editable}" />
+	<ui:param name="readOnly" value="#{createQtBB.managedBean.editable}" />
 	<ui:param name="qtStatusAfterChecklistScoring" value="#{createQtBB.isQTStatusGreaterThan(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
 	<ui:param name="qtStatusScheduleDocAndAfter" value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="zoneCoverageReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ZONE_COVERAGE)}" />
@@ -27,7 +27,7 @@
 							<p:selectOneRadio id="panelTitle" required="true"
 								label="#{lbl['lbl.sc.spec.panel']}" value="#{scQt.panel}">
 								<f:selectItems
-									value="#{qTDetailBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change"
 									listener="#{createQtBB.panelConformation(scQt)}" process="@this,panelTitle"
 									partialSubmit="true" update="@form"></p:ajax>
@@ -53,11 +53,11 @@
 									<ac:lov id="ctCircularPanel" lovId="CT_CIRCULAR_PANEL"
 										headerText="#{lbl['lbl.sc.spec.circular.list']}"
 										update=":form:panelItemId"
-										saveObject="qTDetailBB.managedBean.qt.circularVer"
+										saveObject="createQtBB.managedBean.qt.circularVer"
 										value="#{scQt.circularVer.circularNo}"
 										size="24" readonly="true"
 										conditionField="#{createQtBB.constrcutFieldsForPanel()}"
-										postUpdateListener="createQtBB.circularListSelect(qTDetailBB.managedBean.qt.circularVer)"
+										postUpdateListener="createQtBB.circularListSelect(createQtBB.managedBean.qt.circularVer)"
 										disabled="#{!scQt.panel}" />
 								</c:when>
 								<c:otherwise>
@@ -103,7 +103,7 @@
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_TITLE)}"
 						label="#{lbl['lbl.sc.title']}" required="#{isRequire}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
-						valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}"
+						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
 						style=" margin-bottom:5px; width: 714px;" maxlength="1000">
 						<f:ajax></f:ajax>
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
@@ -274,7 +274,7 @@
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 											<p:ajax event="change" partialSubmit="true"
 												update="generalLocationList" process="@this"
-												listener="#{specificationBackingBean.zoneRadioChange(scQt)}"></p:ajax>
+												listener="#{createQtBB.zoneRadioChange(scQt)}"></p:ajax>
 										</p:selectOneRadio>
 									</c:when>
 									<c:otherwise>
@@ -409,9 +409,9 @@
 							<ac:lov id="contractLovId" lovId="CT_CONTRACT"
 								headerText="#{lbl['lbl.sc.qt.existing.contract.no.search']}"
 								update=":form:qtdetailsid"
-								saveObject="qTDetailBB.managedBean.ctContract"
-								value="#{qTDetailBB.managedBean.ctContract.contractNo}" size="25"
-								conditionField="#{qTDetailBB.constuctConditionFields()}" /> 
+								saveObject="createQtBB.managedBean.ctContract"
+								value="#{createQtBB.managedBean.ctContract.contractNo}" size="25"
+								conditionField="#{createQtBB.constuctConditionFields()}" /> 
 							<ac:lovPopup />
 						</c:when>
 						<c:otherwise>
@@ -472,7 +472,7 @@
 									label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{isRequire}"
 									value="#{scQt.publishPeriod}"
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
-									valueChangeListener="#{qTDetailBB.publishPeriodDaysChanged}"
+									valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
 									style="text-align:right; width:195px;">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
 										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
@@ -499,7 +499,7 @@
 									label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{isRequire}"
 									value="#{scQt.qtValidityPeriod}" 
 									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
-									valueChangeListener="#{qTDetailBB.proposalValidityChanged}"
+									valueChangeListener="#{createQtBB.proposalValidityChanged}"
 									style="text-align:right; width:200px;">
 									<f:ajax></f:ajax>
 								</p:inputMask>

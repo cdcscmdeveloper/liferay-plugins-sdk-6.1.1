@@ -15,8 +15,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -24,6 +26,7 @@ import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.constant.MessageConst;
@@ -39,6 +42,7 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
@@ -61,18 +65,23 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -366,15 +375,13 @@ public class CreateQtBackingBean extends
 	/**
 	 * Zone radio change.change zone location level radio in business owner.
 	 * 
-	 * @param scQt
-	 * 		the scQt instance
+	 * @param event
+	 *            (boolean zoneLocationlevel).
 	 */
-	/*public void zoneRadioChange(ScQt scQt) {
-		
-		Boolean isZonal = (Boolean) event.getComponent().getAttributes()
-				.get("value");
+	public void zoneRadioChange(ScQt scQt) {
 		Boolean isZonal = scQt.isZonal();
 		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
+		
 		if (null == supplierCriteria) {
 			supplierCriteria = new ScQtSupplierCriteria();
 		}
@@ -395,7 +402,12 @@ public class CreateQtBackingBean extends
 			if (null != supplierCriteria
 					&& supplierCriteria.isBrandNew() == false
 					&& scQt.isPanel() == false) {
-				updateTechnicalAndFinacialSpecStatusZoneLocationChange(zoneCriteria);
+				if (null != this.getManagedBean().getLoginRoleType()
+						&& !"".equals(this.getManagedBean().getLoginRoleType())
+						&& "SC".equalsIgnoreCase(this.getManagedBean()
+								.getLoginRoleType())) {
+					updateTechnicalAndFinacialSpecStatusZoneLocationChange(zoneCriteria);
+				}
 			}
 		} else {
 			this.getManagedBean().setZoneGeneralTrees(null);
@@ -405,19 +417,102 @@ public class CreateQtBackingBean extends
 			}
 
 			this.getManagedBean().setZoneGeneralTrees(null);
-			this.getManagedBean().setZoneLocation(false);
 			this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
 			if (null != supplierCriteria
 					&& supplierCriteria.isBrandNew() == false
 					&& scQt.isPanel() == false) {
-				updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
+				if (null != this.getManagedBean().getLoginRoleType()
+						&& !"".equals(this.getManagedBean().getLoginRoleType())
+						&& "SC".equalsIgnoreCase(this.getManagedBean()
+								.getLoginRoleType())) {
+					updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
+				}
 			}
 		}
 
 		scQt.setScQtSupplierCriteria(supplierCriteria);
 		this.getManagedBean().setQt(scQt);
+	}
+	
+	private void updateTechnicalAndFinacialSpecStatusZoneLocationChange(
+			ScQtZoneCriteria zoneCriteria) {
+		try {
+			SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();
+			List<ScQtCheckList> technicalSpecCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if (null == technicalSpecCheckList
+					|| technicalSpecCheckList.isEmpty()) {
+				specificationBackingBean.retriveTechnicalCheckList();
+				technicalSpecCheckList = this.getManagedBean()
+						.getScQtCheckSt2techProposal();
+			}
 
-	}*/
+			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if (null == financialSpecCheckList
+					|| financialSpecCheckList.isEmpty()) {
+				specificationBackingBean.retriveFinancialCheckList();
+				financialSpecCheckList = this.getManagedBean()
+						.getScQtCheckSt2financeProposalList();
+			}
+			if (null != financialSpecCheckList
+					&& !financialSpecCheckList.isEmpty()) {
+				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
+					if (QTConstants.TEMPLETE_SPEC_CODE
+							.equalsIgnoreCase(financialchecklist.getDefinationType()
+									.getParameterCode())) {
+					financialchecklist.setPmStatus(status);
+					
+				}
+			}
+			}
+			if (null != technicalSpecCheckList
+					&& !technicalSpecCheckList.isEmpty()) {
+				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+				boolean zonelevelChange = false;
+				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
+					zonelevelChange = true;
+					//technicalchecklist.setPmStatus(status);
+					if (QTConstants.TEMPLETE_SPEC_CODE
+							.equalsIgnoreCase(technicalchecklist.getDefinationType()
+									.getParameterCode())) {
+						technicalchecklist.setPmStatus(status);
+					
+				}
+				}
+				if (zonelevelChange) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_WARN,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.WARN_760357,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+				}
+
+			}
+
+		} finally {
+
+		}
+
+	}
+
+	private PmStatus getPmStatus(Long statusId) {
+		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(statusId);
+		return iStatusSO.retrieveStatusByStatusId(reqDTO).getPmStatus();
+	}
 	
 	/**
 	 * Ministry Specification Secretary Required radio change.
@@ -835,9 +930,6 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 					supplierCriteria.setScQt(scQt);
 					
 					//scQt.setCircularVer(this.getManagedBean().getCircularVer());
-					if (null == scQt.getZoneLocationLevel()) {
-						scQt.setZoneLocationLevel(new PmParameter());
-					}
 					scQt.setZoneLocationLevel(this.getManagedBean()
 							.getCtPanelItem().getLocationLevelId());
 					setUserDetails(supplierCriteria);
@@ -1995,4 +2087,108 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		
 	}
 	
+	/**
+	 * QT Title value change listener
+	 * 
+	 * @param event
+	 * 		the value change event
+	 */
+	public void qtTitleValueChanged(ValueChangeEvent event) {
+
+		updateQtAmmendMentDtls(event.getComponent().getId(),
+				event.getOldValue(), event.getNewValue());
+
+	}
+	
+	/**
+	 * Publish Period Days value change listener
+	 * 
+	 * @param changeEvent
+	 * 		the value change event
+	 */
+	public void publishPeriodDaysChanged(ValueChangeEvent changeEvent) {
+
+		updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
+				changeEvent.getOldValue(), changeEvent.getNewValue());
+
+	}
+
+	/**
+	 * Proposal Validity value change listener
+	 * 
+	 * @param changeEvent
+	 * 		the value change event
+	 */
+	public void proposalValidityChanged(ValueChangeEvent changeEvent) {
+
+		updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
+				changeEvent.getOldValue(), changeEvent.getNewValue());
+
+	}
+	
+	/**
+	 * Update qt ammend ment dtls.
+	 * 
+	 * @param componentId
+	 *            the component id
+	 * @param oldValue
+	 *            the old value
+	 * @param newValue
+	 *            the new value
+	 */
+	private void updateQtAmmendMentDtls(String componentId, Object oldValue,
+			Object newValue) {
+		QtAmendMentBean amendMentBean = this.getManagedBean()
+				.getAmendMentBean();
+		if (null == amendMentBean) {
+			amendMentBean = new QtAmendMentBean();
+		}
+		if ("title1".equalsIgnoreCase(componentId)) {
+
+			if (null == amendMentBean.getOldTitle()) {
+				amendMentBean.setOldTitle((String) oldValue);
+
+			}
+
+			amendMentBean.setNewTitle((String) newValue);
+
+		} else if ("estprice".equalsIgnoreCase(componentId)) {
+
+			if (null == amendMentBean.getOldEstmtPrice()) {
+				amendMentBean.setOldEstmtPrice((BigDecimal) oldValue);
+
+			}
+			amendMentBean.setNewEstmtPrice((BigDecimal) newValue);
+			if (!amendMentBean.getOldEstmtPrice().equals(
+					amendMentBean.getNewEstmtPrice())) {
+				amendMentBean.setPTJApprovalReq(true);
+			}
+		} else if ("proposalvalidity".equalsIgnoreCase(componentId)) {
+
+			if (0 == amendMentBean.getOldValidityPeriodDays()) {
+				amendMentBean.setOldValidityPeriodDays((Integer) oldValue);
+
+			}
+			if (amendMentBean.getOldValidityPeriodDays() != amendMentBean
+					.getNewValidityPeriodDays()) {
+
+			}
+			amendMentBean.setNewValidityPeriodDays((Integer) newValue);
+
+		} else if ("publishperiod".equalsIgnoreCase(componentId)) {
+
+			if (0 == amendMentBean.getOldPublishPeriodDays()) {
+				amendMentBean.setOldPublishPeriodDays((Integer) oldValue);
+
+			}
+
+			amendMentBean.setNewPublishPeriodDays((Integer) newValue);
+			if (amendMentBean.getOldPublishPeriodDays() != amendMentBean
+					.getNewPublishPeriodDays()) {
+				amendMentBean.setPTJApprovalReq(true);
+			}
+		}
+
+		this.getManagedBean().setAmendMentBean(amendMentBean);
+	}
 }
