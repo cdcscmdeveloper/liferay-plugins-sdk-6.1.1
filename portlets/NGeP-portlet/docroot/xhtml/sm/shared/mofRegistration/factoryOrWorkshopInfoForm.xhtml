@@ -55,13 +55,6 @@
 
 			</p:dataTable>
 			
-		<ac:gmapDialog id="gmapDialog" 
-			latitude="#{cc.attrs.latitude}" 
-			longitude="#{cc.attrs.longitude}" 
-			locationName="#{cc.attrs.locationName}" />
-	
-		<ac:gmapScript />
-			
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
@@ -78,6 +71,14 @@
 			</div>
 			<br />
 		</p:outputPanel>
+		
+		<ac:gmapDialog id="gmapDialog" 
+			latitude="#{cc.attrs.latitude}" 
+			longitude="#{cc.attrs.longitude}" 
+			locationName="#{cc.attrs.locationName}" />
+	
+		<ac:gmapScript />
+		
 		<p:outputPanel rendered="#{!backingBean.managedBean.showFactoryPanel}"
 			layout="block">
 			<table style="width: 100%">
