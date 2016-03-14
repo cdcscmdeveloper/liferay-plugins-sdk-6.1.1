@@ -2405,6 +2405,18 @@
 	 	</css-class-wrapper>
 	 </portlet>
 	 
+	  <portlet>
+	 	<portlet-name>cdTrackingDiary</portlet-name>
+	 	<icon>/icon.png</icon>
+	 	<instanceable>false</instanceable>
+	 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+
+	 	<css-class-wrapper>
+	 		cdTrackingDiary-portlet
+	 	</css-class-wrapper>
+	 </portlet>
+	 
+	 
 	 
 	 
 	 
