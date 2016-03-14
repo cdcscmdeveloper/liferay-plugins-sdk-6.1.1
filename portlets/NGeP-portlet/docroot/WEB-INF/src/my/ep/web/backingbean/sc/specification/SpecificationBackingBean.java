@@ -12355,7 +12355,12 @@ public class SpecificationBackingBean extends
 			if (null != supplierCriteria
 					&& supplierCriteria.isBrandNew() == false
 					&& scQt.isPanel() == false) {
+				if (null != this.getManagedBean().getLoginRoleType()
+						&& !"".equals(this.getManagedBean().getLoginRoleType())
+						&& "SC".equalsIgnoreCase(this.getManagedBean()
+								.getLoginRoleType())){
 				updateTechnicalAndFinacialSpecStatusZoneLocationChange(zoneCriteria);
+				}
 			}
 		} else {
 			this.getManagedBean().setZoneGeneralTrees(null);
@@ -12369,7 +12374,12 @@ public class SpecificationBackingBean extends
 			if (null != supplierCriteria
 					&& supplierCriteria.isBrandNew() == false
 					&& scQt.isPanel() == false) {
+				if (null != this.getManagedBean().getLoginRoleType()
+						&& !"".equals(this.getManagedBean().getLoginRoleType())
+						&& "SC".equalsIgnoreCase(this.getManagedBean()
+								.getLoginRoleType())){
 				updateTechnicalAndFinacialSpecStatusZoneLocationChange(null);
+				}
 			}
 		}
 
@@ -15665,7 +15675,7 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2techProposal();
 			if (null == technicalSpecCheckList
 					|| technicalSpecCheckList.isEmpty()) {
-				retriveTechnicalSpecification();
+				retriveTechnicalCheckList();
 				technicalSpecCheckList = this.getManagedBean()
 						.getScQtCheckSt2techProposal();
 			}
@@ -15674,7 +15684,7 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2financeProposalList();
 			if (null == financialSpecCheckList
 					|| financialSpecCheckList.isEmpty()) {
-				retriveFinancialSpecification();
+				retriveFinancialCheckList();
 				financialSpecCheckList = this.getManagedBean()
 						.getScQtCheckSt2financeProposalList();
 			}
@@ -15682,8 +15692,13 @@ public class SpecificationBackingBean extends
 					&& !financialSpecCheckList.isEmpty()) {
 				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
 				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
+					if (QTConstants.TEMPLETE_SPEC_CODE
+							.equalsIgnoreCase(financialchecklist.getDefinationType()
+									.getParameterCode())) {
 					financialchecklist.setPmStatus(status);
+					
 				}
+			}
 			}
 			if (null != technicalSpecCheckList
 					&& !technicalSpecCheckList.isEmpty()) {
@@ -15691,7 +15706,13 @@ public class SpecificationBackingBean extends
 				boolean zonelevelChange = false;
 				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
 					zonelevelChange = true;
-					technicalchecklist.setPmStatus(status);
+					//technicalchecklist.setPmStatus(status);
+					if (QTConstants.TEMPLETE_SPEC_CODE
+							.equalsIgnoreCase(technicalchecklist.getDefinationType()
+									.getParameterCode())) {
+						technicalchecklist.setPmStatus(status);
+					
+				}
 				}
 				if (zonelevelChange) {
 					FacesContext
