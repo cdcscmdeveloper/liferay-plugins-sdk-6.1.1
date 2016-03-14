@@ -179,6 +179,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -4603,6 +4604,7 @@ public class SpecificationBackingBean extends
 					scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
 					scQt.setDecExpectedIntendedPrice(tmpExpectedIntendedPrice);
 				}
+				this.getManagedBean().setQtCategoryList(scQt.getScQtCategorys());
 			}
 
 		} finally {
@@ -11443,6 +11445,7 @@ public class SpecificationBackingBean extends
 					.getToBeRemoveSchedules());
 			specReqDTO.setToBeRemoveProgressivePayments(this.getManagedBean()
 					.getToBeRemoveProgPayments());
+			specReqDTO.setTobeRemoveCategoryCodes(this.getManagedBean().getTobeRemoveCategoryCodes());
 			boolean isAssignedState = this.getManagedBean().isAssignedState();
 			switch (activeIndex) {
 			case 0:
@@ -12443,8 +12446,18 @@ public class SpecificationBackingBean extends
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			
 			loadPrepareSpecCommitteeDetails(scQt.getQtId(),
 					QTConstants.DOCTYPE_PREPARE_SPEC);
+			
+			// Update Procurement Mode based on final estimated price.
+			scQt = getManagedBean().getQt();
+			Long statusId = scQt.getQtStatus().getStatusId();
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && 
+					(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId) ||
+							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(statusId))) {
+				new CreateQtBackingBean().setProcurementMode(scQt, scQt.getEstimatedAmount());
+			}
 
 		}
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
