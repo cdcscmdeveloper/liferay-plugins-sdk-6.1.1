@@ -31,6 +31,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -48,6 +49,8 @@ import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -195,7 +198,12 @@ public class PurchaseInquiryBackingBean extends
 				throw new EpException(MessageConst.ERROR_760159);
 			}
 
-			requestSupplierItem.setSmSupplier(cmSupplierItem.getSmSupplier());
+			SmSupplier smSupplier = cmSupplierItem.getSmSupplier();
+			requestSupplierItem.setSmSupplier(smSupplier);
+			
+			requestSupplierItem.setSupplierName(smSupplier.getCompanyName());
+			requestSupplierItem.setMofNumber(getMofNor(smSupplier.getSupplierId()));
+			
 			supplierItemPrice.setScRequestSupplierItem(requestSupplierItem);
 			requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
 			requestSupplierItem.setRequestNoteItem(requestItem);
@@ -1282,7 +1290,7 @@ public class PurchaseInquiryBackingBean extends
 
 		// no of response days
 		prInquiry.setDayToResponse((int) DateUtils.getDaysDifference(
-				prInquiry.getCreatedDate(),
+				getCurrentDateWithoutTime(prInquiry.getCreatedDate()),
 				getCurrentDateWithoutTime(prInquiry.getDateToResponse())));
 
 		getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
@@ -1756,6 +1764,29 @@ public class PurchaseInquiryBackingBean extends
 								"lbl.sc.purchase.inquiry.out.of.stock",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								face.getUserLocale())));
+	}
+	
+	/**
+	 * Gets the mof nor.
+	 * 
+	 * @param supplierId
+	 *            the supplier id
+	 * @return the mof nor
+	 */
+	private String getMofNor(Long supplierId) {
+		String mofNo = "";
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMofAccountSO.class);
+		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+		accountReqDTO.setSupplierId(supplierId);
+		MofAccountResDTO mofAccountResDTO = mofAccountSO
+				.retrieveMofNoBySupplierId(accountReqDTO);
+		if (mofAccountResDTO.getMofAccount() != null) {
+			mofNo = mofAccountResDTO.getMofAccount().getMofNo();
+		}
+		return mofNo;
 	}
 
 	

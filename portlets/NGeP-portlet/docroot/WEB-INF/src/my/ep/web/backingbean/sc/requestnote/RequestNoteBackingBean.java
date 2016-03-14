@@ -43,6 +43,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -69,6 +70,8 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -1215,7 +1218,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size()>0){
 				requestSupplierItem.setSupplierItemPrice(requestSupplierItem.getSupplierItemPrices().get(0));
 			}
-			requestSupplierItem.setSupplierId(cmSupplierItem.getSmSupplier().getSupplierId());
+			
+			SmSupplier smSupplier = cmSupplierItem.getSmSupplier();
+			requestSupplierItem.setSupplierId(smSupplier.getSupplierId());
+			requestSupplierItem.setSupplierName(smSupplier.getCompanyName());
+			requestSupplierItem.setMofNumber(getMofNor(smSupplier.getSupplierId()));
 
 			// check supplier is government seller or not 
 			if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
@@ -3528,5 +3535,28 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 		}
+	}
+	
+	/**
+	 * Gets the mof nor.
+	 * 
+	 * @param supplierId
+	 *            the supplier id
+	 * @return the mof nor
+	 */
+	private String getMofNor(Long supplierId) {
+		String mofNo = "";
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMofAccountSO.class);
+		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+		accountReqDTO.setSupplierId(supplierId);
+		MofAccountResDTO mofAccountResDTO = mofAccountSO
+				.retrieveMofNoBySupplierId(accountReqDTO);
+		if (mofAccountResDTO.getMofAccount() != null) {
+			mofNo = mofAccountResDTO.getMofAccount().getMofNo();
+		}
+		return mofNo;
 	}
 }

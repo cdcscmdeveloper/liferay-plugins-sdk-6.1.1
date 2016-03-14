@@ -1055,7 +1055,7 @@ public class PurchaseInDefaultBackingBean extends
 				purchaseInDefault.getRemarks(), ScPIDRemark.class));
 
 		initializeApproverGroup();
-		retrieveReasonDescListByCategory(Boolean.TRUE);
+//		retrieveReasonDescListByCategory(Boolean.TRUE);
 		justificationTypeEvent();
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
@@ -1121,7 +1121,7 @@ public class PurchaseInDefaultBackingBean extends
 
 				getManagedBean().setPurchaseInDefault(purchaseInDefault);
 				initializeApproverGroup();
-				retrieveReasonDescListByCategory(true);
+//				retrieveReasonDescListByCategory(true);
 				justificationTypeEvent();
 
 				try {
