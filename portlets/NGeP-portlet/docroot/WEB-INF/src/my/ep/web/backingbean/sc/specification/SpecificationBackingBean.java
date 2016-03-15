@@ -12899,6 +12899,7 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setFinancialScoring(null);
 				this.getManagedBean().setOfferPricePackage(null);
+				specCommitteeResetData();
 				// settemplateSpecList(savedCheckLists);
 				setTechnicalCheckList(savedCheckLists.get(0),
 						QTConstants.DOCTYPE_PREPARE_SPEC);
@@ -12929,6 +12930,18 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
+	private void specCommitteeResetData(){
+		this.getManagedBean().setTechnicalScoring(null);
+		this.getManagedBean().setProgressivePaymentList(null);
+		this.getManagedBean().setScheduleList(null);
+		this.getManagedBean().setTechnicalScoreSetting(null);
+		this.getManagedBean().setFinancialScoreSetting(null);
+		this.getManagedBean().setDemoScoreSetting(null);
+		this.getManagedBean().setFinacialItemScoreSetting(null);
+		this.getManagedBean().setRecommendationPackageScore(null);
+		this.getManagedBean().setRecommendationScore(null);
+		this.getManagedBean().setQtCategoryList(null);
+	}
 	/**
 	 * Sets the technical check list.
 	 * 
@@ -13497,6 +13510,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setFinancialScoring(null);
 				this.getManagedBean().setOfferPricePackage(null);
+				specCommitteeResetData();
 				if (reqDTO.isZonesQt() || (this.getManagedBean().getQt().isZonal()&& SourcingConstants.FINANCIAL_DOCTYPE
 						.equalsIgnoreCase(specType))) {
 					this.getManagedBean().setZoneGeneralTrees(
