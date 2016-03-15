@@ -4027,6 +4027,15 @@ public class ReportsGenerateBean {
 
 	/** The requisitioner tot var. */
 	private String requisitionerTotVar = ReportConst.EMPTY_VAL;
+	
+	/** The physical contract tot var. */
+	private String physicalContractTotVar = ReportConst.EMPTY_VAL;
+	
+	/** The physical loa tot var. */
+	private String physicalLOATotVar = ReportConst.EMPTY_VAL;
+	
+	/** The contract req tot var. */
+	private String contractReqTotVar = ReportConst.EMPTY_VAL;
 
 	/** The acknowledge officer tot var. */
 	private String acknowledgeOfficerTotVar = ReportConst.EMPTY_VAL;
@@ -20720,6 +20729,63 @@ public class ReportsGenerateBean {
 	 */
 	public void setFlGroupThreePaymentMatchView(boolean flGroupThreePaymentMatchView) {
 		this.flGroupThreePaymentMatchView = flGroupThreePaymentMatchView;
+	}
+
+	/**
+	 * Gets the physical contract tot var.
+	 * 
+	 * @return the physicalContractTotVar
+	 */
+	public String getPhysicalContractTotVar() {
+		return physicalContractTotVar;
+	}
+
+	/**
+	 * Sets the physical contract tot var.
+	 * 
+	 * @param physicalContractTotVar
+	 *            the physicalContractTotVar to set
+	 */
+	public void setPhysicalContractTotVar(String physicalContractTotVar) {
+		this.physicalContractTotVar = physicalContractTotVar;
+	}
+
+	/**
+	 * Gets the physical loa tot var.
+	 * 
+	 * @return the physicalLOATotVar
+	 */
+	public String getPhysicalLOATotVar() {
+		return physicalLOATotVar;
+	}
+
+	/**
+	 * Sets the physical loa tot var.
+	 * 
+	 * @param physicalLOATotVar
+	 *            the physicalLOATotVar to set
+	 */
+	public void setPhysicalLOATotVar(String physicalLOATotVar) {
+		this.physicalLOATotVar = physicalLOATotVar;
+	}
+
+	/**
+	 * Gets the contract req tot var.
+	 * 
+	 * @return the contractReqTotVar
+	 */
+	public String getContractReqTotVar() {
+		return contractReqTotVar;
+	}
+
+	/**
+	 * Sets the contract req tot var.
+	 * 
+	 * @param contractReqTotVar
+	 *            the contractReqTotVar to set
+	 */
+	public void setContractReqTotVar(String contractReqTotVar) {
+		this.contractReqTotVar = contractReqTotVar;
 	}
 
 }
