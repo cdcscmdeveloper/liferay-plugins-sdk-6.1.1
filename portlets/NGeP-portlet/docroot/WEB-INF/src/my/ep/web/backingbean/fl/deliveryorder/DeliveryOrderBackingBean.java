@@ -331,15 +331,15 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				renewSesionObject();
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					Map<String, String> paramMap = new HashMap<String, String>();
-					String supplierDORefList = "";
-					for(String supplierDORef : resDTO.getSupplierDeliveryOrderNoList()) {
-						if(supplierDORef.length()==0) {
-							supplierDORefList = supplierDORef;
+					String deliveryOrderNoList = "";
+					for(String deliveryOrderNo : resDTO.getDeliveryOrderNoList()) {
+						if(deliveryOrderNo.length()==0) {
+							deliveryOrderNoList = deliveryOrderNo;
 						} else {
-							supplierDORefList = supplierDORefList + "," + supplierDORef;
+							deliveryOrderNoList = deliveryOrderNoList + "," + deliveryOrderNo;
 						}
 					}
-					paramMap.put(ReportConst.PARAM_DOC_NO, supplierDORefList);
+					paramMap.put(ReportConst.PARAM_DOC_NO, deliveryOrderNoList);
 					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 					CommonBackingBean commonBackingBean = new CommonBackingBean();
 					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_DELIVERY);
