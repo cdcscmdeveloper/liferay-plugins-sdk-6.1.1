@@ -2983,7 +2983,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public List<PmProcurementCatType> getProcurementCategoryOptions() {
 		log.info("getProcurementCategoryOptions");
 		String languageCode = getFacesScopes().getUserLocale().getLanguage();
-		log.info("languageCode:"+languageCode);
 		return PpCommonUtil.retrieveProcurementCatTypeList(languageCode);
 	}
 	
@@ -2996,7 +2995,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
 		if(procurementCatId!=null && procurementCatId>0L){
 			String languageCode = getFacesScopes().getUserLocale().getLanguage();
-			log.info("languageCode:"+languageCode);
 			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeListByCatId(languageCode, procurementCatId);
 		}
 		return procurementCatTypeList;
@@ -3823,6 +3821,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode()) 
 		? ParameterConst.DOCTYPE_PLAN_PROCUREMENT
 		: ParameterConst.DOCTYPE_PLAN_EXPENDITURE;
+	}
+	
+	public String getProcurementCategoryLabels(PmParameter parameter) {
+		log.info("getProcurementCategoryLabels");
+		String label = "";
+		String languageCode = getFacesScopes().getUserLocale().getLanguage();
+		for(PmParameterDesc desc: parameter.getPmParameterDescs()){
+			if(languageCode.equals(desc.getLanguageCode())){
+				label = desc.getCodeName();
+				break;
+			}
+		}
+		return label;
 	}
 
 }
