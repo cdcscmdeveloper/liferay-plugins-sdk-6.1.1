@@ -44,6 +44,7 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
@@ -68,6 +69,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -100,6 +103,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -486,22 +490,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 							getManagedBean().getInvoice().getFlFulfilmentOrder().setFactored(DbValueConst.FLAG_YES);
 							if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
 								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrgId(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
-								//getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+								getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 							}
 							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
 							if(finOrgResDTO.isSuccessful()) {
 								if(finOrgResDTO.getPmAddressType()!=null){
-//									getManagedBean().setSupplierAddress(getFullAddress(finOrgResDTO.getPmAddressType().getPmAddress()));
-//									getManagedBean().setPhoneNo(finOrgResDTO.getPmAddressType().getPmAddress().getPhoneNo());
-//									getManagedBean().setFaxNo(finOrgResDTO.getPmAddressType().getPmAddress().getFaxNo());
-//									if(!finOrgResDTO.getPmAddressType().getPmContacts().isEmpty() ){
-//										PmContact pmContact = finOrgResDTO.getPmAddressType().getPmContacts().get(0);
-//										getManagedBean().setContactPerson(pmContact.getContactName());
-//										getManagedBean().setContactEmail(pmContact.getEmail());
-//										getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-//									}
-									//TODO NEW
 									getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType())); 
 								}
 									
@@ -1118,28 +1112,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
 		FinancialOrgResDTO finOrgResDTO = null;
 		
-//		getManagedBean().setSupplierAddress(null);
-//		getManagedBean().setPhoneNo(null);
-//		getManagedBean().setFaxNo(null);
-//		getManagedBean().setContactPerson(null);
-//		getManagedBean().setContactEmail(null);
-//		getManagedBean().setContactPhoneNo(null);
-		
 		//HQ info
 		finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 		finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
 		
 		if(finOrgResDTO.isSuccessful()) {
 			if(finOrgResDTO.getPmAddressType()!=null){
-//				getManagedBean().setSupplierAddress(getFullAddress(finOrgResDTO.getPmAddressType().getPmAddress()));
-//				getManagedBean().setPhoneNo(finOrgResDTO.getPmAddressType().getPmAddress().getPhoneNo());
-//				getManagedBean().setFaxNo(finOrgResDTO.getPmAddressType().getPmAddress().getFaxNo());
-//				if(!finOrgResDTO.getPmAddressType().getPmContacts().isEmpty() ){
-//					PmContact pmContact = finOrgResDTO.getPmAddressType().getPmContacts().get(0);
-//					getManagedBean().setContactPerson(pmContact.getContactName());
-//					getManagedBean().setContactEmail(pmContact.getEmail());
-//					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-//				}
 				//TODO NEW
 				getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType()));
 			}
@@ -1629,35 +1607,23 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * @param financialOrgId the financial org id
 	 * @return the selected factoring comp dtl
 	 */
-//	public void getSelectedFactoringCompDtl(Long financialOrgId){
-//		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-//		getManagedBean().setSupplierAddress(null);
-//		getManagedBean().setPhoneNo(null);
-//		getManagedBean().setFaxNo(null);
-//		getManagedBean().setContactPerson(null);
-//		getManagedBean().setContactEmail(null);
-//		getManagedBean().setContactPhoneNo(null);
-//		
-//		if(financialOrgId!=null) {
-//			AddressReqDTO reqDTO = new AddressReqDTO();
-//			reqDTO.setFinancialOrgId(financialOrgId);
-//			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-//			
-//			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-//			if(!resDTO.getAddressTypeList().isEmpty()){
-//				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-//				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-//				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-//				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
-//					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-//					getManagedBean().setContactPerson(pmContact.getContactName());
-//					getManagedBean().setContactEmail(pmContact.getEmail());
-//					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-//				}
-//			}
-//			
-//		}
-//	}
+	public void getSelectedFactoringCompDtl(Long financialOrgId){
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		
+		if(financialOrgId!=null) {
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setFinancialOrgId(financialOrgId);
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(!resDTO.getAddressTypeList().isEmpty()){
+				getManagedBean().getInvoice().getFlFulfilmentOrder().setFactoringAddress(convertPmAddressToFlAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+				getManagedBean().getInvoice().getFlFulfilmentOrder().setFactoringOrgName(resDTO.getAddressTypeList().get(0).getPmFinancialOrg().getFinOrgName());
+
+			}
+
+		}
+	}
 	
 		/**
 	 * Update digisign data for spki.
