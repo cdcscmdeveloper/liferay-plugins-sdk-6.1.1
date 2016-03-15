@@ -2211,4 +2211,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return allowCentralContract;		
 	}
 	
+	public BigDecimal getNoOfSupplierForRestrictedTender() {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER);
+			
+			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
+					.getRuleValueList();
+
+			if (configRuleValues != null && configRuleValues.size() > 0) {
+				PmConfigRuleValue configRuleValue = configRuleValues.get(0);
+				
+				if (configRuleValue != null && configRuleValue.getFromValue() != null && configRuleValue.getToValue() != null) {
+					return configRuleValue.getToValue();
+				}
+				
+			}
+
+		} finally {
+			ruleSO = null;
+		}
+		
+		return BigDecimal.valueOf(0);
+	}
 }
