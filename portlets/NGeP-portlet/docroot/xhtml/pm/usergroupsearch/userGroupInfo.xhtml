@@ -23,7 +23,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="width:220px"
 						value="#{usergroupBackingBean.managedBean.userGroup.groupName}"
-						size="30" maxlength="50" />
+						size="30" maxlength="50" 
+						disabled="#{not usergroupBackingBean.managedBean.userGroup.brandNew}"/>
 						<ac:iconTooltip value="#{lbl['lbl.pm.ug.groupname.tooltips']}" /></td>
 			</tr>
 			<tr>
