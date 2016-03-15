@@ -2133,7 +2133,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		orderedStatuses = orderedStatuses.subList(
 				orderedStatuses.indexOf(fromStatusId), 
-				orderedStatuses.indexOf(toStatusId + 1));
+				orderedStatuses.indexOf(toStatusId)+1);
 		
 		return orderedStatuses.contains(currentStatusId);
 	}
