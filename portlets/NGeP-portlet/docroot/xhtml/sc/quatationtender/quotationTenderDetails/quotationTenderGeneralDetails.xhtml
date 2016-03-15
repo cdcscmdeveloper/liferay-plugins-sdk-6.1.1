@@ -11,6 +11,8 @@
 	<ui:param name="isRequire" value="#{!qTDetailBB.isAuditor()}"></ui:param>
 	<ui:param name="readOnly" value="#{createQtBB.managedBean.editable}" />
 	<ui:param name="qtStatusAfterChecklistScoring" value="#{createQtBB.isQTStatusGreaterThan(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
+	<ui:param name="qtStatusChecklistScoring" value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.qtStatus.statusId == QT_PENDING_CHECKLIST_SCORING_REVISION}" />
+	<ui:param name="qtStatusChecklistScoringAndBefore" value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter" value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="zoneCoverageReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ZONE_COVERAGE)}" />
 
@@ -23,7 +25,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<c:choose>
-						<c:when test="#{!qtStatusAfterChecklistScoring}">
+						<c:when test="#{qtStatusChecklistScoringAndBefore}">
 							<p:selectOneRadio id="panelTitle" required="true"
 								label="#{lbl['lbl.sc.spec.panel']}" value="#{scQt.panel}">
 								<f:selectItems
@@ -49,7 +51,7 @@
 
 						<td>
 							<c:choose>
-								<c:when test="#{!qtStatusAfterChecklistScoring}">
+								<c:when test="#{qtStatusChecklistScoringAndBefore}">
 									<ac:lov id="ctCircularPanel" lovId="CT_CIRCULAR_PANEL"
 										headerText="#{lbl['lbl.sc.spec.circular.list']}"
 										update=":form:panelItemId"
@@ -70,7 +72,7 @@
 
 						<td>
 							<c:choose>
-								<c:when test="#{!qtStatusAfterChecklistScoring}">
+								<c:when test="#{qtStatusChecklistScoringAndBefore}">
 									<p:selectOneMenu id="panelItemId" required="#{isRequire}"
 										label="#{lbl['lbl.sc.spec.group.item']}"
 										value="#{scQt.itemGroup.panelItemGroupId}"
@@ -445,13 +447,13 @@
 				</td>
 				<td style="white-space: nowrap;">
 					<p:outputLabel value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" />
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}" />
 				</td>
 				<td><p:inputText id="contractBo" maxlength="3"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{scQt.contractDuration}"
 						style="text-align:right;margin-bottom:5px; width:200px;"
-						required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}"
+						required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
 						disabled="#{qtStatusAfterChecklistScoring}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@this" />
