@@ -7,7 +7,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-		
+	<ui:param name="isQTStatusPendingQtSubmission" value="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 			
 		<table width="100%">
 		<tr>
@@ -46,18 +46,19 @@
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
 						</ui:repeat>
 					</c:when>
-					<c:otherwise>
+					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
 							update="@all"
 							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" rendered="#{qTDetailBB.managedBean.createQt}"/>
-							
+							oncomplete="blockWidget.hide();" />
+					</c:when>
+					<c:otherwise>
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
 							action="#{qTDetailBB.submitQtDetailsFormMaintanace}" process="@form"
 							update="@all"
 							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" rendered="#{!qTDetailBB.managedBean.createQt}"/>
+							oncomplete="blockWidget.hide();" />
 					</c:otherwise>
 				</c:choose>
 				
