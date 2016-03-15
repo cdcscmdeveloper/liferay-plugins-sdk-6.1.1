@@ -24,8 +24,6 @@ public class Encryption {
 	
 	private static Logger log = EpLogger.getLogger(Encryption.class);
 
-	SFTPUtility sftpUtility = null;//new SFTPUtility();
-	OsbUtility osbUtility = new OsbUtility();
 	JAXBUtility jaxbUtility = new JAXBUtility();
 	
 	IRemoteClientSO remoteClientSO = BusinessDelegate.getInstance()
@@ -42,7 +40,10 @@ public class Encryption {
 	
 		log.info("path value with (.) :" + path);
 	
+		log.info("user.dir "+System.getenv("user.dir"));
 		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
+		
+//		substring = "C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/";
 	
 		String encryptKey = substring
 				+ IntegrationConstants.GMAS_PUBLIC_KEY_PATH;
@@ -63,12 +64,12 @@ public class Encryption {
 		}
 		// upload the encripted file to sftp server
 		
-		String transId =  UUID.randomUUID().toString();
-		reqDTO.setRemoteFilePath(IntegrationConstants.GMAS_UPLOAD + reqDTO.getFileName());
-		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
-		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_1GFMAS);
-		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
-		reqDTO.setTransId(transId);
+//		String transId =  UUID.randomUUID().toString();
+//		reqDTO.setRemoteFilePath(IntegrationConstants.GMAS_UPLOAD + reqDTO.getFileName());
+//		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
+//		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_1GFMAS);
+//		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+//		reqDTO.setTransId(transId);
 //		sftpUtility.upload(reqDTO);
 		
 		// call osb service for transfering from host to 1GFMAS
@@ -206,5 +207,19 @@ public class Encryption {
 		}
 
 		return sb.toString();
+	}
+	
+	
+	public static void main(String args[]){
+		
+		Encryption encryption = new Encryption();
+		BatchReqDTO dto = new BatchReqDTO<>();
+		dto.setFileName("1000APIVE40000120160310002.GPG");
+		dto.setFilePath("C:/Integration/batch/Temp/");
+		dto.setEncryptFilePath("C:/Integration/batch/1GFMAS/OUT/");
+		
+		
+		encryption.encryptGmas(dto);
+		
 	}
 }
