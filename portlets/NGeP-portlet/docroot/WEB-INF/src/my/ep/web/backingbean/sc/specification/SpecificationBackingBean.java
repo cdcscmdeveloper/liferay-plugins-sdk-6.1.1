@@ -867,7 +867,7 @@ public class SpecificationBackingBean extends
 			break;
 		case 1:
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
-			// specSo.validateSupplierQulificationInfo(specReqDTO);
+			specSo.validateSupplierQulificationInfo(specReqDTO);
 
 			break;
 
