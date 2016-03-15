@@ -9,9 +9,6 @@
 
 
 	<h:panelGroup id="recommendationid">
-
-		<h:panelGroup
-			rendered="#{((specificationBackingBean.managedBean.qt.evaluationType eq '2' and specificationBackingBean.managedBean.qt.techEvaluationReq eq 'false') or (specificationBackingBean.managedBean.qt.evaluationType eq '2' and specificationBackingBean.managedBean.qt.techEvaluationReq eq 'true') or (specificationBackingBean.managedBean.qt.evaluationType eq '1' and specificationBackingBean.managedBean.qt.techEvaluationReq eq 'true'))}">
 			<p:panel id="package" toggleable="true">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.by.package']}" />
@@ -176,104 +173,7 @@
 
 
 			</p:panel>
-		</h:panelGroup>
-
-		<h:panelGroup
-			rendered="#{specificationBackingBean.managedBean.qt.evaluationType eq '1' and specificationBackingBean.managedBean.qt.techEvaluationReq eq 'false'}">
-			<p:panel id="recommendTechnicalItem" toggleable="true">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.by.package']}" />
-					<ac:iconTooltip
-						value="#{lbl['lbl.sc.by.package.recommendation.tooltip']}" />
-				</f:facet>
-				<table>
-
-					<tr>
-						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
-								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
-						<td><p:inputText maxlength="5"
-								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}"
-								style="text-align:right">
-
-							</p:inputText> <ac:iconTooltip
-								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
-						</td>
-					</tr>
-				</table>
-			</p:panel>
-
-			<p:panel toggleable="true">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.by.item']}" />
-					<ac:iconTooltip
-						value="#{lbl['lbl.sc.by.item.recommendation.tooltip']}" />
-				</f:facet>
-
-				<p:panelGrid style="margin-top:5px;width:100%;">
-					<f:facet name="header">
-
-						<p:row>
-							<p:column colspan="1"></p:column>
-							<p:column colspan="1">
-								#{lbl['lbl.sc.spec.item']}
-								<ac:iconTooltip value="#{lbl['lbl.sc.spec.item.tooltip']}" />
-							</p:column>
-							<p:column colspan="1">
-								#{lbl['lbl.sc.spec.others']}
-								<ac:iconTooltip value="#{lbl['lbl.sc.spec.others.tooltip']}" />
-							</p:column>
-							<p:column>#{lbl['lbl.sc.spec.score']}</p:column>
-						</p:row>
-					</f:facet>
-
-					<p:row>
-						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.financial']}</p:column>
-						<p:column>
-							<p:inputText style="text-align:right" maxlength="5"
-								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
-
-								<p:ajax event="blur" update="financial"
-									process="@this,recommendTechnicalItem" partialSubmit="true"
-									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
-							</p:inputText>
-						</p:column>
-
-						<p:column colspan="1">
-							<p:inputText style="text-align:right" maxlength="5"
-								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
-
-								<p:ajax event="blur" update="financial"
-									process="@this,recommendTechnicalItem" partialSubmit="true"
-									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
-							</p:inputText>
-						</p:column>
-						<p:column colspan="1" style="text-align:right">
-							<h:outputText id="financial"
-								value="#{specificationBackingBean.managedBean.recommendfinancialScore}" />
-						</p:column>
-					</p:row>
-
-				</p:panelGrid>
-				<p:spacer height="3px;"></p:spacer>
-				<table>
-					<tr>
-						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
-								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
-						<td><p:inputText style="text-align:right" maxlength="5"
-								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
-
-							</p:inputText> <ac:iconTooltip
-								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
-						</td>
-					</tr>
-				</table>
-
-			</p:panel>
-		</h:panelGroup>
+		
 	</h:panelGroup>
 
 </ui:composition>
