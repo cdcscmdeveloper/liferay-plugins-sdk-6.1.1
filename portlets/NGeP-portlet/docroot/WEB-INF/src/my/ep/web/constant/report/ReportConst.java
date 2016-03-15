@@ -739,6 +739,9 @@ public class ReportConst {
 	public static final String FL_AMP_REQUI_NAME_EQ = "&PREQUEST=";
 	public static final String FL_AMP_ACKNOWLEDGE_NAME_EQ = "&PACKOFF=";
 	public static final String FL_AMP_PAYMENT_NAME_EQ = "&PPAYOFF=";
+	public static final String FL_AMP_PHY_CONTRACT_NAME_EQ = "&PPHYCON=";
+	public static final String FL_AMP_PHY_LOA_NAME_EQ = "&PPHYLOA=";
+	public static final String FL_AMP_CONTRACT_NAME_EQ = "&PCRNO=";	
 	public static final String FL_AMP_SUPPL_NAME_EQ = "&PSUPP=";
 	public static final String FL_AMP_MINISTRY_EQ = "&PMINIS=";
 	public static final String FL_AMP_PEGAWAI_PENGAWAI_EQ = "&PFPP";

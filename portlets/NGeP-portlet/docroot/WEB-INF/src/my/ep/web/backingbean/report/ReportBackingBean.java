@@ -15335,6 +15335,27 @@ public class ReportBackingBean extends
 						.setContractTypeTotVar(ReportConst.FL_AMP_COTRACT_TYPE_EQ
 								+ this.getFlContractType());
 			}
+			if ((this.getFlPhysicalContractNo() != null)
+					&& (this.getFlPhysicalContractNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPhysicalContractTotVar(ReportConst.FL_AMP_PHY_CONTRACT_NAME_EQ
+								+ this.getFlPhysicalContractNo());
+			}
+
+			if ((this.getFlLoaPhysicalNo() != null)
+					&& (this.getFlLoaPhysicalNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPhysicalLOATotVar(ReportConst.FL_AMP_PHY_LOA_NAME_EQ
+								+ this.getFlLoaPhysicalNo());
+			}
+
+			if ((this.getFlContractRequestNo() != null)
+					&& (this.getFlContractRequestNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setContractReqTotVar(ReportConst.FL_AMP_CONTRACT_NAME_EQ
+								+ this.getFlContractRequestNo());
+			}
+
 			if ((this.getFlRequisitioner() != null)
 					&& (this.getFlRequisitioner() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -15604,6 +15625,9 @@ public class ReportBackingBean extends
 						+ rptGenBean.getDeliveryAddressTotVar()
 						+ rptGenBean.getFlRecNoteNoTotVar()
 						+ rptGenBean.getContractTypeTotVar()
+						+ rptGenBean.getPhysicalContractTotVar()
+						+ rptGenBean.getPhysicalLOATotVar()
+						+ rptGenBean.getContractReqTotVar()
 						+ rptGenBean.getRequisitionerTotVar()
 						+ rptGenBean.getAcknowledgeOfficerTotVar()
 						+ rptGenBean.getPaymentOfficerTotVar()
@@ -15665,7 +15689,7 @@ public class ReportBackingBean extends
 		log.info("ReportBackingBean-generatePPReport");
 
 		if (checkDefaultValuesForPP()) {
-			
+
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
 
@@ -15676,8 +15700,9 @@ public class ReportBackingBean extends
 			if ((this.getCommonPegaWaiPengawal() != null)
 					&& (this.getCommonPegaWaiPengawal() != ReportConst.EMPTY_VAL)) {
 
-				rptGenBean.setPpPegaiPengawaiVar(ReportConst.FL_AMP_PEGAWAI_PENGAWAI_EQ
-						+ this.getCommonPegaWaiPengawal());
+				rptGenBean
+						.setPpPegaiPengawaiVar(ReportConst.FL_AMP_PEGAWAI_PENGAWAI_EQ
+								+ this.getCommonPegaWaiPengawal());
 			}
 
 			if ((this.getCommonKumpulanPTJ() != null)
@@ -15685,7 +15710,7 @@ public class ReportBackingBean extends
 
 				rptGenBean.setPpKumpulanVar(ReportConst.FL_AMP_KUMPULAN_EQ
 						+ this.getCommonKumpulanPTJ());
-			}			
+			}
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPpPTJVar(ReportConst.FL_AMP_PTJ_NAME_EQ
@@ -16217,6 +16242,9 @@ public class ReportBackingBean extends
 			this.setFlDeliveryAddress(null);
 			this.setFlRecNoteNo(null);
 			this.setFlContractType(null);
+			this.setFlPhysicalContractNo(null);
+			this.setFlLoaPhysicalNo(null);
+			this.setFlContractRequestNo(null);
 			this.setFlRequisitioner(null);
 			this.setFlAcknowledgeOfficer(null);
 			this.setFlPaymentofficer(null);
@@ -17610,6 +17638,12 @@ public class ReportBackingBean extends
 						.getFlContractType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlRequisitioner() != null) && (this
 						.getFlRequisitioner() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPhysicalContractNo() != null) && (this
+						.getFlPhysicalContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlLoaPhysicalNo() != null) && (this
+						.getFlLoaPhysicalNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractRequestNo() != null) && (this
+						.getFlContractRequestNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlAcknowledgeOfficer() != null) && (this
 						.getFlAcknowledgeOfficer() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPaymentofficer() != null) && (this
