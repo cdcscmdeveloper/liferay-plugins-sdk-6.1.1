@@ -1403,27 +1403,62 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	/**
-	 * Check if purchase request threshold
+	 * Get purchase request threshold amount
 	 * 
-	 * @param estimatedAmount
-	 * 		the estimated amount
-	 * @return	the indicator is purchase request threshold
+	 * @return	the purchase request threshold amount
 	 */
-	public boolean isPurchaseRequestThresHold(BigDecimal estimatedAmount) {
+	protected BigDecimal getPRThresholdAmount() {
 		IRuleSO ruleSO = null;
+		BigDecimal maxProcurementAmt = new BigDecimal(0);
+
 		try {
 			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
-			RuleReqDTO reqDTO = new RuleReqDTO();
-			reqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
-			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
-			return ruleSO.compareAValueWithRuleTypeValues(reqDTO)
-					.isCompareValueResult();
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
+			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+
+			if (ruleResDTO.isSuccessful()
+					&& ruleResDTO.getRuleValueList() != null
+					&& ruleResDTO.getRuleValueList().size() > 0) {
+				maxProcurementAmt = new BigDecimal(ruleResDTO
+						.getRuleValueList().get(0).getRuleValue());
+			}
 
 		} finally {
 			ruleSO = null;
 		}
+
+		return maxProcurementAmt;
+	}
+	
+	/**
+	 * Get panel threshold amount
+	 * 
+	 * @return	the panel threshold amount
+	 */
+	protected BigDecimal getPanelThresholdAmount() {
+		IRuleSO ruleSO = null;
+		BigDecimal maxProcurementAmt = new BigDecimal(0);
+
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(RuleTypeConst.PANEL_THRESHOLD);
+			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+			
+			if(ruleResDTO.isSuccessful() && ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
+				maxProcurementAmt = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+			}
+
+		} finally {
+			ruleSO = null;
+		}
+
+		return maxProcurementAmt;
 	}
 
 	/**
@@ -2042,22 +2077,58 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 	}
 	
+	/**
+	 * Check if QT Status published.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @return	the indicator qt status published.
+	 */
 	public boolean isQTStatusPublished(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
 	}
 	
+	/**
+	 * Check if QT Status greater than or equals from status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param fromStatusId
+	 * 		the from status id
+	 * @return	the indicator qt status greater than or equals from status.
+	 */
 	public boolean isQTStatusGreaterThanOrEquals(Long currentStatusId, Long fromStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		
 		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
 	}
 	
+	/**
+	 * Check if QT Status greater than from status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param fromStatusId
+	 * 		the from status id
+	 * @return	the indicator qt status greater than from status.
+	 */
 	public boolean isQTStatusGreaterThan(Long currentStatusId, Long fromStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		
 		return orderedStatuses.indexOf(currentStatusId) > orderedStatuses.indexOf(fromStatusId);
 	}
 	
+	/**
+	 * Check if QT Status is in between from and to status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param fromStatusId
+	 * 		the from status id
+	 * @param toStatusId
+	 * 		the to status id
+	 * @return	the indicator qt status in between from and to status.
+	 */
 	public boolean isQTStatusInBetween(Long currentStatusId, Long fromStatusId, Long toStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		orderedStatuses = orderedStatuses.subList(
@@ -2067,6 +2138,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return orderedStatuses.contains(currentStatusId);
 	}
 	
+	/**
+	 * Check if Current Committee greater than or equals compare committee.
+	 * 
+	 * @param currentCommittee
+	 * 		the current committee
+	 * @param otherCommittee
+	 * 		the compare committee
+	 * @return	the indicator greater than or equals compare committee.
+	 */
 	public boolean isCurrentCommitteeGreaterThanOrEquals(String currentCommittee, String otherCommittee) {
 		List<String> committeesOrder = Arrays.asList(SourcingConstants.COMMITTEES_ORDER);
 		
