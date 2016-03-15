@@ -865,6 +865,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setSmBill(pyBill);
 			reqDTO.setPaymentType(paymentType);
+			getManagedBean().getSmAppl().setPmStatus(paymentStatus);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 
 			// create Payment
