@@ -421,30 +421,28 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	
 	protected FlAddress convertPmAddressToFlAddress(PmAddress pmAddress){
 		FlAddress flAddress = new FlAddress();
-
-				flAddress.setAddress1(pmAddress.getAddress1());
-				flAddress.setAddress2(pmAddress.getAddress2());
-				flAddress.setAddress3(pmAddress.getAddress3());
-				flAddress.setAddress4(pmAddress.getAddress4());
-				flAddress.setMapLatitude(pmAddress.getMapLatitude());
-				flAddress.setMapLongitude(pmAddress.getMapLongitude());
-				flAddress.setPmCity(pmAddress.getPmCity());
-				flAddress.setPmCountry(pmAddress.getPmCountry());
-				flAddress.setPmDistrict(pmAddress.getPmDistrict());
-				if(pmAddress.getPmDivision()!=null){
-					flAddress.setPmDivision(pmAddress.getPmDivision());
-				}
-				flAddress.setPmState(pmAddress.getPmState());
-				flAddress.setPostcode(pmAddress.getPostcode());
-				flAddress.setFaxNo(pmAddress.getFaxNo());
-				flAddress.setFaxArea(pmAddress.getFaxArea());
-				flAddress.setFaxCountry(pmAddress.getFaxCountry());
-				flAddress.setPhoneNo(pmAddress.getPhoneNo());
-				flAddress.setPhoneArea(pmAddress.getPhoneArea());
-				flAddress.setPhoneCountry(pmAddress.getPhoneCountry());
-	
+		flAddress.setAddressName(pmAddress.getAddressName());
+		flAddress.setAddress1(pmAddress.getAddress1());
+		flAddress.setAddress2(pmAddress.getAddress2());
+		flAddress.setAddress3(pmAddress.getAddress3());
+		flAddress.setAddress4(pmAddress.getAddress4());
+		flAddress.setMapLatitude(pmAddress.getMapLatitude());
+		flAddress.setMapLongitude(pmAddress.getMapLongitude());
+		flAddress.setPmCity(pmAddress.getPmCity());
+		flAddress.setPmCountry(pmAddress.getPmCountry());
+		flAddress.setPmDistrict(pmAddress.getPmDistrict());
+		if(pmAddress.getPmDivision()!=null){
+			flAddress.setPmDivision(pmAddress.getPmDivision());
+		}
+		flAddress.setPmState(pmAddress.getPmState());
+		flAddress.setPostcode(pmAddress.getPostcode());
+		flAddress.setFaxNo(pmAddress.getFaxNo());
+		flAddress.setFaxArea(pmAddress.getFaxArea());
+		flAddress.setFaxCountry(pmAddress.getFaxCountry());
+		flAddress.setPhoneNo(pmAddress.getPhoneNo());
+		flAddress.setPhoneArea(pmAddress.getPhoneArea());
+		flAddress.setPhoneCountry(pmAddress.getPhoneCountry());
 		return flAddress;
-		
 	}
 	
 	protected FlAddress convertFinAccAddressToFlAddress(PmAddressType pmAddressType){
