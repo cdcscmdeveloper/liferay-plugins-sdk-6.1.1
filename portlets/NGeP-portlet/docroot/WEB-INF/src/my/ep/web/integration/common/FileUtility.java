@@ -128,11 +128,15 @@ public class FileUtility extends InitializeSO{
 		String PROCESS_ID = ProcessCode.APIVE.value();
 		
 		String fileName = createFileNameGfmas(PROCESS_ID);
+		
+		log.info("batchReqDTO.getFilePath() :"+batchReqDTO.getFilePath());
+		log.info("fileName :"+fileName);
 
 		Writer writer = null;
 
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(batchReqDTO.getFilePath() + fileName), "utf-8"));
+			log.info("after crating writer :");
 
 				StringBuffer line;
 				StringBuffer branchLine;
@@ -173,14 +177,20 @@ public class FileUtility extends InitializeSO{
 							branchLine.append(formatIntegerField(companyBranch.getBankAccountInfoCount(), 3, "R"));
 							branchLine.append(formatIntegerField(companyBranch.getStatus(), 1,"R"));
 							branchLine.append(formatStringField(companyBranch.getMobileNo(), 15,"L"));
-							if(companyBranch.getIndicatorCode()==0)
+							if(companyBranch.getIndicatorCode().equals("0"))
 								branchLine.append(formatStringField(IntegrationConstants.HQ_INDICATOR_CODE, 20,"L"));
 							else
-								branchLine.append(formatLong(companyBranch.getIndicatorCode(), 20));
+								branchLine.append(formatStringField(companyBranch.getIndicatorCode().toString(), 20,"L"));
 							branchLine.append(formatStringField(companyBranch.getAccountActionIndicator(), 1,"R"));
 							branchLine.append(formatStringField(companyBranch.getReferenceNoGST(), 20,"L"));
-							branchLine.append(formatDate(companyBranch.getGSTEffectiveDate()));
-							branchLine.append(formatDate(companyBranch.getGSTEffectiveEndDate()));
+							if(null!=companyBranch.getGSTEffectiveDate())
+								branchLine.append(formatDate(companyBranch.getGSTEffectiveDate()));
+							else
+								branchLine.append(formatIntegerField(0,8,"R"));
+							if(null!=companyBranch.getGSTEffectiveEndDate())
+								branchLine.append(formatDate(companyBranch.getGSTEffectiveEndDate()));
+							else
+								branchLine.append(formatIntegerField(0,8,"R"));
 							branchLine.append(System.getProperty("line.separator"));
 							writer.write(branchLine.toString());
 							
@@ -202,13 +212,17 @@ public class FileUtility extends InitializeSO{
 					}
 				}
 				}
+				writer.close();
+				log.info("file creation successfull..");
 				batchReqDTO.setFileName(fileName);
 				batchReqDTO.setEncryptFilePath(IntegrationConstants.GMAS_UPLOAD_LOCAL);
 				batchReqDTO.setServiceCode(ServiceCode.APIVE.value());
 				batchReqDTO.setProcessId(ProcessCode.APIVE.value());
 				
 				encryption.encryptGmas(batchReqDTO);
-		} catch (IOException e) {
+		} catch (Exception e) {
+			log.info("error creating masterDataVendorFileOutPutStream file ");
+			e.printStackTrace();
 
 		} finally {
 
@@ -309,7 +323,7 @@ public class FileUtility extends InitializeSO{
 			    		  masterDataVendor.getCompanyBranch().setCurrency(getValue(line,421 ,5 ));
 			    		  masterDataVendor.getCompanyBranch().setPaymentTerm(getValue(line,426 ,4 ));
 			    		  masterDataVendor.getCompanyBranch().setMobileNo(getValue(line,430 ,10 ));
-			    		  masterDataVendor.getCompanyBranch().setIndicatorCode(new Long(getValue(line,440 ,20 )));
+			    		  masterDataVendor.getCompanyBranch().setIndicatorCode(getValue(line,440 ,20 ));
 			    	  }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
 			    		  bankAccountInformation = new BankAccountInformation();
 			    		  bankAccountInformation.setRecordType(Integer.parseInt(getValue(line,0 ,1 )));
