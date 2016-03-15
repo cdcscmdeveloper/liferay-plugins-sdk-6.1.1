@@ -13497,7 +13497,10 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setFinancialScoring(null);
 				this.getManagedBean().setOfferPricePackage(null);
-				if (reqDTO.isZonesQt()) {
+				if (reqDTO.isZonesQt() || (this.getManagedBean().getQt().isZonal()&& SourcingConstants.FINANCIAL_DOCTYPE
+						.equalsIgnoreCase(specType))) {
+					this.getManagedBean().setZoneGeneralTrees(
+							new ArrayList<TreeNode>());
 					retriveSpecdetails(this.getManagedBean().getQt().getQtId(),
 							QTConstants.DOCTYPE_PREPARE_SPEC);
 				}
