@@ -10,10 +10,12 @@
 	<p:panel id="supplierlist" header="#{lbl['lbl.sc.supplier.list']}"
 		toggleable="true">
 
-		<h:outputText styleClass="instruction"
+		<h:outputFormat styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.restricted.tender.instruction']}"
 			escape="false"
-			rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == ParameterTypeConst.quotationTenderTypeRestrictedTender and qTSupplierQulCriteriaBackingBean.managedBean.qt.panel == 'No'}" />
+			rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == ParameterTypeConst.quotationTenderTypeRestrictedTender and qTSupplierQulCriteriaBackingBean.managedBean.qt.panel == 'No'}">
+			<f:param value="#{qTSupplierQulCriteriaBackingBean.noOfSupplierForRestrictedTender}" />
+		</h:outputFormat>
 
 		<p:dataTable id="suppliersTbl" var="qtSupplier" rows="10"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"
