@@ -581,7 +581,7 @@ public class PpCommonUtil {
 		}else{
 			locale = langugageCode;
 		}
-		log.info("locale:"+locale);
+		
 		IProcurementCatTypeSO reqSO  = null;
 		try{
 			ProcurementCatTypeReqDTO reqDTO = new ProcurementCatTypeReqDTO();
@@ -612,7 +612,7 @@ public class PpCommonUtil {
 		}else{
 			locale = langugageCode;
 		}
-		log.info("LOCALE:"+locale);
+		
 		IProcurementCatTypeSO reqSO  = null;
 		try{
 			ProcurementCatTypeReqDTO reqDTO = new ProcurementCatTypeReqDTO();

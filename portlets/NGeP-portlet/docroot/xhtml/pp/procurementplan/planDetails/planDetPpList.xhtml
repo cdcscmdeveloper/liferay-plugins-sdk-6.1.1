@@ -112,7 +112,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
-						itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{obj.procurementCat.pmParameterDescs[0].codeName}"/>
+						itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementCat)}"/>
 					<p:ajax event="change" update="somProcurementMethod" />
 				</p:selectOneMenu>
 				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
@@ -123,7 +123,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
-						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{obj.procurementType.pmParameterDescs[0].codeName}"/>
+						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
 					<p:ajax event="change" process="@this" />
 				</p:selectOneMenu>
 				<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
