@@ -521,8 +521,8 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!qtStatusAfterChecklistScoring}">
-							<p:selectOneRadio disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}"
+						<c:when test="#{!qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}">
+							<p:selectOneRadio 
 							    required="#{isRequire}"
 								value="#{scQt.specApprovalReq}" 
 								label="#{lbl['lbl.sc.qt.req.approval.specification']}">
@@ -548,7 +548,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!qtStatusAfterChecklistScoring}">
+						<c:when test="#{!qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}">
 							<h:panelGroup id="approvalSpecTxt">
 								<h:panelGroup rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}">
 									<table>
