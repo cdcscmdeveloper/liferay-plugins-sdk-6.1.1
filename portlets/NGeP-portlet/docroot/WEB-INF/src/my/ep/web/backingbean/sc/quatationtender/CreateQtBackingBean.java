@@ -34,6 +34,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
@@ -572,11 +573,22 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		ScQtSupplierCriteria scQtSupplierCriteria = scQt
 				.getScQtSupplierCriteria();
 		String qtType = scQt.getQtType();
-
-		if (null == amount
-				|| isPurchaseRequestThresHold(amount)) {
-			throw new EpException(MessageConst.ERROR_760024,
-					new String[] { "20000" });
+		
+		// Intended Price
+		if (scQt.isPanel()) {
+			BigDecimal panelThreshold = getPanelThresholdAmount();
+			
+			if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
+				throw new EpException(MessageConst.ERROR_760380,
+						new String[] { SourcingConstants.DF_AMOUNT.format(panelThreshold) });
+			}
+		} else {
+			BigDecimal prThreshold = getPRThresholdAmount();
+			
+			if (null == amount || (amount.compareTo(prThreshold) <= 0)) {
+				throw new EpException(MessageConst.ERROR_760024,
+						new String[] { SourcingConstants.DF_AMOUNT.format(prThreshold) });
+			}
 		}
 
 		// Procurement Mode
@@ -613,20 +625,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 				populateEvaluationTypes(scQt, amount);
 			}			
-		} else {
-			if (isQuotationThresHold) {
-				// QT Type
-				if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER.equalsIgnoreCase(qtType)) {
-					qtType = ParameterConst.QUOTATION_TENDER_TYPE_OPEN;
-					scQt.setQtType(qtType);	
-				}
-				
-				// Evaluation Type
-				if (isOneTierThresHold(amount) && ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType())) {
-					scQt.setEvaluationType(ParameterConst.EVALUATION_TYPES_ONE_TIER);
-				}
-			}
-		}
+		} 
 
 		// All State
 		if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(qtType)) {
