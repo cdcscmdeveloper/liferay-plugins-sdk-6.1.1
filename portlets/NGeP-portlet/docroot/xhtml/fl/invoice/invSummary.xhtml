@@ -102,7 +102,7 @@
 			<tr>
 				<td ></td>
 				<td style="text-align: center;"><h:outputText
-						value="#{invoiceBackingBean.managedBean.supplierAddress}" /></td>
+						value="#{invoiceBackingBean.getFullAddress(invoiceBackingBean.managedBean.invoice.paymentBankAddress)}" /></td>
 			</tr>
 		</table>
 	</p:panel>
