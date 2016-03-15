@@ -28,7 +28,7 @@ public class CompanyBranch {
 	private int bankAccountInfoCount;
 	private int status;
 	private String mobileNo;
-	private Long indicatorCode;
+	private String indicatorCode;
 	private String accountActionIndicator;
 	private String referenceNoGST;
 	private Date GSTEffectiveDate;
@@ -188,11 +188,11 @@ public class CompanyBranch {
 		this.mobileNo = mobileNo;
 	}
 
-	public Long getIndicatorCode() {
+	public String getIndicatorCode() {
 		return indicatorCode;
 	}
 
-	public void setIndicatorCode(Long indicatorCode) {
+	public void setIndicatorCode(String indicatorCode) {
 		this.indicatorCode = indicatorCode;
 	}
 

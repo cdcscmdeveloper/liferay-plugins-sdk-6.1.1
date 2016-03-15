@@ -43,9 +43,6 @@ import my.ep.persistence.entity.pm.common.PmInterfaceLog;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
-import my.ep.persistence.entity.py.PyBill;
-import my.ep.persistence.entity.py.PyPayment;
-import my.ep.persistence.entity.py.PyPaymentDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -55,10 +52,6 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.VotFundType;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.integration.eterimaan.BillingInformationLine;
-import my.ep.web.integration.eterimaan.ReceiptDetails;
-import my.ep.web.integration.eterimaan.ReceiptHeader;
-import my.ep.web.integration.eterimaan.ReceiptInformation;
 import my.ep.web.integration.gfmas.AgCtrlOfficer;
 import my.ep.web.integration.gfmas.AgOffice;
 import my.ep.web.integration.gfmas.BankAccountInformation;
@@ -263,7 +256,9 @@ public class GfmasIntegration extends InitializeUtilityClz{
 
 	@Override
 	public void masterDataVendorGfmasOutbound() {
-		System.out.println("masterDataVendorGfmasOutbound : APIVE");
+		log.info("masterDataVendorGfmasOutbound : APIVE");
+		Date currentDate = new Date();
+		log.info("currentDate :"+currentDate);
 		
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		supplierSearchReqDTO.setCreateDate(currentDate);
@@ -308,7 +303,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 					companyBranch.setStatus(smSupplier.getRecordStatusFlg());
 					companyBranch.setMobileNo(smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
 							
-					companyBranch.setIndicatorCode(0L);
+					companyBranch.setIndicatorCode("0");
 					companyBranch.setAccountActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
 					if(smSupplier.getSmGstSuppliers()!=null){
 						 for(SmGstSupplier gstSupplier : smSupplier.getSmGstSuppliers()){
@@ -412,7 +407,7 @@ public class GfmasIntegration extends InitializeUtilityClz{
 						companyBranch.setStatus(smSupplierBranch.getRecordStatusFlg());
 						companyBranch.setMobileNo(smSupplierBranch.getPhoneNo());   
 							
-						companyBranch.setIndicatorCode(smSupplierBranch.getSupplierBranchId());
+						companyBranch.setIndicatorCode(smSupplierBranch.getSupplierBranchId().toString());
 						companyBranch.setAccountActionIndicator(IntegrationConstants.ACCOUNT_ACTION_UPDATE);
 						companyBranch.setReferenceNoGST(IntegrationConstants.EMPTY_TRING);
 						companyBranch.setGSTEffectiveDate(IntegrationConstants.DEFAULT_DATE);
