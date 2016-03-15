@@ -2983,6 +2983,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public List<PmProcurementCatType> getProcurementCategoryOptions() {
 		log.info("getProcurementCategoryOptions");
 		String languageCode = getFacesScopes().getUserLocale().getLanguage();
+		log.info("languageCode:"+languageCode);
 		return PpCommonUtil.retrieveProcurementCatTypeList(languageCode);
 	}
 	
@@ -2995,6 +2996,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
 		if(procurementCatId!=null && procurementCatId>0L){
 			String languageCode = getFacesScopes().getUserLocale().getLanguage();
+			log.info("languageCode:"+languageCode);
 			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeListByCatId(languageCode, procurementCatId);
 		}
 		return procurementCatTypeList;
