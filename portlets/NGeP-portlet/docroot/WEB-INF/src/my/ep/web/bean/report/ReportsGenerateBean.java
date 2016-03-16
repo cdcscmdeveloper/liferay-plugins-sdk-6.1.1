@@ -109,7 +109,7 @@ public class ReportsGenerateBean {
 	private boolean approvedDateView = false;
 
 	/** The report category. */
-	private String reportCategory = "";
+	private String reportCategory=new String();
 
 	/** The lng user id. */
 	private long lngUserId;

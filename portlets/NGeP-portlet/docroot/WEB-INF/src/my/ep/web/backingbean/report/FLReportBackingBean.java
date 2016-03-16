@@ -180,9 +180,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlInvoiceCreatedDateView(true);
-			rptGenBean.setFlGroupFourteenExtraView(true);	
-			
-
+			rptGenBean.setFlGroupFourteenExtraView(true);
 			break;
 		case ReportConst.PYMT_MATCH_RPT_MIN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -202,7 +200,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlContractOrderCreatedDateView(true);
 			//rptGenBean.setFlGroupThreeView(true);
-			rptGenBean.setFlGroupThreePaymentView(true);			
+			rptGenBean.setFlGroupThreePaymentMatchView(true);					
 			break;
 		case ReportConst.DED_RPT_MIN_VAL:
 			rptGenBean.setFlContractNoView(true);
@@ -497,7 +495,7 @@ public class FLReportBackingBean extends
 			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFlFromDateView(true);
 			rptGenBean.setFlContractOrderCreatedDateView(true);
-			rptGenBean.setFlGroupThreePaymentMatchView(true);
+			rptGenBean.setFlGroupThreePaymentView(true);	
 					
 			break;
 		case ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL:

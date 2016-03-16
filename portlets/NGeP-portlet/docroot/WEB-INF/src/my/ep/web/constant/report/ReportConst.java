@@ -40,6 +40,9 @@ public class ReportConst {
 	public static final String FL_SUB_MOD_CENTRAL_VAL="CC";
 	public static final String FL_SUB_MOD_PURCHASE_VAL="PO";
 	public static final String FL_SUB_MOD_PANEL_VAL="PA";
+	public static final String FL_SUB_MOD_CENTRAL_TREASURY="PKP NO";
+	public static final String FL_SUB_MOD_FULLFILLEMENT_RECEIVE="FRN NO";
+	
 	// SC Module reports start
 	public static final String SPPPP_PEMATUHAN_OC_RPT_VAL = "SC_001";
 	public static final String KPPP1_PEMATUHAN_OC_RPT_VAL = "SC_002";
@@ -727,6 +730,8 @@ public class ReportConst {
 	public static final String FL_AMP_COTRACT_ORDER_EQ = "&PCONO=";
 	public static final String FL_AMP_COTRACT_REQUEST_EQ = "&PCRNO=";
 	public static final String FL_AMP_PURCHASE_ORDER_EQ = "&PPONO=";
+	public static final String FL_AMP_TREASURY_CIRCULAR_EQ = "&PKPNO=";
+	public static final String FL_AMP_FULLFILLEMENT_RECEIVE_EQ = "&FRNNO=";
 	public static final String FL_AMP_COTRACT_TYPE_EQ = "&PCONTYPE=";
 	public static final String FL_AMP_DELI_ADDR_EQ = "&PDOADD=";
 	public static final String FL_AMP_DELI_ORD_NO_EQ = "&PDONO=";
