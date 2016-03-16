@@ -833,9 +833,6 @@ public class QTDetailBackingBean extends
 							tabBean.getBudgetApprovalUsers().getTarget());
 				}
 
-				tabBean.getScQtApproval().setScQtApprovalRemarks(
-						finalizeRemarks(tabBean.getScQtApproval()
-								.getScQtApprovalRemarks()));
 				if (this.getManagedBean().getQt().isBrandNew()) {
 					tabBean.getScQtApproval().setScQt(
 							this.getManagedBean().getQt());
@@ -846,6 +843,13 @@ public class QTDetailBackingBean extends
 
 			}
 			scQt.setScQtApprovals(approvalList);
+		}
+		if (CollectionUtils.isNotEmpty(scQt.getScQtApprovals())) {
+			for (ScQtApproval qtApproval : scQt.getScQtApprovals()) {
+				qtApproval.setScQtApprovalRemarks(
+						finalizeRemarks(qtApproval
+								.getScQtApprovalRemarks()));
+			}
 		}
 
 		scQt.setScQtBriefings(null);
@@ -1741,7 +1745,7 @@ public class QTDetailBackingBean extends
 				qtId = evalDataType.getQtId().longValue();
 
 			}
-			this.getManagedBean().setActiveIndex(1);
+			this.getManagedBean().setActiveIndex(2);
 			retrieveQuationTenderDetails(new Long(qtId));
 			if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 					.equalsIgnoreCase(taskName)
