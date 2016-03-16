@@ -116,11 +116,13 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
+
 import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
@@ -9902,7 +9904,7 @@ public class ReportBackingBean extends
 		this.setSubModule(null);
 		this.setReportName(ReportConst.EMPTY_VAL);
 		getManagedBean().setRptGenBean(rptGenBean);
-		rptGenBean.setReportCategory(this.getReportCategory());
+		// rptGenBean.setReportCategory(this.getReportCategory());
 
 		// tool tips for FL Submodules(like Ex: CC,PO,PA)
 		// checkToolTipsConditonForFLSubmodule();
@@ -11917,11 +11919,14 @@ public class ReportBackingBean extends
 						.getReportCategory() != null)) {
 			rptGenBean = new ReportsGenerateBean();
 			rptGenBean.setReportCategoryView(true);
+
 			// this.setReportCategoryView(true);
 		} else {
 			rptGenBean = new ReportsGenerateBean();
+
 			// rptGenBean.setReportCategoryView(this.isReportCategoryView());
 		}
+		rptGenBean.setReportCategory(this.getReportCategory());
 		// tool tips for FL Submodules(like Ex: CC,PO,PA)
 		checkToolTipsConditonForFLSubmodule();
 		getManagedBean().setModuleNameValue(this.getModuleValue());
@@ -12819,6 +12824,7 @@ public class ReportBackingBean extends
 		}
 
 		rptGenBean = new ReportsGenerateBean();
+		// rptGenBean.setReportCategory(this.getReportCategory());
 		if ((this.getModuleValue() != null)
 				&& (getManagedBean().getReportValue() != null)) {
 			if (!(getManagedBean().getReportValue().toString()
@@ -15341,14 +15347,12 @@ public class ReportBackingBean extends
 						.setPhysicalContractTotVar(ReportConst.FL_AMP_PHY_CONTRACT_NAME_EQ
 								+ this.getFlPhysicalContractNo());
 			}
-
 			if ((this.getFlLoaPhysicalNo() != null)
 					&& (this.getFlLoaPhysicalNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
 						.setPhysicalLOATotVar(ReportConst.FL_AMP_PHY_LOA_NAME_EQ
 								+ this.getFlLoaPhysicalNo());
 			}
-
 			if ((this.getFlContractRequestNo() != null)
 					&& (this.getFlContractRequestNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -15510,26 +15514,81 @@ public class ReportBackingBean extends
 						.setFlPurchaseOrderNoVar(ReportConst.FL_AMP_PURCHASE_ORDER_EQ
 								+ this.getFlPurchaseOrderNo());
 			}
-			if ((this.getFlGroupOne() != null)
-					&& (this.getFlGroupOne() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setFlGroupOneVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupOne());
-			}
+
 			if ((this.getFlGroupTwo() != null)
 					&& (this.getFlGroupTwo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setFlGroupTwoVar(ReportConst.CT_AMP_GROUP_EQ
 						+ this.getFlGroupTwo());
 			}
-			if ((this.getFlGroupThree() != null)
-					&& (this.getFlGroupThree() != ReportConst.EMPTY_VAL)) {
+
+			if (this.getReportCategory().equalsIgnoreCase(
+					ReportConst.FL_SUB_MOD_CENTRAL_VAL)) {
+				if (this.getManagedBean().getReportValue()
+						.equals(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL)
+						|| this.getManagedBean().getReportValue()
+								.equals(ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL)
+						|| this.getManagedBean().getReportValue()
+								.equals(ReportConst.INV_CANC_RPT_CEN_PEN_VAL)) {
+					if (this.getFlGroupThree() != null
+							&& this.getFlGroupThree() != ReportConst.EMPTY_VAL
+							&& this.getFlGroupThree().equalsIgnoreCase(
+									ReportConst.FL_SUB_MOD_CENTRAL_TREASURY)) {
+						rptGenBean
+								.setFlGroupThreeVar(ReportConst.FL_AMP_TREASURY_CIRCULAR_EQ
+										+ this.getFlGroupThree());
+					} else if (this.getFlGroupOne() != null
+							&& this.getFlGroupOne() != ReportConst.EMPTY_VAL
+							&& this.getFlGroupOne().equalsIgnoreCase(
+									ReportConst.FL_SUB_MOD_CENTRAL_TREASURY)) {
+						rptGenBean
+								.setFlGroupOneVar(ReportConst.FL_AMP_TREASURY_CIRCULAR_EQ
+										+ this.getFlGroupOne());
+					}
+				}
+			} else if (this.getFlGroupThree() != null
+					&& this.getFlGroupThree() != ReportConst.EMPTY_VAL) {
 				rptGenBean.setFlGroupThreeVar(ReportConst.CT_AMP_GROUP_EQ
 						+ this.getFlGroupThree());
+			} else if ((this.getFlGroupOne() != null)
+					&& (this.getFlGroupOne() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setFlGroupOneVar(ReportConst.CT_AMP_GROUP_EQ
+						+ this.getFlGroupOne());
 			}
-			if ((this.getFlGroupFour() != null)
+			/*
+			 * if ((this.getFlGroupThree() != null) && (this.getFlGroupThree()
+			 * != ReportConst.EMPTY_VAL)) {
+			 * rptGenBean.setFlGroupThreeVar(ReportConst.CT_AMP_GROUP_EQ +
+			 * this.getFlGroupThree()); }
+			 */
+			if (this.getManagedBean().getReportValue()
+					.equals(ReportConst.LATE_DEL_RPT_MIN_VAL)
+					|| this.getManagedBean().getReportValue()
+							.equals(ReportConst.LATE_DEL_RPT_CEN_PEN_VAL)) {
+				if (this.getFlGroupFour() != null
+						&& this.getFlGroupFour() != ReportConst.EMPTY_VAL
+						&& this.getFlGroupFour().equalsIgnoreCase(
+								ReportConst.FL_SUB_MOD_FULLFILLEMENT_RECEIVE)) {
+					rptGenBean
+							.setFlGroupFourVar(ReportConst.FL_AMP_FULLFILLEMENT_RECEIVE_EQ
+									+ this.getFlGroupFour());
+				} else if ((this.getFlGroupFifteen() != null)
+						&& (this.getFlGroupFifteen() != ReportConst.EMPTY_VAL)
+						&& this.getFlGroupFifteen().equalsIgnoreCase(
+								ReportConst.FL_SUB_MOD_FULLFILLEMENT_RECEIVE)) {
+					rptGenBean
+							.setFlGroupFifteenVar(ReportConst.FL_AMP_FULLFILLEMENT_RECEIVE_EQ
+									+ this.getFlGroupFifteen());
+				}
+			} else if ((this.getFlGroupFour() != null)
 					&& (this.getFlGroupFour() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setFlGroupFourVar(ReportConst.CT_AMP_GROUP_EQ
 						+ this.getFlGroupFour());
+			} else if ((this.getFlGroupFifteen() != null)
+					&& (this.getFlGroupFifteen() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setFlGroupFifteenVar(ReportConst.CT_AMP_GROUP_EQ
+						+ this.getFlGroupFifteen());
 			}
+
 			if ((this.getFlGroupFive() != null)
 					&& (this.getFlGroupFive() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setFlGroupFiveVar(ReportConst.CT_AMP_GROUP_EQ
@@ -15580,11 +15639,7 @@ public class ReportBackingBean extends
 				rptGenBean.setFlGroupFourteenVar(ReportConst.CT_AMP_GROUP_EQ
 						+ this.getFlGroupFourteen());
 			}
-			if ((this.getFlGroupFifteen() != null)
-					&& (this.getFlGroupFifteen() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setFlGroupFifteenVar(ReportConst.CT_AMP_GROUP_EQ
-						+ this.getFlGroupFifteen());
-			}
+
 			if ((this.getFlGroupSixteen() != null)
 					&& (this.getFlGroupSixteen() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setFlGroupSixteenVar(ReportConst.CT_AMP_GROUP_EQ
