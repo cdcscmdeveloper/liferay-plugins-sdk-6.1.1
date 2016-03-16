@@ -75,10 +75,15 @@ public class QTFiledMapper {
 			QT_PENDING_APPROVALS_CHECKLIST_SCORING(
 				QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
 				new String[] { QTFieldConst.FILED_QT_TITLE,
-						QTFieldConst.FILED_QT_ESTMT_AMT,
-						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
+						QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_QT_TYPE,
+						QTFieldConst.FILED_QT_OPEN_FOR,
+						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
+						QTFieldConst.FILED_QT_PROCUREMENT_CATEGORY,
+						QTFieldConst.FILED_QT_EXISTING_CONTRACT,
+						QTFieldConst.FILED_QT_ZONE_COVERAGE,
+						QTFieldConst.FILED_QT_EVALUATION_TYPE,
+						QTFieldConst.FILED_QT_FULFILMENT_TYPE,
 						QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS}),
@@ -89,6 +94,8 @@ public class QTFiledMapper {
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_TITLE,
+						QTFieldConst.FILED_QT_CATEGORY_CODE,
+						QTFieldConst.FILED_QT_LOCATION_COVERAGE,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }),
@@ -98,6 +105,8 @@ public class QTFiledMapper {
 				QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL, new String[] {
 
 				QTFieldConst.FILED_QT_TITLE,
+				   QTFieldConst.FILED_QT_CATEGORY_CODE,
+				   QTFieldConst.FILED_QT_LOCATION_COVERAGE,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_BSVDETAILS,
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
@@ -222,7 +231,6 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_BSVDETAILS,
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
-						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS,
@@ -231,6 +239,7 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_MINIMUM_PAID_UP_CAPITAL,
 						QTFieldConst.FILED_QT_CATEGORY_CODE,
 						QTFieldConst.FILED_QT_LOCATION_COVERAGE,
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_QT_TYPE,
 						QTFieldConst.FILED_QT_OPEN_FOR,
 						QTFieldConst.FILED_QT_EVALUATION_TYPE,
@@ -244,9 +253,12 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_FILE_NO,
 						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
-						QTFieldConst.FILED_QT_EVALUATION_TYPE,
 						QTFieldConst.FILED_QT_EXISTING_CONTRACT,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_CATEGORY_CODE,
 						QTFieldConst.FILED_QT_LOCATION_COVERAGE,
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_BSVDETAILS,
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
@@ -259,7 +271,9 @@ public class QTFiledMapper {
 				QTStatusConst.QT_REVISION_PUBLICATION, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_TITLE,
-
+						
+						QTFieldConst.FILED_QT_CATEGORY_CODE,
+						QTFieldConst.FILED_QT_LOCATION_COVERAGE,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_BSVDETAILS,
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
@@ -269,7 +283,27 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_PUB_APPROVAL,
 						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-						QTFieldConst.FILED_QT_VALIDITY_PERIOD});
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD}),
+						
+						// QT_PENDING_BPK_APPROVAL
+						QT_PENDING_BPK_APPROVAL(
+								QTStatusConst.QT_PENDING_BPK_APPROVAL, new String[] {
+										QTFieldConst.FILED_QT_TITLE,
+										QTFieldConst.FILED_QT_FILE_NO,
+										QTFieldConst.FILED_QT_OPEN_FOR,
+										QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
+										QTFieldConst.FILED_QT_EXISTING_CONTRACT,
+										QTFieldConst.FILED_QT_CATEGORY_CODE,
+										QTFieldConst.FILED_QT_LOCATION_COVERAGE,
+										QTFieldConst.FILED_QT_SUPPQUALIFICATION,
+										QTFieldConst.FILED_QT_BSVDETAILS,
+										QTFieldConst.FILED_QT_PUBLISH_DATE,
+										QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+										QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+										QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+										QTFieldConst.FILED_QT_DOCUMENTS,
+										QTFieldConst.FILED_QT_SCHDETAILS,
+										QTFieldConst.FILED_QT_PUB_APPROVAL});
 		
 		private Long statusId;
 		private String[] toBeEnableFields;
