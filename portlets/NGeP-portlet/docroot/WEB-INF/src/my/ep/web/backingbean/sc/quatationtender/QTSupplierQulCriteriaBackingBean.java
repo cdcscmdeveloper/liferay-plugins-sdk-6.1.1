@@ -191,24 +191,56 @@ public class QTSupplierQulCriteriaBackingBean extends
 	private void populateSupplierSearchCriteria(SupplierSearchBean supplierSearchBean, ISearchBean<SmSupplier> searchBean) {
 		debugLogger("populateSupplierSearchCriteria");
 		if (supplierSearchBean != null) {
-			List<ScQtCategory> scQtCategoryList = getManagedBean().getQtCategoryList();
-			if(scQtCategoryList != null && scQtCategoryList.size() > 0){
-				SearchFilterBean categoryCodeIdFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
-				categoryCodeIdFilterBean.setSearchField("smAppl.smSupplierCategories.pmCategoryL3.categoryL3Id");
-				categoryCodeIdFilterBean.setSearchValue(constructL3Ids(scQtCategoryList));
+			ScQt scQt = getManagedBean().getQt();
+			List<ScQtCategory> scQtCategoryList = getManagedBean()
+					.getQtCategoryList();
+			
+			// Filter By - categoryL3Id
+			if (scQtCategoryList != null && scQtCategoryList.size() > 0) {
+				SearchFilterBean categoryCodeIdFilterBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_IN.value());
+				categoryCodeIdFilterBean
+						.setSearchField("smAppl.smSupplierCategories.pmCategoryL3.categoryL3Id");
+				categoryCodeIdFilterBean
+						.setSearchValue(constructL3Ids(scQtCategoryList));
 				searchBean.getDataFilterBeans().add(categoryCodeIdFilterBean);
 			}
+			
+			// Filter By - companyName
 			String supplierName = supplierSearchBean.getSupplierName();
 			if (!StringUtils.isBlank(supplierName)) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName", SearchOperator.OPERATOR_LIKE.value(), supplierName, true));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("companyName",
+								SearchOperator.OPERATOR_LIKE.value(),
+								supplierName, true));
 			}
+			
+			// Filter By - mofNo
 			String mofAccountNo = supplierSearchBean.getMofAccountNo();
 			if (!StringUtils.isBlank(mofAccountNo)) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("smMofAccounts.mofNo", SearchOperator.OPERATOR_LIKE.value(), mofAccountNo, true));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("smMofAccounts.mofNo",
+								SearchOperator.OPERATOR_LIKE.value(),
+								mofAccountNo, true));
 			}
+			
+			// Filter By - paidUpCapital
 			BigDecimal paidUpCapital = supplierSearchBean.getMinPaidUpCapital();
 			if (paidUpCapital != null && paidUpCapital.longValue() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppls.smCompanyBasic.paidUpCapital", SearchOperator.OPERATOR_GREATER_EQUAL.value(), paidUpCapital.toString(), true));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"smAppls.smCompanyBasic.paidUpCapital",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								paidUpCapital.toString(), true));
+			}
+			
+			// Filter By - bumi
+			if (ParameterConst.OPEN_FOR_BUMI.equals(scQt.getOpenFor())) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"bumi",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								true));
 			}
 		}
 	}
