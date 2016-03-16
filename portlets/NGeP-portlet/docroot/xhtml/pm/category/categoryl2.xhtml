@@ -1,4 +1,3 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
@@ -39,57 +38,63 @@
     
 		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
 			id="catLevel">
-			<h:panelGrid columns="2" columnClasses="cmWidth1,cmPadding5">
-				<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.pm.bn.level']}" />
-				</h:panelGroup>
-				<p:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}"
-					disabled="true" style="width: 108px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
-						itemValue="1" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
-						itemValue="2" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
-				</p:selectOneMenu>
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.pm.bn.code']}" />
-				</h:panelGroup>
-				<p:inputText
-					value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryL2Code}"
-					size="15" maxlength="2"
-					rendered="#{categoryBackingBean.managedBean.newCategory}" />
-				<p:inputText
-					value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryL2Code}"
-					size="15" maxlength="2"
-					rendered="#{!categoryBackingBean.managedBean.newCategory}"
-					readonly="true" disabled="true" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.pm.desc']}" />
-				</h:panelGroup>
-				
-				<p:inputText style="width:300px;"
-					disabled="#{!categoryBackingBean.managedBean.newCategory}"
-					value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryName}"
-					size="170" />
-
-				<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.pm.status']}"  />
-				</h:panelGroup>
-				<p:selectOneMenu required="true" label="#{lbl['lbl.pm.status']}"
-					value="#{categoryBackingBean.managedBean.pmCategoryL2.recordStatusFlg}"
-					disabled="false" style="width: 108px;">
-					<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
-					<p:ajax event="change" process="@form" partialSubmit="true"
-						update="@form" />
-				</p:selectOneMenu>
-			</h:panelGrid>
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 20%">
+						<p:outputLabel value="#{lbl['lbl.pm.bn.level']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}"
+							disabled="true" style="width: 108px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
+								itemValue="1" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
+								itemValue="2" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.pm.bn.code']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText
+							value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryL2Code}"
+							size="15" maxlength="2" disabled="#{!categoryBackingBean.managedBean.newCategory}"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.pm.desc']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText style="text-transform:uppercase"
+							disabled="#{!categoryBackingBean.managedBean.newCategory}"
+							value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryName}"
+							size="170" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.pm.status']}"  />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:selectOneMenu required="true" label="#{lbl['lbl.pm.status']}" id="somCategoryl2Status"
+							value="#{categoryBackingBean.managedBean.pmCategoryL2.recordStatusFlg}">
+							<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="@form" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</table>
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
@@ -150,7 +155,7 @@
 				</p:dataTable>
 
 				<ui:remove>
-					<p>&nbsp;</p>
+					<p></p>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"
 							action="#{categoryBackingBean.addSubDivision()}" />

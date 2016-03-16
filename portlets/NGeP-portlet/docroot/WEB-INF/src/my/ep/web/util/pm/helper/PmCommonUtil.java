@@ -1811,4 +1811,13 @@ public class PmCommonUtil {
 		return pmUser;
 	}
 	
+	public static String getResourceBundleLabels(String label){
+		return ResourceBundleUtils
+		.getMessage(
+				label,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes()
+						.getUserLocale());
+	}
+	
 }
