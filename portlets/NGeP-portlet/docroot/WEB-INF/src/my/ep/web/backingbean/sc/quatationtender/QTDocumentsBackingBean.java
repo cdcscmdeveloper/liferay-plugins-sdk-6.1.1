@@ -1258,7 +1258,7 @@ public class QTDocumentsBackingBean extends
 		html = html.replaceAll("&lt;&lt;Tel No&gt;&gt;", agencyPhoneNo);
 		html = html.replaceAll("&lt;&lt;Faks No&gt;&gt;", agencyFaxNo);
 		html = html.replaceAll("&lt;&lt;Validity Period&gt;&gt;",
-				Integer.toString(scQt.getQtValidityPeriod()));
+				scQt.getQtValidityPeriod() != null ? Integer.toString(scQt.getQtValidityPeriod()) : "");
 		return html;
 	}
 
@@ -2139,11 +2139,11 @@ public class QTDocumentsBackingBean extends
 			estimatedPrice = amountDF.format(qt.getEstimatedAmount());
 		}
 		context.put("estimatedPrice", estimatedPrice);
-		boolean isEstimate = false;
-		if (qt.getEstimatedAmount().intValue() >= 200000) {
-			isEstimate = true;
+		boolean isPerformanceBondReq = false;
+		if (qt.getEstimatedAmount() != null && isPerformanceBondRequired(qt.getEstimatedAmount())) {
+			isPerformanceBondReq = true;
 		}
-		context.put("isEstimate", isEstimate);
+		context.put("isPerformanceBondReq", isPerformanceBondReq);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.DOCPATH_QT_LOA_SAMPLE, context,
