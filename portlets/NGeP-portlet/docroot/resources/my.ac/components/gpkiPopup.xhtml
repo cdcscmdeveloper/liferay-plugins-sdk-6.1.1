@@ -42,10 +42,10 @@
 				gpkiBlockWidget.show();
 				var textBeforeSign = $("[id='#{textBeforeSign.clientId}']")
 						.val();
-				var plainText = encodeURIComponent(Aegis.hash(textBeforeSign));
+				var plainText = encodeURIComponent(Gpki.hash(textBeforeSign));
 				var pin = $("[id='#{pin.clientId}']").val();
 // 				var SignMethod = $("[id='#{r1.clientId}']").checked.val();
-				// 				Aegis.alert("This SignMethod :"	+ SignMethod);
+				// 				Gpki.alert("This SignMethod :"	+ SignMethod);
 // 				alert($('input[name="SignMethod"]:checked').val());
 // 				if($("[id='#{SignMethod.clientId}']:checked").val()){alert("SignMethod");
 // 				}
@@ -69,9 +69,9 @@
 										+ "serialNo = " + serialNo + "\n"
 										+ "validity = " + validity + "\n"
 										+ "subjectDn = " + subjectDn;
-								// 								Aegis.alert(msg);
+								// 								Gpki.alert(msg);
 							} else {
-								Aegis.alert("This signature is *INVALID* :"
+								Gpki.alert("This signature is *INVALID* :"
 										+ statusMsg);
 							}
 
@@ -97,13 +97,13 @@
 										var textBeforeSign = $(
 												"[id='#{textBeforeSign.clientId}']")
 												.val();
-										var originalText = encodeURIComponent(Aegis
+										var originalText = encodeURIComponent(Gpki
 												.hash(textBeforeSign));
 										//var signedText = encodeURIComponent(signedData);
 										//verify(originalText, signedText);
-										// 										Aegis.alert(signedText);
+										// 										Gpki.alert(signedText);
 
-										// 										Aegis.alert(signedData);
+										// 										Gpki.alert(signedData);
 										autoUpdateAction();
 										postSignAction([ {
 											name : 'textBeforeSign',
@@ -122,13 +122,13 @@
 										//blockWidget.show();
 										/* put your logic to handle the result here */
 										// 									} else if (statusCode == "50") {
-										// 										Aegis.alert("Wrong PIN");
+										// 										Gpki.alert("Wrong PIN");
 										// 									} else if (statusCode == "40") {
-										// 										Aegis.alert("CERT_EXPIRED");
+										// 										Gpki.alert("CERT_EXPIRED");
 										// 									} else if (statusCode == "41") {
-										// 										Aegis.alert("CERT_REVOKED");
+										// 										Gpki.alert("CERT_REVOKED");
 										// 									} else if (statusCode == "43") {
-										// 										Aegis.alert("CERT_NOT_YET_VALID");
+										// 										Gpki.alert("CERT_NOT_YET_VALID");
 									} else {
 										errorAction([ {
 											name : 'statusCode',
