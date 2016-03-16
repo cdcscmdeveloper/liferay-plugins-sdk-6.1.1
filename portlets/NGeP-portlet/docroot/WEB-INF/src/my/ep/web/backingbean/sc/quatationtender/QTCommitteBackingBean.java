@@ -1976,10 +1976,8 @@ public class QTCommitteBackingBean extends
 		
 		boolean isQtStatusAfterSchedule = false;
 		if(isQTStatusGreaterThan(currentStatusId,
-				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
-			if(!QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(currentStatusId)){
+				QTStatusConst.QT_PENDING_SCHEDULE_REVISION)){
 				isQtStatusAfterSchedule = true;
-			}
 		}
 		
 		return isQtStatusAfterSchedule;
@@ -1994,12 +1992,9 @@ public class QTCommitteBackingBean extends
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
 
-		if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(currentQtStatus) >= 0) {
-			
+		if (!isQTStatusGreaterThanOrEquals(currentQtStatus, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
 			return true;
-		} else if (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(currentQtStatus)){
-			return true;
-		}
+		} 
 
 		return false;
 	}
@@ -2007,11 +2002,11 @@ public class QTCommitteBackingBean extends
 	public boolean isEnableCloneButton() {
 		
 		Long currentSatatusId = this.getManagedBean().getCurrentStatusId();
-		if (this.getManagedBean().isMaintanceFlow()) {
-			if (!getManagedBean().isDeskOfficer()
-					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentSatatusId)) {
-				return true;
-			}
+		if (this.getManagedBean().isMaintanceFlow()
+				&& QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
+						.equals(currentSatatusId)) {
+
+			return true;
 		} else {
 			if ((QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentSatatusId)
 					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentSatatusId))
@@ -2026,8 +2021,7 @@ public class QTCommitteBackingBean extends
 				return true;
 			}
 		}
-		
-		return false;
+		return !getManagedBean().isDeskOfficer();
 	}
 
 	/**
