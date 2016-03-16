@@ -1381,12 +1381,18 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 					.setTplSpecZoneDtls(
 							convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
 		}
-		/*ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getScQt()
+		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt()
 				.getScQtSupplierCriteria();
 		if (null != zoneSupplierCriteria
-				&& zoneSupplierCriteria.isBrandNew() == false) {
+				&& zoneSupplierCriteria.isBrandNew() == false&& null!=zoneSupplierCriteria.getQtZoneCriterias() && zoneSupplierCriteria.getQtZoneCriterias().isBrandNew()==false) {
+			if (null != this.getManagedBean().getLoginRoleType()
+					&& !"".equals(this.getManagedBean().getLoginRoleType())
+					&& "SC".equalsIgnoreCase(this.getManagedBean()
+							.getLoginRoleType())) {
 			updateFinacialSpecStatus();
-		}*/
+			}
+		
+		}
 		this.getManagedBean().setIndex(-1);
 
 	}
