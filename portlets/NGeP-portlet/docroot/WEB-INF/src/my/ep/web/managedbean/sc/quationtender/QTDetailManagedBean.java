@@ -29,6 +29,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -102,6 +103,7 @@ import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
 
 import org.apache.log4j.Logger;
@@ -116,7 +118,7 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean
 @SessionScoped
-public class QTDetailManagedBean extends QTBaseManagedBean {
+public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -124,6 +126,47 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailManagedBean.class);
+	
+	/** The qt. */
+	private ScQt qt;
+
+	// Panel Information
+	/** The ct panel item. */
+	private CtPanelItem ctPanelItem;
+
+	/** The circular type. */
+	private String circularType;
+	
+	/** The selectpanel item. */
+	private List<CtPanelItemGroup> panelGroupItems;
+	
+	private List<CtPanelItem> panelItems;
+	
+	/** The circular no. */
+	private String circularNo;
+	
+	/** The circular name. */
+	private String circularName;
+	
+	/** The circular exp date. */
+	private Date circularExpDate;
+	
+	// Drop down Listing for Approver
+	private List<PmUser> ministrySpecApprovers; 
+	
+	/** The is zone location. */
+	private boolean isZoneLocation;
+	
+	/** The zone name. */
+	private String zoneName;
+	
+	/** The root zoanl tree. */
+	private TreeNode rootZoanlTree;
+	
+	private boolean isCheckAllList = Boolean.FALSE;
+	
+	/** The zone general trees. */
+	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 
 	/** The qt doc. */
 	private ScQtDoc qtDoc;
@@ -1041,12 +1084,6 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 	/** The selected loc nodes. */
 	private TreeNode[] selectedLocNodes;
 
-	/** The circular exp date. */
-	private Date circularExpDate;
-
-	/** The circular type. */
-	private String circularType;
-
 	// template Specification variables
 	/** The standard template. */
 	private String standardTemplate = ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD;
@@ -1275,9 +1312,6 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 
 	/** The active index. */
 	private int activeIndex;
-
-	/** The ct panel item. */
-	private CtPanelItem ctPanelItem;
 
 	
 
@@ -1577,6 +1611,160 @@ public class QTDetailManagedBean extends QTBaseManagedBean {
 		 * enumValues) { TreeNode node1 = new
 		 * DefaultTreeNode(cloneValue.getDisplayName(), node0); }
 		 */
+	}
+
+	/**
+	 * @return the qt
+	 */
+	public ScQt getQt() {
+		return qt;
+	}
+
+	/**
+	 * @param qt the qt to set
+	 */
+	public void setQt(ScQt qt) {
+		this.qt = qt;
+	}
+
+	/**
+	 * @return the panelGroupItems
+	 */
+	public List<CtPanelItemGroup> getPanelGroupItems() {
+		return panelGroupItems;
+	}
+
+	/**
+	 * @param panelGroupItems the panelGroupItems to set
+	 */
+	public void setPanelGroupItems(List<CtPanelItemGroup> panelGroupItems) {
+		this.panelGroupItems = panelGroupItems;
+	}
+
+	/**
+	 * @return the panelItems
+	 */
+	public List<CtPanelItem> getPanelItems() {
+		return panelItems;
+	}
+
+	/**
+	 * @param panelItems the panelItems to set
+	 */
+	public void setPanelItems(List<CtPanelItem> panelItems) {
+		this.panelItems = panelItems;
+	}
+
+	/**
+	 * @return the circularNo
+	 */
+	public String getCircularNo() {
+		return circularNo;
+	}
+
+	/**
+	 * @param circularNo the circularNo to set
+	 */
+	public void setCircularNo(String circularNo) {
+		this.circularNo = circularNo;
+	}
+
+	/**
+	 * @return the circularName
+	 */
+	public String getCircularName() {
+		return circularName;
+	}
+
+	/**
+	 * @param circularName the circularName to set
+	 */
+	public void setCircularName(String circularName) {
+		this.circularName = circularName;
+	}
+
+	/**
+	 * @return the ministrySpecApprovers
+	 */
+	public List<PmUser> getMinistrySpecApprovers() {
+		return ministrySpecApprovers;
+	}
+
+	/**
+	 * @param ministrySpecApprovers the ministrySpecApprovers to set
+	 */
+	public void setMinistrySpecApprovers(List<PmUser> ministrySpecApprovers) {
+		this.ministrySpecApprovers = ministrySpecApprovers;
+	}
+
+	/**
+	 * @return the isZoneLocation
+	 */
+	public boolean isZoneLocation() {
+		return isZoneLocation;
+	}
+
+	/**
+	 * @param isZoneLocation the isZoneLocation to set
+	 */
+	public void setZoneLocation(boolean isZoneLocation) {
+		this.isZoneLocation = isZoneLocation;
+	}
+
+	/**
+	 * @return the zoneName
+	 */
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	/**
+	 * @param zoneName the zoneName to set
+	 */
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
+
+	/**
+	 * @return the rootZoanlTree
+	 */
+	public TreeNode getRootZoanlTree() {
+		return rootZoanlTree;
+	}
+
+	/**
+	 * @param rootZoanlTree the rootZoanlTree to set
+	 */
+	public void setRootZoanlTree(TreeNode rootZoanlTree) {
+		this.rootZoanlTree = rootZoanlTree;
+	}
+
+	/**
+	 * @return the isCheckAllList
+	 */
+	public boolean isCheckAllList() {
+		return isCheckAllList;
+	}
+
+	/**
+	 * @param isCheckAllList the isCheckAllList to set
+	 */
+	public void setCheckAllList(boolean isCheckAllList) {
+		this.isCheckAllList = isCheckAllList;
+	}
+
+	/**
+	 * @return the zoneGeneralTrees
+	 */
+	public List<TreeNode> getZoneGeneralTrees() {
+		return zoneGeneralTrees;
+	}
+
+	/**
+	 * @param zoneGeneralTrees the zoneGeneralTrees to set
+	 */
+	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
+		this.zoneGeneralTrees = zoneGeneralTrees;
 	}
 
 	/**
