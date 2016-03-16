@@ -1795,7 +1795,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Bond amount - 9933600 * 0.05 = 496680*/
 
 		if(isDirectLoa){
-			scLoa.setBondReq(checkPerformanceBondMandatory(scLoa.getLoaAmt()));
+			scLoa.setBondReq(isPerformanceBondRequired(scLoa.getLoaAmt()));
 		}
 		
 		if (scLoa.isBondReq()) {
@@ -1912,28 +1912,34 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @return boolean isPerformanceBondRequired
 	 */
-	public boolean checkPerformanceBondMandatory(BigDecimal loaAmount) {
-
+	public boolean isPerformanceBondRequired(BigDecimal loaAmount) {
 		if (null != loaAmount) {
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IRuleSO.class);
-			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType(RuleTypeConst.BOND);
-			List<PmConfigRuleValue> ruleValueList = ruleSO
-					.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
+			IRuleSO ruleSO = null;
+			try {
+				ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IRuleSO.class);
+				RuleReqDTO ruleReqDTO = new RuleReqDTO();
+				ruleReqDTO.setRuleType(RuleTypeConst.BOND);
+				List<PmConfigRuleValue> ruleValueList = ruleSO
+						.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
 
-			if (ruleValueList != null && ruleValueList.size() > 0) {
-				PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-				if (loaAmount.compareTo(new BigDecimal(configRuleValue
-						.getRuleValue())) > 0) {
+				if (ruleValueList != null && ruleValueList.size() > 0) {
+					PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+					if (loaAmount.compareTo(new BigDecimal(configRuleValue
+							.getRuleValue())) > 0) {
 
-					return true;
+						return true;
+					}
+
 				}
 
+			} finally {
+				ruleSO = null;
 			}
 
 		}
+		
 		return false;
 	}
 
@@ -2211,6 +2217,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return allowCentralContract;		
 	}
 	
+	/**
+	 * Get maximum no of supplier for restricted tender
+	 * 
+	 * @return the maximum no of supplier for restricted tender
+	 */
 	public BigDecimal getNoOfSupplierForRestrictedTender() {
 		IRuleSO ruleSO = null;
 		try {
