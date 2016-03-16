@@ -15,7 +15,8 @@
 	<ui:param name="qtStatusChecklistScoringAndBefore" value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter" value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="zoneCoverageReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ZONE_COVERAGE)}" />
- <ui:param name="specCommitteeReadOnly" value="#{specificationBackingBean.managedBean.readOnly}" />
+ 	<ui:param name="specCommitteeReadOnly" value="#{createQtBB.managedBean.readOnly}" />
+ 	
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
 		toggleable="true">
 
