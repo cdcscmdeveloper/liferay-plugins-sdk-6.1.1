@@ -40,13 +40,13 @@
 			id="catLevel">
 			<table style="width: 100%;">
 				<tr>
-					<td style="width: 20%">
+					<td style="width: 10%">
 						<p:outputLabel value="#{lbl['lbl.pm.bn.level']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
 						<p:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}"
-							disabled="true" style="width: 108px;">
+							disabled="true">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
 								itemValue="1" />
@@ -69,15 +69,17 @@
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td style="vertical-align:top;">
 						<p:outputLabel value="#{lbl['lbl.pm.desc']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
-						<p:inputText style="text-transform:uppercase"
+						<p:inputTextarea 
+							style="text-transform:uppercase"
 							disabled="#{!categoryBackingBean.managedBean.newCategory}"
-							value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryName}"
-							size="170" />
+							cols="40" maxlength="255"  
+							value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryName}"						
+						/>
 					</td>
 				</tr>
 				<tr>
