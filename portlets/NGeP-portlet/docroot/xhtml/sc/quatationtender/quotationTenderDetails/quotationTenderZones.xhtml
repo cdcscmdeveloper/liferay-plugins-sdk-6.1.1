@@ -21,6 +21,7 @@
 								<c:choose>
 									<c:when test="#{!zoneCoverageReadonly}">
 										<p:selectOneMenu id="locationLevels" required="true"
+										disabled="#{specCommitteeReadOnly}"
 											label="#{lbl['lbl.sc.zone.location.level']}"
 											value="#{scQt.zoneLocationLevel.parameterId}"
 											style="width: 205px;">

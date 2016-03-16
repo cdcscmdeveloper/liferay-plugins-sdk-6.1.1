@@ -15,7 +15,7 @@
 	<ui:param name="qtStatusChecklistScoringAndBefore" value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter" value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="zoneCoverageReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ZONE_COVERAGE)}" />
-
+ <ui:param name="specCommitteeReadOnly" value="#{specificationBackingBean.managedBean.readOnly}" />
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
 		toggleable="true">
 
@@ -25,7 +25,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<c:choose>
-						<c:when test="#{qtStatusChecklistScoringAndBefore}">
+						<c:when test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
 							<p:selectOneRadio id="panelTitle" required="true"
 								label="#{lbl['lbl.sc.spec.panel']}" value="#{scQt.panel}">
 								<f:selectItems
@@ -51,7 +51,7 @@
 
 						<td>
 							<c:choose>
-								<c:when test="#{qtStatusChecklistScoringAndBefore}">
+								<c:when test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
 									<ac:lov id="ctCircularPanel" lovId="CT_CIRCULAR_PANEL"
 										headerText="#{lbl['lbl.sc.spec.circular.list']}"
 										update=":form:panelItemId"
@@ -72,7 +72,7 @@
 
 						<td>
 							<c:choose>
-								<c:when test="#{qtStatusChecklistScoringAndBefore}">
+								<c:when test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
 									<p:selectOneMenu id="panelItemId" required="#{isRequire}"
 										label="#{lbl['lbl.sc.spec.group.item']}"
 										value="#{scQt.itemGroup.panelItemGroupId}"
@@ -270,7 +270,7 @@
 						<tr>
 							<td>
 								<c:choose>
-									<c:when test="#{!zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel}">
+									<c:when test="#{!zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !specCommitteeReadOnly}">
 										<p:selectOneRadio value="#{scQt.zonal}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -297,7 +297,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID)}">
+						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID) and !specCommitteeReadOnly}">
 							<p:selectOneMenu id="qtmaintainprocTypeBoCategory"
 								required="#{isRequire}"
 								label="#{lbl['lbl.sc.procurment.type.category']}"
@@ -319,7 +319,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_CATEGORY)}">
+						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_CATEGORY) and !specCommitteeReadOnly}">
 							<p:selectOneMenu id="procCategory" required="#{isRequire}"
 								style="margin-bottom:5px;width:210px;"
 								label="#{lbl['lbl.sc.procurement.category']}"
@@ -344,7 +344,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_EVALUATION_TYPE)}">
+						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_EVALUATION_TYPE) and !specCommitteeReadOnly}">
 							<table>
 								<tr>
 									<td><p:selectOneRadio id="evalType"
@@ -407,7 +407,7 @@
 						value="#{lbl['lbl.sc.qt.existing.contract.no']}" /></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_EXISTING_CONTRACT)}">
+						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_EXISTING_CONTRACT) and !specCommitteeReadOnly}">
 							<ac:lov id="contractLovId" lovId="CT_CONTRACT"
 								headerText="#{lbl['lbl.sc.qt.existing.contract.no.search']}"
 								update=":form:qtdetailsid"
@@ -428,7 +428,7 @@
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td>
 					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FULFILMENT_TYPE)}">
+						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FULFILMENT_TYPE) and !specCommitteeReadOnly}">
 							<p:selectOneMenu required="#{isRequire}" id="fulfilId"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
@@ -454,7 +454,7 @@
 						value="#{scQt.contractDuration}"
 						style="text-align:right;margin-bottom:5px; width:200px;"
 						required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
-						disabled="#{qtStatusAfterChecklistScoring}">
+						disabled="#{qtStatusAfterChecklistScoring or specCommitteeReadOnly}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@this" />
 					</p:inputText> <p:message id="completionBo" for="contractBo" display="icon"></p:message></td>
