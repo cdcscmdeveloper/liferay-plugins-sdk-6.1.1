@@ -972,7 +972,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 
 		if (userRole == null) {
-			throw new EpException(MessageConst.ERROR_750040);
+			 throw new EpException(MessageConst.ERROR_750040);
 		} else {
 			return userRole;
 		}
@@ -2216,9 +2216,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			    if(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null){
 				      sb.append(ContractConst.CIRCULAR_UPDATE);
 				      sb.append(ContractConst.SEPRATE_LINE);
-				      sb.append(df.format(getManagedBean().getCircularVer().getExtendStartDate()));
+				      if(getManagedBean().getCircularVer().getExtendStartDate() != null)
+				            sb.append(df.format(getManagedBean().getCircularVer().getExtendStartDate()));
+				      else
+				    	  sb.append(df.format(getManagedBean().getCircularVer().getStartDate())); 
 					  sb.append(ContractConst.SEPRATE_LINE);
-					  sb.append(df.format(getManagedBean().getCircularVer().getExtendEndDate()));
+					  if(getManagedBean().getCircularVer().getExtendEndDate() != null)
+					       sb.append(df.format(getManagedBean().getCircularVer().getExtendEndDate()));
+					  else
+						  sb.append(df.format(getManagedBean().getCircularVer().getEndDate()));
 					  sb.append(ContractConst.SEPRATE_LINE);
 		        }else{
 			         sb.append(df.format(getManagedBean().getCircularVer().getStartDate()));
