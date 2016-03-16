@@ -143,9 +143,9 @@
 
 		<table style="width: 100%;">
 			<tr>
-				<td width="100%"><h:panelGrid id="ctReportCriteria" columns="4" columnClasses="columnClassForSOR"
-						style="width:75%;">
-						
+				<td width="100%"><h:panelGrid id="ctReportCriteria" columns="4"
+						columnClasses="columnClassForSOR" style="width:75%;">
+
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctSupplierNameView}">
 							<c:if
@@ -193,8 +193,7 @@
 												style="margin-top:5px;width:290px;">
 												<p:ajax event="blur" partialSubmit="true"
 													update="@([id$=Msg])" />
-											</p:inputText></td>
-										<td>&#160;<p:graphicImage id="phycontractno" style="vertical-align:top"
+											</p:inputText>&#160;<p:graphicImage id="phycontractno"
 												value="/css/images/design/tooltips.png" /> <p:tooltip
 												id="phycontractct" for="phycontractno">
 												<p:outputLabel escape="false"
@@ -383,7 +382,7 @@
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 							</p:inputText>
-						</c:if>					
+						</c:if>
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctLOAPhysicalNoView}">
 							<p:column>
@@ -403,8 +402,7 @@
 												style="margin-top:5px;width:290px;">
 												<p:ajax event="blur" partialSubmit="true"
 													update="@([id$=Msg])" />
-											</p:inputText></td>
-										<td>&#160;<p:graphicImage id="ctphyloa" style="vertical-align:top"
+											</p:inputText>&#160;<p:graphicImage id="ctphyloa"												
 												value="/css/images/design/tooltips.png" /> <p:tooltip
 												id="ctphyloaid" for="ctphyloa">
 												<p:outputLabel escape="false"
