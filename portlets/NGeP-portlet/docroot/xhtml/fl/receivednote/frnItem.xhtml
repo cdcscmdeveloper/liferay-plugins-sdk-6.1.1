@@ -133,7 +133,7 @@
 							styleClass="colFloatRight"
 							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedQty}"
 							maxlength="14" size="15"
-							disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or !bpmTasklistBackingBean.managedBean.claim}">
+							disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or !bpmTasklistBackingBean.managedBean.claim or receivedNoteBackingBean.managedBean.buttonVal=='View'}">
 							<p:ajax event="blur" update="selectedItemSection" process="@this"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								listener="#{receivedNoteBackingBean.retrieveReceivedAmt()}" />
@@ -144,7 +144,7 @@
 					<td><p:inputText size="15" style="text-align:right;"
 							styleClass="colFloatRight" id="receivedAmtVal"
 							label="#{lbl['lbl.fl.received.amount']}"
-							disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}"
+							disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or receivedNoteBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}"
 							rendered="#{!receivedNoteBackingBean.managedBean.isItemTypeProduct()}"
 							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedAmt}">
 							<p:ajax update="receivedAmtVal"
