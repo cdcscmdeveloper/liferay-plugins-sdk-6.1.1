@@ -118,9 +118,12 @@ public class ReportConst {
 	// S1 Report
 	// JSP
 	// OC
+	public static final String SC_OC_RPT_JSP = "SC_OC.jsp";
 	public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "SC_OC_SHLIST_1A.jsp";
 	public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "SC_OC_METHOD_OF_ASSES_1B.jsp";
+	
 	// FEC
+	public static final String SC_FEC_RPT_JSP = "SC_FEC.jsp";
 	public static final String SC_SPPSAP2_FEC_RPT_JSP = "SC_FEC_SHLIST_LEVEL2_3A.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP = "SC_FEC_FIN_ASSES_LEVEL2_3B.jsp";
 	public static final String SC_AKPT_FEC_RPT_JSP = "SC_FEC_PRICE_EVAL_3C.jsp";
@@ -129,6 +132,7 @@ public class ReportConst {
 	public static final String SC_FEC_OVERALL_FIN_3E = "SC_FEC_OVERALL_FIN_3E.jsp";
 
 	// TEC
+	public static final String SC_TEC_RPT_JSP = "SC_TEC.jsp";
 	public static final String SC_SPPSAP2_TEC_RPT_JSP = "SC_TEC_SHLISTTECH_EVAL_2A.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP = "SC_TEC_TECHASSES_2B.jsp";
 	public static final String SC_AKPT_TEC_RPT_JSP = "SC_TEC_EVAL_TECH_2C.jsp";
@@ -137,7 +141,9 @@ public class ReportConst {
 	public static final String SC_TEC_OVERALL_WITH_WEI_2F = "SC_TEC_OVERALL_WITH_WEI_2F.jsp";
 	public static final String SC_TEC_OTHER_CRITERIA = "SC_TEC_OTHER_CRITERIA.jsp";
 	public static final String SC_EC_OTHER_CRITERIA = "SC_EC_OTHER_CRITERIA.jsp";
+	
 	// EC
+	public static final String SC_EC_RPT_JSP = "SC_ONE_TIER.jsp";
 	public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_SHORTLIST_ASSES_4A.jsp";
 	public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_METHOD_OF_ASSES_4B.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "SC_EC_GEN_SPEC_TECH_4D.jsp";
