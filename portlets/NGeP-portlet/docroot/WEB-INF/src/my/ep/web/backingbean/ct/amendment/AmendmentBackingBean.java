@@ -2883,6 +2883,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtMeetings().remove(meeting);
 		}
 		selectedMeetingUser = null;
+		ctBackingBean.getManagedBean().setButtonHideActive(true);
 	}
 	
 	/**
