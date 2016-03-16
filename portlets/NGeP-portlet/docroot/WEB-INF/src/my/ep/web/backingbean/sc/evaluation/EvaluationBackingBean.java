@@ -6323,7 +6323,9 @@ public class EvaluationBackingBean extends
 
 				retrieveReportTabDtl();
 			} else if (outputTab == 5) {
-				saveQtReportDtls();
+				if (!this.getManagedBean().isReadOnly()) {
+					saveQtReportDtls();
+				}
 				
 				retriveCommitteeEndorsment();
 				// RequestContext.getCurrentInstance().update("@form");
@@ -8083,7 +8085,9 @@ public class EvaluationBackingBean extends
 		debugLogger("downloadReport");
 		ScQtEvaluationReportAttachment evalReportAttachment = 
 											generateDocumentAttachment();
-		saveQtReportDtls();
+		if (!this.getManagedBean().isReadOnly()) {
+			saveQtReportDtls();
+		}
 		downloadFile(evalReportAttachment);
 	}
 
