@@ -7,48 +7,48 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="loaContents" header="#{lbl['lbl.ct.panel.loa.contents']}" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="loaContentDt" var="loaReportVar" 
-		     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaReports}"
-		     selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedScLoaReports}" rowKey="#{loaReportVar}">
-		     <p:ajax event="rowSelect" update=":form:delLoaContentBtn" />
-			 <p:column headerText="#{lbl['lbl.ct.contents']}" style="width:50%;" styleClass="column-align-center">
-			    <p:outputLabel value="#{loaReportVar.title}" style="float:left;" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
-				<p:inputText value="#{loaReportVar.title}" style="width:90%;" maxlength="1000"  
-				    disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
-				rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
-		     </p:column>
-			 <p:column style="width:15%;" styleClass="column-align-center">
-			 	<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.type']}"/>
-			        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
-			  	</f:facet>
-				<p:outputLabel style="float:left;"
-					value="#{amendmentBackingBean.getParameterDesc(loaReportVar.definationType)}" />
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.btn.upload']}" styleClass="column-align-center" style="width:20%;">
-				<h:panelGroup id="uploadLetterPg" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
-					<p:commandButton icon="iconAttachment"  rendered="#{loaReportVar.scLoaReportAttachment.filePath == null}"
-					   update=":form:loaContentDt, :form:uploadLetterDlg" oncomplete="uploadLetterDlg.show();return false;"  >
-						<f:setPropertyActionListener value="#{loaReportVar}" 
-						    target="#{amendmentBackingBean.managedBean.selectedScLoaReports}" />
-					</p:commandButton>
-					<h:commandLink rendered="#{loaReportVar.scLoaReportAttachment.filePath != null}" title="#{loaReportVar.scLoaReportAttachment.fileName}"
-						value="#{amendmentBackingBean.getShortFileName(loaReportVar.scLoaReportAttachment.fileName)}"
-						action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
-					</h:commandLink>
-				 </h:panelGroup>
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;">
-			    <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
-			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
-				       <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
-				   </h:commandLink>
-			    </h:panelGroup>
-			     <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}">
-			         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(loaReportVar)}">
-					    <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
-				     </h:commandLink>
-			    </h:panelGroup>
-			  </p:column>
+		          value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaReports}"
+		          selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedScLoaReports}" rowKey="#{loaReportVar}">
+					         <p:ajax event="rowSelect" update=":form:delLoaContentBtn" />
+						    <p:column headerText="#{lbl['lbl.ct.contents']}" style="width:50%;" styleClass="column-align-center">
+						    <p:outputLabel value="#{loaReportVar.title}" style="float:left;" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
+							<p:inputText value="#{loaReportVar.title}" style="width:90%;" maxlength="1000"  
+							    disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
+							rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
+					     </p:column>
+						 <p:column style="width:15%;" styleClass="column-align-center">
+						 	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.type']}"/>
+						        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
+						  	</f:facet>
+							<p:outputLabel style="float:left;"
+								value="#{amendmentBackingBean.getParameterDesc(loaReportVar.definationType)}" />
+						 </p:column>
+						 <p:column headerText="#{lbl['lbl.btn.upload']}" styleClass="column-align-center" style="width:20%;">
+							<h:panelGroup id="uploadLetterPg" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
+								<p:commandButton icon="iconAttachment"  rendered="#{loaReportVar.scLoaReportAttachment.filePath == null}"
+								   update=":form:loaContentDt, :form:uploadLetterDlg" oncomplete="uploadLetterDlg.show();return false;"  >
+									<f:setPropertyActionListener value="#{loaReportVar}" 
+									    target="#{amendmentBackingBean.managedBean.selectedScLoaReports}" />
+								</p:commandButton>
+								<h:commandLink rendered="#{loaReportVar.scLoaReportAttachment.filePath != null}" title="#{loaReportVar.scLoaReportAttachment.fileName}"
+									value="#{amendmentBackingBean.getShortFileName(loaReportVar.scLoaReportAttachment.fileName)}"
+									action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
+								</h:commandLink>
+							 </h:panelGroup>
+						 </p:column>
+						 <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;">
+						    <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
+						       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
+							       <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
+							   </h:commandLink>
+						    </h:panelGroup>
+						     <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}">
+						         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(loaReportVar)}">
+								    <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
+							     </h:commandLink>
+						    </h:panelGroup>
+						  </p:column>
 		  </p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"  process="@form"  rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
@@ -56,10 +56,11 @@
 			    disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"/>
 			<p:spacer width="1" />
 			<p:commandButton id="delLoaContentBtn" value="#{lbl['lbl.ct.delete']}" 
-			  process="@form" onclick="dlgDocumentDel.show();" rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
+			  process="@this" partialSubmit="true" onsuccess="dlgDocumentDel.show();"
+			   rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
 			    disabled="#{amendmentBackingBean.managedBean.selectedScLoaReports == null or  (amendmentBackingBean.managedBean.selectedScLoaReports != null  and 
 			            amendmentBackingBean.managedBean.selectedScLoaReports.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined)
-			            or amendmentBackingBean.managedBean.disableFinalAmendDetails}"/>
+			            or amendmentBackingBean.managedBean.disableFinalAmendDetails or ctBackingBean.managedBean.buttonHideActive}"/>
 			<p:spacer width="1" />
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{amendmentBackingBean.downloadAll()}" />
 		 </div>
@@ -72,19 +73,14 @@
 				  invalidFileMessage="#{lbl['lbl.txt.upload.pdf.only']}"   update=":form:loaContentDt">
 			 </p:fileUpload>
 		 </p:dialog>
-		 <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"  modal="true" width="330"
-		     styleClass="screen-title">
-			 <h:panelGrid columns="3">
-				 <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain" />
-				<p:spacer width="10" />
-				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-			 </h:panelGrid>
-			 <div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:loaContentDt" 
-				    process="@form"  actionListener="#{amendmentBackingBean.deleteLoaContents()}" onclick="dlgDocumentDel.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-				     onclick="dlgDocumentDel.hide();" type="button" />
-			</div>
-		</p:dialog>
+		 <p:confirmDialog id="dlgDocumentDel" widgetVar="dlgDocumentDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+			      <div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:loaContentDt,:form:delLoaContentBtn" 
+						    process="@this" partialSubmit="true"  
+						    actionListener="#{amendmentBackingBean.deleteLoaContents()}" oncomplete="dlgDocumentDel.hide();" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDocumentDel.hide();" type="button" />
+			    </div>
+		</p:confirmDialog>
 	  </p:panel>
 </ui:composition>
