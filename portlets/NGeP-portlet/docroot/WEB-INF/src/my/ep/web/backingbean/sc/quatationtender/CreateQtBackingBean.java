@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.constant.MessageConst;
@@ -46,6 +47,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.exception.EpException;
@@ -638,7 +640,10 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 				populateEvaluationTypes(scQt, amount);
 			}			
-		} 
+		} else {
+			// Open For
+			updateRestrictedTenderOpenFor(scQt);
+		}
 
 		// All State
 		if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(qtType)) {
@@ -735,11 +740,38 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 				this.getManagedBean().setSupplierLocationList(
 						getManagedBean().getExistingSupplierLocationList());
 				
+				updateRestrictedTenderOpenFor(scQt);
+				
 			}
 			scQt.setZonal(false);
 		}
 
-		this.getManagedBean().getQt().setQtType(type);
+		scQt.setQtType(type);
+	}
+	
+	/**
+	 * update Open For value for QT Type is Restricted Tender.
+	 * 
+	 * @return
+	 */
+	private void updateRestrictedTenderOpenFor(ScQt scQt) {
+		IQTDetailSO qtDetailSO = null;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtdetail(getManagedBean().getQt());
+			
+			if (qtDetailSO.isRestrictedTenderOpenForBumi(reqDTO)) {
+				scQt.setOpenFor(ParameterConst.OPEN_FOR_BUMI);
+			} else {
+				scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
+			}
+
+		} finally {
+			qtDetailSO = null;
+		}
 	}
 
 	/**
