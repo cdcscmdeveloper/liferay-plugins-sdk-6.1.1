@@ -204,7 +204,7 @@
 					<td style="width: 17%"><p:outputLabel
 							value="#{lbl['lbl.pm.bn.level']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 43%;margin-bottom: 5px;"
+					<td><p:selectOneMenu
 							disabled="true"
 							value="#{categoryBackingBean.managedBean.catLevel}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
@@ -215,13 +215,13 @@
 							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
 						</p:selectOneMenu></td>
 
-					<td style="width: 16%"><p:outputLabel
+					<td style="width: 17%"><p:outputLabel
 							value="#{lbl['lbl.pm.paid.capital']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:44%" required="true"
+					<td><p:inputText required="true"
 							label="#{lbl['lbl.pm.paid.capital']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
-							size="33" id="paidUpCapId" maxlength="16">
+						    id="paidUpCapId" maxlength="16">
 							<f:validateDoubleRange minimum="1" />
 							<f:validateDoubleRange maximum="99999999999999" />
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -233,24 +233,23 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:41%" required="true"
+					<td><p:inputText required="true"
 							id="catCodeId" label="#{lbl['lbl.pm.bn.code']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
-							size="33" maxlength="2"
+							maxlength="2"
 							converterMessage="#{lbl['lbl.pm.val.subdiv.cat.code.invalid']}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
 							<f:validator validatorId="catCodeValidator" />
 						</p:inputText> <p:message id="catCodeIdMsg" for="catCodeId" showSummary="true"
-							showDetail="false" display="icon" /> <p:inputText
-							style="width:41%"
+							showDetail="false" display="icon" /> <p:inputText							
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
-							size="33" maxlength="2"
+							maxlength="2"
 							rendered="#{!categoryBackingBean.managedBean.newCategory}"
 							readonly="true" disabled="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.category']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 
-					<td><p:selectOneMenu style="width: 46%;margin-bottom: 5px;"
+					<td><p:selectOneMenu
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCode.parameterId}"
 							disabled="#{!categoryBackingBean.managedBean.newCategory}"
 							rendered="#{!categoryBackingBean.managedBean.newCategory}">
@@ -260,7 +259,7 @@
 								var="specialCategory" itemLabel="#{specialCategory.codeName}"
 								itemValue="#{specialCategory.pmParameter.parameterId}">
 							</f:selectItems>
-						</p:selectOneMenu> <p:selectOneMenu style="width: 46%;margin-bottom: 5px;"
+						</p:selectOneMenu> <p:selectOneMenu
 							id="specialCatCreateId" required="true"
 							label="#{lbl['lbl.pm.special.category']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}"
@@ -277,13 +276,14 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pm.desc']}" /> <p:outputLabel
+					<td rowspan="2" style="vertical-align:top;"><p:outputLabel value="#{lbl['lbl.pm.desc']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:41%" required="true"
-							id="catCodeDescId" label="#{lbl['lbl.pm.desc']}" valueChangeListener="#{categoryBackingBean.categoryNameChanges}"
+					<td rowspan="2"><p:inputTextarea required="true"
+							id="catCodeDescId" label="#{lbl['lbl.pm.desc']}" 
+							valueChangeListener="#{categoryBackingBean.categoryNameChanges}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
 							disabled="#{!categoryBackingBean.managedBean.newCategory}"
-							size="33" /> <p:message id="catCodeDescIdMsg"
+							cols="40" maxlength="255"  /> <p:message id="catCodeDescIdMsg"
 							for="catCodeDescId" showSummary="true" showDetail="false"
 							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.facility.type']}" />
@@ -291,7 +291,7 @@
 					<td><p:selectOneMenu id="facilityTypeId" required="#{categoryBackingBean.managedBean.facilityTypeChoosable}" label="#{lbl['lbl.pm.facility.type']}"
 					       disabled="#{!categoryBackingBean.managedBean.facilityTypeChoosable}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.facilityType}"
-							style="width:100px;">
+							>
 							<f:selectItems
 								value="#{categoryBackingBean.getDropdownCodeValuesBySearchBean(ParameterTypeConst.supplierFacilityType , facilityTypeSearchBean)}" />
 
@@ -299,14 +299,6 @@
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pm.bumi.percentage']}" />
-					</td>
-					<td><p:selectOneMenu style="width: 43%;margin-bottom: 5px;"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}">
-							<f:selectItem itemLabel="0%" itemValue="0" />
-							<f:selectItem itemLabel="51%" itemValue="51" />
-							<f:selectItem itemLabel="100%" itemValue="100" />
-						</p:selectOneMenu></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.group']}" /></td>
 					<td><p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
@@ -317,33 +309,14 @@
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 43%;margin-bottom: 5px;"
-							required="true" id="supplierTypeUpdateId"
-							label="#{lbl['lbl.pm.supplier.type']}"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}"
-							rendered="#{!categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.supplierType}"
-								var="supplierType" itemLabel="#{supplierType.codeName}"
-								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
-						</p:selectOneMenu> <p:message id="supplierTypeUpdateIdMsg"
-							for="supplierTypeUpdateId" showSummary="true" showDetail="false"
-							display="icon" /> <p:selectOneMenu
-							style="width: 43%;margin-bottom: 5px;" id="supplierTypeCreateId"
-							required="true" label="#{lbl['lbl.pm.supplier.type']}"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
-							rendered="#{categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.supplierType}"
-								var="supplierType" itemLabel="#{supplierType.codeName}"
-								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
-						</p:selectOneMenu> <p:message id="supplierTypeCreateIdMsg"
-							for="supplierTypeCreateId" showSummary="true" showDetail="false"
-							display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.bumi.percentage']}" />
+					</td>
+					<td><p:selectOneMenu
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}">
+							<f:selectItem itemLabel="0%" itemValue="0" />
+							<f:selectItem itemLabel="51%" itemValue="51" />
+							<f:selectItem itemLabel="100%" itemValue="100" />
+						</p:selectOneMenu></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.category.company.restriction']}" /></td>
 					<td><p:selectBooleanCheckbox
@@ -355,18 +328,48 @@
 
 				</tr>
 				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							required="true" id="supplierTypeUpdateId"
+							label="#{lbl['lbl.pm.supplier.type']}"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}"
+							rendered="#{!categoryBackingBean.managedBean.newCategory}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
+							<f:selectItems
+								value="#{categoryBackingBean.managedBean.supplierType}"
+								var="supplierType" itemLabel="#{supplierType.codeName}"
+								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
+						</p:selectOneMenu> <p:message id="supplierTypeUpdateIdMsg"
+							for="supplierTypeUpdateId" showSummary="true" showDetail="false"
+							display="icon" /> <p:selectOneMenu id="supplierTypeCreateId"
+							required="true" label="#{lbl['lbl.pm.supplier.type']}"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
+							rendered="#{categoryBackingBean.managedBean.newCategory}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
+							<f:selectItems
+								value="#{categoryBackingBean.managedBean.supplierType}"
+								var="supplierType" itemLabel="#{supplierType.codeName}"
+								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
+						</p:selectOneMenu> <p:message id="supplierTypeCreateIdMsg"
+							for="supplierTypeCreateId" showSummary="true" showDetail="false"
+							display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.operate.from.home']}" /></td>
+					<td><p:selectBooleanCheckbox
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" /></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu label="#{lbl['lbl.pm.status']}"
-							required="true" style="width: 43%;margin-bottom: 5px;"
+							required="true" 
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.recordStatusFlg}"
 							disabled="false">
 							<f:selectItems
 								value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
 						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.pm.operate.from.home']}" /></td>
-					<td><p:selectBooleanCheckbox
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" /></td>
+					<td colspan="2"></td>
+						
 				</tr>
 			</table>
 		</p:panel>
