@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
 	<p:panel id="evaluationReportsFilesDownloadIds" header="#{lbl['lbl.sc.content']}" toggleable="true">
 		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
 			widgetVar="documentWidget"
@@ -24,38 +25,30 @@
 				#{evaluationBackingBean.getParameterDesc(scQtEvaluationReport.definationType)}
 			</p:column>
 
-			<p:column style="width:10%;text-align: center;"
-				headerText="#{lbl['lbl.sc.action']}">
-				<p:commandLink
-					rendered="#{!evaluationBackingBean.managedBean.readOnly}"
-					action="#{evaluationBackingBean.showTemplateAction(scQtEvaluationReport)}">
+			<p:column style="width:10%;text-align: center;" headerText="#{lbl['lbl.sc.action']}">
+				<p:commandLink rendered="#{!evaluationBackingBean.managedBean.readOnly}" process="@this" 
+					update="@([id$=reportContentPopupDlgId])" oncomplete="reportContentPopupDlg.show(); return false;">
+					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
+								target="#{evaluationBackingBean.selectedReport}" />					
 					<h:graphicImage value="/css/images/design/edit.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
 				</p:commandLink>
-				<p:commandLink
-					rendered="#{evaluationBackingBean.managedBean.readOnly}"
-					action="#{evaluationBackingBean.showTemplateAction(scQtEvaluationReport)}">
+				<p:commandLink rendered="#{evaluationBackingBean.managedBean.readOnly}" process="@this" 
+					update="@([id$=reportContentPopupDlgId])" oncomplete="reportContentPopupDlg.show(); return false;">
+					<f:setPropertyActionListener value="#{scQtEvaluationReport}"
+								target="#{evaluationBackingBean.selectedReport}" />						
 					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
 				</p:commandLink>
-				<p:commandButton id="download" icon="ui-icon-download"
-					style="background-color:transparent !important; border:0px none;"
-					ajax="false"
-					action="#{evaluationBackingBean.downloadReport(scQtEvaluationReport)}" />
 			</p:column>
-
 		</p:dataTable>
 
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
+			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
 				styleClass="BtnSpacing" style="float:right;"
-				action="#{evaluationBackingBean.downloadAllReports}" />
+				action="#{evaluationBackingBean.downloadReport}" />
 		</div>
 	</p:panel>
-
-
-
-
 
 	<table style="width: 100%">
 		<tr>
@@ -103,4 +96,5 @@
 					update="@form" /></td>
 		</tr>
 	</table>
+
 </ui:composition>

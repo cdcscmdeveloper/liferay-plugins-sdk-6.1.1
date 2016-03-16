@@ -6323,6 +6323,8 @@ public class EvaluationBackingBean extends
 
 				retrieveReportTabDtl();
 			} else if (outputTab == 5) {
+				saveQtReportDtls();
+				
 				retriveCommitteeEndorsment();
 				// RequestContext.getCurrentInstance().update("@form");
 			} else if (outputTab == 6) {
@@ -6631,9 +6633,10 @@ public class EvaluationBackingBean extends
 
 			}
 
-			if (!this.getManagedBean().isReadOnly()) {
-				setReportAttachemnt();
-			}
+			// CR#7782 Commented as report attachment is not required to be generated
+//			if (!this.getManagedBean().isReadOnly()) {
+//				setReportAttachemnt();
+//			}
 
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -8076,17 +8079,12 @@ public class EvaluationBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void downloadReport(ScQtEvaluationReport scQtEvaluationReport)
-			throws Exception {
+	public void downloadReport() throws Exception {
 		debugLogger("downloadReport");
-		ScQtEvaluationReportAttachment scQtEvaluationReportAttachment = scQtEvaluationReport
-				.getScQtEvaluationReportAttachment();
-		if (scQtEvaluationReportAttachment == null) {
-			scQtEvaluationReportAttachment = generateDocumentAttachment(scQtEvaluationReport);
-			scQtEvaluationReport
-					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
-		}
-		downloadFile(scQtEvaluationReportAttachment);
+		ScQtEvaluationReportAttachment evalReportAttachment = 
+											generateDocumentAttachment();
+		saveQtReportDtls();
+		downloadFile(evalReportAttachment);
 	}
 
 	/**
@@ -8287,7 +8285,23 @@ public class EvaluationBackingBean extends
 		}
 		return scQtEvaluationReportAttachment;
 	}
-
+	
+	private ScQtEvaluationReportAttachment generateDocumentAttachment() throws Exception {
+		debugLogger("generateDocumentAttachment");
+		
+		ScQtEvaluationReportAttachment reportAttachment = 
+							new ScQtEvaluationReportAttachment();
+		StringBuilder fileName = new StringBuilder(
+				getManagedBean().getCommitteeType() + "_Report");
+		fileName.append(".pdf");
+		reportAttachment.setFileName(fileName.toString());
+		generateEvaluationPdf(
+				(ScAttachment) reportAttachment,
+				getManagedBean().getScQt());
+		
+		return reportAttachment;
+	}
+	
 	/**
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
@@ -8568,28 +8582,31 @@ public class EvaluationBackingBean extends
 
 		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
-		String reportId = "";
+//		String reportId = "";
 		String reportName = "";
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
-				.getManagedBean().getCommitteeType())) {
-			reportName = ReportConst.SC_EC_OTHER_CRITERIA;
-			reportId = ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL; // SC_032
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+			reportName = ReportConst.SC_EC_RPT_JSP;
+//			reportId = ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL; // SC_032
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+			reportName = ReportConst.SC_OC_RPT_JSP;
+//			reportId = ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL; // SC_018
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
-			reportName = ReportConst.SC_TEC_OTHER_CRITERIA;
-			reportId = ReportConst.PSDABK_TEC_RPT_VAL; // SC_010
-
+			reportName = ReportConst.SC_TEC_RPT_JSP;
+//			reportId = ReportConst.PSDABK_TEC_RPT_VAL; // SC_010
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
-			reportName = ReportConst.SC_FEC_OTHER_CRITERIA;
-			reportId = ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL; // SC_018
+			reportName = ReportConst.SC_FEC_RPT_JSP;
+//			reportId = ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL; // SC_018
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
-		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+//		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
 
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
@@ -9389,6 +9406,15 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
+	 * To set the report to be edited
+	 * 
+	 * @param evaluationReport
+	 */
+	public void setSelectedReport(ScQtEvaluationReport evaluationReport) {
+		this.getManagedBean().setSelectedReport(evaluationReport);
+	}
+	
+	/**
 	 * Show template action.
 	 * 
 	 * @param scQtEvaluationReport
@@ -9415,12 +9441,12 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setScQtEvaluationReport(scQtEvaluationReport);
 
-			ScQtEvaluationReport qtEvaluationReport = retriveRulesAndRegulationReport(scQtEvaluationReport);
-			if (qtEvaluationReport != null) {
-				scQtEvaluationReport = qtEvaluationReport;
-			} else {
-				scQtEvaluationReport = saveScQtReportList(scQtEvaluationReport);
-			}
+//			ScQtEvaluationReport qtEvaluationReport = retriveRulesAndRegulationReport(scQtEvaluationReport);
+//			if (qtEvaluationReport != null) {
+//				scQtEvaluationReport = qtEvaluationReport;
+//			} else {
+//				scQtEvaluationReport = saveScQtReportList(scQtEvaluationReport);
+//			}
 
 			TplDocMaster docMaster = scQtEvaluationReport.getTplDocMaster();
 			if (docMaster == null) {
@@ -9706,8 +9732,9 @@ public class EvaluationBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationReportSO.class);
 
-			String taskId = this.getManagedBean().getTaskId();
-			String[] outComes = this.getManagedBean().getOutComes();
+//			ScQt scQt = getManagedBean().getScQt();
+//			String taskId = this.getManagedBean().getTaskId();
+//			String[] outComes = this.getManagedBean().getOutComes();
 
 			List<ScQtEvaluationReport> evaluationReportList = null;
 			List<ScQtEvaluationReport> docReportsList = getManagedBean()
@@ -9718,18 +9745,16 @@ public class EvaluationBackingBean extends
 			}
 
 			EvaluationReportReqDTO reqDTO = new EvaluationReportReqDTO();
-			// reqDTO.setScQtEvaluationReportList(evaluationReportList);
+			reqDTO.setScQtEvaluationReportList(evaluationReportList);
 			evaluationReportSO.saveQTDtl(reqDTO);
 
-			renewSesionObject();
-			this.getManagedBean().setTaskId(taskId);
-			this.getManagedBean().setOutComes(outComes);
+//			renewSesionObject();
+			
+//			this.getManagedBean().setScQt(scQt);
+//			this.getManagedBean().setTaskId(taskId);
+//			this.getManagedBean().setOutComes(outComes);
 			retrieveReportTabDtl();
 
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation is successfully saved", ""));
 		} finally {
 			evaluationReportSO = null;
 		}
