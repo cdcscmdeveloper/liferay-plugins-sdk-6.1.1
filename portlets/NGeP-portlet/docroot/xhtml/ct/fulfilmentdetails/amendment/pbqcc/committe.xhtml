@@ -101,28 +101,22 @@
 		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"  update="modelDialog"
 		             action="#{amendmentBackingBean.fetchCommitteMembers()}" disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
 		             rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
-		          <p:commandButton value="#{lbl['lbl.ct.delete']}"  onsuccess="dlgDel.show();" partialSubmit="true"
-		             process="@this"  disabled="#{amendmentBackingBean.managedBean.confirmMeeting}"
+		          <p:commandButton value="#{lbl['lbl.ct.delete']}"  onsuccess="committedlgDel.show();" partialSubmit="true" id = "committeDelBtn"
+		             process="@this"  disabled="#{amendmentBackingBean.managedBean.confirmMeeting or ctBackingBean.managedBean.buttonHideActive}"
 		             rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
 		     </div>
            
-             <p:dialog id="dlgCommitteDetails"
-                 styleClass="screen-title"  widgetVar="dlgDel" modal="true" width="330">  
-               
-                 <h:panelGrid columns="3">
-                      <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			          <p:spacer width="10"/>
-                      <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                  </h:panelGrid>
-                 
+              <p:confirmDialog id="committedlgDel" widgetVar="committedlgDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                   <div class="ppRightBtn">
-                  <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="committeTable" 
-		              process="@this" actionListener="#{amendmentBackingBean.removeCommitteeMembers()}" onclick="dlgDel.hide();">
+                  <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:committeTable,:form:committeDelBtn" 
+		              process="@this" partialSubmit="true" 
+		              actionListener="#{amendmentBackingBean.removeCommitteeMembers()}" oncomplete="committedlgDel.hide();">
 		         <f:setPropertyActionListener
 					target="#{amendmentBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
-		            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDel.hide();" type="button" />
+		            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="committedlgDel.hide();" type="button" />
 		          </div>
-             </p:dialog>
+            </p:confirmDialog>
         </p:panel>
       
          <p:dialog id="modelDialog" header="#{lbl['lbl.ct.new.committee.member']}" widgetVar="dlg2" 
