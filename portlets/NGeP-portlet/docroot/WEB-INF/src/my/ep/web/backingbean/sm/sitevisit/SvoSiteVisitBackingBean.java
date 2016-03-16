@@ -126,7 +126,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private StreamedContent file;
 	
 	public SvoSiteVisitBackingBean() {
-
+		SmCommonUtil.setMDCUserId();
 	}
 	
 	/**
@@ -2006,8 +2006,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-				reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(SupplierManagementConst.SVO_SUBMIT_REPORT, 
-						this.getManagedBean().getSmSvTask().getSmAppl().getApplId(), this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getUserRole()));
 			}
 
 			reqDTO.setSmSvTask(svTask);

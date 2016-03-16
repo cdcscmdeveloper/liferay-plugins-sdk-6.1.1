@@ -38,6 +38,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmSvcAssignmentVO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
@@ -52,7 +53,7 @@ public class SvcSiteAssignBackingBean extends
 	private final Long SV_AFTER_APPROVE = 20117L;
 	
 	public SvcSiteAssignBackingBean() {
-
+		SmCommonUtil.setMDCUserId();
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class SvcSiteAssignBackingBean extends
 	public String submitSiteVisitAssignment(String action){
 		log.info("----------------------submitSiteVisitAssignment start----------------");
 		
-
+		List<String> svoNames = new ArrayList<String>();
 		//try{
 			SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 			ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
@@ -106,6 +107,10 @@ public class SvcSiteAssignBackingBean extends
 					SmSvOfficer svOfficer = new SmSvOfficer();
 					svOfficer.setSmSvTask(svTask);
 					svOfficer.setPmUser(pmUser);
+					if(pmUser!=null && !StringUtils.isBlank(pmUser.getUserName()) 
+						&& !svoNames.contains(pmUser.getUserName())){
+						svoNames.add(pmUser.getUserName());
+					}
 					svTask.getSmSvOfficers().add(svOfficer);
 				}
 			}
@@ -124,13 +129,11 @@ public class SvcSiteAssignBackingBean extends
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setToken(token);
 			reqDTO.setBpmSupplierList(bpmSupplierList);
+			reqDTO.setSvoNames(svoNames);
 
 			
 			System.out.println("<<<<<reqDTO.setSmAppl>>>>" + reqDTO.getSmAppl().getApplNo());
 			System.out.println("<<<<<reqDTO.setSmAppl>>>>" + reqDTO.getSmAppl().getApplId());
-			reqDTO.setTrackingDairyVO(
-					SmCommonUtil.assignTrackingDiaryValues(SupplierManagementConst.SVC_ASSIGN_SITEVISIT, 
-							this.getManagedBean().getSmAppl().getApplId(), this.getManagedBean().getSmAppl().getApplNo(), getUserRole()));
 			
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			log.info("******submitSiteVisitAssignment - getSmSupplier******" + pmUser.getUserId());
