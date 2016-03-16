@@ -481,7 +481,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String userScoreSchemaType;
 	private String dummyScoreType;
 	
-	
+	private ScQtEvaluationReport selectedReport;
 	
 
 	/**
@@ -3314,6 +3314,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setDummyScoreType(String dummyScoreType) {
 		this.dummyScoreType = dummyScoreType;
+	}
+
+	/**
+	 * @return the selectedReport
+	 */
+	public ScQtEvaluationReport getSelectedReport() {
+		return selectedReport;
+	}
+
+	/**
+	 * @param selectedReport
+	 *            the selectedReport to set
+	 */
+	public void setSelectedReport(ScQtEvaluationReport selectedReport) {
+		this.selectedReport = selectedReport;
 	}
 
 }
