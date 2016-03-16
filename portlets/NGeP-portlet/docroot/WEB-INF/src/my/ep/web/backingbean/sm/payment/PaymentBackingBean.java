@@ -422,7 +422,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			this.getManagedBean().setOrderId(
 					resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
-			this.getManagedBean().setBillMobile(pmUser.getMobileNo());
+			this.getManagedBean().setBillMobile(pmUser.getMobileFull());
 			this.getManagedBean().setBillEmail(pmUser.getEmail());
 			this.getManagedBean().setBillName(pmUser.getUserName());
 			this.getManagedBean().setBillDesc("NGeP Payment");
