@@ -4318,6 +4318,8 @@ public class LOADetailBackingBean extends
 		getManagedBean().setAgreementMandatory(isAgreementMandatory);
 		if(isAgreementMandatory) {
 			getManagedBean().getScLoa().setAgreementReq(true);
+		} else {
+			getManagedBean().getScLoa().setAgreementReq(false);
 		}
 	}
 
