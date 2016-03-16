@@ -3031,53 +3031,32 @@ public class QTDetailBackingBean extends
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
 						// this.getManagedBean().setContractType(scQt.getContractType());
-						if (this.getManagedBean().getQt().isZonal()) {
-							if (this.getManagedBean().getZoneGeneralTrees()
-									.isEmpty()) {
-								if (null != this.getManagedBean().getQt()
-										.getZoneLocationLevel()) {
-									this.getManagedBean().setStateCodes(
-											this.getManagedBean().getQt()
-													.getZoneLocationLevel()
-													.getParameterCode());
-								}
-								ScQtSupplierCriteria suppCriteria = this
-										.getManagedBean().getQt()
-										.getScQtSupplierCriteria();
-								if (suppCriteria != null) {
-									this.getManagedBean().setSupplierCriteria(
-											suppCriteria);
-									/*this.getManagedBean().setCtPanelItem(
-											suppCriteria.getCtPanelItem());*/
-									/*
-									 * scQt.setPanelItemId(
-									 * suppCriteria.getCtPanelItem
-									 * ().getPanelItemId());
-									 */
-								}
-
-								if (tenderResDTO.getQtDetail().isZonal()) {
-									this.getManagedBean().setCtzones(
-											Boolean.TRUE);
-									if (isNotNullOREmpty(tenderResDTO
-											.getZoneDetails())) {
-										this.getManagedBean()
-												.setTemplateSpecZoneDtls(
-														tenderResDTO
-																.getZoneDetails());
-										for (TplSpecZoneDtl zone : tenderResDTO
-												.getZoneDetails()) {
-											getManagedBean()
-													.getZoneGeneralTrees()
-													.add(LocationSingleton
-															.getInstance()
-															.constuctTreeNode(
-																	zone,
-																	zone.getTplSpecZoneLocs()));
-										}
-									}
-								}
+						if (this.getManagedBean().getQt().isZonal()) {							
+							if (null != this.getManagedBean().getQt()
+									.getZoneLocationLevel()) {
+								this.getManagedBean().setStateCodes(
+										this.getManagedBean().getQt()
+												.getZoneLocationLevel()
+												.getParameterCode());
 							}
+							ScQtSupplierCriteria suppCriteria = this
+									.getManagedBean().getQt()
+									.getScQtSupplierCriteria();
+							if (suppCriteria != null) {
+								this.getManagedBean().setSupplierCriteria(
+										suppCriteria);
+								/*this.getManagedBean().setCtPanelItem(
+										suppCriteria.getCtPanelItem());*/
+								/*
+								 * scQt.setPanelItemId(
+								 * suppCriteria.getCtPanelItem
+								 * ().getPanelItemId());
+								 */
+							}
+
+							// Populate zone detail into tree node
+							populateZoneDetailIntoTreeNode(tenderResDTO.getQtDetail(), tenderResDTO
+									.getZoneDetails());
 						}
 
 					}
@@ -3113,6 +3092,27 @@ public class QTDetailBackingBean extends
 				}
 			} finally {
 				QtDetailsSO = null;
+			}
+		}
+	}
+	
+	private void populateZoneDetailIntoTreeNode(ScQt scQt, List<TplSpecZoneDtl> specZoneDtls) {
+		List<TreeNode> zoneGeneralTrees = getManagedBean().getZoneGeneralTrees();
+		
+		this.getManagedBean().setCtzones(Boolean.TRUE);
+		this.getManagedBean().setTemplateSpecZoneDtls(specZoneDtls);
+		if (zoneGeneralTrees == null) {
+			zoneGeneralTrees = new ArrayList<TreeNode>();
+			getManagedBean().setZoneGeneralTrees(zoneGeneralTrees);
+		} else {
+			zoneGeneralTrees.clear();	
+		}
+		
+		if (isNotNullOREmpty(specZoneDtls)) {
+			for (TplSpecZoneDtl zone : specZoneDtls) {
+				zoneGeneralTrees.add(
+						LocationSingleton.getInstance().constuctTreeNode(
+								zone, zone.getTplSpecZoneLocs()));
 			}
 		}
 	}
@@ -3689,6 +3689,19 @@ public class QTDetailBackingBean extends
 			}
 			break;
 		}
+		
+		if (activeIndex != 0) {
+			ScQt scQt = getManagedBean().getQt();
+			
+			if (scQt.isZonal() && 
+					scQt.getScQtSupplierCriteria() != null &&
+					scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+				// Populate zone detail into tree node
+				populateZoneDetailIntoTreeNode(scQt, 
+						scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls());	
+			}
+		}
+		
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
