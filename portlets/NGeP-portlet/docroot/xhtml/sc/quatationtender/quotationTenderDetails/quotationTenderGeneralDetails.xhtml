@@ -240,7 +240,7 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_OPEN_FOR) and !scQt.panel}">
+						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_OPEN_FOR) and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel}">
 							<table>
 								<tr>
 									<td>
