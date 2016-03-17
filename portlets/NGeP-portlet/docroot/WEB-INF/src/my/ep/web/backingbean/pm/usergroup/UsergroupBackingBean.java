@@ -827,17 +827,24 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	
 	
 	private void findDuplicateGroupName() {
-
+		PmUserGroup userGroup =  getManagedBean().getUserGroup();
 		UserGroupReqDTO reqDTO = new UserGroupReqDTO();
-		reqDTO.setUserGroup(getManagedBean().getUserGroup());
+		reqDTO.setUserGroup(userGroup);
 		IUserGroupSO groupSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserGroupSO.class);
 		boolean response = groupSO.checkDuplicateGroupName(reqDTO);
 		if (response) {
-			throw new EpException(MessageConst.ERR_900029, new String[] {
+			if(userGroup.isBrandNew()){
+				throw new EpException(MessageConst.ERR_900029, new String[] {
 					PmCommonUtil.getRoleDescByRoleCodeAndLanguage(getManagedBean().getUserGroup().getRoleCode(), getFacesScopes().getUserLocale().getLanguage()),
 					getManagedBean().getUserGroup().getPmOrgProfile().getOrgCode()});
+			}else{
+				throw new EpException(MessageConst.ERROR_770220, new String[] {
+						PmCommonUtil.getResourceBundleLabels("lbl.pm.ug.result.groupname")
+						});
+			}
+			
 		}
 	}
 	

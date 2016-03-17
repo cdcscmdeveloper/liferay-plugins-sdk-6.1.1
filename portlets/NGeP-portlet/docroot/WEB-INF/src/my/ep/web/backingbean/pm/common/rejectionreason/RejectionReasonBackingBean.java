@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.constant.MessageConst;
@@ -28,6 +29,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -43,6 +45,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -56,6 +59,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 /**
  * Backing Bean for Rejection Reason
@@ -671,7 +675,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			getAllRestrictions();
 		}
 		
-		
+		if(DbValueConst.RECORD_STATUS_ACTIVE == 
+				getManagedBean().getSelectedReason().getRecordStatusFlg().intValue()){
+			validateRejectionDesc();
+		}
 		
 		if(this.getManagedBean().getSelectedReason().isBrandNew()){
 			returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
@@ -1549,4 +1556,95 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	
 	
+
+	
+	/**
+	 * validate rejection desc if exist
+	 * 
+	 */
+	private void validateRejectionDesc(){
+		log.info("isUniqueReasonCode");
+		String enDesc = null;
+		String msDesc = null;
+		for(PmReasonDesc desc : getManagedBean().getSelectedReason().getPmReasonDescs()){
+			if(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(desc.getPmLanguage().getLanguageCode())){
+				enDesc = desc.getReasonDesc();
+			}
+			
+			if(CommonConstants.LANGUAGE_CODE_MALAY.equals(desc.getPmLanguage().getLanguageCode())){
+				msDesc = desc.getReasonDesc();
+			}
+		}
+		
+		if(StringUtils.isBlank(enDesc) ||StringUtils.isBlank(msDesc) ){
+			throw new EpException("Error Desctiptions");
+		}
+		
+		//Create search bean
+		SearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>();
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(
+						new SearchFilterBean(
+								"reasonDesc", 
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								enDesc.trim(),
+								true),
+						new SearchFilterBean(
+								"pmLanguage.languageCode", 
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								CommonConstants.DEFAULT_LANGUAGE_CODE, 
+								SearchCondition.CONDITION_AND.value())));
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchMultiFilterBean(
+						new SearchFilterBean(
+								"reasonDesc", 
+								SearchOperator.OPERATOR_LIKE.value(), 
+								msDesc.trim(),
+								true),
+						SearchCondition.CONDITION_OR.value(),
+						new SearchFilterBean(
+								"pmLanguage.languageCode", 
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								CommonConstants.LANGUAGE_CODE_MALAY, 
+								SearchCondition.CONDITION_AND.value())));
+		
+		searchBean.getDataFilterBeans().add(new SearchFilterBean(
+				"pmReason.reasonCategoryCode.parameterCode", 
+				SearchOperator.OPERATOR_EQUALS.value(), 
+				getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterCode()
+				));
+		
+		searchBean.getDataFilterBeans().add(new SearchFilterBean(
+				"recordStatusFlg", 
+				SearchOperator.OPERATOR_EQUALS.value(), 
+				DbValueConst.RECORD_STATUS_ACTIVE
+				));
+		
+		searchBean.getDataFilterBeans().add(new SearchFilterBean(
+				"pmReason.recordStatusFlg", 
+				SearchOperator.OPERATOR_EQUALS.value(), 
+				DbValueConst.RECORD_STATUS_ACTIVE
+				));
+		
+		//Filter by search bean
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonDescSearchBean(searchBean);
+		reqDTO.setValidation(true);
+		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
+		ReasonResDTO resDTO = reqSO.retrieveReasonDescBySearchBean(reqDTO);
+		if(resDTO.isSuccessful()&& resDTO.getReasonDescList()!=null && !resDTO.getReasonDescList().isEmpty()){ 
+			if(getManagedBean().getSelectedReason().isBrandNew()){
+				throw new EpException(MessageConst.ERROR_770302,new String[]{
+					PmCommonUtil.getResourceBundleLabels("lbl.pm.reason.desc"),
+					getParameterDesc(getManagedBean().getSelectedReason().getReasonCategoryCode()),
+					PmCommonUtil.getResourceBundleLabels("lbl.pm.reason.desc")					
+				});
+			}else{
+				throw new EpException(MessageConst.ERROR_770220, new String[] {
+						PmCommonUtil.getResourceBundleLabels("lbl.pm.reason.desc")
+				});	
+			}
+		}
+	}
 }
