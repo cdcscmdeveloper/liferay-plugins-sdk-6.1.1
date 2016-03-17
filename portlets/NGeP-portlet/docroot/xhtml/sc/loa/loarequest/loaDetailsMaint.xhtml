@@ -45,7 +45,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" disabled="#{isPendingVerification and !isTrackingDairyView}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form"   disabled="#{!isFulfilmentTypeScheduled or isPendingVerification}">	
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form"   disabled="#{!isPendingVerification}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
