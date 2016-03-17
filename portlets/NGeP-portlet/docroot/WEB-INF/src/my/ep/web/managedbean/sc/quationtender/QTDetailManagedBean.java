@@ -1039,8 +1039,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// supplier Qualification Criteria List and variables
 
-	/** The supp criteriaopen list. */
-	private List<ScQtCategory> suppCriteriaopenList;
+	
 
 	/** The supp criteriaopen select list. */
 	private List<ScQtCategory> suppCriteriaopenSelectList;
@@ -8681,13 +8680,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.totalProgressivePayment = totalProgressivePayment;
 	}
 
-	public List<ScQtCategory> getSuppCriteriaopenList() {
-		return suppCriteriaopenList;
-	}
 
-	public void setSuppCriteriaopenList(List<ScQtCategory> suppCriteriaopenList) {
-		this.suppCriteriaopenList = suppCriteriaopenList;
-	}
 
 	public String getProcuremntCategory() {
 		return procuremntCategory;
