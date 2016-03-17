@@ -40,7 +40,7 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "cdTrackingDiaryBackingBean")
 @ViewScoped
 public class CdTrackingDiaryBackingBean extends
-		BaseBackingBean<CdTrackingDiaryManagedBean> {
+BaseBackingBean<CdTrackingDiaryManagedBean> {
 	private static Logger log = Logger.getLogger(CdTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CODIFICATION_SEARCH = "/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml";
 	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "/xhtml/cm/codification/cdTrackingDairyViewPage.xhtml";
@@ -49,7 +49,7 @@ public class CdTrackingDiaryBackingBean extends
 
 	public CdTrackingDiaryBackingBean() {
 	}
-	
+
 	public void search() {
 		if ((getManagedBean().getSearchDocumentNoValue() != null && getManagedBean().getSearchDocumentNoValue().isEmpty()) 
 				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
@@ -80,7 +80,7 @@ public class CdTrackingDiaryBackingBean extends
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CD"));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),cdObj[5]));
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
+			//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
 			System.out.println("Cd TrackingDiary docId  " + cdObj[5]);
 
 			reqDTO.setSearchBean(searchBean);
@@ -89,18 +89,18 @@ public class CdTrackingDiaryBackingBean extends
 			try {
 				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
 				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
-				
+
 				for(PmTrackingDiary diary:resDTO.getResultBean().getResultList()){
-					
+
 					bb.getManagedBean().setDocId(diary.getDocId());
-				
+
 				}
-				
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			System.out.println("SearchCDTrackingDiaryPagingDataModel TotalRecord====================================: "+ resDTO.getResultBean().getTotalRecord());
+			//			System.out.println("SearchCDTrackingDiaryPagingDataModel TotalRecord====================================: "+ resDTO.getResultBean().getTotalRecord());
 			return resDTO.getResultBean();
 		}
 	}
@@ -108,32 +108,32 @@ public class CdTrackingDiaryBackingBean extends
 	public String goToTrackingDiarySearch(Object[] unspscObj) {
 
 		getManagedBean().setObject(unspscObj);
-		
+
 		SearchBean<PmTrackingDiary> searchBean = new SearchBean<PmTrackingDiary>();
 		TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CD"));
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),unspscObj[5]));
-//		searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
+		//		searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
 		System.out.println("Cd TrackingDiary docId  " + unspscObj[5]);
 
 		reqDTO.setSearchBean(searchBean);
 		TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
-		
-		
+
+
 		ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
 		resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
-		
+
 		BigDecimal temp = (BigDecimal) unspscObj[7];
 		Long statusId =  temp.longValue();
 		for(PmTrackingDiary diary:resDTO.getResultBean().getResultList()){
-				
+
 			this.getManagedBean().setDocId(diary.getDocId());
 			this.getManagedBean().setDocNo(diary.getDocNo());
-			
+
 		}
-		
-		
-		
+
+
+
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
@@ -148,75 +148,80 @@ public class CdTrackingDiaryBackingBean extends
 		this.getManagedBean().setDocStatus(
 				resStatusDTO.getPmStatusDesc() != null ? resStatusDTO
 						.getPmStatusDesc().getStatusName() : "Review");
-		
-		
-		
+
+
+
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 		codeDTO.setDocNo(this.getManagedBean().getDocNo());
 		RequestCodeResDTO codeResDTO = requestSO.retrieveUnspscCodeReviewByDocNo(codeDTO);
 		System.out.println("getRequestLs:"+codeResDTO.getRequestLs().size());
-		
-		
+
+
 		this.getManagedBean().setReviewExtCodeList(null);
 		this.getManagedBean().setProceedExtCodeList(null);
 		this.getManagedBean().setRecommendExtCodeList(null);
-		
-	
+
+
 		if (codeResDTO.getRequestLs() != null
 				&& codeResDTO.getRequestLs().size() > 0) {
 
 			for (CmRequestCode code : codeResDTO.getRequestLs()) {
-				
-				System.out.println("subSTring:"+code.getDocNo().substring(0, 2));
+
+				System.out.println("subSTring:"+code.getDocNo().substring(0, 3));
 				if(code.getDocNo().substring(0, 3).compareToIgnoreCase("RNE")==0){
 					this.getManagedBean().setUnspscInd(false);
 					System.out.println("**extension**");
-					
+
 					boolean colorRecommend = false;
 					boolean brandRecommend = false;
 					boolean typeRecommend = false;
 					boolean meaRecommend = false;
 					if (!code.isRequestColor()) { 
-	
+
 						colorRecommend = true;
-	
+
 					}
 					if (!code.isRequestBrand()){
 						brandRecommend = true;	
 					}
-	
+
 					if (!code.isRequestType()){
-						
+
 						typeRecommend = true;
 					}
-					
+
 					if (!code.isRequestMeasurement()){
-						
+
 						meaRecommend = true;
 					}
-					
+
 					if(colorRecommend && brandRecommend && typeRecommend && meaRecommend){
-						
+
 						System.out.println("recomemd:"+code.getRequestId());
 						this.getManagedBean().getRecommendExtCodeList().add(code);
 					}else{
-						
+
 						System.out.println("process:"+code.getRequestId());
 						this.getManagedBean().getProceedExtCodeList().add(code);
-						
-						
+
+
 					}
 				}else{
 					System.out.println("****unspsc***");
 					this.getManagedBean().setUnspscInd(true);
 					this.getManagedBean().setRequestCode(code);
 					this.getManagedBean().getReviewExtCodeList().add(code);
+
+					if(this.getManagedBean().getReviewExtCodeList().get(0).getCmRecommendCodes()!=null 
+							&& this.getManagedBean().getReviewExtCodeList().get(0).getCmRecommendCodes().size() >0){
+							this.getManagedBean().setUnspscRecommendInd(true);
+					}
 				}
 			}
 		}
-		
+
 		//searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
 	}

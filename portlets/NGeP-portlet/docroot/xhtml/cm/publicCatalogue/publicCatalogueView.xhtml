@@ -11,54 +11,52 @@
 
 	<ui:define name="contentSection">
 
-            <p:blockUI block=":form" trigger="catalogueTabId:searchBtnId" widgetVar="blockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
-		
-			
-	<style type="text/css">
+		<p:blockUI block=":form" trigger="catalogueTabId:searchBtnId"
+			widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
-		div.tbclass:hover { background-color: #EDF0AF; }
-		
-		div[id$="publicCatalogId_content"]{
-			border: none !important;
-		}
-		
-		div[id$="publicCatalogId_content"] td.ui-datagrid-column{
-			width:25% !important;
-		}
-		
-		
-		div[id$="catalogueGridViewID_content"] td.ui-datagrid-column{ 
-			width:33% !important;
-		}
-		
-		
-		
-		
 
-	</style>
-			<p:messages id="publicCatMesId" showDetail="true" autoUpdate="true" closable="true" showSummary="true" />
+		<style type="text/css">
+div.tbclass:hover {
+	background-color: #EDF0AF;
+}
+
+div[id$="publicCatalogId_content"] {
+	border: none !important;
+}
+
+div[id$="publicCatalogId_content"] td.ui-datagrid-column {
+	width: 25% !important;
+}
+
+div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
+	width: 33% !important;
+}
+</style>
+		<p:messages id="publicCatMesId" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true" />
 
 		<p:tabView id="catalogueTabId">
 			<p:tab title="#{lbl['lbl.cm.pub.catalog.keyword.search']}">
 				<table style="width: 100%; margin-top: 8px;">
 					<tr>
-						<td style="width: 20%;"><p:inputText style="height: 33px !important; width: 600px;font-size: 18px;"
+						<td style="width: 20%;"><p:inputText
+								style="height: 33px !important; width: 600px;font-size: 18px;"
 								id="itemNameId"
-								value="#{pCatalogueBackingBean.managedBean.itemName}"
-								/> <p:watermark
-								for="itemNameId"
+								value="#{pCatalogueBackingBean.managedBean.itemName}" />
+							<p:watermark for="itemNameId"
 								value="#{lbl['lbl.cm.pub.catalog.search.filed.watermark']}"></p:watermark></td>
-						<td style="padding-left: 5px;vertical-align: middle;"><p:commandLink title="#{lbl['lbl.cm.search']}" id="searchBtnId"
-								update="@form" action="#{pCatalogueBackingBean.searchCatalogue}">
-								<p:graphicImage value="/css/images/design/search.png" style="20px;"></p:graphicImage>
-							</p:commandLink>
-							<p:defaultCommand target="searchBtnId" />
-							<p:spacer width="10px;" />
-							<p:commandLink title="#{lbl['lbl.cm.clear']}" update=":form"
-								action="#{pCatalogueBackingBean.clearSerach}">
-								<p:graphicImage value="/css/images/design/reject.png" style="20px;"></p:graphicImage>
+						<td style="padding-left: 5px; vertical-align: middle;"><p:commandLink
+								title="#{lbl['lbl.cm.search']}" id="searchBtnId" update="@form"
+								action="#{pCatalogueBackingBean.searchCatalogue}">
+								<p:graphicImage value="/css/images/design/search.png"
+									style="20px;"></p:graphicImage>
+							</p:commandLink> <p:defaultCommand target="searchBtnId" /> <p:spacer
+								width="10px;" /> <p:commandLink title="#{lbl['lbl.cm.clear']}"
+								update=":form" action="#{pCatalogueBackingBean.clearSerach}">
+								<p:graphicImage value="/css/images/design/reject.png"
+									style="20px;"></p:graphicImage>
 							</p:commandLink></td>
 
 					</tr>
@@ -73,7 +71,8 @@
 					<p:panel header="#{lbl['lbl.cm.pub.catalog.panelgrid.title']}"
 						style="margin-top:10px;">
 
-						<p:dataGrid id="publicCatalogId" columns="4" rows="8" styleClass="publicCatGridCol" style="border:none !important;" 
+						<p:dataGrid id="publicCatalogId" columns="4" rows="8"
+							styleClass="publicCatGridCol" style="border:none !important;"
 							value="#{pCatalogueBackingBean.managedBean.popularCommodityList}"
 							var="popular">
 							<table>
@@ -81,7 +80,8 @@
 									<td>#{popular.unspscTitle}</td>
 								</tr>
 								<tr>
-									<td><p:commandLink value=">> #{lbl['lbl.cm.pub.catalog.details']}"
+									<td><p:commandLink
+											value=">> #{lbl['lbl.cm.pub.catalog.details']}"
 											action="#{pCatalogueBackingBean.searchCatalogueByCommodityCode(popular)}"
 											process="@this" update=":form"></p:commandLink></td>
 								</tr>
@@ -90,9 +90,11 @@
 						</p:dataGrid>
 					</p:panel>
 				</h:panelGroup>
-				
-				<p:remoteCommand id="refreshCatalogue" name="refreshCatalogue" update="resultpl"> </p:remoteCommand>
-				
+
+				<p:remoteCommand id="refreshCatalogue" name="refreshCatalogue"
+					update="resultpl">
+				</p:remoteCommand>
+
 
 				<h:panelGroup id="resultpl"
 					rendered="#{!pCatalogueBackingBean.managedBean.frontPage}">
@@ -102,13 +104,12 @@
 
 								<table style="width: 90%;">
 									<tr>
-										<td style="background-color: #DBDBDB;height: 40px;"><p:outputLabel
+										<td style="background-color: #DBDBDB; height: 40px;"><p:outputLabel
 												value="#{lbl['lbl.cm.pub.catalog.categories']}"
 												style="font-weight:bold;font-size:17px;text-align : left;float:left; vertical-align: middle;margin-left : 5px;" /></td>
 									</tr>
 									<tr>
-										<td style="padding-top: 8px; padding-bottom: 8px;">
-										<ui:repeat
+										<td style="padding-top: 8px; padding-bottom: 8px;"><ui:repeat
 												var="family"
 												value="#{pCatalogueBackingBean.managedBean.familyList}">
 												<table style="width: 100%;">
@@ -132,8 +133,7 @@
 
 												<table style="width: 100%;">
 													<tr height="30px;">
-														<td
-															style="border-top: 1px solid #CFD62A;"><p:outputLabel
+														<td style="border-top: 1px solid #CFD62A;"><p:outputLabel
 																style="font-weight:bold;float:left;font-size:15px;"
 																value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 													</tr>
@@ -142,7 +142,8 @@
 														<td><p:selectOneMenu
 																value="#{pCatalogueBackingBean.managedBean.brandId}"
 																style="width:278px;">
-																<f:selectItem itemLabel="Select One" itemValue="0" />
+																<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+																	itemValue="0" />
 																<f:selectItems
 																	value="#{pCatalogueBackingBean.managedBean.brandCriteria}" />
 															</p:selectOneMenu></td>
@@ -155,8 +156,7 @@
 
 
 									<tr height="30px;">
-										<td
-											style="border-top: 1px solid #CFD62A;"><p:outputLabel
+										<td style="border-top: 1px solid #CFD62A;"><p:outputLabel
 												value="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												style="font-weight:bold;float:left;font-size:15px;" /></td>
 									</tr>
@@ -169,72 +169,84 @@
 										</td>
 									</tr>
 									<tr>
-										<td style="text-align: right;padding-top: 5px;"><p:commandButton
-												value="#{lbl['lbl.btn.reset']}" process=":form:catalogueTabId:resultpl"
+										<td style="text-align: right; padding-top: 5px;"><p:commandButton
+												value="#{lbl['lbl.btn.reset']}"
+												process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.resetCatalogue()}"
-												update=":form" /> <p:commandButton value="#{lbl['lbl.btn.search']}"
+												update=":form" /> <p:commandButton
+												value="#{lbl['lbl.btn.search']}"
 												process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
-												update=":form" /></td>
+												update=":form:catalogueTabId:searchResultId" /></td>
 									</tr>
 
 								</table>
 							</td>
-							<td width="70%"><p:outputLabel
-									rendered="#{pCatalogueBackingBean.managedBean.keyWord}"
-									style="font-weight:bold;float:left;font-size:18px;"
-									value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
+							<h:panelGroup id="searchResultId">
+								<td width="70%"><p:outputLabel
+										rendered="#{pCatalogueBackingBean.managedBean.keyWord}"
+										style="font-weight:bold;float:left;font-size:18px;"
+										value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
 
-								<p:outputLabel
-									rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
-									style="font-weight:bold;float:left;font-size:18px;"
-									value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
-								<br />
-								<hr class="horizontal_dotted_line" /> <br /> 
-								
-								<p:dataGrid style="width:100%;" lazy="true"
-									columns="3" rows="9" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
-									id="catalogueGridViewID" var="supplierItem">
-									<ac:paginator for="catalogueGridViewID"></ac:paginator>
-									<div class="tbclass">
-										<p:commandLink
-											action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
-											process="@this" >
-										
-										<table style="width:100%;height:100%;padding-left:10px;padding-right:10px;padding-bottom: 10px;padding-top: 10px;vertical-align: top; ">
-											<tr>
-												<td align="center" style="text-align: center;padding-top: 14px;"><h:panelGroup
-														rendered="#{supplierItem.imagePath == null }">
-														<div align="center" style="width: 100%">
-														<div align="center"  style="height: 100px; width: 100px;left: 0px !important;">
-															<p:outputPanel
-																style="width:100px; border: 1px solid #808080; display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
+									<p:outputLabel
+										rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
+										style="font-weight:bold;float:left;font-size:18px;"
+										value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
+									<br />
+									<hr class="horizontal_dotted_line" /> <br /> <p:dataGrid
+										style="width:100%;" lazy="true" columns="3" rows="9"
+										emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+										value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
+										id="catalogueGridViewID" var="supplierItem">
+										<ac:paginator for="catalogueGridViewID"></ac:paginator>
+										<div class="tbclass">
+											<p:commandLink
+												action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
+												process="@this">
+
+												<table
+													style="width: 100%; height: 100%; padding-left: 10px; padding-right: 10px; padding-bottom: 10px; padding-top: 10px; vertical-align: top;">
+													<tr>
+														<td align="center"
+															style="text-align: center; padding-top: 14px;"><h:panelGroup
+																rendered="#{supplierItem.imagePath == null }">
+																<div align="center" style="width: 100%">
+																	<div align="center"
+																		style="height: 100px; width: 100px; left: 0px !important;">
+																		<p:outputPanel
+																			style="width:100px; border: 1px solid #808080; display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
 													#{lbl['lbl.cm.no.image.available']}
 													</p:outputPanel>
-														</div>
-														</div>
-													</h:panelGroup> <h:panelGroup
-														rendered="#{supplierItem.imagePath != null }">
-														<img src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}" style="height: 100px; width: 100px; left: 0px !important;" />
-													</h:panelGroup></td>
-											</tr>
-											<tr>
-												<td align="center" style="text-align: center;width:100%;height:100%; padding-left: 20px;padding-right: 20px;overflow-wrap:break-word;"><h:outputText
-														 value="#{supplierItem.itemName}" /></td>
-											</tr>
-											<tr>
-												<td align="center" style="text-align: center;width:100%;height:100%; padding-left: 20px;padding-right: 20px;">By <h:outputText
-														 value="#{supplierItem.companyName}" /></td>
-											</tr>
-											<tr>
-												<td style="text-align: center;padding-bottom: 14px;">RM <h:outputText
-														value="#{supplierItem.price}" /></td>
-											</tr>
-										</table>
-									</p:commandLink>
+																	</div>
+																</div>
+															</h:panelGroup> <h:panelGroup
+																rendered="#{supplierItem.imagePath != null }">
+																<img
+																	src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}"
+																	style="height: 100px; width: 100px; left: 0px !important;" />
+															</h:panelGroup></td>
+													</tr>
+													<tr>
+														<td align="center"
+															style="text-align: center; width: 100%; height: 100%; padding-left: 20px; padding-right: 20px; overflow-wrap: break-word;"><h:outputText
+																value="#{supplierItem.itemName}" /></td>
+													</tr>
+													<tr>
+														<td align="center"
+															style="text-align: center; width: 100%; height: 100%; padding-left: 20px; padding-right: 20px;">By
+															<h:outputText value="#{supplierItem.companyName}" />
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center; padding-bottom: 14px;">RM
+															<h:outputText value="#{supplierItem.price}" />
+														</td>
+													</tr>
+												</table>
+											</p:commandLink>
 										</div>
-								</p:dataGrid></td>
+									</p:dataGrid></td>
+							</h:panelGroup>
 						</tr>
 
 					</table>
