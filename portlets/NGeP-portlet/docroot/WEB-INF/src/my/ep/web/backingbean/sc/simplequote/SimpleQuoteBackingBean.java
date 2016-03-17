@@ -1844,6 +1844,10 @@ public class SimpleQuoteBackingBean extends
 	 *            the sc quote
 	 */
 	public void reQuote(ScQuote scQuote) {
+		// start date as current date
+		Date currentDate = new Date();
+		scQuote.setStartDate(currentDate);
+		scQuote.setEndDate(null);
 		preRenderScQuote(scQuote);
 		/*TemplateSpecBean productTplSpecBean = getManagedBean()
 				.getProductTemplateSpecBean();
