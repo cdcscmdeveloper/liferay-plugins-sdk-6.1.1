@@ -198,7 +198,7 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		reqDTO.setCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		//List<Long> statusLs = getManagedBean().getSiteVisitStatusesByType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
 		//reqDTO.setSiteVisitStatuses(statusLs);
-		SiteAssignResDTO resDTO = reqSO.retrieveTaskStateAndCountByCountryCode(reqDTO);
+		SiteAssignResDTO resDTO = reqSO.retrievSvcTaskSummaryByCountryCode(reqDTO);
 		
 		List<SmSvcTaskVO> svcStateLs = new ArrayList<SmSvcTaskVO>();
 		
