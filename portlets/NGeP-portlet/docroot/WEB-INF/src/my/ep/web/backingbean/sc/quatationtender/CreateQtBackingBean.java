@@ -144,24 +144,10 @@ public class CreateQtBackingBean extends
 	public String constrcutFieldsForPanel() {
 
 		StringBuffer conditionString = new StringBuffer();
-		conditionString.append("ctPanelItems.qt^1^");
-		conditionString.append(SearchOperator.OPERATOR_LIKE.value());
+		conditionString.append("qt^true");
 		conditionString.append("|");
 		conditionString.append("docType^");
 		conditionString.append(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-		// conditionString.append("|");
-
-		Date todayDate = new Date();
-		Calendar c1 = Calendar.getInstance();
-		c1.setTime(todayDate);
-		Calendar fromDate = Calendar.getInstance();
-		fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
-				c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-		fromDate.set(Calendar.MILLISECOND, 0);
-		/*
-		 * conditionString.append("endDate^");
-		 * conditionString.append("28-JAN-2016");
-		 */
 
 		return conditionString.toString();
 	}
