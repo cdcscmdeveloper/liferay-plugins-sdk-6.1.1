@@ -9,106 +9,148 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		<table style="width: 100%;">
+	<style>
+		#nav {
+		    width:20%;
+		    float:left;
+		    padding:5px;	      
+		}
+		#section {
+		    width:75%;
+		    float:left;
+		    padding:10px;	 	 
+		}
+	</style>
+
+	<div id="nav">
+		<table>
+		<tr>
+			<th>#{lbl['lbl.sm.state']}</th>
+			<th>#{lbl['lbl.sm.before']}</th>
+			<th>#{lbl['lbl.sm.after']}</th>
+		</tr>
+		<ui:repeat var="stateTask" value="#{svcTasklistBackingBean.retrieveSvcStateTaskList()}">
 			<tr>
-				<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.application.no']}"></p:outputLabel></td>
-				<td width="35%"><p:inputText style="width:80%;"
-						value="#{svcTasklistBackingBean.managedBean.applNo}" /></td>
-				<td width="15%"><p:outputLabel
-						value="#{lbl['lbl.cm.supplier.name']}"></p:outputLabel></td>
-				<td width="35%"><p:inputText style="width:80%;"
-						value="#{svcTasklistBackingBean.managedBean.supplierName}" /></td>
-			</tr>
-			
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.epno']}"></p:outputLabel></td>
-				<td><p:inputText style="width:80%;"
-						value="#{svcTasklistBackingBean.managedBean.epNo}" /></td>
-						
-				<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.site.visit.status']}"></p:outputLabel></td>
 				<td>
-				<p:selectOneMenu value="#{svcTasklistBackingBean.managedBean.siteVisitType}">
-					<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeAll}" itemLabel="ALL" />
-					<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeBefore}" itemLabel="Before" />
-					<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeAfter}" itemLabel="After" />
-				</p:selectOneMenu>
+					<p:commandLink value="#{stateTask.stateName}" 
+					action="#{svcTasklistBackingBean.searchByState()}" update=":#{p:component('searchContent')}">
+						<f:param name="stateId" value="#{stateTask.stateId}"></f:param>
+					</p:commandLink><br />
+				</td>
+				<td>
+					#{stateTask.totalTaskBefore}
+				</td>
+				<td>
+					#{stateTask.totalTaskAfter}
 				</td>
 			</tr>
-
-			<tr>
-				<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td width="35%"><p:selectOneMenu id="stateIdDD"
-						style="width: 80% !important;"
-						value="#{svcTasklistBackingBean.managedBean.stateId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-						<f:selectItems value="#{svcTasklistBackingBean.managedBean.stateList}"
-							var="state" itemLabel="#{state.stateName}"
-							itemValue="#{state.stateId}"></f:selectItems>
-						<p:ajax listener="#{svcTasklistBackingBean.findDistrict}"
-							update="@(.ui-selectonemenu[id$=districtDD])"></p:ajax>
-					</p:selectOneMenu></td>
-				<td width="15%"><p:outputLabel
-						value="#{lbl['lbl.sm.district']}" /></td>
-				<td width="35%"><p:selectOneMenu id="districtDD"
-						style="width: 80% !important;"
-						value="#{svcTasklistBackingBean.managedBean.districtId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-						<f:selectItems value="#{svcTasklistBackingBean.managedBean.districtList}"
-							var="district" itemLabel="#{district.districtName}"
-							itemValue="#{district.districtId}"></f:selectItems>
-					</p:selectOneMenu></td>
-
-			</tr>
+		</ui:repeat>
 		</table>
-		<div style="text-align: right;">
-			<p:commandButton id="schBtn"
-				action="#{svcTasklistBackingBean.searchAction}" value="Search"
-				update="rspl" />
-		</div>
-
-		<p:panel id="rspl">
-			<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				lazy="true" var="appl">
-		
-				<ac:paginator for="rsDt"></ac:paginator>
+	</div>
+	<div id="section">
+		<p:panel id="searchContent">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+			<table style="width: 100%;">
+				<tr>
+					<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.application.no']}"></p:outputLabel></td>
+					<td width="35%"><p:inputText style="width:80%;"
+							value="#{svcTasklistBackingBean.managedBean.applNo}" /></td>
+					<td width="15%"><p:outputLabel
+							value="#{lbl['lbl.cm.supplier.name']}"></p:outputLabel></td>
+					<td width="35%"><p:inputText style="width:80%;"
+							value="#{svcTasklistBackingBean.managedBean.supplierName}" /></td>
+				</tr>
+				
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.epno']}"></p:outputLabel></td>
+					<td><p:inputText style="width:80%;"
+							value="#{svcTasklistBackingBean.managedBean.epNo}" /></td>
+							
+					<td><p:outputLabel value="#{lbl['lbl.sm.siteassign.site.visit.status']}"></p:outputLabel></td>
+					<td>
+					<p:selectOneMenu value="#{svcTasklistBackingBean.managedBean.siteVisitType}">
+						<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeAll}" itemLabel="ALL" />
+						<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeBefore}" itemLabel="Before" />
+						<f:selectItem itemValue="#{SupplierManagementConst.siteVisitAssignmentTypeAfter}" itemLabel="After" />
+					</p:selectOneMenu>
+					</td>
+				</tr>
 	
-				<p:column headerText="#{lbl['lbl.sm.application.no']}">
-					<h:outputText value="#{appl.applNo}"></h:outputText>
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.epno']}">
-					<h:outputText value="#{appl.smSupplier.epNo}"></h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.cm.supplier.name']}">
-					<h:outputText value="#{appl.smSupplier.companyName}"></h:outputText>
-				</p:column>
-				
-				<ui:param name="workFlowInfo" value="#{svcTasklistBackingBean.getWorkflowInfoByApplId(appl.applId)}"></ui:param>
-				<p:column headerText="#{lbl['lbl.sm.siteassign.site.visit.status']}">
-					<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" 
-						rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentBeforeApproval}" />
+				<tr>
+					<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td width="20%"><p:selectOneMenu id="stateIdDD"
+							style="width: 80% !important;"
+							value="#{svcTasklistBackingBean.managedBean.stateId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItems value="#{svcTasklistBackingBean.managedBean.stateList}"
+								var="state" itemLabel="#{state.stateName}"
+								itemValue="#{state.stateId}"></f:selectItems>
+							<p:ajax listener="#{svcTasklistBackingBean.findDistrict}"
+								update="@(.ui-selectonemenu[id$=districtDD])"></p:ajax>
+						</p:selectOneMenu></td>
+					<td width="15%"><p:outputLabel
+							value="#{lbl['lbl.sm.district']}" /></td>
+					<td width="20%"><p:selectOneMenu id="districtDD"
+							style="width: 80% !important;"
+							value="#{svcTasklistBackingBean.managedBean.districtId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItems value="#{svcTasklistBackingBean.managedBean.districtList}"
+								var="district" itemLabel="#{district.districtName}"
+								itemValue="#{district.districtId}"></f:selectItems>
+						</p:selectOneMenu></td>
+	
+				</tr>
+			</table>
+			<div style="text-align: right;">
+				<p:commandButton id="schBtn"
+					action="#{svcTasklistBackingBean.searchAction}" value="Search"
+					update="rspl" />
+			</div>
+	
+			<p:panel id="rspl">
+				<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					lazy="true" var="appl">
+			
+					<ac:paginator for="rsDt"></ac:paginator>
+		
+					<p:column headerText="#{lbl['lbl.sm.application.no']}">
+						<h:outputText value="#{appl.applNo}"></h:outputText>
+					</p:column>
 					
-					<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" 
-						rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentAfterApproval}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.created.date']}">
-					<ac:labelDateTime value="#{workFlowInfo.createdDate}" /> 
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.action']}">
-					<p:commandLink id="navL"
-						action="#{svcTasklistBackingBean.navigateToSiteVisitAssignment}">
-						<f:param name="selApplId" value="#{appl.applId}"></f:param>
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
-					</p:commandLink>
-				</p:column>
-
-			</p:dataTable>
+					<p:column headerText="#{lbl['lbl.sm.epno']}">
+						<h:outputText value="#{appl.smSupplier.epNo}"></h:outputText>
+					</p:column>
+	
+					<p:column headerText="#{lbl['lbl.cm.supplier.name']}">
+						<h:outputText value="#{appl.smSupplier.companyName}"></h:outputText>
+					</p:column>
+					
+					<ui:param name="workFlowInfo" value="#{svcTasklistBackingBean.getWorkflowInfoByApplId(appl.applId)}"></ui:param>
+					<p:column headerText="#{lbl['lbl.sm.siteassign.site.visit.status']}">
+						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" 
+							rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentBeforeApproval}" />
+						
+						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" 
+							rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentAfterApproval}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.created.date']}">
+						<ac:labelDateTime value="#{workFlowInfo.createdDate}" /> 
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.sm.action']}">
+						<p:commandLink id="navL"
+							action="#{svcTasklistBackingBean.navigateToSiteVisitAssignment}">
+							<f:param name="selApplId" value="#{appl.applId}"></f:param>
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+						</p:commandLink>
+					</p:column>
+	
+				</p:dataTable>
+			</p:panel>
 		</p:panel>
-
+		</div>
+		
 	</ui:define>
 
 </ui:composition>
