@@ -2251,7 +2251,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * Validate pm category l1.
 	 * 	
 	 */
-	public void validatePmCategoryL1() {
+	private void validatePmCategoryL1() {
 		ICategoryCodeSO categoryCodeSO = null;
 		
 		try {
@@ -2330,7 +2330,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * 
 	 * 
 	 */
-	public void validatePmCategoryL2() {
+	private void validatePmCategoryL2() {
 		ICategoryCodeSO categoryCodeSO = null;
 		try {
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
@@ -2415,7 +2415,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * 
 	 * 
 	 */
-	public void validatePmCategoryL3() {
+	private void validatePmCategoryL3() {
 		ICategoryCodeSO categoryCodeSO = null;
 		
 		try {

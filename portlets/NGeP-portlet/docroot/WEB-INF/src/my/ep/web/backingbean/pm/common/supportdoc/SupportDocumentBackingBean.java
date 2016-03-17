@@ -1944,9 +1944,13 @@ public class SupportDocumentBackingBean extends
 								pmDocument.getDocumentId()));
 			}
 			if (searchDocument(searchBean) && DbValueConst.RECORD_STATUS_ACTIVE == pmDocument.getRecordStatusFlg().intValue()) {
-				throw new EpException(MessageConst.ERROR_770089);
+				if(pmDocument.isBrandNew()){
+					throw new EpException(MessageConst.ERROR_770089);
+				}else{
+					throw new EpException(MessageConst.ERROR_770220,
+							new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pm.document.name")});
+				}
 			}
-
 		}
 
 	}
