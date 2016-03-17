@@ -39,6 +39,7 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	private List<CmRequestCode> recommendExtCodeList;
 	private List<CmRequestCode> proceedExtCodeList;
 	private boolean unspscInd = true;
+	private boolean unspscRecommendInd = false;
 	
 	private IPagingDataModel<Object[]> cdDocumentDataModel 	= new SearchPagingDataModel();
 
@@ -276,6 +277,20 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void setProceedExtCodeList(List<CmRequestCode> proceedExtCodeList) {
 		this.proceedExtCodeList = proceedExtCodeList;
+	}
+
+	/**
+	 * @return the unspscRecommendInd
+	 */
+	public boolean isUnspscRecommendInd() {
+		return unspscRecommendInd;
+	}
+
+	/**
+	 * @param unspscRecommendInd the unspscRecommendInd to set
+	 */
+	public void setUnspscRecommendInd(boolean unspscRecommendInd) {
+		this.unspscRecommendInd = unspscRecommendInd;
 	}
 	
 	

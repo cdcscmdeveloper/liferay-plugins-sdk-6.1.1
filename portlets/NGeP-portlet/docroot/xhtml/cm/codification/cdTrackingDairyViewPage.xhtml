@@ -108,7 +108,7 @@
 
 
 				<h:panelGroup
-					rendered="#{cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+					rendered="#{cdTrackingDiaryBackingBean.managedBean.unspscInd and !cdTrackingDiaryBackingBean.managedBean.unspscRecommendInd}">
 					<p:dataTable style="width:100%;" id="dt"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{cdTrackingDiaryBackingBean.managedBean.reviewExtCodeList}"
