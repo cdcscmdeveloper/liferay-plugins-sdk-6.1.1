@@ -520,7 +520,7 @@
 					scrollable="true" scrollHeight="150"
 					rowKey="#{purchasedItem}">
 					<ac:paginator for="reqItemInfoDt" />
-					<p:column headerText="Zone" width="200" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}">
+					<p:column headerText="#{lbl['lbl.fl.zone']}" width="200" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}">
 						<p:tree value="#{reqItemInfoList.itemZoneTree}" var="location" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}">
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
