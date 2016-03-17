@@ -11632,7 +11632,11 @@ public class SpecificationBackingBean extends
 
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
-
+		spReqDTO.setTobeRemoveCategoryCodes(this.getManagedBean().getTobeRemoveCategoryCodes());
+		spReqDTO.setToBeRemoveSchedulesList(this.getManagedBean()
+				.getToBeRemoveSchedules());
+		spReqDTO.setToBeRemoveProgressivePayments(this.getManagedBean()
+				.getToBeRemoveProgPayments());
 		spReqDTO.setOutcome(action);
 
 		if (null != digiSign) {
