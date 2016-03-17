@@ -234,4 +234,17 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		findDistrict();
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
+	
+	/**
+	 * reset search criteria
+	 */
+	public void resetSearchCriteria(){
+		getManagedBean().setApplNo(null);
+		getManagedBean().setStateId(0);
+		getManagedBean().setDistrictId(0);
+		getManagedBean().setSupplierName(null);
+		getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
+		getManagedBean().setDistrictId(0);
+
+	}
 }
