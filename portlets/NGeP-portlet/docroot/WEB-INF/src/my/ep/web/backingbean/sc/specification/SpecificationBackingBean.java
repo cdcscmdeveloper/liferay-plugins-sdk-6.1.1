@@ -15032,8 +15032,8 @@ public class SpecificationBackingBean extends
 		if (isTechnicalUserScoringSchema) {
 			if (null == this.getManagedBean().getQt()
 					.getTechnicalUserScoringSchemaAttachment()) {
-				this.getManagedBean().setActiveIndex(4);
-				throw new EpException(MessageConst.ERROR_760378);
+				//this.getManagedBean().setActiveIndex(4);
+				//throw new EpException(MessageConst.ERROR_760378);
 			}
 
 		}
@@ -15044,8 +15044,8 @@ public class SpecificationBackingBean extends
 		if (isFinancialUserScoringSchema) {
 			if (null == this.getManagedBean().getQt()
 					.getFinancialUserScoringSchemaAttachment()) {
-				this.getManagedBean().setActiveIndex(5);
-				throw new EpException(MessageConst.ERROR_760379);
+				//this.getManagedBean().setActiveIndex(5);
+				//throw new EpException(MessageConst.ERROR_760379);
 			}
 		}
 
