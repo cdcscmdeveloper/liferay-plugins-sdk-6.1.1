@@ -1599,7 +1599,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				new SearchMultiFilterBean(
 						new SearchFilterBean(
 								"reasonDesc", 
-								SearchOperator.OPERATOR_LIKE.value(), 
+								SearchOperator.OPERATOR_EQUALS.value(), 
 								msDesc.trim(),
 								true),
 						SearchCondition.CONDITION_OR.value(),
