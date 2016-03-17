@@ -23,6 +23,7 @@ import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
@@ -3148,6 +3149,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			// set action
 			
 			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+			System.out.println("**********b4 pop up***********");
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		
@@ -3160,9 +3162,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	
 	public String testGPKI(
 			PmDigiSign pmDigiSign) throws Exception {
+		
+		System.out.println("***pmDigiSign**"+pmDigiSign);
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
+		
+		
 		//getManagedBean().setValidated(Boolean.TRUE);
 		return null;
 	}
@@ -3171,11 +3177,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	/////// SPKI testing
 	
 	public void spkiSignAction(){
-		
-	
+
+		System.out.println("********spkiSignAction****************");
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		
 		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		System.out.println("********end****************");
 	}
 	
 	
@@ -3186,6 +3194,14 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		System.out.println("signedData:"+signedData);
 		
 		return "";
+	}
+	
+	
+	public String testSkpi(PmDigiSign pmDigiSign) throws Exception {
+		
+		
+		System.out.println("pmDigiSign:"+pmDigiSign.getSpkiSignedData());
+		return null;
 	}
 	
 	

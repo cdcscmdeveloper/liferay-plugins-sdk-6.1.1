@@ -1,0 +1,305 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<!-- <p:remoteCommand name="updateCoinSlider" update="imageUploadID2" ></p:remoteCommand> -->
+
+	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
+
+
+
+
+	<p:outputPanel id="publicCatalogDetPageId">
+
+
+
+		<div style="text-align: right; min-height: 40px;">
+
+			<p:commandButton value="#{lbl['lbl.cm.view']}"
+				action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary('CM',cmTrackingDiaryBackingBean.managedBean.docId)}"></p:commandButton>
+
+
+			<div style="float: left; clear: both;">
+
+				<p:commandButton value="#{lbl['lbl.cm.back']}"
+					action="#{cmTrackingDiaryBackingBean.backToPrev}"
+					immediate="true"></p:commandButton>
+			</div>
+		</div>
+
+
+
+
+		<p:panel header="#{lbl['lbl.cm.item.details']}" toggleable="true">
+
+
+
+			<table style="width: 100%; margin-top: 10px;">
+				<tr style="height: 30px;">
+					<td rowspan="10">
+					
+					<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
+						<div style="display: block; width: 120px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
+					</h:panelGroup>
+
+							<h:panelGroup
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 1 }">
+
+								<div style="width: 250px; height: 150px;">
+									<ui:repeat var="cmImage"
+										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+										<p:graphicImage styleClass="catImageStyle"
+											value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
+
+									</ui:repeat>
+
+
+								</div>
+							</h:panelGroup>
+
+
+
+							<h:panelGroup
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
+
+								<script>
+									$(function() {
+										$('#slides').slidesjs({
+										width : 940,
+										height : 528,
+										navigation : {
+											effect : "fade"
+											},
+									pagination : {
+									effect : "fade"
+										},
+								effect : {
+									fade : {
+										speed : 400
+									}
+								}
+							});
+						});
+					</script>
+					<div id="slides" style="width: 250px;">
+
+								<ui:repeat var="cmImage"
+									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+									<img src="/NGeP-portlet/images/#{cmImage.imageName}"
+										style="height: 150px; left: 0px !important;" />
+								</ui:repeat>
+								</div>
+							</h:panelGroup>
+
+						</td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
+					<td><p:inputText readonly="true" size="35"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
+					<td><p:inputTextarea readonly="true"
+							style="width: 195px !important;"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputTextarea></td>
+
+				</tr>
+
+
+
+
+				<tr style="height: 30px;">
+
+					<td><p:outputLabel value="#{lbl['lbl.cm.uom']} *" /></td>
+					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
+							headerText="#{lbl['lbl.cm.item.table.uom']}" disabled="true"
+							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
+							conditionField="recordStatus^1">
+						</ac:lov> <ac:lovPopup /></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
+					<td><p:inputText size="35"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
+							readonly="true"></p:inputText></td>
+					<td></td>
+				</tr>
+				<tr style="height: 30px;">
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
+					<td><p:inputText size="35"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"
+							readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
+					<td colspan="1"><p:inputText size="35"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"
+							readonly="true"></p:inputText></td>
+				</tr>
+				<tr style="height: 30px;">
+
+					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
+					<td><p:inputText size="35"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"
+							readonly="true"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
+					<td colspan="1"><p:inputText size="26"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
+							readonly="true" /> <p:inputText style="margin-left: 2px;"
+							size="3" value="days" readonly="true" /></td>
+				</tr>
+
+
+				<tr style="height: 30px;">
+					<td><p:outputLabel
+							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
+					<td colspan="3"><p:inputTextarea
+							style="width:660px !important;"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}" /></td>
+
+				</tr>
+
+
+			</table>
+		</p:panel>
+
+		<p:remoteCommand name="refresh" id="refresh"
+			action="#{catalogueBackingBean.refreshImage}" />
+
+		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
+			width="700px" resizable="false" styleClass="pop_up_top">
+
+
+			<p:fileUpload
+				fileUploadListener="#{catalogueBackingBean.imageUpload}"
+				mode="advanced" id="upload"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				oncomplete="refresh();" multiple="true">
+			</p:fileUpload>
+
+		</p:dialog>
+
+
+
+		<p:tabView id="pricingTabID" orientation="left"
+			activeIndex="#{reviewCatBackingBean.managedBean.catDetTabActiveIndex}">
+
+			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
+
+
+				<p:tabView id="headerTabId"
+					activeIndex="#{catalogueBackingBean.managedBean.pricingTabIndex}">
+
+
+					<p:tab title="#{lbl['lbl.cm.normal']}">
+
+						<p:tabView id="normalId"
+							activeIndex="#{catalogueBackingBean.managedBean.normalPricingIndex}">
+
+							<p:tab title="#{lbl['lbl.cm.standard']}">
+								<ui:include src="pricingTab.xhtml" />
+							</p:tab>
+							<p:tab title="#{lbl['lbl.cm.promotion']}">
+								<ui:include src="promotionTab.xhtml" />
+							</p:tab>
+
+						</p:tabView>
+
+
+
+					</p:tab>
+
+					<p:tab title="#{lbl['lbl.cm.tier']}">
+
+						<p:tabView id="tierId"
+							activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
+
+
+							<p:tab title="#{lbl['lbl.cm.standard']}">
+								<ui:include src="pricingTierTab.xhtml" />
+							</p:tab>
+							<p:tab title="#{lbl['lbl.cm.promotion']}">
+								<ui:include src="pricingPromotionTierTab.xhtml" />
+							</p:tab>
+
+						</p:tabView>
+
+
+
+					</p:tab>
+
+
+					<p:tab title="#{lbl['lbl.cm.zonal']}">
+
+						<p:tabView id="zonalId"
+							activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
+
+							<p:tab title="#{lbl['lbl.cm.standard']}">
+								<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
+
+							</p:tab>
+							<p:tab title="#{lbl['lbl.cm.promotion']}">
+								<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
+
+							</p:tab>
+
+						</p:tabView>
+
+
+
+					</p:tab>
+
+					<p:tab title="#{lbl['lbl.cm.zonal.tier']}">
+
+						<p:tabView id="zonalTierId"
+							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
+							<p:tab title="#{lbl['lbl.cm.standard']}">
+								<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
+
+							</p:tab>
+							<p:tab title="#{lbl['lbl.cm.promotion']}">
+								<ui:include src="zonalPromotionTierPricingTab.xhtml"></ui:include>
+
+							</p:tab>
+
+						</p:tabView>
+
+
+
+					</p:tab>
+
+				</p:tabView>
+
+
+
+			</p:tab>
+
+
+
+
+
+
+
+			<p:tab id="supplierInfoId" title="Supplier Info">
+				<ui:include src="supplierInfoTab.xhtml"></ui:include>
+			</p:tab>
+
+
+
+		</p:tabView>
+
+
+
+
+
+	</p:outputPanel>
+
+
+</ui:composition>

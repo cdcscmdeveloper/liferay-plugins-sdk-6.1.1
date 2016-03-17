@@ -1,0 +1,171 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+
+	<div class="header-info">
+		<h:panelGroup
+			rendered="#{cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+			<table style="width: 100%;">
+				<tr>
+					<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"
+							style="text-align : right;"></p:outputLabel></td>
+
+
+					<td width="15%" class="header-info-text"><h:outputText
+							style="white-space: normal!important; text-align : left;"
+							value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.docNo}" /></td>
+
+					<td width="10%"><p:outputLabel
+							value="#{lbl['lbl.cm.doc.status']}" style="text-align : right;"></p:outputLabel></td>
+					<td width="15%" class="header-info-text"><h:outputText
+							style="white-space: normal!important; text-align : left;"
+							value="#{cdTrackingDiaryBackingBean.managedBean.docStatus}" /></td>
+
+					<td width="10%"><p:outputLabel
+							value="#{lbl['lbl.cm.company.name']}" style="text-align : right;"></p:outputLabel></td>
+					<td width="15%" class="header-info-text"><c:choose>
+							<c:when
+								test="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier != null}">
+								<h:outputText
+									style="white-space: normal!important; text-align : left;"
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.companyName}" />
+							</c:when>
+							<c:otherwise>
+								<h:outputText value="N/A" style="text-align : left;" />
+							</c:otherwise>
+						</c:choose></td>
+
+					<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.ep.no']}"
+							style="text-align : right;"></p:outputLabel></td>
+					<td width="15%"><c:choose>
+							<c:when
+								test="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier != null}">
+								<h:outputText
+									style="white-space: normal!important; text-align : left;"
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.epNo}" />
+							</c:when>
+							<c:otherwise>
+								<h:outputText value="N/A" style="text-align : left;" />
+							</c:otherwise>
+						</c:choose></td>
+				</tr>
+				<tr>
+					<c:choose>
+						<c:when
+							test="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier != null and cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType == 'O'}">
+							<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+								style="text-align : right;"></p:outputLabel>
+							<h:outputText
+								style="white-space: normal!important; text-align : left;"
+								value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.regNo}" />
+						</c:when>
+						<c:when
+							test="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier != null and cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType != 'O'}">
+							<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}"
+									style="text-align : right;"></p:outputLabel></td>
+							<td><h:outputText
+									style="white-space: normal!important; text-align : left;"
+									value="#{unspscCodeBackingBean.retrieveMofNo(cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.supplierId , cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType)}" />
+							</td>
+						</c:when>
+						<c:otherwise>
+							<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+								style="text-align : right;"></p:outputLabel>
+							<h:outputText value="N/A" style="text-align : left;" />
+						</c:otherwise>
+					</c:choose>
+				</tr>
+			</table>
+		</h:panelGroup>
+
+
+
+
+		<h:panelGroup
+			rendered="#{!cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+			<table style="width: 100%;">
+				<tr>
+					<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"
+							style="text-align : right;"></p:outputLabel></td>
+
+
+					<td width="15%" class="header-info-text"><h:outputText
+							style="white-space: normal!important; text-align : left;"
+							value="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].docNo}" /></td>
+
+					<td width="10%"><p:outputLabel
+							value="#{lbl['lbl.cm.doc.status']}" style="text-align : right;"></p:outputLabel></td>
+					<td width="15%" class="header-info-text"><h:outputText
+							style="white-space: normal!important; text-align : left;"
+							value="#{cdTrackingDiaryBackingBean.managedBean.docStatus}" /></td>
+
+					<td width="10%"><p:outputLabel
+							value="#{lbl['lbl.cm.company.name']}" style="text-align : right;"></p:outputLabel></td>
+					<td width="15%" class="header-info-text"><c:choose>
+							<c:when
+								test="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier != null}">
+								<h:outputText
+									style="white-space: normal!important; text-align : left;"
+									value="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier.companyName}" />
+							</c:when>
+							<c:otherwise>
+								<h:outputText value="N/A" style="text-align : left;" />
+							</c:otherwise>
+						</c:choose></td>
+
+					<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.ep.no']}"
+							style="text-align : right;"></p:outputLabel></td>
+					<td width="15%"><c:choose>
+							<c:when
+								test="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier != null}">
+								<h:outputText
+									style="white-space: normal!important; text-align : left;"
+									value="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier.epNo}" />
+							</c:when>
+							<c:otherwise>
+								<h:outputText value="N/A" style="text-align : left;" />
+							</c:otherwise>
+						</c:choose></td>
+				</tr>
+				<tr>
+					<c:choose>
+						<c:when
+							test="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier != null and cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier.smAppl.supplierType == 'O'}">
+							<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+								style="text-align : right;"></p:outputLabel>
+							<h:outputText
+								style="white-space: normal!important; text-align : left;"
+								value="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier.regNo}" />
+						</c:when>
+						<c:when
+							test="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier != null and cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier.smAppl.supplierType != 'O'}">
+							<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}"
+									style="text-align : right;"></p:outputLabel></td>
+							<td><h:outputText
+									style="white-space: normal!important; text-align : left;"
+									value="#{unspscCodeBackingBean.retrieveMofNo(cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier.supplierId , cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].smSupplier.smAppl.supplierType)}" />
+							</td>
+						</c:when>
+						<c:otherwise>
+							<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+								style="text-align : right;"></p:outputLabel>
+							<h:outputText value="N/A" style="text-align : left;" />
+						</c:otherwise>
+					</c:choose>
+				</tr>
+			</table>
+		</h:panelGroup>
+
+
+
+
+	</div>
+	<p:spacer height="10px"></p:spacer>
+
+</ui:composition>

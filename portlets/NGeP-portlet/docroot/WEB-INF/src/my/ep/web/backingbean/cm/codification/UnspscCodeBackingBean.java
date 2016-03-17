@@ -221,6 +221,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				this.getManagedBean().getRequestCode().setBrandName(null);
 				this.getManagedBean().getRequestCode().setMeasurementName(null);
 				this.getManagedBean().getRequestCode().setColorName(null);
+			}else{
+				this.getManagedBean().getRequestCode().setRequestBrand(true);
+				this.getManagedBean().getRequestCode().setRequestColor(true);
+				this.getManagedBean().getRequestCode().setRequestMeasurement(true);
+				this.getManagedBean().getRequestCode().setRequestType(true);
 			}
 
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
