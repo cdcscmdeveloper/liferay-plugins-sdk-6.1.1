@@ -15,7 +15,7 @@
 		<h:panelGroup id="extensionFlowReviewID">
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}" rendered="#{unspscCodeBackingBean.allSupplier}" action="#{catalogueBackingBean.addToMaintainByItemId}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}" rendered="#{unspscCodeBackingBean.allSupplier}" action="#{catalogueBackingBean.addToMaintainByItemId('OK')}"></p:commandButton>
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}" rendered="#{bpmTasklistBackingBean.managedBean.claim}"

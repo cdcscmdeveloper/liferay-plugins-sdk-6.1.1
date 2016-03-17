@@ -1,0 +1,500 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			showSummary="true"></p:messages>
+		<h:panelGroup id="cmReviewUnspsc">
+
+
+			<div style="text-align: right; min-height: 40px;">
+
+				<p:commandButton value="#{lbl['lbl.cm.view']}"
+					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary('CD',cdTrackingDiaryBackingBean.managedBean.docId)}"></p:commandButton>
+
+
+				<div style="float: left; clear: both;">
+
+					<p:commandButton value="#{lbl['lbl.cm.back']}"
+						action="#{cdTrackingDiaryBackingBean.backToPrev}" immediate="true"></p:commandButton>
+				</div>
+			</div>
+
+
+			<ui:include src="DocumentHeaderTrackingDairy.xhtml"></ui:include>
+
+
+			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
+
+				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
+						<td><p:selectOneMenu disabled="true"
+								value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.itemType}"
+								style="width:228px;">
+								<f:selectItem itemValue="P"
+									itemLabel="#{lbl['lbl.txt.product']}" />
+								<f:selectItem itemValue="S"
+									itemLabel="#{lbl['lbl.txt.service']}" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+
+					<h:panelGroup
+						rendered="#{cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.itemName}"
+									disabled="true" size="40"></p:inputText></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.itemDetail}"
+									disabled="true" size="40"></p:inputText></td>
+						</tr>
+
+					</h:panelGroup>
+
+
+					<h:panelGroup
+						rendered="#{!cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].tempCode}"
+									disabled="true" size="40"></p:inputText></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList[0].tempTitle}"
+									disabled="true" size="40"></p:inputText></td>
+						</tr>
+					</h:panelGroup>
+
+
+
+					<h:panelGroup id="extensionFiledsId"
+						rendered="#{cdTrackingDiaryBackingBean.managedBean.requestCode.itemType != 'S' and cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.typeName}"
+									disabled="true" size="40"></p:inputText></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.brandName}"
+									disabled="true" size="40"></p:inputText></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.measurementName}"
+									disabled="true" size="40"></p:inputText></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
+							<td><p:inputText
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.colorName}"
+									disabled="true" size="40"></p:inputText></td>
+						</tr>
+					</h:panelGroup>
+				</table>
+
+
+				<h:panelGroup
+					rendered="#{cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+					<p:dataTable style="width:100%;" id="dt"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{cdTrackingDiaryBackingBean.managedBean.reviewExtCodeList}"
+						var="review">
+
+						<p:column width="10%">
+							<f:facet name="header">
+						#{lbl['lbl.cm.extension']}
+					</f:facet>
+
+							<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
+							<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.brand']}</div>
+							<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.measurement']}</div>
+							<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.color']}</div>
+
+						</p:column>
+
+						<p:column width="10%">
+							<f:facet name="header">
+							#{lbl['lbl.sc.supp.name']}
+						</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.typeName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.brandName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.measurementName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.colorName}" disabled="true" />
+							</div>
+
+						</p:column>
+						<p:column width="10%">
+							<f:facet name="header">
+						#{lbl['lbl.cm.review.by']}
+					</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedTypeName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedBrandName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedMeasurementName}"
+									disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedColorName}" disabled="true" />
+							</div>
+
+						</p:column>
+
+						<p:column width="10%">
+							<f:facet name="header">
+						#{lbl['lbl.txt.remarks']}
+					</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.typeRemark}" disabled="true"
+									size="30" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.brandRemark}" disabled="true"
+									size="30" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.measurementRemark}" disabled="true"
+									size="30" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.colorRemark}" disabled="true"
+									size="30" />
+							</div>
+
+						</p:column>
+
+						<p:column width="10%">
+							<f:facet name="header">
+						#{lbl['lbl.cm.endorse.by']}
+					</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedTypeNameII}"
+									disabled="true">
+
+								</p:inputText>
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedBrandNameII}"
+									disabled="true">
+
+								</p:inputText>
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedMeasurementNameII}"
+									disabled="true">
+
+								</p:inputText>
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedColorNameII}"
+									disabled="true">
+
+								</p:inputText>
+							</div>
+
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+						#{lbl['lbl.txt.remarks']}
+					</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.typeRemarkII}" size="30"
+									maxlength="100" disabled="true" />
+
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.brandRemarkII}" size="30"
+									disabled="true"></p:inputText>
+
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.measurementRemarkII}" size="30"
+									maxlength="100" disabled="true"></p:inputText>
+
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.colorRemarkII}" size="30"
+									maxlength="100" disabled="true"></p:inputText>
+
+							</div>
+
+						</p:column>
+
+
+					</p:dataTable>
+				</h:panelGroup>
+
+
+				<h:panelGroup
+					rendered="#{!cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+					<p:dataTable style="width:100%;" id="extensionTableId"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{cdTrackingDiaryBackingBean.managedBean.proceedExtCodeList}"
+						var="review">
+
+						<p:column width="10%">
+							<f:facet name="header">
+						#{lbl['lbl.cm.extension']}
+					</f:facet>
+
+							<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
+							<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.brand']}</div>
+							<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.measurement']}</div>
+							<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.color']}</div>
+
+						</p:column>
+
+						<p:column width="10%">
+							<f:facet name="header">
+							#{lbl['lbl.sc.supp.name']}
+						</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.typeName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.brandName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.measurementName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.colorName}" disabled="true" />
+							</div>
+
+						</p:column>
+						<p:column width="10%">
+							<f:facet name="header">
+						#{lbl['lbl.cm.review.by']}
+					</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedTypeName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedBrandName}" disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedMeasurementName}"
+									disabled="true" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedColorName}" disabled="true" />
+							</div>
+
+						</p:column>
+
+						<p:column width="10%">
+							<f:facet name="header">
+						#{lbl['lbl.txt.remarks']}
+					</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.typeRemark}" disabled="true"
+									size="30" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.brandRemark}" disabled="true"
+									size="30" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.measurementRemark}" disabled="true"
+									size="30" />
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.colorRemark}" disabled="true"
+									size="30" />
+							</div>
+
+						</p:column>
+
+						<p:column width="10%">
+							<f:facet name="header">
+						#{lbl['lbl.cm.endorse.by']}
+					</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedTypeNameII}"
+									disabled="true">
+
+								</p:inputText>
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedBrandNameII}"
+									disabled="true">
+
+								</p:inputText>
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedMeasurementNameII}"
+									disabled="true">
+
+								</p:inputText>
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.reviewedColorNameII}"
+									disabled="true">
+
+								</p:inputText>
+							</div>
+
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+						#{lbl['lbl.txt.remarks']}
+					</f:facet>
+
+							<div style="width: 100%;">
+								<p:inputText value="#{review.typeRemarkII}" size="30"
+									maxlength="100" disabled="true" />
+
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.brandRemarkII}" size="30"
+									disabled="true"></p:inputText>
+
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.measurementRemarkII}" size="30"
+									maxlength="100" disabled="true"></p:inputText>
+
+							</div>
+							<div style="width: 100%;">
+								<p:inputText value="#{review.colorRemarkII}" size="30"
+									maxlength="100" disabled="true"></p:inputText>
+
+							</div>
+
+						</p:column>
+
+
+					</p:dataTable>
+				</h:panelGroup>
+
+
+
+			</p:panel>
+
+			<h:panelGroup
+				rendered="#{cdTrackingDiaryBackingBean.managedBean.unspscInd}">
+				<p:panel header="#{lbl['lbl.cm.recommend.item.code']}"
+					toggleable="true">
+
+					<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.cmRecommendCodes}"
+						var="unspscObj" width="100%">
+
+
+
+						<p:column>
+							<f:facet name="header">
+					#{lbl['lbl.cm.recommended.item.code']}
+				</f:facet>
+
+				
+						#{unspscObj.unspscCode}
+						
+
+
+				</p:column>
+						<p:column>
+							<f:facet name="header">
+					#{lbl['lbl.cm.recommended.item.name']}
+				</f:facet>
+				#{unspscObj.unspscTitle}
+			</p:column>
+					</p:dataTable>
+
+
+				</p:panel>
+			</h:panelGroup>
+
+			<p:panel header="#{lbl['lbl.cm.recommend.extension.code']}"
+				toggleable="true">
+				<p:dataTable style="width:100%;"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{cdTrackingDiaryBackingBean.managedBean.recommendExtCodeList}"
+					var="review">
+
+					<p:column>
+						<f:facet name="header">
+						#{lbl['lbl.cm.extension']}
+					</f:facet>
+
+						<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
+						<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.brand']}</div>
+						<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.measurement']}</div>
+						<div style="width: 100%; padding-bottom: 9px;">#{lbl['lbl.cm.color']}</div>
+
+					</p:column>
+
+
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.sc.supp.name']}
+						</f:facet>
+
+						<div style="width: 100%;">
+							<p:inputText value="#{review.typeName}" disabled="true"></p:inputText>
+
+						</div>
+						<div style="width: 100%;">
+							<p:inputText value="#{review.brandName}" disabled="true"></p:inputText>
+
+						</div>
+						<div style="width: 100%;">
+							<p:inputText value="#{review.measurementName}" disabled="true"></p:inputText>
+
+						</div>
+						<div style="width: 100%;">
+							<p:inputText value="#{review.colorName}" disabled="true"></p:inputText>
+
+						</div>
+
+					</p:column>
+
+
+				</p:dataTable>
+			</p:panel>
+
+		</h:panelGroup>
+
+
+
+
+	</ui:define>
+
+
+</ui:composition>

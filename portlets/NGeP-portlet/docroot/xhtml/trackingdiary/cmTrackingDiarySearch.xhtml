@@ -1,4 +1,5 @@
 <ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,124 +8,135 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<h:panelGroup id="cmUNSPSCsearchID">
-	<script>
-	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
-	</script>
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif" />
-		</p:blockUI>		
 
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
-			
-		<p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}"
-						toggleable="true" id="searchTabId">
+	<ui:define name="contentSection">
+		<h:panelGroup id="cmUNSPSCsearchID">
+			<script>
+				$('#portlet_Catalogue_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.cm.catalogue.search']}");
+			</script>
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif" />
+			</p:blockUI>
 
-						<table style="margin-top: 10px; width: 100%;">
-							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.cm.supp.name']}" /></td>
-								<td><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="15%"><p:outputLabel
-										value="#{lbl['lbl.cm.item.code']}" /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.managedBean.searchItemCodeValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="15%"><p:outputLabel
-										value="#{lbl['lbl.td.item.name']}" /></td>
-								<td width="35%%"><p:inputText size="50"
-										value="#{cmTrackingDiaryBackingBean.managedBean.searchItemNameValue}"></p:inputText></td>
-							</tr>
-<!-- 							<tr> -->
-<!-- 								<td width="15%"><p:outputLabel -->
-<!-- 										value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td> -->
-<!-- 								<td width="35%"><p:calendar mode="popup" showOn="button" -->
-<!-- 										readonlyInput="true" -->
-<!-- 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
-<!-- 										value="#{cmTrackingDiaryBackingBean.managedBean.searchCreatedFromDuration}"> -->
-<!-- 									</p:calendar> -->
-<!-- 									<p:spacer width="5" /> -->
-<!-- 									<p:calendar mode="popup" showOn="button" -->
-<!-- 										readonlyInput="true" -->
-<!-- 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
-<!-- 										value="#{cmTrackingDiaryBackingBean.managedBean.searchCreatedToDuration}"> -->
-<!-- 									</p:calendar></td> -->
-<!-- 							</tr> -->
-<!-- 							<tr> -->
-<!-- 								<td width="15%"><p:outputLabel value="Status" /></td> -->
-<!-- 								<td width="35%"><p:selectOneMenu style="width: 314px;" -->
-<!-- 											value="#{cmTrackingDiaryBackingBean.managedBean.searchStatusId}"> -->
-<!-- 											<f:selectItems -->
-<!-- 												value="#{cmTrackingDiaryBackingBean.getItemStatusOptions()}" /> -->
-<!-- 									</p:selectOneMenu></td> -->
-<!-- 							</tr> -->
-						</table>
+			<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="true"></p:messages>
 
-						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.search']}"
-								action="#{cmTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								update="resultPanel" />
-							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								action="#{cmTrackingDiaryBackingBean.managedBean.reset}" update=":form" />
-						</div>
-		</p:panel>
-		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+			<p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}"
+				toggleable="true" id="searchTabId">
 
-			<p:dataTable id="supplierItemID" lazy="true"
-				value="#{cmTrackingDiaryBackingBean.managedBean.cmDocumentDataModel}" var="cmObject"
-				width="100%" rows="10">
+				<table style="margin-top: 10px; width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.supp.name']}" /></td>
+						<td><p:inputText size="50"
+								value="#{cmTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
+					</tr>
+					<tr>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.item.code']}" /></td>
+						<td width="35%"><p:inputText size="50"
+								value="#{cmTrackingDiaryBackingBean.managedBean.searchItemCodeValue}"></p:inputText></td>
+					</tr>
+					<tr>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.td.item.name']}" /></td>
+						<td width="35%%"><p:inputText size="50"
+								value="#{cmTrackingDiaryBackingBean.managedBean.searchItemNameValue}"></p:inputText></td>
+					</tr>
+					<!-- 							<tr> -->
+					<!-- 								<td width="15%"><p:outputLabel -->
+					<!-- 										value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td> -->
+					<!-- 								<td width="35%"><p:calendar mode="popup" showOn="button" -->
+					<!-- 										readonlyInput="true" -->
+					<!-- 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
+					<!-- 										value="#{cmTrackingDiaryBackingBean.managedBean.searchCreatedFromDuration}"> -->
+					<!-- 									</p:calendar> -->
+					<!-- 									<p:spacer width="5" /> -->
+					<!-- 									<p:calendar mode="popup" showOn="button" -->
+					<!-- 										readonlyInput="true" -->
+					<!-- 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
+					<!-- 										value="#{cmTrackingDiaryBackingBean.managedBean.searchCreatedToDuration}"> -->
+					<!-- 									</p:calendar></td> -->
+					<!-- 							</tr> -->
+					<!-- 							<tr> -->
+					<!-- 								<td width="15%"><p:outputLabel value="Status" /></td> -->
+					<!-- 								<td width="35%"><p:selectOneMenu style="width: 314px;" -->
+					<!-- 											value="#{cmTrackingDiaryBackingBean.managedBean.searchStatusId}"> -->
+					<!-- 											<f:selectItems -->
+					<!-- 												value="#{cmTrackingDiaryBackingBean.getItemStatusOptions()}" /> -->
+					<!-- 									</p:selectOneMenu></td> -->
+					<!-- 							</tr> -->
+				</table>
 
-				<ac:paginator for="supplierItemID"></ac:paginator>
-				<p:column>
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.supp.name']}"/>
-					</f:facet>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						action="#{cmTrackingDiaryBackingBean.search}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						update="resultPanel" />
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						action="#{cmTrackingDiaryBackingBean.managedBean.reset}"
+						update=":form" />
+				</div>
+			</p:panel>
+			<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}"
+				toggleable="true">
+
+				<p:dataTable id="supplierItemID" lazy="true"
+					value="#{cmTrackingDiaryBackingBean.managedBean.cmDocumentDataModel}"
+					var="cmObject" width="100%" rows="10">
+
+					<ac:paginator for="supplierItemID"></ac:paginator>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.supp.name']}" />
+						</f:facet>
 				#{cmObject.getSmSupplier().getCompanyName()}
 				</p:column>
 
-				<!-- <p:column width="15%">
+					<!-- <p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					</f:facet>
 				<ac:labelDateTime value="#{cmObject.createdDate}" /> 
 				</p:column> -->
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.item.code']}"/>
-					</f:facet>
+					<p:column width="15%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.item.code']}" />
+						</f:facet>
 				#{cmObject.getCmItem().getExtensionCode()}
 				</p:column>
-				<p:column>
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.item.name']}"/>
-					</f:facet>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.td.item.name']}" />
+						</f:facet>
 				#{cmObject.getCmItem().getItemName()} 
 				</p:column>
- 				<p:column> 
-					<f:facet name="header"> 
-					<h:outputText value="#{lbl['lbl.cm.status.name']}"/> 
-				</f:facet> 
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.status.name']}" />
+						</f:facet> 
  				#{cmTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.getCatalogueItemStatus(),cmObject.itemStatus)}
-				</p:column> 
-   				
-				<p:column width="5%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.action']}"/>
-					</f:facet>
-					<p:commandLink
-						action="#{cmTrackingDiaryBackingBean.goToTrackingDiarySearch(cmObject)}">
-							<p:graphicImage value="/css/images/design/document.png" />
-					</p:commandLink>
 				</p:column>
-			</p:dataTable>
+
+					<p:column width="5%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.td.action']}" />
+						</f:facet>
+						<p:commandLink
+							action="#{cmTrackingDiaryBackingBean.goToTrackingDiarySearch(cmObject)}">
+							<p:graphicImage value="/css/images/design/document.png" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
 
 
-		</p:panel>
+			</p:panel>
 
 
-	</h:panelGroup>		
+		</h:panelGroup>
+
+	</ui:define>
 
 </ui:composition>

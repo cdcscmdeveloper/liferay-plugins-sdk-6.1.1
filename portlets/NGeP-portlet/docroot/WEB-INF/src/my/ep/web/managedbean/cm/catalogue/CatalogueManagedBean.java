@@ -491,6 +491,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private String scheduleNo;
 	
 	private String expiryAlert;
+	
+	private CmUnspsc unspscObj;
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -3801,6 +3803,22 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setG2gFlag(boolean g2gFlag) {
 		this.g2gFlag = g2gFlag;
+	}
+
+	/**
+	 * @return the unspscObj
+	 */
+	public CmUnspsc getUnspscObj() {
+		if(unspscObj==null)
+			unspscObj = new CmUnspsc();
+		return unspscObj;
+	}
+
+	/**
+	 * @param unspscObj the unspscObj to set
+	 */
+	public void setUnspscObj(CmUnspsc unspscObj) {
+		this.unspscObj = unspscObj;
 	}
 
 	
