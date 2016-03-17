@@ -35,6 +35,7 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
@@ -86,7 +87,7 @@ public class UnitOfMeasurementBackingBean extends
 	 * load clean view
 	 */
 	public void preLoading(){
-		debugLogger("preLoading");
+		log.info("preLoading");
 		this.resetMeasurementSearch();
 		FacesContext fc = FacesContext.getCurrentInstance(); 
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -98,7 +99,7 @@ public class UnitOfMeasurementBackingBean extends
 	 * 
 	 */		
 	public String redirectMeasurementSearch() {
-		debugLogger("redirectMeasurementSearch");
+		log.info("redirectMeasurementSearch");
 //		this.getManagedBean().setLazy(true); 
 
 		return NAV_TO_SEARCH;
@@ -109,7 +110,7 @@ public class UnitOfMeasurementBackingBean extends
 	 * Reset measurement search 
 	 */
 	public void resetMeasurementSearch() {
-		debugLogger("resetMeasurementSearch");
+		log.info("resetMeasurementSearch");
 		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setMeasurementNames(new String());
@@ -152,7 +153,7 @@ public class UnitOfMeasurementBackingBean extends
 	 * 
 	 */	
 	public String createMeasurement() {
-		debugLogger("createMeasurement");
+		log.info("createMeasurement");
 		PmUom pmUom = new PmUom();
 		this.getManagedBean().setPmUom(pmUom);
 
@@ -212,7 +213,7 @@ public class UnitOfMeasurementBackingBean extends
 	}		
 	
 	public void retrieveMeasurement(){
-		debugLogger("retrieveMeasurement");
+		log.info("retrieveMeasurement");
 		this.getManagedBean().setLazy(true); 
 		unitOfMeasurementDataModel.reloadData();
 		
@@ -244,7 +245,7 @@ public class UnitOfMeasurementBackingBean extends
 
 				reqDTO.setMeasurementSearchBean(searchBeanData);
 				
-				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);	
+				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);	
 				UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getMeasurementSearchResultBean();
@@ -262,7 +263,7 @@ public class UnitOfMeasurementBackingBean extends
 	 * into maintenance page (PmUom pmUom)
 	 */	
 	public String goToUnitMaintaincePage(PmUom pmUom){
-		debugLogger("goToUnitMaintaincePage");
+		log.info("goToUnitMaintaincePage");
 		this.getManagedBean().setPmUom(pmUom);
 		
 		PmUom oldPmUom = null;
@@ -284,7 +285,7 @@ public class UnitOfMeasurementBackingBean extends
 	 * into maintenance page (PmUom pmUom)
 	 */	
 	private void reloadUOMData(PmUom pmUom){
-		debugLogger("goToUnitMaintaincePage");
+		log.info("goToUnitMaintaincePage");
 		this.getManagedBean().setPmUom(pmUom);
 		
 		PmUom oldPmUom = null;
@@ -302,7 +303,7 @@ public class UnitOfMeasurementBackingBean extends
 	 * 
 	 */
 	private void validationMessage(PmUom uom){
-		debugLogger("validationMessage");
+		log.info("validationMessage");
 		if(StringUtils.isBlank(uom.getUomCode())){
 			throw new EpException(MessageConst.ERR_900010);
 		}
@@ -312,13 +313,18 @@ public class UnitOfMeasurementBackingBean extends
 		}
 		
 //		if(uom.isBrandNew()){
-			uniqueUOMCode(uom.getUomCode(), uom.getUomId());
+		if(DbValueConst.RECORD_STATUS_ACTIVE == uom.getRecordStatusFlg().intValue()){
+		   uniqueUOMCode(uom);
+		}
+			
 //		}
 		
 	}	
-	private void uniqueUOMCode(String uomCode, Long uomId){
+	private void uniqueUOMCode(PmUom uom){
 
 		ISearchBean<PmUom> searchBean =  new SearchBean<PmUom>();
+		String uomCode = uom.getUomCode().trim();
+		Long uomId = uom.getUomId();
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean(
 						"uomCode",
@@ -329,8 +335,7 @@ public class UnitOfMeasurementBackingBean extends
 						"recordStatusFlg",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						1));
-		if(uomId!=null){
-			System.out.println("uomId: " +uomId);
+		if(uomId!=null){			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
 							"uomId",
@@ -342,12 +347,19 @@ public class UnitOfMeasurementBackingBean extends
 		UomReqDTO reqDTO = new UomReqDTO();
 		reqDTO.setMeasurementSearchBean(searchBean);
 		
-		IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);	
+		IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);	
 		UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
 		if (resDTO.isSuccessful()) {
 			if(resDTO.getMeasurementSearchResultBean()!=null && resDTO.getMeasurementSearchResultBean().getResultList()!=null 
 					&& !resDTO.getMeasurementSearchResultBean().getResultList().isEmpty()){
-				  throw new EpException(MessageConst.ERR_900012,new String[]{uomCode});
+				if(uom.isBrandNew()){
+					throw new EpException(MessageConst.ERR_900012,new String[]{uomCode});
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.uom.uomcode")
+					});	
+				}
+				  
 			}
 		}
 	}
@@ -358,7 +370,7 @@ public class UnitOfMeasurementBackingBean extends
 	 * @return the string
 	 */
 	public String saveMeasurementDtls() {
-		debugLogger("saveMeasurementDtls");
+		log.info("saveMeasurementDtls");
 
 		String messageId = null;
 
@@ -366,7 +378,7 @@ public class UnitOfMeasurementBackingBean extends
 		PmUom pmUom = this.getManagedBean().getPmUom();
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 
 		validationMessage(pmUom);
@@ -384,9 +396,7 @@ public class UnitOfMeasurementBackingBean extends
 		try {
 			StatusResDTO statusResDTO = statusSO
 					.retrieveStatusByStatusId(statusReqDTO);
-			System.out.println("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
-			debugLogger("statusResDTO.getPmStatus().getStatusId():"
+			log.info("statusResDTO.getPmStatus().getStatusId():"
 					+ statusResDTO.getPmStatus().getStatusId());
 
 			if (pmUom.isBrandNew()) {
