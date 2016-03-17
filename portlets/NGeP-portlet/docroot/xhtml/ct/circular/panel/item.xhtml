@@ -180,11 +180,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<p:column selectionMode="multiple" style="width:3%" 
 					rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:40%;" styleClass="column-align-center" >
-					<p:inputTextarea value="#{data.specification}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
+					<p:inputTextarea value="#{data.specification}" maxlength="1000" rows="3" style="width:98%;" autoResize="false"
 						disabled="#{panelBackingBean.managedBean.viewContract}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.description']}" style="width:40%;" styleClass="column-align-center" >
-					<p:inputTextarea value="#{data.description}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
+					<p:inputTextarea value="#{data.description}" maxlength="1000" rows="3" style="width:98%;" autoResize="false"
 						disabled="#{panelBackingBean.managedBean.viewContract}" />
 				</p:column>
 			</p:dataTable>
