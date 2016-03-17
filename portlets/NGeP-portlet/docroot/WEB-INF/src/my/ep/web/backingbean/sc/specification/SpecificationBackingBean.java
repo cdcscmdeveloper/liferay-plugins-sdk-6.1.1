@@ -462,11 +462,11 @@ public class SpecificationBackingBean extends
 	 */
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
-				.getSuppCriteriaopenList();
+				.getQtCategoryList();
 
 		if (qtCategoryList == null) {
 			qtCategoryList = new ArrayList<ScQtCategory>();
-			this.getManagedBean().setSuppCriteriaopenList(qtCategoryList);
+			this.getManagedBean().setQtCategoryList(qtCategoryList);
 		}
 
 		validateDuplicateCategoryCode(pmCategoryL3, qtCategoryList);
@@ -490,7 +490,7 @@ public class SpecificationBackingBean extends
 			removeList = new ArrayList<ScQtCategory>();
 		}
 		List<ScQtCategory> openList = this.getManagedBean()
-				.getSuppCriteriaopenList();
+				.getQtCategoryList();
 
 		if (null == openList) {
 			openList = new ArrayList<ScQtCategory>();
@@ -1006,15 +1006,15 @@ public class SpecificationBackingBean extends
 			tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
 			if (!this.getManagedBean().getQt().isPanel()) {
-				if (null == this.getManagedBean().getSuppCriteriaopenList()
-						|| this.getManagedBean().getSuppCriteriaopenList()
+				if (null == this.getManagedBean().getQtCategoryList()
+						|| this.getManagedBean().getQtCategoryList()
 								.isEmpty()) {
 					tenderResDTO = QtDetailsSO
 							.retriveQTSuppQulCriDetails(tenderReqDTO);
 					List<ScQtCategory> categoryResults = tenderResDTO
 							.getCategories();
 					;
-					this.getManagedBean().setSuppCriteriaopenList(
+					this.getManagedBean().setQtCategoryList(
 							categoryResults);
 					ScQt scQt = tenderResDTO.getQtDetail();
 					this.getManagedBean().setAllStateCode(
@@ -1150,9 +1150,9 @@ public class SpecificationBackingBean extends
 									|| tenderResDTO.getLocationDetails()
 											.isEmpty()) {
 								if (null == this.getManagedBean()
-										.getSuppCriteriaopenList()
+										.getQtCategoryList()
 										|| this.getManagedBean()
-												.getSuppCriteriaopenList()
+												.getQtCategoryList()
 												.isEmpty()) {
 									tenderResDTO = QtDetailsSO
 											.retriveQTSuppQulCriDetails(tenderReqDTO);
@@ -1171,9 +1171,9 @@ public class SpecificationBackingBean extends
 									|| tenderResDTO.getLocationDetails()
 											.isEmpty()) {
 								if (null == this.getManagedBean()
-										.getSuppCriteriaopenList()
+										.getQtCategoryList()
 										|| this.getManagedBean()
-												.getSuppCriteriaopenList()
+												.getQtCategoryList()
 												.isEmpty()) {
 									tenderResDTO = QtDetailsSO
 											.retriveQTSuppQulCriDetails(tenderReqDTO);
@@ -1190,9 +1190,9 @@ public class SpecificationBackingBean extends
 									|| tenderResDTO.getLocationDetails()
 											.isEmpty()) {
 								if (null == this.getManagedBean()
-										.getSuppCriteriaopenList()
+										.getQtCategoryList()
 										|| this.getManagedBean()
-												.getSuppCriteriaopenList()
+												.getQtCategoryList()
 												.isEmpty()) {
 									tenderResDTO = QtDetailsSO
 											.retriveQTSuppQulCriDetails(tenderReqDTO);
@@ -3882,7 +3882,7 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.OPEN_TYPE.equalsIgnoreCase(scQt.getQtType())) {
 				List<ScQtCategory> openList = this.getManagedBean()
-						.getSuppCriteriaopenList();
+						.getQtCategoryList();
 				if (null != openList && !openList.isEmpty()) {
 					scQt.setScQtCategorys(openList);
 				}
@@ -3904,7 +3904,7 @@ public class SpecificationBackingBean extends
 				}
 
 				List<ScQtCategory> openList = this.getManagedBean()
-						.getSuppCriteriaopenList();
+						.getQtCategoryList();
 				if (null != openList && !openList.isEmpty()) {
 					scQt.setScQtCategorys(openList);
 				}
@@ -4034,7 +4034,7 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setPanelChange(scQt.isPanel());
 				this.getManagedBean().setQt(scQt);
-				this.getManagedBean().setQtCategoryList(scQt.getScQtCategorys());
+				//this.getManagedBean().setQtCategoryList(scQt.getScQtCategorys());
 				if (scQt.isZonal()
 
 						&& null != this.getManagedBean().getZoneGeneralTrees()
@@ -4077,7 +4077,7 @@ public class SpecificationBackingBean extends
 					scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
 					scQt.setDecExpectedIntendedPrice(tmpExpectedIntendedPrice);
 				}
-				this.getManagedBean().setQtCategoryList(scQt.getScQtCategorys());
+				//this.getManagedBean().setQtCategoryList(scQt.getScQtCategorys());
 			}
 
 		} finally {
@@ -10157,9 +10157,6 @@ public class SpecificationBackingBean extends
 			if (qtType.equals(QTConstants.OPEN_TYPE) || qtType.equals(QTConstants.RESTRICTED_TYPE)) {
 				List<ScQtCategory> qtCategories = this.getManagedBean()
 						.getQtCategoryList();
-			if(null==qtCategories || qtCategories.isEmpty()){
-				qtCategories=this.getManagedBean().getSuppCriteriaopenList();
-			}
 				scQt.setScQtCategorys(qtCategories);
 			} 
 		}
@@ -12030,7 +12027,7 @@ public class SpecificationBackingBean extends
 				reqDTO.setZonesQt(true);
 				reqDTO.setScQt(scQt);
 				// resDTO = specSO.saveTemplateSpecZoneDtls(reqDTO);
-				this.getManagedBean().setSuppCriteriaopenList(
+				this.getManagedBean().setQtCategoryList(
 						new ArrayList<ScQtCategory>());
 				this.getManagedBean().setZoneGeneralTrees(
 						new ArrayList<TreeNode>());
@@ -12183,8 +12180,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
 		this.getManagedBean().setQtCategoryList(null);
-		this.getManagedBean().setSuppCriteriaopenList(
-				null);
+		
 	}
 	/**
 	 * Sets the technical check list.
@@ -12503,7 +12499,7 @@ public class SpecificationBackingBean extends
 				// resDTO = specSO.saveTemplateSpecZoneDtls(reqDTO);
 				reqDTO.setZonesQt(true);
 				reqDTO.setScQt(scQt);
-				this.getManagedBean().setSuppCriteriaopenList(
+				this.getManagedBean().setQtCategoryList(
 						new ArrayList<ScQtCategory>());
 				this.getManagedBean().setZoneGeneralTrees(
 						new ArrayList<TreeNode>());
@@ -13143,7 +13139,7 @@ public class SpecificationBackingBean extends
 		log.info("searchForSupplierCount - START");
 		List<String> codes = new ArrayList<String>();
 		List<ScQtCategory> suppCriteriaopenList = getManagedBean()
-				.getSuppCriteriaopenList();
+				.getQtCategoryList();
 		ScQtSupplierCriteria scQtSupplierCriteria = getManagedBean().getQt()
 				.getScQtSupplierCriteria();
 		BigDecimal minPaidUpCapital = scQtSupplierCriteria
