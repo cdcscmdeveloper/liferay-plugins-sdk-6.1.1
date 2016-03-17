@@ -10242,7 +10242,9 @@ public class SpecificationBackingBean extends
 			if (qtType.equals(QTConstants.OPEN_TYPE) || qtType.equals(QTConstants.RESTRICTED_TYPE)) {
 				List<ScQtCategory> qtCategories = this.getManagedBean()
 						.getQtCategoryList();
-				
+			if(null==qtCategories || qtCategories.isEmpty()){
+				qtCategories=this.getManagedBean().getSuppCriteriaopenList();
+			}
 				scQt.setScQtCategorys(qtCategories);
 			} 
 		}
@@ -12266,6 +12268,8 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
 		this.getManagedBean().setQtCategoryList(null);
+		this.getManagedBean().setSuppCriteriaopenList(
+				null);
 	}
 	/**
 	 * Sets the technical check list.
