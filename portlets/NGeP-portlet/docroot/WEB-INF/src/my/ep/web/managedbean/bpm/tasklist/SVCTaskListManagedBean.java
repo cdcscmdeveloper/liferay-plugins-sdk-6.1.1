@@ -114,14 +114,14 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 
 	}
 	
-	private List<Long> getSiteVisitStatusesByType(String svType){
+	public List<Long> getSiteVisitStatusesByType(String svType){
 		List<Long> statusLs = new ArrayList<Long>();
 		
 		 switch(svType)
 	      {
 	         case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL :
+	        	statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL); 
 	        	statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL);
-	 			statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL); 
 	            break;
 	         case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_BEFORE :
 	        	 statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL);
