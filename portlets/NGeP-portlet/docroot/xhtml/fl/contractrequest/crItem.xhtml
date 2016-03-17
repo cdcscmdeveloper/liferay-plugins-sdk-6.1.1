@@ -615,7 +615,7 @@
 					value="#{contractRequestBackingBean.managedBean.supplierItemPriceList}"
 					rowKey="#{purchasedItem}">
 					<ac:paginator for="reqItemInfoDt" />
-					<p:column headerText="Zone" rendered="#{contractRequestBackingBean.managedBean.zonalPrice || contractRequestBackingBean.managedBean.zonalTierPrice}">
+					<p:column headerText="#{lbl['lbl.fl.zone']}" rendered="#{contractRequestBackingBean.managedBean.zonalPrice || contractRequestBackingBean.managedBean.zonalTierPrice}">
 						<p:tree value="#{reqItemInfoList.itemZoneTree}" var="location" rendered="#{contractRequestBackingBean.managedBean.zonalPrice || contractRequestBackingBean.managedBean.zonalTierPrice}">
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
