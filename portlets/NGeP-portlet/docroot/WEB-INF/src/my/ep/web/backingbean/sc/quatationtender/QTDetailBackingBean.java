@@ -2267,140 +2267,132 @@ public class QTDetailBackingBean extends
 		}
 		IQTDetailSO QtDetailsSO;
 		QuationTenderResDTO tenderResDTO;
-		
-		
-         try {
-				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-				//tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-				tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
-				
-				tenderResDTO = QtDetailsSO
-						.retriveQTSuppQulCriDetails(tenderReqDTO);
-				
-				
-				ScQt scQt = tenderResDTO.getQtDetail();
-				this.getManagedBean().setAllStateCode(
-						tenderResDTO.getStateCode());
-				this.getManagedBean().setQt(scQt);
-						if (!this.getManagedBean().getQt().isPanel()) {
-					if (CollectionUtils.isEmpty(this
-							.getManagedBean().getQtCategoryList() ))
-							{
-						List<ScQtCategory> categoryResults = tenderResDTO.getCategories();
-								
-						this.getManagedBean().setQtCategoryList(
-								categoryResults);
-						
-						
-						}
-						
-					
-	
-						 if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
-								.equalsIgnoreCase(scQt.getQtType())) {
-							if (CollectionUtils.isEmpty( this.getManagedBean().getQtSupplierList())) {
-								this.getManagedBean().setQtSupplierList(
-										tenderResDTO.getRestrictedSuppliers());
-								this.getManagedBean().setTotalSupplier(tenderResDTO.getRestrictedSuppliers() != null ?
-										tenderResDTO.getRestrictedSuppliers().size() : 0);
-							}
-						}
-		
-						 boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION
-									.equals(scQt.getProcurementMode()
-											.getParameterCode());
-							if (!isQuotationThresHold
-									&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
-									&& !scQt.getScQtSupplierCriteria().isAllState()) {
-								scQt.getScQtSupplierCriteria().setAllState(true);
-							}
-							
-							if (isQuotationThresHold
-									&& ParameterConst.QUOTATION_TENDER_TYPE_OPEN
-											.equalsIgnoreCase(scQt.getQtType())) {
-								if (null == scQt.getScQtSupplierCriteria()
-										.getLocationLevel()) {
-									scQt.getScQtSupplierCriteria()
-											.setLocationLevel(new PmParameter());
-								}
-								scQt.getScQtSupplierCriteria().setAllState(false);
-							}
 
+		try {
+			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+			// tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
 
-						if (!scQt.getScQtSupplierCriteria().isAllState()) {
-							List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-							getManagedBean().setZoneTrees(null);
-							if (null != tenderResDTO.getLocationDetails()) {
-								if (null == this.getManagedBean()
-										.getTotalSuppliersSpecLoc()) {
-									this.getManagedBean()
-											.setTotalSuppliersSpecLoc(
-													new ArrayList<TplSpecLoc>());
-								}
-								this.getManagedBean()
-										.getTotalSuppliersSpecLoc()
-										.addAll(tenderResDTO
-												.getLocationDetails());
-								for (TplSpecLoc localLoc : tenderResDTO
-										.getLocationDetails()) {
-									if (null != scQt.getScQtSupplierCriteria()
-											&& null != scQt
-													.getScQtSupplierCriteria()
-													.getLocationLevel()) {
-										this.getManagedBean()
-												.setLocalLevelCode(
-														scQt.getScQtSupplierCriteria()
-																.getLocationLevel()
-																.getParameterCode());
-									}
-									getManagedBean().setZoneTrees(
-											new ArrayList<TreeNode>());
-									ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
-									locCriteria.add(criteria);
-								}
-								if (null != getManagedBean().getZoneTrees()
-										&& getManagedBean().getZoneTrees()
-												.size() == 0) {
-									this.getManagedBean()
-											.setExistingSupplierLocationList(
-													locCriteria);
-									getManagedBean().getZoneTrees().addAll(
-											LocationSingleton.getInstance()
-													.constuctTreeNode(
-															locCriteria));
-								}
-							}
-						}
-					} else {
-					
-					if (CollectionUtils.isEmpty(this.getManagedBean().getPanelItemList())) {
-						this.getManagedBean().setPanelItemList(tenderResDTO.getPanelItems());
+			tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
+
+			ScQt scQt = tenderResDTO.getQtDetail();
+			this.getManagedBean().setAllStateCode(tenderResDTO.getStateCode());
+			this.getManagedBean().setQt(scQt);
+			if (!this.getManagedBean().getQt().isPanel()) {
+				if (CollectionUtils.isEmpty(this.getManagedBean()
+						.getQtCategoryList())) {
+					List<ScQtCategory> categoryResults = tenderResDTO
+							.getCategories();
+
+					this.getManagedBean().setQtCategoryList(categoryResults);
+
+				}
+
+				if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+						.equalsIgnoreCase(scQt.getQtType())) {
+					if (CollectionUtils.isEmpty(this.getManagedBean()
+							.getQtSupplierList())) {
+						this.getManagedBean().setQtSupplierList(
+								tenderResDTO.getRestrictedSuppliers());
+						this.getManagedBean()
+								.setTotalSuppliers(
+										tenderResDTO.getRestrictedSuppliers() != null ? tenderResDTO
+												.getRestrictedSuppliers()
+												.size() : 0);
 					}
-					if (null != this.getManagedBean().getQt().getCircularVer()) {
-						this.getManagedBean().setCircularExpDate(
-								this.getManagedBean().getQt().getCircularVer()
-										.getEndDate());
-						this.getManagedBean().setCircularNo(
-								this.getManagedBean().getQt().getCircularVer()
-										.getCircularNo());
-						this.getManagedBean().setCircularName(
-								this.getManagedBean().getQt().getCircularVer()
-										.getName());
-						this.getManagedBean().setCircularType(
-								this.getManagedBean().getQt().getCircularVer()
-										.getDocType());
-					}
-					if (this.getManagedBean().getZoneGeneralTrees()
-									.isEmpty()) {
-						retriveZonesByCircularNo();
+				} else {
+					if (tenderResDTO.getTotalSuppliers() != null) {
+						this.getManagedBean().setTotalSuppliers(tenderResDTO.getTotalSuppliers());	
 					}
 				}
-			} finally {
 
+				boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION
+						.equals(scQt.getProcurementMode().getParameterCode());
+				if (!isQuotationThresHold
+						&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
+						&& !scQt.getScQtSupplierCriteria().isAllState()) {
+					scQt.getScQtSupplierCriteria().setAllState(true);
+				}
+
+				if (isQuotationThresHold
+						&& ParameterConst.QUOTATION_TENDER_TYPE_OPEN
+								.equalsIgnoreCase(scQt.getQtType())) {
+					if (null == scQt.getScQtSupplierCriteria()
+							.getLocationLevel()) {
+						scQt.getScQtSupplierCriteria().setLocationLevel(
+								new PmParameter());
+					}
+					scQt.getScQtSupplierCriteria().setAllState(false);
+				}
+
+				if (!scQt.getScQtSupplierCriteria().isAllState()) {
+					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
+					getManagedBean().setZoneTrees(null);
+					if (null != tenderResDTO.getLocationDetails()) {
+						if (null == this.getManagedBean()
+								.getTotalSuppliersSpecLoc()) {
+							this.getManagedBean().setTotalSuppliersSpecLoc(
+									new ArrayList<TplSpecLoc>());
+						}
+						this.getManagedBean().getTotalSuppliersSpecLoc()
+								.addAll(tenderResDTO.getLocationDetails());
+						for (TplSpecLoc localLoc : tenderResDTO
+								.getLocationDetails()) {
+							if (null != scQt.getScQtSupplierCriteria()
+									&& null != scQt.getScQtSupplierCriteria()
+											.getLocationLevel()) {
+								this.getManagedBean().setLocalLevelCode(
+										scQt.getScQtSupplierCriteria()
+												.getLocationLevel()
+												.getParameterCode());
+							}
+							getManagedBean().setZoneTrees(
+									new ArrayList<TreeNode>());
+							ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
+							locCriteria.add(criteria);
+						}
+						if (null != getManagedBean().getZoneTrees()
+								&& getManagedBean().getZoneTrees().size() == 0) {
+							this.getManagedBean()
+									.setExistingSupplierLocationList(
+											locCriteria);
+							getManagedBean().getZoneTrees().addAll(
+									LocationSingleton.getInstance()
+											.constuctTreeNode(locCriteria));
+						}
+					}
+				}
+			} else {
+
+				if (CollectionUtils.isEmpty(this.getManagedBean()
+						.getPanelItemList())) {
+					this.getManagedBean().setPanelItemList(
+							tenderResDTO.getPanelItems());
+				}
+				if (null != this.getManagedBean().getQt().getCircularVer()) {
+					this.getManagedBean().setCircularExpDate(
+							this.getManagedBean().getQt().getCircularVer()
+									.getEndDate());
+					this.getManagedBean().setCircularNo(
+							this.getManagedBean().getQt().getCircularVer()
+									.getCircularNo());
+					this.getManagedBean().setCircularName(
+							this.getManagedBean().getQt().getCircularVer()
+									.getName());
+					this.getManagedBean().setCircularType(
+							this.getManagedBean().getQt().getCircularVer()
+									.getDocType());
+				}
+				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+					retriveZonesByCircularNo();
+				}
 			}
+		} finally {
+
 		}
+	}
 	
 
 	/**
