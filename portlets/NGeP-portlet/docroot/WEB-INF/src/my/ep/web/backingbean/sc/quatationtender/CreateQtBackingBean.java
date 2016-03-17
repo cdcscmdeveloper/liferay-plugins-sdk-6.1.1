@@ -710,7 +710,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 				.get("value");
 		ScQt scQt = this.getManagedBean().getQt();
 
-		this.getManagedBean().setSuppCriteriaopenList(
+		this.getManagedBean().setQtCategoryList(
 				new ArrayList<ScQtCategory>());
 		if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(type)) {
 
@@ -968,7 +968,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 						|| (null != supplierCriteria && null == supplierCriteria
 								.getQtSupplierCriteriaId())) {
 					this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
-					this.getManagedBean().setSuppCriteriaopenList(new ArrayList<ScQtCategory>());
+					this.getManagedBean().setQtCategoryList(new ArrayList<ScQtCategory>());
 					supplierCriteria = new ScQtSupplierCriteria();
 					supplierCriteria.setScQt(scQt);
 					
@@ -2177,7 +2177,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		getManagedBean().setZoneTrees(null);
 		this.getManagedBean().setScQtCheckSt2techProposal(null);
 		this.getManagedBean().setScQtCheckSt2financeProposalList(null);
-		this.getManagedBean().setSuppCriteriaopenList(null);
+		this.getManagedBean().setQtCategoryList(null);
 	}
 
 	/**
@@ -2215,7 +2215,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 					new ArrayList<ScQtLocCriteria>());
 			this.getManagedBean().setSupplierLocationList(
 					new ArrayList<ScQtLocCriteria>());
-			this.getManagedBean().setSuppCriteriaopenList(
+			this.getManagedBean().setQtCategoryList(
 					new ArrayList<ScQtCategory>());
 		} finally {
 			specSo = null;
