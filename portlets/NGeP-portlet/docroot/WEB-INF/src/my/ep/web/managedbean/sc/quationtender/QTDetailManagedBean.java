@@ -378,9 +378,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The total search supplier. */
 	private int totalSearchSupplier;
 
-	/** The total supplier. */
-	private int totalSupplier;
-
 	/** The search panel suppliers node. */
 	private TreeNode searchPanelSuppliersNode;
 
@@ -1156,7 +1153,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<SelectItem> yearsDisplayList;
 
 	/** The total suppliers. */
-	private int totalSuppliers;
+	private Integer totalSuppliers;
 
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -4086,25 +4083,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the total supplier.
-	 * 
-	 * @return the total supplier
-	 */
-	public int getTotalSupplier() {
-		return totalSupplier;
-	}
-
-	/**
-	 * Sets the total supplier.
-	 * 
-	 * @param totalSupplier
-	 *            the new total supplier
-	 */
-	public void setTotalSupplier(int totalSupplier) {
-		this.totalSupplier = totalSupplier;
-	}
-
-	/**
 	 * Gets the search panel suppliers node.
 	 * 
 	 * @return the search panel suppliers node
@@ -6457,7 +6435,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * 
 	 * @return the total suppliers
 	 */
-	public int getTotalSuppliers() {
+	public Integer getTotalSuppliers() {
 		return totalSuppliers;
 	}
 
@@ -6467,7 +6445,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param totalSuppliers
 	 *            the new total suppliers
 	 */
-	public void setTotalSuppliers(int totalSuppliers) {
+	public void setTotalSuppliers(Integer totalSuppliers) {
 		this.totalSuppliers = totalSuppliers;
 	}
 

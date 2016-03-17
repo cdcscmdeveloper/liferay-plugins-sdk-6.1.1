@@ -564,7 +564,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 						scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
 						if (this.getManagedBean().getQtSupplierList().isEmpty()) {
 							this.getManagedBean().getQtSupplierList().add(scQtSupplier);
-							getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+							getManagedBean().setTotalSuppliers(this.getManagedBean().getQtSupplierList().size());
 						} else {
 							for (ScQtSupplier qtSupplier : this.getManagedBean().getQtSupplierList()) {
 								itemIds.add(qtSupplier.getSmSupplier().getSupplierId().toString());
@@ -575,7 +575,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 								} else {
 									qtSupplierList.add(scQtSupplier);
 									this.getManagedBean().setQtSupplierList(qtSupplierList);	
-									getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+									getManagedBean().setTotalSuppliers(this.getManagedBean().getQtSupplierList().size());
 								}
 							}
 						}
@@ -880,11 +880,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (selectedList != null && !selectedList.isEmpty()) {
 			if (list.size() == selectedList.size()) {
 				list.clear();
-				getManagedBean().setTotalSupplier(list.size());
+				getManagedBean().setTotalSuppliers(list.size());
 			} else {
 				for (ScQtSupplier scQtSupplier : selectedList) {
 					list.remove(scQtSupplier);
-					getManagedBean().setTotalSupplier(list.size());
+					getManagedBean().setTotalSuppliers(list.size());
 				}
 			}
 		} else {

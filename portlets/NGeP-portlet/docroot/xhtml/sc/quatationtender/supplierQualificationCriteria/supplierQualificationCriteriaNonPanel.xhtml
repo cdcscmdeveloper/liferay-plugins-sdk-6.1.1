@@ -288,7 +288,10 @@
 					value="#{lbl['lbl.sc.totalsup']}" /></td>
 			<td><p:inputText id="totalSuppliersId" style="margin-right:5px; width:210px; text-align:right;"
 					disabled="true" 
-					value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" /></td>
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</p:inputText>
+			</td>
 			<td>
 				<c:if test="#{!suppQualificationReadonly}">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
