@@ -20,10 +20,22 @@
 		    float:left;
 		    padding:10px;	 	 
 		}
+		
+		#summaryTbl{
+			text-align: center;
+			border: 1px solid grey;
+		}
+		
+		#summaryTbl tr,#summaryTbl td,#summaryTbl tr,#summaryTbl th{
+			text-align: center;
+			border: 1px solid grey;
+		}
+		
+		
 	</style>
-
 	<div id="nav">
-		<table>
+	
+		<table id="summaryTbl">
 		<tr>
 			<th>#{lbl['lbl.sm.state']}</th>
 			<th>#{lbl['lbl.sm.before']}</th>
@@ -37,7 +49,7 @@
 						<f:param name="stateId" value="#{stateTask.stateId}"></f:param>
 					</p:commandLink><br />
 				</td>
-				<td>
+				<td >
 					#{stateTask.totalTaskBefore}
 				</td>
 				<td>
@@ -49,6 +61,7 @@
 	</div>
 	<div id="section">
 		<p:panel id="searchContent">
+			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%;">
 				<tr>
@@ -102,12 +115,19 @@
 				</tr>
 			</table>
 			<div style="text-align: right;">
+				<ui:remove>
+				<p:commandButton id="resetBtn"
+					action="#{svcTasklistBackingBean.resetSearchCriteria}" value="#{lbl['lbl.btn.reset']}"
+					update="searchContent" />
+				</ui:remove>
 				<p:commandButton id="schBtn"
-					action="#{svcTasklistBackingBean.searchAction}" value="Search"
+					action="#{svcTasklistBackingBean.searchAction}" value="#{lbl['lbl.btn.search']}"
 					update="rspl" />
+				
 			</div>
+			</p:panel>
 	
-			<p:panel id="rspl">
+			<p:panel id="rspl" header="#{lbl['lbl.sm.results']}" toggleable="true">
 				<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					lazy="true" var="appl">
 			
