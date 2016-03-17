@@ -59,7 +59,6 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -106,8 +105,6 @@ import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -1020,10 +1017,10 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setAllStateCode(
 							tenderResDTO.getStateCode());
 					this.getManagedBean().setQt(scQt);
-					this.getManagedBean().setTotalSuppliers(0);
 					if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
 							.equalsIgnoreCase(scQt.getQtType())
 							&& type.equalsIgnoreCase("SC")) {
+						this.getManagedBean().setTotalSuppliers(0);
 						if (CollectionUtils.isNotEmpty(tenderResDTO
 								.getRestrictedSuppliers())) {
 							this.getManagedBean().setRestrictedSupplierList(
@@ -13133,132 +13130,6 @@ public class SpecificationBackingBean extends
 		}
 		return null;
 
-	}
-
-	/**
-	 * Search for supplier count.search for Total suppliers in supplier
-	 * qualification criteria.
-	 */
-	public void searchForSupplierCount() {
-		log.info("searchForSupplierCount - START");
-		List<String> codes = new ArrayList<String>();
-		List<ScQtCategory> suppCriteriaopenList = getManagedBean()
-				.getQtCategoryList();
-		ScQtSupplierCriteria scQtSupplierCriteria = getManagedBean().getQt()
-				.getScQtSupplierCriteria();
-		BigDecimal minPaidUpCapital = scQtSupplierCriteria
-				.getMinPaidUpCapital();
-
-		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-		supplierSearchReqDTO.setCount(true);
-		supplierSearchReqDTO
-				.setCategoryCodeIds(constructL3Ids(suppCriteriaopenList));
-		supplierSearchReqDTO.setPaidUpCapital(minPaidUpCapital);
-		String locLevel = "";
-		List<TplSpecLoc> tplSpecLocList = new ArrayList<TplSpecLoc>();
-
-		ScQt scQt = getManagedBean().getQt();
-
-		if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scQt
-				.getProcurementMode().getParameterCode())) {
-			if (getManagedBean().getAllStateCode() != PTJLocalityCode.STATE_PENINSULAR
-					&& !scQtSupplierCriteria.isAllState()) {
-				if (null != scQtSupplierCriteria
-						&& null != scQtSupplierCriteria.getLocationLevel()) {
-					List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-					Long locLevelId = scQt.getScQtSupplierCriteria()
-							.getLocationLevel().getParameterId();
-					if (null != locLevelId) {
-						for (PmParameterDesc paramDesc : localParamDesc) {
-							Long paramDescId = paramDesc.getPmParameter()
-									.getParameterId();
-							if (paramDescId.equals(locLevelId)) {
-								locLevel = paramDesc.getPmParameter()
-										.getParameterCode();
-							}
-						}
-					}
-				}
-				tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
-			} else {
-				// semenanjung, always all state = true or sabah sarawak all
-				// state = true
-				tplSpecLocList = null;
-			}
-		} else {
-			if (scQt.isZonal()) {
-				locLevel = scQt.getScQtSupplierCriteria().getLocationLevel()
-						.getParameterCode();
-
-				if (null != scQt.getZoneLocationLevel()) {
-					List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-					Long locLevelId = scQt.getScQtSupplierCriteria()
-							.getLocationLevel().getParameterId();
-					if (null != locLevelId) {
-						for (PmParameterDesc paramDesc : localParamDesc) {
-							Long paramDescId = paramDesc.getPmParameter()
-									.getParameterId();
-							if (paramDescId.equals(locLevelId)) {
-								locLevel = paramDesc.getPmParameter()
-										.getParameterCode();
-							}
-						}
-					}
-				}
-
-				tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
-				if (null == tplSpecLocList) {
-					tplSpecLocList = new ArrayList<TplSpecLoc>();
-				}
-
-				List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
-				if (getManagedBean().getZoneTrees() != null) {
-					for (TreeNode treeNode : getManagedBean().getZoneTrees()) {
-						List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
-						locationDTOs.addAll(locationDTO);
-					}
-				}
-
-			} else {
-				if (null != scQtSupplierCriteria
-						&& null != scQtSupplierCriteria.getLocationLevel()) {
-					List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-					Long locLevelId = scQt.getScQtSupplierCriteria()
-							.getLocationLevel().getParameterId();
-					if (null != locLevelId) {
-						for (PmParameterDesc paramDesc : localParamDesc) {
-							Long paramDescId = paramDesc.getPmParameter()
-									.getParameterId();
-							if (paramDescId.equals(locLevelId)) {
-								locLevel = paramDesc.getPmParameter()
-										.getParameterCode();
-							}
-						}
-					}
-				}
-				tplSpecLocList = getManagedBean().getTotalSuppliersSpecLoc();
-			}
-		}
-
-		getStatesNDistrict(tplSpecLocList, codes, locLevel);
-		if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(locLevel)) {
-			supplierSearchReqDTO.setStateCodes(codes);
-		} else if (ParameterConst.LOCATION_LEVEL_DIVISION
-				.equalsIgnoreCase(locLevel)) {
-			supplierSearchReqDTO.setDivisionCodes(codes);
-		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
-				.equalsIgnoreCase(locLevel)) {
-			supplierSearchReqDTO.setDistrictCodes(codes);
-		}
-
-		ISupplierSearchSO supplierSearchSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierSearchSO.class);
-		SupplierSearchResDTO searchResDTO = supplierSearchSO
-				.retriveSupplierProfiles(supplierSearchReqDTO);
-		this.getManagedBean().setTotalSuppliers(searchResDTO.getCount());
-		log.info("searchForSupplierCount - END");
 	}
 
 	/**
