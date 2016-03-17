@@ -10,23 +10,31 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
+import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.bpm.tasklist.SVCTaskListManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmSvcTaskVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -136,7 +144,7 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDistrictSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 
 		log.info("*********************************");
 
@@ -179,5 +187,51 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		
 		return workFlowStatus;
 	}
-
+	
+	/**
+	 * retrieve Malaysia State List
+	 * @return stateLs
+	 */
+	public List<SmSvcTaskVO> retrieveSvcStateTaskList(){
+		ISiteAssignSO reqSO = SmServiceLookup.getSiteAssignSO();
+		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
+		reqDTO.setCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		//List<Long> statusLs = getManagedBean().getSiteVisitStatusesByType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
+		//reqDTO.setSiteVisitStatuses(statusLs);
+		SiteAssignResDTO resDTO = reqSO.retrieveTaskStateAndCountByCountryCode(reqDTO);
+		
+		List<SmSvcTaskVO> svcStateLs = new ArrayList<SmSvcTaskVO>();
+		
+		if(resDTO.getResultStrList().size() > 0){
+			for(Object[] resultArr : resDTO.getResultStrList()){
+				Long stateId = Long.valueOf(resultArr[0].toString());
+				String stateName = resultArr[1].toString();
+				int totalBefore = resultArr[2] == null ? 0 : Integer.valueOf(resultArr[2].toString());
+				int totalAfter = resultArr[3] == null ? 0 : Integer.valueOf(resultArr[3].toString());
+				
+				SmSvcTaskVO svcTaskVO = new SmSvcTaskVO();
+				svcTaskVO.setStateId(stateId);
+				svcTaskVO.setStateName(stateName);
+				svcTaskVO.setTotalTaskBefore(totalBefore);
+				svcTaskVO.setTotalTaskAfter(totalAfter);
+				
+				svcStateLs.add(svcTaskVO);
+			}
+		}
+		return svcStateLs;
+	}
+	
+	/**
+	 * search by state
+	 */
+	public void searchByState() {
+		String selectedState = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("stateId"); 
+		getManagedBean().setApplNo(null);
+		getManagedBean().setStateId(Long.valueOf(selectedState));
+		getManagedBean().setDistrictId(0);
+		getManagedBean().setSupplierName(null);
+		getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
+		findDistrict();
+		this.getManagedBean().getSearchDataModel().reloadData();
+	}
 }
