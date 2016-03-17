@@ -2117,7 +2117,8 @@ public class QTDetailBackingBean extends
 									approvalCategoryCode, qtApproval, settings));
 						} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
 								.equals(approvalCategoryCode)) {
-							if (isQTStatusPublished(scQt.getQtStatus().getStatusId())) {
+							Long statusId = scQt.getQtStatus().getStatusId();
+							if (isQTStatusPublished(statusId)) {
 								tabBeans.add(new TabBean(titleName,
 										approvalCategoryCode, qtApproval,
 										approverSettingDtls(
@@ -2125,7 +2126,8 @@ public class QTDetailBackingBean extends
 												scQt.getPmOrgProfile()
 														.getOrgProfileId(),
 												qtApproval)));
-							} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) {
+							} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) ||
+									isStatusOfBpkOrScheduleRevise(statusId)) {
 								this.getManagedBean().setPublicationApproval(qtApproval);
 							}
 						} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
@@ -4757,6 +4759,7 @@ public class QTDetailBackingBean extends
 		boolean isStatusOfBpkOrScheduleRevise = false;
 		if (!this.getManagedBean().isMaintanceFlow()) {
 			if (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(statusId)
+					|| QTStatusConst.QT_PENDING_PB_APPROVAL.equals(statusId)
 					|| QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(statusId)) {
 				isStatusOfBpkOrScheduleRevise = true;
 			}
