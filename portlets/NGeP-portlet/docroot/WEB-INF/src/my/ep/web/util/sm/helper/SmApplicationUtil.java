@@ -5,11 +5,9 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -2949,27 +2947,8 @@ public class SmApplicationUtil {
 	 */
 	public static void checkEquityOwnerUpdateAllowance(
 			SmApplicationManagedBean managedBean) {
-		if (managedBean.getSmSupplier().getSmMofAccounts() != null) {
-			for (SmMofAccount account : managedBean.getSmSupplier()
-					.getSmMofAccounts()) {
-				if (account.getSupplierType().equalsIgnoreCase(
-						managedBean.getSmSupplier().getSmAppl()
-								.getSupplierType())
-						&& account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
-					Calendar sixMonthAftEffDate = new GregorianCalendar();
-					sixMonthAftEffDate.setTime(account.getEffDate());
-					sixMonthAftEffDate.add(Calendar.MONTH, SmRuleHelper
-							.getInstance()
-							.getPersonnelNoneEditableDurationMonths());
-					if (new Date().compareTo(sixMonthAftEffDate.getTime()) < 0) {
-						managedBean.setDisAllowOwnerEdit(true);
-					} else {
-						managedBean.setDisAllowOwnerEdit(false);
-					}
-				}
-			}
-		} else {
+		managedBean.setDisAllowOwnerEdit(true);
+		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
 			managedBean.setDisAllowOwnerEdit(false);
 		}
 	}
@@ -6744,6 +6723,23 @@ public class SmApplicationUtil {
 			}
 		}
 		return null;
+	}
+
+	public static boolean isMofAccEffDatePassedCurrDate(SmSupplier supplier) {
+		boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			reqDTO.setParamMonths(6);
+			int count = SmServiceLookup
+					.getMofRegistrationSO()
+					.countMofAccEffDatePassedCurrDateByMonthsAndSupplierId(
+							reqDTO).getCount();
+			if (count > 0) {
+				retVal = true;
+			}
+		}
+		return retVal;
 	}
 
 	public static SmApplicationUtil getInstance() {
