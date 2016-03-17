@@ -58,7 +58,6 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
-import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -1645,9 +1644,9 @@ public class SpecificationBackingBean extends
 			//qtDocs.add(scqtDocDest);
 			//docReqDTO.setScQtDoc(qtDocs);
 
-			IQTTemplateSO qtTemplateSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTTemplateSO.class);
+//			IQTTemplateSO qtTemplateSO = BusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//							IQTTemplateSO.class);
 
 			//qtTemplateSO.saveOrUpdateTemplateDoc(docReqDTO);
 		} finally {
@@ -4136,78 +4135,6 @@ public class SpecificationBackingBean extends
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().setEvaluationType(type);
-	}
-
-	// Open For Change set Method
-	/**
-	 * Open for change.change open for(Bumiputra/All) radion button in business
-	 * owner.
-	 * 
-	 * @param event
-	 *            (String Openfor)
-	 */
-	public void openForChange(AjaxBehaviorEvent event) {
-		String type = (String) event.getComponent().getAttributes()
-				.get("value");
-		this.getManagedBean().getQt().setOpenFor(type);
-	}
-
-	/**
-	 * On change qt type.change qt Type(open/restricted) radion button in
-	 * business owner.
-	 * 
-	 * @param event
-	 *            ( String qttype)
-	 */
-	public void onChangeQtType(AjaxBehaviorEvent event) {
-		String type = (String) event.getComponent().getAttributes()
-				.get("value");
-
-		this.getManagedBean().setSuppCriteriaopenList(
-				new ArrayList<ScQtCategory>());
-		if (ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(type)) {
-
-			if (null != this.getManagedBean().getQt().getScQtSupplierCriteria()
-					&& null == this.getManagedBean().getQt()
-							.getScQtSupplierCriteria().getLocationLevel()) {
-				this.getManagedBean().getQt().getScQtSupplierCriteria()
-						.setLocationLevel(new PmParameter());
-			}
-
-		} else if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
-				.equalsIgnoreCase(type)) {
-			this.getManagedBean().setSupplierLocationList(
-					getManagedBean().getExistingSupplierLocationList());
-		}
-
-		this.getManagedBean().getQt().setQtType(type);
-	}
-
-	/**
-	 * Panel conformation.change panel(Yes/No) radion button in business owner.
-	 * 
-	 * @param event
-	 *            (boolean panelType).
-	 */
-	public void panelConformation(AjaxBehaviorEvent event) {
-		// Boolean panel = this.getManagedBean().getQt().isPanel();
-		Boolean panel = (Boolean) event.getComponent().getAttributes()
-				.get("value");
-		this.getManagedBean().getQt().setPanel(panel);
-
-	}
-
-	/**
-	 * Panel no conformation.change panel yes to No or No to yes Confirmation .
-	 */
-	public void panelNoConformation() {
-		Boolean panel = this.getManagedBean().getQt().isPanel();
-		if (panel) {
-			this.getManagedBean().getQt().setPanel(false);
-		} else {
-			this.getManagedBean().getQt().setPanel(true);
-		}
-
 	}
 
 	/**
@@ -9629,25 +9556,13 @@ public class SpecificationBackingBean extends
 				}
 
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("ctPanelItems.qt",
-								SearchOperator.OPERATOR_LIKE.value(), 1));
+						new SearchFilterBean("qt",
+								SearchOperator.OPERATOR_EQUALS.value(), true));
 
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("docType",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								ParameterConst.DOCTYPE_PANEL_CIRCULAR, true));
-
-				Date todayDate = new Date();
-				Calendar c1 = Calendar.getInstance();
-				c1.setTime(todayDate);
-				Calendar fromDate = Calendar.getInstance();
-				fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
-						c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-				fromDate.set(Calendar.MILLISECOND, 0);
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("endDate",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-								fromDate));
+								ParameterConst.DOCTYPE_PANEL_CIRCULAR));
 
 				circularReqDTO.setCircularVerSearchBean(searchBean);
 
