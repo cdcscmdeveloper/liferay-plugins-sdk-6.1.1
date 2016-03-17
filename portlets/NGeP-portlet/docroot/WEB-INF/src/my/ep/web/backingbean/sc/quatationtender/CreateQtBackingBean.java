@@ -960,7 +960,6 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 				scQt.setZonal(false);
 				scQt.setQtType(QTConstants.OPEN_TYPE);
 				this.getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
-				this.getManagedBean().setTotalSuppliers(0);
 				this.getManagedBean().setCtZoneSupplierList(new ArrayList<CtPanelSupplier>());
 				ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
 
