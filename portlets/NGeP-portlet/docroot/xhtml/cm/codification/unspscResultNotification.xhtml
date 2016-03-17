@@ -15,7 +15,7 @@
 
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}" action="#{catalogueBackingBean.addToMaintenanceFile()}"
+				<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}" action="#{catalogueBackingBean.addToMaintenanceFile('OK')}"
 					rendered="#{unspscCodeBackingBean.allSupplier}"></p:commandButton>
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
@@ -94,7 +94,7 @@
 
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.sc.spec.recommendation']}"
+			<p:panel header="#{lbl['lbl.cm.recommend.item.code']}"
 				toggleable="true">
 
 				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
