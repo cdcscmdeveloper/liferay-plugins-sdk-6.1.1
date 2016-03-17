@@ -1,4 +1,5 @@
 <ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,102 +8,112 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<h:panelGroup id="cmUNSPSCsearchID">
-	<script>
-	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
-	</script>
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif" />
-		</p:blockUI>		
+	<ui:define name="contentSection">
+		<h:panelGroup id="cmUNSPSCsearchID">
+			<script>
+				$('#portlet_Catalogue_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.cm.catalogue.search']}");
+			</script>
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif" />
+			</p:blockUI>
 
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
-			
-		<p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}"
-						toggleable="true" id="searchTabId">
+			<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="true"></p:messages>
 
-						<table style="margin-top: 10px; width: 100%;">
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="#{lbl['lbl.td.doc.no']}" /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{cdTrackingDiaryBackingBean.managedBean.searchDocumentNoValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="15%"><p:outputLabel
-										value="#{lbl['lbl.td.unspsc.extension.code']}" /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{cdTrackingDiaryBackingBean.managedBean.searchUNSPSCExtensionCodeValue}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.supp.name']}" /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{cdTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
-							</tr>
-<!-- 							<tr> -->
-<!-- 								<td width="35%"><p:outputLabel value="Status" /></td> -->
-<!-- 								<td width="65%"><p:selectOneMenu style="width: 314px;" -->
-<!-- 											value="#{cdTrackingDiaryBackingBean.managedBean.searchStatusId}"> -->
-<!-- 											<f:selectItems -->
-<!-- 												value="#{cdTrackingDiaryBackingBean.getStatus()}" /> -->
-<!-- 									</p:selectOneMenu></td> -->
-<!-- 							</tr> -->
-						</table>
-						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.search']}"
-								action="#{cdTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								update="resultPanel" />
-							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								action="#{cdTrackingDiaryBackingBean.managedBean.reset}" update=":form" />
-						</div>
-		</p:panel>
-		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+			<p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}"
+				toggleable="true" id="searchTabId">
 
-			<p:dataTable id="unspscTableID" lazy="true"
-				value="#{cdTrackingDiaryBackingBean.managedBean.cdDocumentDataModel}" var="Obj"
-				width="100%" rows="10">
+				<table style="margin-top: 10px; width: 100%;">
+					<tr>
+						<td width="35%"><p:outputLabel
+								value="#{lbl['lbl.td.doc.no']}" /></td>
+						<td width="65%"><p:inputText size="50"
+								value="#{cdTrackingDiaryBackingBean.managedBean.searchDocumentNoValue}"></p:inputText></td>
+					</tr>
+					<tr>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.td.unspsc.extension.code']}" /></td>
+						<td width="35%"><p:inputText size="50"
+								value="#{cdTrackingDiaryBackingBean.managedBean.searchUNSPSCExtensionCodeValue}"></p:inputText></td>
+					</tr>
+					<tr>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.supp.name']}" /></td>
+						<td width="35%"><p:inputText size="50"
+								value="#{cdTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
+					</tr>
+					<!-- 							<tr> -->
+					<!-- 								<td width="35%"><p:outputLabel value="Status" /></td> -->
+					<!-- 								<td width="65%"><p:selectOneMenu style="width: 314px;" -->
+					<!-- 											value="#{cdTrackingDiaryBackingBean.managedBean.searchStatusId}"> -->
+					<!-- 											<f:selectItems -->
+					<!-- 												value="#{cdTrackingDiaryBackingBean.getStatus()}" /> -->
+					<!-- 									</p:selectOneMenu></td> -->
+					<!-- 							</tr> -->
+				</table>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						action="#{cdTrackingDiaryBackingBean.search}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						update="resultPanel" />
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						action="#{cdTrackingDiaryBackingBean.managedBean.reset}"
+						update=":form" />
+				</div>
+			</p:panel>
+			<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}"
+				toggleable="true">
 
-				<ac:paginator for="unspscTableID"></ac:paginator>
+				<p:dataTable id="unspscTableID" lazy="true"
+					value="#{cdTrackingDiaryBackingBean.managedBean.cdDocumentDataModel}"
+					var="Obj" width="100%" rows="10">
 
-			<!-- 	<p:column width="15%">
+					<ac:paginator for="unspscTableID"></ac:paginator>
+
+					<!-- 	<p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					</f:facet>
 				<ac:labelDateTime value="#{Obj[0]}" /> 
 				</p:column> -->
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.supp.name']}"/>
-					</f:facet>
+					<p:column width="15%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.supp.name']}" />
+						</f:facet>
 				#{Obj[6]}
 				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.doc.no']}"/>
-					</f:facet>
+					<p:column width="15%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.td.doc.no']}" />
+						</f:facet>
 				#{Obj[1]}
 				</p:column>
-				<p:column>
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.unspsc.extension.code']}"/>
-					</f:facet>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.td.unspsc.extension.code']}" />
+						</f:facet>
 				#{Obj[2]}
 				</p:column>
-				<p:column>
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.status.name']}"/>
-					</f:facet>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.status.name']}" />
+						</f:facet>
 				#{cdTrackingDiaryBackingBean.getStatusDescById(Obj[7])}
 				</p:column>
-				<p:column width="5%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.action']}"/>
-					</f:facet>
-					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(Obj)}">
+					<p:column width="5%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.td.action']}" />
+						</f:facet>
+						<p:commandLink
+							action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(Obj)}">
 							<p:graphicImage value="/css/images/design/document.png" />
-					</p:commandLink>
-			</p:column>
-			</p:dataTable>
-		</p:panel>
-	</h:panelGroup>		
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
+	</ui:define>
 </ui:composition>

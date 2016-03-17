@@ -1,5 +1,8 @@
 package my.ep.web.managedbean.trackingdiary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -9,6 +12,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.web.backingbean.trackingdiary.CdTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -28,6 +32,13 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private Object[] object;
 	private Long docId;
+	private List<CmRequestCode> reviewExtCodeList;
+	private String docNo;
+	private CmRequestCode requestCode;
+	private String docStatus;
+	private List<CmRequestCode> recommendExtCodeList;
+	private List<CmRequestCode> proceedExtCodeList;
+	private boolean unspscInd = true;
 	
 	private IPagingDataModel<Object[]> cdDocumentDataModel 	= new SearchPagingDataModel();
 
@@ -159,6 +170,117 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setDocId(Long docId) {
 		this.docId = docId;
 	}
+
+	/**
+	 * @return the reviewExtCodeList
+	 */
+	public List<CmRequestCode> getReviewExtCodeList() {
+		if(reviewExtCodeList==null){
+			reviewExtCodeList = new ArrayList<CmRequestCode>();
+		}
+		return reviewExtCodeList;
+	}
+
+	/**
+	 * @param reviewExtCodeList the reviewExtCodeList to set
+	 */
+	public void setReviewExtCodeList(List<CmRequestCode> reviewExtCodeList) {
+		this.reviewExtCodeList = reviewExtCodeList;
+	}
+
+	/**
+	 * @return the docNo
+	 */
+	public String getDocNo() {
+		return docNo;
+	}
+
+	/**
+	 * @param docNo the docNo to set
+	 */
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
+	}
+
+	/**
+	 * @return the requestCode
+	 */
+	public CmRequestCode getRequestCode() {
+		if(requestCode==null)
+			requestCode = new CmRequestCode();
+		return requestCode;
+	}
+
+	/**
+	 * @param requestCode the requestCode to set
+	 */
+	public void setRequestCode(CmRequestCode requestCode) {
+		this.requestCode = requestCode;
+	}
+
+	/**
+	 * @return the docStatus
+	 */
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	/**
+	 * @param docStatus the docStatus to set
+	 */
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+
+	/**
+	 * @return the recommendExtCodeList
+	 */
+	public List<CmRequestCode> getRecommendExtCodeList() {
+		if(recommendExtCodeList==null)
+			recommendExtCodeList = new ArrayList<CmRequestCode>();
+		return recommendExtCodeList;
+	}
+
+	/**
+	 * @param recommendExtCodeList the recommendExtCodeList to set
+	 */
+	public void setRecommendExtCodeList(List<CmRequestCode> recommendExtCodeList) {
+		this.recommendExtCodeList = recommendExtCodeList;
+	}
+
+	/**
+	 * @return the unspscInd
+	 */
+	public boolean isUnspscInd() {
+		return unspscInd;
+	}
+
+	/**
+	 * @param unspscInd the unspscInd to set
+	 */
+	public void setUnspscInd(boolean unspscInd) {
+		this.unspscInd = unspscInd;
+	}
+
+	/**
+	 * @return the proceedExtCodeList
+	 */
+	public List<CmRequestCode> getProceedExtCodeList() {
+		if(proceedExtCodeList==null)
+			proceedExtCodeList = new ArrayList<CmRequestCode>();
+		return proceedExtCodeList;
+	}
+
+	/**
+	 * @param proceedExtCodeList the proceedExtCodeList to set
+	 */
+	public void setProceedExtCodeList(List<CmRequestCode> proceedExtCodeList) {
+		this.proceedExtCodeList = proceedExtCodeList;
+	}
+	
+	
+	
+	
 
 	
 	

@@ -11,18 +11,24 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.cm.CmConst;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.trackingdiary.CmTrackingDiaryManagedBean;
@@ -37,7 +43,7 @@ public class CmTrackingDiaryBackingBean extends
 		BaseBackingBean<CmTrackingDiaryManagedBean> {
 	private static Logger log = Logger.getLogger(CmTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CATALOG_SEARCH = "trackingDiary.xhtml";
-	public static final String NAV_TO_CATALOG_DETAIL_SEARCH = "cmTrackingDiaryDetailSearch.xhtml";
+	public static final String NAV_TO_CATALOG_DETAIL_SEARCH = "/xhtml/cm/catalogue/addCatalogViewTrackingDairy.xhtml";
 
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -103,7 +109,39 @@ public class CmTrackingDiaryBackingBean extends
 	public String goToTrackingDiarySearch(CmSupplierItem cmSupplierItem) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
 		getManagedBean().setCmSupplierItem(cmSupplierItem);
-		searchTrackingDiaryDataModel.reloadData();	
+		
+		CatalogueBackingBean bb = new CatalogueBackingBean();
+		SearchBean<PmTrackingDiary> searchBean = new SearchBean<PmTrackingDiary>();
+		
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
+		CatalogueResDTO resDTO = new CatalogueResDTO();
+
+
+		reqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
+		resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+
+		bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
+		
+		bb.getManagedBean().setDisplayCatalogue(true);
+		
+		TrackingDiaryReqDTO reqDTOPM = new TrackingDiaryReqDTO();
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSupplierItemId()));
+		//searchBean.getDataFilterBeans().add(new SearchFilterBean("actionedBy",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCmSupplierItem().getSmSupplier().getSmPersonnel().getPmUser().getUserId()));
+			
+		System.out.println("TrackingDiaryReqDTO item Id:" +getManagedBean().getCmSupplierItem().getCmItem().getItemId());
+
+		reqDTOPM.setSearchBean(searchBean);
+		TrackingDiaryResDTO resDTOPM = new TrackingDiaryResDTO();
+		
+			ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
+			resDTOPM = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTOPM);
+			
+			for(PmTrackingDiary diary : resDTOPM.getResultBean().getResultList()){
+				this.getManagedBean().setDocId(diary.getDocId());
+			}
+			
 		return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
@@ -160,7 +198,7 @@ public class CmTrackingDiaryBackingBean extends
 
 	public String backToPrev() {
 
-		return NAV_TO_CATALOG_SEARCH + "?faces-redirect=true";
+		return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {

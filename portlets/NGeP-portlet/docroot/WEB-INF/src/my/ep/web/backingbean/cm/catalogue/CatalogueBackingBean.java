@@ -66,6 +66,9 @@ import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -144,6 +147,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
@@ -555,7 +559,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "/xhtml/common/acknowledge.xhtml";
 	}
 
-	public String addToMaintainByItemId(){
+	public String addToMaintainByItemId(String action){
+		System.out.println("**********action**************"+action);
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -576,27 +581,178 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.retriveSupplierProfiles(supplierReqDTO);
 
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
-
+		System.out.println("******getTaskId******"+bb.getManagedBean().getTaskId());
 		for(CmRequestCode code : bb.getManagedBean().getReviewExtCodeList()){
-			codeReqDTO.setItemId(code.getItemId());
+			
+			codeReqDTO.setUnspscCode(code.getTempCode());
+			
+			
+			CodificationResDTO codeResDTO =codificationSO.searchUnspscObj(codeReqDTO);
 	
-			CodificationResDTO codeResDTO = codificationSO
-					.searchItemByItemId(codeReqDTO);
+			this.getManagedBean().setUnspscObj(codeResDTO.getUnspscObj());
+			
+			codeReqDTO.setUnspscId(this.getManagedBean().getUnspscObj().getUnspscId());
+			codeReqDTO.setColorId(code.getColorId());
+			codeReqDTO.setMeasurementId(code.getMeasurementId());
+			codeReqDTO.setTypeId(code.getTypeId());
+			codeReqDTO.setBrandId(code.getBrandId());
+			CodificationResDTO itemResDTO =codificationSO.searchItem(codeReqDTO);
 	
-	
-			CmSupplierItem supplierItem = new CmSupplierItem();
-	
-			supplierItem.setCmItem(codeResDTO.getCmItem());
-			supplierItem.setItemStatus("D");
-			supplierItem.setSmSupplier(smResDTO.getResultBean()
-					.getResultList().get(0));
-			supplierItem.setRecordStatus(true);
-			reqDTO.getSupplierItem().add(supplierItem);
+			System.out.println("this.getManagedBean().getUnspscObj().getUnspscId():"+this.getManagedBean().getUnspscObj().getUnspscId());
+			System.out.println("code.getColorId()"+code.getColorId());
+			System.out.println("code.getMeasurementId()"+code.getMeasurementId());
+			System.out.println("code.getBrandId()"+code.getBrandId());
+			System.out.println("code.getTypeId()"+code.getTypeId());
+			System.out.println("itemResDTO.getCmItem()"+itemResDTO.getItemList().size());
+			if(itemResDTO.getItemList()!=null && itemResDTO.getItemList().size()>0){
+				CmSupplierItem supplierItem = new CmSupplierItem();
+		
+				supplierItem.setCmItem(itemResDTO.getItemList().get(0));
+				supplierItem.setItemStatus("D");
+				supplierItem.setSmSupplier(smResDTO.getResultBean()
+						.getResultList().get(0));
+				supplierItem.setRecordStatus(true);
+				reqDTO.getSupplierItem().add(supplierItem);
+			
+			}else{
+				
+				CmItem item = new CmItem();
+				
+			
+				item.setCmUnspsc(codeResDTO.getUnspscObj());
+				
+				//////////////////////////look up measurement////////////////////////////
+				SearchBean<CmMeasurement> meaSearchBean = new SearchBean<CmMeasurement>();
+				
+				meaSearchBean.getDataFilterBeans().add(
+							new SearchFilterBean("measurementId",
+									SearchOperator.OPERATOR_EQUALS.value(), code.getMeasurementId()));
+				
+				meaSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("unspscId.unspscId",
+								SearchOperator.OPERATOR_EQUALS.value(), this.getManagedBean().getUnspscObj().getUnspscId()));
+				
+				
+				codeReqDTO.setMeasurementSearchBean(meaSearchBean);
+				CodificationResDTO meaCcodeResDTO = codificationSO.searchMeasurementObj(codeReqDTO);
+				System.out.println("getMeasurementList:"+meaCcodeResDTO.getMeasurementList().size());
+				
+				item.setCmMeasurement(meaCcodeResDTO.getMeasurementList().get(0));
+				
+				/////////////////////look up type/////////////////////
+				SearchBean<CmType> typeSearchBean = new SearchBean<CmType>();
+				
+				typeSearchBean.getDataFilterBeans().add(
+							new SearchFilterBean("typeId",
+									SearchOperator.OPERATOR_EQUALS.value(), code.getTypeId()));
+				
+				typeSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("unspscId.unspscId",
+								SearchOperator.OPERATOR_EQUALS.value(),this.getManagedBean().getUnspscObj().getUnspscId()));
+				
+				codeReqDTO.setTypeSearchBean(typeSearchBean);
+				CodificationResDTO typeCodeResDTO = codificationSO.searchTypeObj(codeReqDTO);
+				
+				System.out.println("getTypeList:"+typeCodeResDTO.getTypeList().size());
+				
+				item.setCmType(typeCodeResDTO.getTypeList().get(0));
+				////////////////////look up brand/////////////
+				SearchBean<CmBrand> brandSearchBean = new SearchBean<CmBrand>();
+				
+				brandSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("brandId",
+								SearchOperator.OPERATOR_EQUALS.value(), code.getBrandId()));
+			
+				brandSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("unspscId.unspscId",
+							SearchOperator.OPERATOR_EQUALS.value(), this.getManagedBean().getUnspscObj().getUnspscId()));
+			
+				codeReqDTO.setBrandSearchBean(brandSearchBean);
+				CodificationResDTO brandCodeResDTO = codificationSO.searchBrandObj(codeReqDTO);
+				System.out.println("getBrandList:"+brandCodeResDTO.getBrandList().size());
+				
+				item.setCmBrand(brandCodeResDTO.getBrandList().get(0));
+				////////////////////look up color//////////////////////////
+				SearchBean<CmColor> colorSearchBean = new SearchBean<CmColor>();
+				colorSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("colorId",
+								SearchOperator.OPERATOR_EQUALS.value(), code.getColorId()));
+				
+				colorSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(), true));
+				codeReqDTO.setColorSearchBean(colorSearchBean);
+				CodificationResDTO colorCodeResDTO = codificationSO.searchColorObj(codeReqDTO);
+				
+				System.out.println("getColorList:"+colorCodeResDTO.getColorList().size());
+				
+				String brand = brandCodeResDTO.getBrandList().get(0).getBrandCode();
+				String measurement = meaCcodeResDTO.getMeasurementList().get(0).getMeasurementCode();
+				String type = typeCodeResDTO.getTypeList().get(0).getTypeCode();
+				String color = colorCodeResDTO.getColorList().get(0).getColorCode();
+
+				String brandName = brandCodeResDTO.getBrandList().get(0).getBrandName();
+				String measurementName = meaCcodeResDTO.getMeasurementList().get(0).getMeasurementName();
+				String typeName = typeCodeResDTO.getTypeList().get(0).getTypeName();
+				String colorName = colorCodeResDTO.getColorList().get(0).getColorName();
+				
+				String extensionCode = code.getTempCode() + type + brand
+						+ measurement + color;
+				String itemName = this.getManagedBean().getUnspscObj().getUnspscTitle() + " "
+						+ typeName + " " + brandName + " " + measurementName + " "
+						+ colorName;
+				
+				
+				item.setCmColor(colorCodeResDTO.getColorList().get(0));
+				item.setItemName(itemName);
+				item.setExtensionCode(extensionCode);
+				codeReqDTO.setCmItem(item);
+				codeResDTO = codificationSO.saveNewItem(codeReqDTO);
+				
+				CmItem updatedItem = codeResDTO.getCmItem();
+				
+				
+				CmSupplierItem supplierItem = new CmSupplierItem();
+				
+				supplierItem.setCmItem(updatedItem);
+				supplierItem.setItemStatus("D");
+				supplierItem.setSmSupplier(smResDTO.getResultBean()
+						.getResultList().get(0));
+				supplierItem.setRecordStatus(true);
+				reqDTO.getSupplierItem().add(supplierItem);
+					
+			}
 		
 		
 		}
 		CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
 		FacesContext facesContext = FacesContext.getCurrentInstance();
+		
+		
+		///////////////////End Bpm process/////////////////////////
+		FacesScopes face = new FacesScopes();
+		Object token = face.getBPMAuthenticationCtxToken();
+		codeReqDTO = new CodificationReqDTO();
+		CodificationResDTO codeResDTO = null;
+		
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+
+		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+
+		bpmReqDTO.setCtxToken(token);
+		bpmReqDTO.setTaskId(bb.getManagedBean().getTaskId());
+		BpmResponseDTO res = bpmSO.getTaskDetails(bpmReqDTO);
+		Object obj = res.getPojo();
+		
+		codeReqDTO.setTaskId(bb.getManagedBean().getTaskId());
+		codeReqDTO.setOutCome(action);
+		codeReqDTO.setToken(token);
+		codeReqDTO.setPojo(obj);
+		
+		
+		codeResDTO = codificationSO.updateExtensionRequest(codeReqDTO);
+		
 
 		facesContext.addMessage(
 				null,
