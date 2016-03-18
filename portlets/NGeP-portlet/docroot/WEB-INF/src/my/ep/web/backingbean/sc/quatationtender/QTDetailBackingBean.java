@@ -1063,6 +1063,7 @@ public class QTDetailBackingBean extends
 				criteria.setDeleted(true);
 			}
 		}
+		quationTenderReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
 		quationTenderReqDTO
 				.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
 
