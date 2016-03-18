@@ -296,7 +296,13 @@ public class QTFiledMapper {
 										QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 										QTFieldConst.FILED_QT_DOCUMENTS,
 										QTFieldConst.FILED_QT_SCHDETAILS,
-										QTFieldConst.FILED_QT_PUB_APPROVAL});
+										QTFieldConst.FILED_QT_PUB_APPROVAL}),
+										
+						   // QT_PENDING_PB_APPROVAL both status have the same filed names			
+		                  QT_PENDING_PB_APPROVAL(QTStatusConst.QT_PENDING_PB_APPROVAL,
+				                                              QT_PENDING_BPK_APPROVAL.value() );
+
+				                            
 		
 		private Long statusId;
 		private String[] toBeEnableFields;
