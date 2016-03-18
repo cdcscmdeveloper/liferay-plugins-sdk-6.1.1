@@ -17,13 +17,17 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}" rendered="#{bpmTasklistBackingBean.managedBean.claim}"
+					<p:commandButton value="#{action}"
+						rendered="#{bpmTasklistBackingBean.managedBean.claim}"
 						oncomplete="extensionConfirmation.show()"
 						update=":form:extensionConfirmationId"
 						action="#{unspscCodeBackingBean.checkRecomendOrSubmit()}"></p:commandButton>
 				</ui:repeat>
-				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{bpmTasklistBackingBean.claimTaskInDetailPage}" rendered="#{!bpmTasklistBackingBean.managedBean.claim}" update="@form"></p:commandButton>
-		
+				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
+					action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
+					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
+					update="@form"></p:commandButton>
+
 			</div>
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
@@ -150,12 +154,14 @@
 				header="#{lbl['lbl.cm.dialog.cofirm.header']}"
 				widgetVar="extensionConfirmation">
 
-				<p:commandButton id="confirmID"
-					value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-					action="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}" />
-				<p:commandButton id="declineID"
-					value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-					onclick="extensionConfirmation.hide()" />
+				<div align="right">
+					<p:commandButton id="confirmID"
+						value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+						action="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}" />
+					<p:commandButton id="declineID"
+						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+						onclick="extensionConfirmation.hide()" />
+				</div>
 
 			</p:confirmDialog>
 
