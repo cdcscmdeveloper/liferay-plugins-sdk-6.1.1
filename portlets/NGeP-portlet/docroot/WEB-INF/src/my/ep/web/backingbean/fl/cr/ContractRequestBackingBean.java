@@ -1094,7 +1094,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
 			updateGstRate(getManagedBean().getFlRequest());
-			setFlSupplierDtl(getManagedBean().getFlRequest());
+//			setFlSupplierDtl(getManagedBean().getFlRequest());
 			getSupplierGst(getManagedBean().getFlRequest(), getManagedBean().isGstRateChange());
 			getAgAccount(entity);
 			if(getManagedBean().getFlRequest().isBrandNew()){
