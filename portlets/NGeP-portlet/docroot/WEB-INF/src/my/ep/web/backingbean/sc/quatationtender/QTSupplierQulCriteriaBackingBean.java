@@ -874,19 +874,26 @@ public class QTSupplierQulCriteriaBackingBean extends
 	public void deleteRestrictedSupplierList() {
 		debugLogger("deleteRestrictedSupplierList");
 		this.getManagedBean().setAutoUpdate(true);
+		List<ScQtSupplier> removeSupplierList = this.getManagedBean().getToBeRemoveRestrictedSupplierList();
+		if (removeSupplierList == null) {
+			removeSupplierList = new ArrayList<ScQtSupplier>();
+		}
 		List<ScQtSupplier> list = getManagedBean().getQtSupplierList();
 		List<ScQtSupplier> selectedList = getManagedBean()
 				.getSelectedQtSupplierList();
 		if (selectedList != null && !selectedList.isEmpty()) {
 			if (list.size() == selectedList.size()) {
+				removeSupplierList.addAll(list);
 				list.clear();
 				getManagedBean().setTotalSuppliers(list.size());
 			} else {
 				for (ScQtSupplier scQtSupplier : selectedList) {
 					list.remove(scQtSupplier);
+					removeSupplierList.add(scQtSupplier);
 					getManagedBean().setTotalSuppliers(list.size());
 				}
 			}
+			this.getManagedBean().setToBeRemoveRestrictedSupplierList(removeSupplierList);
 		} else {
 			throw new EpException(MessageConst.ERROR_760121);
 		}
