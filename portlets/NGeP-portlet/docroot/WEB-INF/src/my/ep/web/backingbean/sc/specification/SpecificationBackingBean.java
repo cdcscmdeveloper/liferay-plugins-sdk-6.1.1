@@ -173,7 +173,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
@@ -205,7 +204,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 
@@ -5088,7 +5086,6 @@ public class SpecificationBackingBean extends
 					if (null == this.getManagedBean().getPanelItemCategory()
 							|| "".equals(this.getManagedBean()
 									.getPanelItemCategory())) {
-						this.getManagedBean().setCtPanelItem(null);
 						retriveSupplierQualificationCriteria("SC");
 
 					}
@@ -8556,12 +8553,12 @@ public class SpecificationBackingBean extends
 			panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
 							IPanelSupplierSO.class);
+			
+			List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
 
-			if (null != this.getManagedBean().getCtPanelItem()
-					&& null != this.getManagedBean().getCtPanelItem()
-							.getPanelItemId()) {
+			if (CollectionUtils.isNotEmpty(panelItemList)) {
 
-				reqDTO.setPanelItem(this.getManagedBean().getCtPanelItem());
+				reqDTO.setPanelItem(panelItemList.get(0));
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
 			}
 
@@ -8603,9 +8600,10 @@ public class SpecificationBackingBean extends
 
 				}
 			} else {
-				if (null != this.getManagedBean().getCtPanelItem()
-						&& null != this.getManagedBean().getCtPanelItem()
-								.getPanelItemId()) {
+				
+				this.getManagedBean().setTotalSuppliers(0);
+				
+				if (CollectionUtils.isNotEmpty(panelItemList)) {
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
@@ -8624,11 +8622,9 @@ public class SpecificationBackingBean extends
 									IQTSupplierSO.class);
 					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
 					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
-					supplierReqDTO.setPanelItemId(this.getManagedBean()
-							.getCtPanelItem().getPanelItemId());
+					supplierReqDTO.setPanelItemId(panelItemList.get(0).getPanelItemId());
 					supplierResDTO = supplierSo
 							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
-					this.getManagedBean().setTotalSuppliers(0);
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
 					if (null != supplierResDTO.getCtPanelSuppliers()) {
@@ -8800,11 +8796,6 @@ public class SpecificationBackingBean extends
 	 *            (TreeNode treeNode).
 	 */
 	public void unSelectPanelYesTreenode(NodeUnselectEvent event) {
-		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
-		itemList = new ArrayList<CtPanelItem>();
-		itemList.add(this.getManagedBean().getCtPanelItem());
-
-		this.getManagedBean().setSelectpanelItem(itemList);
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		selectedTreeNode.setSelected(false);
@@ -8974,28 +8965,6 @@ public class SpecificationBackingBean extends
 		} finally {
 
 		}
-
-	}
-
-	/**
-	 * Panel item select.Event handle to select panel Item in business owner.
-	 * 
-	 * @param selectEvent
-	 *            (CtPanelItem ctPanelItem).
-	 */
-	public void panelItemSelect(SelectEvent selectEvent) {
-		CtPanelItem ctPanelItem = (CtPanelItem) selectEvent.getObject();
-		List<CtPanelItem> panelList = this.getManagedBean()
-				.getSelectpanelItem();
-
-		panelList = new ArrayList<CtPanelItem>();
-		this.getManagedBean().setCtPanelItem(ctPanelItem);
-
-		this.getManagedBean().setPanelItemCategory(
-				ctPanelItem.getItemCategoryId().getParameterCode());
-		panelList.add(ctPanelItem);
-		this.getManagedBean().setSelectpanelItem(panelList);
-		this.getManagedBean().setSelectPanelItem(true);
 
 	}
 
@@ -13658,47 +13627,6 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * View circular attachments.
-	 * 
-	 * @param type
-	 *            (String type)
-	 * @return navigate to ctcircular page.
-	 */
-	public String viewCircularAttachments(String type) {
-		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
-		itemList = new ArrayList<CtPanelItem>();
-		itemList.add(this.getManagedBean().getCtPanelItem());
-		CtCircularVer ctCircularVer = this.getManagedBean().getQt()
-				.getCircularVer();
-		String pageView = "";
-		if (null != ctCircularVer) {
-
-			PanelBackingBean panelbackingbean = new PanelBackingBean();
-			panelbackingbean.getManagedBean().setDifferentModule(true);
-			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(type)) {
-
-				panelbackingbean
-						.getManagedBean()
-						.setGotoPreviewPage(
-								"/xhtml/sc/specification/businessOwner/businessOwnerTabMenu.xhtml");
-			}
-			if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
-					.equalsIgnoreCase(type)) {
-				panelbackingbean
-						.getManagedBean()
-						.setGotoPreviewPage(
-								"/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml");
-			}
-
-			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer
-					.getCircularVerId());
-
-		}
-		this.getManagedBean().setSelectpanelItem(itemList);
-		return pageView;
-	}
-
-	/**
 	 * technical checklist score change.Event handle check/Uncheck score
 	 * checkbox in technical checklist based on score you will display
 	 * specification status.
@@ -15143,14 +15071,12 @@ public class SpecificationBackingBean extends
 					&& null != supplierCriteria
 					&& null != supplierCriteria.getQtZoneCriterias() && null == supplierCriteria
 					.getQtZoneCriterias().getSpecZoneId()) {
-				this.getManagedBean().setCtPanelItem(item);
 				retriveZonesOrSuppliersByItem();
 					}
 		
 		}else{
 			this.getManagedBean().getQt().setZonal(false);
 			this.getManagedBean().getQt().setZoneLocationLevel(item.getLocationLevelId());
-			this.getManagedBean().setCtPanelItem(item);
 			retriveZonesOrSuppliersByItem();
 		}
 		
