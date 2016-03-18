@@ -10159,6 +10159,12 @@ public class SpecificationBackingBean extends
 					List<ScQtSupplier> qtSuppliers = this.getManagedBean()
 							.getQtSupplierList();
 					if (qtSuppliers != null && !qtSuppliers.isEmpty()) {
+						for (ScQtSupplier scQtSupplier : qtSuppliers) {
+							scQtSupplier
+									.setInvitationType(SourcingConstants.INVITATION_TYPE_INSERT);
+							//setUserDetails(scQtSupplier);
+							// qtSupplierList.add(scQtSupplier);
+						}
 						scQt.setScQtSuppliers(qtSuppliers);
 					}
 				}
