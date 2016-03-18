@@ -264,7 +264,9 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 			remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
 
 			getManagedBean().setRemarkList(remarkList);
-			getManagedBean().getRemarkList().add(0, remark);
+			if(!getManagedBean().isHideRemarks()) {
+				getManagedBean().getRemarkList().add(0, remark);
+			}
 		} else {
 			getManagedBean().setRemarkList(remarkList);
 		}
