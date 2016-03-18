@@ -2411,10 +2411,11 @@ public class QTDetailBackingBean extends
 					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
 							IPanelSupplierSO.class);
 
+			List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
 			
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectpanelItem())){
+			if (CollectionUtils.isNotEmpty(panelItemList)){
 
-				reqDTO.setPanelItem(this.getManagedBean().getSelectpanelItem().get(0));
+				reqDTO.setPanelItem(panelItemList.get(0));
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
 			}
 
@@ -2452,9 +2453,10 @@ public class QTDetailBackingBean extends
 					}
 				}
 			} else {
-				if (null != this.getManagedBean().getCtPanelItem()
-						&& null != this.getManagedBean().getCtPanelItem()
-								.getPanelItemId()) {
+				
+				this.getManagedBean().setTotalSuppliers(0);
+				
+				if (CollectionUtils.isNotEmpty(panelItemList)) {
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
@@ -2464,11 +2466,10 @@ public class QTDetailBackingBean extends
 									IQTSupplierSO.class);
 					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
 					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
-					supplierReqDTO.setPanelItemId(this.getManagedBean()
-							.getCtPanelItem().getPanelItemId());
+					supplierReqDTO.setPanelItemId(panelItemList.get(0).getPanelItemId());
 					supplierResDTO = supplierSo
 							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
-					this.getManagedBean().setTotalSuppliers(0);
+					
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
 					if (null != supplierResDTO.getCtPanelSuppliers()) {
@@ -2479,11 +2480,6 @@ public class QTDetailBackingBean extends
 					}
 				}
 			}
-			List<CtPanelItem> itemList = this.getManagedBean()
-					.getPanelItemList();
-			itemList = new ArrayList<CtPanelItem>();
-			itemList.add(this.getManagedBean().getCtPanelItem());
-			this.getManagedBean().setPanelItemList(itemList);
 		} finally {
 		}
 	}
@@ -4669,22 +4665,26 @@ public class QTDetailBackingBean extends
 					// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
 					break;
 				case 1:
+					detailSO.validateSupplierQualificationDtls(reqDTO);
 					break;
 
 				case 2:
-					detailSO.validateApprovalDetails(reqDTO);
+					
 					break;
 				case 3:
+					detailSO.validateApprovalDetails(reqDTO);
+					break;
+
+				case 4:
 					if (isinvokeValidations(getManagedBean().getQt())) {
 						detailSO.validateDeductionDtls(reqDTO);
 					}
 					break;
 
-				case 4:
+				case 5:
 
 					break;
-
-				case 5:
+				case 6:
 
 					break;
 
@@ -4697,19 +4697,22 @@ public class QTDetailBackingBean extends
 						.getQtId());
 				break;
 			case 1:
+				retrieveSuppQualificationTabDtl();
+				break;
+			case 2:
 				retrieveCommitteeAppointmentTabDtl(false);
 				break;
 
-			case 2:
+			case 3:
 				retrieveApprovalTabDtl();
 				break;
-			case 3:
+			case 4:
 				retrieveDeductionPaymentTabDtl();
 				break;
-			case 4:
+			case 5:
 				retrieveDocumentTabDtl();
 				break;
-			case 5:
+			case 6:
 				retrieveActivitiesTabDtl();
 				break;
 			}
@@ -4735,14 +4738,16 @@ public class QTDetailBackingBean extends
 		int changedIndex = activeIndex;
 		if (isMaintancePendingChklistStatus()) {
 			if (activeIndex == 1) {
-				changedIndex = QTConstants.COMMITTE_TAB_INDEX;
+				changedIndex = QTConstants.SUPP_QUAL_TAB_INDEX;
 			} else if (activeIndex == 2) {
-				changedIndex = QTConstants.APPROVAL_TAB_INDEX;;
+				changedIndex = QTConstants.COMMITTE_TAB_INDEX;
 			} else if (activeIndex == 3) {
-				changedIndex = QTConstants.DEDUCTION_TAB_INDEX;
+				changedIndex = QTConstants.APPROVAL_TAB_INDEX;;
 			} else if (activeIndex == 4) {
-				changedIndex = QTConstants.DOCUMENTS_TAB_INDEX;
+				changedIndex = QTConstants.DEDUCTION_TAB_INDEX;
 			} else if (activeIndex == 5) {
+				changedIndex = QTConstants.DOCUMENTS_TAB_INDEX;
+			} else if (activeIndex == 6) {
 				changedIndex = QTConstants.ACTIVE_TAB_INDEX;
 			} 
 		}

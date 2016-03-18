@@ -58,7 +58,6 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -941,12 +940,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 			this.getManagedBean().setCtZoneSupplierList(
 					supplierResDTO.getCtPanelSuppliers());
-			List<CtPanelItem> itemList = this.getManagedBean()
-					.getPanelItemList();
-			itemList = new ArrayList<CtPanelItem>();
-			itemList.add(this.getManagedBean().getCtPanelItem());
-
-			this.getManagedBean().setPanelItemList(itemList);
 		}
 	}
 
@@ -1414,9 +1407,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public String viewCircularAttachments(String backUrl) {
 		debugLogger("viewCircularAttachments");
-		List<CtPanelItem> itemList = this.getManagedBean().getPanelItemList();
-		itemList = new ArrayList<CtPanelItem>();
-		itemList.add(this.getManagedBean().getCtPanelItem());
 		CtCircularVer ctCircularVer = this.getManagedBean().getQt().getCircularVer();
 		String pageView = "";
 		if (null != ctCircularVer) {
@@ -1425,7 +1415,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 			panelbackingbean.getManagedBean().setGotoPreviewPage(backUrl);
 			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer.getCircularVerId());
 		}
-		this.getManagedBean().setPanelItemList(itemList);
 		return pageView;
 	}
 
