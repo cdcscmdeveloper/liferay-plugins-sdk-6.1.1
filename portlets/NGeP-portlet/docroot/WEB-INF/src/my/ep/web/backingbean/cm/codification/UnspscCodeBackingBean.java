@@ -531,11 +531,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					.getServiceObject("pm", IStatusSO.class);
 
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
-
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			statusReqDTO.setStatusId(15015L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CATALOG_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+			String actionDesc ="Kod Item "+this.getManagedBean().getRequestCode().getDocNo()+" telah disyorkan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -939,6 +939,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 		CodificationBackingBean bb = new CodificationBackingBean();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate
 				.getInstance()
@@ -1384,11 +1385,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				}
 				log.info("tracking diary for Codification_Officer:savetempCode");
 				reqDTO.setTrackingStatus(true);
-
+				
 				statusReqDTO.setStatusId(15004L);
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CODIFICATION_OFFICER, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
+				String actionDesc ="Kod Item "+this.getManagedBean().getRequestCode().getDocNo()+" telah dicipta oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1437,8 +1438,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				statusReqDTO.setStatusId(15013L);
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 
-
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CODIFICATION_OFFICER, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
+				String actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah disyorkan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
