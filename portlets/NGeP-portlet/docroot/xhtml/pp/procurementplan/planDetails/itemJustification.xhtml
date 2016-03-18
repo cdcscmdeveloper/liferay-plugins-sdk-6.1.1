@@ -16,7 +16,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		widgetVar="dlItemJustificationWv" dynamic="true" width="700" height="200" closable="false">
 		<p:ajax event="close" listener="#{pPlanBackingBean.closeJustification}" update="dgJustication"/>
 		<p:outputPanel id="opItemJustification">
-			<p:dataGrid id="dgJustication" value="#{pPlanBackingBean.managedBean.selectedJustifications}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+			<p:dataGrid id="dgJustication" value="#{pPlanBackingBean.managedBean.selectedJustifications}" emptyMessage="#{lbl['lbl.pp.no.record.found']}"  var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 				<table class="ppRmkTable">
 					<tr>
 						<td rowspan="2" valign="top" style="width:15%;">

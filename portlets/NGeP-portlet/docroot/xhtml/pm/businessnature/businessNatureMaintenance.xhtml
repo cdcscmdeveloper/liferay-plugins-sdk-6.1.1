@@ -22,7 +22,7 @@
 							styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="busLv"
 							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}"
-							style="width:178px;margin-bottom:5px;" disabled="true">
+							disabled="true">
 							<f:selectItems
 								value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}"></f:selectItems>
 							<p:ajax event="change" update="@form" />
@@ -39,14 +39,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="padding: 5px 0px;"><p:inputTextarea row="40"
-							cols="80"
+					<td><p:inputTextarea row="40"
+							cols="60"
 							disabled="#{!businessNatureBackingBean.managedBean.brandNew}"
 							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelName}"
-							size="30" maxlength="500" /></td>
+						     maxlength="500" /></td>
 				</tr>				
 				<tr>
-					<td style="width: 10%;"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.pm.profiles.search.status']}" /></td>
 					<td><p:selectOneMenu id="statusBusiness"						
 							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.recordStatusFlg}"
@@ -73,7 +73,7 @@
 						<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.secname']}" /></td>
 						<td><p:inputText
 						value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}"
-						size="100" disabled="true" /></td>
+						size="80" disabled="true" /></td>
 					</tr>
 				</table>
 			</c:if>
