@@ -2281,29 +2281,41 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 
 			}
-			if (this.getManagedBean().isNewCategory()) {
-				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setMainCatCode(this.getManagedBean().getPmCategoryL1()
-						.getCategoryL1Code());
-				CategoryCodeResDTO resDTO = categoryCodeSO
-						.retrieveCategoryL1ByCode(reqDTO);
-				if (resDTO.getCategoryL1() != null) {
+			
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setMainCatCode(this.getManagedBean().getPmCategoryL1()
+					.getCategoryL1Code());
+			CategoryCodeResDTO resDTO = categoryCodeSO
+					.retrieveCategoryL1ByCode(reqDTO);
+			if (resDTO.getCategoryL1() != null) {
+				if (this.getManagedBean().isNewCategory()) {
 					throw new EpException(MessageConst.ERROR_775001);
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only")
+					});	
 				}
+				
+			}
 
-				CategoryCodeResDTO resDTODesc = retrieveCategoryL1ListByCatCodeDesc(categoryCodeSO);
+			CategoryCodeResDTO resDTODesc = retrieveCategoryL1ListByCatCodeDesc(categoryCodeSO);
 
-				if (resDTODesc.getCategoryL1List() != null
-						&& resDTODesc.getCategoryL1List().size() > 0 && this.getManagedBean().getPmCategoryL1()
-						.getRecordStatusFlg().intValue() != DbValueConst.RECORD_STATUS_SUSPENDED) {
-					for (PmCategoryL1 pmCategoryL1 : resDTODesc
-							.getCategoryL1List()) {
-						if (pmCategoryL1.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			if (resDTODesc.getCategoryL1List() != null
+					&& resDTODesc.getCategoryL1List().size() > 0 && this.getManagedBean().getPmCategoryL1()
+					.getRecordStatusFlg().intValue() != DbValueConst.RECORD_STATUS_SUSPENDED) {
+				for (PmCategoryL1 pmCategoryL1 : resDTODesc
+						.getCategoryL1List()) {
+					if (pmCategoryL1.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						if (this.getManagedBean().isNewCategory()) {
 							throw new EpException(MessageConst.ERROR_770218,new String[] {
 									PmCommonUtil.getResourceBundleLabels("lbl.pm.main.category"),
 									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only"),
 									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only")
 							});
+						}else{
+							throw new EpException(MessageConst.ERROR_770220, new String[] {
+									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only")
+							});	
 						}
 					}
 				}
@@ -2358,26 +2370,33 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 
 			}
-			if (this.getManagedBean().isNewCategory()) {
-				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setCategoryL1Id(this.getManagedBean().getPmCategoryL1()
-						.getCategoryL1Id());
-				reqDTO.setSubCatCode(this.getManagedBean().getPmCategoryL2()
-						.getCategoryL2Code());
-				CategoryCodeResDTO resDTO = categoryCodeSO
-						.retrieveCategoryL2ListByCode(reqDTO);
-				if (resDTO.getCategoryL2List() != null
-						&& resDTO.getCategoryL2List().size() > 0) {
+			
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL1Id(this.getManagedBean().getPmCategoryL1()
+					.getCategoryL1Id());
+			reqDTO.setSubCatCode(this.getManagedBean().getPmCategoryL2()
+					.getCategoryL2Code());
+			CategoryCodeResDTO resDTO = categoryCodeSO
+					.retrieveCategoryL2ListByCode(reqDTO);
+			if (resDTO.getCategoryL2List() != null
+					&& resDTO.getCategoryL2List().size() > 0) {
+				if (this.getManagedBean().isNewCategory()) {
 					throw new EpException(MessageConst.ERROR_775002);
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only")
+					});	
 				}
+			}
 
-				CategoryCodeResDTO resDTODesc = retrieveCategoryL2ListByCatCodeDesc(categoryCodeSO);
+			CategoryCodeResDTO resDTODesc = retrieveCategoryL2ListByCatCodeDesc(categoryCodeSO);
 
-				if (resDTODesc.getCategoryL2List() != null
-						&& resDTODesc.getCategoryL2List().size() > 0) {
-					for (PmCategoryL2 pmCategoryL2 : resDTODesc
-							.getCategoryL2List()) {
-						if (pmCategoryL2.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			if (resDTODesc.getCategoryL2List() != null
+					&& resDTODesc.getCategoryL2List().size() > 0) {
+				for (PmCategoryL2 pmCategoryL2 : resDTODesc
+						.getCategoryL2List()) {
+					if (pmCategoryL2.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						if (this.getManagedBean().isNewCategory()) {
 							throw new EpException(MessageConst.ERROR_770219,new String[] { 
 									PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.category"),
 									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only"),
@@ -2385,10 +2404,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									this.getManagedBean().getPmCategoryL1().getCategoryName(),
 									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only")
 							});
+						}else{
+							throw new EpException(MessageConst.ERROR_770220, new String[] {
+									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only")
+							});	
 						}
 					}
 				}
-			} 
+			}
+			
 		} finally {
 			categoryCodeSO = null;
 		}
@@ -2534,56 +2558,46 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							ICategoryCodeSO.class);
-			if (this.getManagedBean().isNewCategory()) {
-				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setCategoryL2Id(this.getManagedBean().getPmCategoryL3()
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL2Id(this.getManagedBean().getPmCategoryL3()
 						.getPmCategoryL2().getCategoryL2Id());
-				reqDTO.setSubDivCode(this.getManagedBean().getPmCategoryL3()
+			reqDTO.setSubDivCode(this.getManagedBean().getPmCategoryL3()
 						.getCategoryL3Code());
-				CategoryCodeResDTO resDTO = categoryCodeSO
+			CategoryCodeResDTO resDTO = categoryCodeSO
 						.retrieveCategoryL3ListByCode(reqDTO);
-				if (resDTO.getCategoryL3List() != null
+			if (resDTO.getCategoryL3List() != null
 						&& resDTO.getCategoryL3List().size() > 0) {
+				if (this.getManagedBean().isNewCategory()) {
 					throw new EpException(MessageConst.ERROR_775003);
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only")
+					});	
 				}
-
-				CategoryCodeResDTO resDTODesc = retrieveCategoryL3ListByCatCodeDesc(categoryCodeSO);
-				if (resDTODesc.getCategoryL3List() != null
+			}
+	
+			CategoryCodeResDTO resDTODesc = retrieveCategoryL3ListByCatCodeDesc(categoryCodeSO);
+			if (resDTODesc.getCategoryL3List() != null
 						&& resDTODesc.getCategoryL3List().size() > 0) {
 					for (PmCategoryL3 pmCategoryL3 : resDTODesc
 							.getCategoryL3List()) {
 						if (pmCategoryL3.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-							throw new EpException(MessageConst.ERROR_770219,new String[] { 
-									PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.div"),
-									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only"),
-									PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.category.desc"),
-									this.getManagedBean().getPmCategoryL2().getCategoryName(),
-									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only")
-							});
+							if (this.getManagedBean().isNewCategory()) {
+								throw new EpException(MessageConst.ERROR_770219,new String[] { 
+										PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.div"),
+										PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only"),
+										PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.category.desc"),
+										this.getManagedBean().getPmCategoryL2().getCategoryName(),
+										PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only")
+								});
+							}else{
+								throw new EpException(MessageConst.ERROR_770220, new String[] {
+										PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only")
+								});	
+							}
 						}
 					}
-				}
-			} else if(isCategoryNameChanged()){
-				CategoryCodeResDTO resDTOUpdate = retrieveCategoryL3ListByCatCodeDesc(categoryCodeSO);
-				if (resDTOUpdate.getCategoryL3List() != null
-						&& resDTOUpdate.getCategoryL3List().size() > 0
-						&& this.getManagedBean().getPmCategoryL3()
-								.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED) {
-					for (PmCategoryL3 pmCategoryL3 : resDTOUpdate
-							.getCategoryL3List()) {
-						if (pmCategoryL3.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-							throw new EpException(MessageConst.ERROR_770219,new String[] { 
-									PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.div"),
-									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only"),
-									PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.category.desc"),
-									this.getManagedBean().getPmCategoryL2().getCategoryName(),
-									PmCommonUtil.getResourceBundleLabels("lbl.pm.category.desc.only")
-							});
-						}
-					}
-				}
 			}
-
 		} finally {
 			categoryCodeSO = null;
 		}

@@ -85,7 +85,8 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{usergroupBackingBean.searchUserGroupAction}"
-							update=":form:searchGroupProfile" />
+							update=":form:searchGroupProfile"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							update="userGroupSearch,:form:searchGroupProfile" process="@this"
 							partialSubmit="true" action="#{usergroupBackingBean.reset}" />
