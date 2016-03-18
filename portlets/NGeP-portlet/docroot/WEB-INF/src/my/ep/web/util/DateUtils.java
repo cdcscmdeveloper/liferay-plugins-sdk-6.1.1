@@ -62,6 +62,21 @@ public class DateUtils {
 		return c2.getTime();
 	}
 	
+	/**
+	 * Retrieve date without time
+	 * @param argValue  date object
+	 */
+	public static Date getDateWithoutTime(Date argValue) {
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(argValue);
+		Calendar c2 = Calendar.getInstance();
+		c2.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+				c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+		c2.set(Calendar.MILLISECOND, 0);
+
+		return c2.getTime();
+	}
+	
 	
 	/**
 	 * Convert date to a string.
