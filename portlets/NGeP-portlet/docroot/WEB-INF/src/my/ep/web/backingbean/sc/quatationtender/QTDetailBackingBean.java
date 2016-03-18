@@ -443,12 +443,6 @@ public class QTDetailBackingBean extends
 			
 			updateApprovalDetails(this.getManagedBean().getQt());
 			retrieveApprovalTabDtl();
-
-			// Code will be called if user didn't visit the supplier qualification
-			// tab.
-			if (null == this.getManagedBean().getSupplierCriteria()) {
-				retrieveSuppQualificationTabDtl();
-			}
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
