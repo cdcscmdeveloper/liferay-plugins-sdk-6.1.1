@@ -246,5 +246,6 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
 		getManagedBean().setDistrictId(0);
 
+		getManagedBean().getSearchDataModel().getList().clear();
 	}
 }
