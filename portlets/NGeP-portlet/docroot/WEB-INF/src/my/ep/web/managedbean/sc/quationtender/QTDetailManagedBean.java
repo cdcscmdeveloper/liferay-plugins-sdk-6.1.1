@@ -1562,7 +1562,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isTechnicalUserScoringSchema;
 	private boolean isFinancialUserScoringSchema;
 	private String loginRoleType;
-	
+	private List<ScQtSupplier> toBeRemoveRestrictedSupplierList;
 	/** The selected flag. */
 	private boolean selectedFlag;
 	
@@ -8742,6 +8742,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setLoginRoleType(String loginRoleType) {
 		this.loginRoleType = loginRoleType;
+	}
+
+	/**
+	 * @return the toBeRemoveRestrictedSupplierList
+	 */
+	public List<ScQtSupplier> getToBeRemoveRestrictedSupplierList() {
+		return toBeRemoveRestrictedSupplierList;
+	}
+
+	/**
+	 * @param toBeRemoveRestrictedSupplierList the toBeRemoveRestrictedSupplierList to set
+	 */
+	public void setToBeRemoveRestrictedSupplierList(
+			List<ScQtSupplier> toBeRemoveRestrictedSupplierList) {
+		this.toBeRemoveRestrictedSupplierList = toBeRemoveRestrictedSupplierList;
 	}
 
 }
