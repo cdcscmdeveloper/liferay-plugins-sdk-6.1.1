@@ -1563,7 +1563,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * 
 	 */
 	private void validateRejectionDesc(){
-		log.info("isUniqueReasonCode");
+		log.info("validateRejectionDesc");
 		String enDesc = null;
 		String msDesc = null;
 		for(PmReasonDesc desc : getManagedBean().getSelectedReason().getPmReasonDescs()){
@@ -1626,6 +1626,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				SearchOperator.OPERATOR_EQUALS.value(), 
 				DbValueConst.RECORD_STATUS_ACTIVE
 				));
+		
+		if(!getManagedBean().getSelectedReason().isBrandNew()){
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmReason.reasonId", 
+					SearchOperator.OPERATOR_NOT_EQUALS.value(), 
+					getManagedBean().getSelectedReason().getReasonId()
+					));
+		}
 		
 		//Filter by search bean
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
