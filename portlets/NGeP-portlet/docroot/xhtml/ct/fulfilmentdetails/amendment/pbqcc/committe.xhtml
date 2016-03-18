@@ -14,12 +14,12 @@
 			      <f:facet name="header">
 					<p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="committeTable" listener="#{amendmentBackingBean.selectAllCommittees()}" />
+							update=":form:committeTable,:form:committeDelBtn" listener="#{amendmentBackingBean.selectAllCommittees()}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{ctCommitteeVar.selectedCheckBox}" styleClass="myCustomChekBox"
 					disabled="#{ctCommitteeVar.memberRole.parameterCode == ParameterConst.committeeRoleSecretary}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					 <p:ajax event="change" update=":form:committeDelBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}"></p:ajax>
 				</p:selectBooleanCheckbox>
 		      </p:column>
                

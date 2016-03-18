@@ -412,6 +412,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			        ctReqDTO.setContractId(new Long(dataType.getContractId()));
 					ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 					ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+					ctReqDTO.setTaskName(getManagedBean().getTaskName());
 					setAmendmentContractVer(ctReqDTO);
 					
 					/*Define boolean value to control gui details*/
@@ -2958,14 +2959,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    	    
 		    	  for (CtCommitteeMember  ctCommiteMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
 	    		         if (getManagedBean().isSelectAll()) {
-	    		               if (ctCommiteMember.getMemberRole() != null 
+	    		               if (ctCommiteMember.getMemberRole() != null && ctCommiteMember.getMemberRole().getParameterCode() != null
 	    				              && ctCommiteMember.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 	    			                 continue;
 	    		                } else {
 	    			               ctCommiteMember.setSelectedCheckBox(true);
+	    			               if(ctBackingBean.getManagedBean().isButtonHideActive()){
+	    			            	   ctBackingBean.getManagedBean().setButtonHideActive(false);
+	    			               }
 	    		                }
 	    		         } else {
 	    		        	 ctCommiteMember.setSelectedCheckBox(false);
+	    		        	 if(!ctBackingBean.getManagedBean().isButtonHideActive()){
+  			            	   ctBackingBean.getManagedBean().setButtonHideActive(true);
+  			               }
 	    		         }
 	    	       }
 	        }
@@ -2984,6 +2991,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						committeeMembers.remove();
 					}
 				}
+				ctBackingBean.getManagedBean().setButtonHideActive(true);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
