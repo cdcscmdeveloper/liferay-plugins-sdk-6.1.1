@@ -16,24 +16,28 @@
 							action="#{qTDetailBB.qtChklistMaintenanceTabChange(0)}" update="@form"
 							process="@form" />
 							
-						<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
+						<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 							action="#{qTDetailBB.qtChklistMaintenanceTabChange(1)}" update="@form"
 							process="@form" />
 							
-						<p:menuitem value="#{lbl['lbl.sc.approval']}"
+						<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
 							action="#{qTDetailBB.qtChklistMaintenanceTabChange(2)}" update="@form"
 							process="@form" />
 							
-						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+						<p:menuitem value="#{lbl['lbl.sc.approval']}"
 							action="#{qTDetailBB.qtChklistMaintenanceTabChange(3)}" update="@form"
+							process="@form" />
+							
+						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(4)}" update="@form"
 							process="@form"  />
 							
 						<p:menuitem value="#{lbl['lbl.sc.qt.documents']}"
-							action="#{qTDetailBB.qtChklistMaintenanceTabChange(4)}" update="@form"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(5)}" update="@form"
 							process="@form" />
 							 
 						<p:menuitem value="#{lbl['lbl.sc.activities']}"
-							action="#{qTDetailBB.qtChklistMaintenanceTabChange(5)}" update="@form"
+							action="#{qTDetailBB.qtChklistMaintenanceTabChange(6)}" update="@form"
 							process="@form"  />
 					</p:tabMenu></td>
 					
@@ -43,21 +47,24 @@
 								src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '1'}">
-							<ui:include
-								src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+							<ui:include src="/xhtml/sc/quatationtender/supplierQualificationCriteria/supplierQualificationCriteria.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '2'}">
 							<ui:include
-								src="/xhtml/sc/quatationtender/approval/approvalCheckBox.xhtml" />
+								src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '3'}">
-							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
+							<ui:include
+								src="/xhtml/sc/quatationtender/approval/approvalCheckBox.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
+						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
 							<ui:include
 								src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
 						</c:if>
-						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
 							<ui:include
 								src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 						</c:if>
