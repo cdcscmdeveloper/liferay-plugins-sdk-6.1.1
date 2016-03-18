@@ -6,8 +6,6 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -71,7 +69,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
-import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
@@ -216,7 +213,6 @@ public class CreateQtBackingBean extends
 				scQt.setCircularVer(null);
 				scQt.setPanelItemId(null);
 				scQt.setItemGroup(null);
-				this.getManagedBean().setCtPanelItem(null);
 				this.getManagedBean().setQt(scQt);
 				setDataNull();
 			}
@@ -915,121 +911,6 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 	}
-	
-	
-	/**
-	 * Business owner next action.click next button in businessowner panel
-	 * selection.navigate to business owner tabs.
-	 * 
-	 * @return the string
-	 */
-	public void panelItemSelection() {
-	
-			if (null == this.getManagedBean().getQt().getCircularVer()) {
-				throw new EpException(MessageConst.ERROR_760157);
-			}
-			ScQt scQt = this.getManagedBean().getQt();
-			boolean isPanel = scQt.isPanel();
-			List<CtPanelItem> panelItemList = null;
-			//this.getManagedBean().getPanelGroupItems();
-			if (CollectionUtils.isNotEmpty(panelItemList)) {
-				Long panelItemId = scQt.getPanelItemId();
-				for (CtPanelItem panelItem : panelItemList) {
-					if (panelItem.getPanelItemId().equals(panelItemId)) {
-						this.getManagedBean().setCtPanelItem(panelItem);
-						this.getManagedBean().setPanelItemCategory(
-								panelItem.getItemCategoryId().getParameterCode());
-					}
-				}
-			}
-			if (QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
-					.getManagedBean().getCircularType())) {
-				if (null == this.getManagedBean().getCtPanelItem()) {
-					throw new EpException(MessageConst.ERROR_760157);
-				}
-			}
-			if (isPanel
-					&& QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
-							.getManagedBean().getCircularType())
-					&& ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC
-							.equalsIgnoreCase(this.getManagedBean()
-									.getPanelItemCategory())
-					|| ParameterConst.ITEM_CATEGORY_TYPE_GENERAL
-							.equalsIgnoreCase(this.getManagedBean()
-									.getPanelItemCategory())) {
-				scQt.setZonal(false);
-				scQt.setQtType(QTConstants.OPEN_TYPE);
-				this.getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
-				this.getManagedBean().setCtZoneSupplierList(new ArrayList<CtPanelSupplier>());
-				ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
-
-				if ((null == supplierCriteria)
-						|| (null != supplierCriteria && null == supplierCriteria
-								.getQtSupplierCriteriaId())) {
-					this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
-					this.getManagedBean().setQtCategoryList(new ArrayList<ScQtCategory>());
-					supplierCriteria = new ScQtSupplierCriteria();
-					supplierCriteria.setScQt(scQt);
-					
-					//scQt.setCircularVer(this.getManagedBean().getCircularVer());
-					scQt.setZoneLocationLevel(this.getManagedBean()
-							.getCtPanelItem().getLocationLevelId());
-					setUserDetails(supplierCriteria);
-					this.getManagedBean().getQt()
-							.setScQtSupplierCriteria(supplierCriteria);
-					if (null != this.getManagedBean().getCtPanelItem()
-							&& null != this.getManagedBean().getCtPanelItem()
-									.getPanelItemId()) {
-						scQt.setZonal(false);
-						retriveZonesOrSuppliersByItem();
-						if (null != this.getManagedBean().getZoneGeneralTrees()
-								&& !this.getManagedBean().getZoneGeneralTrees()
-										.isEmpty()) {
-							scQt.setZonal(true);
-						}
-					}
-				} else {
-
-					if (null != supplierCriteria
-							&& null != supplierCriteria.getQtSupplierCriteriaId()
-							&& (isPanel != this.getManagedBean().isPanelChange())) {
-						RequestContext.getCurrentInstance().execute("panelApprovalDlgs.show()");
-					} else {
-						
-						CtPanelItem ctPanelItem = this.getManagedBean().getCtPanelItem();
-						if (null != ctPanelItem) {}
-					}
-				}
-			}
-
-			else if (isPanel
-					&& QTConstants.CIRCULAR_CENTRAL_CONTRACT_TYPE
-							.equalsIgnoreCase(this.getManagedBean().getCircularType())) {
-
-				FacesScopes facesScopes = new FacesScopes();
-				ScQtRemark remark = new ScQtRemark();
-				// ScWorkFlowStatus status = new ScWorkFlowStatus();
-				// PmStatus status=new PmStatus();
-				setUserDetails(remark);
-				remark.setCreatedBy(facesScopes.getUserSessionBean()
-						.getUserId());
-				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				remark.setChangedBy(remark.getCreatedBy());
-				remark.setCreatedUser(facesScopes.getUserSessionBean());
-				remark.setScQt(this.getManagedBean().getQt());
-				// status.setPmStatus(this.getManagedBean().getScQt().getQtStatus());
-				// status.setStatusId(this.getManagedBean().getScQt().getQtStatus().getStatusId());
-				remark.setScWorkFlowStatus(null);
-				this.getManagedBean().setContractremark(remark);
-				this.getManagedBean().setScQtRemarksList(
-						new ArrayList<ScQtRemark>());
-				this.getManagedBean().getScQtRemarksList()
-						.add(this.getManagedBean().getContractremark());
-
-			}
-			this.getManagedBean().setPanelChange(isPanel);
-		
-	}
 
 	/**
 	 * Retrive zones or suppliers by item.retrive zones or suppliers based on
@@ -1044,12 +925,12 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 			panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
 							IPanelSupplierSO.class);
+			
+			List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
 
-			if (null != this.getManagedBean().getCtPanelItem()
-					&& null != this.getManagedBean().getCtPanelItem()
-							.getPanelItemId()) {
+			if (CollectionUtils.isNotEmpty(panelItemList)) {
 
-				reqDTO.setPanelItem(this.getManagedBean().getCtPanelItem());
+				reqDTO.setPanelItem(panelItemList.get(0));
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
 			}
 
@@ -1091,9 +972,9 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 				}
 			} else {
-				if (null != this.getManagedBean().getCtPanelItem()
-						&& null != this.getManagedBean().getCtPanelItem()
-								.getPanelItemId()) {
+				this.getManagedBean().setTotalSuppliers(0);
+				
+				if (CollectionUtils.isNotEmpty(panelItemList)) {
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
@@ -1112,11 +993,9 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 									IQTSupplierSO.class);
 					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
 					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
-					supplierReqDTO.setPanelItemId(this.getManagedBean()
-							.getCtPanelItem().getPanelItemId());
+					supplierReqDTO.setPanelItemId(panelItemList.get(0).getPanelItemId());
 					supplierResDTO = supplierSo
 							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
-					this.getManagedBean().setTotalSuppliers(0);
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
 					if (null != supplierResDTO.getCtPanelSuppliers()) {
