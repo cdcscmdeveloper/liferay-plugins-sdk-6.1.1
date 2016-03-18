@@ -12,8 +12,16 @@
                 value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
                 selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{ctMeetingsVar}">
                 <ac:paginator for="meetingTable" />
-                <p:column selectionMode="multiple" style="width:2%;" rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
-                
+                  <p:ajax event="toggleSelect" 
+			                              listener="#{ctBackingBean.onToggleSelect}" update=":form:meetingDelBtn" />
+			      <p:ajax event="rowSelect"
+                                       listener="#{ctBackingBean.onRowSelect}" update=":form:meetingDelBtn" />
+			      <p:ajax event="rowSelectCheckbox" 
+			                             listener="#{ctBackingBean.onRowSelect}" update=":form:meetingDelBtn" />
+                   <p:ajax event="rowUnselectCheckbox" 
+                                         listener="#{ctBackingBean.onRowUnselect}" update=":form:meetingDelBtn" />
+              
+                <p:column selectionMode="multiple" style="width:2%;" rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>  
                 <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.date.of.meeting']}" styleClass="column-align-center" >
 			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting" navigator="true"
 			              maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
@@ -46,25 +54,19 @@
 		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"
 		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
-		       <p:commandButton value="#{lbl['lbl.ct.delete']}" process="@form" partialSubmit="true"  
-		          onclick="dlgMeetingDetails.show();" update="meetingTable"
+		       <p:commandButton id="meetingDelBtn" value="#{lbl['lbl.ct.delete']}"  process="@this"  partialSubmit="true"
+		          onsuccess="dlgMeetingDetails.show();" update="meetingTable" disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 		          rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}"/>
 		    </div>
 		    
-		    <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" styleClass="screen-title" 
-		         modal="true" width="330">  
-               
-                 <h:panelGrid columns="3">
-                      <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			          <p:spacer width="10"/>
-                      <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                  </h:panelGrid>
-                 
-                  <div class="ppRightBtn">
-		               <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="meetingTable" 
-		                    process="@form"  action="#{amendmentBackingBean.delPbQccMeetingDetails}" onclick="dlgMeetingDetails.hide();"/>
-			           <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgMeetingDetails.hide();" type="button" />
-		           </div>
-             </p:dialog>
+		    <p:confirmDialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:meetingTable,:form:meetingDelBtn" 
+		                         action="#{amendmentBackingBean.delPbQccMeetingDetails}" oncomplete="dlgMeetingDetails.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgMeetingDetails.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
       	</p:panel>
 </ui:composition>
