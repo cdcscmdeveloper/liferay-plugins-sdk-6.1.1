@@ -194,7 +194,7 @@
 					<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
 				</f:facet>
 
-				<p:calendar 
+				<p:calendar  navigator="true"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleValEffDateId" style="width:100px;"
@@ -220,7 +220,7 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-				<p:calendar 
+				<p:calendar  navigator="true"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleConfigexpDateId" style="width :100px;"

@@ -72,7 +72,7 @@
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 <!-- disabled="#{feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}" -->
-			<p:calendar showOn="button" id="comodityfeeeffDateId"
+			<p:calendar showOn="button" id="comodityfeeeffDateId" navigator="true"
 				style="width :100px;" required="true"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -88,7 +88,7 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 <!-- disabled="#{feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}" -->
-			<p:calendar showOn="button" id="comodityfeeexpDateId"
+			<p:calendar showOn="button" id="comodityfeeexpDateId" navigator="true"
 				style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"

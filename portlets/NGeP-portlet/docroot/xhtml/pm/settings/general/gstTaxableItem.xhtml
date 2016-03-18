@@ -85,7 +85,7 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.stn.effDate']}" />
 			</f:facet>
-			<p:calendar id="effDateId" value="#{tiObj.effDate}"
+			<p:calendar id="effDateId" value="#{tiObj.effDate}" navigator="true"
 					mindate="#{ruleCatalogueBackingBean.managedBean.currentDate}"
 					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
 					disabled = "#{(tiObj.recordStatusFlg == 0 or (tiObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
@@ -99,7 +99,7 @@
 			<f:facet name="header">				
 				<h:outputText value="#{lbl['lbl.pm.stn.expDate']}" />
 			</f:facet>
-			<p:calendar id="expDateId" value="#{tiObj.expDate}" 
+			<p:calendar id="expDateId" value="#{tiObj.expDate}" navigator="true" 
 					mindate="#{!(tiObj.brandNew) ? tiObj.effDate :  ruleCatalogueBackingBean.managedBean.currentDate}"
 					navigator="true"
 					disabled ="#{tiObj.recordStatusFlg == 0 or (tiObj.expDate le DateUtils.getCurrentDateWithoutTime())}"
