@@ -1170,6 +1170,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		siBB.populateChargeLineData();
 		siBB.getManagedBean().setButtonVal("View");
 		flBB.getManagedBean().setHideRemarks(true);
+		flBB.initializeRemarkAndAttachement(resDTO.getFlStopInstr().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		siBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 		
