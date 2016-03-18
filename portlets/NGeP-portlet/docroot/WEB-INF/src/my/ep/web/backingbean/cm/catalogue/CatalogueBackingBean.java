@@ -4288,20 +4288,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
-
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
 
 			if(this.getManagedBean().getSelectedMaintainItem().isReviewRequired())
 			{
 				statusReqDTO.setStatusId(CmConst.PENDING);
 
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVEL,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+				String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah dihantar kepada Catalogue Admin untuk kelulusan";
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}
 			else{
 				statusReqDTO.setStatusId(CmConst.DIRECT_PUBLISHED);;
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+				String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}
 
 			catalogueSO.updateSupplierItem(reqDTO);
@@ -4324,7 +4325,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			supplierReqDTO = new SupplierSearchReqDTO();
 
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			
 			supplierReqDTO.setUserId(pmUser.getUserId());
 			supplierReqDTO.setAllStatuses(true);
 			smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
