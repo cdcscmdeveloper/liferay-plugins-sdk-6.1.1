@@ -1587,7 +1587,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 						new SearchFilterBean(
 								"reasonDesc", 
 								SearchOperator.OPERATOR_EQUALS.value(), 
-								enDesc.trim(),
+								enDesc.toLowerCase().trim(),
 								true),
 						new SearchFilterBean(
 								"pmLanguage.languageCode", 
@@ -1600,7 +1600,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 						new SearchFilterBean(
 								"reasonDesc", 
 								SearchOperator.OPERATOR_EQUALS.value(), 
-								msDesc.trim(),
+								msDesc.toLowerCase().trim(),
 								true),
 						SearchCondition.CONDITION_OR.value(),
 						new SearchFilterBean(
