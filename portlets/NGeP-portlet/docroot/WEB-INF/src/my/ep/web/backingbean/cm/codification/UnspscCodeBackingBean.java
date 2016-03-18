@@ -1752,7 +1752,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		supplierReqDTO.setUserId(pmUser.getUserId());
-
+		String actionDesc = "";
 		SupplierSearchResDTO smResDTO = supplierSearchSO
 				.retriveSupplierProfiles(supplierReqDTO);
 
@@ -1784,13 +1784,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		if(face.hasRoleUser(CmConst.CM_ADMIN)){
 			reqDTO.setTrackingStatus(true);
 
-
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
+			actionDesc = "Kod Lanjutan "+reqDTO.getRequestCode().getDocNo()+" telah dihantar kepada Codification Officer untuk semakan";
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
 
 		}
 		else {
 			reqDTO.setTrackingStatus(true);
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));				
+			actionDesc = "Kod Lanjutan "+reqDTO.getRequestCode().getDocNo()+" telah dihantar kepada Catalogue Administrator untuk semakan";
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));				
 		}		
 
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
