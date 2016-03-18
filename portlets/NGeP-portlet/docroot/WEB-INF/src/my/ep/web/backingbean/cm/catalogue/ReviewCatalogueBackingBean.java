@@ -188,9 +188,9 @@ public void refreshCatalogueList() {
 		statusReqDTO.setStatusId(CmConst.APPROVED);
 						
 		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-		
+		String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diluluskan oleh Catalogue Admin";
 		reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(
-				bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+				bb.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 		
 		try {
 			catalogueSO.updateSupplierItem(reqDTO);
@@ -293,7 +293,9 @@ public void refreshCatalogueList() {
 			statusReqDTO.setStatusId(CmConst.REJECTED);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			System.out.println("statusResDTO.getPmStatus().getStatusId():"+statusResDTO.getPmStatus().getStatusId());
-			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_REJECT,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+			
+			String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah ditolak oleh Catalogue Admin";
+			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(bb.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			
 			catalogueSO.updateSupplierItem(reqDTO);
 			bb.getManagedBean().setRejectReason(null);
