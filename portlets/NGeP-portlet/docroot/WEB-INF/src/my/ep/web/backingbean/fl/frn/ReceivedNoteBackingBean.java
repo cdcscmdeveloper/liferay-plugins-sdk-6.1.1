@@ -102,7 +102,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * Backing Bean for Create Received Note .
  *
@@ -284,7 +283,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					}
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
-					
 					reqDTO.setFulfilmentNoteId(resDTO.getFulfilmentNoteId());
 					resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
 					setFulfilmentNoteField(resDTO);
@@ -370,9 +368,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
+					
 					for(FlFulfilmentNoteItem flFulfilmentNoteItem :resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
-						flFulfilmentNoteItem.setTotalRecvAmount(flFulfilmentNoteItem.getReceivedAmt());
-						flFulfilmentNoteItem.setTotalRecvQty(flFulfilmentNoteItem.getReceivedQty());
+						Double totalAmt = new Double(0);
+						Double totalQty = new Double(0);
+						for(FlFulfilmentItemAddr itemAddr : flFulfilmentNoteItem.getFlItem().getFlFulfilmentItemAddr()){
+							totalAmt = totalAmt + itemAddr.getReceivedAmt().doubleValue();
+							totalQty = totalQty + itemAddr.getReceivedQty().doubleValue();
+						}
+						flFulfilmentNoteItem.setTotalRecvAmount(new BigDecimal(totalAmt));
+						flFulfilmentNoteItem.setTotalRecvQty(new BigDecimal(totalQty));
 					}
 					if(getManagedBean().getFulfilmentNote().getApprover() == null){
 						reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
@@ -408,7 +413,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 							if(delOrderItem.getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 								noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
 								noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
-							}						
+							}	
+							noteItem.setTotalRecvAmount(delOrderItem.getFlFulfilmentItemAddr().getReceivedAmt());
+							noteItem.setTotalRecvQty(delOrderItem.getFlFulfilmentItemAddr().getReceivedQty());
 							noteItemList.add(noteItem);
 						}
 					}
@@ -608,30 +615,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 		
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
-//			IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-//			IUserGroupSO userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
-//			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(fulfilmentNote.getFlRequest().getFulfilmentReqId());
-//			UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
-//			userGroupReqDTO.setGroupId(fulfilmentNote.getFlRequest().getPmUserGroup().getUserGroupId());
-//			userGroupReqDTO.setApprovalLimit(sumItemAmt);
-//			UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByGroupId(userGroupReqDTO);
-//			String lastApproverLoginId = fulfilmentNote.getFlRequest().getApprover().getLoginId();
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
 			if(getManagedBean().getPmUserList().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
-//			for(PmUserGroupUser groupUser : userGroupResDTO.getUserGroupUserList()) {
-//				if (lastApproverLoginId.equalsIgnoreCase(groupUser.getPmUser().getLoginId())) {
-//					orderApproverList.add(groupUser.getPmUser());
-//				} else if (orderApproverList.size() > 0) {
-//					orderApproverList.add(groupUser.getPmUser());
-//				} else if (orderApproverList.size() == 0) {
-//					pendingApproverList.add(groupUser.getPmUser());
-//				}
-//			}
-//			orderApproverList.addAll(pendingApproverList);
-//			getManagedBean().getApproverList().addAll(orderApproverList);
 			if(getManagedBean().getUserLoginId() == null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{
 						ResourceBundleUtils.getMessage("lbl.fl.acknowledgeOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
@@ -886,7 +874,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(selectedTabIndex==1){
 			sortItems(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem());
 			if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0).getFulfilmentNoteItemId() != null){
-				System.out.println("line 894 getFulfilmentNoteItemId: "+getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0).getFulfilmentNoteItemId());
 			}
 			
 		    getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
@@ -967,8 +954,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setPmUser(reqDTO.getPmUser());
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
 				getManagedBean().setSelectedItem(fulfilmentNoteItem);
-				fulfilmentNoteItem.setTotalRecvAmount(fulfilmentNoteItem.getReceivedAmt());
-				fulfilmentNoteItem.setTotalRecvQty(fulfilmentNoteItem.getReceivedQty());
+				Double totalAmt = new Double(0);
+				Double totalQty = new Double(0);
+				for(FlFulfilmentItemAddr itemAddr : fulfilmentNoteItem.getFlItem().getFlFulfilmentItemAddr()){
+					totalAmt = totalAmt + itemAddr.getReceivedAmt().doubleValue();
+					totalQty = totalQty + itemAddr.getReceivedQty().doubleValue();
+				}
+				fulfilmentNoteItem.setTotalRecvAmount(new BigDecimal(totalAmt));
+				fulfilmentNoteItem.setTotalRecvQty(new BigDecimal(totalQty));
 			}
 			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			getManagedBean().setDocMaintainRemarks(true);
