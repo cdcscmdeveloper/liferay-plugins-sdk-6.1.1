@@ -3173,7 +3173,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			searchBean.getDataFilterBeans().add(bean);
 			
 			// plan title
-			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planSearchBean.getPlanType().getParameterCode()) 
+			if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(planSearchBean.getPlanType().getParameterCode()) 
 					&& StringUtils.isNotBlank(planSearchBean.getPlanTitle())){
 				log.info("+ getPlanTitle "  +planSearchBean.getPlanTitle());
 				bean = new SearchFilterBean();

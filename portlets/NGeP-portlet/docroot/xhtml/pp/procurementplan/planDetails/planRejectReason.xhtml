@@ -15,7 +15,7 @@
 		<p:outputPanel id="opRejectReason">
 		<!-- Validation Message -->
 		<p:messages id="messagesReason" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		<p:dataGrid id="dgReason" value="#{pPlanBackingBean.managedBean.selectedRejectReasons}" var="reason" 
+		<p:dataGrid id="dgReason" value="#{pPlanBackingBean.managedBean.selectedRejectReasons}" var="reason" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 			rowIndexVar="reasonIndex" columns="1" >
 			<table class="ppRmkTable">
 				<tr>

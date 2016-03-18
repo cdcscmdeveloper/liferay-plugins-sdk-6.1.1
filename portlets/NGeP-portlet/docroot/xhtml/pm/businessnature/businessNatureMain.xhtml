@@ -10,7 +10,9 @@
 	<ui:define name="contentSection">
 		<p:messages id="busnatMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
-
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<ui:include src="/xhtml/pm/businessnature/businessNatureSearch.xhtml" />
 		<ui:include src="/xhtml/pm/businessnature/businessNatureResult.xhtml" />
 

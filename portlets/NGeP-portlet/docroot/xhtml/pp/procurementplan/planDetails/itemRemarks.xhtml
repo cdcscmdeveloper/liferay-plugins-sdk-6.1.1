@@ -14,7 +14,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<p:ajax event="close" listener="#{pPlanBackingBean.closeItemRemark}" update="opItemRemark"/>
 				
 		<p:outputPanel id="opItemRemark">
-			<p:dataGrid id="dgItemRemark" value="#{pPlanBackingBean.managedBean.selectedItemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+			<p:dataGrid id="dgItemRemark" value="#{pPlanBackingBean.managedBean.selectedItemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" emptyMessage="#{lbl['lbl.pp.no.record.found']}" >
 				<table class="ppRmkTable">
 					<tr>
 						<td rowspan="2" valign="top" style="width:15%;">
