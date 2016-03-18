@@ -819,6 +819,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			// Set DO status
 			doBB.getManagedBean().setFulfilmentOrder(new FlFulfilmentOrder());
+			doBB.getManagedBean().getFulfilmentOrder().setFulfilmentOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
+			doBB.getManagedBean().getFulfilmentOrder().setDocNo(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo());
+			doBB.getManagedBean().getFulfilmentOrder().setDocType(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocType());
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
 			doBB.getManagedBean().setButtonVal("View");
 			doBB.getManagedBean().setHyperLinkPage(true);
