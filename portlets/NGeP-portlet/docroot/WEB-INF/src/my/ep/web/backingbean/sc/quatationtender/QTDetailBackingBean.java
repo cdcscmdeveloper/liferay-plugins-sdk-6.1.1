@@ -441,10 +441,15 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
-			List<TabBean> committeTabs = this.getManagedBean()
-					.getScCommitteeMemberTabList();
-			validateQtDetails();
-			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
+			updateApprovalDetails(this.getManagedBean().getQt());
+			retrieveApprovalTabDtl();
+
+			// Code will be called if user didn't visit the supplier qualification
+			// tab.
+			if (null == this.getManagedBean().getSupplierCriteria()) {
+				retrieveSuppQualificationTabDtl();
+			}
+			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
