@@ -520,7 +520,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			getManagedBean().setSelectedTabIndex(0);
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.getManagedBean().getRemarkList().get(0).getRemark();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
