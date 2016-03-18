@@ -130,10 +130,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The qt. */
 	private ScQt qt;
 
-	// Panel Information
-	/** The ct panel item. */
-	private CtPanelItem ctPanelItem;
-
 	/** The circular type. */
 	private String circularType;
 	
@@ -1012,9 +1008,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The total amount avg. */
 	private BigDecimal totalAmountAvg;
-
-	/** The selectpanel item. */
-	private List<CtPanelItem> selectpanelItem;
 
 	/** The panel item list. */
 	private List<CtPanelItem> panelItemList;
@@ -7509,14 +7502,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.totalAmountAvg = totalAmountAvg;
 	}
 
-	public List<CtPanelItem> getSelectpanelItem() {
-		return selectpanelItem;
-	}
-
-	public void setSelectpanelItem(List<CtPanelItem> selectpanelItem) {
-		this.selectpanelItem = selectpanelItem;
-	}
-
 	public List<CtPanelItem> getPanelItemList() {
 		return panelItemList;
 	}
@@ -8102,14 +8087,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setPanelItemId(Long panelItemId) {
 		this.panelItemId = panelItemId;
-	}
-
-	public CtPanelItem getCtPanelItem() {
-		return ctPanelItem;
-	}
-
-	public void setCtPanelItem(CtPanelItem ctPanelItem) {
-		this.ctPanelItem = ctPanelItem;
 	}
 
 	public CtCircularVer getCircularVer() {
