@@ -3613,6 +3613,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setSaveFlow(true);
 			detailSO.validateApprovalDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
+			int selectedApprovalTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
 			QtAmendMentBean amendMentBean = this.getManagedBean()
 					.getAmendMentBean();
 			renewSesionObject();
@@ -3621,6 +3622,7 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setAmendMentBean(amendMentBean);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			retrieveApprovalTabDtl();
+			this.getManagedBean().setSelectedApprovalTabIndex(selectedApprovalTabIndex);
 			break;
 		case 4:
 			if (isinvokeValidations(getManagedBean().getQt())) {
@@ -4433,7 +4435,8 @@ public class QTDetailBackingBean extends
 		ScQtApproval approval = null;
 
 		if (!isFieldToBeEnabled) {
-			if (isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION)) {
+			if (isStatusOfBpkOrScheduleRevise(statusId)
+					|| isQTStatusGreaterThanOrEquals(statusId,QTStatusConst.QT_PROPOSAL_PREPARATION)) {
 
 				approval = getQtApprovalByCategory(approvals,
 						ParameterConst.APPROVAL_CATEGORY_BPK);
