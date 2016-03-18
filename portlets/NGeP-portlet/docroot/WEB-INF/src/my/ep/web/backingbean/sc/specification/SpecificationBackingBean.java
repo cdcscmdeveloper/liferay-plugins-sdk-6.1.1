@@ -1023,7 +1023,7 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setTotalSuppliers(0);
 						if (CollectionUtils.isNotEmpty(tenderResDTO
 								.getRestrictedSuppliers())) {
-							this.getManagedBean().setRestrictedSupplierList(
+							this.getManagedBean().setQtSupplierList(
 									tenderResDTO.getRestrictedSuppliers());
 							this.getManagedBean().setTotalSuppliers(
 									tenderResDTO.getRestrictedSuppliers()
@@ -10155,6 +10155,13 @@ public class SpecificationBackingBean extends
 				List<ScQtCategory> qtCategories = this.getManagedBean()
 						.getQtCategoryList();
 				scQt.setScQtCategorys(qtCategories);
+				if(qtType.equals(QTConstants.RESTRICTED_TYPE)){
+					List<ScQtSupplier> qtSuppliers = this.getManagedBean()
+							.getQtSupplierList();
+					if (qtSuppliers != null && !qtSuppliers.isEmpty()) {
+						scQt.setScQtSuppliers(qtSuppliers);
+					}
+				}
 			} 
 		}
 		
@@ -10586,6 +10593,7 @@ public class SpecificationBackingBean extends
 			specReqDTO.setToBeRemoveProgressivePayments(this.getManagedBean()
 					.getToBeRemoveProgPayments());
 			specReqDTO.setTobeRemoveCategoryCodes(this.getManagedBean().getTobeRemoveCategoryCodes());
+			specReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
 			boolean isAssignedState = this.getManagedBean().isAssignedState();
 			switch (activeIndex) {
 			case 0:
@@ -11634,6 +11642,7 @@ public class SpecificationBackingBean extends
 				.getToBeRemoveSchedules());
 		spReqDTO.setToBeRemoveProgressivePayments(this.getManagedBean()
 				.getToBeRemoveProgPayments());
+		spReqDTO.setToBeRemoveRestrictedSupplierList(this.getManagedBean().getToBeRemoveRestrictedSupplierList());
 		spReqDTO.setOutcome(action);
 
 		if (null != digiSign) {
@@ -12181,6 +12190,8 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
 		this.getManagedBean().setQtCategoryList(null);
+		this.getManagedBean()
+		.setQtSupplierList(null);
 		
 	}
 	/**
