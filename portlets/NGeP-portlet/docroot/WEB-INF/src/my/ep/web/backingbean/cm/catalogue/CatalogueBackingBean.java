@@ -4410,6 +4410,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CatalogueResDTO resDTO = new CatalogueResDTO();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		try {
 			this.getManagedBean().setTabActiveIndex(0);
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
@@ -4773,7 +4774,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 
-
+			
 				if (catalog.isReviewRequired()) {
 
 					log.info("tracking diary for catalog Items to Pending approval:submitToReviewItems");
@@ -4781,8 +4782,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 					reqDTO.setTrackingStatus(true);
-
-					reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), CmConst.SUPPLIER_ITEM_APPROVEL,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+					String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah dihantar kepada Catalogue Admin untuk kelulusan";
+					reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 					catalog.setItemStatus("P");
 				} else {
@@ -4792,8 +4793,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 					reqDTO.setTrackingStatus(true);
-
-					reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+					String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+					reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 
 					catalog.setItemStatus("U");
@@ -4820,7 +4821,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				
 				supplierReqDTO.setUserId(pmUser.getUserId());
 
 				SupplierSearchResDTO smResDTO = supplierSearchSO
@@ -5194,8 +5195,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			for(CmSupplierItem csi : this.getManagedBean().getSelectedApprovedItems()) {
 				csiList.add(csi);
 				reqDTO.setTrackingStatus(true);
-				reqDTO.setSupplierId(csi.getSupplierId());				
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+				reqDTO.setSupplierId(csi.getSupplierId());
+				
+				String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}			
 			try {
 				catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
