@@ -8,13 +8,18 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -137,7 +142,7 @@ public class BusinessNatureBackingBean extends
 		PmBusinessNature pmBusinessNature2 = new PmBusinessNature();
 
 		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+				.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);
 		try {
 
 			if (Integer.valueOf(pmBusinessNature.getBusinessLevel()) > 10) {
@@ -312,8 +317,7 @@ public class BusinessNatureBackingBean extends
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 
-				if (getManagedBean().getStatus() != null
-						&& !"".equals(getManagedBean().getStatus())) {
+				if (getManagedBean().getStatus() != null) {
 					codesSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					codesSearchBean.setSearchField("recordStatusFlg");
@@ -738,7 +742,7 @@ public class BusinessNatureBackingBean extends
 							.toString());
 
 					IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate
-							.getInstance().getServiceObject("pm",
+							.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 									IBusinessNatureSO.class);
 					BusinessNatureResDTO resDTO = reqSO
 							.retrieveBusinessNatureBySearch(reqDTO);
@@ -762,7 +766,7 @@ public class BusinessNatureBackingBean extends
 		getManagedBean().setNewcategory(false);
 		debugLogger("goToBusinessMaintaincePage");
 		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+				.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);
 		try {
 			BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
 			businessNatureReqDTO.setBusinessLevel(pmBusinessNature
@@ -790,79 +794,144 @@ public class BusinessNatureBackingBean extends
 	 * Validation message for business nature details
 	 * 
 	 */
-	private boolean validationMessage(PmBusinessNature businessNature) {
-
-		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
-		try {
-			if (StringUtils.isBlank(businessNature.getLevelCode())) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(
-										MessageConst.ERROR_738000,										
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-
-				return false;
-			}
-
-			if (StringUtils.isBlank(businessNature.getLevelName())) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(
-										MessageConst.ERROR_738001,										
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-				return false;
-			}
-
-			if (this.getManagedBean().isBrandNew()) {
-				BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
-				businessNatureReqDTO.setBusinessLevel(businessNature
-						.getBusinessLevel());
-				businessNatureReqDTO
-						.setLevelCode(businessNature.getLevelCode());
-				BusinessNatureResDTO businessNatureResDTO = businessNatureSO
-						.retrieveBusinessNatureListByLevel(businessNatureReqDTO);
-				if (businessNatureResDTO.getBusinessNatureList().size() > 0) {
-
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERR_900015,
-															new String[] {
-																	getManagedBean()
-																			.getTaskName(),
-																	ResourceBundleUtils
-																			.getMessage(
-																					getManagedBean()
-																							.getPmBusinessNature()
-																							.getLevelCode(),
-																					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																					new FacesScopes()
-																							.getUserLocale()) },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-					return false;
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			businessNatureSO = null;
+	private void validationMessage(PmBusinessNature businessNature) {
+		if (StringUtils.isBlank(businessNature.getLevelCode())) {
+			throw new EpException(MessageConst.ERROR_738000);
 		}
 
-		return true;
+		if (StringUtils.isBlank(businessNature.getLevelName())) {
+			throw new EpException(MessageConst.ERROR_738001);
+		}
+		
+		if (DbValueConst.RECORD_STATUS_ACTIVE == businessNature.getRecordStatusFlg().intValue()) {
+			validateLevelCode(businessNature);
+			validateLevelName(businessNature);
+		}
+	}
+	
+	private void validateLevelCode(PmBusinessNature businessNature){
+		log.info("validateLevelCode");
+		IBusinessNatureSO businessNatureSO = null;
+		try {
+			businessNatureSO = (IBusinessNatureSO) BusinessDelegate
+					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);
+		BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
+		if(Integer.valueOf(businessNature
+				.getBusinessLevel()) > 10){
+			businessNatureReqDTO.setParentBusinessNatureId(businessNature
+					.getParentBusinessNature().getBusinessNatureId());
+		}
+		businessNatureReqDTO.setBusinessLevel(businessNature
+				.getBusinessLevel());
+		businessNatureReqDTO
+				.setLevelCode(businessNature.getLevelCode());
+		if(!businessNature.isBrandNew()){
+			businessNatureReqDTO
+				.setBusinessNatureId(businessNature.getBusinessNatureId());
+		}
+		
+		BusinessNatureResDTO businessNatureResDTO = businessNatureSO
+				.retrieveBusinessNatureListByLevel(businessNatureReqDTO);
+		if (businessNatureResDTO.getBusinessNatureList().size() > 0) {
+			if(getManagedBean().isBrandNew()){
+				throw new EpException(MessageConst.ERR_900015,
+					new String[] {
+					getManagedBean()
+							.getTaskName(),
+					getManagedBean()
+							.getPmBusinessNature()
+							.getLevelCode()});
+			}else{
+				throw new EpException(MessageConst.ERROR_770220, new String[] {
+						PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.code")
+				});	
+			}
+		}
+		}finally {
+			businessNatureSO = null;
+		}
+	}
+	
+	private void validateLevelName(PmBusinessNature businessNature){
+		log.info("validateLevelName");
+		IBusinessNatureSO businessNatureSO = null;
+		try{
+			ISearchBean<PmBusinessNature> searchBean = new SearchBean<PmBusinessNature>();
+			
+			if(Integer.valueOf(businessNature
+					.getBusinessLevel()) > 10){
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"parentBusinessNature.businessNatureId", 
+						SearchOperator.OPERATOR_EQUALS.value(), 
+						businessNature.getParentBusinessNature().getBusinessNatureId()
+						));
+			}
+			
+			
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"businessLevel", 
+					SearchOperator.OPERATOR_EQUALS.value(), 
+					businessNature.getBusinessLevel()
+					));
+			
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"levelName", 
+					SearchOperator.OPERATOR_EQUALS.value(), 
+					businessNature.getLevelName().toLowerCase().trim(),
+			true));
+			
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"recordStatusFlg", 
+					SearchOperator.OPERATOR_EQUALS.value(), 
+					DbValueConst.RECORD_STATUS_ACTIVE
+					));
+			
+			
+			if(!businessNature.isBrandNew()){
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"businessNatureId", 
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), 
+						businessNature.getBusinessNatureId()
+						));
+			}
+			
+			BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+			reqDTO.setBusinessNatureSearchBean(searchBean);
+			reqDTO.setBusinessLevel(getManagedBean().getCategoryLvl()
+					.toString());
+	
+			businessNatureSO = (IBusinessNatureSO) BusinessDelegate
+					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IBusinessNatureSO.class);
+			BusinessNatureResDTO resDTO = businessNatureSO
+					.retrieveBusinessNatureBySearch(reqDTO);
+			if (resDTO.isSuccessful() && !resDTO.getBusinessNatureList().isEmpty()) {
+				String levelDesc = "";
+				if(businessNature.isBrandNew()){
+					if(ParameterConst.BUSINESS_NATURE_LVL_SECTION.equals(businessNature.getBusinessLevel())){
+						levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_SECTION);
+					}else if(ParameterConst.BUSINESS_NATURE_LVL_DIVISION.equals(businessNature.getBusinessLevel())){
+						levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_DIVISION);
+					}else if(ParameterConst.BUSINESS_NATURE_LVL_GROUP.equals(businessNature.getBusinessLevel())){
+						levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_GROUP);
+					}else if(ParameterConst.BUSINESS_NATURE_LVL_CLASS.equals(businessNature.getBusinessLevel())){
+						levelDesc = getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_CLASS);
+					}else if(ParameterConst.BUSINESS_NATURE_LVL_ITEM.equals(businessNature.getBusinessLevel())){
+						levelDesc =getParameterDesc(ParameterTypeConst.BUSINESS_NATURE, ParameterConst.BUSINESS_NATURE_LVL_ITEM);
+					}
+					throw new EpException(MessageConst.ERROR_770218, new String[]{
+							levelDesc,
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.name"),
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.name")});
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.bn.name")
+					});	
+				}
+			}
+		}finally{
+			businessNatureSO = null;
+		}
 	}
 
 	/**
@@ -870,12 +939,14 @@ public class BusinessNatureBackingBean extends
 	 * 
 	 */
 	public String saveBusinessNatureDtls() {
-
-		IBusinessNatureSO iBusinessNatureSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						IBusinessNatureSO.class);
+		log.info("saveBusinessNatureDtls");
+		IBusinessNatureSO businessNatureSO = null;
+		String returnUrl = null;
 		try {
+			businessNatureSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IBusinessNatureSO.class);
 			PmBusinessNature businessnature = getManagedBean()
 					.getPmBusinessNature();
 			businessnature.setLevelCode(businessnature.getLevelCode()
@@ -884,107 +955,90 @@ public class BusinessNatureBackingBean extends
 			updateCategoryLevel(Integer.valueOf(businessnature
 					.getBusinessLevel()));
 
-			if (!validationMessage(businessnature)) {
-				return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
-			}
+			validationMessage(businessnature);
 
 			BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 			reqDTO.setBusinessNature(businessnature);
 
-			BusinessNatureResDTO resDTO = iBusinessNatureSO
+			BusinessNatureResDTO resDTO = businessNatureSO
 					.saveBusinessNatureDtls(reqDTO);
 			this.getManagedBean().setPmBusinessNature(
 					resDTO.getBusinessNature());
 			if (resDTO.isSuccessful()) {
 				if (this.getManagedBean().isBrandNew()) {
-					if (Integer.valueOf(this.getManagedBean()
-							.getPmBusinessNature().getBusinessLevel()) > 10) {
-						BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
-						businessNatureReqDTO.setBusinessLevel(this
-								.getManagedBean().getPmBusinessNature()
-								.getParentBusinessNature().getBusinessLevel());
-						businessNatureReqDTO.setBusinessNatureId(this
-								.getManagedBean().getPmBusinessNature()
-								.getParentBusinessNature()
-								.getBusinessNatureId());
-						BusinessNatureResDTO businessNatureResDTO = iBusinessNatureSO
-								.retrieveBusinessNatureFetchAll(businessNatureReqDTO);
-
-						businessNatureResDTO
-								.getBusinessNature()
-								.getChildBusinessNatures()
-								.add(this.getManagedBean()
-										.getPmBusinessNature());
-						reqDTO.setBusinessNature(businessNatureResDTO
-								.getBusinessNature());
-						iBusinessNatureSO.saveBusinessNatureDtls(reqDTO);
-					}
-				}
-
-				if (this.getManagedBean().isBrandNew()) {
+					returnUrl =  "/xhtml/pm/businessnature/businessNatureMain.xhtml";
+//					if (Integer.valueOf(this.getManagedBean()
+//							.getPmBusinessNature().getBusinessLevel()) > 10) {
+//						BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
+//						businessNatureReqDTO.setBusinessLevel(this
+//								.getManagedBean().getPmBusinessNature()
+//								.getParentBusinessNature().getBusinessLevel());
+//						businessNatureReqDTO.setBusinessNatureId(this
+//								.getManagedBean().getPmBusinessNature()
+//								.getParentBusinessNature()
+//								.getBusinessNatureId());
+//						BusinessNatureResDTO businessNatureResDTO = businessNatureSO
+//								.retrieveBusinessNatureFetchAll(businessNatureReqDTO);
+//
+//						businessNatureResDTO
+//								.getBusinessNature()
+//								.getChildBusinessNatures()
+//								.add(this.getManagedBean()
+//										.getPmBusinessNature());
+//						reqDTO.setBusinessNature(businessNatureResDTO
+//								.getBusinessNature());
+//						businessNatureSO.saveBusinessNatureDtls(reqDTO);
+//					}
+					
 					FacesContext
-							.getCurrentInstance()
-							.addMessage(
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
 									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERR_900016,
-															new String[] {
+									MessageUtils
+											.getMessage(
+													MessageConst.ERR_900016,
+													new String[] {
+															getManagedBean()
+																	.getTaskName(),
 																	getManagedBean()
-																			.getTaskName(),
-																	ResourceBundleUtils
-																			.getMessage(
-																					getManagedBean()
-																							.getPmBusinessNature()
-																							.getLevelCode(),
-																					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																					new FacesScopes()
-																							.getUserLocale()) },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-
-				} else {
+																	.getPmBusinessNature()
+																	.getLevelCode() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+				}else{
+					returnUrl =  "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 					FacesContext
-							.getCurrentInstance()
-							.addMessage(
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
 									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERR_900024,
-															new String[] {
-																	getManagedBean()
-																			.getTaskName(),
-																	ResourceBundleUtils
-																			.getMessage(
-																					getManagedBean()
-																							.getPmBusinessNature()
-																							.getLevelCode(),
-																					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																					new FacesScopes()
-																							.getUserLocale()) },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+									MessageUtils
+											.getMessage(
+													MessageConst.ERR_900024,
+													new String[] {
+															getManagedBean()
+																	.getTaskName(),
+															getManagedBean()
+																	.getPmBusinessNature()
+																	.getLevelCode() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
 				}
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw(e);
 		} finally {
-			iBusinessNatureSO = null;
+			businessNatureSO = null;
 		}
-
-		if (this.getManagedBean().isBrandNew())
-			return "/xhtml/pm/businessnature/businessNatureMain.xhtml";
-		else
-			return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
+		return returnUrl;
 	}
 
 	public void updateCategoryLevel(int businessLvlCode) {
