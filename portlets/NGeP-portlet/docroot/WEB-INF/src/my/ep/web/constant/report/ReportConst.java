@@ -156,6 +156,7 @@ public class ReportConst {
 	public static final String SC_EC_PRICEOFFER_4M = "SC_EC_PRICEOFFER_4M.jsp";
 
 	// FC
+	public static final String SC_SUPPLIER_FINALIZATION_RPT_JSP = "SC_SUPP_FINAL.jsp";
 	public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "SC_FC_ANALYSIS_EVAL_REP_8A.jsp";
 
 	public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
