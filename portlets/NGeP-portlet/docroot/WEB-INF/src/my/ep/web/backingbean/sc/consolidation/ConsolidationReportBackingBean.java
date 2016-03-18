@@ -1094,8 +1094,9 @@ public class ConsolidationReportBackingBean extends
 		ScQtFinalizationReportAttachment reportAttachment = null;
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
 				.equals(definitionType)) {
-			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-					.getDocDefinitionKey();
+//			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+//					.getDocDefinitionKey();
+			ScQt scQt = getManagedBean().getScQt();
 			reportAttachment = new ScQtFinalizationReportAttachment();
 			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
@@ -1105,45 +1106,67 @@ public class ConsolidationReportBackingBean extends
 			filename.append(scQtFinalizationReport.getTitle().replaceAll("\\s",
 					"_"));
 
-			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
-				generateCoverPdf(attachment, getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS
-					.equals(docDefinitionKey)) {
-				generateOfferedAndQTDtlsPdf(attachment, getManagedBean()
-						.getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT
-							.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
-				generateAnalysisEvaluationReportPdf(attachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD
-					.equals(docDefinitionKey)) {
-				generateNoticeBoardPdf(attachment, getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
-				generatePriceSchedulePdf(attachment, getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
-				populateAttachmentDetails(reportAttachment);
-
-			} 
+			// Redmine SIR#7782
+//			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				reportAttachment.setFileName(filename.toString());
+//				generateCoverPdf(attachment, getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS
+//					.equals(docDefinitionKey)) {
+//				generateOfferedAndQTDtlsPdf(attachment, getManagedBean()
+//						.getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT
+//							.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				reportAttachment.setFileName(filename.toString());
+//				generateAnalysisEvaluationReportPdf(attachment,
+//						getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD
+//					.equals(docDefinitionKey)) {
+//				generateNoticeBoardPdf(attachment, getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE
+//					.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				reportAttachment.setFileName(filename.toString());
+//				generatePriceSchedulePdf(attachment, getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
+//					.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				reportAttachment.setFileName(filename.toString());
+//				populateAttachmentDetails(reportAttachment);
+//
+//			} 
+			
+			filename.append(".pdf");
+			reportAttachment.setFileName(filename.toString());			
+			generateKertasTaklimatPdf(scQt, attachment);
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 		return reportAttachment;
 	}	
+	
+	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment) 
+										   throws Exception {
+		debugLogger("generateKertasTaklimatPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, false);
+	}
 	
 	private void generateCoverPdf(ScAttachment attachment, ScQt scQt)
 			throws Exception {
