@@ -1490,6 +1490,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			if(null != getManagedBean().getInvoice().getSupplierInvoiceRef()){
 				reqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 				reqDTO.setSupplierInvNo(getManagedBean().getInvoice().getSupplierInvoiceRef());
+				if(getManagedBean().getInvoice().getInvoiceId() != null){
+					reqDTO.setInvoiceId(getManagedBean().getInvoice().getInvoiceId());
+				}
 				FulfilmentResDTO resDTO = invoiceSO.searchDuplicateSupplierInvoiceNo(reqDTO);
 				if(resDTO.isDuplicateSupplierInvNo()){
 					throw new EpException(MessageConst.ERROR_740043, new String[]{getManagedBean().getInvoice().getSupplierInvoiceRef(),getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getSupplierName()});
