@@ -2263,7 +2263,7 @@ public class SupplierFinalizationBackingBean extends
 				} else {
 					finalizationReports.removeAll(endorsementReports);
 					
-					// Sort the reports as per the last updated date
+					// Sort the reports as per the last updated date (in ascending order)
 					Collections.sort(endorsementReports, 
 										new Comparator<ScQtFinalizationReport>() {
 											public int compare(ScQtFinalizationReport report1, 
@@ -2558,8 +2558,9 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalizationReportAttachment reportAttachment = null;
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
 				.equals(definitionType)) {
-			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-					.getDocDefinitionKey();
+//			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+//					.getDocDefinitionKey();
+			ScQt scQt = getManagedBean().getScQt();
 			reportAttachment = new ScQtFinalizationReportAttachment();
 			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
@@ -2569,51 +2570,56 @@ public class SupplierFinalizationBackingBean extends
 			filename.append(scQtFinalizationReport.getTitle().replaceAll("\\s",
 					"_"));
 
-			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
-				generateCoverPdf(attachment, getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS
-					.equals(docDefinitionKey)) {
-				generateOfferedAndQTDtlsPdf(attachment, getManagedBean()
-						.getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT
-							.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
-				generateAnalysisEvaluationReportPdf(attachment,
-						getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD
-					.equals(docDefinitionKey)) {
-				generateNoticeBoardPdf(attachment, getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
-				generatePriceSchedulePdf(attachment, getManagedBean().getScQt());
-
-			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
-					.equals(docDefinitionKey)) {
-				filename.append(".pdf");
-				reportAttachment.setFileName(filename.toString());
-				populateAttachmentDetails(reportAttachment);
-
-			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
-					.equals(docDefinitionKey)) {
-				// FIXME - get from Opening report
-
-			} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
-					.equals(docDefinitionKey)) {
-				// FIXME - get from Technical Evaluation report
-
-			} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
-					.equals(docDefinitionKey)) {
-				// FIXME - get from Financial evaluation report
-			}
+			//Redmine SIR#7782
+//			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				reportAttachment.setFileName(filename.toString());
+//				generateCoverPdf(attachment, getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS
+//					.equals(docDefinitionKey)) {
+//				generateOfferedAndQTDtlsPdf(attachment, getManagedBean()
+//						.getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT
+//							.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				reportAttachment.setFileName(filename.toString());
+//				generateAnalysisEvaluationReportPdf(attachment,
+//						getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD
+//					.equals(docDefinitionKey)) {
+//				generateNoticeBoardPdf(attachment, getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE
+//					.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				reportAttachment.setFileName(filename.toString());
+//				generatePriceSchedulePdf(attachment, getManagedBean().getScQt());
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
+//					.equals(docDefinitionKey)) {
+//				filename.append(".pdf");
+//				reportAttachment.setFileName(filename.toString());
+//				populateAttachmentDetails(reportAttachment);
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
+//					.equals(docDefinitionKey)) {
+//				// FIXME - get from Opening report
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
+//					.equals(docDefinitionKey)) {
+//				// FIXME - get from Technical Evaluation report
+//
+//			} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
+//					.equals(docDefinitionKey)) {
+//				// FIXME - get from Financial evaluation report
+//			}
+			
+			filename.append(".pdf");
+			reportAttachment.setFileName(filename.toString());
+			generateKertasTaklimatPdf(scQt, attachment);
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
 		} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
@@ -2623,6 +2629,23 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		return reportAttachment;
+	}
+	
+	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment) 
+										   throws Exception {
+		debugLogger("generateSupplierFinalizationPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, false);		
 	}
 
 	private void generateAnalysisEvaluationReportPdf(ScAttachment attachment,
@@ -3827,7 +3850,7 @@ public class SupplierFinalizationBackingBean extends
 //		context.put("secretary", secretaryName);
 		context.put("member", memberName);
 		
-		StringBuilder endorsementRemarks = new StringBuilder();
+		StringBuilder endorsementRemarks = new StringBuilder(StringUtils.EMPTY);
 		if (CollectionUtils.isNotEmpty(
 				getManagedBean().getFinalizationEndorsementRemarks())) {
 			for (ScQtFinalizationEndorsementRemarks remarks
@@ -3835,7 +3858,7 @@ public class SupplierFinalizationBackingBean extends
 				endorsementRemarks.append(remarks.getRemark() + "\n");
 			}
 		}
-		context.put("endorsementRemarks", endorsementRemarks);
+		context.put("endorsementRemarks", endorsementRemarks.toString());
 		context.put("reportDTO", reportDTO);
 		context.put("zoneDetailsMap", zoneDetailsMap);
 		context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
