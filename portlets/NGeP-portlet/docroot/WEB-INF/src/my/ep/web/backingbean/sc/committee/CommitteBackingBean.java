@@ -34,7 +34,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -59,6 +58,7 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -79,7 +79,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -256,6 +255,12 @@ public class CommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype,
 								true));
 			}
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg", 
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE)					
+					);	
+			
 			/* Commented as part of CR change to fetch irrespective of Ministry.
 			 *   
 			 * if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
@@ -1535,7 +1540,15 @@ public class CommitteBackingBean extends
 					.getIdentificationNo());
 			searchBean.getDataFilterBeans().add(idNoSearchBean);
 		}
+		
+		SearchFilterBean recordStatus = new SearchFilterBean(
+				SearchOperator.OPERATOR_EQUALS.value());
+		recordStatus.setSearchField("recordStatusFlg");
+		recordStatus.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+		searchBean.getDataFilterBeans().add(recordStatus);
+		
 		userReqDTO.setUserSearchBean(searchBean);
+		
 		try {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
