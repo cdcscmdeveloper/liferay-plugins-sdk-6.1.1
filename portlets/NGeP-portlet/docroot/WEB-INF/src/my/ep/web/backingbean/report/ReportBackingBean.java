@@ -9191,6 +9191,7 @@ public class ReportBackingBean extends
 			 */if ((highRoleCodeList != null)
 					&& (highRoleCodeList
 							.contains(ReportConst.ROLE_CODE_REQUISITIONER))) {
+				 rolecodeRquisitionerList.clear();
 				List<Object[]> rlcdLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								ReportConst.ROLE_CODE_REQUISITIONER);
@@ -9225,20 +9226,26 @@ public class ReportBackingBean extends
 								|| this.getReportValue().equals(
 										ReportConst.CON_REQ_RPT_CEN_PEN_VAL)
 								|| this.getReportValue().equals(
-										ReportConst.PUR_REQ_RPT_PO_VAL) || this
+										ReportConst.PUR_REQ_RPT_PO_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.CON_REQ_CANC_RPT_MIN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL) || this
 								.getReportValue().equals(
 										ReportConst.EMR_PROCUR_RPT_PO_VAL))) {
 					List<Object[]> rlcdLst = reportSO
 							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
 									ReportConst.ROLE_CODE_REQUISITIONER,
 									lngPtjId);
+					rolecodeRquisitionerList.clear();
 					for (Object[] object : rlcdLst) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1]);
 						rolecodeRquisitionerList.add(selectItem);
 					}
-				} else if ((this.getReportValue() != null)
+				}
+				if ((this.getReportValue() != null)
 						&& (this.getReportValue().equals(
 								ReportConst.FL_REC_NOTE_RPT_MIN_VAL)
 								|| this.getReportValue()
@@ -9249,6 +9256,7 @@ public class ReportBackingBean extends
 										ReportConst.LATE_DEL_RPT_MIN_VAL) || this
 								.getReportValue().equals(
 										ReportConst.FL_REC_NOTE_RPT_PO_VAL))) {
+					rolecodeRecievingOfficerList.clear();
 					List<Object[]> rlcdLst = reportSO
 							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
 									ReportConst.ROLE_CODE_RECEIVING_OFFICER,
@@ -9259,7 +9267,8 @@ public class ReportBackingBean extends
 						selectItem.setValue(object[1]);
 						rolecodeRecievingOfficerList.add(selectItem);
 					}
-				} else if ((this.getReportValue() != null)
+				}
+				if ((this.getReportValue() != null)
 						&& (this.getReportValue().equals(
 								ReportConst.CON_ORD_RPT_MIN_VAL)
 								|| this.getReportValue().equals(
@@ -9269,9 +9278,19 @@ public class ReportBackingBean extends
 								|| this.getReportValue().equals(
 										ReportConst.PUR_REQ_CANC_RPT_PO_VAL)
 								|| this.getReportValue().equals(
-										ReportConst.PUR_ORD_CANC_RPT_PO_VAL) || this
-								.getReportValue()
+										ReportConst.PUR_ORD_CANC_RPT_PO_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.CON_REQ_CANC_RPT_MIN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_MIN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_CEN_PEN_VAL)
+
+						|| this.getReportValue()
 								.equals(ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL))) {
+					rolecodeApproverList.clear();
 					List<Object[]> rlcdLst = reportSO
 							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
 									ReportConst.ROLE_CODE_FL_APPROVER, lngPtjId);
@@ -9281,13 +9300,27 @@ public class ReportBackingBean extends
 						selectItem.setValue(object[1]);
 						rolecodeApproverList.add(selectItem);
 					}
-				} else if ((this.getReportValue() != null)
+				}
+				if ((this.getReportValue() != null)
 						&& (this.getReportValue().equals(
 								ReportConst.FL_REC_NOTE_RPT_PO_VAL)
 								|| this.getReportValue().equals(
-										ReportConst.LATE_DEL_RPT_PO_VAL) || this
+										ReportConst.LATE_DEL_RPT_PO_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.FL_REC_NOTE_RPT_MIN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.FL_REC_NOTE_CANC_RPT_MIN_VAL)
+								|| this.getReportValue()
+										.equals(ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.LATE_DEL_RPT_MIN_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.LATE_DEL_RPT_CEN_PEN_VAL) || this
 								.getReportValue()
 								.equals(ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL))) {
+					rolecodeAcknowledgeOfficerList.clear();
 					List<Object[]> rlcdLst = reportSO
 							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
 									ReportConst.ROLE_CODE_ACKNOWLEDGE_OFFICER,
@@ -9298,9 +9331,15 @@ public class ReportBackingBean extends
 						selectItem.setValue(object[1]);
 						rolecodeAcknowledgeOfficerList.add(selectItem);
 					}
-				} else if ((this.getReportValue() != null)
-						&& (this.getReportValue()
-								.equals(ReportConst.PYMT_MATCH_RPT_PO_VAL))) {
+				}
+				if ((this.getReportValue() != null)
+						&& (this.getReportValue().equals(
+								ReportConst.PYMT_MATCH_RPT_PO_VAL)
+								|| this.getReportValue().equals(
+										ReportConst.PYMT_MATCH_RPT_MIN_VAL) || this
+								.getReportValue().equals(
+										ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL))) {
+					rolecodePayOfficerList.clear();
 					List<Object[]> rlcdLst = reportSO
 							.retrieveUserListByAdminOrBKPRoleCode(lngUserId,
 									ReportConst.ROLE_CODE_PAY_OFFICER, lngPtjId);
@@ -9318,6 +9357,7 @@ public class ReportBackingBean extends
 							|| highRoleCodeList
 									.contains(ReportConst.ROLE_CODE_CT_APPROVER) || highRoleCodeList
 								.contains(ReportConst.ROLE_CODE_RN_APPROVER))) {
+				rolecodeApproverList.clear();
 				List<Object[]> rlcdLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								highRoleCodeList.get(0));
@@ -9334,12 +9374,14 @@ public class ReportBackingBean extends
 				List<Object[]> recoffLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								ReportConst.ROLE_CODE_RECEIVING_OFFICER);
+				rolecodeRecievingOfficerList.clear();
 				for (Object[] object : recoffLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeRecievingOfficerList.add(selectItem);
 				}
+				rolecodeRquisitionerList.clear();
 				List<Object[]> rlcdLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								ReportConst.ROLE_CODE_REQUISITIONER);
@@ -9357,12 +9399,14 @@ public class ReportBackingBean extends
 				List<Object[]> recoffLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								ReportConst.ROLE_CODE_ACKNOWLEDGE_OFFICER);
+				rolecodeAcknowledgeOfficerList.clear();
 				for (Object[] object : recoffLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeAcknowledgeOfficerList.add(selectItem);
 				}
+				rolecodeRquisitionerList.clear();
 				List<Object[]> rlcdLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								ReportConst.ROLE_CODE_REQUISITIONER);
@@ -9380,12 +9424,14 @@ public class ReportBackingBean extends
 				List<Object[]> recoffLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								ReportConst.ROLE_CODE_PAY_OFFICER);
+				rolecodePayOfficerList.clear();
 				for (Object[] object : recoffLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodePayOfficerList.add(selectItem);
 				}
+				rolecodeRquisitionerList.clear();
 				List<Object[]> rlcdLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								ReportConst.ROLE_CODE_REQUISITIONER);
