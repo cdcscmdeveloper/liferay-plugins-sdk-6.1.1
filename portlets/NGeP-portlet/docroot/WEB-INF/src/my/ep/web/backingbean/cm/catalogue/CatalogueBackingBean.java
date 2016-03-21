@@ -4295,7 +4295,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				statusReqDTO.setStatusId(CmConst.PENDING);
 
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-				String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah dihantar kepada Catalogue Admin untuk kelulusan";
+				String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah dihantar kepada Pentadbir Katalog untuk kelulusan";
 				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}
 			else{
