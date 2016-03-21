@@ -1157,9 +1157,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 **/
 	public String constuctConditionFields() {
 		IStatusSO statusSO = null;
-		StringBuilder sb = null;
+		StringBuilder sb = new StringBuilder();
 		try{
-			sb = new StringBuilder();
 			StatusReqDTO reqDTO = null;
 			if(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles() != null && !getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().isEmpty()){		
 				reqDTO = new StatusReqDTO();

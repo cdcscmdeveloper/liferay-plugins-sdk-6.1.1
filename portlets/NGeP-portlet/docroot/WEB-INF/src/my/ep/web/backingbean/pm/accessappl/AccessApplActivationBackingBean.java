@@ -92,26 +92,26 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 					PmCommonUtil.redirectToPage(
 							ACCESS_APPL_OUTPUT_MSG,
 							MessageConst.INFO_721031,null);
-				}
-				
-				long applDateInMilis = latestApproved.getTime();
-				long dayInMilis = 1000 * 60 * 60 * 24;
+				}else{
+					long applDateInMilis = latestApproved.getTime();
+					long dayInMilis = 1000 * 60 * 60 * 24;
 
-				Date expiryDate = new Date(applDateInMilis + (7 * dayInMilis));
-				log.info("----Activation Access Appl ID----" + accessAppl.getAccessApplId());
-				log.info("----Activation Access Appl Expiry Date----" + expiryDate);
-				if(new Date().before(expiryDate)) { 
-					log.info("****VALID - Before Expiry Date******");
-					this.getManagedBean().setAccessAppl(accessAppl);
-					this.getManagedBean().setEncryptActivationKey(encyptActivationKey);
-					PmCommonUtil.redirectToPage(
-							ACCESS_APPL_ACTIVATION_PAGE,
-							null,null);
-				} else {
-					log.info("****VALID - Expired******");
-					PmCommonUtil.redirectToPage(
-							ACCESS_APPL_OUTPUT_MSG,
-							MessageConst.INFO_721031,null);
+					Date expiryDate = new Date(applDateInMilis + (7 * dayInMilis));
+					log.info("----Activation Access Appl ID----" + accessAppl.getAccessApplId());
+					log.info("----Activation Access Appl Expiry Date----" + expiryDate);
+					if(new Date().before(expiryDate)) { 
+						log.info("****VALID - Before Expiry Date******");
+						this.getManagedBean().setAccessAppl(accessAppl);
+						this.getManagedBean().setEncryptActivationKey(encyptActivationKey);
+						PmCommonUtil.redirectToPage(
+								ACCESS_APPL_ACTIVATION_PAGE,
+								null,null);
+					} else {
+						log.info("****VALID - Expired******");
+						PmCommonUtil.redirectToPage(
+								ACCESS_APPL_OUTPUT_MSG,
+								MessageConst.INFO_721031,null);
+					}
 				}
 			}else{
 				log.info("****Invalid Access Appl******");

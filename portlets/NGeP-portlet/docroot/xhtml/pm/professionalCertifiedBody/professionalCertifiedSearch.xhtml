@@ -14,7 +14,7 @@
 				<td style="width: 14%;"><h:outputLabel
 						value="#{lbl['lbl.pm.search.profcert']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width:205px;margin-bottom:5px;"
+				<td><p:selectOneMenu
 						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.certType}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -24,13 +24,13 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.search.codes']}"></h:outputLabel></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="12"
 						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.bodyCode}"
 						size="30" /></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.search.name']}"></h:outputLabel></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="255"
 						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.bodyName}"
 						size="30" /></td>
 			</tr>

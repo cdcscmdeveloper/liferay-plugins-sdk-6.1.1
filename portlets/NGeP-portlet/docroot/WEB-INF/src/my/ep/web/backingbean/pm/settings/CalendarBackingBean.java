@@ -195,7 +195,7 @@ public class CalendarBackingBean extends
 			String exTitle = this.getManagedBean().getEventToExTitleValueMap()
 					.get(eventId);
 			if (exTitle != null) {
-				if (exTitle == (String) event.getNewValue()) {
+				if (exTitle.equals((String) event.getNewValue())) {
 					this.getManagedBean().getEventToExTitleValueMap()
 							.remove(eventId);
 				}
