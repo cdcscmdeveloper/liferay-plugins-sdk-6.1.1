@@ -572,6 +572,12 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 			
 			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg", 
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE)					
+					);			
+			
+			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
 							"pmUserOrgs.recordStatusFlg", 
 							SearchOperator.OPERATOR_EQUALS.value(),
