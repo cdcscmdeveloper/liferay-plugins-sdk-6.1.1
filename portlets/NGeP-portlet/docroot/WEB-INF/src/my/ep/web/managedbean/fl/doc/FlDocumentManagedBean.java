@@ -42,7 +42,9 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.VFlDocument;
+import my.ep.persistence.entity.fl.order.FlReliefOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -471,6 +473,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 							}
 							if(orderInfo.isCoGSTR()){
 								docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
+								docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
 							}
 							if(orderInfo.isTaxable()){
 								docsearchResult.setTaxable(orderInfo.isTaxable);
@@ -592,6 +595,12 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		        	if(resDTO.getFlOrder().getFlReliefOrders() != null && !resDTO.getFlOrder().getFlReliefOrders().isEmpty()){
 		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer()) {
 		        			orderInfo.setCoGSTR(true);
+		        			for(FlReliefOrder reliefOrder : resDTO.getFlOrder().getFlReliefOrders()) {
+		        				if(reliefOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+		        					orderInfo.setCoGSTRNo(reliefOrder.getReliefOrderNo());
+		        					break;
+		        				}
+		        			}
 		        		}
 		        	}
 		        }
@@ -769,6 +778,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		private boolean isCoGSTR=false;
 		
 		private boolean isTaxable=false;
+		
+		private String coGSTRNo;
 
 		/**
 		 * Gets the role.
@@ -868,6 +879,14 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		 */
 		public void setTaxable(boolean isTaxable) {
 			this.isTaxable = isTaxable;
+		}
+
+		public String getCoGSTRNo() {
+			return coGSTRNo;
+		}
+
+		public void setCoGSTRNo(String coGSTRNo) {
+			this.coGSTRNo = coGSTRNo;
 		}
 
 		
