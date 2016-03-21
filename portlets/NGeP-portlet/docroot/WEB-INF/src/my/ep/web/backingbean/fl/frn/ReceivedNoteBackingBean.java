@@ -577,9 +577,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					throw new EpException(MessageConst.ERROR_740024, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
 				}
 			}
-			
+			frnItem.setRejectedAmt(frnItem.getFlDelOrderItem().getDeliveredAmt().subtract(frnItem.getReceivedAmt()));
+			if(frnItem.getRejectedAmt().doubleValue()<=0) {
+				frnItem.setRejectedAmt(new BigDecimal(0));
+			}
 			if(ParameterConst.ITEM_TYPE_PRODUCT.equalsIgnoreCase(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode())){
-				frnItem.setRejectedAmt(frnItem.getFlDelOrderItem().getDeliveredAmt().subtract(frnItem.getReceivedAmt()));
 				if(frnItem.getReceivedAmt().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
 					if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
 						throw new EpException(MessageConst.ERROR_745051, new String[]{frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
