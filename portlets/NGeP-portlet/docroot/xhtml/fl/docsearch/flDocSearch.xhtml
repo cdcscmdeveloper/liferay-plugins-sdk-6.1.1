@@ -288,7 +288,7 @@
 									<p:menuitem value="#{lbl['lbl.btn.print.cogstr']}" ajax="false"
 										rendered="#{flDocument.coGSTR}"
 										icon="ui-icon-print" 
-										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo, flDocument.taxable)}" />
+										action="#{flDocumentBackingBean.generateCoGSTRReport(flDocument.docNo, flDocument.coGSTRNo)}" />
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.update']}"  
 							        	rendered="#{flDocument.isUpdateAction()}"
 							        	icon="ui-icon-update"

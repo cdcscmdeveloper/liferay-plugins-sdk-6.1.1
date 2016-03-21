@@ -1039,6 +1039,25 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		}
 	}
 	
+	/**
+	 * Generate coGSTR report.
+	 *
+	 * @param orderDocNo the order document number
+	 * @param coGSTRNo system generated coGSTR number
+	 */
+	public void generateCoGSTRReport(String orderDocNo, String coGSTRNo) {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_DOC_NO, orderDocNo);
+		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		paramMap.put(ReportConst.PARAM_RELIEF_ORDER_DOC_NO, coGSTRNo);
+		String reportName = ReportConst.FL_NGEP_COGSTR;		
+		try {
+			generateReport(reportName, paramMap);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	 /**
 	 * retrieve financial year options for current year and past 7 years
 	 * @return financial year options
