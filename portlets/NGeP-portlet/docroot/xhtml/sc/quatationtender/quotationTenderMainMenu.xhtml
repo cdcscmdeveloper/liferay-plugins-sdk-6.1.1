@@ -11,6 +11,7 @@
 	<ui:param name="isQTStatusScheduleDocAndAfter" value="#{qTDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusBtwScheduleDocAndPendingPublication" value="#{qTDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_PUBLICATION)}" />
+	<ui:param name="isMaintancePendingChklistStatus" value="#{qTDetailBB.isMaintancePendingChklistStatus()}" />
 	
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -38,14 +39,29 @@
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
 						rendered="#{isQTStatusScheduleDocAndAfter}" />
+					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+						process="@form"
+						rendered="#{isMaintancePendingChklistStatus}" />
+						
 					<p:menuitem value="#{lbl['lbl.sc.qt.schedule.contact']}"
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						style="white-space: normal;" process="@form"
 						rendered="#{isQTStatusScheduleDocAndAfter}" />
+					<p:menuitem value="#{lbl['lbl.sc.qt.documents']}"
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+						style="white-space: normal;" process="@form"
+						rendered="#{isMaintancePendingChklistStatus}" />
+						
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
 						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
 						process="@form"
 						rendered="#{isQTStatusScheduleDocAndAfter}" />
+					<p:menuitem value="#{lbl['lbl.sc.activities']}"
+						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
+						process="@form"
+						rendered="#{isMaintancePendingChklistStatus}" />
+						
 					<p:menuitem value="#{lbl['lbl.sc.qt.documents']}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"
@@ -102,6 +118,18 @@
 					<ui:fragment
 						rendered="#{isQTStatusPendingQtSubmission}">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
+					</c:if>
+				 </ui:fragment>
+				 
+				 <ui:fragment rendered="#{isMaintancePendingChklistStatus}">
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
+					</c:if>
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
+					</c:if>
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
 							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 					</c:if>
 				 </ui:fragment>
