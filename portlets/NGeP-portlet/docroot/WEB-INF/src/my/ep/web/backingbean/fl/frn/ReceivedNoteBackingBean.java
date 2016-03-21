@@ -196,7 +196,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
 			}
 			if(getManagedBean().getBpmTaskName()!=null && 
-				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT) || getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT)){
+				(getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT) || 
+				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_FRN_HT))){
 				reqDTO.setUserRole(RoleCode.RECEIVING_OFFICER.value());	
 			}else if(getManagedBean().getBpmTaskName()!=null && 
 				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
