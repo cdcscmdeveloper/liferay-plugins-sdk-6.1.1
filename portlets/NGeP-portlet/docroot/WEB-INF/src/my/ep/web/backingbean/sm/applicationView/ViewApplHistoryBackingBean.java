@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.constant.sm.SmTrackingDiaryConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
@@ -21,6 +22,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
+import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -29,6 +31,9 @@ import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 public class ViewApplHistoryBackingBean extends
@@ -36,6 +41,7 @@ public class ViewApplHistoryBackingBean extends
 
 	public static VirtualCertBackingBean virtualCertInstance;
 	public static CommonApplBackingBean commonApplInstance;
+	public static PmTrackingDiaryBackingBean trackinDiaryInstance;
 
 	/**
 	 * Pre-render for View Application History
@@ -100,6 +106,20 @@ public class ViewApplHistoryBackingBean extends
 
 	public void redirectToResubmit() {
 		SmCommonUtil.redirectToExternalUrl(getManagedBean().getResubmitUrl());
+	}
+
+	/**
+	 * Redirect to tracking diary page
+	 */
+	public void redirectToTrackingDiary() {
+		try {
+			getTrackinDiaryInstance().redirectToTrackingDiary(
+					SmTrackingDiaryConst.SM_DEFAULT_DOC_TYPE,
+					getManagedBean().getSmAppl().getApplId());
+		} catch (PortalException | SystemException | IOException e) {
+			throw new EpException("Failed to view tracking diary:"
+					+ e.getMessage());
+		}
 	}
 
 	/**
@@ -222,6 +242,19 @@ public class ViewApplHistoryBackingBean extends
 			commonApplInstance = new CommonApplBackingBean();
 		}
 		return commonApplInstance;
+
+	}
+
+	/**
+	 * Get PmTrackingDiaryBackingBean instance
+	 * 
+	 * @return PmTrackingDiaryBackingBean
+	 */
+	public static PmTrackingDiaryBackingBean getTrackinDiaryInstance() {
+		if (trackinDiaryInstance == null) {
+			trackinDiaryInstance = new PmTrackingDiaryBackingBean();
+		}
+		return trackinDiaryInstance;
 
 	}
 
