@@ -85,11 +85,21 @@ public class CalendarBackingBean extends
 		CalendarResDTO resDTO = calendarSO.getHolidaysForState(reqDTO);
 		List<PmHoliday> stateHolidayList = resDTO.getHolidayList();
 		log.info("...........resDTO.getHolidayList()="+resDTO.getHolidayList());
+		
+		
+		
 		if (stateHolidayList != null) {
 			for (PmHoliday holiday : stateHolidayList) {
+				Calendar endDate = Calendar.getInstance();
+				endDate.setTime(holiday.getEndDate());
+				endDate.set(Calendar.HOUR_OF_DAY, 1);
+				endDate.set(Calendar.MINUTE, 0);
+				endDate.set(Calendar.SECOND, 0);
+				endDate.set(Calendar.MILLISECOND, 0);
+				
 				DefaultScheduleEvent event = new DefaultScheduleEvent(
 						holiday.getHolidayName(), holiday.getStartDate(),
-						holiday.getEndDate());
+						endDate.getTime());
 				event.setId(String.valueOf(holiday.getHolidayId()));
 				event.setData(holiday.getHolidayId());
 				getManagedBean().getEventModel().addEvent(event);
