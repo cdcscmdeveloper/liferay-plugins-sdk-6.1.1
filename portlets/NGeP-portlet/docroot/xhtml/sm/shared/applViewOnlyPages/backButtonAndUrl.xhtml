@@ -25,6 +25,12 @@
 						action="#{viewSmApplBackingBean.redirectToSupplierProfileOrHistoryPage()}" 
 						process="@this" partialSubmit="true" update=":form" 
 						value="#{viewSmApplBackingBean.managedBean.portletUrlLabel}"/>&#160;&#160;
+					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
+						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							action="#{viewSmApplBackingBean.redirectToTrackingDiary()}" 
+							process="@this" partialSubmit="true" update=":form" 
+							value="#{lbl['lbl.td.tracking.diary']}"/>&#160;&#160;
+					</p:outputPanel>
 					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 						<p:fileDownload value="#{viewSmApplBackingBean.printSupplierProfile()}" />
 					</p:commandLink>
