@@ -1088,9 +1088,9 @@ public class QTDocumentsBackingBean extends
 						getManagedBean().getQt());
 			} else if (SourcingConstants.DOC_DEF_KEY_SCOPE_SERVICES
 					.equals(docDefinitionKey)
-					&& (QTConstants.EVALUATION_TWO_TIER
+					&& (ParameterConst.EVALUATION_TYPES_TWO_TIER
 							.equalsIgnoreCase(getManagedBean().getQt()
-									.getEvaluationType()) || (QTConstants.EVALUATION_ONE_TIER
+									.getEvaluationType()) || (ParameterConst.EVALUATION_TYPES_ONE_TIER
 							.equalsIgnoreCase(getManagedBean().getQt()
 									.getEvaluationType()) && getManagedBean()
 							.getQt().isTechEvaluationReq()))) {
@@ -1429,7 +1429,7 @@ public class QTDocumentsBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(qt.getQtId());
-			reqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
+			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
 			reqDTO.setPrepareSpec(true);
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
 			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean()
@@ -1933,7 +1933,7 @@ public class QTDocumentsBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(qt.getQtId());
-			reqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
+			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
 			reqDTO.setPrepareSpec(true);
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
 			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean()
