@@ -457,7 +457,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
-			parseRequestNote(requestNote, outcome);
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
@@ -652,72 +651,74 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
 
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
-				String pType = requestNoteDtl.getProcurementType()
-						.getParameterCode();
-				if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
-						.equals(ParameterConst.PROC_TYPE_EMERGENCY))) {
-					// Check total procurement amount per ptj per item per year
-					FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
-					if (requestNoteDtl.getRequestItem().getCmItem() != null) {
-						Long itemId = requestNoteDtl.getRequestItem().getCmItem()
-								.getItemId();
-						flReqDTO.setItemId(itemId);
-						flReqDTO.setYear(Calendar.getInstance().get(Calendar.YEAR));
-						flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile()
-								.getOrgProfileId());
-						flReqDTO.setSupplierId(requestNoteDtl.getScRequestSupplierItem().getSupplierId());
-						IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+				if(!requestNoteDtl.isDeleted()) {
+					String pType = requestNoteDtl.getProcurementType()
+							.getParameterCode();
+					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
+							.equals(ParameterConst.PROC_TYPE_EMERGENCY))) {
+						// Check total procurement amount per ptj per item per year
+						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
+							Long itemId = requestNoteDtl.getRequestItem().getCmItem()
+									.getItemId();
+							flReqDTO.setItemId(itemId);
+							flReqDTO.setYear(Calendar.getInstance().get(Calendar.YEAR));
+							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile()
+									.getOrgProfileId());
+							flReqDTO.setSupplierId(requestNoteDtl.getScRequestSupplierItem().getSupplierId());
+							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 
-						BigDecimal totalAmt = itemSummarySO
-								.retrieveAccumulatedAmount(flReqDTO);
+							BigDecimal totalAmt = itemSummarySO
+									.retrieveAccumulatedAmount(flReqDTO);
 
-						IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-						RuleReqDTO ruleReqDTO = new RuleReqDTO();
-						ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
-						List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+							IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+							RuleReqDTO ruleReqDTO = new RuleReqDTO();
+							ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+							List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
 
-						if (ruleValueList != null && ruleValueList.size() > 0) {
-							PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-							//Rule : ITEM_THRESHOLD For 20k
-							if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
-								if(!isShowMessage){
-									getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-									throw new EpException(MessageConst.ERROR_760036,
-											new String[] {requestNoteDtl.getRequestItem().getItemName(), configRuleValue.getRuleValue()});
+							if (ruleValueList != null && ruleValueList.size() > 0) {
+								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+								//Rule : ITEM_THRESHOLD For 20k
+								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
+									if(!isShowMessage){
+										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
+										throw new EpException(MessageConst.ERROR_760036,
+												new String[] {requestNoteDtl.getRequestItem().getItemName(), configRuleValue.getRuleValue()});
+									}
 								}
 							}
 						}
 					}
-				}
 
-				// title validation
-				if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
-					throw new EpException(
-							MessageConst.ERROR_760315,
-							new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
+					// title validation
+					if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+						throw new EpException(
+								MessageConst.ERROR_760315,
+								new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
 
-				// pid validity
-				if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
-					pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
-				}
+					// pid validity
+					if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+						pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+					}
 
-				// validate price type
-				if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
-					throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
-				}
+					// validate price type
+					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
+						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+					}
 
-				// validate recommended supplier
-				if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
-						|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
-					throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
-				}
+					// validate recommended supplier
+					if(null == requestNoteDtl.getScRequestSupplierItem() || null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier() 
+							|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId() ){
+						throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+					}
 
-				// validate price type
-				if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
-					throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+					// validate price type
+					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
+						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+					}
 				}
 			}
 		}
@@ -992,7 +993,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			
 			requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
-			
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
@@ -1045,6 +1045,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
 
+		List<ScRequestNoteDtl> mixedDtls = scRequestNote.getRequestNoteDtls();
+		List<ScRequestNoteDtl> nonDeletedDtls = new ArrayList<ScRequestNoteDtl>();
+		if(mixedDtls != null) {
+			for(ScRequestNoteDtl dtl : mixedDtls) {
+				if(!dtl.isDeleted()) {
+					nonDeletedDtls.add(dtl);
+				}
+			}
+		}
+		
+		//set new requestnotedtl to request note (without deleted requestnoteDtl
+		scRequestNote.setNewRequestNoteDtls(nonDeletedDtls);
+		
 		getDirectPurchaseSO().validateRNBeforeSubmitting(requestNoteReqDTO);
 		
 		updateBPMTask(outcome);
