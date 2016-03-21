@@ -20,17 +20,10 @@
 						src="/xhtml/sc/quatationtender/quotationTenderHeader.xhtml" /></td>
 			</tr>
 			<tr>
-				<td width="100%" valign="top"><ui:param name="isPendingChkList"
-						value="#{qTDetailBB.isMaintancePendingChklistStatus()}" /> <c:if
-						test="#{isPendingChkList eq 'false'}">
+				<td width="100%" valign="top">
 						<ui:include
 							src="/xhtml/sc/quatationtender/quotationTenderMainMenu.xhtml" />
-					</c:if> <c:if test="#{isPendingChkList ne 'false'}">
-						<ui:include
-							src="/xhtml/sc/quatationtender/quotationTenderPendingChkListMaintMenu.xhtml" />
-					</c:if></td>
-
-
+				</td>
 			</tr>
 		</table>
 	</ui:define>
