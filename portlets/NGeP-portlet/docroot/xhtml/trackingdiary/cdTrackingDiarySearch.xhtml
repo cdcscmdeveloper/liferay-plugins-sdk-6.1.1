@@ -44,14 +44,6 @@
 						<td width="35%"><p:inputText size="50"
 								value="#{cdTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
 					</tr>
-					<!-- 							<tr> -->
-					<!-- 								<td width="35%"><p:outputLabel value="Status" /></td> -->
-					<!-- 								<td width="65%"><p:selectOneMenu style="width: 314px;" -->
-					<!-- 											value="#{cdTrackingDiaryBackingBean.managedBean.searchStatusId}"> -->
-					<!-- 											<f:selectItems -->
-					<!-- 												value="#{cdTrackingDiaryBackingBean.getStatus()}" /> -->
-					<!-- 									</p:selectOneMenu></td> -->
-					<!-- 							</tr> -->
 				</table>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
@@ -73,19 +65,13 @@
 
 					<ac:paginator for="unspscTableID"></ac:paginator>
 
-					<!-- 	<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
-					</f:facet>
-				<ac:labelDateTime value="#{Obj[0]}" /> 
-				</p:column> -->
-					<p:column width="15%">
+					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.cm.supp.name']}" />
 						</f:facet>
 				#{Obj[6]}
 				</p:column>
-					<p:column width="15%">
+					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.td.doc.no']}" />
 						</f:facet>
