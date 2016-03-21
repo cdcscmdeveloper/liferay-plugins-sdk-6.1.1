@@ -1556,6 +1556,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFinancialUserScoringSchema;
 	private String loginRoleType;
 	private List<ScQtSupplier> toBeRemoveRestrictedSupplierList;
+	/** The search panelItem. */
+	private IPagingDataModel<CtPanelItem> searchDataModelPanelItem;
 	/** The selected flag. */
 	private boolean selectedFlag;
 	
@@ -8734,6 +8736,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setToBeRemoveRestrictedSupplierList(
 			List<ScQtSupplier> toBeRemoveRestrictedSupplierList) {
 		this.toBeRemoveRestrictedSupplierList = toBeRemoveRestrictedSupplierList;
+	}
+
+	/**
+	 * @return the searchDataModelPanelItem
+	 */
+	public IPagingDataModel<CtPanelItem> getSearchDataModelPanelItem() {
+		return searchDataModelPanelItem;
+	}
+
+	/**
+	 * @param searchDataModelPanelItem the searchDataModelPanelItem to set
+	 */
+	public void setSearchDataModelPanelItem(
+			IPagingDataModel<CtPanelItem> searchDataModelPanelItem) {
+		this.searchDataModelPanelItem = searchDataModelPanelItem;
 	}
 
 }
