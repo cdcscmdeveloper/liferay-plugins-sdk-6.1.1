@@ -3736,6 +3736,8 @@ public class QTDetailBackingBean extends
 						IQTDetailSO.class);
 		QuationTenderReqDTO reqDTO = prepareQTInfo();
 		boolean isAuditor = this.isAuditor();
+		boolean isMaintancePendingChklistStatus = isMaintancePendingChklistStatus();
+		
 		if (priviousIndex != activeIndex) {
 			if (!isAuditor) {
 				switch (priviousIndex) {
@@ -3758,8 +3760,13 @@ public class QTDetailBackingBean extends
 					break;
 
 				case 4:
-					if (isinvokeValidations(getManagedBean().getQt())) {
+					
+					if (!isMaintancePendingChklistStatus && isinvokeValidations(getManagedBean().getQt())) {
 						detailSO.validateBsvDetails(reqDTO);
+					} else{
+						if (isinvokeValidations(getManagedBean().getQt())) {
+							detailSO.validateDeductionDtls(reqDTO);
+						}
 					}
 					break;
 
@@ -3770,7 +3777,7 @@ public class QTDetailBackingBean extends
 							detailSO.validateScheduleDetails(reqDTO);
 						}
 					}
-
+				
 					break;
 
 				case 6:
@@ -3816,15 +3823,27 @@ public class QTDetailBackingBean extends
 			case 4:
 				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
 					retrieveActivitiesTabDtl();
+				} else if(isMaintancePendingChklistStatus){
+					retrieveDeductionPaymentTabDtl();
 				} else {
 					retrieveBriefingSitevisitTabDtl();
 				}
 				break;
 			case 5:
-				retrieveScheduleTabDtl();
+				if(isMaintancePendingChklistStatus){
+					retrieveDocumentTabDtl();
+				} else{
+					retrieveScheduleTabDtl();
+				}
+				
 				break;
 			case 6:
-				retrieveDeductionPaymentTabDtl();
+				if(isMaintancePendingChklistStatus){
+					retrieveActivitiesTabDtl();
+				} else{
+					retrieveDeductionPaymentTabDtl();
+				}
+				
 				break;
 			case 7:
 				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
@@ -4724,8 +4743,12 @@ public class QTDetailBackingBean extends
 		
 		boolean isPresent = false;
 		if (this.getManagedBean().isMaintanceFlow()) {
-			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(this
-					.getManagedBean().getQt().getQtStatus().getStatusId())) {
+			Long statusId = this
+					.getManagedBean().getQt().getQtStatus().getStatusId();
+			if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId) ||
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(statusId)	||
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)||
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(statusId)) {
 				isPresent = true;
 			}
 		}
@@ -4736,13 +4759,7 @@ public class QTDetailBackingBean extends
 		
 		int changedIndex = activeIndex;
 		if (isMaintancePendingChklistStatus()) {
-			if (activeIndex == 1) {
-				changedIndex = QTConstants.SUPP_QUAL_TAB_INDEX;
-			} else if (activeIndex == 2) {
-				changedIndex = QTConstants.COMMITTE_TAB_INDEX;
-			} else if (activeIndex == 3) {
-				changedIndex = QTConstants.APPROVAL_TAB_INDEX;;
-			} else if (activeIndex == 4) {
+			if (activeIndex == 4) {
 				changedIndex = QTConstants.DEDUCTION_TAB_INDEX;
 			} else if (activeIndex == 5) {
 				changedIndex = QTConstants.DOCUMENTS_TAB_INDEX;
