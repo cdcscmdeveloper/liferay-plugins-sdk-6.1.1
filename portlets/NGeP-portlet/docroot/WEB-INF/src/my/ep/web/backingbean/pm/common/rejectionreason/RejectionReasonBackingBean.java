@@ -702,7 +702,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		IParameterSO parameterSO  = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		ParameterReqDTO paramReq = new ParameterReqDTO();
-		String reasonCode = null;
+//		String reasonCode = null;
 		paramReq.setParameterId(getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId());
 		ParameterResDTO paramRes = parameterSO.retrieveParameterById(paramReq);	
 		

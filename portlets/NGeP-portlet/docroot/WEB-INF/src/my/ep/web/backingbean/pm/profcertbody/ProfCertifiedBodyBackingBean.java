@@ -37,6 +37,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -77,7 +78,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		log.info("inside constructor");
 	}
 
-	private void debugLogger(Object message) {
+	private void debugLogger(Object message) {		
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
@@ -290,55 +291,93 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		
 		if(StringUtils.isBlank(certBody.getBodyName())){
 			throw new EpException(MessageConst.ERROR_768000,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.pm.search.name",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
+					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.search.name") });
 		}	
 		
 		if(StringUtils.isBlank(certBody.getDescription())){
 			throw new EpException(MessageConst.ERROR_768001,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.pm.search.desc",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
+					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.search.desc") });
 		}
 		
 		if(!certBody.isCertifiedBody()&&!certBody.isProfessionalBody()){
 			throw new EpException(MessageConst.ERROR_768002,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.pm.search.profcert",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
+					new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.search.profcert") });
 		}
 		
-		
-		if (certBody.isBrandNew() && certBody.getBodyCode() != null
-				&& !"".equalsIgnoreCase(certBody.getBodyCode())) { 
-			SearchFilterBean profCertSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());				
-		
-			profCertSearchBean.setSearchField("bodyCode");
-			profCertSearchBean.setCaseInsensitive(true);		
-			profCertSearchBean.setSearchValue(certBody.getBodyCode());
-			ISearchBean<PmCertBody> searchBean = new SearchBean<PmCertBody>();
-			searchBean.getDataFilterBeans().add(profCertSearchBean);
-			
-			ICertBodySO bodySO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							ICertBodySO.class);
-			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
-			certBodyReqDTO.setCertBodySearchBean(searchBean);
-			CertBodyResDTO certBodyResDTO = bodySO.retrieveBodyList(certBodyReqDTO);
-			if(certBodyResDTO.getCertBodyResultBean() != null &&
-					certBodyResDTO.getCertBodyResultBean().getResultList() !=null &&
-					!certBodyResDTO
-					.getCertBodyResultBean().getResultList().isEmpty() ){
-				throw new EpException(MessageConst.ERROR_770160,
-						new String[] {certBody.getBodyCode()});
+		if(DbValueConst.RECORD_STATUS_ACTIVE == certBody.getRecordStatusFlg()){
+			ICertBodySO bodySO = null;
+			try{
+				ISearchBean<PmCertBody> searchBean = new SearchBean<PmCertBody>();
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("bodyName",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								certBody.getBodyName().toLowerCase().trim(), 
+								true));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				if(!certBody.isBrandNew()){
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("certBodyId",
+									SearchOperator.OPERATOR_NOT_EQUALS.value(),
+									certBody.getCertBodyId()));
+				}
+				bodySO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								ICertBodySO.class);
+				CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
+				certBodyReqDTO.setCertBodySearchBean(searchBean);
+				CertBodyResDTO certBodyResDTO = bodySO.retrieveBodyList(certBodyReqDTO);
+				if(certBodyResDTO.getCertBodyResultBean() != null &&
+						certBodyResDTO.getCertBodyResultBean().getResultList() !=null &&
+						!certBodyResDTO
+						.getCertBodyResultBean().getResultList().isEmpty() ){
+					if(certBody.isBrandNew()){
+						throw new EpException(MessageConst.ERROR_770221,new String[]{
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.search.name"),
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.search.name")					
+							});
+					}else{
+						throw new EpException(MessageConst.ERROR_770220, new String[] {
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.search.name")
+						});
+					}
+				}
+			}finally{
+				bodySO = null;
 			}
 			
 		}
+		
+//		if (certBody.isBrandNew() && certBody.getBodyCode() != null
+//				&& !"".equalsIgnoreCase(certBody.getBodyCode())) { 
+//			SearchFilterBean profCertSearchBean = new SearchFilterBean(
+//					SearchOperator.OPERATOR_EQUALS.value());				
+//		
+//			profCertSearchBean.setSearchField("bodyCode");
+//			profCertSearchBean.setCaseInsensitive(true);		
+//			profCertSearchBean.setSearchValue(certBody.getBodyCode());
+//			ISearchBean<PmCertBody> searchBean = new SearchBean<PmCertBody>();
+//			searchBean.getDataFilterBeans().add(profCertSearchBean);
+//			
+//			ICertBodySO bodySO = EpEjbBusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+//							ICertBodySO.class);
+//			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
+//			certBodyReqDTO.setCertBodySearchBean(searchBean);
+//			CertBodyResDTO certBodyResDTO = bodySO.retrieveBodyList(certBodyReqDTO);
+//			if(certBodyResDTO.getCertBodyResultBean() != null &&
+//					certBodyResDTO.getCertBodyResultBean().getResultList() !=null &&
+//					!certBodyResDTO
+//					.getCertBodyResultBean().getResultList().isEmpty() ){
+//				throw new EpException(MessageConst.ERROR_770160,
+//						new String[] {certBody.getBodyCode()});
+//			}
+//			
+//		}
 	}		
 
 	/**
