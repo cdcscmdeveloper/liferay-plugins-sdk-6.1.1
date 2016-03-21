@@ -6,6 +6,8 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -18,8 +20,10 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -35,6 +39,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -83,6 +89,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -2309,5 +2317,115 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		}
 
 	}
+	public void searchAllPanelItems(){
 
+		IPagingDataModel<CtPanelItem> panelItemDataModel = getManagedBean()
+				.getSearchDataModelPanelItem();
+		if (null == panelItemDataModel) {
+			getManagedBean().setSearchDataModelPanelItem(
+					new panelItemPagingDataModel(
+							"viewCircularItemsGroupIds"));
+		}
+		//getManagedBean().getSearchDataModelPanelItem().resetData();
+	}
+
+	/**
+	 * The Class panelItemPagingDataModel.
+	 */
+	private class panelItemPagingDataModel extends PagingDataModel<CtPanelItem> {
+
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+	
+
+		/**
+		 * Instantiates a new  panelItem paging data model.
+		 * 
+		 * @param componentId
+		 *            the component id
+		 * 
+		 */
+		public panelItemPagingDataModel(String componentId) {
+			super(componentId);
+			
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		protected ISearchResultBean<CtPanelItem> pageChangeListener(
+				ISearchBean<CtPanelItem> searchBean) {
+		
+			ICircularDetailSO circularDetailsSo=null;
+			try {
+				 circularDetailsSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularDetailSO.class);
+				CircularDetailReqDTO circularReqDTO=new CircularDetailReqDTO();
+				populateItemSearchCriteria(searchBean);
+				circularReqDTO.setPanelItemSearchBean(searchBean);
+				CircularDetailResDTO resDto = circularDetailsSo.searchListOfPanelItem(circularReqDTO);
+
+				
+				return resDto.getPanelItemVerResultBean();
+			} finally {
+				circularDetailsSo = null;
+			}
+		}
+	}
+
+	/**
+	 * Method to prepare user search criteria.
+	 * 
+	 * @param userCommitteeSearchBean
+	 *            the user committee search bean
+	 * @param userSearchBean
+	 *            the user search bean
+	 */
+	private void populateItemSearchCriteria(
+			
+			ISearchBean<CtPanelItem> itemSearchBean) {
+		
+
+			
+		
+		itemSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("ctCircularVer.qt",
+								SearchOperator.OPERATOR_EQUALS.value(), true
+								));
+			
+			
+	itemSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("ctCircularVer.docType",
+								SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_PANEL_CIRCULAR
+								));
+			
+		
+	itemSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"ctCircularVer.ctCircular.recordStatus",
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								true));
+	
+	
+	Date todayDate = new Date();
+	Calendar c1 = Calendar.getInstance();
+	c1.setTime(todayDate);
+	Calendar fromDate = Calendar.getInstance();
+	fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+			c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+	fromDate.set(Calendar.MILLISECOND, 0);
+	itemSearchBean.getDataFilterBeans().add(
+			new SearchFilterBean("ctCircularVer.endDate",
+					SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+					fromDate));
+	
+
+			
+		}
 }
