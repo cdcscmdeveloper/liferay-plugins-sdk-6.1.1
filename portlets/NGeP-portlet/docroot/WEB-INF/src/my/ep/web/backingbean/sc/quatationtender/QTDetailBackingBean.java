@@ -3763,10 +3763,8 @@ public class QTDetailBackingBean extends
 					
 					if (!isMaintancePendingChklistStatus && isinvokeValidations(getManagedBean().getQt())) {
 						detailSO.validateBsvDetails(reqDTO);
-					} else{
-						if (isinvokeValidations(getManagedBean().getQt())) {
+					} else if(isMaintancePendingChklistStatus){
 							detailSO.validateDeductionDtls(reqDTO);
-						}
 					}
 					break;
 
