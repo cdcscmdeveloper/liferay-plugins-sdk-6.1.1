@@ -21,7 +21,8 @@
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyName}" 
-			size="40" maxlength="255" style="width:375px;" />
+			size="40" maxlength="255"
+			disabled="#{!profcertifiedbodyBackingBean.managedBean.certBody.brandNew}"/>
 		</td>
 	  </tr>
 	  <tr>

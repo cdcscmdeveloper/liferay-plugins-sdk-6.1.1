@@ -771,14 +771,14 @@ public class FinancialOrgBackingBean extends
 	private void validateFinancialAccount()throws Exception {
 		log.info("validateFinancialAccount");
 		List<PmFinancialAcc> pmFinancialAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
-		//System.out.println("pmFinancialAccList size " + pmFinancialAccList.size());
-		for(PmFinancialAcc pmFinancialAcc: pmFinancialAccList){
-			if(pmFinancialAcc.getPmPaymentBankOrg()==null 
-					|| pmFinancialAcc.getPmPaymentBankOrg().getFinancialOrgId()==null){
-				throw new EpException(MessageConst.ERROR_775209);
-			}
-		}
+		//System.out.println("pmFinancialAccList size " + pmFinancialAccList.size());		
 		if (pmFinancialAccList != null && !pmFinancialAccList.isEmpty()) {
+			for(PmFinancialAcc pmFinancialAcc: pmFinancialAccList){
+				if(pmFinancialAcc.getPmPaymentBankOrg()==null 
+						|| pmFinancialAcc.getPmPaymentBankOrg().getFinancialOrgId()==null){
+					throw new EpException(MessageConst.ERROR_775209);
+				}
+			}
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date endLess = sdf.parse("2099-12-31");
 			for (int index1 = 0; index1 < pmFinancialAccList.size(); index1++) {
@@ -1225,8 +1225,6 @@ public class FinancialOrgBackingBean extends
 		log.info("getSearchBeanData - Start");
 		FinancialOrgSearchBean fSearchBean = getManagedBean()
 				.getFinancialOrgSearchBean();
-		boolean isSearchable = SEARCH_DEFAULT;
-		boolean isEmpty = true;
 		if (fSearchBean.getOrgName() != null
 				&& fSearchBean.getOrgName().trim().length() > 0) {
 			searchBean.getDataFilterBeans().add(
@@ -1234,7 +1232,6 @@ public class FinancialOrgBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getOrgName(), true));
-			isEmpty = false;
 		}
 
 		if (fSearchBean.getServiceType() != null
@@ -1245,7 +1242,6 @@ public class FinancialOrgBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getServiceType()));
-			isEmpty = false;
 		}	
 		
 		if(fSearchBean.getOrgStatus() != null && fSearchBean.getOrgStatus().trim().length() > 0){
@@ -1272,7 +1268,6 @@ public class FinancialOrgBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getRegNumber(), true));
-			isEmpty = false;
 		}
 
 		log.info("getSearchBeanData - End");

@@ -10,7 +10,6 @@
 */
 package my.ep.web.managedbean.pm.category;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  */
 @ManagedBean(name = "categoryPM")
 @SessionScoped
-public class CategoryManagedBean extends BaseManagedBean implements Serializable {
+public class CategoryManagedBean extends BaseManagedBean {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;

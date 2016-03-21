@@ -1188,7 +1188,7 @@ public class SupportDocumentBackingBean extends
 		SearchFilterBean bean = new SearchFilterBean();
 		bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
 		bean.setSearchField("pmParameter.parameterCode");
-		bean.setSearchValue(new ArrayList(Arrays
+		bean.setSearchValue(new ArrayList<String>(Arrays
 				.asList(ProfileManagementConst.SUPPORT_DOC_CATEGORY)));
 		searchBean.getDataFilterBeans().add(bean);
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
@@ -1207,7 +1207,7 @@ public class SupportDocumentBackingBean extends
 		SearchFilterBean bean = new SearchFilterBean();
 		bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
 		bean.setSearchField("pmParameter.parameterCode");
-		bean.setSearchValue(new ArrayList(Arrays
+		bean.setSearchValue(new ArrayList<String>(Arrays
 				.asList(ProfileManagementConst.SUPPORT_DOC_CATEGORY_NEW)));
 		searchBean.getDataFilterBeans().add(bean);
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
@@ -1473,7 +1473,6 @@ public class SupportDocumentBackingBean extends
 	public boolean validateUniqueRestrType(int restrictType) {
 		log.info("validateUniqueRestrType");
 		boolean isUnique = true;
-		String errorMesg = null;
 		List<PmDocumentRestr> pmDocumentRestrs = null;
 		if (RESTR_APP == restrictType) {
 			pmDocumentRestrs = this.getManagedBean().getAppTypeRestrictions();
