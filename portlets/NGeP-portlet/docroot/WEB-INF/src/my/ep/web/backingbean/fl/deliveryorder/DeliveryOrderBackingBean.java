@@ -195,15 +195,17 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						//FlDelOrderItem
 						ArrayList<FlDelOrderItem> delOrderList= new ArrayList<FlDelOrderItem>();
 						for(FlFulfilmentItemAddr itemAddress : flDeliveryAddress.getFlFulfilmentItemAddr()){
-							FlDelOrderItem flDelOrderItem = new FlDelOrderItem();
-							flDelOrderItem.setFlDeliveryOrder(flDeliveryOrder);
-							flDelOrderItem.setFlFulfilmentItemAddr(itemAddress);
-							flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
-							flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
-							flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
-							flDelOrderItem.setGstAmount(itemAddress.getDoGstAmt());
-							flDelOrderItem.setGstUnitPrice(itemAddress.getDoGstUnitPrice());
-							delOrderList.add(flDelOrderItem);
+							if(itemAddress.getDeliveredQty().doubleValue()>0) {
+								FlDelOrderItem flDelOrderItem = new FlDelOrderItem();
+								flDelOrderItem.setFlDeliveryOrder(flDeliveryOrder);
+								flDelOrderItem.setFlFulfilmentItemAddr(itemAddress);
+								flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
+								flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
+								flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
+								flDelOrderItem.setGstAmount(itemAddress.getDoGstAmt());
+								flDelOrderItem.setGstUnitPrice(itemAddress.getDoGstUnitPrice());
+								delOrderList.add(flDelOrderItem);
+							}
 						}
 						flDeliveryOrder.setFlDelOrderItem(delOrderList);
 						reqDTO.getDeliveryOrdersList().add(flDeliveryOrder);
