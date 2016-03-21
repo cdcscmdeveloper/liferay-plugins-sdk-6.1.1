@@ -92,6 +92,8 @@ import my.ep.web.managedbean.sc.purchaseindefault.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ReasonHelper;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -660,9 +662,10 @@ public class PurchaseInDefaultBackingBean extends
 	 * in.
 	 */
 	public void justificationTypeEvent() {
+		String reasonCode = getManagedBean().getPurchaseInDefault().getReasonType()
+				.getReasonCode();
 		log.info("justificationTypeEvent : "
-				+ getManagedBean().getPurchaseInDefault().getReasonType()
-						.getReasonCode());
+				+ reasonCode);
 		
 		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -675,8 +678,7 @@ public class PurchaseInDefaultBackingBean extends
 			// call PM API to check output for reason
 			ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
 			reasonReqDTO.setReasonCategoryId(reasonCategory.getParameterId());
-			reasonReqDTO.setReasonCode(getManagedBean().getPurchaseInDefault().getReasonType()
-					.getReasonCode());
+			reasonReqDTO.setReasonCode(reasonCode);
 			ReasonResDTO reasonResDTO = reasonSO.retrieveReasonByReasonCode(reasonReqDTO);
 			PmReason pmReason = reasonResDTO.getPmReason();
 			
@@ -697,6 +699,12 @@ public class PurchaseInDefaultBackingBean extends
 					getManagedBean().setSourceMethods(
 							getSourceMethodDropdownCodeValues(sourceMethod.getParameterCode(), true));
 				}
+				
+				PmReasonDesc reasonDesc = ReasonHelper.getInstance().getReasonDescById(pmReason.getReasonId());
+				List<PmReasonDesc> reasonDescList = new ArrayList<PmReasonDesc>();
+				reasonDescList.add(reasonDesc);
+				getManagedBean().setJustifications(
+						getDropdownCodeValues(reasonDescList));
 			}
 		}
 
