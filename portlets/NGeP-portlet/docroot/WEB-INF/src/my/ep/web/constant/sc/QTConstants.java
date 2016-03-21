@@ -207,10 +207,7 @@ public interface QTConstants {
 	public static final String REPLACE_CHAR = "_";
 	public static final String CT_PANEL_ZONE_COVERAGE = "Z";
 	public static final String CT_PANEL_ALL_COVERAGE = "A";
-	
-	public static final int SUPP_QUAL_TAB_INDEX = 1;
-	public static final int COMMITTE_TAB_INDEX = 2;
-	public static final int APPROVAL_TAB_INDEX = 3;
+
 	public static final int DEDUCTION_TAB_INDEX = 6;
 	public static final int DOCUMENTS_TAB_INDEX = 7;
 	public static final int ACTIVE_TAB_INDEX = 8;
