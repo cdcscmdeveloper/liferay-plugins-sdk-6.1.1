@@ -1180,7 +1180,7 @@ public class ApprovalBackingBean extends
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
 						isRevise = true;
-						break;
+						//break;
 					}
 				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD
 						.equalsIgnoreCase(approvalType)) {
@@ -1196,7 +1196,7 @@ public class ApprovalBackingBean extends
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
 						isRevise = true;
-						break;
+						//break;
 					}
 				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD
 						.equalsIgnoreCase(approvalType)) {
@@ -1210,7 +1210,7 @@ public class ApprovalBackingBean extends
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
 						isRevise = true;
-						break;
+						//break;
 					}
 				} else if (ParameterConst.APPROVAL_REQUEST_OPEN_TO_BUMI
 						.equals(approvalType)
@@ -1232,7 +1232,7 @@ public class ApprovalBackingBean extends
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
 						isRevise = true;
-						break;
+						//break;
 					}
 				}
 			}
