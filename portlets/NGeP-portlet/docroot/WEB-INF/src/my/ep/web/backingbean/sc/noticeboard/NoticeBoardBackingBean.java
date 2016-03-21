@@ -105,7 +105,6 @@ import my.ep.web.bean.sc.quatationtender.AwardedItemsBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
 import my.ep.web.util.CommonUtils;
@@ -877,7 +876,7 @@ public class NoticeBoardBackingBean extends
 			}
 			
 			// Get EC members for 1 tier & OC for 2 tier
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+			if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())) {
 				evalCommitte = getQtCommiteDtlsByQtIdNType(
 						ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE, qtId);

@@ -772,7 +772,7 @@ public class EvaluationMeetingBackingBean extends
 			}
 			List<ScCommitteeMember> scQtCommitteeActivity = this
 					.getManagedBean().getCommitteeMemberActivity();
-			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getQt().getEvaluationType())) {
 				retriveExistOtherCommittee();
 				checkCommitteeMembersExistOtherCommittees(this.getManagedBean()
