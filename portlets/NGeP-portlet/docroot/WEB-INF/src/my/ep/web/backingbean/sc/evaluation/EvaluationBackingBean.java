@@ -498,7 +498,7 @@ public class EvaluationBackingBean extends
 		// scQt.isTechEvaluationReq()
 
 		// if (scQt.getEvaluationType().equals
-		// (QTConstants.EVALUATION_ONE_TIER)) {
+		// (ParameterConst.EVALUATION_TYPES_ONE_TIER)) {
 		//
 		// }
 
@@ -992,10 +992,10 @@ public class EvaluationBackingBean extends
 
 			getManagedBean().setComplianceSummaryGenerated(false);
 			updateSummaryGeneratedStatus();
-			if ((QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+			if ((ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType()) && ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType()))
-					|| (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					|| (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType()))) {
@@ -1132,10 +1132,10 @@ public class EvaluationBackingBean extends
 
 			getManagedBean().setComplianceSummaryGenerated(false);
 			updateSummaryGeneratedStatus();
-			if ((QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+			if ((ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType()) && ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType()))
-					|| (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					|| (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType()))) {
@@ -1351,7 +1351,7 @@ public class EvaluationBackingBean extends
 					} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 							.equalsIgnoreCase(checkList.getDefinationType()
 									.getParameterCode())) {
-						if (QTConstants.EVALUATION_TWO_TIER
+						if (ParameterConst.EVALUATION_TYPES_TWO_TIER
 								.equalsIgnoreCase(this.getManagedBean()
 										.getScQt().getEvaluationType())
 								&& !this.getManagedBean()
@@ -1855,9 +1855,9 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setEvaluationStgfinancialCheckList(
 					localCheckList);
-			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
-					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					|| (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
 				checkFinancialSuppliersQualified();
@@ -2034,7 +2034,7 @@ public class EvaluationBackingBean extends
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 
 				if (this.getManagedBean().getScQt().getEvaluationType()
-						.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+						.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
 						&& !this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
 					EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
@@ -2063,7 +2063,7 @@ public class EvaluationBackingBean extends
 					reqDTO.setSettingType(getSettingType(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE));
 					resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);
 				} else if (this.getManagedBean().getScQt().getEvaluationType()
-						.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+						.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
 						&& this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
 					// evaluationStageStatusCheck();
@@ -2154,7 +2154,7 @@ public class EvaluationBackingBean extends
 					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 					&& !this.getManagedBean().isReadOnly()
 					&& this.getManagedBean().getScQt().getEvaluationType()
-							.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+							.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
 					&& this.getManagedBean().getScQt().isTechEvaluationReq()) {
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
@@ -2208,7 +2208,7 @@ public class EvaluationBackingBean extends
 					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 					&& !this.getManagedBean().isReadOnly()
 					&& this.getManagedBean().getScQt().getEvaluationType()
-							.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+							.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
 					&& this.getManagedBean().getScQt().isTechEvaluationReq()) {
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
@@ -2270,7 +2270,7 @@ public class EvaluationBackingBean extends
 								.getScQt()
 								.getEvaluationType()
 								.equalsIgnoreCase(
-										QTConstants.EVALUATION_ONE_TIER)
+										ParameterConst.EVALUATION_TYPES_ONE_TIER)
 						&& !this.getManagedBean().getScQt()
 								.isTechEvaluationReq()
 						&& !getManagedBean().isFinancialSummaryGenerated()) {
@@ -5515,8 +5515,8 @@ public class EvaluationBackingBean extends
 						|| ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 								.equalsIgnoreCase(this.getManagedBean()
 										.getCommitteeType())) {
-					if (((QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
-							.getManagedBean().getScQt().getEvaluationType())) || (QTConstants.EVALUATION_ONE_TIER
+					if (((ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType())) || (ParameterConst.EVALUATION_TYPES_ONE_TIER
 							.equalsIgnoreCase(this.getManagedBean().getScQt()
 									.getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq()))) {
@@ -5537,8 +5537,8 @@ public class EvaluationBackingBean extends
 				|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
-			if (((QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
-					.getManagedBean().getScQt().getEvaluationType())) || (QTConstants.EVALUATION_ONE_TIER
+			if (((ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())) || (ParameterConst.EVALUATION_TYPES_ONE_TIER
 					.equalsIgnoreCase(this.getManagedBean().getScQt()
 							.getEvaluationType()) && !this.getManagedBean()
 					.getScQt().isTechEvaluationReq()))) {
@@ -7687,7 +7687,7 @@ public class EvaluationBackingBean extends
 			}
 			evalResDTO = evaluationSO.saveSpecDetails(evalReqDTO);
 
-			if (QTConstants.TECHNICAL_SPEC_TYPE
+			if (ParameterConst.SPECIFICATION_TYPE_TECHNICAL
 					.equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				List<ScQtProposalChecklist> technicalSpes = this
 						.getManagedBean()
@@ -7710,7 +7710,7 @@ public class EvaluationBackingBean extends
 				checkDemoStatusForQtCheckList();
 				evaluationTechnicalChangeScQtStatusUpdate();
 			}
-			if (QTConstants.FINANCIAL_SPEC_TYPE
+			if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 					.equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				List<ScQtProposalChecklist> financialSpes = this
 						.getManagedBean().getFinSpecSupplierListDM().getList();
@@ -11062,7 +11062,7 @@ public class EvaluationBackingBean extends
 	}
 
 	private void checkDemoStatusForQtCheckList() {
-		if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+		if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 				.getManagedBean().getScQt().getEvaluationType())
 				&& ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
@@ -11084,7 +11084,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		try {
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+			if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
@@ -11112,7 +11112,7 @@ public class EvaluationBackingBean extends
 				}
 
 			}
-			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					&& ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
@@ -11150,7 +11150,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		try {
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+			if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
@@ -11180,7 +11180,7 @@ public class EvaluationBackingBean extends
 				}
 
 			}
-			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					&& ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()

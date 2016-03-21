@@ -735,7 +735,7 @@ public class QTDetailBackingBean extends
 		/* List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>(); */
 		if (!this.getManagedBean().getQt().isPanel()) {
 			if (this.getManagedBean().getQt().getQtType()
-					.equals(QTConstants.OPEN_TYPE)) {
+					.equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
 				// TODO need to check why updating the twice.. sagar
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getQtCategoryList();
@@ -754,7 +754,7 @@ public class QTDetailBackingBean extends
 					scQt.setScQtCategorys(openList);
 				}
 			} else if (this.getManagedBean().getQt().getQtType()
-					.equals(QTConstants.RESTRICTED_TYPE)) {
+					.equals(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER)) {
 				List<ScQtCategory> restrictedList = this.getManagedBean()
 						.getQtCategoryList();
 				if (CollectionUtils.isNotEmpty(restrictedList)) {
@@ -1310,7 +1310,7 @@ public class QTDetailBackingBean extends
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			reqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
+			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 			reqDTO.setPrepareSpec(true);
 
 			specSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1336,7 +1336,7 @@ public class QTDetailBackingBean extends
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			reqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
+			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
 			reqDTO.setPrepareSpec(true);
 
 			specSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1504,7 +1504,7 @@ public class QTDetailBackingBean extends
 
 			if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
 				// evaluation type is one tier only oc is added..
-				if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
+				if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationType)) {
 					tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
 					ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
@@ -3365,7 +3365,7 @@ public class QTDetailBackingBean extends
 				.getTplSpecMaster());
 		if (this.getManagedBean().getQt().isZonal()
 				&& this.getManagedBean().getQt().getQtType()
-						.equals(QTConstants.OPEN_TYPE)) {
+						.equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
 
 			retrieveQuationTenderDetails(this.getManagedBean().getQt()
 					.getQtId());
