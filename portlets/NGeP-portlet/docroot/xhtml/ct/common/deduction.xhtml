@@ -96,7 +96,7 @@
                                    <ac:paginator for="tableClause" />   
                                    <p:ajax event="toggleSelect" 
 			                              listener="#{ctBackingBean.onToggleSelect}" update=":form:delDeductionClauseBtn" />
-			                      <p:ajax event="rowSelect"
+			                      <p:ajax event="rowSelect" 
                                        listener="#{ctBackingBean.onRowSelect}" update=":form:delDeductionClauseBtn" />
 			                      <p:ajax event="rowSelectCheckbox" 
 			                             listener="#{ctBackingBean.onRowSelect}" update=":form:delDeductionClauseBtn" />
@@ -104,9 +104,9 @@
                                          listener="#{ctBackingBean.onRowUnselect}" update=":form:delDeductionClauseBtn" />
                             
                                   <p:column selectionMode="multiple"    style="width:2%; vertical-align:top;" 
-                                         disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract}"
-                                         rendered="#{!ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
-        	                              ParameterConst.deductionTypeAdvancePayment }">
+                                         disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
+                                         rendered="#{!ctBackingBean.managedBean.viewContract  and
+                                             ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment }">
         	                       </p:column>
                            
                              
@@ -115,11 +115,8 @@
 						                        <h:outputText value="#{lbl['lbl.ct.deduction.clause.desc']}"/>
 				               	          	   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
 				               	          </f:facet>
-                                          <h:outputText escape="false" value="#{data.clauseDescription}" 
-                                               rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode == ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
                                           <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="4" style="width:97%;" autoResize="false"
-                                               disabled="#{ctBackingBean.managedBean.flgPaymentTracking or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"
-                                               rendered="#{ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode != ParameterConst.deductionTypeAdvancePayment}" styleClass="ui-inputtextarea">
+                                               disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" styleClass="ui-inputtextarea">
         	                                  <p:ajax process="@this"/>
         	                              </p:inputTextarea>
                                      </p:column>    
@@ -127,9 +124,7 @@
                       </p:dataTable>
                     
                       <div class="ppRightBtn"> 
-	                          <c:if test="#{ctBackingBean.managedBean.selectedDeduction != null and 
-	                                ctBackingBean.managedBean.selectedDeduction.deductionType.parameterCode  != ParameterConst.deductionTypeAdvancePayment and
-	        	                    !ctBackingBean.managedBean.viewContract }">
+	                          <h:panelGroup  rendered="#{ctBackingBean.managedBean.selectedDeduction != null and  !ctBackingBean.managedBean.viewContract }">
 	        	                
 	        	                <p:commandButton id="addDeductionClauseBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
 	        	                    disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
@@ -152,7 +147,7 @@
 			                               <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDeductionClause.hide();" type="button" />
 		                           </div>
                                   </p:confirmDialog>
-	                        </c:if>
+	                       </h:panelGroup>
                     </div>
                      
                 </h:panelGroup>
