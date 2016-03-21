@@ -10,13 +10,19 @@
 	<ui:param name="scQt" value="#{createQtBB.managedBean.qt}" />
 	<ui:param name="isRequire" value="#{!qTDetailBB.isAuditor()}"></ui:param>
 	<ui:param name="readOnly" value="#{createQtBB.managedBean.editable}" />
-	<ui:param name="qtStatusAfterChecklistScoring" value="#{createQtBB.isQTStatusGreaterThan(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
-	<ui:param name="qtStatusChecklistScoring" value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.qtStatus.statusId == QT_PENDING_CHECKLIST_SCORING_REVISION}" />
-	<ui:param name="qtStatusChecklistScoringAndBefore" value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
-	<ui:param name="qtStatusScheduleDocAndAfter" value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-	<ui:param name="zoneCoverageReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ZONE_COVERAGE)}" />
- 	<ui:param name="specCommitteeReadOnly" value="#{createQtBB.managedBean.readOnly}" />
- 	
+	<ui:param name="qtStatusAfterChecklistScoring"
+		value="#{createQtBB.isQTStatusGreaterThan(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
+	<ui:param name="qtStatusChecklistScoring"
+		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.qtStatus.statusId == QT_PENDING_CHECKLIST_SCORING_REVISION}" />
+	<ui:param name="qtStatusChecklistScoringAndBefore"
+		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
+	<ui:param name="qtStatusScheduleDocAndAfter"
+		value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<ui:param name="zoneCoverageReadonly"
+		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ZONE_COVERAGE)}" />
+	<ui:param name="specCommitteeReadOnly"
+		value="#{createQtBB.managedBean.readOnly}" />
+
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
 		toggleable="true">
 
@@ -24,24 +30,42 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
+
 				<td colspan="3">
-					<c:choose>
-						<c:when test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
-							<p:selectOneRadio id="panelTitle" required="true"
-								label="#{lbl['lbl.sc.spec.panel']}" value="#{scQt.panel}">
-								<f:selectItems
-									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-								<p:ajax event="change"
-									listener="#{createQtBB.panelConformation(scQt)}" process="@this,panelTitle"
-									partialSubmit="true" update="@form"></p:ajax>
-							</p:selectOneRadio>
-							<p:message id="selectPanelTitleId" for="panelTitle" display="icon" />
-						</c:when>
-						<c:otherwise>
-							<p:inputText id="isPanelTxt" value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.panel))}" style="width:195px;" disabled="true" />
-						</c:otherwise>
-					</c:choose>
+					<table>
+						<tr>
+							<td><c:choose>
+									<c:when
+										test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
+										<p:selectOneRadio id="panelTitle" required="true"
+											label="#{lbl['lbl.sc.spec.panel']}" value="#{scQt.panel}">
+											<f:selectItems
+												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+											<p:ajax event="change"
+												listener="#{createQtBB.panelConformation(scQt)}"
+												process="@this,panelTitle" partialSubmit="true"
+												update="@form"></p:ajax>
+										</p:selectOneRadio>
+										<p:message id="selectPanelTitleId" for="panelTitle"
+											display="icon" />
+
+									</c:when>
+									<c:otherwise>
+										<p:inputText id="isPanelTxt"
+											value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.panel))}"
+											style="width:195px;" disabled="true" />
+
+									</c:otherwise>
+								</c:choose></td>
+							<td style="margin-top: -3px"><p:commandLink
+									value="viewPanelitems" rendered="#{scQt.panel}" process="@this"
+									partialSubmit="true" update="circularGroupItemPopupId"
+									action="#{createQtBB.searchAllPanelItems}"
+									oncomplete="viewCircularPanelItems.show();" /></td>
+						</tr>
+					</table>
 				</td>
+
 			</tr>
 
 			<h:panelGroup id="panelInfoId">
@@ -50,30 +74,31 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.circular.no']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 
-						<td>
-							<c:choose>
-								<c:when test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
+						<td><c:choose>
+								<c:when
+									test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
 									<ac:lov id="ctCircularPanel" lovId="CT_CIRCULAR_PANEL"
 										headerText="#{lbl['lbl.sc.spec.circular.list']}"
 										update=":form:panelItemId"
 										saveObject="createQtBB.managedBean.qt.circularVer"
-										value="#{scQt.circularVer.circularNo}"
-										size="24" readonly="true"
+										value="#{scQt.circularVer.circularNo}" size="24"
+										readonly="true"
 										conditionField="#{createQtBB.constrcutFieldsForPanel()}"
 										postUpdateListener="createQtBB.circularListSelect(createQtBB.managedBean.qt.circularVer)"
 										disabled="#{!scQt.panel}" />
 								</c:when>
 								<c:otherwise>
-									<p:inputText id="cirPanelTxt" value="#{scQt.circularVer.circularNo}" style="width:195px;" disabled="true" />
+									<p:inputText id="cirPanelTxt"
+										value="#{scQt.circularVer.circularNo}" style="width:195px;"
+										disabled="true" />
 								</c:otherwise>
-							</c:choose>
-						</td>
+							</c:choose></td>
 						<td><p:outputLabel value="#{lbl['lbl.sc.spec.group.item']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
 
-						<td>
-							<c:choose>
-								<c:when test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
+						<td><c:choose>
+								<c:when
+									test="#{qtStatusChecklistScoringAndBefore and !specCommitteeReadOnly}">
 									<p:selectOneMenu id="panelItemId" required="#{isRequire}"
 										label="#{lbl['lbl.sc.spec.group.item']}"
 										value="#{scQt.itemGroup.panelItemGroupId}"
@@ -83,25 +108,26 @@
 										<f:selectItems value="#{createQtBB.panelGroupItems}"
 											var="panelItem" itemLabel="#{panelItem.groupName}"
 											itemValue="#{panelItem.panelItemGroupId}" />
-		
-										<p:ajax event="change" process="@this" partialSubmit="true" listener="#{createQtBB.changePanelGroupItem}"></p:ajax>
+
+										<p:ajax event="change" process="@this" partialSubmit="true"
+											listener="#{createQtBB.changePanelGroupItem}"></p:ajax>
 									</p:selectOneMenu>
 									<p:message id="panelIteMsgId" for="panelItemId" display="icon" />
 								</c:when>
 								<c:otherwise>
-									<p:inputText id="groupItemTxt" value="#{scQt.itemGroup.groupName}" style="width:200px;" disabled="true" />
+									<p:inputText id="groupItemTxt"
+										value="#{scQt.itemGroup.groupName}" style="width:200px;"
+										disabled="true" />
 								</c:otherwise>
-							</c:choose>
-						</td>
+							</c:choose></td>
 
 					</tr>
 				</ui:fragment>
 			</h:panelGroup>
 
 			<tr>
-				<td valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.title']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea id="title1"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_TITLE)}"
 						label="#{lbl['lbl.sc.title']}" required="#{isRequire}"
@@ -112,23 +138,22 @@
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
 			</tr>
 			<c:if test="#{scQt.brandNew}">
-			<tr>
-				<td valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.ptj']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
-				<td colspan="3"><ac:lov id="ptjProfAuthId"
-						lovId="PM_ORG_PROFILE_AUTH_TYPE" headerText="#{lbl['lbl.sc.ptj']}"
-						saveObject="scQt.pmOrgProfile"
-						value="#{scQt.pmOrgProfile.orgName}"
-						size="98" readonly="true" 
-						conditionField="recordStatus^1" /> <p:message
-						id="ptjMsg" for="ptjProfAuthId" display="icon" /></td>
-			</tr>
+				<tr>
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td colspan="3"><ac:lov id="ptjProfAuthId"
+							lovId="PM_ORG_PROFILE_AUTH_TYPE"
+							headerText="#{lbl['lbl.sc.ptj']}" saveObject="scQt.pmOrgProfile"
+							value="#{scQt.pmOrgProfile.orgName}" size="98" readonly="true"
+							conditionField="recordStatus^1" /> <p:message id="ptjMsg"
+							for="ptjProfAuthId" display="icon" /></td>
+				</tr>
 			</c:if>
 
 			<tr>
-				<td style="width: 270px;"><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td style="width: 270px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td style="width: 250px;"><table>
 						<tr>
 							<td><p:inputText id="fileno"
@@ -150,27 +175,26 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
-			
+
 			<c:choose>
-				<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+				<c:when
+					test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 					<tr>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.spec.expected.intended.price']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td><p:inputText id="expIntendedPrice" style="text-align:right; width:195px;"
-								value="#{scQt.tmpExpectedIntendedPrice}" 
-								required="true"
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.spec.expected.intended.price']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="expIntendedPrice"
+								style="text-align:right; width:195px;"
+								value="#{scQt.tmpExpectedIntendedPrice}" required="true"
 								label="#{lbl['lbl.sc.spec.expected.intended.price']}">
 								<p:ajax event="blur" partialSubmit="true" update="@form"
 									listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice)}">
 								</p:ajax>
-								
+
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText>
-							<p:message id="expIntendedPriceMsg" for="expIntendedPrice" display="icon" />
-						</td>
+							</p:inputText> <p:message id="expIntendedPriceMsg" for="expIntendedPrice"
+								display="icon" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 						<td><p:inputText
 								value="#{createQtBB.getParameterDesc(scQt.procurementMode)}"
@@ -180,22 +204,20 @@
 				<c:otherwise>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" /></td>
-						<td>
-							<p:inputText id="estprice" style="text-align:right; width:195px;"
-								value="#{scQt.estimatedAmount}" 
-								disabled="true">
+						<td><p:inputText id="estprice"
+								style="text-align:right; width:195px;"
+								value="#{scQt.estimatedAmount}" disabled="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText>
-						</td>
-						<td><p:outputLabel value="#{lbl['lbl.sc.spec.expected.intended.price']}" /></td>
-						<td><p:inputText id="expIntendedPrice" style="text-align:right; width:200px;"
-								value="#{scQt.tmpExpectedIntendedPrice}" 
-								disabled="true">
+							</p:inputText></td>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.spec.expected.intended.price']}" /></td>
+						<td><p:inputText id="expIntendedPrice"
+								style="text-align:right; width:200px;"
+								value="#{scQt.tmpExpectedIntendedPrice}" disabled="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText>
-						</td>
+							</p:inputText></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
@@ -207,71 +229,67 @@
 			</c:choose>
 
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" /> 
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{!scQt.panel}" />
-				</td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qttentype']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" rendered="#{!scQt.panel}" /></td>
 
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_QT_TYPE) and !scQt.panel}">
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_QT_TYPE) and !scQt.panel}">
 							<table>
 								<tr>
-									<td>
-										<p:selectOneRadio required="#{isRequire}" id="tenderType"
-											label="#{lbl['lbl.sc.qttentype']}" value="#{scQt.qtType}">
+									<td><p:selectOneRadio required="#{isRequire}"
+											id="tenderType" label="#{lbl['lbl.sc.qttentype']}"
+											value="#{scQt.qtType}">
 											<f:selectItems
 												value="#{createQtBB.getQuotationTendervalues(ParameterTypeConst.quotationTenderType,scQt)}" />
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												update="@form" listener="#{createQtBB.onChangeQtType}"></p:ajax>
-										</p:selectOneRadio>
-									</td>
-									<td><p:message id="tenderMsg" for="tenderType" display="icon" /></td>
+										</p:selectOneRadio></td>
+									<td><p:message id="tenderMsg" for="tenderType"
+											display="icon" /></td>
 								</tr>
 							</table>
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="qtTypeTxt" value="#{createQtBB.getParameterDesc(ParameterTypeConst.quotationTenderType, scQt.qtType)}" style="width:195px;" disabled="true" />
+							<p:inputText id="qtTypeTxt"
+								value="#{createQtBB.getParameterDesc(ParameterTypeConst.quotationTenderType, scQt.qtType)}"
+								style="width:195px;" disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.open.for']}" /> 
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{!scQt.panel}" />
-				</td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_OPEN_FOR) and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel}">
+					</c:choose></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.open.for']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" rendered="#{!scQt.panel}" /></td>
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_OPEN_FOR) and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel}">
 							<table>
 								<tr>
-									<td>
-										<p:selectOneRadio required="#{isRequire}" id="openFor"
+									<td><p:selectOneRadio required="#{isRequire}" id="openFor"
 											label="#{lbl['lbl.sc.open.for']}" value="#{scQt.openFor}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												update="@form" listener="#{createQtBB.openForChange}"></p:ajax>
-										</p:selectOneRadio> 
-									</td>
+										</p:selectOneRadio></td>
 									<td><p:message id="openMsg" for="openFor" display="icon" /></td>
 								</tr>
 							</table>
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="openForTxt" value="#{createQtBB.getParameterDesc(ParameterTypeConst.scOpenFor, scQt.openFor)}" style="width:200px;" disabled="true" />
+							<p:inputText id="openForTxt"
+								value="#{createQtBB.getParameterDesc(ParameterTypeConst.scOpenFor, scQt.openFor)}"
+								style="width:200px;" disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
+					</c:choose></td>
 			</tr>
-			
+
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
-							<td>
-								<c:choose>
-									<c:when test="#{!zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !specCommitteeReadOnly}">
+							<td><c:choose>
+									<c:when
+										test="#{!zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !specCommitteeReadOnly}">
 										<p:selectOneRadio value="#{scQt.zonal}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -281,10 +299,11 @@
 										</p:selectOneRadio>
 									</c:when>
 									<c:otherwise>
-										<p:inputText id="zoneTxt" value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.zonal))}" style="width:195px;" disabled="true" />
+										<p:inputText id="zoneTxt"
+											value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.zonal))}"
+											style="width:195px;" disabled="true" />
 									</c:otherwise>
-								</c:choose>
-							</td>
+								</c:choose></td>
 							<td style="margin-top: -3px"><ac:iconTooltip
 									value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
 						</tr>
@@ -296,9 +315,9 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID) and !specCommitteeReadOnly}">
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID) and !specCommitteeReadOnly}">
 							<p:selectOneMenu id="qtmaintainprocTypeBoCategory"
 								required="#{isRequire}"
 								label="#{lbl['lbl.sc.procurment.type.category']}"
@@ -307,20 +326,22 @@
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
-							</p:selectOneMenu> 
-							<p:message id="procuremntypeCategoryquotationTender" for="qtmaintainprocTypeBoCategory" display="icon" />
+							</p:selectOneMenu>
+							<p:message id="procuremntypeCategoryquotationTender"
+								for="qtmaintainprocTypeBoCategory" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="procTypeCatTxt" value="#{createQtBB.getParameterDesc(scQt.procurementTypeCatId)}" style="width:195px;" disabled="true" />
+							<p:inputText id="procTypeCatTxt"
+								value="#{createQtBB.getParameterDesc(scQt.procurementTypeCatId)}"
+								style="width:195px;" disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
+					</c:choose></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_CATEGORY) and !specCommitteeReadOnly}">
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_CATEGORY) and !specCommitteeReadOnly}">
 							<p:selectOneMenu id="procCategory" required="#{isRequire}"
 								style="margin-bottom:5px;width:210px;"
 								label="#{lbl['lbl.sc.procurement.category']}"
@@ -331,21 +352,22 @@
 							<p:message id="titleMsg" for="procCategory" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="procCatTxt" value="#{createQtBB.getParameterDesc(scQt.pmProcurementCategory)}" style="width:200px;" disabled="true" />
+							<p:inputText id="procCatTxt"
+								value="#{createQtBB.getParameterDesc(scQt.pmProcurementCategory)}"
+								style="width:200px;" disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
+					</c:choose></td>
 
 			</tr>
 
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+				<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory"
+						rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 				</td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_EVALUATION_TYPE) and !specCommitteeReadOnly}">
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_EVALUATION_TYPE) and !specCommitteeReadOnly}">
 							<table>
 								<tr>
 									<td><p:selectOneRadio id="evalType"
@@ -356,38 +378,37 @@
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
 										</p:selectOneRadio></td>
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
-									<td style="margin-top: -3px"><ac:iconTooltip value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
 								</tr>
 							</table>
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="evalTypeTxt" value="#{createQtBB.getParameterDesc(ParameterTypeConst.scEvaluationType, scQt.evaluationType)}" style="width:195px;" disabled="true" />
+							<p:inputText id="evalTypeTxt"
+								value="#{createQtBB.getParameterDesc(ParameterTypeConst.scEvaluationType, scQt.evaluationType)}"
+								style="width:195px;" disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
+					</c:choose></td>
 				<td><h:outputLabel value="#{lbl['lbl.sc.max.proposal']}" /></td>
-				<td><p:inputText id="proposalId" 
+				<td><p:inputText id="proposalId"
 						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
 						value="#{scQt.maxProposal}"
 						style="text-align:right;margin-bottom: 5px; width:200px;"
 						disabled="true">
-					</p:inputText>
-				</td>
+					</p:inputText></td>
 			</tr>
-			
+
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CONTRACT_TYPE)}">
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_CONTRACT_TYPE)}">
 							<p:selectOneMenu id="contractType"
 								value="#{scQt.contractType.parameterId}"
 								style="width: 205px;margin-bottom: 5px;"
-								label="#{lbl['lbl.sc.loiloa.loa.cont.type']}"
-								required="true">
+								label="#{lbl['lbl.sc.loiloa.loa.cont.type']}" required="true">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
 								<f:selectItems value="#{createQtBB.contractTypes}"
@@ -400,36 +421,39 @@
 							<p:message id="contractTypeMsg" for="contractType" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="contractTypeTxt" value="#{createQtBB.getParameterDesc(scQt.contractType)}" style="width:195px;" disabled="true" />
+							<p:inputText id="contractTypeTxt"
+								value="#{createQtBB.getParameterDesc(scQt.contractType)}"
+								style="width:195px;" disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
+					</c:choose></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.qt.existing.contract.no']}" /></td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_EXISTING_CONTRACT) and !specCommitteeReadOnly}">
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_EXISTING_CONTRACT) and !specCommitteeReadOnly}">
 							<ac:lov id="contractLovId" lovId="CT_CONTRACT"
 								headerText="#{lbl['lbl.sc.qt.existing.contract.no.search']}"
 								update=":form:qtdetailsid"
 								saveObject="createQtBB.managedBean.ctContract"
-								value="#{createQtBB.managedBean.ctContract.contractNo}" size="25"
-								conditionField="#{createQtBB.constuctConditionFields()}" /> 
+								value="#{createQtBB.managedBean.ctContract.contractNo}"
+								size="25"
+								conditionField="#{createQtBB.constuctConditionFields()}" />
 							<ac:lovPopup />
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="extContractTxt" value="#{scQt.existingContractNo}" style="width:200px;" disabled="true" />
+							<p:inputText id="extContractTxt"
+								value="#{scQt.existingContractNo}" style="width:200px;"
+								disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
+					</c:choose></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FULFILMENT_TYPE) and !specCommitteeReadOnly}">
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FULFILMENT_TYPE) and !specCommitteeReadOnly}">
 							<p:selectOneMenu required="#{isRequire}" id="fulfilId"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
@@ -442,13 +466,15 @@
 							<p:message id="fulfilType" for="fulfilId" display="icon" />
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="fulfilTypeTxt" value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}" style="width:195px;" disabled="true" />
+							<p:inputText id="fulfilTypeTxt"
+								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
+								style="width:195px;" disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
-				<td style="white-space: nowrap;">
-					<p:outputLabel value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" />
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}" />
+					</c:choose></td>
+				<td style="white-space: nowrap;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
+						value="*" styleClass="mandatory"
+						rendered="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}" />
 				</td>
 				<td><p:inputText id="contractBo" maxlength="3"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
@@ -461,110 +487,100 @@
 					</p:inputText> <p:message id="completionBo" for="contractBo" display="icon"></p:message></td>
 			</tr>
 			<c:if test="#{qtStatusScheduleDocAndAfter}">
-			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" /> 
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td>
-					<table>
-						<tr>
-							<td>
-								<p:inputMask id="publishperiod" mask="9?99"
-									maxlength="3" placeHolder=""
-									label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{isRequire}"
-									value="#{scQt.publishPeriod}"
-									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
-									valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
-									style="text-align:right; width:195px;">
-									<p:ajax event="blur" process="@this" partialSubmit="true"
-										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
-								</p:inputMask></td>
-							<td>
-								<p:message id="publishperiodMsg" for="publishperiod" display="icon" />
-							</td>
-							<td colspan="2">
-								<ac:iconTooltip value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" />
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" /> 
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</td>
-				<td>
-					<table>
-						<tr>
-							<td>
-								<p:inputMask id="proposalvalidity" mask="9?9999"
-									maxlength="5" placeHolder=""
-									label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{isRequire}"
-									value="#{scQt.qtValidityPeriod}" 
-									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
-									valueChangeListener="#{createQtBB.proposalValidityChanged}"
-									style="text-align:right; width:200px;">
-									<f:ajax></f:ajax>
-								</p:inputMask>
-							</td>
-							<td>
-								<p:message id="proposalvalidityMsg" for="proposalvalidity" display="icon" />
-							</td>
-							<td colspan="2">
-								<ac:iconTooltip value="#{lbl['lbl.sc.qt.proposal.validity.tooltip']}" />
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.qt.publishing.period']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:inputMask id="publishperiod" mask="9?99"
+										maxlength="3" placeHolder=""
+										label="#{lbl['lbl.sc.qt.publishing.period']}"
+										required="#{isRequire}" value="#{scQt.publishPeriod}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
+										valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
+										style="text-align:right; width:195px;">
+										<p:ajax event="blur" process="@this" partialSubmit="true"
+											listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
+									</p:inputMask></td>
+								<td><p:message id="publishperiodMsg" for="publishperiod"
+										display="icon" /></td>
+								<td colspan="2"><ac:iconTooltip
+										value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" /></td>
+							</tr>
+						</table>
+					</td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:inputMask id="proposalvalidity" mask="9?9999"
+										maxlength="5" placeHolder=""
+										label="#{lbl['lbl.sc.qt.publishing.period']}"
+										required="#{isRequire}" value="#{scQt.qtValidityPeriod}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
+										valueChangeListener="#{createQtBB.proposalValidityChanged}"
+										style="text-align:right; width:200px;">
+										<f:ajax></f:ajax>
+									</p:inputMask></td>
+								<td><p:message id="proposalvalidityMsg"
+										for="proposalvalidity" display="icon" /></td>
+								<td colspan="2"><ac:iconTooltip
+										value="#{lbl['lbl.sc.qt.proposal.validity.tooltip']}" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 			</c:if>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.qt.req.approval.specification']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}">
-							<p:selectOneRadio 
-							    required="#{isRequire}"
-								value="#{scQt.specApprovalReq}" 
+						value="#{lbl['lbl.sc.qt.req.approval.specification']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}">
+							<p:selectOneRadio required="#{isRequire}"
+								value="#{scQt.specApprovalReq}"
 								label="#{lbl['lbl.sc.qt.req.approval.specification']}">
 								<f:selectItems
 									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-								<p:ajax event="change" 
-									partialSubmit="true" process="@this" update="@this,approvalSpeclbl,approvalSpecTxt" 
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									update="@this,approvalSpeclbl,approvalSpecTxt"
 									listener="#{createQtBB.ministrySpecSecretaryRequiredChanged(scQt)}" />
 							</p:selectOneRadio>
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="specAppReqTxt" value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.specApprovalReq))}" style="width:195px;" disabled="true" />
+							<p:inputText id="specAppReqTxt"
+								value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.specApprovalReq))}"
+								style="width:195px;" disabled="true" />
 						</c:otherwise>
-					</c:choose>
-				</td>
-				<td>
-					<h:panelGroup id="approvalSpeclbl">
-						<h:panelGroup rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}">
-							<p:outputLabel value="#{lbl['lbl.sc.ministry.spec.secretary']}" /> 
+					</c:choose></td>
+				<td><h:panelGroup id="approvalSpeclbl">
+						<h:panelGroup
+							rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}">
+							<p:outputLabel value="#{lbl['lbl.sc.ministry.spec.secretary']}" />
 							<p:outputLabel value="*" styleClass="mandatory" valign="top" />
 						</h:panelGroup>
-					</h:panelGroup>
-				</td>
-				<td>
-					<c:choose>
-						<c:when test="#{!qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}">
+					</h:panelGroup></td>
+				<td><c:choose>
+						<c:when
+							test="#{!qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL)}">
 							<h:panelGroup id="approvalSpecTxt">
-								<h:panelGroup rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}">
+								<h:panelGroup
+									rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}">
 									<table>
 										<tr>
-											<td><p:selectOneMenu id="ministryspec" 
+											<td><p:selectOneMenu id="ministryspec"
 													required="#{isRequire}"
 													label="#{lbl['lbl.sc.ministry.spec.secretary']}"
 													value="#{scQt.ministrySpecSecrataryId.userId}"
 													style="width: 210px;margin-bottom: 5px;">
 													<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 														itemValue="#{null}" />
-													<f:selectItems
-														value="#{createQtBB.ministrySpecApprovers}"
+													<f:selectItems value="#{createQtBB.ministrySpecApprovers}"
 														var="appName" itemLabel="#{appName.userName}"
 														itemValue="#{appName.userId}" />
 												</p:selectOneMenu></td>
@@ -576,38 +592,40 @@
 							</h:panelGroup>
 						</c:when>
 						<c:otherwise>
-							<p:inputText id="specAppUserTxt" value="#{scQt.ministrySpecSecrataryId.userName}" style="width:200px;" disabled="true"
+							<p:inputText id="specAppUserTxt"
+								value="#{scQt.ministrySpecSecrataryId.userName}"
+								style="width:200px;" disabled="true"
 								rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}" />
 						</c:otherwise>
-					</c:choose>
-				</td>
+					</c:choose></td>
 			</tr>
 		</table>
 	</p:panel>
-
+	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
 		<ui:include
 			src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderZones.xhtml" />
 	</h:panelGroup>
 
 	<p:dialog id="revicepanelDlgs" widgetVar="panelApprovalDlgs"
-			header="#{lbl['lbl.sc.dialog.confirm.header.panelNonPanel']}"  resizable="false" width="500"
-			height="200" closable="false">
-			<table>
-				<tr>
-					<td align="center"><h:graphicImage
-							value="/css/images/design/exclamation.png" />
-						<p:outputLabel 
-							value="#{lbl['lbl.sc.dialog.confirm.business.owner.panelNonpanel']}" /></td>
-				</tr>
-			</table>
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this" partialSubmit="true" update="@form"
-					action="#{createQtBB.panelConformationDelete}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"  process="@this" partialSubmit="true" update="@form"
-					actionListener="#{createQtBB.panelNoConformation}"
-					oncomplete="panelApprovalDlgs.hide();" />
-			</div>
-		</p:dialog>
+		header="#{lbl['lbl.sc.dialog.confirm.header.panelNonPanel']}"
+		resizable="false" width="500" height="200" closable="false">
+		<table>
+			<tr>
+				<td align="center"><h:graphicImage
+						value="/css/images/design/exclamation.png" /> <p:outputLabel
+						value="#{lbl['lbl.sc.dialog.confirm.business.owner.panelNonpanel']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+				partialSubmit="true" update="@form"
+				action="#{createQtBB.panelConformationDelete}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
+				partialSubmit="true" update="@form"
+				actionListener="#{createQtBB.panelNoConformation}"
+				oncomplete="panelApprovalDlgs.hide();" />
+		</div>
+	</p:dialog>
 </ui:composition>
