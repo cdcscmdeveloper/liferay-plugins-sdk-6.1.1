@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
@@ -1819,5 +1820,27 @@ public class PmCommonUtil {
 				new FacesScopes()
 						.getUserLocale());
 	}
+	
+	public static void showFacesMsg(FacesContext fc,Severity severity,String msgId, String[] params){
+		fc.addMessage(
+				null,
+				new FacesMessage(
+						severity,
+						null,
+						getMsgFromMsgUtils(msgId,params)
+				));
+	}
+	
+	private static String getMsgFromMsgUtils(String msgId, String[] params){
+		return MessageUtils
+				.getMessage(
+						msgId,
+						params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes()
+								.getUserLocale());
+	}
+	
+	
 	
 }
