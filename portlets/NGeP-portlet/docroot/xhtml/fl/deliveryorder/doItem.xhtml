@@ -132,7 +132,7 @@
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/>
     				</f:facet>
 						<h:outputText id="remaingQtyTxt"
-							value="#{doItems.orderedQty - doItems.deliveredQty - doItems.chargeReceivedQty - doItems.sumDeliveredQty + doItems.rejectedQty}" style="float:right;">
+							value="#{doItems.orderedQty - doItems.chargeReceivedQty - doItems.sumDeliveredQty + doItems.rejectedQty}" style="float:right;">
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</h:outputText>
