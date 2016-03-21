@@ -121,20 +121,9 @@ public interface QTConstants {
 	public static final String NODE_DIVISION = "division";
 	public static final String NODE_DISTRICT = "district";
 	public static final String NODE_CITY = "city";
-
-	public static final String DOCTYPE_PREPARE_SPEC = "PS";
-	public static final String DOCTYPE_BSV = "BSV";
-	public static final String DOCTYPE_PROPOSAL = "PR";
-	public static final String DOCTYPE_OPENING_COMMITTE = "OC";
-	public static final String DOCTYPE_EVAL_COMMITTE = "EC";
-	public static final String DOCTYPE_SPEC_COMMITTE = "SC";
+	
 	public static final String DOCTYPE_MEETING = "MS";
-	public static final String EVALUATION_ONE_TIER = "1";
-	public static final String EVALUATION_TWO_TIER = "2";
 
-	public static final int QUOTAION_VALUE = 20000;
-	public static final String OPEN_TYPE = "O";
-	public static final String RESTRICTED_TYPE = "R";
 	public static final String PRESENTATION_DEMO = "PD";
 
 	public static final String BSV_TYPE_BRIEFING = "B";
@@ -147,12 +136,6 @@ public interface QTConstants {
 	// SPECIFICATION CONSTANTS
 	public static final String TECHNICAL_DOC_TYPE = "1";
 	public static final String FINANCIAL_DOC_TYPE = "2";
-	public static final String TECHNICAL_SPEC_TYPE = "T";
-	public static final String FINANCIAL_SPEC_TYPE = "F";
-	public static final String CIRCULAR_PANEL_TYPE = "PQ";
-	public static final String CIRCULAR_CENTRAL_CONTRACT_TYPE = "CQ";
-	public static final String ITEM_SPECIFIC_TYPE = "Specific";
-	public static final String ITEM_GENERAL_TYPE = "General";
 	public static final String TEMPLETE_SPEC_CODE = "TS";
 	public static final String TECHNICAL_GOV_CODE = "TG";
 	public static final String TECHNICAL_PRIVATE_CODE = "TN";
