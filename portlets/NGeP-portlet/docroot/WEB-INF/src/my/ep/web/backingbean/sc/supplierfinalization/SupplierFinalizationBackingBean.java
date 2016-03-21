@@ -329,9 +329,16 @@ public class SupplierFinalizationBackingBean extends
 	 * To navigate to the selected tab
 	 */
 	public void onTabMenuChangeAction() {
-		Integer selectedTabIndex = Integer.valueOf(FacesContext
+		Integer selectedTabIndex = null; 
+		String selectedTabIndexStr = FacesContext
 				.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("selectedTabIndex"));
+				.getRequestParameterMap().get("selectedTabIndex");
+		
+		if (StringUtils.isNotBlank(selectedTabIndexStr)) {
+			selectedTabIndex = Integer.valueOf(selectedTabIndexStr);
+		} else {
+			selectedTabIndex = getManagedBean().getActiveIndex();
+		}
 		
 		switch (selectedTabIndex) {
 			case 0:
@@ -347,7 +354,7 @@ public class SupplierFinalizationBackingBean extends
 				navigateToEndorsementReportTab();	
 				break;
 			case 4:
-				navigateToCommitteeEndorsementTab();
+				navigateToCommitteeEndorsementStatusTab();
 				break;
 		}
 		
@@ -458,7 +465,7 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setFinalizationEndorsementRemarks(remarks);		
 	}		
 
-	private void navigateToCommitteeEndorsementTab() {
+	private void navigateToCommitteeEndorsementStatusTab() {
 		this.getManagedBean().setActiveIndex(
 				this.getManagedBean().getCommEndorsementTabIndex());
 		retrieveEndorsementCommitteeDetails();
@@ -1056,9 +1063,14 @@ public class SupplierFinalizationBackingBean extends
 					break;
 	
 				case 3:
-					// Committee Endorsement Tab
+					// Committee Endorsement Report Tab
 					reqDTO.setScQtFinalization(scQtFinalization);
 					break;
+					
+				case 4:
+					// Committee Endorsement Status Tab
+					reqDTO.setScQtFinalization(scQtFinalization);
+					break;					
 			}
 			return reqDTO;
 		} finally {
@@ -1086,26 +1098,14 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setCurrentZone(selectedZone);
 		getManagedBean().setPayLoad(dataType);
 		getManagedBean().setCurrentStatusId(currentStatusId);
+		getManagedBean().setActiveIndex(activeIndex);
 		getManagedBean().setZoneActiveIndex(
 				selectedZone != null ? selectedZone.getZoneTabIndex() : 0);
 		getManagedBean().setSecretaryUser(isSecretaryUser);
 
 		loadInitialData(qtId);
 
-		switch (activeIndex) {
-		case 0:
-			navigateToPreparationTab();
-			break;
-		case 1:
-			navigateToBriefingPaperTab();
-			break;
-		case 2:
-			navigateToSupplierFinalizationTab();
-			break;
-		case 3:
-			navigateToCommitteeEndorsementTab();
-			break;
-		}
+		onTabMenuChangeAction();
 	}
 
 	private void setTaskDetails(Integer activeIndex,
