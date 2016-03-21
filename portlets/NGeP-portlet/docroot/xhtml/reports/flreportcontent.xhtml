@@ -254,7 +254,7 @@
 							<p:column>
 								<table style="width: 100%;">
 									<tr style="width: 100%;">
-										<td><p:outputLabel
+										<td><p:outputLabel style="width:110%;"
 												value="#{lbl['lbl.rpt.loaphysicalno']}" /></td>
 									</tr>
 								</table>
@@ -294,7 +294,7 @@
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flSstView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.sstScreen']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:200px;" />
 							<p:inputText maxlength="20" value="#{reportBackingBean.flSst}"
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
@@ -365,7 +365,7 @@
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flRecNoteNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.flRecNoteNo']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:181px;" />
 							<p:inputText maxlength="20"
 								value="#{reportBackingBean.flRecNoteNo}"
 								style="margin-top:5px;width:290px;">
@@ -407,7 +407,7 @@
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flAcknowledgeOfficerView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.ackofficername']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:183px;" />
 							<p:selectOneMenu
 								value="#{reportBackingBean.flAcknowledgeOfficer}"
 								style="margin-top:5px;width:300px;">
@@ -422,7 +422,7 @@
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flPayOfficerView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.paymentofficername']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:188px;" />
 							<p:selectOneMenu value="#{reportBackingBean.flPaymentofficer}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
@@ -622,7 +622,7 @@
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierDeliveryOrderNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.supplierDeliveryOrderNo']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:175px;" />
 							<p:inputText maxlength="30"
 								value="#{reportBackingBean.flSupplierDeliveryOrderNo}"
 								style="margin-top:5px;width:290px;">
@@ -668,7 +668,7 @@
 						<c:if
 							test="#{flReportBackingBean.managedBean.rptGenBean.flStopInstructionNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.StopInstructionNo']}"
-								style="margin-top:5px;width:160px;" />
+								style="margin-top:5px;width:183px;" />
 							<p:inputText value="#{reportBackingBean.flStopInstructionNo}"
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
@@ -3466,7 +3466,7 @@
 						<TD class="columnGenClass"><c:if
 								test="#{reportBackingBean.managedBean.rptGenBean.flContractRequestCreatedDateView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.cntrReqCrtdDtFrm']}"
-									style="width:206px;" />
+									style="width:238px;" />
 							</c:if> <c:if
 								test="#{reportBackingBean.managedBean.rptGenBean.flContractOrderDateView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.cntrOrderDtFrm']}"
@@ -3475,7 +3475,7 @@
 								test="#{reportBackingBean.managedBean.rptGenBean.flDeliveryOrderCreatedDateView}">
 								<p:outputLabel
 									value="#{lbl['lbl.rpt.dlvryOrderCrtdReqCrtdDtFrm']}"
-									style="width:206px;" />
+									style="width:220px;" />
 							</c:if> <c:if
 								test="#{reportBackingBean.managedBean.rptGenBean.flFRNCreatedDateView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.frnCrtdDtFrm']}"
@@ -3483,7 +3483,7 @@
 							</c:if> <c:if
 								test="#{reportBackingBean.managedBean.rptGenBean.flStopInstructionCreatedDateView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.stopInstructCrtdDtFrm']}"
-									style="width:206px;" />
+									style="width:230px;" />
 							</c:if> <c:if
 								test="#{reportBackingBean.managedBean.rptGenBean.flInvoiceCreatedDateView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.invoiceCrtdDtFrm']}"
@@ -3491,7 +3491,7 @@
 							</c:if> <c:if
 								test="#{reportBackingBean.managedBean.rptGenBean.flContractOrderCreatedDateView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.cntrOrderCrtdDtFrm']}"
-									style="width:206px;" />
+									style="width:221px;" />
 							</c:if> <c:if
 								test="#{reportBackingBean.managedBean.rptGenBean.flPurchaseOrderCreatedDateView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.purchaseorderCrtdDtFrm']}"
