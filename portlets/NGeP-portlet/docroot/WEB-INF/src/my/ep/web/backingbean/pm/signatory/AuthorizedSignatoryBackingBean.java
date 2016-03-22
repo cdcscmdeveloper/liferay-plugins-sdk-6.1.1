@@ -39,6 +39,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -299,17 +300,10 @@ public class AuthorizedSignatoryBackingBean extends
 	 */
 	private boolean checkEffDate(PmCertSignatory pmCertSignatory){
 		log.info("checkEffDate");
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.clear(Calendar.HOUR);
-		calendar.clear(Calendar.MINUTE);
-		calendar.clear(Calendar.SECOND);
-		calendar.clear(Calendar.MILLISECOND);
-
-		Date currentDate =  calendar.getTime();
+		Date currentDate =  DateUtils.getCurrentDateWithoutTime();
 		boolean isActive = true;
 		// effDate after currentDate
-		if(pmCertSignatory.getEffDate().compareTo(currentDate)>0){
+		if(! pmCertSignatory.isBrandNew() && pmCertSignatory.getEffDate().compareTo(currentDate)>0){
 			isActive = false;
 		// expDate not null and expDate before currentDate
 		}else if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
@@ -321,14 +315,7 @@ public class AuthorizedSignatoryBackingBean extends
 	
 	public boolean checkExpDate(PmCertSignatory pmCertSignatory){
 		log.info("checkExpDate");
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.clear(Calendar.HOUR);
-		calendar.clear(Calendar.MINUTE);
-		calendar.clear(Calendar.SECOND);
-		calendar.clear(Calendar.MILLISECOND);
-
-		Date currentDate =  calendar.getTime();
+		Date currentDate =   DateUtils.getCurrentDateWithoutTime();
 		boolean isActive = true;
 		if(!pmCertSignatory.isBrandNew() && !getManagedBean().isValidationError()){
 			if(pmCertSignatory.getEffDate() == null){

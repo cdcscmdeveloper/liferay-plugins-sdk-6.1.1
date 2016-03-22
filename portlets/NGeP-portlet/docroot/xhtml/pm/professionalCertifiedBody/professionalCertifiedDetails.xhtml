@@ -21,7 +21,7 @@
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyName}" 
-			size="40" maxlength="255"
+			size="40" maxlength="255" style="width: 375px;"
 			disabled="#{!profcertifiedbodyBackingBean.managedBean.certBody.brandNew}"/>
 		</td>
 	  </tr>
@@ -29,7 +29,7 @@
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.desc']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputTextarea row="40" cols="80" value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" 
-			 maxlength="500" style="width: 375px;"/></td>
+			 maxlength="255" style="width: 375px;"/></td>
 	  </tr>  
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.profcert']}" />
