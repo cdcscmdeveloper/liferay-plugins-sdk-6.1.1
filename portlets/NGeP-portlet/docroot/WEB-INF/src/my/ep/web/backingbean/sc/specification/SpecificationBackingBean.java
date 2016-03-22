@@ -1063,20 +1063,7 @@ public class SpecificationBackingBean extends
 									.getScQtSupplierCriteria()
 									.setLocationLevel(new PmParameter());
 						}
-						if (null == this.getManagedBean().getQt()
-								.getScQtSupplierCriteria().getLocationLevel()
-								.getParameterId()) {
-							if (scQt.isZonal()) {
-								retrieveNonZonalDtls();
-							}
-						} else {
-
-							if (null != tenderResDTO.getLocationDetails()) {
-								retriveSupplierCriteriaLocations(
-										tenderResDTO.getLocationDetails(), scQt);
-
-							}
-						}
+						
 					} else {
 						if (scQt.getScQtSupplierCriteria().isAllState()
 								&& ParameterConst.QUOTATION_TENDER_TYPE_OPEN
@@ -1134,12 +1121,6 @@ public class SpecificationBackingBean extends
 									.getScQtSupplierCriteria()
 									.setLocationLevel(new PmParameter());
 						}
-
-						if (null == this.getManagedBean().getQt()
-								.getScQtSupplierCriteria().getLocationLevel()
-								.getParameterId()) {
-							retrieveNonZonalDtls();
-						} else {
 							if (null == tenderResDTO.getLocationDetails()
 									|| tenderResDTO.getLocationDetails()
 											.isEmpty()) {
@@ -1151,11 +1132,7 @@ public class SpecificationBackingBean extends
 									tenderResDTO = QtDetailsSO
 											.retriveQTSuppQulCriDetails(tenderReqDTO);
 								}
-							}
-							if (null != tenderResDTO.getLocationDetails()) {
-								retriveSupplierCriteriaLocations(
-										tenderResDTO.getLocationDetails(), scQt);
-							}
+							
 						}
 					} else {
 						if (scQt.getScQtSupplierCriteria().isAllState()
