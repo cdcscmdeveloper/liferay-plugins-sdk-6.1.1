@@ -207,6 +207,16 @@
 						value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png"
 						title="#{lbl['lbl.sc.resume.bid']}" />
 				</p:commandLink>
+				<p:commandLink id="rescheduleButton"
+					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidRescheduled}"
+					process="@this" partialSubmit="true"
+					actionListener="#{biddingBB.reScheduleOrReBidPopUpAction(bid)}"
+					update="@([id$=rescheduleRebidPopUp])"
+					oncomplete="bidRescheduleOrResume.show();" size="5">
+					<p:graphicImage id="resheduleBtnImage"
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-action.png"
+						title="#{lbl['lbl.sc.reschedule.bid']}" />
+				</p:commandLink>
 
 			</p:column>
 
@@ -236,4 +246,5 @@
 				src="/xhtml/sc/bidding/bidManagement/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
 		</p:dialog>
 	</h:panelGrid>
+	
 </ui:composition>

@@ -17,13 +17,12 @@
 							<td><p:selectOneRadio id="bidAction"
 									value="#{biddingBB.managedBean.bidAction.actionType}">
 									<f:selectItems
-										value="#{biddingBB.getRadioButtonCodeValues(ParameterTypeConst.bidActionTypes)}" />
+										value="#{biddingBB.getBidActionTypeRadioButtonCodeValues(ParameterTypeConst.bidActionTypes)}" />
 
 									<p:ajax event="change" process="@this,bidAction"
 										partialSubmit="true"
 										listener="#{biddingBB.bidActionTypeChangeListener}"
 										update="reScheduleOrRebid"></p:ajax>
-
 								</p:selectOneRadio></td>
 							<td style="margin-top: -3px"><ac:iconTooltip
 									value="#{lbl['lbl.sc.action.bidding.reschedule.tooltip']}" />
@@ -52,20 +51,24 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					</p:inputText></TD>
 			</tr>
-			<tr>
-				<TD style="width: 25%"><h:outputLabel id="pausedTimeLblBRS"
-						value="#{lbl['lbl.sc.bid.paused.time']}" /></TD>
-				<TD style="width: 25%"><p:inputText id="bidPausedTime"
-						value="#{biddingBB.managedBean.bidAction.createdDate}" size="14"
-						disabled="true">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-					</p:inputText></TD>
-				<TD style="width: 25%"><h:outputLabel id="remainingTimeBRS"
-						value="#{lbl['lbl.sc.remaining.time']}" /></TD>
-				<TD style="width: 25%"><p:inputText id="remainTime" size="14"
-						disabled="true" value="#{biddingBB.managedBean.duration}" /></TD>
-			</tr>
+			<c:if
+				test="#{biddingBB.managedBean.bidAction.actionType ne biddingBB.managedBean.reschedule}">
+
+				<tr>
+					<TD style="width: 25%"><h:outputLabel id="pausedTimeLblBRS"
+							value="#{lbl['lbl.sc.bid.paused.time']}" /></TD>
+					<TD style="width: 25%"><p:inputText id="bidPausedTime"
+							value="#{biddingBB.managedBean.bidAction.createdDate}" size="14"
+							disabled="true">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</p:inputText></TD>
+					<TD style="width: 25%"><h:outputLabel id="remainingTimeBRS"
+							value="#{lbl['lbl.sc.remaining.time']}" /></TD>
+					<TD style="width: 25%"><p:inputText id="remainTime" size="14"
+							disabled="true" value="#{biddingBB.managedBean.duration}" /></TD>
+				</tr>
+			</c:if>
 
 			<tr>
 				<TD style="width: 25%; text-align: right;"><h:outputText
@@ -84,7 +87,7 @@
 						showDetail="false" display="icon" /></TD>
 				<TD style="width: 25%; text-align: right;"><h:outputText
 						value="* " styleClass="mandatory"
-						rendered="#{biddingBB.managedBean.bidAction.actionType eq 'B'}" />
+						rendered="#{biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.reBidding}" />
 					<h:outputLabel id="newBidEndDateLbl"
 						value="#{lbl['lbl.sc.new.bidding.end']}" /></TD>
 				<TD style="width: 25%"><p:inputText id="newResumeBidEndDate"
@@ -94,9 +97,9 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					</p:inputText> <p:calendar id="newReBidEndDate" showOn="button" required="true"
-						mindate="#{biddingBB.managedBean.mindate}"
+						maxMinute="0" mindate="#{biddingBB.managedBean.mindate}"
 						maxdate="#{biddingBB.managedBean.maxdate}"
-						rendered="#{biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.reBidding}"
+						rendered="#{(biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.reBidding) or (biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.reschedule)}"
 						size="14" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 						label="#{lbl['lbl.sc.new.bidding.end']}"
 						value="#{biddingBB.managedBean.bidAction.newEndDate}">

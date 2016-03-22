@@ -19,6 +19,9 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -26,17 +29,16 @@ import my.ep.constant.sc.BiddingConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.schedulermanager.SchedulerManagerBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingManagedBean;
-import my.ep.web.scheduler.constants.common.SchedulerConstants;
-import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -236,34 +238,35 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			BiddingResDTO resDto = biddingSO
 					.retrieveLastBidActionByScheduleId(reqDto);
 			if (resDto.isSuccessful()) {
-				getManagedBean().setBidAction(resDto.getScBidAction());
-				getManagedBean().getBidAction().setRemark(null);
-				resetSearchFormAction();
+				ScBidAction lastBidAction = resDto.getScBidAction();
+				this.getManagedBean().getBidAction().setScBidSchedule(bid);
+				if (lastBidAction != null
+						&& lastBidAction.getActionType().equalsIgnoreCase(
+								BiddingConst.BID_ACTION_TYPE_FAILED)) {
+					this.getManagedBean()
+							.getBidAction()
+							.setActionType(
+									BiddingConst.BID_ACTION_TYPE_RESCHEDULE);
+					getManagedBean().setMindate(getNextDate());
+				} else {
+					this.getManagedBean().getBidAction()
+							.setActionType(BiddingConst.BID_ACTION_TYPE_RESUME);
+					getManagedBean().setMindate(new Date());
+					getManagedBean().setRemainingTime(
+							remainingTimeCalculator(
+									lastBidAction.getCreatedDate(),
+									bid.getEndDate()));
+					getManagedBean().setDuration(
+							durationCalculator(lastBidAction.getCreatedDate(),
+									bid.getEndDate()));
+					getManagedBean().setNewBidDuration("");
+				}
 			}
 
 		} finally {
 			biddingSO = null;
 
 		}
-		if (getManagedBean().getBidAction() != null) {
-
-			getManagedBean().getBidAction().setScBidSchedule(bid);
-
-			getManagedBean().getBidAction().setActionType(
-					BiddingConst.BID_ACTION_TYPE_RESUME);
-
-			getManagedBean().setMindate(new Date());
-
-			getManagedBean().setRemainingTime(
-					remainingTimeCalculator(getManagedBean().getBidAction()
-							.getCreatedDate(), bid.getEndDate()));
-
-			getManagedBean().setDuration(
-					durationCalculator(getManagedBean().getBidAction()
-							.getCreatedDate(), bid.getEndDate()));
-			getManagedBean().setNewBidDuration("");
-		}
-
 	}
 
 	/**
@@ -274,20 +277,23 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	public void bidActionTypeChangeListener(AjaxBehaviorEvent e) {
 
 		String type = (String) e.getComponent().getAttributes().get("value");
-
 		getManagedBean().getBidAction().setActionType(type);
-
 		getManagedBean().getBidAction().setNewStartDate(null);
 		getManagedBean().getBidAction().setNewEndDate(null);
 		getManagedBean().setNewBidDuration("");
 
 		if (type.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(DateUtils.getCurrentDateWithoutTime());
-			c.add(Calendar.DATE, 1);
-			getManagedBean().setMindate(c.getTime());
+			getManagedBean().setMindate(getNextDate());
+		}else{
+			getManagedBean().setMindate(new Date());
 		}
+	}
 
+	private Date getNextDate() {
+		Calendar c = Calendar.getInstance();
+		c.setTime(DateUtils.getCurrentDateWithoutTime());
+		c.add(Calendar.DATE, 1);
+		return c.getTime();
 	}
 
 	/**
@@ -321,7 +327,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			getManagedBean().setNewBidDuration(getManagedBean().getDuration());
 
 		} else if (getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)) {
+				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)
+				|| getManagedBean()
+						.getBidAction()
+						.getActionType()
+						.equalsIgnoreCase(
+								ParameterConst.BID_ACTION_TYPES_RESCHEDULE)) {
 
 			getManagedBean().getBidAction().setNewEndDate(null);
 			getManagedBean().setMindate(startDate);
@@ -383,14 +394,14 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			reqDTO.setScBidAction(this.getManagedBean().getBidAction());
 			BiddingResDTO resDTO = biddingSO.updateBidAction(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("resume Or Rebid Action successful");
+				log.info("resume Or Rebid Or Reschedule Action successful");
 			}
 
 		}
 
 		finally {
 			biddingSO = null;
-			getManagedBean().setBidAction(null);
+			getManagedBean().setBidAction(new ScBidAction());
 			getManagedBean().setRemainingTime(null);
 			getManagedBean().setDuration(null);
 
@@ -886,5 +897,42 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				.getScRequestItem().getTplSpecQuestion(),
 				itemBean.getStartingPrice(), this.getManagedBean()
 						.getSelectedBidItem().getQty());
+	}
+
+	public SelectItem[] getBidActionTypeRadioButtonCodeValues(
+			String parameterType) {
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		if (this.getManagedBean().getBidAction().getActionType() != null
+				&& this.getManagedBean()
+						.getBidAction()
+						.getActionType()
+						.equalsIgnoreCase(
+								BiddingConst.BID_ACTION_TYPE_RESCHEDULE)) {
+			SearchFilterBean pmParameterFilterBean = new SearchFilterBean(
+					"pmParameter.parameterCode",
+					SearchOperator.OPERATOR_EQUALS.value(),
+					BiddingConst.BID_ACTION_TYPE_RESCHEDULE);
+			pmParameterFilterBean.setCaseInsensitive(true);
+			searchBean.getDataFilterBeans().add(pmParameterFilterBean);
+		} else {
+			SearchFilterBean pmParameterFilterBean = new SearchFilterBean(
+					"pmParameter.parameterCode",
+					SearchOperator.OPERATOR_NOT_EQUALS.value(),
+					BiddingConst.BID_ACTION_TYPE_RESCHEDULE);
+			pmParameterFilterBean.setCaseInsensitive(true);
+			searchBean.getDataFilterBeans().add(pmParameterFilterBean);
+			SearchFilterBean parameterFilterBean = new SearchFilterBean(
+					"pmParameter.parameterCode",
+					SearchOperator.OPERATOR_NOT_EQUALS.value(),
+					BiddingConst.BID_ACTION_TYPE_FAILED);
+			parameterFilterBean.setCaseInsensitive(true);
+			searchBean.getDataFilterBeans().add(parameterFilterBean);
+		}
+		System.out.println("********************&&&&&&&&&&&&& min date is &&&&&&&&&&&&*************************"+getManagedBean().getMindate());
+
+		SelectItem[] items = super.getRadioButtonCodeValuesBySearchBean(
+				parameterType, searchBean);
+		return items;
 	}
 }
