@@ -704,6 +704,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			navgPage=NAV_TO_STOP_INSTRUCTION;
 		} else if(docType.equals(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE) || docType.equals(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
 			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
+			danBB.renewSesionObject();
 			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setDanId(Long.valueOf(flDocId));
