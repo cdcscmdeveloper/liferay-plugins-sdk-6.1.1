@@ -105,7 +105,7 @@
 					rendered="#{delOrder.flDeliveryAddress.flAddress != null}"
 					value="#{paymentMatchBackingBean.getFullAddress(delOrder.flDeliveryAddress.flAddress)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}"
+			<p:column headerText="#{lbl['lbl.fl.do.supp.do.no']}"
 				style="white-space:normal;text-align:center;">
 				<p:commandLink value="#{delOrder.supplierDoRef}" style="float:left;"
 					rendered="#{delOrder.recordStatusFlg==1}" immediate="true"
