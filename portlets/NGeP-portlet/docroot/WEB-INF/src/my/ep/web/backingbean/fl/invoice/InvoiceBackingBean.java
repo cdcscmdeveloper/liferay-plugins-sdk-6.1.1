@@ -88,6 +88,7 @@ import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
+import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
@@ -1099,6 +1100,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getInvoice().getAccountNo());
 		if(supplierBank!=null) {
 			getManagedBean().getInvoice().setPaymentBank(supplierBank.getPmFinancialOrg());
+			if(getManagedBean().getInvoice().getPaymentBankAddress() != null){
+				getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),getManagedBean().getInvoice().getPaymentBankAddress()));
+			}else{
+				FlAddress flAddress = new FlAddress();
+				getManagedBean().getInvoice().setPaymentBankAddress(convertSmAddressToFlAddress(supplierBank.getSmAddress(),flAddress));
+			}
+			
+			getManagedBean().getInvoice().setPaymentBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 		}
 	}
 	
