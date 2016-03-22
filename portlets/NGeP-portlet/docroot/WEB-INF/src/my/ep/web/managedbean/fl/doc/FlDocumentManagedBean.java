@@ -704,7 +704,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+				//flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 			}
 			if(isFlFulfilmentApprover() || isAuditor()){
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
@@ -712,7 +712,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+				//flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
