@@ -26,7 +26,7 @@
 					<h:outputLabel value="#{lbl['lbl.pm.category.level']}"></h:outputLabel>
 				</h:panelGroup>
 
-				<p:selectOneMenu style="width:205px;margin-bottom:5px;"
+				<p:selectOneMenu
 					value="#{categoryBackingBean.managedBean.pmCategoryLevel}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
@@ -83,7 +83,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.category.level']}" />
 						<p:outputLabel value="* " styleClass="mandatory" /></td>
 
-					<td><p:selectOneMenu  style="width:205px;margin-bottom:5px;"
+					<td><p:selectOneMenu
 							value="#{categoryBackingBean.managedBean.pmCategoryLevel}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
@@ -104,15 +104,15 @@
 							maxlength="2" size="27" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.desc']}" /></td>
 					<td><p:inputText
-							value="#{categoryBackingBean.managedBean.mainCatDesc}" size="50" /></td>
+							value="#{categoryBackingBean.managedBean.mainCatDesc}" size="50" maxlength="255" /></td>
 				</tr>
 				<tr>
 					<h:panelGroup  
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==null || categoryBackingBean.managedBean.pmCategoryLevel==0 ||
 						 categoryBackingBean.managedBean.pmCategoryLevel==1}">
 						<td><p:outputLabel value="#{lbl['lbl.pm.status']}" /></td>
-						<td><p:selectOneMenu style="width:205px"
-								label="lbl.pm.status"
+						<td><p:selectOneMenu id="somCatL1Status"
+								label="#{lbl['lbl.pm.status']}"
 								value="#{categoryBackingBean.managedBean.status}">
 								<f:selectItems
 									value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
@@ -130,7 +130,7 @@
 							value="#{lbl['lbl.pm.sub.category.desc']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:inputText style="width : auto !important"
-							value="#{categoryBackingBean.managedBean.subCatDesc}" size="50"
+							value="#{categoryBackingBean.managedBean.subCatDesc}" size="50" maxlength="255"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 						
 				</tr>
@@ -138,8 +138,8 @@
 					<h:panelGroup
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2}">
 						<td><p:outputLabel value="#{lbl['lbl.pm.status']}" /></td>
-						<td><p:selectOneMenu style="width:205px"
-								label="lbl.pm.status"
+						<td><p:selectOneMenu id="somCatL2Status"
+								label="#{lbl['lbl.pm.status']}"
 								value="#{categoryBackingBean.managedBean.status}">
 								<f:selectItems
 									value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
@@ -149,22 +149,22 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
-					<td><p:inputText style="width : auto !important"
+					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.subDivCode}" size="27"
 							maxlength="2"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.desc']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 					<td><p:inputText style="float: right:width: 15%"
-							value="#{categoryBackingBean.managedBean.subDivDesc}" size="50"
+							value="#{categoryBackingBean.managedBean.subDivDesc}" size="50" maxlength="255"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 				</tr>
 				<tr>
 					<h:panelGroup
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}">
 						<td><p:outputLabel value="#{lbl['lbl.pm.status']}" /></td>
-						<td><p:selectOneMenu style="width:205px"
-								label="lbl.pm.status"
+						<td><p:selectOneMenu id="somCatL3Status"
+								label="#{lbl['lbl.pm.status']}"
 								value="#{categoryBackingBean.managedBean.status}">
 								<f:selectItems
 									value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>

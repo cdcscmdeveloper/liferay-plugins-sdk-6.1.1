@@ -30,11 +30,12 @@
 							value="#{role.approvalLimit}"
 							required="#{!empty param['disableValidation']} and role.pmRole.limitRequired and role.recordStatusFlg eq 1}"
 							label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
-							disabled="#{!role.pmRole.limitRequired}" maxlength="16">
+							disabled="#{!role.pmRole.limitRequired}" maxlength="17">	
+							<f:validator validatorId="quantityDoubleRangeValidator" />
 							<f:validateDoubleRange minimum="1" />
-							<f:validateDoubleRange maximum="9999999999" />
+							<f:validateDoubleRange maximum="99999999999.99" />
 							<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							<p:ajax event="blur" process="@this" update="@this" />
 						</p:inputText>
 						<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
@@ -49,7 +50,7 @@
 							required="#{role.pmRole.roleCode eq 'FL_APPROVER' and role.recordStatusFlg eq 1}"
 							label="#{lbl['lbl.pm.profiles.authorisation.letterno']}"
 							disabled="#{!(role.pmRole.roleCode eq 'FL_APPROVER')}"
-							maxlength="30">
+							maxlength="50">
 							<p:ajax event="change" process="@this" />
 						</p:inputText>
 						<p:message id="auLetterNoMsg" for="auLetterNo" display="icon" />
