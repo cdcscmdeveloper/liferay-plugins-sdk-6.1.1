@@ -12397,6 +12397,7 @@ public class ReportBackingBean extends
 		reportNameList.add(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL);
 		reportNameList.add(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL);
 		reportNameList.add(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL);
+		reportNameList.add(ReportConst.SM_LIST_OF_APPL_STATUS);
 
 	}
 
