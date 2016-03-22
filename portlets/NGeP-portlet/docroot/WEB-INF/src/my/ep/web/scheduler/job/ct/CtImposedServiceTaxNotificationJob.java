@@ -54,7 +54,7 @@ public class CtImposedServiceTaxNotificationJob implements Job {
 					|| (currentDate.getTime() == sevenDaysPrior.getTime())
 					|| (currentDate.getTime() == fourteenDaysPrior.getTime())
 					|| (currentDate.getTime() == thirtyDaysPrior.getTime())) {
-				schedulerSO = BusinessDelegate.getInstance().getServiceObject(
+				schedulerSO = (ICtSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT, ICtSchedulerSO.class);			
 				schedulerSO.sendImposedServiceTaxNotification();
 			}			
