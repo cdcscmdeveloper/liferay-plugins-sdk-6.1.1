@@ -120,8 +120,12 @@
 							value="#{danBackingBean.getParameterDesc(ParameterTypeConst.assetInd, danBackingBean.managedBean.assetIndCode)}"/></td>
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:inputText
-							value="#{danBackingBean.managedBean.votFundCode}" size="9"
+							value="#{danBackingBean.managedBean.votFundType == ParameterConst.votAmanah? '':(danBackingBean.managedBean.votFundCode)}" size="9"
 							disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td> 
+					<td>
+						<p:inputText value="#{danBackingBean.managedBean.votFundType == ParameterConst.votAmanah? (danBackingBean.managedBean.votFundCode):''}" size="9" disabled="true" />
 					</td>
 				</tr>
 				<tr>
