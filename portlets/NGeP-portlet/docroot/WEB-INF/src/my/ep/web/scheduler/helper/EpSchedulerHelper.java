@@ -113,6 +113,31 @@ public class EpSchedulerHelper {
 		}
 	}
 
+	public static void runJobOnce(JobKey jobKey, Class<? extends Job> jobClass) {
+		// start scheduler if not started yet
+		try {
+			JobDetail jobDetail = null;
+			if (!EpSchedulerHelper.getScheduler().isStarted()) {
+				EpSchedulerHelper.getScheduler().start();
+			}
+
+			// check if job not exist, add to scheduler context
+			if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
+				jobDetail = JobBuilder.newJob(jobClass).withIdentity(jobKey)
+						.storeDurably().build();
+
+				// add job
+				EpSchedulerHelper.getScheduler().addJob(jobDetail, true);
+			}
+
+			// trigger job
+			EpSchedulerHelper.getScheduler().triggerJob(jobKey);
+
+		} catch (SchedulerException e) {
+			log.error(e.getMessage());
+		}
+	}
+
 	public static void runBuildJobNow(JobKey jobKey) {
 		// specify trigger
 		Trigger trigger;
