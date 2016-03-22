@@ -380,6 +380,7 @@
 			styleClass="pop_up_top" modal="true" width="700" height="500">
 			<p:messages id="chargePtjMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:panelGroup  id="chargedPtj">
+		   	<p:panel id="chargePtjSearchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
               <h:panelGrid columns="3">
                  <p:selectOneMenu for="chargeMinistry"  style="width:150px" disabled="true" >
             	    <f:selectItem itemLabel="#{lbl['lbl.fl.ministry']}" itemValue=""/>
@@ -410,6 +411,7 @@
                      value="#{contractRequestBackingBean.managedBean.ptjCodeNameSearchValues}" >
                      <p:ajax process="@this"/></p:inputText>
 			  </h:panelGrid>
+			  </p:panel>
 			  	<div class="ppRightBtn">
        		         
        		         <p:commandButton id="chargePtjSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableChargePtj"  
