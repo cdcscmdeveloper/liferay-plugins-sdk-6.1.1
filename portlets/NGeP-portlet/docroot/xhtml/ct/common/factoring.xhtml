@@ -59,7 +59,7 @@
    			  <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"  />
               <h:panelGrid columns="3">
               	<p:inputText   disabled="true" style="width:200px;"
-                    value="#{ctBackingBean.getBankAccNoName()}" />
+                    value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.bankName}" />
 				<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
 			  </h:panelGrid>
@@ -67,7 +67,7 @@
               <p:outputLabel  value="#{lbl['lbl.ct.bank.account.no']}"  /> 
               <h:panelGrid columns="3">
                  <p:inputText  style="width:200px;"
-                    disabled="true" value="#{ctBackingBean.managedBean.financialAccNo}" />
+                    disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.bankAccountNo}" />
                  <p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.account']}" />
 			  </h:panelGrid> 

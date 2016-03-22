@@ -43,7 +43,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String originalAccountNo;
 	private String curentAccNoBankName;
 	private String accBankName;
-	private String factoringBankAddress;
 	private String textBeforeSign;
 	private String buttonAction;
 	private String fileDirectory;
@@ -129,20 +128,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	 */
 	public void setAccBankName(String accBankName) {
 		this.accBankName = accBankName;
-	}
-	
-	/**
-	 * @return the factoringBankAddress
-	 */
-	public String getFactoringBankAddress() {
-		return factoringBankAddress;
-	}
-	
-	/**
-	 * @param factoringBankAddress the factoringBankAddress to set
-	 */
-	public void setFactoringBankAddress(String factoringBankAddress) {
-		this.factoringBankAddress = factoringBankAddress;
 	}
 	
 	/**

@@ -241,7 +241,7 @@
 				<h:panelGrid columns="4" style="width:400px;">
 					<h:panelGrid columns="3">
 						<p:inputText disabled="true" style="width:120px;"
-							value="#{supplierBackingBean.managedBean.ctContract.smSupplier.regNo}" />
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierRegNo}" />
 						<p:spacer width="1" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
 					</h:panelGrid>
@@ -249,9 +249,9 @@
 					<p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
 					<h:panelGrid columns="3">
 						<p:inputText disabled="true" style="width:120px;"
-							value="#{supplierBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierMofNo}" />
 						<p:spacer width="1" />
-						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
 					</h:panelGrid>
 				</h:panelGrid>
 				
@@ -291,7 +291,7 @@
 				
 				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
 				<p:inputText disabled="true" style="width:250px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson}" />
 				
 				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
 				
@@ -313,16 +313,16 @@
              <p:outputLabel value="#{lbl['lbl.ct.tel']}" />
              <h:panelGrid columns="4">
 				<p:inputText disabled="true" style="width:134px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNo}" />
                  <p:spacer width="10"></p:spacer>
 				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
 				<p:inputText disabled="true" style="width:135px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" />
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.faxNo}" />
 				</h:panelGrid>
 				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
 				<p:outputLabel value="#{lbl['lbl.ct.email']}" />
 				<p:inputText disabled="true" style="width:350px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactEmail}" />
 				
 				
 			</h:panelGrid>

@@ -56,10 +56,13 @@
 						</f:facet>
 						
 						<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-						    style="width:195px;" disabled="#{ctBackingBean.managedBean.viewContract}">
+						    style="width:195px;" rendered="#{!ctBackingBean.managedBean.viewContract}">
 							   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 							   <p:ajax process="@this"></p:ajax>
 						</p:selectOneMenu>
+						
+						<p:inputText value="#{varBond.financialOrgName}" style="width:180px;" disabled="true"
+							rendered="#{ctBackingBean.managedBean.viewContract}"/>
 					</p:column>
 					
 					<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
