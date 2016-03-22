@@ -143,9 +143,13 @@
 							value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.assetInd, paymentMatchBackingBean.managedBean.assetIndCode)}"/></td>
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:inputText
-							value="#{paymentMatchBackingBean.managedBean.votFundCode}"
+							value="#{paymentMatchBackingBean.managedBean.votFundType == ParameterConst.votAmanah? '':(paymentMatchBackingBean.managedBean.votFundCode)}" 
 							size="9" disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
 					</td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td> 
+					<td>
+						<p:inputText value="#{paymentMatchBackingBean.managedBean.votFundType == ParameterConst.votAmanah? (paymentMatchBackingBean.managedBean.votFundCode):''}" size="9" disabled="true" />
+					</td>					
 				</tr>
 				<tr>
 					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
