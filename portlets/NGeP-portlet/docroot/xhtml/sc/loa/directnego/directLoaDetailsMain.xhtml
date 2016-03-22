@@ -18,7 +18,7 @@
 		<ui:param name="isPendingRevisionStatus"
 			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION}" />
 		<ui:param name="isEditableStatus"
-			value="#{isPendingSubmissionStatus or isPendingRevisionStatus}" />
+			value="#{(isPendingSubmissionStatus || ((isPendingApprovalStatus|| isPendingRevisionStatus) and !empty lOADetailBackingBean.managedBean.taskId))}" />
 		<ui:param name="isAfterSupplierResponseStatus"
 			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingVerification"

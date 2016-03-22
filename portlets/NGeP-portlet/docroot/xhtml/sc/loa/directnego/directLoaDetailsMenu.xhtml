@@ -336,7 +336,7 @@
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{isEditableStatus}" /></td>
 				<td><p:selectOneRadio id="approvalReq" styleClass="commonLabel"
-						disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus or directLOABackingBean.managedBean.readOnly}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
 						required="true" label="#{lbl['lbl.sc.loiloa.loa.appr.req']}">
 						<f:selectItems
