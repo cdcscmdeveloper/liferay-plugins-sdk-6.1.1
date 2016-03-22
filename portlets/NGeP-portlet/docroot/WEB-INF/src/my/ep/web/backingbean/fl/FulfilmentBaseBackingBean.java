@@ -13,6 +13,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
+
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -53,8 +55,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
 
 /**
  * Base Backing Bean for Fulfilment.
@@ -486,6 +486,26 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	
 		return flAddress;
 		
+	}
+	
+	protected FlAddress convertSmAddressToFlAddress(SmAddress smAddress,FlAddress flAddress){
+		
+		flAddress.setAddress1(smAddress.getAddress1());
+		flAddress.setAddress2(smAddress.getAddress2());
+		flAddress.setAddress3(smAddress.getAddress3());
+		flAddress.setAddress4(smAddress.getAddress4());
+		flAddress.setMapLatitude(smAddress.getMapLatitude());
+		flAddress.setMapLongitude(smAddress.getMapLongitude());
+		flAddress.setPmCity(smAddress.getPmCity());
+		flAddress.setPmCountry(smAddress.getPmCountry());
+		flAddress.setPmDistrict(smAddress.getPmDistrict());
+		if(smAddress.getPmDivision()!=null){
+			flAddress.setPmDivision(smAddress.getPmDivision());
+		}
+		flAddress.setPmState(smAddress.getPmState());
+		flAddress.setPostcode(smAddress.getPostcode());
+		
+		return flAddress;
 	}
 	
 	/**
