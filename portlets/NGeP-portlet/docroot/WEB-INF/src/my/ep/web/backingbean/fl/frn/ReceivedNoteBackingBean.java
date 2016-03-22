@@ -1179,6 +1179,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	}
 	
 	public void checkLastTaxFRN(){
+		getManagedBean().setLastFRNTaxInv(false);
 		BigDecimal sumTotalReceivedQty = BigDecimal.ZERO;
 		BigDecimal sumTotalOrderQty = BigDecimal.ZERO;
 		BigDecimal sumTotalOrderReceivedQty = BigDecimal.ZERO;
