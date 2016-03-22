@@ -244,6 +244,12 @@ public class QTCommitteBackingBean extends
 							SearchOperator.OPERATOR_EQUALS.value(), 
 							DbValueConst.RECORD_STATUS_ACTIVE));
 			
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.recordStatusFlg", 
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE)					
+					);			
+			
 			/*Removed based on Ministry search for Add Users
 			 * if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
 				userSearchBean
