@@ -381,7 +381,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			supplierDtl.setBranchName(null);
 		}
 		FlAddress flAddress = new FlAddress();
-		CtAddress ctAddress = ctSupplierDtl.getCtSupplierAddress();
+		CtAddress ctAddress = ctSupplierDtl.getSupplierAddress();
 		flAddress.setAddress1(ctAddress.getAddress1());
 		flAddress.setAddress2(ctAddress.getAddress2());
 		flAddress.setAddress3(ctAddress.getAddress3());

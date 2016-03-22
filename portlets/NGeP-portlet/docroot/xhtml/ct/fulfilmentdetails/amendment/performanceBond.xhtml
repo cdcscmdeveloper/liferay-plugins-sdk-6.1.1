@@ -30,9 +30,7 @@
             </p:column>	
          
             <p:column headerText="#{lbl['lbl.ct.financial.inst']}"  style="width:25%;" styleClass="column-align-center">
-                <p:selectOneMenu id="orgName" value="#{varBond.financialOrg.financialOrgId}" style="width:180px;" disabled="true">
-                     <f:selectItems value="#{amendmentBackingBean.retrieveFinancialOrgList()}"/>
-                </p:selectOneMenu>
+                <p:inputText value="#{varBond.financialOrgName}" style="width:180px;" disabled="true"/>
             </p:column>	
          
             <p:column headerText="#{lbl['lbl.ct.amount']}" style="width:10%;" styleClass="column-align-center">

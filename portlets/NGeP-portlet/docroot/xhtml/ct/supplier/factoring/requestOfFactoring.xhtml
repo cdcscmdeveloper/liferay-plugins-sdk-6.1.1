@@ -74,7 +74,7 @@
 					<tr>
 						<td style="width: 20%"><h:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
 						<td style="width: 10%" class="header-info-text">
-						     #{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.loaNo}
+						     #{supplierBackingBean.managedBean.contractVer.ctContractValue.loaNo}
 						</td>
 						
 						<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
@@ -84,7 +84,7 @@
 						
 						<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.supplier.name']}" /></td>
 						<td style="width: 15%" class="header-info-text">
-							 #{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.supplierName}
+							 #{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}
 					     </td>
 						
 						<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
@@ -105,11 +105,11 @@
 					
 						<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 						<p:inputText id="loaNo" style="width:200px;" disabled="true" 
-							value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.loaNo}"/>
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaNo}"/>
 						
 						<p:outputLabel value="#{lbl['lbl.ct.loa.date']}" />
 						<p:inputText style="width:200px;" disabled="true"
-							value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.ackDate}">
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.ackDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 		
@@ -123,17 +123,17 @@
 		
 						<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
 						<p:inputText style="width:200px;" disabled="true"
-							value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.loaPhysicalNo}" />
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.loaPhysicalNo}" />
 		
 						<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 						<p:inputText style="width:200px;" disabled="true"
-							value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.effDate}">
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 		
 						<p:outputLabel value="#{lbl['lbl.ct.expiry.date']}" />
 						<p:inputText style="width:200px;" disabled="true"
-							value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}">
+							value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 		
@@ -143,7 +143,7 @@
 		
 						<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 						<p:inputText for="physicalNo" maxlength="30" style="width:200px;" disabled="true"
-							value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.contractPhysicalNo}" />
+							value="#{supplierBackingBean.managedBean.contractVer.contractPhysicalNo}" />
 		
 		
 						<h:panelGroup>
@@ -179,13 +179,17 @@
 					<p:outputLabel value="#{lbl['lbl.ct.factoring.company']}" styleClass="required" />
 				    <h:panelGrid columns="2">
 						<p:selectOneMenu id="factoringId" label="#{lbl['lbl.ct.factoring.company']}" required="true"
-							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
-								or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
+							rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.managedBean.viewOnly
+								and !supplierBackingBean.isContractAdmin() and !supplierBackingBean.isApproverRole()}"
 							style="width:360px;" value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
 							    <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" />
 							    <p:ajax event="change" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								     update="bankName,clausePanel, notificationBtn" listener="#{supplierBackingBean.resetFactoringCompany}" />
 						</p:selectOneMenu>
+						<p:inputText style="width:360px;"
+							rendered="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+								or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
+							value="#{supplierBackingBean.managedBean.factoring.financialOrgName}" disabled="true" />
 						<p:message for="factoringId" display="icon"></p:message>
 				   </h:panelGrid>
 
@@ -212,8 +216,8 @@
 				    <h:panelGrid columns="2">
 					     <p:calendar id="effdateCal" size="10" required="true" showOn="button" 
 						     value="#{supplierBackingBean.managedBean.factoring.effDate}" label="#{lbl['lbl.ct.start.date']}"
-						     mindate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.effDate}"
-						     maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
+						     mindate="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+						     maxdate="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 						     disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
 							    or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
 						     readonlyInput="true" navigator="true"
@@ -255,7 +259,7 @@
 						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
 							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
 						readonlyInput="true" navigator="true" mindate="#{supplierBackingBean.managedBean.factoring.effDate}"
-						maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
+						maxdate="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<f:attribute name="startDate" value="#{supplierBackingBean.managedBean.factoring.effDate}" />
 						<f:validator validatorId="primeDateRangeValidator" />

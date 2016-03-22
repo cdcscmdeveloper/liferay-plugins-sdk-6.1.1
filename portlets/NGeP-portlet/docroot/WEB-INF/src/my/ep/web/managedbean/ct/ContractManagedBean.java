@@ -14,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 
 import org.primefaces.model.TreeNode;
 
+import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -26,7 +27,6 @@ import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -49,12 +49,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<CtAttachment> attachmentList;
 	private CtContractVer contractVer;
 	private CtContractVer agreementContractVer;
-	private String supplierCompanyName;
 	private boolean updateCompanyName;
+	private String supplierCompanyName;
 	private String supplierBranchName;
+	private String supplierRegNo;
+	private String supplierMofNo;
 	private String supplierAddress;
 	private boolean updateSupplierAddress;
-	private SmAddress smAddress;
+	private CtAddress ctAddress;
 	private boolean directPurchase;
 	private boolean gstCheckingGUI;
 	private String branchInfoFilePath;
@@ -80,7 +82,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	private BigDecimal paidAdvancePaymentAmt;
 	
 	/*Zone start*/
-	private String financialAccNo;
 	private TreeNode ctZoneTrees;
 	
 	/*Agency start*/
@@ -231,6 +232,34 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierBranchName(String supplierBranchName) {
 		this.supplierBranchName = supplierBranchName;
+	}	
+
+	/**
+	 * @return the supplierRegNo
+	 */
+	public String getSupplierRegNo() {
+		return supplierRegNo;
+	}
+
+	/**
+	 * @param supplierRegNo the supplierRegNo to set
+	 */
+	public void setSupplierRegNo(String supplierRegNo) {
+		this.supplierRegNo = supplierRegNo;
+	}
+
+	/**
+	 * @return the supplierMofNo
+	 */
+	public String getSupplierMofNo() {
+		return supplierMofNo;
+	}
+
+	/**
+	 * @param supplierMofNo the supplierMofNo to set
+	 */
+	public void setSupplierMofNo(String supplierMofNo) {
+		this.supplierMofNo = supplierMofNo;
 	}
 
 	/**
@@ -262,17 +291,17 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the smAddress
+	 * @return the ctAddress
 	 */
-	public SmAddress getSmAddress() {
-		return smAddress;
+	public CtAddress getCtAddress() {
+		return ctAddress;
 	}
 
 	/**
-	 * @param smAddress the smAddress to set
+	 * @param ctAddress the ctAddress to set
 	 */
-	public void setSmAddress(SmAddress smAddress) {
-		this.smAddress = smAddress;
+	public void setCtAddress(CtAddress ctAddress) {
+		this.ctAddress = ctAddress;
 	}
 
 	/**
@@ -531,20 +560,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setPaidAdvancePaymentAmt(BigDecimal paidAdvancePaymentAmt) {
 		this.paidAdvancePaymentAmt = paidAdvancePaymentAmt;
-	}
-	
-	/**
-	 * @return the financialAccNo
-	 */
-	public String getFinancialAccNo() {
-		return financialAccNo;
-	}
-
-	/**
-	 * @param financialAccNo the financialAccNo to set
-	 */
-	public void setFinancialAccNo(String financialAccNo) {
-		this.financialAccNo = financialAccNo;
 	}
 	
 	/**

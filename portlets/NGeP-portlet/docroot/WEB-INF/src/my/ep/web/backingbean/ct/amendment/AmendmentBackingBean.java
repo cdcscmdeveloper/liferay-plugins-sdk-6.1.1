@@ -48,7 +48,6 @@ import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -74,8 +73,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -107,8 +104,6 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
@@ -130,6 +125,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.ct.CtAddressUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -138,7 +134,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
-import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
@@ -314,7 +309,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationNo", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getIdentificationNo()));
 				}
 				
-				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				userReqDTO.setUserSearchBean(searchBean);
 				resDto = userSO.searchUserProfile(userReqDTO);
 				if (resDto.isSuccessful()) {
@@ -490,27 +485,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								context.put("supplierUserName", getFacesScopes().getUserSessionBean().getUserName());
 								context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
 								context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-								context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getRegNo());
-						
-								StringBuilder sb = new StringBuilder();
+								context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
 								if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-									sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress1());
-									sb.append(", <br/>");
-									sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress2());
-									sb.append(", <br/>");
-									sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity() != null 
-											? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() : "");
-									sb.append(" ");
-									sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPostcode());
-									sb.append(", <br/>");
-									sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState() != null 
-											? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() : "");
+									String supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+									supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+									supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+							    	context.put("supplierAddress", supplierAddress);
+									context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() != null 
+											? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() : "");
+									context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() != null 
+											? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() : "");
+								} else {
+									context.put("supplierAddress", "");
+									context.put("supplierPhoneNo", "");
+									context.put("supplierFaxNo", "");
 								}
-								context.put("supplierAddress", sb.toString());
-								context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() != null 
-										? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() : "");
-								context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo() != null 
-										? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo() : "");
 								context.put("supplier",true);
 										
 								if (vmFile != null && context != null) {
@@ -785,12 +774,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				    ctBackingBean.getManagedBean().setViewContract(false);
 				    ctBackingBean.getManagedBean().setUpdateCompanyName(false);
 				    ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
-				    ctBackingBean.getManagedBean().setSmAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-				    ctBackingBean.getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(ctBackingBean.getManagedBean().getSmAddress()));
+				    ctBackingBean.getManagedBean().setCtAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+				    ctBackingBean.getManagedBean().setSupplierAddress(getFullAddress(ctBackingBean.getManagedBean().getCtAddress()));
 				    ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
 				    ctBackingBean.getManagedBean().setSupplierCompanyName(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-				    ctBackingBean.getManagedBean().setSupplierBranchName(this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
-				    ctBackingBean.retrieveBranchInfo();
+				    ctBackingBean.getManagedBean().setSupplierBranchName(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
+				    ctBackingBean.getManagedBean().setSupplierRegNo(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
+				    ctBackingBean.getManagedBean().setSupplierMofNo(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
+					ctBackingBean.retrieveBranchInfo();
 				    ctBackingBean.initializeRemarkAndAttachement(ctBackingBean.getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 				    if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
 				    	ctBackingBean.getManagedBean().setFrequencySchedule(ContractConst.FREQENCY_SCHEDULE);
@@ -3262,7 +3253,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
 					}
 					if (supplierBank.getSmAddress() != null) {
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
+						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBank.getSmAddress()));
 					} else {
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
 					}
@@ -3819,7 +3810,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		try {
 			    int i = 1;
-				financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+				financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
 				reqDTO = new FinancialOrgReqDTO();
 				reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND);
 				resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
@@ -4480,30 +4471,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					context.put("supplierUserIcNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getIdentificationNo());
 				}
 				context.put("supplierName", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-				context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getRegNo());
+				context.put("supplierMofRegNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
 				
-				StringBuilder sb = new StringBuilder();
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress1());
-					sb.append(", <br/>");
-					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress2());
-					sb.append(", <br/>");
-					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity() != null
-							? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() : "");
-					sb.append(" ");
-					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPostcode());
-					sb.append(", <br/>");
-					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState() != null 
-							? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() : "");
+					String supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+					supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+					supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+			    	context.put("supplierAddress", supplierAddress);
+					context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() != null 
+							? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() : "");
+					context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() != null 
+							? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() : "");
+				} else {
+					context.put("supplierAddress", "");
+					context.put("supplierPhoneNo", "");
+					context.put("supplierFaxNo", "");
 				}
-				String supplierAddress = sb.toString();
-				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-				context.put("supplierAddress", supplierAddress);
-				
-				context.put("supplierPhoneNo",ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() != null 
-						? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() : "");
-				context.put("supplierFaxNo",ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo() != null 
-						? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo() : "");
 				context.put("supplier",true);
 			}
 		}
@@ -4529,58 +4512,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 			context = new VelocityContext();
 			PmOrgProfile pmOrgProfile = ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile();
-			IAddressSO addressSO = null;
-			PmAddressType pmAddressType = null;
 			
-			try {
-				addressSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-				AddressReqDTO reqDTO = new AddressReqDTO();
-				reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-				reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-
-				if (resDTO.getAddressTypeList().size() > 0) {
-					pmAddressType = resDTO.getAddressTypeList().get(0);
-				}
-				
-				context.put("ptjName", pmOrgProfile.getOrgName());
-				String jabtanName = retrieveJabatanByOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				StringBuffer  ministryJabatan = new StringBuffer();
-				if(!jabtanName.isEmpty()) {
-				      ministryJabatan.append(jabtanName);
-				      ministryJabatan.append(" / ");
-				}
-			
-				PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-				if(ministryOrgProfile!=null) {
-					ministryJabatan.append(ministryOrgProfile.getOrgName());
-				}				
-				context.put("ministryJabatanName", ministryJabatan );
-			} finally {
-				addressSO = null;
+			context.put("ptjName", pmOrgProfile.getOrgName());
+			String jabtanName = retrieveJabatanByOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			StringBuffer  ministryJabatan = new StringBuffer();
+			if(!jabtanName.isEmpty()) {
+			      ministryJabatan.append(jabtanName);
+			      ministryJabatan.append(" / ");
 			}
+		
+			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			if(ministryOrgProfile!=null) {
+				ministryJabatan.append(ministryOrgProfile.getOrgName());
+			}				
+			context.put("ministryJabatanName", ministryJabatan );
+			
 			context.put("hostUrl", hostUrl);
-			StringBuilder ptjAddress = new StringBuilder();
+			String ptjAddress = "";
 			String phoneNo = "";
 			String faxNo = "";
-				
-			if (pmAddressType != null) {
-				PmAddress pmAddress = pmAddressType.getPmAddress();
-				ptjAddress.append(pmAddress.getAddress1());
-				ptjAddress.append(",<br />");
-				ptjAddress.append(pmAddress.getAddress2());
-				ptjAddress.append(",<br />");
-				ptjAddress.append(pmAddress.getPostcode());
-				ptjAddress.append(" ");
-				ptjAddress.append(pmAddress.getPmCity() != null ? pmAddress.getPmCity().getCityName() : "");
-				ptjAddress.append(",<br />");
-				ptjAddress.append(pmAddress.getPmState() != null ? pmAddress.getPmState().getStateName() : "");
-				
-				phoneNo = pmAddress.getPhoneNo();
-				faxNo = pmAddress.getFaxNo();
+			if (ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress() != null) {
+		    	ptjAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress());
+		    	ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
+		    	ptjAddress = ptjAddress.replaceAll("&", "&#38;");
+		    	phoneNo = ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNo();
+		    	faxNo = ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNo();
 			}
-			context.put("ptjAddress", ptjAddress.toString());
+			context.put("ptjAddress", ptjAddress);
 			context.put("phoneNo", phoneNo);
 			context.put("faxNo", faxNo);
 			context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
@@ -4593,26 +4551,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context.put("issueDate", issueDate);
 			context.put("supplierName", scLoiLoa.getSupplierName());
 			
-			StringBuilder sb = new StringBuilder();
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress1());
-				sb.append(", <br/>");
-				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress2());
-				sb.append(", <br/>");
-				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress3());
-				sb.append(", <br/>");
-				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPostcode());
-				sb.append(" ");
-				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity() != null
-						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityCode().equals("000000")
-							? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() : "");
-				sb.append(", <br/>");
-				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState() != null 
-						? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() : "");
 
+			String supplierAddress = "";
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
+				supplierAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 			}
-			String supplierAddress = sb.toString();
-			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 			context.put("supplierAddress", supplierAddress);			
 			context.put("contractNo",ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
 			

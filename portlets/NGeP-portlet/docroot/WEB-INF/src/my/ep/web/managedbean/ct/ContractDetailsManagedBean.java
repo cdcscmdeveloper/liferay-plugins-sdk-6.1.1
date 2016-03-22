@@ -87,8 +87,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private Date asAtDate = null;
 	private int selectedTabIndex = 0;
 	private int attachFileIndex;
-   private boolean updateContract = false;
-	private boolean viewContract = false;
 	private boolean autoUpdate = true;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -463,20 +461,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the updateContract
-	 */
-	public boolean isUpdateContract() {
-		return updateContract;
-	}
-
-	/**
-	 * @param updateContract the updateContract to set
-	 */
-	public void setUpdateContract(boolean updateContract) {
-		this.updateContract = updateContract;
-	}
-
-	/**
 	 * @return the autoUpdate
 	 */
 	public boolean isAutoUpdate() {
@@ -766,20 +750,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
 		this.searchPtjProfile = searchPtjProfile;
-	}
-
-	/**
-	 * @return the viewContract
-	 */
-	public boolean isViewContract() {
-		return viewContract;
-	}
-	
-	/**
-	 * @param viewContract the viewContract to set
-	 */
-	public void setViewContract(boolean viewContract) {
-		this.viewContract = viewContract;
 	}
 
 	/**
