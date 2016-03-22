@@ -87,6 +87,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.govtsellerregistration.GovtSellerRegistrationBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -1331,72 +1332,30 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] pmBusinessTypeDropDown(){
-		log.info("*********getPmBusinessTypeDropDown**********");
-		List<SelectItem> itemList = new ArrayList<SelectItem>();
-		try {
-			SelectItem[] items = getDropdownCodeValues("SBT");
-
-			for(SelectItem selectItem : items) {
-				if(!this.getManagedBean().getSmSupp().isBrandNew()){
-					String bizType = this.getManagedBean().getSmSupp().getBusinessType();
-					if(selectItem.getValue() != null){
-						if(bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
-								bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
-
-							if(selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
-									selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
-								itemList.add(selectItem);
-							}
-						}else if(bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) || 
-								bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)){
-							if(selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) || 
-									selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)){
-								itemList.add(selectItem);
-							}
-						}else if(bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) || 
-								bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)){
-							if(selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) || 
-									selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)){
-								itemList.add(selectItem);
-							}
-						}
-					}
-				}else{
-					if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_BASIC)){
-						itemList.add(selectItem);
-					}else if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_MOF) && 
-							this.getManagedBean().getSmAppl().getSupplierType() != null){
-						if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
-							//log.info("****IS CONTRACTOR*****");
-
-							if(selectItem.getValue() == null || !selectItem.getValue().equals("A")){
-								//log.info("****IS not NULL or A*****" + selectItem.getValue());
-								itemList.add(selectItem);
-							}
-						}else if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
-							//log.info("****IS CONSULTANT*************"); 
-							if(selectItem.getValue() == null || (!selectItem.getValue().equals("K") 
-									&& !selectItem.getValue().equals("L") && !selectItem.getValue().equals("M") && !selectItem.getValue().equals("A"))){ 
-								itemList.add(selectItem);
-							}
-						}
-					}else if(this.getManagedBean().getSmAppl().getSupplierType() == null && this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_MOF)){
-						if(selectItem.getValue() == null){	
-							itemList.add(selectItem);
-						}
-					}
-				}
-			}
+		String applType = this.getManagedBean().getApplType();
+		SelectItem[] items = null;
+		
+		if(applType.equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)){
+			items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);
+		}else{
+			FacesScopes fs = new FacesScopes();
 			
-			log.info("------------->" + itemList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_721010, new String[]{e.toString(), e.getMessage()});
-
-
+			String supplierType = this.getManagedBean().getSmAppl().getSupplierType();
+			if(supplierType != null){
+				if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+					items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR);
+				}else if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+					items = getDropdownCodeValues(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
+				}
+			}else{
+				items = new SelectItem[1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						fs.getUserLocale()));
+			}
 		}
 
-		return itemList.toArray(new SelectItem[itemList.size()]);
+		return items;
 	}
 	
 	/**
