@@ -302,7 +302,7 @@
 								value="*" styleClass="mandatory" /></th>
 						<td><p:inputText styleClass="ppDisplayTextL" id="itUserName"
 								disabled="#{isSupplierOrgType}"
-								maxlength="50" required="#{!empty param['disableValidation']}"
+								maxlength="80" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.username']}"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.username']} #{lbl['lbl.pm.profiles.invalidString']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}">
@@ -356,7 +356,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.designation']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
-						<td><p:inputText styleClass="ppDisplayTextL" maxlength="30"
+						<td><p:inputText styleClass="ppDisplayTextL" maxlength="255"
 								id="itDesignation"
 								disabled="#{isSupplierOrgType}"
 								required="#{!empty param['disableValidation']}"
