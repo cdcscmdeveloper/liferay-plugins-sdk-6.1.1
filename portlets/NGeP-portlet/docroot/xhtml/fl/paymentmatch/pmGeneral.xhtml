@@ -242,16 +242,6 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.supplierName}" /></td>
-				<td rowspan="2" valign="top" style="width: 80px;"><p:outputLabel
-						value="#{lbl['lbl.fl.bank.acc.no.name']}" 
-						rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'false'}"/></td>
-				
-				<td rowspan="2" style="width:290px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:250px;" 
-						rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'false'}"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.accountNo}  #{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.paymentBank.finOrgName}"
-						disabled="true"/>
-				</td>
-				
 			</tr>
 			<tr>
 				
