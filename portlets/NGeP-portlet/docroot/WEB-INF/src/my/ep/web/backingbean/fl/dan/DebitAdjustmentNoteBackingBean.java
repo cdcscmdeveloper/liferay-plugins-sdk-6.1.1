@@ -290,6 +290,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			if(adjustmentItemNodeVO.getFlAdjustmentItem()!=null) {
 				if(null !=adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmVotFund()){
 					getManagedBean().setVotFundCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmVotFund().getVotFundCode());
+					getManagedBean().setVotFundType(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmVotFund().getVotFundType());
 				}
 				if(null != adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getAssetInd()) {
 					getManagedBean().setAssetIndCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getAssetInd().getParameterCode());
