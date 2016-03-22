@@ -1438,7 +1438,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * check role user is fl_approver
 	 */
 	public boolean isApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
+		return getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	
 	private void checkContractAmount(FlFulfilmentRequest flRequest){
