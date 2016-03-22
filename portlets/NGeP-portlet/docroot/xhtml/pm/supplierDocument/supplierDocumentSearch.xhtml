@@ -17,7 +17,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td>
 					<p:inputTextarea id="itaDocName" value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docName}"
 							label="#{lbl['lbl.pm.document.name']}" autoResize="false"
-					 		cols="31" rows="4" maxlength="1000" />
+					 		cols="31" rows="4" maxlength="350" />
 				</td>
 				<th>
 					
@@ -80,7 +80,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.business.category']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" maxlength="10" label="#{lbl['lbl.pm.business.category']}"
+					<p:inputText styleClass="ppDisplayTextM" maxlength="255" label="#{lbl['lbl.pm.business.category']}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.businessCategory}" />
 				</td>
 			</tr>
@@ -98,7 +98,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.suppdoc.certified.body']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" maxlength="10" label="#{lbl['lbl.pm.suppdoc.certified.body']}"
+					<p:inputText styleClass="ppDisplayTextM" maxlength="255" label="#{lbl['lbl.pm.suppdoc.certified.body']}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.certBodyName}" />
 				</td>
 			</tr>

@@ -2288,7 +2288,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						.retrieveCategoryL1ByCode(reqDTO);
 				if (resDTO.getCategoryL1() != null) {
 					if (this.getManagedBean().isNewCategory()) {
-						throw new EpException(MessageConst.ERROR_775001);
+						throw new EpException(MessageConst.ERROR_770218,new String[] {
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.main.category"),
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only"),
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only")
+						});
 					}else{
 						if(!resDTO.getCategoryL1().getCategoryL1Id()
 								.equals(getManagedBean().getPmCategoryL1().getCategoryL1Id())){
@@ -2389,7 +2393,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				if (resDTO.getCategoryL2List() != null
 						&& resDTO.getCategoryL2List().size() > 0) {
 					if (this.getManagedBean().isNewCategory()) {
-						throw new EpException(MessageConst.ERROR_775002);
+						throw new EpException(MessageConst.ERROR_770219,new String[] { 
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.category"),
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only"),
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.main.category.desc"),
+								this.getManagedBean().getPmCategoryL1().getCategoryName(),
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only")
+						});
 					}else{
 						throw new EpException(MessageConst.ERROR_770220, new String[] {
 								PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only")
@@ -2578,7 +2588,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			if (resDTO.getCategoryL3List() != null
 						&& resDTO.getCategoryL3List().size() > 0) {
 				if (this.getManagedBean().isNewCategory()) {
-					throw new EpException(MessageConst.ERROR_775003);
+					throw new EpException(MessageConst.ERROR_770219,new String[] { 
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.div"),
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only"),
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.sub.category.desc"),
+							this.getManagedBean().getPmCategoryL2().getCategoryName(),
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only")
+					});
 				}else{
 					throw new EpException(MessageConst.ERROR_770220, new String[] {
 							PmCommonUtil.getResourceBundleLabels("lbl.pm.category.code.only")
@@ -3241,7 +3257,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 */
 	public String backToSearch() {
 		// resetCategory();
-		return "/xhtml/pm/category/search.xhtml";
+		return "/xhtml/pm/category/search.xhtml?faces-redirect=true";
 	}
 
 	/**
