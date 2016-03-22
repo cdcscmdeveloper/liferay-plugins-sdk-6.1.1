@@ -970,10 +970,15 @@ public class SimpleQuoteBackingBean extends
 		}
 		if (ctPanelSuppliers != null) {
 			for (CtPanelSupplier panelSupplier : ctPanelSuppliers) {
+				SmSupplier smSupplier = panelSupplier.getSupplier();
 				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
-				scQuoteSupplier.setSmSupplier(panelSupplier.getSupplier());
+				scQuoteSupplier.setSmSupplier(smSupplier);
 				scQuoteSupplier.setQuote(quote);
 				scQuoteSupplier.setTplSpecZoneDtl(tplSpecZoneDtl);
+				
+				String mofNo = getMofNor(smSupplier.getSupplierId());
+				scQuoteSupplier.setSupplierName(smSupplier.getCompanyName());
+				scQuoteSupplier.setMofNumber(mofNo);
 
 				panelSuppliers.add(scQuoteSupplier);
 				getManagedBean().setPanelSuppliers(panelSuppliers);
@@ -4226,8 +4231,13 @@ public class SimpleQuoteBackingBean extends
 		if (ctPanelSuppliers != null) {
 			for (CtPanelSupplier panelSupplier : ctPanelSuppliers) {
 				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
-				scQuoteSupplier.setSmSupplier(panelSupplier.getSupplier());
+				SmSupplier smSupplier = panelSupplier.getSupplier();
+				scQuoteSupplier.setSmSupplier(smSupplier);
 				scQuoteSupplier.setQuote(quote);
+				
+				String mofNo = getMofNor(smSupplier.getSupplierId());
+				scQuoteSupplier.setSupplierName(smSupplier.getCompanyName());
+				scQuoteSupplier.setMofNumber(mofNo);
 				
 				getManagedBean().setPanelSuppliers(panelSuppliers);
 				if (panelSuppliers.isEmpty()) {
@@ -5992,8 +6002,6 @@ public class SimpleQuoteBackingBean extends
 	}
 	
 	private void preRenderScQuote(ScQuote scQuote) {
-		CtPanelItem quotePanelItem = null;
-		quotePanelItem = getTopPanelItem();
 		TemplateSpecBean productTplSpecBean = getManagedBean()
 				.getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean()
@@ -6182,6 +6190,9 @@ public class SimpleQuoteBackingBean extends
 					scQuote.getBusinessNatureCriterias());
 		}
 
+		CtPanelItem quotePanelItem = null;
+		quotePanelItem = getTopPanelItem();
+		
 		if (scQuote.getScQuoteSuppliers() != null
 				&& scQuote.getScQuoteSuppliers().size() > 0) {
 			// panel supplier
