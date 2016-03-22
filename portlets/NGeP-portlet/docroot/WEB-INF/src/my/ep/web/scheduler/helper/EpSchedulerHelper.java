@@ -298,6 +298,9 @@ public class EpSchedulerHelper {
 		if (instance == null) {
 			try {
 				instance = new StdSchedulerFactory().getScheduler();
+				if (!instance.isStarted()) {
+					instance.start();
+				}
 			} catch (SchedulerException e) {
 				log.error(e.getMessage());
 			}
