@@ -699,12 +699,6 @@ public class PurchaseInDefaultBackingBean extends
 					getManagedBean().setSourceMethods(
 							getSourceMethodDropdownCodeValues(sourceMethod.getParameterCode(), true));
 				}
-				
-				PmReasonDesc reasonDesc = ReasonHelper.getInstance().getReasonDescById(pmReason.getReasonId());
-				List<PmReasonDesc> reasonDescList = new ArrayList<PmReasonDesc>();
-				reasonDescList.add(reasonDesc);
-				getManagedBean().setJustifications(
-						getDropdownCodeValues(reasonDescList));
 			}
 		}
 
@@ -1063,7 +1057,8 @@ public class PurchaseInDefaultBackingBean extends
 				purchaseInDefault.getRemarks(), ScPIDRemark.class));
 
 		initializeApproverGroup();
-//		retrieveReasonDescListByCategory(Boolean.TRUE);
+		populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
+				purchaseInDefaultResDTO.getCircularPidReasonList());
 		justificationTypeEvent();
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
@@ -1129,7 +1124,8 @@ public class PurchaseInDefaultBackingBean extends
 
 				getManagedBean().setPurchaseInDefault(purchaseInDefault);
 				initializeApproverGroup();
-//				retrieveReasonDescListByCategory(true);
+				populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
+						purchaseInDefaultResDTO.getCircularPidReasonList());
 				justificationTypeEvent();
 
 				try {
