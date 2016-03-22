@@ -2368,7 +2368,8 @@ public class QTDetailBackingBean extends
 											.constuctTreeNode(locCriteria));
 						}
 					} else {
-						if (!scQt.getScQtSupplierCriteria().isAllState()
+						if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())
+								&& !scQt.getScQtSupplierCriteria().isAllState()
 								&& ParameterConst.QUOTATION_TENDER_TYPE_OPEN.equalsIgnoreCase(scQt.getQtType())) {
 							if (null == this.getManagedBean().getZoneTrees()
 									|| this.getManagedBean().getZoneTrees().isEmpty()) {
