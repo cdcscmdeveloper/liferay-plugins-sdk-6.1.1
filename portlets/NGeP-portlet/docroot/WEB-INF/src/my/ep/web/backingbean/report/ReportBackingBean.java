@@ -7822,6 +7822,58 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Checks if is values empty.
+	 * 
+	 * @return the valuesEmpty
+	 */
+	public boolean isValuesEmpty() {
+		return valuesEmpty;
+	}
+
+	/**
+	 * Sets the values empty.
+	 * 
+	 * @param valuesEmpty
+	 *            the valuesEmpty to set
+	 */
+	public void setValuesEmpty(boolean valuesEmpty) {
+		this.valuesEmpty = valuesEmpty;
+	}
+
+	/**
+	 * Gets the fl contract system.
+	 * 
+	 * @return the flContractSystem
+	 */
+	public String getFlContractSystem() {
+		return flContractSystem;
+	}
+
+	/**
+	 * Sets the fl contract system.
+	 * 
+	 * @param flContractSystem
+	 *            the flContractSystem to set
+	 */
+	public void setFlContractSystem(String flContractSystem) {
+		this.flContractSystem = flContractSystem;
+	}
+
+	/**
+	 * Created to date update.
+	 */
+	public void createdToDtUpdate() {
+		this.setScCreatedToYear(this.getScCreatedFromYear());
+	}
+
+	/**
+	 * Created to month update.
+	 */
+	public void createdToMonthUpdate() {
+		this.setScCreatedToMonth(this.getScCreatedFromMonth());
+	}
+
+	/**
 	 * Inits the.
 	 */
 
@@ -8863,7 +8915,14 @@ public class ReportBackingBean extends
 			if (this.getReportValue().equals(
 					ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL)
 					|| this.getReportValue().equals(
-							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) {
+							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL)
+					||
+					this.getReportValue().equals(
+							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL)
+					||
+					this.getReportValue().equals(
+							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)
+					) {
 				for (SelectItem item : docTypeStatusItemsList) {
 					if (!item.getLabel().equalsIgnoreCase(
 							ReportConst.STATUS_CANCELLED))
@@ -9191,7 +9250,7 @@ public class ReportBackingBean extends
 			 */if ((highRoleCodeList != null)
 					&& (highRoleCodeList
 							.contains(ReportConst.ROLE_CODE_REQUISITIONER))) {
-				 rolecodeRquisitionerList.clear();
+				rolecodeRquisitionerList.clear();
 				List<Object[]> rlcdLst = reportSO
 						.retrieveUserListByREQUISITIONER(lngUserId,
 								ReportConst.ROLE_CODE_REQUISITIONER);
@@ -12762,20 +12821,6 @@ public class ReportBackingBean extends
 				this.setValuesEmpty(false);
 			}
 		}
-	}
-
-	/**
-	 * Created to date update.
-	 */
-	public void createdToDtUpdate() {
-		this.setScCreatedToYear(this.getScCreatedFromYear());
-	}
-
-	/**
-	 * Created to month update.
-	 */
-	public void createdToMonthUpdate() {
-		this.setScCreatedToMonth(this.getScCreatedFromMonth());
 	}
 
 	/**
@@ -17445,6 +17490,7 @@ public class ReportBackingBean extends
 			}
 		}
 		sb.append(this.getManagedBean().getSelectedMinistry().getOrgProfileId());
+
 		return sb.toString();
 	}
 
@@ -17471,8 +17517,8 @@ public class ReportBackingBean extends
 						.setPmOrgValidity(new PmOrgValidity());
 			}
 		}
-		sb.append(this.getManagedBean().getSelectedPegwaiPengawal()
-				.getOrgProfileId());
+		sb.append(this.getManagedBean().getSelectedPegwaiPengawal().getOrgProfileId());
+
 		return sb.toString();
 	}
 
@@ -17507,6 +17553,7 @@ public class ReportBackingBean extends
 		}
 		sb.append(this.getManagedBean().getSelectedKumpulanPTJ()
 				.getOrgProfileId());
+
 		return sb.toString();
 	}
 
@@ -17590,25 +17637,6 @@ public class ReportBackingBean extends
 					.setSmAllRegisteredDateView(true);
 		}
 
-	}
-
-	/**
-	 * Checks if is values empty.
-	 * 
-	 * @return the valuesEmpty
-	 */
-	public boolean isValuesEmpty() {
-		return valuesEmpty;
-	}
-
-	/**
-	 * Sets the values empty.
-	 * 
-	 * @param valuesEmpty
-	 *            the valuesEmpty to set
-	 */
-	public void setValuesEmpty(boolean valuesEmpty) {
-		this.valuesEmpty = valuesEmpty;
 	}
 
 	/**
@@ -17804,25 +17832,6 @@ public class ReportBackingBean extends
 				+ getManagedBean().getSelectedOrgType().getParameterCode());
 
 		return sb.toString();
-	}
-
-	/**
-	 * Gets the fl contract system.
-	 * 
-	 * @return the flContractSystem
-	 */
-	public String getFlContractSystem() {
-		return flContractSystem;
-	}
-
-	/**
-	 * Sets the fl contract system.
-	 * 
-	 * @param flContractSystem
-	 *            the flContractSystem to set
-	 */
-	public void setFlContractSystem(String flContractSystem) {
-		this.flContractSystem = flContractSystem;
 	}
 
 }
