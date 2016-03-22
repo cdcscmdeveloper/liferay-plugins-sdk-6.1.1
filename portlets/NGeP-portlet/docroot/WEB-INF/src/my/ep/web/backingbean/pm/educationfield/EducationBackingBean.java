@@ -21,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -33,6 +34,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
@@ -44,7 +46,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.educationfield.EducationManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.beanutils.BeanUtils;
@@ -129,7 +130,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		PmEduField pmEduField = new PmEduField();
 		this.getManagedBean().setPmEduField(pmEduField);
 
-		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
+		return NAV_TO_MAINTAIN;
 
 	}
 
@@ -167,32 +168,27 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	private ISearchBean<PmEduField> getEducationSearchBeanData(
 			ISearchBean<PmEduField> searchBean) {
 
-		if (getManagedBean().getFieldCodes() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getFieldCodes())) {
-			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			codesSearchBean.setSearchField("fieldCode");
-			codesSearchBean.setCaseInsensitive(true);
-			codesSearchBean.setSearchValue(getManagedBean().getFieldCodes());
-			searchBean.getDataFilterBeans().add(codesSearchBean);
+		if (StringUtils.isNotBlank(getManagedBean().getFieldCodes())) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("fieldCode",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getFieldCodes(),
+							true));
 		}
 
-		if (getManagedBean().getFieldNames() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getFieldNames())) {
-			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			codesSearchBean.setSearchField("fieldName");
-			codesSearchBean.setCaseInsensitive(true);
-			codesSearchBean.setSearchValue(getManagedBean().getFieldNames());
-			searchBean.getDataFilterBeans().add(codesSearchBean);
+		if (StringUtils.isNotBlank(getManagedBean().getFieldNames())) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("fieldName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getFieldNames(),
+							true));
 		}
 
 		if (getManagedBean().getStatus() != null) {
-			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			codesSearchBean.setSearchField("recordStatusFlg");
-			codesSearchBean.setSearchValue(getManagedBean().getStatus());
-			searchBean.getDataFilterBeans().add(codesSearchBean);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getStatus()));
 		}
 
 		return searchBean;
@@ -325,6 +321,23 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 			//throw new EpException("Field Name is Mandatory");
 			throw new EpException(MessageConst.ERROR_759001);
 		}
+		
+		if (eduField.isBrandNew()) {
+			if (!isExistEduField(eduField.getFieldCode())) {
+				throw new EpException(MessageConst.ERROR_770160,new String[] {
+						getManagedBean()
+						.getPmEduField()
+						.getFieldCode(),
+				getManagedBean()
+						.getPmEduField()
+						.getFieldName()});
+			}
+
+		}
+		
+		if(DbValueConst.RECORD_STATUS_ACTIVE == eduField.getRecordStatusFlg()){
+			validateEduNameField(eduField);
+		}
 
 		// if(getManagedBean().getEduRestrList() == null ||
 		// getManagedBean().getEduRestrList().isEmpty() ){
@@ -337,77 +350,37 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 * save and update education field details.
 	 * 
 	 * @return the string
+	 * @throws Exception 
 	 */
-	public String saveEducationDtls() {
+	public String saveEducationDtls() throws Exception {
 		debugLogger("saveEducationDtls");
-
-		String messageId = "";
-		// String recordStatusMessageId="";
-
-		String[] msgParam = new String[] { this.getManagedBean()
-				.getPmEduField().getFieldName() };
-
-		// PmEduField olEduField=this.getManagedBean().getOldPmEduField();
-
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-
 		PmEduField eduField = this.getManagedBean().getPmEduField();
-
-		validationMessage(eduField);
-		setUserDetails(eduField);
-
-		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
-		reqDTO.setEduField(eduField);
-		reqDTO.setBrandNew(eduField.isBrandNew());
-		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-
-		IEducationFieldSO iEducationfieldSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						IEducationFieldSO.class);
+		IStatusSO statusSO = null;
+		IEducationFieldSO educationfieldSO = null;
+		StatusReqDTO statusReqDTO = new StatusReqDTO();		
+		String returnUrl = null;
 		try {
-			if (eduField.isBrandNew()) {
-				if (!isExistEduField(eduField.getFieldCode())) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_770160,
-															new String[] {
-																	getManagedBean()
-																			.getPmEduField()
-																			.getFieldCode(),
-																	getManagedBean()
-																			.getPmEduField()
-																			.getFieldName() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-					return NAV_TO_MAINTAIN;
-				}
-
-			}
-
-			if (eduField.isBrandNew()) {
-				messageId = MessageConst.TD_81000;
-			} else {
-				messageId = MessageConst.TD_81001;
-			}
-
+			validationMessage(eduField);
+			setUserDetails(eduField);
+			
+			educationfieldSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IEducationFieldSO.class);
+			
+			statusSO = (IStatusSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			statusReqDTO.setStatusId(eduField.getRecordStatusFlg().longValue());
 			StatusResDTO statusResDTO = statusSO
 					.retrieveStatusByStatusId(statusReqDTO);
-			System.out.println("statusResDTO.getPmStatus().getStatusId():"
-					+ statusResDTO.getPmStatus().getStatusId());
 			debugLogger("statusResDTO.getPmStatus().getStatusId():"
 					+ statusResDTO.getPmStatus().getStatusId());
+			
+			
+			EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
+			reqDTO.setEduField(eduField);
+			reqDTO.setBrandNew(eduField.isBrandNew());
+			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 			reqDTO.setTrackingStatus(true);
 
 			reqDTO.getTrackDairyVOs().add(
@@ -416,9 +389,10 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 							eduField.getFieldCode(),
 							statusResDTO.getPmStatus() != null ? statusResDTO
 									.getPmStatus() : new PmStatus(),
-							getPmActionDesc(messageId, msgParam)));
+							getPmActionDesc(eduField.isBrandNew() ? MessageConst.TD_81000 :MessageConst.TD_81001,
+									new String[] { this.getManagedBean().getPmEduField().getFieldName()})));
 
-			EducationFieldResDTO resDTO = iEducationfieldSO
+			EducationFieldResDTO resDTO = educationfieldSO
 					.saveOrUpdateEduFieldDtls(reqDTO);
 			this.getManagedBean().setPmEduField(resDTO.getEduField());
 			reloadEduData(resDTO.getEduField());
@@ -428,56 +402,37 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 
 			if (resDTO.isSuccessful()) {
 				if (eduField.isBrandNew()) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_780094,
-															new String[] {
-																	resDTO.getEduField()
-																			.getFieldCode(),
-																	resDTO.getEduField()
-																			.getFieldName() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					returnUrl= NAV_TO_MAIN;
+					PmCommonUtil.showFacesMsg(
+							FacesContext.getCurrentInstance(), 
+							FacesMessage.SEVERITY_INFO,
+							MessageConst.INFO_780094, 
+							new String[] {
+									resDTO.getEduField()
+											.getFieldCode(),
+									resDTO.getEduField()
+											.getFieldName()});
 				} else {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_780095,
-															new String[] {
-																	resDTO.getEduField()
-																			.getFieldCode(),
-																	resDTO.getEduField()
-																			.getFieldName() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					returnUrl = NAV_TO_MAINTAIN;
+					PmCommonUtil.showFacesMsg(
+							FacesContext.getCurrentInstance(), 
+							FacesMessage.SEVERITY_INFO,
+							MessageConst.INFO_780095,
+							new String[] {
+									resDTO.getEduField()
+											.getFieldCode(),
+									resDTO.getEduField()
+											.getFieldName() });
 				}
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw (e);
 		} finally {
-			iEducationfieldSO = null;
+			educationfieldSO = null;
+			statusSO = null;
 		}
-		if (!eduField.isBrandNew()) {
-			return NAV_TO_MAINTAIN;
-		} else {
-			return NAV_TO_MAIN;
-		}
+		return returnUrl;
 	}
 
 	/**
@@ -495,38 +450,35 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
 	}
 
-	public boolean isExistEduField(String newEduFieldCode) {
+	private boolean isExistEduField(String newEduFieldCode) {
+		IEducationFieldSO educationfieldSO = null;
+		boolean isValid = true;
+		try{
+			educationfieldSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IEducationFieldSO.class);
+			EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
+			ISearchBean<PmEduField> searchBean =  new SearchBean<PmEduField>();
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("fieldCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							newEduFieldCode.toLowerCase().trim(),
+							true));
+			reqDTO.setEducationSearchBean(searchBean);
+			
+			EducationFieldResDTO resDTO = educationfieldSO
+					.retrieveEducationBySearch(reqDTO);
 
-		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
-
-		reqDTO.setFieldCode(newEduFieldCode);
-
-		IEducationFieldSO educationfieldSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						IEducationFieldSO.class);
-
-		EducationFieldResDTO resDTO = educationfieldSO
-				.retrieveEducationFieldList(reqDTO);
-
-		List<String> eduFieldTypeLs = new ArrayList<String>();
-
-		if (resDTO.getEduFieldList() != null
-				&& !resDTO.getEduFieldList().isEmpty()) {
-
-			for (PmEduField eduField : resDTO.getEduFieldList()) {
-				String oldEduField = eduField.getFieldCode().toString();
-				if (newEduFieldCode.equals(oldEduField)) {
-					eduFieldTypeLs.add(oldEduField);
-					if (eduFieldTypeLs.contains(oldEduField)) {
-						return false;
-					}
-				}
-				eduFieldTypeLs.add(oldEduField);
-
+			if (resDTO.getEduFieldList() != null
+					&& !resDTO.getEduFieldList().isEmpty()) {
+				isValid = false;
 			}
+		}finally{
+			educationfieldSO = null;
 		}
-		return true;
+		
+		return isValid;
 	}
 
 	/**
@@ -552,7 +504,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 * Pre load education filed.
 	 */
 	public void preLoadEducationFiled() {
-		System.out.println("preLoadgroupSearch ....");
+		log.info("preLoadgroupSearch ....");
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -565,13 +517,83 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 * @param baseObject
 	 *            (BaseEntity baseObject)
 	 */
-	public void setUserDetails(BaseEntity baseObject) {
+	private void setUserDetails(BaseEntity baseObject) {
 		if (baseObject.isBrandNew()) {
 			baseObject.setCreatedBy(1L);
 			baseObject
 					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		baseObject.setChangedBy(1L);
+	}
+	
+	private void validateEduNameField(PmEduField eduField) {
+		IEducationFieldSO educationfieldSO = null;
+		boolean isOriInactiveStatus = false;
+		try{
+			educationfieldSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IEducationFieldSO.class);
+			EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
+			EducationFieldResDTO resDTO = null;
+			ISearchBean<PmEduField> searchBean =  new SearchBean<PmEduField>();
+			
+			if(!eduField.isBrandNew()){
+				reqDTO.setEduFieldId(eduField.getEduFieldId());
+				resDTO = educationfieldSO
+						.retrieveEducationFieldById(reqDTO);
+				
+				if(resDTO.isSuccessful() && resDTO.getEduField() != null){
+					PmEduField oriEduField = resDTO.getEduField();
+					if(DbValueConst.RECORD_STATUS_SUSPENDED == oriEduField.getRecordStatusFlg()){
+						isOriInactiveStatus = true;
+					}
+				}
+				searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("eduFieldId",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							eduField.getEduFieldId()));
+			}
+			
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("fieldName",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							eduField.getFieldName().toLowerCase().trim(),
+							true));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			
+			reqDTO = new EducationFieldReqDTO();
+			reqDTO.setEducationSearchBean(searchBean);			
+			resDTO = educationfieldSO
+					.retrieveEducationBySearch(reqDTO);
+
+			if (resDTO.getEduFieldList() != null
+					&& !resDTO.getEduFieldList().isEmpty()) {
+				if(eduField.isBrandNew()){
+					throw new EpException(MessageConst.ERROR_770221,new String[]{
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.ef.fname"),
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.ef.fname")					
+						});
+				}else{
+					if(isOriInactiveStatus){
+						throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.ef.fname")	});	
+					}else{
+						throw new EpException(MessageConst.ERROR_770221,new String[]{
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.ef.fname"),
+								PmCommonUtil.getResourceBundleLabels("lbl.pm.ef.fname")					
+							});
+					}
+				}
+			}
+		}finally{
+			educationfieldSO = null;
+		}
 	}
 
 }
