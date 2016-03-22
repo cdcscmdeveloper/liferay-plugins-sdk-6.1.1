@@ -20,15 +20,15 @@
                                 <td>
                                    <h:panelGrid columns="3" style="width:330px;" >   
                                           <h:panelGrid columns="2">
-	                                          <p:inputText disabled="true" style="width:85px;" 
-	                                              value="#{ctBackingBean.managedBean.contractVer.ctContract.smSupplier.regNo}" />
+	                                          <p:inputText id="supplierRegNo" disabled="true" style="width:85px;" 
+	                                              value="#{ctBackingBean.managedBean.supplierRegNo}" />
 	                                            <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
 					                      </h:panelGrid>
                                       
                                          <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
                                          <h:panelGrid columns="2"> 
-	                                        <p:inputText disabled="true" style="width:85px;" 
-	             	                            value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.scLoiLoa.mofNo}" />
+	                                        <p:inputText id="supplierMofNo" disabled="true" style="width:85px;" 
+	             	                            value="#{ctBackingBean.managedBean.supplierMofNo}" />
 	             	                         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
 					                     </h:panelGrid>
                                   </h:panelGrid>
@@ -51,7 +51,7 @@
                                             <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
 			                                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.companyNameChange}">
 				                                   <p:ajax event="change" 
-				                                        listener="#{ctBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName" />
+				                                        listener="#{ctBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName, supplierRegNo, supplierMofNo" />
 				                            </p:selectBooleanCheckbox>
 			                               <p:spacer width="2" />	
 			                               <p:outputLabel value="#{lbl['lbl.ct.update.name']}" style="width:210px;text-align:left;"/>
@@ -154,7 +154,7 @@
                        </h:panelGroup>
                  </tr>
                  <h:panelGroup  rendered="#{!ctBackingBean.managedBean.viewContract 
-                                           and ctBackingBean.managedBean.updateCompanyName}">
+                                           and ctBackingBean.managedBean.updateSupplierAddress}">
                  <tr>
                  <td></td>
                  <td>
@@ -184,7 +184,7 @@
                  <td>
                     <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
                 <td>  <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
-                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
+                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson}" />
                 </td>
                  </tr>
                   <tr>
@@ -195,7 +195,7 @@
                           <table>
                                  <tr>
                                     <td>
-                                           <p:inputText  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}"  
+                                           <p:inputText  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNo}"  
                                              disabled="true" style="width:97px;" />
                              </td> <td><p:spacer width="4"></p:spacer>
                                
@@ -203,7 +203,7 @@
                 </td>
                  <td>
                 <p:inputText  disabled="true" style="width:97px;"  
-                   value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}"/>  
+                   value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.faxNo}"/>  
                  </td>
                  </tr>
                  
@@ -217,7 +217,7 @@
                  </td>
                  <td>
                  <p:inputText disabled="true" style="width:265px;" 
-                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}"/>
+                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactEmail}"/>
                        </td>
                        </tr>
                        </table>

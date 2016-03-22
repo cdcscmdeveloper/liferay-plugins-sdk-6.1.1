@@ -189,7 +189,7 @@
 							        rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==1 and
 					 		             data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase 
                              	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch}" 
-								    action="#{contractDetailsBackingBean.gotoAmendPage(data.ctContract.contractId, 'update')}"
+								    action="#{contractDetailsBackingBean.gotoAmendPage(data.ctContract.contractId)}"
 								    onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 							  </p:menuitem>
 					 		 

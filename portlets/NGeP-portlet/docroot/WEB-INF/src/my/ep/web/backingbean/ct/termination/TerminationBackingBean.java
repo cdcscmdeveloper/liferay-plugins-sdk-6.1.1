@@ -38,7 +38,6 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -52,8 +51,6 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -61,15 +58,12 @@ import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -662,7 +656,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		 * Templates using to generate letter
 	    */
 	public void previewNoticeAction() throws Exception {
-		IAddressSO addressSO =  null;
 		VelocityContext context = null;
 		String vmFile = null;
 		StringBuffer  ministryJabatan = new StringBuffer();
@@ -670,7 +663,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		try {
 			      validateViewNotice();
 			      if (isViewNoticeFlag()) {
-				         addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 				         context = new VelocityContext();			
 				         getManagedBean().setEditorValue("");
 				      //   String imgUrl = getServerUrl()+ "css/images/gov.png";
@@ -683,16 +675,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				         }
 				
 						getManagedBean().setEditorValue("");
-						if(vmFile !=null) {
-							  AddressReqDTO addressReqDTO = new AddressReqDTO();
-					          addressReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-					          addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-					          AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
-					          PmAddressType pmAddressType = null;
-					          if(addressResDTO.getAddressTypeList().size()>0) {
-						            pmAddressType = addressResDTO.getAddressTypeList().get(0);
-					          }
-					
+						if(vmFile !=null) {							 				
 					          if(getServerUrl() != null){
 					               context.put("imgUrl",getServerUrl()+ "css/images/gov.png" );
 					          }
@@ -713,14 +696,23 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					         context.put("ministryJabatanName", ministryJabatan );					
 					         context.put("decisionDate", getManagedBean().getContractVer().getCtTermination().getDecisionDate());
 	
-					         if(pmAddressType!=null) {
-						           context.put("ptjAddress", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
-						           context.put("telNo", pmAddressType.getPmAddress().getPhoneNo());
-						           context.put("faxNo", pmAddressType.getPmAddress().getFaxNo());						
+					         if(getManagedBean().getContractVer().getOwnerOrgAddress()!=null) {
+					        	 String ptjAddress = getFullAddress(getManagedBean().getContractVer().getOwnerOrgAddress());
+					        	 ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
+					        	 ptjAddress = ptjAddress.replaceAll("&", "&#38;");  
+					        	 context.put("ptjAddress", ptjAddress);
+					        	 if (getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNo() != null)
+					        		 context.put("telNo", getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNo());
+					        	 else
+					        		 context.put("telNo", "");
+					        	 if (getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNo() != null)
+					        		 context.put("faxNo", getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNo());						
+					        	 else
+					        		 context.put("faxNo", "");
 					         } else {
-						           context.put("ptjAddress", "");
-						           context.put("telNo", "");
-						           context.put("faxNo", "");
+						           context.put("ptjAddress", " ");
+						           context.put("telNo", " ");
+						           context.put("faxNo", " ");
 					        }
 					  
 					         if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
@@ -735,8 +727,10 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					        }
 					
 					         context.put("supplierName",getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-					         SmAddress smAddress = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress();
-					         context.put("supplierAddress",formAddress(smAddress.getAddress1(), smAddress.getAddress2(), smAddress.getAddress3(), smAddress.getAddress4()));
+					         String supplierAddress = getFullAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+					         supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+					         supplierAddress = supplierAddress.replaceAll("&", "&#38;");					         
+					         context.put("supplierAddress" ,supplierAddress);
 					         context.put("contractTitle",getManagedBean().getCtContract().getContractName());
 					         if(getManagedBean().getContractVer().getContractPhysicalNo()==null) {
 						          context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
@@ -782,7 +776,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				}
 			}
 		} finally {
-			addressSO = null;
 			context = null;
 		}
 	}
@@ -840,26 +833,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		}
 	}
 	
-	/**
-	 * The method used to combine the whole address into string
-    */
-	private String formAddress(String address1, String address2, String address3, String address4) {
-		StringBuffer address = new StringBuffer();
-		if(address1!=null && address1.length()>0) {
-			address.append(address1).append(" ");
-		}
-		if(address2!=null && address2.length()>0) {
-			address.append(address2).append(" ");
-		}
-		if(address3!=null && address3.length()>0) {
-			address.append("<BR/>").append(address3).append(" ");
-		}
-		if(address4!=null && address4.length()>0) {
-			address.append(address4).append(" ");
-		}
-		return address.toString();
-	}
-	 
 	/**
 	 * Method used to check login user as central or ministry admin
     */
