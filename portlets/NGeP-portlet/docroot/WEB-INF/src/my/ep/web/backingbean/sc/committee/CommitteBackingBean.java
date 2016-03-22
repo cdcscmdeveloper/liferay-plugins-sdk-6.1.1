@@ -261,6 +261,12 @@ public class CommitteBackingBean extends
 							DbValueConst.RECORD_STATUS_ACTIVE)					
 					);	
 			
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.recordStatusFlg", 
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE)					
+					);				
+			
 			/* Commented as part of CR change to fetch irrespective of Ministry.
 			 *   
 			 * if (null != this.getManagedBean().getQt().getPmOrgProfile()) {

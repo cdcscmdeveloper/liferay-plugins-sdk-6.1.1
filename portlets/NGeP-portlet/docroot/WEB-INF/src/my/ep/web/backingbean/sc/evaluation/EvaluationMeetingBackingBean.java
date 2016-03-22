@@ -57,6 +57,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1400,6 +1401,16 @@ public class EvaluationMeetingBackingBean extends
 									getManagedBean().getIdentificationType(),
 									true));
 				}
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg", 
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE)					
+						);	
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.recordStatusFlg", 
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE)					
+						);	
 
 				/*
 				 * if (null != getManagedBean().getQt().getPmOrgProfile()
