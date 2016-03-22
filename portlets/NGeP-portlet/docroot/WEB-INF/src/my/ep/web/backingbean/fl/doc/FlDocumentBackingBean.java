@@ -874,28 +874,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * Search reset.
 	 */
 	public void searchReset(){
-		this.getManagedBean().setSearchTitle(null);
-		this.getManagedBean().setSearchSuppName(null);
-		this.getManagedBean().setSearchSuppDoRef(null);
-		this.getManagedBean().setSearchSuppInvRef(null);
-		this.getManagedBean().setSearchContractNo(null);
-		this.getManagedBean().setSearchContractToDuration(null);
-		this.getManagedBean().setSearchContractFromDuration(null);
-		this.getManagedBean().setSearchLoaNo(null);
-		this.getManagedBean().setSearchCircularNo(null);
-		this.getManagedBean().setSearchOrderType(null);
-		this.getManagedBean().setSearchDocType(null);
-		this.getManagedBean().setSearchPhysContractNo(null);
-		this.getManagedBean().setSearchPhysLoaNo(null);
-		getManagedBean().setSearchCentralContractName(null);
-		
-		// reset everything to false
-		this.getManagedBean().setCheckDocType(false);
-		this.getManagedBean().setCheckPoDocType(false);
-		this.getManagedBean().setCheckDoDocType(false);
-		this.getManagedBean().setCheckInDocType(false);
-		this.getManagedBean().setCheckDoInDocType(false);
 		renewSesionObject();
+		defaultPtjAndMinistryValues();
 	}
 	
 	/**
