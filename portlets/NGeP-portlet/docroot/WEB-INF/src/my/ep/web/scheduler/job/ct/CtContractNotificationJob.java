@@ -37,7 +37,7 @@ public class CtContractNotificationJob implements Job {
 		
 		ICtSchedulerSO schedulerSO = null;
 		try {
-			schedulerSO = BusinessDelegate.getInstance().getServiceObject(
+			schedulerSO = (ICtSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ICtSchedulerSO.class);			
 			schedulerSO.sendContractNotification();
 		} finally {
