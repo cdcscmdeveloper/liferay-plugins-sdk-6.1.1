@@ -58,7 +58,7 @@
 									</c:otherwise>
 								</c:choose></td>
 							<td style="margin-top: -3px"><p:commandLink
-									value="viewPanelitems" rendered="#{scQt.panel}" process="@this"
+									value="#{lbl['lbl.sc.view.panel.items']}" rendered="#{scQt.panel}" process="@this"
 									partialSubmit="true" update="circularGroupItemPopupId"
 									action="#{createQtBB.searchAllPanelItems}"
 									oncomplete="viewCircularPanelItems.show();" /></td>
