@@ -773,21 +773,26 @@ public class QTDetailBackingBean extends
 
 			}
 		}
-		if (scQt.getScQtSupplierCriteria() != null
-				&& !scQt.getScQtSupplierCriteria().isAllState()) {
-			List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
-					this.getManagedBean().getZoneTrees(), scQt.getScQtSupplierCriteria());
-			if (null != locCriteria && !locCriteria.isEmpty()) {
-				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
-			} else {
-				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
-			}
-		}
+		
 
 		if (null != this.getManagedBean().getSupplierCriteria()) {
 			setUserDetails(this.getManagedBean().getSupplierCriteria());
 			scQt.setScQtSupplierCriteria(this.getManagedBean()
 					.getSupplierCriteria());
+		}
+		
+		if (scQt.getScQtSupplierCriteria() != null
+				&& !scQt.getScQtSupplierCriteria().isAllState()) {
+			List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) convertTreeNodesToLocationCriteria(
+					this.getManagedBean().getZoneTrees(),scQt.getScQtSupplierCriteria());
+					
+			/*List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
+					this.getManagedBean().getZoneTrees(), scQt.getScQtSupplierCriteria());*/
+			if (null != locCriteria && !locCriteria.isEmpty()) {
+				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
+			} else {
+				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
+			}
 		}
 		if (scQt.isZonal()) {
 			if (null != scQt.getScQtSupplierCriteria() && scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
@@ -4817,6 +4822,7 @@ public class QTDetailBackingBean extends
 							.getParameterCode();
 					this.getManagedBean().setLocalLevelCode(locationLevelCode);
 					this.getManagedBean().getQt().getScQtSupplierCriteria().setLocationLevel( paramDesc.getPmParameter());
+					this.getManagedBean().getSupplierCriteria().setLocationLevel( paramDesc.getPmParameter());
 					break;
 				}
 			}
