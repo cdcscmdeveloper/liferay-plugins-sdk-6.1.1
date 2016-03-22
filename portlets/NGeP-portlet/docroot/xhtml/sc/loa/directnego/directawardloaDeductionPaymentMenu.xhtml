@@ -54,7 +54,7 @@
 					<p:inputText id="amtid" size="30" maxlength="18" required="true"
 						label="#{lbl['lbl.sc.deduction.amount']}"
 						value="#{scQtDeduction.deductionAmount}"
-						disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus or directLOABackingBean.managedBean.readOnly}"
+						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus) or directLOABackingBean.managedBean.readOnly}"
 						style="margin-right:5px;text-align:right;"
 						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
 						<ac:validateNumber
