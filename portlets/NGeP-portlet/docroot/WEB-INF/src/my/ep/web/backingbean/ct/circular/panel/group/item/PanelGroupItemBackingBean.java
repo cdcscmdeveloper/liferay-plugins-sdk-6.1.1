@@ -118,7 +118,7 @@ public class PanelGroupItemBackingBean extends BaseBackingBean<PanelGroupItemMan
 		   
 		   PanelGroupItemReqDTO reqDTO = new PanelGroupItemReqDTO();
 		   reqDTO.setCtPanelItemGroup(panelGroup);
-		   IPanelGroupItemSO panelGroupItemSO= EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelGroupItemSO.class);
+		   IPanelGroupItemSO panelGroupItemSO= (IPanelGroupItemSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelGroupItemSO.class);
 		
 		   PanelGroupItemResDTO resDTO= panelGroupItemSO.saveOrUpdatePanelGroupItemDtls(reqDTO);
 		   getManagedBean().setCtPanelItemGroup(resDTO.getCtPanelItemGroup());
