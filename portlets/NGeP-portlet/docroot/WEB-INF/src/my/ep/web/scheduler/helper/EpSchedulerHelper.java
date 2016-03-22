@@ -23,13 +23,28 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
 /**
+ * Helper class for manipulating quartz scheduler
+ * 
  * @author Syazwan
+ * 
  */
 public class EpSchedulerHelper {
 	public static Logger log = EpLogger.getLogger(EpSchedulerHelper.class);
 
 	private static Scheduler instance;
 
+	/**
+	 * Schedule new job or update existing scheduled job
+	 * 
+	 * @param JobKey
+	 *            jobKey (mandatory)
+	 * @param Class
+	 *            <? extends Job> jobClass (mandatory)
+	 * @param String
+	 *            jobDetailDesc (mandatory)
+	 * @param String
+	 *            cronExpression (mandatory)
+	 */
 	public static void scheduleJob(JobKey jobKey,
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
@@ -113,44 +128,63 @@ public class EpSchedulerHelper {
 		}
 	}
 
+	/**
+	 * Instantly run job for once only
+	 * 
+	 * @param JobKey
+	 *            jobKey (mandatory)
+	 * @param Class
+	 *            <? extends Job> jobClass (mandatory)
+	 */
 	public static void runJobOnce(JobKey jobKey, Class<? extends Job> jobClass) {
 		// start scheduler if not started yet
 		try {
-			JobDetail jobDetail = null;
-			if (!EpSchedulerHelper.getScheduler().isStarted()) {
-				EpSchedulerHelper.getScheduler().start();
+
+			if (jobKey != null && jobClass != null) {
+				JobDetail jobDetail = null;
+				if (!EpSchedulerHelper.getScheduler().isStarted()) {
+					EpSchedulerHelper.getScheduler().start();
+				}
+
+				// check if job not exist, add to scheduler context
+				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
+					jobDetail = JobBuilder.newJob(jobClass)
+							.withIdentity(jobKey).storeDurably().build();
+
+					// add job
+					EpSchedulerHelper.getScheduler().addJob(jobDetail, true);
+				}
+
+				// trigger job
+				EpSchedulerHelper.getScheduler().triggerJob(jobKey);
 			}
-
-			// check if job not exist, add to scheduler context
-			if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
-				jobDetail = JobBuilder.newJob(jobClass).withIdentity(jobKey)
-						.storeDurably().build();
-
-				// add job
-				EpSchedulerHelper.getScheduler().addJob(jobDetail, true);
-			}
-
-			// trigger job
-			EpSchedulerHelper.getScheduler().triggerJob(jobKey);
 
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
 		}
 	}
 
+	/**
+	 * Instantly run existing job
+	 * 
+	 * @param JobKey
+	 *            jobKey (mandatory)
+	 */
 	public static void runBuildJobNow(JobKey jobKey) {
 		// specify trigger
 		Trigger trigger;
 		try {
-			JobDetail job = EpSchedulerHelper.getScheduler().getJobDetail(
-					jobKey);
+			if (jobKey != null) {
+				JobDetail job = EpSchedulerHelper.getScheduler().getJobDetail(
+						jobKey);
 
-			if (job != null) {
-				trigger = TriggerBuilder.newTrigger().startNow().forJob(job)
-						.build();
+				if (job != null) {
+					trigger = TriggerBuilder.newTrigger().startNow()
+							.forJob(job).build();
 
-				// schedule the job
-				EpSchedulerHelper.getScheduler().scheduleJob(trigger);
+					// schedule the job
+					EpSchedulerHelper.getScheduler().scheduleJob(trigger);
+				}
 			}
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block
@@ -158,15 +192,24 @@ public class EpSchedulerHelper {
 		}
 	}
 
+	/**
+	 * Check if the job is already running
+	 * 
+	 * @param JobKey
+	 *            jobKey (mandatory)
+	 * @return boolean
+	 */
 	public static boolean isJobRunningNow(final JobKey jobKey) {
 		boolean retVal = false;
 
 		try {
-			for (final JobExecutionContext jobExecute : EpSchedulerHelper
-					.getScheduler().getCurrentlyExecutingJobs()) {
-				if (jobExecute.getJobDetail().getKey().equals(jobKey)) {
-					retVal = true;
-					break;
+			if (jobKey != null) {
+				for (final JobExecutionContext jobExecute : EpSchedulerHelper
+						.getScheduler().getCurrentlyExecutingJobs()) {
+					if (jobExecute.getJobDetail().getKey().equals(jobKey)) {
+						retVal = true;
+						break;
+					}
 				}
 			}
 		} catch (final SchedulerException e) {
@@ -176,16 +219,33 @@ public class EpSchedulerHelper {
 		return retVal;
 	}
 
+	/**
+	 * Get trigger by job key
+	 * 
+	 * @param JobKey
+	 *            jobKey (mandatory)
+	 * @return Trigger
+	 * @throws SchedulerException
+	 */
 	public static Trigger getTriggerByJobKey(final JobKey jobKey)
 			throws SchedulerException {
 		return EpSchedulerHelper.getScheduler().getTriggersOfJob(jobKey).get(0);
 	}
 
+	/**
+	 * Get trigger state
+	 * 
+	 * @param Trigger
+	 *            trigger (mandatory)
+	 * @return String
+	 */
 	public static String getTriggerState(final Trigger trigger) {
 		String state = TriggerState.NONE.toString();
 		try {
-			state = EpSchedulerHelper.getScheduler()
-					.getTriggerState(trigger.getKey()).toString();
+			if (trigger != null) {
+				state = EpSchedulerHelper.getScheduler()
+						.getTriggerState(trigger.getKey()).toString();
+			}
 		} catch (final SchedulerException e) {
 			log.error(e.getMessage());
 		}
@@ -193,6 +253,15 @@ public class EpSchedulerHelper {
 		return state;
 	}
 
+	/**
+	 * Get existing job key by job name and job group
+	 * 
+	 * @param String
+	 *            jobName
+	 * @param String
+	 *            jobGroup
+	 * @return JobKey
+	 */
 	public static JobKey getJobKey(String jobName, String jobGroup) {
 		JobKey returnJobKey = null;
 		try {
@@ -220,6 +289,11 @@ public class EpSchedulerHelper {
 
 	}
 
+	/**
+	 * Get scheduler instance
+	 * 
+	 * @return Scheduler
+	 */
 	public static Scheduler getScheduler() {
 		if (instance == null) {
 			try {
