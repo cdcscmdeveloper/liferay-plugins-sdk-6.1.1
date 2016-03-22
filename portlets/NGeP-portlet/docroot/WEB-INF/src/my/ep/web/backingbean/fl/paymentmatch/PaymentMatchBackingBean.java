@@ -860,6 +860,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					if(null !=childData.getPmVotFund()){
 						String votFundCode = childData.getPmVotFund().getVotFundCode();
 						getManagedBean().setVotFundCode(votFundCode);
+						getManagedBean().setVotFundType(childData.getPmVotFund().getVotFundType());
 					}
 					if(childData.getAssetInd()!=null) {
 						getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
