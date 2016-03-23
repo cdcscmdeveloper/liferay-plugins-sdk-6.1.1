@@ -58,7 +58,7 @@ public class SmSchedulerServlet extends HttpServlet {
 				
 		// Sm Payment Reminder Job
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				SchedulerConstants.SM_DAILY_PAYMENT_REMINDER_TIMER,
+				SchedulerConstants.SM_APP_PAYMENT_REMINDER,
 				SchedulerConstants.SM_JOB_GROUP),
 				MOFApplicationPaymentReminderJob.class,
 				SchedulerConstants.SM_PAYMENT_REMINDER_JOB_DESC,
@@ -66,7 +66,7 @@ public class SmSchedulerServlet extends HttpServlet {
 		
 		// Sm App Offline Supporting Documents Reminder
 		EpSchedulerHelper.scheduleJob(new JobKey(
-				SchedulerConstants.SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER,
+				SchedulerConstants.SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER,
 				SchedulerConstants.SM_JOB_GROUP),
 				SupportingDocumentReminderJob.class,
 				SchedulerConstants.SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC,
