@@ -20,16 +20,20 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 		    	action="#{pPlanBackingBean.redirectToSearchPlan}"/>
 
 	    	<div class="rowBtnRight">
-				<ui:repeat
-					var="bpmAction"
-					value="#{pPlanBackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-					<p:commandButton value="#{lbl[buttonLabel]}" update="@form" rendered="#{bpmAction != 'CANCEL'}"
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						action="#{pPlanBackingBean.savePlan(bpmAction)}">
-						<f:param name="disableValidation" value="true" />     
-					</p:commandButton>
-				</ui:repeat>
+	    		<ui:decorate template="/xhtml/pp/procurementplan/common/claim_template.xhtml">
+					<ui:define name="outComeSection">
+						<ui:repeat
+							var="bpmAction"
+							value="#{pPlanBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form" rendered="#{bpmAction != 'CANCEL'}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								action="#{pPlanBackingBean.savePlan(bpmAction)}">
+								<f:param name="disableValidation" value="true" />     
+							</p:commandButton>
+						</ui:repeat>
+					</ui:define>
+				</ui:decorate>
 				<c:if
 					test='#{not empty pPlanBackingBean.managedBean.btnValue and ProcurementPlanConst.actionViewBtn eq pPlanBackingBean.managedBean.btnValue}'>
 						<td colspan="4" style="text-align: right">	

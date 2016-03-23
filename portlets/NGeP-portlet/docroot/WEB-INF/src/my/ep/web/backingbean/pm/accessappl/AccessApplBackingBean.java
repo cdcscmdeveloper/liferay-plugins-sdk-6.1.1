@@ -35,9 +35,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -69,7 +66,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
@@ -122,21 +118,7 @@ public class AccessApplBackingBean extends
 		if(taskId == null){
 			return;
 		}
-		FacesScopes face = new FacesScopes();
-		Object token = face.getBPMAuthenticationCtxToken();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-
-		BpmRequestDTO req = new BpmRequestDTO();
-		req.setCtxToken(token);
-		req.setTaskId(taskId);
-
-		BpmResponseDTO res = bpmSO.getTaskDetails(req);
-		Object obj = res.getPojo();
-		this.getManagedBean().setOutComes(res.getAction());
-		
-		
-		this.getManagedBean().setTaskName(res.getTaskName());
+		Object obj = super.getBpmTaskDetails(Object.class, null);
 		this.getManagedBean().setTaskId(taskId);
 		// Procurement Plan
 		PMProfileDataType pmObj = (PMProfileDataType) obj;
@@ -152,7 +134,7 @@ public class AccessApplBackingBean extends
 			AccessApplResDTO resDTO = accessApplSO.retrieveAccessApplById(reqDTO);
 			if(resDTO.isSuccessful()){
 				PmAccessAppl accessAppl = resDTO.getAccessAppl();
-				accessAppl.setCurrentStatus(res.getDocStatus());
+				accessAppl.setCurrentStatus(getManagedBean().getCurrentStatusId().intValue());
 				getManagedBean().setAccessAppl(accessAppl);
 				if(accessAppl.getAccessApplDocs() != null){
 					getManagedBean().setAccessApplDocList(accessAppl.getAccessApplDocs());
