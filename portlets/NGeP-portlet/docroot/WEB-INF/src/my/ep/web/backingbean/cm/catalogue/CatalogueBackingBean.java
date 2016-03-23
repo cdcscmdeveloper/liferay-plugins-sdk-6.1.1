@@ -4782,7 +4782,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 					reqDTO.setTrackingStatus(true);
-					String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah dihantar kepada Catalogue Admin untuk kelulusan";
+					String actionDesc ="Item "+this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmItem().getItemName()+" telah dihantar kepada Catalogue Admin untuk kelulusan";
 					reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 					catalog.setItemStatus("P");
@@ -4793,7 +4793,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 					reqDTO.setTrackingStatus(true);
-					String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
+					String actionDesc ="Item "+this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
 					reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 
