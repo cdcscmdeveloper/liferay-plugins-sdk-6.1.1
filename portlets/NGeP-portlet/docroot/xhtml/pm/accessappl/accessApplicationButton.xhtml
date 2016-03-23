@@ -19,19 +19,23 @@
 							 <f:param name="disableValidation" value="true" /> 
 						</p:commandButton>
 					</td>
-					<ui:repeat var="action" value="#{accessApplBackingBean.managedBean.outComes}" 
-						rendered ="#{not isBrandNew}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
-							<td>
-								<p:commandButton value="#{lbl[buttonLabel]}" 
-									action="#{accessApplBackingBean.saveAccessApplication(action)}" 
-									onstart="blockWidget.show()" 
-									oncomplete="blockWidget.hide()">
-									<f:param name="disableValidation" value="true" /> 
-							</p:commandButton>
-							</td>
-						</ui:repeat>
-						<td><p:commandLink value="#{lbl['lbl.td.tracking.diary']}" 
+					<td colspan="4" style="text-align: right">
+					<ui:decorate template="/xhtml/pm/shared/claim_template.xhtml">
+						<ui:define name="outComeSection">
+							<ui:repeat var="action" value="#{accessApplBackingBean.managedBean.outComes}" 
+								rendered ="#{not isBrandNew}">
+								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />									
+										<p:commandButton value="#{lbl[buttonLabel]}" 
+											action="#{accessApplBackingBean.saveAccessApplication(action)}" 
+											onstart="blockWidget.show()" 
+											oncomplete="blockWidget.hide()">
+											<f:param name="disableValidation" value="true" /> 
+									</p:commandButton>									
+								</ui:repeat>
+						</ui:define>
+					</ui:decorate>
+					</td>
+					<td><p:commandLink value="#{lbl['lbl.td.tracking.diary']}" 
 							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(accessApplBackingBean.managedBean.accessAppl.docType, accessApplBackingBean.managedBean.accessAppl.accessApplId)}"
 							rendered="#{accessApplBackingBean.managedBean.showTrackingDairy}">
 							
