@@ -471,7 +471,7 @@
 								rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.myIdResp']}"
-							style="white-space: normal;"
+							style="white-space: normal;" rendered="#{!backingBean.managedBean.supplierUser}"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
 							<p:commandLink onstart="blockWidget.show()"
