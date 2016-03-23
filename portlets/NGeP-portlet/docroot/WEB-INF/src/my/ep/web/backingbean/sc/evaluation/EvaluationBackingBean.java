@@ -6634,7 +6634,7 @@ public class EvaluationBackingBean extends
 
 			if (!this.getManagedBean().isReadOnly()) {
 				saveQtReportDtls();
-				setReportAttachemnt();
+				setReportAttachment();
 			}
 
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -7329,7 +7329,7 @@ public class EvaluationBackingBean extends
 
 	// this method to set downaloadall reports file name and save file name in
 	// db;
-	private void setReportAttachemnt() throws Exception {
+	private void setReportAttachment() throws Exception {
 		IQTEvaluationSO evaluationSO = null;
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
