@@ -10,6 +10,7 @@ public class SchedulerConstants {
 	public static final String JOB_WAIT = "WAIT";
 	public static final String JOB_RESUME = "RESUME";
 	public static final String JOB_PAUSE = "PAUSE";
+	public static final String JOB_NOT_SCHEDULED = "PAUSE";
 
 	// Sourcing Module Constants
 	// Sourcing Job Group ID
