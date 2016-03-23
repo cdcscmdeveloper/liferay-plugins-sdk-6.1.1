@@ -53,6 +53,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 					</h:outputText>
+					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty jobBean.trigger}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.quartz.next.fired.time']}">
@@ -61,6 +62,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 					</h:outputText>
+					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty jobBean.trigger}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.quartz.action']}">
