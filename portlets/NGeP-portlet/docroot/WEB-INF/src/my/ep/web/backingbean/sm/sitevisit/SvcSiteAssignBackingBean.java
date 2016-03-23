@@ -52,6 +52,7 @@ public class SvcSiteAssignBackingBean extends
 	private final Long SV_BEFORE_APPROVE = 20110L;
 	private final Long SV_AFTER_APPROVE = 20117L;
 	private final String SVC_TASK_LIST = "/xhtml/bpmtasklist/svcTasklist.xhtml";
+	private final String SVC_ACK_PAGE = "/xhtml/sm/svcassignment/svcAcknowledgement.xhtml";
 	
 	public SvcSiteAssignBackingBean() {
 		SmCommonUtil.setMDCUserId();
@@ -141,7 +142,6 @@ public class SvcSiteAssignBackingBean extends
 			
 			reqDTO.setLogKey(new LogKey(pmUser.getUserId()));
 			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
-
 			
 			if (resDTO.isSuccessful()) {
 				log.info("Submission is success>>>>>>>>"); 
@@ -149,7 +149,7 @@ public class SvcSiteAssignBackingBean extends
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 				MessageUtils.getMessage(MessageConst.INFO_721201,new String[] {getManagedBean().getSmAppl().getApplNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				renewSesionObject();
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				return SVC_ACK_PAGE;
 			} else {
 				log.info("Submission is failed >>>>>>>>"); 
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
