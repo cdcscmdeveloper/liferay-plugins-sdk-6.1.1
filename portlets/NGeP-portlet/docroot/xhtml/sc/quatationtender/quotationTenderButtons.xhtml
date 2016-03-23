@@ -62,9 +62,11 @@
 					</c:otherwise>
 				</c:choose>
 				
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
-					style="float:right;margin-right: 12px;" 
-					onclick="cancelQTDlg.show()" />
+				<c:if test="#{!qTDetailBB.isQTStatusGreaterThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_CANCELLATION)}">
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+						style="float:right;margin-right: 12px;" 
+						onclick="cancelQTDlg.show()" />
+				</c:if>
 			</c:if>
 			
 			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
