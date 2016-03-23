@@ -21,6 +21,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.persistence.NonUniqueResultException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -155,6 +156,17 @@ public class AccessApplBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, ACCESS_APPL_MAIN_PAGE);
 	}
+	/**
+	 * redirect to profile search page
+	 * 
+	 * @return String
+	 */
+	public String redirectToProfileSearchPage() {
+		log.info("redirectToProfileSearchPage");
+
+		return "/xhtml/pm/profilemanagementsearch/profileManagementMain.xhtml";
+
+	}
 	
 	public void redirectToAccessApplView(Long accessApplId, Integer statusId) {
 		log.info("redirectToAccessApplView");
@@ -186,8 +198,9 @@ public class AccessApplBackingBean extends
 				}			
 				
 			}
+
 		}catch(Exception e){
-			throw new EpException(e.getMessage());
+			throw new EpException(MessageConst.ERROR_776106);
 		}finally{
 			accessApplSO = null;
 		}
