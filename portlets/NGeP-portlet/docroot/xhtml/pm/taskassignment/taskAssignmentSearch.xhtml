@@ -127,7 +127,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td width="55%">
 					<p:inputText id="docNo"  styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="80"
+							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="20"
 							value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
 							size="30" >
 						<p:ajax event="blur" listener="#{taskAssignBackingBean.onChangeUser(null)}" 
