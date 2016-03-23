@@ -27,6 +27,7 @@ import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.personnelauthorization.IPersonnelAuthorizationSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.revertApplication.IRevertApplicationSO;
@@ -478,24 +479,36 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IBlacklistDirectorSO.class);
 	}
-	
+
 	/**
 	 * Get IConfigGeneralSO
+	 * 
 	 * @return IConfigGeneralSO
 	 */
-	public static IConfigGeneralSO getConfigGeneralSO(){
+	public static IConfigGeneralSO getConfigGeneralSO() {
 		return (IConfigGeneralSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IConfigGeneralSO.class);
 	}
-	
+
 	/**
 	 * Get IConfigGeneralSO
+	 * 
 	 * @return IConfigGeneralSO
 	 */
-	public static ISiteAssignSO getSiteAssignSO(){
-		return (ISiteAssignSO) BusinessDelegate.getInstance()
+	public static ISiteAssignSO getSiteAssignSO() {
+		return (ISiteAssignSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteAssignSO.class);
+	}
+
+	/**
+	 * Get IPersonnelSO
+	 * 
+	 * @return IPersonnelSO
+	 */
+	public static IPersonnelAuthorizationSO getPersonnelAuthorizationSO() {
+		return (IPersonnelAuthorizationSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISiteAssignSO.class);
+						IPersonnelAuthorizationSO.class);
 	}
 }

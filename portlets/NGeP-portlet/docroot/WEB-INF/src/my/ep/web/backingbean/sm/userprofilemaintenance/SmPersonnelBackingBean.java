@@ -27,6 +27,8 @@ import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1606,29 +1608,54 @@ public class SmPersonnelBackingBean extends
 	/**
 	 * Process deactivate old admin and replace with new admin
 	 */
+	// public void deactivateAdmin() {
+	// FacesScopes fs = new FacesScopes();
+	// PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+	// reqDTO.setLanguage(fs.getUserLocale().getLanguage());
+	// reqDTO.setServerName(fs.getRequest().getServerName());
+	// reqDTO.setServerPort(fs.getRequest().getServerPort());
+	// reqDTO.setAdminPersonnel(getManagedBean().getUpdateSmPersonnel());
+	// reqDTO.setSmPersonnel(getManagedBean().getSelectedPersonnelToReassign());
+	// reqDTO.setSmSupplierId(SmApplicationUtil.getCurrentSupplier()
+	// .getSupplierId());
+	// reqDTO.setOldAdminRecordStatusFlg(getManagedBean()
+	// .getUpdateSmPersonnel().getEpRole()
+	// .equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ?
+	// DbValueConst.RECORD_STATUS_ACTIVE
+	// : DbValueConst.RECORD_STATUS_DELETED);
+	//
+	// PersonnelResDTO resDTO = new PersonnelResDTO();
+	// resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
+	//
+	// if (resDTO.isSuccessful()) {
+	// SmCommonUtil
+	// .callDeactivationSuccessDialog(MessageConst.INFO_721027);
+	// } else {
+	// throw new EpException(MessageConst.ERROR_721112);
+	// }
+	// }
+
 	public void deactivateAdmin() {
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		FacesScopes fs = new FacesScopes();
+		PersonnelAuthorizationReqDTO reqDTO = new PersonnelAuthorizationReqDTO();
 		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
-		reqDTO.setServerName(fs.getRequest().getServerName());
-		reqDTO.setServerPort(fs.getRequest().getServerPort());
-		reqDTO.setAdminPersonnel(getManagedBean().getUpdateSmPersonnel());
-		reqDTO.setSmPersonnel(getManagedBean().getSelectedPersonnelToReassign());
-		reqDTO.setSmSupplierId(SmApplicationUtil.getCurrentSupplier()
-				.getSupplierId());
-		reqDTO.setOldAdminRecordStatusFlg(getManagedBean()
-				.getUpdateSmPersonnel().getEpRole()
-				.equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? DbValueConst.RECORD_STATUS_ACTIVE
+		reqDTO.setOldSupplierAdmin(getManagedBean().getUpdateSmPersonnel());
+		reqDTO.setNewSupplierAdmin(getManagedBean()
+				.getSelectedPersonnelToReassign());
+		reqDTO.setRecordStatusFlg(getManagedBean().getUpdateSmPersonnel()
+				.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? DbValueConst.RECORD_STATUS_ACTIVE
 				: DbValueConst.RECORD_STATUS_DELETED);
+		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
-		PersonnelResDTO resDTO = new PersonnelResDTO();
-		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
+		PersonnelAuthorizationResDTO resDTO = new PersonnelAuthorizationResDTO();
+		resDTO = SmServiceLookup.getPersonnelAuthorizationSO()
+				.replaceAdminWithExistingPersonnel(reqDTO);
 
-		if (resDTO.isSuccessful()) {
+		if (StringUtils.isBlank(resDTO.getErrorCode())) {
 			SmCommonUtil
 					.callDeactivationSuccessDialog(MessageConst.INFO_721027);
 		} else {
-			throw new EpException(MessageConst.ERROR_721112);
+			throw new EpException(resDTO.getErrorCode());
 		}
 	}
 
