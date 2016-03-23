@@ -12,24 +12,23 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
-import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
-import my.ep.dto.pm.common.zone.ZoneReqDTO;
-import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -66,7 +65,7 @@ public class SalutationBackingBean extends
 		log.info("inside constructor");
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
-			System.out.println("***userId: " + pmUser.getUserId());
+			log.info("***userId: " + pmUser.getUserId());
 
 			new LogKey(pmUser.getUserId()); 
 		}else{
@@ -103,9 +102,7 @@ public class SalutationBackingBean extends
         this.getManagedBean().setSalutationNames(new String());
         this.getManagedBean().setStatus(null);
 
-        salutationDataModel = new SalutationPagingDataModel();
-       
-		
+        salutationDataModel = new SalutationPagingDataModel();    
 	}
 	
 	/**
@@ -117,7 +114,6 @@ public class SalutationBackingBean extends
 		PmSalutation pmSalutation= new PmSalutation();
 		this.getManagedBean().setPmSalutation(pmSalutation);
 		return "/xhtml/pm/salutation/salutationMaintenance.xhtml";
-
 	}	
 
 	/**
@@ -136,8 +132,7 @@ public class SalutationBackingBean extends
 		 */
 		private ISearchBean<PmSalutation> getSearchBeanData(ISearchBean<PmSalutation> searchBean){
 				
-			if (getManagedBean().getSalutationCodes() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getSalutationCodes())) {
+			if (StringUtils.isNotBlank(getManagedBean().getSalutationCodes())) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
@@ -149,8 +144,7 @@ public class SalutationBackingBean extends
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (getManagedBean().getSalutationNames() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getSalutationNames())) {
+			if (StringUtils.isNotBlank(getManagedBean().getSalutationNames())) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
@@ -251,12 +245,40 @@ public class SalutationBackingBean extends
 	private void validationMessage(PmSalutation salutation){
 		debugLogger("validationMessage");
 		if(StringUtils.isBlank(salutation.getSalutationCode())){
-			throw new EpException("Salutation Code is Mandatory");
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pm.sa.code")});
 		}
 		
 		if(StringUtils.isBlank(salutation.getSalutationName())){
-			throw new EpException("Salutation Name is Mandatory");
-		}		
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pm.sa.name")});
+		}	
+		
+		if(DbValueConst.RECORD_STATUS_ACTIVE == salutation.getRecordStatusFlg()){
+			if (isExistSalutationCode(salutation)) {
+				if(salutation.isBrandNew()){
+					throw new EpException(MessageConst.ERROR_779003);
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.sa.code")
+					});	
+				}
+			}
+			
+			if(isExistSalutationName(salutation)){
+				if(salutation.isBrandNew()){
+					throw new EpException(MessageConst.ERROR_770221, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.sa.name"),
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.sa.name")
+					});
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.sa.name")
+					});	
+				}
+			}
+		}
+		
 	}		
 	
 	/**
@@ -265,82 +287,92 @@ public class SalutationBackingBean extends
 	 */
 	 public String saveSaluationDtls(){
 		 debugLogger("saveSaluationDtls");
+		 ISalutationSO salutationSO = null;
+		 String returnUrl = null;
 		 
-		 PmSalutation salutation= this.getManagedBean().getPmSalutation();
-		 log.info("............salutation.getSalutationCode()="+salutation.getSalutationCode());
-		 validationMessage(salutation);
-		 
-		 if(salutation.isBrandNew()){
-			 if (isExistSalutationCode(salutation.getSalutationCode())) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(
-											MessageConst.ERROR_779003, new String[] {
-													salutation.getSalutationCode(),
-													salutation.getSalutationCode()},
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes().getUserLocale())));
-					return NAV_TO_MAINTAIN;
+		 try{
+			 PmSalutation salutation= this.getManagedBean().getPmSalutation();
+			 validationMessage(salutation);
+			 SalutationReqDTO reqDTO = new SalutationReqDTO();
+			 reqDTO.setSalutation(salutation);
+			 
+			 salutationSO = EpEjbBusinessDelegate.getInstance().
+					 getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
+			 
+			 SalutationResDTO resDTO= salutationSO.saveOrUpdateSaluationDtls(reqDTO);
+			 this.getManagedBean().setPmSalutation(resDTO.getSalutation());
+			 if(resDTO.isSuccessful()){
+				 if (salutation.isBrandNew()) {
+					 returnUrl = NAV_TO_MAIN;
+					 PmCommonUtil.showFacesMsg(
+							 FacesContext.getCurrentInstance(), 
+							 FacesMessage.SEVERITY_INFO, 
+							 MessageConst.INFO_779001, 
+							 new String[] {
+										resDTO.getSalutation().getSalutationCode(),
+										resDTO.getSalutation().getSalutationCode()});
+					}else{
+						returnUrl = NAV_TO_MAINTAIN;
+						PmCommonUtil.showFacesMsg(
+								 FacesContext.getCurrentInstance(), 
+								 FacesMessage.SEVERITY_INFO, 
+								 MessageConst.INFO_779002, 
+								 new String[] {
+											resDTO.getSalutation().getSalutationCode(),
+											resDTO.getSalutation().getSalutationCode()});					
+					}
 				}
-		 setUserDetails(salutation);
+		 }catch(Exception e){
+			 throw e;
+		 }finally{
+			 salutationSO = null;
 		 }
-		 
-		 SalutationReqDTO reqDTO = new SalutationReqDTO();
-		 reqDTO.setSalutation(salutation);
-		 ISalutationSO iSalutationSO= EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
-		
-		 SalutationResDTO resDTO= iSalutationSO.saveOrUpdateSaluationDtls(reqDTO);
-		 this.getManagedBean().setPmSalutation(resDTO.getSalutation());
-		 if(resDTO.isSuccessful()){
-			 if (salutation.isBrandNew()) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_779001, new String[] {
-													resDTO.getSalutation().getSalutationCode(),
-													resDTO.getSalutation().getSalutationCode()},
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-				}else{
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_779002, new String[] {
-													resDTO.getSalutation().getSalutationCode(),
-													resDTO.getSalutation().getSalutationCode()},
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-				}
-			}
-		if(!salutation.isBrandNew()){
-			return NAV_TO_MAINTAIN;
-		}else{
-		  return NAV_TO_MAIN;
-		}
+		 return returnUrl;
 	 }
-	 public boolean isExistSalutationCode(String salutationCode) {
-		 ISalutationSO salutationSO = (ISalutationSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
-		 SalutationReqDTO reqDTO = new SalutationReqDTO();
-			reqDTO.setSalutationCode(salutationCode);
-			SalutationResDTO resDTO = salutationSO.retrieveSalutationBySalutationCode(reqDTO);
+	 public boolean isExistSalutationCode(PmSalutation salutation) {
+		 ISalutationSO reqSO = null;
+			boolean isExist = false;
+			try {
+				SalutationReqDTO reqDTO = new SalutationReqDTO();
+				reqSO = (ISalutationSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								ISalutationSO.class);
+				ISearchBean<PmSalutation> searchBean = new SearchBean<PmSalutation>();
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("salutationCode",
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								salutation.getSalutationCode().toLowerCase().trim(),
+								true
+				));
+				
+				if(!salutation.isBrandNew()){
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("salutationId",
+									SearchOperator.OPERATOR_NOT_EQUALS.value(), 
+									salutation.getSalutationId()
+					));
+				}
 
-			if (resDTO.getSalutation() != null) {
-				return true;
-			} else {
-				return false;
+				reqDTO.setSalutationSearchBean(searchBean);
+				SalutationResDTO resDTO = reqSO.retrieveSalutationBySearch(reqDTO);
+				if(resDTO.isSuccessful() && resDTO.getSalutationList() !=null 
+						&& !resDTO.getSalutationList().isEmpty()){
+					isExist = true;
+				}
+				
+			} finally {
+				reqSO = null;
 			}
-		}
+			return isExist;
+	}
 	 /**
 		 *  This method used for reset the search bean field and
 		 *  navigate to the search main page. 
 		 * 
 		 **/
 	 public void preLoadSalutation(){
-			System.out.println("preLoadgroupSearch ....");
+			log.info("preLoadgroupSearch ....");
 			renewSesionObject();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -354,6 +386,53 @@ public class SalutationBackingBean extends
 						.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			}
 			baseObject.setChangedBy(1L);
+	}
+	 
+	 public boolean isExistSalutationName(PmSalutation salutation) {
+			ISalutationSO reqSO = null;
+			boolean isExist = false;
+			try {
+				SalutationReqDTO reqDTO = new SalutationReqDTO();
+				reqSO = (ISalutationSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								ISalutationSO.class);
+				ISearchBean<PmSalutation> searchBean = new SearchBean<PmSalutation>();
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								DbValueConst.RECORD_STATUS_ACTIVE
+				));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("salutationName",
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								salutation.getSalutationName().toLowerCase().trim(),
+								true
+				));
+				
+				if(!salutation.isBrandNew()){
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("salutationId",
+									SearchOperator.OPERATOR_NOT_EQUALS.value(), 
+									salutation.getSalutationId()
+					));
+				}
+				
+				searchBean.getSortColumns().add(
+						new SearchOrderBean("salutationName"));
+
+				reqDTO.setSalutationSearchBean(searchBean);
+				SalutationResDTO resDTO = reqSO.retrieveSalutationBySearch(reqDTO);
+				if(resDTO.isSuccessful() && resDTO.getSalutationList() !=null 
+						&& !resDTO.getSalutationList().isEmpty()){
+					isExist = true;
+				}
+				
+			} finally {
+				reqSO = null;
+			}
+			return isExist;
 		}
 	 
 	 

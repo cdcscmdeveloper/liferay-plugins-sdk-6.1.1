@@ -1831,7 +1831,7 @@ public class PmCommonUtil {
 				));
 	}
 	
-	private static String getMsgFromMsgUtils(String msgId, String[] params){
+	public static String getMsgFromMsgUtils(String msgId, String[] params){
 		return MessageUtils
 				.getMessage(
 						msgId,
