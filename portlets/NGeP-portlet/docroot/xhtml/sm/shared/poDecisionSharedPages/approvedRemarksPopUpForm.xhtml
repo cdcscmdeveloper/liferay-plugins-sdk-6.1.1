@@ -10,15 +10,17 @@
 		showDetail="true" autoUpdate="true" closable="true" />
 	<table style="width: 100%">
 		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-			<tr>
-				<td style="border-style: none !important;float: right !important;">
-					<p:selectBooleanCheckbox value="#{backingBean.managedBean.smAppl.bumi}" 
-						disabled="#{backingBean.managedBean.smAppl.applType eq 'B'}"/>
-				</td>
-				<td valign="top" style="border-style: none !important;white-space: normal;">
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.bumi.tick.msg']}" />
-				</td>
-			</tr>
+			<p:outputPanel rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
+				<tr>
+					<td style="border-style: none !important;float: right !important;">
+						<p:selectBooleanCheckbox value="#{backingBean.managedBean.smAppl.bumi}" 
+							disabled="#{backingBean.managedBean.smAppl.applType eq 'B'}"/>
+					</td>
+					<td valign="top" style="border-style: none !important;white-space: normal;">
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.bumi.tick.msg']}" />
+					</td>
+				</tr>
+			</p:outputPanel>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
