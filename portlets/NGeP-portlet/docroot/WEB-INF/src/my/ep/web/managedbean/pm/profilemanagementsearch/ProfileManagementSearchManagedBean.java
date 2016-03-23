@@ -46,23 +46,13 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 	private Long selectedOrgType;
 
 	private PmOrgProfile selectedOrgProfile;
-	// Paging for listing
-	private IPagingDataModel<Object[]> accessAPPLDataModel = new AccessAPPLPagingDataModel();
-
-	public IPagingDataModel<Object[]> getAccessAPPLDataModel() {
-		return accessAPPLDataModel;
-	}
-
-	public void setAccessAPPLDataModel(
-			IPagingDataModel<Object[]> accessAPPLDataModel) {
-		this.accessAPPLDataModel = accessAPPLDataModel;
-	}
+	
 	/**
 	 * get search bean
 	 * 
 	 * @return ISearchBean<PmAccessAppl>
 	 */
-	private void fillRequestDTO(AccessApplReqDTO applReqDTO) {
+	public void fillRequestDTO(AccessApplReqDTO applReqDTO) {
 		log.info("fillRequestDTO - Start");
 		ProfileManagementSearchBean pmSearchBean = this.getProfileManagSearchBean();
 
@@ -99,54 +89,6 @@ public class ProfileManagementSearchManagedBean extends BaseManagedBean {
 		}
 
 	}
-	// pagination for profile management search list
-	private class AccessAPPLPagingDataModel extends
-			PagingDataModel<Object[]> {
-		private static final long serialVersionUID = 1L;
-
-		public AccessAPPLPagingDataModel() {
-			super("dtPmResult");
-			log.info("....AccessAPPLPagingDataModel");
-		}
-		
-		@Override
-		protected ISearchResultBean<Object[]> pageChangeListener(
-				ISearchBean<Object[]> searchBean) {
-			log.info("....pageChangeListener");
-			IAccessApplSO accessApplSO = null;
-			if (getSelectedAppTypeParamCode() != null) {
-				try {
-//					ISearchBean<Object[]> searchBeanData = getSearchBeanData(searchBean);
-					log.info("....after getsearchbean");
-					log.info("....getProfileManagSearchBean().getAppStatusId()="+getProfileManagSearchBean().getAppStatusId());
-					AccessApplReqDTO applReqDTO = new AccessApplReqDTO();
-					fillRequestDTO(applReqDTO);
-					applReqDTO.setAccessApplSearch(searchBean);
-					applReqDTO.setAppStatusId(getProfileManagSearchBean()
-							.getAppStatusId());
-					applReqDTO.setDocType(getSelectedAppTypeParamCode());
-					accessApplSO = BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IAccessApplSO.class);
-					log.info("....efor call  getAccessApplListBySearchBean");
-					AccessApplResDTO resDto = accessApplSO
-							.getAccessApplListBySearchBean(applReqDTO);
-					log.info("....after call  getAccessApplListBySearchBean");
-					if (resDto != null && resDto.isSuccessful()) {
-						log.info("....pageChangeListener..resultt.end");
-						return resDto.getAppLResultBean();
-					}
-				} finally {
-					accessApplSO = null;
-				}
-			}
-			log.info("....pageChangeListener...end");
-			return null;
-		}
-
-	}
-
 	/**
 	 * get search bean
 	 * 
