@@ -49,7 +49,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.quartz.last.fired.time']}">
-					<h:outputText value="#{jobBean.trigger.previousFireTime}">
+					<h:outputText value="#{jobBean.trigger.previousFireTime}" rendered="#{not empty jobBean.trigger}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 					</h:outputText>
@@ -57,27 +57,32 @@
 
 				<p:column headerText="#{lbl['lbl.quartz.next.fired.time']}">
 					<h:outputText value="#{jobBean.trigger.nextFireTime}"
-						rendered="#{jobBean.trigger.nextFireTime!=null}">
+						rendered="#{not empty jobBean.trigger and not empty jobBean.trigger.nextFireTime}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.quartz.action']}">
-					<p:commandLink id="resumePauseActionId" partialSubmit="true"
-						process="@this"
-						action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}"
-						update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()">
-						<h:outputText value="#{jobBean.action}" />
-					</p:commandLink>
-					<p:commandLink id="runNowActionId"
-						rendered="#{jobBean.status eq 'WAIT'}" partialSubmit="true"
-						process="@this" action="#{schedulerManagerBB.runNowJob(jobBean)}"
-						update="@form" onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()">
-						<h:outputText value="#{lbl['lbl.quartz.run.now']}" />
-					</p:commandLink>
+					<p:outputPanel rendered="#{not empty jobBean.trigger}">
+						<p:commandLink id="resumePauseActionId" partialSubmit="true"
+							process="@this"
+							action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}"
+							update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							<h:outputText value="#{jobBean.action}" />
+						</p:commandLink>
+						<p:commandLink id="runNowActionId"
+							rendered="#{jobBean.status eq 'WAIT'}" partialSubmit="true"
+							process="@this" action="#{schedulerManagerBB.runNowJob(jobBean)}"
+							update="@form" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							<h:outputText value="#{lbl['lbl.quartz.run.now']}" />
+						</p:commandLink>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{empty jobBean.trigger}">
+						<h:outputText value="#{lbl['lbl.quartz.action.not.available']}" />
+					</p:outputPanel>
 				</p:column>
 
 			</p:dataTable>
