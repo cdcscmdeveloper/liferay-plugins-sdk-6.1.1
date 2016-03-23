@@ -22,7 +22,7 @@
 
 		<div class="ppRightBtn">
 			<h:panelGroup id="approverBtns">
-
+<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
 				<ui:decorate
 					template="/WEB-INF/facelets/templates/claim_template.xhtml">
 					<ui:define name="outComeSection">

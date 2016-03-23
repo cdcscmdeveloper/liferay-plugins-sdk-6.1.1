@@ -36,6 +36,7 @@
 			postSignAction="#{lOIDetailBackingBean.gpkiSignMultiLoiAction(gpkiBackingBean.pmDigiSign)}" />
 
 		<div class="ppRightBtn">
+		<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
