@@ -21,6 +21,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -84,12 +90,6 @@ import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -1141,6 +1141,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		orderBackingBean.getManagedBean().setButtonVal("View");
 		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 		flBB.getManagedBean().setHideRemarks(true);
+		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
@@ -1274,6 +1275,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		BigDecimal deliveredAmt = BigDecimal.ZERO;
 		for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+				
 				if(!isDoGST || !itemAddr.isGst()) {
 					itemAddr.setDoGstAmt(BigDecimal.ZERO);
 					itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice());
@@ -1282,8 +1284,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					itemAddr.setDoGstAmt(gstAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
 					itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice().add(itemAddr.getDoGstAmt()));
 				}
-				deliveredAmt = itemAddr.getDeliveredQty().multiply(itemAddr.getDoGstUnitPrice());
-				itemAddr.setDeliveredAmt(deliveredAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+				if(itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+					deliveredAmt = itemAddr.getDeliveredQty().multiply(itemAddr.getDoGstUnitPrice());
+					itemAddr.setDeliveredAmt(deliveredAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+				}
+				
 				if(!amtChanged && itemAddr.getGstAmount().compareTo(itemAddr.getDoGstAmt())!=0) {
 					amtChanged = true;
 				}
