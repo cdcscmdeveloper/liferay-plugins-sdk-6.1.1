@@ -14,6 +14,15 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<div class="nav-wrapper" align="justify">
+			<p:commandButton id="btnSubmit" value="#{lbl['lbl.btn.submit']}"  style="float:right;"
+				action="#{svcSiteAssignBackingBean.validateForm}" />
+
+			<p:commandButton id="btnBack" value="#{lbl['lbl.btn.back']}"  style="float:left;"
+				action="#{svcSiteAssignBackingBean.navigateToSvcTaskList}" />
+		</div>
+		<div style="clear: both;"></div>
+
 		<ui:remove><f:event listener="#{svcSiteAssignBackingBean.preRenderView}" type="preRenderView" /></ui:remove>
 		<ui:param name="supplierName"
 			value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.companyName}" />
@@ -27,7 +36,9 @@
    			 #{lbl['lbl.sm.sitevisit.want.proceed.qmark']}	
    			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
+					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}">
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="submissionConfirmDlg.hide();"></p:commandButton>
 			</div>
@@ -35,10 +46,6 @@
 
 		<p:messages id="svoMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
-		<div align="right">
-			<p:commandButton id="btnSubmit" value="#{lbl['lbl.btn.submit']}"
-				action="#{svcSiteAssignBackingBean.validateForm}" />
-		</div>
 		
 		<table>
 			<tr>
@@ -106,11 +113,12 @@
 					<h:outputText value="#{lbl['lbl.sm.siteassign.expected.visiting.date']}" />
 					<h:outputText value="*"
 						styleClass="mandatory" />&#160;&#160;
-					<p:calendar id="scheduleDateId" navigator="true" required="true"
+					<p:calendar id="scheduleDateId" navigator="true" 
 						label="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
 						value="#{svc.smSvTask.scheduleDate}"
 						mindate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						required="#{!empty param['disableValidation']}"
 						size="30" showOn="button" /><br />
 					<p:pickList id="pickList"
 							value="#{svc.svoUserList}"
