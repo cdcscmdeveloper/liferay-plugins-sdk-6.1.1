@@ -80,6 +80,7 @@ public class SchedulerConstants {
 	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB = "Delete or deactivate pending activation personnel";
 	public static final String SM_APP_SOFTCERT_RENEW_REMINDER_JOB = "Soft Cert Renewal Reminder";
 	public static final String SM_APP_PAYMENT_REMINDER = "Payment Reminder";
+	public static final String SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER = "Offline Supporting Document Reminder";
 
 	// Sm Job Description
 	public static final String SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC = "Job run every day at 00:05 AM to delete pending activation personnel";
