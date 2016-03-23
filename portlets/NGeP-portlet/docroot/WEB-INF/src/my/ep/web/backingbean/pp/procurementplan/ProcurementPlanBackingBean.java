@@ -208,37 +208,26 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (taskId == null) {
 			return;
 		}
-		FacesScopes face = new FacesScopes();
-		Object token = face.getBPMAuthenticationCtxToken();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(token);
-		reqDTO.setTaskId(taskId);
-
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-
-		//only for PLAN OFFICER/ PLAN APPROVER/ PLAN VERIFIER (from tasklist)
-		if(isRolePlanner() || isRoleApprover() || isRoleVerifier()){
-			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			int i = 1;
-			for (String action : res.getAction()) {
-				outcome[i++] = action;
-			}
-			this.getManagedBean().setOutComes(outcome);
-		}
+//		//only for PLAN OFFICER/ PLAN APPROVER/ PLAN VERIFIER (from tasklist)
+//		if(isRolePlanner() || isRoleApprover() || isRoleVerifier()){
+//			String[] outcome = new String[res.getAction().length + 1];
+//			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+//			int i = 1;
+//			for (String action : res.getAction()) {
+//				outcome[i++] = action;
+//			}
+//			this.getManagedBean().setOutComes(outcome);
+//		}
 		
-		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setBackAllow(false);
-		generatePageModeForProcess(res.getTaskName());
+		generatePageModeForProcess(this.getManagedBean().getTaskName());
 		
-		this.getManagedBean().setBpmStatusCreator(res.getCreator());
-		this.getManagedBean().setBpmStatusDate(new Timestamp(res.getCreateDate().getTimeInMillis()));
-		this.getManagedBean().setBpmStatusId(res.getDocStatus().longValue());
+//		this.getManagedBean().setBpmStatusCreator(res.getCreator());
+//		this.getManagedBean().setBpmStatusDate(new Timestamp(res.getCreateDate().getTimeInMillis()));
+//		this.getManagedBean().setBpmStatusId(res.getDocStatus().longValue());
 
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
