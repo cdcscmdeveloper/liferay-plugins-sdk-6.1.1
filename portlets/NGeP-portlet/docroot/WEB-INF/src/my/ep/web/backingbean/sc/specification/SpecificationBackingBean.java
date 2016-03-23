@@ -11953,8 +11953,8 @@ public class SpecificationBackingBean extends
 				// resDTO = specSO.saveTemplateSpecZoneDtls(reqDTO);
 				this.getManagedBean().setQtCategoryList(
 						new ArrayList<ScQtCategory>());
-				this.getManagedBean().setZoneGeneralTrees(
-						new ArrayList<TreeNode>());
+				//this.getManagedBean().setZoneGeneralTrees(
+					//	new ArrayList<TreeNode>());
 				// this.getManagedBean().setQt(resDTO.getScQt());
 				// retriveSpecdetails(resDTO.getScQt().getQtId());
 				// retriveSupplierQualificationCriteria("SC");
@@ -12047,6 +12047,10 @@ public class SpecificationBackingBean extends
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
 			this.getManagedBean().setFinancialScoring(null);
 			this.getManagedBean().setOfferPricePackage(null);
+			if(reqDTO.isZonesQt()){
+				this.getManagedBean().setZoneGeneralTrees(
+						new ArrayList<TreeNode>());
+			}
 			specCommitteeResetData();
 			// settemplateSpecList(savedCheckLists);
 			setTechnicalCheckList(savedCheckLists.get(0));
@@ -12394,8 +12398,8 @@ public class SpecificationBackingBean extends
 				reqDTO.setScQt(scQt);
 				this.getManagedBean().setQtCategoryList(
 						new ArrayList<ScQtCategory>());
-				this.getManagedBean().setZoneGeneralTrees(
-						new ArrayList<TreeNode>());
+				//this.getManagedBean().setZoneGeneralTrees(
+						//new ArrayList<TreeNode>());
 				// this.getManagedBean().setQt(resDTO.getScQt());
 				// retriveSpecdetails(resDTO.getScQt().getQtId());
 				// retriveSupplierQualificationCriteria("SC");
