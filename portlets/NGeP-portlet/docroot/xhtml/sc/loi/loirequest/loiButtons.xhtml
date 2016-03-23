@@ -17,6 +17,7 @@
 		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 			rendered="#{lOIDetailBackingBean.managedBean.editFlag}"
 			style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" />
+			<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
 		<ui:decorate
 			template="/WEB-INF/facelets/templates/claim_template.xhtml">
 			<ui:define name="outComeSection">

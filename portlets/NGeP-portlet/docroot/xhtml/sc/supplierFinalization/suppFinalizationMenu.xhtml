@@ -31,6 +31,7 @@
 			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
 		<div align="right" class="BtnSpacing">
+		<ui:param name="readOnlyTask" value="#{suppFinalizationBackingBean.managedBean.readOnly}" />
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
