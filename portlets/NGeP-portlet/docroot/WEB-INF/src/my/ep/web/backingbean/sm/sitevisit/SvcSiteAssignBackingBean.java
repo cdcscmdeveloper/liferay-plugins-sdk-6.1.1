@@ -51,6 +51,7 @@ public class SvcSiteAssignBackingBean extends
 	
 	private final Long SV_BEFORE_APPROVE = 20110L;
 	private final Long SV_AFTER_APPROVE = 20117L;
+	private final String SVC_TASK_LIST = "/xhtml/bpmtasklist/svcTasklist.xhtml";
 	
 	public SvcSiteAssignBackingBean() {
 		SmCommonUtil.setMDCUserId();
@@ -249,6 +250,13 @@ public class SvcSiteAssignBackingBean extends
 		if(this.getManagedBean().getSmAppl() == null){
 			//retrieveSiteAssignInfo();
 		}
+	}
+	
+	/**
+	 * return to svcTaskList
+	 */
+	public String navigateToSvcTaskList(){
+		return SVC_TASK_LIST;
 	}
 	
 	/**
