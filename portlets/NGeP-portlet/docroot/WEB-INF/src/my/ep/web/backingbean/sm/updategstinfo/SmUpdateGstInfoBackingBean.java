@@ -12,6 +12,7 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -45,7 +46,7 @@ public class SmUpdateGstInfoBackingBean extends
 	 */
 	public void preRenderGstInfo() {
 		renewSesionObject();
-		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "",null);
+		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "", null);
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class SmUpdateGstInfoBackingBean extends
 						.getSmSupplierBranchList());
 		initHqGstInfo();
 		initBranchGstInfo();
-		SmCommonUtil.redirectToPage("gstInfoBasePage.xhtml", "",null);
+		SmCommonUtil.redirectToPage("gstInfoBasePage.xhtml", "", null);
 	}
 
 	/**
@@ -202,7 +203,7 @@ public class SmUpdateGstInfoBackingBean extends
 		renewSesionObject();
 		SmCommonUtil.redirectToPage(
 				SmApplicationUtil.getApplicationErrorPage(),
-				MessageConst.INFO_721062,null);
+				MessageConst.INFO_721062, null);
 	}
 
 	/**
@@ -329,8 +330,6 @@ public class SmUpdateGstInfoBackingBean extends
 	 * Init Branch gst information
 	 */
 	private void initBranchGstInfo() {
-		getManagedBean()
-				.setInitialBranchGstList(new ArrayList<SmGstSupplier>());
 		List<SmSupplierBranch> supplierBranchList = getManagedBean()
 				.getSuppBranchList();
 		if (supplierBranchList != null && !supplierBranchList.isEmpty()) {
@@ -352,20 +351,18 @@ public class SmUpdateGstInfoBackingBean extends
 						brVO.setSameWithHq(SmApplicationUtil
 								.isBranchGstSameAsHq(getManagedBean()
 										.getHqGstSupplier(), brVO.getGst()));
-						if (brVO.getGst().getSmGstSupplierDocs() == null
-								|| brVO.getGst().getSmGstSupplierDocs()
-										.isEmpty()) {
+						if (EntityHelper.isCollectionEmpty(brVO.getGst()
+								.getSmGstSupplierDocs())) {
 							SmApplicationUtil.initGstSuppDocs(brVO.getGst());
 						}
-					} else {
-						brVO.setGst(new SmGstSupplier());
-						brVO.setSameWithHq(true);
-						SmCommonUtil.copyHqGstToBranch(getManagedBean()
-								.getHqGstSupplier(), brVO.getGst(), true, brVO
-								.getBranch().getBranchCode());
-					}
-					getManagedBean().getInitialBranchGstList().add(
-							brVO.getGst());
+					} 
+//					else {
+//						brVO.setGst(new SmGstSupplier());
+//						brVO.setSameWithHq(true);
+//						SmCommonUtil.copyHqGstToBranch(getManagedBean()
+//								.getHqGstSupplier(), brVO.getGst(), true, brVO
+//								.getBranch().getBranchCode());
+//					}
 				}
 				getManagedBean().getBranches().add(brVO);
 			}
