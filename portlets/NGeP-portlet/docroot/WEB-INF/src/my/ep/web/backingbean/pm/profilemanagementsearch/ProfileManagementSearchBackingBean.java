@@ -53,6 +53,7 @@ public class ProfileManagementSearchBackingBean extends
 	public void preLoadingAccessAPL() {
 		log.info("preLoadingAccessAPL");
 		renewSesionObject();
+		log.info("preLoadingAccessAPL");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -169,7 +170,7 @@ public class ProfileManagementSearchBackingBean extends
 	 */
 	public SelectItem[] getOrgTypeDropdownValues() {
 		SelectItem[] items = null;
-		if (getManagedBean().getOrgTypeMap().get("somAccessApplOrgType") == null) {
+//		if (getManagedBean().getOrgTypeMap().get("somAccessApplOrgType") == null) {
 			ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
 					PmParameterDesc.class, "somAccessApplOrgType");
 
@@ -189,11 +190,11 @@ public class ProfileManagementSearchBackingBean extends
 				items = getDropdownValuesBySearchBean(
 						ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 			}
-			getManagedBean().getOrgTypeMap().put("somAccessApplOrgType", items);
-		} else {
-			items = getManagedBean().getOrgTypeMap()
-					.get("somAccessApplOrgType");
-		}
+//			getManagedBean().getOrgTypeMap().put("somAccessApplOrgType", items);
+//		} else {
+//			items = getManagedBean().getOrgTypeMap()
+//					.get("somAccessApplOrgType");
+//		}
 
 		return items;
 	}
