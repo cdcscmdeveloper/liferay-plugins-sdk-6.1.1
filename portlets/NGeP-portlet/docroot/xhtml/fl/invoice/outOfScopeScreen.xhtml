@@ -6,12 +6,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-		<p:panel header="#{lbl['lbl.fl.out.of.scope']}" toggleable="true" rendered="#{not empty invoiceBackingBean.managedBean.outOfScopeSectionItemRoot}">
+		<p:panel header="#{lbl['lbl.fl.out.of.scope']}" toggleable="true">
 			<p:treeTable id="outOfScopeTbl" var="chargeLineNode" rendered="#{invoiceBackingBean.managedBean.taxInvoice and not empty invoiceBackingBean.managedBean.outOfScopeSectionItemRoot}"
 					styleClass="invItemChange" value="#{invoiceBackingBean.managedBean.outOfScopeSectionItemRoot}">
 					<p:ajax event="expand" 
-		                onstart="blockOOSTbl.show();" oncomplete="blockOOSTbl.hide();" />  			
-				<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center;width:20%;" >
+		                onstart="blockOOSTbl.show();" oncomplete="blockOOSTbl.hide();" />
+			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center;width:20%;" >
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
@@ -80,6 +80,49 @@
 					</p:inputText><p:message for="oosChargeInvAmt" display="icon" />
 				</p:column>
 			</p:treeTable>
+			
+			<p:dataTable value="#{invoiceBackingBean.emptyTableList}" rendered="#{invoiceBackingBean.managedBean.taxInvoice and empty invoiceBackingBean.managedBean.outOfScopeSectionItemRoot}">
+			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;text-align:center;width:20%;" >
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column style="white-space:normal;text-align:center">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.fl.gst.rate']}"/>
+					</f:facet>
+				</p:column>
+				<p:column style="white-space:normal; text-align:center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.fl.received.qty']}"></h:outputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.received.quantity']}"/>
+				</f:facet>
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.total.amt.gst']}" style="white-space:normal;text-align:center">
+				<f:facet name="footer">
+					<f:facet name="footer">
+					</f:facet>		
+				</f:facet>
+				</p:column>
+			</p:dataTable>
 
 			<p:spacer height="2px" rendered="#{invoiceBackingBean.managedBean.oosItemTableClause=='true'}"></p:spacer>
 			<h:panelGroup rendered="#{invoiceBackingBean.managedBean.oosItemTableClause=='true'}">
