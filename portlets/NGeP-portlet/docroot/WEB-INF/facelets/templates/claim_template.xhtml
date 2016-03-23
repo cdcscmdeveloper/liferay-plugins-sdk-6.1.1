@@ -10,7 +10,9 @@
 			test="${bpmTasklistBackingBean.managedBean.groupTask eq 'true' and !bpmTasklistBackingBean.managedBean.claim}">
 			<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
 				action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
-				update="@form"></p:commandButton>
+				update="@form">
+				<f:setPropertyActionListener target="#{readOnlyTask}" value="false" />
+				</p:commandButton>
 		</c:when>
 		<c:otherwise>
 			<ui:insert name="outComeSection" />
