@@ -3687,13 +3687,13 @@ table.rptTbl {
 	font-size: 13px;
 }
 
-#nav {
+#customNav {
 	width:20%;
 	float:left;
 	padding:10px;	      
 }
 
-#section {
+#customSection {
 	width:75%;
 	float:left;
 	padding:0px;
