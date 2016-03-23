@@ -237,37 +237,38 @@ public class EpSchedulerHelper {
 						// retrieve the trigger
 						CronTrigger oldTrigger = (CronTrigger) getTriggerByJobKey(jobKey);
 						CronTrigger newTrigger = oldTrigger;
+						
+						if(oldTrigger!=null){
+							// obtain a builder that would produce the trigger
+							TriggerBuilder tb = oldTrigger.getTriggerBuilder();
 
-						// obtain a builder that would produce the trigger
-						TriggerBuilder tb = oldTrigger.getTriggerBuilder();
+							// update trigger cron expression
+							if (!oldTrigger.getCronExpression().equals(
+											cronExpression)
+									&& !isJobRunningNow(jobKey)) {
+								newTrigger = (CronTrigger) tb.withSchedule(
+										CronScheduleBuilder
+												.cronSchedule(cronExpression))
+										.build();
+								EpSchedulerHelper.getScheduler().rescheduleJob(
+										oldTrigger.getKey(), newTrigger);
+							}
 
-						// update trigger cron expression
-						if (oldTrigger != null
-								&& !oldTrigger.getCronExpression().equals(
-										cronExpression)
-								&& !isJobRunningNow(jobKey)) {
-							newTrigger = (CronTrigger) tb.withSchedule(
-									CronScheduleBuilder
-											.cronSchedule(cronExpression))
-									.build();
-							EpSchedulerHelper.getScheduler().rescheduleJob(
-									oldTrigger.getKey(), newTrigger);
-						}
+							// update job description
+							if (!oldJob.getDescription().equals(jobDetailDesc)
+									&& !isJobRunningNow(jobKey)) {
 
-						// update job description
-						if (!oldJob.getDescription().equals(jobDetailDesc)
-								&& !isJobRunningNow(jobKey)) {
+								JobDetail newJob = JobBuilder
+										.newJob(oldJob.getJobClass())
+										.withIdentity(jobKey)
+										.withDescription(jobDetailDesc).build();
 
-							JobDetail newJob = JobBuilder
-									.newJob(oldJob.getJobClass())
-									.withIdentity(jobKey)
-									.withDescription(jobDetailDesc).build();
+								Set<CronTrigger> newTriggerSet = new HashSet<CronTrigger>();
+								newTriggerSet.add(newTrigger);
 
-							Set<CronTrigger> newTriggerSet = new HashSet<CronTrigger>();
-							newTriggerSet.add(newTrigger);
-
-							EpSchedulerHelper.getScheduler().scheduleJob(
-									newJob, newTriggerSet, true);
+								EpSchedulerHelper.getScheduler().scheduleJob(
+										newJob, newTriggerSet, true);
+							}
 						}
 
 					}
