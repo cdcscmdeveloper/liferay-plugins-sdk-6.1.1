@@ -22,7 +22,9 @@
 					rendered="#{unspscCodeBackingBean.allSupplier}"></p:commandButton>
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}" rendered="#{bpmTasklistBackingBean.managedBean.claim}"
+					
+					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+					<p:commandButton value="#{lbl[buttonLabel]}" rendered="#{bpmTasklistBackingBean.managedBean.claim}"
 						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"
 						update="@form"></p:commandButton>
 				</ui:repeat>
