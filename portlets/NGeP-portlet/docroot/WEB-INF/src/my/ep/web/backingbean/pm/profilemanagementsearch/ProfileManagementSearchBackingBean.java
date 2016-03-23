@@ -11,9 +11,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.access.application.IAccessApplSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.access.application.AccessApplReqDTO;
+import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -22,9 +27,12 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ProfileManagementSearchBean;
 import my.ep.web.managedbean.pm.profilemanagementsearch.ProfileManagementSearchManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
@@ -49,10 +57,70 @@ public class ProfileManagementSearchBackingBean extends
 	private ISearchBean<PmParameterDesc> appTypeSearchBean;
 	private SelectItem[] applicationStatus;
 	
-		
+	// Paging for listing
+		private IPagingDataModel<Object[]> accessAPPLDataModel = new AccessAPPLPagingDataModel();
+
+		public IPagingDataModel<Object[]> getAccessAPPLDataModel() {
+			return accessAPPLDataModel;
+		}
+
+		public void setAccessAPPLDataModel(
+				IPagingDataModel<Object[]> accessAPPLDataModel) {
+			this.accessAPPLDataModel = accessAPPLDataModel;
+		}
+		// pagination for profile management search list
+		private class AccessAPPLPagingDataModel extends
+				PagingDataModel<Object[]> {
+			private static final long serialVersionUID = 1L;
+
+			public AccessAPPLPagingDataModel() {
+				super("dtPmResult");
+				log.info("....AccessAPPLPagingDataModel");
+			}
+			
+			@Override
+			protected ISearchResultBean<Object[]> pageChangeListener(
+					ISearchBean<Object[]> searchBean) {
+				log.info("....pageChangeListener");
+				IAccessApplSO accessApplSO = null;
+				if (getManagedBean().getSelectedAppTypeParamCode() != null) {
+					try {
+//						ISearchBean<Object[]> searchBeanData = getSearchBeanData(searchBean);
+						log.info("....after getsearchbean");
+						log.info("....getProfileManagSearchBean().getAppStatusId()="+getManagedBean().getProfileManagSearchBean().getAppStatusId());
+						AccessApplReqDTO applReqDTO = new AccessApplReqDTO();
+						getManagedBean().fillRequestDTO(applReqDTO);
+						applReqDTO.setAccessApplSearch(searchBean);
+						applReqDTO.setAppStatusId(getManagedBean().getProfileManagSearchBean()
+								.getAppStatusId());
+						applReqDTO.setDocType(getManagedBean().getSelectedAppTypeParamCode());
+						accessApplSO = BusinessDelegate.getInstance()
+								.getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT,
+										IAccessApplSO.class);
+						log.info("....efor call  getAccessApplListBySearchBean");
+						AccessApplResDTO resDto = accessApplSO
+								.getAccessApplListBySearchBean(applReqDTO);
+						log.info("....after call  getAccessApplListBySearchBean");
+						if (resDto != null && resDto.isSuccessful()) {
+							log.info("....pageChangeListener..resultt.end");
+							return resDto.getAppLResultBean();
+						}
+					} finally {
+						accessApplSO = null;
+					}
+				}
+				log.info("....pageChangeListener...end");
+				return null;
+			}
+
+		}
+
+
 	public void preLoadingAccessAPL() {
 		log.info("preLoadingAccessAPL");
 		renewSesionObject();
+		resetProfileManagSearchBean();
 		log.info("preLoadingAccessAPL");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -131,7 +199,7 @@ public class ProfileManagementSearchBackingBean extends
 	}
 
 	public void searchAccessAppL(){
-		this.getManagedBean().getAccessAPPLDataModel().reloadData();
+		getAccessAPPLDataModel().reloadData();
 		log.info("searchAccessAppL-end");
 	}
 	
@@ -161,7 +229,7 @@ public class ProfileManagementSearchBackingBean extends
 		this.getManagedBean().setSelectedOrgProfile(null);
 		this.getManagedBean().setSelectedOrgType(null);
 		
-//		userOrgDataModel = new UserProfilePagingDataModel();
+		setAccessAPPLDataModel(new AccessAPPLPagingDataModel());
 	}
 	/**
 	 * The method used for generating a list of available display type of org
