@@ -35,7 +35,8 @@ public class SchedulerManagerBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 		initAllJobs();
-		getManagedBean().setCurrentDayBids(SchedulerHelper.getInstance().getJobBidScheduleList());
+		getManagedBean().setCurrentDayBids(
+				SchedulerHelper.getInstance().getJobBidScheduleList());
 	}
 
 	public void initAllJobs() {
@@ -66,7 +67,12 @@ public class SchedulerManagerBackingBean extends
 					if (jobState.equals(TriggerState.PAUSED.toString())) {
 						jobAction = SchedulerConstants.JOB_RESUME;
 					} else {
-						jobAction = SchedulerConstants.JOB_PAUSE;
+						// if job does not have trigger, set to not scheduled
+						if (trigger == null) {
+							jobAction = SchedulerConstants.JOB_NOT_SCHEDULED;
+						} else {
+							jobAction = SchedulerConstants.JOB_PAUSE;
+						}
 					}
 
 					getManagedBean().getEpSchedulerJobList().add(
@@ -84,33 +90,31 @@ public class SchedulerManagerBackingBean extends
 			log.error(e.getMessage());
 		}
 	}
-	
-	
-	public JobKey getJobKey(String jobName,String searchGroupName){
-		JobKey returnJobKey = null;
-		try{
-		for (String groupName : getManagedBean().getScheduler()
-				.getJobGroupNames()) {
-			
-			if(searchGroupName.equalsIgnoreCase(groupName)){
-				for (JobKey jobKey : getManagedBean().getScheduler()
-						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
 
-					if(jobKey.getName().equals(jobName)){
-						returnJobKey = jobKey;
-						break;				
+	public JobKey getJobKey(String jobName, String searchGroupName) {
+		JobKey returnJobKey = null;
+		try {
+			for (String groupName : getManagedBean().getScheduler()
+					.getJobGroupNames()) {
+
+				if (searchGroupName.equalsIgnoreCase(groupName)) {
+					for (JobKey jobKey : getManagedBean().getScheduler()
+							.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+
+						if (jobKey.getName().equals(jobName)) {
+							returnJobKey = jobKey;
+							break;
+						}
 					}
+
+					break;
 				}
-				
-				break;
+
 			}
-			
-		}
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			log.error(e);
 		}
-		
+
 		return returnJobKey;
 
 	}
@@ -144,18 +148,17 @@ public class SchedulerManagerBackingBean extends
 		}
 		return retVal;
 	}
-	
-	public void encryptionButton(){
-		log.info("inside encryptionButton");
-		try{
-			com.org.encryption.Encryption.main(null);
-			
-		}catch(Exception e){
-			e.printStackTrace();
-			
-		}
-		
-	}
 
+	public void encryptionButton() {
+		log.info("inside encryptionButton");
+		try {
+			com.org.encryption.Encryption.main(null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+
+	}
 
 }
