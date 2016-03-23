@@ -1,10 +1,12 @@
 package my.ep.web.scheduler.helper;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -286,7 +288,13 @@ public class EpSchedulerHelper {
 	 */
 	public static Trigger getTriggerByJobKey(final JobKey jobKey)
 			throws SchedulerException {
-		return EpSchedulerHelper.getScheduler().getTriggersOfJob(jobKey).get(0);
+		Trigger trigger = null;
+		List<? extends Trigger> triggerList = EpSchedulerHelper.getScheduler()
+				.getTriggersOfJob(jobKey);
+		if (!EntityHelper.isCollectionEmpty(triggerList)) {
+			trigger = triggerList.get(0);
+		}
+		return trigger;
 	}
 
 	/**
