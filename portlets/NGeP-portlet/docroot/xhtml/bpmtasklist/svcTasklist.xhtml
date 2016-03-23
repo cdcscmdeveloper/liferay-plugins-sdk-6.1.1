@@ -9,33 +9,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-	<style>
-		#nav {
-		    width:20%;
-		    float:left;
-		    padding:5px;	      
-		}
-		#section {
-		    width:75%;
-		    float:left;
-		    padding:10px;	 	 
-		}
-		
-		#summaryTbl{
-			text-align: center;
-			border: 1px solid grey;
-		}
-		
-		#summaryTbl tr,#summaryTbl td,#summaryTbl tr,#summaryTbl th{
-			text-align: center;
-			border: 1px solid grey;
-		}
-		
-		
-	</style>
-	<div id="nav">
-	
-		<table id="summaryTbl">
+	<div id="customNav">
+		<table class="customDtTbl">
 		<tr>
 			<th>#{lbl['lbl.sm.state']}</th>
 			<th>#{lbl['lbl.sm.before']}</th>
@@ -59,7 +34,7 @@
 		</ui:repeat>
 		</table>
 	</div>
-	<div id="section">
+	<div id="customSection">
 		<p:panel id="searchContent">
 			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
