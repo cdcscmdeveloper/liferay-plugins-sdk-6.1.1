@@ -15,7 +15,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
+import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
@@ -102,18 +103,20 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
 		validateMyIdentity(getManagedBean().getNewAdmin());
-		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
-				.replaceAdminWithNewPersonnel(getReqDTO());
-		redirectToSuccessPage(resDto);
+		PersonnelAuthorizationResDTO resDTO = SmServiceLookup
+				.getPersonnelAuthorizationSO().replaceAdminWithNewPersonnel(
+						getReqDTO());
+		redirectToSuccessPage(resDTO);
 	}
 
 	/**
 	 * Replace admin with existing personnel and redirect to success page
 	 */
 	public void replaceWithExistingUser() {
-		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
-				.reassignSupplierAdmin(getReqDTO());
-		redirectToSuccessPage(resDto);
+		PersonnelAuthorizationResDTO resDTO = SmServiceLookup
+				.getPersonnelAuthorizationSO()
+				.replaceAdminWithExistingPersonnel(getReqDTO());
+		redirectToSuccessPage(resDTO);
 	}
 
 	/**
@@ -167,19 +170,31 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * 
 	 * @return PersonnelReqDTO
 	 */
-	private PersonnelReqDTO getReqDTO() {
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
-		reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
-		reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
-		reqDTO.setApplId(getManagedBean().getSmSupplier().getSmAppl()
-				.getApplId());
+	// private PersonnelReqDTO getReqDTO() {
+	// PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+	// reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+	// reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
+	// reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
+	// reqDTO.setApplId(getManagedBean().getSmSupplier().getSmAppl()
+	// .getApplId());
+	// FacesScopes fs = new FacesScopes();
+	// reqDTO.setLanguage(fs.getUserLocale().getLanguage());
+	// reqDTO.setServerName(fs.getRequest().getServerName());
+	// reqDTO.setServerPort(fs.getRequest().getServerPort());
+	// reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+	// reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+	// return reqDTO;
+	// }
+
+	private PersonnelAuthorizationReqDTO getReqDTO() {
 		FacesScopes fs = new FacesScopes();
+		PersonnelAuthorizationReqDTO reqDTO = new PersonnelAuthorizationReqDTO();
 		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
-		reqDTO.setServerName(fs.getRequest().getServerName());
-		reqDTO.setServerPort(fs.getRequest().getServerPort());
+		reqDTO.setOldSupplierAdmin(getManagedBean().getOldAdmin());
+		reqDTO.setNewSupplierAdmin(getManagedBean().getNewAdmin());
+		reqDTO.setSmAppl(getManagedBean().getSmSupplier().getSmAppl());
+		reqDTO.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		return reqDTO;
 	}
 
@@ -542,8 +557,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param PersonnelResDTO
 	 *            resDto
 	 */
-	private void redirectToSuccessPage(PersonnelResDTO resDTO) {
-		if (resDTO.isSuccessful()) {
+	private void redirectToSuccessPage(PersonnelAuthorizationResDTO resDTO) {
+		if (StringUtils.isBlank(resDTO.getErrorCode())) {
 			if (getManagedBean().getNewAdmin().getPmUser() == null) {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
@@ -566,7 +581,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 			}
 		} else {
-			throw new EpException(MessageConst.ERROR_721113);
+			throw new EpException(resDTO.getErrorCode());
 		}
 	}
 
