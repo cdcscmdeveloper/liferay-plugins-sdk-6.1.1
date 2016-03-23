@@ -146,6 +146,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	
 	/** The fl invoice data model. */
 	private IPagingDataModel<FlInvoice> flInvoiceDataModel = new FlInvoicePagingDataModel();
+	private List<InvoiceChargeLineVO> emptyTableList;
 	
 	/** The Constant NAV_ORDERNO. */
 	
@@ -2068,6 +2069,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 		}
 		getManagedBean().setTextBeforeSign(sb.toString());
+	}
+
+	public List<InvoiceChargeLineVO> getEmptyTableList() {
+		return emptyTableList;
+	}
+
+	public void setEmptyTableList(List<InvoiceChargeLineVO> emptyTableList) {
+		this.emptyTableList = emptyTableList;
 	}
 	
 }
