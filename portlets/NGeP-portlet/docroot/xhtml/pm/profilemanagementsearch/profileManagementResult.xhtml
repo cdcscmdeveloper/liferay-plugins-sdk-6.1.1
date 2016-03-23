@@ -11,7 +11,7 @@
 	<p:panel id="pmResult" header="#{lbl['lbl.pm.user.result']}" toggleable="true">
 		<p:dataTable id="dtPmResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			rowIndexVar="rowIndex"  lazy="true" rows="10"
-			value="#{profileManagSearchBackingBean.managedBean.accessAPPLDataModel}"
+			value="#{profileManagSearchBackingBean.accessAPPLDataModel}"
 			var="accessAPPL">
 			<ac:paginator for="dtPmResult" />
 			<p:column headerText="#{lbl['lbl.pm.access.app.result.createdDate']}" style="width :25%;white-space : normal">			
