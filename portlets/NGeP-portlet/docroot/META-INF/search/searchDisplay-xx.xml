@@ -44,14 +44,14 @@
 					<property name="columnName" value="unspscCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.cm.unspsc.code" />
+					<property name="bundleKey" value="lbl.cm.unspsc.code.lov" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="unspscTitle" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.cm.unspsc.title" />
+					<property name="bundleKey" value="lbl.cm.unspsc.title.lov" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 			</list>
