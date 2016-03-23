@@ -15,6 +15,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		      <ac:paginator for="panelItemDt" />
               <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" process="@this" 
                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"  />	
+		      <p:ajax event="rowUnselect" process="@this" 
+                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" >
+                 <f:setPropertyActionListener value="#{null}" target="#{panelBackingBean.managedBean.selectedPanelItems}" />
+              </p:ajax>	
 		      
 		      <p:column style="width:3%;">
 		           <p:selectBooleanCheckbox value="#{panelItemsVar.selectedCheckBox}" styleClass="myCustomChekBox"
@@ -32,7 +36,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
 			             <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
 			             <p:ajax event="change"   listener="#{panelBackingBean.setCtPanelZoneListner(panelItemsVar)}" 
-			                 process="@all"   update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" /> 
+			                 process="@all"   update="panelItemDt,@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" /> 
 			       </p:selectOneMenu>
 	  	      </p:column>
 			 
@@ -43,7 +47,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:100%;"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
-			           <p:ajax event="change" update="spec" process="@this" listener="#{panelBackingBean.changeItemCategoryListner(panelItemsVar)}" /> 
+			           <p:ajax event="change" update="spec" process="@this" listener="#{panelBackingBean.changeItemCategoryListner(panelItemsVar)}" />
 			      </p:selectOneMenu>
 			  </p:column>
 			  
@@ -212,7 +216,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
         </p:dialog>  	
 		<p:spacer height="40" />
 		<p:outputPanel id="itemZone">
-		    <h:panelGroup rendered="#{panelBackingBean.managedBean.selectionOfZone}">
+		    <h:panelGroup rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and panelBackingBean.managedBean.selectionOfZone}">
 		                <p:outputLabel value="#{lbl['lbl.ct.sublabel.panel.coverage']}" style="float:left; font-weight:bold; padding-top:25px;"/>
 			            <div style="clear:both" />
 			            <table style="width: 100%">
@@ -233,9 +237,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				                selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
 									    <ac:paginator for="zoneGeneralDataTable" />
 									    <p:ajax event="rowSelect" update=":form:itemSupplier" 
-									         process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
-					                   
-					                   <p:column style="width:60%" styleClass="column-align-center" >
+											process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
+										<p:ajax event="rowUnselect" process="@this"	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+											update="@([id$=itemSupplier])">
+											<f:setPropertyActionListener value="#{null}" target="#{panelBackingBean.managedBean.selectedPanelZone}" />
+										</p:ajax>
+										<p:column style="width:60%" styleClass="column-align-center" >
 				    	                   <f:facet name="header">
 				    	                       <h:outputText value="#{lbl['lbl.ct.location']}" styleClass="required"/>
 				    	                 </f:facet>
@@ -328,11 +335,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	   </p:dialog>
        </p:outputPanel>
 		<p:spacer height="40" />
-		<p:outputPanel id="itemSupplier">
-		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.sublabel.panel.supplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
+		<p:outputPanel id="itemSupplier" >
+		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.sublabel.panel.supplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
 		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.sublabel.item.supplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
 		<div style="clear:both" />
-		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
+		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelItems != null and panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
 		       (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
 		    	<p:dataTable id="itemSupplierDt" var="supVar" rowIndexVar="index"
 			          value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
