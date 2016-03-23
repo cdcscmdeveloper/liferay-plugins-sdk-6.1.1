@@ -100,7 +100,7 @@
 				<h:outputText value="#{lbl['lbl.cm.uom']}" />
 			</f:facet>
 			<ui:param name="correctionIndexRow" value="#{rowIndex % 10}" />
-			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20"
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="16"
 				headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true"
 				saveObject="catalogueBackingBean.managedBean.draftSearchDataModel.list[#{correctionIndexRow}].pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"
