@@ -16,7 +16,7 @@
 								test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscCodeView}">
 								<td><p:outputLabel
 										value="#{lbl['lbl.rpt.unspscCodeScreen']}"
-										style="margin-top:5px;width:101px;" /></td>
+										style="margin-top:5px;width:105px;" /></td>
 								<td><p:inputText maxlength="8" id="unspscId"
 										readonly="true" value="#{reportBackingBean.cmUnspscCode}"
 										style="margin-top:5px;width:140px;text-align:left;">
@@ -30,7 +30,7 @@
 							<c:if
 								test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscTitleView}">
 								<td><p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}"
-										style="margin-top:5px;width:127px;" /></td>
+										style="margin-top:5px;width:138px;" /></td>
 								<td><p:inputText id="unspscTitle"
 										value="#{reportBackingBean.cmUnspscTitle}" readonly="true"
 										style="margin-top:5px;width:290px;">
@@ -386,19 +386,19 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.cmPublishedDateView}">
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.publisheddatelabel']}"
-								style="width:181px;" /></TD>
+								style="width:161px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmApprovedDateView}">
 						<TD class="columnGenClass"><p:outputLabel
-								value="#{lbl['lbl.rpt.approveddatelabel']}" style="width:181px;" />
+								value="#{lbl['lbl.rpt.approveddatelabel']}" style="width:161px;" />
 						</TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmSubmittedDateView}">
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.submitteddatelabel']}"
-								style="width:181px;" /></TD>
+								style="width:161px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmExpiredDateView}">
@@ -409,13 +409,13 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.cmItemValidityDateView}">
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.itemvaliditydatelabel']}"
-								style="width:181px;" /></TD>
+								style="width:161px;" /></TD>
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.cmFromDateView}">
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.dtRangeFrm']}"
-								style="width:181px;" /></TD>
+								style="width:161px;" /></TD>
 					</c:if>
 					<TD class="columnDateFromClass"><p:calendar showOn="button"
 							navigator="true" display="inline" readonlyInput="true" size="9"
