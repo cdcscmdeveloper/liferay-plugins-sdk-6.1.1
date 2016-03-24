@@ -203,7 +203,7 @@
 						size="4"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}" 
 						postUpdateListener="contractRequestBackingBean.checkVotFundLov" 
-						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{contractRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
+						conditionField="votFundCode^#{contractRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
 						value="#{contractRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
 					</ac:lov></h:panelGroup></td>
 					<td></td>
@@ -216,7 +216,7 @@
 						readonly="true"
 						size="7"
 						disabled="#{!contractRequestBackingBean.managedBean.programLov}" 
-						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
+						conditionField="pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
 						value="#{contractRequestBackingBean.managedBean.pmPrgActivity.prgActivityCode}"	>
 					</ac:lov></h:panelGroup></td>
 				</tr>
@@ -229,7 +229,7 @@
 						size="7"
 						disabled="#{!contractRequestBackingBean.managedBean.projectLov}" 
 						update=":form:setiaCode,:form:subSetiaCode,:form:cpCode" 
-						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
+						conditionField="pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
 						value="#{contractRequestBackingBean.managedBean.pmSubSetia.projectCode}"	>
 					</ac:lov>
 					</h:panelGroup></td>
