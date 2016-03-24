@@ -283,13 +283,8 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Dynamically creating main tab menu
 		createMainMenuModel();
-		
-		// Disable selection if group task and is not yet claimed by any user
-		if (getManagedBean().isReadOnly()) {
-			getManagedBean().setInitialDecisionFwdToBPK(false);
-		}
 	}
-
+	
 	/**
 	 * Loads ScQt details corresponding to the selected quotation/tender and
 	 * sets the data in the managed bean associated with the current user
@@ -3855,15 +3850,18 @@ public class SupplierFinalizationBackingBean extends
 //		context.put("secretary", secretaryName);
 		context.put("member", memberName);
 		
-		StringBuilder endorsementRemarks = new StringBuilder(StringUtils.EMPTY);
+		StringBuilder endorsementRemarks = new StringBuilder();
 		if (CollectionUtils.isNotEmpty(
 				getManagedBean().getFinalizationEndorsementRemarks())) {
 			for (ScQtFinalizationEndorsementRemarks remarks
 						: getManagedBean().getFinalizationEndorsementRemarks()) {
-				endorsementRemarks.append(remarks.getRemark() + "\n");
+				if (StringUtils.isNotBlank(remarks.getRemark())) {
+					endorsementRemarks.append(remarks.getRemark() + "\n");
+				}
 			}
 		}
-		context.put("endorsementRemarks", endorsementRemarks.toString());
+		context.put("endorsementRemarks", endorsementRemarks.length() == 0 ? 
+					StringUtils.EMPTY : endorsementRemarks.toString());
 		context.put("reportDTO", reportDTO);
 		context.put("zoneDetailsMap", zoneDetailsMap);
 		context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
@@ -6002,8 +6000,7 @@ public class SupplierFinalizationBackingBean extends
 		MenuModel mainMenuModel = new DefaultMenuModel();
 
 		boolean isBPKUser = false;
-		if (getManagedBean().isInitialDecisionFwdToBPK() || 
-				getManagedBean().isReadOnly()) {
+		if (getManagedBean().isInitialDecisionFwdToBPK()) {
 			isBPKUser = true;
 		}
 

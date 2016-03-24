@@ -21,17 +21,21 @@
 		<ui:param name="validityDaysExpiredQt"
 			value="#{suppFinalizationBackingBean.checkProposalValidityDateReach(
 		     				suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-
-		<p:messages id="supplierFinalization" showDetail="true"
-			showSummary="false" autoUpdate="true" closable="true"
-			severity="error, info" />
+		     				
+		<ui:param name="isBPKTask" 
+				  value="#{suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}" />
+		<ui:param name="readOnlyTask" 
+				  value="#{suppFinalizationBackingBean.managedBean.readOnly}" />
+		<ui:param name="isBPKTaskAndClaimed"  value="#{isBPKTask and !readOnlyTask}" />		
+		     				
+		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
+					autoUpdate="true" closable="true" severity="error, info" />
 
 		<ac:gpkiPopup
 			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
 		<div align="right" class="BtnSpacing">
-		<ui:param name="readOnlyTask" value="#{suppFinalizationBackingBean.managedBean.readOnly}" />
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
@@ -39,7 +43,7 @@
 						partialSubmit="true" update="@form"
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
 						rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
-								suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}"
+										isBPKTaskAndClaimed}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 					<ui:repeat var="bpmAction"

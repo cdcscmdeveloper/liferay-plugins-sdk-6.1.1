@@ -36,7 +36,7 @@
 							<p:selectOneMenu id="cancelItems" label="#{lbl['lbl.sc.cancelled']}" required="true"
 								value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
 								disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}">
+												isBPKTaskAndClaimed)}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
 								<p:ajax event="change" process="@this" update="@([id$=cancelItems],[id$=supplierListTblPanel])" 
 										listener="#{suppFinalizationBackingBean.zonalPackageItemsCancellationEvent}" />
@@ -191,9 +191,8 @@
 								
 				<p:column styleClass="td-check-box-spacing" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
 					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-											suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
-												shortlistedSupp.suppSelectionDisabled or 
-													suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
+											isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
+												suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
 		            rendered="#{showSelectionColumn}" />
 			</p:dataTable>
 			
@@ -331,9 +330,8 @@
 				<p:column styleClass="td-check-box-spacing" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectAwardSupplier" value="#{shortlistedSupp.awareded}" 
 						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
-											shortlistedSupp.suppSelectionDisabled or 
-												suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
+										isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
+											suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
 						rendered="#{suppFinalizationBackingBean.managedBean.finalizationMethod eq 
 											ParameterConst.recommendByMultipleAward or 
 												suppFinalizationBackingBean.managedBean.selectedItemAlreadyAwarded}">
@@ -343,9 +341,8 @@
 					
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
 						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
-											shortlistedSupp.suppSelectionDisabled or 
-												suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
+										isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
+											suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
 						rendered="#{(suppFinalizationBackingBean.managedBean.finalizationMethod == ParameterConst.recommendByOnlineBidding or 
 										suppFinalizationBackingBean.managedBean.finalizationMethod == ParameterConst.recommendByMultipleLoi) and 
 											!suppFinalizationBackingBean.managedBean.selectedItemAlreadyAwarded}">
@@ -495,9 +492,8 @@
 								
 				<p:column styleClass="td-check-box-spacing" selectionMode="single" 
 					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-											suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
-												shortlistedSupp.suppSelectionDisabled or 
-													suppFinalizationBackingBean.managedBean.disableSupplierSelection}" 
+											isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
+												suppFinalizationBackingBean.managedBean.disableSupplierSelection}" 
 		            rendered="#{showSelectionColumn}" />														
 																
 			</p:dataTable>				

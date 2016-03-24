@@ -60,10 +60,9 @@
 		</p:dataTable>
 		
 		<div class="ppRightBtn BtnSpacing">
-			<p:commandButton 
-				value="#{lbl['lbl.btn.download.all']}"
-				ajax="false"	
-				action="#{suppFinalizationBackingBean.downloadAllReports}" />
+			<p:commandButton  value="#{lbl['lbl.btn.download.all']}"
+				action="#{suppFinalizationBackingBean.downloadAllReports}" 
+				ajax="false" rendered="#{!readOnlyTask}" />
 		</div>
 	</p:panel>
 	
@@ -78,7 +77,7 @@
 					partialSubmit="true" process="@this" update="@([id$=attachmentPopup])" 
 					value="#{lbl['lbl.txt.attach.file']}" 
 					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
-									suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
+									isBPKTaskAndClaimed}">
 				</p:commandButton>
 			</td>
 		</tr>
