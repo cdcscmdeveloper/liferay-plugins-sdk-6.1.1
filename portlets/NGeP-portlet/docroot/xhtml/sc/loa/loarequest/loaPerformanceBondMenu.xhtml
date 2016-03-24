@@ -70,138 +70,33 @@
 		</table>
 	</p:panel>
 	<p:dataTable id="performancebondtbl" var="bondList"
-		value="#{lOADetailBackingBean.managedBean.scLoa.performanceBonds}"
+		value="#{lOADetailBackingBean.managedBean.scLoa}"
 		rows="10" rowIndexVar="rowIndex">
 		<ac:paginator for="performancebondtbl" />
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.bond.ref.no']}"
 			style="width:20%">
-			#{bondList.bondRefNo}
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.finan.inst']}"
 			style="width:20%">
-			#{bondList.financialOrg.finOrgName}
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}"
 			style="width:10%;text-align: right;">
-			#{bondList.bondAmount}
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.effective.date']}"
 			style="width:15%">
-			<h:outputText value="#{bondList.bondEffDate}">
-				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-			</h:outputText>
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.exp.date']}"
 			style="width:15%">
-			<h:outputText value="#{bondList.bondExpDate}">
-				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-			</h:outputText>
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.txt.attachment']}"
 			style="width:15%">
-			<h:outputText value="#{bondList.fileName}" />
 		</p:column>
 	</p:dataTable>
-
-	<!-- <p:dataTable id="performancebondtbl" var="bondList"
-		value="#{lOADetailBackingBean.managedBean.scBondDtlList}"
-		selection="#{lOADetailBackingBean.managedBean.selectScBondDtlList}"
-		rows="10" rowKey="#{bondList}" rowIndexVar="rowIndex">
-
-		<ac:paginator for="performId" />
-
-		<p:column selectionMode="multiple" style="width:2%" />
-
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.bond.ref.no']}"
-			style="width:5%">
-			<p:inputText value="#{bondList.bondRefNo}" style="width:95%" />
-		</p:column>
-
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.finan.inst']}"
-			style="width:5%">
-			<p:inputText value="#{bondList.financialOrg.finOrgName}" style="width:95%" />
-		</p:column>
-
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}"
-			style="width:5%">
-			<p:inputText value="#{bondList.bondAmount}" style="width:95%" />
-		</p:column>
-
-		<p:column headerText="#{lbl['lbl.sc.effective.date']}"
-			style="width:5%">
-			<h:outputText value="#{bondList.bondEffDate}" style="width:85%" />
-			<p:calendar id="bondeffdate" size="10"
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
-				value="#{bondList.bondEffDate}" />
-		</p:column>
-
-		<p:column headerText="#{lbl['lbl.sc.exp.date']}"
-			style="width:5%">
-			<h:outputText value="#{bondList.bondExpDate}" style="width:85%" />
-			<p:calendar id="bondexpdate" size="10"
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
-				value="#{bondList.bondExpDate}" />
-		</p:column>
-
-		<p:column headerText="#{lbl['lbl.txt.attachment']}"
-			style="width:5%">
-			<h:outputText value="#{bondList.fileName}" />
-		</p:column>
-
-		<p:column headerText="#{lbl['lbl.sc.action']}"
-			style="width:15%">
-			<p:commandLink oncomplete="attachDlg.show();return false;"
-				update="performancebondtbl" rendered="#{bondList.fileName eq 'null'}">
-				<p:graphicImage
-					value="/css/images/design/upload.png" />
-				<f:setPropertyActionListener value="#{bondList}"
-					target="#{lOADetailBackingBean.managedBean.scBondDtl}" />
-			</p:commandLink>
-			<p:spacer width="10" height="5" />
-			<p:commandLink rendered="#{bondList.fileName ne 'null'}">
-				<p:graphicImage 
-					value="/css/images/design/edit.png" />
-			</p:commandLink>
-		</p:column>
-
-		<p:column headerText="#{lbl['lbl.sc.action']}" style="width:5%">
-			<p:commandLink>
-				<p:graphicImage
-					value="/css/images/design/edit.png" />
-			</p:commandLink>
-
-		</p:column>
-
-	</p:dataTable>
-	<p:spacer height="20px" />
-	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.add']}"
-			process="@this,performancebondtbl" partialSubmit="true"
-			update="performancebondtbl" />
-
-		<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			process="@this" partialSubmit="true"  />
-	</div>
-
-	<p:dialog id="attachDlg" widgetVar="attachDlg" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener=""
-			mode="advanced" id="upload"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			update="performancebondtbl" oncomplete="attachDlg.hide()">
-		</p:fileUpload>
-	</p:dialog> -->
 
 	<p:dialog id="sampleBondLetterDlg" widgetVar="bdLetterDlg" modal="true"
 		dynamic="true" hideEffect="explode" resizable="false" width="1000px"

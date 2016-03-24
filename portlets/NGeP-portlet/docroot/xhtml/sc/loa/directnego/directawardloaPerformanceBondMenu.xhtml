@@ -71,41 +71,31 @@
 		</table>
 	</p:panel>
 	<p:dataTable id="performancebondtbl" var="bondList"
-		value="#{directLOABackingBean.managedBean.scLoa.performanceBonds}"
+		value="#{directLOABackingBean.managedBean.scLoa}"
 		rows="10" rowIndexVar="rowIndex">
 		<ac:paginator for="performancebondtbl" />
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.bond.ref.no']}"
 			style="width:20%">
-			#{bondList.bondRefNo}
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.finan.inst']}"
 			style="width:20%">
-			#{bondList.financialOrg.finOrgName}
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}"
 			style="width:10%;text-align: right;">
-			#{bondList.bondAmount}
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.effective.date']}"
 			style="width:15%">
-			<h:outputText value="#{bondList.bondEffDate}">
-				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-			</h:outputText>
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.exp.date']}"
 			style="width:15%">
-			<h:outputText value="#{bondList.bondExpDate}">
-				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-			</h:outputText>
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.txt.attachment']}"
 			style="width:15%">
-			<h:outputText value="#{bondList.fileName}" />
 		</p:column>
 	</p:dataTable>
 
