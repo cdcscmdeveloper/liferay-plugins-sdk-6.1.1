@@ -17,7 +17,6 @@
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 			columns="2">
 			<p:outputPanel id="orgProfileDet">
-
 				<table class="ppTwoTable">
 					<tr>
 						<th width="20%"><p:outputLabel
@@ -181,7 +180,7 @@
 							<td width="5%"> <p:message id="somIdTypeMsg" for="somIdType" display="icon" />
 							</td>
 						
-						<td width="20%">
+						<td width="30%">
 						<c:choose>
 								<c:when
 									test="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode == ProfileManagementConst.newIc}">
@@ -218,9 +217,7 @@
 								showEffect="fade" hideEffect="fade" > 
 									<p:outputLabel escape="false" value="#{lbl['lbl.pm.profiles.userdetails.idno.tooltip']}"/>
 								</p:tooltip>
-								
-							</td>
-							<td width="5%"> <p:message id="itIdentityNoMsg" for="itIdentityNo"
+								<p:message id="itIdentityNoMsg" for="itIdentityNo"
 								display="icon" />
 							</td>
 						<!-- Profile Photo -->
@@ -265,8 +262,7 @@
 
 						</td>
 						<td></td>
-						<td></td>
-						<td></td>
+						<td></td>						
 						<td></td>
 					</tr>
 
@@ -291,8 +287,7 @@
 							<td><p:message id="somSalutationMsg" for="somSalutation"
 								display="icon" /></td>
 						<td></td>
-						<td></td>
-						<td></td>
+						<td></td>						
 						<td></td>
 					</tr>
 
@@ -318,8 +313,7 @@
 						<td> <p:message
 								id="itUserNameMsg" for="itUserName" display="icon" /></td>
 						<td></td>
-						<td></td>
-						<td></td>
+						<td></td>						
 						<td></td>
 					</tr>
 
@@ -347,8 +341,7 @@
 						<td><p:message id="somNationalityMsg" for="somNationality"
 								display="icon" /></td>
 						<td></td>
-						<td></td>
-						<td></td>
+						<td></td>						
 						<td></td>
 					</tr>
 
@@ -367,8 +360,7 @@
 							<p:message id="itDesignationMsg" for="itDesignation"
 								display="icon" /></td>
 						<td></td>
-						<td></td>
-						<td></td>
+						<td></td>						
 						<td></td>
 					</tr>
 
@@ -383,8 +375,7 @@
 									value="#{profileManagementBackingBean.getYesNoOptions()}" />
 							</p:selectOneRadio></td>
 						<td></td>
-						<td></td>
-						<td></td>
+						<td></td>						
 						<td></td>
 						<td></td>
 					</tr>
@@ -409,8 +400,7 @@
 								showEffect="fade" hideEffect="fade" /></td>
 						<td><p:message id="userGradeMsg" for="userGrade"
 								display="icon" /></td>
-						<td></td>
-						<td></td>
+						<td></td>						
 						<td></td>
 						<td></td>
 					</tr>
@@ -434,8 +424,7 @@
 								</td>
 								<td><p:message
 								id="itEmailMsg" for="itEmail" display="icon" /></td>
-						<td></td>
-						<td></td>
+						<td></td>						
 						<td></td>
 						<td></td>
 					</tr>
@@ -448,8 +437,7 @@
 						number="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneNo}"  
 						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
 						</td>
-						<td><p:message id="itTelNoMsg" for="itTelNo" display="icon" /></td>
-						<td></td>
+						<td><p:message id="itTelNoMsg" for="itTelNo" display="icon" /></td>					
 						<td></td>
 					</tr>
 					<tr>
@@ -461,8 +449,7 @@
 						number="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxNo}"  
 						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
 						</td>
-						<td> <p:message id="itFaxNoMsg" for="itFaxNo" display="icon" /></td>
-						<td></td>
+						<td> <p:message id="itFaxNoMsg" for="itFaxNo" display="icon" /></td>						
 						<td></td>
 					</tr>
 					<tr>
@@ -477,8 +464,7 @@
 							telcoId="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileTelcoId}" />
 						</td>
 						<td> <p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
-						</td>
-						<td></td>
+						</td>						
 						<td></td>
 					</tr>
 
@@ -498,8 +484,7 @@
 									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr" />
 
 							</p:selectOneMenu></td>
-						<td></td>
-						<td></td>
+						<td></td>					
 						<td></td>
 						<td></td>
 						<td></td>

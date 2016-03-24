@@ -656,60 +656,59 @@ public class FinancialOrgBackingBean extends
 //						}
 					}
 		 
-		 if(StringUtils.isNotBlank(getManagedBean().getFinancialOrg().getFinOrgName())){
-			 String finOrgName = getManagedBean().getFinancialOrg().getFinOrgName();
-			 getManagedBean().getFinancialOrg().setFinOrgName(finOrgName.trim());
-			 IFinancialOrgSO financialOrgSO = null;
-				try{
-					ISearchBean<PmFinancialOrg> searchBean = getFinOrgSearchBean("newOrgTypeFederalList");
-					
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("finOrgName",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getFinancialOrg().getFinOrgName(), true));
-					
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("recordStatusFlg",
-									SearchOperator.OPERATOR_EQUALS.value(), 
-									DbValueConst.RECORD_STATUS_ACTIVE
-									));
-					
-					if(!getManagedBean().getFinancialOrg().isBrandNew() 
-							&& getManagedBean().getFinancialOrg().getFinancialOrgId() != null){
+		 if(DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean().getFinancialOrg().getRecordStatusFlg()){
+			 if(StringUtils.isNotBlank(getManagedBean().getFinancialOrg().getFinOrgName())){
+				 String finOrgName = getManagedBean().getFinancialOrg().getFinOrgName();
+				 getManagedBean().getFinancialOrg().setFinOrgName(finOrgName.trim());
+				 IFinancialOrgSO financialOrgSO = null;
+					try{
+						ISearchBean<PmFinancialOrg> searchBean = getFinOrgSearchBean("newOrgTypeFederalList");
+						
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("financialOrgId",
-										SearchOperator.OPERATOR_NOT_EQUALS.value(),
-										getManagedBean().getFinancialOrg().getFinancialOrgId()));
+								new SearchFilterBean("finOrgName",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										getManagedBean().getFinancialOrg().getFinOrgName(), true));
+						
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("recordStatusFlg",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										DbValueConst.RECORD_STATUS_ACTIVE
+										));
+						
+						if(!getManagedBean().getFinancialOrg().isBrandNew() 
+								&& getManagedBean().getFinancialOrg().getFinancialOrgId() != null){
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("financialOrgId",
+											SearchOperator.OPERATOR_NOT_EQUALS.value(),
+											getManagedBean().getFinancialOrg().getFinancialOrgId()));
+						}
+						
+						FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+						reqDTO.setFinancialSearchBean(searchBean);
+						financialOrgSO = (IFinancialOrgSO) BusinessDelegate
+								.getInstance().getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT,
+										IFinancialOrgSO.class);
+						FinancialOrgResDTO resDto = financialOrgSO
+								.searchFinancialOrgData(reqDTO);
+						
+						if(resDto.getFinaceialOrgResultBean() != null 
+								&& resDto.getFinaceialOrgResultBean().getResultList() != null 
+								&& !resDto.getFinaceialOrgResultBean().getResultList().isEmpty()){
+							throw new EpException(
+									MessageConst.ERROR_775208,  
+									new String[]{getManagedBean().getFinancialOrg().getFinOrgName()});
+						}		
+						
 					}
-					
-					FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-					reqDTO.setFinancialSearchBean(searchBean);
-					financialOrgSO = (IFinancialOrgSO) BusinessDelegate
-							.getInstance().getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IFinancialOrgSO.class);
-					FinancialOrgResDTO resDto = financialOrgSO
-							.searchFinancialOrgData(reqDTO);
-					
-					if(resDto.getFinaceialOrgResultBean() != null 
-							&& resDto.getFinaceialOrgResultBean().getResultList() != null 
-							&& !resDto.getFinaceialOrgResultBean().getResultList().isEmpty()){
-						throw new EpException(
-								MessageConst.ERROR_775208,  
-								new String[]{getManagedBean().getFinancialOrg().getFinOrgName()});
-					}		
-					
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-					throw e;
-				}finally{
-					financialOrgSO = null;
-				}
+					catch (Exception e) {
+						e.printStackTrace();
+						throw e;
+					}finally{
+						financialOrgSO = null;
+					}
+			 }
 		 }
-
-		
-		
 	}
 	
 	/**
