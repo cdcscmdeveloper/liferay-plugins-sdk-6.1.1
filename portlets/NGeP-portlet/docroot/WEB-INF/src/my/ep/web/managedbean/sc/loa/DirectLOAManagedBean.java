@@ -20,7 +20,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -157,15 +156,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	/** The status. */
 	private String status;
-
-	/** The sc bond dtl. */
-	private ScPerformanceBond scBondDtl;
-
-	/** The sc bond dtl list. */
-	private List<ScPerformanceBond> scBondDtlList;
-
-	/** The select sc bond dtl list. */
-	private List<ScPerformanceBond> selectScBondDtlList;
 
 	/** The pm currency. */
 	private PmCurrency pmCurrency;
@@ -912,64 +902,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	/**
-	 * Gets the sc bond dtl.
-	 * 
-	 * @return the scBondDtl
-	 */
-	public ScPerformanceBond getScBondDtl() {
-		return scBondDtl;
-	}
-
-	/**
-	 * Sets the sc bond dtl.
-	 * 
-	 * @param scBondDtl
-	 *            the scBondDtl to set
-	 */
-	public void setScBondDtl(ScPerformanceBond scBondDtl) {
-		this.scBondDtl = scBondDtl;
-	}
-
-	/**
-	 * Gets the sc bond dtl list.
-	 * 
-	 * @return the scBondDtlList
-	 */
-	public List<ScPerformanceBond> getScBondDtlList() {
-		return scBondDtlList;
-	}
-
-	/**
-	 * Sets the sc bond dtl list.
-	 * 
-	 * @param scBondDtlList
-	 *            the scBondDtlList to set
-	 */
-	public void setScBondDtlList(List<ScPerformanceBond> scBondDtlList) {
-		this.scBondDtlList = scBondDtlList;
-	}
-
-	/**
-	 * Gets the select sc bond dtl list.
-	 * 
-	 * @return the selectScBondDtlList
-	 */
-	public List<ScPerformanceBond> getSelectScBondDtlList() {
-		return selectScBondDtlList;
-	}
-
-	/**
-	 * Sets the select sc bond dtl list.
-	 * 
-	 * @param selectScBondDtlList
-	 *            the selectScBondDtlList to set
-	 */
-	public void setSelectScBondDtlList(
-			List<ScPerformanceBond> selectScBondDtlList) {
-		this.selectScBondDtlList = selectScBondDtlList;
 	}
 
 	/**

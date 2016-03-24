@@ -104,7 +104,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
-import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -402,28 +401,6 @@ public class DirectLOABackingBean extends
 		}
 
 		return loaStreamContent;
-	}
-
-	/**
-	 * Adds the performance bond.
-	 */
-	public void addPerformanceBond() {
-
-		debugLogger("addPerformanceBond");
-		ScPerformanceBond scBondDtl = new ScPerformanceBond();
-		try {
-
-			List<ScPerformanceBond> bondDtlList = getManagedBean()
-					.getScBondDtlList();
-			if (null == bondDtlList) {
-				bondDtlList = new ArrayList<ScPerformanceBond>();
-			}
-			scBondDtl.setScLoa(getManagedBean().getScLoa());
-			bondDtlList.add(scBondDtl);
-			this.getManagedBean().setScBondDtlList(bondDtlList);
-		} catch (Exception e) {
-			throw new IllegalArgumentException();
-		}
 	}
 
 	/**
