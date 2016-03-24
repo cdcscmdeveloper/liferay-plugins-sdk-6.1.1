@@ -272,6 +272,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
 		category.setPmCategoryL2(pmCategoryL2);
 		category.setPmCategoryL3(pmCategoryL3);
+		category.setPmCategoryL1Name(
+				pmCategoryL2.getPmCategoryL1().getCategoryName());
+		category.setPmCategoryL2Name(
+				pmCategoryL2.getCategoryName());
+		category.setPmCategoryL3Name(
+				pmCategoryL3.getCategoryName());
+		
 		qtCategoryList.add(category);
 	}
 
