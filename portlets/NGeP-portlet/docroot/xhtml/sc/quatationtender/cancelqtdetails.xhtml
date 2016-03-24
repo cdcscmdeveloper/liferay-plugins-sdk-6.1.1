@@ -29,62 +29,62 @@
 			</h:panelGroup>
 		</div>
 
+		<c:choose>
+			<c:when test="#{qTDetailBB.isQTStatusGreaterThanOrEquals(qTDetailBB.managedBean.currentStatusId, QTStatusConst.QT_PENDING_PUBLICATION)}">
 
-
-		<c:if test="#{qTDetailBB.managedBean.currentStatusId gt '60007'}">
-
-			<p:panel id="cancelQt" header="FinalizationCommitteApproval"
-				toggleable="true">
-				<ui:param name="fcaApprovalTab"
-					value="#{qTDetailBB.managedBean.selectedApprovalTabBean}" />
-				<ui:param name="fcaApprovalRemarkList"
-					value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
-				<ui:include
-					src="/xhtml/sc/quatationtender/approval/approvalDetailsFinalizationCommittee.xhtml" />
-
-				<ui:include
-					src="/xhtml/sc/quatationtender/approval/approvalhistory.xhtml" />
-			</p:panel>
-		</c:if>
-
-		<c:if test="#{qTDetailBB.managedBean.currentStatusId lt '60007' }">
-			<p:panel id="beforePublished" header="Cancel Quatation/Tender"
-				toggleable="true">
-				
-				<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid id="cancelRemarks"
-						value="#{qTDetailBB.managedBean.qt.scQtRemarks}" var="remarkVar"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{qTDetailBB.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}"
-										/>
-									<h:outputText value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;"
-										/></td>
-							</tr>
+				<p:panel id="cancelQt" header="#{qTDetailBB.getParameterDesc(ParameterTypeConst.approvalCategory, ParameterConst.approvalCategoryFinalizationCommittee)}"
+					toggleable="true">
+					<ui:param name="fcaApprovalTab"
+						value="#{qTDetailBB.managedBean.selectedApprovalTabBean}" />
+					<ui:param name="fcaApprovalRemarkList"
+						value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalDetailsFinalizationCommittee.xhtml" />
+	
+					<ui:include
+						src="/xhtml/sc/quatationtender/approval/approvalhistory.xhtml" />
+				</p:panel>
+			</c:when>
+	
+			<c:otherwise>
+				<p:panel id="beforePublished" header="#{lbl['lbl.sc.cancel.quatation.tender']}"
+					toggleable="true">
+					
+					<table style="width: 100%" id="remarkslist">
+				<tr>
+					<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
+							value="#{lbl['lbl.sc.remark']}" /></td>
+					<td class="TableFieldRight"><p:dataGrid id="cancelRemarks"
+							value="#{qTDetailBB.managedBean.qt.scQtRemarks}" var="remarkVar"
+							rowIndexVar="remarkIndex" columns="1">
+							<table>
+								<tr>
+									<td rowspan="2" valign="top"><h:graphicImage
+											value="#{qTDetailBB.userImagePath(remarkVar.createdUser.loginId)}"
+											height="30" width="30" /></td>
+									<td width="5"></td>
+									<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+										<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
+											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+										</h:outputText></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+											rendered="#{remarkVar.remarkId eq null}"
+											/>
+										<h:outputText value="#{remarkVar.remark}"
+											rendered="#{remarkVar.remarkId ne null}"
+											style="display: inline-block; width:220px;word-wrap: break-word;"
+											/></td>
+								</tr>
+							</table>
+						</p:dataGrid></td>
+						</tr>
 						</table>
-					</p:dataGrid></td>
-					</tr>
-					</table>
-			</p:panel>
-		</c:if>
+				</p:panel>
+			</c:otherwise>
+		</c:choose>
 	</ui:define>
 
 </ui:composition>
