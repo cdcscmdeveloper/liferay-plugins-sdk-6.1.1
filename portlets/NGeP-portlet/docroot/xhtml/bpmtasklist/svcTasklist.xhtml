@@ -101,7 +101,7 @@
 				
 			</div>
 			</p:panel>
-	
+
 			<p:panel id="rspl" header="#{lbl['lbl.sm.results']}" toggleable="true">
 				<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					lazy="true" var="appl">
@@ -120,27 +120,16 @@
 						<h:outputText value="#{appl.smSupplier.companyName}"></h:outputText>
 					</p:column>
 					
-					<ui:remove>
-					<ui:param name="workFlowInfo" value="#{svcTasklistBackingBean.getWorkflowInfoByApplId(appl.applId)}"></ui:param>
 					<p:column headerText="#{lbl['lbl.sm.siteassign.site.visit.status']}">
 						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" 
-							rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentBeforeApproval}" />
+							rendered="#{not empty appl.workFlowObj.pmStatus and appl.workFlowObj.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentBeforeApproval}" />
 						
 						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" 
-							rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentAfterApproval}" />
-					</p:column>
-					</ui:remove>
-					
-					<p:column headerText="#{lbl['lbl.sm.siteassign.site.visit.status']}">
-						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" 
-							rendered="#{not empty appl.workflowStatus and appl.workflowStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentBeforeApproval}" />
-						
-						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" 
-							rendered="#{not empty appl.workflowStatus and appl.workflowStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentAfterApproval}" />
+							rendered="#{not empty appl.workFlowObj.pmStatus and appl.workFlowObj.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentAfterApproval}" />
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sm.created.date']}">
-						<ac:labelDateTime value="#{workFlowInfo.createdDate}" /> 
+						<ac:labelDateTime value="#{appl.workFlowObj.createdDate}" /> 
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sm.action']}">
