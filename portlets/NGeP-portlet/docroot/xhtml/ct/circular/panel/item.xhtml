@@ -159,19 +159,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="bulkUpdateDlg.hide();" type="button" />
 		   </div>
         </p:dialog>
-		<p:dialog id="delItemDlg" 
-		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="330">  
-            <h:panelGrid columns="3">
-              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			  <p:spacer width="10"/>
-              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=itemId])"
+        
+        <p:confirmDialog id="delItemDlg" widgetVar="delItemDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		           <div class="ppRightBtn">
+				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=itemId])"
 		       process="@all" actionListener="#{panelBackingBean.removeAddRow()}" onclick="delItemDlg.hide();"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delItemDlg.hide();" type="button" />
-		   </div>
-        </p:dialog>
+				   </div>
+        </p:confirmDialog>
+       
         <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
 	   		styleClass="pop_up_top" modal="true" width="700" height="450">
 	   		<h:panelGrid columns="1">
@@ -201,19 +198,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="itemSpecDlg.hide();" />
 			</div>
    		</p:dialog>
-   		<p:dialog id="delPanelItemSpecDlg"
-		    styleClass="screen-title" widgetVar="delPanelItemSpecDlg"  modal="true" width="330">  
-            <h:panelGrid columns="3">
-              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			  <p:spacer width="10"/>
-              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=itemSpecDt])"
-		       process="@all" actionListener="#{panelBackingBean.deletePanelItemSpec()}" onclick="delPanelItemSpecDlg.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPanelItemSpecDlg.hide();" type="button" />
-		   </div>
-        </p:dialog>  	
+   		
+   		 <p:confirmDialog id="delPanelItemSpecDlg" widgetVar="delPanelItemSpecDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		           <div class="ppRightBtn">
+				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:itemSpecDt"
+				       process="@all" actionListener="#{panelBackingBean.deletePanelItemSpec()}" onclick="delPanelItemSpecDlg.hide();"/>
+					 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPanelItemSpecDlg.hide();" type="button" />
+				   </div>
+        </p:confirmDialog>
+        
 		<p:spacer height="40" />
 		<p:outputPanel id="itemZone">
 		    <h:panelGroup rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and panelBackingBean.managedBean.selectionOfZone}">
@@ -236,10 +230,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				                var="panelZoneVar" selectionMode="single" widgetVar="panelZoneObj"
 				                selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
 									    <ac:paginator for="zoneGeneralDataTable" />
-									    <p:ajax event="rowSelect" update=":form:itemSupplier" 
+									    <p:ajax event="rowSelect" update=":form:itemSupplier, :form:deleteZoneBtn"   listener="#{panelBackingBean.onRowSelect}"
 											process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 										<p:ajax event="rowUnselect" process="@this"	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-											update="@([id$=itemSupplier])">
+											update=":form:itemSupplier">
 											<f:setPropertyActionListener value="#{null}" target="#{panelBackingBean.managedBean.selectedPanelZone}" />
 										</p:ajax>
 										<p:column style="width:60%" styleClass="column-align-center" >
@@ -273,13 +267,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					           oncomplete="ZoneGeneral.show();" actionListener="#{panelBackingBean.showGeneralZoneLocationPopup}"
 					           rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 		                 <p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.ct.delete']}"  process="@this"
+		                             disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 		                      onsuccess="delZoneDlg.show();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 	              </div>	
 	    
-	         <p:confirmDialog id="delZoneDlg" widgetVar="cancelCircularSupDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+	         <p:confirmDialog id="delZoneDlg" widgetVar="delZoneDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 		           <div class="ppRightBtn">
-				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=zoneGeneralDataTable],[id$=itemSupplier])"
+				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:zoneGeneralDataTable,:form:itemSupplier, :form:deleteZoneBtn"
 				       process="@all" actionListener="#{panelBackingBean.deletePanelZone()}" onclick="delZoneDlg.hide();"/>
 					 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delZoneDlg.hide();" type="button" />
 				   </div>
