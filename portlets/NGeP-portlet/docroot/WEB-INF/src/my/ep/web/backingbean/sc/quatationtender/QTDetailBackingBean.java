@@ -1005,7 +1005,7 @@ public class QTDetailBackingBean extends
 							.getTarget();
 					if (CollectionUtils.isNotEmpty(approvalSettings)) {
 						for (ScQtApproverSettings approverSettings : approvalSettings) {
-							approverSettings.setQtApproval(pubApproval);
+							approverSettings.setScQtApproval(pubApproval);
 						}
 						pubApproval.setApproverSettings(approvalSettings);
 					}
@@ -2148,14 +2148,15 @@ public class QTDetailBackingBean extends
 									|| approvalSettings.isEmpty()) {
 								approvalSettings = new ArrayList<ScQtApproverSettings>();
 								ScQtApproverSettings approverSettings = new ScQtApproverSettings();
-								approverSettings.setApprover(new PmUser());
-								approverSettings.setQtApproval(qtApproval);
+								approverSettings.setPmUser(new PmUser());
+								approverSettings.setScQtApproval(qtApproval);
+								approverSettings.setCommitteeType(new PmParameter());
 								approvalSettings.add(approverSettings);
 								qtApproval
 										.setApproverSettings(approvalSettings);
 							} else {
 								for (ScQtApproverSettings approverSettings : approvalSettings) {
-									approverSettings.setQtApproval(qtApproval);
+									approverSettings.setScQtApproval(qtApproval);
 								}
 							}
 							tabBeans.add(new TabBean(titleName,
@@ -3266,17 +3267,17 @@ public class QTDetailBackingBean extends
 					isApproverExists = false;
 					for (ScQtApproverSettings scQtApproverSettings : approval
 							.getApproverSettings()) {
-						if (scQtApproverSettings.getApprover().getUserId()
+						if (scQtApproverSettings.getPmUser().getUserId()
 								.equals(pmUser.getUserId())) {
-							scQtApproverSettings.setQtApproval(approval);
+							scQtApproverSettings.setScQtApproval(approval);
 							isApproverExists = true;
 							break;
 						}
 					}
 					if (!isApproverExists) {
 						ScQtApproverSettings qtApproverSettings = new ScQtApproverSettings();
-						qtApproverSettings.setApprover(pmUser);
-						qtApproverSettings.setQtApproval(approval);
+						qtApproverSettings.setPmUser(pmUser);
+						qtApproverSettings.setScQtApproval(approval);
 						availableApprovers.add(qtApproverSettings);
 					}
 				}
@@ -3284,8 +3285,8 @@ public class QTDetailBackingBean extends
 			} else {
 				for (PmUser pmUser : approvers) {
 					ScQtApproverSettings qtApproverSettings = new ScQtApproverSettings();
-					qtApproverSettings.setApprover(pmUser);
-					qtApproverSettings.setQtApproval(approval);
+					qtApproverSettings.setPmUser(pmUser);
+					qtApproverSettings.setScQtApproval(approval);
 					availableApprovers.add(qtApproverSettings);
 				}
 				selectedApprovers = new ArrayList<ScQtApproverSettings>();
@@ -4180,13 +4181,16 @@ public class QTDetailBackingBean extends
 	 * @param event
 	 *            the event
 	 */
-	public void changePbSecretaryCommType(AjaxBehaviorEvent event) {
-		debugLogger("retrieveFinalizationCommitteeSecretaryName");
-		String commType = (String) event.getComponent().getAttributes()
-				.get("value");
-		if (null != commType) {
+	public void changePbSecretaryCommType(ScQtApproverSettings approverSettings) {
+		debugLogger("changePbSecretaryCommType");
+		
+		Long commTypeId = approverSettings.getCommitteeType().getParameterId();
+		if (null != commTypeId) {
+			PmParameter commTypeCode = ParameterHelper.getInstance().getPmParameterById(commTypeId);
+			approverSettings.setCommitteeType(commTypeCode);
+			
 			getManagedBean().getSelectedApprovalTabBean().getScQtApproval()
-					.getApproverSettings().get(0).setApprover(new PmUser());
+					.getApproverSettings().get(0).setPmUser(new PmUser());
 		}
 	}
 
@@ -4228,7 +4232,7 @@ public class QTDetailBackingBean extends
 
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt qt = this.getManagedBean().getQt();
-			if (isQTStatusPublished(qt.getQtStatus().getStatusId())) {
+			if (isQTStatusGreaterThanOrEquals(getManagedBean().getCurrentStatusId(), QTStatusConst.QT_PENDING_PUBLICATION)) {
 				qt.setScQtCommittees(null);
 				qt.setScQtBriefings(null);
 				qt.setScQtStatus(null);
@@ -4240,9 +4244,8 @@ public class QTDetailBackingBean extends
 				List<ScQtApproverSettings> approverSettings = approval
 						.getApproverSettings();
 				if (null != approverSettings && !approverSettings.isEmpty()) {
-					String fcCommType = approverSettings.get(0)
-							.getCommitteType();
-					if (StringUtils.isEmpty(fcCommType)) {
+					PmParameter fcCommTypeCode = approverSettings.get(0).getCommitteeType();
+					if (fcCommTypeCode == null || fcCommTypeCode.getParameterId() == null) {
 						throw new EpException(
 								MessageConst.ERROR_100022,
 								new String[] { ResourceBundleUtils
@@ -4253,7 +4256,7 @@ public class QTDetailBackingBean extends
 														.getUserLocale()) });
 					}
 
-					PmUser approver = approverSettings.get(0).getApprover();
+					PmUser approver = approverSettings.get(0).getPmUser();
 					if (approver == null || approver.getUserId() == null) {
 						throw new EpException(
 								MessageConst.ERROR_100022,
@@ -4374,7 +4377,7 @@ public class QTDetailBackingBean extends
 			if (user.getUserId().equals(id)) {
 				this.getManagedBean().getSelectedApprovalTabBean()
 						.getScQtApproval().getApproverSettings().get(0)
-						.setApprover(user);
+						.setPmUser(user);
 				break;
 			}
 		}
