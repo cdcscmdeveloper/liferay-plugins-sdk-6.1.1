@@ -37,15 +37,14 @@
 									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										actionListener="#{backingBean.setTabValue('4','5')}"
-										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 										update=":form:" rendered="#{backingBean.managedBean.supplierUser}"/>
 									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										actionListener="#{backingBean.setTabValue('4','5')}"
 										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 										update=":form:" rendered="#{!backingBean.managedBean.supplierUser}"/>
-								</div>
-							</td>
+								</div></td>
 						</tr>
 					</table>
 				</div></td>
