@@ -304,6 +304,11 @@
 					</table></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson}"
+						 /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactEmail}"
@@ -311,15 +316,11 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.fl.mobile']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactMobileNo}"
-						 /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
+						value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNo}"
 						 /></td>
 			</tr>
+			
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.factoring.details']}"  toggleable="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}">
@@ -360,7 +361,7 @@
 				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.contactEmail}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.contactPhoneNo}"/></td>
 			</tr>
 		</table>
