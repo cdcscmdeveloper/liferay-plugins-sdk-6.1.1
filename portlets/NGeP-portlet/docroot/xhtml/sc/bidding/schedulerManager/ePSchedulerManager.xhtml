@@ -82,7 +82,7 @@
 							update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/ico-play.png" title="#{lbl['lbl.quartz.resume.job']}" />
-						</p:commandLink>&#160;
+						</p:commandLink>
 						<p:commandLink id="pauseActionId" partialSubmit="true"
 							process="@this" rendered="#{jobBean.action eq 'PAUSE'}"
 							action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}"
