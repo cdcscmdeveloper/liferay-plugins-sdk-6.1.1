@@ -310,7 +310,11 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				.getBidAction()
 				.getActionType()
 				.equalsIgnoreCase(
-						ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING)) {
+						ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING) || getManagedBean()
+						.getBidAction()
+						.getActionType()
+						.equalsIgnoreCase(
+								ParameterConst.BID_ACTION_TYPES_RESCHEDULE)) {
 
 			final long ONE_MINUTE_IN_MILLIS = 60000;
 
@@ -355,7 +359,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().getBidAction().setNewEndDate(endDate);
 
 		if (getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)) {
+				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING) || getManagedBean().getBidAction().getActionType()
+				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_RESCHEDULE)) {
 
 			getManagedBean().setNewBidDuration(
 					durationCalculator(getManagedBean().getBidAction()
@@ -929,7 +934,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			parameterFilterBean.setCaseInsensitive(true);
 			searchBean.getDataFilterBeans().add(parameterFilterBean);
 		}
-		System.out.println("********************&&&&&&&&&&&&& min date is &&&&&&&&&&&&*************************"+getManagedBean().getMindate());
 
 		SelectItem[] items = super.getRadioButtonCodeValuesBySearchBean(
 				parameterType, searchBean);
