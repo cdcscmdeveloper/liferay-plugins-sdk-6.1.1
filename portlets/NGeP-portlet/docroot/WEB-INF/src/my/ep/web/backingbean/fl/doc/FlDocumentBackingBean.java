@@ -174,8 +174,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * <p>get fl document Search result based on selected and filled in parameters.
 	 */
 	public void searchDocument(){
-		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| hasSupplierRole()) {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
 			if(null == getManagedBean().getMinistry()){ 
 				throw new EpException(MessageConst.ERROR_740044);
 			}
@@ -1161,10 +1160,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	  *         false, if login user is not User/internal auditor
 	*/	
 	public boolean disableMinistryLov() {
-		return (isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()
+		return (isFlFulfilmentRequisitioner()
+				|| isFlFulfilmentApprover()
 				|| isFlFulfilmentRecevingOfficer()
-				|| isFlFulfilmentPaymentOfficer() || getFacesScopes()
-				.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()));
+				|| isFlFulfilmentPaymentOfficer()
+				|| getFacesScopes().hasRoleUser(
+						RoleCode.AUDITOR_INTERNAL.value()) || hasSupplierRole());
 	}
 	
 	/**
@@ -1179,7 +1180,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public boolean disablePtjLov() {
 		return (isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()
 				|| isFlFulfilmentRecevingOfficer()
-				|| isFlFulfilmentPaymentOfficer() || getManagedBean().getMinistry()==null);
+				|| isFlFulfilmentPaymentOfficer()
+				|| getManagedBean().getMinistry() == null || hasSupplierRole());
 	}
 	
 	/**
@@ -1194,7 +1196,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public boolean disablePtjGroupLov() {
 		return (isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()
 				|| isFlFulfilmentRecevingOfficer()
-				|| isFlFulfilmentPaymentOfficer() || getManagedBean().getMinistry()==null);
+				|| isFlFulfilmentPaymentOfficer()
+				|| getManagedBean().getMinistry() == null || hasSupplierRole());
 	}
 	
 
