@@ -17,6 +17,9 @@
 
 	</ui:fragment>
  -->
+ 
+ <ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+			
  	<ui:param name="isCommitteeInfoEditable" value="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
  	
  	<c:choose>
