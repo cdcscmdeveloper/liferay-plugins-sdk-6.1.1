@@ -1145,6 +1145,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
+		if(resDTO.getFlOrder().isFactored()) {
+			orderBackingBean.getManagedBean().setFactoringCheck("true");
+			orderBackingBean.getFactoringCompanyDtl();
+//			if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){//TODO
+//				flOrderBB.getFactoringAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
+//			}				
+		}
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			return NAV_PO;
 		}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
