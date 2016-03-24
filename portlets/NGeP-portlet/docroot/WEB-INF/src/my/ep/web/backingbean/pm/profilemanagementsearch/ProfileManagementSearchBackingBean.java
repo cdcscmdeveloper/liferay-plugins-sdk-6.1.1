@@ -195,6 +195,9 @@ public class ProfileManagementSearchBackingBean extends
 		this.applicationStatus = applicationStatus;
 	}
 	public SelectItem[] getApplicationStatus() {
+		if(applicationStatus == null){
+			appTypeChange();
+		}
 		return applicationStatus;
 	}
 

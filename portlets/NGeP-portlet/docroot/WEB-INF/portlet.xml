@@ -6345,7 +6345,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/profilemanagementsearch/profileManagementMain.xhtml</value>
+			<value>/xhtml/pm/profilemanagementsearch/preRenderAccessAPL.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>

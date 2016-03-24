@@ -63,6 +63,8 @@
 						value="#{profileManagSearchBackingBean.managedBean.profileManagSearchBean.appStatusId}">
 						<f:selectItems
 							value="#{profileManagSearchBackingBean.getApplicationStatus()}" />
+								<p:ajax
+							update="somAppStatus" />
 					</p:selectOneMenu></td>
 					<th></th>
 				<td></td>
@@ -83,7 +85,7 @@
 				<td><p:inputText id="apUserName" 
 						label="#{lbl['lbl.pm.access.app.request.username']}"
 						value="#{profileManagSearchBackingBean.managedBean.profileManagSearchBean.userName}"
-						size="60" maxlength="15" /></td>
+						size="60" maxlength="80" /></td>
 				<th></th>
 				<td></td>
 			</tr>
