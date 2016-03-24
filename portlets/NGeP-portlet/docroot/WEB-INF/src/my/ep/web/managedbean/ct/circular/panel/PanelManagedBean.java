@@ -30,7 +30,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -110,7 +109,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private SmCompanyBasic smCompanyBasic;
 	private SmPersonnel smPersonnel;
-	private SmAddress supplierAddress;
+	private CtPanelSupplier ctPanelSupplier;
 	private SmMofAccount smMofAccount;
 	private List<CtCircularPidReason> ctCircularPidReasons;
 	
@@ -849,17 +848,17 @@ public class PanelManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the supplierAddress
+	 * @return the ctPanelSupplier
 	 */
-	public SmAddress getSupplierAddress() {
-		return supplierAddress;
+	public CtPanelSupplier getCtPanelSupplier() {
+		return ctPanelSupplier;
 	}
 
 	/**
-	 * @param supplierAddress the supplierAddress to set
+	 * @param ctPanelSupplier the ctPanelSupplier to set
 	 */
-	public void setSupplierAddress(SmAddress supplierAddress) {
-		this.supplierAddress = supplierAddress;
+	public void setCtPanelSupplier(CtPanelSupplier ctPanelSupplier) {
+		this.ctPanelSupplier = ctPanelSupplier;
 	}
 
 	/**
