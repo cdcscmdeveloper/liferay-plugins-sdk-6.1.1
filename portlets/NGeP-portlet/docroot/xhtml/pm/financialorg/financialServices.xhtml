@@ -36,7 +36,7 @@
 				
                  <ui:fragment
 					rendered="#{financialsrv.brandNew}">
-				 <p:selectOneMenu id="svcType"
+				 <p:selectOneMenu id="svcType" 
 					value="#{financialsrv.serviceTypeCode.parameterId}"
 					disabled="#{!financialsrv.brandNew || financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}"
 					label="#{lbl['lbl.pm.financialorg.servicetype']}" required="false"
@@ -47,9 +47,9 @@
 						itemLabel="#{serviceType.codeName}"
 						itemValue="#{serviceType.pmParameter.parameterId}"
 						value="#{financialOrgBackingBean.getServiceTypeList()}" />
-					<p:ajax event="change"
-						listener="#{financialOrgBackingBean.updateService}" update="@form"
-						process="@all" />
+					<p:ajax event="change" process="@this" 
+				 		update="@form"
+						listener="#{financialOrgBackingBean.updateService}"  />
 				</p:selectOneMenu>
 				<p:message for="svcType" id="svcTypeMsg" display="icon" /> 
 				</ui:fragment>
