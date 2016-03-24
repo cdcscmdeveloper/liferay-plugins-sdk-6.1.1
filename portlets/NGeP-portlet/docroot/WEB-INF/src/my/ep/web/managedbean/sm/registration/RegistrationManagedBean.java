@@ -107,9 +107,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<PmDocument> gstDocLs;
 	private SmGstSupplierDoc selectedGstSupplierDoc;
 	
-	private String captchaText;
-	private String captchaAnswer;
-	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -591,21 +588,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.selectedGstSupplierDoc = selectedGstSupplierDoc;
 	}
 
-	public String getCaptchaText() {
-		return captchaText;
-	}
-
-	public void setCaptchaText(String captchaText) {
-		this.captchaText = captchaText;
-	}
-
-	public String getCaptchaAnswer() {
-		return captchaAnswer;
-	}
-
-	public void setCaptchaAnswer(String captchaAnswer) {
-		this.captchaAnswer = captchaAnswer;
-	}
 
 	public List<SelectItem> getSalutationItems() {
 		if(salutationItems == null || salutationItems.size() > 0) {

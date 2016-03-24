@@ -29,6 +29,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private Boolean groupTask;
 	private boolean isReadOnly;
 	private List<SelectItem> localAuthorityItems;
+	private String captchaText;
+	private String captchaAnswer;
 
 	// For sub title displayed in screen.
 	private String title;
@@ -211,6 +213,22 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setLocalAuthorityItems(List<SelectItem> localAuthorityItems) {
 		this.localAuthorityItems = localAuthorityItems;
+	}
+
+	public String getCaptchaText() {
+		return captchaText;
+	}
+
+	public void setCaptchaText(String captchaText) {
+		this.captchaText = captchaText;
+	}
+
+	public String getCaptchaAnswer() {
+		return captchaAnswer;
+	}
+
+	public void setCaptchaAnswer(String captchaAnswer) {
+		this.captchaAnswer = captchaAnswer;
 	}
 
 }
