@@ -82,21 +82,21 @@
 							update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/ico-play.png" title="#{lbl['lbl.quartz.resume.job']}" />
-						</p:commandLink>
+						</p:commandLink>&#160;
 						<p:commandLink id="pauseActionId" partialSubmit="true"
 							process="@this" rendered="#{jobBean.action eq 'PAUSE'}"
 							action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}"
 							update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/ico-suspend.png" title="#{lbl['lbl.quartz.pause.job']}" />
-						</p:commandLink>
+						</p:commandLink>&#160;
 						<p:commandLink id="runNowActionId"
 							rendered="#{jobBean.status eq 'WAIT'}" partialSubmit="true"
 							process="@this" action="#{schedulerManagerBB.runNowJob(jobBean)}"
 							update="@form" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/ico-action.png" title="#{lbl['lbl.quartz.execute.job']}" />
-						</p:commandLink>
+						</p:commandLink>&#160;
 						<p:commandLink id="deleteActionId"
 							rendered="#{jobBean.status eq 'WAIT'}" partialSubmit="true"
 							process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
