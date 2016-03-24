@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -152,8 +153,7 @@ public class EpSchedulerHelper {
 		try {
 			EpSchedulerHelper.getScheduler().deleteJob(jobKey);
 		} catch (SchedulerException e) {
-			throw new EpException(
-					"Selected job not exist for deleting purposes.");
+			throw new EpException(MessageConst.ERRQRTZ_00002);
 		}
 	}
 

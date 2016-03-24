@@ -82,7 +82,7 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setShowBranchPointOfContact(false);
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/govtSellerRegistration/govtSellerBasePage.xhtml",
+				"/xhtml/sm/govtSellerRegistration/govtSellerTncPage.xhtml",
 				"", null);
 
 	}
@@ -154,6 +154,21 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	public String returnToSignUp() {
 		return getInstance().returnToSignUp();
+	}
+
+	/**
+	 * Return to tnc page
+	 * 
+	 * @return String
+	 */
+	public String returnToTnc() {
+		return "/xhtml/sm/govtSellerRegistration/govtSellerTncPage.xhtml?faces-redirect=true";
+	}
+
+	public String navigateToSearchPage() {
+		getManagedBean().setTargetPage(
+				SupplierManagementConst.GOVT_SELLER_SEARCH_PAGE);
+		return "/xhtml/sm/govtSellerRegistration/govtSellerBasePage.xhtml?faces-redirect=true";
 	}
 
 	/**
