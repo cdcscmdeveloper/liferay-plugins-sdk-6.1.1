@@ -111,14 +111,12 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -129,7 +127,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.panel.PanelManagedBean;
@@ -1324,48 +1321,39 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	/**
 	 * Set the selected supplier details in managed bean
 	 * 
-	 * @param smSupplier  the selected supplier
+	 * @param ctPanelSupplier  the selected supplier
 	 */
-	public void showSupplierDetails(SmSupplier smSupplier) {
+	public void showSupplierDetails(CtPanelSupplier ctPanelSupplier) {
 		QTSupplierResDTO qtSupplierResDTO = new QTSupplierResDTO();
 		MofAccountResDTO mofAccResDTO = new MofAccountResDTO();
 		IQTSupplierSO qtSupplierSO = null;
 		IMofAccountSO mofAccountSO = null;
 		
 		try {
-			if (smSupplier != null) {
+			if (ctPanelSupplier != null) {
+				getManagedBean().setCtPanelSupplier(ctPanelSupplier);
 				qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
 				QTSupplierReqDTO qtSupplierReqDTO = new QTSupplierReqDTO();
-				qtSupplierReqDTO.setSupplierId(smSupplier.getSupplierId());
+				qtSupplierReqDTO.setSupplierId(ctPanelSupplier.getSupplier().getSupplierId());
 				qtSupplierResDTO = qtSupplierSO.retrieveSupplierDetails(qtSupplierReqDTO);
-				smSupplier = qtSupplierResDTO.getSmSupplier();
-				getManagedBean().setSmSupplier(smSupplier);
+				//smSupplier = qtSupplierResDTO.getSmSupplier();
+				getManagedBean().setSmSupplier(qtSupplierResDTO.getSmSupplier());
 				
 				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 				MofAccountReqDTO mofAccReqDTO = new MofAccountReqDTO();
-				mofAccReqDTO.setSupplierId(smSupplier.getSupplierId());
+				mofAccReqDTO.setSupplierId(ctPanelSupplier.getSupplier().getSupplierId());
 				mofAccResDTO = mofAccountSO.retrieveMofNoBySupplierId(mofAccReqDTO);
 				getManagedBean().setSmMofAccount(mofAccResDTO.getMofAccount());
 	
-				SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl().getSmCompanyBasic();
+				SmCompanyBasic smCompanyBasic = ctPanelSupplier.getSupplier().getSmAppl().getSmCompanyBasic();
 				getManagedBean().setSmCompanyBasic(smCompanyBasic);
 	
-				List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl().getSmPersonnels();
+				List<SmPersonnel> smPersonnelList = ctPanelSupplier.getSupplier().getSmAppl().getSmPersonnels();
 				for (SmPersonnel smPersonnel : smPersonnelList) {
 					if (smPersonnel.isContactPerson()) {
 						getManagedBean().setSmPersonnel(smPersonnel);
-						break;
-					}
-				}
-				for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
-					if (AddressType.CONTACT_ADDRESS.value().equals(
-							smCompanyAddress.getAddressType())) {
-						getManagedBean().setSupplierBranch(
-								QTConstants.SUPPLIER_INFO_HQ);
-						getManagedBean().setSupplierAddress(
-								smCompanyAddress.getSmAddress());
 						break;
 					}
 				}
