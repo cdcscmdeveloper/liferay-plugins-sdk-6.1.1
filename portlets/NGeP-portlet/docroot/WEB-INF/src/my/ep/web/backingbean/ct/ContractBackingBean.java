@@ -1448,6 +1448,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgencyAddress = getManagedBean().getSelectedAgency().getCtAgencyAddresses();
 				
 				for (PmAddressType addressType : addressTypeList) {
+					boolean isAddressExist = false;
+					// if already exist, skip to avoid duplicate
+					for (CtAgencyAddress address : ctAgencyAddress) {
+						if( address.getAddressType().getAddressTypeId().equals(addressType.getAddressTypeId())) {
+							isAddressExist = true;
+							break;
+						}
+					}				
+					if (isAddressExist) {
+						continue;
+					}
+					
 					CtAgencyAddress agencyAddress = new CtAgencyAddress();
 					agencyAddress.setAddressType(addressType);
 					agencyAddress.setCtAgency(getManagedBean().getSelectedAgency());
@@ -1461,13 +1473,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						agencyAddress.setDeliveryAddress(CtAddressUtil.convertPmAddressTypeToCtAddress(addResDTO.getAddressTypeList().get(0)));
 					}
 					agencyAddressList.add(agencyAddress);
-				   
-					//Remove if already exist, avoid duplicate
-					for (CtAgencyAddress address : ctAgencyAddress) {
-						if( address.getAddressType().getAddressTypeId().equals(addressType.getAddressTypeId())) {
-							agencyAddressList.remove(agencyAddress);
-						}
-					}
 				}
 				ctAgencyAddress.addAll(agencyAddressList);
 			}
