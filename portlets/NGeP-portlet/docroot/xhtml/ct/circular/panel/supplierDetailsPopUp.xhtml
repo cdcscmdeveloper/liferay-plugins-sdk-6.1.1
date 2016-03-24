@@ -27,7 +27,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30" style=" margin-bottom:5px;"
-					value="#{panelBackingBean.managedBean.smSupplier.companyName}"
+					value="#{panelBackingBean.managedBean.ctPanelSupplier.supplierCompanyName}"
 					readonly="true" />
 			</h:column>
 			
@@ -43,7 +43,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30" style=" margin-bottom:5px;"
-					value="#{panelBackingBean.managedBean.smSupplier.regNo}"
+					value="#{panelBackingBean.managedBean.ctPanelSupplier.supplierRegNo}"
 					readonly="true" />
 			</h:column>
 			
@@ -52,7 +52,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30"
-					value="#{panelBackingBean.managedBean.smMofAccount.mofNo}"
+					value="#{panelBackingBean.managedBean.ctPanelSupplier.supplierMofNo}"
 					readonly="true" />
 			</h:column>
 			
@@ -113,7 +113,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 			</h:column>
 			<h:column>
-				<p:inputTextarea cols="30" value="#{panelBackingBean.managedBean.supplierAddress.address1}" 
+				<p:inputTextarea cols="30" value="#{panelBackingBean.getFullAddress(panelBackingBean.managedBean.ctPanelSupplier.supplierAddress)}" 
 					style=" margin-bottom:5px;" readonly="true" />
 			</h:column>
 			
@@ -121,7 +121,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</h:column>
 			<h:column>
-				<p:inputText size="30" value="#{panelBackingBean.managedBean.smPersonnel.name}" readonly="true" />
+				<p:inputText size="30" value="#{panelBackingBean.managedBean.ctPanelSupplier.supplierAddress.contactPerson}" readonly="true" />
 			</h:column>
 			
 			<h:column>
@@ -135,7 +135,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</h:column>
 			<h:column>
-				<p:inputText size="30" value="#{panelBackingBean.managedBean.smPersonnel.email}" readonly="true" />
+				<p:inputText size="30" value="#{panelBackingBean.managedBean.ctPanelSupplier.supplierAddress.contactEmail}" readonly="true" />
 			</h:column>
 		</h:panelGrid>
 
