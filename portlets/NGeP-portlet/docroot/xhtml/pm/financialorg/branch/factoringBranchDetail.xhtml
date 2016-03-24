@@ -5,8 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
  
 	<p:outputPanel id="financialBranchDtl"  rendered="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch!=null}" >
-		<br/>
-		<br/>
+		
 		<p:dataTable id="financialBranchAccId" var="financialacc"
 			value="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex"

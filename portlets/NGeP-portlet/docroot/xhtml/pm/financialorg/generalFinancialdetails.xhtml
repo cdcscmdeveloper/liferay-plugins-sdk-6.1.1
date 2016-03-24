@@ -69,7 +69,8 @@
 			</tr>
 		</table>
 		<p:outputPanel id="opGeneralTopMenu">
-				<p:tabView id="tvGeneralFinance"  widgetVar="tvGeneralFinance" dynamic="false" cache="false" orientation="top">
+				<p:tabView id="tvGeneralFinance"  widgetVar="tvGeneralFinance" dynamic="false" cache="false" orientation="top"
+					activeIndex="#{financialOrgBackingBean.managedBean.tabActiveIndex}">
 					<p:tab id="tFacAdd" title="#{lbl['lbl.pm.financialorg.tab.address']}">
 						<ui:include src="/xhtml/pm/financialorg/financialOrgAddress.xhtml" />
 					</p:tab>
