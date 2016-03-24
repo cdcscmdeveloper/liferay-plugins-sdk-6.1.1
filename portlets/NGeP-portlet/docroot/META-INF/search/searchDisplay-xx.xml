@@ -1007,8 +1007,8 @@
 	</bean>
 	<bean id="PM_VOT_FUND" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="votFundId" />
-		<property name="daoClass"
-			value="my.ep.persistence.dao.pm.common.votfund.VotFundDAO" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.common.votfund.VotFundDAO" />
+		<property name="searchMethod" value="retrieveFundList" />	
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
