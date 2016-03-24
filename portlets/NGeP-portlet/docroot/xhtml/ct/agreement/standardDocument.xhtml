@@ -96,18 +96,16 @@
 				</p:fileUpload>
 			</p:dialog>
 			
-			<p:dialog id="deleteContentId" widgetVar="deleteContentDlg" styleClass="screen-title" modal="true" width="330">  
-      	           <h:panelGrid columns="3">
- 			              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-		   	              <p:spacer width="10"/>
-                          <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
-     	            </h:panelGrid>
-		            <div class="ppRightBtn">
-	                      <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form"  update=":form:contentTable"
-	                        	actionListener="#{agreementBackingBean.deleteContentAttachement()}"  onclick="deleteContentDlg.hide();"/>
-		                  <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteContentDlg.hide();" type="button" />
-	              </div>
- 	       </p:dialog>	
+			   <p:confirmDialog id="deleteContentId" widgetVar="deleteContentId" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:contentTable" 
+		                       action="#{agreementBackingBean.deleteContentAttachement()}" oncomplete="deleteContentId.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteContentId.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+          
 		</h:panelGrid>
 		  <div class="ppRightBtn"> 
               <p:commandButton id="addContentBtn" value="#{lbl['lbl.btn.add']}" process="@form"  
@@ -117,7 +115,7 @@
 					</p:tooltip>
               </p:commandButton>
 		      <p:spacer width="1"/>
-		      <p:commandButton id="delContentBtn" value="#{lbl['lbl.ct.delete']}" process="@form" onclick="dlgDocumentDel.show();"
+		      <p:commandButton id="delContentBtn" value="#{lbl['lbl.ct.delete']}" process="@this" onclick="dlgDocumentDel.show();"
 		      		disabled="#{!(agreementBackingBean.managedBean.selectedAgreementContent!=null and 
 		      		agreementBackingBean.managedBean.selectedAgreementContent.contentType.parameterCode==ParameterConst.agreementUserUploadDoc)}">
 		      		<p:tooltip for="delContentBtn">
@@ -132,19 +130,16 @@
 					</p:tooltip>
 		      </p:commandButton> 
 	   </div>
-	    <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"
-	      styleClass="screen-title" modal="true" width="330">  
-           <h:panelGrid columns="3">
-              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			   <p:spacer width="10"/>
-              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:contentTable" 
-				process="@form"  actionListener="#{agreementBackingBean.delAgreementContents()}" onclick="dlgDocumentDel.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDocumentDel.hide();" type="button" />
-		   </div>
-        </p:dialog>  
+	   
+	     <p:confirmDialog id="dlgDocumentDel" widgetVar="dlgDocumentDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:contentTable" 
+		                       action="#{agreementBackingBean.delAgreementContents()}" oncomplete="dlgDocumentDel.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDocumentDel.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
 	</p:panel>
 	<p:panel id="agreementDisclaimerPnl" header="#{lbl['lbl.ct.disclaimer']}"
 	    toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.approveFinalAgreement}" >

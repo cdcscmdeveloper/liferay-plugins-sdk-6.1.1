@@ -19,9 +19,16 @@
                
                  <p:dataTable id="AgSignerTable" var="agSignerVar" 
                        value="#{agreementBackingBean.managedBean.ctAgencySigner}" widgetVar="AgSignerObj" 
-                       selection="#{agreementBackingBean.selectedAgencySigner}" rowKey="#{agSignerVar}" rowIndexVar="index">
-		          
+                       selection="#{agreementBackingBean.managedBean.selectedAgencySigner}" rowKey="#{agSignerVar}" rowIndexVar="index">
 		               <ac:paginator for="AgSignerTable"/>
+		               <p:ajax event="toggleSelect"
+                                  listener="#{agreementBackingBean.onToggleSelect}" update=":form:delAgencySignerBtn" />
+                            <p:ajax event="rowSelect"
+                                   listener="#{agreementBackingBean.onRowSelect}" update=":form:delAgencySignerBtn" />
+			                 <p:ajax event="rowSelectCheckbox" 
+			                        listener="#{agreementBackingBean.onRowSelect}" update=":form:delAgencySignerBtn" />
+                              <p:ajax event="rowUnselectCheckbox"  
+                                    listener="#{agreementBackingBean.onRowUnselect}" update=":form:delAgencySignerBtn" />
 		               <p:column selectionMode="multiple" style="width:5%;"/>  
 		               
 		               <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ptj']}" styleClass="column-align-center"
@@ -89,27 +96,24 @@
 			      </p:tooltip>
        		</p:commandButton>
        		
-		      <p:commandButton id="delAgencySignerBtn" process="@form" 
+		      <p:commandButton id="delAgencySignerBtn" process="@this" 
+		            disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
 		          value="#{lbl['lbl.ct.delete']}"   onsuccess="dlgAgSignerDel.show()">
 		  	       <p:tooltip for="delAgencySignerBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.signer']}" escape="false" />
 			       </p:tooltip>
 		       </p:commandButton>
 	        </div>
-	  
-	        <p:dialog id="dlgAgSignerDel" 
-	            widgetVar="dlgAgSignerDel" styleClass="screen-title" modal="true" width="330">  
-                <h:panelGrid columns="3">
-                   <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			       <p:spacer width="10"/>
-                   <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                </h:panelGrid>
-                <div class="ppRightBtn">
-		           <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:AgSignerTable" 
-		               process="@all" actionListener="#{agreementBackingBean.deleteAgencySignerParty()}" onclick="dlgAgSignerDel.hide();"/>
-			       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSignerDel.hide();" type="button" />
-		        </div>
-             </p:dialog>  
+	        
+	         <p:confirmDialog id="dlgAgSignerDel" widgetVar="dlgAgSignerDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:AgSignerTable, :form:delAgencySignerBtn" 
+		                       action="#{agreementBackingBean.deleteAgencySignerParty()}" oncomplete="dlgAgSignerDel.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSignerDel.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
 	 
 	         <p:spacer width="15"/>
              <h:panelGrid style="width:100%;">
@@ -122,9 +126,16 @@
                   
                    <p:dataTable id="AgWitnessTable" var="signAgWitnessVar"
                         value="#{agreementBackingBean.managedBean.ctSignAgencyWitness}" widgetVar="AgWitnessObj" 
-	                    selection="#{agreementBackingBean.selectedAgencyWitnes}" rowKey="#{signAgWitnessVar}">
-		                
+	                    selection="#{agreementBackingBean.managedBean.selectedAgencyWitnes}" rowKey="#{signAgWitnessVar}">
 		                <ac:paginator for="AgWitnessTable"/>
+		                <p:ajax event="toggleSelect"
+                                  listener="#{agreementBackingBean.onToggleSelect}" update=":form:delAgencyWitnessBtn" />
+                            <p:ajax event="rowSelect"
+                                   listener="#{agreementBackingBean.onRowSelect}" update=":form:delAgencyWitnessBtn" />
+			                 <p:ajax event="rowSelectCheckbox" 
+			                        listener="#{agreementBackingBean.onRowSelect}" update=":form:delAgencyWitnessBtn" />
+                              <p:ajax event="rowUnselectCheckbox"  
+                                    listener="#{agreementBackingBean.onRowUnselect}" update=":form:delAgencyWitnessBtn" />
 		                <p:column selectionMode="multiple" style="width:2%"/> 
 		
 		                <p:column headerText="#{lbl['lbl.ct.name']}" style="width:35%;" styleClass="column-align-center">
@@ -155,26 +166,23 @@
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.witness']}" escape="false" />
 			       </p:tooltip>
 		       </p:commandButton>
-		       <p:commandButton id="delAgencyWitnessBtn" process="@form"
+		       <p:commandButton id="delAgencyWitnessBtn" process="@this"
+		             disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
 		            value="#{lbl['lbl.ct.delete']}"    onsuccess="dlgAgWitnessDel.show()">
 		            <p:tooltip for="delAgencyWitnessBtn">
 			             <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.witness']}" escape="false" />
 			        </p:tooltip>
 		        </p:commandButton>
 	        </div>
-	        <p:dialog id="dlgAgWitnessDel" 
-	            widgetVar="dlgAgWitnessDel" styleClass="screen-title" modal="true" width="330">  
-                <h:panelGrid columns="3">
-                   <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			       <p:spacer width="10"/>
-                   <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                </h:panelGrid>
-               <div class="ppRightBtn">
-		          <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:AgWitnessTable"  
-		              process="@form"  actionListener="#{agreementBackingBean.deleteAgencyWitnes()}" onclick="dlgAgWitnessDel.hide();"/>
-			      <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgAgWitnessDel.hide();" type="button" />
-		       </div>
-           </p:dialog>
+	          <p:confirmDialog id="dlgAgWitnessDel" widgetVar="dlgAgWitnessDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:AgWitnessTable, :form:delAgencyWitnessBtn" 
+		                         action="#{agreementBackingBean.deleteAgencyWitnes()}" oncomplete="dlgAgWitnessDel.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgWitnessDel.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
          
            <p:dialog id="dialogAgencySigner"  header="Add Agency Signer" 
                   widgetVar="dlgAgencySigner"  styleClass="pop_up_top" modal="true" width="600" height="200">
