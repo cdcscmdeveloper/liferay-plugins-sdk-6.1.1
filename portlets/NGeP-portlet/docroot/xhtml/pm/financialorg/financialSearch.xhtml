@@ -12,8 +12,6 @@
 						value="#{lbl['lbl.pm.financialorg.services']}" />
 				</th>
 				<td><p:selectOneMenu id="serviceTypeId"
-						styleClass="ppDropDownWidthM"
-					    style="margin-bottom: 5px;"
 						label="#{lbl['lbl.pm.financialorg.services']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrgSearchBean.serviceType}">
 						<f:selectItems
@@ -36,7 +34,7 @@
 						value="#{lbl['lbl.pm.financialorg.name']}" /></th>
 				<td><p:inputText styleClass="ppDisplayTextM" size="40" 
 						value="#{financialOrgBackingBean.managedBean.financialOrgSearchBean.orgName}"
-						maxlength="50" /></td>
+						maxlength="100" /></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 
