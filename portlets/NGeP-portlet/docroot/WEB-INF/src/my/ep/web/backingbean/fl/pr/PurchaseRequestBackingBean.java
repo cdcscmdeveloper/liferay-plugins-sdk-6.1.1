@@ -3459,6 +3459,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(itemAmtMap.containsKey(item.getScRequestItem().getRequestNoteItemId())){
 					itemAmtMap.put(item.getScRequestItem().getRequestNoteItemId(), itemAmtMap.get(item.getScRequestItem().getRequestNoteItemId()).add(new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue())));
 				}else{
+					// Skip validation if item not yet codified.
+					if(item.getCmItem()==null) {
+						continue;
+					}
 					itemAmtMap.put(item.getScRequestItem().getRequestNoteItemId(), new BigDecimal(item.getUnitPrice().doubleValue()*item.getOrderedQty().doubleValue()));
 					requestItemMap.put(item.getScRequestItem().getRequestNoteItemId(), item.getScRequestItem());
 				}
