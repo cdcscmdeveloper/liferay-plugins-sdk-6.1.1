@@ -361,17 +361,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				           <p:commandLink update="@([id$=suppDtlPopUp])" 
 									action="#{panelBackingBean.showSupplierDetails(supVar.supplier)}"
 									oncomplete="suppDtlWidgetVar.show();">
-									<h:outputText value="#{supVar.supplier.companyName}" />
+									<h:outputText value="#{supVar.supplierCompanyName}" />
 								</p:commandLink>
 							</div>
 			          </p:column>
 				
 				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;" styleClass="column-align-center" > 
-				          <h:outputText value="#{supVar.supplier.regNo}" style="float:left;"/>
+				          <h:outputText value="#{supVar.supplierRegNo}" style="float:left;"/>
 				      </p:column>
 				     
 				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;" styleClass="column-align-center" >
-				          <h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" style="float:left;" />
+				          <h:outputText value="#{supVar.supplierMofNo}" style="float:left;" />
 				      </p:column>
 				      
 				       <p:column  style="width:15%;" styleClass="column-align-center" >
@@ -379,16 +379,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				                  <h:outputText value="#{lbl['lbl.ct.bank.account.name']}" />
 				              </f:facet>
 				               <p:selectOneMenu id="accountId" style="width:250px;margin-bottom: 5px;"
-						           value="#{supVar.bankAccountNo}" disabled="#{panelBackingBean.managedBean.viewContract}">
+						           value="#{supVar.bankAccountNo}" rendered="#{!panelBackingBean.managedBean.viewContract}">
 						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier, index)}" />
 						          <p:ajax event="change" process="@form"
 							          onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							           listener="#{panelBackingBean.changeAccountActionListener(supVar, index)}" />
 					         </p:selectOneMenu>
+					          <h:outputText rendered="#{panelBackingBean.managedBean.viewContract}" value="#{supVar.bankAccountNo}" style="width:250px;float:left" />
 					     </p:column>
 				        
 				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:30%;white-space:normal;" styleClass="column-align-center" >
-					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"  style="text-align:left;float:left;"/>
+					     <h:outputText value="#{panelBackingBean.getFullAddress(supVar.supplierAddress)}"  style="text-align:left;float:left;"/>
 				      </p:column>
 				   
 				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:8%;" styleClass="column-align-center" >
