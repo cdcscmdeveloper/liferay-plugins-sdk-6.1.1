@@ -2,7 +2,6 @@ package my.ep.web.vo;
 
 import java.io.Serializable;
 
-import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobKey;
 import org.quartz.Trigger;

@@ -21,16 +21,14 @@
 		<p:panel header="#{lbl['lbl.quartz.scheduled.jobs.list']}"
 			toggleable="true" id="jobListPanelId">
 			
-			<p:outputPanel>
-				<div align="right">
-					<p:commandLink id="refreshId"
-						partialSubmit="true" process="@this" action="#{schedulerManagerBB.initAllJobs}"
-						update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-						<p:graphicImage value="/css/images/design/ico-refresh.png" title="#{lbl['lbl.quartz.refresh.job']}" />
-					</p:commandLink>
-				</div>
-			</p:outputPanel>
-		
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.quartz.instruction.one']}"/>&#160;
+			<p:commandLink id="refreshId"
+				partialSubmit="true" process="@this" action="#{schedulerManagerBB.initAllJobs}"
+				update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+				<p:graphicImage value="/css/images/design/ico-refresh.png" title="#{lbl['lbl.quartz.refresh.job']}" />
+			</p:commandLink>&#160;
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.quartz.instruction.two']}"/><br />
+			
 			<p:dataTable var="jobBean" id="jobBeanDt" widgetVar="jobBeanWidVar"
 				value="#{schedulerManagerBB.managedBean.epSchedulerJobList}"
 				rows="10" rowKey="#{jobBean}" rowIndexVar="index">
