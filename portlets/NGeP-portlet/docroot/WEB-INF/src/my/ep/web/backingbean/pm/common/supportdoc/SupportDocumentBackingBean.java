@@ -1802,7 +1802,7 @@ public class SupportDocumentBackingBean extends
 			if (StringUtils.isBlank(pmDocument.getDocName())) {
 				throw new EpException(MessageConst.ERROR_770084);
 			} else {
-
+					
 				// validate Display Seq
 				pmDocument.setDisplaySeq(displaySeq.trim());
 				if (validateDisplaySequence(pmDocument)) {
@@ -1812,39 +1812,50 @@ public class SupportDocumentBackingBean extends
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale()) });
 				}
-				// doc name unique
-				SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
+				
+				if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocument.getRecordStatusFlg()){
+					// doc name unique
+					SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
 
-				// docCategoryCode
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("docCategoryCode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								pmDocument.getDocCategoryCode()
-										.getParameterCode()));
-				// recordStatusFlg
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("recordStatusFlg",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								DbValueConst.RECORD_STATUS_ACTIVE));
-
-				// docName
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchField("docName");
-				bean.setCaseInsensitive(true);
-				bean.setSearchValue(pmDocument.getDocName());
-				searchBean.getDataFilterBeans().add(bean);
-
-				// documentId
-				if (!pmDocument.isBrandNew()) {
+					// docCategoryCode
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("documentId",
-									SearchOperator.OPERATOR_NOT_EQUALS.value(),
-									pmDocument.getDocumentId()));
+							new SearchFilterBean("docCategoryCode.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									pmDocument.getDocCategoryCode()
+											.getParameterCode()));
+					// recordStatusFlg
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("recordStatusFlg",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									DbValueConst.RECORD_STATUS_ACTIVE));
+
+					// docName
+					SearchFilterBean bean = new SearchFilterBean();
+					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					bean.setSearchField("docName");
+					bean.setCaseInsensitive(true);
+					bean.setSearchValue(pmDocument.getDocName());
+					searchBean.getDataFilterBeans().add(bean);
+
+					// documentId
+					if (!pmDocument.isBrandNew()) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("documentId",
+										SearchOperator.OPERATOR_NOT_EQUALS.value(),
+										pmDocument.getDocumentId()));
+					}
+					if (searchDocument(searchBean)) {
+						if(pmDocument.isBrandNew()){
+							throw new EpException(MessageConst.ERROR_770085);
+						}else{
+							throw new EpException(MessageConst.ERROR_770220, new String[] {
+									PmCommonUtil.getResourceBundleLabels("lbl.pm.document.name")
+							});	
+						}
+						
+					}
 				}
-				if (searchDocument(searchBean)) {
-					throw new EpException(MessageConst.ERROR_770085);
-				}
+				
 			}
 
 			/*
@@ -2037,45 +2048,25 @@ public class SupportDocumentBackingBean extends
 			if (resDTO.isSuccessful()) {
 				// loadSupportDoc(resDTO.getDocument().getDocumentId());
 				if (createAction) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_770094,
-															new String[] {
-																	getParameterDesc(pmDocument
-																			.getDocCategoryCode()),
-																	pmDocument
-																			.getDocName() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					PmCommonUtil.showFacesMsg(
+							FacesContext.getCurrentInstance(), 
+							FacesMessage.SEVERITY_INFO, 
+							MessageConst.INFO_770094, 
+							new String[] {
+									getParameterDesc(pmDocument
+											.getDocCategoryCode()),
+									pmDocument
+											.getDocName()});					
 					return redirectToSearchSupportDoc();
 				} else {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_770095,
-															new String[] { getParameterDesc(pmDocument
-																	.getDocCategoryCode()) },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-
-					loadSupportDoc(pmDocument.getDocumentId());
+					PmCommonUtil.showFacesMsg(
+							FacesContext.getCurrentInstance(),
+							FacesMessage.SEVERITY_INFO, 
+							MessageConst.INFO_770095, 
+							new String[] { getParameterDesc(pmDocument
+									.getDocCategoryCode()) });
+					redirectToMaintainDoc(pmDocument.getDocumentId());
 					return null;
-
 				}
 			}
 		} catch (Exception e) {
