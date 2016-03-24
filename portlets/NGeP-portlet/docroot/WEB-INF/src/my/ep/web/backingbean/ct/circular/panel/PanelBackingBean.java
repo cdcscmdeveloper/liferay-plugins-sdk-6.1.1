@@ -124,6 +124,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.ct.CtAddressUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
@@ -1061,51 +1062,61 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to add list of supplier details
 	 * during panel circular item creation
 	 */
-	public void addPanelSupplier(List<SmSupplier> supplierList){ //101
+	public void addPanelSupplier(List<SmSupplier> supplierList) { //101
 		log.info("PanelBackingBean.addPanelSupplier()");
 		try {
-			if (supplierList != null){
+			if (supplierList != null) {
 				List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
 				List<CtPanelSupplier> panelSupplierList = new ArrayList<CtPanelSupplier>();
-				List<String> bankAccountNoList = null;
+				List<SmSupplierBank> bankAccountNoList = null;
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 				SupplierSearchResDTO supplierResDTO = new SupplierSearchResDTO();
 				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 				
-				 if (this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null) {
-					 ctPanelSuppliers = this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers();
-				 }
-				 else if (!this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelItems() != null) {
-					 ctPanelSuppliers =  this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers();
-				 }
+				if (this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null) {
+					ctPanelSuppliers = this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers();
+				} else if (!this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelItems() != null) {
+					ctPanelSuppliers =  this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers();
+				}
 				
 				for (SmSupplier smSupplier : supplierList) {
+					boolean isSupplierExist = false;
+					// if already exist, skip to avoid duplicate
+					for (CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
+						if (ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
+							isSupplierExist = true;
+							break;
+						}
+					}					
+					if (isSupplierExist) {
+						continue;
+					}
+					// Panel Supplier
 					CtPanelSupplier panelSupplier = new CtPanelSupplier();
 					panelSupplier.setSupplier(smSupplier);
 					panelSupplier.setCtPanelItem( this.getManagedBean().getSelectedPanelItems());
 					panelSupplier.setCtPanelZone(this.getManagedBean().getSelectedPanelZone());
+					panelSupplier.setSupplierCompanyName(smSupplier.getCompanyName());
+					panelSupplier.setSupplierMofNo(retrieveMofNo(smSupplier));
+					panelSupplier.setSupplierRegNo(smSupplier.getRegNo());
+					panelSupplier.setSupplierAddress(CtAddressUtil.retrieveSupplierAddress(
+							retrieveSupplierInfo(smSupplier.getSupplierId())));
 					
 					supplierReqDTO.setSupplierId(smSupplier.getSupplierId());					
 					supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
-					bankAccountNoList = new ArrayList<String>();
+					bankAccountNoList = new ArrayList<SmSupplierBank>();
 					if (supplierResDTO.getSmSupplierBankList() != null) {
 						for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
 							if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-								bankAccountNoList.add(smSupplierBank.getAccountNo());
+								bankAccountNoList.add(smSupplierBank);
 						    }
 						}
 					}
-					if(bankAccountNoList.size()==1) {
-						panelSupplier.setBankAccountNo(bankAccountNoList.get(0));
+					if (bankAccountNoList.size() == 1) {
+						panelSupplier.setBankAccountNo(bankAccountNoList.get(0).getAccountNo());
+						panelSupplier.setBankName(bankAccountNoList.get(0).getPmFinancialOrg().getFinOrgName());
 					}
 					panelSupplierList.add(panelSupplier);
-				   
-					//Remove if already exist, avoid duplicate
-					for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
-						if(ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
-							panelSupplierList.remove(panelSupplier);
-						}
-					}
 				}
 				ctPanelSuppliers.addAll(panelSupplierList);
 			}
@@ -1122,97 +1133,115 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public void addBulkPanelSupplier(List<SmSupplier> supplierList){ 
 		log.info("PanelBackingBean.addPanelSupplier()");
-		 String panelCoverageICode;
+		String panelCoverageICode = "";
 		try {
-			List<String> bankAccountNoList = null;
+			List<SmSupplierBank> bankAccountNoList = null;
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 			SupplierSearchResDTO supplierResDTO = new SupplierSearchResDTO();
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 			
-			if (supplierList != null){
-				
-				for(CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()){
-					   if(panelItem.isSelectedCheckBox()){
-						   List<CtPanelSupplier> panelSupplierList = new ArrayList<CtPanelSupplier>();
-							List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
-							
-						   if(panelItem.getPanelCoverageId() == null || panelItem.getPanelCoverageId().getParameterCode() == null){
-							   panelCoverageICode = getItemGeneralCode(panelItem.getZoneAllParamterId()); 
-						   } else {
-							   panelCoverageICode = panelItem.getPanelCoverageId().getParameterCode();
-						   }
-						   
-						   if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)) {
-							
-							   ctPanelSuppliers =  panelItem.getCtPanelSuppliers();
-							   for (SmSupplier smSupplier : supplierList) {
-								      CtPanelSupplier panelSupplier = new CtPanelSupplier();
-								      panelSupplier.setSupplier(smSupplier);
-								      panelSupplier.setCtPanelItem(getManagedBean().getSelectedPanelItems());
-								      panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());	
-								      
-								    supplierReqDTO.setSupplierId(smSupplier.getSupplierId());					
-									supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
-									bankAccountNoList = new ArrayList<String>();
-									if (supplierResDTO.getSmSupplierBankList() != null) {
-										for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
-											if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-												bankAccountNoList.add(smSupplierBank.getAccountNo());
-											}
+			if (supplierList != null) {				
+				for (CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()) {
+					if (panelItem.isSelectedCheckBox()) {
+						List<CtPanelSupplier> panelSupplierList = new ArrayList<CtPanelSupplier>();
+						List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
+						
+						if (panelItem.getPanelCoverageId() == null || panelItem.getPanelCoverageId().getParameterCode() == null) {
+							panelCoverageICode = getItemGeneralCode(panelItem.getZoneAllParamterId()); 
+						} else {
+							panelCoverageICode = panelItem.getPanelCoverageId().getParameterCode();
+						}
+						if (panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)) {
+							ctPanelSuppliers =  panelItem.getCtPanelSuppliers();
+							for (SmSupplier smSupplier : supplierList) {
+								boolean isSupplierExist = false;
+								// if already exist, skip to avoid duplicate
+								for (CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
+									if (ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
+										isSupplierExist = true;
+										break;
+									}
+								}					
+								if (isSupplierExist) {
+									continue;
+								}
+								// Panel Supplier
+								CtPanelSupplier panelSupplier = new CtPanelSupplier();
+								panelSupplier.setSupplier(smSupplier);
+								panelSupplier.setCtPanelItem(getManagedBean().getSelectedPanelItems());
+								panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());	
+								panelSupplier.setSupplierCompanyName(smSupplier.getCompanyName());
+								panelSupplier.setSupplierMofNo(retrieveMofNo(smSupplier));
+								panelSupplier.setSupplierRegNo(smSupplier.getRegNo());
+								panelSupplier.setSupplierAddress(CtAddressUtil.retrieveSupplierAddress(
+										retrieveSupplierInfo(smSupplier.getSupplierId())));
+								
+							    supplierReqDTO.setSupplierId(smSupplier.getSupplierId());					
+								supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
+								bankAccountNoList = new ArrayList<SmSupplierBank>();
+								if (supplierResDTO.getSmSupplierBankList() != null) {
+									for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+										if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+											bankAccountNoList.add(smSupplierBank);
 										}
 									}
-									if(bankAccountNoList.size()==1) {
-										panelSupplier.setBankAccountNo(bankAccountNoList.get(0));
-									}
-
-									panelSupplierList.add(panelSupplier);
-								      
-								    //Remove if already exist, avoid duplicate
-										for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
-											if(ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
-												panelSupplierList.remove(panelSupplier);
-											}
-										}
-								   }  panelItem.getCtPanelSuppliers().addAll(panelSupplierList);
-						    }								      
-
-                          if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
-							   
-                        	  for(CtPanelZone zone : panelItem.getCtPanelZones()) { 
+								}
+								if (bankAccountNoList.size( ) == 1) {
+									panelSupplier.setBankAccountNo(bankAccountNoList.get(0).getAccountNo());
+									panelSupplier.setBankName(bankAccountNoList.get(0).getPmFinancialOrg().getFinOrgName());
+								}
+								panelSupplierList.add(panelSupplier);
+							}
+							panelItem.getCtPanelSuppliers().addAll(panelSupplierList);
+						}
+						
+						if (panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {							   
+                        	  for (CtPanelZone zone : panelItem.getCtPanelZones()) { 
                         		  List<CtPanelSupplier> panelSupplierList1 = new ArrayList<CtPanelSupplier>();
                         		  ctPanelSuppliers = zone.getCtPanelSuppliers();
                         		  for (SmSupplier smSupplier : supplierList) {
+                        			  boolean isSupplierExist = false;
+                        			  // if already exist, skip to avoid duplicate
+                        			  for (CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
+                        				  if (ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
+                        					  isSupplierExist = true;
+                        					  break;
+                        				  }
+                        			  }					
+                        			  if (isSupplierExist) {
+                        				  continue;
+                        			  }
+                        			  // Panel Supplier
                         			  CtPanelSupplier panelSupplier = new CtPanelSupplier();
                         			  panelSupplier.setSupplier(smSupplier);
                         			  panelSupplier.setCtPanelItem(getManagedBean().getSelectedPanelItems());
-                        			  panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());	
+                        			  panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());
+                        			  panelSupplier.setSupplierCompanyName(smSupplier.getCompanyName());
+                        			  panelSupplier.setSupplierMofNo(retrieveMofNo(smSupplier));
+                        			  panelSupplier.setSupplierRegNo(smSupplier.getRegNo());
+                        			  panelSupplier.setSupplierAddress(CtAddressUtil.retrieveSupplierAddress(
+                        					  retrieveSupplierInfo(smSupplier.getSupplierId())));
 
                         			  supplierReqDTO.setSupplierId(smSupplier.getSupplierId());					
                         			  supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
-                        			  bankAccountNoList = new ArrayList<String>();
+                        			  bankAccountNoList = new ArrayList<SmSupplierBank>();
                         			  if (supplierResDTO.getSmSupplierBankList() != null) {
                         				  for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
                         					  if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-                        						  bankAccountNoList.add(smSupplierBank.getAccountNo());
+                        						  bankAccountNoList.add(smSupplierBank);
                         					  }
                         				  }
                         			  }
-                        			  if(bankAccountNoList.size()==1) {
-                        				  panelSupplier.setBankAccountNo(bankAccountNoList.get(0));
+                        			  if (bankAccountNoList.size() == 1) {
+                        				  panelSupplier.setBankAccountNo(bankAccountNoList.get(0).getAccountNo());
+      									  panelSupplier.setBankName(bankAccountNoList.get(0).getPmFinancialOrg().getFinOrgName());
                         			  }
-
                         			  panelSupplierList1.add(panelSupplier);
-
-                        			  //Remove if already exist, avoid duplicate
-                        			  for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
-                        				  if(ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
-                        					  panelSupplierList1.remove(panelSupplier);
-                        				  }
-                        			  }
-                        		  }  zone.getCtPanelSuppliers().addAll(panelSupplierList1);
-							    }
-						   }
-					   }
+                        		  }
+                        		  zone.getCtPanelSuppliers().addAll(panelSupplierList1);
+                        	  }
+						}
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -2065,30 +2094,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
     /**
      * Method to fetch supplier address from supplier management
-     * @param pass ctPanelSupplier Object
-     * Return String type supplier address
-     * */
-	public String getSupAddress(CtPanelSupplier panelSupplier){
-	
+     * @param supplierId Long
+     * @return smSupplier SmSupplier Object
+     * */ 
+	private SmSupplier retrieveSupplierInfo(Long supplierId) {
 		ICircularSO circularSO = null;
 		CircularReqDTO reqDTO = null;
-		try{
-	           	circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-	           	reqDTO = new CircularReqDTO();
-	           	reqDTO.setSupplier(panelSupplier.getSupplier());
-	            CircularResDTO resDTO = circularSO.retrieveSupplierById(reqDTO);
-		        if(resDTO.getSmSupplier().getSmAppl()!=null && resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!=null && 
-		             	resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()!=null) {
-			            for(SmCompanyAddress address : resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
-				                if(address.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) {
-					                 return getFullAddress(address.getSmAddress());
-				                }
-			             }
-		         }
-		   }catch(Exception ex){
-			
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+           	reqDTO = new CircularReqDTO();
+           	reqDTO.setSupplierId(supplierId);
+            CircularResDTO resDTO = circularSO.retrieveSupplierById(reqDTO);
+		    return resDTO.getSmSupplier();
+		   } catch(Exception ex){			
 		}
-		return "";
+		return null;
 	}
 
 	/**
@@ -2140,7 +2160,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @param  smSupplier object
 	 * @return String type mof no
      */
-	public String retrieveMofNo(SmSupplier smSupplier) {
+	private String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
