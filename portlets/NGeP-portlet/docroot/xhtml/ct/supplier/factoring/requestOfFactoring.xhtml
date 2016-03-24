@@ -300,20 +300,16 @@
 			</p:dialog>
 		</p:panel>
 		
-		<p:dialog id="deleteFactoringAttachId" 
-			    widgetVar="deleteFactoringAttach" styleClass="screen-title" modal="true" width="330">  
-             	<h:panelGrid columns="3">
- 			        <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-		   	        <p:spacer width="10"/>
-                    <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
-     	        </h:panelGrid>
-		        <div class="ppRightBtn">
-	                <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form"  update=":form:factoringPanel" immediate="true"
-	     	            actionListener="#{supplierBackingBean.deleteFactoringAttachement()}"  onclick="deleteFactoringAttach.hide();"/>
-		            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteFactoringAttach.hide();" type="button" />
-	            </div>
- 	        </p:dialog>	
- 	        
+		  <p:confirmDialog id="deleteFactoringAttachId" widgetVar="deleteFactoringAttach" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                   update=":form:factoringPanel" 
+		                   action="#{supplierBackingBean.deleteFactoringAttachement()}" oncomplete="deleteFactoringAttach.hide();"/>
+			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteFactoringAttach.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+		
 		<p:panel id="clausePanel" header="#{lbl['lbl.ct.panel.notification.factoring']}"
 			toggleable="true" toggleSpeed="500" rendered="#{!supplierBackingBean.managedBean.removeFactoring}">
 			<table style="width: 100%">
