@@ -15,11 +15,22 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-
-		<p:poll update="@form" interval="5" />
-
+		
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
+		
 		<p:panel header="#{lbl['lbl.quartz.scheduled.jobs.list']}"
-			toggleable="true">
+			toggleable="true" id="jobListPanelId">
+			
+			<p:outputPanel>
+				<div align="right">
+					<p:commandLink id="refreshId"
+						partialSubmit="true" process="@this" action="#{schedulerManagerBB.initAllJobs}"
+						update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<p:graphicImage value="/css/images/design/ico-refresh.png" title="#{lbl['lbl.quartz.refresh.job']}" />
+					</p:commandLink>
+				</div>
+			</p:outputPanel>
+		
 			<p:dataTable var="jobBean" id="jobBeanDt" widgetVar="jobBeanWidVar"
 				value="#{schedulerManagerBB.managedBean.epSchedulerJobList}"
 				rows="10" rowKey="#{jobBean}" rowIndexVar="index">
@@ -67,19 +78,33 @@
 
 				<p:column headerText="#{lbl['lbl.quartz.action']}">
 					<p:outputPanel rendered="#{not empty jobBean.trigger}">
-						<p:commandLink id="resumePauseActionId" partialSubmit="true"
-							process="@this"
+						<p:commandLink id="resumeActionId" partialSubmit="true"
+							process="@this" rendered="#{jobBean.action eq 'RESUME'}"
 							action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}"
 							update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
-							<h:outputText value="#{jobBean.action}" />
+							<p:graphicImage value="/css/images/design/ico-play.png" title="#{lbl['lbl.quartz.resume.job']}" />
+						</p:commandLink>
+						<p:commandLink id="pauseActionId" partialSubmit="true"
+							process="@this" rendered="#{jobBean.action eq 'PAUSE'}"
+							action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}"
+							update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							<p:graphicImage value="/css/images/design/ico-suspend.png" title="#{lbl['lbl.quartz.pause.job']}" />
 						</p:commandLink>
 						<p:commandLink id="runNowActionId"
 							rendered="#{jobBean.status eq 'WAIT'}" partialSubmit="true"
 							process="@this" action="#{schedulerManagerBB.runNowJob(jobBean)}"
 							update="@form" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
-							<h:outputText value="#{lbl['lbl.quartz.run.now']}" />
+							<p:graphicImage value="/css/images/design/ico-action.png" title="#{lbl['lbl.quartz.execute.job']}" />
+						</p:commandLink>
+						<p:commandLink id="deleteActionId"
+							rendered="#{jobBean.status eq 'WAIT'}" partialSubmit="true"
+							process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
+							update="@form" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.quartz.delete.job']}" />
 						</p:commandLink>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{empty jobBean.trigger}">
@@ -119,6 +144,19 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		
+		<p:confirmDialog id="confirmDeleteDialog" closable="true"
+			message="#{lbl['lbl.quartz.delete.confirm.msg']}"
+			header="#{lbl['lbl.quartz.delete.confirm.header']}" severity="alert"
+			widgetVar="confirmDeleteDialog">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeleteDialog.hide();" 
+					action="#{schedulerManagerBB.deleteJob}" update="@form"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteDialog.hide();" />
+			</div>
+		</p:confirmDialog>
 		
 	</ui:define>
 

@@ -150,21 +150,10 @@ public class EpSchedulerHelper {
 	 */
 	public static void deleteJobAndAssociatedTriggers(JobKey jobKey) {
 		try {
-			// check if job not exist, add to scheduler context
-			if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
-
-				if (isJobRunningNow(jobKey)) {
-					throw new EpException(
-							"Job is currently running. Please try again later.");
-				}
-
-				EpSchedulerHelper.getScheduler().deleteJob(jobKey);
-			} else {
-				throw new EpException(
-						"Selected job not exist for deleting purposes.");
-			}
+			EpSchedulerHelper.getScheduler().deleteJob(jobKey);
 		} catch (SchedulerException e) {
-			log.error(e.getMessage());
+			throw new EpException(
+					"Selected job not exist for deleting purposes.");
 		}
 	}
 
@@ -236,8 +225,9 @@ public class EpSchedulerHelper {
 
 						// retrieve the trigger
 						CronTrigger oldTrigger = (CronTrigger) getTriggerByJobKey(jobKey);
-						
-						// if trigger is null, create new trigger
+
+						// if trigger is null, create new trigger and scheduled
+						// with existing job
 						if (oldTrigger == null) {
 							oldTrigger = TriggerBuilder
 									.newTrigger()
@@ -253,7 +243,7 @@ public class EpSchedulerHelper {
 						TriggerBuilder tb = oldTrigger.getTriggerBuilder();
 
 						// update trigger cron expression
-						if (!oldTrigger.getCronExpression().equals(
+						if (!newTrigger.getCronExpression().equals(
 								cronExpression)
 								&& !isJobRunningNow(jobKey)) {
 							newTrigger = (CronTrigger) tb.withSchedule(
@@ -261,7 +251,7 @@ public class EpSchedulerHelper {
 											.cronSchedule(cronExpression))
 									.build();
 							EpSchedulerHelper.getScheduler().rescheduleJob(
-									oldTrigger.getKey(), newTrigger);
+									newTrigger.getKey(), newTrigger);
 						}
 
 						// update job description
