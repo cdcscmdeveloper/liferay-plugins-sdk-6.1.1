@@ -105,9 +105,8 @@
 				</tr>
 			</table>
 
-			<p:tabView id="conditionTabId">
+			<p:tabView id="conditionTabId" rendered="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}">
 				<p:tab id="cTabID"
-					rendered="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode == ParameterConst.purchaseInDefault}"
 					title="#{lbl['lbl.pm.reason.conditions']}">
 					<p:panel>
 
