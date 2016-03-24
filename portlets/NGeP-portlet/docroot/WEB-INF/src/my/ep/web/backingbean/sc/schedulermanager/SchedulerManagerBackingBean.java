@@ -89,6 +89,8 @@ public class SchedulerManagerBackingBean extends
 				}
 
 			}
+			getManagedBean().setCurrentDayBids(
+					SchedulerHelper.getInstance().getJobBidScheduleList());
 
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
