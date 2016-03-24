@@ -120,6 +120,7 @@
 						<h:outputText value="#{appl.smSupplier.companyName}"></h:outputText>
 					</p:column>
 					
+					<ui:remove>
 					<ui:param name="workFlowInfo" value="#{svcTasklistBackingBean.getWorkflowInfoByApplId(appl.applId)}"></ui:param>
 					<p:column headerText="#{lbl['lbl.sm.siteassign.site.visit.status']}">
 						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" 
@@ -127,6 +128,15 @@
 						
 						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" 
 							rendered="#{not empty workFlowInfo and workFlowInfo.pmStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentAfterApproval}" />
+					</p:column>
+					</ui:remove>
+					
+					<p:column headerText="#{lbl['lbl.sm.siteassign.site.visit.status']}">
+						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" 
+							rendered="#{not empty appl.workflowStatus and appl.workflowStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentBeforeApproval}" />
+						
+						<h:outputText value="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" 
+							rendered="#{not empty appl.workflowStatus and appl.workflowStatus.statusId == SupplierMgmtConst.pmStatusSvAssignmentAfterApproval}" />
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sm.created.date']}">
