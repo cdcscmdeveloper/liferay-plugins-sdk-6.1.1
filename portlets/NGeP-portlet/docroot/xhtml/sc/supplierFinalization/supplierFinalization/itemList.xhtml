@@ -30,7 +30,7 @@
 				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
 				
 			<p:column styleClass="td-check-box-spacing" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
-													 suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
+													 				isBPKTaskAndClaimed}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])"
@@ -71,7 +71,7 @@
 						required="true" label="#{lbl['lbl.sc.cancelled']}" 
 						disabled="#{item.disabled or item.awardedItem or 
 									!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}" 
+										isBPKTaskAndClaimed)}" 
 						style="width:95%;">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown(item)}" />
 						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel])" 
@@ -141,7 +141,7 @@
 			<h:column>
 				<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}" 
 					disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}">
+										isBPKTaskAndClaimed)}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems value="#{suppFinalizationBackingBean.getAwardSupplierListDropDown()}" />
 					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" 

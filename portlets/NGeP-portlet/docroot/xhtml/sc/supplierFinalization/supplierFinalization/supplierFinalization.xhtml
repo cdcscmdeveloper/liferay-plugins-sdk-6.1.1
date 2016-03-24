@@ -54,7 +54,7 @@
 						<td>
 							<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
 								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
-								disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+								disabled="#{!(isBPKTaskAndClaimed or 
 												suppFinalizationBackingBean.managedBean.secretaryUser)}"
 								style="width:225px;">
 								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
@@ -87,9 +87,8 @@
 								<p:selectOneRadio id="recommendType" required="true" label="#{lbl['lbl.sc.recomend.type']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}" 
 									disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or
-													suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
-															suppFinalizationBackingBean.managedBean.procCategoryMedicine or 
-																suppFinalizationBackingBean.managedBean.itemFwdToHighAuthority or 
+													isBPKTaskAndClaimed) or suppFinalizationBackingBean.managedBean.procCategoryMedicine or 
+														suppFinalizationBackingBean.managedBean.itemFwdToHighAuthority or 
 													( isQTStatusReFinalized and 
 														(suppFinalizationBackingBean.managedBean.scQt.zonal or 
 															suppFinalizationBackingBean.managedBean.initialSelectionItemized or 
@@ -122,8 +121,7 @@
 								<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
 									value="#{suppFinalizationBackingBean.managedBean.finalizationMethod}"
 									disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-													suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
-														isQTStatusReFinalized}">
+													isBPKTaskAndClaimed) or isQTStatusReFinalized}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel])" 
 										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" />
@@ -244,8 +242,8 @@
 					<div style="float: left; display: inline-block;">
 						<p:selectBooleanCheckbox id="reEvaluateReqForComp"
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq}"
-							disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
-													suppFinalizationBackingBean.managedBean.secretaryUser)}">
+							disabled="#{!(isBPKTaskAndClaimed or 
+											suppFinalizationBackingBean.managedBean.secretaryUser)}">
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('1', 
 													suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq)}"/>
@@ -261,7 +259,7 @@
 						<p:selectBooleanCheckbox id="reEvaluateReqForTech"
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"
 							disabled="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCompReq or 
-										 	!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+										 	!(isBPKTaskAndClaimed or 
 													suppFinalizationBackingBean.managedBean.secretaryUser)}" >
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('2', 
@@ -278,7 +276,7 @@
 						<p:selectBooleanCheckbox id="reEvaluateReqForFin"
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}"
 							disabled="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq or 
-											!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+											!(isBPKTaskAndClaimed or 
 												suppFinalizationBackingBean.managedBean.secretaryUser)}">
 							<p:ajax process="@this" update="@([id$=reEvaluatePanel])" 
 									listener="#{suppFinalizationBackingBean.reEvaluateByOptionEvent('3', 
@@ -299,7 +297,7 @@
 							<td><p:selectOneRadio id="reEvaluateBy" required="true"
 									label="#{lbl['lbl.sc.reevaluate.by']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}"
-									disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+									disabled="#{!(isBPKTaskAndClaimed or 
 													suppFinalizationBackingBean.managedBean.secretaryUser)}">
 									<f:selectItems
 										value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
@@ -325,8 +323,8 @@
 		   			<div class="checkbox">
 						<p:selectBooleanCheckbox id="reqSpecChanges" 
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.specChangeReq}" 
-							disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
-													suppFinalizationBackingBean.managedBean.secretaryUser)}"/>
+							disabled="#{!(isBPKTaskAndClaimed or 
+												suppFinalizationBackingBean.managedBean.secretaryUser)}"/>
 					</div>
 					<ac:iconTooltip value="#{lbl['lbl.sc.required.specification.changes.tooltip']}" />
 				</h:column>
