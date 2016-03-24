@@ -17,7 +17,15 @@
         
               <p:dataTable id="agSupplierSigner" var="signSupplierVar" 
                    value="#{agreementBackingBean.managedBean.ctSupplierSigner}" widgetVar="supSignerObj"
-                   selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
+                   selection="#{agreementBackingBean.managedBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
+                    <p:ajax event="toggleSelect"
+                                  listener="#{agreementBackingBean.onToggleSelect}" update=":form:delSupplierSignerBtn" />
+                            <p:ajax event="rowSelect"
+                                   listener="#{agreementBackingBean.onRowSelect}" update=":form:delSupplierSignerBtn" />
+			                 <p:ajax event="rowSelectCheckbox" 
+			                        listener="#{agreementBackingBean.onRowSelect}" update=":form:delSupplierSignerBtn" />
+                              <p:ajax event="rowUnselectCheckbox"  
+                                    listener="#{agreementBackingBean.onRowUnselect}" update=":form:delSupplierSignerBtn" />
                    <ac:paginator for="agSupplierSigner"/>
 			       <p:column selectionMode="multiple" style="width:5%"/> 
                   
@@ -59,27 +67,24 @@
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.signer']}" escape="false" />
 				   </p:tooltip>
 		        </p:commandButton>
-		        <p:commandButton id="delSupplierSignerBtn" process="@form" 
+		        <p:commandButton id="delSupplierSignerBtn" process="@this" 
+		             disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
 		           value="#{lbl['lbl.ct.delete']}"  onsuccess="dlgAgSupplierDel.show()">
 		    	   <p:tooltip for="delSupplierSignerBtn">
 				       <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.signer']}" escape="false" />
 			        </p:tooltip>
 		         </p:commandButton>
               </div>
-        
-              <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" 
-                   styleClass="screen-title" modal="true" width="330">  
-                   <h:panelGrid columns="3">
-                       <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			           <p:spacer width="10"/>
-                       <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                   </h:panelGrid>
-                   <div class="ppRightBtn">
-		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form" 
-				            update=":form:agSupplierSigner"  actionListener="#{agreementBackingBean.deleteSupplierSigner()}" onclick="dlgAgSupplierDel.hide();"/>
+              
+                 <p:confirmDialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:agSupplierSigner, :form:delSupplierSignerBtn" 
+		                       action="#{agreementBackingBean.deleteSupplierSigner()}" oncomplete="dlgAgSupplierDel.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSupplierDel.hide();" type="button" />
 		           </div>
-                </p:dialog>  
+          </p:confirmDialog>
       
              <h:panelGrid style="width:100%">
                   <h:panelGrid columns="3">
@@ -90,8 +95,16 @@
        
                   <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" 
                        value="#{agreementBackingBean.managedBean.ctSupplierWitness}" widgetVar="supWitnessObj"
-                       selection="#{agreementBackingBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
+                       selection="#{agreementBackingBean.managedBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
                        <ac:paginator for="witnessSign"/>
+                        <p:ajax event="toggleSelect"
+                                  listener="#{agreementBackingBean.onToggleSelect}" update=":form:delSupplierWitnessBtn" />
+                            <p:ajax event="rowSelect"
+                                   listener="#{agreementBackingBean.onRowSelect}" update=":form:delSupplierWitnessBtn" />
+			                 <p:ajax event="rowSelectCheckbox" 
+			                        listener="#{agreementBackingBean.onRowSelect}" update=":form:delSupplierWitnessBtn" />
+                              <p:ajax event="rowUnselectCheckbox"  
+                                    listener="#{agreementBackingBean.onRowUnselect}" update=":form:delSupplierWitnessBtn" />
                        <p:column selectionMode="multiple" style="width:2%"/> 
                      
                        <p:column style="width:35%;" headerText="#{lbl['lbl.ct.name']}" styleClass="column-align-center">
@@ -119,25 +132,23 @@
 				        </p:tooltip>
 		            </p:commandButton>
 		            <p:commandButton id="delSupplierWitnessBtn" value="#{lbl['lbl.ct.delete']}" 
-		                  process="@form" onsuccess="dlgSupplierWitnesDel.show()">
+		                  disabled="#{agreementBackingBean.managedBean.buttonHideActive}"
+		                  process="@this" onsuccess="dlgSupplierWitnesDel.show()">
 		         	     <p:tooltip for="delSupplierWitnessBtn">
 				             <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.witness']}" escape="false" />
 				         </p:tooltip>
 		             </p:commandButton>
                 </div>
-                <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" 
-                    styleClass="screen-title" modal="true" width="330">  
-                    <h:panelGrid columns="3">
-                        <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			             <p:spacer width="10"/>
-                         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                    </h:panelGrid>
-                    <div class="ppRightBtn">
-		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:supplierWitnesTable" 
-				             process="@form"   actionListener="#{agreementBackingBean.deleteSupplierWitness()}" onclick="dlgSupplierWitnesDel.hide();"/>
+                
+                   <p:confirmDialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:supplierWitnesTable, :form:delSupplierWitnessBtn" 
+		                       action="#{agreementBackingBean.deleteSupplierWitness()}" oncomplete="dlgSupplierWitnesDel.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSupplierWitnesDel.hide();" type="button" />
-		            </div>
-               </p:dialog>  
+		           </div>
+          </p:confirmDialog>
        </p:panel>
        <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
