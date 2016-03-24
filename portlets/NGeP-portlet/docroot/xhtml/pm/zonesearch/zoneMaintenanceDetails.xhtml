@@ -16,7 +16,8 @@
 						label="#{lbl['lbl.pm.zone.code']}" style="text-transform: uppercase"
 						value="#{zoneBackingBean.managedBean.pmZone.zoneCode}"
 						disabled="#{!zoneBackingBean.managedBean.pmZone.brandNew}"
-						id="zonecode" lable="#{lbl['lbl.pm.zone.code']}" size="40"						
+						id="zonecode" lable="#{lbl['lbl.pm.zone.code']}" size="40"	
+						maxlength="10"					
 						required="true" >						
 						</p:inputText></td>
 				<td><p:message id="zonecodeMsg" for="zonecode" display="icon" /></td>
@@ -26,9 +27,11 @@
 						value="#{lbl['lbl.pm.zone.name']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td class="TableFieldRight"><p:inputText styleClass="ppDisplayTextM"
+						disabled="#{!zoneBackingBean.managedBean.pmZone.brandNew}"
 						value="#{zoneBackingBean.managedBean.pmZone.zoneName}"
 						label="#{lbl['lbl.pm.zone.name']}" id="zonename"
-						lable="#{lbl['lbl.pm.zone.name']}" size="40" required="true" /></td>
+						maxlength="50"		
+					    size="40" required="true" /></td>
 				<td><p:message id="zonenameMsg" for="zonename" display="icon" /></td>
 			</tr>
 

@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
@@ -44,9 +45,6 @@ import my.ep.web.bean.pm.ZoneSearchBean;
 import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.util.MessageUtils;
-import my.ep.web.util.FacesScopes;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -161,90 +159,61 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 * Save zone.
 	 * 
 	 * @return the string
+	 * @throws Exception 
 	 */
-	public String saveZone() {
-		ZoneReqDTO reqDTO = new ZoneReqDTO();
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IZoneSO.class);
-		if (getManagedBean().getZoneStateList().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770051);
-		}
-		List<PmZoneState> zones = new ArrayList<PmZoneState>();
-		PmZone zone = this.getManagedBean().getPmZone();
-		
-		log.info(".................zone.getRecordStatusFlg()="+zone.getRecordStatusFlg());
-		if (zone.getRecordStatusFlg() == 1) {//if changed to active	
+	public String saveZone() throws Exception {
+		IZoneSO zoneSO = null;
+		String returnUrl = null;
+		try{
+			List<PmZoneState> zones = new ArrayList<PmZoneState>();
+			PmZone zone = this.getManagedBean().getPmZone();
+			zoneValidation(zone);
 			
-				if (!checkZoneStateAvailability()){
-					this.getManagedBean().getPmZone().setRecordStatusFlg(0);//revert back to inactive
-					throw new EpException(MessageConst.ERROR_770151);
-
+			if (zone.isBrandNew()) {
+				zone.setZoneCode(zone.getZoneCode().toUpperCase());
+				List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
+				for (PmZoneState zoneSta : stateZones) {
+					zoneSta.setPmZone(zone);
+			    }				
+				zones.addAll(stateZones);
+				zone.setPmZoneStates(zones);
+			}
+			
+			zoneSO = (IZoneSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IZoneSO.class);
+			ZoneReqDTO reqDTO = new ZoneReqDTO();
+			reqDTO.setPmZone(zone);
+			ZoneResDTO resDTO = zoneSO.saveOrUpdateZone(reqDTO);	
+			if (resDTO.isSuccessful()) {
+				result = resDTO.isSuccessful();
+				if (this.getManagedBean().getPmZone().isBrandNew()) {
+					returnUrl = NAV_TO_MAIN;
+					PmCommonUtil.showFacesMsg(
+							FacesContext.getCurrentInstance(),
+							FacesMessage.SEVERITY_INFO,
+							MessageConst.INFO_780098,
+							new String[] {
+									resDTO.getPmZone().getZoneCode(),
+									resDTO.getPmZone().getZoneName()});					
+				} else {
+					redirectToZone(resDTO.getPmZone().getZoneId());
+					PmCommonUtil.showFacesMsg(
+							FacesContext.getCurrentInstance(),
+							FacesMessage.SEVERITY_INFO,
+							MessageConst.INFO_780097,
+							new String[] {
+									resDTO.getPmZone().getZoneCode(),
+									resDTO.getPmZone().getZoneName()});
 				}
-	     	}
-		if (zone.isBrandNew()) {			
-			if (isExistZoneCode(getManagedBean().getPmZone().getZoneCode())) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(
-										MessageConst.ERROR_770138, new String[] {
-												getManagedBean().getPmZone().getZoneCode(),
-												getManagedBean().getPmZone().getZoneName()},
-												MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes().getUserLocale())));
-				return NAV_TO_MAINTAIN;
 			}
+		}catch(Exception e){
+			throw e;
+		}finally{
+			zoneSO = null;
+		}
 		
-			zone.setZoneCode(zone.getZoneCode().toUpperCase());
-
-			List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
-
-			for (PmZoneState zoneSta : stateZones) {
-
-				zoneSta.setPmZone(zone);
-
-		    }
-			
-			zones.addAll(stateZones);
-			zone.setPmZoneStates(zones);
-		}
-
-		reqDTO.setPmZone(zone);
-
-		ZoneResDTO resDTO = zoneSO.saveOrUpdateZone(reqDTO);		
-		
-		if (resDTO.isSuccessful()) {
-			result = resDTO.isSuccessful();
-			if (this.getManagedBean().getPmZone().isBrandNew()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_780098, new String[] {
-												resDTO.getPmZone().getZoneCode(),
-												resDTO.getPmZone().getZoneName()},
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_780097, new String[] {												
-												resDTO.getPmZone().getZoneCode(),
-												resDTO.getPmZone().getZoneName()},
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}
-
-		}
-		if(getManagedBean().getPmZone().isBrandNew()){
-		return NAV_TO_MAIN;
-		}
-		else{
-	   return NAV_TO_MAINTAIN;
-		}
+		return returnUrl;
 	}
 
 	/**
@@ -285,11 +254,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				}
 			}
 		}
-
 		this.getManagedBean().setStates(stList);
-
-		
-
 	}
 
 	/**
@@ -300,43 +265,32 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 * @return ISearchBean<PmZone> searchBean
 	 */
 	private ISearchBean<PmZone> getSearchBeanData(ISearchBean<PmZone> searchBean) {
-
 		ZoneSearchBean zSearchBean = this.getManagedBean().getZoneSearchBean();
-		boolean isSearchable = SEARCH_DEFAULT;
-		boolean isEmpty = true;
-		if (zSearchBean.getZoneCode() != null
-				&& zSearchBean.getZoneCode().trim().length() > 0) {
-
+		if (StringUtils.isNotBlank(zSearchBean.getZoneCode())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("zoneCode",
 							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
 									.getZoneCode(), true));
-			isEmpty = false;
 		}
-		if (zSearchBean.getZoneCode() != null
-				&& zSearchBean.getZoneName().trim().length() > 0) {
-
+		
+		if (StringUtils.isNotBlank(zSearchBean.getZoneName())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("zoneName",
 							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
 									.getZoneName(), true));
-			isEmpty = false;
 		}
-		if (zSearchBean.getStateName() != null
-				&& zSearchBean.getStateName().trim().length() > 0) {
+		
+		if (StringUtils.isNotBlank(zSearchBean.getStateName())) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmZoneStates.pmState.stateName",
 							SearchOperator.OPERATOR_LIKE.value(), zSearchBean
 									.getStateName(), true));
-			isEmpty = false;
-		}	
+		}
 		
-		String status=getManagedBean().getZoneSearchBean().getStatus();
-		
-		if (StringUtils.isBlank(status)) {			
+		if (StringUtils.isBlank(zSearchBean.getStatus())) {			
 			List<Integer> statusList = new ArrayList<Integer>();
 			statusList.add(DbValueConst.RECORD_STATUS_ACTIVE);
-			statusList.add(DbValueConst.RECORD_STATUS_DELETED);
+			statusList.add(DbValueConst.RECORD_STATUS_SUSPENDED);
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
@@ -388,7 +342,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 								IZoneSO.class);
 				ZoneResDTO resDTO = zoneSO.searchZoneData(zoneReqDTO);
 				if (resDTO.isSuccessful()) {
-
 					return resDTO.getZoneResultBean();
 				}
 			} catch (Exception e) {
@@ -516,7 +469,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 * @return the status options
 	 */
 	public static SelectItem[] getStatusOptions() {
-		return PmCommonUtil.getStatusOptions();
+		return PmCommonUtil.getCommonStatusOptions();
 	}
 
 	/**
@@ -559,19 +512,82 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 *            (String zonecode(mandatory))
 	 * @return true, if is exist zone code
 	 */
-	public boolean isExistZoneCode(String zoneCode) {
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IZoneSO.class);
-		ZoneReqDTO reqDTO = new ZoneReqDTO();
-		reqDTO.setZoneCode(zoneCode);
-		ZoneResDTO resDTO = zoneSO.retrieveZoneByZoneCode(reqDTO);
-
-		if (resDTO.getPmZone() != null) {
-			return true;
-		} else {
-			return false;
+	private boolean isExistZoneCode(PmZone zone) {
+		IZoneSO zoneSO = null;
+		boolean isExist = false;
+		try{
+			ISearchBean<PmZone> searchBean =  new SearchBean<PmZone>();
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("zoneCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							zone.getZoneCode().toLowerCase().trim(),
+							true));
+			
+			if(!zone.isBrandNew()){
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("zoneId",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								zone.getZoneId()));
+			}
+			
+			ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+			zoneReqDTO.setZoneSearchBean(searchBean);
+			zoneSO = (IZoneSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IZoneSO.class);
+			ZoneResDTO resDTO = zoneSO.searchZoneData(zoneReqDTO);
+			if (resDTO.isSuccessful() 
+					&& resDTO.getZoneList() != null 
+					&& !resDTO.getZoneList().isEmpty()) {
+				isExist = true;
+			}
+		}finally{
+			zoneSO = null;
 		}
+		return isExist;
 	}
+	
+	private boolean isExistZoneName(PmZone zone) {
+		IZoneSO zoneSO = null;
+		boolean isExist = false;
+		try{
+			ISearchBean<PmZone> searchBean =  new SearchBean<PmZone>();
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("zoneName",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							zone.getZoneName().toLowerCase().trim(),
+							true));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							DbValueConst.RECORD_STATUS_ACTIVE
+			));
+			
+			if(!zone.isBrandNew()){
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("zoneId",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								zone.getZoneId()));
+			}
+			
+			ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+			zoneReqDTO.setZoneSearchBean(searchBean);
+			zoneSO = (IZoneSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IZoneSO.class);
+			ZoneResDTO resDTO = zoneSO.searchZoneData(zoneReqDTO);
+			if (resDTO.isSuccessful() 
+					&& resDTO.getZoneList() != null 
+					&& !resDTO.getZoneList().isEmpty()) {
+				isExist = true;
+			}
+		}finally{
+			zoneSO = null;
+		}
+		return isExist;
+	}
+		
 
 	/**
 	 * Removes the disabled states.
@@ -598,17 +614,18 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		PmZone currentZone = getManagedBean().getPmZone();
 		List<PmState> assignedStates = new ArrayList<PmState>(); 
 		for (PmZone zone : getManagedBean().getPmZonesList()) {
-			if (zone.getZoneCode() != currentZone.getZoneCode() && zone.getRecordStatusFlg() ==1 && zone.getPmZoneStates() != null
+			if (!zone.getZoneCode().equals(currentZone.getZoneCode()) 
+					&& zone.getRecordStatusFlg() ==1 
+					&& zone.getPmZoneStates() != null
 					&& !zone.getPmZoneStates().isEmpty()) {
 				for (PmZoneState zoneState : zone.getPmZoneStates()) {	
 					assignedStates.add(zoneState.getPmState());
-					
 				}
 			}
 	     }
-		for(PmState state:assignedStates){
-			log.info(".................state.getStateCode()="+state.getStateCode());
-		}
+//		for(PmState state:assignedStates){
+//			log.info(".................state.getStateCode()="+state.getStateCode());
+//		}
 		for(PmZoneState currentZoneState : getManagedBean().getZoneStateList()){
 			log.info(".................currentZoneState.getPmState()="+currentZoneState.getPmState());
 			log.info(".................assignedStates.contains(currentZoneState.getPmState()="+assignedStates.contains(currentZoneState.getPmState()));
@@ -618,6 +635,47 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 		return true;
 	}
-
 	
+	private void zoneValidation(PmZone zone){
+		log.info("zoneValidation");
+		if (getManagedBean().getZoneStateList().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_770051);
+		}
+		
+		log.info(".................zone.getRecordStatusFlg()="+zone.getRecordStatusFlg());
+		if (zone.getRecordStatusFlg() == 1) {//if changed to active				
+			if (!checkZoneStateAvailability()){
+				this.getManagedBean().getPmZone().setRecordStatusFlg(0);//revert back to inactive
+				throw new EpException(MessageConst.ERROR_770151);
+
+			}
+	     }	
+		
+		if(DbValueConst.RECORD_STATUS_ACTIVE == zone.getRecordStatusFlg()){
+			if (isExistZoneCode(getManagedBean().getPmZone())) {
+				if(getManagedBean().getPmZone().isBrandNew()){
+					throw new EpException(MessageConst.ERROR_770221,new String[]{
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.zone.code"),
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.zone.code")});
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.zone.code")
+					});	
+				}
+			}
+			
+			if (isExistZoneName(getManagedBean().getPmZone())) {
+				if(getManagedBean().getPmZone().isBrandNew()){
+					throw new EpException(MessageConst.ERROR_770221,new String[]{
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.zone.name"),
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.zone.name")});
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.zone.name")
+					});	
+				}
+			}
+		}
+	}
+		
 }
