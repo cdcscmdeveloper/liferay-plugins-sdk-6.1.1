@@ -39,7 +39,12 @@
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										actionListener="#{backingBean.setTabValue('4','5')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-										update=":form" />
+										update=":form" rendered="#{backingBean.managedBean.supplierUser}"/>
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										actionListener="#{backingBean.setTabValue('4','5')}"
+										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+										update=":form" rendered="#{!backingBean.managedBean.supplierUser}"/>
 								</div></td>
 						</tr>
 					</table>
