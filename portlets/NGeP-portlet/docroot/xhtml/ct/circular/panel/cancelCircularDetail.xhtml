@@ -37,7 +37,7 @@
 		</p:dataTable>
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
-			<p:commandButton value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true"  onclick="delCancelCircular.show()"/>				
+			<p:commandButton value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true"  onsuccess="delCancelCircular.show()"/>				
 		</div>				
 		</p:outputPanel>	
 		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" 
@@ -64,19 +64,16 @@
 					</div>
 				</f:facet>
 		</p:dialog>	
-		 <p:dialog id="delCancelCircular" widgetVar="delCancelCircular" 
-		   styleClass="screen-title" modal="true" width="330">  
-           <h:panelGrid columns="3">
-               <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			      <p:spacer width="10"/>
-                  <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton  update=":form:cancelCcrDt,:form:cancelCcrPnl" process="@all"
-		        value="#{lbl['lbl.btn.yes']}" actionListener="#{panelBackingBean.deleteCancelReqCircular()}" onclick="delCancelCircular.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCancelCircular.hide();" type="button" />
-		  </div>
-        </p:dialog>  		
+		
+		 <p:confirmDialog id="delCancelCircular" widgetVar="delCancelCircular" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                   update=":form:cancelCcrDt,:form:cancelCcrPnl" 
+		                   action="#{panelBackingBean.deleteCancelReqCircular()}" oncomplete="delCancelCircular.hide();"/>
+			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCancelCircular.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
 	</p:panel>
 		<p:remoteCommand name="gotoCancelPage" action="#{panelBackingBean.gotoCancelPage}" />
 </ui:composition>
