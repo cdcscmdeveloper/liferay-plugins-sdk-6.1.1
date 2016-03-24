@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.constant.MessageConst;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -135,15 +137,24 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void runNowJob(EpJobVO epJobVO) {
-		EpSchedulerHelper
-				.runJobOnce(epJobVO.getJobKey(), epJobVO.getJobClass());
-		initAllJobs();
+		if (!EpSchedulerHelper.isJobRunningNow(epJobVO.getJobKey())) {
+			EpSchedulerHelper.runJobOnce(epJobVO.getJobKey(),
+					epJobVO.getJobClass());
+			initAllJobs();
+		} else {
+			throw new EpException(MessageConst.ERRQRTZ_00001);
+		}
 	}
 
 	public void deleteJob() {
-		EpSchedulerHelper.deleteJobAndAssociatedTriggers(getManagedBean()
-				.getSelectedJobVO().getJobKey());
-		initAllJobs();
+		if (!EpSchedulerHelper.isJobRunningNow(getManagedBean()
+				.getSelectedJobVO().getJobKey())) {
+			EpSchedulerHelper.deleteJobAndAssociatedTriggers(getManagedBean()
+					.getSelectedJobVO().getJobKey());
+			initAllJobs();
+		} else {
+			throw new EpException(MessageConst.ERRQRTZ_00001);
+		}
 	}
 
 	public void onDeleteJob(EpJobVO epJobVO) {
