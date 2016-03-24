@@ -65,8 +65,7 @@ public class SchedulerManagerBackingBean extends
 							.getJobDetail(jobKey);
 
 					// get job's trigger
-					trigger = EpSchedulerHelper
-							.getTriggerByJobKey(jobKey);
+					trigger = EpSchedulerHelper.getTriggerByJobKey(jobKey);
 
 					if (job != null && trigger != null) {
 						// get trigger state
@@ -136,7 +135,8 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void runNowJob(EpJobVO epJobVO) {
-		EpSchedulerHelper.runBuildJobNow(epJobVO.getJobKey());
+		EpSchedulerHelper
+				.runJobOnce(epJobVO.getJobKey(), epJobVO.getJobClass());
 		initAllJobs();
 	}
 
