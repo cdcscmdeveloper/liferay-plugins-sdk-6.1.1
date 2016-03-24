@@ -22,6 +22,7 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = -4940842520664848758L;
 
 	private List<EpJobVO> epSchedulerJobList;
+	private EpJobVO selectedJobVO;
 	private Scheduler scheduler;
 	private List<ScBidSchedule> currentDayBids;
 	
@@ -71,6 +72,14 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	 */
 	public void setEpSchedulerJobList(List<EpJobVO> epSchedulerJobList) {
 		this.epSchedulerJobList = epSchedulerJobList;
+	}
+
+	public EpJobVO getSelectedJobVO() {
+		return selectedJobVO;
+	}
+
+	public void setSelectedJobVO(EpJobVO selectedJobVO) {
+		this.selectedJobVO = selectedJobVO;
 	}
 
 	

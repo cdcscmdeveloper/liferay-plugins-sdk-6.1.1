@@ -16,6 +16,8 @@ import my.ep.web.vo.EpJobVO;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
+import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -58,29 +60,30 @@ public class SchedulerManagerBackingBean extends
 				for (JobKey jobKey : getManagedBean().getScheduler()
 						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
 
+					// get job details
+					JobDetail job = getManagedBean().getScheduler()
+							.getJobDetail(jobKey);
+
 					// get job's trigger
-					trigger = EpSchedulerHelper.getTriggerByJobKey(jobKey);
+					trigger = EpSchedulerHelper
+							.getTriggerByJobKey(jobKey);
 
-					// get trigger state
-					jobState = EpSchedulerHelper.getTriggerState(trigger);
+					if (job != null && trigger != null) {
+						// get trigger state
+						jobState = EpSchedulerHelper.getTriggerState(trigger);
 
-					if (jobState.equals(TriggerState.PAUSED.toString())) {
-						jobAction = SchedulerConstants.JOB_RESUME;
-					} else {
-						// if job does not have trigger, set to not scheduled
-						if (trigger == null) {
-							jobAction = SchedulerConstants.JOB_NOT_SCHEDULED;
+						if (jobState.equals(TriggerState.PAUSED.toString())) {
+							jobAction = SchedulerConstants.JOB_RESUME;
 						} else {
 							jobAction = SchedulerConstants.JOB_PAUSE;
 						}
-					}
 
-					getManagedBean().getEpSchedulerJobList().add(
-							new EpJobVO(jobKey, trigger, getJobStatus(jobKey),
-									jobAction, jobState, getManagedBean()
-											.getScheduler()
-											.getJobDetail(jobKey)
-											.getDescription()));
+						getManagedBean().getEpSchedulerJobList().add(
+								new EpJobVO(jobKey, trigger,
+										getJobStatus(jobKey), jobAction,
+										jobState, job.getDescription(), job
+												.getJobClass()));
+					}
 
 				}
 
@@ -126,19 +129,27 @@ public class SchedulerManagerBackingBean extends
 			} else {
 				getManagedBean().getScheduler().resumeJob(epJobVO.getJobKey());
 			}
+			initAllJobs();
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
 		}
 	}
 
 	public void runNowJob(EpJobVO epJobVO) {
+		EpSchedulerHelper.runBuildJobNow(epJobVO.getJobKey());
+		initAllJobs();
+	}
 
-		if (epJobVO.getStatus().equals(SchedulerConstants.JOB_WAIT)) {
-			// schedule the job
-			EpSchedulerHelper.runBuildJobNow(epJobVO.getJobKey());
-			initAllJobs();
-		}
+	public void deleteJob() {
+		EpSchedulerHelper.deleteJobAndAssociatedTriggers(getManagedBean()
+				.getSelectedJobVO().getJobKey());
+		initAllJobs();
+	}
 
+	public void onDeleteJob(EpJobVO epJobVO) {
+		getManagedBean().setSelectedJobVO(epJobVO);
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteDialog.show();");
 	}
 
 	private String getJobStatus(JobKey jobKey) {
@@ -149,16 +160,16 @@ public class SchedulerManagerBackingBean extends
 		return retVal;
 	}
 
-	public void encryptionButton() {
-		log.info("inside encryptionButton");
-		try {
-			com.org.encryption.Encryption.main(null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		}
-
-	}
+	// public void encryptionButton() {
+	// log.info("inside encryptionButton");
+	// try {
+	// com.org.encryption.Encryption.main(null);
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	//
+	// }
+	//
+	// }
 
 }

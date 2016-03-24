@@ -2,6 +2,8 @@ package my.ep.web.vo;
 
 import java.io.Serializable;
 
+import org.quartz.CronTrigger;
+import org.quartz.Job;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
 
@@ -13,17 +15,20 @@ public class EpJobVO implements Serializable {
 	private static final long serialVersionUID = 4778444005489515499L;
 
 	private JobKey jobKey;
+	private Class<? extends Job> jobClass;
 	private Trigger trigger;
 	private String status;
 	private String action;
 	private String state;
 	private String description;
-	
-	public EpJobVO(){
-		
+
+	public EpJobVO() {
+
 	}
 
-	public EpJobVO(JobKey jobKey, Trigger trigger, String status,String action,String state,String description) {
+	public EpJobVO(JobKey jobKey, Trigger trigger, String status,
+			String action, String state, String description,
+			Class<? extends Job> jobClass) {
 
 		this.jobKey = jobKey;
 		this.trigger = trigger;
@@ -31,6 +36,7 @@ public class EpJobVO implements Serializable {
 		this.action = action;
 		this.state = state;
 		this.description = description;
+		this.jobClass = jobClass;
 	}
 
 	public JobKey getJobKey() {
@@ -79,6 +85,14 @@ public class EpJobVO implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Class<? extends Job> getJobClass() {
+		return jobClass;
+	}
+
+	public void setJobClass(Class<? extends Job> jobClass) {
+		this.jobClass = jobClass;
 	}
 
 }
