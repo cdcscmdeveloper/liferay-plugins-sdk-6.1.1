@@ -171,16 +171,16 @@ public class SchedulerManagerBackingBean extends
 		return retVal;
 	}
 
-	// public void encryptionButton() {
-	// log.info("inside encryptionButton");
-	// try {
-	// com.org.encryption.Encryption.main(null);
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	//
-	// }
-	//
-	// }
+	public void encryptionButton() {
+		log.info("inside encryptionButton");
+		try {
+			com.org.encryption.Encryption.main(null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+
+	}
 
 }
