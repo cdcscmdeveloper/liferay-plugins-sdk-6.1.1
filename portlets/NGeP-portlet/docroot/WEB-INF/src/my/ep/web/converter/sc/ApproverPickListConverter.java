@@ -46,7 +46,7 @@ public class ApproverPickListConverter implements Converter {
 				if (o instanceof PmUser) {
 					id = "" + ((PmUser) o).getUserId();	
 				} else if (o instanceof ScQtApproverSettings) {
-					id = "" + ((ScQtApproverSettings) o).getApprover().getUserId();
+					id = "" + ((ScQtApproverSettings) o).getPmUser().getUserId();
 				}
 				
 				if (arg2.equals(id)) {
@@ -59,7 +59,7 @@ public class ApproverPickListConverter implements Converter {
 					if (o instanceof PmUser) {
 						id = "" + ((PmUser) o).getUserId();	
 					} else if (o instanceof ScQtApproverSettings) {
-						id = "" + ((ScQtApproverSettings) o).getApprover().getUserId();
+						id = "" + ((ScQtApproverSettings) o).getPmUser().getUserId();
 					}
 					
 					if (arg2.equals(id)) {
@@ -80,7 +80,7 @@ public class ApproverPickListConverter implements Converter {
 		if (arg2 instanceof PmUser) {
 			str = "" + ((PmUser) arg2).getUserId();
 		} else if (arg2 instanceof ScQtApproverSettings) {
-			str = "" + ((ScQtApproverSettings) arg2).getApprover().getUserId();
+			str = "" + ((ScQtApproverSettings) arg2).getPmUser().getUserId();
 		}
 		return str;
 	}

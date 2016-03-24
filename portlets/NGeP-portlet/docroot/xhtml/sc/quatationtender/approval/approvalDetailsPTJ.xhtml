@@ -29,7 +29,7 @@
 			<p:pickList id="ptjapproverid" value="#{ptjList}"
 				disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}"
 				var="ptjapproverUser" showTargetControls="true"
-				itemLabel="#{ptjapproverUser.approver.userName}"
+				itemLabel="#{ptjapproverUser.pmUser.userName}"
 				itemValue="#{ptjapproverUser}" converter="approverPickListConverter">
 				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']} </f:facet>
 				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>

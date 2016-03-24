@@ -24,7 +24,7 @@
 		<div style="width: 100%">
 			<p:pickList id="committeeapproverid" value="#{commiteList}"
 				var="approverUser" showTargetControls="true"
-				itemLabel="#{approverUser.approver.userName}"
+				itemLabel="#{approverUser.pmUser.userName}"
 				disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}"
 				itemValue="#{approverUser}" converter="approverPickListConverter">
 				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']}</f:facet>

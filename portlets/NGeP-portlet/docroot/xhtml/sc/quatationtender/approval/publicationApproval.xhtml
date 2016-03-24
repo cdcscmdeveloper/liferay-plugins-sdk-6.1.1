@@ -16,7 +16,7 @@
 				disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.publicationApproval)}"
 				value="#{qTDetailBB.managedBean.publicationApprovals}"
 				var="publicationUser" showTargetControls="true"
-				itemLabel="#{publicationUser.approver.userName}"
+				itemLabel="#{publicationUser.pmUser.userName}"
 				itemValue="#{publicationUser}" converter="approverPickListConverter">
 				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']} </f:facet>
 				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>

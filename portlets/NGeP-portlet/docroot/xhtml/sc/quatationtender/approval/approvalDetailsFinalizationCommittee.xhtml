@@ -27,23 +27,23 @@
 			<p:column headerText="#{lbl['lbl.sc.finalization.committee']}">
 				<c:choose>
 					<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate and 
-							qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryFinalizationCommittee}">
+							qTDetailBB.managedBean.selectedApprovalTabBean.tabType != ParameterConst.approvalCategoryProcurementBoard}">
 						<p:selectOneMenu id="fcApprovalId"
-							value="#{approverSettings.committeType}"
+							value="#{approverSettings.committeeType.parameterId}"
 							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="secretary"
 								value="#{fcaApprovalTab.approverCommittes}"
 								itemLabel="#{secretary.parameterCode}"
-								itemValue="#{secretary.parameterCode}" />
+								itemValue="#{secretary.parameterId}" />
 							<p:ajax event="change" update="commTypes" process="@this"
-								listener="#{qTDetailBB.changePbSecretaryCommType}"
+								listener="#{qTDetailBB.changePbSecretaryCommType(approverSettings)}"
 								partialSubmit="true" />
 						</p:selectOneMenu>
 					</c:when>
 					<c:otherwise>
-						#{approverSettings.committeType}
+						#{approverSettings.committeeType.parameterCode}
 					</c:otherwise>
 				</c:choose>
 			</p:column>
@@ -52,12 +52,12 @@
 					<c:choose>
 						<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate}">
 							<p:selectOneMenu id="usersSecretaryId"
-								value="#{approverSettings.approver.userId}"
+								value="#{approverSettings.pmUser.userId}"
 								style="width: 178px;margin-bottom: 5px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
 								<f:selectItems var="usersSecretary"
-									value="#{qTDetailBB.retrievePmUserSecratryDtl(approverSettings.committeType)}"
+									value="#{qTDetailBB.retrievePmUserSecratryDtl(approverSettings.committeeType.parameterCode)}"
 									itemLabel="#{usersSecretary.userName}"
 									itemValue="#{usersSecretary.userId}" />
 								<p:ajax event="change"
@@ -66,7 +66,7 @@
 							</p:selectOneMenu>
 						</c:when>
 						<c:otherwise>
-							#{approverSettings.approver.userName}
+							#{approverSettings.pmUser.userName}
 						</c:otherwise>
 					</c:choose>
 				</h:panelGroup>
