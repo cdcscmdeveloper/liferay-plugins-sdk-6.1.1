@@ -34,7 +34,7 @@
 							<td>
 								<h:commandLink value="#{attachFile.fileName}" 
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
-			 	 				<p:commandLink onclick="deleteComitteDlg.show();"  disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
+			 	 				<p:commandLink onsuccess="deleteComitteDlg.show();"  disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
 			 	 				   action="#{amendmentBackingBean.setAttachFileIndex(attachFileIndex)}">
 			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
@@ -59,20 +59,17 @@
 		</p:fileUpload> 
 	</p:dialog>
 	
-	<p:dialog id="deleteComitteDlg" widgetVar="deleteComitteDlg"
-      	styleClass="screen-title" modal="true" width="330">  
-      	<h:panelGrid columns="3">
- 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-		   	<p:spacer width="10"/>
-            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
-     	</h:panelGrid>
-		<div class="ppRightBtn">
-	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="lampiranComitte" process="@form" 
-	     	actionListener="#{amendmentBackingBean.deleteCommitteAttachmentAction(amendmentBackingBean.managedBean.attachFileIndex)}" 
-	     	onclick="deleteComitteDlg.hide();"/>
-		 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteComitteDlg.hide();" type="button" />
-	   </div>
- 	</p:dialog>	
+	  <p:confirmDialog id="deleteComitteDlg" widgetVar="deleteComitteDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:lampiranComitte" 
+		                         action="#{amendmentBackingBean.deleteCommitteAttachmentAction(amendmentBackingBean.managedBean.attachFileIndex)}"
+		                          oncomplete="deleteComitteDlg.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteComitteDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+
 			
 		
 	</p:panel>		
