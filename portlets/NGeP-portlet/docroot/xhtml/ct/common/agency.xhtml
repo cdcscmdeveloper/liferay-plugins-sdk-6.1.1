@@ -183,40 +183,34 @@
 						disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 					 <p:commandButton id="delAddressBtn" value="#{lbl['lbl.ct.delete']}" 
-				     	 process="@this" onclick="delAddressDlg.show()"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+				     	 process="@this" onsuccess="delAddressDlg.show()"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 				     	 rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 				</div>
-		      	<p:dialog id="delAddressDlg" widgetVar="delAddressDlg"
-			   		styleClass="screen-title" modal="true" width="330">  
-	           		<h:panelGrid columns="3">
-	             	<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-				   	<p:spacer width="10"/>
-	              	<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-	           		</h:panelGrid>
-	           		<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=deliveryAddressTbl])" process="@all"
-							actionListener="#{ctBackingBean.deleteDeliveryAddress()}" onclick="delAddressDlg.hide();"/>
-						<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delAddressDlg.hide();" type="button" />
-					</div>
-	    		</p:dialog>  
+				
+				    <p:confirmDialog id="delAddressDlg" widgetVar="delAddressDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:deliveryAddressTbl" 
+		                         action="#{ctBackingBean.deleteDeliveryAddress()}" oncomplete="delAddressDlg.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delAddressDlg.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
 				<p:spacer height="20"/>		
 			</h:panelGroup>
 	    </p:outputPanel> 
 	  	<ac:lovPopup />
-        <p:dialog id="dlgDel" widgetVar="dlgDel" styleClass="screen-title"  
-           modal="true" width="330">  
-           <h:panelGrid columns="3">
-            <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			 <p:spacer width="10"/>
-             <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl"
-		         process="@form" actionListener="#{ctBackingBean.deleteAgencyDetails()}" onclick="dlgDel.hide();"
-		         onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDel.hide();" type="button" />
-		   </div>
-        </p:dialog>  
+	  	
+	  	  <p:confirmDialog id="dlgDel" widgetVar="dlgDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl" 
+		                         action="#{ctBackingBean.deleteAgencyDetails()}" oncomplete="dlgDel.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDel.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
+                   
 	   </p:panel>  
 		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" 
 			styleClass="pop_up_top" modal="true" width="700" height="500">
@@ -337,20 +331,15 @@
 		</p:fileUpload> 
 	</p:dialog>
 	
-	<p:dialog id="deleteAttachmentDlg1" widgetVar="deleteAttachmentDlg1"
-      	styleClass="screen-title" modal="true" width="330">  
-      	<h:panelGrid columns="3">
- 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-		   	<p:spacer width="10"/>
-            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
-     	</h:panelGrid>
-		<div class="ppRightBtn">
-	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form"  update=":form:tableAgencyDetails"
-	     	actionListener="#{ctBackingBean.deleteAgencyAttachement()}" 
-	     	onclick="deleteAttachmentDlg1.hide();"/>
-		 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg1.hide();" type="button" />
-	   </div>
- 	</p:dialog>	
+	                 <p:confirmDialog id="deleteAttachmentDlg1" widgetVar="deleteAttachmentDlg1" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                         update=":form:tableAgencyDetails" 
+		                         action="#{ctBackingBean.deleteAgencyAttachement()}" oncomplete="deleteAttachmentDlg1.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg1.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
 		
 	</p:panel>		
 </ui:composition>                                      

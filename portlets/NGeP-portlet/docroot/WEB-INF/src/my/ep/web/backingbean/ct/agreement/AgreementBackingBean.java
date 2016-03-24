@@ -114,6 +114,9 @@ import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
@@ -135,10 +138,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private static final String AGREEMENT_DOC_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml?faces-redirect=true";
 	private ContractBackingBean ctBB = null;
-	private CtAgreementParty[] selectedAgencyWitnes;
+	/*private CtAgreementParty[] selectedAgencyWitnes;
 	private CtAgreementParty[] selectedAgencySigner;
 	private CtAgreementParty[] selectedSupplierWitnes;
-	private CtAgreementParty[] selectedSupplierSigner;
+	private CtAgreementParty[] selectedSupplierSigner;*/
 	
 	private String agreementZipFileName = null;
 	private String agreementZipFilePath = null;
@@ -213,62 +216,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			userSO = null;
 		}
 		return sourceList;
-	}
-
-	/**
-	 * @return the selectedAgencyWitnes
-	 */
-	public CtAgreementParty[] getSelectedAgencyWitnes() {
-		return selectedAgencyWitnes;
-	}
-
-	/**
-	 * @param selectedAgencyWitnes the selectedAgencyWitnes to set
-	 */
-	public void setSelectedAgencyWitnes(CtAgreementParty[] selectedAgencyWitnes) {
-		this.selectedAgencyWitnes = selectedAgencyWitnes;
-	}
-
-	/**
-	 * @return the selectedAgencySigner
-	 */
-	public CtAgreementParty[] getSelectedAgencySigner() {
-		return selectedAgencySigner;
-	}
-
-	/**
-	 * @param selectedAgencySigner the selectedAgencySigner to set
-	 */
-	public void setSelectedAgencySigner(CtAgreementParty[] selectedAgencySigner) {
-		this.selectedAgencySigner = selectedAgencySigner;
-	}
-
-	/**
-	 * @return the selectedSupplierWitnes
-	 */
-	public CtAgreementParty[] getSelectedSupplierWitnes() {
-		return selectedSupplierWitnes;
-	}
-
-	/**
-	 * @param selectedSupplierWitnes the selectedSupplierWitnes to set
-	 */
-	public void setSelectedSupplierWitnes(CtAgreementParty[] selectedSupplierWitnes) {
-		this.selectedSupplierWitnes = selectedSupplierWitnes;
-	}
-
-	/**
-	 * @return the selectedSupplierSigner
-	 */
-	public CtAgreementParty[] getSelectedSupplierSigner() {
-		return selectedSupplierSigner;
-	}
-
-	/**
-	 * @param selectedSupplierSigner the selectedSupplierSigner to set
-	 */
-	public void setSelectedSupplierSigner(CtAgreementParty[] selectedSupplierSigner) {
-		this.selectedSupplierSigner = selectedSupplierSigner;
 	}
 	
 	/**
@@ -1687,12 +1634,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * The method used to delete the selected signer(s) for agency party.
 	 */
 	public void deleteAgencySignerParty() {
+		
 		getManagedBean().setValidateWitness(false);
-		for (int i = 0; i < selectedAgencySigner.length; i++) {
-			CtAgreementParty ctAgreementParty = selectedAgencySigner[i];
-			this.getManagedBean().getCtAgencySigner().remove(ctAgreementParty);
-		}
-		selectedAgencySigner = null;
+		this.getManagedBean().getCtAgencySigner().removeAll(getManagedBean().getSelectedAgencySigner());
+		getManagedBean().setButtonHideActive(true);
 	}
 	
 	/**
@@ -1775,11 +1720,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */
 	public void deleteAgencyWitnes() {
 		getManagedBean().setValidateWitness(false);
-		for (int i = 0; i < selectedAgencyWitnes.length; i++) {
-			CtAgreementParty ctAgreementParty = selectedAgencyWitnes[i];
-			getManagedBean().getCtSignAgencyWitness().remove(ctAgreementParty);
-		}
-		selectedAgencyWitnes = null;
+		getManagedBean().getCtSignAgencyWitness().removeAll(getManagedBean().getSelectedAgencyWitnes());
+		getManagedBean().setButtonHideActive(true);
 	}
 	
 	/**
@@ -1849,11 +1791,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */
 	public void deleteSupplierSigner() {
 		getManagedBean().setValidateWitness(false);
-		for (int i = 0; i < selectedSupplierSigner.length; i++) {
-			CtAgreementParty ctAgreementParty = selectedSupplierSigner[i];
-			getManagedBean().getCtSupplierSigner().remove(ctAgreementParty);
-		}
-		selectedSupplierSigner = null;
+		getManagedBean().getCtSupplierSigner().removeAll(getManagedBean().getSelectedSupplierSigner());
+		getManagedBean().setButtonHideActive(true);
 	}	
 	
 	/**
@@ -1935,11 +1874,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */
 	public void deleteSupplierWitness() {
 		getManagedBean().setValidateWitness(false);
-		for (int i = 0; i < selectedSupplierWitnes.length; i++) {
-			CtAgreementParty ctAgreementParty = selectedSupplierWitnes[i];
-			getManagedBean().getCtSupplierWitness().remove(ctAgreementParty);
-		}
-		selectedSupplierWitnes = null;
+		getManagedBean().getCtSupplierWitness().removeAll(getManagedBean().getSelectedSupplierWitnes());
+		getManagedBean().setButtonHideActive(true);
 	}
 	
 	/**
@@ -2564,5 +2500,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */   
     public void setIndexProperty(int index){
     	getManagedBean().setVarIndex(index);
+    }
+    
+    public void onToggleSelect(ToggleSelectEvent event) {
+		getManagedBean().setButtonHideActive(false);
+	}
+	
+	public void onRowSelect(SelectEvent event) {
+		getManagedBean().setButtonHideActive(false);
+	}
+ 
+    public void onRowUnselect(UnselectEvent event) {
+    	getManagedBean().setButtonHideActive(true);
     }
 }

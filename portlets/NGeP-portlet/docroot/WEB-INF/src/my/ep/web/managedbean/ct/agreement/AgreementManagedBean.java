@@ -60,6 +60,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private boolean approveFinalAgreement = false;
 	private boolean agreementDisclaimer = false;
 	private boolean autoUpdate = true;
+	private boolean buttonHideActive = true;
 	private List<CtAgreementParty> ctAgencySigner;
 	private List<CtAgreementParty> ctSupplierSigner;
 	private List<CtAgreementParty> ctSupplierWitness;
@@ -82,6 +83,10 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;	
 	private TreeNode docSectionTN;
 	private Map<TplDocSection, TreeNode> docSectionMap;
+	private List<CtAgreementParty> selectedAgencyWitnes;
+	private List<CtAgreementParty> selectedAgencySigner;
+	private List<CtAgreementParty> selectedSupplierWitnes;
+	private List<CtAgreementParty> selectedSupplierSigner;
 	/**
 	 * @return the action
 	 */
@@ -692,5 +697,56 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setAgreementDisclaimer(boolean agreementDisclaimer) {
 		this.agreementDisclaimer = agreementDisclaimer;
-	}	
+	}
+
+	/**
+	 * @return the ButtonHideActive
+	 */
+	public boolean isButtonHideActive() {
+		return buttonHideActive;
+	}
+
+	/**
+	 * @param buttonHideActive the buttonHideActive to set
+	 */
+	public void setButtonHideActive(boolean buttonHideActive) {
+		this.buttonHideActive = buttonHideActive;
+	}
+
+	public List<CtAgreementParty> getSelectedAgencyWitnes() {
+		return selectedAgencyWitnes;
+	}
+
+	public void setSelectedAgencyWitnes(List<CtAgreementParty> selectedAgencyWitnes) {
+		this.selectedAgencyWitnes = selectedAgencyWitnes;
+	}
+
+	public List<CtAgreementParty> getSelectedAgencySigner() {
+		return selectedAgencySigner;
+	}
+
+	public void setSelectedAgencySigner(List<CtAgreementParty> selectedAgencySigner) {
+		this.selectedAgencySigner = selectedAgencySigner;
+	}
+
+	public List<CtAgreementParty> getSelectedSupplierWitnes() {
+		return selectedSupplierWitnes;
+	}
+
+	public void setSelectedSupplierWitnes(
+			List<CtAgreementParty> selectedSupplierWitnes) {
+		this.selectedSupplierWitnes = selectedSupplierWitnes;
+	}
+
+	public List<CtAgreementParty> getSelectedSupplierSigner() {
+		return selectedSupplierSigner;
+	}
+
+	public void setSelectedSupplierSigner(
+			List<CtAgreementParty> selectedSupplierSigner) {
+		this.selectedSupplierSigner = selectedSupplierSigner;
+	}
+
+	
+	
 }

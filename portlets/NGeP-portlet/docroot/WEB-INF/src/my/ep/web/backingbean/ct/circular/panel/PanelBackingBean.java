@@ -1489,6 +1489,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deletePanelZone(){
 		this.getManagedBean().getSelectedPanelItems().getCtPanelZones().remove(getManagedBean().getSelectedPanelZone());
 		this.getManagedBean().setSelectedPanelZone(null);
+		getManagedBean().setButtonHideActiveDel(true);
 	}
 
 	/**
