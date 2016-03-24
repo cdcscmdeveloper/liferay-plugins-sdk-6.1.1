@@ -994,28 +994,6 @@ public class QTDetailBackingBean extends
 				scQt.setScQtContactPersons(contactList);
 			}
 
-			// Setting the Deductions to qtdetails.
-			List<ScQtDeduction> deductionList = this.getManagedBean()
-					.getScQtDeductionList();
-			if (null != deductionList && !deductionList.isEmpty()) {
-				for (ScQtDeduction deduction : deductionList) {
-					deduction.setScQt(this.getManagedBean().getQt());
-					if (null == deduction.getDeductionType().getParameterCode()) {
-						throw new EpException(MessageConst.ERROR_100022,
-								new String[] { "Deduction Type" });
-
-					}
-				}
-			}
-			scQt.setScQtDeductions(deductionList);
-
-			// Setting the Documents to qtdetails.
-			List<ScQtDocReport> docReportsList = getManagedBean()
-					.getScQtDocReportList();
-			if (docReportsList != null && !docReportsList.isEmpty()) {
-				scQt.setScQtDocReports(docReportsList);
-			}
-
 			ScQtApproval pubApproval = this.getManagedBean()
 					.getPublicationApproval();
 			if (null != pubApproval) {
@@ -1042,7 +1020,28 @@ public class QTDetailBackingBean extends
 
 		}
 		scQt.setScQtStatus(null);
+		
+		// Setting the Deductions to qtdetails.
+		List<ScQtDeduction> deductionList = this.getManagedBean().getScQtDeductionList();
+		if (null != deductionList && !deductionList.isEmpty()) {
+			for (ScQtDeduction deduction : deductionList) {
+				deduction.setScQt(this.getManagedBean().getQt());
+				if (null == deduction.getDeductionType().getParameterCode()) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { "Deduction Type" });
 
+				}
+			}
+			scQt.setScQtDeductions(deductionList);
+		 }
+		
+		// Setting the Documents to qtdetails.
+		List<ScQtDocReport> docReportsList = getManagedBean()
+				.getScQtDocReportList();
+		if (docReportsList != null && !docReportsList.isEmpty()) {
+			scQt.setScQtDocReports(docReportsList);
+		}
+		
 		// save.
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
@@ -2670,7 +2669,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void retrieveDeductionPaymentTabDtl() {
 		debugLogger("retrieveDeductionPaymentTabDtl");
-		if (this.getManagedBean().getScQtDeductionList() == null) {
+		if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -3619,6 +3618,24 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setSelectedCommitteeTabIndex(
 					committeeTabIndex);
 			retrieveCommitteeAppointmentTabDtl(false);
+			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				List<ScQtApproval> approvals = this.getManagedBean().getQt()
+						.getScQtApprovals();
+
+				for (ScQtApproval scQtApproval : approvals) {
+					if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
+							.equalsIgnoreCase(scQtApproval
+									.getApprovalCategory().getParameterCode())) {
+						initializeRemarks(scQtApproval, this.getManagedBean()
+								.getQt().getCurrentWorkFlowStatus(),
+								scQtApproval.getScQtApprovalRemarks(),
+								ScQtApprovalRemark.class);
+						this.getManagedBean().setScQtApproval(scQtApproval);
+
+						break;
+					}
+				}
+			}
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
 		case 3:
@@ -3663,7 +3680,7 @@ public class QTDetailBackingBean extends
 			}
 			break;
 		case 6:
-			if (isinvokeValidations(getManagedBean().getQt())) {
+			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
 				reqDTO = prepareQTInfo();
 				detailSO.validateDeductionDtls(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -3676,7 +3693,7 @@ public class QTDetailBackingBean extends
 			}
 			break;
 		case 7:
-			if (isinvokeValidations(getManagedBean().getQt())) {
+			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
 				reqDTO = prepareQTInfo();
 				reqDTO.setSaveFlow(true);
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -3838,7 +3855,9 @@ public class QTDetailBackingBean extends
 				break;
 
 			case 4:
-				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(getManagedBean().getQt().getQtStatus().getStatusId())) {
+				Long statusId = getManagedBean().getQt().getQtStatus().getStatusId();
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) ||
+						QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId)) {
 					retrieveActivitiesTabDtl();
 				} else if(isMaintancePendingChklistStatus){
 					retrieveDeductionPaymentTabDtl();
@@ -4497,8 +4516,12 @@ public class QTDetailBackingBean extends
 		
 		Long statusId = this
 				.getManagedBean().getQt().getQtStatus().getStatusId();
+		if (this.getManagedBean().isMaintanceFlow()
+				&& QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId)) {
+			return true;
+		}
 		if ((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
-				isStatusOfBpkOrScheduleRevise(statusId))
+				isStatusOfBpkOrScheduleRevise(statusId)) 
 				&& (ParameterConst.APPROVAL_CATEGORY_PTJ
 						.equalsIgnoreCase(approval.getApprovalCategory()
 								.getParameterCode()) || (ParameterConst.APPROVAL_CATEGORY_PTJ
@@ -4683,77 +4706,6 @@ public class QTDetailBackingBean extends
 		scTdObj[4] = scQt.getQtStatus().getStatusId();
 		scTdObj[5] = scQt.getQtTitle();
 		this.getManagedBean().setScTdObj(scTdObj);
-	}
-	
-	public void qtChklistMaintenanceTabChange(Integer activeIndex) {
-		
-		int priviousIndex = this.getManagedBean().getActiveIndex();
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
-		QuationTenderReqDTO reqDTO = prepareQTInfo();
-		boolean isAuditor = this.isAuditor();
-		if (priviousIndex != activeIndex) {
-			if (!isAuditor) {
-				switch (priviousIndex) {
-				case 0:
-					detailSO.validateateQTDetails(reqDTO);
-					// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
-					break;
-				case 1:
-					detailSO.validateSupplierQualificationDtls(reqDTO);
-					break;
-
-				case 2:
-					
-					break;
-				case 3:
-					detailSO.validateApprovalDetails(reqDTO);
-					break;
-
-				case 4:
-					if (isinvokeValidations(getManagedBean().getQt())) {
-						detailSO.validateDeductionDtls(reqDTO);
-					}
-					break;
-
-				case 5:
-
-					break;
-				case 6:
-
-					break;
-
-				}
-			}
-			switch (activeIndex) {
-			case 0:
-
-				retrieveQuationTenderDetails(this.getManagedBean().getQt()
-						.getQtId());
-				break;
-			case 1:
-				retrieveSuppQualificationTabDtl();
-				break;
-			case 2:
-				retrieveCommitteeAppointmentTabDtl(false);
-				break;
-
-			case 3:
-				retrieveApprovalTabDtl();
-				break;
-			case 4:
-				retrieveDeductionPaymentTabDtl();
-				break;
-			case 5:
-				retrieveDocumentTabDtl();
-				break;
-			case 6:
-				retrieveActivitiesTabDtl();
-				break;
-			}
-			this.getManagedBean().setActiveIndex(activeIndex);
-
-		}
 	}
 	
 	public boolean isMaintancePendingChklistStatus(){
@@ -5023,5 +4975,5 @@ public class QTDetailBackingBean extends
 		 */
 		return results;
 	}
- 
+	
 }
