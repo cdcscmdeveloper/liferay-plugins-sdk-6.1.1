@@ -52,9 +52,9 @@
 		</div>
 	</p:panel>
 	<p:dialog header="#{lbl['lbl.pm.header.general.org.delivery']}" widgetVar="addressPopup" id="deliveryAddressDialog" resizable="false"
-		modal="true" width="900" height="450">
+		modal="true" width="910" height="450">
 
-		<p:panel header="#{lbl['lbl.pm.header.general.org.delivery']}" toggleable="true" id="deliveryAddressPanel">
+		<p:outputPanel id="deliveryAddressPanel">
 			<p:messages id="deliveryAddressMessages" showDetail="true"
 				autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%">
@@ -62,7 +62,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="addressname"  styleClass="ppDisplayTextL"
-							label="#{lbl['lbl.pm.address.name']}" maxlength="80"
+							label="#{lbl['lbl.pm.address.name']}" maxlength="255"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.addressName}"
 							size="35" /></td>
 					<td><p:message for="addressname" id="addressnameMsg"
@@ -233,7 +233,7 @@
 						  	<td><p:message for="dfaxNo" id="dfaxNoMsg" display="icon" /></td>
 			</tr>
 			</table>
-		</p:panel>
+		</p:outputPanel>
 		<!-- <p:panel header="#{lbl['lbl.pm.header.general.org.contactPerson']}"
 			toggleable="true">
 			<table style="width: 100%">

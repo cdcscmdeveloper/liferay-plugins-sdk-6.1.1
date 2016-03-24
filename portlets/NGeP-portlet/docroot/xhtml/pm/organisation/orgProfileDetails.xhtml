@@ -50,7 +50,6 @@
 								<p:selectOneMenu id="newOrgTypeFederalList"
 									rendered="#{organisationBackingBean.managedBean.orgCategory eq organisationBackingBean.federalGovt}" 
 									styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" 
-									style="width:275px;margin-bottom:5px;"
 									value="#{organisationBackingBean.managedBean.orgTypeId}">
 									<f:selectItems
 										value="#{organisationBackingBean.getNewOrgTypeDropdownValues()}" />
@@ -63,7 +62,7 @@
 									styleClass="ppDropDownWidthL"
 									label="#{lbl['lbl.pm.organisation.orgType']}"
 									value="#{organisationBackingBean.managedBean.orgTypeId}"
-									style="width: 275px;margin-bottom: 5px;" required="true">
+									required="true">
 									<f:selectItems
 										value="#{organisationBackingBean.getNewOrgTypeDropdownValues()}" />
 									<p:ajax event="change" update="@form"
@@ -118,11 +117,15 @@
 						value="#{lbl['lbl.pm.organisation.orgName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				
-						<td><p:inputText id="orgName" disabled="#{ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType or ParameterConst.orgTypeJabatan eq organisationBackingBean.managedBean.orgType or ParameterConst.orgTypePegawaiPengawal eq organisationBackingBean.managedBean.orgType}"
+						<td><p:inputText id="orgName" 
+								disabled="#{(ParameterConst.orgTypeMinistry eq organisationBackingBean.managedBean.orgType and not organisationBackingBean.managedBean.orgProfile.brandNew) 
+										or ParameterConst.orgTypePtj eq organisationBackingBean.managedBean.orgType 
+										or ParameterConst.orgTypeJabatan eq organisationBackingBean.managedBean.orgType 
+										or ParameterConst.orgTypePegawaiPengawal eq organisationBackingBean.managedBean.orgType}"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
 								required="#{!empty param['disableValidation']}" size="45" styleClass="ppDisplayTextL"
-								maxlength="99" /></td>
+								maxlength="255" /></td>
 						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>	
 						
 				<ui:fragment

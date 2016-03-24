@@ -188,6 +188,7 @@ public class FinancialOrgBackingBean extends
 		this.getManagedBean().setEnableUpdateStatus(true);
 		this.getManagedBean().setShowFactoringBank(true);
 		this.getManagedBean().setServiceTypes(null);
+		getManagedBean().setTabActiveIndex(0);
 	}
 	
 	/**
@@ -1062,6 +1063,7 @@ public class FinancialOrgBackingBean extends
 		}
 		
 		getManagedBean().getServiceTypes().addAll(serviceTypeSet);
+		getManagedBean().setTabActiveIndex(1);
 	}
 	
 	/**
