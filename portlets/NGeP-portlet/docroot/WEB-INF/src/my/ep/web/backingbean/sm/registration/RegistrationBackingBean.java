@@ -1,9 +1,5 @@
 package my.ep.web.backingbean.sm.registration;
 
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,12 +13,9 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
-import javax.faces.validator.ValidatorException;
-import javax.imageio.ImageIO;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
@@ -102,15 +95,11 @@ import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -2369,51 +2358,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 	}
 	
-	public StreamedContent getCaptchaTextImage() {
-		StreamedContent graphicText = null;
-		try {
-	        BufferedImage bufferedImg = new BufferedImage(100, 25, BufferedImage.TYPE_BYTE_BINARY);
-	        Graphics2D g2 = bufferedImg.createGraphics();
-	        
-	        String captchaText = RandomStringUtils.randomAlphanumeric(6);
-	        this.getManagedBean().setCaptchaText(captchaText);
-	        
-            Font font = new Font("Tahoma", Font.ITALIC, 20);
-            g2.setFont(font);
-
-	        g2.drawString(captchaText, 15, 20);
-	        ByteArrayOutputStream os = new ByteArrayOutputStream();
-	        ImageIO.write(bufferedImg, "png", os);
-	        graphicText = new DefaultStreamedContent(new ByteArrayInputStream(os.toByteArray()), "image/png"); 
-		} 
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-		return graphicText;
-	}
-	
-	public void validateCaptcha (FacesContext context, UIComponent component, Object value) {
-		String skipValidator= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("skipValidator");
-		if (skipValidator == null) {
-			String captchaAnswer = (String) value;
-			if(captchaAnswer == null || captchaAnswer.length() == 0) {
-				log.error("Captcha is null");
-				throw new ValidatorException(new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, null,
-						SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721046, null)));
-
-			}
-
-			if(captchaAnswer != null && captchaAnswer.length() > 0) {
-				if(!captchaAnswer.equals(this.getManagedBean().getCaptchaText())) {
-					log.error("Captcha is wrong");
-					throw new ValidatorException(new FacesMessage(
-							FacesMessage.SEVERITY_ERROR, null,
-							SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721047, null)));
-				}
-			}
-		}
-	}
 }
 
 
