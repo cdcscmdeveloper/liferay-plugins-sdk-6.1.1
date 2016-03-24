@@ -11,7 +11,7 @@
 		<div style="width: 100%">
 			<p:pickList id="budgetapprover" value="#{budgetList}"
 				var="approverUser" showTargetControls="true"
-				itemLabel="#{approverUser.approver.userName}" itemValue="#{approverUser}"
+				itemLabel="#{approverUser.pmUser.userName}" itemValue="#{approverUser}"
 				converter="approverPickListConverter">
 				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']} </f:facet>
 				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
