@@ -43,6 +43,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	private boolean showFactoringBank=true;
 	
 	private boolean isLazy = false; 
+	
+	private Integer tabActiveIndex = 0;
 
 
 	/**
@@ -226,6 +228,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
+	}
+
+	/**
+	 * @return the tabActiveIndex
+	 */
+	public Integer getTabActiveIndex() {
+		return tabActiveIndex;
+	}
+
+	/**
+	 * @param tabActiveIndex the tabActiveIndex to set
+	 */
+	public void setTabActiveIndex(Integer tabActiveIndex) {
+		this.tabActiveIndex = tabActiveIndex;
 	}
 
 
