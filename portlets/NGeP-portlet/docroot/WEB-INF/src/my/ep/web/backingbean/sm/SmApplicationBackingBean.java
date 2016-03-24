@@ -624,20 +624,25 @@ public class SmApplicationBackingBean extends
 
 			boolean cannotProceedAlertMsg = false;
 
-			if (applicationType
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-				boolean hasActiveTransactions = SmApplicationUtil
-						.hasActiveTransactions(currSupp);
-				if (hasActiveTransactions) {
-					throw new EpException(MessageConst.ERROR_722565);
-				}
-			} else {
+			// if (applicationType
+			// .equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			// boolean hasActiveTransactions = SmApplicationUtil
+			// .hasActiveTransactions(currSupp);
+			// if (hasActiveTransactions) {
+			// throw new EpException(MessageConst.ERROR_722565);
+			// }
+			// } else {
+			//
+			// }
 
-			}
-			cannotProceedAlertMsg = SmApplicationUtil
-					.checkActiveSmApplForSupp(currSupp);
-			if (cannotProceedAlertMsg) {
-				throw new EpException(MessageConst.ERROR_722542);
+			// Disabled blocking if has active transaction for cancel MOF
+			if (!applicationType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				cannotProceedAlertMsg = SmApplicationUtil
+						.checkActiveSmApplForSupp(currSupp);
+				if (cannotProceedAlertMsg) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
 			}
 
 			if (applicationType
@@ -6624,15 +6629,15 @@ public class SmApplicationBackingBean extends
 
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
-			
+
 			SmWorkflowStatus sts = SmCommonUtil
 					.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl()
 							.getApplId());
-			
+
 			reqDTO.setSmWorkflowStatus(sts);
 			regSo.initiateSmDelPendingApplicationTask(reqDTO);
 			String msg = "";
-			
+
 			if (sts != null && sts.getPmStatus() != null) {
 				if (sts.getPmStatus()
 						.getStatusId()
