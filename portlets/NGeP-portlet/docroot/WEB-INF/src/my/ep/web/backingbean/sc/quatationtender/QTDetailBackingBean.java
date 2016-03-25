@@ -446,7 +446,7 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
 			updateApprovalDetails(this.getManagedBean().getQt());
-			retrieveApprovalTabDtl();
+			//retrieveApprovalTabDtl();
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
