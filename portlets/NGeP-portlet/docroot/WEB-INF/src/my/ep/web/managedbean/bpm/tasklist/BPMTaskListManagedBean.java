@@ -429,6 +429,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
 						       }
+						       
+						       
+						       
+						       if(worklistItemVO.getTitle().startsWith("lbl.cd")) {
+						    	
+						    	   StringBuilder sb = new StringBuilder();
+						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    	   
+						    	   
+						        worklistItemVO.setTitle(sb.toString());
+						       }
 						}
 					}
 					
