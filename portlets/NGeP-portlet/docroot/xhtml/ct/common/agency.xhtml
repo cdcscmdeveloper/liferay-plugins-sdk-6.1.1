@@ -147,8 +147,8 @@
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
        		</p:commandButton>
-			 <p:commandButton id="delBtn" value="#{lbl['lbl.ct.delete']}" process="@this"
-			 	onsuccess="dlgDel.show()" 
+			 <p:commandButton id="delBtn" value="#{lbl['lbl.ct.delete']}" process="@form"
+			 	onsuccess="dlgAgenyDel.show()"
 			 	disabled="#{ctBackingBean.managedBean.buttonHideActive or ctBackingBean.managedBean.disableAmendDetails}" 
 			 	rendered="#{!ctBackingBean.managedBean.viewContract}" >
        			<p:tooltip for="delBtn">
@@ -156,6 +156,15 @@
 				</p:tooltip>
 			</p:commandButton>
 	  	</div>
+	  	<p:confirmDialog id="dlgDelid" widgetVar="dlgAgenyDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@all"  
+		                         update=":form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl" 
+		                         action="#{ctBackingBean.deleteAgencyDetails()}" onclick="dlgAgenyDel.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgenyDel.hide();" type="button" />
+		                 </div>
+                   </p:confirmDialog>
 	  	
 	  	<p:outputPanel id="agencyDeliveryAddress">
 	        <h:panelGroup  style="width:100%" rendered="#{ctBackingBean.managedBean.selectedAgency != null}">	     
@@ -165,6 +174,14 @@
 	           		value="#{ctBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
 					rowKey="#{deliveryAddress}" selection="#{ctBackingBean.managedBean.selectedListOfAddress}">
 					<ac:paginator for="deliveryAddressTbl"/>
+					<p:ajax event="toggleSelect" 
+			                              listener="#{ctBackingBean.onToggleSelect}" update=":form:delAddressBtn" />
+			                      <p:ajax event="rowSelect"
+                                       listener="#{ctBackingBean.onRowSelect}" update=":form:delAddressBtn" />
+			                      <p:ajax event="rowSelectCheckbox" 
+			                             listener="#{ctBackingBean.onRowSelect}" update=":form:delAddressBtn" />
+                                  <p:ajax event="rowUnselectCheckbox" 
+                                         listener="#{ctBackingBean.onRowUnselect}" update=":form:delAddressBtn" />
 					<p:column selectionMode="multiple" style="width:3%"  disabledSelection="#{ctBackingBean.managedBean.disableAmendDetails}"
 						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 					<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="width:100%; white-space:normal;">
@@ -183,7 +200,8 @@
 						disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 						rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 					 <p:commandButton id="delAddressBtn" value="#{lbl['lbl.ct.delete']}" 
-				     	 process="@this" onsuccess="delAddressDlg.show()"  disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+				     	 process="@this" onsuccess="delAddressDlg.show()" partialSubmit="true"
+				     	 disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideActive}"
 				     	 rendered="#{!ctBackingBean.managedBean.viewContract}"/>
 				</div>
 				
@@ -191,7 +209,7 @@
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                          <div class="ppRightBtn">
 		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		                         update=":form:deliveryAddressTbl" 
+		                         update=":form:deliveryAddressTbl, :form:delAddressBtn" 
 		                         action="#{ctBackingBean.deleteDeliveryAddress()}" oncomplete="delAddressDlg.hide();"/>
 			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delAddressDlg.hide();" type="button" />
 		                 </div>
@@ -200,16 +218,6 @@
 			</h:panelGroup>
 	    </p:outputPanel> 
 	  	<ac:lovPopup />
-	  	
-	  	  <p:confirmDialog id="dlgDel" widgetVar="dlgDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
-                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-                         <div class="ppRightBtn">
-		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		                         update=":form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl" 
-		                         action="#{ctBackingBean.deleteAgencyDetails()}" oncomplete="dlgDel.hide();"/>
-			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDel.hide();" type="button" />
-		                 </div>
-                   </p:confirmDialog>
                    
 	   </p:panel>  
 		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" 
@@ -270,7 +278,8 @@
 					</p:column>
 			 </p:dataTable>           
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" 
+				update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
 				    action="#{ctBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgAgency.hide();" />
            </div>

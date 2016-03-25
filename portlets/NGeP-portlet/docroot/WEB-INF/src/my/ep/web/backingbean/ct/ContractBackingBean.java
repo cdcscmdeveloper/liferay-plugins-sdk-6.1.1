@@ -1433,6 +1433,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return null;
 		}
 	}
+		
+		
 	
 	/**
 	 * The method used to add new agency's delivery address.
@@ -1476,6 +1478,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				ctAgencyAddress.addAll(agencyAddressList);
 			}
+			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
@@ -1527,6 +1530,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void deleteDeliveryAddress() {		
 		try {
 			getManagedBean().getSelectedAgency().getCtAgencyAddresses().removeAll(getManagedBean().getSelectedListOfAddress());
+			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
@@ -1544,7 +1548,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					CtAgency agency = agencyIterator.next();
 					if (agency.isSelectedCheckBox()) {
 						agencyIterator.remove();
-						if (this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) {
+						if (getManagedBean().getCtItemList() != null && getManagedBean().getCtItemList().size() > 0) {
 							for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
 								Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
 								while (ctItemCeilingQtyIterator.hasNext()) {
@@ -1560,6 +1564,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			this.getManagedBean().setSelectedAgency(null);
+			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2673,4 +2678,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    public void onRowUnselect(UnselectEvent event) {
 	    	getManagedBean().setButtonHideActive(true);
 	    }
+
+		
+		
+		/**
+		 * The method used for searching the agency.
+		 *//*
+		public void searchCtitemDetails() {
+			try {
+				ctItemDataModel.reloadData();
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
+			}
+		}*/
 }
