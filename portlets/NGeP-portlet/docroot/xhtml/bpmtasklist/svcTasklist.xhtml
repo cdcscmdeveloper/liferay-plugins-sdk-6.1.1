@@ -104,7 +104,7 @@
 
 			<p:panel id="rspl" header="#{lbl['lbl.sm.results']}" toggleable="true">
 				<p:dataTable id="rsDt" value="#{svcTasklistBackingBean.managedBean.searchDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					lazy="true" var="appl">
+					lazy="true" var="appl" rows="10">
 			
 					<ac:paginator for="rsDt"></ac:paginator>
 		
