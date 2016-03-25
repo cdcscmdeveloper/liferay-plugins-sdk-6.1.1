@@ -49,7 +49,7 @@
 							<p:outputPanel id="orgtypeId">
 								<p:selectOneMenu id="newOrgTypeFederalList"
 									rendered="#{organisationBackingBean.managedBean.orgCategory eq organisationBackingBean.federalGovt}" 
-									styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" 
+									required="true" label="#{lbl['lbl.pm.organisation.orgType']}" 
 									value="#{organisationBackingBean.managedBean.orgTypeId}">
 									<f:selectItems
 										value="#{organisationBackingBean.getNewOrgTypeDropdownValues()}" />
@@ -59,7 +59,6 @@
 							
 								<p:selectOneMenu id="newOrgTypeOtherList" 
 									rendered="#{organisationBackingBean.managedBean.orgCategory eq organisationBackingBean.others}" 
-									styleClass="ppDropDownWidthL"
 									label="#{lbl['lbl.pm.organisation.orgType']}"
 									value="#{organisationBackingBean.managedBean.orgTypeId}"
 									required="true">
@@ -83,7 +82,7 @@
 						value="#{lbl['lbl.pm.organisation.orgCode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>				
 						<td><p:inputText id="orgCode" disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
-								label="#{lbl['lbl.pm.organisation.orgCode']}" size="45"
+								label="#{lbl['lbl.pm.organisation.orgCode']}" size="35"
 								styleClass="ppDisplayTextL"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}"
 								maxlength="20" required="#{!empty param['disableValidation']}" /></td>
@@ -124,7 +123,7 @@
 										or ParameterConst.orgTypePegawaiPengawal eq organisationBackingBean.managedBean.orgType}"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
-								required="#{!empty param['disableValidation']}" size="45" styleClass="ppDisplayTextL"
+								required="#{!empty param['disableValidation']}" size="35" styleClass="ppDisplayTextL"
 								maxlength="255" /></td>
 						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>	
 						
@@ -146,10 +145,10 @@
 					<td><h:outputLabel value="#{lbl['lbl.pm.zone.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="zoneCode"
-							label="#{lbl['lbl.pm.zone.name']}" styleClass="ppDropDownWidthM"
+							label="#{lbl['lbl.pm.zone.name']}" 
 							value="#{organisationBackingBean.managedBean.orgProfile.pmZone.zoneId}"
 							required="#{organisationBackingBean.managedBean.orgType eq 'RHQ' or organisationBackingBean.managedBean.orgType eq 'RSH'or organisationBackingBean.managedBean.orgType eq 'RSQ'}"
-							style="width: 300px;margin-bottom: 5px;">
+							style="width: 250px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="zoneLs"
@@ -169,7 +168,7 @@
 				<p:inputText id="gstRegNoId" 
 						label="#{lbl['lbl.pm.org.gst.reg.no']}"
 						value="#{organisationBackingBean.managedBean.gstSupplier.gstRegNo}"
-						size="45" styleClass="ppDisplayTextL"
+						size="35" styleClass="ppDisplayTextL"
 						maxlength="12" >						
 				</p:inputText>				
 				</ui:fragment>	
@@ -213,7 +212,7 @@
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.gst.eff.date']}"
 						value=" "
-						size="25" styleClass="ppDisplayTextL"
+						size="35" 
 						/>
 				</ui:fragment>
 				<ac:iconTooltip value="#{lbl['lbl.pm.org.gst.eff.date.tooltip']}" />
