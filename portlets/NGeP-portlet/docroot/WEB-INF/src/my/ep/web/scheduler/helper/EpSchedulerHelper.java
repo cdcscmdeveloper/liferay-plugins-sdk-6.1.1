@@ -65,7 +65,9 @@ public class EpSchedulerHelper {
 	 * @param Class
 	 *            <? extends Job> jobClass (mandatory)
 	 */
-	public static void runJobOnce(JobKey jobKey, Class<? extends Job> jobClass) {
+	public static boolean runJobOnce(JobKey jobKey,
+			Class<? extends Job> jobClass) {
+		boolean success = true;
 		try {
 
 			if (jobKey != null && jobClass != null) {
@@ -85,8 +87,10 @@ public class EpSchedulerHelper {
 			}
 
 		} catch (SchedulerException e) {
+			success = false;
 			log.error(e.getMessage());
 		}
+		return success;
 	}
 
 	/**
@@ -150,12 +154,15 @@ public class EpSchedulerHelper {
 	 * @param JobKey
 	 *            jobKey (mandatory)
 	 */
-	public static void deleteJobAndAssociatedTriggers(JobKey jobKey) {
+	public static boolean deleteJobAndAssociatedTriggers(JobKey jobKey) {
+		boolean success = true;
 		try {
 			EpSchedulerHelper.getScheduler().deleteJob(jobKey);
 		} catch (SchedulerException e) {
-			throw new EpException(MessageConst.ERRQRTZ_00002);
+			log.error(e.getMessage());
+			success = false;
 		}
+		return success;
 	}
 
 	/**
