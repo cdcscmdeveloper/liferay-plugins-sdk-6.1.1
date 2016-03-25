@@ -2,7 +2,6 @@ package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -12,29 +11,20 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.PPProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.constants.SMProcessNameConst;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
@@ -914,14 +904,32 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	public String constructCondition(){
 
-
+		IParameterSO statusSO = (IParameterSO) BusinessDelegate
+				.getInstance().getServiceObject("pm",
+						IParameterSO.class);
+		
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		
+		ParameterResDTO resDTO = statusSO.findDOcTypeList(reqDTO);
+		
+		StringBuilder docType = new StringBuilder();
+		docType.append("CD,");
+		if(resDTO.getDocTypeLs()!=null && resDTO.getDocTypeLs().size()>0){
+			for(String doc :resDTO.getDocTypeLs()){
+				docType.append(doc+",");
+			}
+		}
+		
+		String outCome = docType.substring(0, docType.length()-1);
+		System.out.println("outCome:"+outCome);
+		
 		StringBuilder sb = new StringBuilder();
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
 		sb.append("languageCode^"+languageCode);
 
 		sb.append("|pmStatus.docType^");
-		sb.append("CM,CD");
+		sb.append(outCome);
 		sb.append("^9");
 
 		System.out.println("sb.toString()"+sb.toString());
