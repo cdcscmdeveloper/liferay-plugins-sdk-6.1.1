@@ -343,7 +343,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		            else 
 			        	     getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			
-			    	initializeRemarks();
 	             	if(getManagedBean().getUserMap().size()==0) {
 	     			   initializeApproverList();
 	             	}
@@ -357,7 +356,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			        getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 		
 			        getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-			        initializeRemarks();
 			        ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			        ctBB.initializeRemarkAndAttachement(resDTO.getCancelCircularReq().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
