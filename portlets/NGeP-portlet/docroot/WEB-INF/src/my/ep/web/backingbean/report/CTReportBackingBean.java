@@ -279,7 +279,7 @@ public class CTReportBackingBean extends
 			rptGenBean.setCtPegaWaiPengawalView(true);
 			rptGenBean.setCtKumpulanPTJView(true);
 			rptGenBean.setCtPtjView(true);
-			rptGenBean.setCtGroupThreeView(true);
+			rptGenBean.setCtGroupThreeExtraView(true);
 			rptGenBean.setCtProcurementModeView(true);
 			rptGenBean.setCtLOAPhysicalNoView(true);
 			// rptGenBean.setCtUserTypeView(true);
@@ -363,7 +363,7 @@ public class CTReportBackingBean extends
 		case ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL:
 			rptGenBean.setCtContractNoView(true);
 			rptGenBean.setCtPhysicalContractNoView(true);
-			rptGenBean.setCtAgreementView(true);
+			rptGenBean.setCtAgreementExtraView(true);
 			rptGenBean.setCtStatusThreeView(true);
 			rptGenBean.setCtLoanNoView(true);
 			//rptGenBean.setCommonLOVBasedRoles(true);

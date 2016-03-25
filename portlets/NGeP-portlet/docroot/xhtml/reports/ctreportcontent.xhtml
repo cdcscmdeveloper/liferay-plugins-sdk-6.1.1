@@ -270,11 +270,26 @@
 						</c:if>
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctAgreementView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.agreement']}"
+							<p:outputLabel value="#{lbl['lbl.rpt.agreement']}" 
 								style="margin-top:5px;width:190px;" />
 							<p:selectOneMenu value="#{reportBackingBean.ctAgreement}"
 								style="margin-top:5px;width:300px;">
-
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.yesLabel']}"
+									itemValue="#{lbl['lbl.rpt.yes']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.noLabel']}"
+									itemValue="#{lbl['lbl.rpt.no']}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>						
+						<c:if
+							test="#{ctReportBackingBean.managedBean.rptGenBean.ctAgreementExtraView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.agreement']}" 
+								style="margin-top:5px;width:280px;" />
+							<p:selectOneMenu value="#{reportBackingBean.ctAgreement}"
+								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.yesLabel']}"
@@ -285,6 +300,7 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
+						
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctProcurementModeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.ProcurementMode']}"
@@ -463,7 +479,7 @@
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctCircularNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.crclrnamelabel']}"
-								style="margin-top:5px;width:190px;" />
+								style="margin-top:5px;width:280px;" />
 							<p:inputText value="#{reportBackingBean.ctCircularName}"
 								style="margin-top:5px;width:290px;">
 								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
@@ -557,7 +573,7 @@
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupOneView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:190px;" />
+								style="margin-top:5px;width:280px;" />
 							<p:selectOneMenu value="#{reportBackingBean.ctGroupOne}"
 								style="margin-top:5px;width:300px;">
 
@@ -581,7 +597,7 @@
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupThreeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:190px;" />
+								style="margin-top:5px;width:280px;" />
 							<p:selectOneMenu value="#{reportBackingBean.ctGroupThree}"
 								style="margin-top:5px;width:300px;">
 
@@ -597,11 +613,30 @@
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
+						</c:if>						
+						<c:if
+							test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupThreeExtraView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
+								style="margin-top:5px;width:190px;" />
+							<p:selectOneMenu value="#{reportBackingBean.ctGroupThree}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
+									itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
+									itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.ProcurementMode']}"
+									itemValue="#{lbl['lbl.rpt.capsprocurementmode']}"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true"
+									update="@([id$=Msg])" />
+							</p:selectOneMenu>
 						</c:if>
+						
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupFourView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:190px;" />
+								style="margin-top:5px;width:280px;" />
 							<p:selectOneMenu value="#{reportBackingBean.ctGroupThree}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
@@ -638,7 +673,7 @@
 							<c:if
 								test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupFiveWithoutSupplView}">
 								<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-									style="margin-top:5px;width:190px;" />
+									style="margin-top:5px;width:280px;" />
 								<p:selectOneMenu value="#{reportBackingBean.ctGroupThree}"
 									style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
@@ -655,7 +690,7 @@
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupTwoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
-								style="margin-top:5px;width:190px;" />
+								style="margin-top:5px;width:280px;" />
 							<p:selectOneMenu value="#{reportBackingBean.ctGroupTwo}"
 								style="margin-top:5px;width:300px;">
 

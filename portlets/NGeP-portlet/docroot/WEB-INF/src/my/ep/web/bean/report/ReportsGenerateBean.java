@@ -3785,6 +3785,9 @@ public class ReportsGenerateBean {
 
 	/** The ct agreement view. */
 	private boolean ctAgreementView = false;
+	
+	/** The ct agreement extra view. */
+	private boolean ctAgreementExtraView=false;	
 
 	/** The ct status view. */
 	private boolean ctStatusView = false;
@@ -3826,7 +3829,10 @@ public class ReportsGenerateBean {
 	private boolean ctPhysicalContractNoView = false;
 
 	/** The ct group three view. */
-	private boolean ctGroupThreeView = false;
+	private boolean ctGroupThreeView = false;	
+	
+	/** The ct group three extra view. */
+	private boolean ctGroupThreeExtraView=false;
 
 	/** The ct status two view. */
 	private boolean ctStatusTwoView = false;
@@ -20786,6 +20792,44 @@ public class ReportsGenerateBean {
 	 */
 	public void setContractReqTotVar(String contractReqTotVar) {
 		this.contractReqTotVar = contractReqTotVar;
+	}
+
+	/**
+	 * Checks if is ct group three extra view.
+	 * 
+	 * @return the ctGroupThreeExtraView
+	 */
+	public boolean isCtGroupThreeExtraView() {
+		return ctGroupThreeExtraView;
+	}
+
+	/**
+	 * Sets the ct group three extra view.
+	 * 
+	 * @param ctGroupThreeExtraView
+	 *            the ctGroupThreeExtraView to set
+	 */
+	public void setCtGroupThreeExtraView(boolean ctGroupThreeExtraView) {
+		this.ctGroupThreeExtraView = ctGroupThreeExtraView;
+	}
+
+	/**
+	 * Checks if is ct agreement extra view.
+	 * 
+	 * @return the ctAgreementExtraView
+	 */
+	public boolean isCtAgreementExtraView() {
+		return ctAgreementExtraView;
+	}
+
+	/**
+	 * Sets the ct agreement extra view.
+	 * 
+	 * @param ctAgreementExtraView
+	 *            the ctAgreementExtraView to set
+	 */
+	public void setCtAgreementExtraView(boolean ctAgreementExtraView) {
+		this.ctAgreementExtraView = ctAgreementExtraView;
 	}
 
 }
