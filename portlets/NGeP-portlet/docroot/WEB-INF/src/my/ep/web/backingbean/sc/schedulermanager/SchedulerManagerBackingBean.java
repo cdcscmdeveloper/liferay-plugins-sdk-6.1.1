@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sc.schedulermanager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -8,6 +10,7 @@ import javax.faces.bean.RequestScoped;
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
@@ -26,6 +29,8 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.matchers.GroupMatcher;
+
+import com.liferay.portal.kernel.util.StringUtil;
 
 @ManagedBean(name = "schedulerManagerBB")
 @RequestScoped
@@ -88,6 +93,7 @@ public class SchedulerManagerBackingBean extends
 									jobKey.getGroup());
 						}
 
+						// add any exist job if job group filter is All
 						if (StringUtils.isBlank(getManagedBean().getJobGroup())) {
 							getManagedBean().getEpSchedulerJobList().add(
 									new EpJobVO(jobKey, trigger,
@@ -95,6 +101,8 @@ public class SchedulerManagerBackingBean extends
 											jobState, job.getDescription(), job
 													.getJobClass()));
 						} else {
+							// if job group not all, add job group equals filter
+							// job group
 							if (getManagedBean().getJobGroup().equals(
 									jobKey.getGroup())) {
 								getManagedBean().getEpSchedulerJobList().add(
@@ -111,6 +119,8 @@ public class SchedulerManagerBackingBean extends
 				}
 
 			}
+
+			// set bidding list
 			getManagedBean().setCurrentDayBids(
 					SchedulerHelper.getInstance().getJobBidScheduleList());
 
@@ -208,6 +218,37 @@ public class SchedulerManagerBackingBean extends
 			retVal = SchedulerConstants.JOB_RUN;
 		}
 		return retVal;
+	}
+
+	private void sortJobList() {
+		// sort job groups filter
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getJobGroups())) {
+			// sort
+			Collections.sort(getManagedBean().getJobGroups(),
+					new Comparator<String>() {
+						@Override
+						public int compare(final String s1, final String s2) {
+							return StringUtil.upperCase(s1).compareTo(
+									StringUtil.upperCase(s2));
+						}
+					});
+		}
+		// sort job scheduled list
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getEpSchedulerJobList())) {
+			// sort by group
+			Collections.sort(getManagedBean().getEpSchedulerJobList(),
+					new Comparator<EpJobVO>() {
+						@Override
+						public int compare(final EpJobVO jobVO1,
+								final EpJobVO jobVO2) {
+							return StringUtil.upperCase(
+									jobVO1.getJobKey().getGroup()).compareTo(
+									StringUtil.upperCase(jobVO1.getJobKey()
+											.getGroup()));
+						}
+					});
+		}
 	}
 
 }
