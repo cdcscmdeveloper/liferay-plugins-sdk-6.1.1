@@ -19,6 +19,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+// TODO: Auto-generated Javadoc
+
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
@@ -57,7 +60,6 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlReliefOrderItem;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
@@ -89,9 +91,6 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
-// TODO: Auto-generated Javadoc
 
 /**
  * Backingbean for Fulfillment document.
@@ -477,9 +476,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if(resDTO.getFlOrder().isFactored()) {
 				flOrderBB.getManagedBean().setFactoringCheck("true");
 				flOrderBB.getFactoringCompanyDtl();
-//				if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){//TODO
-//					flOrderBB.getFactoringAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-//				}				
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.initializeRemarkAndAttachement(null, resDTO.getRemarkList(), resDTO.getAttachmentList());
@@ -630,11 +626,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			}
 			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 			recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
-				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
-				fulfilmentNoteItem.setTotalRecvAmount(fulfilmentNoteItem.getReceivedAmt());
-				fulfilmentNoteItem.setTotalRecvQty(fulfilmentNoteItem.getReceivedQty());
-			}
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			recNoteBB.getManagedBean().setDocMaintainRemarks(true);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){

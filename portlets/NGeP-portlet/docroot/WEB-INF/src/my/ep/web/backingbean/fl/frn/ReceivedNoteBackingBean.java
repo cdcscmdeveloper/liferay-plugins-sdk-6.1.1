@@ -329,17 +329,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 				getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
 				
-				for(FlFulfilmentNoteItem flFulfilmentNoteItem :resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
-					Double totalAmt = new Double(0);
-					Double totalQty = new Double(0);
-					for(FlFulfilmentItemAddr itemAddr : flFulfilmentNoteItem.getFlItem().getFlFulfilmentItemAddr()){
-						totalAmt = totalAmt + itemAddr.getReceivedAmt().doubleValue();
-						totalQty = totalQty + itemAddr.getReceivedQty().doubleValue();
-					}
-					flFulfilmentNoteItem.setTotalRecvAmount(new BigDecimal(totalAmt));
-					flFulfilmentNoteItem.setTotalRecvQty(new BigDecimal(totalQty));
-				}
-				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 				
@@ -362,17 +351,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
-					
-					for(FlFulfilmentNoteItem flFulfilmentNoteItem :resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
-						Double totalAmt = new Double(0);
-						Double totalQty = new Double(0);
-						for(FlFulfilmentItemAddr itemAddr : flFulfilmentNoteItem.getFlItem().getFlFulfilmentItemAddr()){
-							totalAmt = totalAmt + itemAddr.getReceivedAmt().doubleValue();
-							totalQty = totalQty + itemAddr.getReceivedQty().doubleValue();
-						}
-						flFulfilmentNoteItem.setTotalRecvAmount(new BigDecimal(totalAmt));
-						flFulfilmentNoteItem.setTotalRecvQty(new BigDecimal(totalQty));
-					}
 					if(getManagedBean().getFulfilmentNote().getApprover() == null){
 						reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
 						getManagedBean().getFulfilmentNote().setApprover(receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO)) ;
@@ -408,8 +386,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 								noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
 								noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
 							}	
-							noteItem.setTotalRecvAmount(delOrderItem.getFlFulfilmentItemAddr().getReceivedAmt());
-							noteItem.setTotalRecvQty(delOrderItem.getFlFulfilmentItemAddr().getReceivedQty());
 							noteItemList.add(noteItem);
 						}
 					}
@@ -951,17 +927,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 			getManagedBean().setPmUser(reqDTO.getPmUser());
-			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
-				getManagedBean().setSelectedItem(fulfilmentNoteItem);
-				Double totalAmt = new Double(0);
-				Double totalQty = new Double(0);
-				for(FlFulfilmentItemAddr itemAddr : fulfilmentNoteItem.getFlItem().getFlFulfilmentItemAddr()){
-					totalAmt = totalAmt + itemAddr.getReceivedAmt().doubleValue();
-					totalQty = totalQty + itemAddr.getReceivedQty().doubleValue();
-				}
-				fulfilmentNoteItem.setTotalRecvAmount(new BigDecimal(totalAmt));
-				fulfilmentNoteItem.setTotalRecvQty(new BigDecimal(totalQty));
-			}
 			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			getManagedBean().setDocMaintainRemarks(true);
 			
@@ -1066,8 +1031,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setOrderedQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty());
 			getManagedBean().setDeliveredQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredQty());
 			getManagedBean().setDeliveredAmt(getManagedBean().getSelectedItem().getFlDelOrderItem().getDeliveredAmt());
-			getManagedBean().setTotalReceivedAmt(getManagedBean().getSelectedItem().getTotalRecvAmount());
-			getManagedBean().setTotalReceivedQty(getManagedBean().getSelectedItem().getTotalRecvQty());
 			if(getManagedBean().isAcknowledged()){
 				getManagedBean().setRemainingQty(getManagedBean().getSelectedItem().getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().subtract(getManagedBean().getSelectedItem().getReceivedQty()));
 			}else{
