@@ -1,11 +1,13 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -24,20 +26,24 @@ import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.bpm.tasklist.SVCTaskListManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmSvcTaskVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "svcTasklistBackingBean")
 @RequestScoped
@@ -49,6 +55,7 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SVCTaskListBackingBean.class);
 	private List<SmAppl> resultList = new ArrayList<SmAppl>(); 
+	private static String SVC_TASK_LIST = "svc-assignment";
 
 
 	public SVCTaskListBackingBean(){
@@ -233,6 +240,31 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
 		findDistrict();
 		this.getManagedBean().getSearchDataModel().reloadData();
+	}
+	
+	/**
+	 * search by state
+	 * @throws SystemException 
+	 * @throws PortalException 
+	 * @throws IOException 
+	 */
+	public void navigateByState() throws PortalException, SystemException, IOException {
+		String selectedState = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("stateId"); 
+		getManagedBean().setApplNo(null);
+		getManagedBean().setStateId(Long.valueOf(selectedState));
+		getManagedBean().setDistrictId(0);
+		getManagedBean().setSupplierName(null);
+		getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
+		findDistrict();
+		this.getManagedBean().getSearchDataModel().reloadData();
+		
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(
+						themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+		
+		externalContext.redirect(commonUrl + "/" + SVC_TASK_LIST);
 	}
 	
 	/**
