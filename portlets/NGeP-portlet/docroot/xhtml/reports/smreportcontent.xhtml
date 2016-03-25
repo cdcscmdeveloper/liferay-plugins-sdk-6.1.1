@@ -635,8 +635,6 @@
 												label="#{lbl['lbl.rpt.supplierType']}" id="SupplierType"
 												value="#{reportBackingBean.smSupplierType}"
 												style="width:300px;">
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
-													itemValue="#{null}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
 													itemValue="J"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
@@ -2346,7 +2344,7 @@
 									value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>
 								<p:ajax event="change"
 									listener="#{reportBackingBean.retrieveDistrict}"
-									process="@this" partialSubmit="true" update="smDistrict" />
+									process="@form" partialSubmit="true" update="@form" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -2690,12 +2688,6 @@
 						</c:if>
 					</h:panelGrid></td>
 			</tr>
-
-
-
-
-
-
 
 
 
@@ -4071,11 +4063,11 @@
 								<p:column style="width:2%" selectionMode="multiple" />
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-									<h:outputText value="*"
+									<h:outputText value="*" rendered="#{reportBackingBean.mainCatValueReqd}"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.mainCat']}"
 										id="consultProjParCatCode"
-										required="#{reportBackingBean.valueReqd}"
+										required="#{reportBackingBean.mainCatValueReqd}"
 										value="#{expCategoryBean.pmCategoryL1.categoryL1Id}"
 										style="width: 320px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -4097,10 +4089,10 @@
 
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-									<h:outputText
+									<h:outputText value="*" rendered="#{reportBackingBean.subCatValueReqd}"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.subCat']}"
-										value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"
+										value="#{expCategoryBean.pmCategoryL2.categoryL2Id}" required="#{reportBackingBean.subCatValueReqd}"
 										id="conslChild" style="width: 320px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -4118,10 +4110,10 @@
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-									<h:outputText
+									<h:outputText value="*" rendered="#{reportBackingBean.subCatDivisionValueReqd}"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
-										value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"
+										value="#{expCategoryBean.pmCategoryL3.categoryL3Id}" required="#{reportBackingBean.subCatDivisionValueReqd}"
 										id="conslSubChild" style="width: 320px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />

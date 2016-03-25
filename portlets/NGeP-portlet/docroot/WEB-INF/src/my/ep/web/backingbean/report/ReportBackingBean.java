@@ -273,6 +273,9 @@ public class ReportBackingBean extends
 	/** The unspc list. */
 	private List<SelectItem> unspcList = new ArrayList<SelectItem>();
 
+	/** The items list. */
+	private SelectItem[] itemsList = null;
+
 	/** The brand list. */
 	private List<SelectItem> brandList = new ArrayList<SelectItem>();
 
@@ -407,6 +410,15 @@ public class ReportBackingBean extends
 
 	/** The value reqd. */
 	private boolean valueReqd;
+
+	/** The main cat value reqd. */
+	private boolean mainCatValueReqd;
+
+	/** The Sub cat value reqd. */
+	private boolean subCatValueReqd;
+
+	/** The Sub cat division value reqd. */
+	private boolean subCatDivisionValueReqd;
 
 	/** The show parent msg. */
 	private boolean showParentMsg;
@@ -1477,6 +1489,44 @@ public class ReportBackingBean extends
 	 */
 	public List<SelectItem> getSmStateList() {
 		return smStateList;
+	}
+
+	/**
+	 * Checks if is sub cat value reqd.
+	 * 
+	 * @return the subCatValueReqd
+	 */
+	public boolean isSubCatValueReqd() {
+		return subCatValueReqd;
+	}
+
+	/**
+	 * Sets the sub cat value reqd.
+	 * 
+	 * @param subCatValueReqd
+	 *            the subCatValueReqd to set
+	 */
+	public void setSubCatValueReqd(boolean subCatValueReqd) {
+		this.subCatValueReqd = subCatValueReqd;
+	}
+
+	/**
+	 * Checks if is sub cat division value reqd.
+	 * 
+	 * @return the subCatDivisionValueReqd
+	 */
+	public boolean isSubCatDivisionValueReqd() {
+		return subCatDivisionValueReqd;
+	}
+
+	/**
+	 * Sets the sub cat division value reqd.
+	 * 
+	 * @param subCatDivisionValueReqd
+	 *            the subCatDivisionValueReqd to set
+	 */
+	public void setSubCatDivisionValueReqd(boolean subCatDivisionValueReqd) {
+		this.subCatDivisionValueReqd = subCatDivisionValueReqd;
 	}
 
 	/**
@@ -3523,6 +3573,25 @@ public class ReportBackingBean extends
 	 */
 	public String getSmEpNo() {
 		return smEpNo;
+	}
+
+	/**
+	 * Checks if is main cat value reqd.
+	 * 
+	 * @return the mainCatValueReqd
+	 */
+	public boolean isMainCatValueReqd() {
+		return mainCatValueReqd;
+	}
+
+	/**
+	 * Sets the main cat value reqd.
+	 * 
+	 * @param mainCatValueReqd
+	 *            the mainCatValueReqd to set
+	 */
+	public void setMainCatValueReqd(boolean mainCatValueReqd) {
+		this.mainCatValueReqd = mainCatValueReqd;
 	}
 
 	/**
@@ -7256,6 +7325,25 @@ public class ReportBackingBean extends
 	}
 
 	/**
+	 * Gets the items list.
+	 * 
+	 * @return the itemsList
+	 */
+	public SelectItem[] getItemsList() {
+		return itemsList;
+	}
+
+	/**
+	 * Sets the items list.
+	 * 
+	 * @param itemsList
+	 *            the itemsList to set
+	 */
+	public void setItemsList(SelectItem[] itemsList) {
+		this.itemsList = itemsList;
+	}
+
+	/**
 	 * Sets the pm org code.
 	 * 
 	 * @param pmOrgCode
@@ -8573,8 +8661,8 @@ public class ReportBackingBean extends
 						this.setSmMofRegNoTo(ReportConst.SUPPL_CONTRACT_MOF_NO);
 					}
 				} else {
-					this.setSmMofRegNoFrom(null);
-					this.setSmMofRegNoTo(null);
+					this.setSmMofRegNoFrom(ReportConst.SUPPL_CONSULT_MOF_NO);
+					this.setSmMofRegNoTo(ReportConst.SUPPL_CONSULT_MOF_NO);
 				}
 			}
 		}
@@ -8916,13 +9004,10 @@ public class ReportBackingBean extends
 					ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL)
 					|| this.getReportValue().equals(
 							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL)
-					||
-					this.getReportValue().equals(
-							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL)
-					||
-					this.getReportValue().equals(
-							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)
-					) {
+					|| this.getReportValue()
+							.equals(ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL)
+					|| this.getReportValue().equals(
+							ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL)) {
 				for (SelectItem item : docTypeStatusItemsList) {
 					if (!item.getLabel().equalsIgnoreCase(
 							ReportConst.STATUS_CANCELLED))
@@ -9706,7 +9791,29 @@ public class ReportBackingBean extends
 	private void assignValReqdToTrue() {
 		log.info("ReportBackingBean-assignValReqdToTrue");
 		this.setShowParentMsg(false);
-		this.setValueReqd(true);
+		// this.setValueReqd(true);						
+		if (this.reportValue!=null && this.reportValue
+				.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
+			getCatDropdownStatusList();
+		} else {
+			this.setMainCatValueReqd(true);
+			this.setSubCatValueReqd(false);
+			this.setSubCatDivisionValueReqd(false);
+		}
+		
+	}
+
+	private void getCatDropdownStatusList() {
+		if (this.getSmState() != null
+				&& this.getSmState() != ReportConst.EMPTY_VAL) {
+			this.setMainCatValueReqd(true);
+			this.setSubCatValueReqd(true);
+			this.setSubCatDivisionValueReqd(true);
+		} else {
+			this.setMainCatValueReqd(true);
+			this.setSubCatValueReqd(false);
+			this.setSubCatDivisionValueReqd(false);
+		}
 	}
 
 	/**
@@ -12222,6 +12329,10 @@ public class ReportBackingBean extends
 			if (this.getReportValue().equals(ReportConst.SM_LIST_OF_USERS)) {
 				changeSoftCertSelection();
 			}
+			if (this.getReportValue().equalsIgnoreCase(
+					ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)) {
+				supplierTypeConsultant();
+			}
 			getGenBusCompanyData();
 			/*
 			 * if (pmReport != null) {
@@ -12615,6 +12726,7 @@ public class ReportBackingBean extends
 			selectItem.setValue(state.getStateId());
 			stateLst.add(selectItem);
 		}
+		
 	}
 
 	/**
@@ -12639,6 +12751,22 @@ public class ReportBackingBean extends
 				selectItem.setValue(pmDistrict.getDistrictId());
 				districtLst.add(selectItem);
 			}
+			if (this.reportValue
+					.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
+				this.setMainCatValueReqd(true);
+				this.setSubCatValueReqd(true);
+				this.setSubCatDivisionValueReqd(true);
+			}
+		} else {
+			this.setMainCatValueReqd(true);
+			this.setSubCatValueReqd(false);
+			this.setSubCatDivisionValueReqd(false);
+		}
+		// to clear the category drop down values		
+		for (SmSupplierCategory cat : this.getSelectedCatList()) {
+			cat.setPmCategoryL1(new PmCategoryL1());
+			cat.setPmCategoryL2(new PmCategoryL2());
+			cat.setPmCategoryL3(new PmCategoryL3());
 		}
 	}
 
@@ -16600,6 +16728,7 @@ public class ReportBackingBean extends
 			// changeReportType();
 			retrieveDates();
 			applicationStatusDateChange();
+			getCatDropdownStatusList();
 			if (this.getModuleValue() != null) {
 				if ((!this.getModuleValue().equalsIgnoreCase(
 						ModuleCodeConst.CONTRACT_MANAGEMENT)
@@ -16610,7 +16739,6 @@ public class ReportBackingBean extends
 					checkEmptyValuesForLovs();
 				}
 			}
-
 		}
 
 	}
@@ -17518,7 +17646,8 @@ public class ReportBackingBean extends
 						.setPmOrgValidity(new PmOrgValidity());
 			}
 		}
-		sb.append(this.getManagedBean().getSelectedPegwaiPengawal().getOrgProfileId());
+		sb.append(this.getManagedBean().getSelectedPegwaiPengawal()
+				.getOrgProfileId());
 
 		return sb.toString();
 	}
