@@ -8,7 +8,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_SvcTasklist_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.svctasklist.header']}");
+		</script>
+	</ui:define>
 	<ui:define name="contentSection">
+		<style>
+			.portlet-body{
+				overflow:auto;
+			}
+		</style>
+	
 	<div id="customNav">
 		<table class="customDtTbl">
 		<tr>
@@ -91,11 +102,11 @@
 			</table>
 			<div style="text-align: right;">
 
-				<p:commandButton id="resetBtn"
+				<p:commandButton id="resetBtn" 
 					action="#{svcTasklistBackingBean.resetSearchCriteria}" value="#{lbl['lbl.btn.reset']}"
 					update="searchContent" />
 
-				<p:commandButton id="schBtn"
+				<p:commandButton id="schBtn" 
 					action="#{svcTasklistBackingBean.searchAction}" value="#{lbl['lbl.btn.search']}"
 					update="rspl" />
 				
@@ -144,7 +155,6 @@
 			</p:panel>
 		</p:panel>
 		</div>
-		
 	</ui:define>
 
 </ui:composition>
