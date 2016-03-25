@@ -22,11 +22,12 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = -4940842520664848758L;
 
 	private List<EpJobVO> epSchedulerJobList;
+	private List<EpJobVO> filteredEpSchedulerJobList;
+	private List<String> jobGroups;
+	private String jobGroup;
 	private EpJobVO selectedJobVO;
 	private Scheduler scheduler;
 	private List<ScBidSchedule> currentDayBids;
-	
-	
 
 	/**
 	 * @return the currentDayBids
@@ -36,7 +37,8 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param currentDayBids the currentDayBids to set
+	 * @param currentDayBids
+	 *            the currentDayBids to set
 	 */
 	public void setCurrentDayBids(List<ScBidSchedule> currentDayBids) {
 		this.currentDayBids = currentDayBids;
@@ -50,7 +52,8 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scheduler the scheduler to set
+	 * @param scheduler
+	 *            the scheduler to set
 	 */
 	public void setScheduler(Scheduler scheduler) {
 		this.scheduler = scheduler;
@@ -68,7 +71,8 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param epSchedulerJobList the epSchedulerJobList to set
+	 * @param epSchedulerJobList
+	 *            the epSchedulerJobList to set
 	 */
 	public void setEpSchedulerJobList(List<EpJobVO> epSchedulerJobList) {
 		this.epSchedulerJobList = epSchedulerJobList;
@@ -82,6 +86,29 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 		this.selectedJobVO = selectedJobVO;
 	}
 
-	
+	public List<EpJobVO> getFilteredEpSchedulerJobList() {
+		return filteredEpSchedulerJobList;
+	}
+
+	public void setFilteredEpSchedulerJobList(
+			List<EpJobVO> filteredEpSchedulerJobList) {
+		this.filteredEpSchedulerJobList = filteredEpSchedulerJobList;
+	}
+
+	public List<String> getJobGroups() {
+		return jobGroups;
+	}
+
+	public void setJobGroups(List<String> jobGroups) {
+		this.jobGroups = jobGroups;
+	}
+
+	public String getJobGroup() {
+		return jobGroup;
+	}
+
+	public void setJobGroup(String jobGroup) {
+		this.jobGroup = jobGroup;
+	}
 
 }
