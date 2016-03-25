@@ -16,6 +16,7 @@ import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.sc.helper.SchedulerHelper;
 import my.ep.web.vo.EpJobVO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -54,6 +55,7 @@ public class SchedulerManagerBackingBean extends
 				getManagedBean().setScheduler(EpSchedulerHelper.getScheduler());
 			}
 			getManagedBean().setEpSchedulerJobList(new ArrayList<EpJobVO>());
+			getManagedBean().setJobGroups(new ArrayList<String>());
 
 			for (String groupName : getManagedBean().getScheduler()
 					.getJobGroupNames()) {
@@ -79,11 +81,31 @@ public class SchedulerManagerBackingBean extends
 							jobAction = SchedulerConstants.JOB_PAUSE;
 						}
 
-						getManagedBean().getEpSchedulerJobList().add(
-								new EpJobVO(jobKey, trigger,
-										getJobStatus(jobKey), jobAction,
-										jobState, job.getDescription(), job
-												.getJobClass()));
+						// add group for filtering purposes
+						if (!getManagedBean().getJobGroups().contains(
+								jobKey.getGroup())) {
+							getManagedBean().getJobGroups().add(
+									jobKey.getGroup());
+						}
+
+						if (StringUtils.isBlank(getManagedBean().getJobGroup())) {
+							getManagedBean().getEpSchedulerJobList().add(
+									new EpJobVO(jobKey, trigger,
+											getJobStatus(jobKey), jobAction,
+											jobState, job.getDescription(), job
+													.getJobClass()));
+						} else {
+							if (getManagedBean().getJobGroup().equals(
+									jobKey.getGroup())) {
+								getManagedBean().getEpSchedulerJobList().add(
+										new EpJobVO(jobKey, trigger,
+												getJobStatus(jobKey),
+												jobAction, jobState, job
+														.getDescription(), job
+														.getJobClass()));
+							}
+						}
+
 					}
 
 				}
