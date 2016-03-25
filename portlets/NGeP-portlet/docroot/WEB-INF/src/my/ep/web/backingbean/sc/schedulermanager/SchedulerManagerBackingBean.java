@@ -40,8 +40,6 @@ public class SchedulerManagerBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 		initAllJobs();
-		getManagedBean().setCurrentDayBids(
-				SchedulerHelper.getInstance().getJobBidScheduleList());
 	}
 
 	public void initAllJobs() {
@@ -162,7 +160,6 @@ public class SchedulerManagerBackingBean extends
 					getManagedBean().getScheduler().resumeJob(
 							epJobVO.getJobKey());
 				}
-				initAllJobs();
 			} else {
 				throw new EpException(MessageConst.ERRQRTZ_00001);
 			}
@@ -175,9 +172,7 @@ public class SchedulerManagerBackingBean extends
 		if (!EpSchedulerHelper.isJobRunningNow(epJobVO.getJobKey())) {
 			boolean success = EpSchedulerHelper.runJobOnce(epJobVO.getJobKey(),
 					epJobVO.getJobClass());
-			if (success) {
-				initAllJobs();
-			} else {
+			if (!success) {
 				throw new EpException(MessageConst.ERRQRTZ_00003);
 			}
 		} else {
@@ -191,9 +186,7 @@ public class SchedulerManagerBackingBean extends
 			boolean success = EpSchedulerHelper
 					.deleteJobAndAssociatedTriggers(getManagedBean()
 							.getSelectedJobVO().getJobKey());
-			if (success) {
-				initAllJobs();
-			} else {
+			if (!success) {
 				throw new EpException(MessageConst.ERRQRTZ_00002);
 			}
 		} else {
