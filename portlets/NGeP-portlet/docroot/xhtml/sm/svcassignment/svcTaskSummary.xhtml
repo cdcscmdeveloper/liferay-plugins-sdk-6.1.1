@@ -1,0 +1,39 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+	<div id="customNav">
+		<table class="customDtTbl">
+		<tr>
+			<th>#{lbl['lbl.sm.state']}</th>
+			<th>#{lbl['lbl.sm.before']}</th>
+			<th>#{lbl['lbl.sm.after']}</th>
+		</tr>
+		<ui:repeat var="stateTask" value="#{svcTasklistBackingBean.retrieveSvcStateTaskList()}">
+			<tr>
+				<td>
+					<p:commandLink value="#{stateTask.stateName}" 
+					action="#{svcTasklistBackingBean.navigateByState()}">
+						<f:param name="stateId" value="#{stateTask.stateId}"></f:param>
+					</p:commandLink><br />
+				</td>
+				<td >
+					#{stateTask.totalTaskBefore}
+				</td>
+				<td>
+					#{stateTask.totalTaskAfter}
+				</td>
+			</tr>
+		</ui:repeat>
+		</table>
+	</div>
+	</ui:define>
+
+</ui:composition>
