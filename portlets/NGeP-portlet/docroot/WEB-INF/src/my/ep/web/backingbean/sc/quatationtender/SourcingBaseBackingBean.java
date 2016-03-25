@@ -2249,4 +2249,62 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return BigDecimal.valueOf(0);
 	}
+	
+	
+	/**
+	 * Gets the role type dropdown values.
+	 * 
+	 * @return the role type dropdown values
+	 */
+	public List<PmParameterDesc> getRoleTypeDropdownValuesBasedOnPTJ(
+			boolean isChairPersonReq,ScQt scqt,PmUser user) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		boolean isptj=false;
+		if (!isChairPersonReq) {
+			isptj=orgProfileCheckExist( scqt, user,isptj);
+		if(isptj==true){
+			recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							recommendList));
+			
+		}
+			
+		}else{
+			isptj=orgProfileCheckExist( scqt, user,isptj);
+			
+			
+		}
+		if(isptj==false){
+				recommendList.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode",
+								SearchOperator.OPERATOR_IN.value(),
+								recommendList));
+			}
+
+		return retrieveParametersBySearchBean(
+				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+
+	}
+	
+	private boolean orgProfileCheckExist(ScQt scqt,PmUser user, boolean isptj){
+		PmOrgProfile orgProfile=	scqt.getPmOrgProfile();
+		System.out.println("===qt PtjId==="+orgProfile.getOrgProfileId());
+		if(null!=user.getPmUserOrgs()){
+		for(PmUserOrg userorg:user.getPmUserOrgs()){
+			System.out.println("===user org record status==="+userorg.isRecordStatus());
+			System.out.println("===user org profile Id==="+userorg.getPmOrgProfile().getOrgProfileId());
+			if(userorg.isRecordStatus() && null!=userorg.getPmOrgProfile() && userorg.getPmOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())){
+				isptj=true;
+				break;
+			}
+			
+		}
+		}
+		return isptj;
+	}
+	
 }
