@@ -127,22 +127,32 @@ public class SchedulerManagerBackingBean extends
 
 	public void pauseOrResumeJob(EpJobVO epJobVO) {
 		try {
-			if (epJobVO.getAction().equals(SchedulerConstants.JOB_PAUSE)) {
-				getManagedBean().getScheduler().pauseJob(epJobVO.getJobKey());
+			if (!EpSchedulerHelper.isJobRunningNow(epJobVO.getJobKey())) {
+				if (epJobVO.getAction().equals(SchedulerConstants.JOB_PAUSE)) {
+					getManagedBean().getScheduler().pauseJob(
+							epJobVO.getJobKey());
+				} else {
+					getManagedBean().getScheduler().resumeJob(
+							epJobVO.getJobKey());
+				}
+				initAllJobs();
 			} else {
-				getManagedBean().getScheduler().resumeJob(epJobVO.getJobKey());
+				throw new EpException(MessageConst.ERRQRTZ_00001);
 			}
-			initAllJobs();
 		} catch (SchedulerException e) {
-			log.error(e.getMessage());
+			throw new EpException(MessageConst.ERRQRTZ_00003);
 		}
 	}
 
 	public void runNowJob(EpJobVO epJobVO) {
 		if (!EpSchedulerHelper.isJobRunningNow(epJobVO.getJobKey())) {
-			EpSchedulerHelper.runJobOnce(epJobVO.getJobKey(),
+			boolean success = EpSchedulerHelper.runJobOnce(epJobVO.getJobKey(),
 					epJobVO.getJobClass());
-			initAllJobs();
+			if (success) {
+				initAllJobs();
+			} else {
+				throw new EpException(MessageConst.ERRQRTZ_00003);
+			}
 		} else {
 			throw new EpException(MessageConst.ERRQRTZ_00001);
 		}
@@ -151,9 +161,14 @@ public class SchedulerManagerBackingBean extends
 	public void deleteJob() {
 		if (!EpSchedulerHelper.isJobRunningNow(getManagedBean()
 				.getSelectedJobVO().getJobKey())) {
-			EpSchedulerHelper.deleteJobAndAssociatedTriggers(getManagedBean()
-					.getSelectedJobVO().getJobKey());
-			initAllJobs();
+			boolean success = EpSchedulerHelper
+					.deleteJobAndAssociatedTriggers(getManagedBean()
+							.getSelectedJobVO().getJobKey());
+			if (success) {
+				initAllJobs();
+			} else {
+				throw new EpException(MessageConst.ERRQRTZ_00002);
+			}
 		} else {
 			throw new EpException(MessageConst.ERRQRTZ_00001);
 		}
