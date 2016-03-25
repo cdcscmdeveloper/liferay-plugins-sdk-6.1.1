@@ -946,6 +946,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				flItemAddr.setItemType(purchaseItem.getRequestItem().getItemType());
 				flItemAddr.setScRequestItem(purchaseItem.getRequestItem());
 				flItemAddr.setCmItem(purchaseItem.getRequestItem().getCmItem());
+				flItemAddr.setPmUomId(purchaseItem.getRequestItem().getUom().getUomId());
 				if(purchaseItem.getRequestItem().getCmItem()!=null) {
 					flItemAddr.setItemCode(purchaseItem.getRequestItem().getCmItem().getExtensionCode());
 				} else {
@@ -1016,7 +1017,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			return false;
 		}
 		for(FlFulfilmentItemAddr flFulItemAddress:showAllItemsRows){
-			if(purchaseItem.getRequestItem().getRequestNoteItemId()==flFulItemAddress.getScRequestItem().getRequestNoteItemId()){
+			if(purchaseItem.getRequestItem().getRequestNoteItemId()+purchaseItem.getRequestItem().getUom().getUomId()==flFulItemAddress.getScRequestItem().getRequestNoteItemId()+flFulItemAddress.getPmUomId()){
 				isContains=true;
 			}
 		}
@@ -1181,7 +1182,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			boolean isExist = false;
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 				if(itemAddr.getFlDeliveryAddress() == getManagedBean().getSelectedDelAddr() 
-						&& itemAddr.getScRequestItem().getRequestNoteItemId().longValue() == flItemAddr.getScRequestItem().getRequestNoteItemId()){
+						&& itemAddr.getScRequestItem().getRequestNoteItemId().longValue()+itemAddr.getPmUomId() == flItemAddr.getScRequestItem().getRequestNoteItemId()+flItemAddr.getPmUomId()){
 
 					isExist = true;
 					break;
