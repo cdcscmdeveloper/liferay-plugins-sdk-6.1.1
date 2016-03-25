@@ -7855,7 +7855,7 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Site Visit</title>
+	 		<title>SVC Task Summary</title>
 	 		<short-title>NewJSFPortlet</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
