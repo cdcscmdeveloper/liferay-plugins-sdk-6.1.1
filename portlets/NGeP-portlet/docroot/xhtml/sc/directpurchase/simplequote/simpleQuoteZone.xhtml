@@ -19,7 +19,7 @@
 				<td style="width: 180px; margin-bottom: 5px;"><p:selectOneMenu
 						id="locLevels"
 						value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
-						disabled="#{!isEditable}"
+						disabled="#{!isEditable || simpleQuoteBackingBean.managedBean.scQuote.panel}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
@@ -33,7 +33,7 @@
 		</table>
 
 		<h:panelGroup
-			rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panelItem eq null}">
+			rendered="#{!simpleQuoteBackingBean.managedBean.scQuote.panel}">
 			<h:panelGrid width="100%" style="margin-top:20px">
 				<p:dataTable id="zoneLocationDataTable"
 					value="#{simpleQuoteBackingBean.managedBean.zoneTrees}"
@@ -102,7 +102,7 @@
 
 		<!-- panel item zone -->
 		<h:panelGroup
-			rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panelItem ne null}">
+			rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
 			<h:panelGrid width="100%" style="margin-top:20px">
 				<p:dataTable id="panelzoneDataTable"
 					value="#{simpleQuoteBackingBean.managedBean.zoneTrees}"
