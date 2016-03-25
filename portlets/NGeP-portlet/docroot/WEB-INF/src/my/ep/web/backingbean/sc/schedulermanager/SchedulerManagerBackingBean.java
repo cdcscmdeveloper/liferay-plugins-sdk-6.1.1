@@ -164,6 +164,7 @@ public class SchedulerManagerBackingBean extends
 					getManagedBean().getScheduler().resumeJob(
 							epJobVO.getJobKey());
 				}
+				initAllJobs();
 			} else {
 				throw new EpException(MessageConst.ERRQRTZ_00001);
 			}
@@ -178,6 +179,8 @@ public class SchedulerManagerBackingBean extends
 					epJobVO.getJobClass());
 			if (!success) {
 				throw new EpException(MessageConst.ERRQRTZ_00003);
+			}else{
+				initAllJobs();
 			}
 		} else {
 			throw new EpException(MessageConst.ERRQRTZ_00001);
@@ -192,6 +195,8 @@ public class SchedulerManagerBackingBean extends
 							.getSelectedJobVO().getJobKey());
 			if (!success) {
 				throw new EpException(MessageConst.ERRQRTZ_00002);
+			}else{
+				initAllJobs();
 			}
 		} else {
 			throw new EpException(MessageConst.ERRQRTZ_00001);
