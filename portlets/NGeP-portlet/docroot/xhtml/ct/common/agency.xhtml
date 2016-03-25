@@ -225,6 +225,7 @@
 			<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
 		   <h:panelGroup  id="agencyies">
+		       <p:panel id="agencyPopUpId" header="#{lbl['lbl.ct.search']}" toggleable="true" toggleSpeed="500" >
               <h:panelGrid columns="3">
                  <p:selectOneMenu for="ministry"  style="width:150px" disabled="true" >
             	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
@@ -261,7 +262,9 @@
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
 			            action="#{ctBackingBean.resetAgencyDetails}" update=":form:agencyies"   />
 		       </div>
+		       </p:panel>
 			   <p:spacer height="2"/>
+			        <p:panel id="agencyTablePopUpId" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500" >
               <p:dataTable id="tableAgency" var="pmVar" value="#{ctBackingBean.agencyDataModel}" 
                  rowIndexVar="rowIndex" selection="#{ctBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
                   <ac:paginator for="tableAgency"/>
@@ -283,6 +286,7 @@
 				    action="#{ctBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgAgency.hide();" />
            </div>
+          </p:panel>
            </h:panelGroup>
 	</p:dialog>
 	<p:panel id="agencyRemarksAttachmentPnl" header="#{lbl['lbl.txt.remarks']}" toggleable="true" 
