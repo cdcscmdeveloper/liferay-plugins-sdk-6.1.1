@@ -8,6 +8,7 @@ import javax.faces.bean.RequestScoped;
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
@@ -39,7 +40,10 @@ public class SchedulerManagerBackingBean extends
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		initAllJobs();
+		if (EntityHelper.isCollectionEmpty(getManagedBean()
+				.getEpSchedulerJobList())) {
+			initAllJobs();
+		}
 	}
 
 	public void initAllJobs() {
