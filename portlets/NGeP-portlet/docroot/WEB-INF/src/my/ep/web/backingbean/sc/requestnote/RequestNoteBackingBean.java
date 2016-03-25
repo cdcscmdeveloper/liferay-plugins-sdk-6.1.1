@@ -1732,13 +1732,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
 					scRequestNoteDtl, scRequestNoteDtl.getAssignedUser().getUserId() , scRequestNoteDtl.getProcTypeCategoryId());
 		} else {
-			List<Long> itemIds = new ArrayList<Long>();
+			List<String> itemUOMIds = new ArrayList<String>();
 			for (ScRequestNoteDtl noteDtl : getManagedBean().getRequestNoteDtls()) {
-				itemIds.add(noteDtl.getRequestItem().getCmItem().getItemId());
+				ScRequestItem requestItem = noteDtl.getRequestItem();
+				String itemUOMKey = generateItemUomKey(requestItem);
+				
+				
+				itemUOMIds.add(itemUOMKey);
 			}
-			if (itemIds.size() > 0) {
-				if(itemIds.contains(scRequestNoteDtl.getRequestItem().getCmItem().getItemId())){
-					throw new EpException(MessageConst.ERROR_700027, new String[]{scRequestNoteDtl.getRequestItem().getCmItem().getItemName(),""});
+			if (itemUOMIds.size() > 0) {
+				ScRequestItem selectedRequestItem = scRequestNoteDtl.getRequestItem();
+				String selectedItemUOMKey = generateItemUomKey(selectedRequestItem);
+				if(itemUOMIds.contains(selectedItemUOMKey)){
+					throw new EpException(MessageConst.ERROR_700027, 
+							new String[]{scRequestNoteDtl.getRequestItem().getCmItem().getItemName() +
+							"(" + selectedRequestItem.getUom().getUomName() + ")",""});
 				} else {
 					requestNoteDtls.add(scRequestNoteDtl);
 					// set by default selected price type , rec.supplier and offer price
@@ -3571,5 +3579,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			mofNo = mofAccountResDTO.getMofAccount().getMofNo();
 		}
 		return mofNo;
+	}
+	
+	/**
+	 * Generate key according to itemId and uomId for requestItem
+	 */
+	private String generateItemUomKey(ScRequestItem requestItem) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("I").
+		append(requestItem.getCmItem().getItemId()).
+		append("U").
+		append(requestItem.getUom().getUomId());
+		
+		return sb.toString();
 	}
 }
