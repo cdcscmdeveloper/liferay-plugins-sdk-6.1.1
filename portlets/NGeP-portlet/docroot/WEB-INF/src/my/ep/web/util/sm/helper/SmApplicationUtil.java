@@ -2160,6 +2160,13 @@ public class SmApplicationUtil {
 						new String[] { pers.getIdentificationNo() });
 			}
 			myIdentityVerification(pers);
+			if (pers.getIdentityResponseCode().equals("70020")) {
+				validUser = false;
+				throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+			} else if (pers.getIdentityResponseCode().equals("70031")) {
+				validUser = false;
+				throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+			}
 		}
 		if (!pers.isEquityOwner() && !pers.isDirector()
 				&& !pers.isHigherManagement() && !pers.isManagement()
@@ -2228,7 +2235,7 @@ public class SmApplicationUtil {
 		try {
 			resDTO = myIdentitySO.myIdentityVerification(reqDTO);
 			// StringBuffer sb = new StringBuffer();
-			if (resDTO.getStatusCode() != null) {
+			if (!StringUtils.isBlank(resDTO.getStatusCode())) {
 				per.setIdentityResponseCode(resDTO.getStatusCode());
 			}
 			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
