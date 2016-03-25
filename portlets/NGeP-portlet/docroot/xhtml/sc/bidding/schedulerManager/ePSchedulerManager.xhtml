@@ -27,24 +27,43 @@
 				update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 				<p:graphicImage value="/css/images/design/ico-refresh.png" title="#{lbl['lbl.quartz.refresh.job']}" />
 			</p:commandLink>&#160;
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.quartz.instruction.two']}"/><br />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.quartz.instruction.two']}"/><br /><br />
+			
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.quartz.filter.by.job.group']}" /></td>
+					<td>
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							id="jobGroupId" label="#{lbl['lbl.quartz.job.group']}"
+							value="#{schedulerManagerBB.managedBean.jobGroup}">
+							<f:selectItem itemLabel="All" itemValue="" />
+							<f:selectItems value="#{schedulerManagerBB.managedBean.jobGroups}" />
+							<p:ajax event="change" process="@this" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								listener="#{schedulerManagerBB.initAllJobs}"
+								update="@form" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</table><br />
 			
 			<p:dataTable var="jobBean" id="jobBeanDt" widgetVar="jobBeanWidVar"
 				value="#{schedulerManagerBB.managedBean.epSchedulerJobList}"
 				rows="10" rowKey="#{jobBean}" rowIndexVar="index">
 
 				<ac:paginator for="jobBeanDt" />
+				
+				<p:column style="white-space : normal;width : 18%;"
+					headerText="#{lbl['lbl.quartz.job.group']}">
+					<h:outputText value="#{jobBean.jobKey.group}" />
+				</p:column>
 
-				<p:column style="white-space : normal"
+				<p:column style="white-space : normal;width : 18%;"
 					headerText="#{lbl['lbl.quartz.job.name']}">
 					<h:outputText value="#{jobBean.jobKey.name}" />
 				</p:column>
 
-				<p:column style="white-space : normal" headerText="#{lbl['lbl.quartz.job.group']}">
-					<h:outputText value="#{jobBean.jobKey.group}" />
-				</p:column>
-
-				<p:column style="white-space : normal"
+				<p:column style="white-space : normal;width : 35%;"
 					headerText="#{lbl['lbl.quartz.job.description']}">
 					<h:outputText value="#{jobBean.description}" />
 				</p:column>
@@ -56,8 +75,14 @@
 				<p:column headerText="#{lbl['lbl.quartz.health.state']}">
 					<h:outputText value="#{jobBean.state}" />
 				</p:column>
+				
+				<ui:remove>
+					<p:column headerText="Missfire Policy">
+						<h:outputText value="#{jobBean.trigger.misfireInstruction}" />
+					</p:column>
+				</ui:remove>
 
-				<p:column headerText="#{lbl['lbl.quartz.last.fired.time']}">
+				<p:column headerText="#{lbl['lbl.quartz.last.fired.time']}" style="white-space : normal;width : 10%;">
 					<h:outputText value="#{jobBean.trigger.previousFireTime}" rendered="#{not empty jobBean.trigger}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
@@ -65,7 +90,7 @@
 					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty jobBean.trigger}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.quartz.next.fired.time']}">
+				<p:column headerText="#{lbl['lbl.quartz.next.fired.time']}" style="white-space : normal;width : 10%;">
 					<h:outputText value="#{jobBean.trigger.nextFireTime}"
 						rendered="#{not empty jobBean.trigger and not empty jobBean.trigger.nextFireTime}">
 						<f:convertDateTime
@@ -74,7 +99,7 @@
 					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty jobBean.trigger}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.quartz.action']}">
+				<p:column headerText="#{lbl['lbl.quartz.action']}" style="white-space : normal;width : 10%;">
 					<p:outputPanel rendered="#{not empty jobBean.trigger}">
 						<p:commandLink id="resumeActionId" partialSubmit="true"
 							process="@this" rendered="#{jobBean.action eq 'RESUME'}"
