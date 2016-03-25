@@ -11,6 +11,7 @@ import my.ep.helper.EntityHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.quartz.CronExpression;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
@@ -174,7 +175,8 @@ public class EpSchedulerHelper {
 			String cronExpression) {
 		if (jobKey != null && jobClass != null
 				&& !StringUtils.isBlank(jobDetailDesc)
-				&& !StringUtils.isBlank(cronExpression)) {
+				&& !StringUtils.isBlank(cronExpression)
+				&& CronExpression.isValidExpression(cronExpression)) {
 			try {
 				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
 					// specify the job' s details..
@@ -213,7 +215,8 @@ public class EpSchedulerHelper {
 	public static void updateScheduledJob(JobKey jobKey, String jobDetailDesc,
 			String cronExpression) {
 		if (jobKey != null && !StringUtils.isBlank(jobDetailDesc)
-				&& !StringUtils.isBlank(cronExpression)) {
+				&& !StringUtils.isBlank(cronExpression)
+				&& CronExpression.isValidExpression(cronExpression)) {
 			try {
 				if (EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
 					// Get existing job
