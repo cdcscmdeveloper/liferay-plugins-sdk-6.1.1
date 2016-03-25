@@ -2292,11 +2292,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	private boolean orgProfileCheckExist(ScQt scqt,PmUser user, boolean isptj){
 		PmOrgProfile orgProfile=	scqt.getPmOrgProfile();
-		System.out.println("===qt PtjId==="+orgProfile.getOrgProfileId());
+		log.info("===qt PtjId==="+orgProfile.getOrgProfileId());
 		if(null!=user.getPmUserOrgs()){
 		for(PmUserOrg userorg:user.getPmUserOrgs()){
-			System.out.println("===user org record status==="+userorg.isRecordStatus());
-			System.out.println("===user org profile Id==="+userorg.getPmOrgProfile().getOrgProfileId());
+			log.info("===user org record status==="+userorg.isRecordStatus());
 			if(userorg.isRecordStatus() && null!=userorg.getPmOrgProfile() && userorg.getPmOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())){
 				isptj=true;
 				break;
