@@ -186,7 +186,8 @@ public class QTCommitteBackingBean extends
 
 				populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
 				userReqDTO.setUserSearchBean(searchBean);
-				UserResDTO resDto = userSO.searchUserProfile(userReqDTO);
+
+                UserResDTO resDto = userSO.searchUserProfileDtl(userReqDTO);
 
 				if (null != resDto.getUserResultBean().getResultList()) {
 					getManagedBean().setExternalUsers(
