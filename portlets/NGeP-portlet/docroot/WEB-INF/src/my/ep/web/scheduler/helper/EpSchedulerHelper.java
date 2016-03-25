@@ -4,14 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import my.ep.constant.MessageConst;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.quartz.CronExpression;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
@@ -182,8 +179,7 @@ public class EpSchedulerHelper {
 			String cronExpression) {
 		if (jobKey != null && jobClass != null
 				&& !StringUtils.isBlank(jobDetailDesc)
-				&& !StringUtils.isBlank(cronExpression)
-				&& CronExpression.isValidExpression(cronExpression)) {
+				&& !StringUtils.isBlank(cronExpression)) {
 			try {
 				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
 					// specify the job' s details..
@@ -196,7 +192,8 @@ public class EpSchedulerHelper {
 							.newTrigger()
 							.withSchedule(
 									CronScheduleBuilder
-											.cronSchedule(cronExpression))
+											.cronSchedule(cronExpression)
+											.withMisfireHandlingInstructionDoNothing())
 							.build();
 
 					// schedule new job
@@ -222,8 +219,7 @@ public class EpSchedulerHelper {
 	public static void updateScheduledJob(JobKey jobKey, String jobDetailDesc,
 			String cronExpression) {
 		if (jobKey != null && !StringUtils.isBlank(jobDetailDesc)
-				&& !StringUtils.isBlank(cronExpression)
-				&& CronExpression.isValidExpression(cronExpression)) {
+				&& !StringUtils.isBlank(cronExpression)) {
 			try {
 				if (EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
 					// Get existing job
@@ -243,22 +239,29 @@ public class EpSchedulerHelper {
 									.newTrigger()
 									.withSchedule(
 											CronScheduleBuilder
-													.cronSchedule(cronExpression))
+													.cronSchedule(
+															cronExpression)
+													.withMisfireHandlingInstructionDoNothing())
 									.build();
+
 						}
 
 						CronTrigger newTrigger = oldTrigger;
 
 						// obtain a builder that would produce the trigger
-						TriggerBuilder tb = oldTrigger.getTriggerBuilder();
+						TriggerBuilder tb = newTrigger.getTriggerBuilder();
 
-						// update trigger cron expression
-						if (!newTrigger.getCronExpression().equals(
-								cronExpression)
-								&& !isJobRunningNow(jobKey)) {
-							newTrigger = (CronTrigger) tb.withSchedule(
-									CronScheduleBuilder
-											.cronSchedule(cronExpression))
+						// update trigger cron expression and miss fire policy
+						// do nothing
+						if ((!newTrigger.getCronExpression().equals(
+								cronExpression) && !isJobRunningNow(jobKey))
+								|| newTrigger.getMisfireInstruction() != newTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
+							newTrigger = (CronTrigger) tb
+									.withSchedule(
+											CronScheduleBuilder
+													.cronSchedule(
+															cronExpression)
+													.withMisfireHandlingInstructionDoNothing())
 									.build();
 							EpSchedulerHelper.getScheduler().rescheduleJob(
 									newTrigger.getKey(), newTrigger);
