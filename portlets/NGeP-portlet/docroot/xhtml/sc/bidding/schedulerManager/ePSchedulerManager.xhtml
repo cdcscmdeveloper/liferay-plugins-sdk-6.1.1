@@ -79,14 +79,14 @@
 						<p:commandLink id="resumeActionId" partialSubmit="true"
 							process="@this" rendered="#{jobBean.action eq 'RESUME'}"
 							action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}"
-							update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
+							update="@form" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/ico-play.png" title="#{lbl['lbl.quartz.resume.job']}" />
 						</p:commandLink>
 						<p:commandLink id="pauseActionId" partialSubmit="true"
 							process="@this" rendered="#{jobBean.action eq 'PAUSE'}"
 							action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}"
-							update="@([id$=jobBeanDt])" onstart="blockWidget.show()"
+							update="@form" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/ico-suspend.png" title="#{lbl['lbl.quartz.pause.job']}" />
 						</p:commandLink>&#160;
