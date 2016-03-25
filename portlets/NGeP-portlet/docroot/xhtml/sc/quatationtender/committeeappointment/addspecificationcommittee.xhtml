@@ -101,7 +101,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="role"
-								value="#{qTCommitteBackingBean.getRoleTypeDropdownValues(existcommitteeuser.PMP)}"
+								value="#{qTCommitteBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existcommitteeuser.PMP,qTDetailBB.managedBean.qt,existcommitteeuser)}"
 								itemLabel="#{role.codeName}"
 								itemValue="#{role.pmParameter.parameterId}" />
 							<p:ajax event="change" partialSubmit="true"/>

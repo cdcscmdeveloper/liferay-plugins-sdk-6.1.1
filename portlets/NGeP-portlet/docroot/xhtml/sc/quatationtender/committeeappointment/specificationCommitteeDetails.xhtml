@@ -83,7 +83,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="role"
-								value="#{qTCommitteBackingBean.getRoleTypeDropdownValues(specificationcommittee.PNP)}"
+								value="#{qTCommitteBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(specificationcommittee.PNP,qTDetailBB.managedBean.qt,specificationcommittee.pmUser)}"
 								itemLabel="#{role.codeName}"
 								itemValue="#{role.pmParameter.parameterId}" />
 						</p:selectOneMenu>
