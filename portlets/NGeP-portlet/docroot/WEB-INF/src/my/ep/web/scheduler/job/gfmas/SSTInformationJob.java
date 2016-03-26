@@ -25,7 +25,7 @@ public class SSTInformationJob implements Job {
 				.getServiceObject(ModuleCodeConst.INTEGRATION,
 						IGfmasServiceSO.class);
 		
-//		gfmasServiceSO.sstInformationGfmas();
+		gfmasServiceSO.sstInformationGfmas();
 		log.info("SSTInformationJob end");
 
 	}
