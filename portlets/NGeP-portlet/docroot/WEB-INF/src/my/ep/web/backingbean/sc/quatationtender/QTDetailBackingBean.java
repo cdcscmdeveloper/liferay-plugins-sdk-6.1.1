@@ -4777,7 +4777,10 @@ public class QTDetailBackingBean extends
 							.getParameterCode();
 					this.getManagedBean().setLocalLevelCode(locationLevelCode);
 					this.getManagedBean().getQt().getScQtSupplierCriteria().setLocationLevel( paramDesc.getPmParameter());
-					this.getManagedBean().getSupplierCriteria().setLocationLevel( paramDesc.getPmParameter());
+					if(this.getManagedBean().getSupplierCriteria() != null){
+						this.getManagedBean().getSupplierCriteria().setLocationLevel( paramDesc.getPmParameter());
+					}
+					
 					break;
 				}
 			}
