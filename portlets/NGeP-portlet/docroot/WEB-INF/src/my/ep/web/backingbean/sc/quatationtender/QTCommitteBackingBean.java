@@ -584,6 +584,7 @@ public class QTCommitteBackingBean extends
 						e.printStackTrace();
 					}
 					if (null != member1) {
+						member1.setBrandNew(true);
 						member1.setCommitteeMemberId(null);
 						setUserDetails(member1);
 						member1.setChangedDate(null);
@@ -776,6 +777,7 @@ public class QTCommitteBackingBean extends
 						if (null != member1) {
 							if (!cloneCommitte.getScCommitteeMembers()
 									.contains(member1)) {
+								member1.setBrandNew(true);
 								member1.setCommitteeMemberId(null);
 								setUserDetails(member1);
 								member1.setChangedDate(null);
@@ -1039,12 +1041,10 @@ public class QTCommitteBackingBean extends
 							e.printStackTrace();
 						}
 						if (null != member1) {
+							member1.setBrandNew(true);
 							member1.setCommitteeMemberId(null);
+							setUserDetails(member1);
 							member1.setChangedDate(null);
-							member1.setCreatedBy(null);
-							member1.setCreatedDate(null);
-							member1.setChangedBy(null);
-							member1.setScCommittee(null);
 							member1.setScCommittee(tabBean.getScQtCommittee()
 									.getScCommittee());
 							committeeMembersList.add(member1);
@@ -1143,12 +1143,10 @@ public class QTCommitteBackingBean extends
 							e.printStackTrace();
 						}
 						if (null != member1) {
+							member1.setBrandNew(true);
 							member1.setCommitteeMemberId(null);
+							setUserDetails(member1);
 							member1.setChangedDate(null);
-							member1.setCreatedBy(null);
-							member1.setCreatedDate(null);
-							member1.setChangedBy(null);
-							member1.setScCommittee(null);
 							member1.setScCommittee(tabBean.getScQtCommittee()
 									.getScCommittee());
 							committeeMembersList.add(member1);
