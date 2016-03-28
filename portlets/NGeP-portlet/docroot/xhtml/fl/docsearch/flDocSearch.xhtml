@@ -28,11 +28,11 @@
 		</style>
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
-			<h:panelGroup id="orgSearch">
+			<h:panelGroup id="orgSearch" rendered="#{!flDocumentBackingBean.disableAllLov()}">
 			<table>
 				<tr>
 					<td style="width: 190px;">
-						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"	/><p:outputLabel
+						<p:outputLabel value="#{lbl['lbl.fl.ministry']}"  /><p:outputLabel
 						value="*" styleClass="mandatory" />
 					</td>
 					<td>
@@ -42,7 +42,8 @@
 							value="#{flDocumentBackingBean.managedBean.ministry.orgName}"
 							postUpdateListener="flDocumentBackingBean.resetPtjGroupProfile()"
 							update=":form:searchPtj,:form:orgSearch"
-							saveObject="flDocumentBackingBean.managedBean.ministry">
+							saveObject="flDocumentBackingBean.managedBean.ministry"
+							>
 						</ac:lov>
 					</td>
 				</tr>
@@ -58,19 +59,21 @@
 							postUpdateListener="flDocumentBackingBean.resetPtjProfile()"
 							update=":form:searchPtj,:form:orgSearch"
 							saveObject="flDocumentBackingBean.managedBean.ptjGroup"
-							conditionField="#{flDocumentBackingBean.constuctConditionFieldsForPTJGroup()}">
+							conditionField="#{flDocumentBackingBean.constuctConditionFieldsForPTJGroup()}"
+							>
 						</ac:lov>
 					</td>
 				</tr>
 				<tr>
-					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.ptj']}"	/></td>
+					<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.ptj']}" /></td>
 					<td>
 						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="46" readonly="true" style="width:314px"
 							disabled="#{flDocumentBackingBean.disablePtjLov()}"
 							headerText="#{lbl['lbl.fl.ptj']}"
 							value="#{flDocumentBackingBean.managedBean.ptj.orgName}"
 							saveObject="flDocumentBackingBean.managedBean.ptj"	
-							conditionField="#{flDocumentBackingBean.getPTJCondition()}">			
+							conditionField="#{flDocumentBackingBean.getPTJCondition()}"
+							>			
 						</ac:lov>
 					</td>
 				</tr>

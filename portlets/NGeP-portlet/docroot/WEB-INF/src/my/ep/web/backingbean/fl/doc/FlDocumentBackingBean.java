@@ -1156,7 +1156,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				|| isFlFulfilmentRecevingOfficer()
 				|| isFlFulfilmentPaymentOfficer()
 				|| getFacesScopes().hasRoleUser(
-						RoleCode.AUDITOR_INTERNAL.value()) || hasSupplierRole());
+						RoleCode.AUDITOR_INTERNAL.value()) );
 	}
 	
 	/**
@@ -1172,7 +1172,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		return (isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()
 				|| isFlFulfilmentRecevingOfficer()
 				|| isFlFulfilmentPaymentOfficer()
-				|| getManagedBean().getMinistry() == null || hasSupplierRole());
+				|| getManagedBean().getMinistry() == null );
 	}
 	
 	/**
@@ -1188,7 +1188,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		return (isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()
 				|| isFlFulfilmentRecevingOfficer()
 				|| isFlFulfilmentPaymentOfficer()
-				|| getManagedBean().getMinistry() == null || hasSupplierRole());
+				|| getManagedBean().getMinistry() == null );
+	}
+	
+	public boolean disableAllLov() {
+		return (hasSupplierRole());
 	}
 	
 
