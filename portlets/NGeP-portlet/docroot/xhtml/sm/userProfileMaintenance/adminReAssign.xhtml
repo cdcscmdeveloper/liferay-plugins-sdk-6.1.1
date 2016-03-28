@@ -35,10 +35,10 @@
 			
 			<p:dataTable id="smPersonnelAuthorizedNonAdminId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{smPersonnelBackingBean.managedBean.smPersonnelList}" selection="#{smPersonnelBackingBean.managedBean.selectedPersonnelToReassign}"
-				var="personnel" rowKey="#{personnel}" rowIndexVar="index">
+				var="personnel" rowKey="#{personnel}" rowIndexVar="index" rows="10">
 				<ac:paginator for="smPersonnelDataModelId" />
 				
-				<p:column selectionMode="single" disabledSelection="#{personnel.epRole eq 'CM_USER'}" />
+				<p:column selectionMode="single" disabledSelection="#{personnel.epRole eq 'CM_USER' or (personnel.softcertFlg ne 0 and personnel.softcertFlg ne 1)}" />
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
 					<p:outputPanel rendered="#{personnel.epRole eq 'CM_USER'}">
@@ -46,6 +46,13 @@
 						<p:tooltip id="uidtt" for="uidti">
 							<p:outputLabel escape="false"
 								value="#{lbl['tt.sm.deactivateadmin.catalogueuser.upgrade']}" />
+						</p:tooltip>&#160;
+					</p:outputPanel>
+					<p:outputPanel rendered="#{personnel.epRole ne 'CM_USER' and (personnel.softcertFlg ne 0 and personnel.softcertFlg ne 1)}">
+						&#160;<p:graphicImage id="uid2ti" value="/css/images/design/tooltips.png"  />
+						<p:tooltip id="uid2tt" for="uid2ti">
+							<p:outputLabel escape="false"
+								value="#{lbl['tt.sm.deactivateadmin.sofcertnotissued.upgrade']}" />
 						</p:tooltip>&#160;
 					</p:outputPanel>
 					<h:outputText value="#{personnel.name}" />
