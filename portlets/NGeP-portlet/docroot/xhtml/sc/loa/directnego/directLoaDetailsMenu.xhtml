@@ -378,42 +378,20 @@
 						<p:selectOneMenu id="contractAgencyProf" required="true"
 							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgProfileId}"
-							style="width: 284px;margin-bottom: 5px;"
-							label="#{lbl['lbl.sc.loiloa.loa.agency']}"
-							rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
+							style="width: 284px;margin-bottom: 5px;" label="#{lbl['lbl.sc.loiloa.loa.agency']}"
+							rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode ne ParameterConst.contractTypeCentral}">
 
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{directLOABackingBean.managedBean.agencyProfileDDList}"
-								var="pmOrgProfile" itemLabel="#{pmOrgProfile[1]}"
-								itemValue="#{pmOrgProfile[0]}" />
-							<p:ajax event="change"
-								listener="#{directLOABackingBean.contractAgencyChanged()}"
-								process="@this" partialSubmit="true" update="contractAdmin" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+							<f:selectItems value="#{directLOABackingBean.managedBean.agencyProfileDDList}"
+								var="pmOrgProfile" itemLabel="#{pmOrgProfile[1]}" itemValue="#{pmOrgProfile[0]}" />
+							<p:ajax event="change" listener="#{directLOABackingBean.contractAgencyChanged()}"
+									process="@this" partialSubmit="true" update="contractAdmin" />
 						</p:selectOneMenu>
-						<p:message id="contractAgencyProfMsg" for="contractAgencyProf"
-							display="icon" />
+						<p:message id="contractAgencyProfMsg" for="contractAgencyProf" display="icon" />
 
-						<p:selectOneMenu id="contractAgency" required="true"
-							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgTypeCode.parameterCode}"
-							style="width: 284px;margin-bottom: 5px;"
-							label="#{lbl['lbl.sc.loiloa.loa.agency']}"
-							rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode ne ParameterConst.contractTypeMinistry}">
-
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{directLOABackingBean.managedBean.agencyList}"
-								var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
-								itemValue="#{pmParameterDesc.pmParameter.parameterCode}" />
-							<p:ajax event="change"
-								listener="#{directLOABackingBean.contractAgencyChanged()}"
-								partialSubmit="true" process="@this" update="contractAdmin" />
-						</p:selectOneMenu>
-						<p:message id="contractAgencyMsg" for="contractAgency"
-							display="icon" />
+						<p:inputText id="contractAgency" disabled="true" style="width:284px; margin-bottom:5px;"
+									 value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}" 
+									 rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeCentral}" />
 					</h:panelGroup></td>
 				<td style="width: 10%;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
