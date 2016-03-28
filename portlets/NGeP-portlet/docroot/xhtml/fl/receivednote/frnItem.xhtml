@@ -64,10 +64,10 @@
 		<h:panelGroup styleClass="selectedItemSection" id="selectedItemSection">
 			<table style="width: 50%">
 				<tr>
-					<td></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.qty']}" /></td>
-					<td></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.amount.rm']}" /></td>
+					<td style="width:250px;"></td>
+					<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.qty']}" /></td>
+					<td style="width:50px;"></td>
+					<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.amount.rm']}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.ordered']}" /></td>
@@ -161,13 +161,9 @@
 						</p:inputText></td>
 					<td></td>
 				</tr>
-
-			</table>
-			<p:spacer height="30"/>	
-			<table>
 				<tr>
 					<td valign="top" style="width:110px;"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-					<td>
+					<td colspan="3">
 						<p:inputTextarea cols="40" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" autoResize="false" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.buttonVal eq 'View'}">
 							<p:ajax process="@this" />
 						</p:inputTextarea><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.remarks']}"/>
