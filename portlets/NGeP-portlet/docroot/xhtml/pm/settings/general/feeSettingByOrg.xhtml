@@ -66,6 +66,7 @@
 		                		</f:facet>
    <!-- disabled="#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (!feeObj.brandNew and (feeObj.effDate le DateUtils.getCurrentDateWithoutTime()))}" -->
 			<p:calendar showOn="button" id="FeeOrgeffDateId" navigator="true"
+				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
 				style="width :40px;" required="true"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -81,6 +82,7 @@
 			 </f:facet>
 <!-- disabled="#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (!feeObj.brandNew and (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime()))}" -->
 			<p:calendar showOn="button" id="FeeOrgexpDateId" navigator="true"
+				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
 				style="width :40px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"

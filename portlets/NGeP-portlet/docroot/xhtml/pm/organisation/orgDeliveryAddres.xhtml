@@ -60,7 +60,7 @@
 			<tr>
 					<td style="width:15%;"><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width:35%;"><p:inputText id="addressname"  styleClass="ppDisplayTextL"
+					<td style="width:35%;"><p:inputText id="addressname"
 							label="#{lbl['lbl.pm.address.name']}" maxlength="255"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.addressName}"
 							size="31" /></td>
@@ -76,7 +76,7 @@
 						value="*" styleClass="mandatory" />
 				</td>				
 				<td>
-					<p:selectOneMenu id="dCountry" styleClass="ppDropDownWidthL"
+					<p:selectOneMenu id="dCountry"
 						required="#{!empty param['dialogValidation']}" label="#{lbl['lbl.pm.address.country']}" disabled="true"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmCountry.countryId}"
 						style="width: 250px;">
@@ -93,7 +93,7 @@
 						value="*" styleClass="mandatory" />
 				</td>
 				<td>
-					<p:selectOneMenu id="dState" required="#{!empty param['dialogValidation']}" styleClass="ppDropDownWidthL"
+					<p:selectOneMenu id="dState" required="#{!empty param['dialogValidation']}"
 						label="#{lbl['lbl.pm.address.state']}"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.pmState.stateId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -114,7 +114,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="daddress1" 
 						label="#{lbl['lbl.pm.address.address']}" maxlength="255"
-						required="#{!empty param['dialogValidation']}" styleClass="ppDisplayTextL"
+						required="#{!empty param['dialogValidation']}"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.address1}"
 						size="31" /><p:message for="daddress1" id="daddress1Msg" display="icon" /></td>				
 				<td>

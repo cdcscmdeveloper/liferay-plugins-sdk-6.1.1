@@ -38,8 +38,7 @@
 				<f:facet name="header">
 					               #{lbl['lbl.pm.rule.type']}
 			                   	</f:facet>
-				
-			                    #{ruleTypeObj.ruleTypeDesc}
+				#{ruleCatalogueBackingBean.getRuleTypeDesc(ruleTypeObj,null)}
 				
 			</p:column>
 			<p:column width="40%">
@@ -65,17 +64,20 @@
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 2)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
-					                 #{lbl['lbl.pm.value']}
-				           </f:facet>
+					    #{lbl['lbl.pm.value']}
+				</f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="30"
-					maxlength="12" id="amountValueId" style="text-align:right"
+				<p:inputText value="#{typeValueObj.ruleNumberValue}" size="30"
+					label="#{lbl['lbl.pm.value']}"
+					maxlength="17" id="amountValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
-					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
-					validator="#{webappBean.validateDecimalNumber}">
+					requiredMessage="#{lbl['lbl.pm.settings.value.required']}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="min" value="1"/>	
+		  			<f:attribute name="max" value="99999999999.99"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, amountValueMsg" />
-
 				</p:inputText>
 				<p:message id="amountValueMsg" for="amountValueId" display="icon" />
 			</p:column>
@@ -86,11 +88,15 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="30"
+				<p:inputText value="#{typeValueObj.ruleNumberValue}" size="30"
+					label="#{lbl['lbl.pm.value']}"
 					maxlength="4" id="numberValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
-					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
-					validator="#{webappBean.validateNonDecimalNumber}">
+					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"	>
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					<f:attribute name="min" value="1"/>	
+		  			<f:attribute name="max" value="9999"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, numberValueMsg" />
 				</p:inputText>
@@ -104,6 +110,7 @@
 					                 #{lbl['lbl.pm.value']}
 		    </f:facet>
 				<p:selectOneMenu id="parameterCodeValueId"
+					label="#{lbl['lbl.pm.value']}"
 					value="#{typeValueObj.ruleValue}"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
@@ -123,11 +130,15 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="30"
-					maxlength="5" id="percentageValueId" style="text-align:right"
+				<p:inputText value="#{typeValueObj.ruleNumberValue}" size="30"
+					label="#{lbl['lbl.pm.value']}"
+					maxlength="7" id="percentageValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
-					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
-					validator="#{webappBean.validatePercentageNumber}">
+					requiredMessage="#{lbl['lbl.pm.settings.value.required']}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+		  			<f:attribute name="min" value="1"/>	
+		  			<f:attribute name="max" value="100"/>		
+					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink]),percentageValueMsg" />
 				</p:inputText>
@@ -153,10 +164,14 @@
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			</f:facet>
 				<p:inputText id="fromValueId" value="#{typeValueObj.fromValue}"
-					size="15" required="true" maxlength="12" style="text-align:right"
+					label="#{lbl['lbl.pm.rule.from.value']}"
+					size="17" required="true" maxlength="12" style="text-align:right"
 					onchange="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and !typeValueObj.showFlag)}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		  			<f:attribute name="max" value="99999999999.99"/>				
+					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax partialSubmit="true" process="@this" 
 						update="@this, @([id$=cloneLink]), fromValueMsg, :form:settingTabId:errorDialog" />
 				</p:inputText>
@@ -169,10 +184,14 @@
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
 				<p:inputText value="#{typeValueObj.toValue}" size="15"
-					maxlength="12" id="toValueId" style="text-align:right"
+					label="#{lbl['lbl.pm.rule.to.value']}"
+					maxlength="17" id="toValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink])" />
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		  			<f:attribute name="max" value="99999999999.99"/>				
+					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{ruleCatalogueBackingBean.updateToValue(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID, :form:settingTabId:errorDialog" />
@@ -191,10 +210,11 @@
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
-					<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
+					<h:outputText value="#{lbl['lbl.pm.as.effdate']}" />
 				</f:facet>
 
 				<p:calendar  navigator="true"
+					yearRange="#{DateUtils.getCalendarMaxYearRange()}"					
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleValEffDateId" style="width:100px;"
@@ -221,6 +241,7 @@
 			                	</f:facet>
 
 				<p:calendar  navigator="true"
+					yearRange="#{DateUtils.getCalendarMaxYearRange()}"	
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleConfigexpDateId" style="width :100px;"
@@ -241,6 +262,7 @@
 				</p:calendar>
 			</p:column>
 
+			<ui:remove>
 			<p:column width="10%">
 				<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
@@ -260,6 +282,7 @@
 				</p:selectOneMenu>
 
 			</p:column>
+			</ui:remove>
 			<p:column style="width:5%;text-align:center;">
 				<f:facet name="header">
                      #{lbl['lbl.pm.action']}

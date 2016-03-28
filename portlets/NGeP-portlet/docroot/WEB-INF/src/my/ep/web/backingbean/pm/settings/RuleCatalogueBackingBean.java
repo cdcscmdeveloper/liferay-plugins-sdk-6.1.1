@@ -82,6 +82,7 @@ import my.ep.persistence.entity.pm.general.settings.gst.PmDaValidity;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
 import my.ep.persistence.entity.pm.general.settings.gst.PmGstItem;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -93,7 +94,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -132,6 +132,9 @@ public class RuleCatalogueBackingBean extends
 	private String inactiveFeeContPopUpMsg = "";
 	
     private String dupplicateOrgTypeName;
+    
+    private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
+    private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
 
 	// private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
 
@@ -253,18 +256,13 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public SelectItem[] getOrgTypeDropdownValuesFOR() {
 		log.info("getOrgTypeDropdownValues for org type");
 		ISearchBean<PmParameterDesc> searchBean = null;
-	
-			searchBean = getOrgTypeSearchBean("orgTypeSysParameter");
-			
-			log.info(".........searchBean.getDataFilterBeans()"+searchBean.getDataFilterBeans());
-		
+		searchBean = getOrgTypeSearchBean("orgTypeSysParameter");
 		SelectItem[] items = null;
 		if(searchBean != null){
 			searchBean.getSortColumns();
 			items = getDropdownValuesBySearchBean(
 					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
-		}		
-
+		}
 		return items;
 	}
 	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {	
@@ -354,9 +352,32 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		getManagedBean().setAutoUpdate(true);
 		setCurrentActiveOrg();
 		// resetErrorDialog();
-
-		IConfigGeneralSO cgeneralSO = null;
+		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
+			initConfigRule();
+			initFeeSettings();
+			initOperationThreshold();
+			initGst();
+			fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fc.addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							null,e.getMessage()
+					));
+			PmCommonUtil.redirectToPage(
+					ERROR_PAGE,
+					null,null);
+		}
+		return "";
+	}
+	
+	private void initConfigRule(){
+		IConfigGeneralSO cgeneralSO = null;
+		try{
 			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IConfigGeneralSO.class);
@@ -364,8 +385,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			ConfigGeneralResDTO resDTO = cgeneralSO.getConfigGeneral(reqDTO);
 			this.getManagedBean().setSelectedConfigGeneral(
 					resDTO.getPmConfigGeneral());
-			System.out
-					.println("resDTO.getPmConfigGeneral().getFinancialYear()="
+			log.info("resDTO.getPmConfigGeneral().getFinancialYear()="
 							+ resDTO.getPmConfigGeneral().getFinancialYear());
 			// this.getManagedBean().setTabActiveIndex(0);
 			// for(PmConfigRule
@@ -377,20 +397,23 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			List<PmConfigRule> list = retriveConfigRuleFromDB();
 			this.getManagedBean().setConfigRuleList(list);
 			this.getManagedBean().setSelectedRuleType(list.get(0));
-
-			// ////////////getitng FeeExemption////////////////////////////
-			IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
+		}finally{
+			cgeneralSO = null;
+		}
+	}
+	
+	private void initFeeSettings(){
+		IFeeExemptionSO feeSO = null;
+		try{
+			feeSO = (IFeeExemptionSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IFeeExemptionSO.class);
-
 			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
 			FeeExemptionResDTO resFDTO = null;
-
 			this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
 			this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
 			resFDTO = feeSO.getFeeExemptionsForOrgAndItem(reqFDTO);
-
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
 				if (exemption.getItemId() == null) {// TODO: clear it before
 													// updating the fee list
@@ -399,43 +422,40 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				this.getManagedBean().getFeeExemptionsForOrgAndItem()
 						.add(exemption);
 			}
-
-			// this.getManagedBean().setFeeExemptionIndex(0);
-
+			
 			this.getManagedBean().getFeeExemptionsForComodity().clear();
 			this.getManagedBean().getDeletedComodityFeeExemptions().clear();
+			
+			
 			resFDTO = feeSO.getFeeExemptionsForComodity(reqFDTO);
 
-			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.CATALOGUE_MANAGEMENT,
-							ICodificationSO.class);
-			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+//			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+//					.getInstance().getServiceObject(
+//							ModuleCodeConst.CATALOGUE_MANAGEMENT,
+//							ICodificationSO.class);
+//			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
 				if (exemption.getTypeId() == null) {
 					exemption.setTypeId(new CmType());
 				}
-				cReqDTO.setUnspscCode(exemption.getUnspscId().getUnspscCode());
-				CodificationResDTO cResDTO = unspscSO
-						.retrieveUNSPSCByCommodityCode(cReqDTO);
-
-				if (cResDTO.isSuccessful()) {
-
-					CmUnspsc commodity = cResDTO.getCommodityObj();
-
-					exemption.setTypes(new ArrayList<CmType>());
-					for (CmType type : commodity.getCmType()) {
-						if (!StringUtils.isBlank(type.getTypeName())) {
-							exemption.getTypes().add(type);
-						}
-					}
-				}
+//				cReqDTO.setUnspscCode(exemption.getUnspscId().getUnspscCode());
+//				CodificationResDTO cResDTO = unspscSO
+//						.retrieveUNSPSCByCommodityCode(cReqDTO);
+//
+//				if (cResDTO.isSuccessful()) {
+//					CmUnspsc commodity = cResDTO.getCommodityObj();
+//					exemption.setTypes(new ArrayList<CmType>());
+//					for (CmType type : commodity.getCmType()) {
+//						if (!StringUtils.isBlank(type.getTypeName())) {
+//							exemption.getTypes().add(type);
+//						}
+//					}
+//				}
 				this.getManagedBean().getFeeExemptionsForComodity()
 						.add(exemption);
 			}
-
-			// this.getManagedBean().setFeeExemptionIndex(1);
-
+			
+			
 			this.getManagedBean().getFeeExemptionsForContract().clear();
 			this.getManagedBean().getDeletedContractFeeExemptions().clear();
 			resFDTO = feeSO.getFeeExemptionsForContractAndReqItem(reqFDTO);
@@ -460,16 +480,16 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 			this.getManagedBean().setFeeExemptionsForOrgType(resFDTO.getFeeExemptions());
 			
-			initOperationThreshold();
-			initGst();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "settingConfig.xhtml?faces-redirect=true");
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
+		}finally{
+			feeSO = null;
 		}
-		return "";
+		
+				
+					
+
+					// this.getManagedBean().setFeeExemptionIndex(1);
+
+							
 	}
 
 	private void initOperationThreshold() {
@@ -552,13 +572,13 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			configRules = resRDTO.getRuleTypeList();
 
 			// fill up ruleType's ruleValueList
-			for (PmConfigRule cRule : configRules) {
-
-				reqRDTO.setRuleType(cRule.getRuleType());
-				resRDTO = ruleSO.getRuleValuesByRuleType(reqRDTO);
-				List<PmConfigRuleValue> valuelist = resRDTO.getRuleValueList();
-				cRule.setConfigRuleValues(valuelist);
-			}
+//			for (PmConfigRule cRule : configRules) {
+//
+//				reqRDTO.setRuleType(cRule.getRuleType());
+//				resRDTO = ruleSO.getRuleValuesByRuleType(reqRDTO);
+//				List<PmConfigRuleValue> valuelist = resRDTO.getRuleValueList();
+//				cRule.setConfigRuleValues(valuelist);
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
@@ -744,15 +764,14 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					.getSelectedSmSupplier().getSupplierId());
 			OrgProfileResDTO resDAO = profileSO
 					.retrieveOrgWithSupplierByProfileId(reqDAO);
-			System.out.println("...............resDAO.getPmOrgProfile()="
+			log.info("...............resDAO.getPmOrgProfile()="
 					+ resDAO.getPmOrgProfile());
-			System.out
-					.println("...............this.getManagedBean().getSelectedSmSupplier().getSupplierId()="
+			log.info("...............this.getManagedBean().getSelectedSmSupplier().getSupplierId()="
 							+ this.getManagedBean().getSelectedSmSupplier()
 									.getSupplierId());
 			PmFeeExemption exemption = this.getManagedBean()
 					.getSelectedFeeExemption();
-			System.out.println("..............exemption=" + exemption);
+			log.info("..............exemption=" + exemption);
 			// PmFeeExemption exemption = feeExcemptionList.get(index);
 			exemption.setOrgProfileId(resDAO.getPmOrgProfile());
 			// this.getManagedBean().getFeeExemptionsForOrgAndItem().remove(index);
@@ -903,23 +922,19 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			ContractItemReqDTO reqDAO = new ContractItemReqDTO();
 			reqDAO.setContractItemId(ctContract.getContractItemId());
 			ContractItemResDTO resDAO = contractItemSO.getContractItem(reqDAO);
-			System.out
-					.println("...............this.getManagedBean().getSelectedCtContractItem().getContractItemId()="
+			log.info("...............this.getManagedBean().getSelectedCtContractItem().getContractItemId()="
 							+ this.getManagedBean().getSelectedCtContractItem()
 									.getContractItemId());
-			System.out
-					.println("...............resDAO.getCtContractItem().getScRequestItem()="
+			log.info("...............resDAO.getCtContractItem().getScRequestItem()="
 							+ resDAO.getCtContractItem().getScRequestItem());
-			System.out
-					.println("...............resDAO.getCtContractItem().getScRequestItem().getRequestNoteItemId()="
+			log.info("...............resDAO.getCtContractItem().getScRequestItem().getRequestNoteItemId()="
 							+ resDAO.getCtContractItem().getScRequestItem()
 									.getRequestNoteItemId());
 			PmFeeExemption exemption = this.getManagedBean()
 					.getFeeExemptionsForContract().get(index);
 			exemption.setRequestItemId(resDAO.getCtContractItem()
 					.getScRequestItem());
-			System.out
-					.println(".....after set..........exemption.getRequestItemId().getRequestNoteItemId()="
+			log.info(".....after set..........exemption.getRequestItemId().getRequestNoteItemId()="
 							+ exemption.getRequestItemId()
 									.getRequestNoteItemId());
 			this.getManagedBean().getFeeExemptionsForContract().remove(index);
@@ -945,22 +960,18 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			reqDAO.setContractItemId(this.getManagedBean()
 					.getSelectedCtContractItem().getContractItemId());
 			ContractItemResDTO resDAO = contractItemSO.getContractItem(reqDAO);
-			System.out
-					.println("...............this.getManagedBean().getSelectedCtContractItem().getContractItemId()="
+			log.info("...............this.getManagedBean().getSelectedCtContractItem().getContractItemId()="
 							+ this.getManagedBean().getSelectedCtContractItem()
 									.getContractItemId());
-			System.out
-					.println("...............resDAO.getCtContractItem().getScRequestItem()="
+			log.info("...............resDAO.getCtContractItem().getScRequestItem()="
 							+ resDAO.getCtContractItem().getScRequestItem());
-			System.out
-					.println("...............resDAO.getCtContractItem().getScRequestItem().getRequestNoteItemId()="
+			log.info("...............resDAO.getCtContractItem().getScRequestItem().getRequestNoteItemId()="
 							+ resDAO.getCtContractItem().getScRequestItem()
 									.getRequestNoteItemId());
 			PmFeeExemption exemption = feeExcemptionList.get(index);
 			exemption.setRequestItemId(resDAO.getCtContractItem()
 					.getScRequestItem());
-			System.out
-					.println(".....after set..........exemption.getRequestItemId().getRequestNoteItemId()="
+			log.info(".....after set..........exemption.getRequestItemId().getRequestNoteItemId()="
 							+ exemption.getRequestItemId()
 									.getRequestNoteItemId());
 			this.getManagedBean().getFeeExemptionsForContract().remove(index);
@@ -1026,9 +1037,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			// prompt popoup
 			// prepare popup msg
 			setInactivePopUpMsg(PmCommonUtil.getMessage(
-					"lbl.pm.inactive.popUp.msg", new String[] { this
-							.getManagedBean().getSelectedRuleType()
-							.getRuleTypeDesc() }));
+					"lbl.pm.inactive.popUp.msg", new String[] {
+							getRuleTypeDesc(getManagedBean().getSelectedRuleType(),null)}));
 
 			RequestContext.getCurrentInstance().execute(
 					"statusConfirmDialog.show();");
@@ -1052,15 +1062,15 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				// prompt popoup
 				// prepare popup Msg
 
-				if (fee.getFeeExemptionType().equals("1")
+				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER)
 						&& fee.getItemId().getItemId() == null) {
 					setInactiveFeeOrgPopUpMsg(PmCommonUtil.getMessage(
 							"lbl.pm.inactive.fee.popUp.msg", new String[] { fee
 									.getOrgProfileId().getSmSupplier()
 									.getCompanyName() }));
 
-				} else if (fee.getFeeExemptionType().equals("4")
-						|| (fee.getFeeExemptionType().equals("1") && fee
+				} else if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_ITEM)
+						|| (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER) && fee
 								.getItemId().getItemId() != null)) {
 					setInactiveFeeOrgPopUpMsg(PmCommonUtil.getMessage(
 							"lbl.pm.inactive.fee.popUp.msg", new String[] { fee
@@ -1092,13 +1102,13 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				// prompt popoup
 				// prepare popup msg
 
-				if (fee.getFeeExemptionType().equals("6")
+				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE)
 						&& fee.getTypeId().getTypeId() == null) {
 					setInactiveFeeComoPopUpMsg(PmCommonUtil.getMessage(
 							"lbl.pm.inactive.fee.popUp.msg", new String[] { fee
 									.getUnspscId().getUnspscTitle() }));
-				} else if (fee.getFeeExemptionType().equals("3")
-						|| (fee.getFeeExemptionType().equals("6") && fee
+				} else if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY)
+						|| (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE) && fee
 								.getTypeId().getTypeId() != null)) {
 					setInactiveFeeComoPopUpMsg(PmCommonUtil.getMessage(
 							"lbl.pm.inactive.fee.popUp.msg", new String[] { fee
@@ -1130,13 +1140,13 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				// prompt popoup
 				// prepare popup msg
 
-				if (fee.getFeeExemptionType().equals("2")
+				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT)
 						&& fee.getRequestItemId().getRequestNoteItemId() == null) {
 					setInactiveFeeContPopUpMsg(PmCommonUtil.getMessage(
 							"lbl.pm.inactive.fee.popUp.msg", new String[] { fee
 									.getContractId().getContractNo() }));
-				} else if (fee.getFeeExemptionType().equals("5")
-						|| (fee.getFeeExemptionType().equals("2") && fee
+				} else if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT_AND_CONTRACTED_ITEM)
+						|| (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT) && fee
 								.getRequestItemId().getRequestNoteItemId() != null)) {
 					setInactiveFeeContPopUpMsg(PmCommonUtil.getMessage(
 							"lbl.pm.inactive.fee.popUp.msg", new String[] { fee
@@ -1197,7 +1207,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void addMoreOrgAndItemFee() {
 		log.info(".................addMoreOrgAndItemFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-		newFeeExemption.setFeeExemptionType("1");
+		newFeeExemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER);
 		newFeeExemption.setEffDate(this.getManagedBean().getToday());// future
 																		// date
 		newFeeExemption.setItemId(new CmItem());// make sure to delete the new
@@ -1246,7 +1256,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void addMoreComodityFee() {
 		log.info(".................addMoreComodityFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-		newFeeExemption.setFeeExemptionType("6");
+		newFeeExemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE);
 		newFeeExemption.setEffDate(this.getManagedBean().getToday());// make
 																		// sure
 																		// to
@@ -1269,7 +1279,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void addMoreOrgTypeFee() {
 		log.info(".................addMoreOrgTypeFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-		newFeeExemption.setFeeExemptionType("7");
+		newFeeExemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORGTYPE);
 		newFeeExemption.setEffDate(this.getManagedBean().getToday());// make
 																		// sure
 																		// to
@@ -1320,7 +1330,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 	public void addMoreContractFee() {
 		log.info(".................addMoreContractFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-		newFeeExemption.setFeeExemptionType("2");
+		newFeeExemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT);
 		newFeeExemption.setEffDate(this.getManagedBean().getToday());
 		newFeeExemption.setRequestItemId(new ScRequestItem());
 		newFeeExemption.setContractId(new CtContract());
@@ -1400,7 +1410,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 															// less than from
 															// value
 					throw new EpException(MessageConst.ERROR_770210,
-							new String[] { ruleType.getRuleTypeDesc() });
+							new String[] {  getRuleTypeDesc(ruleType,null)});
 				}
 
 				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
@@ -1420,7 +1430,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 																					// from
 																					// value
 						throw new EpException(MessageConst.ERROR_770210,
-								new String[] { ruleType.getRuleTypeDesc() });
+								new String[] { getRuleTypeDesc(ruleType,null) });
 					}
 
 					if (!ruleValueValidation(baseValueToCompare, value,
@@ -1436,14 +1446,12 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 								throw new EpException(
 										MessageConst.ERROR_770110,
-										new String[] { ruleType
-												.getRuleTypeDesc() });
+										new String[] {  getRuleTypeDesc(ruleType,null) });
 							} else {
 
 								throw new EpException(
 										MessageConst.ERROR_770109,
-										new String[] { ruleType
-												.getRuleTypeDesc() });
+										new String[] {  getRuleTypeDesc(ruleType,null) });
 							}
 						case '2':
 							if (ruleType.getRuleDataTypeId().getParameterCode()
@@ -1451,18 +1459,17 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 								throw new EpException(
 										MessageConst.ERROR_770199,
 										new String[] {
-												ruleType.getRuleTypeDesc(),
+												 getRuleTypeDesc(ruleType,null),
 												value.getCategoryDisplayValue() });
 							} else {
 								throw new EpException(
 										MessageConst.ERROR_770110,
-										new String[] { ruleType
-												.getRuleTypeDesc() });
+										new String[] {  getRuleTypeDesc(ruleType,null) });
 							}
 
 						case '3':
 							throw new EpException(MessageConst.ERROR_770154,
-									new String[] { ruleType.getRuleTypeDesc() });
+									new String[] {  getRuleTypeDesc(ruleType,null) });
 
 						}
 
@@ -1483,7 +1490,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			StatusReqDTO statusReqDTO = null;
 			for (PmConfigRule ruleType : this.getManagedBean()
 					.getConfigRuleList()) {
@@ -1499,12 +1506,12 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 								.equals("C")) {
 							msgParam = new String[] {
 									ruleTypeValue.getCategoryDisplayValue(),
-									ruleType.getRuleTypeDescInMS() };
+									getRuleTypeDesc(ruleType,CommonConstants.LANGUAGE_CODE_MALAY) };
 
 						} else {
 							msgParam = new String[] {
 									ruleTypeValue.getRuleValue(),
-									ruleType.getRuleTypeDescInMS() };
+									getRuleTypeDesc(ruleType,CommonConstants.LANGUAGE_CODE_MALAY) };
 
 						}
 					} else {
@@ -1516,12 +1523,12 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 									.equals("C")) {
 								msgParam = new String[] {
 										ruleTypeValue.getCategoryDisplayValue(),
-										ruleType.getRuleTypeDescInMS() };
+										getRuleTypeDesc(ruleType,CommonConstants.LANGUAGE_CODE_MALAY) };
 
 							} else {
 								msgParam = new String[] {
 										ruleTypeValue.getRuleValue(),
-										ruleType.getRuleTypeDescInMS() };
+										getRuleTypeDesc(ruleType,CommonConstants.LANGUAGE_CODE_MALAY) };
 
 							}
 						}
@@ -1557,6 +1564,14 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			// RuleConfigHelper.getInstance().getRuleTypeList().get(0));
 			List<PmConfigRule> list = retriveConfigRuleFromDB();
 			this.getManagedBean().setConfigRuleList(list);
+			
+			Long configRuleId = getManagedBean().getSelectedRuleType().getRuleTypeId();
+			for(PmConfigRule configRule: list){
+				if(configRuleId.equals(configRule.getRuleTypeId())){
+					this.getManagedBean().setSelectedRuleType(configRule);
+					break;
+				}
+			}
 			// this.getManagedBean().setSelectedRuleType(list.get(0));
 
 			if (resDTO.isSuccessful()) {
@@ -1714,7 +1729,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 			if (exemption1.getFeeExemptionId() == null) {// set ExemptionType
 															
-					exemption1.setFeeExemptionType("7");
+					exemption1.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORGTYPE);
 
 			} 
 		}
@@ -1735,7 +1750,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		IFeeExemptionSO exemptionSO = null;
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusReqDTO statusReqDTO = null;
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
@@ -1778,7 +1793,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		// //////////////////
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IFeeExemptionSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
@@ -1830,14 +1845,14 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			if (exemption.getFeeExemptionId() == null) {// set ExemptionType for
 														// new FeeExemptions
 				if (exemption.getItemId() == null) {
-					exemption.setFeeExemptionType("1");
+					exemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER);
 				} else {
-					exemption.setFeeExemptionType("4");
+					exemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_ITEM);
 				}
-			} else if (exemption.getFeeExemptionType().equals("1")
+			} else if (exemption.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER)
 					&& exemption.getItemId() != null) {
 				// update exemptionType if Item is selected
-				exemption.setFeeExemptionType("4");
+				exemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_ITEM);
 			}
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
@@ -1865,7 +1880,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 		// /////////////////////////////////////////add to Tracking Dairy
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusReqDTO statusReqDTO = null;
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
@@ -1876,7 +1891,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 
 				messageId = MessageConst.TD_80022;
-				if (fee.getFeeExemptionType().equals("1")) {
+				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER)) {
 					msgParam = new String[] {
 							fee.getOrgProfileId().getSmSupplier()
 									.getCompanyName(), "" };
@@ -2002,56 +2017,56 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				// // if record inactive choose next one
 				// continue;
 				// }
-				if ((ex.getFeeExemptionType().equals("1")
-						&& baseExemption.getFeeExemptionType().equals("1") && ex
-						.getOrgProfileId().getOrgProfileId() == baseExemption
-						.getOrgProfileId().getOrgProfileId())
-						|| (ex.getFeeExemptionType().equals("4")
+				if ((ex.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER)
+						&& baseExemption.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER) && ex
+						.getOrgProfileId().getOrgProfileId().equals(baseExemption
+						.getOrgProfileId().getOrgProfileId()))
+						|| (ex.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_ITEM)
 								&& baseExemption.getFeeExemptionType().equals(
-										"4")
-								&& ex.getOrgProfileId().getOrgProfileId() == baseExemption
-										.getOrgProfileId().getOrgProfileId() && ex
-								.getItemId().getItemId() == baseExemption
-								.getItemId().getItemId())) {
+										ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_ITEM)
+								&& ex.getOrgProfileId().getOrgProfileId().equals(baseExemption
+										.getOrgProfileId().getOrgProfileId()) && ex
+								.getItemId().getItemId().equals(baseExemption
+								.getItemId().getItemId()))) {
 
 					result = isDateOverlaped(ex.getEffDate(), ex.getExpDate(),
 							baseExemption.getEffDate(),
 							baseExemption.getExpDate());
 
-				} else if ((ex.getFeeExemptionType().equals("6")
-						&& baseExemption.getFeeExemptionType().equals("6") && ex
-						.getUnspscId().getUnspscCode() == baseExemption
-						.getUnspscId().getUnspscCode())
-						|| (ex.getFeeExemptionType().equals("3")
+				} else if ((ex.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE)
+						&& baseExemption.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE) && ex
+						.getUnspscId().getUnspscCode().equals(baseExemption
+						.getUnspscId().getUnspscCode()))
+						|| (ex.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY)
 								&& baseExemption.getFeeExemptionType().equals(
-										"3")
-								&& ex.getUnspscId().getUnspscCode() == baseExemption
-										.getUnspscId().getUnspscCode() && ex
-								.getTypeId().getTypeId() == baseExemption
-								.getTypeId().getTypeId())) {
+										ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY)
+								&& ex.getUnspscId().getUnspscCode().equals(baseExemption
+										.getUnspscId().getUnspscCode()) && ex
+								.getTypeId().getTypeId().equals(baseExemption
+								.getTypeId().getTypeId()))) {
 					result = isDateOverlaped(ex.getEffDate(), ex.getExpDate(),
 							baseExemption.getEffDate(),
 							baseExemption.getExpDate());
 
-				} else if ((ex.getFeeExemptionType().equals("2")
-						&& baseExemption.getFeeExemptionType().equals("2") && ex
-						.getContractId().getContractId() == baseExemption
-						.getContractId().getContractId())
-						|| (ex.getFeeExemptionType().equals("5")
+				} else if ((ex.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT)
+						&& baseExemption.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT) && ex
+						.getContractId().getContractId().equals(baseExemption
+						.getContractId().getContractId()))
+						|| (ex.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT_AND_CONTRACTED_ITEM)
 								&& baseExemption.getFeeExemptionType().equals(
-										"5")
-								&& ex.getContractId().getContractId() == baseExemption
-										.getContractId().getContractId() && ex
-								.getRequestItemId().getRequestNoteItemId() == baseExemption
-								.getRequestItemId().getRequestNoteItemId())) {
+										ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT_AND_CONTRACTED_ITEM)
+								&& ex.getContractId().getContractId().equals(baseExemption
+										.getContractId().getContractId()) && ex
+								.getRequestItemId().getRequestNoteItemId().equals(baseExemption
+								.getRequestItemId().getRequestNoteItemId()))) {
 
 					result = isDateOverlaped(ex.getEffDate(), ex.getExpDate(),
 							baseExemption.getEffDate(),
 							baseExemption.getExpDate());
-				}else if (ex.getFeeExemptionType().equals("7")
-						&& baseExemption.getFeeExemptionType().equals("7") && ex
-						.getOrgTypeId().getParameterId() == baseExemption
-						.getOrgTypeId().getParameterId()) {
+				}else if (ex.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORGTYPE)
+						&& baseExemption.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORGTYPE) && ex
+						.getOrgTypeId().getParameterId().equals(baseExemption
+						.getOrgTypeId().getParameterId())) {
 					result = isDateOverlaped(ex.getEffDate(), ex.getExpDate(),
 							baseExemption.getEffDate(),
 							baseExemption.getExpDate());
@@ -2096,14 +2111,14 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			if (exemption.getFeeExemptionId() == null) {// set ExemptionType for
 														// new FeeExemptions
 				if (exemption.getRequestItemId() == null) {
-					exemption.setFeeExemptionType("2");
+					exemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT);
 				} else {
-					exemption.setFeeExemptionType("5");
+					exemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT_AND_CONTRACTED_ITEM);
 				}
-			} else if (exemption.getFeeExemptionType().equals("2")
+			} else if (exemption.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT)
 					&& exemption.getRequestItemId() != null) {
 				// update exemptionType if requestedItem is selected
-				exemption.setFeeExemptionType("5");
+				exemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT_AND_CONTRACTED_ITEM);
 			}
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
@@ -2131,7 +2146,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		IFeeExemptionSO exemptionSO = null;
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusReqDTO statusReqDTO = null;
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
@@ -2141,7 +2156,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				messageId = MessageConst.TD_80022;
-				if (fee.getFeeExemptionType().equals("2")) {
+				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT)) {
 					msgParam = new String[] {
 							fee.getContractId().getContractNo(), "" };
 
@@ -2179,7 +2194,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		// ///////////////////////////
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IFeeExemptionSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
@@ -2262,15 +2277,15 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			if (exemption1.getFeeExemptionId() == null) {// set ExemptionType
 															// for
 				if (exemption1.getTypeId() == null) { // new FeeExemptions
-					exemption1.setFeeExemptionType("6");
+					exemption1.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE);
 				} else {
-					exemption1.setFeeExemptionType("3");
+					exemption1.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY);
 
 				}
-			} else if (exemption1.getFeeExemptionType().equals("6")
+			} else if (exemption1.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE)
 					&& exemption1.getTypeId() != null) {
 				// update exemptionType if Type is selected
-				exemption1.setFeeExemptionType("3");
+				exemption1.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY);
 			}
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
@@ -2293,7 +2308,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		IFeeExemptionSO exemptionSO = null;
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusReqDTO statusReqDTO = null;
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
@@ -2302,7 +2317,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				messageId = MessageConst.TD_80022;
-				if (fee.getFeeExemptionType().equals("6")) {
+				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE)) {
 					msgParam = new String[] {
 							fee.getUnspscId().getUnspscTitle(), "" };
 
@@ -2340,7 +2355,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		// //////////////////
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IFeeExemptionSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
@@ -2353,7 +2368,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 					.getInstance()
-					.getServiceObject("cm", ICodificationSO.class);
+					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
 				if (exemption.getTypeId() == null) {
@@ -2397,7 +2412,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		IConfigGeneralSO cgeneralSO = null;
 		try {
 			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IConfigGeneralSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
 			ConfigGeneralReqDTO reqDTO = new ConfigGeneralReqDTO();
 			reqDTO.setPmConfigGeneral(this.getManagedBean()
 					.getSelectedConfigGeneral());
@@ -2498,7 +2513,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					.getThresholdIdToS2UnplannedMap()
 					.get(threshold.getThresholdId());
 			if (originalS2Unplanned != null) {
-				if (originalS2Unplanned == (Integer) event.getNewValue()) {
+				if (originalS2Unplanned.equals((Integer) event.getNewValue())) {
 					this.getManagedBean().getThresholdIdToS2UnplannedMap()
 							.remove(threshold.getThresholdId());
 				}
@@ -2525,7 +2540,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					.getThresholdIdToBudgetSpentMap()
 					.get(threshold.getThresholdId());
 			if (originalBudget != null) {
-				if (originalBudget == (Integer) event.getNewValue()) {
+				if (originalBudget.equals((Integer) event.getNewValue())) {
 					this.getManagedBean().getThresholdIdToBudgetSpentMap()
 							.remove(threshold.getThresholdId());
 				}
@@ -2555,7 +2570,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				.get(this.getManagedBean().getThreshold().getThresholdId());
 		log.info(".......originalS2Unplanned=" + originalS2Unplanned);
 		if (originalS2Unplanned != null) {
-			if (originalS2Unplanned == (Integer) event.getNewValue()) {
+			if (originalS2Unplanned.equals((Integer) event.getNewValue())) {
 				this.getManagedBean()
 						.getThresholdIdToS2UnplannedMap()
 						.remove(this.getManagedBean().getThreshold()
@@ -2583,7 +2598,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				.getThresholdIdToBudgetSpentMap()
 				.get(this.getManagedBean().getThreshold().getThresholdId());
 		if (originalBudgetSpent != null) {
-			if (originalBudgetSpent == (Integer) event.getNewValue()) {
+			if (originalBudgetSpent.equals((Integer) event.getNewValue())) {
 				this.getManagedBean()
 						.getThresholdIdToBudgetSpentMap()
 						.remove(this.getManagedBean().getThreshold()
@@ -2626,8 +2641,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 						.get(this.getManagedBean().getThreshold()
 								.getThresholdId());
 				if (originalUnplanndthreshold != null
-						&& originalUnplanndthreshold != centralizedLevelThreshold
-								.getS2Unplanned()) {// track change
+						&& !originalUnplanndthreshold.equals(centralizedLevelThreshold
+								.getS2Unplanned())) {// track change
 					log.info("Tracking diary for Threshold : Centeralized Unplanned changed");
 					String messageId = MessageConst.TD_80018;
 					String[] msgParam = new String[] {
@@ -2657,8 +2672,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							.getThresholdIdToS2UnplannedMap()
 							.get(threshold.getThresholdId());
 					if (originalUnplanndthreshold != null
-							&& originalUnplanndthreshold != threshold
-									.getS2Unplanned()) {// track change
+							&& !originalUnplanndthreshold.equals(threshold
+									.getS2Unplanned())) {// track change
 						log.info("Tracking diary for Threshold : ministery Unplanned changed");
 						String messageId = MessageConst.TD_80017;
 						String[] msgParam = new String[] {
@@ -2692,8 +2707,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 						.get(this.getManagedBean().getThreshold()
 								.getThresholdId());
 				if (originalBudgetThreshold != null
-						&& originalBudgetThreshold != centralizedLevelThreshold
-								.getBudgetSpent()) {// track change
+						&& !originalBudgetThreshold.equals(centralizedLevelThreshold
+								.getBudgetSpent())) {// track change
 					log.info("Tracking diary for Threshold : Centeralized BudgetVsSpent changed");
 					String messageId = MessageConst.TD_80020;
 					String[] msgParam = new String[] {
@@ -2723,8 +2738,8 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							.getThresholdIdToBudgetSpentMap()
 							.get(threshold.getThresholdId());
 					if (originalUnplanndthreshold != null
-							&& originalUnplanndthreshold != threshold
-									.getBudgetSpent()) {// track change
+							&& !originalUnplanndthreshold.equals(threshold
+									.getBudgetSpent())) {// track change
 						log.info("Tracking diary for Threshold : ministery BudgetVsSpent changed");
 						String messageId = MessageConst.TD_80019;
 						String[] msgParam = new String[] {
@@ -3702,7 +3717,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 				statusReqDTO.setStatusId(da.getRecordStatusFlg().longValue());
 				StatusResDTO statusResDTO = statusSO
 						.retrieveStatusByStatusId(statusReqDTO);
-				System.out.println("statusResDTO.getPmStatus().getStatusId():"
+				log.info("statusResDTO.getPmStatus().getStatusId():"
 						+ statusResDTO.getPmStatus().getStatusId());
 				log.info("statusResDTO.getPmStatus().getStatusId():"
 						+ statusResDTO.getPmStatus().getStatusId());
@@ -3747,7 +3762,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
 			StatusResDTO statusResDTO = statusSO
 					.retrieveStatusByStatusId(statusReqDTO);
-			System.out.println("statusResDTO.getPmStatus().getStatusId():"
+			log.info("statusResDTO.getPmStatus().getStatusId():"
 					+ statusResDTO.getPmStatus().getStatusId());
 			log.info("statusResDTO.getPmStatus().getStatusId():"
 					+ statusResDTO.getPmStatus().getStatusId());
@@ -4466,5 +4481,22 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+	}
+	
+	public String getRuleTypeDesc(PmConfigRule configRule, String language){
+		String ruleTypeDesc = null;
+		for(PmConfigRuleDesc desc : configRule.getConfigRuleDesc()){
+			if(desc.getLanguageCode().getLanguageCode().equals(
+					StringUtils.isNotBlank(language) ? language : new FacesScopes().getUserLocale().getLanguage())){
+				ruleTypeDesc = desc.getRuleDesc();
+				break;
+			}
+		}		
+		return ruleTypeDesc;
+		
+	}
+	
+	public String getMaxCalendarYearRange(){
+		return null;
 	}
 }

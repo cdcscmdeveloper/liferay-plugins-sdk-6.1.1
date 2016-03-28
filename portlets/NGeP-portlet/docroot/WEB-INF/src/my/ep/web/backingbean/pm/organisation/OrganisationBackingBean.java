@@ -528,8 +528,6 @@ public class OrganisationBackingBean extends
 		
 		this.getManagedBean().setOrgProfile(orgProfile);
 
-		
-
 		// set org category
 		if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_FEDERAL_GOVT)
 				.contains(getManagedBean().getOrgType())) {
@@ -792,19 +790,24 @@ public class OrganisationBackingBean extends
 		String redirectUrl = null;
 
 		try {
+			PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();			
 			// check govSeller
-			if (this.getManagedBean().getOrgProfile().isGovtSeller()) {
+			if (orgProfile.isGovtSeller()) {
 				validateSupplierBankListAndSupplierPersonnel();
 				validateGstDetails();
 			}
 			
 			// check group org
-			if (ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getOrgProfile().getGroupOrgType())) {
+			if (ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(orgProfile.getGroupOrgType())) {
 				validateGroupOrg();				
 			}
+			
+			validateOrgProfile(orgProfile);
+			validateOrgAddress(this.getManagedBean().getOfficeAddress());
+			validateContactPerson(this.getManagedBean()
+					.getOfficeContactPerson());
 
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-
 			orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOrgProfileSO.class);
@@ -817,11 +820,9 @@ public class OrganisationBackingBean extends
 					.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
 			parameterReqDTO.setParameterCode(getManagedBean().getOrgType());
 			ParameterResDTO parameterResDTO = parameterSO
-					.retrieveParameterByTypeAndCode(parameterReqDTO);
-
-			PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
-			PmOrgValidity orgValidity = getManagedBean().getOrgProfile()
-					.getPmOrgValidity();
+					.retrieveParameterByTypeAndCode(parameterReqDTO);			
+			PmOrgValidity orgValidity = orgProfile.getPmOrgValidity();
+			
 			List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
 			if (orgProfile.isBrandNew()) {
 				// check BPK
@@ -848,12 +849,7 @@ public class OrganisationBackingBean extends
 				orgValidity.setPmOrgProfile(orgProfile);
 				orgProfile.setPmOrgValidity(orgValidity);
 			}
-
-			validateOrgProfiel(orgProfile);
-			validateOrgAddress(this.getManagedBean().getOfficeAddress());
-			validateContactPerson(this.getManagedBean()
-					.getOfficeContactPerson());
-
+			
 			if (parameterResDTO
 					.getPmParameter()
 					.getParameterCode()
@@ -866,7 +862,8 @@ public class OrganisationBackingBean extends
 				orgProfile.setPmZone(getManagedBean().getOrgProfile()
 						.getPmZone());
 			}
-			// PTJ, GLC, LAT, STG and STB
+			
+			// PTJ, GLC, LAT, STG , STS and STB
 			if (getManagedBean().getOrgType().equalsIgnoreCase(
 					OrganizationType.DIVISION.value())
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
@@ -874,11 +871,13 @@ public class OrganisationBackingBean extends
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.STATUTORY_BODIES.value())
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATUTORY_BODIES_STATE.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.LOCAL_AUTHORITY.value())
 					|| getManagedBean().getOrgType().equalsIgnoreCase(
 							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())) {
 
-				if (getManagedBean().getOrgProfile().isGovtSeller()) {
+				if (orgProfile.isGovtSeller()) {
 					reqDTO.setSupplierUsers(getManagedBean()
 							.getSupplierUsers());
 					reqDTO.setSupplierBanks(getManagedBean().getSmSupplierBanks());
@@ -891,21 +890,19 @@ public class OrganisationBackingBean extends
 							reqDTO.setGstSupplier(gstSupplier);
 						}
 					}
-					
-					
 				} else {
 					log.info("Deactvate Supplier=======");
 					reqDTO.setSupplierBanks(getManagedBean().getSmSupplierBanks());
 					reqDTO.setSmPersonnels(getManagedBean().getSmPersonnels());				
 				}
-			}
+			}			
+			
 			// PTJ
 			if (parameterResDTO.getPmParameter().getParameterCode()
 					.equalsIgnoreCase(OrganizationType.DIVISION.value())) {			
 				// Validate the Delivery Address
 				for (PmAddressType deliveryAddress : getManagedBean()
 						.getAddressTypesList()) {
-
 					if (deliveryAddress.getAddressType().equals(
 							AddressType.DELIVERY_ADDRESS.value())) {
 						log.info("Validate Delivery Address"
@@ -965,24 +962,7 @@ public class OrganisationBackingBean extends
 				}
 				
 			}
-			//For Ministry, Statutory Body, GLC, State Govt and Local Authority 
-			if (getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.STATE_GOVERNMENT.value())
-					|| getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.STATUTORY_BODIES.value())
-					|| getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.STATUTORY_BODIES_STATE.value())
-					|| getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.LOCAL_AUTHORITY.value())
-					|| getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())
-					|| getManagedBean().getOrgType().equalsIgnoreCase(
-							OrganizationType.MINISTRY.value())) {
-				validateUniqueOrgCode(orgProfile,getManagedBean().getOrgType());
-				validateUniqueOrgName(orgProfile,getManagedBean().getOrgType());
-			}
-
-
+			
 			reqDTO.setPmOrgProfile(orgProfile);
 			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
 			reqDTO.setUser(getFacesScopes().getUserSessionBean());
@@ -1010,7 +990,6 @@ public class OrganisationBackingBean extends
 						.getMessage("lbl.pm.org.updated.successfully",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale());
-				redirectUrl = null;
 				redirectToOrganisation(getManagedBean().getOrgProfile()
 						.getOrgProfileId());
 			}
@@ -1020,7 +999,7 @@ public class OrganisationBackingBean extends
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Org Name : ", message));
+								null, message));
 			}
 		} finally {
 			orgProfileSO = null;
@@ -1031,7 +1010,7 @@ public class OrganisationBackingBean extends
 
 	}
 
-	private void validateOrgProfiel(PmOrgProfile orgProfile) {
+	private void validateOrgProfile(PmOrgProfile orgProfile) {
 
 		if (StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgCode())) {
 			throw new EpException(MessageConst.ERROR_775105);
@@ -1039,6 +1018,26 @@ public class OrganisationBackingBean extends
 		if (StringUtils.isBlank(orgProfile.getPmOrgValidity().getOrgName())) {
 			throw new EpException(MessageConst.ERROR_775106);
 		}
+		
+		if(DbValueConst.RECORD_STATUS_ACTIVE == orgProfile.getRecordStatusFlg()){
+			//For Ministry, Statutory Body, GLC, State Govt and Local Authority 
+			if (getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATE_GOVERNMENT.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATUTORY_BODIES.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATUTORY_BODIES_STATE.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.LOCAL_AUTHORITY.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.MINISTRY.value())) {
+				validateUniqueOrgCode(orgProfile,getManagedBean().getOrgType());
+				validateUniqueOrgName(orgProfile,getManagedBean().getOrgType());
+			}
+		}
+		
 
 	}
 
@@ -2392,6 +2391,11 @@ public class OrganisationBackingBean extends
 							orgProfile.getOrgProfileId()));	
 			}
 			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			
 						
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgProfileSearchBean(searchBean);
@@ -2400,9 +2404,15 @@ public class OrganisationBackingBean extends
 							IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgSO.searchOrgProfile(reqDTO);
 			if(resDTO.getOrgProfileResultBean()!=null && resDTO.getOrgProfileResultBean().getResultList()!=null 
-					&& !resDTO.getOrgProfileResultBean().getResultList().isEmpty()){				
-				throw new EpException(MessageConst.ERROR_775131, new
-						 String[]{orgProfile.getOrgCode()});
+					&& !resDTO.getOrgProfileResultBean().getResultList().isEmpty()){
+				if(orgProfile.isBrandNew()){
+					throw new EpException(MessageConst.ERROR_775131, new
+							 String[]{orgProfile.getOrgCode()});
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.org.code")
+					});	
+				}
 			}
 		}finally{
 			orgSO = null;
@@ -2458,8 +2468,14 @@ public class OrganisationBackingBean extends
 				String orgTypeDesc = getParameterDesc(
 						ParameterTypeConst.ORGANISATION_TYPES,
 						resDTO.getOrgProfileResultBean().getResultList().get(0).getOrgTypeCode().getParameterCode());
-				throw new EpException(MessageConst.ERROR_775132, new
-						 String[]{orgProfile.getOrgName(),orgTypeDesc,orgTypeDesc});
+				if(orgProfile.isBrandNew()){
+					throw new EpException(MessageConst.ERROR_775132, new
+							 String[]{orgProfile.getOrgName(),orgTypeDesc,orgTypeDesc});
+				}else{
+					throw new EpException(MessageConst.ERROR_770220, new String[] {
+							PmCommonUtil.getResourceBundleLabels("lbl.pm.org.name")
+					});	
+				}
 			}
 		}finally{
 			orgSO = null;
