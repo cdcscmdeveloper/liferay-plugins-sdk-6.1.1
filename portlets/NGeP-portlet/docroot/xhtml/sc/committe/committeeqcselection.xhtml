@@ -69,7 +69,7 @@
 					<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
-							value="#{committeBackingBean.getRoleTypeDropdownValues(committeemember.PNP)}" />
+							value="#{committeBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(committeemember.PNP,committeBackingBean.managedBean.qtCommittee.scQt,committeemember.pmUser)}" />
 					</p:selectOneMenu>
 				</p:column>
 			</c:if>
