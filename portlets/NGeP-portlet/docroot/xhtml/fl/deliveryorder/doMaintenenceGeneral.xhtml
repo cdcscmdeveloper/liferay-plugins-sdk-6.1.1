@@ -137,7 +137,7 @@
 						value="#{flOrderBB.getFullAddress(createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress)}" /></td>
 				<td style="width: 140px;vertical-align: top;"><p:outputLabel
 						value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td style="vertical-align: top;"><p:inputText size="15" disabled="true" value="#{createDOBackingBean.managedBean.fulfilmentRequest.submissionDate}"><f:convertDateTime
+				<td style="vertical-align: top;"><p:inputText size="15" disabled="true" value="#{createDOBackingBean.managedBean.flDeliveryOrder.estDeliveryDate}"><f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /></p:inputText></td>	
 			</tr>
 			<tr>
