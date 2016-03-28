@@ -293,17 +293,17 @@ public class ProfileManagementSearchBackingBean extends
 		log.info("......appTypeChange......");
 	String paramCode = this.getManagedBean().getSelectedAppTypeParamCode();
 	Long[] statusIds = null;
-	Long[] cpStatusIds = new Long[]{75005L,75010L,75015L,75020L,75025L,75030L};
-	Long[] mrStatusIds = new Long[]{75000L,75010L,75015L,75020L,75025L,75030L};
+	Long[] cpStatusIds = new Long[]{75005L,75010L,75015L,75020L,75030L};
+	Long[] mrStatusIds = new Long[]{75000L,75010L,75015L,75020L,75030L};
 	if(paramCode != null){
 	    if(paramCode.equals(ParameterConst.DOCTYPE_MARKET_RESEARCH)){
 		  this.getManagedBean().getProfileManagSearchBean().setMarketResearch(true);
-		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(false);
+//		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(false);
 		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(null);
 		  statusIds = mrStatusIds;
 	    }else if(paramCode.equals(ParameterConst.DOCTYPE_COMPANY_PROFILE)){
 	    	this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(true);
-	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(false);
+//	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(false);
 	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(null);
 	    	 statusIds = cpStatusIds;
 	    }
