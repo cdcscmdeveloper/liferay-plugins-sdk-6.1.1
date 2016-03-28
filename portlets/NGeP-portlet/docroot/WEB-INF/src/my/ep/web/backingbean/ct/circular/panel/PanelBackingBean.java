@@ -1046,6 +1046,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.deletePanelitemSpec()");
 		try {
 			getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs().removeAll(getManagedBean().getSelectedPanelItemSpecs());
+			getManagedBean().setButtonHideActiveDel(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
