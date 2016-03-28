@@ -51,7 +51,7 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 		 * Instantiates a new search paging data model.
 		 */
 		public SearchPagingDataModel() {
-			super("rsDt", false);
+			super("rsDt", true);
 			// TODO Auto-generated constructor stub
 		}
 
@@ -101,7 +101,6 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 				
 
 				SiteAssignResDTO resDTO = siteAssignSO.retrievesSiteVisitTasks(reqDTO);
-
 
 				return resDTO.getSmApplResultBean();
 			} catch (Exception e) {
