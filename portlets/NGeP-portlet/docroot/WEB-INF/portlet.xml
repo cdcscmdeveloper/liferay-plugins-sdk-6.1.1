@@ -7535,7 +7535,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/bpmtasklist/svcTasklist.xhtml</value>			
+			<value>/xhtml/sm/svcassignment/prerenderSvcTaskList.xhtml</value>			
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
