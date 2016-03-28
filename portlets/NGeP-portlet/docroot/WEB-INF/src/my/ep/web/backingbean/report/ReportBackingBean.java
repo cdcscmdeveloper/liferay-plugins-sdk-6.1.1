@@ -17410,9 +17410,7 @@ public class ReportBackingBean extends
 			}		
 
 		} else if (this.reportValue
-				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)
-				|| this.reportValue
-						.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
+				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
 			
 			itemsList = getAllOrgTypeList(federalItems, otherItems);
 
