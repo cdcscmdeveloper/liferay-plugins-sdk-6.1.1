@@ -12334,6 +12334,7 @@ public class ReportBackingBean extends
 				supplierTypeConsultant();
 			}
 			getGenBusCompanyData();
+			getOrgTypeDropdownValues();
 			/*
 			 * if (pmReport != null) {
 			 * getDefaultValuesFromAndToDate(pmReport.getReportCode()); }
@@ -17375,10 +17376,11 @@ public class ReportBackingBean extends
 	public SelectItem[] getOrgTypeDropdownValues() {
 		log.info("ReportBackingBean-getOrgTypeDropdownValues");
 		ISearchBean<PmParameterDesc> searchBean1 = null;
-		ISearchBean<PmParameterDesc> searchBean2 = null;
-		SelectItem[] items = null;
+		//ISearchBean<PmParameterDesc> searchBean2 = null;
+		//SelectItem[] items = null;
 		SelectItem[] federalItems = null;
 		SelectItem[] otherItems = null;
+		this.setPmOrgType(null);
 
 		if (this.reportValue
 				.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
@@ -17394,40 +17396,50 @@ public class ReportBackingBean extends
 				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
 				if (searchBean1 != null) {
 					searchBean1.getSortColumns();
-					items = getDropdownValuesBySearchBean(
+					
+					itemsList = getDropdownValuesBySearchBean(
 							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
 				}
 			}
 			if (this.getPmOrgCategory() != null) {
 				if (searchBean1 != null) {
-					searchBean1.getSortColumns();
-					items = getDropdownValuesBySearchBean(
+					searchBean1.getSortColumns();				
+					itemsList = getDropdownValuesBySearchBean(
 							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
 				}
-			}
+			}		
 
 		} else if (this.reportValue
 				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)
 				|| this.reportValue
 						.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
-
-			searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
-			if (searchBean1 != null) {
-				searchBean1.getSortColumns();
-				federalItems = getDropdownValuesBySearchBean(
-						ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
-			}
-			searchBean2 = getOrgTypeSearchBean("orgTypeOthersList");
-			if (searchBean2 != null) {
-				searchBean2.getSortColumns();
-				otherItems = getDropdownValuesBySearchBean(
-						ParameterTypeConst.ORGANISATION_TYPES, searchBean2);
-				// for the removal of 'Select One' in the dropdown
-				otherItems = (SelectItem[]) ArrayUtils.remove(otherItems, 0);
-			}
-			items = ArrayUtils.addAll(federalItems, otherItems);
+			
+			itemsList = getAllOrgTypeList(federalItems, otherItems);
 
 		}
+		return itemsList;
+	}
+
+	private SelectItem[] getAllOrgTypeList(SelectItem[] federalItems,
+			SelectItem[] otherItems) {
+		ISearchBean<PmParameterDesc> searchBean1;
+		ISearchBean<PmParameterDesc> searchBean2;
+		SelectItem[] items;
+		searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
+		if (searchBean1 != null) {
+			searchBean1.getSortColumns();
+			federalItems = getDropdownValuesBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
+		}
+		searchBean2 = getOrgTypeSearchBean("orgTypeOthersList");
+		if (searchBean2 != null) {
+			searchBean2.getSortColumns();
+			otherItems = getDropdownValuesBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean2);
+			// for the removal of 'Select One' in the dropdown
+			otherItems = (SelectItem[]) ArrayUtils.remove(otherItems, 0);
+		}
+		items = ArrayUtils.addAll(federalItems, otherItems);
 		return items;
 	}
 
