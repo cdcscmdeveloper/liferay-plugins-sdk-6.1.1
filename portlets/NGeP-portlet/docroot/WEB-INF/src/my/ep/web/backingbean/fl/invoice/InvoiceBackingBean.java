@@ -924,7 +924,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		if(serviceFee.doubleValue()>0){
 			for(FlInvoiceItemSummary invSummary : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
 				for(FlInvoiceItem invItem : invSummary.getFlInvoiceItem()){
-					if(invSummary.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId() != null){
+					if(invSummary.getFlFulfilmentItem().getCmItem() != null){
 						reqDTO.setItemId(invSummary.getFlFulfilmentItem().getCmItem().getItemId());
 					}
 					reqDTO.setRequestItemId(invSummary.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
