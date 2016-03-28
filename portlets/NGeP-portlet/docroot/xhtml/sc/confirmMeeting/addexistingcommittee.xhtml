@@ -126,7 +126,7 @@
 										value="#{existcommitteeuser.memberRole.parameterId}"
 										style="width: 110px;margin-bottom: 5px;">
 										<f:selectItems
-											value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
+											value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(existcommitteeuser.PMP,evaluationMeetingBackingBean.managedBean.qt,existcommitteeuser)}" />
 									</p:selectOneMenu>
 								</p:column>
 							</p:dataTable>

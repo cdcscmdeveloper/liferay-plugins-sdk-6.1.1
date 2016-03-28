@@ -130,7 +130,7 @@
 					<br />
 				</p:panel>
 				<p:spacer height="3" />
-				<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+				<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true" id="evaluationCloneCommitteeMeetingIds">
 					<p:dataTable id="clonesearchCommitteid" rows="10"
 						value="#{evaluationMeetingBackingBean.searchQuotatioTender}"
 						rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
@@ -192,7 +192,7 @@
 				#{evaluationMeetingBackingBean.managedBean.cloneSelectQt.qtNo}>#{lbl['lbl.sc.committee.details']}
 				</ui:fragment>
 
-					<p:dataTable id="cloneCommittee" var="committeeMember" rows="10"
+					<p:dataTable id="cloneCommittee" var="committeeMember" rows="10" rowIndexVar="index"
 						value="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebers}"
 						selection="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebersSelect}"
 						rowKey="#{committeeMember.committeeMemberId}">
@@ -250,7 +250,7 @@
 							styleClass="BtnSpacing"
 							actionListener="#{evaluationMeetingBackingBean.closeListener}"
 							style="float:right;" onclick="screen2.hide();" />
-						<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this"
+						<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this,evaluationCloneCommitteeMeetingIds"
 							styleClass="BtnSpacing" partialSubmit="true"
 							actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
 							oncomplete="prepareCommittee.paginator.endLink.click();"

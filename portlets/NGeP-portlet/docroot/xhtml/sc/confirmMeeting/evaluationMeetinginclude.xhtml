@@ -137,7 +137,7 @@
 
 			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox
+					<p:selectBooleanCheckbox disabled="true"
 						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="evaluationpreparecommittee"
@@ -207,7 +207,7 @@
 						value="#{committeeMember.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
-							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
+							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(committeeMember.PNP,evaluationMeetingBackingBean.managedBean.qt,committeeMember.pmUser)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{evaluationMeetingBackingBean.chnageMemberRole(index,evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"></p:ajax>
 					</p:selectOneMenu>
