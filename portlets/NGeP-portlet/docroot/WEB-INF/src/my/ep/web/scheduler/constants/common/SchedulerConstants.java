@@ -170,7 +170,9 @@ public class SchedulerConstants {
 	
 //	1GFMAS IN BOUND
 	
-	public static final String GFMAS_MASTER_DATA_INBOUND = "MASTER DATA JOB(Inbound)";
+	public static final String GFMAS_MASTER_DATA_INBOUND = "MASTER GL DATA JOB(Inbound)";
+	
+	public static final String GFMAS_MASTER_DATA_ERROR = "MASTER DATA ERROR FILE JOB(Inbound)";
 	
 	public static final String GFMAS_PAYMENT_INFORMATION_INBOUND = "PAYMENT INFORMATION JOB(Inbound)";
 
