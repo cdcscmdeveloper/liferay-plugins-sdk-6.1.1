@@ -1558,7 +1558,7 @@ public class CommitteBackingBean extends
 		try {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDto = userSO.searchUserProfile(userReqDTO);
+			resDto = userSO.searchUserProfileDtl(userReqDTO);
 			if (resDto != null) {
 				this.getManagedBean().setExternalUsers(
 						resDto.getUserResultBean().getResultList());
