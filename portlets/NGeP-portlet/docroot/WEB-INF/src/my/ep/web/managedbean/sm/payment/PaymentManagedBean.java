@@ -19,6 +19,7 @@ public class PaymentManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	
 	private Long orderId;
+	private String paymentType;
 	private String billName;
 	private String billEmail;
 	private String billMobile;
@@ -267,6 +268,12 @@ public class PaymentManagedBean extends BaseManagedBean{
 	}
 	public void setDocNo(String docNo) {
 		this.docNo = docNo;
+	}
+	public String getPaymentType() {
+		return paymentType;
+	}
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
 	}
 
 }

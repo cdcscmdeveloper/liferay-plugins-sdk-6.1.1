@@ -244,6 +244,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 						.put(billDtl.getBillDtlRefId(), billDtl);
 						
 			} else {
+				getManagedBean().setPaymentType(billDtl.getItemCode().getParameterCode());
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
@@ -391,6 +392,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setSmBill(pyBill);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
+			reqDTO.setPaymentType(getManagedBean().getPaymentType());
 
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IPaymentSO.class);
@@ -646,6 +648,28 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 				pymtReqDTO.setBackEndUpdate(false);
 				pymtReqDTO.setRespondFromPaymentGateway(true);
+				
+				String paymentType = StringUtils.EMPTY;
+				if (pyPayment
+						.getPyBill()
+						.getBillType()
+						.equalsIgnoreCase(
+								my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)) {
+					paymentType = SupplierManagementConst.MOF_PAYMENT;
+				} else if (pyPayment
+						.getPyBill()
+						.getBillType()
+						.equalsIgnoreCase(
+								my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)) {
+					paymentType = SupplierManagementConst.PROCESSING_PAYMENT;
+				} else if (pyPayment
+						.getPyBill()
+						.getBillType()
+						.equalsIgnoreCase(
+								my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+					paymentType = SupplierManagementConst.SOFTCERT_PAYMENT;
+				}
+				pymtReqDTO.setPaymentType(paymentType);
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				if(pymtResDTO.isSuccessful()){
@@ -791,7 +815,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public void tempPaymentSuccess() {
 		log.info("********submitPayment******");
-		String paymentType = StringUtils.EMPTY;
 		if (this.getManagedBean().getPyBill() != null) {
 			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList(
 					"SM", SupplierManagementConst.PM_STATUS_PAYMENT,
@@ -828,9 +851,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				
 				pymDtlList.add(paymentDtl);
 				totalAmount = totalAmount.add(newBillDtl.getItemPrice());
-				if(newBillDtl.getItemCode()!=null){
-					paymentType = newBillDtl.getItemCode().getParameterCode();
-				}
 			}
 
 			totalAmount = totalAmount.add(getManagedBean().getGstAmount())
@@ -856,7 +876,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setSmBill(pyBill);
-			reqDTO.setPaymentType(paymentType);
+			reqDTO.setPaymentType(getManagedBean().getPaymentType());
 			getManagedBean().getSmAppl().setPmStatus(paymentStatus);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 
@@ -930,7 +950,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
 			pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 			pymtReqDTO.setBackEndUpdate(false);
-			pymtReqDTO.setPaymentType(paymentType);
+			pymtReqDTO.setPaymentType(getManagedBean().getPaymentType());
 
 			log.info("Debug payment>>>>>");
 			
