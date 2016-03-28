@@ -79,6 +79,7 @@ import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -154,6 +155,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
@@ -1434,7 +1436,6 @@ public class DirectLOABackingBean extends
 
 		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 			try {
-
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoa(scLoa);
 				if (null != this.getManagedBean().getScLoa().getScLoiLoa()
@@ -1468,22 +1469,38 @@ public class DirectLOABackingBean extends
 				// qtAwardSO = null;
 			}
 		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-			List<String> orgTypes = new ArrayList<String>();
+			
+			Long userId = new FacesScopes().getUserSessionBean().getUserId();
+			
+			if (userId != null) {
+				IUserSO userSO = null;
+				try {
+					UserReqDTO reqDTO = new UserReqDTO();
+					reqDTO.setUserId(userId);
+					userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserResDTO resDTO = userSO
+							.retrieveUserOrgListByUserId(reqDTO);
 
-			orgTypes.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
-			orgTypes.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
-			orgTypes.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
-
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_IN.value(), orgTypes));
-
-			List<PmParameterDesc> agencyList = ParameterHelper.getInstance()
-					.getParameterDescListBySearchBean(
-							ParameterTypeConst.ORGANISATION_TYPES, searchBean);
-
-			getManagedBean().setAgencyList(agencyList);
+					if (resDTO.getUserOrgList() != null
+							&& resDTO.getUserOrgList().size() > 0) {
+						for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+							if (pmUserOrg.getPmOrgProfile() != null) {
+								Boolean isBPK = pmUserOrg.getPmOrgProfile().getBpk();
+								if (BooleanUtils.isTrue(isBPK)) {
+									scLoa.getScLoiLoa().setPmOrgProfile(
+											pmUserOrg.getPmOrgProfile());
+									scLoa.setContractAgency(scLoa
+											.getScLoiLoa().getPmOrgProfile());
+									break;
+								}
+							}
+						}
+					}
+				} finally {
+					userSO = null;
+				}
+			}			
 		}
 
 		contractAgencyChanged();
@@ -1507,7 +1524,8 @@ public class DirectLOABackingBean extends
 			List<PmUser> userList = null;
 
 			if (scLoa.getContractAgency() != null) {
-				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
+				if (ParameterConst.CONTRACT_TYPE_MINISTRY
+						.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
 					reqDTO.setOrgProfileId(scLoa.getScQt().getPmOrgProfile()
@@ -1518,10 +1536,12 @@ public class DirectLOABackingBean extends
 					userList = resDTO.getUserList();
 
 				} else if (ParameterConst.CONTRACT_TYPE_CENTRAL
-						.equals(contractType)) {
+								.equals(contractType)) {
 					// TODO - filter user based on central contract.
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.BPK_CCA.value());
+					reqDTO.setOrgProfileId(
+							scLoa.getContractAgency().getOrgProfileId());
 
 					UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 
