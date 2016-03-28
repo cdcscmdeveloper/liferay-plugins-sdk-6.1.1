@@ -35,9 +35,6 @@ public class MasterDataVendorOutboundJob implements Job {
 		} finally{
 			gfmasServiceSO = null;
 		}
-		
-//		BatchTemplate integration = new GfmasIntegration();
-//		integration.masterDataVendorGfmasOutbound();
 		log.info("MasterDataVendorOutboundJob end");
 
 	}
