@@ -259,7 +259,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		 	                 }
 		                }*/
 		
-		             	initializeRemarks();
 		             	if(getManagedBean().getUserMap().size()==0) {
 		     			   initializeApproverList();
 		     			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList(RoleCode.BPK_PQ_APPROVER.value()));
@@ -2015,6 +2014,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			this.getManagedBean().setSelectedPanelItems(null);
 			this.getManagedBean().setSelectionOfZone(false);
+			getManagedBean().setButtonHideActiveDel(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2073,9 +2073,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
     public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
 		if((boolean) e.getComponent().getAttributes().get("value")){
-			getManagedBean().setButtonHideActive(false);
+			getManagedBean().setButtonHideActiveDel(false);
 		}else{
-			getManagedBean().setButtonHideActive(true);
+			getManagedBean().setButtonHideActiveDel(true);
 		}	
 	}
 	
