@@ -8,18 +8,16 @@ import javax.faces.bean.RequestScoped;
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
-import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.sc.helper.SchedulerHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.EpJobVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -35,15 +33,14 @@ public class SchedulerManagerBackingBean extends
 
 	public static Logger log = EpLogger
 			.getLogger(SchedulerManagerBackingBean.class);
-
-	public SchedulerManagerBackingBean() {
-		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
-		if (EntityHelper.isCollectionEmpty(getManagedBean()
-				.getEpSchedulerJobList())) {
-			initAllJobs();
-		}
+	
+	
+	public void preRenderSchedulerManager() {
+		renewSesionObject();
+		SmCommonUtil.setMDCUserId();
+		initAllJobs();
+		SmCommonUtil
+				.redirectToPage("ePSchedulerManager.xhtml", "", null);
 	}
 
 	public void initAllJobs() {
