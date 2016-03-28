@@ -53,15 +53,15 @@
 				update=":form:chargeLineSection" disabled="#{danItem.level == 2}" />				
 			<p:column>
 			<f:facet name="header" style="width:8%;">
-					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
+					<h:outputText value="#{lbl['lbl.fl.item.code']}" />
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
 				</f:facet>
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.itemCode}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:15%;">
+			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:35%;">
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center;">
+			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center;width:20%;">
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" style="float:left;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}"  style="white-space:normal;text-align:center;" rendered="false">
