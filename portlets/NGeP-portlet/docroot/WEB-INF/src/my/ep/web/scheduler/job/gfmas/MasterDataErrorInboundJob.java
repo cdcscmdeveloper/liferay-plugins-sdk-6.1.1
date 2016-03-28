@@ -6,10 +6,15 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/*
+ * @author P Ganga prasad
+ */
+@DisallowConcurrentExecution
 public class MasterDataErrorInboundJob implements Job {
 	public static Logger log = EpLogger
 			.getLogger(MasterDataErrorInboundJob.class);
@@ -18,17 +23,17 @@ public class MasterDataErrorInboundJob implements Job {
 			throws JobExecutionException {
 
 		log.info("MasterDataErrorInboundJob start");
-		IGfmasServiceSO  gfmasServiceSO;
+		IGfmasServiceSO gfmasServiceSO;
 		try {
-			  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.INTEGRATION,
 							IGfmasServiceSO.class);
-			
+
 			gfmasServiceSO.masterDataErrorInbound();
-		} finally{
+		} finally {
 			gfmasServiceSO = null;
 		}
-		
+
 		log.info("MasterDataErrorInboundJob end");
 
 	}

@@ -9,6 +9,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.gfmas.GfmasBatchPmInboundJob;
+import my.ep.web.scheduler.job.gfmas.MasterDataErrorInboundJob;
 import my.ep.web.scheduler.job.phis.MasterDataDeliveryAddressJob;
 import my.ep.web.scheduler.job.phis.MasterDataKodAkaunJob;
 import my.ep.web.scheduler.job.phis.MasterDataProgramJob;
@@ -79,6 +80,13 @@ public class PmSchedulerServlet extends HttpServlet {
 		SchedulerConstants.GFMAS_MASTER_DATA_INBOUND,
 		SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 		GfmasBatchPmInboundJob.class, SchedulerConstants.GFMAS_PM_IN_JOB_DESC,
+		EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.inbound"));
+		
+		//1GFMAS integration Jobs
+		EpSchedulerHelper.scheduleJob(new JobKey(
+		SchedulerConstants.GFMAS_MASTER_DATA_ERROR,
+		SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+		MasterDataErrorInboundJob.class, SchedulerConstants.GFMAS_PM_IN_JOB_DESC,
 		EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.inbound"));
 		
 		
