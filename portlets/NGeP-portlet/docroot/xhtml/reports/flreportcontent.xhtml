@@ -22,7 +22,7 @@
 											value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
 									<td><ac:lov id="lovFlMinistry"
 											lovId="PM_ORG_PROFILE_REPORT" size="66" update="@form"
-											headerText="#{lbl['lbl.rpt.ministry']}"
+											headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"
 											value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedMinistry"
 											conditionField="#{reportBackingBean.constructMinistryConditionFields()}"
@@ -44,7 +44,8 @@
 											value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel></td>
 									<td><ac:lov id="lovFlPegaWaiPengawal"
 											lovId="PM_ORG_PROFILE_REPORT" size="66" update="@form"
-											headerText="#{lbl['lbl.rpt.pegawaipengawal']}"
+											headerText="#{lbl['lbl.rpt.pegawaipengawal']}" readonly="true"
+											disabled="#{reportBackingBean.managedBean.selectedMinistry==null}"												
 											value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedPegwaiPengawal"
 											conditionField="#{reportBackingBean.constructPegwaiPengawalConditionFields()}"
@@ -66,7 +67,9 @@
 											value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
 									<td><ac:lov id="lovFlKumpulanPTJ"
 											lovId="PM_ORG_PROFILE_REPORT" size="66" update="@form"
-											headerText="#{lbl['lbl.rpt.kumpulan.ptj']}"
+											headerText="#{lbl['lbl.rpt.kumpulan.ptj']}" readonly="true"
+											disabled="#{reportBackingBean.managedBean.selectedMinistry==null 
+											or reportBackingBean.managedBean.selectedPegwaiPengawal==null}"												
 											value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedKumpulanPTJ"
 											conditionField="#{reportBackingBean.constructKumpulanPTJConditionFields()}"
@@ -86,8 +89,10 @@
 									test="#{flReportBackingBean.managedBean.rptGenBean.flPtjView}">
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
-									<td><ac:lov id="lovFlPTJ" lovId="PM_ORG_PROFILE_REPORT"
+									<td><ac:lov id="lovFlPTJ" lovId="PM_ORG_PROFILE_REPORT" readonly="true"
 											size="66" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
+											disabled="#{reportBackingBean.managedBean.selectedMinistry==null 
+											or reportBackingBean.managedBean.selectedPegwaiPengawal==null or reportBackingBean.managedBean.selectedKumpulanPTJ==null}"	
 											value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedPTJ"
 											conditionField="#{reportBackingBean.constructPTJConditionFields()}"
