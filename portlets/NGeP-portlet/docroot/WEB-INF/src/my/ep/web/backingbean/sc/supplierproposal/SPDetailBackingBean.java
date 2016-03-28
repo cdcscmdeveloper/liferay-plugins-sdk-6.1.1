@@ -1347,21 +1347,26 @@ public class SPDetailBackingBean extends
 	@SuppressWarnings("resource")
 	protected void uploadAttachmentWithEncryption(UploadedFile file,
 			ScAttachment attachment) throws FileNotFoundException, IOException {
-		String fileName = file.getFileName();
-		// byte[] fileBytes = file.getContents();
-		FileInputStream fis = (FileInputStream) file.getInputstream();
-		attachment.setFileName(fileName);
-		attachment.setFileDesc("File uploded");
+		try{
+			String fileName = file.getFileName();
+			// byte[] fileBytes = file.getContents();
+			FileInputStream fis = (FileInputStream) file.getInputstream();
+			attachment.setFileName(fileName);
+			attachment.setFileDesc("File uploded");
 
-		populateAttachmentDetails(attachment);
+			populateAttachmentDetails(attachment);
 
-		FileOutputStream fos;
-		fos = new FileOutputStream(getActualFilePath(attachment));
-		// fos.write(fileBytes);
-		// fos.close();
-		BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
-		bc.InitEncryptCipher();
-		bc.CBCEncryptFile(fis, fos);
+			FileOutputStream fos;
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			// fos.write(fileBytes);
+			// fos.close();
+			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
+			bc.InitEncryptCipher();
+			bc.CBCEncryptFile(fis, fos);
+		}
+		catch(Exception e){
+			throw new EpException(e.getLocalizedMessage());
+		}
 		
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"The file was uploaded successfully.", null);
