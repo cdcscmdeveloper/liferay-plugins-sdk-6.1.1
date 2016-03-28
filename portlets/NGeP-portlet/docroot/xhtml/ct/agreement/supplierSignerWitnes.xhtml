@@ -113,8 +113,6 @@
                        
                         <p:column style="width:20%;" headerText="#{lbl['lbl.ct.ic.no']}" styleClass="column-align-center"> 
                             <p:inputText value="#{supplierWitnessVar.officerIc}" label="#{lbl['lbl.ct.ic.no']}"  style="width:95%;" maxlength="12">
-                              <p:ajax event="blur" listener="#{agreementBackingBean.addSupplierWitness(1)}"
-                                  process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
                               </p:inputText>
                         </p:column> 	       
           
