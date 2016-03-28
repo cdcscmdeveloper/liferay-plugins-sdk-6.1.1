@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -44,6 +45,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "svcTasklistBackingBean")
 @RequestScoped
@@ -55,7 +57,8 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SVCTaskListBackingBean.class);
 	private List<SmAppl> resultList = new ArrayList<SmAppl>(); 
-	private static String SVC_TASK_LIST = "svc-assignment";
+	private static String SVC_TASK_LIST_PATH = "svc-assignment";
+	private static String SVC_TASK_LIST_XHTML = "/xhtml/bpmtasklist/svcTasklist.xhtml";
 
 
 	public SVCTaskListBackingBean(){
@@ -248,23 +251,18 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 	 * @throws PortalException 
 	 * @throws IOException 
 	 */
-	public void navigateByState() throws PortalException, SystemException, IOException {
+	public void navigateByState() throws IOException, PortalException, SystemException {
 		String selectedState = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("stateId"); 
-		getManagedBean().setApplNo(null);
-		getManagedBean().setStateId(Long.valueOf(selectedState));
-		getManagedBean().setDistrictId(0);
-		getManagedBean().setSupplierName(null);
-		getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
-		findDistrict();
-		this.getManagedBean().getSearchDataModel().reloadData();
-		
+
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(
 						themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 		
-		externalContext.redirect(commonUrl + "/" + SVC_TASK_LIST);
+		externalContext.redirect(commonUrl + "/" + SVC_TASK_LIST_PATH + "?st=" + selectedState);
+
+
 	}
 	
 	/**
@@ -279,5 +277,32 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		getManagedBean().setDistrictId(0);
 
 		getManagedBean().getSearchDataModel().getList().clear();
+	}
+	
+	/**
+	 * Prerender SVC Task List
+	 */
+	public void preRenderView(){
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String stateId = originalServletRequest.getParameter("st");
+		
+		if(stateId != null && StringUtils.isNotBlank(stateId)){
+			getManagedBean().setApplNo(null);
+			getManagedBean().setStateId(Long.valueOf(stateId));
+			getManagedBean().setDistrictId(0);
+			getManagedBean().setSupplierName(null);
+			getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
+			findDistrict();
+			this.getManagedBean().getSearchDataModel().reloadData();
+		}
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,SVC_TASK_LIST_XHTML);
+
 	}
 }
