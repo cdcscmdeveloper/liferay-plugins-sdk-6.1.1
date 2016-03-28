@@ -3650,6 +3650,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				flItemAddr.setItemType(flTempItem.getScRequestItem().getItemType());
 				flItemAddr.setScRequestItem(flTempItem.getScRequestItem());
 				flItemAddr.setCmItem(flTempItem.getScRequestItem().getCmItem());
+				flItemAddr.setPmUomId(flTempItem.getScRequestItem().getUom().getUomId());
 				if(flTempItem.getScRequestItem().getCmItem()!=null) {
 					flItemAddr.setItemCode(flTempItem.getScRequestItem().getCmItem().getExtensionCode());
 				} else {
