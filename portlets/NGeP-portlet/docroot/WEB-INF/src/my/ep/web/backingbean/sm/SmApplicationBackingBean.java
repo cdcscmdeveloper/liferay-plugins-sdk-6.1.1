@@ -624,16 +624,14 @@ public class SmApplicationBackingBean extends
 
 			boolean cannotProceedAlertMsg = false;
 
-			// if (applicationType
-			// .equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-			// boolean hasActiveTransactions = SmApplicationUtil
-			// .hasActiveTransactions(currSupp);
-			// if (hasActiveTransactions) {
-			// throw new EpException(MessageConst.ERROR_722565);
-			// }
-			// } else {
-			//
-			// }
+			if (applicationType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				boolean hasActiveTransactions = SmApplicationUtil
+						.hasActiveTransactions(currSupp);
+				if (hasActiveTransactions) {
+					throw new EpException(MessageConst.ERROR_722565);
+				}
+			}
 
 			// Disabled blocking if has active transaction for cancel MOF
 			if (!applicationType
