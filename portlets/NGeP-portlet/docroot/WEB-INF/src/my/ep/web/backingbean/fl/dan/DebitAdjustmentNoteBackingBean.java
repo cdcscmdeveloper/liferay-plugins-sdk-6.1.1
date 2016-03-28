@@ -238,9 +238,10 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			sumOrderedAmt =sumOrderedAmt.add(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt());
 			sumInvoiceAmt = sumInvoiceAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt());
 			sumDanAmt = sumDanAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt().subtract(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt()));
+			String danAmount=sumDanAmt.toString().replace("-", "");
 			getManagedBean().setOrderedAmtTotal(sumOrderedAmt);
 			getManagedBean().setInvAmtTotal(sumInvoiceAmt);
-			getManagedBean().setDanAmtTotal(sumDanAmt);
+			getManagedBean().setDanAmtTotal(new BigDecimal(danAmount));
 		}
 	}
 	
