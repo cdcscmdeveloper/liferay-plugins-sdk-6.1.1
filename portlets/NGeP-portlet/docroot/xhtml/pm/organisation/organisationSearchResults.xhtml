@@ -28,7 +28,7 @@
 	         </p:column>
 			<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
 				style="width :5%;text-align:center;">
-				<p:commandLink
+				<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 					action="#{organisationBackingBean.redirectToOrganisation(organisation.orgProfileId)}"
 					update="@form">
 					<p:graphicImage 
@@ -41,6 +41,7 @@
 	<div class="ppRightBtn">
 		<p:commandButton id="addOrgProfileBtnId" partialSubmit="true" process="@this"
 			value="#{lbl['lbl.pm.create.location']}" 
-			action="#{organisationBackingBean.redirectToOrganisation(null)}" />
+			action="#{organisationBackingBean.redirectToOrganisation(null)}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"  />
 	</div>
 </ui:composition>

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
 
 import org.apache.log4j.Logger;
@@ -498,6 +499,21 @@ public class DateUtils {
 
 		int diffYear = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
 		return  diffYear * 12 + endCal.get(Calendar.MONTH) - startCal.get(Calendar.MONTH)+1;
+	}
+	
+	public static String getCalendarMaxYearRange(){
+		Calendar c1 = Calendar.getInstance();
+		int currentYear = c1.get(Calendar.YEAR);
+		int remainingYear = ProfileManagementConst.CALENDAR_MAX_YEAR - currentYear;
+		StringBuilder sb = new StringBuilder();
+		if(remainingYear > 0 ){
+			sb.append("c-10:c");
+			sb.append("+");
+			sb.append(remainingYear);
+		}else{
+			sb.append("c-10:c+10");
+		}
+		return sb.toString();
 	}
 
 }
