@@ -51,11 +51,12 @@
 			            </p:column>
 		<p:column id="cmTypelist" style="width:15%">
 			<f:facet name="header">
-				<h:outputText value=" #{lbl['lbl.pm.unspsc.type']}" />
+				<h:outputText value="#{lbl['lbl.pm.unspsc.type']}" />
 			</f:facet>
 
-			<p:selectOneMenu value="#{feeObj.typeId.typeId}" label="UNSPSC Type"
+			<p:selectOneMenu value="#{feeObj.typeId.typeId}" label="#{lbl['lbl.pm.unspsc.type']}"
 				disabled="#{!(feeObj.brandNew) || feeObj.unspscId.unspscCode == null}"
+				rendered="#{(feeObj.brandNew)}"
 				style="width:128px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems value="#{feeObj.types}" itemLabel="#{type.typeName}"
@@ -65,6 +66,11 @@
 					partialSubmit="true" process="@this" update="@this" />
 
 			</p:selectOneMenu>
+			<p:inputText
+					rendered="#{(!feeObj.brandNew)}"
+					label="#{lbl['lbl.pm.unspsc.type']}"
+					disabled="true"
+					value="#{feeObj.typeId.typeName}" />
 		</p:column>
 		<p:column width="10%">
 			<f:facet name="header">
@@ -73,6 +79,7 @@
 		                		</f:facet>
 <!-- disabled="#{feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}" -->
 			<p:calendar showOn="button" id="comodityfeeeffDateId" navigator="true"
+				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
 				style="width :100px;" required="true"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -90,6 +97,7 @@
 <!-- disabled="#{feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}" -->
 			<p:calendar showOn="button" id="comodityfeeexpDateId" navigator="true"
 				style="width :100px;"
+				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"

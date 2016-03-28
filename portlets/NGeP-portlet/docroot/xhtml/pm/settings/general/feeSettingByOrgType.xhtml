@@ -45,6 +45,7 @@
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 			<p:calendar showOn="button" id="orgTypefeeeffDateId" navigator="true"
+				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
 				style="width :100px;" required="true"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -60,6 +61,7 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 			<p:calendar showOn="button" id="orgTypefeeexpDateId" navigator="true"
+				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
 				style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"

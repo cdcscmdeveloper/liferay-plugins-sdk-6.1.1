@@ -14,7 +14,8 @@
 				<td><p:selectOneRadio styleClass="commonLabel" value="#{organisationBackingBean.managedBean.searchOrgCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{organisationBackingBean.federalGovt}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{organisationBackingBean.others}"/>
-						<p:ajax process="@this" event="change" partialSubmit="true" update="orgSearchPanel,:form:searchOrganisation" listener ="#{organisationBackingBean.resetOrganisationSearchBean()}"/>
+						<p:ajax process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							event="change" partialSubmit="true" update="orgSearchPanel,:form:searchOrganisation" listener ="#{organisationBackingBean.resetOrganisationSearchBean()}"/>
 					</p:selectOneRadio></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
@@ -54,7 +55,7 @@
 						value="#{lbl['lbl.pm.organisation.orgName']}" /></th>
 				<td><p:inputText styleClass="ppDisplayTextM" size="40"
 						value="#{organisationBackingBean.managedBean.organisationSearchBean.orgName}"
-						maxlength="50" /></td>
+						maxlength="255"/></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 
@@ -79,7 +80,7 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{organisationBackingBean.searchOrganisation}"
 							update="searchOrganisation" process="orgSearchPanel" 
-							
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							 />
 						
 						<p:commandButton value="#{lbl['lbl.btn.reset']}" partialSubmit="true" process="@this"

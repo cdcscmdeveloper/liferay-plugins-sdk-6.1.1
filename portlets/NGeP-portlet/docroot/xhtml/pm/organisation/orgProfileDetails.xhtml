@@ -23,7 +23,9 @@
 				<td><p:selectOneRadio id="orgCatergoryId" value="#{organisationBackingBean.managedBean.orgCategory}" disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{organisationBackingBean.federalGovt}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{organisationBackingBean.others}"/>
-						<p:ajax process="@this" event="change" partialSubmit="true" update="orgtypeId" />
+						<p:ajax process="@this" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							event="change" partialSubmit="true" update="orgtypeId" />
 					</p:selectOneRadio></td>			
 			</tr>
 			<tr>
