@@ -297,7 +297,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		List<FlStopInstrItem> flStopInstrItemList = null;
 		for (FlStopInstrItem flStopInstrItem : getManagedBean().getStopInstr().getStopInstrItems()) {
 			if (siItemsMap.containsKey(flStopInstrItem.getFlFulfilmentItem().getItemCode()+flStopInstrItem.getFlFulfilmentItem().getPmUomId())) {
-				flStopInstrItemList = siItemsMap.get(flStopInstrItem.getFlFulfilmentItem().getItemCode());
+				flStopInstrItemList = siItemsMap.get(flStopInstrItem.getFlFulfilmentItem().getItemCode()+flStopInstrItem.getFlFulfilmentItem().getPmUomId());
 			} else {
 				flStopInstrItemList = new ArrayList<FlStopInstrItem>();
 			}
@@ -319,11 +319,11 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			flFulfilmentItemIds = new ArrayList<Long>();
 			
 			for(FlStopInstrItem chargeLineItem : stopInstrItems) {
-				if(flFulfilmentItemIds.contains(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId())) {
+				if(flFulfilmentItemIds.contains(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+chargeLineItem.getFlFulfilmentItem().getPmUomId())) {
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getFlFulfilmentItem().getSumRecalledQty().add(chargeLineItem.getRecalledQty()));
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getFlFulfilmentItem().getSumRecalledAmt().add(chargeLineItem.getRecalledAmt()));						
 				} else {
-					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId());
+					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+chargeLineItem.getFlFulfilmentItem().getPmUomId());
 					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getRecalledQty());
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getRecalledAmt());					
