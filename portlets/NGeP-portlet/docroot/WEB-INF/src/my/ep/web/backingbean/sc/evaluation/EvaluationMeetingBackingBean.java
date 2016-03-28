@@ -146,10 +146,23 @@ public class EvaluationMeetingBackingBean extends
 	 * @return SelectItem[]
 	 */
 
-	public SelectItem[] getRoleTypeDropdownValues(String committeeRole) {
+	public SelectItem[] getRoleTypeDropdownValues(boolean isChairPerson,ScQt scqt,PmUser user) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
+		boolean isPtj=false;
+		if(isChairPerson){
+			isPtj=orgProfileCheckExist(scqt,user,isPtj);
+			
+		}
+		if((isChairPerson &&isPtj==false)|| !isChairPerson){
+			recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		}
+	
 		recommendList.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 
 		searchBean.getDataFilterBeans().add(
@@ -161,6 +174,22 @@ public class EvaluationMeetingBackingBean extends
 		return items;
 	}
 
+	private boolean orgProfileCheckExist(ScQt scqt,PmUser user, boolean isptj){
+		PmOrgProfile orgProfile=	scqt.getPmOrgProfile();
+		log.info("===qt PtjId==="+orgProfile.getOrgProfileId());
+		if(null!=user.getPmUserOrgs()){
+		for(PmUserOrg userorg:user.getPmUserOrgs()){
+			log.info("===user org record status==="+userorg.isRecordStatus());
+			if(userorg.isRecordStatus() && null!=userorg.getPmOrgProfile() && userorg.getPmOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())){
+				isptj=true;
+				break;
+			}
+			
+		}
+		}
+		return isptj;
+	}
+	
 	/**
 	 * Gets the procurement mode dropdown values.display procurement mode
 	 * values(Quotation/Tender) in committee member clone popup.
@@ -1461,7 +1490,7 @@ public class EvaluationMeetingBackingBean extends
 				IUserSO userSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IUserSO.class);
-				resDto = userSO.searchUserProfile(userReqDTO);
+				resDto = userSO.searchUserProfileDtl(userReqDTO);
 				if (resDto != null) {
 					getManagedBean().setExternalUsers(
 							resDto.getUserResultBean().getResultList());
