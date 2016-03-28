@@ -11,7 +11,8 @@
 		<table style="width: 100%;">
 			<tr>
 				<td><h:panelGrid id="pmReportCriteria" columns="4"
-						columnClasses="pmColumn1Width,pmColumn2Width,pmColumn3Width" style="width:100%;">
+						columnClasses="pmColumn1Width,pmColumn2Width,pmColumn3Width"
+						style="width:100%;">
 						<c:if
 							test="#{pmReportBackingBean.managedBean.rptGenBean.pmServiceTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.servicescreen']}" />
@@ -54,14 +55,16 @@
 									<tr>
 										<td><p:selectOneMenu
 												label="#{lbl['lbl.rpt.org.category']}" id="orgCatg"
-												value="#{reportBackingBean.pmOrgCategory}"
+												value="#{reportBackingBean.pmOrgCategory}" required="true"
 												style="width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue=""></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.federal']}"
 													itemValue="1"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.others']}"
 													itemValue="2"></f:selectItem>
-												<p:ajax event="change" partialSubmit="true" update="@form"
-													process="@form" />
+												<p:ajax event="change" partialSubmit="true" update="@form" 
+													listener="#{reportBackingBean.getOrgTypeDropdownValues()}" />
 											</p:selectOneMenu></td>
 										<td><p:message id="rptOrgCatgMsg" for="orgCatg"
 												display="icon" showDetail="false" /></td>
@@ -83,10 +86,10 @@
 								<table style="width: 100%">
 									<tr>
 										<td><p:selectOneMenu label="#{lbl['lbl.rpt.org.type']}"
-												id="orgType" value="#{reportBackingBean.pmOrgType}" required="true"
-												style="width:300px;">
+												id="orgType" value="#{reportBackingBean.pmOrgType}"
+												required="true" style="width:300px;">
 												<f:selectItems
-													value="#{reportBackingBean.getOrgTypeDropdownValues()}"></f:selectItems>
+													value="#{reportBackingBean.itemsList}"></f:selectItems>
 												<p:ajax event="change" partialSubmit="true" update="@form" />
 											</p:selectOneMenu></td>
 										<td><p:message id="rptOrgTypeMsg" for="orgType"
