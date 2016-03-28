@@ -4,7 +4,6 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -276,7 +275,6 @@ public class CreateQtBackingBean extends
 				scQt.setOwnerOrgProfile(pmOrgProfile);
 			}
 			scQt.setProcurementMode(new PmParameter());
-			scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			scQt.setProcurementTypeCatId(new PmParameter());
 			scQt.setFulfilmentType(new PmParameter());
 			scQt.setPmProcurementCategory(new PmParameter());
@@ -328,7 +326,7 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setActiveIndex(0);
 			scQt.setContractType(new PmParameter());
 			scQt.setCircularVer(new CtCircularVer());
-			
+			setUserDetails(scQt);
 			this.getManagedBean().setQt(scQt);
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();

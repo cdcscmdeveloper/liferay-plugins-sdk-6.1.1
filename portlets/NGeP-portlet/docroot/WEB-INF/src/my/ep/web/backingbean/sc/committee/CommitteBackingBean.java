@@ -2049,6 +2049,7 @@ public class CommitteBackingBean extends
 					e.printStackTrace();
 				}
 				if (null != member1) {
+					member1.setBrandNew(true);
 					member1.setCommitteeMemberId(null);
 					setUserDetails(member1);
 					member1.setChangedDate(null);
