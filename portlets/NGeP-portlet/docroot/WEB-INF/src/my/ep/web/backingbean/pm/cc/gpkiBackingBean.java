@@ -75,6 +75,7 @@ public class gpkiBackingBean {
 	public String gpkiSignAction(
 			com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
 		System.out.println("ContextualCompositeMethodExpression");
+		
 		String textBeforeSign = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
 				.get("textBeforeSign");
@@ -89,7 +90,7 @@ public class gpkiBackingBean {
 		Long userId = facesScope.getUserSessionBean().getUserId();
 		// Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		debugLogger("getUserSessionBean().getUserId();=====================================: "
+		System.out.println("getUserSessionBean().getUserId();=====================================: "
 				+ facesScope.getUserSessionBean().getUserId());
 		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(IUserSO.class);
@@ -98,16 +99,16 @@ public class gpkiBackingBean {
 		userSO.retrieveUserByUserId(reqDTO);
 		UserResDTO resDTO = new UserResDTO();
 		resDTO = userSO.retrieveUserByUserId(reqDTO);
-		debugLogger("serialNo====================================: " + serialNo);
-		debugLogger("subjectDN====================================: "
+		System.out.println("serialNo====================================: " + serialNo);
+		System.out.println("subjectDN====================================: "
 				+ subjectDN);
-		debugLogger("userId====================================: "
+		System.out.println("userId====================================: "
 				+ subjectDN.substring(subjectDN.indexOf("=") + 1,
 						subjectDN.indexOf(",")));
-		debugLogger("getIdentificationNo=====================================: "
+		System.out.println("getIdentificationNo=====================================: "
 				+ resDTO.getPmUser().getLoginId());
 		System.out.println("ContextualCompositeMethodExpression  2");
-		debugLogger("reflectAction=====================================: "
+		System.out.println("reflectAction=====================================: "
 				+ obj);
 		Object returnObj = null;
 		System.out.println("textBeforeSign:"+textBeforeSign);
@@ -121,7 +122,7 @@ public class gpkiBackingBean {
 				pmDigiSign.setOriginalData(textBeforeSign);
 				pmDigiSign.setGpkiSignedData(signedText);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-				debugLogger("=================================Same IC No");
+				System.out.println("=================================Same IC No");
 				returnObj = obj.invoke(
 						FacesContext.getCurrentInstance().getELContext(),
 						new Object[] { pmDigiSign });
@@ -162,9 +163,14 @@ public class gpkiBackingBean {
 				.get("statusCode");
 		String statusMsg = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap().get("statusMsg");
+		String extMsg = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("extMsg");
+		
 		System.out.println("statusMsg:"+statusMsg);
+		System.out.println("extMsg:"+extMsg);
 		FacesContext.getCurrentInstance().addMessage("gpki",
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", extMsg));
 	}
 
 }
