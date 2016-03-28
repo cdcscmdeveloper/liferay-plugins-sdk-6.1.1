@@ -35,6 +35,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -186,9 +187,11 @@ public void refreshCatalogueList() {
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 
 		statusReqDTO.setStatusId(CmConst.APPROVED);
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
 						
 		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-		String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diluluskan oleh Catalogue Admin";
+		String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diluluskan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
 		reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(
 				bb.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 		
@@ -293,8 +296,8 @@ public void refreshCatalogueList() {
 			statusReqDTO.setStatusId(CmConst.REJECTED);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			System.out.println("statusResDTO.getPmStatus().getStatusId():"+statusResDTO.getPmStatus().getStatusId());
-			
-			String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah ditolak oleh Catalogue Admin";
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			String actionDesc ="Item "+bb.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah ditolak oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
 			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(bb.getManagedBean().getSelectedMaintainItem(),actionDesc,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			
 			catalogueSO.updateSupplierItem(reqDTO);
