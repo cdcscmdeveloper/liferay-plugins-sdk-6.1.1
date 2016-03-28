@@ -182,6 +182,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	     	<p:dataTable id="itemSpecDt" var="data" value="#{panelBackingBean.managedBean.selectedItemForSpec.ctPanelItemSpecs}"
 				rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedPanelItemSpecs}" widgetVar="panelItemSpecObj">
 				<ac:paginator for="itemSpecDt" />
+				  <p:ajax event="toggleSelect" 
+			                              listener="#{panelBackingBean.onToggleSelect}" update=":form:itemSpecificDelBtn" />
+			                      <p:ajax event="rowSelect"
+                                       listener="#{panelBackingBean.onRowSelect}" update=":form:itemSpecificDelBtn" />
+			                      <p:ajax event="rowSelectCheckbox" 
+			                             listener="#{panelBackingBean.onRowSelect}" update=":form:itemSpecificDelBtn" />
+                                  <p:ajax event="rowUnselectCheckbox" 
+                                         listener="#{panelBackingBean.onRowUnselect}" update=":form:itemSpecificDelBtn" />
 				<p:column selectionMode="multiple" style="width:3%" 
 					rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:40%;" styleClass="column-align-center" >
@@ -197,8 +205,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 					action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" 
 					oncomplete="panelItemSpecObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-				<p:commandButton value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true"
-				    onsuccess="delPanelItemSpecDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
+				<p:commandButton id="itemSpecificDelBtn" value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true"
+				     disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}" 
+				     onsuccess="delPanelItemSpecDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
 				<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="itemSpecDlg.hide();" />
 			</div>
    		</p:dialog>
@@ -206,8 +215,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
    		 <p:confirmDialog id="delPanelItemSpecDlg" widgetVar="delPanelItemSpecDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
 		           <div class="ppRightBtn">
-				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:itemSpecDt"
-				       process="@all" actionListener="#{panelBackingBean.deletePanelItemSpec()}" onclick="delPanelItemSpecDlg.hide();"/>
+				     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:itemSpecDt, :form:itemSpecificDelBtn"
+				       process="@this" partialSubmit="true" actionListener="#{panelBackingBean.deletePanelItemSpec()}" oncomplete="delPanelItemSpecDlg.hide();"/>
 					 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPanelItemSpecDlg.hide();" type="button" />
 				   </div>
         </p:confirmDialog>
