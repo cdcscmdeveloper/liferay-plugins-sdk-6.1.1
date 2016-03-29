@@ -446,7 +446,8 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			
 			updateApprovalDetails(this.getManagedBean().getQt());
-			//retrieveApprovalTabDtl();
+			//Required to fetch the approvers when are trying to Save/Submit from other than the Approval tab 
+			retrieveApprovalTabDtl();
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
