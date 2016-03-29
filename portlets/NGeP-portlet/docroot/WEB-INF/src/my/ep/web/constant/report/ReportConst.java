@@ -575,13 +575,17 @@ public class ReportConst {
 	public static final String AMP_SM_PAYMENT_TO_EQ = "&PPAYMENTTO=";
 	public static final String PEND_PRPR_SITE_VISIT = "Pending Prepare Site Visit Report";
 	public static final String SITE_VISIT_COMPLTD = "Site Visit Report Completed";
+	public static final String SM_REPORT_TYPE_RECEIVED = "RECEIVED";
+	public static final String SM_REPORT_TYPE_APPROVED = "APPROVED";
+	public static final String SM_REPORT_TYPE_REJECTED = "REJECTED";	
 	public static final String KAMA = ",";
 	public static final String SUPPL_CONSULT_TYPE = "J";
 	public static final String SUPPL_CONTRACT_TYPE = "K";
 	public static final String SUPPL_ALL_TYPE = "All";
 	public static final String SUPPL_CONSULT_MOF_NO = "465-";
 	public static final String SUPPL_CONTRACT_MOF_NO = "357-";
-
+	public static final String PARAM_MODULE_TYPE = "REP";
+	public static final String LA_VALUE="LA";
 	public static final String AMP_EP_NO_EQ = "&epno=";
 
 	/** The Constant AMP_TO_DATE_EQ. */
