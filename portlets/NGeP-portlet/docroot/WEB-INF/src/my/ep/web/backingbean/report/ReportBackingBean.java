@@ -8328,19 +8328,19 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean()
 					.setSmMandatoryRejectedReportTypeView(false);
 			if (null != this.getSmReportType()
-					&& this.getSmReportType().equalsIgnoreCase("RECEIVED")) {
+					&& this.getSmReportType().equalsIgnoreCase(ReportConst.SM_REPORT_TYPE_RECEIVED)) {
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryRecievedReportTypeView(true);
 			} else if (null != this.getSmReportType()
-					&& this.getSmReportType().equalsIgnoreCase("APPROVED")) {
+					&& this.getSmReportType().equalsIgnoreCase(ReportConst.SM_REPORT_TYPE_APPROVED)) {
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryApprovedReportTypeView(true);
 			} else if (null != this.getSmReportType()
-					&& this.getSmReportType().equalsIgnoreCase("REJECTED")) {
+					&& this.getSmReportType().equalsIgnoreCase(ReportConst.SM_REPORT_TYPE_REJECTED)) {
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean()
@@ -8392,7 +8392,7 @@ public class ReportBackingBean extends
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 
-			List<Object[]> regStatusList = reportSO.retrieveRegStatusList("en");
+			List<Object[]> regStatusList = reportSO.retrieveRegStatusList(ReportConst.ENG_LANGUAGE_CODE);
 			for (Object[] object : regStatusList) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setValue(object[1].toString());
@@ -10190,7 +10190,7 @@ public class ReportBackingBean extends
 		items = null;
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			if ((this.getModuleValue()) != null) {
-				paramModule = "REP";
+				paramModule = ReportConst.PARAM_MODULE_TYPE;
 			}
 			items = super.getRadioButtonCodeValuesBySearchBean(paramModule,
 					this.getReportSearchBean());
@@ -16886,7 +16886,7 @@ public class ReportBackingBean extends
 
 		log.info("ReportBackingBean-getLOAReports");
 		if (this.getScLOAIdNo() != null && !(this.getScLOAIdNo() == "")
-				&& this.getScLOAIdNo().startsWith("LA")) {
+				&& this.getScLOAIdNo().startsWith(ReportConst.LA_VALUE)) {
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 
@@ -17238,14 +17238,14 @@ public class ReportBackingBean extends
 
 		if (this.getSmApplicationStatus() != null) {
 
-			if (this.getSmApplicationStatus().equalsIgnoreCase("APPROVED")) {
+			if (this.getSmApplicationStatus().equalsIgnoreCase(ReportConst.SM_REPORT_TYPE_APPROVED)) {
 				this.getManagedBean().getRptGenBean()
 						.setSmNonMandatoryDateView(true);
 				this.getManagedBean().getRptGenBean()
 						.setSmApprovalDateView(true);
 
 			} else if (this.getSmApplicationStatus().equalsIgnoreCase(
-					"REJECTED")) {
+					ReportConst.SM_REPORT_TYPE_REJECTED)) {
 				this.getManagedBean().getRptGenBean()
 						.setSmNonMandatoryDateView(true);
 				this.getManagedBean().getRptGenBean()
