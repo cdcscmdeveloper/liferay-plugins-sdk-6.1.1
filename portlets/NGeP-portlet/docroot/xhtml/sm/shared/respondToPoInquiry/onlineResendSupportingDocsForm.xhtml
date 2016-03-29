@@ -14,16 +14,24 @@
 
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="messages" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" />
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.submit.msg']}" rendered="#{!backingBean.managedBean.claimTask}"/><br />
 		<table style="width: 100%">
 			<tr>
 				<td></td>
 				<td>
 					<div align="right" style="width: 99%" class="button-wrapper">
-						<p:commandButton value="#{lbl['lbl.sm.button.resubmit']}"
+						<p:commandButton value="#{lbl['lbl.sm.button.resubmit']}" disabled="#{!backingBean.managedBean.claimTask}"
 							action="#{backingBean.resubmitSmApplInquiryToBpm(backingBean.managedBean.smAppl.applType)}"
 							style="margin-bottom:5px;" />
+						<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{backingBean.onClickClaimButton}" update="@form" process="@this"
+							rendered="#{!backingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+							<f:param name="taskId" value="#{backingBean.managedBean.taskId}" />
+						</p:commandButton>
 					</div>
 				</td>
 			</tr>
@@ -60,7 +68,7 @@
 				<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
 					style="width : 10%;">
 					<p:commandLink oncomplete="attachDlg1.show();return false;"
-						process="@this" partialSubmit="true"
+						process="@this" partialSubmit="true" disabled="#{!backingBean.managedBean.claimTask}"
 						action="#{backingBean.assignSelectedSupportDoc(table)}"
 						rendered="#{table.verifiedFlg != 1}">
 						<p:graphicImage value="/css/images/design/upload.png"

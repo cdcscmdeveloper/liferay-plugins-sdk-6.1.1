@@ -1720,6 +1720,30 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get bpm tasklist by login Id
+	 * 
+	 * @param String
+	 *            loginId
+	 * @return List<WorklistItemVO>
+	 */
+	public static List<WorklistItemVO> getBpmTaskListByLoginId(String loginId) {
+		List<WorklistItemVO> taskList = new ArrayList<WorklistItemVO>();
+		BpmResponseDTO responseDTO = null;
+		BpmRequestDTO reqDTO = null;
+		reqDTO = new BpmRequestDTO();
+		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+		reqDTO.setOffset(0);
+		reqDTO.setUserId(loginId);
+		responseDTO = SmServiceLookup.getBpmSO().getReassignedItems(reqDTO);
+		if (responseDTO.getWorklistVO() != null
+				&& !EntityHelper.isCollectionEmpty(responseDTO.getWorklistVO()
+						.getWorklistItem())) {
+			taskList = responseDTO.getWorklistVO().getWorklistItem();
+		}
+		return taskList;
+	}
+
+	/**
 	 * Redirect to page with message as optional.
 	 * 
 	 * @param page

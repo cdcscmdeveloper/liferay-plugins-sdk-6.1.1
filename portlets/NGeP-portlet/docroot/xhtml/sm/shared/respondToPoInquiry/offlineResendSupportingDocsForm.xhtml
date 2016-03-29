@@ -29,6 +29,9 @@
 
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="messages" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
@@ -36,9 +39,13 @@
 				<td></td>
 				<td>
 					<div align="right" style="width: 99%" class="button-wrapper">
-						<p:commandButton value="#{lbl['lbl.sm.button.resubmit']}"
+						<p:commandButton value="#{lbl['lbl.sm.button.resubmit']}" disabled="#{!backingBean.managedBean.claimTask}"
 							action="#{backingBean.resubmitSmApplInquiryToBpm(backingBean.managedBean.smAppl.applType)}"
 							style="margin-bottom:5px;" />
+						<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{backingBean.onClickClaimButton}" update="@form" process="@this"
+							rendered="#{!backingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+							<f:param name="taskId" value="#{backingBean.managedBean.taskId}" />
+						</p:commandButton>
 					</div>
 				</td>
 			</tr>

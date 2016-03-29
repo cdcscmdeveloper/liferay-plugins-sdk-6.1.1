@@ -7486,6 +7486,30 @@ public class SmApplicationUtil {
 		return machineItems;
 	}
 
+	/**
+	 * Get supplier admin and supplier user that already had login by appl
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return List<PmUser>
+	 */
+	public static List<PmUser> getActivatedSupplierUserList(SmAppl smAppl) {
+		List<PmUser> retVal = new ArrayList<PmUser>();
+		if (smAppl != null
+				&& !EntityHelper.isCollectionEmpty(smAppl.getSmPersonnels())) {
+			for (SmPersonnel personnel : smAppl.getSmPersonnels()) {
+				if (personnel.getPmUser() != null
+						&& !StringUtils.isBlank(personnel.getEpRole())
+						&& (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+								.contains(personnel.getEpRole()) || my.ep.constant.sm.SupplierManagementConst.SUPPLIER_USER_ROLES
+								.contains(personnel.getEpRole()))) {
+					retVal.add(personnel.getPmUser());
+				}
+			}
+		}
+		return retVal;
+	}
+
 	public static SmAppl deleteApplChildEntities(SmAppl appl) {
 		appl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 		appl.setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());

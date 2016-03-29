@@ -12,6 +12,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -90,14 +91,15 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean deactivatePersonnel;
 	private Date currDate;
 	private String logoutUrl;
+	private List<WorklistItemVO> taskList;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
-		if(myCountryId==null){
+		if (myCountryId == null) {
 			myCountryId = SmCommonUtil.getMyCountryId();
 		}
-		if(currDate==null){
+		if (currDate == null) {
 			currDate = new Date();
 		}
 	}
@@ -629,6 +631,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setSalutationItems(List<SelectItem> salutationItems) {
 		this.salutationItems = salutationItems;
+	}
+
+	public List<WorklistItemVO> getTaskList() {
+		return taskList;
+	}
+
+	public void setTaskList(List<WorklistItemVO> taskList) {
+		this.taskList = taskList;
 	}
 
 }
