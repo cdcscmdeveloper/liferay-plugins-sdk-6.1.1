@@ -1610,6 +1610,9 @@ public class SmPersonnelBackingBean extends
 				.getUpdateSmPersonnel().getEpRole()
 				.equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? DbValueConst.RECORD_STATUS_ACTIVE
 				: DbValueConst.RECORD_STATUS_DELETED);
+		if (!EntityHelper.isCollectionEmpty(reqDTO.getTaskList())) {
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		}
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
 		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
