@@ -18,17 +18,16 @@ public class GfmasBatchPmInboundJob implements Job {
 
 	public static Logger log = EpLogger
 			.getLogger(GfmasBatchPmInboundJob.class);
+	
+	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.INTEGRATION,
+					IGfmasServiceSO.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("GfmasBatchPmInboundJob  : Start");
-		IGfmasServiceSO  gfmasServiceSO;
 		try {
-			 gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.INTEGRATION,
-							IGfmasServiceSO.class);
-			
 			gfmasServiceSO.gfmasInboundServices();
 		} finally {
 			gfmasServiceSO = null;
