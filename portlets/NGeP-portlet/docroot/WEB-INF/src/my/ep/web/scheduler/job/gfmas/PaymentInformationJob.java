@@ -19,19 +19,17 @@ public class PaymentInformationJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(PaymentInformationJob.class);
 
+	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IGfmasServiceSO.class);
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("PaymentInformationJob start");
-		IGfmasServiceSO  gfmasServiceSO;
 		try {
-			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.INTEGRATION,
-							IGfmasServiceSO.class);
-			
 			gfmasServiceSO.paymentGfmasInbound();
-		} finally {
-			gfmasServiceSO = null;
+		} catch(Exception e) {
+			log.info("PaymentInformationJob :"+e.getMessage());
 		}
 		log.info("PaymentInformationJob end");
 

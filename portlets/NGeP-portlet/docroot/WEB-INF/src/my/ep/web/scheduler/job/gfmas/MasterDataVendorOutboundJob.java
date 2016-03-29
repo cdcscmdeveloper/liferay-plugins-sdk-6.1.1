@@ -20,20 +20,20 @@ public class MasterDataVendorOutboundJob implements Job {
 
 	public static Logger log = EpLogger
 			.getLogger(MasterDataVendorOutboundJob.class);
+	
+	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.INTEGRATION,
+					IGfmasServiceSO.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("MasterDataVendorOutboundJob start");
-		IGfmasServiceSO  gfmasServiceSO;
 		try {
-			  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.INTEGRATION,
-							IGfmasServiceSO.class);
 			
 			gfmasServiceSO.masterDataVendorGfmasOutbound();
-		} finally{
-			gfmasServiceSO = null;
+		 }catch(Exception e){
+			log.info("MasterDataVendorOutboundJob "+e.getMessage());
 		}
 		log.info("MasterDataVendorOutboundJob end");
 

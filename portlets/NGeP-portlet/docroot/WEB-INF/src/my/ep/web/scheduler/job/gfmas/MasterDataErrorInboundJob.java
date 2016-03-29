@@ -29,8 +29,8 @@ public class MasterDataErrorInboundJob implements Job {
 		log.info("MasterDataErrorInboundJob start");
 		try {
 			gfmasServiceSO.masterDataErrorInbound();
-		} finally {
-			gfmasServiceSO = null;
+		} catch(Exception e) {
+			log.info("MasterDataErrorInboundJob :"+e.getMessage());
 		}
 
 		log.info("MasterDataErrorInboundJob end");

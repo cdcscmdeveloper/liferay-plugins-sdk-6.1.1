@@ -29,8 +29,8 @@ public class GfmasBatchPmInboundJob implements Job {
 		log.info("GfmasBatchPmInboundJob  : Start");
 		try {
 			gfmasServiceSO.gfmasInboundServices();
-		} finally {
-			gfmasServiceSO = null;
+		} catch(Exception e) {
+			log.info("GfmasBatchPmInboundJob :"+e.getMessage());
 		}
 
 		log.info("GfmasBatchPmInboundJob  : End");

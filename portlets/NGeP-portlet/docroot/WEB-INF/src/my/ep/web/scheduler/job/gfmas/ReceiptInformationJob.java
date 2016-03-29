@@ -18,20 +18,20 @@ import org.quartz.JobExecutionException;
 public class ReceiptInformationJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(ReceiptInformationJob.class);
+	
+	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IGfmasServiceSO.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("ReceiptInformationJob start");
-		IGfmasServiceSO  gfmasServiceSO;
 		try {
-			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.INTEGRATION,
-							IGfmasServiceSO.class);
 			
 //		gfmasServiceSO.receiptInformationGfmasOutbound();
 		} catch (Exception e) {
-			gfmasServiceSO = null;
+			log.info("ReceiptInformationJob :"+e.getMessage());
 		}
 		log.info("ReceiptInformationJob end");
 
