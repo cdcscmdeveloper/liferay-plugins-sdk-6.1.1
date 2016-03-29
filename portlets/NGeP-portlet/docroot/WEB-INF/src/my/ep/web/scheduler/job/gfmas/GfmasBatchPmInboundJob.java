@@ -23,12 +23,16 @@ public class GfmasBatchPmInboundJob implements Job {
 			throws JobExecutionException {
 
 		log.info("GfmasBatchPmInboundJob  : Start");
-		
-		IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IGfmasServiceSO.class);
-		
-		gfmasServiceSO.gfmasInboundServices();
+		IGfmasServiceSO  gfmasServiceSO;
+		try {
+			 gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IGfmasServiceSO.class);
+			
+			gfmasServiceSO.gfmasInboundServices();
+		} finally {
+			gfmasServiceSO = null;
+		}
 
 		log.info("GfmasBatchPmInboundJob  : End");
 		
