@@ -23,11 +23,16 @@ public class PaymentInformationJob implements Job {
 			throws JobExecutionException {
 
 		log.info("PaymentInformationJob start");
-		IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IGfmasServiceSO.class);
-		
-		gfmasServiceSO.paymentGfmasInbound();
+		IGfmasServiceSO  gfmasServiceSO;
+		try {
+			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IGfmasServiceSO.class);
+			
+			gfmasServiceSO.paymentGfmasInbound();
+		} finally {
+			gfmasServiceSO = null;
+		}
 		log.info("PaymentInformationJob end");
 
 	}

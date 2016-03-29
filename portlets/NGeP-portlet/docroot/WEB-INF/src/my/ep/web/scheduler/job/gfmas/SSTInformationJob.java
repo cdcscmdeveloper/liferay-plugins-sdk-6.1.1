@@ -23,11 +23,16 @@ public class SSTInformationJob implements Job {
 			throws JobExecutionException {
 
 		log.info("SSTInformationJob start");
-		IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IGfmasServiceSO.class);
-		
-		gfmasServiceSO.sstInformationGfmas();
+		IGfmasServiceSO  gfmasServiceSO;
+		try {
+			 gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.INTEGRATION,
+							IGfmasServiceSO.class);
+			
+			gfmasServiceSO.sstInformationGfmas();
+		} finally {
+			gfmasServiceSO = null;
+		}
 		log.info("SSTInformationJob end");
 
 	}
