@@ -20,7 +20,7 @@ public class MasterDataVendorInboundJob implements Job {
 	public static Logger log = EpLogger
 			.getLogger(MasterDataVendorInboundJob.class);
 	
-	static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.INTEGRATION,
 						IGfmasServiceSO.class);
 

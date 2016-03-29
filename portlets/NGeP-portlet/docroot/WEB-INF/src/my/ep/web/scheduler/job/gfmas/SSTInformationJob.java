@@ -18,20 +18,19 @@ import org.quartz.JobExecutionException;
 public class SSTInformationJob implements Job {
 
 	public static Logger log = EpLogger.getLogger(SSTInformationJob.class);
+	
+	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.INTEGRATION,
+						IGfmasServiceSO.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("SSTInformationJob start");
-		IGfmasServiceSO  gfmasServiceSO;
 		try {
-			 gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.INTEGRATION,
-							IGfmasServiceSO.class);
-			
 			gfmasServiceSO.sstInformationGfmas();
-		} finally {
-			gfmasServiceSO = null;
+		} catch(Exception e) {
+			log.info("SSTInformationJob :"+e.getMessage());
 		}
 		log.info("SSTInformationJob end");
 
