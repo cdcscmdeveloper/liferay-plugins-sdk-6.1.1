@@ -127,6 +127,7 @@ import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -6341,10 +6342,20 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase("C")) {
 				reqDTO.setUserList(new ArrayList<String>());
-				log.info("User List Size for pass to BPM:"
-						+ reqDTO.getUserList().size());
-				PmUser pmUser = new FacesScopes().getUserSessionBean();
-				reqDTO.getUserList().add(pmUser.getLoginId());
+				if (EpPropertiesUtils.getInstance()
+						.getProperty("sm.send.bpm.mode").equals("B")) {
+					List<PmUser> supplierUserList = SmApplicationUtil
+							.getActivatedSupplierUserList(getManagedBean()
+									.getSmAppl());
+					if (!EntityHelper.isCollectionEmpty(supplierUserList)) {
+						for (PmUser user : supplierUserList) {
+							reqDTO.getUserList().add(user.getLoginId());
+						}
+					}
+				} else {
+					PmUser pmUser = new FacesScopes().getUserSessionBean();
+					reqDTO.getUserList().add(pmUser.getLoginId());
+				}
 				log.info("Login user added to the user list to BPM");
 			}
 
