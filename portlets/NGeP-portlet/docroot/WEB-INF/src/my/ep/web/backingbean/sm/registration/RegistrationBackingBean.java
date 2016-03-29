@@ -1250,6 +1250,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSmSupp(resDTO.getSmSupp());
 				this.getManagedBean().setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
 				this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
+				getManagedBean().setApplType(getManagedBean().getSmAppl().getApplType());
+				
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 				}
