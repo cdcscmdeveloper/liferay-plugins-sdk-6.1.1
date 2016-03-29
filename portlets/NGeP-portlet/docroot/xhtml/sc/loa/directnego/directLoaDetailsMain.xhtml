@@ -151,6 +151,8 @@
 					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+					label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
+					cancelLabel="#{lbl['lbl.btn.cancel']}"
 					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
 				</p:fileUpload>
 			</c:if>
@@ -162,6 +164,8 @@
 					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 					allowTypes="/(\.|\/)(pdf)$/"
 					invalidFileMessage="Only PDF files are accepted"
+					label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
+					cancelLabel="#{lbl['lbl.btn.cancel']}"
 					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
 				</p:fileUpload>
 			</c:if>
@@ -178,6 +182,8 @@
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
 				update="@form" oncomplete="loiSuppAttmPopupDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
