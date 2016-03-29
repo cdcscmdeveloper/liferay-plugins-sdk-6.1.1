@@ -1664,8 +1664,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
 				
-				PmUserGroup pmUserGroup = new PmUserGroup();
-				getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
 				getManagedBean().getUserGroupList().clear();
 				
 				//new
@@ -1689,6 +1687,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
 					}
 					if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
+						PmUserGroup pmUserGroup = new PmUserGroup();
+						getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
 						getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 					}
 					
