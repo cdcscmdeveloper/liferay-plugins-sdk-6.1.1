@@ -290,13 +290,19 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		String stateId = originalServletRequest.getParameter("st");
 		
 		if(stateId != null && StringUtils.isNotBlank(stateId)){
+			try{
+				Long stId = Long.parseLong(stateId);
+				getManagedBean().setStateId(stId);
+				findDistrict();
+			}catch(Exception ex){
+				getManagedBean().setStateId(0);
+				getManagedBean().setDistrictList(null);
+			}
 			getManagedBean().setApplNo(null);
-			getManagedBean().setStateId(Long.valueOf(stateId));
 			getManagedBean().setDistrictId(0);
 			getManagedBean().setSupplierName(null);
 			getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
-			findDistrict();
-			this.getManagedBean().getSearchDataModel().reloadData();
+			getManagedBean().getSearchDataModel().reloadData();
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
