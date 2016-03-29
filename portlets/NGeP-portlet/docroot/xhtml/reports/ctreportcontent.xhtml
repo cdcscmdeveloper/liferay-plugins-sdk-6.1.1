@@ -20,7 +20,7 @@
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
 									<td><ac:lov id="lovCtMinistry" lovId="PM_ORG_PROFILE_REPORT"
-											size="66" update="@form"
+											size="100" update="@form"
 											headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"	
 											value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedMinistry"
@@ -42,7 +42,7 @@
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel></td>
 									<td><ac:lov id="lovCtPegaWaiPengawal"
-											lovId="PM_ORG_PROFILE_REPORT" size="66" update="@form"
+											lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 											headerText="#{lbl['lbl.rpt.pegawaipengawal']}" readonly="true"	
 											disabled="#{reportBackingBean.managedBean.selectedMinistry==null}"	
 											value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"
@@ -65,7 +65,7 @@
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
 									<td><ac:lov id="lovCtKumpulanPTJ"
-											lovId="PM_ORG_PROFILE_REPORT" size="66" update="@form"
+											lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 											headerText="#{lbl['lbl.rpt.kumpulan.ptj']}" readonly="true"	
 											disabled="#{reportBackingBean.managedBean.selectedMinistry==null 
 											or reportBackingBean.managedBean.selectedPegwaiPengawal==null}"	
@@ -89,7 +89,7 @@
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
 									<td><ac:lov id="lovCtPTJ" lovId="PM_ORG_PROFILE_REPORT" readonly="true"	
-											size="66" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
+											size="100" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
 											disabled="#{reportBackingBean.managedBean.selectedMinistry==null 
 											or reportBackingBean.managedBean.selectedPegwaiPengawal==null or reportBackingBean.managedBean.selectedKumpulanPTJ==null}"	
 											value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
@@ -113,7 +113,7 @@
 								<tr>
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
-									<td><p:selectOneMenu style="width:515px;"
+									<td><p:selectOneMenu style="width:656px;"
 											id="lovCtMinistry"
 											value="#{reportBackingBean.commonMinistry}">
 											<f:selectItems value="#{reportBackingBean.ministryList}" />
@@ -133,7 +133,7 @@
 									test="#{ctReportBackingBean.managedBean.rptGenBean.ctPegaWaiPengawalView}">
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel></td>
-									<td><p:selectOneMenu style="width:515px;"
+									<td><p:selectOneMenu style="width:656px;"
 											id="lovCtPegaWaiPengawal"
 											value="#{reportBackingBean.commonPegaWaiPengawal}">
 											<f:selectItems
@@ -154,7 +154,7 @@
 									test="#{ctReportBackingBean.managedBean.rptGenBean.ctKumpulanPTJView}">
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
-									<td><p:selectOneMenu style="width:515px;"
+									<td><p:selectOneMenu style="width:656px;"
 											id="lovCtKumpulanPTJ"
 											value="#{reportBackingBean.commonKumpulanPTJ}">
 											<f:selectItems value="#{reportBackingBean.kumpulanPTJList}" />
@@ -174,7 +174,7 @@
 									test="#{ctReportBackingBean.managedBean.rptGenBean.ctPtjView}">
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
-									<td><p:selectOneMenu style="width:515px;" id="lovCtPTJ"
+									<td><p:selectOneMenu style="width:656px;" id="lovCtPTJ"
 											value="#{reportBackingBean.commonPtj}">
 											<f:selectItems value="#{reportBackingBean.ptjList}" />
 										</p:selectOneMenu></td>
