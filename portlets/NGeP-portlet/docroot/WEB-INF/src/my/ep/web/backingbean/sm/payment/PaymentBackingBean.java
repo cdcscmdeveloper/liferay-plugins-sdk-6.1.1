@@ -320,33 +320,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	public String submitPayment() {
 		log.debug("********submitPayment******");
 		if (this.getManagedBean().getPyBill() != null) {
-			List<PmParameterDesc> paymentModeLs = SmCommonUtil
-					.retrieveParameterDescList(
-							SupplierManagementConst.PM_PAYMENT_MODE,
-							new FacesScopes().getUserLocale().getLanguage());
-			List<PmStatusDesc> paymentStatusLs = SmCommonUtil
-					.retrievePmStatusList("SM",
-							SupplierManagementConst.PM_STATUS_PAYMENT,
-							new FacesScopes().getUserLocale().getLanguage());
-			PmParameter paymentMode = new PmParameter();
+
+			PmParameter paymentMode = ParameterHelper.getInstance().
+					getParameterByTypeAndCode(SupplierManagementConst.PM_PAYMENT_MODE, SupplierManagementConst.ONLINE_PAYMENT);
+			PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(SupplierManagementConst.PM_STAT_PENDING_PAYMENT);
 			PyPayment payment = new PyPayment();
-			PmStatus paymentStatus = new PmStatus();
-
-			for (PmParameterDesc pMethod : paymentModeLs) {
-				if (pMethod.getPmParameter().getParameterCode()
-						.equals(SupplierManagementConst.ONLINE_PAYMENT)) {
-					paymentMode = pMethod.getPmParameter();
-				}
-			}
-
-			for (PmStatusDesc pStat : paymentStatusLs) {
-				if (pStat
-						.getPmStatus()
-						.getStatusId()
-						.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT)) {
-					paymentStatus = pStat.getPmStatus();
-				}
-			}
 
 			payment.setPaymentMode(paymentMode);
 			payment.setPmStatus(paymentStatus);
@@ -402,19 +380,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			log.info("******Payment ID********"
 					+ resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
 
-			/*
-			 * if(this.getManagedBean().getPaymentMode().equals(
-			 * SupplierManagementConst.OFFLINE_PAYMENT)){
-			 * FacesContext.getCurrentInstance().addMessage(null,new
-			 * FacesMessage
-			 * (FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage
-			 * (MessageConst.INFO_721051, MessageUtils.BUNDLE_COMMON_MESSAGES,
-			 * new FacesScopes().getUserLocale())));
-			 * 
-			 * return "paymentAcknowledge";
-			 * 
-			 * }else{
-			 */
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 
 			this.getManagedBean().setOrderId(
@@ -422,7 +387,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			this.getManagedBean().setBillMobile(pmUser.getMobileFull());
 			this.getManagedBean().setBillEmail(pmUser.getEmail());
 			this.getManagedBean().setBillName(pmUser.getUserName());
-			this.getManagedBean().setBillDesc("NGeP Payment");
+			this.getManagedBean().setBillDesc(getManagedBean().getNewPyBillDtlLs().get(0).getItemDesc());
 			// this.getManagedBean().
 			String orderId = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentId().toString();
