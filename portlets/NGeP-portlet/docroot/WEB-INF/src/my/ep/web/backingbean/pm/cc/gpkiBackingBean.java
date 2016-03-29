@@ -169,8 +169,16 @@ public class gpkiBackingBean {
 		
 		System.out.println("statusMsg:"+statusMsg);
 		System.out.println("extMsg:"+extMsg);
+		
+		String errorMsg = "";
+		if(extMsg!=null && extMsg.trim().length()>0){
+			errorMsg = extMsg;
+		}else{
+			errorMsg = statusMsg;
+		}
+		
 		FacesContext.getCurrentInstance().addMessage("gpki",
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", extMsg));
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
 	}
 
 }
