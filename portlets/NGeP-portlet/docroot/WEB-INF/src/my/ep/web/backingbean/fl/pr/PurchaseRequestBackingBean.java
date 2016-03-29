@@ -1425,8 +1425,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
 
-				PmUserGroup pmUserGroup = new PmUserGroup();
-				getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
 				getManagedBean().getUserGroupList().clear();
 
 				//new
@@ -1450,8 +1448,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
 					}
 					if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
+						PmUserGroup pmUserGroup = new PmUserGroup();
+						getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
 						getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 					}
+					
 				}
 			}
 			if(getManagedBean().getFulfilmentRequest().getPmUserGroup()!=null && getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
