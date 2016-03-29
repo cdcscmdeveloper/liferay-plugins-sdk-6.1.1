@@ -374,11 +374,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							</div>
 			          </p:column>
 				
-				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;" styleClass="column-align-center" > 
+				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;" styleClass="column-align-center" rendered="false" > 
 				          <h:outputText value="#{supVar.supplierRegNo}" style="float:left;"/>
 				      </p:column>
 				     
-				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;" styleClass="column-align-center" >
+				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;" styleClass="column-align-center" rendered="false" >
 				          <h:outputText value="#{supVar.supplierMofNo}" style="float:left;" />
 				      </p:column>
 				      
@@ -386,7 +386,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				              <f:facet name="header">
 				                  <h:outputText value="#{lbl['lbl.ct.bank.account.name']}" />
 				              </f:facet>
-				               <p:selectOneMenu id="accountId" style="width:250px;margin-bottom: 5px;"
+				               <p:selectOneMenu id="accountId" style="width:300px;margin-bottom: 5px;"
 						           value="#{supVar.bankAccountNo}" rendered="#{!panelBackingBean.managedBean.viewContract}">
 						           <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier, index)}" />
 						          <p:ajax event="change" process="@form"
@@ -396,7 +396,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					          <h:outputText rendered="#{panelBackingBean.managedBean.viewContract}" value="#{supVar.bankAccountNo}/#{supVar.bankName}" style="width:250px;float:left" />
 					     </p:column>
 				        
-				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:30%;white-space:normal;" styleClass="column-align-center" >
+				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:30%;white-space:normal;" styleClass="column-align-center" rendered="false" >
 					     <h:outputText value="#{panelBackingBean.getFullAddress(supVar.supplierAddress)}"  style="text-align:left;float:left;"/>
 				      </p:column>
 				   
