@@ -121,7 +121,7 @@ start : function (message){
     	$(".modal").append("<p/>");
     }
     if (typeof message == 'undefined'){
-        $(".modal > p").html("Please Wait...");
+       // $(".modal > p").html("Please Wait...");
     }
     else {    
         $(".modal > p").html(message);
