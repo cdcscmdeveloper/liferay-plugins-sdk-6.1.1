@@ -107,7 +107,7 @@
 					<tr>
 						<td style="width: 15%;"><p:outputLabel
 								value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
-						<td><p:selectOneMenu style="width:656px;"
+						<td><p:selectOneMenu style="width:720px;"
 								id="lovPpMinistryOnly"  
 								value="#{reportBackingBean.commonMinistry}">
 								<f:selectItems  value="#{reportBackingBean.ministryList}" />
@@ -122,7 +122,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel>
 						</td>
-						<td><p:selectOneMenu style="width:656px;"
+						<td><p:selectOneMenu style="width:720px;"
 								id="lovPpPegaWaiPengawal" 
 								value="#{reportBackingBean.commonPegaWaiPengawal}">
 								<f:selectItems value="#{reportBackingBean.pegaWaiPengawalList}"/>
@@ -136,7 +136,7 @@
 					test="#{ppReportBackingBean.managedBean.rptGenBean.ppKumpulanPTJView}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
-						<td><p:selectOneMenu style="width:656px;"
+						<td><p:selectOneMenu style="width:720px;"
 								id="lovPpKumpulanPTJ" 
 								value="#{reportBackingBean.commonKumpulanPTJ}">
 								<f:selectItems value="#{reportBackingBean.kumpulanPTJList}"	/>
@@ -149,7 +149,7 @@
 				<c:if test="#{ppReportBackingBean.managedBean.rptGenBean.ppPTJView}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
-						<td><p:selectOneMenu style="width:656px;" id="lovPpPTJ" 
+						<td><p:selectOneMenu style="width:720px;" id="lovPpPTJ" 
 								value="#{reportBackingBean.commonPtj}">
 								<f:selectItems value="#{reportBackingBean.ptjList}" />
 							</p:selectOneMenu></td>
