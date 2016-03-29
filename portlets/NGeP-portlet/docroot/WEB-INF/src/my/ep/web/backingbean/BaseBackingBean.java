@@ -21,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -1416,7 +1418,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				} else {
 					outComes = resDTO.getAction();
 				}				
-				this.getManagedBean().setOutComes(outComes);	
+				this.getManagedBean().setOutComes(sortOutcomes(outComes));	
 			}
 			this.getManagedBean().setCurrentStatusId(
 					Long.valueOf(resDTO.getDocStatus()));
@@ -1429,5 +1431,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		} finally {
 			bpmSO = null;
 		}
+	}
+	
+	private String[] sortOutcomes(String[] outComes) {
+		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes)); 
+		
+		// Move 'Cancel' button to the last
+		if(bpmActions.contains(BpmOutcomeConst.BPM_CANCEL) && !bpmActions.get(bpmActions.size()-1).equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
+		}
+		
+		outComes = new String[bpmActions.size()];
+		return bpmActions.toArray(outComes);
 	}
 }
