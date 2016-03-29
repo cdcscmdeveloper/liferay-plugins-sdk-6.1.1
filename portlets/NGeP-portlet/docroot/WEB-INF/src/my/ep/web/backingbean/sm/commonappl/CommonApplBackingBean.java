@@ -718,8 +718,6 @@ public class CommonApplBackingBean extends
 		boolean retVal = false;
 		if (!isClaim
 				&& (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.RESPOND_PO_INQUIRY)
-						|| resDTO.getTaskName().equalsIgnoreCase(
 								SMProcessNameConst.REVIEW_APPL_ESCALATED)
 						|| resDTO.getTaskName().equalsIgnoreCase(
 								SMProcessNameConst.REVIEW_APPL)

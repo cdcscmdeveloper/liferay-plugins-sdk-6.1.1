@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
@@ -28,6 +29,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -48,6 +50,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -127,6 +130,7 @@ public class SmPersonnelBackingBean extends
 	 * Pre - render and redirect to Deactivate Supplier Admin screen
 	 */
 	public void preRenderDeactivateSuppAdmin() {
+		renewSesionObject();
 		boolean isHasSupplierUser = false;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		SmPersonnel adminPersonnel = null;
@@ -134,7 +138,6 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
 		reqDTO.setApplId(smSupplier.getSmAppl().getApplId());
 		reqDTO.setHasActiveAppl(false);
-
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrieveAuthorizedPersonnelsBySuppIdAndApplId(reqDTO);
 
@@ -144,51 +147,37 @@ public class SmPersonnelBackingBean extends
 
 		getManagedBean().setNoSupplierUserMsg("");
 
-		if (isHavePendingTaskList(smSupplier)) {
-			SmCommonUtil.redirectToPage(redirectPage, MessageConst.INFO_721213,
-					null);
-		} else {
-			redirectPage = "adminReAssign.xhtml";
-			if (resDTO.getSmPersonnelList() != null
-					&& !resDTO.getSmPersonnelList().isEmpty()) {
-				List<SmPersonnel> authorizedPersonnelList = resDTO
-						.getSmPersonnelList();
-				for (SmPersonnel smPersonnelTemp : authorizedPersonnelList) {
-					if (smPersonnelTemp.getEpRole().equals(
-							RoleCode.G2G_SUPPLIER_ADMIN.value())
-							|| smPersonnelTemp.getEpRole().equals(
-									RoleCode.BASIC_SUPPLIER_ADMIN.value())
-							|| smPersonnelTemp.getEpRole().equals(
-									RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-						adminPersonnel = smPersonnelTemp;
-					} else if (smPersonnelTemp.getEpRole().equals(
-							RoleCode.G2G_SUPPLIER_USER.value())
-							|| smPersonnelTemp.getEpRole().equals(
-									RoleCode.BASIC_SUPPLIER_USER.value())
-							|| smPersonnelTemp.getEpRole().equals(
-									RoleCode.MOF_SUPPLIER_USER.value())
-							|| smPersonnelTemp.getEpRole().equals(
-									RoleCode.FL_USER.value())) {
-						isHasSupplierUser = true;
-					}
+		redirectPage = "adminReAssign.xhtml";
+		if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())) {
+			List<SmPersonnel> authorizedPersonnelList = resDTO
+					.getSmPersonnelList();
+			for (SmPersonnel smPersonnelTemp : authorizedPersonnelList) {
+				if (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
+						.contains(smPersonnelTemp.getEpRole())) {
+					adminPersonnel = smPersonnelTemp;
+				} else if (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_USER_ROLES
+						.contains(smPersonnelTemp.getEpRole())) {
+					isHasSupplierUser = true;
 				}
-				authorizedPersonnelList.remove(adminPersonnel);
-				getManagedBean().setSmPersonnelList(authorizedPersonnelList);
-				getManagedBean().setUpdateSmPersonnel(adminPersonnel);
-				SmCommonUtil.setRoleName(smSupplier.getSmAppl()
-						.getSupplierType(), getManagedBean()
-						.getSmPersonnelList());
-				if (!isHasSupplierUser) {
-					constructNoSupplierUserToDeactivateMsg(smSupplier);
-				}
-			} else {
-				getManagedBean().setSmPersonnelList(
-						new ArrayList<SmPersonnel>());
-				constructNoSupplierUserToDeactivateMsg(smSupplier);
 			}
-
-			SmCommonUtil.redirectToPage(redirectPage, "", null);
+			authorizedPersonnelList.remove(adminPersonnel);
+			getManagedBean().setSmPersonnelList(authorizedPersonnelList);
+			getManagedBean().setUpdateSmPersonnel(adminPersonnel);
+			SmCommonUtil.setRoleName(smSupplier.getSmAppl().getSupplierType(),
+					getManagedBean().getSmPersonnelList());
+			if (!isHasSupplierUser) {
+				constructNoSupplierUserToDeactivateMsg(smSupplier);
+			} else {
+				getManagedBean().setTaskList(
+						SmCommonUtil.getBpmTaskListByLoginId(adminPersonnel
+								.getPmUser().getLoginId()));
+			}
+		} else {
+			getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
+			constructNoSupplierUserToDeactivateMsg(smSupplier);
 		}
+
+		SmCommonUtil.redirectToPage(redirectPage, "", null);
 
 	}
 
@@ -1616,6 +1605,7 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setSmPersonnel(getManagedBean().getSelectedPersonnelToReassign());
 		reqDTO.setSmSupplierId(SmApplicationUtil.getCurrentSupplier()
 				.getSupplierId());
+		reqDTO.setTaskList(getTaskList());
 		reqDTO.setOldAdminRecordStatusFlg(getManagedBean()
 				.getUpdateSmPersonnel().getEpRole()
 				.equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? DbValueConst.RECORD_STATUS_ACTIVE
@@ -1634,6 +1624,16 @@ public class SmPersonnelBackingBean extends
 
 	public void onChangeAccntStatus(AjaxBehaviorEvent e) {
 
+	}
+
+	private List<String> getTaskList() {
+		List<String> taskList = new ArrayList<String>();
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getTaskList())) {
+			for (WorklistItemVO task : getManagedBean().getTaskList()) {
+				taskList.add(task.getTaskId());
+			}
+		}
+		return taskList;
 	}
 
 	/**
@@ -1860,5 +1860,10 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		return epRole;
+	}
+
+	private int calculateFinalOffSet(int currentPage) {
+		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+		return offSet;
 	}
 }
