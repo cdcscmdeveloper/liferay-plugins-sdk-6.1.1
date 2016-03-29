@@ -18,17 +18,16 @@ import org.quartz.JobExecutionException;
 public class MasterDataErrorInboundJob implements Job {
 	public static Logger log = EpLogger
 			.getLogger(MasterDataErrorInboundJob.class);
+	
+	public static IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.INTEGRATION,
+					IGfmasServiceSO.class);
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
 		log.info("MasterDataErrorInboundJob start");
-		IGfmasServiceSO gfmasServiceSO;
 		try {
-			gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.INTEGRATION,
-							IGfmasServiceSO.class);
-
 			gfmasServiceSO.masterDataErrorInbound();
 		} finally {
 			gfmasServiceSO = null;
