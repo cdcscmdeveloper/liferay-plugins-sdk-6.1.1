@@ -564,9 +564,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 						scQtSupplier.setSmSupplier(smSupplier);
 						scQtSupplier.setScQt(scQt);
 						scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
-						if (this.getManagedBean().getQtSupplierList().isEmpty()) {
-							this.getManagedBean().getQtSupplierList().add(scQtSupplier);
-							getManagedBean().setTotalSuppliers(this.getManagedBean().getQtSupplierList().size());
+						if (qtSupplierList.isEmpty()) {
+							qtSupplierList.add(scQtSupplier);
+							getManagedBean().setTotalSuppliers(qtSupplierList.size());
+							this.getManagedBean().setQtSupplierList(qtSupplierList);
 						} else {
 							for (ScQtSupplier qtSupplier : this.getManagedBean().getQtSupplierList()) {
 								itemIds.add(qtSupplier.getSmSupplier().getSupplierId().toString());
