@@ -6342,8 +6342,9 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase("C")) {
 				reqDTO.setUserList(new ArrayList<String>());
-				if (EpPropertiesUtils.getInstance()
-						.getProperty("sm.send.bpm.mode").equals("B")) {
+				String sendMode = EpPropertiesUtils.getInstance()
+						.getProperty("sm.send.bpm.mode");
+				if (!StringUtils.isBlank(sendMode) && sendMode.equals("B")) {
 					List<PmUser> supplierUserList = SmApplicationUtil
 							.getActivatedSupplierUserList(getManagedBean()
 									.getSmAppl());
