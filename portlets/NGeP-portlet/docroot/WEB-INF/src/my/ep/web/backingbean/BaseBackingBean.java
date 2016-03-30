@@ -73,6 +73,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
@@ -1482,7 +1483,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				PmConfigRule configRule = configRules.get(0);
 				
 				if (configRule != null) {
-					return configRule.getRuleTypeDesc();
+					for(PmConfigRuleDesc desc : configRule.getConfigRuleDesc()){
+						if(desc.getLanguageCode().getLanguageCode().equals(new FacesScopes().getUserLocale().getLanguage())){
+							return desc.getRuleDesc();
+						}
+					}
 				}
 				
 			}
