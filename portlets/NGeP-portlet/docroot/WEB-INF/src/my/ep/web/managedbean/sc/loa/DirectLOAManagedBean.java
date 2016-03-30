@@ -246,6 +246,9 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private String zoneName;
 	private String tempZoneName;
 	private int index;
+	
+	  /** The ministry condition field. */
+    private String ministryConditionField;
 
 	/** The total suppliers spec loc. */
 	private List<TplSpecLoc> totalSuppliersSpecLoc;
@@ -1568,5 +1571,19 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setTempFilePath(String tempFilePath) {
 		this.tempFilePath = tempFilePath;
+	}
+
+	/**
+	 * @return the ministryConditionField
+	 */
+	public String getMinistryConditionField() {
+		return ministryConditionField;
+	}
+
+	/**
+	 * @param ministryConditionField the ministryConditionField to set
+	 */
+	public void setMinistryConditionField(String ministryConditionField) {
+		this.ministryConditionField = ministryConditionField;
 	}
 }
