@@ -1828,8 +1828,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IRuleSO.class);
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
-				String ruleType = RuleTypeConst.BOND_PERCENTAGE;
-				ruleReqDTO.setRuleType(ruleType);
+				ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
 				ruleReqDTO.setCompareValue(bondPercentageLoaAmt.toString());
 				RuleResDTO roleResDTO = ruleSO
 						.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
@@ -1843,7 +1842,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								BigDecimal.ROUND_HALF_UP);
 						scLoa.setBondPercentage(new BigDecimal(percentage));
 					} else {
-						throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleType)});
+						throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 					}
 				}
 				if (bondPercentage.doubleValue() > 0) {
