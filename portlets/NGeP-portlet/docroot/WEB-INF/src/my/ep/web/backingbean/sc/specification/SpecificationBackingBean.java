@@ -7460,8 +7460,10 @@ public class SpecificationBackingBean extends
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			String localDate = sdf.format(currentDate);
 			String day = localDate.substring(0, 2);
-			String fromDate = day + "/" + startMonth + "/" + startYear;
-			String toDate = day + "/" + endMonth + "/" + endYear;
+			String localstartMonth=retriveMonthDtls(new Integer(startMonth));
+			String localemdMonth=retriveMonthDtls(new Integer(endMonth));
+			String fromDate = 01 + "/" + localstartMonth + "/" + startYear;
+			String toDate = 01 + "/" + localemdMonth + "/" + endYear;
 			Date startDate = sdf.parse(fromDate);
 			Date endDate = sdf.parse(toDate);
 
@@ -10271,9 +10273,9 @@ public class SpecificationBackingBean extends
 							CommonConstants.DEFAULT_DATE_FORMAT);
 					String localDate = df.format(currentDate);
 					String day = localDate.substring(0, 2);
-					String fromdate = day + "/" + Startmonth + "/"
+					String fromdate = 01 + "/" + Startmonth + "/"
 							+ schedule.getStartYear();
-					String toDate = day + "/" + endmonth + "/"
+					String toDate = 01 + "/" + endmonth + "/"
 							+ schedule.getEndYear();
 
 					schedule.setScheduleNo(schedule.getScheduleNo());
@@ -10319,9 +10321,9 @@ public class SpecificationBackingBean extends
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 					String localDate = format.format(d1);
 					String date = localDate.substring(0, 2);
-					String fromdate = date + "/" + Startmonth + "/"
+					String fromdate = 01 + "/" + Startmonth + "/"
 							+ schedule.getStartYear();
-					String toDate = date + "/" + endmonth + "/"
+					String toDate = 01 + "/" + endmonth + "/"
 							+ schedule.getEndYear();
 					try {
 						schedule.setFromDate(df.parse(fromdate));
