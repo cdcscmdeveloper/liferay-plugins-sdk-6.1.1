@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -68,6 +69,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	
 	/** The error value. */
 	boolean errorValue=false;
+	
+	private SmSupplier smSupplier;
 
 	/** The month map. */
 	private HashMap<String, String> monthMap = new HashMap<String, String>();
@@ -357,6 +360,20 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public ScLoa getScLoa() {
 		return scLoa;
+	}
+
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
 	}
 
 	/**
