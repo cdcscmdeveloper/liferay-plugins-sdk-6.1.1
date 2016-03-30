@@ -26,7 +26,7 @@
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
 		<ac:paginator for="feeByOrgTypeTableID" />
 		
-		<p:column  style="width:30%">
+		<p:column>
 			<f:facet name="header">
 			    <h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value=" #{lbl['lbl.pm.settings.fee.organisation.type']}" />
@@ -39,7 +39,7 @@
 						<p:ajax event="change" process="@this" update="@this" partialSubmit="true" listener="#{ruleCatalogueBackingBean.getParameterObj(feeObj)}" />
 					</p:selectOneMenu>
 		</p:column>
-		<p:column>
+		<p:column  width="15%">
 			<f:facet name="header">
 			<h:outputText value="*" styleClass="mandatory" />
 								#{lbl['lbl.pm.as.effdate']}
@@ -55,7 +55,7 @@
 			</p:calendar>
 		</p:column>
 
-		<p:column>
+		<p:column  width="15%">
 			<f:facet name="header">
 			
 						#{lbl['lbl.pm.as.expdate']}
@@ -74,7 +74,7 @@
 			</p:calendar>
 		</p:column>
 		
-		<p:column style="text-align:center;">
+		<p:column style="text-align:center;width:5%;">
 			<f:facet name="header">
                 #{lbl['lbl.pm.action']}
 			</f:facet>
