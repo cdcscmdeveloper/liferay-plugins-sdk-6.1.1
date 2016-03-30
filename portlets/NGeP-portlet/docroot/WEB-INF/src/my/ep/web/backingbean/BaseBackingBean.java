@@ -82,7 +82,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -1462,7 +1461,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public String getRuleTypeDesc(String ruleType) {
 		IRuleSO ruleSO = null;
 		try {
-			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
