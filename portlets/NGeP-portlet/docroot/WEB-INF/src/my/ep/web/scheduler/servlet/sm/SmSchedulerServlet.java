@@ -22,6 +22,7 @@ import my.ep.web.scheduler.job.eperunding.SignatoryJob;
 import my.ep.web.scheduler.job.gfmas.MasterDataVendorInboundJob;
 import my.ep.web.scheduler.job.gfmas.MasterDataVendorOutboundJob;
 import my.ep.web.scheduler.job.gfmas.ReceiptInformationJob;
+import my.ep.web.scheduler.job.sm.CheckBasicAccountExpirationJob;
 import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
 import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
 import my.ep.web.scheduler.job.sm.SoftCertRenewalReminderJob;
@@ -71,6 +72,13 @@ public class SmSchedulerServlet extends HttpServlet {
 				SupportingDocumentReminderJob.class,
 				SchedulerConstants.SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC,
 				SchedulerConstants.SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER);
+
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				SchedulerConstants.SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB,
+				SchedulerConstants.SM_JOB_GROUP),
+				CheckBasicAccountExpirationJob.class,
+				SchedulerConstants.SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB_DESC,
+				SchedulerConstants.SM_DAILY_CHECK_BASIC_ACCOUNT_EXPIRATION_TIMER);
 		
 		//1GFMAS jobs				
 		EpSchedulerHelper.scheduleJob(new JobKey(
