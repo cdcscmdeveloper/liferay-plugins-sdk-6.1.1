@@ -734,8 +734,9 @@ public class QTDetailBackingBean extends
 					qtCommitteList.add(qtCommittee);
 				}
 			}
+			scQt.setScQtCommittees(qtCommitteList);
 		}
-		scQt.setScQtCommittees(qtCommitteList);
+		
 		// Code for to update the supplier qualification criteria
 		/* List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>(); */
 		if (!this.getManagedBean().getQt().isPanel()) {
@@ -2405,7 +2406,8 @@ public class QTDetailBackingBean extends
 							this.getManagedBean().getQt().getCircularVer()
 									.getDocType());
 				}
-				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+				if (this.getManagedBean().getZoneGeneralTrees()== null ||
+						this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 					retriveZonesByCircularNo();
 				}
 			}
