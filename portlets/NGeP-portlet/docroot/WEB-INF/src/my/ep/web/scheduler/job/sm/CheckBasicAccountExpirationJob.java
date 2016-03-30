@@ -153,14 +153,14 @@ public class CheckBasicAccountExpirationJob implements Job {
 		Criterion criterion3 = null;
 		criterion3 = RestrictionsFactoryUtil.like("comments", "%BASIC_SUPPLIER_ADMIN%");
 		
-		Criterion criterion4 = null;
-		criterion4 = RestrictionsFactoryUtil.like("screenName", "812345678916");
+//		Criterion criterion4 = null;
+//		criterion4 = RestrictionsFactoryUtil.like("screenName", "812345678916");
 		
 		Criterion criterionAll = null;
-//		criterionAll = RestrictionsFactoryUtil.or(criterion1, criterion2);
-//		criterionAll = RestrictionsFactoryUtil.and(criterionAll, criterion3);
+		criterionAll = RestrictionsFactoryUtil.or(criterion1, criterion2);
+		criterionAll = RestrictionsFactoryUtil.and(criterionAll, criterion3);
 		
-		criterionAll = RestrictionsFactoryUtil.and(criterion4, criterion3);
+//		criterionAll = RestrictionsFactoryUtil.and(criterion4, criterion3);
 		dynamicQuery.add(criterionAll);
 		
 		List<User> userList = new ArrayList<User>();
@@ -182,20 +182,20 @@ public class CheckBasicAccountExpirationJob implements Job {
 		log.info("In terminateExpiredBasicSupplier");
 		
 		Date current = new Date();
-		Date oneYearBefore = new Date(current.getYear() - 1, current.getMonth(), current.getDate() - 7, 0, 0, 0);
-		log.info("1 year before: " + oneYearBefore);
+		Date oneYearBefore = new Date(current.getYear(), current.getMonth() -3, current.getDate());
+		log.info("3 months before: " + oneYearBefore);
 				
 		DynamicQuery dynamicQuery = UserLocalServiceUtil.dynamicQuery();
 		
 		// if last login date is not null, last login date is 1 year before
 		Criterion criterion1 = null;
 		criterion1 = RestrictionsFactoryUtil.isNotNull("lastLoginDate");
-		criterion1 = RestrictionsFactoryUtil.and(criterion1, RestrictionsFactoryUtil.le("lastLoginDate", oneYearBefore));
+		criterion1 = RestrictionsFactoryUtil.and(criterion1, RestrictionsFactoryUtil.eq("lastLoginDate", oneYearBefore));
 		
 		// if last login date is null, creation date is 1 year before.
 		Criterion criterion2 = null;
 		criterion2 = RestrictionsFactoryUtil.isNull("lastLoginDate");
-		criterion2 = RestrictionsFactoryUtil.and(criterion2, RestrictionsFactoryUtil.le("createDate", oneYearBefore));
+		criterion2 = RestrictionsFactoryUtil.and(criterion2, RestrictionsFactoryUtil.eq("createDate", oneYearBefore));
 		
 		// user's comments contain "BASIC_SUPPLIER_ADMIN"
 		Criterion criterion3 = null;
