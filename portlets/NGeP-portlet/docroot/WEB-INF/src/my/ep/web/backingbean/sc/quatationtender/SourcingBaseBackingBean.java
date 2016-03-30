@@ -1806,44 +1806,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			BigDecimal totalDuration = BigDecimal.ZERO;
 			BigDecimal bondPercentageLoaAmt = BigDecimal.ZERO;
 			BigDecimal bondPercentage = BigDecimal.ZERO;
-			if (scLoa.getLoaAmt() != null) {
+			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
 				BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
 						scLoa.getGstAmt());
-
+				BigDecimal duration = scLoa.getContractDuration();
+				duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
 				// Duration in years
-				if (scLoa.getContractDuration() != null) {
-					BigDecimal duration = scLoa.getContractDuration();
-					duration = duration.setScale(4, BigDecimal.ROUND_HALF_UP);
-					totalDuration = duration.divide(new BigDecimal(12), 4,
-							BigDecimal.ROUND_HALF_UP);
-					
-					double ceilingDuration = Math.ceil(totalDuration.doubleValue());
-					
-					totalDuration = BigDecimal.valueOf(ceilingDuration);
+				totalDuration = duration.divide(new BigDecimal(12), 4,
+						BigDecimal.ROUND_HALF_UP);
+				
+				double ceilingDuration = Math.ceil(totalDuration.doubleValue());
+				
+				totalDuration = BigDecimal.valueOf(ceilingDuration);
 
-					// Total amount to get bond percentage
-					bondPercentageLoaAmt = overallCtAmount.divide(
-							totalDuration, 4, BigDecimal.ROUND_HALF_UP);
-				}
-
+				// Total amount to get bond percentage
+				bondPercentageLoaAmt = overallCtAmount.divide(
+						totalDuration, 4, BigDecimal.ROUND_HALF_UP);
+				
 				// Get performance bond rule percentage
 				IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IRuleSO.class);
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
-				ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
+				String ruleType = RuleTypeConst.BOND_PERCENTAGE;
+				ruleReqDTO.setRuleType(ruleType);
 				ruleReqDTO.setCompareValue(bondPercentageLoaAmt.toString());
 				RuleResDTO roleResDTO = ruleSO
 						.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
 
-				if (roleResDTO.isSuccessful()
-						&& roleResDTO.getRuleValueStrList() != null
-						&& roleResDTO.getRuleValueStrList().size() > 0) {
-					String percentage = roleResDTO.getRuleValueStrList().get(0);
-					BigDecimal res = new BigDecimal(percentage);
-					bondPercentage = res.divide(new BigDecimal(100), 4,
-							BigDecimal.ROUND_HALF_UP);
-					scLoa.setBondPercentage(new BigDecimal(percentage));
+				if (roleResDTO.isSuccessful()) {
+					if (roleResDTO.getRuleValueStrList() != null
+							&& roleResDTO.getRuleValueStrList().size() > 0) {
+						String percentage = roleResDTO.getRuleValueStrList().get(0);
+						BigDecimal res = new BigDecimal(percentage);
+						bondPercentage = res.divide(new BigDecimal(100), 4,
+								BigDecimal.ROUND_HALF_UP);
+						scLoa.setBondPercentage(new BigDecimal(percentage));
+					} else {
+						throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleType)});
+					}
 				}
 				if (bondPercentage.doubleValue() > 0) {
 					bondAmt = bondPercentageLoaAmt.multiply(bondPercentage);
