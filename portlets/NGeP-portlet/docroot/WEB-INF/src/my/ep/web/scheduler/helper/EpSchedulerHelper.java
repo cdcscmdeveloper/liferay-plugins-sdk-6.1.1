@@ -96,7 +96,9 @@ public class EpSchedulerHelper {
 	 * @param JobKey
 	 *            jobKey (mandatory)
 	 */
-	public static void runBuildJobNow(JobKey jobKey) {
+	public static boolean runBuildJobNow(JobKey jobKey) {
+		boolean success = true;
+		
 		// specify trigger
 		Trigger trigger;
 		try {
@@ -113,9 +115,10 @@ public class EpSchedulerHelper {
 				}
 			}
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
+			success = false;
 			log.error(e.getMessage());
 		}
+		return success;
 	}
 
 	/**

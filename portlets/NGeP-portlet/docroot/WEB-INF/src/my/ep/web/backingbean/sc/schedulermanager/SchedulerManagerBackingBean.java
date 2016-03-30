@@ -168,8 +168,8 @@ public class SchedulerManagerBackingBean extends
 
 	public void runNowJob(EpJobVO epJobVO) {
 		if (!EpSchedulerHelper.isJobRunningNow(epJobVO.getJobKey())) {
-			boolean success = EpSchedulerHelper.runJobOnce(epJobVO.getJobKey(),
-					epJobVO.getJobClass());
+			boolean success = EpSchedulerHelper.runBuildJobNow(epJobVO
+					.getJobKey());
 			if (!success) {
 				throw new EpException(MessageConst.ERRQRTZ_00003);
 			} else {

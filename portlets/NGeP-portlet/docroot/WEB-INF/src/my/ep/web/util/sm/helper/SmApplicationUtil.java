@@ -6102,17 +6102,16 @@ public class SmApplicationUtil {
 		EducationLevelResDTO resDTO = reqSO.retrieveEducationLevelList(reqDTO);
 		if (resDTO != null && resDTO.getEduLevelList() != null) {
 			eduLvls = resDTO.getEduLevelList();
+			// sort
+			Collections.sort(eduLvls, new Comparator<PmEduLevel>() {
+				@Override
+				public int compare(final PmEduLevel s1, final PmEduLevel s2) {
+					return StringUtil.upperCase(s1.getLevelCode()).compareTo(
+							StringUtil.upperCase(s2.getLevelCode()));
+				}
+			});
 			managedBean.setEduLevelList(eduLvls);
 		}
-
-		// sort
-		Collections.sort(eduLvls, new Comparator<PmEduLevel>() {
-			@Override
-			public int compare(final PmEduLevel s1, final PmEduLevel s2) {
-				return StringUtil.upperCase(s1.getLevelCode()).compareTo(
-						StringUtil.upperCase(s2.getLevelCode()));
-			}
-		});
 
 		academics.add(new SelectItem(null, SmCommonUtil.getMessage(
 				"lbl.txt.select", null)));

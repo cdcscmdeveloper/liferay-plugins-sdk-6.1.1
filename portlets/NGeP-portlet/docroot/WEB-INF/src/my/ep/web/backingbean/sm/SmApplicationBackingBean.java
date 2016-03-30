@@ -6342,8 +6342,8 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase("C")) {
 				reqDTO.setUserList(new ArrayList<String>());
-				String sendMode = EpPropertiesUtils.getInstance()
-						.getProperty("sm.send.bpm.mode");
+				String sendMode = EpPropertiesUtils.getInstance().getProperty(
+						"sm.send.bpm.mode");
 				if (!StringUtils.isBlank(sendMode) && sendMode.equals("B")) {
 					List<PmUser> supplierUserList = SmApplicationUtil
 							.getActivatedSupplierUserList(getManagedBean()
@@ -9588,48 +9588,29 @@ public class SmApplicationBackingBean extends
 		String suppType = StringUtils.isNotBlank(getManagedBean()
 				.getNewSupplierType()) ? getManagedBean().getNewSupplierType()
 				: getManagedBean().getSmAppl().getSupplierType();
-		List<SelectItem> finalList = getManagedBean().getAcadQualifications();
+		List<SelectItem> finalList = new ArrayList<SelectItem>();
+		SelectItem item = null;
 
 		if (getManagedBean().getSelectedShareHolder() != null
 				&& StringUtils.isNotBlank(suppType) && suppType.equals("J")) {
-			if (getManagedBean().getCertEduLevel() != null
-					&& getManagedBean().getDiplomaEduLevel() != null
-					&& (getManagedBean().getSelectedShareHolder().isProf()
-							|| getManagedBean().getSelectedShareHolder()
-									.isSemiProf() || getManagedBean()
-							.getSelectedShareHolder().isClerical())) {
-				finalList = new ArrayList<SelectItem>();
-				for (SelectItem tempItem : getManagedBean()
-						.getAcadQualifications()) {
-					if (tempItem.getValue() != null) {
-						if (getManagedBean()
-								.getCertEduLevel()
-								.getEduLevelId()
-								.compareTo(
-										Long.parseLong(tempItem.getValue()
-												.toString())) == 0) {
-							if (getManagedBean().getSelectedShareHolder()
-									.isClerical()) {
-								finalList.add(tempItem);
-							}
-						} else if (getManagedBean()
-								.getDiplomaEduLevel()
-								.getEduLevelId()
-								.compareTo(
-										Long.parseLong(tempItem.getValue()
-												.toString())) == 0) {
-							if (getManagedBean().getSelectedShareHolder()
-									.isClerical()
-									|| getManagedBean()
-											.getSelectedShareHolder()
-											.isSemiProf()) {
-								finalList.add(tempItem);
-							}
-						} else {
-							finalList.add(tempItem);
-						}
-					} else {
-						finalList.add(tempItem);
+			for (PmEduLevel eduLevel : getManagedBean().getEduLevelList()) {
+				if ((getManagedBean().getSelectedShareHolder().isProf() && SupplierManagementConst.PROF_STAFF_EDU_LEVEL_CODES
+						.contains(eduLevel.getLevelCode()))
+						|| (getManagedBean().getSelectedShareHolder()
+								.isSemiProf() && SupplierManagementConst.SEMI_PROF_STAFF_EDU_LEVEL_CODES
+								.contains(eduLevel.getLevelCode()))
+						|| (getManagedBean().getSelectedShareHolder()
+								.isClerical() && SupplierManagementConst.CLERICAL_STAFF_EDU_LEVEL_CODES
+								.contains(eduLevel.getLevelCode()))) {
+					item = (SelectItem) EntityHelper
+							.getEntityBySinglePropertyFromList(
+									eduLevel.getEduLevelId(), finalList,
+									"value");
+					if (item == null) {
+						item = new SelectItem();
+						item.setLabel(eduLevel.getLevelDesc());
+						item.setValue(eduLevel.getEduLevelId());
+						finalList.add(item);
 					}
 				}
 			}
