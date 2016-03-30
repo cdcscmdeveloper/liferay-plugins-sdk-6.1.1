@@ -56,12 +56,12 @@ public class SchedulerManagerBackingBean extends
 
 			for (String groupName : getManagedBean().getScheduler()
 					.getJobGroupNames()) {
-				
-				//set search by group
-				if(!StringUtils.isBlank(getManagedBean().getJobGroup())){
+
+				// set search by group
+				if (!StringUtils.isBlank(getManagedBean().getJobGroup())) {
 					groupName = getManagedBean().getJobGroup();
 				}
-				
+
 				// get jobkey
 				for (JobKey jobKey : getManagedBean().getScheduler()
 						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
@@ -94,18 +94,17 @@ public class SchedulerManagerBackingBean extends
 								jobKey.getGroup())) {
 							getManagedBean().getEpSchedulerJobList().add(
 									new EpJobVO(jobKey, trigger,
-											getJobStatus(jobKey),
-											jobAction, jobState, job
-													.getDescription(), job
+											getJobStatus(jobKey), jobAction,
+											jobState, job.getDescription(), job
 													.getJobClass()));
 						}
 
 					}
 
 				}
-				
-				//break loop if search by group
-				if(!StringUtils.isBlank(getManagedBean().getJobGroup())){
+
+				// break loop if search by group
+				if (!StringUtils.isBlank(getManagedBean().getJobGroup())) {
 					break;
 				}
 
@@ -198,14 +197,17 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void rescheduleJob(EpJobVO epJobVO) {
-		if (epJobVO.getState().equals("BLOCK")) {
-			try {
+		try {
+			if (EpSchedulerHelper.getScheduler()
+					.getTriggerState(epJobVO.getTrigger().getKey()).toString()
+					.equals("BLOCK")) {
 				EpSchedulerHelper.getScheduler().rescheduleJob(
 						epJobVO.getTrigger().getKey(), epJobVO.getTrigger());
 				initAllJobs();
-			} catch (SchedulerException e) {
-				throw new EpException(MessageConst.ERRQRTZ_00001);
 			}
+
+		} catch (SchedulerException e) {
+			throw new EpException(MessageConst.ERRQRTZ_00001);
 		}
 	}
 
