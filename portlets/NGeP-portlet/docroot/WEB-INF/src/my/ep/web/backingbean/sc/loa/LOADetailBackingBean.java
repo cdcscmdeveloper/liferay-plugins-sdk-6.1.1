@@ -4275,7 +4275,8 @@ public class LOADetailBackingBean extends
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(RuleTypeConst.BOND);
+		String ruleType = RuleTypeConst.BOND;
+		ruleReqDTO.setRuleType(ruleType);
 		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
 
 		if (ruleValueList != null && ruleValueList.size() > 0) {
@@ -4288,6 +4289,8 @@ public class LOADetailBackingBean extends
 				isPerformanceBondMandatory = true;
 				loa.setBondReq(false);
 			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleType)});
 		}
 		getManagedBean().setPerformanceBondMandatory(isPerformanceBondMandatory);
 	}
