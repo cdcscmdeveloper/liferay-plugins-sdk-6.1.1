@@ -15,16 +15,22 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 public class SupplierManagementConst {
 
 	public static final Map<String, String> APPLICATION_BASE_PAGE_BY_TYPE;
-    static {
-        Map<String, String> tmp = new HashMap<String, String>();
-        tmp.put("N", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
-        tmp.put("C", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
-        tmp.put("A", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-        tmp.put("B", "/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
-        tmp.put("U", "/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
-        tmp.put("R", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-        APPLICATION_BASE_PAGE_BY_TYPE = Collections.unmodifiableMap(tmp);
-    }
+	static {
+		Map<String, String> tmp = new HashMap<String, String>();
+		tmp.put("N",
+				"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+		tmp.put("C",
+				"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+		tmp.put("A",
+				"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+		tmp.put("B",
+				"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+		tmp.put("U",
+				"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+		tmp.put("R",
+				"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+		APPLICATION_BASE_PAGE_BY_TYPE = Collections.unmodifiableMap(tmp);
+	}
 	// Navigation
 	public static final String PROCEED_MOF_REG = "mofRegSmUser_BaseWizardPage";
 	public static final String PROCEED_MOF_REG_TNC_PAGE = "/xhtml/sm/NewMofApplication/newMofApplTermsAndConditionsPage.xhtml";
@@ -152,6 +158,13 @@ public class SupplierManagementConst {
 			SupplierManagementConst.CAT_TYPE_MANUFACTURING,
 			SupplierManagementConst.CAT_TYPE_PRINTING,
 			SupplierManagementConst.CAT_TYPE_TRAVEL };
+
+	public static List<String> PROF_STAFF_EDU_LEVEL_CODES = Arrays
+			.asList(new String[] { "91", "93", "94" });
+	public static List<String> SEMI_PROF_STAFF_EDU_LEVEL_CODES = Arrays
+			.asList(new String[] { "80", "91", "93", "94" });
+	public static List<String> CLERICAL_STAFF_EDU_LEVEL_CODES = Arrays
+			.asList(new String[] { "30", "40", "60", "80", "91", "93", "94" });
 
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
@@ -369,11 +382,11 @@ public class SupplierManagementConst {
 	public static List<String> LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
 					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG);
-	public static List<String> LOCAL_AUTH_BUSINESS_TYPE =Arrays.asList(
-			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
-			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
-			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
-			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK);
+	public static List<String> LOCAL_AUTH_BUSINESS_TYPE = Arrays
+			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK);
 
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT = "ROS";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT = "ROB_I";
@@ -556,7 +569,7 @@ public class SupplierManagementConst {
 	public static final String SUPP_TYPE_CONSULTANT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONSULTANT;
 	public static final String SUPP_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_BASIC;
 	public static final String SUPP_TYPE_GOVT_TO_GOVT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT;
-	
+
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_ALL = "C";
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_BEFORE = "B";
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_AFTER = "A";
@@ -890,7 +903,7 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_SUPPORTDOCS() {
 		return SM_APPL_PAGE_TYPE_SUPPORTDOCS;
 	}
-	
+
 	public String getSM_APPL_PAGE_TYPE_VIRTUAL_CERT() {
 		return SM_APPL_PAGE_TYPE_VIRTUAL_CERT;
 	}
@@ -1038,6 +1051,5 @@ public class SupplierManagementConst {
 	public String getSiteVisitAssignmentTypeAfter() {
 		return SITE_VISIT_ASSIGNMENT_TYPE_AFTER;
 	}
-
 
 }
