@@ -260,6 +260,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
     /** The temp file path. */
     private String tempFilePath;
     
+    /** The ministry condition field. */
+    private String ministryConditionField;
+    
     /**
      * Gets the spki backing bean.
      *
@@ -1459,6 +1462,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setTempFilePath(String tempFilePath) {
 		this.tempFilePath = tempFilePath;
+	}
+
+	/**
+	 * @return the ministryConditionField
+	 */
+	public String getMinistryConditionField() {
+		return ministryConditionField;
+	}
+
+	/**
+	 * @param ministryConditionField the ministryConditionField to set
+	 */
+	public void setMinistryConditionField(String ministryConditionField) {
+		this.ministryConditionField = ministryConditionField;
 	}
 	
 }
