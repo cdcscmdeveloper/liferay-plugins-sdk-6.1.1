@@ -723,6 +723,14 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 			}
 
 		} else {
+			if(scQt.getTmpExpectedIntendedPrice()== null){
+				
+				String labelKey =  ResourceBundleUtils.getMessage(
+						"lbl.sc.spec.expected.intended.price", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+				throw new EpException(labelKey+" is mandatory.");
+			}
 			if (ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
 					.equalsIgnoreCase(type)) {
 				this.getManagedBean().setSupplierLocationList(
@@ -2426,4 +2434,28 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 
 			
 		}
+	
+	public void setProcurmentCategory(AjaxBehaviorEvent event){
+		
+		Long id = (Long) event.getComponent().getAttributes().get("value");
+		if (id != null) {
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterId(id);
+			ParameterResDTO parameterResDTO = getParameterSO()
+					.retrieveParameterById(parameterReqDTO);
+			this.getManagedBean().getQt().setPmProcurementCategory(
+					parameterResDTO.getPmParameter());
+		}
+	}
+	
+	/**
+	 * Gets the parameter so.
+	 * 
+	 * @return the parameter so
+	 */
+	private IParameterSO getParameterSO() {
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	}
+
 }
