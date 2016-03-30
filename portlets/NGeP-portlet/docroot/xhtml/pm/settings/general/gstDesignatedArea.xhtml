@@ -84,15 +84,15 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
 			                	</f:facet>
-		<p:calendar showOn="button" id="daEffDateId" navigator="true"
+		<p:calendar showOn="button" id="daeffDateId" navigator="true"
 				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
 	         	disabled="#{!daObj.brandNew and (daObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
-				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}" 
 				required="true" label="#{lbl['lbl.pm.as.effdate']}"
 				readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{daObj.effDate}">
-				<p:ajax event="dateSelect" update="@([id$=daExpDateId])" process="@this" />
+				<p:ajax event="dateSelect" update="@([id$=daexpDateId])" process="@this" />
 			</p:calendar>
 		</p:column>
 
@@ -103,7 +103,7 @@
 						
 			                	</f:facet>
 
-			<p:calendar showOn="button" id="daExpDateId" navigator="true"
+			<p:calendar showOn="button" id="daexpDateId" navigator="true"
 				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
