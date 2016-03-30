@@ -161,6 +161,7 @@ public class CheckBasicAccountExpirationJob implements Job {
 //		criterionAll = RestrictionsFactoryUtil.and(criterionAll, criterion3);
 		
 		criterionAll = RestrictionsFactoryUtil.and(criterion4, criterion3);
+		dynamicQuery.add(criterionAll);
 		
 		List<User> userList = new ArrayList<User>();
 		try {
