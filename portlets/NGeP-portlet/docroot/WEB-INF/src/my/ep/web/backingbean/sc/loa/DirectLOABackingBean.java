@@ -199,6 +199,8 @@ public class DirectLOABackingBean extends
 
 	private boolean suppDocFlag;
 
+	private static final String PIPE_SYMBOL = "|";
+	private static final String CARET_SYMBOL = "^";
 	private static final String BRANCH_INFO_TITLE = "Branch Information";
 
 	/**
@@ -2225,23 +2227,29 @@ public class DirectLOABackingBean extends
 	 * @return orgProfileId
 	 */
 	public String constuctConditionFields() {
-
-		String conditionField = null;
+		StringBuilder conditionField = null;
 		PmOrgProfile ministryOrg = this.getManagedBean().getScQt()
-				.getPmOrgProfile();
+									   .getPmOrgProfile();
 		if (null != ministryOrg) {
+			conditionField = new StringBuilder();
 			Long ministryOrgProfileId = ministryOrg.getOrgProfileId();
 			if (ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(ministryOrg
 					.getOrgTypeCode().getParameterCode())) {
 
-				conditionField = OrgProfileUtil
+				conditionField.append(OrgProfileUtil
 						.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
-						+ "^" + ministryOrgProfileId;
+						+ CARET_SYMBOL + ministryOrgProfileId);
 			} else {
-				conditionField = "orgProfileId" + "^" + ministryOrgProfileId;
+				conditionField.append("orgProfileId" + CARET_SYMBOL + ministryOrgProfileId);
 			}
+			conditionField.append(PIPE_SYMBOL + "recordStatus" + CARET_SYMBOL + 
+								  DbValueConst.RECORD_STATUS_ACTIVE);
 		}
-		return conditionField;
+		if (conditionField != null) {
+			return conditionField.toString();
+		}
+		
+		return null;
 	}
 	
 	/**

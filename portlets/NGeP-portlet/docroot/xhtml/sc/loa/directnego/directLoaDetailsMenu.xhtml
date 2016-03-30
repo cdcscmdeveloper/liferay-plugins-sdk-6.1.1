@@ -16,7 +16,7 @@
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="SM_SUPPLIER_MOFNO"
 						postUpdateListener="directLOABackingBean.mofNoListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
 						headerText="Supplier MOF No Lov" selectionMode="single"
-						readonly="true" size="35"
+						readonly="true" size="35" conditionField="recordStatus^1" 
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 						update="@form" /></td>
@@ -28,7 +28,7 @@
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
 						headerText="Supplier Lov" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
-						readonly="true" size="35"
+						conditionField="recordStatus^1" readonly="true" size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						update="@form" /></td>
 			</tr>
