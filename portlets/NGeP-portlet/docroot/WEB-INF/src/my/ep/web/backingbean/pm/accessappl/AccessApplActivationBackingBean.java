@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.accessappl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -13,13 +14,17 @@ import org.apache.log4j.Logger;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAccessAppl;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -27,6 +32,7 @@ import my.ep.web.managedbean.pm.accessappl.AccessApplActivationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.RuleConfigHelper;
 
 @ManagedBean(name = "accessApplActivationBackingBean")
 public class AccessApplActivationBackingBean extends
@@ -93,10 +99,19 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 							ACCESS_APPL_OUTPUT_MSG,
 							MessageConst.INFO_721031,null);
 				}else{
+					List<PmConfigRuleValue> ruleList = RuleConfigHelper.getInstance().getRuleTypeValueListByRuleType(RuleTypeConst.ACCESS_APPLICATION_ACTIVATION_PERIOD);
+					Integer activationPeriod = null;
+					if(ruleList!=null && !ruleList.isEmpty()) {
+						activationPeriod = Integer.parseInt(ruleList.get(0).getRuleValue());
+					}
+					if(activationPeriod == null){
+						throw new IllegalArgumentException("activationPeriod is invalid.");
+					}
+					
 					long applDateInMilis = latestApproved.getTime();
 					long dayInMilis = 1000 * 60 * 60 * 24;
 
-					Date expiryDate = new Date(applDateInMilis + (7 * dayInMilis));
+					Date expiryDate = new Date(applDateInMilis + (activationPeriod * dayInMilis));
 					log.info("----Activation Access Appl ID----" + accessAppl.getAccessApplId());
 					log.info("----Activation Access Appl Expiry Date----" + expiryDate);
 					if(new Date().before(expiryDate)) { 
