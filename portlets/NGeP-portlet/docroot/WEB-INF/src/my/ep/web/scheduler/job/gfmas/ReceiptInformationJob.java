@@ -29,7 +29,7 @@ public class ReceiptInformationJob implements Job {
 		log.info("ReceiptInformationJob start");
 		try {
 			
-//		gfmasServiceSO.receiptInformationGfmasOutbound();
+		gfmasServiceSO.receiptInformationGfmasOutbound();
 		} catch (Exception e) {
 			log.info("ReceiptInformationJob :"+e.getMessage());
 		}
