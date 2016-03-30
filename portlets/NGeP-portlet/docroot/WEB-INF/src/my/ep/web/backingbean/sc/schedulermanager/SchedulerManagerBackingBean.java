@@ -56,7 +56,12 @@ public class SchedulerManagerBackingBean extends
 
 			for (String groupName : getManagedBean().getScheduler()
 					.getJobGroupNames()) {
-
+				
+				//set search by group
+				if(!StringUtils.isBlank(getManagedBean().getJobGroup())){
+					groupName = getManagedBean().getJobGroup();
+				}
+				
 				// get jobkey
 				for (JobKey jobKey : getManagedBean().getScheduler()
 						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
@@ -85,29 +90,23 @@ public class SchedulerManagerBackingBean extends
 									jobKey.getGroup());
 						}
 
-						// add any exist job if job group filter is All
-						if (StringUtils.isBlank(getManagedBean().getJobGroup())) {
+						if (getManagedBean().getJobGroup().equals(
+								jobKey.getGroup())) {
 							getManagedBean().getEpSchedulerJobList().add(
 									new EpJobVO(jobKey, trigger,
-											getJobStatus(jobKey), jobAction,
-											jobState, job.getDescription(), job
+											getJobStatus(jobKey),
+											jobAction, jobState, job
+													.getDescription(), job
 													.getJobClass()));
-						} else {
-							// if job group not all, add job group equals filter
-							// job group
-							if (getManagedBean().getJobGroup().equals(
-									jobKey.getGroup())) {
-								getManagedBean().getEpSchedulerJobList().add(
-										new EpJobVO(jobKey, trigger,
-												getJobStatus(jobKey),
-												jobAction, jobState, job
-														.getDescription(), job
-														.getJobClass()));
-							}
 						}
 
 					}
 
+				}
+				
+				//break loop if search by group
+				if(!StringUtils.isBlank(getManagedBean().getJobGroup())){
+					break;
 				}
 
 			}
@@ -201,9 +200,8 @@ public class SchedulerManagerBackingBean extends
 	public void rescheduleJob(EpJobVO epJobVO) {
 		if (epJobVO.getState().equals("BLOCK")) {
 			try {
-				JobDetail jobDetail = EpSchedulerHelper.getScheduler()
-						.getJobDetail(epJobVO.getJobKey());
-				jobDetail.requestsRecovery();
+				EpSchedulerHelper.getScheduler().rescheduleJob(
+						epJobVO.getTrigger().getKey(), epJobVO.getTrigger());
 				initAllJobs();
 			} catch (SchedulerException e) {
 				throw new EpException(MessageConst.ERRQRTZ_00001);
