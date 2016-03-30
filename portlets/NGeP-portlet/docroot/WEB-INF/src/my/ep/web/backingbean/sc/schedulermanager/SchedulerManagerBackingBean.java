@@ -33,14 +33,12 @@ public class SchedulerManagerBackingBean extends
 
 	public static Logger log = EpLogger
 			.getLogger(SchedulerManagerBackingBean.class);
-	
-	
+
 	public void preRenderSchedulerManager() {
 		renewSesionObject();
 		SmCommonUtil.setMDCUserId();
 		initAllJobs();
-		SmCommonUtil
-				.redirectToPage("ePSchedulerManager.xhtml", "", null);
+		SmCommonUtil.redirectToPage("ePSchedulerManager.xhtml", "", null);
 	}
 
 	public void initAllJobs() {
@@ -176,7 +174,7 @@ public class SchedulerManagerBackingBean extends
 					epJobVO.getJobClass());
 			if (!success) {
 				throw new EpException(MessageConst.ERRQRTZ_00003);
-			}else{
+			} else {
 				initAllJobs();
 			}
 		} else {
@@ -192,11 +190,24 @@ public class SchedulerManagerBackingBean extends
 							.getSelectedJobVO().getJobKey());
 			if (!success) {
 				throw new EpException(MessageConst.ERRQRTZ_00002);
-			}else{
+			} else {
 				initAllJobs();
 			}
 		} else {
 			throw new EpException(MessageConst.ERRQRTZ_00001);
+		}
+	}
+
+	public void rescheduleJob(EpJobVO epJobVO) {
+		if (epJobVO.getState().equals("BLOCK")) {
+			try {
+				JobDetail jobDetail = EpSchedulerHelper.getScheduler()
+						.getJobDetail(epJobVO.getJobKey());
+				jobDetail.requestsRecovery();
+				initAllJobs();
+			} catch (SchedulerException e) {
+				throw new EpException(MessageConst.ERRQRTZ_00001);
+			}
 		}
 	}
 
