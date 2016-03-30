@@ -43,7 +43,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -57,6 +59,7 @@ import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.BaseEntity;
@@ -69,14 +72,17 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -1418,7 +1424,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				} else {
 					outComes = resDTO.getAction();
 				}				
-				this.getManagedBean().setOutComes(sortOutcomes(outComes));	
+				this.getManagedBean().setOutComes(outComes);	
 			}
 			this.getManagedBean().setCurrentStatusId(
 					Long.valueOf(resDTO.getDocStatus()));
@@ -1444,5 +1450,48 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		
 		outComes = new String[bpmActions.size()];
 		return bpmActions.toArray(outComes);
+	}
+	
+	/**
+	 * Get Rule Type Description by rule type
+	 * 
+	 * @param ruleType
+	 * 		the rule type
+	 * @return	the rule type description.
+	 */
+	public String getRuleTypeDesc(String ruleType) {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			
+			SearchBean<PmConfigRule> searchBean = new SearchBean<PmConfigRule>();
+			// Filter By - ruleType
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("ruleType",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ruleType));
+			reqDTO.setSearchBean(searchBean);			
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			
+			List<PmConfigRule> configRules = ruleSO.getRuleTypes(reqDTO)
+					.getRuleTypeList();
+
+			if (configRules != null && configRules.size() > 0) {
+				PmConfigRule configRule = configRules.get(0);
+				
+				if (configRule != null) {
+					return configRule.getRuleTypeDesc();
+				}
+				
+			}
+
+		} finally {
+			ruleSO = null;
+		}
+		
+		return null;
 	}
 }
