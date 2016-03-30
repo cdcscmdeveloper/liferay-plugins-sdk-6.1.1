@@ -57,6 +57,11 @@ public class SchedulerManagerBackingBean extends
 			for (String groupName : getManagedBean().getScheduler()
 					.getJobGroupNames()) {
 
+				// add group for filtering purposes
+				if (!getManagedBean().getJobGroups().contains(groupName)) {
+					getManagedBean().getJobGroups().add(groupName);
+				}
+
 				// set search by group
 				if (!StringUtils.isBlank(getManagedBean().getJobGroup())) {
 					groupName = getManagedBean().getJobGroup();
@@ -81,13 +86,6 @@ public class SchedulerManagerBackingBean extends
 							jobAction = SchedulerConstants.JOB_RESUME;
 						} else {
 							jobAction = SchedulerConstants.JOB_PAUSE;
-						}
-
-						// add group for filtering purposes
-						if (!getManagedBean().getJobGroups().contains(
-								jobKey.getGroup())) {
-							getManagedBean().getJobGroups().add(
-									jobKey.getGroup());
 						}
 
 						getManagedBean().getEpSchedulerJobList().add(
