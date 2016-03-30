@@ -20,6 +20,7 @@ import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -123,7 +124,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			ruleSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType("QTTOL");
+			ruleReqDTO.setRuleType(RuleTypeConst.BIDDING_TOLERANCE_PERCENTAGE);
 			RuleResDTO ruleResDTO = ruleSO
 					.getRuleValuesByTypeInCurrentDate(ruleReqDTO);
 
