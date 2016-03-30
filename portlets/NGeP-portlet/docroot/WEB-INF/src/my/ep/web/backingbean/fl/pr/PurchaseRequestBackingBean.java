@@ -1447,7 +1447,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
 					}
-					if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
+					if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null || getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
 						PmUserGroup pmUserGroup = new PmUserGroup();
 						getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
 						getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
