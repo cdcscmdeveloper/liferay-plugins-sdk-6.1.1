@@ -90,14 +90,11 @@ public class SchedulerManagerBackingBean extends
 									jobKey.getGroup());
 						}
 
-						if (getManagedBean().getJobGroup().equals(
-								jobKey.getGroup())) {
-							getManagedBean().getEpSchedulerJobList().add(
-									new EpJobVO(jobKey, trigger,
-											getJobStatus(jobKey), jobAction,
-											jobState, job.getDescription(), job
-													.getJobClass()));
-						}
+						getManagedBean().getEpSchedulerJobList().add(
+								new EpJobVO(jobKey, trigger,
+										getJobStatus(jobKey), jobAction,
+										jobState, job.getDescription(), job
+												.getJobClass()));
 
 					}
 
