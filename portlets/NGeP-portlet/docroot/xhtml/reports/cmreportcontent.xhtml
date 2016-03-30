@@ -114,16 +114,16 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
-
 						<c:if
 							test="#{cmReportBackingBean.managedBean.rptGenBean.cmCompanyNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"
 								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="200"
-								value="#{reportBackingBean.cmCompanyName}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-							</p:inputText>
+							<ac:lov id="cmCompanyName" readonly="true" 
+								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="40"
+								update="@form" headerText="#{lbl['lbl.rpt.cmpName']}"
+								value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"	
+								postUpdateListener="#{reportBackingBean.onCompanyNameChangeForLOV()}"							
+								saveObject="reportBackingBean.managedBean.selectedOrgProfile" />								
 						</c:if>
 
 						<c:if

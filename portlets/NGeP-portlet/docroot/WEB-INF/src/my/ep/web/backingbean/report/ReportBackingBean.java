@@ -12953,6 +12953,12 @@ public class ReportBackingBean extends
 		}
 	}
 
+	public void onCompanyNameChangeForLOV(){
+		if(this.getManagedBean().getSelectedOrgProfile()!=null && this.getManagedBean().getSelectedOrgProfile().getSmSupplier()!=null){
+			this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+	}
+	
 	/**
 	 * onSelectEffectedValues - On select effected values.S
 	 */
@@ -16466,6 +16472,7 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean()
 					.setCmExtentionMeasurmentView(false);
 			getManagedBean().getRptGenBean().setCmExtentionColourView(false);
+			this.getManagedBean().setSelectedOrgProfile(new PmOrgProfile());
 			this.setFromDate(null);
 			this.setToDate(null);
 			this.setScQuotationId(null);
@@ -16480,6 +16487,8 @@ public class ReportBackingBean extends
 			this.setCmUnspscTitle(null);
 			// this.setCmUnspscTitle(null);
 			this.setCmCompanyName(null);
+			//to clear the cmCompanyName value while page loading
+			this.getManagedBean().setSelectedOrgProfile(new PmOrgProfile());
 			this.setCmRegistrationType(null);
 			this.setCmItemCategory(null);
 			this.setCmItemName(null);
@@ -17381,6 +17390,7 @@ public class ReportBackingBean extends
 		SelectItem[] federalItems = null;
 		SelectItem[] otherItems = null;
 		this.setPmOrgType(null);
+		this.setItemsList(null);
 
 		if (this.reportValue
 				.equals(ReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
