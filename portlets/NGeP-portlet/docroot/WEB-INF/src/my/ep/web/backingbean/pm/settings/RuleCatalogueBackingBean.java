@@ -2,6 +2,8 @@ package my.ep.web.backingbean.pm.settings;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -86,6 +88,7 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -102,6 +105,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RuleConfigHelper;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
@@ -603,7 +607,24 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 		// }
 		// }
 		// }
+		for (PmConfigRule rule : configRules) {
+			sortConfigRuleValueList(rule.getConfigRuleValues());
+		}
 		return configRules;
+	}
+	
+	private void sortConfigRuleValueList(
+			List<PmConfigRuleValue> configRuleValueList) {
+		Comparator<PmConfigRuleValue> comparator = new Comparator<PmConfigRuleValue>() {
+			@Override
+			public int compare(PmConfigRuleValue o1,
+					PmConfigRuleValue o2) {
+				return new CompareToBuilder().append(o1.getEffDate(),
+						o2.getEffDate()).append(o1.getFromValue(),
+								o2.getFromValue()).toComparison();
+			}
+		};
+		Collections.sort(configRuleValueList, comparator);
 	}
 
 	// public void categoryCodesUpdate(BaseEntity entity) {

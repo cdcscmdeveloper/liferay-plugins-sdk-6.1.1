@@ -14,11 +14,10 @@ import org.apache.log4j.Logger;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ProfileManagementStatusConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -78,18 +77,40 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			if(accessAppl != null  
 					&& hashAccessApplId.equals(
 							PmCommonUtil.hashString(String.valueOf(accessAppl.getAccessApplId())))
-							&& isLatestActivationEmail(createdTimeParam, accessAppl) && validateUserActive(accessAppl)) {
+							&& isLatestActivationEmail(createdTimeParam, accessAppl) && validateUserActive(accessAppl)) {	
 				Date latestApproved = null;
+				boolean isPendingCp = false;
+				boolean isPendingMr = false;
 				if(accessAppl.getCompanyProfileStatus() != null && accessAppl.getMarketResearchStatus() !=null){
-					if(accessAppl.getCompanyProfileStatus().getChangedDate().
-							after(accessAppl.getMarketResearchStatus().getChangedDate())){
+					if(ProfileManagementStatusConst.PENDING_ACTIVATION
+							.equals(accessAppl.getCompanyProfileStatus().getPmStatus().getStatusId())){
+						isPendingCp = true;
+					}
+					
+					if(ProfileManagementStatusConst.PENDING_ACTIVATION
+							.equals(accessAppl.getMarketResearchStatus().getPmStatus().getStatusId())){
+						isPendingMr = true;
+					}
+					
+					if(isPendingMr && isPendingCp){
+						if(accessAppl.getCompanyProfileStatus().getChangedDate().
+								after(accessAppl.getMarketResearchStatus().getChangedDate())){
+							latestApproved = accessAppl.getCompanyProfileStatus().getChangedDate();
+						}else{
+							latestApproved = accessAppl.getMarketResearchStatus().getChangedDate();
+						}
+					}else if(isPendingCp){
 						latestApproved = accessAppl.getCompanyProfileStatus().getChangedDate();
-					}else{
+					}else if(isPendingMr){
 						latestApproved = accessAppl.getMarketResearchStatus().getChangedDate();
 					}
-				}else if(accessAppl.getCompanyProfileStatus() != null){
+				}else if(accessAppl.getCompanyProfileStatus() != null &&
+						ProfileManagementStatusConst.PENDING_ACTIVATION
+							.equals(accessAppl.getCompanyProfileStatus().getPmStatus().getStatusId())){
 					latestApproved = accessAppl.getCompanyProfileStatus().getChangedDate();
-				}else if(accessAppl.getMarketResearchStatus() !=null){
+				}else if(accessAppl.getMarketResearchStatus() !=null &&
+						ProfileManagementStatusConst.PENDING_ACTIVATION
+						.equals(accessAppl.getMarketResearchStatus().getPmStatus().getStatusId())){
 					latestApproved = accessAppl.getMarketResearchStatus().getChangedDate();
 				}
 				
