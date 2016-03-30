@@ -1407,7 +1407,9 @@ public class DirectLOABackingBean extends
 			}
 			supplierCriteria.setQtZoneCriterias(null);
 		}
-
+		if(null==scQt.getScheduleType()){
+			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+		}
 		scLoa.setScQt(this.getManagedBean().getScQt());
 
 	}
@@ -1862,8 +1864,8 @@ public class DirectLOABackingBean extends
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			String localDate = sdf.format(currentDate);
 			String day = localDate.substring(0, 2);
-			String fromDate = day + "/" + startMonth + "/" + startYear;
-			String toDate = day + "/" + endMonth + "/" + endYear;
+			String fromDate = 01 + "/" + startMonth + "/" + startYear;
+			String toDate = 01 + "/" + endMonth + "/" + endYear;
 			Date startDate = sdf.parse(fromDate);
 			Date endDate = sdf.parse(toDate);
 
@@ -1877,6 +1879,7 @@ public class DirectLOABackingBean extends
 		freqSchedule.set(index, schedule);
 		this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
 	}
+
 
 	/**
 	 * Gets the deduction item type dropdown list.
@@ -4040,44 +4043,54 @@ public class DirectLOABackingBean extends
 
 			this.getManagedBean().setTotalFrequency(scheduleList.size());
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		try{
 			for (ScQtSchedule scQtSchedule : scheduleList) {
 
-				String fromdate = dateFormat.format(scQtSchedule.getFromDate());
-				String todate = dateFormat.format(scQtSchedule.getToDate());
+				
+				SimpleDateFormat dateFormat = new SimpleDateFormat(
+						CommonConstants.DEFAULT_DATE_FORMAT);
+				int months;
+				Date startDate = null;
+				Date endDate = null;
+				String fromdate = dateFormat.format(scQtSchedule
+						.getFromDate());
+				String todate = dateFormat.format(scQtSchedule
+						.getToDate());
 				String startdate = fromdate.substring(3, 5);
-				String startYear = fromdate.substring(6, fromdate.length());
-				String enddate = todate.substring(3, 5);
-				String endYear = todate.substring(6, todate.length());
+				String startYear = fromdate.substring(6,
+						fromdate.length());
+				String fromDay = fromdate.substring(0, 2);
 
-				int start = Integer.parseInt(startdate);
-				int end = Integer.parseInt(enddate);
+				String enddate = todate.substring(3, 5);
+				String endYear = todate.substring(6,
+						todate.length());
+				String toDay = todate.substring(0, 2);
+
+				//startMonth = fulfilmentMonthlyDtls(startdate);
+				//endMonth = fulfilmentMonthlyDtls(enddate);
 
 				int sYear = Integer.parseInt(startYear);
 				int eYear = Integer.parseInt(endYear);
-				int diffYear = 0;
-				int count = 0;
 
-				if (eYear >= sYear) {
-					if (!endYear.equals(startYear)) {
-						diffYear = eYear - sYear;
-					}
-					for (int i = start + 1; i <= end + 1; i++) {
-						count++;
-					}
-					count = count + (diffYear * 12);
-					scQtSchedule.setTotalMonths(new BigDecimal(count));
-				} else {
-					scQtSchedule.setTotalMonths(BigDecimal.ZERO);
-				}
-				// scQtSchedule.setTotalMonths(new BigDecimal(months));
+				String fromDate = fromDay + "/" + startdate + "/"
+						+ sYear;
+				String toDate = toDay + "/" + enddate + "/" + eYear;
 
-				scQtSchedule.setStartMonth(Integer.valueOf(start).toString());
-				scQtSchedule.setEndMonth(Integer.valueOf(end).toString());
+				startDate = dateFormat.parse(fromDate);
+				endDate = dateFormat.parse(toDate);
+
+				months = DateUtils.getMonths(startDate, endDate);
+				scQtSchedule.setTotalMonths(new BigDecimal(months));
+
+				scQtSchedule.setStartMonth(Integer.valueOf(startdate).toString());
+				scQtSchedule.setEndMonth(Integer.valueOf(enddate).toString());
 				scQtSchedule.setStartYear(startYear);
 				scQtSchedule.setEndYear(endYear);
 
 			}
+		}catch(ParseException e){
+			
+		}
 
 		}
 
