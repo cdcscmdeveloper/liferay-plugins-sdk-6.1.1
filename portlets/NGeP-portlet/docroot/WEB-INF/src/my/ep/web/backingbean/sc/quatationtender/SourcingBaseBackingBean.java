@@ -106,6 +106,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -113,6 +114,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -2314,44 +2316,58 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @return the maximum no of supplier for restricted tender
 	 */
-	public ScAddress populateScAddress(SmCompanyBasic smCompanyBasic, SmPersonnel smPersonnel,
-						 			   SmAddress smAddress, ScAddress scAddress) {
-		if (smCompanyBasic == null || smPersonnel == null 
-				|| smAddress == null) {
-			return null;
-		} else if (scAddress == null) {
-			scAddress = new ScAddress();
+	public ScAddress populateScAddress(SmSupplier smSupplier) {
+		ScAddress scAddress = null;
+		
+		if (smSupplier != null && smSupplier.getSmAppl() != null) {
+			for (SmPersonnel smPersonnel : smSupplier.getSmAppl().getSmPersonnels()) {
+				if (smPersonnel.isContactPerson()) {
+					SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl().getSmCompanyBasic();
+					if (smCompanyBasic.getSmCompanyAddresses() != null
+							&& smCompanyBasic.getSmCompanyAddresses().size() > 0) {
+						for (SmCompanyAddress smCompanyAddress : 
+									smCompanyBasic.getSmCompanyAddresses()) {
+							if (smCompanyAddress.getAddressType().equals(
+									AddressType.CONTACT_ADDRESS.value())) {
+								SmAddress smAddress = smCompanyAddress.getSmAddress();
+								
+								if (smAddress != null) {
+									scAddress = new ScAddress();
+									scAddress.setAddress1(smAddress.getAddress1());
+									scAddress.setAddress2(smAddress.getAddress2());
+									scAddress.setAddress3(smAddress.getAddress3());
+									scAddress.setAddress4(smAddress.getAddress4());
+									scAddress.setPostcode(smAddress.getPostcode());
+									scAddress.setPmCountry(smAddress.getPmCountry());
+									scAddress.setPmState(smAddress.getPmState());
+									scAddress.setPmDivision(smAddress.getPmDivision());
+									scAddress.setPmDistrict(smAddress.getPmDistrict());
+									scAddress.setPmCity(smAddress.getPmCity());
+									scAddress.setMapLatitude(smAddress.getMapLatitude());
+									scAddress.setMapLongitude(smAddress.getMapLongitude());
+									
+									scAddress.setContactEmail(smPersonnel.getEmail());
+									scAddress.setContactFaxArea(smPersonnel.getFaxArea());
+									scAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
+									scAddress.setContactMobileArea(smPersonnel.getMobileArea());
+									scAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
+									scAddress.setContactMobileNo(smPersonnel.getMobileNo());
+									scAddress.setContactPerson(smPersonnel.getName());
+									scAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
+									scAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
+									
+									scAddress.setContactFaxNo(smCompanyBasic.getFaxNo());
+									scAddress.setContactPhoneNo(smCompanyBasic.getPhoneNo());	
+								}
+								break;
+							}
+						}
+					}
+					break;
+				}
+			}
 		}
-		
-		smAddress.getPmCountry();
-		smAddress.getPmState();
-		smAddress.getPmDistrict();
-		smAddress.getPmCity();
-		scAddress.setAddress1(smAddress.getAddress1());
-		scAddress.setAddress2(smAddress.getAddress2());
-		scAddress.setAddress3(smAddress.getAddress3());
-		scAddress.setAddress4(smAddress.getAddress4());
-		scAddress.setPostcode(smAddress.getPostcode());
-		scAddress.setPmCountry(smAddress.getPmCountry());
-		scAddress.setPmState(smAddress.getPmState());
-		scAddress.setPmDivision(smAddress.getPmDivision());
-		scAddress.setPmDistrict(smAddress.getPmDistrict());
-		scAddress.setPmCity(smAddress.getPmCity());
-		scAddress.setMapLatitude(smAddress.getMapLatitude());
-		scAddress.setMapLongitude(smAddress.getMapLongitude());
-		
-		scAddress.setContactEmail(smPersonnel.getEmail());
-		scAddress.setContactFaxArea(smPersonnel.getFaxArea());
-		scAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
-		scAddress.setContactFaxNo(smCompanyBasic.getFaxNo());
-		scAddress.setContactMobileArea(smPersonnel.getMobileArea());
-		scAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
-		scAddress.setContactMobileNo(smPersonnel.getMobileNo());
-		scAddress.setContactPerson(smPersonnel.getName());
-		scAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
-		scAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
-		scAddress.setContactPhoneNo(smCompanyBasic.getPhoneNo());
-
+			
 		return scAddress;
 	}	
 	
