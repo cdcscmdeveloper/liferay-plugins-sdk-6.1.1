@@ -52,15 +52,11 @@ public class SchedulerManagerBackingBean extends
 				getManagedBean().setScheduler(EpSchedulerHelper.getScheduler());
 			}
 			getManagedBean().setEpSchedulerJobList(new ArrayList<EpJobVO>());
-			getManagedBean().setJobGroups(new ArrayList<String>());
+			getManagedBean().setJobGroups(getManagedBean().getScheduler()
+					.getJobGroupNames());
 
 			for (String groupName : getManagedBean().getScheduler()
 					.getJobGroupNames()) {
-
-				// add group for filtering purposes
-				if (!getManagedBean().getJobGroups().contains(groupName)) {
-					getManagedBean().getJobGroups().add(groupName);
-				}
 
 				// set search by group
 				if (!StringUtils.isBlank(getManagedBean().getJobGroup())) {
