@@ -1686,7 +1686,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
 					}
-					if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
+					if(getManagedBean().getFlRequest().getPmUserGroup()==null || getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
 						PmUserGroup pmUserGroup = new PmUserGroup();
 						getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
 						getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
@@ -3106,7 +3106,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private void initializeDelAddr() {
 		if(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
 			getManagedBean().getFlRequest().getFlDeliveryAddresses().clear();
-			getManagedBean().getShowItemAddrList().clear();
+			if(getManagedBean().getShowItemAddrList()!=null) {
+				getManagedBean().getShowItemAddrList().clear();
+			}
 			getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 		}
 		
