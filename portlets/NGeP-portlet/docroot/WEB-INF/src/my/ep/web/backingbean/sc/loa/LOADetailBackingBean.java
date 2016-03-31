@@ -712,11 +712,6 @@ public class LOADetailBackingBean extends
 		if(scLoa.getScQtDeductions() != null && scLoa.getScQtDeductions().size()>0){
 			getManagedBean().setSelectedScQtDeduction(scLoa.getScQtDeductions().get(0));
 		}
-
-		// contract agency
-		if(scLoa.getContractAgency() != null){
-			scLoa.setAgencyId(scLoa.getContractAgency().getOrgProfileId());
-		}
 		
 		if (scLoa.getContractType().getParameterId() != null) {
 			contractTypeChanged();
@@ -2945,39 +2940,14 @@ public class LOADetailBackingBean extends
 		String contractType = scLoa.getContractType().getParameterCode();
 
 		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			try {
-
-				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-				reqDTO.setScLoa(scLoa);
-
-				AwardSupplierResDTO resDTO = getQtAwardSO()
-						.retrieveMinistryAgencyList(reqDTO);
-
-				getManagedBean().setAgencyProfileDDList(
-						resDTO.getAgencyProfileDDList());
-
-				if(scLoa.getScLoiLoa().getPmOrgProfile() != null){
-					boolean found = false;
-					for(Object[] object : resDTO.getAgencyProfileDDList()){
-						if(object[0].toString().equals(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId().toString())){
-							found = true;
-							break;
-						}
-					}
-					if(found){
-						if(null == scLoa.getContractAgency()){
-							scLoa.setAgencyId(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
-							scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
-						}
-					}
-				}
-
-
-			} finally {
-				//qtAwardSO = null;
+			// ministry condtion field for LOV 
+			getMinistryConditionField(scLoa);
+			if(null == scLoa.getContractAgency()){
+				scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
 			}
+
 		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			
+
 			Long userId = new FacesScopes().getUserSessionBean().getUserId();
 			
 			if (userId != null) {
@@ -3029,18 +2999,13 @@ public class LOADetailBackingBean extends
 			String contractType = scLoa.getContractType().getParameterCode();
 			List<PmUser> userList = null;
 
-			if (scLoa.getAgencyId() != null || getManagedBean().getSelectedContractAgency() !=null) {
+			if (scLoa.getContractAgency() != null || getManagedBean().getSelectedContractAgency() !=null) {
 				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
-					reqDTO.setOrgProfileId(scLoa.getAgencyId());
+					reqDTO.setOrgProfileId(scLoa.getContractAgency().getOrgProfileId());
 					UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 					userList = resDTO.getUserList();
-					
-                    // update agency
-					PmOrgProfile pmOrgProfile =  retrieveOrgProfileByOrgProfileId(scLoa.getAgencyId());
-					getManagedBean().getScLoa().setContractAgency(pmOrgProfile);
-
 
 				} else if (ParameterConst.CONTRACT_TYPE_CENTRAL
 						.equals(contractType)) {
@@ -3346,12 +3311,12 @@ public class LOADetailBackingBean extends
 
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null) {
-			Date currentDate = new Date();
+			//Date currentDate = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-			String localDate = sdf.format(currentDate);
-			String day = localDate.substring(0, 2);
-			String fromDate = day + "/" + startMonth + "/" + startYear;
-			String toDate = day + "/" + endMonth + "/" + endYear;
+			//String localDate = sdf.format(currentDate);
+			//String day = localDate.substring(0, 2);
+			String fromDate = 01 + "/" + startMonth + "/" + startYear;
+			String toDate = 01 + "/" + endMonth + "/" + endYear;
 			Date startDate  = sdf.parse(fromDate);
 			Date endDate  = sdf.parse(toDate);
 
@@ -4315,10 +4280,10 @@ public class LOADetailBackingBean extends
 		
 		getManagedBean().setAgreementMandatory(isAgreementMandatory);
 		if(isAgreementMandatory) {
-			getManagedBean().getScLoa().setAgreementReq(true);
-		} else {
-			getManagedBean().getScLoa().setAgreementReq(false);
-		}
+			loa.setAgreementReq(Boolean.TRUE);
+		} else{
+			loa.setAgreementReq(Boolean.FALSE);
+		} 
 	}
 
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
@@ -5175,6 +5140,37 @@ public class LOADetailBackingBean extends
 		return path.toString();
 	}
 
+	/**
+	 * Gets the ministry condition field.
+	 *
+	 * @param scLoa the sc loa
+	 * @return the ministry condition field
+	 */
+	private void getMinistryConditionField(ScLoa scLoa) {
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		orgProfileReqDTO.setOrgProfileId(scLoiLoa.getPmOrgProfile()
+				.getOrgProfileId());
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IOrgProfileSO.class);
+		PmOrgProfile ministryOrgProfile = orgProfileSO
+				.retrieveMinistryByOrgProfileId(orgProfileReqDTO)
+				.getPmOrgProfile();
+		StringBuilder criteria = new StringBuilder();
+		criteria.append(
+				"orgTypeCode.parameterCode")
+				.append("^").append(OrganizationType.DIVISION.value())
+				.append("|");
+		
+		criteria.append(
+				"parentOrgProfile.orgProfileId")
+				.append("^").append(ministryOrgProfile.getOrgProfileId())
+				.append("|");
+		
+		criteria.append("recordStatus^1");
+		getManagedBean().setMinistryConditionField(criteria.toString());
+	}
 
 	public boolean isFlag() {
 		return flag;
