@@ -98,7 +98,7 @@ public class EpSchedulerHelper {
 	 */
 	public static boolean runBuildJobNow(JobKey jobKey) {
 		boolean success = true;
-		
+
 		// specify trigger
 		Trigger trigger;
 		try {
@@ -196,7 +196,7 @@ public class EpSchedulerHelper {
 							.withSchedule(
 									CronScheduleBuilder
 											.cronSchedule(cronExpression)
-											.withMisfireHandlingInstructionDoNothing())
+											.withMisfireHandlingInstructionIgnoreMisfires())
 							.build();
 
 					// schedule new job
@@ -258,13 +258,13 @@ public class EpSchedulerHelper {
 						// do nothing
 						if ((!newTrigger.getCronExpression().equals(
 								cronExpression) && !isJobRunningNow(jobKey))
-								|| newTrigger.getMisfireInstruction() != newTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
+								|| newTrigger.getMisfireInstruction() != newTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
 							newTrigger = (CronTrigger) tb
 									.withSchedule(
 											CronScheduleBuilder
 													.cronSchedule(
 															cronExpression)
-													.withMisfireHandlingInstructionDoNothing())
+													.withMisfireHandlingInstructionIgnoreMisfires())
 									.build();
 							EpSchedulerHelper.getScheduler().rescheduleJob(
 									newTrigger.getKey(), newTrigger);
