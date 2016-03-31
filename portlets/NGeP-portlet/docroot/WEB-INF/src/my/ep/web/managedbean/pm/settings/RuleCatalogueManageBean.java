@@ -49,9 +49,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private PmConfigRule selectedRuleType;
 	private List<PmConfigRule> configRuleList;
 	private String selectedDocumentType;
-	private Date  today = new Date();
-	private Date  tomorrow = tomorrowDate();
-	private Date  maxDate = maxDate();
+	private Date today = new Date();
+	private Date tomorrow = null;
+	private Date maxDate = null;
 	private List<PmFeeExemption> feeExemptionsForOrgAndItem;
 	private List<PmFeeExemption> feeExemptionsForComodity;
 	private List<PmFeeExemption> feeExemptionsForContract;
@@ -133,6 +133,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	public Date getTomorrow() {
+		if(tomorrow == null){
+			tomorrow = tomorrowDate();
+		}
 		return tomorrow;
 	}
 
@@ -916,6 +919,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @return the maxDate
 	 */
 	public Date getMaxDate() {
+		if(maxDate == null){
+			maxDate = maxDate();
+		}
 		return maxDate;
 	}
 
