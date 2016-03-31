@@ -25,7 +25,7 @@
 			<p:commandLink id="refreshId"
 				partialSubmit="true" process="@this" action="#{schedulerManagerBB.initAllJobs}"
 				update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-				<p:graphicImage value="/css/images/design/btn_refresh.png" title="#{lbl['lbl.quartz.refresh.job']}" />
+				<p:graphicImage value="/css/images/design/ico-refresh.png" title="#{lbl['lbl.quartz.refresh.job']}" />
 			</p:commandLink>&#160;
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.quartz.instruction.two']}"/><br /><br />
 			
@@ -73,7 +73,13 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.quartz.health.state']}">
-					<h:outputText value="#{jobBean.state}" />
+					<h:outputText value="#{jobBean.state}" rendered="#{empty jobBean.state}"/>
+					<p:graphicImage value="/css/images/design/ico-submit.png" rendered="#{jobBean.state ne 'ERROR' and jobBean.state ne 'BLOCKED'}"
+						title="#{lbl['lbl.quartz.state.normal.tooltips']}" />
+					<p:graphicImage value="/css/images/design/icon_alert.png" rendered="#{jobBean.state eq 'BLOCKED'}"
+						title="#{lbl['lbl.quartz.state.blocked.tooltips']}" />
+					<p:graphicImage value="/css/images/design/icon_error.png" rendered="#{jobBean.state eq 'ERROR'}"
+						title="#{lbl['lbl.quartz.state.error.tooltips']}" />
 				</p:column>
 				
 				<ui:remove>
@@ -129,13 +135,13 @@
 							update="@form" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.quartz.delete.job']}" />
-						</p:commandLink>
-						<p:commandLink id="rescheduledActionId"
-							partialSubmit="true" rendered="#{jobBean.status eq 'WAIT' or jobBean.status eq 'BLOCK'}"
-							process="@this" action="#{schedulerManagerBB.rescheduleJob(jobBean)}"
+						</p:commandLink>&#160;
+						<p:commandLink id="recoveryActionId"
+							partialSubmit="true" rendered="#{jobBean.state eq 'BLOCKED'}"
+							process="@this" action="#{schedulerManagerBB.recoverJob(jobBean)}"
 							update="@form" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
-							<p:graphicImage value="/css/images/design/ico-refresh.png" title="#{lbl['lbl.quartz.reschedule.block.job']}" />
+							<p:graphicImage value="/css/images/design/ico-termination-history.png" title="#{lbl['lbl.quartz.recovery.block.job']}" />
 						</p:commandLink>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{empty jobBean.trigger}">
