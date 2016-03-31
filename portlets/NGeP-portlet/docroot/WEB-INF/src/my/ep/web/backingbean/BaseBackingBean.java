@@ -1420,7 +1420,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				} else {
 					outComes = resDTO.getAction();
 				}				
-				this.getManagedBean().setOutComes(outComes);	
+				this.getManagedBean().setOutComes(sortOutcomes(outComes));	
 			}
 			this.getManagedBean().setCurrentStatusId(
 					Long.valueOf(resDTO.getDocStatus()));
