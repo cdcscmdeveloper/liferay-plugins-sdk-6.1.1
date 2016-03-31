@@ -197,9 +197,6 @@ public class SupplierFinalizationBackingBean extends
 	private static final int PREPARE_ACTIVE_INDEX_COMMITTEE = 1;
 	private static final int PREPARE_ACTIVE_INDEX_JOIN_IN = 2;
 	
-	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
-			   										  SourcingConstants.MALAYSIA_COUNTRY_CODE);
-
 	/**
 	 * Default constructor
 	 */
@@ -2257,7 +2254,7 @@ public class SupplierFinalizationBackingBean extends
 				int totalFinalizationRounds = findFinalizationCount();
 				if (endorsementReportCount < totalFinalizationRounds) {
 					String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, myLocale) 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
 				 			+ SPACE + "(" + totalFinalizationRounds + ")";
 					addFinalizationReport(reportTitle);
 				} else {
@@ -3614,17 +3611,17 @@ public class SupplierFinalizationBackingBean extends
 
 		if (scQtFinalization.getDecision() != null) {
 			context.put("meetingDecision", getParameterDesc(
-					scQtFinalization.getDecision(), myLocale));
+					scQtFinalization.getDecision(), SourcingConstants.MY_LOCALE));
 		}
 
 		if (scQtFinalization.getRecommendedTypeId() != null) {
 			context.put("selectionBasedOn", getParameterDesc(
-					scQtFinalization.getRecommendedTypeId(), myLocale));
+					scQtFinalization.getRecommendedTypeId(), SourcingConstants.MY_LOCALE));
 		}
 		
 		if (scQtFinalization.getFinalizationMethod() != null) {
 			context.put("finalizationMethod", getParameterDesc(
-					scQtFinalization.getFinalizationMethod(), myLocale));
+					scQtFinalization.getFinalizationMethod(), SourcingConstants.MY_LOCALE));
 		}	
 		
 		if (scQtFinalization.getFinalizationMethod() != null) {
@@ -3636,7 +3633,7 @@ public class SupplierFinalizationBackingBean extends
 						ParameterTypeConst.FINALIZATION_LOILOA_PREPARED_BY, 
 						scQtFinalization.getLoiLoaBy());
 				if (param != null) {
-					loiLoaPreparedBy = getParameterDesc(param, myLocale);
+					loiLoaPreparedBy = getParameterDesc(param, SourcingConstants.MY_LOCALE);
 				}
 			}
 			context.put("loiLoaPreparedBy", loiLoaPreparedBy);
@@ -3648,7 +3645,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			if (scQtFinalization.getHigherCommitte() != null) {
 				context.put("higherAuthority", getParameterDesc(
-							scQtFinalization.getHigherCommitte(), myLocale));
+							scQtFinalization.getHigherCommitte(), SourcingConstants.MY_LOCALE));
 			}
 		}
 		
