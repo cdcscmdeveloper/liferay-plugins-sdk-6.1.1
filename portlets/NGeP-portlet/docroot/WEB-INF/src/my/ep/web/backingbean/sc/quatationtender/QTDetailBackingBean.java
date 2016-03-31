@@ -1726,97 +1726,87 @@ public class QTDetailBackingBean extends
 	 * preRenderView()
 	 */
 	public void preRenderView() {
-		renewSesionObject();
-		Long qtId = null;
-		Object payLoad = getBpmTaskDetails(Object.class, null);
-		String taskName = this.getManagedBean().getTaskName();
-		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-						.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(this
-						.getManagedBean().getTaskName())
-				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
-						.equalsIgnoreCase(taskName)) {
-			if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-					.equalsIgnoreCase(taskName)
-					&& !SCProcessNameConst.ASSIGN_FC_SECRETARY
+		try {
+			renewSesionObject();
+			Long qtId = null;
+			Object payLoad = getBpmTaskDetails(Object.class, null);
+			String taskName = this.getManagedBean().getTaskName();
+			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 							.equalsIgnoreCase(taskName)
-					&& !SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
-							.equalsIgnoreCase(taskName)) {
-
-				SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
-
-				qtId = committeDataType.getQtId().longValue();
-				this.getManagedBean().setPendingRevision(true);
-			} else {
-
-				SCEvaluationDataType evalDataType = (SCEvaluationDataType) payLoad;
-				qtId = evalDataType.getQtId().longValue();
-
-			}
-			this.getManagedBean().setActiveIndex(2);
-			retrieveQuationTenderDetails(new Long(qtId));
-			if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-					.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(this
+							.getManagedBean().getTaskName())
 					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 							.equalsIgnoreCase(taskName)) {
-				retrieveCommitteeAppointmentTabDtl(true);
-			} else {
-				retrieveCommitteeAppointmentTabDtl(false);
-			}
-			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
-				List<ScQtApproval> approvals = this.getManagedBean().getQt()
-						.getScQtApprovals();
+				if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
+						.equalsIgnoreCase(taskName)
+						&& !SCProcessNameConst.ASSIGN_FC_SECRETARY
+								.equalsIgnoreCase(taskName)
+						&& !SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+								.equalsIgnoreCase(taskName)) {
 
-				for (ScQtApproval scQtApproval : approvals) {
-					if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
-							.equalsIgnoreCase(scQtApproval
-									.getApprovalCategory().getParameterCode())) {
-						initializeRemarks(scQtApproval, this.getManagedBean()
-								.getQt().getCurrentWorkFlowStatus(),
-								scQtApproval.getScQtApprovalRemarks(),
-								ScQtApprovalRemark.class);
-						this.getManagedBean().setScQtApproval(scQtApproval);
+					SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
 
-						break;
+					qtId = committeDataType.getQtId().longValue();
+					this.getManagedBean().setPendingRevision(true);
+				} else {
+
+					SCEvaluationDataType evalDataType = (SCEvaluationDataType) payLoad;
+					qtId = evalDataType.getQtId().longValue();
+
+				}
+				this.getManagedBean().setActiveIndex(2);
+				retrieveQuationTenderDetails(new Long(qtId));
+				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
+						.equalsIgnoreCase(taskName)
+						|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+								.equalsIgnoreCase(taskName)) {
+					retrieveCommitteeAppointmentTabDtl(true);
+				} else {
+					retrieveCommitteeAppointmentTabDtl(false);
+				}
+				if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+					List<ScQtApproval> approvals = this.getManagedBean().getQt()
+							.getScQtApprovals();
+
+					for (ScQtApproval scQtApproval : approvals) {
+						if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
+								.equalsIgnoreCase(scQtApproval
+										.getApprovalCategory().getParameterCode())) {
+							initializeRemarks(scQtApproval, this.getManagedBean()
+									.getQt().getCurrentWorkFlowStatus(),
+									scQtApproval.getScQtApprovalRemarks(),
+									ScQtApprovalRemark.class);
+							this.getManagedBean().setScQtApproval(scQtApproval);
+
+							break;
+						}
 					}
 				}
+			} else {
+				// qtId = quotationTenderDataType.getQtId().longValue();
+				SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
+				qtId = quationDataType.getQtId().longValue();
+				// retrieveFinalizationSecratryDtl(qtId);
+				retrieveQuationTenderDetails(new Long(qtId));
 			}
-		} else {
-			// qtId = quotationTenderDataType.getQtId().longValue();
-			SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
-			qtId = quationDataType.getQtId().longValue();
-			// retrieveFinalizationSecratryDtl(qtId);
-			retrieveQuationTenderDetails(new Long(qtId));
-		}
 
-		if (null == this.getManagedBean().getQt().getProcurementMode()) {
-			this.getManagedBean().getQt().setProcurementMode(new PmParameter());
-		}
+			if (null == this.getManagedBean().getQt().getProcurementMode()) {
+				this.getManagedBean().getQt().setProcurementMode(new PmParameter());
+			}
 
-		if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
-				.getManagedBean().getTaskName())) {
-			this.getManagedBean().setPcbProcess(true);
-		}
+			if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
+					.getManagedBean().getTaskName())) {
+				this.getManagedBean().setPcbProcess(true);
+			}
 
-		ScQt scQt = this.getManagedBean().getQt();
-		
-		if (scQt.getQtStatus() != null
-				&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
-						.getQtStatus().getStatusId()) && scQt.isPanel()
-		&& isOneTierThresHold(scQt.getEstimatedAmount())) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							ResourceBundleUtils.getMessage(
-									"lbl.sc.qt.panel.estamt.msg",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale())));
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
+			
+		} catch (Exception e) {
+			handleException(e);
 		}
-
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
 	}
 
 	/**
