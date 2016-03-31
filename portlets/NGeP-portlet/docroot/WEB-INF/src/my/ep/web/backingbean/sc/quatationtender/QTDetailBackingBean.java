@@ -791,9 +791,9 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().getZoneTrees(), scQt.getScQtSupplierCriteria());*/
 			if (null != locCriteria && !locCriteria.isEmpty()) {
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
-			} else {
+			} /*else {
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
-			}
+			}*/
 		}
 		if (scQt.isZonal()) {
 			if (null != scQt.getScQtSupplierCriteria() && scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
@@ -3054,9 +3054,8 @@ public class QTDetailBackingBean extends
 												.getZoneLocationLevel()
 												.getParameterCode());
 							}
-							ScQtSupplierCriteria suppCriteria = this
-									.getManagedBean().getQt()
-									.getScQtSupplierCriteria();
+							ScQtSupplierCriteria suppCriteria = tenderResDTO
+									.getQtSupplierCriteria();
 							if (suppCriteria != null) {
 								this.getManagedBean().setSupplierCriteria(
 										suppCriteria);
