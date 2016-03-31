@@ -687,6 +687,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 												new String[] {requestNoteDtl.getRequestItem().getItemName(), configRuleValue.getRuleValue()});
 									}
 								}
+							} else {
+								throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 							}
 						}
 					}

@@ -221,6 +221,8 @@ public class PurchaseInquiryBackingBean extends
 		if (ruleValueList != null && ruleValueList.size() > 0) {
 			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
 			scPrInquiry.setDayToResponse(Integer.valueOf(configRuleValue.getRuleValue()));
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 		}
 		scPrInquiry.setDateToResponse(calcDayToResponse(scPrInquiry));
 
