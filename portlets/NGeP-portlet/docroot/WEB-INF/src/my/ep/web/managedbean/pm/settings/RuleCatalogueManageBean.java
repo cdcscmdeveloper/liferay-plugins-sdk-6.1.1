@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.pm.settings;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -49,6 +51,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String selectedDocumentType;
 	private Date  today = new Date();
 	private Date  tomorrow = tomorrowDate();
+	private Date  maxDate = maxDate();
 	private List<PmFeeExemption> feeExemptionsForOrgAndItem;
 	private List<PmFeeExemption> feeExemptionsForComodity;
 	private List<PmFeeExemption> feeExemptionsForContract;
@@ -869,6 +872,19 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		
         return c1.getTime();
     }
+	
+	public Date maxDate() {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String dateInString = ProfileManagementConst.CALENDAR_MAX_DATE;
+		Calendar calendar = Calendar.getInstance();
+		try {
+			Date date = formatter.parse(dateInString);
+			calendar.setTime(date);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+        return calendar.getTime();
+    }
 
 	/**
 	 * @return the currentActiveOrg
@@ -894,6 +910,20 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setFeeExemptionsForOrgType(
 			List<PmFeeExemption> feeExemptionsForOrgType) {
 		this.feeExemptionsForOrgType = feeExemptionsForOrgType;
+	}
+
+	/**
+	 * @return the maxDate
+	 */
+	public Date getMaxDate() {
+		return maxDate;
+	}
+
+	/**
+	 * @param maxDate the maxDate to set
+	 */
+	public void setMaxDate(Date maxDate) {
+		this.maxDate = maxDate;
 	} 
 
 }

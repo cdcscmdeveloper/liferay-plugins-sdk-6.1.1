@@ -501,8 +501,11 @@ public class DateUtils {
 		return  diffYear * 12 + endCal.get(Calendar.MONTH) - startCal.get(Calendar.MONTH)+1;
 	}
 	
-	public static String getCalendarMaxYearRange(){
+	public static String getCalendarMaxYearRange(Date date){
 		Calendar c1 = Calendar.getInstance();
+		if(date != null){
+			c1.setTime(date);
+		}
 		int currentYear = c1.get(Calendar.YEAR);
 		int remainingYear = ProfileManagementConst.CALENDAR_MAX_YEAR - currentYear;
 		StringBuilder sb = new StringBuilder();
