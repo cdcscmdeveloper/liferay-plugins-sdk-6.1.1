@@ -20,24 +20,26 @@
 		<p:spacer height="10" />
 		<p:outputPanel id="cancelCircularList">
 		<p:dataTable id="cancelCcrDt" var="data" 
-			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}"
-			rowKey="#{data}" selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
-			<ac:paginator for="cancelCcrDt" />
-			<p:column selectionMode="multiple" style="width:3%" />
-			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" 
-			     styleClass="column-align-center"  style="width:35%; white-space:normal;" >
-				<p:commandLink value="#{data.circularVer.circularNo}"
-					onclick="gotoCancelPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVer.circularVerId}'}])">
-				</p:commandLink>	
+			  value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}"
+			  rowKey="#{data}" selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
+			  <ac:paginator for="cancelCcrDt" />
+			  <p:column selectionMode="multiple" style="width:3%" />
+			  <p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" 
+			        styleClass="column-align-center"  style="width:35%; white-space:normal;" >
+				    <p:commandLink value="#{data.circularVer.circularNo}"
+				      	onclick="gotoCancelPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVer.circularVerId}'}])">
+				    </p:commandLink>	
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.circular.name']}" 
 			    styleClass="column-align-center"  style="width:60%; white-space:normal;">
-				<h:outputText value="#{data.circularVer.name}" style="float:left" />
+				<h:outputText value="#{data.circularVer.name}" style="float:left;" />
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
-			<p:commandButton value="#{lbl['lbl.ct.delete']}" process="@this" partialSubmit="true"  onsuccess="delCancelCircular.show()"/>				
+			<p:commandButton value="#{lbl['lbl.btn.add']}" 
+			      actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
+			<p:commandButton value="#{lbl['lbl.ct.delete']}" id="delCancelBtn"
+			      process="@all"   onsuccess="delCancelCircular.show()"/>				
 		</div>				
 		</p:outputPanel>	
 		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" 
@@ -68,9 +70,9 @@
 		 <p:confirmDialog id="delCancelCircular" widgetVar="delCancelCircular" message="#{lbl['lbl.msg.confirm.delete']}" 	
                 severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                  <div class="ppRightBtn">
-		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		                   update=":form:cancelCcrDt,:form:cancelCcrPnl" 
-		                   action="#{panelBackingBean.deleteCancelReqCircular()}" oncomplete="delCancelCircular.hide();"/>
+		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@all"  
+		                   update=":form:cancelCcrPnl" 
+		                   action="#{panelBackingBean.deleteCancelReqCircular()}" onclick="delCancelCircular.hide();"/>
 			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCancelCircular.hide();" type="button" />
 		           </div>
           </p:confirmDialog>

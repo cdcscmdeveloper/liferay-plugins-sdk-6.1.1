@@ -393,7 +393,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							          onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							           listener="#{panelBackingBean.changeAccountActionListener(supVar, index)}" />
 					         </p:selectOneMenu>
-					          <h:outputText rendered="#{panelBackingBean.managedBean.viewContract}" value="#{supVar.bankAccountNo}/#{supVar.bankName}" style="width:250px;float:left" />
+					          <h:outputText rendered="#{panelBackingBean.managedBean.viewContract}"
+					           value="#{supVar.bankAccountNo}/#{supVar.bankName}" style="width:250px;float:left;text-align:left;" />
 					     </p:column>
 				        
 				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:30%;white-space:normal;" styleClass="column-align-center" rendered="false" >

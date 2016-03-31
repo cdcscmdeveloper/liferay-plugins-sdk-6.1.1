@@ -14,6 +14,10 @@
       .column-align-center {
          text-align: center !important;
       }
+      
+         .top-aligned-columns td { 
+         vertical-align: top;
+      }    
       .confirmation-message-box {
          	border: 1px solid #cecece;
 			font-family: Arial;
@@ -70,7 +74,8 @@
 					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}" update="@form">
 						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}" update="@form" rendered="#{panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin()}">
+					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}" 
+					   update="@form" rendered="#{panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin()}">
 						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 				</p:tabMenu>
