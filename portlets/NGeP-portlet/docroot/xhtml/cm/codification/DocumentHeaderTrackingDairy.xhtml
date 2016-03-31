@@ -59,25 +59,25 @@
 					<c:choose>
 						<c:when
 							test="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier != null and cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType == 'O'}">
-							<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
-								style="text-align : right;"></p:outputLabel>
-							<h:outputText
-								style="white-space: normal!important; text-align : left;"
-								value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.regNo}" />
+							<td width="10%"><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+									style="text-align : right;"></p:outputLabel></td>
+							<td width="15%"><h:outputText
+									style="white-space: normal!important; text-align : left;"
+									value="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.regNo}" /></td>
 						</c:when>
 						<c:when
 							test="#{cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier != null and cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType != 'O'}">
-							<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}"
+							<td width="10%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}"
 									style="text-align : right;"></p:outputLabel></td>
-							<td><h:outputText
+							<td width="15%"><h:outputText
 									style="white-space: normal!important; text-align : left;"
 									value="#{unspscCodeBackingBean.retrieveMofNo(cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.supplierId , cdTrackingDiaryBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType)}" />
 							</td>
 						</c:when>
 						<c:otherwise>
-							<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
-								style="text-align : right;"></p:outputLabel>
-							<h:outputText value="N/A" style="text-align : left;" />
+							<td width="10%"><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+									style="text-align : right;"></p:outputLabel></td>
+							<td width="15%"><h:outputText value="N/A" style="text-align : left;" /></td>
 						</c:otherwise>
 					</c:choose>
 				</tr>
