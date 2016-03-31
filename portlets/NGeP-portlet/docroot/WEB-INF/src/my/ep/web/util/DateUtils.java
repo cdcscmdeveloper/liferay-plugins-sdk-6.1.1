@@ -503,16 +503,20 @@ public class DateUtils {
 	
 	public static String getCalendarMaxYearRange(Date date){
 		Calendar c1 = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+		int currentYear = c2.get(Calendar.YEAR);
 		if(date != null){
 			c1.setTime(date);
 		}
-		int currentYear = c1.get(Calendar.YEAR);
-		int remainingYear = ProfileManagementConst.CALENDAR_MAX_YEAR - currentYear;
+		int calendarYear = c1.get(Calendar.YEAR);
+		int startYear = calendarYear - currentYear;
+		int endYear = ProfileManagementConst.CALENDAR_MAX_YEAR - calendarYear;
 		StringBuilder sb = new StringBuilder();
-		if(remainingYear > 0 ){
-			sb.append("c-10:c");
-			sb.append("+");
-			sb.append(remainingYear);
+		if(endYear >= 0 && startYear >= 0 ){
+			sb.append("c-");
+			sb.append(startYear);
+			sb.append(":c+");
+			sb.append(endYear);
 		}else{
 			sb.append("c-10:c+10");
 		}
