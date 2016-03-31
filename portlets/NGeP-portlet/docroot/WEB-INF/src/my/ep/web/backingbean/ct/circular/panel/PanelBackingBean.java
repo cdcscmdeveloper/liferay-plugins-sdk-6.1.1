@@ -799,10 +799,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
 		}
 		
-		if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
+		/*if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
 				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){				
 				throw new EpException(MessageConst.ERROR_750018, new String[]{"panel circular update"});
-		}
+		}*/
 	}
 	
 	/**
