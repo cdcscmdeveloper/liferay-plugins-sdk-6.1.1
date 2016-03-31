@@ -26,7 +26,6 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	private List<String> jobGroups;
 	private String jobGroup;
 	private EpJobVO selectedJobVO;
-	private Scheduler scheduler;
 	private List<ScBidSchedule> currentDayBids;
 
 	/**
@@ -42,21 +41,6 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	 */
 	public void setCurrentDayBids(List<ScBidSchedule> currentDayBids) {
 		this.currentDayBids = currentDayBids;
-	}
-
-	/**
-	 * @return the scheduler
-	 */
-	public Scheduler getScheduler() {
-		return scheduler;
-	}
-
-	/**
-	 * @param scheduler
-	 *            the scheduler to set
-	 */
-	public void setScheduler(Scheduler scheduler) {
-		this.scheduler = scheduler;
 	}
 
 	public SchedulerManagerManagedBean() {

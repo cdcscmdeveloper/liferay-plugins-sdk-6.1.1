@@ -48,14 +48,12 @@ public class SchedulerManagerBackingBean extends
 			String jobAction = "";
 			String jobState = "";
 			Trigger trigger = null;
-			if (getManagedBean().getScheduler() == null) {
-				getManagedBean().setScheduler(EpSchedulerHelper.getScheduler());
-			}
-			getManagedBean().setEpSchedulerJobList(new ArrayList<EpJobVO>());
-			getManagedBean().setJobGroups(getManagedBean().getScheduler()
-					.getJobGroupNames());
 
-			for (String groupName : getManagedBean().getScheduler()
+			getManagedBean().setEpSchedulerJobList(new ArrayList<EpJobVO>());
+			getManagedBean().setJobGroups(
+					EpSchedulerHelper.getScheduler().getJobGroupNames());
+
+			for (String groupName : EpSchedulerHelper.getScheduler()
 					.getJobGroupNames()) {
 
 				// set search by group
@@ -64,11 +62,11 @@ public class SchedulerManagerBackingBean extends
 				}
 
 				// get jobkey
-				for (JobKey jobKey : getManagedBean().getScheduler()
+				for (JobKey jobKey : EpSchedulerHelper.getScheduler()
 						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
 
 					// get job details
-					JobDetail job = getManagedBean().getScheduler()
+					JobDetail job = EpSchedulerHelper.getScheduler()
 							.getJobDetail(jobKey);
 
 					// get job's trigger
@@ -113,11 +111,11 @@ public class SchedulerManagerBackingBean extends
 	public JobKey getJobKey(String jobName, String searchGroupName) {
 		JobKey returnJobKey = null;
 		try {
-			for (String groupName : getManagedBean().getScheduler()
+			for (String groupName : EpSchedulerHelper.getScheduler()
 					.getJobGroupNames()) {
 
 				if (searchGroupName.equalsIgnoreCase(groupName)) {
-					for (JobKey jobKey : getManagedBean().getScheduler()
+					for (JobKey jobKey : EpSchedulerHelper.getScheduler()
 							.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
 
 						if (jobKey.getName().equals(jobName)) {
@@ -142,10 +140,10 @@ public class SchedulerManagerBackingBean extends
 		try {
 			if (!EpSchedulerHelper.isJobRunningNow(epJobVO.getJobKey())) {
 				if (epJobVO.getAction().equals(SchedulerConstants.JOB_PAUSE)) {
-					getManagedBean().getScheduler().pauseJob(
+					EpSchedulerHelper.getScheduler().pauseJob(
 							epJobVO.getJobKey());
 				} else {
-					getManagedBean().getScheduler().resumeJob(
+					EpSchedulerHelper.getScheduler().resumeJob(
 							epJobVO.getJobKey());
 				}
 				initAllJobs();
@@ -187,14 +185,17 @@ public class SchedulerManagerBackingBean extends
 		}
 	}
 
-	public void rescheduleJob(EpJobVO epJobVO) {
+	public void recoverJob(EpJobVO epJobVO) {
 		try {
 			if (EpSchedulerHelper.getScheduler()
 					.getTriggerState(epJobVO.getTrigger().getKey()).toString()
-					.equals("BLOCK")) {
-				EpSchedulerHelper.getScheduler().rescheduleJob(
-						epJobVO.getTrigger().getKey(), epJobVO.getTrigger());
-				initAllJobs();
+					.equals(TriggerState.BLOCKED.toString())) {
+				JobDetail jobDetail = EpSchedulerHelper.getScheduler()
+						.getJobDetail(epJobVO.getJobKey());
+				if (jobDetail != null && jobDetail.getJobBuilder() != null) {
+					jobDetail.getJobBuilder().requestRecovery();
+					initAllJobs();
+				}
 			}
 
 		} catch (SchedulerException e) {
