@@ -1693,6 +1693,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 				orderBackingBean.getManagedBean().setHyperLinkPage(true);
 				orderBackingBean.getManagedBean().setButtonVal("View");
+				boolean isFactoredSelected=getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored();
+				if(isFactoredSelected){
+					orderBackingBean.getManagedBean().setFactoringCheck("true");
+				} else {
+					orderBackingBean.getManagedBean().setFactoringCheck("false");
+				}
 				orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 				flBB.getManagedBean().setHideRemarks(true);
 				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
