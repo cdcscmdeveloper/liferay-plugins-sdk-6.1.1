@@ -73,7 +73,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.quartz.health.state']}">
-					<h:outputText value="#{jobBean.state}" rendered="#{empty jobBean.state}"/>
+					<h:outputText value="#{lbl['lbl.quartz.health.state.none']}" rendered="#{empty jobBean.state}"/>
 					<p:graphicImage value="/css/images/design/ico-submit.png" rendered="#{jobBean.state ne 'ERROR' and jobBean.state ne 'BLOCKED'}"
 						title="#{lbl['lbl.quartz.state.normal.tooltips']}" />
 					<p:graphicImage value="/css/images/design/icon_alert.png" rendered="#{jobBean.state eq 'BLOCKED'}"
