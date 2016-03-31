@@ -1665,7 +1665,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
      */
 	public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)
+				|| (BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
 			    chkComplyAP201Rule();
     	        setSecretary();
 			    validateContractAmendment(outcome);
@@ -1696,7 +1697,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && isSupplierRole()
+		} else if ((BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome))
+				&& isSupplierRole()
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
 			validateContractAmendment(outcome);	
 			getManagedBean().setButtonAction(outcome);
