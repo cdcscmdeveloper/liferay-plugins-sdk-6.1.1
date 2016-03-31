@@ -1427,10 +1427,11 @@ public class DirectLOABackingBean extends
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(scLoa.getContractType().getParameterId());
-
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			scLoa.setContractType(resDTO.getPmParameter());
+			if(scLoa.getContractType() !=null){
+				reqDTO.setParameterId(scLoa.getContractType().getParameterId());
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+				scLoa.setContractType(resDTO.getPmParameter());
+			}
 
 		} finally {
 			parameterSO = null;
@@ -1439,41 +1440,15 @@ public class DirectLOABackingBean extends
 		String contractType = scLoa.getContractType().getParameterCode();
 
 		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			try {
-				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-				reqDTO.setScLoa(scLoa);
-				if (null != this.getManagedBean().getScLoa().getScLoiLoa()
-						.getPmOrgProfile().getOrgProfileId()) {
-					AwardSupplierResDTO resDTO = getQtAwardSO()
-							.retrieveMinistryAgencyList(reqDTO);
+			// ministry condtion field for LOV 
+			getMinistryConditionField(scLoa);
 
-					getManagedBean().setAgencyProfileDDList(
-							resDTO.getAgencyProfileDDList());
+			//if(null == scLoa.getContractAgency()){
+			scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
+			//}
 
-					if (scLoa.getScLoiLoa().getPmOrgProfile() != null) {
-						boolean found = false;
-						for (Object[] object : resDTO.getAgencyProfileDDList()) {
-							if (object[0].toString().equals(
-									scLoa.getScLoiLoa().getPmOrgProfile()
-											.getOrgProfileId().toString())) {
-								found = true;
-								break;
-							}
-						}
-						if (found) {
-							scLoa.setContractAgency(scLoa.getScLoiLoa()
-									.getPmOrgProfile());
-						}
-					}
-
-				} else {
-					debugLogger("org profile is null");
-				}
-			} finally {
-				// qtAwardSO = null;
-			}
 		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			
+
 			Long userId = new FacesScopes().getUserSessionBean().getUserId();
 			
 			if (userId != null) {
@@ -1528,12 +1503,10 @@ public class DirectLOABackingBean extends
 			List<PmUser> userList = null;
 
 			if (scLoa.getContractAgency() != null) {
-				if (ParameterConst.CONTRACT_TYPE_MINISTRY
-						.equals(contractType)) {
+				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
-					reqDTO.setOrgProfileId(scLoa.getScQt().getPmOrgProfile()
-							.getOrgProfileId());
+					reqDTO.setOrgProfileId(scLoa.getContractAgency().getOrgProfileId());
 
 					UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 
@@ -5578,15 +5551,15 @@ public class DirectLOABackingBean extends
 	 * @param gstAmount
 	 */
 	public void calculateOverallAmount(BigDecimal gstAmount) {
-		BigDecimal loaAmount = this.getManagedBean().getOverallContractAmt();
+		ScLoa scLoa = getManagedBean().getScLoa();
+		BigDecimal loaAmount = scLoa.getLoaAmt();
+		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
 		prepareSignerInfo();
 		if (loaAmount != null) {
-			this.getManagedBean().setOverallContractAmt(
-					overallCtAmount(loaAmount, gstAmount));
-			ScLoa scLoa = getManagedBean().getScLoa();
+			contractOverAllAmt   = overallCtAmount(loaAmount, gstAmount);
+			this.getManagedBean().setOverallContractAmt(contractOverAllAmt);
 
 			calcBondAmount(scLoa, true);
-
 			// bond amount in words
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(
@@ -5602,9 +5575,7 @@ public class DirectLOABackingBean extends
 				RequestContext.getCurrentInstance().execute(
 						"gstSignerConfirmPopupWin.show()");
 			}
-
 		}
-
 	}
 
 	public boolean isGSTRegActive() {
@@ -5959,13 +5930,23 @@ public class DirectLOABackingBean extends
 		}
 	}
 
+	/**
+	 * Sets the overall ct amount.
+	 *
+	 * @param loaAmount the new overall ct amount
+	 */
 	public void setOverallCtAmount(BigDecimal loaAmount) {
-		this.getManagedBean().getScLoa().setContractSigner(new PmUser());
-		this.getManagedBean().getScLoa().setLoaSignerDesig(null);
-		this.getManagedBean().setOverallContractAmt(loaAmount);
-		prepareSignerInfo();
-		
+		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
 		ScLoa scLoa = this.getManagedBean().getScLoa();
+		scLoa.setContractSigner(new PmUser());
+		scLoa.setLoaSignerDesig(null);
+		
+		if (loaAmount != null) {
+			contractOverAllAmt   = overallCtAmount(loaAmount, scLoa.getGstAmt());
+		}
+		getManagedBean().setOverallContractAmt(contractOverAllAmt);
+		
+		prepareSignerInfo();
 		
 		// calc bond amt
 		calcBondAmount(scLoa, true);
@@ -6169,7 +6150,7 @@ public class DirectLOABackingBean extends
 		ScLoa loa = getManagedBean().getScLoa();
 		BigDecimal overallContractAmtOrLoaAmt = getManagedBean().getOverallContractAmt();
 		
-		if (null != loa.getScLoiLoa().getFulfilmentTypeCode()) {
+		if (null != loa.getScLoiLoa().getFulfilmentTypeCode() && null != overallContractAmtOrLoaAmt ) {
 			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode()
 					.getParameterCode();
 
@@ -6273,5 +6254,36 @@ public class DirectLOABackingBean extends
 		return resDTO.getScLoiLoa();
 	}
 
+	/**
+	 * Gets the ministry condition field.
+	 *
+	 * @param scLoa the sc loa
+	 * @return the ministry condition field
+	 */
+	private void getMinistryConditionField(ScLoa scLoa) {
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		orgProfileReqDTO.setOrgProfileId(scLoiLoa.getPmOrgProfile()
+				.getOrgProfileId());
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IOrgProfileSO.class);
+		PmOrgProfile ministryOrgProfile = orgProfileSO
+				.retrieveMinistryByOrgProfileId(orgProfileReqDTO)
+				.getPmOrgProfile();
+		StringBuilder criteria = new StringBuilder();
+		criteria.append(
+				"orgTypeCode.parameterCode")
+				.append("^").append(OrganizationType.DIVISION.value())
+				.append("|");
+		
+		criteria.append(
+				"parentOrgProfile.orgProfileId")
+				.append("^").append(ministryOrgProfile.getOrgProfileId())
+				.append("|");
+		
+		criteria.append("recordStatus^1");
+		getManagedBean().setMinistryConditionField(criteria.toString());
+	}
 
 }
