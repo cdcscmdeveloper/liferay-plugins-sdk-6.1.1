@@ -292,6 +292,8 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (bsvDetail.getMaxNoOfAttendance() < 1) {
 			throw new EpException("Max Attendance is greater than 0");
 		}
+		validatePostcode();
+		
 		// Checking for duplication.. if it is add flow..
 		if (!bsvDetail.isSelected()) {
 			if (null != briefingBean.getBriefingList()
@@ -843,9 +845,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		String postcode = getManagedBean().getQtBriefing().getAddress().getPostcode();
 		Pattern pattern = Pattern.compile("\\d{5}");
 		Matcher matcher = pattern.matcher(postcode);
-		if (matcher.matches()) {
-			// throw new EpException("Postcode is Valid");
-		} else {
+		if (!matcher.matches()) {
 			throw new EpException("Postcode is not valid, Postcode Should be limited to 5 digits.");
 		}
 
