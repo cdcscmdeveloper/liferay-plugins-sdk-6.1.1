@@ -45,12 +45,13 @@
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 			<p:calendar showOn="button" id="orgTypefeeeffDateId" navigator="true"
-				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
+				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.effDate)}"
 				style="width :100px;" required="true"
+				maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
-				<p:ajax event="dateSelect" update="@([id$=orgTypefeeeffDateId])"
+				<p:ajax event="dateSelect" update="@([id$=orgTypefeeeffDateId,id$=orgTypefeeeffDateId])"
 					process="@this" />
 			</p:calendar>
 		</p:column>
@@ -61,15 +62,18 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 			<p:calendar showOn="button" id="orgTypefeeexpDateId" navigator="true"
-				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
+				yearRange="#{DateUtils.getCalendarMaxYearRange(feeObj.expDate)}"
 				style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+				maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.expDate}"
 				validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
 				<f:attribute name="startDate" value="#{feeObj.effDate}" />
 				<f:validator validatorId="primeDateRangeValidator" />
+				<p:ajax event="dateSelect" update="@this"
+					process="@this" />
 
 			</p:calendar>
 		</p:column>

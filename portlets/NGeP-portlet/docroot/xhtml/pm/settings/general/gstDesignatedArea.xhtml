@@ -85,14 +85,15 @@
 				<h:outputText value=" #{lbl['lbl.pm.as.effdate']}" />
 			                	</f:facet>
 		<p:calendar showOn="button" id="daeffDateId" navigator="true"
-				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
+				yearRange="#{DateUtils.getCalendarMaxYearRange(daObj.effDate)}"
 	         	disabled="#{!daObj.brandNew and (daObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}" 
+				maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
 				required="true" label="#{lbl['lbl.pm.as.effdate']}"
 				readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{daObj.effDate}">
-				<p:ajax event="dateSelect" update="@([id$=daexpDateId])" process="@this" />
+				<p:ajax event="dateSelect" update="@([id$=daexpDateId,id$=daeffDateId])" process="@this" />
 			</p:calendar>
 		</p:column>
 
@@ -104,13 +105,17 @@
 			                	</f:facet>
 
 			<p:calendar showOn="button" id="daexpDateId" navigator="true"
-				yearRange="#{DateUtils.getCalendarMaxYearRange()}"
-				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
+				yearRange="#{DateUtils.getCalendarMaxYearRange(daObj.expDate)}"
+				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+				maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
+				style="width :45px;"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{daObj.expDate}" validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
 				<f:attribute name="startDate" value="#{daObj.effDate}" />
 				<f:validator validatorId="primeDateRangeValidator" />
+				<p:ajax event="dateSelect" update="@this"
+					process="@this" />
 			</p:calendar>
 		</p:column>
 		

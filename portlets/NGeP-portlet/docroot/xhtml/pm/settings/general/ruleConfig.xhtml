@@ -214,16 +214,17 @@
 				</f:facet>
 
 				<p:calendar  navigator="true"
-					yearRange="#{DateUtils.getCalendarMaxYearRange()}"					
+					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"					
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleValeffDateId"
 					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
+					maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
 					required="true" label="#{lbl['lbl.pm.as.effdate']}"
 					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.effDate}">
-					<p:ajax event="dateSelect" update="@([id$=ruleConfigexpDateId])"
+					<p:ajax event="dateSelect" update="@([id$=ruleConfigexpDateId,id$=ruleValeffDateId])"
 						process="@this" />
 					<p:ajax event="dateSelect"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
@@ -241,17 +242,20 @@
 			                	</f:facet>
 
 				<p:calendar  navigator="true"
-					yearRange="#{DateUtils.getCalendarMaxYearRange()}"	
+					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.expDate)}"	
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleConfigexpDateId"
 					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+					maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
 					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.expDate}"
 					validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
 					<f:attribute name="startDate" value="#{typeValueObj.effDate}" />
 					<f:validator validatorId="primeDateRangeValidator" />
+					<p:ajax event="dateSelect" update="@this"
+						process="@this" />
 					<p:ajax event="dateSelect"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
 						update="@([id$=cloneLink])" />
