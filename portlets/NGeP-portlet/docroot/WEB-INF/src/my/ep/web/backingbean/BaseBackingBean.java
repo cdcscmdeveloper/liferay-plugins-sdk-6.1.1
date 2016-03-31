@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -72,13 +71,10 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -1467,35 +1463,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			
-			SearchBean<PmConfigRule> searchBean = new SearchBean<PmConfigRule>();
-			// Filter By - ruleType
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("ruleType",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							ruleType));
-			reqDTO.setSearchBean(searchBean);			
+			reqDTO.setRuleType(ruleType);			
 			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 			
-			List<PmConfigRule> configRules = ruleSO.getRuleTypes(reqDTO)
-					.getRuleTypeList();
-
-			if (configRules != null && configRules.size() > 0) {
-				PmConfigRule configRule = configRules.get(0);
-				
-				if (configRule != null) {
-					for(PmConfigRuleDesc desc : configRule.getConfigRuleDesc()){
-						if(desc.getLanguageCode().getLanguageCode().equals(new FacesScopes().getUserLocale().getLanguage())){
-							return desc.getRuleDesc();
-						}
-					}
-				}
-				
-			}
+			return ruleSO.getRuleDescByType(reqDTO);
 
 		} finally {
 			ruleSO = null;
 		}
-		
-		return null;
 	}
 }

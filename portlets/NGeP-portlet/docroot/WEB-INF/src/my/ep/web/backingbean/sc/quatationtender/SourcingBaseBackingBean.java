@@ -1329,9 +1329,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.ONE_TIER_EVALUATION_THRESHOLD);
-			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
-			return ruleSO.compareAValueWithRuleTypeValues(reqDTO)
-					.isCompareValueResult();
+			
+			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
+					.getRuleValueList();
+			if (configRuleValues != null && configRuleValues.size() > 0) {
+				PmConfigRuleValue configRuleValue = configRuleValues.get(0);
+				
+				if (estimatedAmount != null && estimatedAmount.compareTo(BigDecimal.valueOf(0)) > 0) {
+					if (configRuleValue != null && configRuleValue.getRuleValue() != null) {
+						return estimatedAmount.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0;
+					}
+				}
+				
+			} else {
+				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(reqDTO.getRuleType())});
+			}
+			
+			return false;
 
 		} finally {
 			ruleSO = null;
@@ -1345,7 +1359,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 		the estimated amount
 	 * @return	the indicator is bumiputra threshold
 	 */
-	public boolean isOpenForBumiputraThresHold(BigDecimal estimatedAmount) {
+	protected boolean isOpenForBumiputraThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
 			ruleSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1357,15 +1371,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
 
-			if (estimatedAmount != null && estimatedAmount.compareTo(BigDecimal.valueOf(0)) > 0 && 
-					configRuleValues != null && configRuleValues.size() > 0) {
-				PmConfigRuleValue configRuleValue = configRuleValues.get(0);
-				
-				if (configRuleValue != null && configRuleValue.getFromValue() != null && configRuleValue.getToValue() != null) {
-					return estimatedAmount.compareTo(configRuleValue.getFromValue()) >= 0 && 
-							estimatedAmount.compareTo(configRuleValue.getToValue()) <= 0;
-				}
-				
+			if (estimatedAmount != null && estimatedAmount.compareTo(BigDecimal.valueOf(0)) > 0) {
+				if (configRuleValues != null && configRuleValues.size() > 0) {
+					PmConfigRuleValue configRuleValue = configRuleValues.get(0);
+					
+					if (configRuleValue != null && configRuleValue.getFromValue() != null && configRuleValue.getToValue() != null) {
+						return estimatedAmount.compareTo(configRuleValue.getFromValue()) >= 0 && 
+								estimatedAmount.compareTo(configRuleValue.getToValue()) <= 0;
+					}
+					
+				} else {
+					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(reqDTO.getRuleType())});
+				}	
 			}
 			
 			return false;
@@ -1382,7 +1399,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 		the estimated amount
 	 * @return	the indicator is quotation threshold
 	 */
-	public boolean isQuotationThresHold(BigDecimal estimatedAmount) {
+	protected boolean isQuotationThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
 			ruleSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1398,8 +1415,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (ruleValueStrList != null && ruleValueStrList.size() > 0) {
 				return ParameterConst.PROCUREMENT_MODE_QUOTATION
 						.equals(ruleValueStrList.get(0));
-			}
-
+			}/* else {
+				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(reqDTO.getRuleType())});
+			}*/ // temporary take out because xhtml using it.
+			
 			return true;
 
 		} finally {
@@ -1424,11 +1443,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			ruleReqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
 			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 
-			if (ruleResDTO.isSuccessful()
-					&& ruleResDTO.getRuleValueList() != null
-					&& ruleResDTO.getRuleValueList().size() > 0) {
-				maxProcurementAmt = new BigDecimal(ruleResDTO
-						.getRuleValueList().get(0).getRuleValue());
+			if (ruleResDTO.isSuccessful()) {
+				if (ruleResDTO.getRuleValueList() != null
+						&& ruleResDTO.getRuleValueList().size() > 0) {
+					maxProcurementAmt = new BigDecimal(ruleResDTO
+							.getRuleValueList().get(0).getRuleValue());
+				} else {
+					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+				}	
 			}
 
 		} finally {
@@ -1455,10 +1477,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			ruleReqDTO.setRuleType(RuleTypeConst.PANEL_THRESHOLD);
 			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 			
-			if(ruleResDTO.isSuccessful() && ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
-				maxProcurementAmt = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+			if (ruleResDTO.isSuccessful()) {
+				if(ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
+					maxProcurementAmt = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+				} else {
+					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+				}	
 			}
-
+			
 		} finally {
 			ruleSO = null;
 		}
@@ -2246,6 +2272,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					return configRuleValue.getToValue();
 				}
 				
+			} else {
+				log.warn("Rule " + RuleTypeConst.QT_RT_MINIMUM_NUMBER_SUPPLIER + " is not found.");
 			}
 
 		} finally {

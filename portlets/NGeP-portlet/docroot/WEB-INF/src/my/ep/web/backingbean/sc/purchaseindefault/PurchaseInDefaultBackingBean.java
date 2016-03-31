@@ -38,7 +38,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -92,13 +91,13 @@ import my.ep.web.managedbean.sc.purchaseindefault.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ReasonHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 
@@ -299,6 +298,8 @@ public class PurchaseInDefaultBackingBean extends
 		if (ruleValueList != null && ruleValueList.size() > 0) {
 			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
 			scPurchaseInDefault.setPidValidDays(Integer.valueOf(configRuleValue.getRuleValue()));
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 		}
 		
 		return PURCHASE_IN_DEFAULT_PAGE;
