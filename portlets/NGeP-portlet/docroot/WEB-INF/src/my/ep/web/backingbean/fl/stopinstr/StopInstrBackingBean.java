@@ -306,7 +306,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}
 		
 		BigDecimal totalRecalledAmt = new BigDecimal(0);
-		List<Long> flFulfilmentItemIds = null;
+		List<String> flFulfilmentItemIds = null;
 		
 		for(Entry<String, List<FlStopInstrItem>> itemEntry : siItemsMap.entrySet()){
 			List<FlStopInstrItem> stopInstrItems = itemEntry.getValue();
@@ -316,14 +316,14 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getItemCode(), flsiItem, getManagedBean().getChargeLineItemRoot());
 			
 			totalRecalledAmt = new BigDecimal(0);
-			flFulfilmentItemIds = new ArrayList<Long>();
+			flFulfilmentItemIds = new ArrayList<String>();
 			
 			for(FlStopInstrItem chargeLineItem : stopInstrItems) {
-				if(flFulfilmentItemIds.contains(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+chargeLineItem.getFlFulfilmentItem().getPmUomId())) {
+				if(flFulfilmentItemIds.contains(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+""+chargeLineItem.getFlFulfilmentItem().getPmUomId())) {
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getFlFulfilmentItem().getSumRecalledQty().add(chargeLineItem.getRecalledQty()));
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getFlFulfilmentItem().getSumRecalledAmt().add(chargeLineItem.getRecalledAmt()));						
 				} else {
-					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+chargeLineItem.getFlFulfilmentItem().getPmUomId());
+					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+""+chargeLineItem.getFlFulfilmentItem().getPmUomId());
 					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getRecalledQty());
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getRecalledAmt());					
