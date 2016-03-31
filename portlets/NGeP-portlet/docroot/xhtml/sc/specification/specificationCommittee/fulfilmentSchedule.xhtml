@@ -44,14 +44,13 @@
 							<td style="width: 175px;"><h:outputLabel
 									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td>
 							<td><p:inputText style="text-align:right;" id="focus"
-									title="#{lbl['lbl.sc.spec.total.frequency.tooltip']}"
 									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									value="#{specificationBackingBean.managedBean.totalFrequency}">
-									<p:ajax event="blur" update="@([id$=frequencySchedule])"
+									<p:ajax event="change" update="@([id$=frequencySchedule])"
 										partialSubmit="true" process="@this"
 										listener="#{specificationBackingBean.addScheduleDetails}" />
-								</p:inputText> <p:tooltip id="toolTipFocus" for="focus" showEvent="focus"
-									hideEvent="blur" /></td>
+								</p:inputText> <ac:iconTooltip
+									value="#{lbl['lbl.sc.spec.total.frequency.tooltip']}" /></td>
 						</h:panelGroup>
 					</tr>
 				</table>
@@ -73,7 +72,6 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
 						</f:facet>
 						<p:inputText value="#{frequency.scheduleNo}" required="true"
-							title="#{lbl['lbl.sc.spec.total.frequency.tooltip']}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							style="text-align:right;" maxlength="3"
 							label="#{lbl['lbl.sc.spec.schedule.no']}" size="3"
@@ -82,8 +80,6 @@
 								update="@this,frequencySchedule" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
-						<p:tooltip id="toolTipDreqScheduleNum#{index}PS" for="scheduleNum"
-							showEvent="focus" hideEvent="blur" />
 						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.start.month']}"
@@ -196,14 +192,13 @@
 								value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right;"
 								id="progressivefocus"
-								title="#{lbl['lbl.sc.spec.phase.tooltip']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
-								<p:ajax event="blur" update="@([id$=progressivePayment])"
+								<p:ajax event="change" update="@([id$=progressivePayment])"
 									partialSubmit="true" process="@this"
 									listener="#{specificationBackingBean.addProgressiveDetails}" />
-							</p:inputText> <p:tooltip id="toolTipForprogressivePaymentids"
-								for="progressivefocus" showEvent="focus" hideEvent="blur" /></td>
+							</p:inputText> <ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.phase.tooltip']}" /></td>
 					</tr>
 
 				</table>
@@ -221,7 +216,6 @@
 						</f:facet>
 						<p:inputText value="#{payment.phaseNo}" required="true"
 							style="text-align:right;"
-							title="#{lbl['lbl.sc.spec.phase.tooltip']}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
 							maxlength="3" size="3">
@@ -230,10 +224,6 @@
 								update="@this,progressivePayment" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
-						<!-- <ac:iconTooltip id="progressivePaymentPhaseno#{index}SC"
-							value="#{lbl['lbl.sc.spec.phase.tooltip']}" /> -->
-						<p:tooltip id="progressivePaymentPhaseno#{index}SC"
-							for="progressivePhase" showEvent="focus" hideEvent="blur" />
 						<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
 					</p:column>
 					<p:column style="width:20%">
