@@ -2399,4 +2399,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return scAddress;
 	}	
 	
+	/**
+	 * Gets the days by rule type.
+	 *
+	 * @param RuleType the rule type
+	 * @return the days by rules
+	 */
+	protected Integer getDaysByRuleType(String ruleType){
+		Integer days = 0;
+		IRuleSO ruleSO;
+		try {
+			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(ruleType);
+			
+			List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+			if (ruleValueList != null && ruleValueList.size() > 0) {
+				PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+				days  = Integer.valueOf(configRuleValue.getRuleValue());
+			} else {
+				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+			}
+		} finally {
+			ruleSO= null;
+		}
+		
+		return days;
+	}
 }
