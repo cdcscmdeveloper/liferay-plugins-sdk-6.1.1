@@ -6,14 +6,12 @@ import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 
 
-@DisallowConcurrentExecution
 public class GfmasBatchPmInboundJob implements Job {
 
 	public static Logger log = EpLogger
