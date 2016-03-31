@@ -82,9 +82,11 @@
 						title="#{lbl['lbl.quartz.state.error.tooltips']}" />
 				</p:column>
 				
-				<p:column headerText="Missfire Policy">
-					<h:outputText value="#{jobBean.trigger.misfireInstruction}" />
-				</p:column>
+				<ui:remove>
+					<p:column headerText="Missfire Policy">
+						<h:outputText value="#{jobBean.trigger.misfireInstruction}" />
+					</p:column>
+				</ui:remove>
 				
 				<p:column headerText="#{lbl['lbl.quartz.last.fired.time']}" style="width : 10% !important;">
 					<h:outputText value="#{jobBean.trigger.previousFireTime}" rendered="#{not empty jobBean.trigger}"
