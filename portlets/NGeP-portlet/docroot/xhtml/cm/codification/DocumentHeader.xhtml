@@ -55,11 +55,11 @@
 				<c:choose>
 					<c:when
 						test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null and unspscCodeBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType == 'O'}">
-						<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
-							style="text-align : right;"></p:outputLabel>
-						<h:outputText
+						<td><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+							style="text-align : right;"></p:outputLabel></td>
+						<td><h:outputText
 							style="white-space: normal!important; text-align : left;"
-							value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.regNo}" />
+							value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.regNo}" /></td>
 					</c:when>
 					<c:when
 						test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null and unspscCodeBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType != 'O'}">
@@ -70,9 +70,9 @@
 							value="#{unspscCodeBackingBean.retrieveMofNo(unspscCodeBackingBean.managedBean.requestCode.smSupplier.supplierId , unspscCodeBackingBean.managedBean.requestCode.smSupplier.smAppl.supplierType)}" />
 					</td></c:when>
 					<c:otherwise>
-						<p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
-							style="text-align : right;"></p:outputLabel>
-						<h:outputText value="N/A" style="text-align : left;" />
+						<td><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}"
+							style="text-align : right;"></p:outputLabel></td>
+						<td><h:outputText value="N/A" style="text-align : left;" /></td>
 					</c:otherwise>
 				</c:choose>
 			</tr>
