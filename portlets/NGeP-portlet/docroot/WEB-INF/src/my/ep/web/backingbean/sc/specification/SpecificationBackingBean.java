@@ -14478,16 +14478,16 @@ public class SpecificationBackingBean extends
 		List<PmConfigRuleValue> ruleValueList = ruleSO
 				.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
 				.getRuleValueList();
-		for (PmConfigRuleValue pmConfigRuleValue : ruleValueList) {
-			if (null != pmConfigRuleValue.getRuleValue()) {
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			if (configRuleValue != null && configRuleValue.getRuleValue() != null) {
 				technicalPassingScore = new BigDecimal(
-						pmConfigRuleValue.getRuleValue());
+						configRuleValue.getRuleValue());
 			}
-		}
-		if (null == technicalPassingScore
-				|| technicalPassingScore.intValue() == 0) {
-			technicalPassingScore = new BigDecimal(50);
-		}
+		}/* else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}*/
+		
 		return technicalPassingScore;
 	}
 
