@@ -6352,6 +6352,9 @@ public class SmApplicationBackingBean extends
 						for (PmUser user : supplierUserList) {
 							reqDTO.getUserList().add(user.getLoginId());
 						}
+					} else {
+						PmUser pmUser = new FacesScopes().getUserSessionBean();
+						reqDTO.getUserList().add(pmUser.getLoginId());
 					}
 				} else {
 					PmUser pmUser = new FacesScopes().getUserSessionBean();
