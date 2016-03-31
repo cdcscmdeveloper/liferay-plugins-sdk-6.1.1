@@ -37,7 +37,6 @@ import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -66,9 +65,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -91,7 +88,6 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
@@ -1283,7 +1279,7 @@ public class DirectLOABackingBean extends
 
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
-			Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
 
@@ -3907,7 +3903,7 @@ public class DirectLOABackingBean extends
 		scLoa.setOverallContractAmt(overallCtAmout);
 		
 		// Acknowledge Date
-		Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOA_RESPONSE_PERIOD);
+		Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
 		scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 
 		TemplateSpecBean bean = new TemplateSpecBean(
@@ -5689,35 +5685,6 @@ public class DirectLOABackingBean extends
 		}
 	}
 
-	/**
-	 * To check is performance bond required
-	 * 
-	 * @return boolean isPerformanceBondRequired
-	 */
-	public boolean getPerformanceBondEnableOrNot() {
-		boolean isPerformanceBondMandatory = false;
-		ScLoa loa = getManagedBean().getScLoa();
-		BigDecimal overallContractAmtOrLoaAmt = loa.getOverallContractAmt();
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(RuleTypeConst.BOND);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
-
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-
-			if (overallContractAmtOrLoaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
-				isPerformanceBondMandatory = true;
-				getManagedBean().getScLoa().setBondReq(true);
-			} else if (overallContractAmtOrLoaAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0) {
-				isPerformanceBondMandatory = true;
-				getManagedBean().getScLoa().setBondReq(false);
-			}
-		}
-		return isPerformanceBondMandatory;
-	}
-
 	public void resetContractDates() {
 		this.getManagedBean().getScLoa().setContractEffDate(null);
 		this.getManagedBean().getScLoa().setContractExpDate(null);
@@ -6165,26 +6132,6 @@ public class DirectLOABackingBean extends
 		loa.setAgreementReq(isAgreementMandatory);
 
 		return isAgreementMandatory;
-	}
-	
-	/**
-	 * Gets the days by rules.
-	 *
-	 * @param RuleType the rule type
-	 * @return the days by rules
-	 */
-	private Integer getDaysByRules(String RuleType){
-		Integer days = 0;
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(RuleType);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			days  = Integer.valueOf(configRuleValue.getRuleValue());
-		}
-		return days;
 	}
 	
 	private void RenameTempLoaNoRepoDirByLoaNo(ScLoa scLoa){

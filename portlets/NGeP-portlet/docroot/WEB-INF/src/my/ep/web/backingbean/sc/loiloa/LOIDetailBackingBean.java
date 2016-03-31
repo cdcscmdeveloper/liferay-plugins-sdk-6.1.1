@@ -36,7 +36,6 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -58,7 +57,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -78,7 +76,6 @@ import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -1697,7 +1694,7 @@ public class LOIDetailBackingBean extends
 
 		// Issue & Acknowledge Date
 		scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
-		Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOI_RESPONSE_PERIOD);
+		Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
 		scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), loaRespPeriod));
 
 		// approvers
@@ -2091,7 +2088,7 @@ public class LOIDetailBackingBean extends
 			savePendingLois();
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
-			Integer loaRespPeriod = getDaysByRules(RuleTypeConst.LOI_RESPONSE_PERIOD);
+			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
 			scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), loaRespPeriod));
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -5153,28 +5150,6 @@ public class LOIDetailBackingBean extends
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Gets the days by rules.
-	 *
-	 * @param RuleType the rule type
-	 * @return the days by rules
-	 */
-	private Integer getDaysByRules(String RuleType){
-		Integer days = 0;
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(RuleType);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			days  = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}
-		return days;
 	}
 	
 	/**
