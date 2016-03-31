@@ -176,12 +176,12 @@
 				</table>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						process="@this, bsvdetailsdlg"
+						process="@this, bsvdetailsdlg" update="@(.briefingList)" 
 						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList}"
-						update="@(.briefingList)" />
+						onclick="addbsvdtls.hide()" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.cancelBriefingList}"
-						partialSubmit="true" />
+						partialSubmit="true" onclick="addbsvdtls.hide(); return false;" />
 				</div>
 			</p:panel>
 		</c:if>
