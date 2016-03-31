@@ -220,7 +220,9 @@ public class DirectLOABackingBean extends
 			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE, reqDTO);
 
 			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
+			validateSupplierDetails(scLoa);
 			validateDeductionPaymentDtls(scLoa);
+						
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
@@ -320,6 +322,7 @@ public class DirectLOABackingBean extends
 			scLoa.setScLoaWorkFlowStatuses(null);
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 
+			validateSupplierDetails(scLoa);
 			validateLOADetails(scLoa, outcome);
 
 			validateContractAmount(scLoa.getLoaAmt());
@@ -1167,7 +1170,35 @@ public class DirectLOABackingBean extends
 			}
 		}
 	}
-
+	
+	/**
+	 * Validate supplier details
+	 * 
+	 * @param scLoa
+	 *          the scLoa
+	 */	
+	private void validateSupplierDetails(ScLoa scLoa) {
+		Locale locale = new FacesScopes().getUserLocale();
+		
+		if (StringUtils.isBlank(
+				scLoa.getScLoiLoa().getMofNo())) {
+			throw new EpException(MessageConst.ERROR_760400,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.mof.no", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+		}
+		if (StringUtils.isBlank(
+				scLoa.getScLoiLoa().getSupplierName())) {
+			throw new EpException(MessageConst.ERROR_760400,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.supplier.name", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+		}
+		if (scLoa.getSupplierAddress() == null) {
+			throw new EpException(MessageConst.ERROR_760400,
+					new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+		}		
+	}
+	
 	/**
 	 * Progressive pay validation.
 	 * 

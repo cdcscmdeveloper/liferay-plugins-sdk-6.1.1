@@ -15,25 +15,25 @@
 			<tr>
 				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
-				<td colspan="3"><ac:lov id="supplierMofNo"
+				<td colspan="3"><ac:lov id="supplierMofNo" label="#{lbl['lbl.sc.mof.no']}" 
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="SM_SUPPLIER_MOFNO"
 						postUpdateListener="directLOABackingBean.mofNoListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
 						headerText="Supplier MOF No Lov" selectionMode="single"
 						readonly="true" size="35" conditionField="recordStatus^1" 
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
-						update="@form" /></td>
+						update="@form" required="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
-				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER"
+				<td colspan="3"><ac:lov id="supplierId" lovId="SM_SUPPLIER" label="#{lbl['lbl.sc.supplier.name']}" 
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
 						headerText="Supplier Lov" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
 						conditionField="recordStatus^1" readonly="true" size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
-						update="@form" /></td>
+						update="@form" required="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
@@ -100,16 +100,16 @@
 			<tr>
 				<td rowspan="3" valign="top" width="18%"><p:outputLabel
 						value="#{lbl['lbl.sc.address']}" /></td>
-				<td rowspan="3" width="32%"><p:inputTextarea id="suppAddr"
-						cols="36" disabled="true" rows="5"
+				<td rowspan="3" width="32%">
+					<p:inputTextarea id="suppAddr" label="#{lbl['lbl.sc.address']}" 
+						cols="36" disabled="true" rows="5" style=" margin-bottom:5px; width: 274px" maxlength="200" 
 						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.supplierAddress)}"
-						style=" margin-bottom:5px; width: 274px" maxlength="200" /></td>
+						required="true" /></td>
 
 				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				</td>
-				<td><p:inputText id="suppPhoneNo" size="25"
-						disabled="true"
-						value="#{directLOABackingBean.managedBean.scLoa.supplierPhoneNo}" />
+				<td><p:inputText id="suppPhoneNo" size="25" disabled="true" 
+								 value="#{directLOABackingBean.managedBean.scLoa.supplierPhoneNo}" />
 				</td>
 			</tr>
 			<tr>
