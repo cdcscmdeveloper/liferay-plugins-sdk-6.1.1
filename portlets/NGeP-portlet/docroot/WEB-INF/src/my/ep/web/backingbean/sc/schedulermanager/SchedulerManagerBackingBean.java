@@ -193,7 +193,33 @@ public class SchedulerManagerBackingBean extends
 				JobDetail jobDetail = EpSchedulerHelper.getScheduler()
 						.getJobDetail(epJobVO.getJobKey());
 				if (jobDetail != null && jobDetail.getJobBuilder() != null) {
-					jobDetail.getJobBuilder().requestRecovery();
+					if (jobDetail.requestsRecovery()) {
+						initAllJobs();
+					} else {
+						rescheduledJob(epJobVO);
+					}
+				}
+			}
+
+		} catch (SchedulerException e) {
+			throw new EpException(MessageConst.ERRQRTZ_00001);
+		}
+	}
+
+	public void rescheduledJob(EpJobVO epJobVO) {
+		try {
+			if (EpSchedulerHelper.getScheduler()
+					.getTriggerState(epJobVO.getTrigger().getKey()).toString()
+					.equals(TriggerState.COMPLETE.toString())
+					|| EpSchedulerHelper.getScheduler()
+							.getTriggerState(epJobVO.getTrigger().getKey())
+							.toString().equals(TriggerState.BLOCKED.toString())) {
+				JobDetail jobDetail = EpSchedulerHelper.getScheduler()
+						.getJobDetail(epJobVO.getJobKey());
+				if (jobDetail != null && jobDetail.getJobBuilder() != null) {
+					EpSchedulerHelper.getScheduler()
+							.rescheduleJob(epJobVO.getTrigger().getKey(),
+									epJobVO.getTrigger());
 					initAllJobs();
 				}
 			}
