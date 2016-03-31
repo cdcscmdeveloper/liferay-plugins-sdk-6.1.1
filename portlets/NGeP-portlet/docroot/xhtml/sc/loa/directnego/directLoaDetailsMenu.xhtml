@@ -6,6 +6,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ac:lovPopup />
+	
+	<ui:param name="isContractTypeAsMinistry"
+		value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -347,7 +350,7 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contract.details']}"
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contract.details']}"  id="contractDetailsId"
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -367,32 +370,28 @@
 						<p:ajax event="change"
 							listener="#{directLOABackingBean.contractTypeChanged()}"
 							partialSubmit="true" process="@this"
-							update="contractAgencyPG,contractAdmin" />
+							update="contractDetailsId" />
 					</p:selectOneMenu> <p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><h:panelGroup id="contractAgencyPG">
-						<p:selectOneMenu id="contractAgencyProf" required="true"
-							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgProfileId}"
-							style="width: 284px;margin-bottom: 5px;" label="#{lbl['lbl.sc.loiloa.loa.agency']}"
-							rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode ne ParameterConst.contractTypeCentral}">
-
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-							<f:selectItems value="#{directLOABackingBean.managedBean.agencyProfileDDList}"
-								var="pmOrgProfile" itemLabel="#{pmOrgProfile[1]}" itemValue="#{pmOrgProfile[0]}" />
-							<p:ajax event="change" listener="#{directLOABackingBean.contractAgencyChanged()}"
-									process="@this" partialSubmit="true" update="contractAdmin" />
-						</p:selectOneMenu>
-						<p:message id="contractAgencyProfMsg" for="contractAgencyProf" display="icon" />
-
-						<p:inputText id="contractAgency" disabled="true" style="width:284px; margin-bottom:5px;"
+				<td><h:panelGroup id="contractAgencyPG" rendered="#{isContractTypeAsMinistry}">
+						 <ac:lov 
+							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="PM_ORG_PROFILE"
+							postUpdateListener="directLOABackingBean.contractAgencyChanged()"
+							headerText="Contract Agency" selectionMode="single"
+							readonly="true" size="35"
+							saveObject="directLOABackingBean.managedBean.scLoa.contractAgency"
+							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}"
+							required="true"
+							update="@form" />
+					</h:panelGroup>
+					<p:inputText id="contractAgency" disabled="true" style="width:234px; margin-bottom:5px;"
 									 value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}" 
-									 rendered="#{directLOABackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeCentral}" />
-					</h:panelGroup></td>
+									 rendered="#{!isContractTypeAsMinistry}" />	
+					</td>
 				<td style="width: 10%;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
