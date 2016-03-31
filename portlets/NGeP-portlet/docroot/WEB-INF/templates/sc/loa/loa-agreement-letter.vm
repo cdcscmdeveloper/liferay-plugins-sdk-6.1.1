@@ -208,7 +208,7 @@
 					: 
 				</td>
 				<td>
-					$supplierDesignation
+					$!supplierDesignation
 				</td>
 				
 			</tr>
