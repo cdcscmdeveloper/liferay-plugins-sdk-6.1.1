@@ -32,7 +32,7 @@
 						disabled="true" /> <p:spacer width="5" /> <p:commandLink
 						oncomplete="suppDetailsPopup.show();return false;" process="@this"
 						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						update="@([id$=suppDetailsPopup])">
+						update="@([id$=suppDetailsPopupId])">
 
 						<p:graphicImage value="/css/images/design/evaluate.png"
 							title="#{lbl['lbl.sc.view.companyinfo']}"
