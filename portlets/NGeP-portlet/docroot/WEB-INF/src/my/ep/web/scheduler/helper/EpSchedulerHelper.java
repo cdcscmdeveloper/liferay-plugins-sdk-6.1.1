@@ -244,7 +244,7 @@ public class EpSchedulerHelper {
 											CronScheduleBuilder
 													.cronSchedule(
 															cronExpression)
-													.withMisfireHandlingInstructionDoNothing())
+													.withMisfireHandlingInstructionIgnoreMisfires())
 									.build();
 
 						}
