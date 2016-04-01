@@ -975,7 +975,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						TaxInvoiceVO taxInvVO = new TaxInvoiceVO();
 						taxInvVO.setAmountWithoutGst(invItem.getInvAmt());
 						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
-							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getInvoice().getFlRequest().getGstRate()+"%");
+							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getInvoice().getFlRequest().getGstRate().setScale(2,RoundingMode.HALF_UP)+"%");
 							taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
 						}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
 							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = 0%");
@@ -993,7 +993,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					taxInvVO.setAmountWithoutGst(invItem.getInvAmt());
 					if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
 						taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
-						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getInvoice().getFlRequest().getGstRate()+"%");
+						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getInvoice().getFlRequest().getGstRate().setScale(2,RoundingMode.HALF_UP)+"%");
 					}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
 						taxInvVO.setGstAmount(BigDecimal.ZERO.toString());	
 						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = 0%");
