@@ -24,7 +24,7 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.deduction.type']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.sc.deduction.type.tooltip']}" />
+					<ac:iconTooltip id="dedType#{rowIndex}" value="#{lbl['lbl.sc.deduction.type.tooltip']}" />
 				</f:facet>
 				<h:selectOneMenu id="deductionType"
 					value="#{scQtDeduction.deductionType.parameterId}" disabled="#{qTDetailBB.isAuditor()}">
