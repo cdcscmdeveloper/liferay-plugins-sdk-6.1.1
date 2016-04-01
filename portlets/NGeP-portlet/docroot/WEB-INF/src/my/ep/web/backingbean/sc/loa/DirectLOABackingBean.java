@@ -1089,37 +1089,6 @@ public class DirectLOABackingBean extends
 			}
 		}
 
-		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)
-				|| QTStatusConst.LOA_PENDING_REVISION.equals(statusId)
-				&& BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			if (scLoa.isApprovalReq()) {
-				if (null == getManagedBean().getApproverUser()
-						|| null == getManagedBean().getApproverUser()
-								.getUserId()) {
-					throw new EpException(MessageConst.ERROR_760315,
-							new String[] { ResourceBundleUtils.getMessage(
-									"lbl.sc.approver",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
-				}
-			}
-			if (null != scLoa.getContractSigner()
-					&& null == scLoa.getContractSigner().getUserId()) {
-				throw new EpException(MessageConst.ERROR_760352);
-			}
-
-			if (null == scLoa.getContractEffDate()) {
-				throw new EpException(MessageConst.ERROR_760349);
-			}
-
-			if (null == scLoa.getContractExpDate()) {
-				throw new EpException(MessageConst.ERROR_760350);
-			}
-			if (null == scLoa.getFileExtNo()) {
-
-				throw new EpException(MessageConst.ERROR_760351);
-			}
-		}
 		// validation for fulfillment schedule and progressivepayment
 		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
 				|| BpmOutcomeConst.BPM_SAVE.equals(outcome)) {
