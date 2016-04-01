@@ -57,7 +57,7 @@
 						<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
 						<p:password binding="#{pin1}" id="password"
 							value="#{cc.attrs.password}" />
-						<p:commandButton id="spkiSign" value="Sign" onstart="spkiSign();" 
+						<p:commandButton id="spkiSign" value="#{lbl['lbl.btn.sign']}" onstart="spkiSign();" 
 							oncomplete="spkiBlockWidget.hide();" />
 					</h:panelGrid>
 				</span>
