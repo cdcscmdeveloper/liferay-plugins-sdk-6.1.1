@@ -3634,6 +3634,7 @@ public class QTDetailBackingBean extends
 			reqDTO = prepareQTInfo();
 			reqDTO.getQtdetail().setModified(false);
 			reqDTO.setSaveFlow(true);
+			reqDTO.getQtdetail().setFCApproval(true);
 			detailSO.validateApprovalDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			int selectedApprovalTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
@@ -3703,6 +3704,7 @@ public class QTDetailBackingBean extends
 				reqDTO = prepareQTInfo();
 				reqDTO.getQtdetail().setModified(true);
 				reqDTO.setSaveFlow(true);
+				reqDTO.getQtdetail().setFCApproval(true);
 				detailSO.validateApprovalDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
@@ -3783,7 +3785,10 @@ public class QTDetailBackingBean extends
 					// retrieveSuppQualificationTabDtl();
 					break;
 				case 3:
-
+						if (isQTStatusBtwScheduleDocAndBeforePublished(getManagedBean()
+								.getQt().getQtStatus().getStatusId())) {
+							reqDTO.getQtdetail().setFCApproval(true);
+						}
 					detailSO.validateApprovalDetails(reqDTO);
 					// retrieveApprovalTabDtl();
 					break;
