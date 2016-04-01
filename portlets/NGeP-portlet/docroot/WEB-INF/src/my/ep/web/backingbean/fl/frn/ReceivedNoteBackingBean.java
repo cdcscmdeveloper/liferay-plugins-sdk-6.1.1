@@ -29,6 +29,7 @@ import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
@@ -256,7 +257,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 										new FacesScopes().getUserLocale())));
 					}
 				} else {
-					if(getManagedBean().isLastFRNTaxInv()){
+					if(getManagedBean().isLastFRNTaxInv() && checkTaxInvoice(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId())){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(MessageConst.INFO_745010, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
 										ParameterConst.DOCTYPE_FULFILMENT_NOTE),
@@ -1314,6 +1315,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		sb.append(outcome+"|");
 		sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 		getManagedBean().setTextBeforeSign(sb.toString());
+	}
+	
+	private boolean checkTaxInvoice(Long reqId){
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		return fulfilmentSO.checkTaxInvoice(reqId);
 	}
 		
 }
