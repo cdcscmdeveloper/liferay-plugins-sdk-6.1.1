@@ -2416,7 +2416,8 @@ public class SpecificationBackingBean extends
 						ScQtScoreSetting pkgScoreSetting = constructScoreSetting(4);
 						BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 						pkgScoreSetting.setOverallTechnical(passingScore);
-						pkgScoreSetting.setOverallFin(passingScore);
+						int financial=100-passingScore.intValue();
+						pkgScoreSetting.setOverallFin(new BigDecimal(financial));
 						this.getManagedBean().setRecommendationPackageTotal(
 								new BigDecimal(100));
 
@@ -14484,9 +14485,9 @@ public class SpecificationBackingBean extends
 				technicalPassingScore = new BigDecimal(
 						configRuleValue.getRuleValue());
 			}
-		}/* else {
+		} else {
 			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}*/
+		}
 		
 		return technicalPassingScore;
 	}
