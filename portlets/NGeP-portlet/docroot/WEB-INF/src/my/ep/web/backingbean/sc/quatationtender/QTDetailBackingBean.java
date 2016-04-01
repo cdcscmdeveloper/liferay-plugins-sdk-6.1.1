@@ -4202,9 +4202,7 @@ public class QTDetailBackingBean extends
 		List<Date> dates = new ArrayList<Date>();
 		Date latestBsvDate = null;
 		for (ScQtBsvDtl bsvDtl : bsvDetails) {
-			if (bsvDtl.getBsvDate() == null) {
-				throw new EpException(MessageConst.ERROR_760156);
-			} else {
+			if (bsvDtl.getBsvDate() != null) {
 				dates.add(bsvDtl.getBsvDate());
 			}
 		}
