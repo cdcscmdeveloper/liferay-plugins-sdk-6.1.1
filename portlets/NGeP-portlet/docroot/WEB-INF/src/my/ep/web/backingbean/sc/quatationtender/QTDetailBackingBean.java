@@ -1845,7 +1845,7 @@ public class QTDetailBackingBean extends
 			Object payLoad = getManagedBean().getPayLoad();
 			// Fix for Other Approval Validations on submit only
 			qt.setOtherApproval(true);
-
+			qt.setFCApproval(true);
 			if (ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA
 					.equalsIgnoreCase(qt.getPmProcurementCategory()
 							.getParameterCode())) {
@@ -3759,6 +3759,7 @@ public class QTDetailBackingBean extends
 		int priviousIndex = this.getManagedBean().getActiveIndex();
 		getManagedBean().getQt().setMitiApproval(false);
 		getManagedBean().getQt().setOtherApproval(false);
+		getManagedBean().getQt().setFCApproval(false);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
