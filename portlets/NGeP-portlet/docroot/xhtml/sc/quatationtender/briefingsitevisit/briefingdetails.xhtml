@@ -149,7 +149,7 @@
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.sc.post.code']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.postcode}"
-								size="30" >
+								size="30" maxlength="5">
 								<p:ajax event="blur" partialSubmit="true" process="@this"
 									listener="#{qTBriefingSiteVisitBackingBean.validatePostcode}" />
 							</p:inputText> <p:message id="briefpostMsg" for="briefpost" display="icon" /></td>
@@ -167,9 +167,10 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.qt.max.attendance']}" /></td>
 						<td colspan="3">
-							<p:inputText style="text-align: right;"
-								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.maxNoOfAttendance}"
-								size="30" maxlength="2" />
+							<p:inputText style="text-align: right;" size="30" maxlength="2" 
+										 required="true" label="#{lbl['lbl.sc.qt.max.attendance']}"
+										 value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.maxNoOfAttendance}">
+							</p:inputText>
 							<ac:iconTooltip value="#{lbl['lbl.sc.qt.max.attendance.tooltip']}" />
 						</td>
 					</tr>
@@ -177,8 +178,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						process="@this, bsvdetailsdlg" update="@(.briefingList)" 
-						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList}"
-						onclick="addbsvdtls.hide()" />
+						action="#{qTBriefingSiteVisitBackingBean.addToBriefingList}" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.cancelBriefingList}"
 						partialSubmit="true" onclick="addbsvdtls.hide(); return false;" />

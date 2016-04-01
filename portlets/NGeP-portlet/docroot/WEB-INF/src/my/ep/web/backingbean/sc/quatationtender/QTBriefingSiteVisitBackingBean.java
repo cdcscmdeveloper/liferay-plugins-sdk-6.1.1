@@ -356,7 +356,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBsvDtlBean(briefingBean);
 		this.getManagedBean().setQtBriefing(null);
 		// facesmgs error hide..
-		RequestContext.getCurrentInstance().execute("addbsvdtls.hide()");
+		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
 		this.getManagedBean().setRequired(Boolean.FALSE);
 		
 		ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
