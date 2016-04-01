@@ -34,7 +34,9 @@ public class SmApplicationNotificationUtil {
 				|| managedBean
 						.getSmAppl()
 						.getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| managedBean.getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 			reqDTO.setPaymentMethods(" --- TO BE CONFIRMED ON THE PAYMENT LIST DETAILS ---");
 			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(managedBean));
 		} else if (managedBean.getSmAppl().getApplType()
