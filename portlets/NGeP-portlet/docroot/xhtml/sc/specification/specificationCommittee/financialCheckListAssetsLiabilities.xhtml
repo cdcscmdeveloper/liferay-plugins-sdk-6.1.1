@@ -191,6 +191,7 @@
 										label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+											<p:ajax  event="change" process="@this" partialSubmit="true" update="financialAssetsLiabilityScore"></p:ajax>
 									</p:inputText> <p:message id="finAssetLiabilityMaxScore"
 										for="finAssetsLiaScore" display="icon"></p:message></td>
 							</tr>
@@ -297,6 +298,7 @@
 										label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
 										value="#{specificationBackingBean.managedBean.scQtContractScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+											<p:ajax  event="change" process="@this" partialSubmit="true" update="financialAssetsLiabilitycurrentRatioScoring"></p:ajax>
 									</p:inputText> <p:message id="finAssetLiabilityMaxScoreUserScore"
 										for="finAssetsLiaUserScore" display="icon"></p:message></td>
 							</tr>
