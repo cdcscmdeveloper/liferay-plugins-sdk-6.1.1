@@ -1488,6 +1488,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 			doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 			doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
 			//doBB.getManagedBean().setButtonVal("Review");
 			doBB.getManagedBean().setHyperLinkPage(true);
 			doBB.getManagedBean().setButtonVal("View");
