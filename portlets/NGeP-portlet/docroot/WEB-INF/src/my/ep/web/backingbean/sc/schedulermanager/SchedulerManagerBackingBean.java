@@ -72,7 +72,7 @@ public class SchedulerManagerBackingBean extends
 					// get job's trigger
 					trigger = EpSchedulerHelper.getTriggerByJobKey(jobKey);
 
-					if (job != null && trigger != null) {
+					if (job != null) {
 						// get trigger state
 						jobState = EpSchedulerHelper.getTriggerState(trigger);
 
