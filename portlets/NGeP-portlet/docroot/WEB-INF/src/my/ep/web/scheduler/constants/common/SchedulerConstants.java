@@ -24,7 +24,7 @@ public class SchedulerConstants {
 	public static final String SC_QT_PROPOSAL_VALIDITY_EXPIRY = "QT_PROPOSAL_VALIDITY_EXPIRY";
 	public static final String SC_FAILOVER_HANDLER_JOB = "SOURCING FAILOVER HANDLER";
 	public static final String SC_QT_PUBLISH_JOB = "PUBLISH APPROVED QT AS SCHEDULED";
-	
+	public static final String SC_QT_PROPOSAL_CLOSE_JOB = "CLOSE PROPOSAL AS SCHEDULED";
 	//Sourcing Job description
 	public static final String SC_DAILY_JOB_DESCRIPTION = "Job run every day at 11:55 PM";
 	public static final String SC_CONTINUOUS_JOB_DESCRIPTION = "Job to run every 60 Seconds";
@@ -32,7 +32,7 @@ public class SchedulerConstants {
 	public static final String SC_QT_CLOSED_JOB_DESCRIPTION ="Job run every day by batch";
 	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job run every day at 12:05 AM";
 	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run every hour to publish Qt's";
-
+	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run every hour to close proposal";
 	// Contracts Module Constants
 	public static final String TRIGGER_TIME = "0 01 00 * * ?";
 	// CT Job Group ID
