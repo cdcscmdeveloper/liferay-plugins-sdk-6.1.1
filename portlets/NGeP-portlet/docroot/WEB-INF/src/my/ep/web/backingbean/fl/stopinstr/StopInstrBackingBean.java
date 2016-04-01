@@ -524,6 +524,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		
 		FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
 		orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+		boolean isFactoredSelected=orderBackingBean.getManagedBean().getFulfilmentOrder().isFactored();
+		if(isFactoredSelected){
+			orderBackingBean.getManagedBean().setFactoringCheck("true");
+		} else {
+			orderBackingBean.getManagedBean().setFactoringCheck("false");
+		}
 		orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
