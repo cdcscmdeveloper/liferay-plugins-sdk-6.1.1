@@ -170,18 +170,13 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void deleteJob() {
-		if (!EpSchedulerHelper.isJobRunningNow(getManagedBean()
-				.getSelectedJobVO().getJobKey())) {
-			boolean success = EpSchedulerHelper
-					.deleteJobAndAssociatedTriggers(getManagedBean()
-							.getSelectedJobVO().getJobKey());
-			if (!success) {
-				throw new EpException(MessageConst.ERRQRTZ_00002);
-			} else {
-				initAllJobs();
-			}
+		boolean success = EpSchedulerHelper
+				.deleteJobAndAssociatedTriggers(getManagedBean()
+						.getSelectedJobVO().getJobKey());
+		if (!success) {
+			throw new EpException(MessageConst.ERRQRTZ_00002);
 		} else {
-			throw new EpException(MessageConst.ERRQRTZ_00001);
+			initAllJobs();
 		}
 	}
 
