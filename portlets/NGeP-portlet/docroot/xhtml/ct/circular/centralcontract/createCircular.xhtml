@@ -191,22 +191,23 @@
 	    
 	              <p:dialog id="dialogExemptedMinistry"  header="#{lbl['lbl.ct.panel.exempted.org.dlg']}" 
 	                     widgetVar="dlgExemptedMinistry" styleClass="pop_up_top" modal="true" width="600" height="500">
-			             <p:messages id="exemptedMsgId" showSummary="false"
-			                     showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
-		                 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.orgtype.menu']}" escape="false"/><br/><br/>
+			            <p:panel id="popUpExmptedDlg" header="Search" toggleable="true" toggleSpeed="500">
+			                  <p:messages id="exemptedMsgId" showSummary="false"
+			                         showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+		                             <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.orgtype.menu']}" escape="false"/><br/><br/>
 		        
-		                  <h:panelGrid columns="3">
-		                         <p:selectOneMenu for="OrgTypeId"  style="width:150px" disabled="true" >
-            	                         <f:selectItem itemLabel="#{lbl['lbl.ct.panel.exempted.type']}" itemValue=""/>
-                                 </p:selectOneMenu>
-		                         <p:spacer height="1"/>
-		                         <p:selectOneMenu id="OrgTypeId"   label="#{lbl['lbl.ct.panel.exempted.type']}"  
-		                               style="width:200px" value="#{centralContractBackingBean.managedBean.orgTypeCode}">
-            	                       <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
-            	                            <p:ajax event="change"  update="exmptedMinistryId,:form:tablePtjCode"
-            	                            process="@this"  listener="#{centralContractBackingBean.resetMinistryDetails}" ></p:ajax>
-            	                </p:selectOneMenu>
-            	           </h:panelGrid>
+		                            <h:panelGrid columns="3">
+		                                    <p:selectOneMenu for="OrgTypeId"  style="width:150px" disabled="true" >
+            	                                   <f:selectItem itemLabel="#{lbl['lbl.ct.panel.exempted.type']}" itemValue=""/>
+                                            </p:selectOneMenu>
+		                                   <p:spacer height="1"/>
+		                                   <p:selectOneMenu id="OrgTypeId"   label="#{lbl['lbl.ct.panel.exempted.type']}"  
+		                                         style="width:200px" value="#{centralContractBackingBean.managedBean.orgTypeCode}">
+            	                               <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
+            	                                   <p:ajax event="change"  update=":form:exmptedMinistryId,:form:tablePtjCode"
+            	                                         process="@this"  listener="#{centralContractBackingBean.resetMinistryDetails}" ></p:ajax>
+            	                            </p:selectOneMenu>
+            	                     </h:panelGrid>
             	    
             	           <h:panelGroup  id="exmptedMinistryId">
                                    
@@ -238,7 +239,8 @@
                                 </h:panelGrid>
                     
                               <h:panelGrid rendered="#{centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypePtj
-                                           or centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypeJabatan}" columns="3" >
+                                           or centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypeJabatan
+                                           or centralContractBackingBean.managedBean.orgTypeCode == ParameterConst.orgTypeMinistry}" columns="3" >
                                       <p:selectOneMenu for="ptjcodename" 
                                            value="#{centralContractBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
                                            <f:selectItem itemLabel="#{lbl['lbl.ct.org.code']}" itemValue="#{CtConst.ptjCode}"/>
@@ -264,8 +266,9 @@
 			                       </p:commandButton>
 		                       </div>
 		             </h:panelGroup>
+		            </p:panel>
 			          <p:spacer height="2"/>
-                    
+                      <p:panel id="popUpExmptedTable" header="Result" toggleable="true" toggleSpeed="500">
                       <p:dataTable id="tablePtjCode" var="pmVar" value="#{centralContractBackingBean.exemptedOrgDataModel}" 
                               rowIndexVar="rowIndex" selection="#{centralContractBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
                               <ac:paginator for="tablePtjCode"/>
@@ -289,6 +292,7 @@
 				              </p:commandButton>
 				               <p:commandButton id="closeButId" value="#{lbl['lbl.btn.cancel']}"  onclick="dlgExemptedMinistry.hide();"  type="button" />
                        </div>
+                   </p:panel>
 	           </p:dialog>
 	 </p:panel>
 	
