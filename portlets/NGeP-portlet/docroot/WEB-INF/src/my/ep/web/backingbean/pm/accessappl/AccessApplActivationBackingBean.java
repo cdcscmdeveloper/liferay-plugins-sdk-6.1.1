@@ -159,6 +159,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			PmCommonUtil.redirectToPage(
 					ACCESS_APPL_OUTPUT_MSG,
 					MessageConst.INFO_721031,null);
+			ex.printStackTrace();
 		}
 		
 	}
