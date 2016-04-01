@@ -158,10 +158,10 @@
 				<tr style="height: 30px;">
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-					<td colspan="3"><p:inputTextarea
+					<td colspan="3"><p:inputTextarea 
 							style="width:660px !important;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}" /></td>
+							readonly="true" /></td>
 
 				</tr>
 
@@ -204,10 +204,10 @@
 							activeIndex="#{catalogueBackingBean.managedBean.normalPricingIndex}">
 
 							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="pricingTab.xhtml" />
+								<ui:include src="pricingTabViewOnly.xhtml" />
 							</p:tab>
 							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="promotionTab.xhtml" />
+								<ui:include src="promotionTabViewOnly.xhtml" />
 							</p:tab>
 
 						</p:tabView>
@@ -223,10 +223,10 @@
 
 
 							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="pricingTierTab.xhtml" />
+								<ui:include src="pricingTierTabViewOnly.xhtml" />
 							</p:tab>
 							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="pricingPromotionTierTab.xhtml" />
+								<ui:include src="pricingPromotionTierTabViewOnly.xhtml" />
 							</p:tab>
 
 						</p:tabView>
@@ -242,11 +242,11 @@
 							activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
 
 							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
+								<ui:include src="zonalStandardPricingTabViewOnly.xhtml"></ui:include>
 
 							</p:tab>
 							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
+								<ui:include src="zonalPromotionPricingTabViewOnly.xhtml"></ui:include>
 
 							</p:tab>
 
@@ -261,11 +261,11 @@
 						<p:tabView id="zonalTierId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
 							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
+								<ui:include src="zonalTierPricingTabViewOnly.xhtml"></ui:include>
 
 							</p:tab>
 							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="zonalPromotionTierPricingTab.xhtml"></ui:include>
+								<ui:include src="zonalPromotionTierPricingTabViewOnly.xhtml"></ui:include>
 
 							</p:tab>
 
