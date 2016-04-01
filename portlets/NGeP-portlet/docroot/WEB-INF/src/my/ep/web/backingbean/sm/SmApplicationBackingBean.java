@@ -6263,6 +6263,7 @@ public class SmApplicationBackingBean extends
 		bank.setPmFinancialOrg(new PmFinancialOrg());
 		bank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
 		bank.setSmSupplierBranchBanks(new ArrayList<SmSupplierBranchBank>());
+		bank.setForHqFlg(1);
 		getManagedBean().setSelectedBank(bank);
 		getManagedBean().setBankStates(
 				SmCommonUtil.getStateList(getManagedBean().getSelectedBank()
@@ -7981,6 +7982,7 @@ public class SmApplicationBackingBean extends
 		} else if (getManagedBean().getSelectedBank().getAccountPurpose()
 				.equalsIgnoreCase("R")) {
 			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_REGISTRATION);
+			getManagedBean().getSelectedBank().setForHqFlg(1);
 		} else if (getManagedBean().getSelectedBank().getAccountPurpose()
 				.equalsIgnoreCase("B")) {
 			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
