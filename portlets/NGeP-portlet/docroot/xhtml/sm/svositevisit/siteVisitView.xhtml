@@ -46,12 +46,24 @@
 			<p:column headerText="#{lbl['lbl.sm.facility.facilityType']}">
 				<h:outputText  value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svTask.smSvAddress.smAddress.smFacilities[0].facilityType)}" />
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sm.address']}"
 				style="width: 50%;white-space: normal;">
-				<h:outputText
-					value="#{svoSiteVisitBackingBean.getSMFullAddress(svTask.smSvAddress.smAddress)}"
+				<h:outputText value="#{svoSiteVisitBackingBean.getSMFullAddress(svTask.smSvAddress.smAddress)}"
 					escape="false" style="float : left" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}">
+				<p:outputLabel value="#{lbl['lbl.sm.latitude']}" style="float:left"
+						styleClass="outputLabel-view-label" />
+				<p:outputLabel styleClass="outputLabel-view"
+						value="#{svTask.smSvAddress.smAddress.mapLatitude}" />
+				<br />
+	
+				<p:outputLabel value="#{lbl['lbl.sm.longitude']}" style="float:left"
+						styleClass="outputLabel-view-label" />
+				<p:outputLabel styleClass="outputLabel-view"
+						value="#{svTask.smSvAddress.smAddress.mapLongitude}" />
 			</p:column>
 
 
