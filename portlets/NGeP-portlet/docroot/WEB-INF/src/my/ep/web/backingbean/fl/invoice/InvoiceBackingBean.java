@@ -876,13 +876,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		
 		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
 		BigDecimal orderTotalAmount = new BigDecimal(0);
+		BigDecimal gstAmount = new BigDecimal(0);
 		BigDecimal gstTotalAmount = new BigDecimal(0);
 		for(FlInvoiceItemSummary invSummary : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
 			invoiceTotalAmount = invoiceTotalAmount.add(invSummary.getInvAmt());
 			orderTotalAmount = orderTotalAmount.add(invSummary.getOrderedAmt());
 			for(FlInvoiceItem invItem : invSummary.getFlInvoiceItem()){
 				if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
-					gstTotalAmount = gstTotalAmount.add(invItem.getGstAmount());
+					gstAmount = (new BigDecimal(invItem.getGstAmount().doubleValue() * (invItem.getReceivedQty().doubleValue())));
+					gstTotalAmount = gstTotalAmount.add(gstAmount);
 				}
 			}
 		}
