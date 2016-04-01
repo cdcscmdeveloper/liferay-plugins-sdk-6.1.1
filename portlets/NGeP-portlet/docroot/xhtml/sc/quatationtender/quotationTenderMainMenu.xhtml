@@ -90,9 +90,7 @@
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '3'}">
 						<ui:include src="/xhtml/sc/quatationtender/approval/approvalCheckBox.xhtml" />
 					</c:if>
-					<ui:fragment
-						rendered="#{isQTStatusScheduleDocAndAfter}">
-
+					<c:if test="#{isQTStatusScheduleDocAndAfter}">
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include
 								src="/xhtml/sc/quatationtender/briefingsitevisit/qtbriefingsitevisitdetails.xhtml" />
@@ -109,21 +107,20 @@
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '8'}">
 							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 						</c:if>
-						<ui:fragment rendered="#{isQTStatusBtwScheduleDocAndPendingPublication}">
+						<c:if test="#{isQTStatusBtwScheduleDocAndPendingPublication}">
 							<c:if test="#{qTDetailBB.managedBean.activeIndex eq '9'}">
 								<ui:include
 									src="/xhtml/sc/quatationtender/approval/qtpublicationapproval.xhtml" />
 							</c:if>
-						</ui:fragment>
-					</ui:fragment>
-					<ui:fragment
-						rendered="#{isQTStatusPendingQtSubmission or isQTStatusSCcommitteeApproval}">
+						</c:if>
+					</c:if>
+					<c:if test="#{isQTStatusPendingQtSubmission or isQTStatusSCcommitteeApproval}">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 					</c:if>
-				 </ui:fragment>
+				 </c:if>
 				 
-				 <ui:fragment rendered="#{isMaintancePendingChklistStatus}">
+				 <c:if test="#{isMaintancePendingChklistStatus}">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
 					</c:if>
@@ -133,7 +130,7 @@
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
 							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
 					</c:if>
-				 </ui:fragment>
+				 </c:if>
 				</h:panelGroup></td>
 		</tr>
 	</table>
