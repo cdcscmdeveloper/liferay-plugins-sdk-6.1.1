@@ -17,15 +17,15 @@
 
 		<table width="100%">
 			<tr>
-				<td style="width: 23%;"><p:outputLabel
+				<td width="15%"><p:outputLabel
 						styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.cm.supplier.name']}" /></td>
-				<td><p:outputLabel
+				<td width="35%"><p:outputLabel
 						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.companyName}"
 						styleClass="outputLabel-view" readonly="true"></p:outputLabel></td>
-				<td><p:outputLabel styleClass="outputLabel-view-label"
+				<td  width="15%"><p:outputLabel styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view"
+				<td  width="35%"><p:outputLabel styleClass="outputLabel-view"
 						value="#{catalogueBackingBean.managedBean.smGstSupplier.gstRegNo}"
 						readonly="true"
 						rendered="#{catalogueBackingBean.managedBean.smGstSupplier ne null}" /></td>
