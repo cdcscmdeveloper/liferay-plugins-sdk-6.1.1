@@ -1155,6 +1155,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 					locationDTOs.get(0).getTplSpecZoneDtl().getZoneName());
 			getManagedBean().setTempZoneName(
 					locationDTOs.get(0).getTplSpecZoneDtl().getZoneName());
+			this.getManagedBean().setStatecode(locationLevelCode);
 		} finally {
 
 		}
