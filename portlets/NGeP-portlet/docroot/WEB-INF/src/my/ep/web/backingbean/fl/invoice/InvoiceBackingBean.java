@@ -905,7 +905,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			req.setRuleType(RuleTypeConst.TRANSACTION_FEE_ONE_OFF);
 			serviceFee = new BigDecimal(ruleSO.getRuleValuesByTypeInCurrentDate(req).getRuleValueList().get(0).getRuleValue());
 		} else {
-			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
+			if(getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee() == null){
+				serviceFee = new BigDecimal(0); 
+			}
+			serviceFee = getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee();
 		}
 		
 		if(getManagedBean().getInvoice().getFlRequest().getProcurementType()!=null && getManagedBean().getInvoice().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
