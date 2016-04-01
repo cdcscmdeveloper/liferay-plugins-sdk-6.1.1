@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<h:panelGrid columns="2" style="width:100%;"  styleClass="top-aligned-columns">
-		<h:panelGrid columns="2" style="width:500px;" columnClasses="columnWidth200">
+		<h:panelGrid columns="2" style="width:550px;" columnClasses="columnWidth200">
 		           <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required" />
 			       <h:panelGrid columns="5">
 		                  <p:inputText  id="circularNoTxt" style="width:200px;"  required="true" 
@@ -127,7 +127,7 @@
 		                  </p:fileUpload> 
 	                 </p:dialog>
 	               
-	                <p:confirmDialog id="deleteAttachFile" widgetVar="deleteAttachFile" message="#{lbl['lbl.msg.confirm.delete']}" 	
+	        <p:confirmDialog id="deleteAttachFile" widgetVar="deleteAttachFile" message="#{lbl['lbl.msg.confirm.delete']}" 	
                 severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                  <div class="ppRightBtn">
 		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
