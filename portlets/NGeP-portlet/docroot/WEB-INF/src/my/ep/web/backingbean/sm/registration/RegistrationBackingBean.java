@@ -1062,9 +1062,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			validateBusinessRegNoWithBussTypeAndLocalAuth();
 		} else{
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+			List<Integer> recStatusLs = new ArrayList<Integer>();
+			recStatusLs.add(DbValueConst.RECORD_STATUS_ACTIVE);
+			recStatusLs.add(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+			
 			IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
 			reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
-			RegistrationResDTO resDTO = reqSO.retrieveActiveSupplierByRegNo(reqDTO);
+			reqDTO.setStatusLs(recStatusLs);
+			RegistrationResDTO resDTO = reqSO.retrieveSupplierByRegNoAndStatusLs(reqDTO);
 			
 			if(resDTO.getSmSuppliers().size() > 0 ){
 				//Appl Type is MOF
