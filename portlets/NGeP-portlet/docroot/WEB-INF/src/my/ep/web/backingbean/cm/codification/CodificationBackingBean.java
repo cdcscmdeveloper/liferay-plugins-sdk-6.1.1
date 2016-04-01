@@ -145,16 +145,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	
 	public String resetAction() {
 		log.info("In reset action...................");
-		titleFilterBean = null;
-		codeFilterBean = null;
-
-		titleFilterBean = new SearchFilterBean(
-				SearchOperator.OPERATOR_LIKE.value());
-		codeFilterBean = new SearchFilterBean(
-				SearchOperator.OPERATOR_LIKE.value());
-		this.setSearchDataModel(new SearchPagingDataModel());
-
-		this.getManagedBean().setAutoCompleteUnspscCode(null);
+		
+		this.getManagedBean().reset();
 		log.info("after reset.........................");
 		return null;
 	}

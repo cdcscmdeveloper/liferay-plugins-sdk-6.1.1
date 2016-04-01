@@ -10,9 +10,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.primefaces.context.RequestContext;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -39,6 +36,9 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.ExtensionCodeVO;
+
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "codificationMB")
 @SessionScoped
@@ -1343,7 +1343,14 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.docTitle = docTitle;
 	}
 	
-	
+	public void reset(){
+		
+		this.setTitleFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		this.setCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		this.setSearchDataModel(new SearchPagingDataModel());
+		this.setAutoCompleteUnspscCode(null);
+		
+	}
 	
 	
 	
