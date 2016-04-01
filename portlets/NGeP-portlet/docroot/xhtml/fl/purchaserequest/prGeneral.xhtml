@@ -361,24 +361,26 @@
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
 			            action="#{purchaseRequestBackingBean.resetChargedPtjDetails}" update=":form:chargedPtj"   />
 		       </div>
-			   <p:spacer height="2"/>
 			  <p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-              <p:dataTable id="tableChargePtj" var="pmVar" value="#{purchaseRequestBackingBean.chargedPtjDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-                 rowIndexVar="rowIndex" selection="#{purchaseRequestBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
-                  <ac:paginator for="tableChargePtj"/>
-                    <p:column selectionMode="single" style="width:18px;"> 
-                         <f:facet name="header">
-                             
-		               </f:facet>
-                    </p:column>       
-                    <p:column headerText="#{lbl['lbl.fl.ptj.code']}" >
+				<p:dataTable id="tableChargePtj" var="pmVar"
+					value="#{purchaseRequestBackingBean.chargedPtjDataModel}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="rowIndex"
+					selection="#{purchaseRequestBackingBean.selectedPmOrgProfile}"
+					rowKey="#{pmVar}" lazy="true" rows="10">
+					<ac:paginator for="tableChargePtj" />
+					<p:column selectionMode="single" style="width:18px;">
+						<f:facet name="header">
+						</f:facet>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.ptj.code']}">
                        	#{pmVar.orgCode}
 					</p:column>
-                    <p:column headerText="#{lbl['lbl.fl.ptj.name']}" >
+					<p:column headerText="#{lbl['lbl.fl.ptj.name']}">
                       	#{pmVar.orgName}
 					</p:column>
-			 </p:dataTable>
-			 </p:panel>           
+				</p:dataTable>
+			</p:panel>           
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"  update=":form:chargeOrgProfileId,:form:chargePtj" 
 				    action="#{purchaseRequestBackingBean.addChargedPtjDetails()}" onclick="dlgChargedPtj.hide();"/>
