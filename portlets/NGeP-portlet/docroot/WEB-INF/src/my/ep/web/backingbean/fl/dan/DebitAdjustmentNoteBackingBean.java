@@ -371,6 +371,12 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
 			orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			boolean isFactoredSelected=orderBackingBean.getManagedBean().getFulfilmentOrder().isFactored();
+			if(isFactoredSelected){
+				orderBackingBean.getManagedBean().setFactoringCheck("true");
+			} else {
+				orderBackingBean.getManagedBean().setFactoringCheck("false");
+			}
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
 			orderBackingBean.getManagedBean().setButtonVal("View");
 			FacesContext fc = FacesContext.getCurrentInstance();
