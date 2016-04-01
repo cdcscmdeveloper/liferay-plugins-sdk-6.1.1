@@ -24,7 +24,6 @@ import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
@@ -179,9 +178,7 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 					boolean typeRecommend = false;
 					boolean meaRecommend = false;
 					if (!code.isRequestColor()) { 
-
 						colorRecommend = true;
-
 					}
 					if (!code.isRequestBrand()){
 						brandRecommend = true;	
@@ -271,6 +268,18 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
+	
+	
 
+	public void preRenderCodificationTrackingDairyView() {
+		log.info(".................preRenderCodificationTrackingDairyView................");
+		
+		this.getManagedBean().reset();
+		
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "cdTrackingDiarySearch");
+	}
 }
 
