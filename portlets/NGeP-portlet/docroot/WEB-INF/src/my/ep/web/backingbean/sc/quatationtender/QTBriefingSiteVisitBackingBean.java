@@ -290,7 +290,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		ScQtBsvDtl bsvDetail = this.getManagedBean().getQtBriefing();
 		// Checking Max attendance value is greater than zero.
 		if (bsvDetail.getMaxNoOfAttendance() < 1) {
-			throw new EpException("Max Attendance is greater than 0");
+			throw new EpException(MessageConst.ERROR_760401);
 		}
 		validatePostcode();
 		
