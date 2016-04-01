@@ -46,7 +46,7 @@
 
 
 			<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}"
-				toggleable="true">
+				toggleable="true" id="specCommitteeNoOfEmployeesRadio">
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.total.num.employees.instruction']}"
 					escape="false" />
@@ -61,6 +61,7 @@
 						<f:selectItem
 							itemLabel="#{lbl['lbl.sc.spec.total.num.employees.for.all.employees']}"
 							itemValue="true"></f:selectItem>
+							<p:ajax  event="change" process="@this" partialSubmit="true" update="specCommitteeNoOfEmployeesRadio"></p:ajax>
 					</p:selectOneRadio>
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.spec.total.num.employees.tooltip']}" />
@@ -166,6 +167,7 @@
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
 										maxlength="18">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+											<p:ajax  event="change" process="@this" partialSubmit="true" update="technicalTotalEmployees"></p:ajax>
 									</p:inputText> <p:message id="techTotalEmployee" for="totalEmployeesScore"
 										display="icon"></p:message></td>
 							</tr>

@@ -26,7 +26,7 @@
 						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
 						value="#{lbl['lbl.btn.print']}" type="button">
-						<p:printer target="financialCheckListSuppInfo" />
+						<p:printer target="financialChecklistSupplierInfoScoringUserIds" />
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						style="float:right;" onstart="blockWidget.show();"
@@ -39,11 +39,59 @@
 			</tr>
 		</table>
 
-		<h:panelGroup id="financialCheckListSuppInfo">
-			<ui:include
-				src="/xhtml/sc/specification/specificationCommittee/financialCheckListSupplierInfoscore.xhtml" />
-		</h:panelGroup>
+		<h:panelGroup id="financialChecklistSupplierInfoScoringUserIds">
+			<!-- <ui:include
+				src="/xhtml/sc/specification/specificationCommittee/financialCheckListSupplierInfoscore.xhtml" /> -->
+				
+				<ui:include src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
+
 		
+
+		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}" 
+			toggleable="true" id="SpecCommitteefinancialChecklistSupplierInfoIds">
+			<table>
+				<tr>
+					<td style="width: 117px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu disabled="true" style="width: 180px;margin-bottom: 5px;"
+							value="#{specificationBackingBean.managedBean.checklistScoreType}">
+							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
+
+						</p:selectOneMenu></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
+				</tr>
+			</table>
+
+			
+				
+				<h:panelGroup
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+					<table>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+								<ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.isQTStatusChecklistScoring()}">
+									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+								</ui:fragment></td>
+							<td><p:inputText id="totalSuppliersScore" required="true"
+									style="text-align:right;"
+									disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+									label="#{lbl['lbl.sc.spec.max.score']}"
+									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
+									maxlength="18">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+									<p:ajax event="change" process="@this" partialSubmit="true" update="SpecCommitteefinancialChecklistSupplierInfoIds"></p:ajax>
+								</p:inputText> <p:message id="financialSuppliers" for="totalSuppliersScore"
+									display="icon"></p:message></td>
+						</tr>
+					</table>
+				</h:panelGroup>
+			
+		</p:panel>
+		
+		</h:panelGroup>
 	</ui:define>
 
 </ui:composition>

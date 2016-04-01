@@ -26,7 +26,7 @@
 						value="#{lbl['lbl.btn.back']}" immediate="true"
 						style="float:left;"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.print']}" type="button">
+						value="#{lbl['lbl.btn.print']}"  type="button">
 						<p:printer target="techCheckListGovtCompExp" />
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
@@ -69,7 +69,7 @@
 								required="true" style="text-align:right;"
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
 								maxlength="4">
-								<p:ajax event="blur" process="@this" partialSubmit="true"
+								<p:ajax event="blur" process="@this" partialSubmit="true" update="compExpFedGovtId"
 									listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
 							</p:inputText> <p:message id="techGovCompanyId" for="techGovCompany"
 								display="icon"></p:message></td>
@@ -227,6 +227,7 @@
 										id="techGovCompanyContracts"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+											<p:ajax  event="change" process="@this" partialSubmit="true" update="techCompanyExpContracts"></p:ajax>
 
 									</p:inputText> <p:message id="govContracts" for="techGovCompanyContracts"
 										display="icon"></p:message></td>
@@ -322,6 +323,7 @@
 												update="@this,#{scoringPnlId}_fromRangeyears" />
 											<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 											<f:attribute name="min" value="0"></f:attribute>
+											<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
 										</p:inputText>
 
 
@@ -367,6 +369,7 @@
 											label="#{lbl['lbl.sc.score']}"
 											value="#{checkListScoring.score}" maxlength="18">
 											<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+											<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
 										</p:inputText>
 
 									</p:column>
@@ -425,6 +428,7 @@
 										maxlength="18" required="true"
 										label="#{lbl['lbl.sc.spec.max.score']}" id="techGovYrs">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+											<p:ajax  event="change" process="@this" partialSubmit="true" update="techGovNumberOfYearsUpdate"></p:ajax>
 
 									</p:inputText> <p:message id="govyeras" for="techGovYrs" display="icon"></p:message>
 								</td>

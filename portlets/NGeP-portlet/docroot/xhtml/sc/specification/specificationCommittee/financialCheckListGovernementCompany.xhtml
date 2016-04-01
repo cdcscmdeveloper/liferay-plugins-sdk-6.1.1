@@ -45,7 +45,7 @@
 			<ui:include
 				src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-			<p:panel toggleable="true">
+			<p:panel toggleable="true" id="specCommitteeFinancialGovChecklistids">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.gov']}" />
 					<ac:iconTooltip
@@ -65,7 +65,7 @@
 								required="true" style="text-align:right;"
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
 								maxlength="4">
-								<p:ajax event="blur" process="@this" partialSubmit="true"
+								<p:ajax event="blur" process="@this" partialSubmit="true" update="specCommitteeFinancialGovChecklistids"
 									listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
 							</p:inputText> <p:message id="finGovCompanyYrs" for="finSpecGovCompany"
 								display="icon"></p:message></td>
@@ -213,6 +213,7 @@
 										maxlength="18" label="#{lbl['lbl.sc.spec.max.score']}"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+										<p:ajax  event="change" process="@this" partialSubmit="true" update="financialGovernmentContracts"></p:ajax>
 									</p:inputText> <p:message id="finGovMaxSoring" for="finMaxScore"
 										display="icon"></p:message></td>
 							</tr>
