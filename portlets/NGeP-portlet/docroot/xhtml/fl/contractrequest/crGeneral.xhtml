@@ -420,10 +420,10 @@
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
 			            action="#{contractRequestBackingBean.resetChargedPtjDetails}" update=":form:chargedPtj"   />
 		       </div>
-			   <p:spacer height="2"/>
+			   <p:spacer height="1"/>
 			  <p:panel id="chargeResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
               <p:dataTable id="tableChargePtj" var="pmVar" value="#{contractRequestBackingBean.chargedPtjDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-                 rowIndexVar="rowIndex" selection="#{contractRequestBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
+                 rowIndexVar="rowIndex" selection="#{contractRequestBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true" rows="10">
                   <ac:paginator for="tableChargePtj"/>
                     <p:column selectionMode="single" style="width:18px;"> 
                          <f:facet name="header">
