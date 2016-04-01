@@ -7775,7 +7775,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml	
+				/xhtml/trackingdiary/cdTrackingDiarySearchInit.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
