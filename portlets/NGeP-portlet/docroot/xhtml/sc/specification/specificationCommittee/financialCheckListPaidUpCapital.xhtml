@@ -157,6 +157,7 @@
 										label="#{lbl['lbl.sc.spec.max.score']}" id="finpaidUpScore"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+										<p:ajax  event="change" process="@this" partialSubmit="true" update="financialPaidUpCapitalScore"></p:ajax>
 									</p:inputText> <p:message id="finpaidUpMaxScore" for="finpaidUpScore"
 										display="icon"></p:message></td>
 							</tr>

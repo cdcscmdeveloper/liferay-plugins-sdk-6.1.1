@@ -1,5 +1,4 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,18 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<ui:define name="resourceSection">
-	</ui:define>
-
-
-	<ui:define name="contentSection">
+	
 
 		<ui:include src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
 		
 
 		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}" 
-			toggleable="true">
+			toggleable="true" id="SpecCommitteefinancialChecklistSupplierInfoIds">
 			<table>
 				<tr>
 					<td style="width: 117px;"><p:outputLabel
@@ -35,7 +30,7 @@
 				</tr>
 			</table>
 
-			<h:panelGroup id="supplierScore">
+			
 				
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
@@ -53,13 +48,14 @@
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
 									maxlength="18">
 									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+									<p:ajax event="change" process="@this" partialSubmit="true" update="SpecCommitteefinancialChecklistSupplierInfoIds"></p:ajax>
 								</p:inputText> <p:message id="financialSuppliers" for="totalSuppliersScore"
 									display="icon"></p:message></td>
 						</tr>
 					</table>
 				</h:panelGroup>
-			</h:panelGroup>
+			
 		</p:panel>
 
-	</ui:define>
+
 </ui:composition>

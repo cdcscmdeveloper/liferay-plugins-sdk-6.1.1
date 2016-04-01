@@ -47,7 +47,7 @@
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 					label="#{lbl['lbl.sc.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
-					<p:ajax event="blur" process="@this" partialSubmit="true" />
+					<p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/>
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 
 				</p:inputText>
@@ -97,7 +97,7 @@
 					required="#{index lt scoringList.size()-1}"
 					label="#{lbl['lbl.sc.to']}" value="#{checkListScoring.rangeTo}"
 					maxlength="18">
-					<p:ajax event="blur" process="@this" partialSubmit="true" />
+					<p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/>
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 				</p:inputText>
 
@@ -129,6 +129,7 @@
 					label="#{lbl['lbl.sc.score']}" value="#{checkListScoring.score}"
 					maxlength="18">
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+					<p:ajax  event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
 				</p:inputText>
 
 			</p:column>

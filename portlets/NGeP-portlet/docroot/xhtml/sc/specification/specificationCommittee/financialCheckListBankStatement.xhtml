@@ -47,7 +47,7 @@
 
 
 			<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}"
-				toggleable="true">
+				toggleable="true" id="specCommitteeBankStatementsMonthSelectionsIds">
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.bank.statement.instruction']}"
 					escape="false" />
@@ -76,7 +76,7 @@
 								<f:selectItems
 									value="#{specificationBackingBean.bankYearsDisplayDtls}">
 								</f:selectItems>
-								<p:ajax event="change" update="toDetailsUpdate,amountdetails"
+								<p:ajax event="change" update="toDetailsUpdate,amountdetails,specCommitteeBankStatementsMonthSelectionsIds"
 									listener="#{specificationBackingBean.bankStatementsyearsChange}"></p:ajax>
 							</p:selectOneMenu></td>
 
@@ -212,6 +212,7 @@
 										label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
 										value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+										<p:ajax  event="change" process="@this" partialSubmit="true" update="financialBankStmtScore"></p:ajax>
 									</p:inputText> <p:message id="bkStmtMaxScoreId" for="bankStmtMaxScore"
 										display="icon"></p:message></td>
 							</tr>
