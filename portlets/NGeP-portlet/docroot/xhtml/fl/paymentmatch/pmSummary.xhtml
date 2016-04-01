@@ -71,7 +71,7 @@
 			</tr>
 		</table>
 		<p:spacer height="10px" />
-		<p:dataTable value="#{paymentMatchBackingBean.managedBean.taxInvoiceList}" var="taxInvoice" style="width:50%">
+		<p:dataTable value="#{paymentMatchBackingBean.managedBean.taxInvoiceList}" var="taxInvoice" style="width:50%" rendered="#{paymentMatchBackingBean.managedBean.taxInvoice}">
 			<p:column headerText="#{lbl['lbl.fl.gst.rate']}" style="white-space:normal;">
 				<h:outputText value="#{taxInvoice.gstFlag}" />
 			</p:column>
