@@ -1,0 +1,87 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<p:outputPanel id="zStanPriceId">
+		<p:dataTable id="zStanPriceTableId"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.zStdPrices}"
+			var="standard" rowKey="#{standard}" rowIndexVar="rowIndex"
+			width="100%">
+
+
+			<ac:paginator for="zStanPriceTableId"></ac:paginator>
+
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.zm.name']}
+				</f:facet>
+				<p:selectOneMenu value="#{standard.cmSupplierZone.suppZoneId}"
+					disabled="true" style="width: 128px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+					<f:selectItems
+						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
+						var="zone" itemLabel="#{zone.suppZoneName}"
+						itemValue="#{zone.suppZoneId}"></f:selectItems>
+					
+				</p:selectOneMenu>
+
+			</p:column>
+
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<p:inputText value="#{standard.price}" size="10" maxlength="18"
+					disabled="true" style="text-align:right">
+				
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</p:column>
+
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.start.date']}
+				</f:facet>
+				<p:calendar value="#{standard.startDate}" showOn="button" size="10"
+					mindate="#{catalogueBackingBean.managedBean.currentDate}"
+					disabled="true"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+				
+				</p:calendar>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.end.date']}
+				</f:facet>
+				<p:calendar value="#{standard.endDate}" showOn="button" size="10" 
+					mindate="#{catalogueBackingBean.managedBean.currentDate}"
+					disabled="true"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"> 
+				
+				</p:calendar>
+
+			</p:column>
+
+			
+		</p:dataTable>
+
+
+	</p:outputPanel>
+
+
+</ui:composition>
