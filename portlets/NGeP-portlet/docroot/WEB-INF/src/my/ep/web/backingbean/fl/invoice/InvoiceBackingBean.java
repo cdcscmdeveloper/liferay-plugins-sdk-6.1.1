@@ -562,9 +562,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			getManagedBean().setButtonVal("View");
 			getManagedBean().setInvoice(resDTO.getInvoice());
 			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
-//			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//TODO remove if gt fladdress is working
-//				getFactoringDtl(); 
-//			}			
+			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+				getFactoringDtl(); 
+			}			
 
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setHideRemarks(true);
