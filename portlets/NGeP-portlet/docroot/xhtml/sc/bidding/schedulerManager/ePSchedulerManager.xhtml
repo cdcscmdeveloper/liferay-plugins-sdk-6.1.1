@@ -140,7 +140,7 @@
 						<p:commandLink id="updateActionId"
 							partialSubmit="true"
 							process="@this" action="#{schedulerManagerBB.onUpdateJob(jobBean)}"
-							update="addJobDialog" onstart="blockWidget.show()"
+							update=":#{p:component('addJobDialog')}" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/action.png" title="#{lbl['lbl.quartz.update.job']}" />
 						</p:commandLink>
@@ -389,9 +389,9 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					action="#{schedulerManagerBB.addOrUpdateJob}"
-					partialSubmit="true" process="addJobOutPanelId"
+					partialSubmit="true" process="addJobDialog"
 					onclick="addJobOutPanelWidget.show();" oncomplete="addJobOutPanelWidget.hide();"
-					update="@form" />
+					update=":form:jobBeanDt,@([id$=Msg]),:#{p:component('jobGroupId')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" 
 					partialSubmit="true" process="@this" update="addJobOutPanelId"
 					oncomplete="addJobDialog.hide();" />
