@@ -140,7 +140,7 @@
 						<p:commandLink id="deleteActionId"
 							partialSubmit="true"
 							process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
-							update="@form" onstart="blockWidget.show()"
+							update="jobBeanDt,@([id$=Msg])" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.quartz.delete.job']}" />
 						</p:commandLink>
@@ -174,6 +174,17 @@
 
 			</p:dataTable>
 		</p:panel>
+		
+		<br />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				process="@this" partialSubmit="true" onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()" 
+				action="#{schedulerManagerBB.onAddJob()}"
+				update="@form" />
+		</div>
+		<br />
+					
 		<p:panel id="biddingListPanel" header="#{lbl['lbl.sc.bidding.list']}"
 			toggleable="true">
 
@@ -205,6 +216,184 @@
 			</p:dataTable>
 		</p:panel>
 		
+		<p:dialog width="800px" height="300px"
+			header="#{lbl['lbl.quartz.job.name']}" widgetVar="addJobDialog"
+			resizable="false" showEffect="fade" closable="false" hideEffect="fade"
+			modal="true" id="addJobDialog">
+			
+			<p:outputPanel id="addJobOutPanelId" layout="block">
+				<p:messages id="addJobDialogMsg" showSummary="false"
+					showDetail="true" autoUpdate="true" closable="true" />
+		
+				<table style="width: 100%">
+					<tr>
+						<td style="border-style: none !important;float: right !important;">
+							<p:selectBooleanCheckbox value="#{schedulerManagerBB.managedBean.othersJobGroup}">
+								<p:ajax event="change" partialSubmit="true" process="@this" 
+									onstart="addJobOutPanelWidget.show();" oncomplete="addJobOutPanelWidget.hide()"
+									update="addJobOutPanelId" listener="#{schedulerManagerBB.onTickOtherJobGroup()}"/>
+							</p:selectBooleanCheckbox>
+						</td>
+						<td valign="top" style="border-style: none !important;">
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.quartz.tick.entered.new.job']}" />
+						</td>
+					</tr>
+					<p:outputPanel rendered="#{!schedulerManagerBB.managedBean.othersJobGroup}">
+						<tr>
+							<td>
+								<p:outputLabel value="#{lbl['lbl.quartz.job.group']}" /> 
+								<p:outputLabel value="*" styleClass="mandatory"/>
+							</td>
+							<td><p:selectOneMenu
+									required="true"
+									label="#{lbl['lbl.quartz.job.group']}" id="jobKeyGroupId"
+									value="#{schedulerManagerBB.managedBean.selectedJobVO.jobGroup}"
+									style="width: 250px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems value="#{schedulerManagerBB.managedBean.jobGroups}" />
+									<p:ajax event="change" process="@this" update="@this" />
+								</p:selectOneMenu>
+								<p:message id="jobKeyGroupIdMsg" for="jobKeyGroupId"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{schedulerManagerBB.managedBean.othersJobGroup}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.quartz.job.group']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:inputText maxlength="50"
+									required="true"
+									label="#{lbl['lbl.quartz.job.group']}" id="jobKeyGroup"
+									value="#{schedulerManagerBB.managedBean.selectedJobVO.jobKey.group}"
+									size="35" >
+									<p:ajax process="@this" update="@this,jobKeyGroupMsg" partialSubmit="true" event="blur" />
+								</p:inputText> 
+								<p:message id="jobKeyGroupMsg"
+									for="jobKeyGroup" showSummary="true" showDetail="false"
+									display="icon" />
+							</td>
+						</tr>
+					</p:outputPanel>
+					
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.quartz.job.name']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText maxlength="50"
+								required="true"
+								label="#{lbl['lbl.quartz.job.name']}" id="jobNameId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.jobName}"
+								size="35">
+								<p:ajax process="@this" update="@this,jobNameIdMsg" partialSubmit="true" event="blur" />
+							</p:inputText> 
+							<p:message id="jobNameIdMsg" for="jobNameId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.quartz.jobclass']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText maxlength="50"
+								required="true"
+								label="#{lbl['lbl.quartz.jobclass']}" id="jobClassNameId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.jobClassName}"
+								size="35">
+								<p:ajax process="@this" update="@this,jobNameIdMsg" partialSubmit="true" event="blur" />
+							</p:inputText> 
+							<p:message id="jobClassNameIdMsg" for="jobClassNameId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.quartz.job.description']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputTextarea maxlength="200"
+								required="true"
+								label="#{lbl['lbl.quartz.job.description']}" id="jobDescId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.description}"
+								validatorMessage="#{lbl['lbl.quartz.job.description']} - #{lbl['lbl.sm.banktnc.length.validMsg']}"
+								cols="25">
+								<p:ajax process="@this" partialSubmit="true" event="blur"/>
+								<f:validateLength maximum="200" />
+							</p:inputTextarea>
+							<p:message id="jobDescIdMsg" for="jobDescId"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.quartz.cronexpression']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td>
+							<h:outputText value="#{lbl['lbl.quartz.sec']}"/>
+							<p:inputText maxlength="4"
+								required="true"
+								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.sec']}" id="secId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronSec}"
+								size="4">
+								<p:ajax process="@this" partialSubmit="true" event="blur" />
+							</p:inputText>&#160;
+							<h:outputText value="#{lbl['lbl.quartz.min']}" />
+							<p:inputText maxlength="4"
+								required="true"
+								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.min']}" id="minId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronMin}"
+								size="4">
+								<p:ajax process="@this" partialSubmit="true" event="blur" />
+							</p:inputText>&#160;
+							<h:outputText value="#{lbl['lbl.quartz.hour']}" />
+							<p:inputText maxlength="4"
+								required="true"
+								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.hour']}" id="hourId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronHr}"
+								size="4">
+								<p:ajax process="@this" partialSubmit="true" event="blur" />
+							</p:inputText>&#160;
+							<h:outputText value="#{lbl['lbl.quartz.day']}" />
+							<p:inputText maxlength="4"
+								required="true"
+								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.day']}" id="dayId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronDay}"
+								size="4">
+								<p:ajax process="@this" partialSubmit="true" event="blur" />
+							</p:inputText>&#160;
+							<h:outputText value="#{lbl['lbl.quartz.month']}" />
+							<p:inputText maxlength="4"
+								required="true"
+								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.month']}" id="monthId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronMonth}"
+								size="4">
+								<p:ajax process="@this" partialSubmit="true" event="blur" />
+							</p:inputText>&#160;
+							<h:outputText value="#{lbl['lbl.quartz.year']}" />
+							<p:inputText maxlength="4"
+								required="true"
+								label="#{lbl['lbl.quartz.cronexpression']} - #{lbl['lbl.quartz.year']}" id="yearId"
+								value="#{schedulerManagerBB.managedBean.selectedJobVO.cronYear}"
+								size="4">
+								<p:ajax process="@this" partialSubmit="true" event="blur" />
+							</p:inputText>&#160;
+						</td>
+					</tr>
+		
+				</table>
+			</p:outputPanel>
+			
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					action="#{schedulerManagerBB.addJob}"
+					partialSubmit="true" process="addJobDialog"
+					onclick="addJobOutPanelWidget.show();" oncomplete="addJobOutPanelWidget.hide();"
+					update=":form:jobBeanDt,@([id$=Msg])" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" 
+					partialSubmit="true" process="@this" update="addJobOutPanelId"
+					oncomplete="addJobDialog.hide();" />
+			</div>
+			
+			<p:blockUI block="addJobOutPanelId" widgetVar="addJobOutPanelWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:dialog>
+		
 		<p:confirmDialog id="confirmDeleteDialog" closable="true"
 			message="#{lbl['lbl.quartz.delete.confirm.msg']}"
 			header="#{lbl['lbl.quartz.delete.confirm.header']}" severity="alert"
@@ -212,8 +401,8 @@
 			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeleteDialog.hide();" 
-					action="#{schedulerManagerBB.deleteJob}" update="@form"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					action="#{schedulerManagerBB.deleteJob}" update="jobBeanDt,@([id$=Msg])" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this"/>
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteDialog.hide();" />
 			</div>
 		</p:confirmDialog>
