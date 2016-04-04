@@ -51,7 +51,7 @@ public class EpSchedulerHelper {
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
 		addAndScheduleNewJob(jobKey, jobClass, jobDetailDesc, cronExpression);
-		updateScheduledJob(jobKey, jobDetailDesc, cronExpression);
+		updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class EpSchedulerHelper {
 	 *            cronExpression (mandatory)
 	 */
 	public static void updateScheduledJob(JobKey jobKey, String jobDetailDesc,
-			String cronExpression) {
+			String cronExpression, Class<? extends Job> jobClass) {
 		if (jobKey != null && !StringUtils.isBlank(jobDetailDesc)
 				&& !StringUtils.isBlank(cronExpression)) {
 			try {
@@ -270,12 +270,12 @@ public class EpSchedulerHelper {
 									newTrigger.getKey(), newTrigger);
 						}
 
-						// update job description
-						if (!oldJob.getDescription().equals(jobDetailDesc)
+						// update job description or job class
+						if ((!oldJob.getDescription().equals(jobDetailDesc) || !oldJob
+								.getJobClass().equals(jobClass))
 								&& !isJobRunningNow(jobKey)) {
 
-							JobDetail newJob = JobBuilder
-									.newJob(oldJob.getJobClass())
+							JobDetail newJob = JobBuilder.newJob(jobClass)
 									.withIdentity(jobKey)
 									.withDescription(jobDetailDesc).build();
 

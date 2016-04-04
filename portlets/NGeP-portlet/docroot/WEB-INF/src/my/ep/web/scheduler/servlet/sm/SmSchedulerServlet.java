@@ -27,6 +27,7 @@ import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
 import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
 import my.ep.web.scheduler.job.sm.SoftCertRenewalReminderJob;
 import my.ep.web.scheduler.job.sm.SupportingDocumentReminderJob;
+import my.ep.web.scheduler.job.sm.TestJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
@@ -165,6 +166,10 @@ public class SmSchedulerServlet extends HttpServlet {
 				SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
 				DeletedCompanyJob.class, SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("eperunding.sm.outbound11"));
+		
+//		EpSchedulerHelper.scheduleJob(new JobKey("KERJA1","KUMPULAN KERJA1"),
+//				TestJob.class, "Suka2 nak try!!!","0/60 * * * * ?");
+		
 		
 		log.info("end init sm scheduler servlet....");
 
