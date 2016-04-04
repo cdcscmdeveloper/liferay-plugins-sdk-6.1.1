@@ -7986,6 +7986,7 @@ public class SmApplicationBackingBean extends
 		} else if (getManagedBean().getSelectedBank().getAccountPurpose()
 				.equalsIgnoreCase("B")) {
 			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
+			getManagedBean().getSelectedBank().setForHqFlg(1);
 		} else {
 			this.getManagedBean().setFinOrgLs(new ArrayList<PmFinancialOrg>());
 			runQuery = false;
