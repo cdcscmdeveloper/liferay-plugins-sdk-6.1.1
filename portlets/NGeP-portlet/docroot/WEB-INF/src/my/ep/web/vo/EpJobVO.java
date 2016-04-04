@@ -21,7 +21,6 @@ public class EpJobVO implements Serializable {
 	private String state;
 	private String description;
 	private String jobClassName;
-	private String prevJobName;
 	private String cronSec;
 	private String cronMin;
 	private String cronHr;
@@ -30,6 +29,7 @@ public class EpJobVO implements Serializable {
 	private String cronYear;
 	private String jobName;
 	private String jobGroup;
+	private String cronExpression;
 
 	public EpJobVO() {
 
@@ -37,7 +37,7 @@ public class EpJobVO implements Serializable {
 
 	public EpJobVO(JobKey jobKey, Trigger trigger, String status,
 			String action, String state, String description,
-			Class<? extends Job> jobClass) {
+			Class<? extends Job> jobClass, String cronExpression) {
 
 		this.jobKey = jobKey;
 		this.trigger = trigger;
@@ -46,6 +46,7 @@ public class EpJobVO implements Serializable {
 		this.state = state;
 		this.description = description;
 		this.jobClass = jobClass;
+		this.cronExpression = cronExpression;
 	}
 
 	public JobKey getJobKey() {
@@ -112,14 +113,6 @@ public class EpJobVO implements Serializable {
 		this.jobClassName = jobClassName;
 	}
 
-	public String getPrevJobName() {
-		return prevJobName;
-	}
-
-	public void setPrevJobName(String prevJobName) {
-		this.prevJobName = prevJobName;
-	}
-
 	public String getCronSec() {
 		return cronSec;
 	}
@@ -182,6 +175,14 @@ public class EpJobVO implements Serializable {
 
 	public void setJobGroup(String jobGroup) {
 		this.jobGroup = jobGroup;
+	}
+
+	public String getCronExpression() {
+		return cronExpression;
+	}
+
+	public void setCronExpression(String cronExpression) {
+		this.cronExpression = cronExpression;
 	}
 
 }
