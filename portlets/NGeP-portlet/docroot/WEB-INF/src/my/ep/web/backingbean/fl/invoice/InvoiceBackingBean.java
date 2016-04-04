@@ -908,7 +908,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			if(getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee() != null){
 				serviceFee = getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee();
 			}
-			
 		}
 		
 		if(getManagedBean().getInvoice().getFlRequest().getProcurementType()!=null && getManagedBean().getInvoice().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
@@ -957,6 +956,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		BigDecimal percentage = new BigDecimal(100);
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
+		nonExemptedItem = nonExemptedItem.subtract(gstTotalAmount);
 		invMulty = nonExemptedItem.multiply(serviceFee);
 		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 		getManagedBean().getInvoice().setFeeAmt(feeAmount);
@@ -1316,7 +1316,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		if(resDTO.getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
 		} else {
-			serviceFee = new BigDecimal(resDTO.getInvoice().getFlRequest().getCtContract().getServiceFee());
+			if(getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee() != null){
+				serviceFee = getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee();
+			}
 		}
 		
 		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
