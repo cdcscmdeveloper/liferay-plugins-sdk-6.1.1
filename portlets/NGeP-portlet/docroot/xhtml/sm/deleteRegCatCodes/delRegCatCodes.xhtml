@@ -92,10 +92,10 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.catCodes.delete']}"
 					disabled="true" readonly="true"
-					rendered="#{deleteCategoryCodeBB.managedBean.selectedCategories.size() == 0}" />
-				<p:commandButton value="#{lbl['lbl.sm.catCodes.delete']}"
-					rendered="#{deleteCategoryCodeBB.managedBean.selectedCategories.size() != 0}"
-					onclick="confirmation.show()" type="button" />
+					rendered="#{empty deleteCategoryCodeBB.managedBean.selectedCategories}" />
+				<p:commandButton value="#{lbl['lbl.sm.catCodes.delete']}" action="#{deleteCategoryCodeBB.onDeleteSelectedCatCodes}"
+					rendered="#{not empty deleteCategoryCodeBB.managedBean.selectedCategories}"
+					process="@this" update="@form"/>
 			</div>
 		</p:panel>
 		<p:confirmDialog id="catDelConfirm"
