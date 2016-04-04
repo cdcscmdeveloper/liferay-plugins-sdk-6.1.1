@@ -202,8 +202,8 @@ public class SchedulerConstants {
 	public static final String NOTIFICATION_INTEGRATION_JOB_GROUP = "NOTIFICATION INTEGRATION JOB";
 	public static final String NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC = "Job run 10 AM and 10 PM";
 
-	public static final String CM_EXPIRED_ITEM_TIMER_JOB = "CM JOB GROUP";
-	public static final String CM_EXPIRED_ITEM_TIMER_JOB_GROUP = "ITEM EXPIRED JOB";
+	public static final String CM_EXPIRED_ITEM_TIMER_JOB = "ITEM EXPIRED JOB";
+	public static final String CM_EXPIRED_ITEM_TIMER_JOB_GROUP = "CM JOB GROUP";
 	public static final String CM_EXPIRED_ITEM_TIMER_CONTINUOUS_JOB_DESC = "Job run 12 AM";
 	public static final String CM_EXPIRED_ITEM_TIMER = "0 01 00 * * ?";
 
