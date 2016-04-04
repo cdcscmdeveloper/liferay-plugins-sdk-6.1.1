@@ -678,7 +678,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		getManagedBean().setInvoiceAmountWithoutGST(invoiceTotalAmount.subtract(getManagedBean().getGstAmount()));
 		BigDecimal serviceFee = new BigDecimal(0);
 		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
-			serviceFee = new BigDecimal(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getServiceFee());
+			if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee() != null){
+				serviceFee = getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getServiceFee();
+			}
 		}else{
 			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);;
 		}		
@@ -749,7 +751,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		if(haveDeduction && nonExemptedItemAmt.doubleValue() > 0){
 			if(totalDeductionAmt != null && totalDeductionAmt.doubleValue() > 0){
 				
-				newInvoiceAmt = nonExemptedItemAmt.subtract(totalDeductionAmt);
+				newInvoiceAmt = nonExemptedItemAmt.subtract(totalDeductionAmt).subtract(getManagedBean().getGstAmount());
 				if(newInvoiceAmt.doubleValue() <= 0){
 					getManagedBean().getPaymentAdvice().setFeeAmt(new BigDecimal(0));
 				}else{
@@ -769,6 +771,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 		}else if(nonExemptedItemAmt.doubleValue() >= 0 && haveDeduction == false){
 			if(nonExemptedItemAmt.doubleValue() > 0){
+				nonExemptedItemAmt = nonExemptedItemAmt.subtract(getManagedBean().getGstAmount());
 				invMulty = nonExemptedItemAmt.multiply(serviceFee);
 				transFee = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
 				getManagedBean().getPaymentAdvice().setFeeAmt(transFee);
