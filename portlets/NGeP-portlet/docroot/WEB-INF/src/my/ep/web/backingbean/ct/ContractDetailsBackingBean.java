@@ -308,7 +308,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		          // Retrieve Agencies
 	              if (ctBB.getManagedBean().getContractVer().getCtAgencies() != null  && ctBB.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 	    	              ctBB.getManagedBean().setSelectedAgency(null);
-	    	              sortAgencyList(ctBB.getManagedBean().getContractVer().getCtAgencies());
+	    	              //sortAgencyList(ctBB.getManagedBean().getContractVer().getCtAgencies());
 	    	              for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 	    		                 ctBB.checkAgencyStatus(ctAgency);		        	   
 	    	              }
