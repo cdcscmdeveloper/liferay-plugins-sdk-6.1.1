@@ -19,7 +19,7 @@
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="SM_SUPPLIER_MOFNO"
 						postUpdateListener="directLOABackingBean.mofNoListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
 						headerText="#{lbl['lbl.sc.supp.mof.no']}" selectionMode="single"
-						readonly="true" size="35" conditionField="recordStatus^1" 
+						readonly="true" size="35" conditionField="recordStatus^1|smSupplier.recordStatus^1" 
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 						update="@form" required="true" /></td>
@@ -31,7 +31,7 @@
 						postUpdateListener="directLOABackingBean.supplierListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
 						headerText="#{lbl['lbl.sc.supp.name']}" selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
-						conditionField="recordStatus^1" readonly="true" size="35"
+						conditionField="recordStatus^1|smMofAccounts.recordStatus^1" readonly="true" size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						update="@form" required="true" /></td>
 			</tr>
