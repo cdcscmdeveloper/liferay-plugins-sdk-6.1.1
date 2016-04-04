@@ -211,6 +211,18 @@ public class CmTrackingDiaryBackingBean extends
 	}
 	
 	
+	public void preRenderCMTrackingDairyView() {
+		log.info(".................preRenderCMTrackingDairyView................");
+		
+		this.getManagedBean().reset();
+		
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "cmTrackingDiarySearch");
+	}
+	
+	
 
 }
 
