@@ -73,7 +73,8 @@
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					<f:attribute name="max" value="99999999999.99"/>		
+					<f:attribute name="min" value="0"/>	
+		  			<f:attribute name="max" value="99999999999.99"/>		
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, amountValueMsg" />
@@ -93,7 +94,8 @@
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"	>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-					<f:attribute name="max" value="9999"/>		
+					<f:attribute name="min" value="0"/>	
+		  			<f:attribute name="max" value="9999"/>		
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, numberValueMsg" />
@@ -134,6 +136,7 @@
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+		  			<f:attribute name="min" value="0"/>	
 		  			<f:attribute name="max" value="100"/>		
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax partialSubmit="true" process="@this"
