@@ -252,7 +252,7 @@
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.businessStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
-						<p:ajax event="change"
+						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
 							update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
@@ -276,7 +276,7 @@
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
-						<p:ajax event="change"
+						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateCityByAddType('business',true)}"
 							update="busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
 					</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
@@ -300,7 +300,8 @@
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
-						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
+						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"
+							listener="#{registrationBackingBean.onSelectCity('business')}"/>
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
 			</tr>
 
