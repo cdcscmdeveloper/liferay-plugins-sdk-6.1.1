@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -1055,10 +1056,12 @@ public class NoticeBoardBackingBean extends
 
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
 						.equals(selectedTab)) {
-					statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
-					statusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
-					statusIds.add(QTStatusConst.QT_PENDING_LOI);
-					statusIds.add(QTStatusConst.QT_PENDING_LOA);
+					List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+					orderedStatuses = orderedStatuses.subList(
+							orderedStatuses.indexOf(QTStatusConst.QT_CLOSED), 
+							orderedStatuses.indexOf(QTStatusConst.QT_AWARDED));
+					
+					statusIds.addAll(orderedStatuses);
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
