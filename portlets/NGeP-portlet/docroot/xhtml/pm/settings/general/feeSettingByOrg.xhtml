@@ -72,7 +72,7 @@
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
-				<p:ajax event="dateSelect" update="@([id$=FeeOrgexpDateId,id$=FeeOrgeffDateId])"
+				<p:ajax event="dateSelect" update="FeeOrgexpDateId,@this"
 					process="@this" />
 			</p:calendar>
 		</p:column>
