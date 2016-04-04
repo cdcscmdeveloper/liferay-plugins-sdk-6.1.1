@@ -44,6 +44,7 @@ public class CmTrackingDiaryBackingBean extends
 	private static Logger log = Logger.getLogger(CmTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CATALOG_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CATALOG_DETAIL_SEARCH = "/xhtml/cm/catalogue/addCatalogViewTrackingDairy.xhtml";
+	public static final String BACK_TO_PREV = "/xhtml/trackingdiary/cmTrackingDiarySearch.xhtml";
 
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -197,8 +198,8 @@ public class CmTrackingDiaryBackingBean extends
 	}
 
 	public String backToPrev() {
-
-		return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
+		System.out.println("***************BACK_TO_PREV**********"+BACK_TO_PREV);
+		return BACK_TO_PREV + "?faces-redirect=true";
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
