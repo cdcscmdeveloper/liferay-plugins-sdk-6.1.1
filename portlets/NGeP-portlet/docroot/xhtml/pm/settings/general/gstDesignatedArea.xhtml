@@ -93,7 +93,7 @@
 				readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{daObj.effDate}">
-				<p:ajax event="dateSelect" update="@([id$=daexpDateId,id$=daeffDateId])" process="@this" />
+				<p:ajax event="dateSelect" update="daexpDateId,@this" process="@this" />
 			</p:calendar>
 		</p:column>
 
