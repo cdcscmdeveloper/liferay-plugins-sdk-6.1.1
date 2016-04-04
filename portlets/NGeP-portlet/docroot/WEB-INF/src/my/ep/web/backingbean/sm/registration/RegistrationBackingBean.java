@@ -1172,10 +1172,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void populateDistrictByAddType(String typeAdd, boolean reset) {
 		if (typeAdd.equals("business")) {
 			if(reset){
-				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+				getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 			}
-			// this.getManagedBean().getSmBusinessAdd().getPmState().getStateId();
+			this.getManagedBean().getSmBusinessAdd().setPmState(SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
 			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
 			this.getManagedBean().setBusinessDistrictLs(districtLs);
 			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
@@ -1205,9 +1205,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("---------------City By Type--------------------");
 		if (typeAdd.equals("business")) {
 			if(reset){
-				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+				getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 			}
-			// this.getManagedBean().getSmBusinessAdd().getPmState().getStateId();
+			this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId()));
 			List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setBusinessCityLs(cityLs);
 			populateLocalAuthority(getManagedBean().getSmSupp(), this.getManagedBean().getSmBusinessAdd());
@@ -1217,6 +1217,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		} else if (typeAdd.equals("permenant")) {
 			List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmPermenantAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setPermenantCityLs(cityLs);
+		}
+	}
+	
+	public void onSelectCity(String typeAdd){
+		if (typeAdd.equals("business")) {
+			this.getManagedBean().getSmBusinessAdd().setPmCity(SmCommonUtil.getInstance().getCityById(this.getManagedBean().getSmBusinessAdd().getPmCity().getCityId()));
 		}
 	}
 
