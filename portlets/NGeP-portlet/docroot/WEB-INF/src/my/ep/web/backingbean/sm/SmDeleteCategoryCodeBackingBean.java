@@ -31,6 +31,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -216,6 +217,13 @@ public class SmDeleteCategoryCodeBackingBean extends
 			}
 		}
 	}
+	
+	public void onDeleteSelectedCatCodes(){
+		SmApplicationUtil.checkCategoryPendingTransaction(getManagedBean()
+				.getSelectedCategories(), getManagedBean().getSmSupplier()
+				.getSupplierId());
+		RequestContext.getCurrentInstance().execute("confirmation.show()");
+	}
 
 	/**
 	 * Delete selected category codes for the SmAppl object in the managed bean.
@@ -227,9 +235,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 			if (getManagedBean().getActiveCategoryList().size() == delListSize) {
 				throw new EpException(MessageConst.ERROR_722578);
 			}
-			SmApplicationUtil.checkCategoryPendingTransaction(getManagedBean()
-					.getSelectedCategories(), getManagedBean().getSmSupplier()
-					.getSupplierId());
+			
 			Boolean invalidRemarks = false;
 			StringBuilder sb = new StringBuilder();
 			sb.append(SmCommonUtil.getMessage("lbl.sm.category.deleteRemarks",
