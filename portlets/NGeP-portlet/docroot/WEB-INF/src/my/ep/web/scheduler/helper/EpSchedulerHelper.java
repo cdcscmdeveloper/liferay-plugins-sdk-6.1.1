@@ -371,6 +371,30 @@ public class EpSchedulerHelper {
 	}
 
 	/**
+	 * Get cron expression by jobKey
+	 * 
+	 * @param JobKey
+	 *            jobKey
+	 * @return String
+	 */
+	public static String getCronExpressionByJobKey(JobKey jobKey) {
+		String retVal = StringUtils.EMPTY;
+		try {
+			List<? extends Trigger> triggers = getScheduler().getTriggersOfJob(
+					jobKey);
+			for (Trigger trigger : triggers) {
+				if (trigger instanceof CronTrigger) {
+					CronTrigger cronTrigger = (CronTrigger) trigger;
+					retVal = cronTrigger.getCronExpression();
+				}
+			}
+		} catch (SchedulerException e) {
+			log.error(e);
+		}
+		return retVal;
+	}
+
+	/**
 	 * Get scheduler instance
 	 * 
 	 * @return Scheduler
