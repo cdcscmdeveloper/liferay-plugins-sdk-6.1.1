@@ -4475,7 +4475,8 @@ public class SupplierFinalizationBackingBean extends
 
 				// set the checkbox or radio button of supplier selected
 				if (CollectionUtils.isNotEmpty(
-						scQtRecommend.getRecommendDtls())) {
+						scQtRecommend.getRecommendDtls()) && 
+						CollectionUtils.isNotEmpty(shortlistedSuppliers)) {
 					if (isQTRefinalized() || finalizationMethod.getParameterCode()
 							.equals(ParameterConst.RECOMMEND_BY_AWARD)) {
 						
