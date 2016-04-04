@@ -20,6 +20,16 @@ public class EpJobVO implements Serializable {
 	private String action;
 	private String state;
 	private String description;
+	private String jobClassName;
+	private String prevJobName;
+	private String cronSec;
+	private String cronMin;
+	private String cronHr;
+	private String cronDay;
+	private String cronMonth;
+	private String cronYear;
+	private String jobName;
+	private String jobGroup;
 
 	public EpJobVO() {
 
@@ -92,6 +102,86 @@ public class EpJobVO implements Serializable {
 
 	public void setJobClass(Class<? extends Job> jobClass) {
 		this.jobClass = jobClass;
+	}
+
+	public String getJobClassName() {
+		return jobClassName;
+	}
+
+	public void setJobClassName(String jobClassName) {
+		this.jobClassName = jobClassName;
+	}
+
+	public String getPrevJobName() {
+		return prevJobName;
+	}
+
+	public void setPrevJobName(String prevJobName) {
+		this.prevJobName = prevJobName;
+	}
+
+	public String getCronSec() {
+		return cronSec;
+	}
+
+	public void setCronSec(String cronSec) {
+		this.cronSec = cronSec;
+	}
+
+	public String getCronMin() {
+		return cronMin;
+	}
+
+	public void setCronMin(String cronMin) {
+		this.cronMin = cronMin;
+	}
+
+	public String getCronHr() {
+		return cronHr;
+	}
+
+	public void setCronHr(String cronHr) {
+		this.cronHr = cronHr;
+	}
+
+	public String getCronDay() {
+		return cronDay;
+	}
+
+	public void setCronDay(String cronDay) {
+		this.cronDay = cronDay;
+	}
+
+	public String getCronMonth() {
+		return cronMonth;
+	}
+
+	public void setCronMonth(String cronMonth) {
+		this.cronMonth = cronMonth;
+	}
+
+	public String getCronYear() {
+		return cronYear;
+	}
+
+	public void setCronYear(String cronYear) {
+		this.cronYear = cronYear;
+	}
+
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+
+	public String getJobGroup() {
+		return jobGroup;
+	}
+
+	public void setJobGroup(String jobGroup) {
+		this.jobGroup = jobGroup;
 	}
 
 }

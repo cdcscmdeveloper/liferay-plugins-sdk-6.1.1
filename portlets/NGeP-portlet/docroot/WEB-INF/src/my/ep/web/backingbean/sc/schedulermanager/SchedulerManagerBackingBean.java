@@ -8,6 +8,7 @@ import javax.faces.bean.RequestScoped;
 import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
@@ -19,6 +20,7 @@ import my.ep.web.vo.EpJobVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
@@ -39,6 +41,8 @@ public class SchedulerManagerBackingBean extends
 		SmCommonUtil.setMDCUserId();
 		initAllJobs();
 		SmCommonUtil.redirectToPage("ePSchedulerManager.xhtml", "", null);
+
+		getManagedBean().setJobClassList(new ArrayList<String>());
 	}
 
 	public void initAllJobs() {
@@ -224,6 +228,47 @@ public class SchedulerManagerBackingBean extends
 		}
 	}
 
+	public void onTickOtherSystem() {
+		getManagedBean().getSelectedJobVO().setJobKey(new JobKey("", ""));
+	}
+
+	public void onAddJob() {
+		getManagedBean().setOthersJobGroup(false);
+		EpJobVO jobVO = new EpJobVO();
+		getManagedBean().setSelectedJobVO(jobVO);
+		RequestContext.getCurrentInstance().execute("addJobDialog.show()");
+	}
+
+	public void addJob() {
+		StringBuilder cronExpSb = new StringBuilder();
+		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronSec())
+				.append(" ");
+		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronMin())
+				.append(" ");
+		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronHr())
+				.append(" ");
+		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronDay())
+				.append(" ");
+		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronMonth())
+				.append(" ");
+		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronYear());
+
+		Class<? extends Job> jobClass = getValidJobClass();
+
+		try {
+			EpSchedulerHelper.addAndScheduleNewJob(new JobKey(getManagedBean()
+					.getSelectedJobVO().getJobName(), getManagedBean()
+					.getSelectedJobVO().getJobGroup()), jobClass,
+					getManagedBean().getSelectedJobVO().getDescription(),
+					cronExpSb.toString());
+			initAllJobs();
+			RequestContext.getCurrentInstance().execute("addJobDialog.hide()");
+		} catch (Exception ex) {
+			throw new EpException(
+					MessageConst.ERRQRTZ_00004);
+		}
+	}
+
 	public void onDeleteJob(EpJobVO epJobVO) {
 		getManagedBean().setSelectedJobVO(epJobVO);
 		RequestContext.getCurrentInstance().execute(
@@ -234,6 +279,37 @@ public class SchedulerManagerBackingBean extends
 		String retVal = SchedulerConstants.JOB_WAIT;
 		if (EpSchedulerHelper.isJobRunningNow(jobKey)) {
 			retVal = SchedulerConstants.JOB_RUN;
+		}
+		return retVal;
+	}
+
+	private Class<? extends Job> getValidJobClass() {
+		Class<?> jobClass;
+		try {
+			jobClass = Class.forName(getManagedBean().getSelectedJobVO()
+					.getJobClassName());
+			if (!Job.class.isAssignableFrom(jobClass)) {
+				throw new EpException(MessageConst.ERRQRTZ_00005);
+			}
+		} catch (ClassNotFoundException e) {
+			throw new EpException(MessageConst.ERRQRTZ_00005);
+		}
+		if (isJobAlreadyExist(getManagedBean().getSelectedJobVO().getJobName())) {
+			throw new EpException(MessageConst.ERRQRTZ_00006);
+		}
+		return (Class<? extends Job>) jobClass;
+	}
+
+	private boolean isJobAlreadyExist(String jobName) {
+		boolean retVal = false;
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getEpSchedulerJobList())) {
+			for (EpJobVO job : getManagedBean().getEpSchedulerJobList()) {
+				if (!StringUtils.isBlank(jobName)
+						&& jobName.equals(job.getJobKey().getName())) {
+					retVal = true;
+				}
+			}
 		}
 		return retVal;
 	}
