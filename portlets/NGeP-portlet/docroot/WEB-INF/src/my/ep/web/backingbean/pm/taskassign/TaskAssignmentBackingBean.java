@@ -486,10 +486,11 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 */
 	private List<String> retrieveAvailableRoles(Long statusId){
 		log.info("retrieveAvailableRoles");
+		IStatusSO statusSO = null;
 		List<String> statusRoles = new ArrayList<String>();
 		try {
 			StatusReqDTO reqDTO = new StatusReqDTO();
-			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			reqDTO.setStatusId(statusId);
 			StatusResDTO resDTO = statusSO.retrieveStatusRoleByStatusId(reqDTO);
 			if(resDTO.isSuccessful()){
@@ -501,6 +502,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770093, new String[]{e.getMessage()});
+		}finally{
+			statusSO = null;
 		}
 		return statusRoles;
 	}
@@ -523,6 +526,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			}
 			
 			if(reqDTO.getRoleCodeList() != null && !reqDTO.getRoleCodeList().isEmpty()){
+				reqDTO.setReassignType(ProfileManagementConst.REASSIGN_TYPE_COMMON);
 				IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 				StatusResDTO resDTO = statusSO.retrieveStatusRoleListByRoleCode(reqDTO);
 				if(resDTO.isSuccessful()){
@@ -549,119 +553,131 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		boolean isApprover = false;
 		List <PmUser> pmUsers = new ArrayList<PmUser>();
 		try {
-			List<String> statusRoles = retrieveAvailableRoles(this.getManagedBean().getSelectedTask().getDocStatus().longValue());
-			Long userId = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId();
-			Long orgProfileId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId();
-			Long orgTypeId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId();
-			ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-		
-			/* Search Bean Filter - Start */
-			// only active user
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("recordStatusFlg");
-			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
-			searchBean.getDataFilterBeans().add(bean);
-			
-			// only active user role
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmUserOrgs.pmUserRoles.recordStatusFlg");
-			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
-			searchBean.getDataFilterBeans().add(bean);
-			
-			// only active org group
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmUserOrgs.recordStatusFlg");
-			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
-			searchBean.getDataFilterBeans().add(bean);
-			
-			// not current selected user
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
-			bean.setSearchField("userId");
-			bean.setSearchValue(userId);
-			searchBean.getDataFilterBeans().add(bean);
-				
-			// same org profile id
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
-			bean.setSearchValue(orgProfileId);
-			searchBean.getDataFilterBeans().add(bean);
-			
-			// same org type id
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterId");
-			bean.setSearchValue(orgTypeId);
-			searchBean.getDataFilterBeans().add(bean);
-
-			// in applicable role code
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
-			bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
-			bean.setSearchValue(statusRoles);
-			searchBean.getDataFilterBeans().add(bean);
-			
+			List<String> statusRoles = new ArrayList<String>();
 			String moduleCode = PmCommonUtil.getPmStatusById(task.getDocStatus().longValue()).getModuleCode();
-			if(ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
+			if(StringUtils.isNotBlank(moduleCode)){
+//				if(ModuleCodeConst.SUPPLIER_SELECTION.equalsIgnoreCase(moduleCode)){
+//					statusRoles = retrieveSourcingRoles(task);
+//				}else 
+//					
+					
+					if(ModuleCodeConst.CONTRACT_MANAGEMENT.equalsIgnoreCase(moduleCode)){
+					statusRoles = retrieveCtRoles(task);
+				}				
+				if(statusRoles.isEmpty()){
+					statusRoles = retrieveAvailableRoles(this.getManagedBean().getSelectedTask().getDocStatus().longValue());
+				}				
+				Long userId = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId();
+				Long orgProfileId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId();
+				Long orgTypeId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId();
+				ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+			
+				/* Search Bean Filter - Start */
+				// only active user
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("recordStatusFlg");
+				bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+				searchBean.getDataFilterBeans().add(bean);
+				
+				// only active user role
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmUserOrgs.pmUserRoles.recordStatusFlg");
+				bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+				searchBean.getDataFilterBeans().add(bean);
+				
+				// only active org group
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmUserOrgs.recordStatusFlg");
+				bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+				searchBean.getDataFilterBeans().add(bean);
+				
+				// not current selected user
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
+				bean.setSearchField("userId");
+				bean.setSearchValue(userId);
+				searchBean.getDataFilterBeans().add(bean);
+					
+				// same org profile id
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
+				bean.setSearchValue(orgProfileId);
+				searchBean.getDataFilterBeans().add(bean);
+				
+				// same org type id
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterId");
+				bean.setSearchValue(orgTypeId);
+				searchBean.getDataFilterBeans().add(bean);
+
+				// in applicable role code
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+				bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
+				bean.setSearchValue(statusRoles);
+				searchBean.getDataFilterBeans().add(bean);
+				
+				if(ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
+					// approver should be returned by BPM not selected from DB
+					boolean receivingOfficer = false;
+					for(String status : statusRoles){
+						if(ProfileManagementConst.RECEIVING_OFFICER.equals(status)){
+							receivingOfficer = true;
+							break;
+						}
+					}
+				
+					if(receivingOfficer){
+						List<Long> userIds = getReceivingOfficerIdListByDeliveryOrderId(task.getDocId().longValue());			
+						if(userIds != null && !userIds.isEmpty()){											
+							bean = new SearchFilterBean();
+							bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+							bean.setSearchField("userId");					
+							bean.setSearchValue(userIds);
+							searchBean.getDataFilterBeans().add(bean);
+						}				
+					}else{
+						bean = new SearchFilterBean();
+						bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
+						bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
+						bean.setSearchValue(APPROVER);
+						searchBean.getDataFilterBeans().add(bean);
+					}
+					
+				}
+				/* 27 Jan 2014
 				// approver should be returned by BPM not selected from DB
-				boolean receivingOfficer = false;
-				for(String status : statusRoles){
-					if(ProfileManagementConst.RECEIVING_OFFICER.equals(status)){
-						receivingOfficer = true;
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
+				bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
+				bean.setSearchValue(APPROVER);
+				searchBean.getDataFilterBeans().add(bean);*/
+				/* Search Bean Filter - End */
+				
+				//search users
+				pmUsers = PmCommonUtil.searchUsersBySearchBean(searchBean);
+
+				//if contains approver role
+				for(String roleCode:statusRoles){
+					if(roleCode.toLowerCase().contains(APPROVER.toLowerCase())){
+						isApprover = true;
 						break;
 					}
 				}
-			
-				if(receivingOfficer){
-					List<Long> userIds = getReceivingOfficerIdListByDeliveryOrderId(task.getDocId().longValue());			
-					if(userIds != null && !userIds.isEmpty()){											
-						bean = new SearchFilterBean();
-						bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
-						bean.setSearchField("userId");					
-						bean.setSearchValue(userIds);
-						searchBean.getDataFilterBeans().add(bean);
-					}				
-				}else{
-					bean = new SearchFilterBean();
-					bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
-					bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
-					bean.setSearchValue(APPROVER);
-					searchBean.getDataFilterBeans().add(bean);
+				if(isApprover && ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
+					generateCompleteUsers(pmUsers, task, userId);
 				}
-				
+				/* 27 Jan 2014
+				if(isApprover){
+					generateCompleteUsers(pmUsers, task);
+				}*/
 			}
-			/* 27 Jan 2014
-			// approver should be returned by BPM not selected from DB
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
-			bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
-			bean.setSearchValue(APPROVER);
-			searchBean.getDataFilterBeans().add(bean);*/
-			/* Search Bean Filter - End */
-			
-			//search users
-			pmUsers = PmCommonUtil.searchUsersBySearchBean(searchBean);
-
-			//if contains approver role
-			for(String roleCode:statusRoles){
-				if(roleCode.toLowerCase().contains(APPROVER.toLowerCase())){
-					isApprover = true;
-					break;
-				}
-			}
-			if(isApprover && ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
-				generateCompleteUsers(pmUsers, task, userId);
-			}
-			/* 27 Jan 2014
-			if(isApprover){
-				generateCompleteUsers(pmUsers, task);
-			}*/
-			
-				
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770095, new String[]{e.getMessage()});
@@ -1169,6 +1185,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			}
 			
 			if(reqDTO != null){
+				reqDTO.setReassignType(ProfileManagementConst.REASSIGN_TYPE_COMMON);
 				statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 				StatusResDTO resDTO =statusSO.retrieveStatusRoleListByRoleCode(reqDTO);
 				
@@ -1245,9 +1262,50 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}finally{
 			documentSO = null;		
 		}
-		
-		
 		return userIds;
+	}
+	
+	private List<String> retrieveSourcingRoles(WorklistItemVO task){
+		log.info("retrieveSourcingRoles");
+		List<String> roleList = new ArrayList<>();
+		ISourcingIntegrationSO scIntegrationSO = null;
+		try{
+			SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
+			scIntegrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+			reqDTO.setDocType(task.getDocType());
+			reqDTO.setDocNo(task.getDocNumber());
+			reqDTO.setStatusId(task.getDocStatus().longValue());
+			SourcingIntegrationResDTO resDTO = scIntegrationSO.retrieveRoleForTaskAssignment(reqDTO);
+			if(StringUtils.isNotBlank(resDTO.getRoleCode())){
+				roleList.add(resDTO.getRoleCode());
+			}
+		}finally{
+			scIntegrationSO = null;
+		}
+		
+		return roleList;
+	}
+	
+	private List<String> retrieveCtRoles(WorklistItemVO task){
+		log.info("retrieveCtRoles");
+		List<String> roleList = new ArrayList<>();
+		IContractIntegrationSO ctIntegrationSO = null;
+		try{
+			ContractIntegrationReqDTO reqDTO =  new ContractIntegrationReqDTO();
+			ctIntegrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
+			reqDTO.setDocNo(task.getDocNumber());
+			reqDTO.setDocType(task.getDocType());
+			ContractIntegrationResDTO resDTO = ctIntegrationSO.retrieveTaskAssignmentRole(reqDTO);
+			if(resDTO.isSuccessful() && !resDTO.getRoleCodeList().isEmpty()){
+				roleList = resDTO.getRoleCodeList();
+			}
+		}finally{
+			ctIntegrationSO = null;
+		}
+		
+		return roleList;
 	}
 		
 }
