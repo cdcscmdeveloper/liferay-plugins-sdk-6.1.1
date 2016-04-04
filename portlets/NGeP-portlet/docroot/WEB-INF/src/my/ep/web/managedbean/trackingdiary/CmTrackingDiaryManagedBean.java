@@ -13,11 +13,16 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.trackingdiary.CdTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 @ManagedBean(name = "cmTrackingDiaryManagedBean")
 @SessionScoped
 public class CmTrackingDiaryManagedBean extends BaseManagedBean { 
@@ -71,6 +76,15 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 					System.out.println("getSearchStatusId"+getSearchStatusId());
 					reqDTO.setItemStatus(getSearchStatusId());
 				}
+				
+				UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+				if(bb.isAllSupplier()){
+					System.out.println("*********is supplier***********");
+					SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
+					System.out.println("smSupp.getSupplierId():"+smSupp.getSupplierId());
+					reqDTO.setSupplierId(smSupp.getSupplierId());
+				}
+				
 				reqDTO.setSearchBean(searchBean);
 				System.out.println("*********b4***********"+getSearchItemCodeValue() );
 				CatalogueResDTO resDTO = catSO.searchSupplierItem(reqDTO);
