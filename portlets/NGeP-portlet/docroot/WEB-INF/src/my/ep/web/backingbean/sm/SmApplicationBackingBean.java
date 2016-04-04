@@ -59,6 +59,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.revertApplication.RevertApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
@@ -7576,18 +7577,20 @@ public class SmApplicationBackingBean extends
 					reqDTO.setServerPort(fs.getRequest().getServerPort());
 					reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
-					reqSO.submitPOorApproverReviewToBPM(reqDTO);
+					ReviewApplicationResDTO revApplicationResDTO = reqSO.submitPOorApproverReviewToBPM(reqDTO);
 
-					// to auto generate mof cert
-					if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
-						try {
-							SmVirtualCertHelper.getInstance()
-									.autoGenerateVirtualCert(
-											getManagedBean().getSmAppl()
-													.getApplId());
-						} catch (Exception ex) {
-							log.info("<<<<MOF Approval - error when generate Virtual Cert>>>>"
-									+ ex.getMessage());
+					if(revApplicationResDTO.isSuccessful()){
+						// to auto generate mof cert
+						if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+							try {
+								SmVirtualCertHelper.getInstance()
+								.autoGenerateVirtualCert(
+										getManagedBean().getSmAppl()
+										.getApplId());
+							} catch (Exception ex) {
+								log.info("<<<<MOF Approval - error when generate Virtual Cert>>>>"
+										+ ex.getMessage());
+							}
 						}
 					}
 
