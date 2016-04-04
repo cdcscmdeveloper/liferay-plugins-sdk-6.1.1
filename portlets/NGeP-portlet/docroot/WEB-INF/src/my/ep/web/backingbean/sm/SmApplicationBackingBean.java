@@ -9598,7 +9598,12 @@ public class SmApplicationBackingBean extends
 		SelectItem item = null;
 
 		if (getManagedBean().getSelectedShareHolder() != null
-				&& StringUtils.isNotBlank(suppType) && suppType.equals("J")) {
+				&& StringUtils.isNotBlank(suppType)
+				&& suppType.equals("J")
+				&& (getManagedBean().getSelectedShareHolder().isProf()
+						|| getManagedBean().getSelectedShareHolder()
+								.isSemiProf() || getManagedBean()
+						.getSelectedShareHolder().isClerical())) {
 			for (PmEduLevel eduLevel : getManagedBean().getEduLevelList()) {
 				if ((getManagedBean().getSelectedShareHolder().isProf() && SupplierManagementConst.PROF_STAFF_EDU_LEVEL_CODES
 						.contains(eduLevel.getLevelCode()))
@@ -9620,8 +9625,27 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
+
+		} else {
+			finalList = getAllPmEduLevelItems(finalList);
 		}
 		return finalList;
+	}
+
+	private List<SelectItem> getAllPmEduLevelItems(
+			List<SelectItem> eduLevelItems) {
+		SelectItem item = null;
+		for (PmEduLevel eduLevel : getManagedBean().getEduLevelList()) {
+			item = (SelectItem) EntityHelper.getEntityBySinglePropertyFromList(
+					eduLevel.getEduLevelId(), eduLevelItems, "value");
+			if (item == null) {
+				item = new SelectItem();
+				item.setLabel(eduLevel.getLevelDesc());
+				item.setValue(eduLevel.getEduLevelId());
+				eduLevelItems.add(item);
+			}
+		}
+		return eduLevelItems;
 	}
 
 	/**
