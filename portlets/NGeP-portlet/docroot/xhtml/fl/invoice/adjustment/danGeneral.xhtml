@@ -209,19 +209,19 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.factoring.company']}" /></td>
 					<td><p:inputText size="50" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringOrgName}"/></td>
 					<td style="width: 133px;"><p:outputLabel
-							value="#{lbl['lbl.fl.invoice.acc.bank']}" /></td>
+							value="#{lbl['lbl.fl.bank.acc.no.name']}" /></td>
 					<td><p:inputText size="40" disabled="true"
 							value="#{danBackingBean.managedBean.adjustment.flInvoice.accountNo}  #{danBackingBean.managedBean.adjustment.flInvoice.paymentBank.finOrgName}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" /></td>
-					<td><p:inputText  disabled="true" size="50" value="#{danBackingBean.managedBean.branchName}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" rendered="false"/></td>
+					<td><p:inputText  disabled="true" size="50" value="#{danBackingBean.managedBean.branchName}" rendered="false"/></td>
 				</tr>
 				<tr>
 					<td valign="top" style="width: 137px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.address']}" /></td>
 					<td><p:inputTextarea cols="50" rows="5"
-							style="margin-bottom:5px;" disabled="true" value="#{danBackingBean.getFullAddress(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress)}"/></td>
+							style="margin-bottom:5px;" disabled="true" value="#{danBackingBean.getFullAddress(danBackingBean.managedBean.adjustment.flOrder.factoringAddress)}"/></td>
 				</tr>
 				<tr>
 					<td style="width: 100px;"><p:outputLabel
@@ -229,27 +229,27 @@
 					<td><table style="width: 100%">
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
-										disabled="true"  value="#{danBackingBean.managedBean.phoneNo}"/></td>
+										disabled="true"  value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.phoneNo}"/></td>
 								<td style="width: 65px;"><p:outputLabel
 										value="#{lbl['lbl.fl.faxno']}" /></td>
-								<td><p:inputText size="20" disabled="true" value="#{danBackingBean.managedBean.faxNo}"/></td>
+								<td><p:inputText size="20" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.faxNo}"/></td>
 							</tr>
 						</table></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-					<td><p:inputText size="50" disabled="true" value="#{danBackingBean.managedBean.contactPerson}"/></td>
+					<td><p:inputText size="50" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactPerson}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.email']}" /></td>
-					<td><p:inputText size="50"  disabled="true" value="#{danBackingBean.managedBean.contactEmail}"/></td>
+					<td><p:inputText size="50"  disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactEmail}"/></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-					<td><p:inputText size="15" disabled="true" value="#{danBackingBean.managedBean.contactPhoneNo}" /></td>
+					<td><p:inputText size="15" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactPhoneNo}" /></td>
 				</tr>
 			</table>
 		</p:panel>
