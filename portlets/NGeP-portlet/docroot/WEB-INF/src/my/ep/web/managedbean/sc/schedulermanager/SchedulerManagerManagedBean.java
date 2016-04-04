@@ -10,8 +10,6 @@ import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.EpJobVO;
 
-import org.quartz.Scheduler;
-
 @ManagedBean(name = "schedulerManagerManagedBean")
 @SessionScoped
 public class SchedulerManagerManagedBean extends BaseManagedBean {
@@ -27,6 +25,8 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	private String jobGroup;
 	private EpJobVO selectedJobVO;
 	private List<ScBidSchedule> currentDayBids;
+	private List<String> jobClassList;
+	private boolean othersJobGroup;
 
 	/**
 	 * @return the currentDayBids
@@ -93,6 +93,22 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 
 	public void setJobGroup(String jobGroup) {
 		this.jobGroup = jobGroup;
+	}
+
+	public boolean isOthersJobGroup() {
+		return othersJobGroup;
+	}
+
+	public void setOthersJobGroup(boolean othersJobGroup) {
+		this.othersJobGroup = othersJobGroup;
+	}
+
+	public List<String> getJobClassList() {
+		return jobClassList;
+	}
+
+	public void setJobClassList(List<String> jobClassList) {
+		this.jobClassList = jobClassList;
 	}
 
 }
