@@ -119,7 +119,7 @@
 							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"
 								style="margin-top:5px;width:160px;" />
 							<ac:lov id="cmCompanyName" readonly="true" 
-								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="40"
+								lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="30"
 								update="@form" headerText="#{lbl['lbl.rpt.cmpName']}"
 								value="#{reportBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"	
 								postUpdateListener="#{reportBackingBean.onCompanyNameChangeForLOV()}"							
