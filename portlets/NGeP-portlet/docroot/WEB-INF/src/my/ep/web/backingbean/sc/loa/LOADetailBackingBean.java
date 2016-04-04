@@ -642,7 +642,9 @@ public class LOADetailBackingBean extends
 		// loa contract type - central
 		String contractType = scLoa.getContractType().getParameterCode();
 		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			getManagedBean().setSelectedContractAgency(scLoa.getContractAgency().getOrgTypeCode().getParameterCode());
+			if(scLoa.getContractAgency() != null){
+				getManagedBean().setSelectedContractAgency(scLoa.getContractAgency().getOrgTypeCode().getParameterCode());
+			}
 		}
 		
         //Supplier overall contract amount
