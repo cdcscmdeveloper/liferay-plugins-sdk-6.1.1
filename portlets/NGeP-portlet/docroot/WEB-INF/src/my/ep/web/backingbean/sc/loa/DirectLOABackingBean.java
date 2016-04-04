@@ -137,6 +137,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DirectLOAManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -3848,18 +3849,23 @@ public class DirectLOABackingBean extends
 	}
 
 	public void preRenderDirectLoa() {
-
-		SCAwardSupplierDataType awardSupplierDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
-		retriveLoaDetails(awardSupplierDataType.getAwardId());
-
-		contractTypeChanged();
-		constructStartNEndMonth();
-		this.getManagedBean().setPayLoad(awardSupplierDataType);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
-
+		
+		try {
+			SCAwardSupplierDataType awardSupplierDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
+			retriveLoaDetails(awardSupplierDataType.getAwardId());
+	
+			contractTypeChanged();
+			constructStartNEndMonth();
+			this.getManagedBean().setPayLoad(awardSupplierDataType);
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+			fc.getApplication().getNavigationHandler()
+			  .handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
+		}
 	}
 
 	private void retriveLoaDetails(Long loaId) {
