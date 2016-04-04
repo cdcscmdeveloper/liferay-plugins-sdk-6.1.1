@@ -224,7 +224,7 @@
 					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.effDate}">
-					<p:ajax event="dateSelect" update="@([id$=ruleConfigexpDateId,id$=ruleValeffDateId])"
+					<p:ajax event="dateSelect" update="@this,ruleConfigexpDateId"
 						process="@this" />
 					<p:ajax event="dateSelect"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
