@@ -235,10 +235,16 @@ public class SchedulerManagerBackingBean extends
 
 	public void addOrUpdateJob() {
 		if (getManagedBean().getSelectedJobVO().getJobKey() == null) {
+			if (isJobAlreadyExist(getManagedBean().getSelectedJobVO()
+					.getJobName())) {
+				throw new EpException(MessageConst.ERRQRTZ_00006);
+			}
 			addJob();
 		} else {
 			updateJob();
 		}
+		getManagedBean().setJobGroup(
+				getManagedBean().getSelectedJobVO().getJobGroup());
 		initAllJobs();
 		RequestContext.getCurrentInstance().execute("addJobDialog.hide()");
 	}
@@ -267,10 +273,6 @@ public class SchedulerManagerBackingBean extends
 		Class<? extends Job> jobClass = getValidJobClass();
 
 		try {
-			if (isJobAlreadyExist(getManagedBean().getSelectedJobVO()
-					.getJobName())) {
-				throw new EpException(MessageConst.ERRQRTZ_00006);
-			}
 			EpSchedulerHelper.addAndScheduleNewJob(new JobKey(getManagedBean()
 					.getSelectedJobVO().getJobName(), getManagedBean()
 					.getSelectedJobVO().getJobGroup()), jobClass,
