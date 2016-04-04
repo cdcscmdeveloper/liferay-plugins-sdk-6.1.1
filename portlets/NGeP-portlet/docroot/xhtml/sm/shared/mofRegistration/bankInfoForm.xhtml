@@ -469,7 +469,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.is.associate.to.hq']}" /></td>
-					<td><p:selectOneRadio disabled="#{backingBean.managedBean.selectedBank.accountPurpose eq 'R'}"
+					<td><p:selectOneRadio disabled="#{backingBean.managedBean.selectedBank.accountPurpose ne 'P'}"
 							value="#{backingBean.managedBean.selectedBank.forHqFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
