@@ -137,6 +137,14 @@
 							</p:commandLink>
 						</p:outputPanel>
 						&#160;
+						<p:commandLink id="updateActionId"
+							partialSubmit="true"
+							process="@this" action="#{schedulerManagerBB.onUpdateJob(jobBean)}"
+							update="addJobDialog" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							<p:graphicImage value="/css/images/design/action.png" title="#{lbl['lbl.quartz.update.job']}" />
+						</p:commandLink>
+						&#160;
 						<p:commandLink id="deleteActionId"
 							partialSubmit="true"
 							process="@this" action="#{schedulerManagerBB.onDeleteJob(jobBean)}"
@@ -231,7 +239,7 @@
 							<p:selectBooleanCheckbox value="#{schedulerManagerBB.managedBean.othersJobGroup}">
 								<p:ajax event="change" partialSubmit="true" process="@this" 
 									onstart="addJobOutPanelWidget.show();" oncomplete="addJobOutPanelWidget.hide()"
-									update="addJobOutPanelId" listener="#{schedulerManagerBB.onTickOtherJobGroup()}"/>
+									update="addJobOutPanelId" />
 							</p:selectBooleanCheckbox>
 						</td>
 						<td valign="top" style="border-style: none !important;">
@@ -264,7 +272,7 @@
 							<td><p:inputText maxlength="50"
 									required="true"
 									label="#{lbl['lbl.quartz.job.group']}" id="jobKeyGroup"
-									value="#{schedulerManagerBB.managedBean.selectedJobVO.jobKey.group}"
+									value="#{schedulerManagerBB.managedBean.selectedJobVO.jobGroup}"
 									size="35" >
 									<p:ajax process="@this" update="@this,jobKeyGroupMsg" partialSubmit="true" event="blur" />
 								</p:inputText> 
@@ -380,10 +388,10 @@
 			<br />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-					action="#{schedulerManagerBB.addJob}"
-					partialSubmit="true" process="addJobDialog"
+					action="#{schedulerManagerBB.addOrUpdateJob}"
+					partialSubmit="true" process="addJobOutPanelId"
 					onclick="addJobOutPanelWidget.show();" oncomplete="addJobOutPanelWidget.hide();"
-					update=":form:jobBeanDt,@([id$=Msg])" />
+					update="@form" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" 
 					partialSubmit="true" process="@this" update="addJobOutPanelId"
 					oncomplete="addJobDialog.hide();" />
@@ -392,6 +400,7 @@
 			<p:blockUI block="addJobOutPanelId" widgetVar="addJobOutPanelWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
+			
 		</p:dialog>
 		
 		<p:confirmDialog id="confirmDeleteDialog" closable="true"
