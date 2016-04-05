@@ -210,7 +210,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			          /*If statement  to check agency start*/
 			         if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {
 			 	            //Collections.sort(getManagedBean().getContractVer().getCtAgencies(), new CtAgency());			 	
-				            sortAgencyList(getManagedBean().getContractVer().getCtAgencies());
 			 	            for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 			 		             /*Get latest agency and map with the org profile*/
 			 		              for (CtAgency latestAgency : getManagedBean().getCtContract().getLatestContractVer().getCtAgencies()) {
