@@ -458,6 +458,7 @@ public class QTDetailBackingBean extends
 
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
