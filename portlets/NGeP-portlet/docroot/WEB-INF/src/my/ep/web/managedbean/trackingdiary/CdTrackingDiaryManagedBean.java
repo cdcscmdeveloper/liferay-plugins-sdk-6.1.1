@@ -13,11 +13,14 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.trackingdiary.CdTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 
 import org.apache.log4j.Logger;
 @ManagedBean(name = "cdTrackingDiaryManagedBean")
@@ -78,6 +81,15 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 					
 					reqDTO.setSupplierName(getSearchSupplierValue());
 				}
+				
+				UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+				if(bb.isAllSupplier()){
+					System.out.println("*********is supplier***********");
+					SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
+					System.out.println("smSupp.getSupplierId():"+smSupp.getSupplierId());
+					reqDTO.setSupplierId(smSupp.getSupplierId());
+				}
+				
 //				if(getSearchStatusId()!=null) {
 //					System.out.println("getSearchStatusId"+getSearchStatusId());
 //					reqDTO.setst(getSearchStatusId());
