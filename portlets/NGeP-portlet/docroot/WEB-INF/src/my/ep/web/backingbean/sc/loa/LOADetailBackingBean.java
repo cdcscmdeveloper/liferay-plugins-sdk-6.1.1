@@ -413,12 +413,6 @@ public class LOADetailBackingBean extends
 				}
 			}
 			
-			// loa contract type - central
-			String contractType = scLoa.getContractType().getParameterCode();
-			if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-				getManagedBean().setSelectedContractAgency(scLoa.getContractAgency().getOrgTypeCode().getParameterCode());
-			}
-			
 			generateDeclarationFromVelocity(scLoa, scQt);
 			
 			// Filter skop kerja dan perkhidmatan repo.
@@ -639,14 +633,6 @@ public class LOADetailBackingBean extends
 			scLoa = calcBondAmount(scLoa,false);
 		}
 		
-		// loa contract type - central
-		String contractType = scLoa.getContractType().getParameterCode();
-		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			if(scLoa.getContractAgency() != null){
-				getManagedBean().setSelectedContractAgency(scLoa.getContractAgency().getOrgTypeCode().getParameterCode());
-			}
-		}
-		
         //Supplier overall contract amount
 		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
 		getManagedBean().setOverallContractAmt(overallCtAmout);
@@ -669,20 +655,15 @@ public class LOADetailBackingBean extends
 		handleBranchDetailsChanged();
 		//}
 		
-		// Agency & Supplier Witness
-		ScLoaWitness loaAgencyWitness = null;
+		// Supplier Witness
 		ScLoaWitness loaSupplierWitness = null;
 		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
 			String partyType = scLoaWitness.getPartyType();
-			// scLoaWitness.setScLoa(scLoa);
-			if (ParameterConst.WITNESS_PARTY_TYPE_AGENCY.equals(partyType)) {
-				loaAgencyWitness = scLoaWitness;
-			} else if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
+		if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
 					.equals(partyType)) {
 				loaSupplierWitness = scLoaWitness;
 			}
 		}
-		getManagedBean().setLoaAgencyWitness(loaAgencyWitness);
 		getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
 
 		// Acknowledge Date
@@ -2905,14 +2886,6 @@ public class LOADetailBackingBean extends
 				&& contractSignerUser.getUserId() != null) {
 			scLoa.setContractSigner(contractSignerUser);
 		}
-		
-		// loa contract type - central
-		String contractType = scLoa.getContractType().getParameterCode();
-		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
-			PmOrgProfile pmOrgProfile = retrieveOrgProfileByOrgType(getManagedBean().getSelectedContractAgency());
-			scLoa.setContractAgency(pmOrgProfile);
-		}
-		
 	}
 
 	/**
@@ -3000,7 +2973,7 @@ public class LOADetailBackingBean extends
 			String contractType = scLoa.getContractType().getParameterCode();
 			List<PmUser> userList = null;
 
-			if (scLoa.getContractAgency() != null || getManagedBean().getSelectedContractAgency() !=null) {
+			if (scLoa.getContractAgency() != null) {
 				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());

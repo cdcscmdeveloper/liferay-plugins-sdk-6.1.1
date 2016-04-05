@@ -86,9 +86,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The supplier hq personnel. */
 	private SmPersonnel supplierHQPersonnel;
 
-	/** The loa agency witness. */
-	private ScLoaWitness loaAgencyWitness;
-
 	/** The loa supplier witness. */
 	private ScLoaWitness loaSupplierWitness;
 
@@ -486,25 +483,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierHQPersonnel(SmPersonnel supplierHQPersonnel) {
 		this.supplierHQPersonnel = supplierHQPersonnel;
-	}
-
-	/**
-	 * Gets the loa agency witness.
-	 * 
-	 * @return the loaAgencyWitness
-	 */
-	public ScLoaWitness getLoaAgencyWitness() {
-		return loaAgencyWitness;
-	}
-
-	/**
-	 * Sets the loa agency witness.
-	 * 
-	 * @param loaAgencyWitness
-	 *            the loaAgencyWitness to set
-	 */
-	public void setLoaAgencyWitness(ScLoaWitness loaAgencyWitness) {
-		this.loaAgencyWitness = loaAgencyWitness;
 	}
 
 	/**
