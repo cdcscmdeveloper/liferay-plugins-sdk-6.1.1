@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sc.schedulermanager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -14,6 +15,8 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.job.LoadAllJob;
+import my.ep.web.util.ReflectionHelper;
 import my.ep.web.util.sc.helper.SchedulerHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.EpJobVO;
@@ -41,9 +44,8 @@ public class SchedulerManagerBackingBean extends
 		renewSesionObject();
 		SmCommonUtil.setMDCUserId();
 		initAllJobs();
+		initAllJobClasses();
 		SmCommonUtil.redirectToPage("ePSchedulerManager.xhtml", "", null);
-
-		getManagedBean().setJobClassList(new ArrayList<String>());
 	}
 
 	public void initAllJobs() {
@@ -290,7 +292,10 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void onUpdateJob(EpJobVO epJobVO) {
-		getManagedBean().setSelectedJobVO(epJobVO);
+		getManagedBean().setSelectedJobVO(
+				(EpJobVO) EntityHelper.getEntityBySinglePropertyFromList(
+						epJobVO.getJobName(), getManagedBean()
+								.getEpSchedulerJobList(), "jobName"));
 		RequestContext.getCurrentInstance().execute("addJobDialog.show()");
 	}
 
@@ -339,17 +344,15 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	private Class<? extends Job> getValidJobClass() {
-		Class<?> jobClass;
+		Class<? extends Job> jobClass;
 		try {
-			jobClass = Class.forName(getManagedBean().getSelectedJobVO()
-					.getJobClassName());
-			if (!Job.class.isAssignableFrom(jobClass)) {
-				throw new EpException(MessageConst.ERRQRTZ_00005);
-			}
+			jobClass = (Class<? extends Job>) Class.forName(getManagedBean()
+					.getSelectedJobVO().getJobClassName());
 		} catch (ClassNotFoundException e) {
+			log.error(">>>>>>>>>>>ERROR CONVERT JOB CLASS:" + e);
 			throw new EpException(MessageConst.ERRQRTZ_00005);
 		}
-		return (Class<? extends Job>) jobClass;
+		return jobClass;
 	}
 
 	private boolean isJobAlreadyExist(String jobName) {
@@ -403,6 +406,24 @@ public class SchedulerManagerBackingBean extends
 				.append(" ");
 		cronExpSb.append(getManagedBean().getSelectedJobVO().getCronYear());
 		return cronExpSb.toString();
+	}
+
+	private void initAllJobClasses() {
+		getManagedBean().setSelectedJobVO(new EpJobVO());
+		getManagedBean().setJobClassList(new ArrayList<String>());
+
+		Class<LoadAllJob> load = LoadAllJob.class;
+		List<Class<?>> classList = ReflectionHelper.findClassesImpmenenting(
+				Job.class, Package.getPackage("my.ep.web.scheduler.job"));
+		for (Class<?> jobClass : classList) {
+			try {
+				if (!jobClass.equals(LoadAllJob.class)) {
+					getManagedBean().getJobClassList().add(jobClass.getName());
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 
 }
