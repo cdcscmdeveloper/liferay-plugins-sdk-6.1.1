@@ -5969,13 +5969,8 @@ public class DirectLOABackingBean extends
 		List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
 		List<TplSpecAnswer> tobeDeletedSpecAnswers = this.getManagedBean()
 				.getProdTemplateSpecBean().getSpecAnswersToDelete();
-		List<TplSpecAnswer> tobeDeleteSpecAnswers = this.getManagedBean()
-				.getSpecTemplateSpecBean().getSpecAnswersToDelete();
 		if (CollectionUtils.isNotEmpty(tobeDeletedSpecAnswers)) {
 			specAnswers.addAll(tobeDeletedSpecAnswers);
-		}
-		if (CollectionUtils.isNotEmpty(tobeDeleteSpecAnswers)) {
-			specAnswers.addAll(tobeDeleteSpecAnswers);
 		}
 
 		awardReqDTO.setTobeDeletedList(specAnswers);
