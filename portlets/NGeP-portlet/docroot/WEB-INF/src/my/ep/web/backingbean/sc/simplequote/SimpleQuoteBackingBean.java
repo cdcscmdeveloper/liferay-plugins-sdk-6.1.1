@@ -517,6 +517,10 @@ public class SimpleQuoteBackingBean extends
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 						// panel item general
 						isGeneralOrSpecific = Boolean.FALSE;
+						
+						// add ct panel item to sc quote when panel item is general only.
+						scQuote.setPanelItem(selectedPanelItem);
+						
 					} else if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
@@ -578,7 +582,7 @@ public class SimpleQuoteBackingBean extends
 					}
 					
 					// adding selected item to item List
-					scQuote.setPanelItem(selectedPanelItem);
+					//scQuote.setPanelItem(selectedPanelItem);
 					getManagedBean().getPanelItems().add(selectedPanelItem);
 				}
 				
@@ -1810,7 +1814,14 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setBusinessNatureCriterias(
 					scQuote.getBusinessNatureCriterias());
 		}
-		CtPanelItem quotePanelItem = getTopPanelItem();
+		
+		CtPanelItem quotePanelItem = null;
+		if(null == scQuote.getPanelItem()){
+			// panel general item
+			quotePanelItem = getTopPanelItem();
+		} else{
+			quotePanelItem = scQuote.getPanelItem();
+		}
 		if (scQuote.getScQuoteSuppliers() != null
 				&& scQuote.getScQuoteSuppliers().size() > 0) {
 			// panel supplier
@@ -6206,8 +6217,13 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		CtPanelItem quotePanelItem = null;
-		quotePanelItem = getTopPanelItem();
-		
+
+		if(null == scQuote.getPanelItem()){
+			// panel general item
+			quotePanelItem = getTopPanelItem();
+		} else{
+			quotePanelItem = scQuote.getPanelItem();
+		}
 		if (scQuote.getScQuoteSuppliers() != null
 				&& scQuote.getScQuoteSuppliers().size() > 0) {
 			// panel supplier
