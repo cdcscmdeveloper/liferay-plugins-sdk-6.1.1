@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
@@ -26,6 +27,7 @@ import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 
 import org.apache.log4j.Logger;
@@ -52,6 +54,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		
 		if(!supp.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
 			if(!supp.getSmAppl().isQuestionnaire()){
+				QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
+				reqDTO.setSmAppl(supp.getSmAppl());
+				SmServiceLookup.getQuestionnaireSO().deleteSupplierAnswerByApplId(reqDTO);
 				QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
 				quesBackingBean.getManagedBean().setTargetUrl(XHTML_VIRTUAL_DET);
 				quesBackingBean.getManagedBean().setSmSupp(supp);
