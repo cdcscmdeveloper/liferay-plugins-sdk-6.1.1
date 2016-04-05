@@ -6798,8 +6798,7 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO regSo = null;
 		boolean valid = false;
 		try {
-			// SmApplicationUtil.getInstance().setApplAddressTransientValue(
-			// getManagedBean().getSmAppl(), true);
+			setSupplierChangeValues(currentPageType);
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			bpmAppl.setApplSaveDate(new Timestamp(System.currentTimeMillis()));
 
