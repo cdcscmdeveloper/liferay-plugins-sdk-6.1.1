@@ -73,6 +73,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private boolean circularExtension;
 	private int index = -1;
 	private boolean buttonHideActiveDel = true;
+	private boolean buttonHidePanelItemDel = true;
+	 private boolean selectAll;
 	
 	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode rootZoanlTree;
@@ -890,11 +892,45 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.ctCircularPidReasons = ctCircularPidReasons;
 	}
 
+	/**
+	 * @return the buttonHideActiveDel
+	 */
 	public boolean isButtonHideActiveDel() {
 		return buttonHideActiveDel;
 	}
 
+	/**
+	 * @param buttonHideActiveDel the buttonHideActiveDel to set
+	 */
 	public void setButtonHideActiveDel(boolean buttonHideActiveDel) {
 		this.buttonHideActiveDel = buttonHideActiveDel;
+	}
+
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	/**
+	 * @return the buttonHidePanelItemDel
+	 */
+	public boolean isButtonHidePanelItemDel() {
+		return buttonHidePanelItemDel;
+	}
+
+	/**
+	 * @param buttonHidePanelItemDel the buttonHidePanelItemDel to set
+	 */
+	public void setButtonHidePanelItemDel(boolean buttonHidePanelItemDel) {
+		this.buttonHidePanelItemDel = buttonHidePanelItemDel;
 	}
 }
