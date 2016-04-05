@@ -256,7 +256,7 @@
 				<td>
 					<p:outputPanel id="emailInputPanelId" >
 						<p:inputText label="#{lbl['lbl.sm.person.email']}"
-							id="equiEmail" required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" maxlength="80"
+							id="equiEmail" required="#{not empty backingBean.managedBean.selectedShareHolder.epRole}" maxlength="80"
 							disabled="#{backingBean.managedBean.disableIcEmail}"
 							validatorMessage="#{lbl['lbl.sm.person.email']} - #{lbl['lbl.sm.invalidEmail']}"
 							value="#{backingBean.managedBean.selectedShareHolder.email}"
