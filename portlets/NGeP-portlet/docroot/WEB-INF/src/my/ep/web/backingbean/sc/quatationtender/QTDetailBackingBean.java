@@ -48,6 +48,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -1096,6 +1097,7 @@ public class QTDetailBackingBean extends
 		quationTenderReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);
 		quationTenderReqDTO.setMaintanceFlow(this.getManagedBean()
 				.isMaintanceFlow());
+		quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		return quationTenderReqDTO;
 	}
 
@@ -3563,6 +3565,7 @@ public class QTDetailBackingBean extends
 		case 0:
 			reqDTO = prepareQTInfo();
 			reqDTO.setSaveFlow(true);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			detailSO.validateateQTDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
@@ -3581,6 +3584,7 @@ public class QTDetailBackingBean extends
 			reqDTO = prepareQTInfo();
 			detailSO.validateSupplierQualificationDtls(reqDTO);
 			reqDTO.setSaveFlow(true);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3591,6 +3595,7 @@ public class QTDetailBackingBean extends
 		case 2:
 			reqDTO = prepareQTInfo();
 			reqDTO.setSaveFlow(true);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
@@ -3634,6 +3639,7 @@ public class QTDetailBackingBean extends
 			reqDTO = prepareQTInfo();
 			reqDTO.getQtdetail().setModified(false);
 			reqDTO.setSaveFlow(true);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			reqDTO.getQtdetail().setFCApproval(true);
 			detailSO.validateApprovalDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
@@ -3653,6 +3659,7 @@ public class QTDetailBackingBean extends
 				reqDTO = prepareQTInfo();
 				detailSO.validateBsvDetails(reqDTO);
 				reqDTO.setSaveFlow(true);
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3664,6 +3671,7 @@ public class QTDetailBackingBean extends
 				reqDTO = prepareQTInfo();
 				detailSO.validateScheduleDetails(reqDTO);
 				reqDTO.setSaveFlow(true);
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3675,9 +3683,10 @@ public class QTDetailBackingBean extends
 		case 6:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
 				reqDTO = prepareQTInfo();
+				reqDTO.setSaveFlow(true);
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				detailSO.validateDeductionDtls(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
-				reqDTO.setSaveFlow(true);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -3689,6 +3698,7 @@ public class QTDetailBackingBean extends
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
 				reqDTO = prepareQTInfo();
 				reqDTO.setSaveFlow(true);
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3704,6 +3714,7 @@ public class QTDetailBackingBean extends
 				reqDTO = prepareQTInfo();
 				reqDTO.getQtdetail().setModified(true);
 				reqDTO.setSaveFlow(true);
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				reqDTO.getQtdetail().setFCApproval(true);
 				detailSO.validateApprovalDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
