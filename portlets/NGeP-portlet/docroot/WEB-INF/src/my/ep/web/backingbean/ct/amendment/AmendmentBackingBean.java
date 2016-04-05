@@ -571,7 +571,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		try {
 					contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 					resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
-					ctBackingBean.getManagedBean().setContractVer(contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO).getCtContractVer());	 
+					ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());	 
 					//Retrieve agreement contract version for physical no & signed date
 					retrieveContractVerOfAgreement();
 			
@@ -671,7 +671,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					      			Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 							    	if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0 ) {					    		
 							    		//Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
-							    		sortItemCeilingQtyList(item.getCtItemCeilingQties());
+							    		//sortItemCeilingQtyList(item.getCtItemCeilingQties());
 							    	}
 							    	Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 							    	getManagedBean().getCtItemList().add(item);
