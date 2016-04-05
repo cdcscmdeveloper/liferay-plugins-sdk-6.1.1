@@ -1396,8 +1396,14 @@ public class DirectLOABackingBean extends
 		ScQt scQt = this.getManagedBean().getScQt();
 		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getScQt()
 				.getScQtSupplierCriteria();
+		
+		if (supplierCriteria == null) {
+			supplierCriteria = new ScQtSupplierCriteria();
+			supplierCriteria.setScQt(scQt);
+			scQt.setScQtSupplierCriteria(supplierCriteria);	
+		}
+		
 		if (scQt.isZonal()) {
-
 			ScQtZoneCriteria qtZoneCriteria = supplierCriteria
 					.getQtZoneCriterias();
 			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
@@ -3347,13 +3353,14 @@ public class DirectLOABackingBean extends
 		}
 		this.getManagedBean().setSelectedGeneralTreeNodes(null);
 		Long parameterId = (Long) ((UIOutput) event.getSource()).getValue();
-		if (null != parameterId)
+		if (null != parameterId) {
 			this.getManagedBean()
 					.setLocalLevelCode(
 							ParameterHelper.getInstance()
 									.getPmParameterById(parameterId)
 									.getParameterCode());
-
+		}
+		
 		this.getManagedBean().getScQt().getScQtSupplierCriteria()
 				.getQtZoneCriterias()
 				.setTplSpecZoneDtls(new ArrayList<TplSpecZoneDtl>());
@@ -3385,6 +3392,11 @@ public class DirectLOABackingBean extends
 		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
 		scQt.setZoneLocationLevel(new PmParameter());
 
+		if (supplierCriteria == null) {
+			supplierCriteria = new ScQtSupplierCriteria();
+			supplierCriteria.setScQt(scQt);
+		}
+		
 		if (isZonal) {
 			ScQtZoneCriteria zoneCriteria = supplierCriteria
 					.getQtZoneCriterias();
