@@ -24,8 +24,8 @@ public class SchedulerManagerManagedBean extends BaseManagedBean {
 	private List<String> jobGroups;
 	private String jobGroup;
 	private EpJobVO selectedJobVO;
-	private List<ScBidSchedule> currentDayBids;
 	private List<String> jobClassList;
+	private List<ScBidSchedule> currentDayBids;
 	private boolean othersJobGroup;
 
 	/**
