@@ -23,16 +23,21 @@
 	                        value="#{panelBackingBean.managedBean.circularVer.ctCircularPidReason}" 
 	                        rowKey="#{pidObj}" selection="#{panelBackingBean.managedBean.ctCircularPidReasons}">
 				                  <ac:paginator for="pidTableId" />
-				                  <p:ajax event="toggleSelect"
-                                       listener="#{panelBackingBean.onToggleSelect}" update=":form:delPidPanelBtn" />
-                                  <p:ajax event="rowSelect"
-                                       listener="#{panelBackingBean.onRowSelect}" update=":form:delPidPanelBtn" />
-			                      <p:ajax event="rowSelectCheckbox" 
-			                           listener="#{panelBackingBean.onRowSelect}" update=":form:delPidPanelBtn" />
-                                  <p:ajax event="rowUnselectCheckbox"  
-                                      listener="#{panelBackingBean.onRowUnselect}" update=":form:delPidPanelBtn" />
-				                 <p:column selectionMode="multiple"
-				                         style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				                 <p:column 
+				                    style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}">
+				                          <f:facet name="header">
+							                <p:selectBooleanCheckbox id="checkBoxAll" value="#{panelBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									               update=":form:pidTableId,:form:delPidPanelBtn" listener="#{panelBackingBean.selectAllPidReason}" />
+							               </p:selectBooleanCheckbox>
+						                  </f:facet>
+		           
+		                                 <p:selectBooleanCheckbox 
+		                                     value="#{pidObj.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                        update=":form:delPidPanelBtn,:form:pidTableId" listener="#{panelBackingBean.selectOnePidCheckboxSelect}"></p:ajax>
+			                             </p:selectBooleanCheckbox>
+			                      </p:column>
 				       
 				                 <p:column style="width:50%;" 
 				                         headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
@@ -65,7 +70,7 @@
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                      <div class="ppRightBtn">
 		                <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:pidTableId,:form:delPidPanelBtn"
-		                    process="@all" actionListener="#{panelBackingBean.deletePidPurchase()}" onclick="delPidPurchaseDlg.hide();"/>
+		                    process="@all" actionListener="#{panelBackingBean.deleteTableRow('PID')}" onclick="delPidPurchaseDlg.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPidPurchaseDlg.hide();" type="button" />
 		            </div>
                </p:confirmDialog>
@@ -77,16 +82,21 @@
 		                    value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index" 
 			                selection="#{panelBackingBean.managedBean.selectedContactPersons}" widgetVar="contactPersonObj">
 			                     <ac:paginator for="contactPersonDt" />
-			                     <p:ajax event="toggleSelect"
-                                       listener="#{panelBackingBean.onToggleSelect}" update=":form:ctPersonDelBtn" />
-                                  <p:ajax event="rowSelect"
-                                       listener="#{panelBackingBean.onRowSelect}" update=":form:ctPersonDelBtn" />
-			                      <p:ajax event="rowSelectCheckbox" 
-			                           listener="#{panelBackingBean.onRowSelect}" update=":form:ctPersonDelBtn" />
-                                  <p:ajax event="rowUnselectCheckbox"  
-                                      listener="#{panelBackingBean.onRowUnselect}" update=":form:ctPersonDelBtn" />
-			                     <p:column selectionMode="multiple" 
-			                           style="width:3%" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+			                     <p:column 
+			                           style="width:3%" rendered="#{!panelBackingBean.managedBean.viewContract}">
+			                            <f:facet name="header">
+							               <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								             <p:ajax partialSubmit="true" process="@this"
+									            update=":form:contactPersonDt,:form:ctPersonDelBtn" listener="#{panelBackingBean.selectAllPerson}" />
+							               </p:selectBooleanCheckbox>
+						                </f:facet>
+		           
+		                                 <p:selectBooleanCheckbox
+		                                   value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                       <p:ajax event="change" update=":form:ctPersonDelBtn" 
+		           		                       listener="#{panelBackingBean.selectOnePersonCheckboxSelect}"></p:ajax>
+			                             </p:selectBooleanCheckbox>
+			                           </p:column>
 			        
 			                     <p:column style="width:20%;" styleClass="column-align-center" >
 			                             <f:facet name="header">
@@ -128,7 +138,7 @@
 		                severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                      <div class="ppRightBtn">
 		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:contactPersonDt, :form:ctPersonDelBtn"
-		                     process="@all" actionListener="#{panelBackingBean.deleteContactPerson()}" onclick="delCtPersonDlg.hide();"/>
+		                     process="@all" actionListener="#{panelBackingBean.deleteTableRow('PERSON')}" onclick="delCtPersonDlg.hide();"/>
 			             <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCtPersonDlg.hide();" type="button" />
 		             </div>
              </p:confirmDialog>	
@@ -140,16 +150,21 @@
 			        value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}" rowKey="#{data}"
 			        selection="#{panelBackingBean.managedBean.selectedCancelCirculars}"  rowIndexVar="index" >
 			               <ac:paginator for="cancelCircularDt" />		
-			               <p:ajax event="toggleSelect"
-                                  listener="#{panelBackingBean.onToggleSelect}" update=":form:cancelCircularDtBtn" />
-                            <p:ajax event="rowSelect"
-                                   listener="#{panelBackingBean.onRowSelect}" update=":form:cancelCircularDtBtn" />
-			                 <p:ajax event="rowSelectCheckbox" 
-			                        listener="#{panelBackingBean.onRowSelect}" update=":form:cancelCircularDtBtn" />
-                              <p:ajax event="rowUnselectCheckbox"  
-                                    listener="#{panelBackingBean.onRowUnselect}" update=":form:cancelCircularDtBtn" />
-			                  <p:column selectionMode="multiple" style="width:3%" 
-				                    rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+			                  <p:column  style="width:3%" 
+				                    rendered="#{!panelBackingBean.managedBean.viewContract}">
+				                <f:facet name="header">
+							      <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								     <p:ajax partialSubmit="true" process="@this"
+									      update=":form:cancelCircularDt,:form:cancelCircularDtBtn" listener="#{panelBackingBean.selectAllCancelCircular}" />
+							      </p:selectBooleanCheckbox>
+						       </f:facet>
+		           
+		                        <p:selectBooleanCheckbox 
+		                             value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		               <p:ajax event="change"
+		           		                  update=":form:cancelCircularDt,:form:cancelCircularDtBtn" listener="#{panelBackingBean.selectCancelCheckboxSelect}"></p:ajax>
+			                     </p:selectBooleanCheckbox>     
+				              </p:column>
 			
 			                  <p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
 				                     <h:outputText value="#{data.circularVer.circularNo}"  style="float:left;"/>
@@ -168,14 +183,14 @@
 				                  rendered="#{!panelBackingBean.managedBean.viewContract}" onsuccess="cancelCircularDltDlg.show()"/>				
 		           </div>	
 		           
-		            <p:confirmDialog id="cancelCircularDlt" widgetVar="cancelCircularDltDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+		               <p:confirmDialog id="cancelCircularDlt" widgetVar="cancelCircularDltDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
 		                   severity="alert"  closable="true"  appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                            <div class="ppRightBtn">
-		                    <p:commandButton value="#{lbl['lbl.btn.yes']}"   action="#{panelBackingBean.deleteCancelCircular}" 
+		                       <p:commandButton value="#{lbl['lbl.btn.yes']}"   action="#{panelBackingBean.deleteTableRow('CANCEL')}" 
 		                         update=":form:cancelCircularDt, :form:cancelCircularDtBtn" partialSubmit="true"  oncomplete="cancelCircularDltDlg.hide();"/>
-			                <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="cancelCircularDltDlg.hide();" />
-		             </div>
-                 </p:confirmDialog>
+			                   <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="cancelCircularDltDlg.hide();" />
+		                   </div>
+                      </p:confirmDialog>
 	       </p:panel>
 	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
 		styleClass="pop_up_top" modal="true" width="550" height="350">
