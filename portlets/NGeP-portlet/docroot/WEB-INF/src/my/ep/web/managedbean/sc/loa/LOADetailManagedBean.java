@@ -64,9 +64,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The terms conditions. */
 	private String termsConditions;
 	
-	/** The selected contract agency. */
-	private String selectedContractAgency;
-	
 	/** The attachment doc type. */
 	private String attachmentDocType;
 	
@@ -78,9 +75,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	/** The supplier hq personnel. */
 	private SmPersonnel supplierHQPersonnel;
-	
-	/** The loa agency witness. */
-	private ScLoaWitness loaAgencyWitness;
 	
 	/** The loa supplier witness. */
 	private ScLoaWitness loaSupplierWitness;
@@ -378,24 +372,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the selected contract agency.
-	 *
-	 * @return the selectedContractAgency
-	 */
-	public String getSelectedContractAgency() {
-		return selectedContractAgency;
-	}
-
-	/**
-	 * Sets the selected contract agency.
-	 *
-	 * @param selectedContractAgency the selectedContractAgency to set
-	 */
-	public void setSelectedContractAgency(String selectedContractAgency) {
-		this.selectedContractAgency = selectedContractAgency;
-	}
-
-	/**
 	 * Gets the attachment doc type.
 	 *
 	 * @return the attachmentDocType
@@ -447,24 +423,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierHQPersonnel(SmPersonnel supplierHQPersonnel) {
 		this.supplierHQPersonnel = supplierHQPersonnel;
-	}
-
-	/**
-	 * Gets the loa agency witness.
-	 *
-	 * @return the loaAgencyWitness
-	 */
-	public ScLoaWitness getLoaAgencyWitness() {
-		return loaAgencyWitness;
-	}
-
-	/**
-	 * Sets the loa agency witness.
-	 *
-	 * @param loaAgencyWitness the loaAgencyWitness to set
-	 */
-	public void setLoaAgencyWitness(ScLoaWitness loaAgencyWitness) {
-		this.loaAgencyWitness = loaAgencyWitness;
 	}
 
 	/**

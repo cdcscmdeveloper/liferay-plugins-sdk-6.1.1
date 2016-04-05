@@ -1404,25 +1404,26 @@ public class DirectLOABackingBean extends
 		}
 		
 		if (scQt.isZonal()) {
-			ScQtZoneCriteria qtZoneCriteria = supplierCriteria
-					.getQtZoneCriterias();
-			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
-					this.getManagedBean().getZoneTrees(), null);
+			if(supplierCriteria != null ){
+				ScQtZoneCriteria qtZoneCriteria = supplierCriteria
+						.getQtZoneCriterias();
+				List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+						this.getManagedBean().getZoneTrees(), null);
 
-			for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
+				for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
 
-				List<TplSpecZoneLoc> specLocs = tplSpecZoneDtl
-						.getTplSpecZoneLocs();
-				for (TplSpecZoneLoc specZoneLoc : specLocs) {
-					specZoneLoc.setTplSpecZoneDtl(tplSpecZoneDtl);
+					List<TplSpecZoneLoc> specLocs = tplSpecZoneDtl
+							.getTplSpecZoneLocs();
+					for (TplSpecZoneLoc specZoneLoc : specLocs) {
+						specZoneLoc.setTplSpecZoneDtl(tplSpecZoneDtl);
+					}
+
+					tplSpecZoneDtl.setTplSpecZone(qtZoneCriteria);
+
 				}
-
-				tplSpecZoneDtl.setTplSpecZone(qtZoneCriteria);
-
+				qtZoneCriteria.setTplSpecZoneDtls(zoneDetails);
+				supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
 			}
-			qtZoneCriteria.setTplSpecZoneDtls(zoneDetails);
-			supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
-
 		} else {
 			ScQtZoneCriteria zoneCriteria = this.getManagedBean()
 					.getToBedeletedSupplierZone();
@@ -1431,7 +1432,9 @@ public class DirectLOABackingBean extends
 				zoneCriteria.setDeleted(true);
 				awardReqDTO.setToBeDeltedZoneCriteria(zoneCriteria);
 			}
-			supplierCriteria.setQtZoneCriterias(null);
+			if(supplierCriteria != null){
+				supplierCriteria.setQtZoneCriterias(null);
+			}
 		}
 		if(null==scQt.getScheduleType()){
 			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
@@ -2165,9 +2168,11 @@ public class DirectLOABackingBean extends
 		SmSupplier smSupplier = getManagedBean().getScLoa().getScLoiLoa()
 				.getSmSupplier();
 		if(smSupplier != null) {
+			ScLoa loa  = getManagedBean().getScLoa();
 			ScLoiLoa scLoiLoa = getSupplierLoiLoaByDocId(smSupplier.getSupplierId(), scQt.getQtId());
 			if(scLoiLoa != null) {
-				getManagedBean().getScLoa().setScLoiLoa(scLoiLoa);
+				loa.setScLoiLoa(scLoiLoa);
+				//loa.setScQt(scQt);
 			}
 		}
 	}
@@ -3924,7 +3929,6 @@ public class DirectLOABackingBean extends
 		setUserDetails(scQt);
 		this.getManagedBean().setScQt(scLoa.getScQt());
 		this.getManagedBean().setApproverUser(new PmUser());
-		getManagedBean().setLoaAgencyWitness(scLoa.getScLoaWitnesses().get(0));
 		this.getManagedBean().setScLoa(scLoa);
 		if (scQt.isZonal()) {
 			List<TplSpecZoneDtl> zoneDetails = awardResDTO.getSpecZoneDetails();
