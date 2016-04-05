@@ -28,6 +28,7 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.personnelauthorization.IPersonnelAuthorizationSO;
+import my.ep.biz.service.sm.questionnaire.IQuestionnaireSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.revertApplication.IRevertApplicationSO;
@@ -510,5 +511,16 @@ public class SmServiceLookup {
 		return (IPersonnelAuthorizationSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IPersonnelAuthorizationSO.class);
+	}
+	
+	/**
+	 * Get IQuestionnaireSO
+	 * 
+	 * @return IQuestionnaireSO
+	 */
+	public static IQuestionnaireSO getQuestionnaireSO() {
+		return (IQuestionnaireSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IQuestionnaireSO.class);
 	}
 }
