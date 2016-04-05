@@ -308,7 +308,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		          // Retrieve Agencies
 	              if (ctBB.getManagedBean().getContractVer().getCtAgencies() != null  && ctBB.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 	    	              ctBB.getManagedBean().setSelectedAgency(null);
-	    	              //sortAgencyList(ctBB.getManagedBean().getContractVer().getCtAgencies());
 	    	              for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 	    		                 ctBB.checkAgencyStatus(ctAgency);		        	   
 	    	              }
@@ -349,8 +348,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    		         } else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 	    			            Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 	    			             if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
-	    				                 //Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
-	    				                sortItemCeilingQtyList(item.getCtItemCeilingQties());
 	    				                for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
 	    					                  ctBB.checkAgencyStatus(ceilingQty.getCtAgency());		        	   
 	    				                }

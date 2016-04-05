@@ -631,7 +631,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				  	if (ctBackingBean.getManagedBean().getContractVer().getCtAgencies() != null 
 				  			&& this.ctBackingBean.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 				  		ctBackingBean.getManagedBean().setSelectedAgency(null);
-				     	sortAgencyList(ctBackingBean.getManagedBean().getContractVer().getCtAgencies());
 				  		for (CtAgency ctAgency : ctBackingBean.getManagedBean().getContractVer().getCtAgencies()) {
 				  			// If effective date is after current date, status is still display old status
 				  			ctBackingBean.checkAgencyStatus(ctAgency);
@@ -669,10 +668,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					      		if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 					      			getManagedBean().setItemProductExist(true);
 					      			Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-							    	if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0 ) {					    		
-							    		//Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
-							    		//sortItemCeilingQtyList(item.getCtItemCeilingQties());
-							    	}
 							    	Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 							    	getManagedBean().getCtItemList().add(item);
 					      		} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
