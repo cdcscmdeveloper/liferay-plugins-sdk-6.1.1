@@ -300,15 +300,17 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.quartz.jobclass']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText maxlength="50"
-								required="true"
-								label="#{lbl['lbl.quartz.jobclass']}" id="jobClassNameId"
-								value="#{schedulerManagerBB.managedBean.selectedJobVO.jobClassName}"
-								size="35">
-								<p:ajax process="@this" update="@this,jobNameIdMsg" partialSubmit="true" event="blur" />
-							</p:inputText> 
-							<p:message id="jobClassNameIdMsg" for="jobClassNameId"
-								showSummary="true" showDetail="false" display="icon" /></td>
+						<td><p:selectOneMenu
+									required="true"
+									label="#{lbl['lbl.quartz.jobclass']}" id="jobClassId"
+									value="#{schedulerManagerBB.managedBean.selectedJobVO.jobClassName}"
+									style="width: 270px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems value="#{schedulerManagerBB.managedBean.jobClassList}" />
+									<p:ajax event="change" process="@this" update="@this" />
+								</p:selectOneMenu>
+								<p:message id="jobClassIdMsg" for="jobClassId"
+									showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					
 					<tr>
