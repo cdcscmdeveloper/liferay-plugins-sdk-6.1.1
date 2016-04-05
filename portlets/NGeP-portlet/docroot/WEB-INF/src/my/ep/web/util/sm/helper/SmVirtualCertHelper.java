@@ -36,6 +36,7 @@ public class SmVirtualCertHelper {
 	private static Logger log = EpLogger.getLogger(SmVirtualCertHelper.class);
 	private final static String VIRTUAL_CERT_PATH = "SM/VIRTUAL_CERT";
 	private final static String CERT_EXT = ".pdf";
+	private final static String HTTP_HEADER_TYPE_PDF = "application/pdf";
 	
 	public SmVirtualCertHelper(){
 		
@@ -110,40 +111,44 @@ public class SmVirtualCertHelper {
 			URL obj = new URL(reportUrl);
 			urlConnection = (HttpURLConnection) obj.openConnection();
 
-			BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
-			//FileInputStream buf = new FileInputStream("E:/HKS/Mof_1_1402497715752.pdf");
+			if(urlConnection.getContentType().equalsIgnoreCase(HTTP_HEADER_TYPE_PDF)){
+				BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
+				//FileInputStream buf = new FileInputStream("E:/HKS/Mof_1_1402497715752.pdf");
 
-			String path = Calendar.getInstance().get(Calendar.YEAR)  + "/" + VIRTUAL_CERT_PATH;  
-			String fileName = String.valueOf(cert.getMofCertId()) + CERT_EXT;
-			String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-			filePath += "/" + path;
+				log.info("Content Type>>>>" + urlConnection.getContentType());
+				String path = Calendar.getInstance().get(Calendar.YEAR)  + "/" + VIRTUAL_CERT_PATH;  
+				String fileName = String.valueOf(cert.getMofCertId()) + CERT_EXT;
+				String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+				filePath += "/" + path;
 
-			File dir = new File(filePath);
-			log.info(" dir.exists()" + dir.exists());
-			if (!dir.exists()) {
-				log.info("before make directory");
-				dir.mkdirs();
-				log.info("after make directory");
+				File dir = new File(filePath);
+				log.info(" dir.exists()" + dir.exists());
+				if (!dir.exists()) {
+					log.info("before make directory");
+					dir.mkdirs();
+					log.info("after make directory");
+				}
+
+				String finalFile = filePath + "/" + fileName;
+				OutputStream out =  new FileOutputStream(new File(finalFile));
+
+				byte[] b = new byte[128];
+				int size;
+				while ((size = buf.read(b, 0, b.length)) != -1) {
+					out.write(b, 0, size);
+				}
+				buf.close();
+				out.close();
+
+				//update MOF Cert with file path & name
+				cert.setFilePath(path);
+				cert.setFileName(fileName);
+				SmMofCert mofcert = updateMOFCertFilePath(cert);
+				return mofcert;
+			}else{
+				log.info("****genReport****" + urlConnection.getContentType());
+				return null;
 			}
-
-			String finalFile = filePath + "/" + fileName;
-			OutputStream out =  new FileOutputStream(new File(finalFile));
-
-			byte[] b = new byte[128];
-			int size;
-			while ((size = buf.read(b, 0, b.length)) != -1) {
-				out.write(b, 0, size);
-			}
-			buf.close();
-			out.close();
-
-			//update MOF Cert with file path & name
-			cert.setFilePath(path);
-			cert.setFileName(fileName);
-			SmMofCert mofcert = updateMOFCertFilePath(cert);
-
-
-			return mofcert;
 			//commonDownload(finalFile, fileName);
 		}catch(Exception ex){
 			log.info("******genReport******" + cert.getMofCertId() + " - " + ex.getMessage());
