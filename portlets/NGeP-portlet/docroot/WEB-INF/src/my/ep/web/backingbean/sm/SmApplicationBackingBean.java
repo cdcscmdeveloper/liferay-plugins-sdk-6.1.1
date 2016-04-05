@@ -5306,6 +5306,37 @@ public class SmApplicationBackingBean extends
 	 * selected SmPersonnel.
 	 */
 	public void addOrUpdateJobFunctions() {
+		
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedShareHolder().getSmStaffExperiences())) {
+			StringBuilder sb1 = null;
+			StringBuilder sb2 = null;
+			for (SmStaffExperience exp : getManagedBean()
+					.getSelectedShareHolder().getSmStaffExperiences()) {
+				if (getManagedBean().getSelectedJobFunction() != null) {
+					sb1 = new StringBuilder();
+					sb1.append(getManagedBean().getSelectedJobFunction()
+							.getCompanyName());
+					sb1.append(getManagedBean().getSelectedJobFunction()
+							.getDesignation());
+					sb1.append(getManagedBean().getSelectedJobFunction()
+							.getFromYear());
+					sb1.append(getManagedBean().getSelectedJobFunction()
+							.getToYear());
+
+					sb2 = new StringBuilder();
+					sb2.append(exp.getCompanyName());
+					sb2.append(exp.getDesignation());
+					sb2.append(exp.getFromYear());
+					sb2.append(exp.getToYear());
+
+					if (sb1.toString().equals(sb2.toString())) {
+						throw new EpException(MessageConst.ERROR_722638);
+					}
+				}
+			}
+		}
+
 		if (getManagedBean()
 				.getSelectedJobFunction()
 				.getFromYear()
@@ -7576,16 +7607,17 @@ public class SmApplicationBackingBean extends
 					reqDTO.setServerPort(fs.getRequest().getServerPort());
 					reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
-					ReviewApplicationResDTO revApplicationResDTO = reqSO.submitPOorApproverReviewToBPM(reqDTO);
+					ReviewApplicationResDTO revApplicationResDTO = reqSO
+							.submitPOorApproverReviewToBPM(reqDTO);
 
-					if(revApplicationResDTO.isSuccessful()){
+					if (revApplicationResDTO.isSuccessful()) {
 						// to auto generate mof cert
 						if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 							try {
 								SmVirtualCertHelper.getInstance()
-								.autoGenerateVirtualCert(
-										getManagedBean().getSmAppl()
-										.getApplId());
+										.autoGenerateVirtualCert(
+												getManagedBean().getSmAppl()
+														.getApplId());
 							} catch (Exception ex) {
 								log.info("<<<<MOF Approval - error when generate Virtual Cert>>>>"
 										+ ex.getMessage());
