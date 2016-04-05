@@ -33,9 +33,10 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
-				<h:inputText style="width:96%" value="#{scLoaReport.title}"
-					rendered="#{empty scLoaReport.pmDocument}">
-					<p:ajax event="keyup" />
+				<h:inputText style="width:96%" label="#{lbl['lbl.sc.content']}" 
+							 value="#{scLoaReport.title}" required="true"
+							 rendered="#{empty scLoaReport.pmDocument}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</h:inputText>
 				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />

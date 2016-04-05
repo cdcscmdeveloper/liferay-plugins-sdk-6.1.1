@@ -223,6 +223,7 @@ public class DirectLOABackingBean extends
 			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
 			validateSupplierDetails(scLoa);
 			validateDeductionPaymentDtls(scLoa);
+			validateLOAReportAttachments(scLoa);
 						
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
@@ -324,6 +325,7 @@ public class DirectLOABackingBean extends
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 
 			validateSupplierDetails(scLoa);
+			validateLOAReportAttachments(scLoa);
 			validateLOADetails(scLoa, outcome);
 
 			validateContractAmount(scLoa.getLoaAmt());
@@ -1168,6 +1170,27 @@ public class DirectLOABackingBean extends
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}		
 	}
+	
+	/**
+	 * Validate Report attachments
+	 * 
+	 * @param scLoa
+	 *          the scLoa
+	 */	
+	private void validateLOAReportAttachments(ScLoa scLoa) {
+		List<ScLoaReport> loaReports = scLoa.getScLoaReports();
+		
+		if (CollectionUtils.isNotEmpty(loaReports)) {
+			for (ScLoaReport report : loaReports) {
+				if (report.getScLoaReportAttachment() != null && 
+						report.getScLoaReportAttachment().getFileName() == null) {
+					this.getManagedBean().setSelectedTabIndex(6);
+					throw new EpException(MessageConst.ERROR_760402);
+				}
+			}
+		}
+		
+	}	
 	
 	/**
 	 * Progressive pay validation.
