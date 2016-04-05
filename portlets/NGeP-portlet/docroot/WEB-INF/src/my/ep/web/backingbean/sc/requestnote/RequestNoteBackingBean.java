@@ -285,6 +285,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setPidNo(getManagedBean().getPidNo());
 	    requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 	    requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
+	    requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 
 	    Long prInqId = getManagedBean().getPrInquiryId();
 	    Long pidId = getManagedBean().getPurchaseInDefaultId();
@@ -474,6 +475,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidNo(getManagedBean().getPidNo());
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
 			requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
+			requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 
 			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);
@@ -625,14 +627,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNote.setTitle(procTitle);
 			} else{
 				requestNote.setTitle(sb.toString());
-			}
-		}
-
-		// adding request note delete list
-		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || 
-				BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-			if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
-				requestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
 			}
 		}
 		requestNote.setRequestNoteDtls(requestNoteDtls);
@@ -993,6 +987,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setPidApprovers(getManagedBean().getPidApprovers());
 			requestNoteReqDTO.setPidNo(getManagedBean().getPidNo());
 			requestNoteReqDTO.setPidId(getManagedBean().getPurchaseInDefaultId());
+			 requestNoteReqDTO.setDeletedRequestNoteDtls(getManagedBean().getDeleteRequestNoteDtls());
 			
 			requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 			if (requestNoteResDTO.isSuccessful()) {
