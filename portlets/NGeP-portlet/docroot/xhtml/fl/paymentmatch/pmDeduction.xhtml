@@ -14,7 +14,7 @@
 			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}">
 			<ac:paginator for="deductionDataTable" />
 			<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
-			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}">
+			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}" style="width:15%">
 				<p:selectOneMenu id="deductionList" value="#{deduction.deductionType.parameterId}" disabled="#{paymentMatchBackingBean.managedBean.buttonVal == 'View'}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="ctDeduction"
@@ -28,8 +28,8 @@
 				<p:ajax process="@this" />
 				</p:inputText>
 			</p:column>
-			<p:column>
-			<f:facet name="header" style="width:8%;">
+			<p:column style="white-space:normal;text-align:center;width:8%;">
+			<f:facet name="header" >
 					<h:outputText value="#{lbl['lbl.fl.payment.match.clauses']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.clauses']}"/>
 				</f:facet>
@@ -38,8 +38,8 @@
 					update=":form:clauseDialog"></p:commandLink>
 				<h:outputText style="text-align:right" />
 			</p:column>
-			<p:column>
-				<f:facet name="header" style="width:8%;">
+			<p:column style="width:16%;">
+				<f:facet name="header" style="width:16%;">
 					<h:outputText value="#{lbl['lbl.fl.payment.match.amanah']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
 				</f:facet>
@@ -54,8 +54,8 @@
 					</ac:lov>
 				</p:outputPanel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.gosodo']}">
-			<f:facet name="header" style="width:8%;">
+			<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width:15%;">
+			<f:facet name="header" style="width:15%;">
 					<h:outputText value="#{lbl['lbl.fl.gosodo']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/>
 				</f:facet>
@@ -65,12 +65,12 @@
 						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.gosodo']}"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmGlAccount"
 						conditionField="pmOrgProfile.orgProfileId^#{paymentMatchBackingBean.retrieveJabatanOrgProfile(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgProfileId).orgProfileId}*pmOrgProfile^1^11"
-						readonly="true" size="10"
+						readonly="true" size="9"
 						value="#{deduction.pmGlAccount.glAccCode}">
 					</ac:lov>
 				</p:outputPanel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:right;width:15%">
 				<p:outputPanel id="deductionAmtPnl">
 					<h:outputText styleClass="colFloatRight"
 						value="#{deduction.deductionAmt}"
