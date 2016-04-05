@@ -3620,29 +3620,8 @@ public class SmApplicationUtil {
 		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-			descList = SmServiceLookup.getStatusSO()
-					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
-		} else {
-			descList = SmServiceLookup.getStatusSO()
-					.retrieveRegStatusList(reqDTO).getStatusDescList();
-
-			// consultant only load reg status non bumi
-			if (StringUtils.isNotBlank(suppType)
-					&& suppType.equalsIgnoreCase("J")) {
-				for (Iterator<PmStatusDesc> it = descList.iterator(); it
-						.hasNext();) {
-					PmStatusDesc descTemp = it.next();
-					if (descTemp.getPmStatus() != null
-							&& descTemp.getPmStatus().getPmRegStatus() != null
-							&& descTemp.getPmStatus().getPmRegStatus()
-									.isBumiAppl()) {
-						it.remove();
-					}
-				}
-			}
-
-		}
+		descList = SmServiceLookup.getStatusSO()
+				.retrieveRegStatusList(reqDTO).getStatusDescList();
 		return descList;
 	}
 
