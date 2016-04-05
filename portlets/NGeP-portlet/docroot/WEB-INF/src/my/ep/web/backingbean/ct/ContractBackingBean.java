@@ -1663,10 +1663,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public boolean isContractSharing() {
 		PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(
 				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-		
+		PmOrgProfile agencyMinistry = null;
 		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
-			if (!contractMinistry.getOrgProfileId().equals(
-					retrieveMinistryOrgProfile(ctAgency.getOrgProfile().getOrgProfileId()).getOrgProfileId())) {
+			agencyMinistry = retrieveMinistryOrgProfile(ctAgency.getOrgProfile().getOrgProfileId());
+			if (agencyMinistry==null || !contractMinistry.getOrgProfileId().equals(agencyMinistry.getOrgProfileId())) {
 				return true;
 			}
 		}
