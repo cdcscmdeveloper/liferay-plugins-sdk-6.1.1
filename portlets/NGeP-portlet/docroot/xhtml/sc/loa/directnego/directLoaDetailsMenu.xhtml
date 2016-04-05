@@ -243,15 +243,13 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 
-
 			</tr>
 
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.off.price']}">
-
 					</p:outputLabel> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="text-align: right;" required="true"
+				<td><p:inputText style="text-align: right;" required="true" id="loaAmtId"
 						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}" size="35"
 						label="#{lbl['lbl.sc.loiloa.loa.off.price']}"
 						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}">
@@ -260,7 +258,7 @@
 							update="@this,ContractAmtId,bondReq"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
+					</p:inputText>  <p:message id="loaAmtIdMsg" for="loaAmtId" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fullfillent.type']}" />
@@ -414,16 +412,20 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl[directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
+				<td>
+				<ui:param name="lblContractDuration"
+				    value="#{lbl[directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
+				<p:outputLabel
+						value="#{lbl[lblContractDuration]}" />
+				 <p:outputLabel value="*" styleClass="mandatory"/>
 				</td>
-				<td><p:inputText style="text-align: right;"
+				<td><p:inputText style="text-align: right;" required="true" label="#{lbl[lblContractDuration]}"
 						id="contractDuration" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
 						size="35">
 						<p:ajax event="blur" update="effdate,expdate"
 							listener="#{directLOABackingBean.resetContractDates()}"></p:ajax>
-					</p:inputText></td>
+					</p:inputText>  <p:message id="contractDurationMsg" for="contractDuration" display="icon" /></td>
 			</tr>
 			<ui:param name="lbleffDate"
 				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
