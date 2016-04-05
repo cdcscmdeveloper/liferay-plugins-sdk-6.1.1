@@ -136,42 +136,43 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private void setSelectedSmSvFacility(SmSvTemplate svTemplate){
 		//getManagedBean().getSelectedSvTemplate().setSmSvFacility(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getSmFacilities().get(0));
 		log.info("*******setSelectedSmSvFacility*********" + getManagedBean().getSelectedSvTemplate().getSvTemplateId());
+		if(getManagedBean().getSelectedSvTemplate().getSmSvFacility() == null){
+			log.info("smFacility 0 - " +getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
+			SmFacility smFacility = retrieveFacilityByAddress(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
+			SmSvFacility smSvFacility = getManagedBean().getSelectedSvTemplate().getSmSvFacility();
 
-		log.info("smFacility 0 - " +getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
-		SmFacility smFacility = retrieveFacilityByAddress(getManagedBean().getSmSvTask().getSmSvAddress().getSmAddress().getAddressId());
-		SmSvFacility smSvFacility = getManagedBean().getSelectedSvTemplate().getSmSvFacility();
+			if(smFacility != null){
+				if(smSvFacility == null){
+					smSvFacility = new SmSvFacility();
+				}
 
-		if(smFacility != null){
-			if(smSvFacility == null){
-				smSvFacility = new SmSvFacility();
-			}
-			
-			smSvFacility.setOwnershipType(smFacility.getOwnershipType());
-			//				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-			//				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
-			if(smFacility.getAreaSquareFeet()!=null){
-				//smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
-				//smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
+				smSvFacility.setOwnershipType(smFacility.getOwnershipType());
+				//				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+				//				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+				if(smFacility.getAreaSquareFeet()!=null){
+					//smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
+					//smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
 
-				smSvFacility.setOverallSqft(smFacility.getAreaSquareFeet().toString());
-				smSvFacility.setEnclosedSqft(smFacility.getAreaSquareFeet().toString());
-				smSvFacility.setEnclosedCapacitySqft(smFacility.getAreaSquareFeet().toString());
-			}
-			if(smFacility.getOwnershipType().equals("R")){
-				smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
+					smSvFacility.setOverallSqft(smFacility.getAreaSquareFeet().toString());
+					smSvFacility.setEnclosedSqft(smFacility.getAreaSquareFeet().toString());
+					smSvFacility.setEnclosedCapacitySqft(smFacility.getAreaSquareFeet().toString());
+				}
+				if(smFacility.getOwnershipType().equals("R")){
+					smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
+				}else{
+					smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
+				}
+				smSvFacility.setSmSvTemplate(svTemplate);
+				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}else{
-				smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
-			}
-			smSvFacility.setSmSvTemplate(svTemplate);
-			getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
-		}else{
-			//NumberFormat formatter = new DecimalFormat("#0.00");
-			smSvFacility = new SmSvFacility();
-			//smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-			//smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+				//NumberFormat formatter = new DecimalFormat("#0.00");
+				smSvFacility = new SmSvFacility();
+				//smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+				//smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
 
-			smSvFacility.setSmSvTemplate(svTemplate);
-			getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
+				smSvFacility.setSmSvTemplate(svTemplate);
+				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
+			}
 		}
 	}
 
@@ -266,7 +267,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			groupCategoryCodeByType(svoTask.getSmSvTemplate());
 			
 			getManagedBean().setSelectedSvTemplate(smSvTask.getSmSvTemplate());
+			
+			if(smSvTask.getSmSvTemplate().getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
+					smSvTask.getSmSvTemplate().getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
+					smSvTask.getSmSvTemplate().getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
+
+				setSelectedSmSvFacility(smSvTask.getSmSvTemplate());
+			}
 		}
+		
 	}
 	
 	/**
@@ -312,14 +321,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				svTemplate.getSmSvComment().setSmSvTemplate(svTemplate);
 			}
 			
-			if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
-					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
-					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-				if(svTemplate.getSmSvFacility() == null){
-					svTemplate.setSmSvFacility(new SmSvFacility());
-				}
-				//svTemplate.getSmSvFacility().setSmSvTemplate(svTemplate);
-			}
+
 			
 			if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
 				this.prepareEquipmentLicenseInsurance(svTemplate);
