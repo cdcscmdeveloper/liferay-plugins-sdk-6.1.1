@@ -21,7 +21,7 @@
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.periodicScheduleType)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@([id$=progressive],[id$=schedule])"
-								listener="#{specificationBackingBean.scheduleTypeChange(specificationBackingBean.managedBean.scQt)}"></p:ajax>
+								listener="#{specificationBackingBean.scheduleTypeChange(specificationBackingBean.managedBean.qt)}"></p:ajax>
 						</p:selectOneRadio></td>
 					<td style="margin-top: -3px"><ac:iconTooltip
 							value="#{lbl['lbl.sc.periodic.fullfillent.type.tooltip']}" /></td>
