@@ -3454,6 +3454,28 @@ public class SmCommonUtil {
 		return items;
 	}
 
+	/**
+	 * Check if application is physical counsultant
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @return boolean
+	 */
+	public static boolean isApplPhysicalConsultant(SmAppl appl) {
+		boolean retVal = false;
+		if (appl.getSupplierType().equals("J")) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(appl.getApplId());
+			reqDTO.setCategoryCode(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+			int count = SmServiceLookup.getMofRegistrationSO()
+					.countSuppCatByApplIdAndCatCode(reqDTO).getCount();
+			if (count > 0) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
 	private static SelectItem getLhdnSelectItem() {
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		reqDTO.setOrgCode(my.ep.constant.sm.SupplierManagementConst.LHDN_ORG_PROFILE_CODE);
