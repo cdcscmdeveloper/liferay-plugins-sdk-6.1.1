@@ -1194,6 +1194,7 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.qualification.level']}" id="equiStfAcaQl"
 						value="#{backingBean.managedBean.selectedStaffAcademic.pmEduLevel.eduLevelId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems value="#{backingBean.getAcademicQualifications()}" />
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
