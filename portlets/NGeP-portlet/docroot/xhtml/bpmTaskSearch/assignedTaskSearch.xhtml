@@ -1,0 +1,137 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+	
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>		
+
+	<p:messages id="srchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+	
+	<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+	
+	<table>
+ 		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.txt.docNo']}" /></td>
+			<td><div style="margin-top: 5px;"></div>
+			<p:inputText id="docNo" size="50" value="#{bpmAssignedTaskSearchBackingBean.managedBean.docNo}"></p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.txt.docType']}" /></td>
+			<td>
+			<p:selectOneMenu size="50" id="docType" value="#{bpmAssignedTaskSearchBackingBean.managedBean.docType}">
+				<f:selectItems value="#{bpmAssignedTaskSearchBackingBean.getDropdownCodeValues(ParameterTypeConst.documentTypes)}" />
+				<p:ajax listener="#{bpmAssignedTaskSearchBackingBean.findDocStatus}" update="docStatus" />
+			</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.txt.docStatus']}"/></td>
+			<td><div style="margin-top: 5px;"></div>
+				<p:selectOneMenu id="docStatus" size="50" value="#{bpmAssignedTaskSearchBackingBean.managedBean.docStatus}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+					<f:selectItems 	value="#{bpmAssignedTaskSearchBackingBean.managedBean.docStatusList}"
+								 	itemLabel="#{docStatus.statusName}"
+								 	var="docStatus"
+								 	itemValue="#{docStatus.statusDescId}"
+								 	></f:selectItems>
+				</p:selectOneMenu>
+			</td>						
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.pm.cal.frmdate']}" /></td>
+			<td><div style="margin-top: 3px;"></div>
+				<p:calendar showOn="button" size="25" label="#{lbl['lbl.pm.cal.frmdate']}"
+							maxdate="#{bpmAssignedTaskSearchBackingBean.managedBean.searchToCreatedDate}"
+							id="fromDate" readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+							value="#{bpmAssignedTaskSearchBackingBean.managedBean.searchFromCreatedDate}"
+							required="#{not empty bpmAssignedTaskSearchBackingBean.managedBean.searchToCreatedDate}" >
+				<p:ajax event="dateSelect" update="toDate" />
+				</p:calendar>
+			</td>
+			<td><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
+			<td><div style="margin-top: 3px;"></div>
+				<p:calendar showOn="button" size="25" label="#{lbl['lbl.pm.cal.todate']}"
+							mindate="#{bpmAssignedTaskSearchBackingBean.managedBean.searchFromCreatedDate}"
+							id="toDate" readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+							value="#{bpmAssignedTaskSearchBackingBean.managedBean.searchToCreatedDate}"
+							required="#{not empty bpmAssignedTaskSearchBackingBean.managedBean.searchFromCreatedDate}" >
+				<p:ajax event="dateSelect" update="fromDate" />
+				</p:calendar>
+			</td>
+		</tr>
+	</table>
+
+	<div style="text-align: right;">
+			<p:commandButton id="schBtn"
+				value="#{lbl['lbl.btn.search']}"
+				action="#{bpmAssignedTaskSearchBackingBean.searchAction}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				update="resultPanel" />
+			<p:commandButton
+				value="#{lbl['lbl.btn.reset']}"
+				action="#{bpmAssignedTaskSearchBackingBean.reset}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				update=":form" />
+	</div>
+
+	</p:panel>
+	
+	<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+	
+		<p:dataTable id="taskListTableId" value="#{bpmAssignedTaskSearchBackingBean.managedBean.taskListDataModel}"
+			rows="5" var="taskList" lazy="true" >
+			<ac:paginator for="taskListTableId"></ac:paginator>
+			
+			<p:column width="5%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.docNo']}"/>
+				</f:facet>
+				<h:outputText value="#{taskList.docNumber}"></h:outputText>
+			</p:column>
+
+			<p:column  width="18%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.docStatus']}"/>
+				</f:facet>
+				<h:outputText value="#{bpmAssignedTaskSearchBackingBean.getDocStatus(taskList.docStatus)}"></h:outputText>
+			</p:column>
+
+			<p:column width="10%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.assignedDate']}"/>
+				</f:facet>
+				<h:outputText value="#{taskList.createDate.time}">
+				<f:convertDateTime
+					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</h:outputText>
+			</p:column>
+<!--
+			<p:column>
+				<f:facet name="header">
+					Assignees
+				</f:facet>
+				<h:outputText value="#{taskList.assignees}"></h:outputText>
+			</p:column>
+-->
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.assigneeName']}"/>
+				</f:facet>
+				<h:outputText value="#{bpmAssignedTaskSearchBackingBean.getAssigneeNamesString(taskList.assignees)}"></h:outputText>
+			</p:column>
+
+		</p:dataTable>
+	
+	</p:panel>
+	</ui:define>
+</ui:composition>

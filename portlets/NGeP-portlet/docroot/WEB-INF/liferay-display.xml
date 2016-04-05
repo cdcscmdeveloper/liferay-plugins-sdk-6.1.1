@@ -232,6 +232,7 @@
 			<portlet id="taskStatusSearch"></portlet>
 			<portlet id="DirectMofRegistration"></portlet>
 			<portlet id="SvcTasklist"></portlet>
+			<portlet id="assignedTaskSearch"></portlet>
 		</category>
 
 		<category name="Template">
