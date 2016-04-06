@@ -365,18 +365,14 @@
 				    	  var addr2 = document.getElementById('#{p:component(&quot;compAdd2&quot;)}').value + ',';
 				    	  var addr3 = document.getElementById('#{p:component(&quot;compAdd3&quot;)}').value + ',';
 				    	  var addr4 = document.getElementById('#{p:component(&quot;compAdd4&quot;)}').value + ',';
+				    	  var postcode = document.getElementById('#{p:component(&quot;compPostCodeMy&quot;)}').value + ' ';
 
 				    	  var cityName = document.getElementById('#{p:component(&quot;busCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;busCity&quot;)}_input').selectedIndex].text;
 				    	  var districtName = document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').options[document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').selectedIndex].text;
 				    	  var stateName = document.getElementById('#{p:component(&quot;busState&quot;)}_input').options[document.getElementById('#{p:component(&quot;busState&quot;)}_input').selectedIndex].text;
 				    	  var countryName = document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').options[document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').selectedIndex].text;
-				    	  
-				    	  /*var cityName = '';
-				    	  var districtName = '';
-				    	  var stateName = '';
-				    	  var countryName = '';
-				    	  */
-				    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+
+				    	  var address = addr1 + addr2 + addr3 + addr4 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 
 				      	return address;
 				      }
