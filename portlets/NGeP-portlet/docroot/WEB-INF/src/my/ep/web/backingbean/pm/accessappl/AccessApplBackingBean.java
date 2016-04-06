@@ -402,24 +402,24 @@ public class AccessApplBackingBean extends
 				PmAccessAppl savedAccessAppl = resDTO.getAccessAppl();
 				if(BpmOutcomeConst.BPM_SAVE.equals(outcome)){
 					if(savedAccessAppl.isCompanyProfile() && savedAccessAppl.isMarketResearch()){
-						messageId = MessageConst.INFO_730033;
+						messageId = MessageConst.INFO_776032;
 					}else if(savedAccessAppl.isCompanyProfile() ){
-						messageId = MessageConst.INFO_730031;
+						messageId = MessageConst.INFO_776030;
 					}else if(savedAccessAppl.isMarketResearch()){
-						messageId = MessageConst.INFO_730032;
+						messageId = MessageConst.INFO_776031;
 					}
 				}else if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 					if(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL.equals(currentStatus.longValue())){
-						messageId = MessageConst.INFO_730035;
+						messageId = MessageConst.INFO_776034;
 					}else if(ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.equals(currentStatus.longValue())){
-						messageId = MessageConst.INFO_730037;
+						messageId = MessageConst.INFO_776036;
 					}
 					
 				}else if(BpmOutcomeConst.BPM_REJECT.equals(outcome)){
 					if(ProfileManagementStatusConst.PENDING_COMPANY_ACCESS_APPROVAL.equals(currentStatus.longValue())){
-						messageId = MessageConst.INFO_730036;
+						messageId = MessageConst.INFO_776035;
 					}else if(ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.equals(currentStatus.longValue())){
-						messageId = MessageConst.INFO_730038;
+						messageId = MessageConst.INFO_776037;
 					}
 				}
 				
@@ -549,7 +549,7 @@ public class AccessApplBackingBean extends
 				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
 				AccessApplResDTO resDTO = accessApplSO.isAccessApplProccessingByIdNo(reqDTO);
 				if(resDTO.isSuccessful() && !resDTO.isValid()){
-					throw new EpException(MessageConst.ERROR_730034);
+					throw new EpException(MessageConst.ERROR_776033);
 				}
 			}catch(Exception e){
 				throw new EpException(e.getMessage());
