@@ -7180,9 +7180,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		List<CmPricing> pricings = new ArrayList<CmPricing>();
 
-		for(int i = 0; i < index; i++){
+		for(int i = 0; i < this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size(); i++){
 			pricings.add(this.getManagedBean()
-					.getSelectedMaintainItem().getCmZonalPromotionPricings().get(i));
+					.getSelectedMaintainItem().getzStdPrices().get(i));
 		}
 		if(promotion.getPrice() != null){
 			validatePriceValue(promotion, pricings);
@@ -7205,15 +7205,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		boolean priceInvalidFirstRow = false;
 
 		for(CmPricing cmPricing : pricings){
+			System.out.println("*******standard********"+cmPricing.getPrice());
+			System.out.println("*******promotion*******"+pricing.getPrice());
 
+			
 			if (pricing.getStand_group_id() == cmPricing.getStand_group_id() && (cmPricing.getPrice().compareTo(pricing.getPrice()) <= 0)){
 				priceInvalid = true;
 			}
 
 		}	
-
-		if(pricing.getPricingType().equals("04") || pricing.getPricingType().equals("06")) {
-			System.out.println("***04****"+priceInvalid);
+		System.out.println("**************************************pricing.getPricingType()"+pricing.getPricingType());
+		System.out.println("***priceInvalid****"+priceInvalid);
+		if(pricing.getPricingType().equals("04")) {
 			if(!priceInvalid) {
 				BigDecimal promotionTierPrice = pricing.getPrice();
 				BigDecimal parentTierPrice = pricing.getParentPrice().getPrice();
@@ -7235,26 +7238,31 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 		}
+		
 		System.out.println("priceInvalidFirstRow"+priceInvalidFirstRow);
+		
+		
+		
+		
 		if(priceInvalidFirstRow){
 			pricing.setCheckOk(false);
 			this.getManagedBean().setError99(true);
-			if(pricing.getPricingType().equals("06")){
-				pricing.setDisplayAction(false);
-			}
+			
 
 		}else{
 			pricing.setCheckOk(true);
 			this.getManagedBean().setError99(false);
 
-			if(pricing.getPricingType().equals("06")){
-				pricing.setDisplayAction(true);
-			}
-
 			if(priceInvalid){
 				pricing.setCheckOk(false);
 				this.getManagedBean().setError9(true);
+				if(pricing.getPricingType().equals("06")){
+					pricing.setDisplayAction(false);
+				}
 			} else {
+				if(pricing.getPricingType().equals("06")){
+					pricing.setDisplayAction(true);
+				}
 				pricing.setCheckOk(true);
 				this.getManagedBean().setError9(false);
 			}
