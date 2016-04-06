@@ -2371,6 +2371,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 	}
 	
+	public void removeGstUploadedFile(){
+		SmGstSupplierDoc gstDoc = getManagedBean().getSelectedGstSupplierDoc();
+		gstDoc.setFileName(null);
+		gstDoc.setFilePath(null);
+
+	}
+	
 }
 
 
