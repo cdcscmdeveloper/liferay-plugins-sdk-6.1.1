@@ -77,8 +77,22 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		getCategoryDescrDataModel().resetData();
 	}
 	
-	public void categorySearchAction() {
+	public void categorySearchAction(String supplierType, String facilityType, String paidUpCapital, String bumiPercentage, String categoryType, String businessTypeCode) {
 		debugLogger("searchAction");
+		
+		log.info("supplierType: " + supplierType);
+		log.info("facilityType: " + facilityType);
+		log.info("paidUpCapital: " + paidUpCapital);
+		log.info("bumiPercentage: " + bumiPercentage);
+		log.info("categoryType: " + categoryType);
+		log.info("supplierType: " + businessTypeCode);
+		
+		this.getManagedBean().setSupplierType(supplierType);
+		this.getManagedBean().setFacilityType(facilityType);
+		this.getManagedBean().setPaidUpCapital(paidUpCapital);
+		this.getManagedBean().setBumiPercentage(bumiPercentage);
+		this.getManagedBean().setCategoryType(categoryType);
+		this.getManagedBean().setBusinessTypeCode(businessTypeCode);
 		
 		getCategoryDataModel().reloadData();
 	}
@@ -459,6 +473,43 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setSearchBean(searchBean);
+
+				if(getManagedBean().getSupplierType() != null && getManagedBean().getSupplierType().length() > 0) {
+					reqDTO.setSupplierTypeCode(getManagedBean().getSupplierType());
+				}
+				if(getManagedBean().getFacilityType() != null && getManagedBean().getFacilityType().length() > 0) {
+					if (getManagedBean().getFacilityType().equalsIgnoreCase("H")) {
+						reqDTO.setHomeOperated(1);
+					} else {
+						reqDTO.setHomeOperated(0);
+					}
+				}
+				if(getManagedBean().getPaidUpCapital() != null && getManagedBean().getPaidUpCapital().length() > 0) {
+					Integer capital = Integer.parseInt(getManagedBean().getPaidUpCapital());
+					reqDTO.setPaidUpCapital(capital);
+				}
+//				if(getBumiPercentage() != null && getBumiPercentage().length() > 0) {
+//					Integer bumi = Integer.parseInt(getBumiPercentage());
+//					reqDTO.setBumiPercentage(bumi);
+//				}
+				if(getManagedBean().getCategoryType() != null && getManagedBean().getCategoryType().length() > 0) {
+					if (getManagedBean().getCategoryType().equals("N")) {
+						reqDTO.setIsSpecialCategory(false);
+					} else {
+						reqDTO.setIsSpecialCategory(true);
+					}
+				}
+				if(getManagedBean().getBusinessTypeCode() != null && getManagedBean().getBusinessTypeCode().length() > 0) {
+					reqDTO.setBusinessTypeCode(getManagedBean().getBusinessTypeCode());
+				}
+				
+				log.info("supplierType: " + getManagedBean().getSupplierType());
+				log.info("facilityType: " + getManagedBean().getFacilityType());
+				log.info("paidUpCapital: " + getManagedBean().getPaidUpCapital());
+				log.info("bumiPercentage: " + getManagedBean().getBumiPercentage());
+				log.info("categoryType: " + getManagedBean().getCategoryType());
+				log.info("supplierType: " + getManagedBean().getBusinessTypeCode());
+				
 				CategoryCodeResDTO resDTO = categoryCodeSO.searchCategoryL3(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getCategoryL3ResultBean();
@@ -657,4 +708,5 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		resetL2L3CategoryCode();
 		categoryResetAction();
 	}
+	
 }
