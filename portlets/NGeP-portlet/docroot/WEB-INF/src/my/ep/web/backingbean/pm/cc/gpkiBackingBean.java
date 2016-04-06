@@ -95,7 +95,7 @@ public class gpkiBackingBean {
 				.getServiceObject(IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
-		userSO.retrieveUserByUserId(reqDTO);
+		//userSO.retrieveUserByUserId(reqDTO);
 		UserResDTO resDTO = new UserResDTO();
 		resDTO = userSO.retrieveUserByUserId(reqDTO);
 		debugLogger("serialNo====================================: " + serialNo);
