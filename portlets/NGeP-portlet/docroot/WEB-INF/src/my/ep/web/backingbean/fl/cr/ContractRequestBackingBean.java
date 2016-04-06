@@ -2272,15 +2272,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param flDelAddress
 	 */
 	public void receivingOfficerList(FlDeliveryAddress flDelAddress){
+		IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		Long addressId = flDelAddress.getPmAddressId();
+		AddressReqDTO reqDTO = new AddressReqDTO();
 		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
-			ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
-			ctReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
-			ctReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-			IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
-			ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-			getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
-			
+			reqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
+			reqDTO.setAddressTypeId(flDelAddress.getReceivingGrp().getAddressTypeId());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
 		}
 		AddressResDTO resDTO=getReceivingOfficerList(addressId, AddressType.RECEIVING_OFFICER_ADDRESS.value());
