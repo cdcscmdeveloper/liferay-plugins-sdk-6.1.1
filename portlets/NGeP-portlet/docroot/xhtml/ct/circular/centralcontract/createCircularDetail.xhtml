@@ -78,10 +78,8 @@
 			           </p:selectBooleanCheckbox>
 			  	  
 			  	  <f:verbatim/>	  <f:verbatim/>
-				      <h:panelGrid class="columnWidth200">
-					       <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-				      </h:panelGrid>
-		             
+				   
+				<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 		 		<h:panelGroup id="uploadCircularPg">
 			  		<p:commandButton value="#{lbl['lbl.bpm.choose.file']}" update="uploadCircularPg, uploadCircularDlg"
 						action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	

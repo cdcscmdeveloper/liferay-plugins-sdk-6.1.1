@@ -23,7 +23,20 @@
 			  value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}"
 			  rowKey="#{data}" selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 			  <ac:paginator for="cancelCcrDt" />
-			  <p:column selectionMode="multiple" style="width:3%" />
+			   <p:column 
+				     style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}">
+				     <f:facet name="header">
+						  <p:selectBooleanCheckbox id="checkBoxAll" value="#{panelBackingBean.managedBean.selectAll}">
+							   <p:ajax partialSubmit="true" process="@this"
+									  update=":form:cancelCcrDt,:form:delCancelBtn" listener="#{panelBackingBean.selectAllDeleteCircular}" />
+					       </p:selectBooleanCheckbox>
+					  </f:facet>
+		              <p:selectBooleanCheckbox 
+		                       value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		        <p:ajax event="change" 
+		           		               update=":form:delCancelBtn,:form:cancelCcrDt" listener="#{panelBackingBean.selectAllDeleteCheckboxSelect}"></p:ajax>
+			           </p:selectBooleanCheckbox>
+			  </p:column>
 			  <p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" 
 			        styleClass="column-align-center"  style="width:35%; white-space:normal;" >
 				    <p:commandLink value="#{data.circularVer.circularNo}"
@@ -39,7 +52,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}" 
 			      actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
 			<p:commandButton value="#{lbl['lbl.ct.delete']}" id="delCancelBtn"
-			      process="@all"   onsuccess="delCancelCircular.show()"/>				
+			      process="@all"   onsuccess="delCancelCircular.show()" disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"/>				
 		</div>				
 		</p:outputPanel>	
 		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" 
@@ -71,7 +84,7 @@
                 severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                  <div class="ppRightBtn">
 		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@all"  
-		                   update=":form:cancelCcrPnl" 
+		                   update=":form" 
 		                   action="#{panelBackingBean.deleteCancelReqCircular()}" onclick="delCancelCircular.hide();"/>
 			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delCancelCircular.hide();" type="button" />
 		           </div>
