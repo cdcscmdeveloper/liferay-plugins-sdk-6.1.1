@@ -24,7 +24,7 @@
 	                        rowKey="#{pidObj}" selection="#{panelBackingBean.managedBean.ctCircularPidReasons}">
 				                  <ac:paginator for="pidTableId" />
 				                 <p:column 
-				                    style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}">
+				                      style="width:5%;text-align:center" rendered="#{!panelBackingBean.managedBean.viewContract}">
 				                          <f:facet name="header">
 							                <p:selectBooleanCheckbox id="checkBoxAll" value="#{panelBackingBean.managedBean.selectAll}">
 								               <p:ajax partialSubmit="true" process="@this"
@@ -93,7 +93,7 @@
 		           
 		                                 <p:selectBooleanCheckbox
 		                                   value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
-		           		                       <p:ajax event="change" update=":form:ctPersonDelBtn" 
+		           		                       <p:ajax event="change" update=":form:ctPersonDelBtn, :form:contactPersonDt" 
 		           		                       listener="#{panelBackingBean.selectOnePersonCheckboxSelect}"></p:ajax>
 			                             </p:selectBooleanCheckbox>
 			                           </p:column>

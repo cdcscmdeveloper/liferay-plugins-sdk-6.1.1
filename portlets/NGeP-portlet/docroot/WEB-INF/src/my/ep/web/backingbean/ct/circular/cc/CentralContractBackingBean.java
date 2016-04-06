@@ -29,6 +29,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -418,20 +419,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				          FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		     	}
 		}
-	
-	/**
-	 * The method used to delete  associate circular with current circular 
-	 */
-	public void deleteCancelCircular(){
-			try {
-			     	getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
-				   getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());
-				   getManagedBean().setButtonHideActive(true);
-			} catch (Exception e) {
-				   e.printStackTrace();
-				   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			}
-	 }
 	
 	/**
 	 * The method used to delete  associate circular with current circular 
@@ -1053,18 +1040,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
-	/**
-	 * Method used to delete contract person from contract person list
-    */
-	public void deleteContactPerson(){
-		try {
-			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
-			getManagedBean().setButtonHideActive(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	}	
 	
 	/**
 	 * Method used to add exempted 
@@ -1367,23 +1342,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	/**
-	 * The method used to delete the selected signer(s) for agency party.
-	 */
-	public void deleteExemptedOrgMinistry() {
-		try {
-			for (int i = 0; i < selectedExemptedOrgs.length; i++) {
-				  getManagedBean().getCircularVer().getCtExemptedOrgs().remove(selectedExemptedOrgs[i]);
-			} 
-			selectedExemptedOrgs = null;
-			getManagedBean().setButtonHideActive(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-		
-	}
-	
-	/**
 	 * The method used to set auto update true
 	 * to show the message summary
 	 * */
@@ -1670,21 +1628,193 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				ctCircularPidReasons.setPmReason(new PmReason());
 				getManagedBean().getCircularVer().getCtCircularPidReason().add(ctCircularPidReasons);
 			}
-			
-		 /**
-		 * This method used to
-		 *  delete old record from datatable
-		 */
-		public void deletePidPurchase(){
-				try {
-					getManagedBean().getCircularVer().getCtCircularPidReason().removeAll(getManagedBean().getCtCircularPidReasons());
-					getManagedBean().setButtonHideActive(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-				}
-			}
 		
+		public void selectAllPidReason(AjaxBehaviorEvent e) {
+			
+			for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()) {
+				if (getManagedBean().isSelectAll()) {
+					ctCircularPidReasons.setSelectedCheckBox(true);
+			       }else {
+			    	   ctCircularPidReasons.setSelectedCheckBox(false);
+			       }
+		}
+		
+		 if((boolean) e.getComponent().getAttributes().get("value")){
+			 getManagedBean().setButtonHideActiveDel(false);
+		 }else{
+			 getManagedBean().setButtonHideActiveDel(true);
+		 }	
+	   }
+		
+		/**
+	     * Method to set boolean value for checkbox 
+	     * @param pass ajax event type
+	     * Set boolean value for user action 
+	     * */
+	    public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
+			
+	    	getManagedBean().setSelectAll(false);
+	    	for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()){
+	    		if(ctCircularPidReasons.isSelectedCheckBox()){
+	    			getManagedBean().setButtonHideActiveDel(false);
+	    			return;
+	    		}
+	    	}
+	    	
+			if((boolean) e.getComponent().getAttributes().get("value")){
+				getManagedBean().setButtonHideActiveDel(false);
+			}else{
+				getManagedBean().setButtonHideActiveDel(true);
+			}	
+		}
+		
+		/**
+    	 * The method used to delete the selected deduction clause.
+    	 */
+    	public void deleteTableRow(String tableType) {
+    		try {
+    			 if(tableType.equalsIgnoreCase("PID")){	
+    			      Iterator<CtCircularPidReason> pidReasonIterator = getManagedBean().getCircularVer().getCtCircularPidReason().iterator();
+    				   while(pidReasonIterator.hasNext()){
+    					 CtCircularPidReason  pidReason = pidReasonIterator.next();
+    					 if(pidReason.isSelectedCheckBox()){
+    						pidReasonIterator.remove();
+    					 }
+    				 }
+    				 getManagedBean().setCtCircularPidReasons(null);
+    			
+    			 } else if(tableType.equalsIgnoreCase("PERSON")){
+    				 Iterator<CtContactPerson> contactPersonIterator = getManagedBean().getCircularVer().getCtContactPersons().iterator();
+  				     while(contactPersonIterator.hasNext()){
+  				    	CtContactPerson  ctContactPersons = contactPersonIterator.next();
+  					    if(ctContactPersons.isSelectedCheckBox()){
+  					    	contactPersonIterator.remove();
+  					    }
+  				    } 
+  				     getManagedBean().setSelectedContactPersons(null);
+    			
+    			 }else if(tableType.equalsIgnoreCase("ORG")){
+    				 Iterator<CtExemptedOrg> ctExemptedOrgs = getManagedBean().getCircularVer().getCtExemptedOrgs().iterator();
+  				     while(ctExemptedOrgs.hasNext()){
+  				    	CtExemptedOrg  ctExemptedOrg = ctExemptedOrgs.next();
+  					    if(ctExemptedOrg.isSelectedCheckBox()){
+  					    	ctExemptedOrgs.remove();
+  					    }
+  				    } 
+    		      getManagedBean().setSelectedExemptedOrgs(null);
+    			 } else if(tableType.equalsIgnoreCase("CANCEL")){
+    				 Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCircularVer().getCtCancelCircularList().iterator();
+  				     while(ctCancelCirculars.hasNext()){
+  				    	CtCancelCircular  ctCancelCircular = ctCancelCirculars.next();
+  					    if(ctCancelCircular.isSelectedCheckBox()){
+  					    	ctCancelCirculars.remove();
+  					    }
+  				    } 
+  				     getManagedBean().setSelectedCancelledCircularList(null);
+    			 } 
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+    		}
+        }
+    	
+    	public void selectAllPerson(AjaxBehaviorEvent e) {
+    		
+    		for (CtContactPerson ctContactPersons : getManagedBean().getCircularVer().getCtContactPersons()) {
+    			if (getManagedBean().isSelectAll()) {
+    				ctContactPersons.setSelectedCheckBox(true);
+    		       }else {
+    		    	   ctContactPersons.setSelectedCheckBox(false);
+    		       }
+    	}
+    	
+    	 if((boolean) e.getComponent().getAttributes().get("value")){
+    		 getManagedBean().setButtonHideActiveDel(false);
+    	 }else{
+    		 getManagedBean().setButtonHideActiveDel(true);
+    	 }		
+        }
+      
+        public void selectOnePersonCheckboxSelect(AjaxBehaviorEvent e){
+    		
+        	getManagedBean().setSelectAll(false);
+        	  for (CtContactPerson ctContactPersons : getManagedBean().getCircularVer().getCtContactPersons()){
+        		if(ctContactPersons.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+    	}
+		
+        public void selectAllCancelCircular(AjaxBehaviorEvent e) {
+    		
+    		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()) {
+    			if (getManagedBean().isSelectAll()) {
+    				ctCancelCirculars.setSelectedCheckBox(true);
+    		       }else {
+    		    	   ctCancelCirculars.setSelectedCheckBox(false);
+    		       }
+    	}
+    	
+    	 if((boolean) e.getComponent().getAttributes().get("value")){
+    		 getManagedBean().setButtonHideActiveDel(false);
+    	 }else{
+    		 getManagedBean().setButtonHideActiveDel(true);
+    	 }		
+        }
+
+        public void selectCancelCheckboxSelect(AjaxBehaviorEvent e){
+        	getManagedBean().setSelectAll(false);
+        	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCircularVer().getCtCancelCircularList()){
+        		if(ctCancelCirculars.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+        }
+        
+        public void selectAllexemptedOrg(AjaxBehaviorEvent e){
+        
+        	for (CtExemptedOrg ctExemptedOrgs : getManagedBean().getCircularVer().getCtExemptedOrgs()){
+        		if (getManagedBean().isSelectAll()) {
+        			ctExemptedOrgs.setSelectedCheckBox(true);
+    		       }else {
+    		    	   ctExemptedOrgs.setSelectedCheckBox(false);
+    		       }
+    	      }
+        	
+        	 if((boolean) e.getComponent().getAttributes().get("value")){
+        		 getManagedBean().setButtonHideActiveDel(false);
+        	 }else{
+        		 getManagedBean().setButtonHideActiveDel(true);
+        	 }		
+            }
+        
+        
+        public void selectExemptedOrgCheckboxSelect(AjaxBehaviorEvent e){
+        	getManagedBean().setSelectAll(false);
+        	for (CtExemptedOrg ctExemptedOrgs : getManagedBean().getCircularVer().getCtExemptedOrgs()){
+        		if(ctExemptedOrgs.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+        }
 		/**
 	     * Method to set boolean value for checkbox 
 	     * @param pass ajax event type
