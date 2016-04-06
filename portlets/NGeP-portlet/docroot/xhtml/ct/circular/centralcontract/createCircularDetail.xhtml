@@ -22,7 +22,7 @@
 					<p:message for="circularNoTxt" display="icon" />
 				    </h:panelGrid>
 						
-					 <h:outputLabel value="#{lbl['lbl.ct.circular.central.name']}"   styleClass="required"/>
+					 <p:outputLabel value="#{lbl['lbl.ct.circular.central.name']}"   styleClass="required"/>
 				    <h:panelGrid columns="5">
 				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:200px;" required="true" 
 						   disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
@@ -33,6 +33,19 @@
 				         	<p:spacer width="5"/>
 				         	<p:message for="circularNameTxt" display="icon" />
 				    </h:panelGrid>
+				    
+				    <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
+				    <p:inputText  style="width:170px;" maxlength="60" disabled="#{centralContractBackingBean.managedBean.viewContract}"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />
+				   
+					<p:outputLabel value="#{lbl['lbl.ct.warranty.period']}" />
+					<h:panelGroup>
+						<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.warrantyPeriod}" 
+							disabled="#{centralContractBackingBean.managedBean.viewContract}"
+						  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
+						<p:spacer width="5" />
+						<h:outputText value="#{lbl['lbl.ct.months']}" />
+					</h:panelGroup>
 				    
 					<p:outputLabel value="#{lbl['lbl.ct.start.date']}"  styleClass="required" />
 					<h:panelGrid columns="2">
@@ -45,7 +58,7 @@
 		                <p:message for="popupButtonCal" display="icon" />
 		 			</h:panelGrid>
 		 			
-		 		      <h:outputLabel value="#{lbl['lbl.ct.end.date']}"   styleClass="required"/>
+		 		      <p:outputLabel value="#{lbl['lbl.ct.end.date']}"   styleClass="required"/>
               		  <h:panelGrid columns="2">
 	   					<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 	   						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
@@ -57,32 +70,14 @@
 	         	   		</p:calendar>
 	         	   		<p:message for="popupButtonCal1" display="icon" />
 	         		</h:panelGrid>
-			              
-			              
-			     	<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
-				    <p:inputText  style="width:170px;" maxlength="60" disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />
-				   
-					<p:outputLabel value="#{lbl['lbl.ct.warranty.period']}" />
-					<h:panelGroup>
-						<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.warrantyPeriod}" 
-							disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
-						<p:spacer width="5" />
-						<h:outputText value="#{lbl['lbl.ct.months']}" />
-					</h:panelGroup>
 				
-					 <f:verbatim/>
-			         <h:panelGrid columns="3">
-			               <p:selectBooleanCheckbox disabled="#{centralContractBackingBean.managedBean.viewContract}" 
-			                       value="#{centralContractBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
+					 <p:outputLabel value="#{lbl['lbl.ct.pid']}"  />
+			           <p:selectBooleanCheckbox disabled="#{centralContractBackingBean.managedBean.viewContract}" 
+			                   value="#{centralContractBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
 			                       <p:ajax event="change"  update=":form:groupPidId" process="@this"></p:ajax>
-			                </p:selectBooleanCheckbox>
-			                <p:spacer width="2" />	
-			                <h:outputText value="#{lbl['lbl.ct.pid']}"  />
-			  	      </h:panelGrid>
-			  	      <f:verbatim/> <f:verbatim/>
+			           </p:selectBooleanCheckbox>
 			  	  
+			  	  <f:verbatim/>	  <f:verbatim/>
 				      <h:panelGrid class="columnWidth200">
 					       <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 				      </h:panelGrid>
