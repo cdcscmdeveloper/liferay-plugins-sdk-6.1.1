@@ -99,8 +99,10 @@
 									disabled="true" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 									value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
 							</td>
+							<ui:remove>
 							<td style="width: 211px;"><p:outputLabel styleClass="outputLabel-view" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 									value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}" /></td>
+						    </ui:remove>			
 						</tr>
 					</table></td>
 				<td><p:outputLabel
