@@ -177,7 +177,7 @@
 						value="#{lbl['lbl.sc.loiloa.appr.req']}" />
 						<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" /></td>
 				<td><p:selectOneRadio  styleClass="commonLabel"
-						disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus or lOIDetailBackingBean.managedBean.readOnly}"
+						disabled="#{!isPendingSubmissionStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
