@@ -51,6 +51,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = true;
 	private boolean viewContract = false;
 	private boolean  buttonHideActive = true;
+	private boolean  selectAll;
 
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -377,11 +378,33 @@ public class TerminationManagedBean extends BaseManagedBean {
 		this.ptjCodeNameSearchValue = ptjCodeNameSearchValue;
 	}
 
+	/**
+	 * @return the buttonHideActive
+	 */
 	public boolean isButtonHideActive() {
 		return buttonHideActive;
 	}
 
+	/**
+	 * @param buttonHideActive the buttonHideActive to set
+	 */
 	public void setButtonHideActive(boolean buttonHideActive) {
 		this.buttonHideActive = buttonHideActive;
 	}
+
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+	
+	
 }

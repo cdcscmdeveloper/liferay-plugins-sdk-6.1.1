@@ -1509,9 +1509,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method to remove cancel circular from circular details
 	 * */
 	public void deleteCancelReqCircular() {
-		log.info("PanelBackingBean.deleteCancelReqCircular()");
 		try {
-			getManagedBean().getCancelCircularReq().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
+			
+				 Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCancelCircularReq().getCtCancelCircularList().iterator();
+				     while(ctCancelCirculars.hasNext()){
+				    	CtCancelCircular  ctCancelCircular = ctCancelCirculars.next();
+					    if(ctCancelCircular.isSelectedCheckBox()){
+					    	ctCancelCirculars.remove();
+					    }
+				    } 
+				     getManagedBean().setSelectedCancelledCircularList(null);
+			 getManagedBean().setButtonHideActiveDel(true);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2469,6 +2478,23 @@ public void selectAllPidReason(AjaxBehaviorEvent e) {
 	 }	
    }
 	
+
+    public void selectAllDeleteCircular(AjaxBehaviorEvent e) {
+	
+	      for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelCircularReq().getCtCancelCircularList()) {
+		       if (getManagedBean().isSelectAll()) {
+			         ctCancelCirculars.setSelectedCheckBox(true);
+	           }else {
+	    	         ctCancelCirculars.setSelectedCheckBox(false);
+	           }
+           }
+
+          if((boolean) e.getComponent().getAttributes().get("value")){
+	           getManagedBean().setButtonHideActiveDel(false);
+          }else{
+	           getManagedBean().setButtonHideActiveDel(true);
+          }	
+     }
 	/**
      * Method to set boolean value for checkbox 
      * @param pass ajax event type
@@ -2666,6 +2692,20 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
         		}	
          }
     	
+    	public void selectAllDeleteCheckboxSelect(AjaxBehaviorEvent e){
+    		getManagedBean().setSelectAll(false);
+        	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelCircularReq().getCtCancelCircularList()){
+        		if(ctCancelCirculars.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+    	}
 	public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActiveDel(false);
 	}

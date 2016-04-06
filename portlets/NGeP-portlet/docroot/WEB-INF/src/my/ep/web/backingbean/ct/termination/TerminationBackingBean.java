@@ -24,6 +24,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 import javax.portlet.PortletRequest;
@@ -862,18 +863,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 }
 
 	 /**
-	  * Method describes  termination reason for delete
-	  */
-	 public void deleteTerminateReason() {
-		 for (int i = 0; i < selectedTerminationReasonsList.length; i++) {
-				CtTerminationReason terminationReason = selectedTerminationReasonsList[i];
-				getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().remove(terminationReason);
-			}
-		 selectedTerminationReasonsList = null;	
-		 getManagedBean().setButtonHideActive(true);
-	 }
-	 
-	 /**
 	  * The method used for searching the recommended agency.
 	  */
 	 public void searchRecommendedAgency() {
@@ -1237,6 +1226,64 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
      * @param pass ajax event type
      * Set boolean value for user action 
      * */
+	
+    public void selectAllTermination(AjaxBehaviorEvent e) {
+		
+		for (CtTerminationReason ctTerminationReasons : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()) {
+			if (getManagedBean().isSelectAll()) {
+				ctTerminationReasons.setSelectedCheckBox(true);
+		       }else {
+		    	   ctTerminationReasons.setSelectedCheckBox(false);
+		       }
+	}
+	
+	 if((boolean) e.getComponent().getAttributes().get("value")){
+		 getManagedBean().setButtonHideActive(false);
+	 }else{
+		 getManagedBean().setButtonHideActive(true);
+	 }	
+   }
+    
+    /**
+     * Method to set boolean value for checkbox 
+     * @param pass ajax event type
+     * Set boolean value for user action 
+     * */
+    public void selectOneTerminationCheckbox(AjaxBehaviorEvent e){
+		
+    	getManagedBean().setSelectAll(false);
+    	for (CtTerminationReason ctTerminationReasons : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
+    		if(ctTerminationReasons.isSelectedCheckBox()){
+    			 getManagedBean().setButtonHideActive(false);
+    			return;
+    		}
+    	}
+    	
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			 getManagedBean().setButtonHideActive(false);
+		}else{
+			getManagedBean().setButtonHideActive(true);
+		}	
+	}
+	
+    /**
+	 * The method used to delete the selected deduction clause.
+	 */
+	public void deleteTableRow() {
+		try {
+			  Iterator<CtTerminationReason> ctTerReasonIterator = getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().iterator();
+				   while(ctTerReasonIterator.hasNext()){
+					   CtTerminationReason  ctTerminationReasons = ctTerReasonIterator.next();
+					 if(ctTerminationReasons.isSelectedCheckBox()){
+						 ctTerReasonIterator.remove();
+					 }
+				 }
+			 getManagedBean().setButtonHideActive(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+    }
 	
 	public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActive(false);
