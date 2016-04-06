@@ -2098,6 +2098,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    	for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
 		    		itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
 		    	}
+		    	getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
 		    	for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 		    		if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
 		    			CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
@@ -2107,6 +2108,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    			ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 		    			ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		    			getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
+		    		} else {
+		    			getManagedBean().getSelectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
 		    		}
 		    	}
 			}
