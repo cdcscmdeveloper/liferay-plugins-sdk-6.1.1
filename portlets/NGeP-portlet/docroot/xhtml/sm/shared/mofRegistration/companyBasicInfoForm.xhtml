@@ -449,13 +449,14 @@
 					    	  var addr2 = document.getElementById('#{p:component(&quot;smSupAddr2&quot;)}').value + ',';
 					    	  var addr3 = document.getElementById('#{p:component(&quot;smSupAddr3&quot;)}').value + ',';
 					    	  var addr4 = document.getElementById('#{p:component(&quot;smSupAddr4&quot;)}').value + ',';
+					    	  var postcode = document.getElementById('#{p:component(&quot;smSupPostCodeMy&quot;)}').value + ' ';
 					    	  
 					    	  var cityName = document.getElementById('#{p:component(&quot;basicCompCity&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicCompCity&quot;)}_input').selectedIndex].text;
 					    	  var districtName = document.getElementById('#{p:component(&quot;basicCompDist&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicCompDist&quot;)}_input').selectedIndex].text;
 					    	  var stateName = document.getElementById('#{p:component(&quot;basicComState&quot;)}_input').options[document.getElementById('#{p:component(&quot;basicComState&quot;)}_input').selectedIndex].text;
 					    	  var countryName = document.getElementById('#{p:component(&quot;smSupCont&quot;)}_input').options[document.getElementById('#{p:component(&quot;smSupCont&quot;)}_input').selectedIndex].text;
 					    	  
-					    	  var address = addr1 + addr2 + addr3 + addr4 + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+					    	  var address = addr1 + addr2 + addr3 + addr4 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
 
 					      	return address;
 					      }
