@@ -233,13 +233,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
-		SmGstSupplierDoc mainDoc = (SmGstSupplierDoc) EntityHelper
-				.getEntityBySinglePropertyFromList(doc.getPmDocument()
-						.getDocumentId(), getManagedBean().getSelectedBranch()
-						.getGst().getSmGstSupplierDocs(), "pmDocument");
-
-		mainDoc.setFileName(StringUtils.EMPTY);
-		mainDoc.setFilePath(StringUtils.EMPTY);
+		doc.setFileName(StringUtils.EMPTY);
+		doc.setFilePath(StringUtils.EMPTY);
 	}
 
 	/**
