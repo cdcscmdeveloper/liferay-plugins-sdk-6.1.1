@@ -3560,32 +3560,21 @@ public class QTDetailBackingBean extends
 				.getStatusId();
 		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean()
 				.getTemplateSpecZoneDtls();
-		QuationTenderReqDTO reqDTO = null;
+		QuationTenderReqDTO reqDTO = prepareQTInfo();
+		reqDTO.setSaveFlow(true);
+		reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
-			reqDTO = prepareQTInfo();
-			reqDTO.setSaveFlow(true);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			detailSO.validateateQTDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setTaskName(taskName);
-
-			/*
-			 * this.getManagedBean().setMaintanceFlow(
-			 * this.getManagedBean().getTaskName() == null ? true : false);
-			 */
-
 			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId());
 			setAmmendMentBean(resDTO.getAmendMentBean());
-			// this.getManagedBean().setQt(resDTO.getQtDetail());
 			break;
 		case 1:
-			reqDTO = prepareQTInfo();
 			detailSO.validateSupplierQualificationDtls(reqDTO);
-			reqDTO.setSaveFlow(true);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3594,9 +3583,6 @@ public class QTDetailBackingBean extends
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
 		case 2:
-			reqDTO = prepareQTInfo();
-			reqDTO.setSaveFlow(true);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
@@ -3637,10 +3623,7 @@ public class QTDetailBackingBean extends
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
 		case 3:
-			reqDTO = prepareQTInfo();
 			reqDTO.getQtdetail().setModified(false);
-			reqDTO.setSaveFlow(true);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			reqDTO.getQtdetail().setFCApproval(true);
 			detailSO.validateApprovalDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
@@ -3657,10 +3640,7 @@ public class QTDetailBackingBean extends
 			break;
 		case 4:
 			if (isinvokeValidations(getManagedBean().getQt())) {
-				reqDTO = prepareQTInfo();
 				detailSO.validateBsvDetails(reqDTO);
-				reqDTO.setSaveFlow(true);
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3669,10 +3649,7 @@ public class QTDetailBackingBean extends
 			break;
 		case 5:
 			if (isinvokeValidations(getManagedBean().getQt())) {
-				reqDTO = prepareQTInfo();
 				detailSO.validateScheduleDetails(reqDTO);
-				reqDTO.setSaveFlow(true);
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3683,9 +3660,6 @@ public class QTDetailBackingBean extends
 			break;
 		case 6:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
-				reqDTO = prepareQTInfo();
-				reqDTO.setSaveFlow(true);
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				detailSO.validateDeductionDtls(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
@@ -3697,9 +3671,6 @@ public class QTDetailBackingBean extends
 			break;
 		case 7:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
-				reqDTO = prepareQTInfo();
-				reqDTO.setSaveFlow(true);
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3712,10 +3683,7 @@ public class QTDetailBackingBean extends
 			break;
 		case 9:
 			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
-				reqDTO = prepareQTInfo();
 				reqDTO.getQtdetail().setModified(true);
-				reqDTO.setSaveFlow(true);
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 				reqDTO.getQtdetail().setFCApproval(true);
 				detailSO.validateApprovalDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
