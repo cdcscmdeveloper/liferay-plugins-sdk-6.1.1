@@ -2054,7 +2054,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		if (this.getManagedBean().getQt().isPanel()) {
 			this.getManagedBean().getQt()
 					.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
-			this.getManagedBean().getQt().setOpenFor(null);
+			this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
 			circularListSelect(new CtCircularVer());
 			if (null == this.getManagedBean().getQt().getItemGroup()) {
 				this.getManagedBean().getQt()
