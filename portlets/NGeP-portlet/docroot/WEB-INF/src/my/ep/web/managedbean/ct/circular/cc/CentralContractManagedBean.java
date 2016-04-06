@@ -76,6 +76,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = true;
 	private boolean circularExtension;
 	private boolean ButtonHideActive = true;
+	private boolean buttonHideActiveDel = true;
+	 private boolean selectAll;
 	
 	private TreeNode centralZoneTrees;
 	private PmDigiSign pmDigiSign;
@@ -794,5 +796,21 @@ public class CentralContractManagedBean extends BaseManagedBean {
 
 	public void setButtonHideActive(boolean buttonHideActive) {
 		ButtonHideActive = buttonHideActive;
+	}
+
+	public boolean isButtonHideActiveDel() {
+		return buttonHideActiveDel;
+	}
+
+	public void setButtonHideActiveDel(boolean buttonHideActiveDel) {
+		this.buttonHideActiveDel = buttonHideActiveDel;
+	}
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
 	}
 }
