@@ -526,6 +526,34 @@ public class TemplateSpecHelper {
 	}
 	
 	/**
+	 * Reset Spec Zone Quantities
+	 * 
+	 * @param specQuestion
+	 * 		the TplSpecQuestion instance 
+	 */
+	public void resetSpecZoneQuanties(TplSpecQuestion specQuestion) {
+		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+		
+		List<TplSpecZoneQty> specZoneQtiesToBeDeleted 
+					= specMaster.getSpecZoneQtiesToDelete();
+		if (CollectionUtils.isNotEmpty(
+				specQuestion.getTplSpecZoneQties())) {
+			if (specZoneQtiesToBeDeleted == null) {
+				specZoneQtiesToBeDeleted = new ArrayList<TplSpecZoneQty>();
+				specMaster.setSpecZoneQtiesToDelete(specZoneQtiesToBeDeleted);
+			}
+			for (TplSpecZoneQty tplSpecZoneQty :
+						specQuestion.getTplSpecZoneQties()) {
+				if (!tplSpecZoneQty.isBrandNew()) {
+					tplSpecZoneQty.setDeleted(true);
+					specZoneQtiesToBeDeleted.add(tplSpecZoneQty);
+				}
+			}
+			specQuestion.setTplSpecZoneQties(null);
+		}
+	}	
+	
+	/**
 	 * Update Zone Details
 	 * 
 	 * @param specMaster

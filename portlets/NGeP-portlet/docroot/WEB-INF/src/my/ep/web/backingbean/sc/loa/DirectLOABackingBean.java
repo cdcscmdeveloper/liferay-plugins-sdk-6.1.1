@@ -5755,7 +5755,20 @@ public class DirectLOABackingBean extends
 		}
 
 	}
-
+	
+	private void resetTplSpecZoneQuantities(List<TplSpecQuestion> specQuestions,
+											TemplateSpecHelper helper, boolean isZonal, 
+											TemplateSpecBean templateSpecBean) {
+		if (!isZonal && CollectionUtils.isNotEmpty(specQuestions)) {
+			for (TplSpecQuestion specQuestion : specQuestions) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM
+						.equalsIgnoreCase(specQuestion.getQuestionType())) {
+					helper.resetSpecZoneQuanties(specQuestion);
+				}
+			}
+		}
+	}	
+	
 	/**
 	 * @param specZoneDtls
 	 * @param tempZoneName
@@ -5833,15 +5846,20 @@ public class DirectLOABackingBean extends
 		TemplateSpecHelper helper = TemplateSpecHelper.getInstance();
 		helper.updateZoneDtl(producSpecMaster,
 				producSpecMaster.getTplSpecZone());
+		
+		resetTplSpecZoneQuantities(producSpecMaster.getTplSpecQuestions(), helper, 
+				isZonal, this.getManagedBean().getProdTemplateSpecBean());
 		resetTplSpecEstimations(producSpecMaster.getTplSpecQuestions(), helper,
 				isZonal, this.getManagedBean().getProdTemplateSpecBean());
 		TplSpecMaster serviceSpecMaster = this.getManagedBean()
 				.getServicescQtDoc().getTplSpecMaster();
 		helper.updateZoneDtl(serviceSpecMaster,
 				serviceSpecMaster.getTplSpecZone());
-		resetTplSpecEstimations(serviceSpecMaster.getTplSpecQuestions(),
-				helper, isZonal, this.getManagedBean()
-						.getSpecTemplateSpecBean());
+		
+		resetTplSpecZoneQuantities(serviceSpecMaster.getTplSpecQuestions(), helper,
+				isZonal, this.getManagedBean().getSpecTemplateSpecBean());		
+		resetTplSpecEstimations(serviceSpecMaster.getTplSpecQuestions(), helper,
+				isZonal, this.getManagedBean().getSpecTemplateSpecBean());	
 	}
 
 	public void uploadBranchInfo(FileUploadEvent event) {
