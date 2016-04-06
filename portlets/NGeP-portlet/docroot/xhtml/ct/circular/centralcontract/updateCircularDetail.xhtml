@@ -34,7 +34,7 @@
 					          <p:message for="circularNameUpTxt" display="icon"/>
 			        </h:panelGrid>
 			        
-			          <h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
+			          <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 				  <p:inputText  style="width:170px;" maxlength="60"
 						disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}"
@@ -44,19 +44,24 @@
 		          <p:inputText  id="popupButtonCal3" style="width:115px;" disabled="true"
 		              value="#{centralContractBackingBean.managedBean.circularVer.startDate}">
 				    <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
-				
-				  <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
-			   	        <p:selectBooleanCheckbox id="extensionId" value="#{centralContractBackingBean.managedBean.circularExtension}"
-			   	        	 disabled="#{centralContractBackingBean.managedBean.viewContract}">
-			                 <p:ajax event="change" update=":form:ccc" listener="#{centralContractBackingBean.chkCircularExtension}" process="@this"/> 
+				    
+				     <p:outputLabel value="#{lbl['lbl.ct.pid']}"  />
+			         <p:selectBooleanCheckbox disabled="#{centralContractBackingBean.managedBean.viewContract}" 
+			                       value="#{centralContractBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
+			                       <p:ajax event="change"  update=":form:groupPidId" process="@this"></p:ajax>
 			           </p:selectBooleanCheckbox>
-		        
-				<h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
+			               
+				 <p:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 		        <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal4" 
 			             style="width:115px;" disabled="true">
 				        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 				
-			
+			  <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
+			   	        <p:selectBooleanCheckbox id="extensionId" value="#{centralContractBackingBean.managedBean.circularExtension}"
+			   	        	 disabled="#{centralContractBackingBean.managedBean.viewContract}">
+			                 <p:ajax event="change" update=":form:ccc" listener="#{centralContractBackingBean.chkCircularExtension}" process="@this"/> 
+			           </p:selectBooleanCheckbox>
+			             <f:verbatim/> <f:verbatim/>
 		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required"  rendered="#{centralContractBackingBean.managedBean.circularExtension}" />
 			    <p:calendar  value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
 			         maxdate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
@@ -65,9 +70,9 @@
 			         rendered="#{centralContractBackingBean.managedBean.circularExtension}"  size="10"  id="popupButtonCal5" showOn="button"
 				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 		       </p:calendar>
+		         <f:verbatim/> <f:verbatim/>
 		       
-		       
-		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required"   rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
+		    <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required"   rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
 		   <p:calendar size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
 				   disabled="#{centralContractBackingBean.managedBean.viewContract}"
@@ -76,20 +81,10 @@
 				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
 				</p:calendar>
 				
-				 <f:verbatim/>
-			         <h:panelGrid columns="3">
-			               <p:selectBooleanCheckbox disabled="#{centralContractBackingBean.managedBean.viewContract}" 
-			                       value="#{centralContractBackingBean.managedBean.circularVer.pid}"  style="text-align:top;">
-			                       <p:ajax event="change"  update=":form:groupPidId" process="@this"></p:ajax>
-			                </p:selectBooleanCheckbox>
-			                <p:spacer width="2" />	
-			                <h:outputText value="#{lbl['lbl.ct.pid']}"  />
-			  	      </h:panelGrid>
 			  	      <f:verbatim/> <f:verbatim/>
 				
-				<h:panelGrid  class="columnWidth200">
-		        		<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-		    	</h:panelGrid> 
+				
+		       <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 		        <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
 		        	styleClass="blue_font" 
 					action="#{centralContractBackingBean.downloadFile(1)}" />
