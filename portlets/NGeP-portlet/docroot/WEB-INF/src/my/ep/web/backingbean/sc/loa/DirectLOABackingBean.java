@@ -456,22 +456,24 @@ public class DirectLOABackingBean extends
 			}
 			// Supplier Witness
 			ScLoaWitness loaSupplierWitness = null;
-			List<ScLoaWitness> scLoaWitnesses = scLoa.getScLoaWitnesses();
-			for (ScLoaWitness scLoaWitness : scLoaWitnesses) {
-				String partyType = scLoaWitness.getPartyType();
+			if(scLoa.getScLoaWitnesses() != null){
+				List<ScLoaWitness> scLoaWitnesses = scLoa.getScLoaWitnesses();
+				for (ScLoaWitness scLoaWitness : scLoaWitnesses) {
+					String partyType = scLoaWitness.getPartyType();
 
-				if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
-						.equals(partyType)) {
-					loaSupplierWitness = scLoaWitness;
+					if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
+							.equals(partyType)) {
+						loaSupplierWitness = scLoaWitness;
+					}
 				}
-			}
-			if (loaSupplierWitness == null) {
-				loaSupplierWitness = new ScLoaWitness();
-				loaSupplierWitness
-						.setPartyType(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER);
-				loaSupplierWitness.setScLoa(scLoa);
+				if (loaSupplierWitness == null) {
+					loaSupplierWitness = new ScLoaWitness();
+					loaSupplierWitness
+					.setPartyType(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER);
+					loaSupplierWitness.setScLoa(scLoa);
 
-				scLoaWitnesses.add(loaSupplierWitness);
+					scLoaWitnesses.add(loaSupplierWitness);
+				}
 			}
 			getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
 
@@ -2164,17 +2166,17 @@ public class DirectLOABackingBean extends
 	public void onQTSelected(ScQt scQt) {
 		debugLogger("onQTSelected");
 		// TODO ministry name cleared after selected QT.
+		ScLoa loa  = getManagedBean().getScLoa();
 		populateMinistryBasedOnLoginUser();
 		SmSupplier smSupplier = getManagedBean().getScLoa().getScLoiLoa()
 				.getSmSupplier();
 		if(smSupplier != null) {
-			ScLoa loa  = getManagedBean().getScLoa();
 			ScLoiLoa scLoiLoa = getSupplierLoiLoaByDocId(smSupplier.getSupplierId(), scQt.getQtId());
 			if(scLoiLoa != null) {
 				loa.setScLoiLoa(scLoiLoa);
-				//loa.setScQt(scQt);
 			}
 		}
+		loa.setScQt(scQt);
 	}
 
 	/**
@@ -4777,13 +4779,15 @@ public class DirectLOABackingBean extends
 		String supplierWitnessMobNo = "";
 		String supplierWitnessEmail = "";
 		ScLoaWitness supplierWitness = null;
-		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
-			String partyType = scLoaWitness.getPartyType();
+		if(scLoa.getScLoaWitnesses() !=null){
+			for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+				String partyType = scLoaWitness.getPartyType();
 
-			if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
-				supplierWitness = scLoaWitness;
+				if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
+					supplierWitness = scLoaWitness;
 
-				break;
+					break;
+				}
 			}
 		}
 		if (supplierWitness != null) {
