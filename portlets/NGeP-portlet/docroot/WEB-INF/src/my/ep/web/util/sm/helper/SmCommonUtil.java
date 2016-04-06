@@ -3476,6 +3476,33 @@ public class SmCommonUtil {
 		return retVal;
 	}
 
+	public static boolean isBetweenDuration(int minParam, int maxParam,
+			int minCompare, int maxCompare) {
+		boolean retVal = false;
+
+		List<Integer> paramDuration = new ArrayList<Integer>();
+		List<Integer> compareDuration = new ArrayList<Integer>();
+
+		for (int i = minParam; i <= maxParam; i++) {
+			paramDuration.add(i);
+		}
+
+		for (int i = minCompare; i <= maxCompare; i++) {
+			compareDuration.add(i);
+		}
+
+		for (Integer param : paramDuration) {
+			for (Integer compare : compareDuration) {
+				if (param.equals(compare)) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+
+		return retVal;
+	}
+
 	private static SelectItem getLhdnSelectItem() {
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		reqDTO.setOrgCode(my.ep.constant.sm.SupplierManagementConst.LHDN_ORG_PROFILE_CODE);
