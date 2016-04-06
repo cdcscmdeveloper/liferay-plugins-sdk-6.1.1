@@ -376,7 +376,8 @@
 					paidUpCapital="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
 					categoryType="#{backingBean.managedBean.smAppl.applCategoryType}"
 					bumiPercentage="#{(backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smSupplier.bumi) ? backingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage : 0}"
-					businessTypeCode="#{backingBean.managedBean.smSupplier.businessType}" />
+					businessTypeCode="#{backingBean.managedBean.smSupplier.businessType}"
+					special="#{backingBean.managedBean.smAppl.supplierType}" />
 
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.deleteSelectedPendingApprovalCategoryCodes}"

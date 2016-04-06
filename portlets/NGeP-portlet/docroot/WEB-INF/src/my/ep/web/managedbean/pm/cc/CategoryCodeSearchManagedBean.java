@@ -34,6 +34,13 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 	private IPagingDataModel<PmCategoryL3> categoryDescrDataModel;
 	private IPagingDataModel<PmCategoryL3> categoryDataModel;
 	
+	private String supplierType = null;
+	private String facilityType = null;
+	private String paidUpCapital = null;
+	private String bumiPercentage = null;
+	private String categoryType = null;
+	private String businessTypeCode = null;
+	
 	public CategoryCodeSearchManagedBean() {
 	}
 
@@ -155,6 +162,54 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 
 	public void setCategoryCode(String categoryCode) {
 		this.categoryCode = categoryCode;
+	}
+
+	public String getSupplierType() {
+		return supplierType;
+	}
+
+	public void setSupplierType(String supplierType) {
+		this.supplierType = supplierType;
+	}
+
+	public String getFacilityType() {
+		return facilityType;
+	}
+
+	public void setFacilityType(String facilityType) {
+		this.facilityType = facilityType;
+	}
+
+	public String getPaidUpCapital() {
+		return paidUpCapital;
+	}
+
+	public void setPaidUpCapital(String paidUpCapital) {
+		this.paidUpCapital = paidUpCapital;
+	}
+
+	public String getBumiPercentage() {
+		return bumiPercentage;
+	}
+
+	public void setBumiPercentage(String bumiPercentage) {
+		this.bumiPercentage = bumiPercentage;
+	}
+
+	public String getCategoryType() {
+		return categoryType;
+	}
+
+	public void setCategoryType(String categoryType) {
+		this.categoryType = categoryType;
+	}
+
+	public String getBusinessTypeCode() {
+		return businessTypeCode;
+	}
+
+	public void setBusinessTypeCode(String businessTypeCode) {
+		this.businessTypeCode = businessTypeCode;
 	}
 	
 }
