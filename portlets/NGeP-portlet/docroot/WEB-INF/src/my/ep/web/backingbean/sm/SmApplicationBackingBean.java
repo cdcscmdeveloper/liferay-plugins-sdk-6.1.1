@@ -5306,7 +5306,7 @@ public class SmApplicationBackingBean extends
 	 * selected SmPersonnel.
 	 */
 	public void addOrUpdateJobFunctions() {
-		
+
 		if (!EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSelectedShareHolder().getSmStaffExperiences())) {
 			StringBuilder sb1 = null;
@@ -5319,19 +5319,26 @@ public class SmApplicationBackingBean extends
 							.getCompanyName());
 					sb1.append(getManagedBean().getSelectedJobFunction()
 							.getDesignation());
-					sb1.append(getManagedBean().getSelectedJobFunction()
-							.getFromYear());
-					sb1.append(getManagedBean().getSelectedJobFunction()
-							.getToYear());
 
 					sb2 = new StringBuilder();
 					sb2.append(exp.getCompanyName());
 					sb2.append(exp.getDesignation());
-					sb2.append(exp.getFromYear());
-					sb2.append(exp.getToYear());
 
-					if (sb1.toString().equals(sb2.toString())) {
-						throw new EpException(MessageConst.ERROR_722638);
+					if (sb1.toString().equals(sb2.toString())
+							&& getManagedBean().getSelectedJobFunction()
+									.getFromYear().equals(exp.getFromYear())
+							&& getManagedBean().getSelectedJobFunction()
+									.getToYear().equals(exp.getToYear())) {
+						throw new EpException(MessageConst.ERROR_722638,
+								new String[] { exp.getCompanyName() });
+					} else if (sb1.toString().equals(sb2.toString())
+							&& (SmCommonUtil.isBetweenDuration(getManagedBean()
+									.getSelectedJobFunction().getFromYear(),
+									getManagedBean().getSelectedJobFunction()
+											.getToYear(), exp.getFromYear(),
+									exp.getToYear()))) {
+						throw new EpException(MessageConst.ERROR_722639,
+								new String[] { exp.getCompanyName() });
 					}
 				}
 			}
