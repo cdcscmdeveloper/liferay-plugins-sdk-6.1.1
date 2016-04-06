@@ -143,6 +143,48 @@ public class SmUpdateGstInfoBackingBean extends
 
 	}
 
+	public void onDeleteBrAttachment(SmSupplierBranch br, SmGstSupplierDoc doc) {
+		SmGstBranchVO vo = new SmGstBranchVO();
+		vo.setBranch(br);
+		vo.setDoc(doc);
+		getManagedBean().setSelectedBranchDoc(vo);
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteBrDialog.show();");
+	}
+
+	public void deleteBrAttachment() {
+		SmSupplierBranch mainBr = (SmSupplierBranch) EntityHelper
+				.getEntityBySinglePropertyFromList(getManagedBean()
+						.getSelectedBranchDoc().getBranch()
+						.getSupplierBranchId(), getManagedBean().getBranches(),
+						"supplierBranchId");
+		SmGstSupplierDoc mainDoc = (SmGstSupplierDoc) EntityHelper
+				.getEntityBySinglePropertyFromList(getManagedBean()
+						.getSelectedBranchDoc().getDoc().getPmDocument()
+						.getDocumentId(), mainBr.getGst()
+						.getSmGstSupplierDocs(), "supplierBranchId");
+
+		mainDoc.setFileName(StringUtils.EMPTY);
+		mainDoc.setFilePath(StringUtils.EMPTY);
+	}
+
+	public void onDeleteHqAttachment(SmGstSupplierDoc doc) {
+		getManagedBean().setSelectedHqSuppDoc(doc);
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteHqDialog.show();");
+	}
+
+	public void deleteHqAttachment() {
+		SmGstSupplierDoc mainDoc = (SmGstSupplierDoc) EntityHelper
+				.getEntityBySinglePropertyFromList(
+						getManagedBean().getSelectedHqSuppDoc().getPmDocument()
+								.getDocumentId(), getManagedBean()
+								.getHqGstSupplier().getSmGstSupplierDocs(),
+						"pmDocument");
+		mainDoc.setFileName(StringUtils.EMPTY);
+		mainDoc.setFilePath(StringUtils.EMPTY);
+	}
+
 	/**
 	 * Add Branch gst information in session
 	 * 
@@ -355,14 +397,14 @@ public class SmUpdateGstInfoBackingBean extends
 								.getSmGstSupplierDocs())) {
 							SmApplicationUtil.initGstSuppDocs(brVO.getGst());
 						}
-					} 
-//					else {
-//						brVO.setGst(new SmGstSupplier());
-//						brVO.setSameWithHq(true);
-//						SmCommonUtil.copyHqGstToBranch(getManagedBean()
-//								.getHqGstSupplier(), brVO.getGst(), true, brVO
-//								.getBranch().getBranchCode());
-//					}
+					}
+					// else {
+					// brVO.setGst(new SmGstSupplier());
+					// brVO.setSameWithHq(true);
+					// SmCommonUtil.copyHqGstToBranch(getManagedBean()
+					// .getHqGstSupplier(), brVO.getGst(), true, brVO
+					// .getBranch().getBranchCode());
+					// }
 				}
 				getManagedBean().getBranches().add(brVO);
 			}
