@@ -168,17 +168,22 @@
 		             value="#{terminationBackingBean.managedBean.contractVer.ctTermination.ctTerminationReasons}" 
 			         dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
 			               <ac:paginator for="terminationReason" />
-			                <p:ajax event="toggleSelect" 
-			                     listener="#{centralContractBackingBean.onToggleSelect}" update=":form:terReasonDelBtn" />
-			                <p:ajax event="rowSelect"
-                                listener="#{centralContractBackingBean.onRowSelect}" update=":form:terReasonDelBtn" />
-			                <p:ajax event="rowSelectCheckbox"
-			                     listener="#{centralContractBackingBean.onRowSelect}" update=":form:terReasonDelBtn" />
-                            <p:ajax event="rowUnselectCheckbox"  
-                                 listener="#{centralContractBackingBean.onRowUnselect}" update=":form:terReasonDelBtn" />
-			                <p:column selectionMode="multiple"
-			                    style="width:1%;" rendered="#{!terminationBackingBean.managedBean.viewContract}"/>  
-		        
+			                <p:column
+			                    style="width:3%;" rendered="#{!terminationBackingBean.managedBean.viewContract}">  
+				                      <f:facet name="header">
+							                <p:selectBooleanCheckbox id="checkBoxAll" value="#{terminationBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									               update=":form:terminationReason,:form:terReasonDelBtn" listener="#{terminationBackingBean.selectAllTermination}" />
+							               </p:selectBooleanCheckbox>
+						                  </f:facet>
+		           
+		                                 <p:selectBooleanCheckbox 
+		                                     value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                        update=":form:terminationReason,:form:terReasonDelBtn" listener="#{terminationBackingBean.selectOneTerminationCheckbox}"></p:ajax>
+			                             </p:selectBooleanCheckbox>
+			                      </p:column>
+			            
 		                     <p:column style="width:35%;">
 		                           <f:facet name="header">
 					                     <h:outputText value="* " styleClass="mandatory" rendered="#{!terminationBackingBean.managedBean.mutualTermination}" />
@@ -215,7 +220,7 @@
 			       <div class="ppRightBtn">
 				         <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
 					             partialSubmit="true"  update=":form:terminationReason, :form:terReasonDelBtn"
-					             action="#{terminationBackingBean.deleteTerminateReason}"
+					             action="#{terminationBackingBean.deleteTableRow()}"
 					             oncomplete="dlgTerminationReason.hide();" />
 				          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgTerminationReason.hide();" />	
 			       </div>
