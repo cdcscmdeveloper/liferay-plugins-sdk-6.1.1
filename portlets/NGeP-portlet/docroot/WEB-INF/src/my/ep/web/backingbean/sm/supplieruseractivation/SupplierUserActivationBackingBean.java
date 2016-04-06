@@ -37,6 +37,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -109,7 +110,7 @@ public class SupplierUserActivationBackingBean extends
 				long applDateInMilis = personnel.getCreatedDate().getTime();
 				long dayInMilis = 1000 * 60 * 60 * 24;
 
-				Date expiryDate = new Date(applDateInMilis + (7 * dayInMilis));
+				Date expiryDate = new Date(applDateInMilis + (SmRuleHelper.getInstance().getEmailActivationDays() * dayInMilis));
 				log.info("----Activation Personnel ID----" + personnel.getPersonnelId());
 				log.info("----Activation Expiry Date----" + expiryDate);
 				if(new Date().before(expiryDate)) { 
