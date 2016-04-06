@@ -162,6 +162,15 @@
 						<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
 							style="float: left;white-space: normal;" />
 						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
+						<p:commandLink id="deleteBrAttId" style="white-space: normal !important;"
+							partialSubmit="true" rendered="#{not empty table.fileName}"
+							process="@this" action="#{smUpdateGstInfoBackingBean.onDeleteBrAttachment(table)}"
+							update="@form" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
+							&#160;
+							<p:graphicImage value="/css/images/design/ico-termination.png" 
+								title="#{lbl['lbl.sm.gst.delete.attachment']}" />
+						</p:commandLink>
 					</p:column>
 				</p:dataTable>
 				
@@ -196,4 +205,17 @@
 			fileUploadListener="#{smUpdateGstInfoBackingBean.handleBranchSupDocFileAttachment}"
 			update="@form" oncomplete="branchUploadDialog.hide();" />
 	</p:dialog>
+	
+	<p:confirmDialog id="confirmDeleteBrDialog" closable="true"
+		message="#{lbl['lbl.sm.gst.delete.attachment.confirm.msg']}"
+		header="#{lbl['lbl.sm.gst.delete.attachment.header']}" severity="alert"
+		widgetVar="confirmDeleteBrDialog">
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeleteBrDialog.hide();" 
+				action="#{smUpdateGstInfoBackingBean.deleteBrAttachment}" update="@form" partialSubmit="true"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteBrDialog.hide();" />
+		</div>
+	</p:confirmDialog>
 </ui:composition>

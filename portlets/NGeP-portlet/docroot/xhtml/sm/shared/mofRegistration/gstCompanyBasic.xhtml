@@ -147,6 +147,19 @@
 							<h:outputText value="#{tableGstHq.fileName}" rendered="#{not empty tableGstHq.fileName}"
 								style="float: left;white-space: normal;" />
 							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty tableGstHq.fileName}" />
+							<p:commandLink id="deleteHqAttId" style="white-space: normal !important;"
+								partialSubmit="true" rendered="#{not empty tableGstHq.fileName and (backingBean.managedBean.supplierUser 
+								and (backingBean.managedBean.smAppl.applType eq 'N' 
+								or backingBean.managedBean.smAppl.applType eq 'R') 
+								and not empty backingBean.managedBean.companyBasicGst 
+								and not empty backingBean.managedBean.companyBasicGst.gstRegNo)}"
+								process="@this" action="#{backingBean.onDeleteHqAttachment(tableGstHq)}"
+								update="@form" onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()">
+								&#160;
+								<p:graphicImage value="/css/images/design/ico-termination.png" 
+									title="#{lbl['lbl.sm.gst.delete.attachment']}" />
+							</p:commandLink>
 						</p:column>
 					</p:dataTable>
 				</td>
@@ -175,6 +188,19 @@
 				fileUploadListener="#{backingBean.handleGstSupDocFileAttachment}"
 				update="gstHqPanelId" oncomplete="gstUploadDialog.hide();" />
 		</p:dialog>
+		
+		<p:confirmDialog id="confirmDeleteHqDialog" closable="true"
+			message="#{lbl['lbl.sm.gst.delete.attachment.confirm.msg']}"
+			header="#{lbl['lbl.sm.gst.delete.attachment.header']}" severity="alert"
+			widgetVar="confirmDeleteHqDialog">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeleteHqDialog.hide();" 
+					action="#{backingBean.deleteHqAttachment}" update="@form" partialSubmit="true"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteHqDialog.hide();" />
+			</div>
+		</p:confirmDialog>
 	</p:panel>
 
 </ui:composition>
