@@ -208,6 +208,41 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * On click delete HQ GST doc
+	 * 
+	 * @param SmGstSupplierDoc
+	 *            doc
+	 */
+	public void onDeleteHqAttachment(SmGstSupplierDoc doc) {
+		getManagedBean().setSelectedGstSuppDoc(doc);
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteHqDialog.show();");
+	}
+
+	/**
+	 * Delete HQ GST attachment
+	 */
+	public void deleteHqAttachment() {
+		SmGstSupplierDoc mainDoc = (SmGstSupplierDoc) EntityHelper
+				.getEntityBySinglePropertyFromList(getManagedBean()
+						.getSelectedGstSuppDoc().getPmDocument()
+						.getDocumentId(), getManagedBean().getCompanyBasicGst()
+						.getSmGstSupplierDocs(), "pmDocument");
+		mainDoc.setFileName(StringUtils.EMPTY);
+		mainDoc.setFilePath(StringUtils.EMPTY);
+	}
+
+	public void deleteBrAttachment(SmGstSupplierDoc doc) {
+		SmGstSupplierDoc mainDoc = (SmGstSupplierDoc) EntityHelper
+				.getEntityBySinglePropertyFromList(doc.getPmDocument()
+						.getDocumentId(), getManagedBean().getSelectedBranch()
+						.getGst().getSmGstSupplierDocs(), "pmDocument");
+
+		mainDoc.setFileName(StringUtils.EMPTY);
+		mainDoc.setFilePath(StringUtils.EMPTY);
+	}
+
+	/**
 	 * Pre-render re-submission questionnaire page.
 	 */
 	public void prerenderResubmissionQuestionaire() {
