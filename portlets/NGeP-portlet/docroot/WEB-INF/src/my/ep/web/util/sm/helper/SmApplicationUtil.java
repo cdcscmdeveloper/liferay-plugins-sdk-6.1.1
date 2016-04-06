@@ -3620,8 +3620,8 @@ public class SmApplicationUtil {
 		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		descList = SmServiceLookup.getStatusSO()
-				.retrieveRegStatusList(reqDTO).getStatusDescList();
+		descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO)
+				.getStatusDescList();
 		return descList;
 	}
 
@@ -3631,15 +3631,28 @@ public class SmApplicationUtil {
 	 * @return the list of PmEduField
 	 */
 	public static List<PmEduField> retrieveEduFieldList() {
+		List<PmEduField> eduFieldList = null;
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
 		IEducationFieldSO reqSO = (IEducationFieldSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", IEducationFieldSO.class);
 		EducationFieldResDTO resDTO = reqSO.retrieveEducationFieldList(reqDTO);
 		if (resDTO != null) {
-			return resDTO.getEduFieldList();
-		} else {
-			return null;
+			eduFieldList = resDTO.getEduFieldList();
+
+			// sort
+			Collections.sort(eduFieldList, new Comparator<PmEduField>() {
+				@Override
+				public int compare(final PmEduField s1, final PmEduField s2) {
+					String field1 = StringUtils.isBlank(s1.getFieldName()) ? StringUtils.EMPTY
+							: s1.getFieldName();
+					String field2 = StringUtils.isBlank(s2.getFieldName()) ? StringUtils.EMPTY
+							: s2.getFieldName();
+					return StringUtil.upperCase(field1).compareTo(
+							StringUtil.upperCase(field2));
+				}
+			});
 		}
+		return eduFieldList;
 	}
 
 	/**
