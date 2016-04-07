@@ -331,6 +331,13 @@ public class SchedulerManagerBackingBean extends
 				EpSchedulerHelper.updateScheduledJob(jobKey, getManagedBean()
 						.getSelectedJobVO().getDescription(),
 						getFinalCronExpression(), getValidJobClass());
+				
+				//sleep for two seconds for updated reflect
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					
+				}
 			}
 		}
 	}
