@@ -4209,7 +4209,7 @@ public class QTDetailBackingBean extends
 
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt qt = this.getManagedBean().getQt();
-			if (isQTStatusGreaterThanOrEquals(getManagedBean().getCurrentStatusId(), QTStatusConst.QT_PENDING_PUBLICATION)) {
+			if (isQTStatusPublished(getManagedBean().getCurrentStatusId())) {
 				qt.setScQtCommittees(null);
 				qt.setScQtBriefings(null);
 				qt.setScQtStatus(null);
@@ -4251,7 +4251,6 @@ public class QTDetailBackingBean extends
 				scQtApprovals.add(approval);
 				qt.setScQtApprovals(scQtApprovals);
 				quationTenderReqDTO.setQtdetail(qt);
-				quationTenderReqDTO.setPublished(true);
 				quationTenderReqDTO.setPmUser(new FacesScopes()
 						.getUserSessionBean());
 				quationTenderReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
@@ -4291,7 +4290,6 @@ public class QTDetailBackingBean extends
 				qt.setScQtApprovals(null);
 				qt.setScQtBriefings(null);
 				quationTenderReqDTO.setQtdetail(qt);
-				quationTenderReqDTO.setPublished(false);
 				quationTenderReqDTO.setPmUser(new FacesScopes()
 						.getUserSessionBean());
 
