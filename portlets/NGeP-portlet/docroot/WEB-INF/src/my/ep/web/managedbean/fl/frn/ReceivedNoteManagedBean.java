@@ -5,6 +5,7 @@ package my.ep.web.managedbean.fl.frn;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -114,6 +115,8 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String bpmTaskName;
 	private boolean lastFRNTaxInv=false;
 	private List<PmUser> approverList;
+	private PmUser acknowledgeOfficer;
+	private Date acknowledgeDate;
 	
 	private boolean acknowledged;
 	
@@ -909,6 +912,22 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setIssuanceCogstrCheck(boolean issuanceCogstrCheck) {
 		this.issuanceCogstrCheck = issuanceCogstrCheck;
+	}
+
+	public PmUser getAcknowledgeOfficer() {
+		return acknowledgeOfficer;
+	}
+
+	public void setAcknowledgeOfficer(PmUser acknowledgeOfficer) {
+		this.acknowledgeOfficer = acknowledgeOfficer;
+	}
+
+	public Date getAcknowledgeDate() {
+		return acknowledgeDate;
+	}
+
+	public void setAcknowledgeDate(Date acknowledgeDate) {
+		this.acknowledgeDate = acknowledgeDate;
 	}
 
 }

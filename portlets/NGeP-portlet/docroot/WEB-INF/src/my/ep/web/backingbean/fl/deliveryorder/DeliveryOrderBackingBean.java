@@ -59,6 +59,7 @@ import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -266,8 +267,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 					}
 				}
-				
-				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), getManagedBean().getFulfilmentRequest().getApprover(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentRequest().getDocType(), getManagedBean().getFulfilmentRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), actor.getUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(approverUserList);
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);

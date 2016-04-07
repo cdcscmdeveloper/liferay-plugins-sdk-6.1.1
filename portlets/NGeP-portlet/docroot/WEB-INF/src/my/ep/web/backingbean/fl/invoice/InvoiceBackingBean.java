@@ -88,6 +88,7 @@ import my.ep.jaxb.fl.maintenace.cancel.invoice.FLInvoiceCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.invoice.FLInvoiceModificationReqType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -216,7 +217,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(resDTO.getApproverGroupUserList().isEmpty()){
 					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
 				}
-				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),getManagedBean().getInvoice().getFlRequest().getApprover(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
+				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 			}
 			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setInvoice(invoice);
@@ -257,7 +259,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
 					}
 				}
-				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),getManagedBean().getInvoice().getFlRequest().getApprover(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
+				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(listOfApprover);
 				
 				
@@ -2054,6 +2057,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 				}
 				recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
+				if(recNoteBB.getManagedBean().getAcknowledgeOfficer() == null){
+					reqDTO.setFlRequestId(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
+					FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+					if(actor != null){
+						recNoteBB.getManagedBean().setAcknowledgeOfficer(actor.getUser());
+						recNoteBB.getManagedBean().setAcknowledgeDate(actor.getActionDate());
+					}
+				}
 				recNoteBB.getManagedBean().setAcknowledged(true);
 				recNoteBB.getManagedBean().setButtonVal("View");
 				recNoteBB.getManagedBean().setHyperLinkPage(true);
