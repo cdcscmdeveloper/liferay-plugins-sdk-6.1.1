@@ -69,6 +69,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
@@ -1526,6 +1527,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 			}
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
+			if(recNoteBB.getManagedBean().getAcknowledgeOfficer() == null){
+				reqDTO.setFlRequestId(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
+				FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+				if(actor != null){
+					recNoteBB.getManagedBean().setAcknowledgeOfficer(actor.getUser());
+					recNoteBB.getManagedBean().setAcknowledgeDate(actor.getActionDate());
+				}
+			}
 			recNoteBB.getManagedBean().setAcknowledged(true);
 			recNoteBB.getManagedBean().setHyperLinkPage(true);
 			//recNoteBB.getManagedBean().setButtonVal("View");
@@ -1533,6 +1542,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			FacesContext fc = FacesContext.getCurrentInstance();
 			recNoteBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 			recNoteBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			
 			
 			
 		return NAV_FULFILMENTNOTE_PAGE;

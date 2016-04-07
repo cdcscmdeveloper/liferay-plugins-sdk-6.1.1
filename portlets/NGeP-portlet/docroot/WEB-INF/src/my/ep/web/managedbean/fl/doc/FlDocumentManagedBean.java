@@ -442,7 +442,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 							if(isUpdate || isCancel) {
 								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
 									reqDTO.setFulfilmentNoteId(docsearchResult.getDocId());
-									resDTO = fulfilmentOrderSO.isSelectedApproverForOrder(reqDTO);
+									resDTO = fulfilmentOrderSO.isSelectedAcknowledgeOfficerForOrder(reqDTO);
 								}
 							}
 							if(isUpdate){

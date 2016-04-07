@@ -146,6 +146,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -462,8 +463,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 			getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 		}
-		if(getManagedBean().getFlRequest().getApprover() != null){
-			getManagedBean().setSelectedApprover(getManagedBean().getFlRequest().getApprover().getUserId());
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		if(getManagedBean().getFlRequest() != null){
+			if(getManagedBean().getFlRequest().getFulfilmentReqId() != null){
+				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFlRequest().getDocType(), getManagedBean().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+				if(actor != null){
+					getManagedBean().setSelectedApprover(actor.getUser().getUserId());
+				}
+			}
 		}
 		
 		if(isFlFulfilmentRequisitioner()){

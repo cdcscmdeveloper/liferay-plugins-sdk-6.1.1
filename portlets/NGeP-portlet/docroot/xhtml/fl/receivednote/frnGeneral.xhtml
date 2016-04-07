@@ -67,7 +67,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.approver.name']}" /></td>
 				<td><p:inputText size="59"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.approver.userName}"
+						value="#{receivedNoteBackingBean.managedBean.acknowledgeOfficer.userName}"
 						disabled="true" /></td>
 			</tr>
 		</table>
@@ -95,7 +95,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.frn.acknowledged.date']}" /></td>
-				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.approvedDate}">
+				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.acknowledgeDate}">
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.subb.date']}"/></td>
