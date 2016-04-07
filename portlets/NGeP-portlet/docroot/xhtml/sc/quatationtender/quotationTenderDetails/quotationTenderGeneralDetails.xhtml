@@ -348,6 +348,9 @@
 								value="#{scQt.pmProcurementCategory.parameterId}">
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+								<p:ajax event="change"
+									listener="#{createQtBB.setProcurmentCategory}" process="@this"
+									update="@this" partialSubmit="true"></p:ajax>
 							</p:selectOneMenu>
 							<p:message id="titleMsg" for="procCategory" display="icon" />
 						</c:when>
