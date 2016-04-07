@@ -1025,6 +1025,13 @@ public class SmApplicationBackingBean extends
 				SmCommonUtil.isSiteVisitAfterApproved(getManagedBean()
 						.getSmAppl()));
 
+		// set business type parameter type
+		getManagedBean()
+				.setBusinessTypeParamCode(
+						getManagedBean().getSmAppl().getSupplierType()
+								.equals("K") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE
+								: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
