@@ -300,6 +300,7 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	public void updateJob() {
+		String finalCronExpression = getFinalCronExpression();
 		if (!getManagedBean()
 				.getSelectedJobVO()
 				.getJobName()
@@ -325,18 +326,20 @@ public class SchedulerManagerBackingBean extends
 								.getSelectedJobVO().getJobKey());
 				addJob();
 			} else {
-				JobKey jobKey = new JobKey(getManagedBean().getSelectedJobVO()
-						.getJobName(), getManagedBean().getSelectedJobVO()
-						.getJobGroup());
-				EpSchedulerHelper.updateScheduledJob(jobKey, getManagedBean()
-						.getSelectedJobVO().getDescription(),
-						getFinalCronExpression(), getValidJobClass());
-				
-				//sleep for two seconds for updated reflect
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					
+				if (!finalCronExpression.equals(getManagedBean()
+						.getSelectedJobVO().getCronExpression())) {
+					EpSchedulerHelper
+							.deleteJobAndAssociatedTriggers(getManagedBean()
+									.getSelectedJobVO().getJobKey());
+					addJob();
+				} else {
+					JobKey jobKey = new JobKey(getManagedBean()
+							.getSelectedJobVO().getJobName(), getManagedBean()
+							.getSelectedJobVO().getJobGroup());
+					EpSchedulerHelper.updateScheduledJob(jobKey,
+							getManagedBean().getSelectedJobVO()
+									.getDescription(),
+							getFinalCronExpression(), getValidJobClass());
 				}
 			}
 		}
