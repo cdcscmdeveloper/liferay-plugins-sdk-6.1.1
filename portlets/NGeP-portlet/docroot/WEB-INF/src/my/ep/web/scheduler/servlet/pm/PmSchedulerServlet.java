@@ -18,6 +18,7 @@ import my.ep.web.scheduler.job.phis.MasterDataVotDanaJob;
 import my.ep.web.scheduler.job.phis.MasterDataVotJob;
 import my.ep.web.scheduler.job.pm.PmAccessApplJob;
 import my.ep.web.scheduler.job.pm.PmAccessApplReminderJob;
+import my.ep.web.scheduler.job.pm.PmConfigRulesJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
@@ -104,6 +105,14 @@ public class PmSchedulerServlet extends HttpServlet {
 		SchedulerConstants.PM_JOB_GROUP),
 		PmAccessApplReminderJob.class,
 		SchedulerConstants.SEND_REMINDER_ACCESS_APPLICATION_JOB_DESC,
+		SchedulerConstants.TRIGGER_TIME);
+		
+		// Reset Pm RuleConfig Map
+		EpSchedulerHelper.scheduleJob(new JobKey(
+		SchedulerConstants.RESET_CONFIG_RULES_MAP,
+		SchedulerConstants.PM_JOB_GROUP),
+		PmConfigRulesJob.class,
+		SchedulerConstants.RESET_CONFIG_RULES_JOB_DESC,
 		SchedulerConstants.TRIGGER_TIME);
 		
 	}
