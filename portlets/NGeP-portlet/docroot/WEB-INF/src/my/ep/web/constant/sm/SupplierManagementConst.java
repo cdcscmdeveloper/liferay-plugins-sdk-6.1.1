@@ -165,6 +165,8 @@ public class SupplierManagementConst {
 			.asList(new String[] { "80", "91", "93", "94" });
 	public static List<String> CLERICAL_STAFF_EDU_LEVEL_CODES = Arrays
 			.asList(new String[] { "30", "40", "60", "80", "91", "93", "94" });
+	public static List<String> EQUI_OWNER_EDU_LEVEL_CODES = Arrays
+			.asList(new String[] { "91", "93", "94" });
 
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
