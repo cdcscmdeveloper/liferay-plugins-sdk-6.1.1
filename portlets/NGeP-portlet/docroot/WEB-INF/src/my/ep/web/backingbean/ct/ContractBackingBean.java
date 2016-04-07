@@ -2459,19 +2459,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    int i = 1;
 		    try {
 		    	
-		    	    List<String> pmReasonType = new ArrayList<String>();
-			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_CHEAPER_PRICE);
-			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY);
-			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_UNABLE_SUPPLIER);
-			        pmReasonType.add(ProfileManagementConst. PID_REASONTYPE_SPECIFICATION);
-			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_OTHER);
-			        
 			        reqDTO = new ReasonReqDTO();
 			        FacesScopes facesScopes = new FacesScopes();
 				    reqDTO.setLanguage(facesScopes.getUserLocale().getLanguage());
 			        reqDTO.setSortBy("pmReason.reasonId");
 			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), ReasonCategory.PID_JUSTIFICATION.value()));
-			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCode", SearchOperator.OPERATOR_IN.value(), pmReasonType));
+			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.pmPIDReasonList.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.CONTRACT_TYPE_MINISTRY));
 			        reqDTO.setReasonDescSearchBean(searchBean);
 			        
 			        reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
@@ -2480,7 +2473,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		     		items = new SelectItem[list.size() + 1];
 					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()));
-					 for (PmReasonDesc reasonDesc : list) {
+					for (PmReasonDesc reasonDesc : list) {
 						     items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
 					  }
 			   } catch (Exception e) {

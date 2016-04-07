@@ -2360,20 +2360,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    ISearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>();
 		    int i = 1;
 		    try {
-		    	   
-		    	    List<String> pmReasonType = new ArrayList<String>();
-		    	    pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_CHEAPER_PRICE);
-			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY);
-			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_UNABLE_SUPPLIER);
-			        pmReasonType.add(ProfileManagementConst. PID_REASONTYPE_SPECIFICATION);
-			        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_OTHER);
 			        
 			        reqDTO = new ReasonReqDTO();
 			        reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
 			        reqDTO.setSortBy("pmReason.reasonId");
 			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), ReasonCategory.PID_JUSTIFICATION.value()));
-			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCode", SearchOperator.OPERATOR_IN.value(), pmReasonType));
-			        reqDTO.setReasonDescSearchBean(searchBean);
+			        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.pmPIDReasonList.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_PANEL_CIRCULAR));
+					reqDTO.setReasonDescSearchBean(searchBean);
 			        
 			        reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
 			        resDTO = reasonSO.retrieveReasonDescBySearchBean(reqDTO);
@@ -2595,6 +2588,7 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
     					 }
     				 }
     				 getManagedBean().setCtCircularPidReasons(null);
+    				 getManagedBean().setSelectAll(false);
     			 } else if(tableType.equalsIgnoreCase("PERSON")){
     				 Iterator<CtContactPerson> contactPersonIterator = getManagedBean().getCircularVer().getCtContactPersons().iterator();
   				     while(contactPersonIterator.hasNext()){
@@ -2604,6 +2598,7 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
   					    }
   				    } 
   				     getManagedBean().setSelectedContactPersons(null);
+  				   getManagedBean().setSelectAll(false);
     			 } else if(tableType.equalsIgnoreCase("CANCEL")){
     				 Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCircularVer().getCtCancelCircularList().iterator();
   				     while(ctCancelCirculars.hasNext()){
@@ -2613,6 +2608,7 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
   					    }
   				    } 
   				     getManagedBean().setSelectedCancelledCircularList(null);
+  				   getManagedBean().setSelectAll(false);
     			
     			 } else if(tableType.equalsIgnoreCase("SUPPLIER")){
     			
@@ -2632,7 +2628,7 @@ public void selectAllCancelCircular(AjaxBehaviorEvent e) {
    		  					    	         ctPanelSupplierIterator.remove();
    		  					            }
    						        }
-    					  }
+    					  } getManagedBean().setSelectAll(false);
     			 }
     			 getManagedBean().setButtonHideActiveDel(true);
     			 getManagedBean().setButtonHidePanelItemDel(true);
