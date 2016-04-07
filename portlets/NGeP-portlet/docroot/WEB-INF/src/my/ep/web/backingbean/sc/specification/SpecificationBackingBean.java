@@ -14373,8 +14373,19 @@ public class SpecificationBackingBean extends
 					&& currScoring.getRangeTo() != null
 					&& currScoring.getRangeFrom().compareTo(
 							currScoring.getRangeTo()) >= 0) {
-				throw new EpException(MessageConst.ERROR_100033, new String[] {
-						"To", "From at row " + (row + 1) });
+				/*throw new EpException(MessageConst.ERROR_100033, new String[] {
+						"To", "From at row " + (row + 1) });*/
+				throw new EpException(MessageConst.ERROR_760403, 
+						new String[]{ 
+						ResourceBundleUtils.getMessage(
+								"lbl.sc.to", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()), 
+						ResourceBundleUtils.getMessage(
+								"lbl.sc.from", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) + 
+						" at row " + (row+1) });
 			}
 
 			if (prevScore != null) {
