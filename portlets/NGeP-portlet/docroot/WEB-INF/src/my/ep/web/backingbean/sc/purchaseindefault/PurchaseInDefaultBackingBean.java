@@ -23,7 +23,6 @@ import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -53,6 +52,7 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -160,10 +160,10 @@ public class PurchaseInDefaultBackingBean extends
 				.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
 						IPurchaseInDefaultSO.class);
-		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate
+	/*	IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT,
-						IContractItemSO.class);
+						IContractItemSO.class);*/
 		ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault();
 		getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 		// check contract item or panel item
@@ -349,10 +349,6 @@ public class PurchaseInDefaultBackingBean extends
 							ModuleCodeConst.SUPPLIER_SELECTION,
 							IPurchaseInDefaultSO.class);
 			PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IReasonSO.class);
-			ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
 			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
 			scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
@@ -366,12 +362,7 @@ public class PurchaseInDefaultBackingBean extends
 
 			// justification
 			if (scPurchaseInDefault.getReasonType().getReasonCode() != null) {
-				reasonReqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION
-						.value());
-				reasonReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
-				ReasonResDTO resDTO = reasonSO
-						.retrieveReasonDescListByCategory(reasonReqDTO);
-				for (PmReasonDesc reasonDesc : resDTO.getReasonDescList()) {
+				for (PmReasonDesc reasonDesc : getManagedBean().getPidJustifications()) {
 					if (scPurchaseInDefault
 							.getReasonType()
 							.getReasonCode()
@@ -875,16 +866,21 @@ public class PurchaseInDefaultBackingBean extends
 		if (CollectionUtils.isNotEmpty(ctPidReasonList)) {
 			for(CtPidReason pidReason : ctPidReasonList) {
 				PmReasonDesc reasonDesc = getReasonDescByReasonId(pidReason.getPmReason().getReasonId());
-				results.add(reasonDesc);
+				if(reasonDesc.getPmReason().isRecordStatus()){
+					results.add(reasonDesc);
+				}
 			}
 		} else if(CollectionUtils.isNotEmpty(circularReasonList)){
 			for(CtCircularPidReason pidReason : circularReasonList) {
 				PmReasonDesc reasonDesc = getReasonDescByReasonId(pidReason.getPmReason().getReasonId());
-				results.add(reasonDesc);
+				if(reasonDesc.getPmReason().isRecordStatus()){
+					results.add(reasonDesc);
+				}
 			}
 		}
 		getManagedBean().setJustifications(
 				getDropdownCodeValues(results));
+		getManagedBean().setPidJustifications(results);
 	}
 
 	/**
@@ -1025,6 +1021,7 @@ public class PurchaseInDefaultBackingBean extends
 			 * contractItem = ConIresDTO.getCtContractItem();
 			 * purchaseInDefault.setContractedItem(contractItem);
 			 */
+			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
 			getManagedBean().setCheckContractItem(Boolean.TRUE);
 		}
 		// panel item
