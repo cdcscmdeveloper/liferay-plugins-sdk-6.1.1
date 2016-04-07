@@ -107,6 +107,7 @@ import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -390,9 +391,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setSelectedTabIndex(0);
 
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
-		
-		if(resDTO.getFlFulfilmentRequest().getApprover() != null){
-			getManagedBean().setSelectedApprover(resDTO.getFlFulfilmentRequest().getApprover().getUserId());
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		if(resDTO.getFlFulfilmentRequest() != null){
+			if(resDTO.getFlFulfilmentRequest().getFulfilmentReqId() != null){
+				FlActor actor = fulfilmentSO.retrieveFlActors(resDTO.getFlFulfilmentRequest().getDocType(), resDTO.getFlFulfilmentRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+				if(actor != null){
+					getManagedBean().setSelectedApprover(actor.getUser().getUserId());
+				}
+			}
 		}
 		if(isFlFulfilmentRequisitioner()){
 			initializeApproverGroup();

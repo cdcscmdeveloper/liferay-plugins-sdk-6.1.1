@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
+import com.sun.corba.se.pept.transport.Acceptor;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -71,6 +72,7 @@ import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
@@ -352,9 +354,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
-					if(getManagedBean().getFulfilmentNote().getApprover() == null){
+					if(getManagedBean().getAcknowledgeOfficer() == null){
 						reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
-						getManagedBean().getFulfilmentNote().setApprover(receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO)) ;
+						FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+						if(actor != null){
+							getManagedBean().setAcknowledgeOfficer(actor.getUser());
+							getManagedBean().setAcknowledgeDate(actor.getActionDate());
+						}
 					}
 				} else {
 					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -363,9 +369,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 					getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 					
-					if(getManagedBean().getFulfilmentNote().getApprover() == null){
+					if(getManagedBean().getAcknowledgeOfficer() == null){
 						reqDTO.setFlRequestId(resDTO.getFlDeliveryOrder().getFlRequest().getFulfilmentReqId());
-						getManagedBean().getFulfilmentNote().setApprover(receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO)) ;
+						FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+						if(actor != null){
+							getManagedBean().setAcknowledgeOfficer(actor.getUser());
+							getManagedBean().setAcknowledgeDate(actor.getActionDate());
+						}
+						
 					}
 					
 					getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
@@ -419,8 +430,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				}
 				getSupplierGst(getManagedBean().getFulfilmentNote());
 			}
-			if(getManagedBean().getFulfilmentNote().getApprover() != null){
-				getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApprover().getUserId()); 
+			if(getManagedBean().getAcknowledgeOfficer() != null){
+				getManagedBean().setUserLoginId(getManagedBean().getAcknowledgeOfficer().getUserId()); 
 			}
 			getManagedBean().setSelectedTabIndex(0);
 			System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
@@ -1118,8 +1129,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 		getSupplierGst(getManagedBean().getFulfilmentNote());
 	
-		if(getManagedBean().getFulfilmentNote().getApprover() != null){
-			getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApprover().getUserId()); 
+		if(getManagedBean().getAcknowledgeOfficer() != null){
+			getManagedBean().setUserLoginId(getManagedBean().getAcknowledgeOfficer().getUserId()); 
 		}
 		getManagedBean().setSelectedTabIndex(0);
 
