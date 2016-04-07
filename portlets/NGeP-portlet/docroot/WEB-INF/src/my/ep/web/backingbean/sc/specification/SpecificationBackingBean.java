@@ -7604,9 +7604,9 @@ public class SpecificationBackingBean extends
 					+ technical.getOverallOtherTechnical().intValue();
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
-			if (local < 50 && !this.getManagedBean().isReadOnly()) {
-				throw new EpException(MessageConst.ERROR_760366);
-			}
+			/*if (local < 50 && !this.getManagedBean().isReadOnly()) {
+				//throw new EpException(MessageConst.ERROR_760366);
+			}*/
 			int financialScore = 0;
 			if (null != getManagedBean().getRecommendfinancialScore()) {
 				financialScore = getManagedBean().getRecommendfinancialScore()
