@@ -63,6 +63,7 @@
 				</tr>
 		</table>
 		<br />
+
 		<p:dataTable value="#{registrationBackingBean.managedBean.smGstSupplier.smGstSupplierDocs}" var="gstDoc" rowIndexVar="index" id="dtGstDocId">
 			<p:column headerText="No.">
 				#{index +1}
@@ -78,6 +79,10 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.gst.document.name']}">
 				#{gstDoc.fileName}
+				<p:commandLink  rendered="#{not empty gstDoc.fileName}"  onclick="confirmDeleteHqDialog.show();"
+					disabled="#{!registrationBackingBean.managedBean.gstFlag}" action="#{registrationBackingBean.setSelectedGstDoc(gstDoc)}">
+						<p:graphicImage value="/css/images/design/ico-termination.png" style="margin-right:2px;" />
+				</p:commandLink>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -91,4 +96,15 @@
 			oncomplete="uploadDlg.hide();return false;">
 		</p:fileUpload>
 	</p:dialog>
+	
+	<p:confirmDialog id="confirmDeleteHqDialog" closable="true" message="#{lbl['lbl.sm.gst.delete.attachment.confirm.msg']}"
+	   header="#{lbl['lbl.sm.gst.delete.attachment.header']}" severity="alert"
+	   widgetVar="confirmDeleteHqDialog">
+	   
+	   <div align="right">
+	    <p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeleteHqDialog.hide();" 
+		     action="#{registrationBackingBean.removeGstUploadedFile()}" update="@([id$=pnlGstInfo])" />
+	    <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteHqDialog.hide();" />
+	   </div>
+	 </p:confirmDialog>
 </ui:composition>
