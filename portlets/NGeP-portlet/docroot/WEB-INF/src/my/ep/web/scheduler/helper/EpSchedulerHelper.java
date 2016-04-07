@@ -51,7 +51,7 @@ public class EpSchedulerHelper {
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
 		addAndScheduleNewJob(jobKey, jobClass, jobDetailDesc, cronExpression);
-		updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
+//		updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
 	}
 
 	/**
