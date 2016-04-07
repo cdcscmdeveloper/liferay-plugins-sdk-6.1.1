@@ -564,6 +564,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 						scQtSupplier.setSmSupplier(smSupplier);
 						scQtSupplier.setScQt(scQt);
 						scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
+//						scQtSupplier = populateScQtSupplierDetails(scQtSupplier, smSupplier);
+						
 						if (qtSupplierList.isEmpty()) {
 							qtSupplierList.add(scQtSupplier);
 							getManagedBean().setTotalSuppliers(qtSupplierList.size());
@@ -1301,9 +1303,17 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * qualification criteria.
 	 */
 	public void searchForSupplierCount() {
+		IQTDetailSO detailSO;
 		IQTSupplierSO qtSupplierSO;
 		
 		try {
+			detailSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);			
+			QuationTenderReqDTO quationTenderReqDTO = 
+								  new QTDetailBackingBean().prepareQTInfo();
+			detailSO.validateSupplierQualificationDtls(quationTenderReqDTO);
+			
 			qtSupplierSO = BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1382,6 +1392,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			this.getManagedBean().setTotalSuppliers(totalSuppliers);
 			
 		} finally {
+			detailSO = null;
 			qtSupplierSO = null;
 		}
 		
