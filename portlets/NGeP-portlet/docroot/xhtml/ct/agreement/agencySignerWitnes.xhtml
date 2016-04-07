@@ -18,24 +18,28 @@
 		 		 </h:panelGrid>
                
                  <p:dataTable id="AgSignerTable" var="agSignerVar" 
-                       value="#{agreementBackingBean.managedBean.ctAgencySigner}" widgetVar="AgSignerObj" 
-                       selection="#{agreementBackingBean.managedBean.selectedAgencySigner}" rowKey="#{agSignerVar}" rowIndexVar="index">
-		               <ac:paginator for="AgSignerTable"/>
-		               <p:ajax event="toggleSelect"
-                                  listener="#{agreementBackingBean.onToggleSelect}" update=":form:delAgencySignerBtn" />
-                            <p:ajax event="rowSelect"
-                                   listener="#{agreementBackingBean.onRowSelect}" update=":form:delAgencySignerBtn" />
-			                 <p:ajax event="rowSelectCheckbox" 
-			                        listener="#{agreementBackingBean.onRowSelect}" update=":form:delAgencySignerBtn" />
-                              <p:ajax event="rowUnselectCheckbox"  
-                                    listener="#{agreementBackingBean.onRowUnselect}" update=":form:delAgencySignerBtn" />
-		               <p:column selectionMode="multiple" style="width:5%;"/>  
+                         value="#{agreementBackingBean.managedBean.ctAgencySigner}" widgetVar="AgSignerObj" 
+                         selection="#{agreementBackingBean.managedBean.selectedAgencySigner}" rowKey="#{agSignerVar}" rowIndexVar="index">
+		                 <ac:paginator for="AgSignerTable"/>
+		                     <p:column  style="width:5%;text-align:center">
+				                   <f:facet name="header">
+							             <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									                  update=":form:AgSignerTable,:form:delAgencySignerBtn" listener="#{agreementBackingBean.selectAllAgencySignerCheckBox}" />
+							              </p:selectBooleanCheckbox>
+						            </f:facet>
+		           
+		                             <p:selectBooleanCheckbox  value="#{agSignerVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                         update=":form:AgSignerTable,:form:delAgencySignerBtn" listener="#{agreementBackingBean.selectOneAgencySignerCheckBox}"></p:ajax>
+			                         </p:selectBooleanCheckbox>
+			                    </p:column>
 		               
-		               <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ptj']}" styleClass="column-align-center"
-		                      rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
-		                   <div align="left">
-		                       <h:outputText value="#{agSignerVar.orgProfile.orgName}" /></div>
-		               </p:column>
+		                        <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ptj']}" styleClass="column-align-center"
+		                                rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+		                               <div align="left">
+		                                     <h:outputText value="#{agSignerVar.orgProfile.orgName}" /></div>
+		                        </p:column>
 		        
 		               <p:column style="width:15%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}" styleClass="column-align-center"
 		                       rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
@@ -110,7 +114,7 @@
                  <div class="ppRightBtn">
 		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                       update=":form:AgSignerTable, :form:delAgencySignerBtn" 
-		                       action="#{agreementBackingBean.deleteAgencySignerParty()}" oncomplete="dlgAgSignerDel.hide();"/>
+		                       action="#{agreementBackingBean.deleteTableRow('AGENCY_SIGNER')}" oncomplete="dlgAgSignerDel.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSignerDel.hide();" type="button" />
 		           </div>
           </p:confirmDialog>
@@ -128,17 +132,22 @@
                         value="#{agreementBackingBean.managedBean.ctSignAgencyWitness}" widgetVar="AgWitnessObj" 
 	                    selection="#{agreementBackingBean.managedBean.selectedAgencyWitnes}" rowKey="#{signAgWitnessVar}">
 		                <ac:paginator for="AgWitnessTable"/>
-		                <p:ajax event="toggleSelect"
-                                  listener="#{agreementBackingBean.onToggleSelect}" update=":form:delAgencyWitnessBtn" />
-                            <p:ajax event="rowSelect"
-                                   listener="#{agreementBackingBean.onRowSelect}" update=":form:delAgencyWitnessBtn" />
-			                 <p:ajax event="rowSelectCheckbox" 
-			                        listener="#{agreementBackingBean.onRowSelect}" update=":form:delAgencyWitnessBtn" />
-                              <p:ajax event="rowUnselectCheckbox"  
-                                    listener="#{agreementBackingBean.onRowUnselect}" update=":form:delAgencyWitnessBtn" />
-		                <p:column selectionMode="multiple" style="width:2%"/> 
-		
-		                <p:column headerText="#{lbl['lbl.ct.name']}" style="width:35%;" styleClass="column-align-center">
+		             
+                         <p:column  style="width:5%;text-align:center">
+				                  <f:facet name="header">
+							            <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									                  update=":form:AgWitnessTable,:form:delAgencyWitnessBtn" listener="#{agreementBackingBean.selectAllAgencyWitnessCheckBox}" />
+							              </p:selectBooleanCheckbox>
+						            </f:facet>
+		           
+		                             <p:selectBooleanCheckbox  value="#{signAgWitnessVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                         update=":form:AgWitnessTable,:form:delAgencyWitnessBtn" listener="#{agreementBackingBean.selectOneAgencyWitnessCheckBox}"></p:ajax>
+			                         </p:selectBooleanCheckbox>
+			                </p:column>
+		            
+		                 <p:column headerText="#{lbl['lbl.ct.name']}" style="width:35%;" styleClass="column-align-center">
 		                      <p:inputText value="#{signAgWitnessVar.officerName}" 
 		                          style="width:90%" maxlength="20" />
 		                </p:column> 
@@ -158,8 +167,7 @@
              <div class="ppRightBtn"> 
 		       <p:commandButton id="addAgencyWitnessBtn" value="#{lbl['lbl.btn.add']}" 
 		            action="#{agreementBackingBean.addAgencyWitnes(2)}" 
-		           process="@form" onstart="blockWidget.show();"
-		           oncomplete="blockWidget.hide();" update=":form:AgWitnessTable">
+		           process="@form"  update=":form:AgWitnessTable">
 		           <p:tooltip for="addAgencyWitnessBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.witness']}" escape="false" />
 			       </p:tooltip>
@@ -177,7 +185,7 @@
                          <div class="ppRightBtn">
 		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                         update=":form:AgWitnessTable, :form:delAgencyWitnessBtn" 
-		                         action="#{agreementBackingBean.deleteAgencyWitnes()}" oncomplete="dlgAgWitnessDel.hide();"/>
+		                         action="#{agreementBackingBean.deleteTableRow('AGENCY_WITNESS')}" oncomplete="dlgAgWitnessDel.hide();"/>
 			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgWitnessDel.hide();" type="button" />
 		                 </div>
                    </p:confirmDialog>

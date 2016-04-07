@@ -61,6 +61,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private boolean agreementDisclaimer = false;
 	private boolean autoUpdate = true;
 	private boolean buttonHideActive = true;
+	private boolean selectAll;
 	private List<CtAgreementParty> ctAgencySigner;
 	private List<CtAgreementParty> ctSupplierSigner;
 	private List<CtAgreementParty> ctSupplierWitness;
@@ -713,40 +714,75 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.buttonHideActive = buttonHideActive;
 	}
 
+	/**
+	 * @return the selectedAgencyWitnes
+	 */
 	public List<CtAgreementParty> getSelectedAgencyWitnes() {
 		return selectedAgencyWitnes;
 	}
 
+	/**
+	 * @param selectedAgencyWitnes the selectedAgencyWitnes to set
+	 */
 	public void setSelectedAgencyWitnes(List<CtAgreementParty> selectedAgencyWitnes) {
 		this.selectedAgencyWitnes = selectedAgencyWitnes;
 	}
 
+	/**
+	 * @return the selectedAgencySigner
+	 */
 	public List<CtAgreementParty> getSelectedAgencySigner() {
 		return selectedAgencySigner;
 	}
 
+	/**
+	 * @param selectedAgencySigner the selectedAgencySigner to set
+	 */
 	public void setSelectedAgencySigner(List<CtAgreementParty> selectedAgencySigner) {
 		this.selectedAgencySigner = selectedAgencySigner;
 	}
 
+	/**
+	 * @return the selectedSupplierWitnes
+	 */
 	public List<CtAgreementParty> getSelectedSupplierWitnes() {
 		return selectedSupplierWitnes;
 	}
 
+	/**
+	 * @param selectedSupplierWitnes the selectedSupplierWitnes to set
+	 */
 	public void setSelectedSupplierWitnes(
 			List<CtAgreementParty> selectedSupplierWitnes) {
 		this.selectedSupplierWitnes = selectedSupplierWitnes;
 	}
 
+	/**
+	 * @return the selectedSupplierSigner
+	 */
 	public List<CtAgreementParty> getSelectedSupplierSigner() {
 		return selectedSupplierSigner;
 	}
 
+	/**
+	 * @param selectedSupplierSigner the selectedSupplierSigner to set
+	 */
 	public void setSelectedSupplierSigner(
 			List<CtAgreementParty> selectedSupplierSigner) {
 		this.selectedSupplierSigner = selectedSupplierSigner;
 	}
 
-	
-	
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
 }
