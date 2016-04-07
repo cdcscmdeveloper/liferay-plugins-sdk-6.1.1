@@ -34,7 +34,7 @@
 				<h:outputText
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.flAddress)}" />
 			</p:column>
-			<p:column style="white-space:normal;width:195px;">
+			<p:column style="white-space:normal;width:195px;" headerText="#{lbl['lbl.fl.delivery.date']}" >
 				<h:outputText value="#{lbl['lbl.fl.do.start.date']}" />
 				<p:spacer width="2"/>
 				<p:inputText size="7" disabled="true"
@@ -64,7 +64,7 @@
 						value="#{doDelAddress.flTempDoAddr.estDeliveryDate}">
 					</p:calendar>
 			</p:column>
-			<p:column style="white-space:normal;">
+			<p:column style="white-space:normal;" headerText="#{lbl['lbl.fl.del.delivery.ord.no']}">
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.fl.do.supp.do.no']}" />
 				<br />
