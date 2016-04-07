@@ -53,7 +53,7 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 		 * Instantiates a new search paging data model.
 		 */
 		public TaskListPagingDataModel() {
-			super("taskListTableId", false);
+			super("taskListTableId", true);
 			// TODO Auto-generated constructor stub
 		}
 
@@ -88,32 +88,31 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 			reqDTO.setState("ASSIGNED");
 			reqDTO.setAssignment("ALL");
 
-			if (getDocNo() != null || !(getDocNo().isEmpty())) {
+			if (getDocNo() != null && !(getDocNo().trim().isEmpty())) {
 				reqDTO.setDocNumber(getDocNo().trim());
 				reqDTO.setDocType(null);
 				reqDTO.setStatus(0);
 				reqDTO.setAfterDate(null);
 				reqDTO.setBeforeDate(null);
-			}
-
-			if (getDocType() != null) {
+				
+			} else if (getDocType() != null) {
 				reqDTO.setDocType(getDocType());
+//				reqDTO.setStatus(20100);
+				if (getDocStatus() != 0) {
+					reqDTO.setStatus(getDocStatus());
+				}
+				if (getSearchFromCreatedDate() != null && getSearchToCreatedDate() != null) {
+					Calendar afterDate = Calendar.getInstance();
+				    afterDate.setTime(getSearchFromCreatedDate()); 
+					reqDTO.setAfterDate(afterDate);
+
+					Calendar beforeDate = Calendar.getInstance();
+					beforeDate.setTime(getSearchToCreatedDate());
+					reqDTO.setBeforeDate(beforeDate);
+				}
 			}
 
-//			reqDTO.setStatus(20100);
-			if (getDocStatus() != 0) {
-				reqDTO.setStatus(getDocStatus());
-			}
 
-			if (getSearchFromCreatedDate() != null && getSearchToCreatedDate() != null) {
-				Calendar afterDate = Calendar.getInstance();
-			    afterDate.setTime(getSearchFromCreatedDate()); 
-				reqDTO.setAfterDate(afterDate);
-
-				Calendar beforeDate = Calendar.getInstance();
-				beforeDate.setTime(getSearchToCreatedDate());
-				reqDTO.setBeforeDate(beforeDate);
-			}
 
 			log.info("*******reqDTO*******");
 			log.info("*******" + "reqDTO.getState(): " + reqDTO.getState() + " *******");
@@ -137,41 +136,11 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 
 			SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 			
-			resultBean.setTotalRecord(resDTO.getWorklistVO().getTotal());
+			resultBean.setTotalRecord(resDTO.getWorklistVO().getWorklistItem().size());
 			resultBean.setResultList(resDTO.getWorklistVO().getWorklistItem());
 			
 			return resultBean;
-			
-//			try {
-//				System.out.println("********************************");
-//				SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
-//				reqDTO.setApplNo(bb.getManagedBean().getApplNo());
-//				reqDTO.setSupplierName(bb.getManagedBean().getSupplierName());
-//
-//				if(bb.getManagedBean().getDistrictId() >0){
-//					reqDTO.setDistrictId(bb.getManagedBean().getDistrictId());
-//				}
-//
-//				if(bb.getManagedBean().getDistrictId() ==0){
-//					if(bb.getManagedBean().getStateId() >0){
-//						reqDTO.setStateId(bb.getManagedBean().getStateId());
-//					}
-//				}
-				
-//				reqDTO.setSearchBean(searchBean);
-//
-//				SiteAssignResDTO resDTO = siteAssignSO.retrievesSiteVisitTasks(reqDTO);
-
-
-//				return resDTO.getSmApplResultBean();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				return new SearchResultBean();
-//			} finally {
-//				siteAssignSO = null;
-//			}
 		}
-
 	}
 
 	public String getDocNo() {

@@ -42,7 +42,7 @@ public class BPMAssignedTaskSearchBackingBean extends BaseBackingBean<BPMAssigne
 	public void searchAction() {
 		log.info("*********searchAction*********");
 
-		if ((getManagedBean().getDocNo() != null && getManagedBean().getDocNo().isEmpty()) 
+		if (((getManagedBean().getDocNo() == null) || (getManagedBean().getDocNo() != null && getManagedBean().getDocNo().trim().isEmpty()))
 				&& (getManagedBean().getDocType() == null)
 				&& (getManagedBean().getSearchFromCreatedDate() == null && getManagedBean().getSearchToCreatedDate() == null)) {
 			getManagedBean().resetTaskListDataModel();
