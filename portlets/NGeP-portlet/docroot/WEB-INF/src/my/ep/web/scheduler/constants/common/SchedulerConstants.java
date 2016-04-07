@@ -67,10 +67,12 @@ public class SchedulerConstants {
 	public static final String PM_INTEGRATION_DAILY_JOB = "PM INTEGRATION JOB";
 	public static final String UPDATE_EXPIRED_ACCESS_APPLICATION = "UPDATE EXPIRED ACCESS APPLICATION";
 	public static final String SEND_REMINDER_ACCESS_APPLICATION = "SEND ACCESS APPLICATION REMINDER";
+	public static final String RESET_CONFIG_RULES_MAP = "RESET CONFIG RULES MAP";
 	// PM Integration Job Description
 	public static final String PM_INTEGRATION_DAILY_JOB_DESC = "";
 	public static final String UPDATE_EXPIRED_ACCESS_APPLICATION_JOB_DESC = "Job run every day at 00:01 AM to expire the access application that no more effective.";
 	public static final String SEND_REMINDER_ACCESS_APPLICATION_JOB_DESC = "Job run every day at 00:01 AM to send reminder.";
+	public static final String RESET_CONFIG_RULES_JOB_DESC = "Job run every day at 00:01 AM to reset config rules.";
 	
 
 	// SM Module Scheduler COnstants
