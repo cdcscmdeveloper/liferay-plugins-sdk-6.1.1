@@ -5371,11 +5371,10 @@ public class ProfileManagementBackingBean extends
 	}
 	
 	// Org Type and Org Name will be defaulted to the admin's organisation
-	// Only applicable for Procurement Admin,PTJ Admin,UPS Admin and Support Admin
+	// Only applicable for PTJ Admin,BPK Admin and Support Admin
 	private void retrieveOrgTypeAndOrgName(){
 		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) || 
-				getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) ||
-				getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) ){
 			if(getManagedBean().getCurrentActiveOrg() != null){
 				getManagedBean().setSelectedOrgType(getManagedBean().getCurrentActiveOrg().getOrgTypeCode());
