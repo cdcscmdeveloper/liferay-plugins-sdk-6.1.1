@@ -21,6 +21,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -445,10 +446,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setBusinessTypeVal(
 				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
 						.getSmSupplier()));
-		getManagedBean().setSupplierBusinessTypeVal(
-				SmCommonUtil.getDropDownViewOnlyValueByCode(
-						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
-						getManagedBean().getSmSupplier().getBusinessType()));
+		getManagedBean()
+				.setSupplierBusinessTypeVal(
+						SmCommonUtil
+								.getDropDownViewOnlyValueByCode(
+										getManagedBean().getSmAppl()
+												.getSupplierType().equals("K") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE
+												: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT,
+										getManagedBean().getSmSupplier()
+												.getBusinessType()));
 		populateLocalAuthority(getManagedBean().getSmSupplier(), smAppl
 				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 				.getSmAddress());
