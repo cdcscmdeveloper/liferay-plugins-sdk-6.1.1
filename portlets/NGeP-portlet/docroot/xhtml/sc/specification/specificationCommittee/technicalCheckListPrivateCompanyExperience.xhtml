@@ -27,7 +27,7 @@
 						action="#{specificationBackingBean.committeeBackAction}" /> 
 						
 				<p:commandButton 
-						value="#{lbl['lbl.btn.print']}" type="button">
+						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="techCheckListPrivateCompExp" />
 					</p:commandButton>
 					<p:commandButton
