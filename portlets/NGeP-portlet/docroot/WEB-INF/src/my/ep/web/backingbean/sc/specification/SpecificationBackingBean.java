@@ -14378,11 +14378,11 @@ public class SpecificationBackingBean extends
 				throw new EpException(MessageConst.ERROR_760403, 
 						new String[]{ 
 						ResourceBundleUtils.getMessage(
-								"lbl.sc.to", 
+								"lbl.sc.from", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()), 
 						ResourceBundleUtils.getMessage(
-								"lbl.sc.from", 
+								"lbl.sc.to", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()) + 
 						" at row " + (row+1) });
