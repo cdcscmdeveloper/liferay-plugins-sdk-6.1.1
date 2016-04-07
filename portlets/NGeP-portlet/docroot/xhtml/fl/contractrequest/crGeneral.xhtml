@@ -267,7 +267,7 @@
 				
 				<td><p:selectOneMenu id="suppBranch"
 						value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.branchCode}"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View' or empty contractRequestBackingBean.managedBean.supplierBranchesList}"
 						style="width: 360px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="suppBranchList"
