@@ -62,9 +62,9 @@
 					</p:commandButton></td>
 			</c:if>
 			<c:if
-					test='#{flOrderBB.managedBean.buttonVal eq "View" and !flOrderBB.managedBean.isHyperLinkPage()}'>
+					test='#{flOrderBB.managedBean.buttonVal eq "View"}'>
 					<td colspan="4" style="text-align: right">	
-					<p:commandLink
+					<p:commandLink rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId)}"
 						immediate="true" />&#160;&#160;
