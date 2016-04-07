@@ -969,6 +969,8 @@ public class ReportConst {
 	public static final String EXT_TYPE = "Type";
 	public static final String EXT_BRAND = "Brand";
 	public static final String EXT_MEASUREMENT = "Measurement";
+	public static final String SM_PAYMENT_GOV = "Government";
+	public static final String SM_PAYMENT_CDC = "CDC";
 
 	/** The Constant EXT_COLOUR. */
 	public static final String EXT_COLOUR = "Colour";
