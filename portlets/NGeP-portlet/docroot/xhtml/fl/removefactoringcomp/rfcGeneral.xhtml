@@ -80,7 +80,7 @@
 						width="5" /> <p:inputText size="2" value="Days" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.po.approved.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"
-						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.approvedDate}">
+						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.changedDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
