@@ -14384,8 +14384,8 @@ public class SpecificationBackingBean extends
 						ResourceBundleUtils.getMessage(
 								"lbl.sc.to", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) + 
-						" at row " + (row+1) });
+								new FacesScopes().getUserLocale()) ,
+						 row+1 +" " });
 			}
 
 			if (prevScore != null) {
