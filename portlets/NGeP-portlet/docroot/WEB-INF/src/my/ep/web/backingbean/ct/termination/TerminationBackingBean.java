@@ -1279,6 +1279,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					 }
 				 }
 			 getManagedBean().setButtonHideActive(true);
+			 getManagedBean().setSelectAll(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

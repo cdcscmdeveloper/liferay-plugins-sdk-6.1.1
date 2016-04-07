@@ -1549,18 +1549,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			    int i = 1;
 			    try {
 			    	   
-			    	    List<String> pmReasonType = new ArrayList<String>();
-			    	    pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_CHEAPER_PRICE);
-				        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY);
-				        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_UNABLE_SUPPLIER);
-				        pmReasonType.add(ProfileManagementConst. PID_REASONTYPE_SPECIFICATION);
-				        pmReasonType.add(ProfileManagementConst.PID_REASONTYPE_OTHER);
-				        
-				        reqDTO = new ReasonReqDTO();
+			            reqDTO = new ReasonReqDTO();
 				        reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
 				        reqDTO.setSortBy("pmReason.reasonId");
 				        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), ReasonCategory.PID_JUSTIFICATION.value()));
-				        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCode", SearchOperator.OPERATOR_IN.value(), pmReasonType));
+				        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.pmPIDReasonList.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR));
 				        reqDTO.setReasonDescSearchBean(searchBean);
 				        
 				        reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
@@ -1682,6 +1675,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     					 }
     				 }
     				 getManagedBean().setCtCircularPidReasons(null);
+    				 getManagedBean().setSelectAll(false);
     			
     			 } else if(tableType.equalsIgnoreCase("PERSON")){
     				 Iterator<CtContactPerson> contactPersonIterator = getManagedBean().getCircularVer().getCtContactPersons().iterator();
@@ -1692,6 +1686,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
   					    }
   				    } 
   				     getManagedBean().setSelectedContactPersons(null);
+  				   getManagedBean().setSelectAll(false);
     			
     			 }else if(tableType.equalsIgnoreCase("ORG")){
     				 Iterator<CtExemptedOrg> ctExemptedOrgs = getManagedBean().getCircularVer().getCtExemptedOrgs().iterator();
@@ -1702,6 +1697,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
   					    }
   				    } 
     		      getManagedBean().setSelectedExemptedOrgs(null);
+    		      getManagedBean().setSelectAll(false);
     			 } else if(tableType.equalsIgnoreCase("CANCEL")){
     				 Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCircularVer().getCtCancelCircularList().iterator();
   				     while(ctCancelCirculars.hasNext()){
@@ -1711,6 +1707,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
   					    }
   				    } 
   				     getManagedBean().setSelectedCancelledCircularList(null);
+  				   getManagedBean().setSelectAll(false);
     			 } 
     		} catch (Exception e) {
     			e.printStackTrace();

@@ -37,6 +37,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -1629,16 +1630,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			 throw new EpException(MessageConst.ERROR_755003);
 		}
 	}
-
-	/**
-	 * The method used to delete the selected signer(s) for agency party.
-	 */
-	public void deleteAgencySignerParty() {
-		
-		getManagedBean().setValidateWitness(false);
-		this.getManagedBean().getCtAgencySigner().removeAll(getManagedBean().getSelectedAgencySigner());
-		getManagedBean().setButtonHideActive(true);
-	}
 	
 	/**
 	 * The method used for adding representative of witness(s)
@@ -1715,14 +1706,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    }
 	}
 	
-	/**
-	 * The method used to delete the selected witness(s) for agency party.
-	 */
-	public void deleteAgencyWitnes() {
-		getManagedBean().setValidateWitness(false);
-		getManagedBean().getCtSignAgencyWitness().removeAll(getManagedBean().getSelectedAgencyWitnes());
-		getManagedBean().setButtonHideActive(true);
-	}
+	
 	
 	/**
 	 * The method used to generate the contract signer information once
@@ -1785,15 +1769,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			throw new EpException(MessageConst.ERROR_755003);
 		}
 	}
-
-	/**
-	 * The method used to delete the selected signer(s) for supplier party.
-	 */
-	public void deleteSupplierSigner() {
-		getManagedBean().setValidateWitness(false);
-		getManagedBean().getCtSupplierSigner().removeAll(getManagedBean().getSelectedSupplierSigner());
-		getManagedBean().setButtonHideActive(true);
-	}	
 	
 	/**
 	 * The method used for adding representative of witness(s)
@@ -1867,15 +1842,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 							ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS).getParameterId());
 			getManagedBean().getCtSupplierWitness().add(ctAgreementParty);	    
 		}
-	}
-	
-	/**
-	 * The method used to delete the selected witness(s) for supplier party.
-	 */
-	public void deleteSupplierWitness() {
-		getManagedBean().setValidateWitness(false);
-		getManagedBean().getCtSupplierWitness().removeAll(getManagedBean().getSelectedSupplierWitnes());
-		getManagedBean().setButtonHideActive(true);
 	}
 	
 	/**
@@ -2501,6 +2467,221 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
     public void setIndexProperty(int index){
     	getManagedBean().setVarIndex(index);
     }
+    
+    /**
+     * Method to set boolean value for checkbox 
+     * @param pass ajax event type
+     * Set boolean value for user action 
+     * */
+	
+     public void selectAllAgencySignerCheckBox(AjaxBehaviorEvent e) {
+		
+		  for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtAgencySigner()) {
+			   if (getManagedBean().isSelectAll()) {
+				   ctAgreementPartys.setSelectedCheckBox(true);
+		       }else {
+		    	   ctAgreementPartys.setSelectedCheckBox(false);
+		       }
+	  }
+	
+	 if((boolean) e.getComponent().getAttributes().get("value")){
+		 getManagedBean().setButtonHideActive(false);
+	 }else{
+		 getManagedBean().setButtonHideActive(true);
+	 }	
+   }
+
+/**
+ * Method to set boolean value for checkbox 
+ * @param pass ajax event type
+ * Set boolean value for user action 
+ * */
+public void selectOneAgencySignerCheckBox(AjaxBehaviorEvent e){
+	
+		getManagedBean().setSelectAll(false);
+		for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtAgencySigner()) {
+			if(ctAgreementPartys.isSelectedCheckBox()){
+				 getManagedBean().setButtonHideActive(false);
+				return;
+			}
+		}
+	
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			 getManagedBean().setButtonHideActive(false);
+		}else{
+			 getManagedBean().setButtonHideActive(true);
+		}	
+   }
+
+/**
+ * The method used to delete the selected deduction clause.
+ */
+public void deleteTableRow(String tableType) {
+	try {
+		 if(tableType.equalsIgnoreCase("AGENCY_SIGNER")){	
+		      Iterator<CtAgreementParty> ctAgreementPartyIterator = getManagedBean().getCtAgencySigner().iterator();
+			   while(ctAgreementPartyIterator.hasNext()){
+				   CtAgreementParty  ctAgreementPartys = ctAgreementPartyIterator.next();
+				 if(ctAgreementPartys.isSelectedCheckBox()){
+					 ctAgreementPartyIterator.remove();
+				 }
+			 }
+			 getManagedBean().setSelectedAgencySigner(null);
+			 getManagedBean().setSelectAll(false);
+	
+		 } else if(tableType.equalsIgnoreCase("AGENCY_WITNESS")){
+			 Iterator<CtAgreementParty> ctAgreementPartyIterator= getManagedBean().getCtSignAgencyWitness().iterator();
+			     while(ctAgreementPartyIterator.hasNext()){
+			    	 CtAgreementParty  ctSignAgencyWitnes = ctAgreementPartyIterator.next();
+				    if(ctSignAgencyWitnes.isSelectedCheckBox()){
+				    	ctAgreementPartyIterator.remove();
+				    }
+			    } 
+			     getManagedBean().setSelectedAgencyWitnes(null);
+			     getManagedBean().setSelectAll(false);
+		 }  else if(tableType.equalsIgnoreCase("SUPPLIER_SIGNER")){
+			 Iterator<CtAgreementParty> ctAgreementPartyIterator = getManagedBean().getCtSupplierSigner().iterator();
+		     while(ctAgreementPartyIterator.hasNext()){
+		    	 CtAgreementParty  ctSignAgencyWitnes = ctAgreementPartyIterator.next();
+			    if(ctSignAgencyWitnes.isSelectedCheckBox()){
+			    	ctAgreementPartyIterator.remove();
+			    }
+		    } 
+		     getManagedBean().setSelectedSupplierSigner(null);
+		     getManagedBean().setSelectAll(false);
+	 } else if(tableType.equalsIgnoreCase("SUPPLIER_WITNESS")){
+		 Iterator<CtAgreementParty> ctAgreementPartyIterator = getManagedBean().getCtSupplierWitness().iterator();
+	     while(ctAgreementPartyIterator.hasNext()){
+	    	 CtAgreementParty  ctSignAgencyWitnes = ctAgreementPartyIterator.next();
+		    if(ctSignAgencyWitnes.isSelectedCheckBox()){
+		    	ctAgreementPartyIterator.remove();
+		    }
+	    } 
+	     getManagedBean().setSelectedSupplierWitnes(null);
+	     getManagedBean().setSelectAll(false);
+ } 
+		 getManagedBean().setButtonHideActive(true);
+	} catch (Exception e) {
+		e.printStackTrace();
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	}
+}
+	
+
+    public void selectAllAgencyWitnessCheckBox(AjaxBehaviorEvent e){
+    	 for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtSignAgencyWitness()) {
+			   if (getManagedBean().isSelectAll()) {
+				   ctAgreementPartys.setSelectedCheckBox(true);
+		       }else {
+		    	   ctAgreementPartys.setSelectedCheckBox(false);
+		       }
+	  }
+	
+	 if((boolean) e.getComponent().getAttributes().get("value")){
+		 getManagedBean().setButtonHideActive(false);
+	 }else{
+		 getManagedBean().setButtonHideActive(true);
+	 }	
+     }
+    
+    /**
+     * Method to set boolean value for checkbox 
+     * @param pass ajax event type
+     * Set boolean value for user action 
+     * */
+    public void selectOneAgencyWitnessCheckBox(AjaxBehaviorEvent e){
+    	
+    		getManagedBean().setSelectAll(false);
+    		for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtSignAgencyWitness()) {
+    			if(ctAgreementPartys.isSelectedCheckBox()){
+    				 getManagedBean().setButtonHideActive(false);
+    				return;
+    			}
+    		}
+    	
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			 getManagedBean().setButtonHideActive(false);
+    		}else{
+    			 getManagedBean().setButtonHideActive(true);
+    		}	
+       }
+    
+    public void selectAllSupplierSignerCheckBox(AjaxBehaviorEvent e) {
+		
+		  for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtSupplierSigner()) {
+			   if (getManagedBean().isSelectAll()) {
+				   ctAgreementPartys.setSelectedCheckBox(true);
+		       }else {
+		    	   ctAgreementPartys.setSelectedCheckBox(false);
+		       }
+	  }
+	
+	 if((boolean) e.getComponent().getAttributes().get("value")){
+		 getManagedBean().setButtonHideActive(false);
+	 }else{
+		 getManagedBean().setButtonHideActive(true);
+	 }	
+ }
+
+/**
+* Method to set boolean value for checkbox 
+* @param pass ajax event type
+* Set boolean value for user action 
+* */
+public void selectOneSupplierSignerCheckBox(AjaxBehaviorEvent e){
+	
+		getManagedBean().setSelectAll(false);
+		for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtSupplierSigner()) {
+			if(ctAgreementPartys.isSelectedCheckBox()){
+				 getManagedBean().setButtonHideActive(false);
+				return;
+			}
+		}
+	
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			 getManagedBean().setButtonHideActive(false);
+		 } else {
+			 getManagedBean().setButtonHideActive(true);
+		 }	
+ }
+
+public void selectAllSupplierWitnessCheckBox(AjaxBehaviorEvent e){
+	 for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtSupplierWitness()) {
+		   if (getManagedBean().isSelectAll()) {
+			   ctAgreementPartys.setSelectedCheckBox(true);
+	       }else {
+	    	   ctAgreementPartys.setSelectedCheckBox(false);
+	       }
+ }
+
+if((boolean) e.getComponent().getAttributes().get("value")){
+	 getManagedBean().setButtonHideActive(false);
+}else{
+	 getManagedBean().setButtonHideActive(true);
+}	
+}
+
+/**
+* Method to set boolean value for checkbox 
+* @param pass ajax event type
+* Set boolean value for user action 
+* */
+public void selectOneSupplierWitnessCheckBox(AjaxBehaviorEvent e){
+	
+		getManagedBean().setSelectAll(false);
+		for (CtAgreementParty ctAgreementPartys : getManagedBean().getCtSignAgencyWitness()) {
+			if(ctAgreementPartys.isSelectedCheckBox()){
+				 getManagedBean().setButtonHideActive(false);
+				return;
+			}
+		}
+	
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			 getManagedBean().setButtonHideActive(false);
+		}else{
+			 getManagedBean().setButtonHideActive(true);
+		}	
+  }
     
     public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActive(false);

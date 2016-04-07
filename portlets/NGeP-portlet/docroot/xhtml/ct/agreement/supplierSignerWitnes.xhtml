@@ -18,16 +18,20 @@
               <p:dataTable id="agSupplierSigner" var="signSupplierVar" 
                    value="#{agreementBackingBean.managedBean.ctSupplierSigner}" widgetVar="supSignerObj"
                    selection="#{agreementBackingBean.managedBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
-                    <p:ajax event="toggleSelect"
-                                  listener="#{agreementBackingBean.onToggleSelect}" update=":form:delSupplierSignerBtn" />
-                            <p:ajax event="rowSelect"
-                                   listener="#{agreementBackingBean.onRowSelect}" update=":form:delSupplierSignerBtn" />
-			                 <p:ajax event="rowSelectCheckbox" 
-			                        listener="#{agreementBackingBean.onRowSelect}" update=":form:delSupplierSignerBtn" />
-                              <p:ajax event="rowUnselectCheckbox"  
-                                    listener="#{agreementBackingBean.onRowUnselect}" update=":form:delSupplierSignerBtn" />
                    <ac:paginator for="agSupplierSigner"/>
-			       <p:column selectionMode="multiple" style="width:5%"/> 
+			        <p:column  style="width:5%;text-align:center">
+				                   <f:facet name="header">
+							             <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									                  update=":form:agSupplierSigner,:form:delSupplierSignerBtn" listener="#{agreementBackingBean.selectAllSupplierSignerCheckBox}" />
+							              </p:selectBooleanCheckbox>
+						            </f:facet>
+		           
+		                             <p:selectBooleanCheckbox  value="#{signSupplierVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                         update=":form:agSupplierSigner,:form:delSupplierSignerBtn" listener="#{agreementBackingBean.selectOneSupplierSignerCheckBox}"></p:ajax>
+			                         </p:selectBooleanCheckbox>
+			            </p:column>
                   
                    <p:column style="width:25%;" headerText="#{lbl['lbl.ct.business.name']}" styleClass="column-align-center">
                        <div align="left">
@@ -61,8 +65,7 @@
 		    </h:panelGrid>
 		    <div class="ppRightBtn"> 
 		       <p:commandButton id="addSupplierSignerBtn" value="#{lbl['lbl.btn.add']}" 
-		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}" 
-		            onstart="blockWidget.show();" oncomplete="blockWidget.hide();" update=":form:agSupplierSigner">
+		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}" update=":form:agSupplierSigner">
 		    	   <p:tooltip for="addSupplierSignerBtn">
 				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.signer']}" escape="false" />
 				   </p:tooltip>
@@ -81,7 +84,7 @@
                  <div class="ppRightBtn">
 		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                       update=":form:agSupplierSigner, :form:delSupplierSignerBtn" 
-		                       action="#{agreementBackingBean.deleteSupplierSigner()}" oncomplete="dlgAgSupplierDel.hide();"/>
+		                       action="#{agreementBackingBean.deleteTableRow('SUPPLIER_SIGNER')}" oncomplete="dlgAgSupplierDel.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSupplierDel.hide();" type="button" />
 		           </div>
           </p:confirmDialog>
@@ -97,15 +100,19 @@
                        value="#{agreementBackingBean.managedBean.ctSupplierWitness}" widgetVar="supWitnessObj"
                        selection="#{agreementBackingBean.managedBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
                        <ac:paginator for="witnessSign"/>
-                        <p:ajax event="toggleSelect"
-                                  listener="#{agreementBackingBean.onToggleSelect}" update=":form:delSupplierWitnessBtn" />
-                            <p:ajax event="rowSelect"
-                                   listener="#{agreementBackingBean.onRowSelect}" update=":form:delSupplierWitnessBtn" />
-			                 <p:ajax event="rowSelectCheckbox" 
-			                        listener="#{agreementBackingBean.onRowSelect}" update=":form:delSupplierWitnessBtn" />
-                              <p:ajax event="rowUnselectCheckbox"  
-                                    listener="#{agreementBackingBean.onRowUnselect}" update=":form:delSupplierWitnessBtn" />
-                       <p:column selectionMode="multiple" style="width:2%"/> 
+                        <p:column  style="width:5%;text-align:center">
+				                   <f:facet name="header">
+							             <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.selectAll}">
+								               <p:ajax partialSubmit="true" process="@this"
+									                  update=":form:supplierWitnesTable,:form:delSupplierWitnessBtn" listener="#{agreementBackingBean.selectAllSupplierWitnessCheckBox}" />
+							              </p:selectBooleanCheckbox>
+						            </f:facet>
+		           
+		                             <p:selectBooleanCheckbox  value="#{supplierWitnessVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                    <p:ajax event="change" 
+		           		                         update=":form:supplierWitnesTable,:form:delSupplierWitnessBtn" listener="#{agreementBackingBean.selectOneSupplierSignerCheckBox}"></p:ajax>
+			                         </p:selectBooleanCheckbox>
+			            </p:column>
                      
                        <p:column style="width:35%;" headerText="#{lbl['lbl.ct.name']}" styleClass="column-align-center">
                            <p:inputText value="#{supplierWitnessVar.officerName}"  style="width:95%;" maxlength="20"/>
@@ -123,7 +130,7 @@
               </h:panelGrid>
               <div class="ppRightBtn"> 
 		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" 
-		                 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  process="@form" 
+		                 process="@form" 
 		                 action="#{agreementBackingBean.addSupplierWitness(2)}" update=":form:supplierWitnesTable">
 		    	        <p:tooltip for="addSupplierWitnessBtn">
 				             <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.witness']}" escape="false" />
@@ -143,7 +150,7 @@
                  <div class="ppRightBtn">
 		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                       update=":form:supplierWitnesTable, :form:delSupplierWitnessBtn" 
-		                       action="#{agreementBackingBean.deleteSupplierWitness()}" oncomplete="dlgSupplierWitnesDel.hide();"/>
+		                       action="#{agreementBackingBean.deleteTableRow('SUPPLIER_WITNESS')}" oncomplete="dlgSupplierWitnesDel.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSupplierWitnesDel.hide();" type="button" />
 		           </div>
           </p:confirmDialog>
