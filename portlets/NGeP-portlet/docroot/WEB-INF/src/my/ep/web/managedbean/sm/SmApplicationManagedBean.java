@@ -414,6 +414,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poInquiryRespond;
 
 	private boolean showNewChanges;
+	
+	private String businessTypeParamCode;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -3228,5 +3230,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPoInquiryRespond(boolean poInquiryRespond) {
 		this.poInquiryRespond = poInquiryRespond;
+	}
+
+	public String getBusinessTypeParamCode() {
+		return businessTypeParamCode;
+	}
+
+	public void setBusinessTypeParamCode(String businessTypeParamCode) {
+		this.businessTypeParamCode = businessTypeParamCode;
 	}
 }
