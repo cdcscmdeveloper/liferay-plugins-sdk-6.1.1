@@ -30,7 +30,7 @@
 		</div>
 
 		<c:choose>
-			<c:when test="#{qTDetailBB.isQTStatusGreaterThanOrEquals(qTDetailBB.managedBean.currentStatusId, QTStatusConst.QT_PENDING_PUBLICATION)}">
+			<c:when test="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.currentStatusId)}">
 
 				<p:panel id="cancelQt" header="#{qTDetailBB.getParameterDesc(ParameterTypeConst.approvalCategory, ParameterConst.approvalCategoryFinalizationCommittee)}"
 					toggleable="true">
