@@ -10192,8 +10192,10 @@ public class SpecificationBackingBean extends
 			for (ScQtCheckList checkList : techCheckList) {
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
+					if(null!=scQt.getEvaluationType() && ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(scQt.getEvaluationType())){
 					demo = true;
 					checkList.setScoringReq(true);
+					}
 
 				}
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
