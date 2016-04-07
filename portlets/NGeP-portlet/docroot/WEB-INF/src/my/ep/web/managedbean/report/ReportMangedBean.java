@@ -17,6 +17,8 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -61,6 +63,9 @@ public class ReportMangedBean extends BaseManagedBean {
 	/** The report code. */
 	private String reportCode;
 	
+	/** The report url value. */
+	private String reportUrlValue;
+	
 	/** The values empty. */
 	boolean valuesEmpty=false;
 	
@@ -70,6 +75,7 @@ public class ReportMangedBean extends BaseManagedBean {
 	/** The error value. */
 	boolean errorValue=false;
 	
+	/** The sm supplier. */
 	private SmSupplier smSupplier;
 
 	/** The month map. */
@@ -113,6 +119,9 @@ public class ReportMangedBean extends BaseManagedBean {
 
 	/** The selected org profile. */
 	private PmOrgProfile selectedOrgProfile;
+	
+	/** The selected item. */
+	private CmItem selectedItem;
 	
 	/** The selected org type. */
 	private PmParameter selectedOrgType;
@@ -227,8 +236,7 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public HashMap<String, String> getMonthMap() {
 		return monthMap;
-	}
-
+	}	
 	/**
 	 * Sets the month map.
 	 * 
@@ -246,6 +254,25 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public String[] getSearchValue() {
 		return searchValue;
+	}
+
+	/**
+	 * Gets the report url value.
+	 * 
+	 * @return the reportUrlValue
+	 */
+	public String getReportUrlValue() {
+		return reportUrlValue;
+	}
+
+	/**
+	 * Sets the report url value.
+	 * 
+	 * @param reportUrlValue
+	 *            the reportUrlValue to set
+	 */
+	public void setReportUrlValue(String reportUrlValue) {
+		this.reportUrlValue = reportUrlValue;
 	}
 
 	/**
@@ -363,6 +390,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sm supplier.
+	 * 
 	 * @return the smSupplier
 	 */
 	public SmSupplier getSmSupplier() {
@@ -370,7 +399,10 @@ public class ReportMangedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smSupplier the smSupplier to set
+	 * Sets the sm supplier.
+	 * 
+	 * @param smSupplier
+	 *            the smSupplier to set
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
@@ -510,6 +542,25 @@ public class ReportMangedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected item.
+	 * 
+	 * @return the selectedItem
+	 */
+	public CmItem getSelectedItem() {
+		return selectedItem;
+	}
+
+	/**
+	 * Sets the selected item.
+	 * 
+	 * @param selectedItem
+	 *            the selectedItem to set
+	 */
+	public void setSelectedItem(CmItem selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	/**
 	 * Sets the module name value.
 	 * 
 	 * @param moduleNameValue
@@ -605,7 +656,7 @@ public class ReportMangedBean extends BaseManagedBean {
 		return reportTitle;
 	}
 
-	/**
+		/**
 	 * Sets the report title.
 	 * 
 	 * @param reportTitle

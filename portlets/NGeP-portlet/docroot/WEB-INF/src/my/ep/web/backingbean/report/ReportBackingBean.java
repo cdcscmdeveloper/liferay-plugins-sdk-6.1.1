@@ -12190,6 +12190,8 @@ public class ReportBackingBean extends
 			reqDTO.setReportCode(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
 			PMReport pmReport = rptResDTO.getPmReportDtls();
+			this.getManagedBean().setReportUrlValue(
+					pmReport.getIsTempAccess().toString());
 			/*
 			 * String language =
 			 * ResourceBundleUtils.getMessage(ReportConst.LABEL_LANG,
@@ -16765,8 +16767,13 @@ public class ReportBackingBean extends
 			String paramConstrString) {
 		log.info("ReportBackingBean-fileGenerateReport");
 		StringBuilder gnrtdURL = new StringBuilder();
-		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.EXC_PREV_URL));
+		if (this.getManagedBean().getReportUrlValue().equals("1")) {
+			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.EXC_PREV_URL2));
+		} else if (this.getManagedBean().getReportUrlValue().equals("0")) {
+			gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.EXC_PREV_URL));
+		}
 		gnrtdURL.append(paramConstrString);
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_NEXT_URL));
