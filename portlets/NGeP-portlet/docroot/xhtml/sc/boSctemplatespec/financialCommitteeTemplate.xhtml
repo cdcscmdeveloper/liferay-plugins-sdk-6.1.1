@@ -24,7 +24,7 @@
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
-						value="#{lbl['lbl.btn.print']}" type="button">
+						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
 						<p:printer target="financialComitteeTemp" />
 					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.complete']}"
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
