@@ -1099,6 +1099,8 @@ public class QTDetailBackingBean extends
 		quationTenderReqDTO.setMaintanceFlow(this.getManagedBean()
 				.isMaintanceFlow());
 		quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		quationTenderReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		
 		return quationTenderReqDTO;
 	}
 
