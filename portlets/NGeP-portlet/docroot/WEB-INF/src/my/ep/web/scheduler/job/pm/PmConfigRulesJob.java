@@ -36,7 +36,7 @@ public class PmConfigRulesJob implements Job {
 		try {
 			schedulerSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IPmSchedulerSO.class);			
-			schedulerSO.resetConfigRulesMap();
+			schedulerSO.resetRulesConfigMap();
 		} finally {
 			schedulerSO = null;
 		}
