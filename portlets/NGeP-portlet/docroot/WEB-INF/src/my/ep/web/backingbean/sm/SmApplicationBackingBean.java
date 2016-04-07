@@ -9678,13 +9678,16 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedShareHolder() != null
 				&& StringUtils.isNotBlank(suppType)
 				&& suppType.equals("J")
-				&& (getManagedBean().getSelectedShareHolder().isProf()
+				&& (getManagedBean().getSelectedShareHolder().isEquityOwner()
+						|| getManagedBean().getSelectedShareHolder().isProf()
 						|| getManagedBean().getSelectedShareHolder()
 								.isSemiProf() || getManagedBean()
 						.getSelectedShareHolder().isClerical())) {
 			for (PmEduLevel eduLevel : getManagedBean().getEduLevelList()) {
-				if ((getManagedBean().getSelectedShareHolder().isProf() && SupplierManagementConst.PROF_STAFF_EDU_LEVEL_CODES
+				if ((getManagedBean().getSelectedShareHolder().isEquityOwner() && SupplierManagementConst.EQUI_OWNER_EDU_LEVEL_CODES
 						.contains(eduLevel.getLevelCode()))
+						|| (getManagedBean().getSelectedShareHolder().isProf() && SupplierManagementConst.PROF_STAFF_EDU_LEVEL_CODES
+								.contains(eduLevel.getLevelCode()))
 						|| (getManagedBean().getSelectedShareHolder()
 								.isSemiProf() && SupplierManagementConst.SEMI_PROF_STAFF_EDU_LEVEL_CODES
 								.contains(eduLevel.getLevelCode()))
