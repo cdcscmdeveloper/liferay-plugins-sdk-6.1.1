@@ -295,7 +295,8 @@
 							ParameterConst.orgTypeJabatan eq organisationBackingBean.managedBean.orgType or 
 							ParameterConst.orgTypePegawaiPengawal eq organisationBackingBean.managedBean.orgType or 
 							ParameterConst.orgTypeBpk eq organisationBackingBean.managedBean.orgType or 
-							ParameterConst.orgTypeSupport eq organisationBackingBean.managedBean.orgType}"
+							ParameterConst.orgTypeSupport eq organisationBackingBean.managedBean.orgType or
+							ParameterConst.orgTypeJabatanAuditNegara eq organisationBackingBean.managedBean.orgType}"
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
 						required="#{!empty param['disableValidation']}" style="margin-bottom: 5px;">
 						<f:selectItems
