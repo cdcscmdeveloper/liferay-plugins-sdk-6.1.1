@@ -17,6 +17,7 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -133,6 +134,9 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	
 	/** The back up approvers */
 	private List<PmUser> backupApprovers;
+	
+    /** The pid justifications. */
+    private List<PmReasonDesc> pidJustifications;
 
 	/**
 	 * Instantiates a new purchase in default managed bean.
@@ -684,5 +688,18 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	public void setBackupApprovers(List<PmUser> backupApprovers) {
 		this.backupApprovers = backupApprovers;
 	}
-	
+
+	/**
+	 * @return the pidJustifications
+	 */
+	public List<PmReasonDesc> getPidJustifications() {
+		return pidJustifications;
+	}
+
+	/**
+	 * @param pidJustifications the pidJustifications to set
+	 */
+	public void setPidJustifications(List<PmReasonDesc> pidJustifications) {
+		this.pidJustifications = pidJustifications;
+	}
 }
