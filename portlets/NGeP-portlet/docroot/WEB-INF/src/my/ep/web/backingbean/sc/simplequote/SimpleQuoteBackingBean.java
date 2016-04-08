@@ -320,7 +320,7 @@ public class SimpleQuoteBackingBean extends
 				// supplier list
 				if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
 					// panel supplier
-					if(quotePanelItem != null){
+					if(scQuote.isPanel()){
 						getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
 					} else {
 						if(scQuote.getProcurementType() != null &&  scQuote.getProcurementType().getParameterCode()
@@ -1352,12 +1352,12 @@ public class SimpleQuoteBackingBean extends
 
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// panel item zone
-			if (quote.getPanelItem() != null) {
-				validatePanelItem(quote.getPanelItem());
-
-				// panel item
+			if(quote.isPanel()){
+				if (quote.getPanelItem() != null) {
+					validatePanelItem(quote.getPanelItem());
+				}
+				// panel suppliers
 				if (getManagedBean().getPanelSuppliers() != null) {
-
 					for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
 							.getPanelSuppliers()) {
 						if (quote.getScQuoteSuppliers() != null
@@ -1825,7 +1825,7 @@ public class SimpleQuoteBackingBean extends
 		if (scQuote.getScQuoteSuppliers() != null
 				&& scQuote.getScQuoteSuppliers().size() > 0) {
 			// panel supplier
-			if (quotePanelItem != null) {
+			if (scQuote.isPanel()) {
 				getManagedBean().setPanelSuppliers(
 						scQuote.getScQuoteSuppliers());
 
@@ -2131,15 +2131,14 @@ public class SimpleQuoteBackingBean extends
 
 			// zone details
 			quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
-			// panel item zone
-			if (quote.getPanelItem() != null) {
-				validatePanelItem(quote.getPanelItem());
-
-				// panel item
+			// panel item
+			if(quote.isPanel()){
+				if (quote.getPanelItem() != null) {
+					validatePanelItem(quote.getPanelItem());
+				}
+				// panel suppliers
 				if (getManagedBean().getPanelSuppliers() != null) {
-
 					for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
 							.getPanelSuppliers()) {
 						if (quote.getScQuoteSuppliers() != null
@@ -6227,7 +6226,7 @@ public class SimpleQuoteBackingBean extends
 		if (scQuote.getScQuoteSuppliers() != null
 				&& scQuote.getScQuoteSuppliers().size() > 0) {
 			// panel supplier
-			if (quotePanelItem != null) {
+			if (scQuote.isPanel()) {
 				getManagedBean().setPanelSuppliers(
 						scQuote.getScQuoteSuppliers());
 
