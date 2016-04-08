@@ -11,21 +11,20 @@
 		>
 		<p:dataTable id="dtAttachment" var="attachment" rowKey="#{attachment}"
 	  		 emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
-		     value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserAttachments}"
-			    >   
+		     value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserAttachments}">   
 		    <ac:paginator for="dtAttachment"/>
-		    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.filename']}" >
+		    <p:column style="width:65%;text-align:center;white-space:normal;" headerText="#{lbl['lbl.pm.profiles.authorisation.filename']}" >
 	          	#{attachment.fileName}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.created.by']}" >
+	        <p:column headerText="#{lbl['lbl.pm.created.by']}" style="width:17%;text-align:center;white-space:normal;">
 	          	#{profileManagementBackingBean.getUsername(attachment.createdBy)}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.created.date']}" >
+	        <p:column headerText="#{lbl['lbl.pm.created.date']}" style="width:10%;text-align:center;" >
 	        	<h:outputText value="#{attachment.createdDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
-	        <p:column style="text-align:center;" headerText="#{lbl['lbl.pm.action']}" >
+	        <p:column style="text-align:center;width:8%;" headerText="#{lbl['lbl.pm.action']}" >
 	          	<p:commandLink action="#{profileManagementBackingBean.downloadAttachment(attachment)}" 
 	          		immediate="true" ajax="false" disabled="#{attachment.brandNew}">
  					  <p:graphicImage value="/css/images/design/attach.png" />
