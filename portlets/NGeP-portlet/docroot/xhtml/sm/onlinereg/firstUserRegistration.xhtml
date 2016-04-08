@@ -8,8 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<ui:define name="contentSection">
-	<script type="application/javascript">
+	<ui:define name="resourceSection">
+		<script type="application/javascript">
 			$(document).ready(function(e){
 				  $("input[id$=txtPermAdd1]").keydown(function(e){
 					if(e.which==9 || e.keycode==9){
@@ -69,7 +69,9 @@
 			      });
 			});
 	</script>
+	</ui:define>
 	
+	<ui:define name="contentSection">
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="@([id$=Msg])" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
