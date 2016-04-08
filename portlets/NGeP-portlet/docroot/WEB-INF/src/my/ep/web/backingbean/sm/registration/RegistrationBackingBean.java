@@ -2112,6 +2112,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setGstFlag(true);
 			}
 		}else{
+			deleteGst(this.getManagedBean().getSmGstSupplier());
 			this.getManagedBean().setGstFlag(false);
 		}
 	}
@@ -2369,6 +2370,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return acknowledgement;
 		}
 		
+	}
+	
+	/**
+	 * Delete GST
+	 * 
+	 * @param SmGstSupplier
+	 *            gst
+	 */
+	public void deleteGst(SmGstSupplier gst) {
+		gst.setGstRegNo(null);
+		gst.setGstEffDate(null);
+		gst.setGstEndDate(null);
+		gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
+		SmApplicationUtil.initGstSuppDocs(gst);
 	}
 	
 	public void removeGstUploadedFile(){
