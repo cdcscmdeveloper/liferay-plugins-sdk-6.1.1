@@ -63,7 +63,7 @@
 					<h:outputText value="#{jobBean.jobKey.name}" style="white-space: normal;"/>
 				</p:column>
 
-				<p:column style="width : 35% !important;"
+				<p:column style="width : 25% !important;"
 					headerText="#{lbl['lbl.quartz.job.description']}">
 					<h:outputText value="#{jobBean.description}" style="white-space: normal;"/>
 				</p:column>
@@ -82,11 +82,10 @@
 						title="#{lbl['lbl.quartz.state.error.tooltips']}" />
 				</p:column>
 				
-				<ui:remove>
-					<p:column headerText="Missfire Policy">
-						<h:outputText value="#{jobBean.trigger.misfireInstruction}" />
-					</p:column>
-				</ui:remove>
+				<p:column headerText="#{lbl['lbl.quartz.misfire.policy']}" style="width : 10% !important;">
+					<h:outputText value="#{schedulerManagerBB.showMisFiredInstruction(jobBean.trigger.misfireInstruction)}" 
+						style="white-space: normal;"/>
+				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.quartz.last.fired.time']}" style="width : 10% !important;">
 					<h:outputText value="#{jobBean.trigger.previousFireTime}" rendered="#{not empty jobBean.trigger}"
@@ -225,7 +224,7 @@
 		</p:panel>
 		
 		<p:dialog width="800px" height="300px"
-			header="#{lbl['lbl.quartz.job.name']}" widgetVar="addJobDialog"
+			header="#{lbl['lbl.quartz.job.info']}" widgetVar="addJobDialog"
 			resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 			modal="true" id="addJobDialog">
 			
