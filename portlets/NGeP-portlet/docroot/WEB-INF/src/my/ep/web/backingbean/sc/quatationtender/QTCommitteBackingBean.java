@@ -2171,10 +2171,49 @@ public class QTCommitteBackingBean extends
 		return email;
 	}
 	
-	public boolean renderECOrTECButton(){
-	
-		return QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(this
-				.getManagedBean().getCurrentStatusId());
+	public boolean renderECOrTECButton(Long committeStatus, String commType) {
+
+		boolean isRenderBtn = false;
+
+		if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+				.equalsIgnoreCase(commType)
+				&& isQTStatusInBetween(this.getManagedBean()
+						.getCurrentStatusId(),
+						QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+						QTStatusConst.QT_PROPOSAL_PREPARATION)
+				&& this.getManagedBean().isDeskOfficer()) {
+			isRenderBtn = true;
+			ScQt scQt = this.getManagedBean().getQt();
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			String fetchCommType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
+			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt
+					.getEvaluationType())) {
+				fetchCommType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+			}
+			reqDTO.setCommitteeType(fetchCommType);
+			reqDTO.setQtId(scQt.getQtId());
+			CommitteResDTO resDTO = null;
+			ICommitteSO committeSO;
+			try {
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
+				ScQtCommittee qtCommitte = resDTO.getScQtCommittee();
+				if (qtCommitte != null && qtCommitte.getScCommittee() != null) {
+					Long committeeStatus = qtCommitte.getScCommittee().getCommitteStatus().getStatusId();
+					if ((QTStatusConst.CMT_PENDING_APPROVAL
+							.equals(committeeStatus) || QTStatusConst.CMT_PENDING_REVISION_APPROVAL
+							.equals(committeeStatus))) {
+						isRenderBtn = false;
+					}
+				}
+
+			} finally {
+				committeSO = null;
+			}
+		}
+		return isRenderBtn;
+
 	}
 	
 	public boolean isMaintancePendingChklistStatus() {
@@ -2199,5 +2238,14 @@ public class QTCommitteBackingBean extends
 				(isMaintancePendingChklistStatus() || QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL
 				.equals(statusId)));
 
+	}
+	
+	public boolean isEnableCheckboxes(Long committeStatus, String commType) {
+
+		boolean isEnableCheckboxes = isCommitteInfoEditable(committeStatus,commType);
+		if (isEnableCheckboxes) {
+			isEnableCheckboxes = !renderECOrTECButton(committeStatus, commType);
+		}
+		return isEnableCheckboxes;
 	}
 }
