@@ -45,10 +45,12 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -74,6 +76,7 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
+import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -139,6 +142,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -4957,4 +4961,57 @@ public class QTDetailBackingBean extends
 		return results;
 	}
 	
+	/**
+	 * is Allow QT Closed button
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 * 
+	 * @return
+	 */
+	public boolean isAllowQTClosedBtn(ScQt scQt) {
+		if (scQt.getQtStatus() != null && QTStatusConst.QT_PROPOSAL_PREPARATION.equals(scQt.getQtStatus().getStatusId())) {
+			String isAllowQTClosedBtn = EpPropertiesUtils.getInstance()
+					.getProperty(EpPropertiesConst.SC_SHOW_BUTTON_CLOSEQT);
+			
+			if (StringUtils.isNotBlank(isAllowQTClosedBtn)) {
+				return Boolean.valueOf(isAllowQTClosedBtn);
+			}
+		}		
+		
+		return false;
+	}
+	
+	/**
+	 * Trigger to close the supplier prepare proposal.
+	 * 
+	 * @param qtId
+	 * 		the quotation / tender id
+	 */
+	public void closeProposal(Long qtId) {
+		IQTProposalSO qtProposalSO = null;
+		try {
+			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setQtId(qtId);
+			
+			boolean isSucessful = qtProposalSO.closeProposal(reqDTO)
+				.isSuccessful();
+			
+			if (isSucessful) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								"QT Closed Sucessfully."
+				));
+			}
+
+		} finally {
+			qtProposalSO = null;
+		}
+	}
 }
