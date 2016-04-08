@@ -21,7 +21,8 @@
  <ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
 			
  	<ui:param name="isCommitteeInfoEditable" value="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
- 	
+ 	<ui:param name="isEnablChkBoxes" value="#{!qTCommitteBackingBean.isEnableCheckboxes(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
+
  	<c:choose>
  		<c:when test="#{qTDetailBB.managedBean.selectedTabBean.tabType eq SourcingConstants.committeTypeFinalization}">
  			<ui:include src="finalizationSecretaryDetails.xhtml" />
@@ -57,18 +58,18 @@
 					rendered="#{isCommitteeInfoEditable}" />
 				
 				<c:if test="#{isQTStatusChecklistAndAfter}">
-					<ui:param name="isRender" value="#{qTCommitteBackingBean.renderECOrTECButton()}"></ui:param>
+					<ui:param name="isRender" value="#{qTCommitteBackingBean.renderECOrTECButton(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"></ui:param>
 					<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}" styleClass="BtnSpacing"
 						process="@this, specificationcommitteeid"
 						update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
-						rendered="#{isRender and qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2 and isCommitteeInfoEditable}"
+						rendered="#{isRender and (qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2)}"
 						actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
 						title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" />
 		
 					<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}" styleClass="BtnSpacing"
 						process="@this, specificationcommitteeid"
 						update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
-						rendered="#{isRender and qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 1 and isCommitteeInfoEditable}"
+						rendered="#{isRender and (qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 1)}"
 						actionListener="#{qTCommitteBackingBean.addCloneToEcDtl}"
 						title="#{lbl['lbl.sc.qt.clone.to.ec.tooltip']}" />
 				</c:if>
