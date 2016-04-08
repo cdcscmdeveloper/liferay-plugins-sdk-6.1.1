@@ -43,6 +43,7 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	private List<CmRequestCode> proceedExtCodeList;
 	private boolean unspscInd = true;
 	private boolean unspscRecommendInd = false;
+	private String docType;
 	
 	private IPagingDataModel<Object[]> cdDocumentDataModel 	= new SearchPagingDataModel();
 
@@ -303,6 +304,20 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void setUnspscRecommendInd(boolean unspscRecommendInd) {
 		this.unspscRecommendInd = unspscRecommendInd;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
 	}
 	
 	

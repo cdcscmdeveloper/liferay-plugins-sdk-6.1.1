@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.trackingdiary;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -110,7 +112,12 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 
 		SearchBean<PmTrackingDiary> searchBean = new SearchBean<PmTrackingDiary>();
 		TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-		searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CD"));
+		
+		List<String> docTypeLs = new ArrayList<String>();
+		docTypeLs.add("CU");
+		docTypeLs.add("CE");
+		
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_IN.value(),docTypeLs));
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),unspscObj[5]));
 		//		searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
 		System.out.println("Cd TrackingDiary docId  " + unspscObj[5]);
@@ -153,6 +160,7 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
+		System.out.println("this.getManagedBean().getDocNo()"+this.getManagedBean().getDocNo());
 		codeDTO.setDocNo(this.getManagedBean().getDocNo());
 		RequestCodeResDTO codeResDTO = requestSO.retrieveUnspscCodeReviewByDocNo(codeDTO);
 		System.out.println("getRequestLs:"+codeResDTO.getRequestLs().size());
