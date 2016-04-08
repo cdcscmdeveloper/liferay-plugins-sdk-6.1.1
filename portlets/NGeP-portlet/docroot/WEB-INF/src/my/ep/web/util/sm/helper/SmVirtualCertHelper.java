@@ -111,8 +111,6 @@ public class SmVirtualCertHelper {
 			URL obj = new URL(reportUrl);
 			urlConnection = (HttpURLConnection) obj.openConnection();
 			urlConnection.setUseCaches(false);
-			log.info("<<<HttpURLConnection DefaultUseCaches>>>" + urlConnection.getDefaultUseCaches());
-			urlConnection.setDefaultUseCaches(false);
 			
 			if(urlConnection.getContentType().equalsIgnoreCase(HTTP_HEADER_TYPE_PDF)){
 				BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
