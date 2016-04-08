@@ -2468,7 +2468,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				CmSupplierItem cmSupplierItem = cmPricings.get(0).getCmSupplierItem();
 				cmSupplierItem.setCmPricings(cmPricings);
 
+				SmSupplier smSupplier = cmSupplierItem.getSmSupplier();
 				requestSupplierItem = createScRequestSupplierItem(cmSupplierItem, requestNoteDtl.getRequestItem(), cmSupplierItem.getSmSupplier(), cmPricings);
+				
+				if(requestSupplierItem.getSupplierName() == null && smSupplier != null) {
+					requestSupplierItem.setSupplierName(smSupplier.getCompanyName());
+					requestSupplierItem.setMofNumber(getMofNor(smSupplier.getSupplierId()));
+				}
 				
 				requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 				
