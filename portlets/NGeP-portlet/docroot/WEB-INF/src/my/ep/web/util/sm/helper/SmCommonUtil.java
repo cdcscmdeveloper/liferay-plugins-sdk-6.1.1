@@ -1131,7 +1131,7 @@ public class SmCommonUtil {
 			SmCompanyBasic compBasic) {
 		BigDecimal mul = new BigDecimal(100);
 		log.info(" *** Intial Calc ***** ");
-		if (compBasic.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
+		if (compBasic.getPaidUpCapital()!=null && compBasic.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
 			compBasic.setBumiPercent(compBasic
 					.getBumiEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
