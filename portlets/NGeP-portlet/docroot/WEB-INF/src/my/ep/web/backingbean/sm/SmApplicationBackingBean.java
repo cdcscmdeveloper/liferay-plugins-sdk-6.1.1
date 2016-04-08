@@ -2550,6 +2550,10 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierCategories()
 					.removeAll(catList);
 		}
+
+		// assign application category type for consultant
+		assignApplnConsultantCategoryType();
+
 		StringBuilder sb = new StringBuilder();
 		String desc = null;
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
@@ -2570,6 +2574,75 @@ public class SmApplicationBackingBean extends
 					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		saveOrUpdateAppl();
+	}
+
+	private void assignApplnConsultantCategoryType() {
+		if (!StringUtils
+				.isBlank(getManagedBean().getSmAppl().getSupplierType())
+				&& getManagedBean().getSmAppl().getSupplierType().equals("J")) {
+			List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
+			// Remove from active list
+			if (getManagedBean()
+					.getPhysicalConsulting()
+					.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)) {
+				for (SmSupplierCategory cat : getManagedBean()
+						.getActiveCategoryList()) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catList.add(cat);
+					}
+
+				}
+				getManagedBean().getActiveCategoryList().removeAll(catList);
+			} else {
+				for (SmSupplierCategory cat : getManagedBean()
+						.getActiveCategoryList()) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catList.add(cat);
+					}
+
+				}
+				getManagedBean().getActiveCategoryList().removeAll(catList);
+			}
+			// Remove from main list
+			if (getManagedBean()
+					.getPhysicalConsulting()
+					.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)) {
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catList.add(cat);
+					}
+
+				}
+				getManagedBean().getSmAppl().getSmSupplierCategories()
+						.removeAll(catList);
+			} else {
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)
+							&& cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catList.add(cat);
+					}
+				}
+				getManagedBean().getSmAppl().getSmSupplierCategories()
+						.removeAll(catList);
+			}
+		}
 	}
 
 	/**
@@ -3646,6 +3719,8 @@ public class SmApplicationBackingBean extends
 			deleteCatCodes(categories);
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+			
+			initPhysicalConsultingCatcode();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Category Code" });
@@ -9368,6 +9443,7 @@ public class SmApplicationBackingBean extends
 	private void initApplCategoryType() {
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+			initPhysicalConsultingCatcode();
 			if (getManagedBean().getBasicCompanyFacility() != null
 					&& getManagedBean()
 							.getBasicCompanyFacility()
@@ -9383,6 +9459,24 @@ public class SmApplicationBackingBean extends
 							.setApplicationCategorySelected(getManagedBean());
 					assignApplnCategoryType();
 				}
+			}
+		}
+	}
+	
+	private void initPhysicalConsultingCatcode(){
+		if (!StringUtils.isBlank(getManagedBean().getSmAppl()
+				.getSupplierType())
+				&& getManagedBean().getSmAppl().getSupplierType()
+						.equals("J")) {
+			if (SmCommonUtil.isApplPhysicalConsultant(getManagedBean()
+					.getSmAppl())) {
+				getManagedBean()
+						.setPhysicalConsulting(
+								my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+			} else {
+				getManagedBean()
+						.setPhysicalConsulting(
+								my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE);
 			}
 		}
 	}

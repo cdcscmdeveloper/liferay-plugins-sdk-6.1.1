@@ -533,7 +533,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	 */
 	public List<SelectItem> retrieveCategoryL1List(
 			String supplierType, String facilityType, Integer paidUpCapital, 
-			Integer bumiPercentage, String categoryType, String businessTypeCode) {
+			Integer bumiPercentage, String categoryType, String businessTypeCode,String catcodeL1) {
 		
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
@@ -571,7 +571,14 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		for(PmCategoryL1 l1 : resDTO.getCategoryL1List()) {
 			System.out.println("l1.getCategoryName(): " + l1.getCategoryName());
-			selectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
+			//filter for consultant
+			if(!StringUtils.isBlank(supplierType) && supplierType.equals("J")){
+				if(!StringUtils.isBlank(catcodeL1) && catcodeL1.equals(l1.getCategoryL1Code())){
+					selectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
+				}
+			}else{
+				selectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
+			}
 		}
 		
 		return selectItems;
