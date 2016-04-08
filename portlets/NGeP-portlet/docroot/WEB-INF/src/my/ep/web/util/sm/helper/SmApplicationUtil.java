@@ -6128,8 +6128,8 @@ public class SmApplicationUtil {
 			Collections.sort(eduLvls, new Comparator<PmEduLevel>() {
 				@Override
 				public int compare(final PmEduLevel s1, final PmEduLevel s2) {
-					return StringUtil.upperCase(s1.getLevelCode()).compareTo(
-							StringUtil.upperCase(s2.getLevelCode()));
+					return StringUtil.upperCase(s2.getLevelCode()).compareTo(
+							StringUtil.upperCase(s1.getLevelCode()));
 				}
 			});
 			managedBean.setEduLevelList(eduLvls);
