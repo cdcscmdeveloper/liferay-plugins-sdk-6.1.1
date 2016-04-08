@@ -416,6 +416,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showNewChanges;
 	
 	private String businessTypeParamCode;
+	private String physicalConsulting;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -3238,5 +3239,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBusinessTypeParamCode(String businessTypeParamCode) {
 		this.businessTypeParamCode = businessTypeParamCode;
+	}
+
+	public String getPhysicalConsulting() {
+		return physicalConsulting;
+	}
+
+	public void setPhysicalConsulting(String physicalConsulting) {
+		this.physicalConsulting = physicalConsulting;
 	}
 }

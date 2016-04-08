@@ -65,7 +65,7 @@
 					<td style="word-wrap: break-word"><p:outputLabel
 							rendered="#{backingBean.managedBean.disabledBusinessType}"
 							styleClass="outputLabel-view"
-							value="#{backingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,backingBean.managedBean.smSupplier.businessType)}" />
+							value="#{backingBean.getParameterDesc(backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smSupplier.businessType)}" />
 						<p:selectOneMenu id="smBusTypeId" required="true"
 							label="#{lbl['lbl.sm.regtype']}"
 							value="#{backingBean.managedBean.smSupplier.businessType}"
