@@ -1721,9 +1721,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
 
 				reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
+				retriveSupplierGstInfomation(resDTO.getSupplierItemList().get(0).getSmSupplier());
 				resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 				this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-				retriveSupplierGstInfomation(resDTO.getSupplierItemList().get(0).getSmSupplier());
+				
 			}
 			//remove N/A from Item name if any
 			String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName().replaceAll("N/A", "");
