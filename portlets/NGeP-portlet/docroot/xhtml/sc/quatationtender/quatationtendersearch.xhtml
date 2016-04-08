@@ -212,6 +212,12 @@
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" styleClass="tasklist_title1"
 								title="click view icon" />
 						</p:commandLink>
+						<p:commandLink id="closeQTIcon" action="#{qTDetailBB.closeProposal(scQt.qtId)}"
+							style="margin-right:20px;" partialSubmit="true" process="@this"
+							rendered="#{qTDetailBB.isAllowQTClosedBtn(scQt)}">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-play.png" styleClass="tasklist_title1"
+								title="click close QT" />
+						</p:commandLink>
 					</p:column>
 				</p:dataTable>
 			</h:panelGroup>
