@@ -9806,6 +9806,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 								ISupplierGstSO.class);
 				SupplierGstReqDTO supplierGstreqDTO = new SupplierGstReqDTO();
+				System.out.println("*******supplier.getSupplierId()**********"+supplier.getSupplierId());
 				supplierGstreqDTO.setSupplierId(supplier.getSupplierId());
 				supplierGstreqDTO.setBranchCode(null);
 				SupplierGstResDTO supplierGstresDTO = supplierGstSo
