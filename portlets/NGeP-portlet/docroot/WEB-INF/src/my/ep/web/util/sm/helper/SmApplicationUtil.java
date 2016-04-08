@@ -5909,10 +5909,16 @@ public class SmApplicationUtil {
 					managedBean.getBusinessTypeVal(),
 					managedBean.isReviewSiteVisit());
 		}
-
-		// added to custom confirm dialog title and msg
-		// based on category type Special or Normal
-		setRegCatCodeConfirmDialog(managedBean);
+		
+		if(managedBean.getSmAppl().getSupplierType().equals("J")){
+			// added to custom confirm dialog title and msg
+			// based on category type Physical or Non Physical
+			setRegCatCodeConsConfirmDialog(managedBean);
+		}else{
+			// added to custom confirm dialog title and msg
+			// based on category type Special or Normal
+			setRegCatCodeConfirmDialog(managedBean);
+		}
 	}
 
 	/**
@@ -5936,6 +5942,30 @@ public class SmApplicationUtil {
 						"lbl.sm.regCatCode.confirm.header.special", null));
 				managedBean.setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
 						"lbl.sm.regCatCode.confirm.msg.special", null));
+			}
+		}
+	}
+	
+	/**
+	 * Sets the register categor code confirm dialog text for consultant.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
+	public static void setRegCatCodeConsConfirmDialog(
+			SmApplicationManagedBean managedBean) {
+		managedBean.setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
+				"lbl.sm.regCatCode.confirm.header.physical", null));
+		managedBean.setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
+				"lbl.sm.regCatCode.confirm.msg.physical", null));
+		if (managedBean.getSmAppl() != null) {
+			if (StringUtils.isNotBlank(managedBean.getPhysicalConsulting())
+					&& managedBean.getPhysicalConsulting()
+							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)) {
+				managedBean.setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.header.nonphysical", null));
+				managedBean.setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.msg.nonphysical", null));
 			}
 		}
 	}

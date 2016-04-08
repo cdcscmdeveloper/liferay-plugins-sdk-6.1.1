@@ -24,6 +24,7 @@ import my.ep.web.vo.EpJobVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -342,6 +343,18 @@ public class SchedulerManagerBackingBean extends
 							getFinalCronExpression(), getValidJobClass());
 				}
 			}
+		}
+	}
+
+	public String showMisFiredInstruction(int policy) {
+		if (policy == CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING) {
+			return "MISFIRE_INSTRUCTION_DO_NOTHING";
+		} else if (policy == CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
+			return "MISFIRE_INSTRUCTION_FIRE_ONCE_NOW";
+		} else if (policy == CronTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
+			return "MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY";
+		} else {
+			return "MISFIRE_INSTRUCTION_SMART_POLICY";
 		}
 	}
 

@@ -370,6 +370,7 @@
 				</p:commandButton>
 
 				<ac:lookupCategoryCode okAction="backingBean.addNewCategoryAction"
+					catcodeL1 ="#{backingBean.managedBean.physicalConsulting}"
 					update="@([id$=catCodeInfPan])"
 					supplierType="#{backingBean.managedBean.smAppl.supplierType}"
 					facilityType="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
