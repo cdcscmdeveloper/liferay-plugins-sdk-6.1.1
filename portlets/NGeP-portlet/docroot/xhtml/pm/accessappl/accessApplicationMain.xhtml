@@ -54,19 +54,29 @@
 		   		label="#{lbl['lbl.btn.choose']}" 
 		   		cancelLabel="#{lbl['lbl.btn.cancel']}" />
 		</p:dialog>
-		
-		<p:dialog id="deleteAttachmentDlg" widgetVar="deleteAttachmentDlg"
-      		styleClass="screen-title" modal="true" width="330">  
-	      	<h:panelGrid columns="3">
-	 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			   	<p:spacer width="10"/>
-	            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
-	     	</h:panelGrid>
+ 	
+ 		<p:dialog id="deleteAttachmentDlg" widgetVar="deleteAttachmentDlg"
+			header="#{lbl['lbl.msg.confirm.delete.header']}" resizable="false"
+			height="100" width="350"
+			closable="false" modal="true">
+			<h:panelGrid columns="3">
+				<p:graphicImage value="/css/images/design/exclamation.png"
+					styleClass="ui-icon-complain" />
+				<p:spacer width="10" />
+				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
+			</h:panelGrid>
+			<p:spacer height="1" />
 			<div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@this,:form:suppDocPnl" process="@this" 
-		     	actionListener="#{accessApplBackingBean.deleteAttachment()}" onclick="deleteAttachmentDlg.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg.hide();" type="button" />
-		   </div>
- 	</p:dialog>	
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+					partialSubmit="true"
+					action="#{accessApplBackingBean.deleteAttachment()}"
+					oncomplete="deleteAttachmentDlg.hide();"
+					update="@this,:form:suppDocPnl"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="deleteAttachmentDlg.hide();"
+					type="button"
+					process="@this"/>
+			</div>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
