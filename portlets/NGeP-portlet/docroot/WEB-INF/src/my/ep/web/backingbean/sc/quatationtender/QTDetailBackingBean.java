@@ -4970,7 +4970,10 @@ public class QTDetailBackingBean extends
 	 * @return
 	 */
 	public boolean isAllowQTClosedBtn(ScQt scQt) {
-		if (scQt.getQtStatus() != null && QTStatusConst.QT_PROPOSAL_PREPARATION.equals(scQt.getQtStatus().getStatusId())) {
+		if (scQt != null && 
+				scQt.getQtStatus() != null && 
+						scQt.getQtStatus().getStatusId() != null &&
+				QTStatusConst.QT_PROPOSAL_PREPARATION.equals(scQt.getQtStatus().getStatusId())) {
 			String isAllowQTClosedBtn = EpPropertiesUtils.getInstance()
 					.getProperty(EpPropertiesConst.SC_SHOW_BUTTON_CLOSEQT);
 			
