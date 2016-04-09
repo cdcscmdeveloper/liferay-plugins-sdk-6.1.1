@@ -2004,7 +2004,7 @@ public class QTCommitteBackingBean extends
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
 
-		if (!isQTStatusGreaterThanOrEquals(currentQtStatus, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
+		if (!isQTStatusGreaterThanOrEquals(currentQtStatus, QTStatusConst.QT_EVALUATION_PROPOSAL) || !this.getManagedBean().isMaintanceFlow()) {
 			return true;
 		} 
 
