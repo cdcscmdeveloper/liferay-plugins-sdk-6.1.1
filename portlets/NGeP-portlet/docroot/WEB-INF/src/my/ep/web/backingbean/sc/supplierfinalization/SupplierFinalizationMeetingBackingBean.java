@@ -706,11 +706,12 @@ public class SupplierFinalizationMeetingBackingBean extends
 			// orgProfileId
 			pmOrgProfile = getFcOrgProfileIdByCommitteeType(pmOrgProfile,
 					committeeType);
-			if (pmOrgProfile != null) {
+			if (pmOrgProfile != null && pmOrgProfile.getOrgTypeCode() != null && 
+					StringUtils.isNotBlank(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
 								"pmUserOrg.pmOrgProfile."
-										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()), 
+										+ OrgProfileUtil.getSearchBeanParentString(pmOrgProfile.getOrgTypeCode().getParameterCode()), 
 								SearchOperator.OPERATOR_EQUALS.value(), 
 								pmOrgProfile.getOrgProfileId()));
 				
