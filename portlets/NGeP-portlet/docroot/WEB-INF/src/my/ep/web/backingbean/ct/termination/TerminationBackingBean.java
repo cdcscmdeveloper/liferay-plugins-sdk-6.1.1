@@ -295,7 +295,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 					amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 					
-					if (this.getManagedBean().getContractVer().getCtContractAmount().isAgreement()) {
+					if (ctBB.getManagedBean().getContractVer().getCtContractAmount().isAgreement()) {
 							//Retrieve amendment
 							ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
 							amendmentReqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
