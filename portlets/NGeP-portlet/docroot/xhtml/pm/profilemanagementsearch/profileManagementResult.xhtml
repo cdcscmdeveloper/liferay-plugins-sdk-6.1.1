@@ -38,7 +38,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
 				<p:commandLink partialSubmit="true" process="@this"
-						action="#{accessApplBackingBean.redirectToAccessApplView(accessAPPL[0], accessAPPL[6])}"
+						action="#{accessApplBackingBean.redirectToAccessApplView(accessAPPL[0], accessAPPL[6],profileManagSearchBackingBean.managedBean.selectedAppTypeParamCode)}"
 						style="padding-right :5px;" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.txt.view']}" />
