@@ -1484,7 +1484,7 @@ public class QTDetailBackingBean extends
 	 * @param isApprovalReq
 	 *            the is approval req
 	 */
-	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq) {
+	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq, boolean isReformCommitteeReq) {
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
 		ScQt scQt = this.getManagedBean().getQt();
 		Long currentStatus = scQt.getQtStatus().getStatusId();
@@ -1521,15 +1521,21 @@ public class QTDetailBackingBean extends
 					parameterType, tabType), tabType, specCommitte));
 
 			if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())) {
+				ScCommittee committee = null;
 				// evaluation type is one tier only oc is added..
 				if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(evaluationType)) {
 					tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
 					ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
 					if (isApprovalReq) {
-						evalCommitte.getScCommittee().setApprovalReq(
-								isApprovalReq);
-						evalCommitte.getScCommittee().setModified(true);
+						committee = evalCommitte.getScCommittee();
+						committee.setApprovalReq(isApprovalReq);
+						if ((committee.getCommitteStatus() != null &&
+								committee.getCommitteStatus().getStatusId() != null &&
+								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
+								isReformCommitteeReq) {
+							committee.setModified(true);	
+						}
 					}
 					committeTabs.add(new TabBean(parameterHelper
 							.getParameterDesc(parameterType, tabType), tabType,
@@ -1541,9 +1547,14 @@ public class QTDetailBackingBean extends
 					ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
 					if (isApprovalReq) {
-						openingCommitte.getScCommittee().setApprovalReq(
-								isApprovalReq);
-						openingCommitte.getScCommittee().setModified(true);
+						committee = openingCommitte.getScCommittee();
+						committee.setApprovalReq(isApprovalReq);
+						if ((committee.getCommitteStatus() != null &&
+								committee.getCommitteStatus().getStatusId() != null &&
+								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
+								isReformCommitteeReq) {
+							committee.setModified(true);
+						}
 					}
 					committeTabs.add(new TabBean(parameterHelper
 							.getParameterDesc(parameterType, tabType), tabType,
@@ -1553,9 +1564,14 @@ public class QTDetailBackingBean extends
 					ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
 					if (isApprovalReq) {
-						tecCommitte.getScCommittee().setApprovalReq(
-								isApprovalReq);
-						tecCommitte.getScCommittee().setModified(true);
+						committee = tecCommitte.getScCommittee();
+						committee.setApprovalReq(isApprovalReq);
+						if ((committee.getCommitteStatus() != null &&
+								committee.getCommitteStatus().getStatusId() != null &&
+								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
+								isReformCommitteeReq) {
+							committee.setModified(true);
+						}
 					}
 					committeTabs.add(new TabBean(parameterHelper
 							.getParameterDesc(parameterType, tabType), tabType,
@@ -1565,9 +1581,14 @@ public class QTDetailBackingBean extends
 					ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
 							tabType, qtId);
 					if (isApprovalReq) {
-						fecCommitte.getScCommittee().setApprovalReq(
-								isApprovalReq);
-						fecCommitte.getScCommittee().setModified(true);
+						committee = fecCommitte.getScCommittee();
+						committee.setApprovalReq(isApprovalReq);
+						if ((committee.getCommitteStatus() != null &&
+								committee.getCommitteStatus().getStatusId() != null &&
+								!QTStatusConst.CMT_COMPLETED.equals(committee.getCommitteStatus().getStatusId())) ||
+								isReformCommitteeReq) {
+							committee.setModified(true);
+						}
 					}
 					committeTabs.add(new TabBean(parameterHelper
 							.getParameterDesc(parameterType, tabType), tabType,
@@ -1612,8 +1633,7 @@ public class QTDetailBackingBean extends
 					}
 				}
 
-				ScQtCommittee committee = null;
-				committeTabs.add(new TabBean(fcTitleName, tabType, committee));
+				committeTabs.add(new TabBean(fcTitleName, tabType, null));
 			}
 		} 
 
@@ -1767,12 +1787,13 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setActiveIndex(2);
 				retrieveQuationTenderDetails(new Long(qtId));
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-						.equalsIgnoreCase(taskName)
-						|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+						.equalsIgnoreCase(taskName)) {
+					retrieveCommitteeAppointmentTabDtl(true, false);
+				} else if (SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 								.equalsIgnoreCase(taskName)) {
-					retrieveCommitteeAppointmentTabDtl(true);
+					retrieveCommitteeAppointmentTabDtl(true, true);
 				} else {
-					retrieveCommitteeAppointmentTabDtl(false);
+					retrieveCommitteeAppointmentTabDtl(false, false);
 				}
 				if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 					List<ScQtApproval> approvals = this.getManagedBean().getQt()
@@ -2062,7 +2083,7 @@ public class QTDetailBackingBean extends
 		List<TabBean> tabList = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		if (CollectionUtils.isEmpty(tabList)) {
-			retrieveCommitteeAppointmentTabDtl(false);
+			retrieveCommitteeAppointmentTabDtl(false, false);
 		}
 		this.getManagedBean().setSelectedApprovalTabIndex(0);
 		updateQtDtls();
@@ -3607,7 +3628,7 @@ public class QTDetailBackingBean extends
 			// this.getManagedBean().setActiveIndex(0);
 			this.getManagedBean().setSelectedCommitteeTabIndex(
 					committeeTabIndex);
-			retrieveCommitteeAppointmentTabDtl(false);
+			retrieveCommitteeAppointmentTabDtl(false, false);
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				List<ScQtApproval> approvals = this.getManagedBean().getQt()
 						.getScQtApprovals();
@@ -3831,7 +3852,7 @@ public class QTDetailBackingBean extends
 
 			case 2:
 				// detailSO.validateSupplierQualificationDtls(reqDTO);
-				retrieveCommitteeAppointmentTabDtl(false);
+				retrieveCommitteeAppointmentTabDtl(false, false);
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
