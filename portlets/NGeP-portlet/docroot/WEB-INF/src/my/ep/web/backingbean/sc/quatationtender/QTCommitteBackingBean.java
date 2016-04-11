@@ -1343,19 +1343,7 @@ public class QTCommitteBackingBean extends
 								.retrieveParameterById(reqDTO);
 						committeeMember.setMemberRole(resDTO.getPmParameter());
 					} else {
-						if (users.get(i).isPMP() == true) {
-							ParameterReqDTO reqDTO = new ParameterReqDTO();
-							reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-							reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-							ParameterResDTO resDTO = getParameterSO()
-									.retrieveParameterByTypeAndCode(reqDTO);
-							committeeMember.setMemberRole(resDTO
-									.getPmParameter());
-						} else {
-
-							committeeMember.setMemberRole(new PmParameter());
-						}
-
+						committeeMember.setMemberRole(new PmParameter());
 					}
 
 					/*
