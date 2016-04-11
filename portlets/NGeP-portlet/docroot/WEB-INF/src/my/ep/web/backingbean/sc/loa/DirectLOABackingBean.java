@@ -5735,13 +5735,15 @@ public class DirectLOABackingBean extends
 	}
 
 	public void resetContractDates() {
-		this.getManagedBean().getScLoa().setContractEffDate(null);
-		this.getManagedBean().getScLoa().setContractExpDate(null);
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		scLoa.setContractEffDate(null);
+		scLoa.setContractExpDate(null);
 		this.getManagedBean()
-				.getSpecTemplateSpecBean()
-				.getSpecMaster()
-				.setDurationMonth(
-						this.getManagedBean().getScLoa().getContractDuration());
+		.getSpecTemplateSpecBean()
+		.getSpecMaster()
+		.setDurationMonth(
+				scLoa.getContractDuration());
+		updatePerformanceBond(scLoa);
 
 	}
 
@@ -5984,6 +5986,19 @@ public class DirectLOABackingBean extends
 		
 		// calc bond amt
 		calcBondAmount(scLoa, true);
+		// bond amount in words
+		if (scLoa.getBondAmt() != null) {
+			getManagedBean().setBondAmountWord(
+					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}
+	}
+
+	/**
+	 * Update performance bond.
+	 */
+	private void updatePerformanceBond(ScLoa scLoa ) {
+		// calc bond amt
+		calcBondAmount(scLoa, Boolean.TRUE);
 		// bond amount in words
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
