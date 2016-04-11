@@ -122,7 +122,7 @@
 					<td colspan="2" class="ppRightBtn">
 						<p:commandButton
 							value="#{lbl['lbl.btn.search']}"
-							action="#{categoryCodeSearchBackingBean.categorySearchAction}" 
+							action="#{categoryCodeSearchBackingBean.categorySearchAction(cc.attrs.supplierType,cc.attrs.facilityType,cc.attrs.paidUpCapital,cc.attrs.bumiPercentage,cc.attrs.categoryType,cc.attrs.businessTypeCode,cc.attrs.catcodeL1)}" 
 							process="catCodePnl" update="catDescrTbl" />
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							action="#{categoryCodeSearchBackingBean.categoryResetAction}" 

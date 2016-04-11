@@ -78,7 +78,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		getCategoryDescrDataModel().resetData();
 	}
 	
-	public void categorySearchAction(String supplierType, String facilityType, String paidUpCapital, String bumiPercentage, String categoryType, String businessTypeCode) {
+	public void categorySearchAction(String supplierType, String facilityType, String paidUpCapital, String bumiPercentage, String categoryType, String businessTypeCode,String catcodeL1) {
 		debugLogger("searchAction");
 		
 		log.info("supplierType: " + supplierType);
@@ -94,6 +94,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		this.getManagedBean().setBumiPercentage(bumiPercentage);
 		this.getManagedBean().setCategoryType(categoryType);
 		this.getManagedBean().setBusinessTypeCode(businessTypeCode);
+		this.getManagedBean().setCatcodeL1(catcodeL1);
 		
 		getCategoryDataModel().reloadData();
 	}
@@ -503,6 +504,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				if(getManagedBean().getBusinessTypeCode() != null && getManagedBean().getBusinessTypeCode().length() > 0) {
 					reqDTO.setBusinessTypeCode(getManagedBean().getBusinessTypeCode());
 				}
+				reqDTO.setMainCatCode(getManagedBean().getCatcodeL1());
 				
 				log.info("supplierType: " + getManagedBean().getSupplierType());
 				log.info("facilityType: " + getManagedBean().getFacilityType());
