@@ -453,7 +453,7 @@
 							<h:outputText value="#{lbl['lbl.txt.no']}"
 								rendered="#{person.authorizedFlg eq '0'}" />
 						</p:column>
-						<p:column
+						<p:column rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR}"
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}"
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner) or person.softcertFlg eq 3}">
