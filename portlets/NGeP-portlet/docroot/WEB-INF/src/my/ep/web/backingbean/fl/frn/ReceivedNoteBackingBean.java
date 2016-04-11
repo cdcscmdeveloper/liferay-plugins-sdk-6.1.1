@@ -941,7 +941,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setPmUser(reqDTO.getPmUser());
 			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			getManagedBean().setDocMaintainRemarks(true);
-			
+			getManagedBean().setAcknowledged(true);
+			getManagedBean().setButtonVal("View");
+			if(getManagedBean().getAcknowledgeOfficer() == null){
+				reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
+				FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+				if(actor != null){
+					getManagedBean().setAcknowledgeOfficer(actor.getUser());
+					getManagedBean().setAcknowledgeDate(actor.getActionDate());
+				}
+			}
 			
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
