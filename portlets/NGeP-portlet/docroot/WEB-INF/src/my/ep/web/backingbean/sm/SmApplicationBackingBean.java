@@ -1032,6 +1032,13 @@ public class SmApplicationBackingBean extends
 								.equals("K") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE
 								: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
 
+		// set supporting document mode if empty
+		if (StringUtils.isBlank(getManagedBean().getSmAppl()
+				.getSupportingDocMode())) {
+			getManagedBean().getSmAppl().setSupportingDocMode(
+					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		}
+
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
