@@ -51,7 +51,7 @@ public class EpSchedulerHelper {
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
 		addAndScheduleNewJob(jobKey, jobClass, jobDetailDesc, cronExpression);
-//		updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
+		// updateScheduledJob(jobKey, jobDetailDesc, cronExpression, jobClass);
 	}
 
 	/**
@@ -198,6 +198,10 @@ public class EpSchedulerHelper {
 											.cronSchedule(cronExpression)
 											.withMisfireHandlingInstructionFireAndProceed())
 							.build();
+					log.info(">>>>>>>>>>>ADD JOB:" + jobKey.getName()
+							+ "   MISFIRE POLICY:"
+							+ cronTrigger.getMisfireInstruction()
+							+ "<<<<<<<<<<<<<<<");
 
 					// schedule new job
 					EpSchedulerHelper.getScheduler().scheduleJob(job,
@@ -246,6 +250,10 @@ public class EpSchedulerHelper {
 															cronExpression)
 													.withMisfireHandlingInstructionFireAndProceed())
 									.build();
+							log.info(">>>>>>>>>>>UPDATE JOB:"
+									+ jobKey.getName() + "   MISFIRE POLICY:"
+									+ oldTrigger.getMisfireInstruction()
+									+ "<<<<<<<<<<<<<<<");
 
 						}
 
@@ -268,6 +276,10 @@ public class EpSchedulerHelper {
 									.build();
 							EpSchedulerHelper.getScheduler().rescheduleJob(
 									newTrigger.getKey(), newTrigger);
+							log.info(">>>>>>>>>>>UPDATE JOB:"
+									+ jobKey.getName() + "   MISFIRE POLICY:"
+									+ newTrigger.getMisfireInstruction()
+									+ "<<<<<<<<<<<<<<<");
 						}
 
 						// update job description or job class
