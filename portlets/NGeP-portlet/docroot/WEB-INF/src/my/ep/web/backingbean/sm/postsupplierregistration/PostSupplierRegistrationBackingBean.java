@@ -488,7 +488,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			String catalogue = checkCatalogueUpload(supplier.getSupplierId()); 
 			if(catalogue == null){
-				mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
+				//mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
+				mofActionMap.put("CU", CATALOGUE_MAINT);
 			}else{
 				if(!catalogue.equalsIgnoreCase(CATALOGUE_PUBLISHED)){
 					mofActionMap.put("CU",CATALOGUE_MAINT);
