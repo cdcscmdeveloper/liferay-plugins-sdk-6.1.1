@@ -38,7 +38,10 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
-				<td colspan="4" style="text-align: right"><ui:repeat
+				<td colspan="4" style="text-align: right">
+					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+						<ui:define name="outComeSection">
+							<ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
 						<ui:param name="buttonLabel1" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<ui:param name="buttonLabel2" value="#{fn:replace(buttonLabel1, ' ','.')}" />
@@ -46,7 +49,10 @@
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{flOrderBB.signingAction(bpmAction)}"
 							process="@this" />
-					</ui:repeat> </td>
+							</ui:repeat>
+						</ui:define>
+					</ui:decorate>
+				</td>
 			</tr>
 		</table>
 		
