@@ -39,7 +39,7 @@ public class NumberWordUtil {
 	}
 
 	public static String convert(String phrase) {
-		int dollars = 0;
+		long dollars = 0;
 		int cent = 0;
 		if (phrase.contains(".")) {
 			dollars = Integer.parseInt(phrase.substring(0,
@@ -47,7 +47,7 @@ public class NumberWordUtil {
 			cent = Integer
 					.parseInt(phrase.substring(phrase.lastIndexOf(".") + 1));
 		} else {
-			dollars = Integer.parseInt(phrase);
+			dollars = Long.parseLong(phrase);
 		}
 
 		if (dollars == 0 && cent != 0) {
