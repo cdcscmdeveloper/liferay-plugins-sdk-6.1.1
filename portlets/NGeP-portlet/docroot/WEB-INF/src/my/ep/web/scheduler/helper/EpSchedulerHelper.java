@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import javax.portlet.PortletContext;
 
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -415,7 +415,7 @@ public class EpSchedulerHelper {
 	 */
 	public static Scheduler getScheduler() {
 		Scheduler scheduler = null;
-		ServletContext servletContext = (ServletContext) FacesContext
+		PortletContext servletContext = (PortletContext) FacesContext
 				.getCurrentInstance().getExternalContext().getContext();
 
 		// Get QuartzInitializerListener
