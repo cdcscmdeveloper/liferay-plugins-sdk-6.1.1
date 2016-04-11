@@ -12,7 +12,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.access.app.remarks']}" /> </td>
 				<td>
-					<p:inputTextarea id="textAreaId"    
+					<p:inputTextarea id="textAreaId"   disabled="#{accessApplBackingBean.managedBean.showTrackingDairy}"
 							cols="40" maxlength="1000"  value="#{accessApplBackingBean.managedBean.remarks}"  							
 							>
 					 </p:inputTextarea>

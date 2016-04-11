@@ -21,7 +21,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.persistence.NonUniqueResultException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -168,7 +167,7 @@ public class AccessApplBackingBean extends
 
 	}
 	
-	public void redirectToAccessApplView(Long accessApplId, Integer statusId) {
+	public void redirectToAccessApplView(Long accessApplId, Integer statusId,String selectedDocType) {
 		log.info("redirectToAccessApplView");
 		renewSesionObject();
 		IAccessApplSO accessApplSO = null;
@@ -182,11 +181,17 @@ public class AccessApplBackingBean extends
 			AccessApplResDTO resDTO = accessApplSO.retrieveAccessApplById(reqDTO);
 			if(resDTO.isSuccessful()){
 				PmAccessAppl accessAppl = resDTO.getAccessAppl();
-				accessAppl.setCurrentStatus(statusId != null ? statusId : 0);
-				if(accessAppl.isMarketResearch()){
-					accessAppl.setDocType("MR");
-				}else if(accessAppl.isCompanyProfile()){
-					accessAppl.setDocType("CP");
+				accessAppl.setCurrentStatus(statusId != null ? statusId : 0);	
+				if(StringUtils.isNotBlank(selectedDocType)){
+					accessAppl.setDocType(selectedDocType);
+				}else{
+					throw new EpException(MessageConst.ERROR_776106);
+				}
+				
+				if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equals(accessAppl.getDocType())){
+					getManagedBean().setRemarks(accessAppl.getMrRemark());
+				}else if(ParameterConst.DOCTYPE_COMPANY_PROFILE.equals(accessAppl.getDocType())){
+					getManagedBean().setRemarks(accessAppl.getCpRemark());
 				}
 				getManagedBean().setAccessAppl(accessAppl);
 				if(accessAppl.getAccessApplDocs() != null){
@@ -195,10 +200,8 @@ public class AccessApplBackingBean extends
 				if(accessAppl.getOrgProfile() !=null){
 					getManagedBean().setSelectedOrgProfile(accessAppl.getOrgProfile());
 					getManagedBean().setSelectedOrgType(accessAppl.getOrgProfile().getOrgTypeCode().getParameterId());
-				}			
-				
+				}
 			}
-
 		}catch(Exception e){
 			throw new EpException(MessageConst.ERROR_776106);
 		}finally{
