@@ -95,17 +95,24 @@
 				<td>
 					<table>
 						<tr>
-							<td><p:selectOneMenu required="true" id="priceType"
-									style="margin-bottom: 5px; width: 235px;"
-									label="#{lbl['lbl.sc.price.inquiry.price.type']}"
-									disabled="#{isViewOnly}"
-									value="#{purchaseInquiryBackingBean.managedBean.priceType}">
-									<f:selectItems
-										value="#{purchaseInquiryBackingBean.managedBean.priceTypes}" />
-									<p:ajax event="change"
-										listener="#{purchaseInquiryBackingBean.priceTypeChangeListener()}"
-										update="respDtl" process="@this" />
-								</p:selectOneMenu></td>
+							<td><c:if test="#{isPendingSubmissionStatus}">
+									<p:selectOneMenu required="true" id="priceType"
+										style="margin-bottom: 5px; width: 235px;"
+										label="#{lbl['lbl.sc.price.inquiry.price.type']}"
+										disabled="#{isViewOnly}"
+										value="#{purchaseInquiryBackingBean.managedBean.priceType}">
+										<f:selectItems
+											value="#{purchaseInquiryBackingBean.managedBean.priceTypes}" />
+										<p:ajax event="change"
+											listener="#{purchaseInquiryBackingBean.priceTypeChangeListener()}"
+											update="respDtl" process="@this" />
+									</p:selectOneMenu>
+									
+								</c:if> <c:if test="#{!isPendingSubmissionStatus}">
+									<p:inputText
+										value="#{purchaseInquiryBackingBean.managedBean.priceType}"
+										disabled="true" size="28" />
+								</c:if></td>
 							<td><p:spacer width="2px"></p:spacer> <h:commandLink
 									immediate="true"
 									action="#{requestNoteBackingBean.viewMarketResearch(purchaseInquiryBackingBean.managedBean.requestNoteDtl)}"
@@ -113,7 +120,7 @@
 									<p:graphicImage value="/css/images/design/ico-view.png"
 										title="#{lbl['lbl.sc.summary.searchresult.tooltip']}"></p:graphicImage>
 								</h:commandLink></td>
-							<td style="margin-top: -3px"><p:message id="priceTypeMsg"
+							<td style="margin-top: -3px"><p:message id="priceTypeMsg" rendered="#{isPendingSubmissionStatus}"
 									for="priceType" display="icon" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
 						</tr>
@@ -256,7 +263,7 @@
 			</tr>
 		</table>
 		<p:dataTable id="respDtl" var="supplierItemPrice"
-			value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrices}"
+			value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}"
 				sortBy="#{supplierItemPrice.tplSpecZone.zoneName}" style="width:25%">
