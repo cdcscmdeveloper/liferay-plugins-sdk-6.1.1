@@ -28,16 +28,16 @@ public class CmApplicationUtil {
 	}
 	
 	public static CmTrackingDairyVO assignTrackingDiaryValuesForUNSPSCExtension(String actionDesc,
-			PmStatus status) {
+			PmStatus status, String docType) {
 		CmTrackingDairyVO trckVO = new CmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
 		trckVO.setActionedBy(user != null ? user.getUserId() : null);
 		trckVO.setActionedByRole(getUserRoleValue());				
-		trckVO.setDocType(CmConst.CD_DocType);	
+		trckVO.setDocType(docType);	
 		trckVO.setGroupId(null);
 		trckVO.setStatus(status);
-		trckVO.setGroupDocType(null);
+		trckVO.setGroupDocType(CmConst.CD_DocType);
 		return trckVO;
 	}
 	public static String getUserRoleValue() {		
