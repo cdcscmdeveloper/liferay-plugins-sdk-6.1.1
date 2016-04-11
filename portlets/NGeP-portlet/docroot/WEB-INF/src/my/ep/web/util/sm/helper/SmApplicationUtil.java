@@ -1089,23 +1089,6 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722556,
 					new String[] { sb.toString() });
 		}
-		if (!SmCommonUtil.isCollectionEmpty(managedBean.getSmAppl()
-				.getSmSupplierBranches())) {
-			SmSupplierBranch brBank = null;
-			for (SmSupplierBranch brAppl : managedBean.getSmAppl()
-					.getSmSupplierBranches()) {
-				brBank = (SmSupplierBranch) EntityHelper
-						.getEntityByMultiplePropertiesFromList(brAppl,
-								paymentAccBranch,
-								new String[] { "supplierBranchId" }, null, null);
-				if (brBank == null) {
-					validSave = false;
-					setNavigationBackToCurrentPage(currentTab, managedBean);
-					throw new EpException(MessageConst.ERROR_722622,
-							new String[] { brAppl.getBranchName() });
-				}
-			}
-		}
 
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
@@ -1136,7 +1119,7 @@ public class SmApplicationUtil {
 		}
 	}
 
-	private static boolean isBranchAssignToBank(SmAppl appl,
+	public static boolean isBranchAssignToBank(SmAppl appl,
 			SmSupplierBranch paramBranch) {
 		boolean retVal = false;
 		if (paramBranch != null && paramBranch.getSupplierBranchId() != null
@@ -5621,13 +5604,17 @@ public class SmApplicationUtil {
 		if (!SmCommonUtil.isCollectionEmpty(smSupplierBanks) && branch != null
 				&& branch.getSupplierBranchId() != null) {
 			for (SmSupplierBank smSupplierBank : smSupplierBanks) {
-				if (smSupplierBank.getSmSupplierBranch() != null
-						&& smSupplierBank.getSmSupplierBranch()
-								.getSupplierBranchId() != null
-						&& branch.getSupplierBranchId().compareTo(
-								smSupplierBank.getSmSupplierBranch()
-										.getSupplierBranchId()) == 0) {
-					retVal = true;
+				if (!EntityHelper.isCollectionEmpty(smSupplierBank
+						.getSmSupplierBranchBanks())) {
+					SmSupplierBranchBank brTmp = (SmSupplierBranchBank) EntityHelper
+							.getEntityBySinglePropertyFromList(
+									branch.getSupplierBranchId(),
+									smSupplierBank.getSmSupplierBranchBanks(),
+									"smSupplierBranch");
+					if (brTmp != null && brTmp.getSmSupplierBranch() != null) {
+						retVal = true;
+						break;
+					}
 				}
 			}
 		}
@@ -5909,12 +5896,12 @@ public class SmApplicationUtil {
 					managedBean.getBusinessTypeVal(),
 					managedBean.isReviewSiteVisit());
 		}
-		
-		if(managedBean.getSmAppl().getSupplierType().equals("J")){
+
+		if (managedBean.getSmAppl().getSupplierType().equals("J")) {
 			// added to custom confirm dialog title and msg
 			// based on category type Physical or Non Physical
 			setRegCatCodeConsConfirmDialog(managedBean);
-		}else{
+		} else {
 			// added to custom confirm dialog title and msg
 			// based on category type Special or Normal
 			setRegCatCodeConfirmDialog(managedBean);
@@ -5945,7 +5932,7 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sets the register categor code confirm dialog text for consultant.
 	 * 
@@ -5960,7 +5947,8 @@ public class SmApplicationUtil {
 				"lbl.sm.regCatCode.confirm.msg.physical", null));
 		if (managedBean.getSmAppl() != null) {
 			if (StringUtils.isNotBlank(managedBean.getPhysicalConsulting())
-					&& managedBean.getPhysicalConsulting()
+					&& managedBean
+							.getPhysicalConsulting()
 							.equals(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE)) {
 				managedBean.setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
 						"lbl.sm.regCatCode.confirm.header.nonphysical", null));
