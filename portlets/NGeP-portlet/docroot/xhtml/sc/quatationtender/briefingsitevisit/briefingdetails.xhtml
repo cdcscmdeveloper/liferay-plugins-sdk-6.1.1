@@ -85,7 +85,7 @@
 						<td><p:selectOneMenu id="manDivison"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDivision.divisionId}"
 								style="width: 249px;margin-bottom: 5px;"
-								disabled="#{!qTBriefingSiteVisitBackingBean.managedBean.stateCode}">
+								disabled="#{empty qTBriefingSiteVisitBackingBean.managedBean.divisionList}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="divisionList"
 									value="#{qTBriefingSiteVisitBackingBean.managedBean.divisionList}"
