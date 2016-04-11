@@ -315,7 +315,7 @@
 							<h:outputText value="#{lbl['lbl.txt.no']}"
 								rendered="#{person.authorizedFlg eq '0'}" />
 						</p:column>
-						<p:column
+						<p:column rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K'}"
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
 							<ac:smSoftcertStatus personnel="#{person}"  />
 						</p:column>
