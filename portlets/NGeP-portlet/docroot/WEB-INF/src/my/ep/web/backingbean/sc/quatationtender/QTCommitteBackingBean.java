@@ -1933,7 +1933,7 @@ public class QTCommitteBackingBean extends
 
 					return true;
 				}
-			} else if (isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
+			} else if (isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_CLOSED)) {
 				return true;
 			} else if (isMaintenanceEligibleStatus(currentStatusId)) {
 							
@@ -2013,6 +2013,9 @@ public class QTCommitteBackingBean extends
 				return true;
 			} else if (isQTStatusAfterScheduleDoc(this.getManagedBean().getCurrentStatusId())
 					&& !SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getTaskName())
+					&& !SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getTaskName())) {
 				return true;
