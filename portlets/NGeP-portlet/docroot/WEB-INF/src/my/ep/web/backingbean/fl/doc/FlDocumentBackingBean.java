@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
@@ -274,6 +275,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		IReliefOrderSO reliwfOrderSo=null;
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 		StatusReqDTO statusReqDTO = null;
+		IFulfilmentSO iFulfilmentSO = null;
 		
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		flBB.getManagedBean().setDocMaintainRemarks(false);
@@ -606,6 +608,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			navgPage=NAV_TO_MAINTAIN_INV;
 		}
 		else if(docType.equals(ParameterConst.DOCTYPE_FULFILMENT_NOTE)){
+			iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentSO.class);
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			reqDTO.setFulfilmentNoteId(Long.valueOf(flDocId));
 			reqDTO.setStatusDesc(statusDesc);
@@ -630,11 +633,10 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 			recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
-			if(recNoteBB.getManagedBean().getAcknowledgeOfficer() == null){
-				reqDTO.setFlRequestId(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
-				FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+			if(recNoteBB.getManagedBean().getFlApprover() == null){
+				FlActor actor = iFulfilmentSO.retrieveFlActors(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				if(actor != null){
-					recNoteBB.getManagedBean().setAcknowledgeOfficer(actor.getUser());
+					recNoteBB.getManagedBean().setFlApprover(actor.getUser());
 					recNoteBB.getManagedBean().setAcknowledgeDate(actor.getActionDate());
 				}
 			}
