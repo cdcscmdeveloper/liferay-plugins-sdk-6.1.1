@@ -6921,6 +6921,8 @@ public class SmApplicationBackingBean extends
 						getManagedBean(), currentTab);
 			} else {
 				valid = validateBeforeSave(applType, currentPageType);
+				SmApplicationUtil.validateBranchWithoutBankAcc(
+						getManagedBean(), currentTab, valid);
 			}
 
 			if (valid) {
@@ -8150,8 +8152,13 @@ public class SmApplicationBackingBean extends
 	public void retrieveBankFinOrgListByType() {
 		boolean runQuery = true;
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+
 		log.info("******* Selected Value **********"
 				+ getManagedBean().getSelectedBank().getAccountPurpose());
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+				.getSmSupplierBranches())) {
+			getManagedBean().getSelectedBank().setForHqFlg(1);
+		}
 		if (getManagedBean().getSelectedBank().getAccountPurpose()
 				.equalsIgnoreCase("P")) {
 			reqDTO.setServiceType(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
