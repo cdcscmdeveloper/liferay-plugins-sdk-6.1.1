@@ -2256,6 +2256,29 @@ public class SmApplicationBackingBean extends
 			}
 
 			getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
+
+			// sort by document is mandatory or not
+			Collections.sort(getManagedBean().getSmAppl()
+					.getSmApplSupportDocs(),
+					new Comparator<SmApplSupportDoc>() {
+						@Override
+						public int compare(final SmApplSupportDoc s1,
+								final SmApplSupportDoc s2) {
+							String str1 = "0";
+							String str2 = "0";
+
+							if (s1.getPmDocument() != null
+									&& s1.getPmDocument().isMandatory()) {
+								str1 = "1";
+							}
+							if (s2.getPmDocument() != null
+									&& s2.getPmDocument().isMandatory()) {
+								str2 = "1";
+							}
+							return (str2.compareTo(str1));
+						}
+					});
+
 		} else {
 			log.info("*** Empty Supporting doc list **** ");
 		}
@@ -3719,7 +3742,7 @@ public class SmApplicationBackingBean extends
 			deleteCatCodes(categories);
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
-			
+
 			initPhysicalConsultingCatcode();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
@@ -9462,12 +9485,11 @@ public class SmApplicationBackingBean extends
 			}
 		}
 	}
-	
-	private void initPhysicalConsultingCatcode(){
-		if (!StringUtils.isBlank(getManagedBean().getSmAppl()
-				.getSupplierType())
-				&& getManagedBean().getSmAppl().getSupplierType()
-						.equals("J")) {
+
+	private void initPhysicalConsultingCatcode() {
+		if (!StringUtils
+				.isBlank(getManagedBean().getSmAppl().getSupplierType())
+				&& getManagedBean().getSmAppl().getSupplierType().equals("J")) {
 			if (SmCommonUtil.isApplPhysicalConsultant(getManagedBean()
 					.getSmAppl())) {
 				getManagedBean()

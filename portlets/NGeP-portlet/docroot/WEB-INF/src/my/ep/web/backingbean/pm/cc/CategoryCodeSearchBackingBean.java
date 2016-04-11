@@ -26,6 +26,7 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -569,16 +570,23 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		System.out.println("resDTO.getCategoryL1List(): " + resDTO.getCategoryL1List());		
 		
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		List<SelectItem> consultantSelectItems = new ArrayList<SelectItem>();
 		for(PmCategoryL1 l1 : resDTO.getCategoryL1List()) {
 			System.out.println("l1.getCategoryName(): " + l1.getCategoryName());
 			//filter for consultant
 			if(!StringUtils.isBlank(supplierType) && supplierType.equals("J")){
 				if(!StringUtils.isBlank(catcodeL1) && catcodeL1.equals(l1.getCategoryL1Code())){
+					consultantSelectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
+				}else{
 					selectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
 				}
 			}else{
 				selectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
 			}
+		}
+		
+		if(!EntityHelper.isCollectionEmpty(consultantSelectItems)){
+			selectItems = consultantSelectItems;
 		}
 		
 		return selectItems;
