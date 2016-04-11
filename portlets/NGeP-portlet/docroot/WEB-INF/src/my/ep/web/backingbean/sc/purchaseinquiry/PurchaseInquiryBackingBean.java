@@ -658,6 +658,7 @@ public class PurchaseInquiryBackingBean extends
 				requestNoteDtl.setPriceType(getParameterByTypeAndCode(
 						ParameterTypeConst.PRICE_TYPE, getManagedBean()
 								.getPriceType()));
+				prInquiry.setPriceType(requestNoteDtl.getPriceType());
 			}
 
 			requestNoteDtls.add(requestNoteDtl);
@@ -992,42 +993,10 @@ public class PurchaseInquiryBackingBean extends
 
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
 					ScRequestSupplierItem scRequestSupplierItem =  scRequestNoteDtl.getScRequestSupplierItem();
-					// validate pi if no stock
-					if (prInquiry.getIsStockAvailable().equals(
-							ParameterConst.PI_NO_STOCK)
-							&& scRequestNoteDtl
-							.getProcurementType()
-							.getParameterCode()
-							.equalsIgnoreCase(
-									ParameterConst.PROC_TYPE_NORMAL)) {
-						PrInquiryReqDTO inquiryReqDTO = new PrInquiryReqDTO();
-						inquiryReqDTO.setRequestItemId(scRequestNoteDtl
-								.getRequestItem().getRequestNoteItemId());
-
-						PrInquiryResDTO inquiryResDTO = getPrInquirySO()
-								.isPIProceedabletoRN(inquiryReqDTO);
-						if (!inquiryResDTO.isProceedable()) {
-							throw new EpException(MessageConst.ERROR_760358);
-						}
-					}
 
 					scRequestNoteDtl.setFulfilmentType(getParameterByTypeAndCode(
 							ParameterTypeConst.FULFILMENT_TYPE,
 							ParameterConst.FULFILMENT_TYPE_ONE_OFF));
-
-					// check purchase inquiry item
-					if(scRequestNoteDtl.isShowPurchaseInquiry()){
-						ScPrInquiry scPrInquiry = null;
-						if (scRequestNoteDtl.getPiRequestSupplierItem() != null){
-							scPrInquiry = scRequestNoteDtl.getPiRequestSupplierItem().getScPrInquiy();
-						}
-						if(scRequestSupplierItem.getScPrInquiy() != null){
-							scPrInquiry = scRequestSupplierItem.getScPrInquiy();
-						}
-						if(scPrInquiry != null){
-							reqNoteBackingBean.getManagedBean().setPrInquiryId(scPrInquiry.getPrInquiryId());
-						}
-					}
 
 					if (null == scRequestNoteDtl.getPriceType()) {
 						scRequestNoteDtl.setPriceType(new PmParameter());
@@ -1049,10 +1018,6 @@ public class PurchaseInquiryBackingBean extends
 						scRequestNoteDtl.setDeliverTermType(getDeliveryTermType());
 					}
 
-					scRequestNoteDtl.getScRequestSupplierItem().setSupplierId(
-							scRequestNoteDtl.getScRequestSupplierItem()
-							.getSmSupplier().getSupplierId());
-
 					if (scRequestNoteDtl.getJustificationType() != null) {
 						reqNoteBackingBean.getManagedBean().setJustificationType(
 								scRequestNoteDtl.getProcurementType()
@@ -1063,16 +1028,45 @@ public class PurchaseInquiryBackingBean extends
 						reqNoteBackingBean.getManagedBean().setJustification(
 								scRequestNoteDtl.getJustification());
 					}
+					
+					if(scRequestSupplierItem != null){
+						scRequestNoteDtl.getScRequestSupplierItem().setSupplierId(
+								scRequestNoteDtl.getScRequestSupplierItem()
+								.getSmSupplier().getSupplierId());
 
-					// set condition field for saved request note
-					if (!scRequestNoteDtl.isReRecommend()) {
+						// check purchase inquiry item
+						if(scRequestNoteDtl.isShowPurchaseInquiry()){
+							ScPrInquiry scPrInquiry = null;
+							if (scRequestNoteDtl.getPiRequestSupplierItem() != null){
+								scPrInquiry = scRequestNoteDtl.getPiRequestSupplierItem().getScPrInquiy();
+							}
+							if(scRequestSupplierItem.getScPrInquiy() != null){
+								scPrInquiry = scRequestSupplierItem.getScPrInquiy();
+							}
+							if(scPrInquiry != null){
+								reqNoteBackingBean.getManagedBean().setPrInquiryId(scPrInquiry.getPrInquiryId());
+							}
+						}
+						
+						reqNoteBackingBean.supplierListener(scRequestNoteDtl
+								.getScRequestSupplierItem().getSupplierId(),
+								scRequestNoteDtl.getPriceType().getParameterId(),
+								scRequestNoteDtl, scRequestNoteDtl.getAssignedUser()
+								.getUserId(), scRequestNoteDtl
+								.getProcurementTypeCategory().getParameterId());
+					}
+					
+					// purchase inquiry
+					if (prInquiry.getIsStockAvailable().equals(
+							ParameterConst.PI_NO_STOCK)){
+						
+						// set condition field for saved request note
 						StringBuilder sb = new StringBuilder();
 						sb.append("requestNoteItem.requestNoteItemId^");
 						sb.append(scRequestNoteDtl.getRequestItem()
 								.getRequestNoteItemId());
 
-						if (prInquiry.getIsStockAvailable().equals(
-								ParameterConst.PI_NO_STOCK) && scRequestNoteDtl.isShowPurchaseInquiry()) {
+						if (scRequestNoteDtl.isShowPurchaseInquiry()) {
 							sb.append("|");
 							sb.append("requestSupplierItemId^");
 							sb.append(scRequestNoteDtl.getPiRequestSupplierItem()
@@ -1082,19 +1076,35 @@ public class PurchaseInquiryBackingBean extends
 							sb.append(SearchOperator.OPERATOR_NOT_IN.value());
 						}
 						scRequestNoteDtl.setConditionField(sb.toString());
-					}
 
+						// bofore save rn set null as supplier item for no stock supplier
+						if (null == requestNote.getCurrentStatus()) {
+							scRequestNoteDtl.setScRequestSupplierItem(null);
+						}
+						
+						// validate pi if no stock
+						if (scRequestNoteDtl
+								.getProcurementType()
+								.getParameterCode()
+								.equalsIgnoreCase(
+										ParameterConst.PROC_TYPE_NORMAL)) {
+							PrInquiryReqDTO inquiryReqDTO = new PrInquiryReqDTO();
+							inquiryReqDTO.setRequestItemId(scRequestNoteDtl
+									.getRequestItem().getRequestNoteItemId());
+
+							PrInquiryResDTO inquiryResDTO = getPrInquirySO()
+									.isPIProceedabletoRN(inquiryReqDTO);
+							if (!inquiryResDTO.isProceedable()) {
+								throw new EpException(MessageConst.ERROR_760358);
+							}
+						}
+					}
+					
 					reqNoteBackingBean.getManagedBean().setProcurementType(
 							scRequestNoteDtl.getProcurementType()
 							.getParameterCode());
 					reqNoteBackingBean.getManagedBean().setRequestSupplierItem(
 							scRequestNoteDtl.getScRequestSupplierItem());
-					reqNoteBackingBean.supplierListener(scRequestNoteDtl
-							.getScRequestSupplierItem().getSupplierId(),
-							scRequestNoteDtl.getPriceType().getParameterId(),
-							scRequestNoteDtl, scRequestNoteDtl.getAssignedUser()
-							.getUserId(), scRequestNoteDtl
-							.getProcurementTypeCategory().getParameterId());
 
 					// update price
 					reqNoteBackingBean.priceTypeChangeListener(scRequestNoteDtl
@@ -1105,14 +1115,7 @@ public class PurchaseInquiryBackingBean extends
 					reqNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
 					reqNoteBackingBean.getManagedBean().setRequestNoteDtl(
 							scRequestNoteDtl);
-
-					if (prInquiry.getIsStockAvailable().equals(
-							ParameterConst.PI_NO_STOCK)
-							&& null == requestNote.getCurrentStatus()) {
-						scRequestNoteDtl.getScRequestSupplierItem().setSmSupplier(
-								new SmSupplier());
-
-					}
+					
 					requestNoteDtls.add(scRequestNoteDtl);
 					reqNoteBackingBean.getManagedBean().setRequestSupplierItem(
 							scRequestNoteDtl.getScRequestSupplierItem());
@@ -1248,18 +1251,10 @@ public class PurchaseInquiryBackingBean extends
 							.getLeadTime());
 				}
 
-				// price type drop down
-				List<String> priceTypes = new ArrayList<String>();
-				priceTypes
-				.add(requestNoteDtl.getPriceType().getParameterCode());
-				getManagedBean().setPriceType(
-						requestNoteDtl.getPriceType().getParameterCode());
-				getManagedBean().setPriceTypes(
-						getPriceTypeDropdownValues(
-								ParameterTypeConst.PRICE_TYPE, priceTypes));
-
-				getManagedBean().setPmOrgProfile(
-						requestNoteDtl.getScRequestNote().getPmOrgProfile());
+				// price type
+				getManagedBean().setPriceType(getParameterDesc(prInquiry.getPriceType()));
+				getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
+				
 				getManagedBean().setRequestNoteDtl(requestNoteDtl);
 				getManagedBean().setScRequestSupplierItem(requestSupplierItem);
 
@@ -1532,7 +1527,6 @@ public class PurchaseInquiryBackingBean extends
 
 		// get selected supplier 
 		ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
-		ScRequestNoteDtl scRequestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
 		prInquiry.setRequestSupplierItem(requestSupplierItem);
 
 		// lead time 
@@ -1540,14 +1534,13 @@ public class PurchaseInquiryBackingBean extends
 			requestSupplierItem.getRequestNoteItem().setLeadTime(requestSupplierItem.getSupplierItemPrices().get(0).getPricing().getCmSupplierItem().getLeadTime());
 		}
 
-		// price type drop down
-		List<String> priceTypes= new ArrayList<String>();
-		priceTypes.add(scRequestNoteDtl.getPriceType().getParameterCode());
-		getManagedBean().setPriceType(scRequestNoteDtl.getPriceType().getParameterCode());
-		getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
-
-		getManagedBean().setPmOrgProfile(scRequestNoteDtl.getScRequestNote().getPmOrgProfile());
-		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+		if(requestSupplierItem.getScRequestNoteDtl() != null 
+				&& requestSupplierItem.getScRequestNoteDtl().size()>0){
+			ScRequestNoteDtl scRequestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
+			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+		}
+		getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
+		getManagedBean().setPriceType(getParameterDesc(prInquiry.getPriceType()));
 		getManagedBean().setScRequestSupplierItem(requestSupplierItem);
 
 		// no of response days
