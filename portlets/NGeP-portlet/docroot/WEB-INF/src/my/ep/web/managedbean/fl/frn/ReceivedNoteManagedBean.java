@@ -115,7 +115,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String bpmTaskName;
 	private boolean lastFRNTaxInv=false;
 	private List<PmUser> approverList;
-	private PmUser acknowledgeOfficer;
+	private PmUser flApprover;
 	private Date acknowledgeDate;
 	
 	private boolean acknowledged;
@@ -914,20 +914,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 		this.issuanceCogstrCheck = issuanceCogstrCheck;
 	}
 
-	public PmUser getAcknowledgeOfficer() {
-		return acknowledgeOfficer;
-	}
-
-	public void setAcknowledgeOfficer(PmUser acknowledgeOfficer) {
-		this.acknowledgeOfficer = acknowledgeOfficer;
-	}
-
 	public Date getAcknowledgeDate() {
 		return acknowledgeDate;
 	}
 
 	public void setAcknowledgeDate(Date acknowledgeDate) {
 		this.acknowledgeDate = acknowledgeDate;
+	}
+
+	public PmUser getFlApprover() {
+		return flApprover;
+	}
+
+	public void setFlApprover(PmUser flApprover) {
+		this.flApprover = flApprover;
 	}
 
 }

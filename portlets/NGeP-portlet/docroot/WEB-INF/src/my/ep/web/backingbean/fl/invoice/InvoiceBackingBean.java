@@ -2040,6 +2040,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		
 		public String navigateFulfilmentNote(FlDeliveryOrder delOrder){
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 				reqDTO.setFulfilmentNoteId(delOrder.getFulfilmentNote().getFulfilmentNoteId());
@@ -2057,11 +2058,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 				}
 				recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
-				if(recNoteBB.getManagedBean().getAcknowledgeOfficer() == null){
-					reqDTO.setFlRequestId(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
-					FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+				if(recNoteBB.getManagedBean().getFlApprover() == null){
+					FlActor actor = iFulfilmentSO.retrieveFlActors(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 					if(actor != null){
-						recNoteBB.getManagedBean().setAcknowledgeOfficer(actor.getUser());
+						recNoteBB.getManagedBean().setFlApprover(actor.getUser());
 						recNoteBB.getManagedBean().setAcknowledgeDate(actor.getActionDate());
 					}
 				}
