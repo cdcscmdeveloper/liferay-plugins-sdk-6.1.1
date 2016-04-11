@@ -198,6 +198,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void retrievePmDivisions() {
 		debugLogger("retrievePmDistrictList");
 		this.getManagedBean().setState(false);
+		this.getManagedBean().setDivisionList(null);
 		if (null != this.getManagedBean().getQtBriefing()) {
 			/*
 			 * this.getManagedBean().getQtBriefing().getAddress()
