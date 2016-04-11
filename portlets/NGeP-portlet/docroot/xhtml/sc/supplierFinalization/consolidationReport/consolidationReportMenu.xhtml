@@ -35,7 +35,6 @@
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					action="#{consolidationReportBackingBean.managedBean.setOutcome(bpmAction)}"
 					process="@this" oncomplete="submissionPopup.show();"
-					update="@([id$=#{submissionPopupId}])"
 					rendered="#{validityDaysExpiredQt}" />
 			</ui:repeat>
 		</div>
