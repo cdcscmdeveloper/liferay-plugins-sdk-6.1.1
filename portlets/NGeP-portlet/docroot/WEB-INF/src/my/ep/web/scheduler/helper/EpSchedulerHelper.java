@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 
@@ -21,6 +24,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
+import org.quartz.ee.servlet.QuartzInitializerListener;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
@@ -32,8 +36,6 @@ import org.quartz.impl.matchers.GroupMatcher;
  */
 public class EpSchedulerHelper {
 	public static Logger log = EpLogger.getLogger(EpSchedulerHelper.class);
-
-	private static Scheduler instance;
 
 	/**
 	 * Schedule new job or update existing scheduled job
@@ -412,17 +414,20 @@ public class EpSchedulerHelper {
 	 * @return Scheduler
 	 */
 	public static Scheduler getScheduler() {
-		if (instance == null) {
-			try {
-				instance = new StdSchedulerFactory().getScheduler();
-				if (!instance.isStarted()) {
-					instance.start();
-				}
-			} catch (SchedulerException e) {
-				log.error(e.getMessage());
-			}
+		Scheduler scheduler = null;
+		ServletContext servletContext = (ServletContext) FacesContext
+				.getCurrentInstance().getExternalContext().getContext();
+
+		// Get QuartzInitializerListener
+		StdSchedulerFactory stdSchedulerFactory = (StdSchedulerFactory) servletContext
+				.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY);
+
+		try {
+			scheduler = stdSchedulerFactory.getScheduler();
+		} catch (SchedulerException e) {
+
 		}
-		return instance;
+		return scheduler;
 
 	}
 
