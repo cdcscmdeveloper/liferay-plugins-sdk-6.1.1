@@ -7754,7 +7754,7 @@ public class SmApplicationBackingBean extends
 					ReviewApplicationResDTO revApplicationResDTO = reqSO
 							.submitPOorApproverReviewToBPM(reqDTO);
 
-					if (revApplicationResDTO.isSuccessful()) {
+					/*if (revApplicationResDTO.isSuccessful()) {
 						// to auto generate mof cert
 						if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 							try {
@@ -7767,7 +7767,7 @@ public class SmApplicationBackingBean extends
 										+ ex.getMessage());
 							}
 						}
-					}
+					}*/
 
 					FacesContext.getCurrentInstance().addMessage(
 							null,

@@ -196,11 +196,11 @@ public class MolPayServlet extends HttpServlet {
 							if(smPayment.getPyBill().getBillType().
 									equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE) && 
 									validPayment){
-								try{
+								/*try{
 									SmVirtualCertHelper.getInstance().autoGenerateVirtualCert(smPayment.getPyBill().getBillRefId());
 								}catch(Exception ex){
 									log.info("<<<<MOLPayment - error when generate Virtual Cert>>>>" + ex.getMessage());
-								}
+								}*/
 							}
 							
 							log.info("Curl IPN - CBTOKEN:MPSTATOK " + nbcb);
