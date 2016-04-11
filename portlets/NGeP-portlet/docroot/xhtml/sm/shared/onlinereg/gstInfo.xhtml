@@ -81,7 +81,7 @@
 				#{gstDoc.fileName}
 				<p:commandLink  rendered="#{not empty gstDoc.fileName}"  onclick="confirmDeleteHqDialog.show();"
 					disabled="#{!registrationBackingBean.managedBean.gstFlag}" action="#{registrationBackingBean.setSelectedGstDoc(gstDoc)}">
-						<p:graphicImage value="/css/images/design/ico-termination.png" style="margin-right:2px;" />
+						<p:graphicImage value="/css/images/design/delete.png" style="margin-right:2px;" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
