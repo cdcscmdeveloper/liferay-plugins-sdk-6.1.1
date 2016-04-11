@@ -809,6 +809,21 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory company name view. */
 	private boolean smMandatoryCompanyNameView = false;
+	
+	/** The sm non mandatory company name view. */
+	private boolean smNonMandatoryCompanyNameView=false;
+	
+	/** The sm non mandatory state view. */
+	private boolean smNonMandatoryStateView=false;
+	
+	/** The sm sv non mandatory district view. */
+	private boolean smSVNonMandatoryDistrictView=false;
+	
+	/** The sm svo non mandatory user view. */
+	private boolean smSVONonMandatoryUserView=false;
+	
+	/** The sm non mandatory application no view. */
+	private boolean smNonMandatoryApplicationNoView=false;
 
 	/** The sm mandatory registration type view. */
 	private boolean smMandatoryRegistrationTypeView = false;
@@ -7102,6 +7117,103 @@ public class ReportsGenerateBean {
 	 */
 	public boolean isSmActiveSubmissiveFromDateView() {
 		return smActiveSubmissiveFromDateView;
+	}
+
+	/**
+	 * Checks if is sm non mandatory company name view.
+	 * 
+	 * @return the smNonMandatoryCompanyNameView
+	 */
+	public boolean isSmNonMandatoryCompanyNameView() {
+		return smNonMandatoryCompanyNameView;
+	}
+
+	/**
+	 * Sets the sm non mandatory company name view.
+	 * 
+	 * @param smNonMandatoryCompanyNameView
+	 *            the smNonMandatoryCompanyNameView to set
+	 */
+	public void setSmNonMandatoryCompanyNameView(
+			boolean smNonMandatoryCompanyNameView) {
+		this.smNonMandatoryCompanyNameView = smNonMandatoryCompanyNameView;
+	}
+
+	/**
+	 * Checks if is sm non mandatory state view.
+	 * 
+	 * @return the smNonMandatoryStateView
+	 */
+	public boolean isSmNonMandatoryStateView() {
+		return smNonMandatoryStateView;
+	}
+
+	/**
+	 * Sets the sm non mandatory state view.
+	 * 
+	 * @param smNonMandatoryStateView
+	 *            the smNonMandatoryStateView to set
+	 */
+	public void setSmNonMandatoryStateView(boolean smNonMandatoryStateView) {
+		this.smNonMandatoryStateView = smNonMandatoryStateView;
+	}
+
+	/**
+	 * Checks if is sm sv non mandatory district view.
+	 * 
+	 * @return the smSVNonMandatoryDistrictView
+	 */
+	public boolean isSmSVNonMandatoryDistrictView() {
+		return smSVNonMandatoryDistrictView;
+	}
+
+	/**
+	 * Sets the sm sv non mandatory district view.
+	 * 
+	 * @param smSVNonMandatoryDistrictView
+	 *            the smSVNonMandatoryDistrictView to set
+	 */
+	public void setSmSVNonMandatoryDistrictView(boolean smSVNonMandatoryDistrictView) {
+		this.smSVNonMandatoryDistrictView = smSVNonMandatoryDistrictView;
+	}
+
+	/**
+	 * Checks if is sm svo non mandatory user view.
+	 * 
+	 * @return the smSVONonMandatoryUserView
+	 */
+	public boolean isSmSVONonMandatoryUserView() {
+		return smSVONonMandatoryUserView;
+	}
+
+	/**
+	 * Sets the sm svo non mandatory user view.
+	 * 
+	 * @param smSVONonMandatoryUserView
+	 *            the smSVONonMandatoryUserView to set
+	 */
+	public void setSmSVONonMandatoryUserView(boolean smSVONonMandatoryUserView) {
+		this.smSVONonMandatoryUserView = smSVONonMandatoryUserView;
+	}
+
+	/**
+	 * Checks if is sm non mandatory application no view.
+	 * 
+	 * @return the smNonMandatoryApplicationNoView
+	 */
+	public boolean isSmNonMandatoryApplicationNoView() {
+		return smNonMandatoryApplicationNoView;
+	}
+
+	/**
+	 * Sets the sm non mandatory application no view.
+	 * 
+	 * @param smNonMandatoryApplicationNoView
+	 *            the smNonMandatoryApplicationNoView to set
+	 */
+	public void setSmNonMandatoryApplicationNoView(
+			boolean smNonMandatoryApplicationNoView) {
+		this.smNonMandatoryApplicationNoView = smNonMandatoryApplicationNoView;
 	}
 
 	/**
