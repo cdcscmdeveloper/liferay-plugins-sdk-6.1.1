@@ -251,7 +251,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 
 					/////// set at SO tracking dairy ActionDesc
-					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+					
+					String actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada Pentadbir Katalog untuk semakan";
+					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CU_DocType));
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
 
 					if(resDTO.isSuccessful()){
@@ -382,7 +384,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 
 				///////actionDesc set at SO
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus()));
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus(),CmConst.CU_DocType));
 				
 				resDTO = unspscSO.addCodificationRequest(reqDTO);
 
@@ -448,14 +450,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				statusReqDTO.setStatusId(15014L);
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada Pentadbir Kodifikasi untuk semakan";
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus()));
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus(),CmConst.CU_DocType));
 			}
 			else if (face.hasRoleUser(CmConst.CODIFICATION_OFFICER)) {
 				log.info("Tracking diary for UNSPSC Code Review CODIFICATION_OFFICER");
 				statusReqDTO.setStatusId(15004L);
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada CDC Working Committee untuk kelulusan. ";
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus()));
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus(),CmConst.CU_DocType));
 			}
 			
 		}
@@ -466,7 +468,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				statusReqDTO.setStatusId(15015L);
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah disyorkan oleh "+reqDTO.getUserName();
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus()));
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus(),CmConst.CU_DocType));
 			}			
 			else if (face.hasRoleUser(CmConst.CODIFICATION_OFFICER)) {
 				log.info("Tracking diary for UNSPSC Code Recomended To Supplier by CODIFICATION_OFFICER");
@@ -474,7 +476,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				statusReqDTO.setStatusId(15013L);
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah disyorkan oleh "+reqDTO.getUserName();
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, new PmStatus()));
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, new PmStatus(),CmConst.CU_DocType));
 			}
 		}
 	}
@@ -545,7 +547,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			statusReqDTO.setStatusId(15015L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc ="Kod Item "+this.getManagedBean().getRequestCode().getDocNo()+" telah disyorkan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CU_DocType));
 
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1399,7 +1401,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				statusReqDTO.setStatusId(15004L);
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				String actionDesc ="Kod Item "+this.getManagedBean().getRequestCode().getDocNo()+" telah diserah kepada CDC Working Committee untuk kelulusan. ";
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));	
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1449,7 +1451,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 
 				String actionDesc = "Kod Item "+reqDTO.getRequestCode().getDocNo()+" telah disyorkan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CU_DocType));	
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1795,13 +1797,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			reqDTO.setTrackingStatus(true);
 
 			actionDesc = "Kod Lanjutan "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada Pentadbir Kodifikasi untuk semakan";
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));	
 
 		}
 		else {
 			reqDTO.setTrackingStatus(true);
 			actionDesc = "Kod Lanjutan "+reqDTO.getRequestCode().getDocNo()+" telah diserah kepada Pentadbir Katalog untuk semakan";
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));				
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));				
 		}		
 
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
@@ -2181,7 +2183,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			statusReqDTO.setStatusId(15005L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc ="Kod Item "+ this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diiklankan oleh "+pmUser.getUserName();
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
 			
 			resDTO = unspscSO.publishExtensionRequest(reqDTO);
 
@@ -2348,21 +2350,21 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			statusReqDTO.setStatusId(15004L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan.";
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
 		}
 		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
 			statusReqDTO.setStatusId(15025L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (eP) untuk perakuan.";
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
 		}
 		else if (face.hasRoleUser(CmConst.EP_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by EP_COMMITTE");
 			statusReqDTO.setStatusId(15003L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diperaku oleh " +reqDTO.getUserName();
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
 		}
 	}
 
