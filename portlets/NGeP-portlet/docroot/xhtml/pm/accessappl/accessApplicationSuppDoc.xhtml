@@ -13,10 +13,10 @@
 			value="#{accessApplBackingBean.managedBean.accessApplDocList}"
 			rowIndexVar="index">
 			<ac:paginator for="suppDocDt" />
-			<p:column style="width:45%;white-space:normal;" headerText="#{lbl['lbl.pm.document.name']}">
+			<p:column style="width:65%;white-space:normal;" headerText="#{lbl['lbl.pm.document.name']}">
 				<h:outputText value="#{accessApplDoc.document.docName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.txt.attachment']}" style="width:55%;text-align:center;white-space:normal;">
+			<p:column headerText="#{lbl['lbl.txt.attachment']}" style="width:35%;text-align:center;white-space:normal;">
 			<p:commandLink oncomplete="accessApplUploadDlg.show();"
 							update="@([id$=accessApplUploadDialog])" process="@this"
 							action="#{accessApplBackingBean.assignSelectedApplDoc(accessApplDoc)}"
