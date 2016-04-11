@@ -1160,6 +1160,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory expected site visi rptt date view. */
 	private boolean smMandatoryExpectedSiteVisiRpttDateView = false;
+	
+	/** The sm non mandatory expected site visi rptt date view. */
+	private boolean smNonMandatoryExpectedSiteVisiRpttDateView=false;
 
 	/** The sm mandatory actual site visit date view. */
 	private boolean smMandatoryActualSiteVisitDateView = false;
@@ -6752,6 +6755,26 @@ public class ReportsGenerateBean {
 	 */
 	public boolean isSmMandatoryApprovedReportTypeView() {
 		return smMandatoryApprovedReportTypeView;
+	}
+
+	/**
+	 * Checks if is sm non mandatory expected site visi rptt date view.
+	 * 
+	 * @return the smNonMandatoryExpectedSiteVisiRpttDateView
+	 */
+	public boolean isSmNonMandatoryExpectedSiteVisiRpttDateView() {
+		return smNonMandatoryExpectedSiteVisiRpttDateView;
+	}
+
+	/**
+	 * Sets the sm non mandatory expected site visi rptt date view.
+	 * 
+	 * @param smNonMandatoryExpectedSiteVisiRpttDateView
+	 *            the smNonMandatoryExpectedSiteVisiRpttDateView to set
+	 */
+	public void setSmNonMandatoryExpectedSiteVisiRpttDateView(
+			boolean smNonMandatoryExpectedSiteVisiRpttDateView) {
+		this.smNonMandatoryExpectedSiteVisiRpttDateView = smNonMandatoryExpectedSiteVisiRpttDateView;
 	}
 
 	/**
