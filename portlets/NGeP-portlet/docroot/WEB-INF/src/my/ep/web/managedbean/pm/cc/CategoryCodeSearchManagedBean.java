@@ -40,6 +40,7 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 	private String bumiPercentage = null;
 	private String categoryType = null;
 	private String businessTypeCode = null;
+	private String catcodeL1;
 	
 	public CategoryCodeSearchManagedBean() {
 	}
@@ -210,6 +211,14 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 
 	public void setBusinessTypeCode(String businessTypeCode) {
 		this.businessTypeCode = businessTypeCode;
+	}
+
+	public String getCatcodeL1() {
+		return catcodeL1;
+	}
+
+	public void setCatcodeL1(String catcodeL1) {
+		this.catcodeL1 = catcodeL1;
 	}
 	
 }
