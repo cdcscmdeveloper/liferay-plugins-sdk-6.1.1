@@ -315,7 +315,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();		
 		if(taskId != null){
 			renewSesionObject();
-			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+			IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentSO.class);
+			IFulfilmentRequestSO iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
@@ -342,7 +343,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setGfmasError(true);
 					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 					errReq.setErrorId(fulfillmentCancelReqType.getErrorId());
-					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+					FulfilmentResDTO errRes = iFulfilmentRequestSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
 			}else{
@@ -354,11 +355,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
-					if(getManagedBean().getAcknowledgeOfficer() == null){
-						reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
-						FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+					if(getManagedBean().getFlApprover() == null){
+						FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 						if(actor != null){
-							getManagedBean().setAcknowledgeOfficer(actor.getUser());
+							getManagedBean().setFlApprover(actor.getUser());
 							getManagedBean().setAcknowledgeDate(actor.getActionDate());
 						}
 					}
@@ -369,11 +369,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 					getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 					
-					if(getManagedBean().getAcknowledgeOfficer() == null){
-						reqDTO.setFlRequestId(resDTO.getFlDeliveryOrder().getFlRequest().getFulfilmentReqId());
-						FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+					if(getManagedBean().getFlApprover() == null){
+						FlActor actor = iFulfilmentSO.retrieveFlActors(resDTO.getFlDeliveryOrder().getFlRequest().getDocType(), resDTO.getFlDeliveryOrder().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 						if(actor != null){
-							getManagedBean().setAcknowledgeOfficer(actor.getUser());
+							getManagedBean().setFlApprover(actor.getUser());
 							getManagedBean().setAcknowledgeDate(actor.getActionDate());
 						}
 						
@@ -422,7 +421,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setGfmasError(true);
 					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 					errReq.setErrorId(fulFillmentRecievedNoteDataType.getErrorId());
-					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+					FulfilmentResDTO errRes = iFulfilmentRequestSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
 				if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
@@ -430,8 +429,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				}
 				getSupplierGst(getManagedBean().getFulfilmentNote());
 			}
-			if(getManagedBean().getAcknowledgeOfficer() != null){
-				getManagedBean().setUserLoginId(getManagedBean().getAcknowledgeOfficer().getUserId()); 
+			if(getManagedBean().getFlApprover() != null){
+				getManagedBean().setUserLoginId(getManagedBean().getFlApprover().getUserId()); 
 			}
 			getManagedBean().setSelectedTabIndex(0);
 			System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
@@ -906,6 +905,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 *
 	 */
 	public void viewReceivedNote() {
+		IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentSO.class);
 		IReceivedNoteSO receivedNoteSO =(IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -943,11 +943,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setDocMaintainRemarks(true);
 			getManagedBean().setAcknowledged(true);
 			getManagedBean().setButtonVal("View");
-			if(getManagedBean().getAcknowledgeOfficer() == null){
-				reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
-				FlActor actor = receivedNoteSO.retrieveLatestAcknowledgeOfficerByApprovedDate(reqDTO);
+			if(getManagedBean().getFlApprover() == null){
+				FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				if(actor != null){
-					getManagedBean().setAcknowledgeOfficer(actor.getUser());
+					getManagedBean().setFlApprover(actor.getUser());
 					getManagedBean().setAcknowledgeDate(actor.getActionDate());
 				}
 			}
@@ -1097,6 +1096,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		for(PmUser user : getManagedBean().getPmUserList()){
 			if(user.getUserId().equals(getManagedBean().getUserLoginId())){
 				getManagedBean().setSelectedAckOfficer(user);
+				break;
 			}
 		}
 	}
@@ -1138,8 +1138,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 		getSupplierGst(getManagedBean().getFulfilmentNote());
 	
-		if(getManagedBean().getAcknowledgeOfficer() != null){
-			getManagedBean().setUserLoginId(getManagedBean().getAcknowledgeOfficer().getUserId()); 
+		if(getManagedBean().getFlApprover() != null){
+			getManagedBean().setUserLoginId(getManagedBean().getFlApprover().getUserId()); 
 		}
 		getManagedBean().setSelectedTabIndex(0);
 
