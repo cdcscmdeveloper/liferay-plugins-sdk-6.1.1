@@ -2279,7 +2279,7 @@ public class LOIDetailBackingBean extends
 			}
 		} else if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
-
+			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 		} else {
 			updateBPMTask(outcome, null);
 		}
