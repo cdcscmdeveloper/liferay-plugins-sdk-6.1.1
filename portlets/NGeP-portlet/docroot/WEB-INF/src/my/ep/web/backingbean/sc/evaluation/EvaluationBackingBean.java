@@ -7378,7 +7378,7 @@ public class EvaluationBackingBean extends
 				EvaluationResDTO evalResDTO = evaluationSO
 						.saveReportDtls(reqDTO);
 				ScAttachment localAttachment = evalResDTO.getScQt()
-						.getScEvaluationCommitteeReportAttachment();
+						.getScOpenCommitteeReportAttachment();
 				this.getManagedBean().setScQt(evalResDTO.getScQt());
 				this.getManagedBean().setScAttachment(localAttachment);
 			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -7395,7 +7395,7 @@ public class EvaluationBackingBean extends
 				EvaluationResDTO evalResDTO = evaluationSO
 											.saveReportDtls(reqDTO);
 				ScAttachment localAttachment = evalResDTO.getScQt()
-						.getScEvaluationCommitteeReportAttachment();
+						.getScTechnicalEvaluationReportAttachment();
 				this.getManagedBean().setScQt(evalResDTO.getScQt());
 				this.getManagedBean().setScAttachment(localAttachment);
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
@@ -7412,7 +7412,7 @@ public class EvaluationBackingBean extends
 				EvaluationResDTO evalResDTO = evaluationSO
 											.saveReportDtls(reqDTO);
 				ScAttachment localAttachment = evalResDTO.getScQt()
-						.getScEvaluationCommitteeReportAttachment();
+						.getScFinancialEvaluationReportAttachment();
 				this.getManagedBean().setScQt(evalResDTO.getScQt());
 				this.getManagedBean().setScAttachment(localAttachment);
 			}
