@@ -34,8 +34,8 @@
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstEffDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							disabled="#{!registrationBackingBean.managedBean.gstFlag}"
-							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}">
-							<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
+							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" mindate="#{CommonConstants.GST_LAUNCH_DATE}">
+							<p:ajax event="dateSelect" process="@this" partialSubmit="true" update="gstEndDateCalId"/>
 						</p:calendar>
 						<p:message id="gstEffDateCalIdMsg" for="gstEffDateCalId" display="icon" />
 					</td>
@@ -54,7 +54,8 @@
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstEndDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  
 							disabled="#{!registrationBackingBean.managedBean.gstFlag}"
-							readonlyInput="true" size="30" showOn="button">
+							readonlyInput="true" size="30" showOn="button" 
+							mindate="#{registrationBackingBean.minGstEndDate}">
 							<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
 						</p:calendar>
 					</td>
