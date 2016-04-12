@@ -423,7 +423,18 @@ public class EpSchedulerHelper {
 				.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY);
 
 		try {
-			scheduler = stdSchedulerFactory.getScheduler();
+			if (stdSchedulerFactory != null
+					&& stdSchedulerFactory.getScheduler() != null) {
+				log.info(">>>>>>>>>>>QUARTZ INITIALIZER SCHEDULERFACTORY NOT NULL<<<<<<<<<");
+				scheduler = stdSchedulerFactory.getScheduler();
+			} else {
+				scheduler = new StdSchedulerFactory().getScheduler();
+				log.info(">>>>>>>>>>>QUARTZ INITIALIZER SCHEDULERFACTORY IS NULL<<<<<<<<<");
+				if (!scheduler.isStarted()) {
+					log.info(">>>>>>>>>>>QUARTZ SCHEDULER NOT STARTED<<<<<<<<<");
+					scheduler.start();
+				}
+			}
 		} catch (SchedulerException e) {
 
 		}
