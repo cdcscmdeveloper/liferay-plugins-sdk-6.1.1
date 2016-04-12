@@ -165,5 +165,13 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		}
 	}
 
+	/**
+	 * get Supplier Application Type description
+	 * @param applType
+	 * @return String
+	 */
+	public String getsupplierApplTypeDesc(String applType){
+		return SmCommonUtil.getApplTypeDesc(applType);
+	}
 }
 
