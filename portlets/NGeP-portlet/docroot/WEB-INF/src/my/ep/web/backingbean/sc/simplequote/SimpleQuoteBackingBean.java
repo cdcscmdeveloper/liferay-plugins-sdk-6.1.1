@@ -1879,6 +1879,7 @@ public class SimpleQuoteBackingBean extends
 		Date currentDate = new Date();
 		scQuote.setStartDate(currentDate);
 		scQuote.setEndDate(null);
+		getManagedBean().setCurrentStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		preRenderScQuote(scQuote);
 		/*TemplateSpecBean productTplSpecBean = getManagedBean()
 				.getProductTemplateSpecBean();
