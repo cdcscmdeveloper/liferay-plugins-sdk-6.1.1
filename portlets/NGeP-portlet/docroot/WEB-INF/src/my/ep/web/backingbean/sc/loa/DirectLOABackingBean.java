@@ -1007,9 +1007,9 @@ public class DirectLOABackingBean extends
 					scLoa.setSupplierBranch("HQ");
 					scLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
 					scLoa.setSupplierContact(supplierHQPersonnel.getName());
-					scLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneNo());
-					scLoa.setSupplierFaxNo(smCompanyBasic.getFaxNo());
-					scLoa.setSupplierMobNo(supplierHQPersonnel.getMobileNo());
+					scLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
+					scLoa.setSupplierFaxNo(smCompanyBasic.getFaxFull());
+					scLoa.setSupplierMobNo(supplierHQPersonnel.getMobileFull());
 					scLoa.setSupplierEmail(supplierHQPersonnel.getEmail());
 					// Get gst info
 					SupplierGstResDTO resDTO = getGSTInfo(supplierId, null);
@@ -1030,10 +1030,10 @@ public class DirectLOABackingBean extends
 					scLoa.setSupplierAddress(supplierBranch.getSmAddress());
 					scLoa.setSupplierContact(supplierBranch.getSmPersonnel()
 							.getName());
-					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneNo());
-					scLoa.setSupplierFaxNo(supplierBranch.getFaxNo());
+					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneFull());
+					scLoa.setSupplierFaxNo(supplierBranch.getFaxFull());
 					scLoa.setSupplierMobNo(supplierBranch.getSmPersonnel()
-							.getMobileNo());
+							.getMobileFull());
 					scLoa.setSupplierEmail(supplierBranch.getSmPersonnel()
 							.getEmail());
 					// Get gst info
@@ -4021,6 +4021,16 @@ public class DirectLOABackingBean extends
 		if (scLoa.getContractSigner() == null) {
 			scLoa.setContractSigner(new PmUser());
 		}
+		
+		// supplier branch
+		if(!StringUtils.isBlank(scLoa.getSupplierBranch())){
+			getManagedBean().setSelectedSupplierBranchName(scLoa.getSupplierBranch());
+		}
+		
+		// Actual Total Intended Price (RM)
+		if (scLoa.getEstimatedPrice() != null) {
+			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
+		}
 
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
@@ -6020,15 +6030,15 @@ public class DirectLOABackingBean extends
 	public void populateMinistryBasedOnLoginUser() {
 		PmOrgProfile orgProfile = this.getManagedBean().getScQt()
 				.getPmOrgProfile();
+		if(orgProfile != null){
+			
+			if (!ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(orgProfile
+					.getOrgTypeCode().getParameterCode())) {
 
-		if (!ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(orgProfile
-				.getOrgTypeCode().getParameterCode())) {
-
-			orgProfile = getMinistryOrgProfile(orgProfile);
-
+				orgProfile = getMinistryOrgProfile(orgProfile);
+			}
+			this.getManagedBean().getScQt().setMinistryOrgProfile(orgProfile);
 		}
-		this.getManagedBean().getScQt().setMinistryOrgProfile(orgProfile);
-
 	}
 
 	/**
