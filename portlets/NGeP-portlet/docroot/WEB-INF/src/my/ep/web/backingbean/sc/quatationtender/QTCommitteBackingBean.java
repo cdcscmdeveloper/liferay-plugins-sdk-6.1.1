@@ -2038,7 +2038,7 @@ public class QTCommitteBackingBean extends
 			if (qtCommittee != null) {
 				ScCommittee committee = qtCommittee.getScCommittee();
 				if (CollectionUtils.isNotEmpty(committee
-						.getScCommitteeMembers())) {
+						.getScCommitteeMembers())&& committee.isApprovalReq()) {
 					String committeeType = committee.getCommitteeType().getParameterCode();
 					isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
 					isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
