@@ -2037,11 +2037,11 @@ public class QTCommitteBackingBean extends
 					.getScQtCommittee();
 			if (qtCommittee != null) {
 				ScCommittee committee = qtCommittee.getScCommittee();
-
 				if (CollectionUtils.isNotEmpty(committee
 						.getScCommitteeMembers())) {
-					isChairpersonRequired(committee.getScCommitteeMembers());
-					isSecretaryRequired(committee.getScCommitteeMembers());
+					String committeeType = committee.getCommitteeType().getParameterCode();
+					isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
+					isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
 					isAtleastOneMemebersReq(committee.getScCommitteeMembers());
 				} else {
 					committee.setApprovalReq(false);
@@ -2057,7 +2057,7 @@ public class QTCommitteBackingBean extends
 		}
 	}
 
-	private void isChairpersonRequired(List<ScCommitteeMember> commMembers) {
+	private void isChairpersonRequired(List<ScCommitteeMember> commMembers,String committeeType) {
 		int count = 0;
 
 		for (ScCommitteeMember committeeMember : commMembers) {
@@ -2066,23 +2066,23 @@ public class QTCommitteBackingBean extends
 			if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
 					.equalsIgnoreCase(memberRole)) {
 				if (!committeeMember.isPNP()) {
-					throw new EpException(MessageConst.ERROR_760264);
+					throw new EpException(MessageConst.ERROR_760264,new String[]{committeeType});
 				}
 				count++;
 				if (count >= 2) {
-					throw new EpException(MessageConst.ERROR_760123);
+					throw new EpException(MessageConst.ERROR_760123,new String[]{committeeType});
 					// Only required to have 1 chairperson for appoint committee
 				}
 			}
 		}
 
 		if (count == 0) {
-			throw new EpException(MessageConst.ERROR_760047);
+			throw new EpException(MessageConst.ERROR_760047,new String[]{committeeType});
 			// At least one chairperson are required for appoint committee
 		}
 	}
 
-	private void isSecretaryRequired(List<ScCommitteeMember> commMembers) {
+	private void isSecretaryRequired(List<ScCommitteeMember> commMembers,String committeeType) {
 		int count = 0;
 		for (ScCommitteeMember committeeMember : commMembers) {
 			String memberRole = committeeMember.getMemberRole()
@@ -2091,13 +2091,13 @@ public class QTCommitteBackingBean extends
 					.equalsIgnoreCase(memberRole)) {
 				count++;
 				if (count >= 2) {
-					throw new EpException(MessageConst.ERROR_760124);
+					throw new EpException(MessageConst.ERROR_760124,new String[]{committeeType});
 					// Only required to have 1 secretary for appoint committee
 				}
 			}
 		}
 		if (count == 0) {
-			throw new EpException(MessageConst.ERROR_760046);
+			throw new EpException(MessageConst.ERROR_760046,new String[]{committeeType});
 			// At least one secretary are required for appoint committee
 		}
 	}
