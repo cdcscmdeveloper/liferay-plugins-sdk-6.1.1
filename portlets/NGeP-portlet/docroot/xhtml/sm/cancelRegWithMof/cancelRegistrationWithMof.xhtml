@@ -59,7 +59,10 @@
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
 				fileUploadListener="#{backingBean.handleCancelMofRegFileAttachment}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
-				update="@form" oncomplete="excelDialog.hide();" />
+				update="@form" oncomplete="excelDialog.hide();" 
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.choose']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}" />
 		</p:dialog>
 		<p:message id="uploadMsg" for="upload" display="icon" />
 	</ui:define>
