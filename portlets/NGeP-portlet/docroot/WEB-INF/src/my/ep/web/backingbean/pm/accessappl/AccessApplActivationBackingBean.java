@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2015 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.pm.accessappl;
 
 import java.util.Date;
@@ -32,7 +35,12 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RuleConfigHelper;
-
+/**
+ * The backing bean for Access Application Activation
+ * 
+ * @author Ken
+ * @since 21.12.2015
+ */
 @ManagedBean(name = "accessApplActivationBackingBean")
 public class AccessApplActivationBackingBean extends
 BaseBackingBean<AccessApplActivationManagedBean>{
