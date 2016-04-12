@@ -323,7 +323,8 @@ public class SMReportBackingBean extends
 		case ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL:
 			rptGenBean.retrieveCategoryLevOne1();			
 			rptGenBean.setSmListOfSOAView(true);
-			rptGenBean.setSmMainCatMandatoryCategoryView(true);
+			//rptGenBean.setSmMainCatMandatoryCategoryView(true);
+			rptGenBean.setSmNonMandatoryCategoryView(true);
 			rptGenBean.setSmCommonZoneView(true);
 			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 			// rptGenBean.setSmZoneView(true);
