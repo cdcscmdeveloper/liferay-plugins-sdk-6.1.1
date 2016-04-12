@@ -9,18 +9,32 @@
 	
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" escape="false" closable="false"/> 
-		
 		<p:panel header="#{lbl['lbl.sm.virtual.cert']}">
-			<p:dataTable id="vcDt" 
+			<p:dataTable id="vcDt" rowIndexVar="index"
 				value="#{virtualCertBackingBean.managedBean.mofCertLs}"
 				var="mofCert"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<p:column headerText="No.">
+					#{index +1}
+				</p:column>
+				
 				<p:column headerText="#{lbl['lbl.sm.mofno']}">
 					#{mofCert.smMofAccount.mofNo}
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.certno']}">
 					#{mofCert.certSerialNo}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.virtual.cert.release.date']}">
+					<h:outputText value="#{mofCert.createdDate}">
+						<f:convertDateTime 
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.virtual.cert.appl.type']}">
+					#{lbl[virtualCertBackingBean.getsupplierApplTypeDesc(mofCert.smAppl.applType)]}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.virtual.cert.type']}">
