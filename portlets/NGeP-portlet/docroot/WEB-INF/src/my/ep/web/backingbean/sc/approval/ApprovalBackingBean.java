@@ -554,6 +554,9 @@ public class ApprovalBackingBean extends
 						IQTDetailSO.class);
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		reqDTO.setQtdetail(this.getManagedBean().getQt());
+		reqDTO.setApproval(this.getManagedBean().getScQtApproval());
+		reqDTO.setApprovalRequests(this.getManagedBean()
+						.getScQtApprovalRequestList());
 		this.getManagedBean().setAction(action);
 		logger.info("Task Name : " + this.getManagedBean().getTaskName());
 		if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
@@ -591,6 +594,7 @@ public class ApprovalBackingBean extends
 			if (isRevised) {
 				RequestContext.getCurrentInstance().execute("reviceApprovalDlg.show()");
 			} else if (isApproved) {
+				detailSO.validateQtApprovalDtl(reqDTO);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} else if (isRejected) {
 				RequestContext.getCurrentInstance().execute("rejectApprovalDlg.show()");
@@ -632,6 +636,7 @@ public class ApprovalBackingBean extends
 						}
 					}
 				}
+				detailSO.validateQtApprovalDtl(reqDTO);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
 		}
