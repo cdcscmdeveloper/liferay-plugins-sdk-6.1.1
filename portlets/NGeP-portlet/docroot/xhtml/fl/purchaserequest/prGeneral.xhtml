@@ -145,8 +145,10 @@
 									disabled="true"
 									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.deliveryTerm}" />
 							</td>
+							<ui:remove>
 							<td style="width: 208px;"><p:outputLabel styleClass="outputLabel-view"
 									value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUom)}" /></td>
+							</ui:remove>
 						</tr>
 					</table></td>
 				<td colspan="2"><p:outputLabel
