@@ -7332,6 +7332,7 @@ public class EvaluationBackingBean extends
 	private void setReportAttachment() throws Exception {
 		IQTEvaluationSO evaluationSO = null;
 		try {
+			EvaluationResDTO evalResDTO = null;
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -7357,8 +7358,7 @@ public class EvaluationBackingBean extends
 				scAttachment = attachment;				
 				scQt.setScEvaluationCommitteeReportAttachment(attachment);
 				reqDTO.setScQt(scQt);
-				EvaluationResDTO evalResDTO = evaluationSO
-						.saveReportDtls(reqDTO);
+				evalResDTO = evaluationSO.saveReportDtls(reqDTO);
 				ScAttachment localAttachment = evalResDTO.getScQt()
 						.getScEvaluationCommitteeReportAttachment();
 				this.getManagedBean().setScQt(evalResDTO.getScQt());
@@ -7375,8 +7375,7 @@ public class EvaluationBackingBean extends
 				attachment.setScQt(scQt);
 				scQt.setScOpenCommitteeReportAttachment(attachment);
 				reqDTO.setScQt(scQt);
-				EvaluationResDTO evalResDTO = evaluationSO
-						.saveReportDtls(reqDTO);
+				evalResDTO = evaluationSO.saveReportDtls(reqDTO);
 				ScAttachment localAttachment = evalResDTO.getScQt()
 						.getScOpenCommitteeReportAttachment();
 				this.getManagedBean().setScQt(evalResDTO.getScQt());
@@ -7392,8 +7391,7 @@ public class EvaluationBackingBean extends
 				attachment.setScQt(scQt);
 				scQt.setScTechnicalEvaluationReportAttachment(attachment);
 				reqDTO.setScQt(scQt);
-				EvaluationResDTO evalResDTO = evaluationSO
-											.saveReportDtls(reqDTO);
+				evalResDTO = evaluationSO.saveReportDtls(reqDTO);
 				ScAttachment localAttachment = evalResDTO.getScQt()
 						.getScTechnicalEvaluationReportAttachment();
 				this.getManagedBean().setScQt(evalResDTO.getScQt());
@@ -7409,8 +7407,7 @@ public class EvaluationBackingBean extends
 				attachment.setScQt(scQt);
 				scQt.setScFinancialEvaluationReportAttachment(attachment);
 				reqDTO.setScQt(scQt);
-				EvaluationResDTO evalResDTO = evaluationSO
-											.saveReportDtls(reqDTO);
+				evalResDTO = evaluationSO.saveReportDtls(reqDTO);
 				ScAttachment localAttachment = evalResDTO.getScQt()
 						.getScFinancialEvaluationReportAttachment();
 				this.getManagedBean().setScQt(evalResDTO.getScQt());
