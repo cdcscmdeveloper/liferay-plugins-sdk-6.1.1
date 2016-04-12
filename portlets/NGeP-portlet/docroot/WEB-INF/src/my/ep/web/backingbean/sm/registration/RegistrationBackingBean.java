@@ -29,6 +29,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -2391,6 +2392,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		gstDoc.setFileName(null);
 		gstDoc.setFilePath(null);
 
+	}
+	
+	public Date getMinGstEndDate() {
+		if (getManagedBean().getSmGstSupplier() != null
+				&& getManagedBean().getSmGstSupplier().getGstEffDate() != null) {
+			return getManagedBean().getSmGstSupplier().getGstEffDate();
+		} else {
+			CommonConstants commonConst = new CommonConstants();
+			return commonConst.getGST_LAUNCH_DATE();
+		}
 	}
 	
 }
