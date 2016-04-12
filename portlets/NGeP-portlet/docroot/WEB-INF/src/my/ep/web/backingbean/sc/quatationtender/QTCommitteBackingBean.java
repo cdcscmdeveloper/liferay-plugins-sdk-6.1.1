@@ -2037,21 +2037,24 @@ public class QTCommitteBackingBean extends
 					.getScQtCommittee();
 			if (qtCommittee != null) {
 				ScCommittee committee = qtCommittee.getScCommittee();
-				if (CollectionUtils.isNotEmpty(committee
-						.getScCommitteeMembers())&& committee.isApprovalReq()) {
-					String committeeType = committee.getCommitteeType().getParameterCode();
-					isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
-					isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
-					isAtleastOneMemebersReq(committee.getScCommitteeMembers());
-				} else {
-					committee.setApprovalReq(false);
-					int selectedIndex = this.getManagedBean()
-							.getSelectedTabIndex();
-					this.getManagedBean().getScCommitteeMemberTabList()
-							.remove(selectedIndex);
-					this.getManagedBean().getScCommitteeMemberTabList()
-							.add(selectedIndex, selectedCommitteTabBean);
-					throw new EpException(MessageConst.ERROR_760275);
+				 if(committee.isApprovalReq()){
+					if (CollectionUtils.isNotEmpty(committee
+							.getScCommitteeMembers())) {
+					
+						String committeeType = committee.getCommitteeType().getParameterCode();
+						isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
+						isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
+						isAtleastOneMemebersReq(committee.getScCommitteeMembers());
+					} else {
+						committee.setApprovalReq(false);
+						int selectedIndex = this.getManagedBean()
+								.getSelectedTabIndex();
+						this.getManagedBean().getScCommitteeMemberTabList()
+								.remove(selectedIndex);
+						this.getManagedBean().getScCommitteeMemberTabList()
+								.add(selectedIndex, selectedCommitteTabBean);
+						throw new EpException(MessageConst.ERROR_760275);
+					}
 				}
 			}
 		}
