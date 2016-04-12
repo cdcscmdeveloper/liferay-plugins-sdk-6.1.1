@@ -557,13 +557,14 @@ public class PurchaseInquiryBackingBean extends
 	 */
 	public void priceTypeChangeListener() {
 		debugLogger("priceTypeChangeListener");
+		ScPrInquiry prInquiry  = getManagedBean().getScPrInquiry();
 		Map<ScSupplierItemPrice, ScSupplierItemPrice> itemPricesMap = new HashMap<ScSupplierItemPrice, ScSupplierItemPrice>();
 		List<ScSupplierItemPrice> itemPriceList = new ArrayList<ScSupplierItemPrice>();
 		if (getManagedBean().getScRequestSupplierItem() != null
 				&& getManagedBean().getScRequestSupplierItem()
-						.getSupplierItemPrices() != null
+				.getSupplierItemPrices() != null
 				&& getManagedBean().getScRequestSupplierItem()
-						.getSupplierItemPrices().size() > 0) {
+				.getSupplierItemPrices().size() > 0) {
 			ScRequestSupplierItem scRequestSupplierItem = new ScRequestSupplierItem();
 			List<ScSupplierItemPrice> supplierItemPrices = getManagedBean()
 					.getScRequestSupplierItem().getSupplierItemPrices();
@@ -572,19 +573,21 @@ public class PurchaseInquiryBackingBean extends
 
 					if (scSupplierItemPrice.getPriceType() != null) {
 
-						if (scSupplierItemPrice.getPriceType()
-								.getParameterCode()
-								.equals(getManagedBean().getPriceType())) {
+						if(prInquiry.getPriceType() != null){
 
-							if (DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE
-									.equals(getManagedBean().getPriStatus()
-											.getStatusId())) {
-								scSupplierItemPrice.setItemPrice(null);
-								itemPricesMap.put(scSupplierItemPrice,
-										scSupplierItemPrice);
-							} else {
-								itemPricesMap.put(scSupplierItemPrice,
-										scSupplierItemPrice);
+							if (scSupplierItemPrice.getPriceType()
+									.getParameterCode()
+									.equals(prInquiry.getPriceType().getParameterCode())) {
+								if (DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE
+										.equals(getManagedBean().getPriStatus()
+												.getStatusId())) {
+									scSupplierItemPrice.setItemPrice(null);
+									itemPricesMap.put(scSupplierItemPrice,
+											scSupplierItemPrice);
+								} else {
+									itemPricesMap.put(scSupplierItemPrice,
+											scSupplierItemPrice);
+								}
 							}
 						}
 					}
@@ -594,8 +597,7 @@ public class PurchaseInquiryBackingBean extends
 						itemPricesMap.keySet());
 			}
 			scRequestSupplierItem.setSupplierItemPrices(itemPriceList);
-			getManagedBean().getScPrInquiry().setRequestSupplierItem(
-					scRequestSupplierItem);
+			prInquiry.setRequestSupplierItem(scRequestSupplierItem);
 		}
 	}
 
