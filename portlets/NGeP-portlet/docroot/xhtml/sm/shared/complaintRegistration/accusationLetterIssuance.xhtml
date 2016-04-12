@@ -83,7 +83,10 @@
 			mode="basic" id="scLetterUpload" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="pnlAccusationLetter" 
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			oncomplete="acLetterDlg.hide();return false;">
+			oncomplete="acLetterDlg.hide();return false;" 
+			uploadLabel="#{lbl['lbl.btn.upload']}" 
+	       label="#{lbl['lbl.btn.choose']}" 
+	       cancelLabel="#{lbl['lbl.btn.cancel']}">
 		</p:fileUpload>
 	</p:dialog>
 	

@@ -56,7 +56,10 @@
 			mode="basic" id="acRespUpload" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="pnlAcLetterResp" 
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			oncomplete="acRespDlg.hide();return false;">
+			oncomplete="acRespDlg.hide();return false;"
+			uploadLabel="#{lbl['lbl.btn.upload']}" 
+	       label="#{lbl['lbl.btn.choose']}" 
+	       cancelLabel="#{lbl['lbl.btn.cancel']}">
 		</p:fileUpload>
 	</p:dialog>
 	
