@@ -4,9 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.faces.context.FacesContext;
-import javax.portlet.PortletContext;
-
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 
@@ -24,7 +21,6 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
-import org.quartz.ee.servlet.QuartzInitializerListener;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
@@ -36,7 +32,7 @@ import org.quartz.impl.matchers.GroupMatcher;
  */
 public class EpSchedulerHelper {
 	public static Logger log = EpLogger.getLogger(EpSchedulerHelper.class);
-
+	private static Scheduler instance;
 	/**
 	 * Schedule new job or update existing scheduled job
 	 * 
@@ -414,31 +410,17 @@ public class EpSchedulerHelper {
 	 * @return Scheduler
 	 */
 	public static Scheduler getScheduler() {
-		Scheduler scheduler = null;
-		PortletContext servletContext = (PortletContext) FacesContext
-				.getCurrentInstance().getExternalContext().getContext();
-
-		// Get QuartzInitializerListener
-		StdSchedulerFactory stdSchedulerFactory = (StdSchedulerFactory) servletContext
-				.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY);
-
-		try {
-			if (stdSchedulerFactory != null
-					&& stdSchedulerFactory.getScheduler() != null) {
-				log.info(">>>>>>>>>>>QUARTZ INITIALIZER SCHEDULERFACTORY NOT NULL<<<<<<<<<");
-				scheduler = stdSchedulerFactory.getScheduler();
-			} else {
-				scheduler = new StdSchedulerFactory().getScheduler();
-				log.info(">>>>>>>>>>>QUARTZ INITIALIZER SCHEDULERFACTORY IS NULL<<<<<<<<<");
-				if (!scheduler.isStarted()) {
-					log.info(">>>>>>>>>>>QUARTZ SCHEDULER NOT STARTED<<<<<<<<<");
-					scheduler.start();
+		if (instance == null) {
+			try {
+				instance = new StdSchedulerFactory().getScheduler();
+				if (!instance.isStarted()) {
+					instance.start();
 				}
+			} catch (SchedulerException e) {
+				log.error(e.getMessage());
 			}
-		} catch (SchedulerException e) {
-
 		}
-		return scheduler;
+		return instance;
 
 	}
 
