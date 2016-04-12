@@ -101,7 +101,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
 				.getNewAdmin(), getManagedBean().getMailAddr(),
 				getManagedBean().getPermAddr());
-		validateMyIdentity(getManagedBean().getNewAdmin());
+		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
 		redirectToSuccessPage(resDto);
@@ -349,15 +349,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param SmPersonnel
 	 *            personnel
 	 */
-	private void validateMyIdentity(SmPersonnel personnel) {
-		if (personnel != null
-				&& personnel.getIdentificationType().getParameterCode()
-						.equalsIgnoreCase("I")) {
-			if (personnel.getIdentificationNo().length() != 12) {
-				throw new EpException(MessageConst.ERROR_722532,
-						new String[] { personnel.getIdentificationNo() });
-			}
-			SmApplicationUtil.myIdentityVerification(personnel);
+	private void validateMyIdentity() {
+		if (getManagedBean().getNewAdmin() != null
+				&& getManagedBean().getIdentificationType().getParameterCode()
+						.equals(SupplierManagementConst.NEW_IC)) {
+			SmCommonUtil.getInstance()
+					.verifyWithMyIdentity(
+							getManagedBean().getNewAdmin().getName(),
+							getManagedBean().getNewAdmin()
+									.getIdentificationNo(),
+							getManagedBean().getPermAddr().getSmAddress()
+									.getPostcode());
 		}
 	}
 

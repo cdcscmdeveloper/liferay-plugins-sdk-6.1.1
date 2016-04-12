@@ -429,7 +429,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//validate IC with MyIdentity
 		if(personnelIDType.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-			this.verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), this.getManagedBean().getSmPermenantAdd().getPostcode());
+			SmCommonUtil.getInstance().verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), this.getManagedBean().getSmPermenantAdd().getPostcode());
 		}
 		
 		/*String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
@@ -1673,49 +1673,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				throw new EpException(MessageConst.ERROR_721013);
 			}
 			
-		}
-	}
-
-	/**
-	 * Verify identification no with MyIdentity
-	 * @param name
-	 * @param identificationNo
-	 * @param postCode
-	 */
-	public void verifyWithMyIdentity(String name, String identificationNo, String postCode){
-		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
-		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IMyIdentitySO.class);
-		
-		reqDTO.setType("Online");
-		reqDTO.setNewIcNo(identificationNo);
-		reqDTO.setPostCode(postCode);
-		reqDTO.setName(name);
-		
-		try{
-			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
-			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
-			if(!resDTO.getSeverity().equalsIgnoreCase(SupplierManagementConst.SM_MYIDENTITY_SEVERITY_SUCC)){
-				switch (resDTO.getStatusCode()) {
-				case "70019" :
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
-				case "70020" :
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
-				case "70031" :
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
-				case "70032" :
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
-				default : 
-					log.info("MyIDENTITY ERROR: " + identificationNo + " - " + resDTO.getStatusCode() + " - " + resDTO.getStatusDesc());
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70099);
-				}
-			}
-		}catch(Exception ex){
-			String message = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-			if(message != null){
-				throw new EpException("MyIdentity: " + message);
-			}else{
-				throw new EpException("MyIdentity: " + ex.getMessage());
-			}
 		}
 	}
 	
