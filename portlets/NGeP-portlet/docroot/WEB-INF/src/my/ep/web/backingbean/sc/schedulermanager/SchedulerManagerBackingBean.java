@@ -42,15 +42,17 @@ public class SchedulerManagerBackingBean extends
 			.getLogger(SchedulerManagerBackingBean.class);
 
 	public void preRenderSchedulerManager() {
+		log.info(">>>>>>>>>>>>INSIDE PRERENDER SCHEDULER MANAGER<<<<<<<<<<<<<<<<<<");
 		renewSesionObject();
 		SmCommonUtil.setMDCUserId();
 		initAllJobs();
 		initAllJobClasses();
 		SmCommonUtil.redirectToPage("ePSchedulerManager.xhtml", "", null);
+		log.info(">>>>>>>>>>>>LEAVING PRERENDER SCHEDULER MANAGER<<<<<<<<<<<<<<<<<<");
 	}
 
 	public void initAllJobs() {
-
+		log.info(">>>>>>>>>>>>START INIT ALL JOBS<<<<<<<<<<<<<<<<<<");
 		// loop jobs by group
 		try {
 			String jobAction = "";
@@ -118,6 +120,7 @@ public class SchedulerManagerBackingBean extends
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
 		}
+		log.info(">>>>>>>>>>>>END INIT ALL JOBS<<<<<<<<<<<<<<<<<<");
 	}
 
 	public JobKey getJobKey(String jobName, String searchGroupName) {
@@ -327,21 +330,12 @@ public class SchedulerManagerBackingBean extends
 								.getSelectedJobVO().getJobKey());
 				addJob();
 			} else {
-				if (!finalCronExpression.equals(getManagedBean()
-						.getSelectedJobVO().getCronExpression())) {
-					EpSchedulerHelper
-							.deleteJobAndAssociatedTriggers(getManagedBean()
-									.getSelectedJobVO().getJobKey());
-					addJob();
-				} else {
-					JobKey jobKey = new JobKey(getManagedBean()
-							.getSelectedJobVO().getJobName(), getManagedBean()
-							.getSelectedJobVO().getJobGroup());
-					EpSchedulerHelper.updateScheduledJob(jobKey,
-							getManagedBean().getSelectedJobVO()
-									.getDescription(),
-							getFinalCronExpression(), getValidJobClass());
-				}
+				JobKey jobKey = new JobKey(getManagedBean().getSelectedJobVO()
+						.getJobName(), getManagedBean().getSelectedJobVO()
+						.getJobGroup());
+				EpSchedulerHelper.updateScheduledJob(jobKey, getManagedBean()
+						.getSelectedJobVO().getDescription(),
+						finalCronExpression, getValidJobClass());
 			}
 		}
 	}
