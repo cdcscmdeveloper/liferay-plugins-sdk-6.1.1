@@ -66,7 +66,8 @@
 				value="#{lovBackingBean.searchDataModel}" >
 				
 				<ac:paginator for="lovTb" />
-				
+				<p:ajax event="rowDblselect" listener="#{lovBackingBean.populateToSaveObject}" 
+                     update="@form" />
 				<!-- <p:column selectionMode="single" style="width:2%" /> 
 				
 				<p:column width="5%">
