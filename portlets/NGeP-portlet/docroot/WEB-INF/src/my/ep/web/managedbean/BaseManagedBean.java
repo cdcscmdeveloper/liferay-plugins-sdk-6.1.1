@@ -34,6 +34,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 	// For sub title displayed in screen.
 	private String title;
+	private boolean hasErrors;
 
 	/**
 	 * @return the token
@@ -229,6 +230,14 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setCaptchaAnswer(String captchaAnswer) {
 		this.captchaAnswer = captchaAnswer;
+	}
+
+	public boolean isHasErrors() {
+		return hasErrors;
+	}
+
+	public void setHasErrors(boolean hasErrors) {
+		this.hasErrors = hasErrors;
 	}
 
 }
