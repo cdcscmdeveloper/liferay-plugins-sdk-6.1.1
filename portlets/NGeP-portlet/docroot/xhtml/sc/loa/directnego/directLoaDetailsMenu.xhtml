@@ -255,7 +255,7 @@
 						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}">
 						<p:ajax event="blur"
 							listener="#{directLOABackingBean.setOverallCtAmount(directLOABackingBean.managedBean.scLoa.loaAmt)}"
-							update="@this,ContractAmtId,bondReq"></p:ajax>
+							update="@form"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>  <p:message id="loaAmtIdMsg" for="loaAmtId" display="icon" /></td>
