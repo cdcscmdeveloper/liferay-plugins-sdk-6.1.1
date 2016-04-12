@@ -92,7 +92,10 @@
 				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{backingBean.handleResubmitSupDocFileAttachment}"
-				update="onSdList" oncomplete="attachDlg1.hide();" />
+				update="onSdList" oncomplete="attachDlg1.hide();" 
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.choose']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}" />
 		</p:dialog>
 	</ui:define>
 </ui:composition>

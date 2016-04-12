@@ -203,7 +203,10 @@
 			invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
 			fileUploadListener="#{smUpdateGstInfoBackingBean.handleBranchSupDocFileAttachment}"
-			update="@form" oncomplete="branchUploadDialog.hide();" />
+			update="@form" oncomplete="branchUploadDialog.hide();" 
+			uploadLabel="#{lbl['lbl.btn.upload']}"  
+			label="#{lbl['lbl.btn.choose']}" 
+			cancelLabel="#{lbl['lbl.btn.cancel']}" />
 	</p:dialog>
 	
 	<p:confirmDialog id="confirmDeleteBrDialog" closable="true"
