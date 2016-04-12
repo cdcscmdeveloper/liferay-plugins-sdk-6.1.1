@@ -100,6 +100,8 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
+import com.asn1c.core.Bool;
+
 /**
  * Implementation for scheduling meeting for supplier finalization
  * 
@@ -137,6 +139,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
+		
+		getManagedBean().setHasErrors(Boolean.FALSE);
 
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
@@ -156,6 +160,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.FC_COORDINATE_MEETING_PAGE);
 		} catch (Exception e) {
+			getManagedBean().setHasErrors(Boolean.TRUE);
 			handleException(e);
 		}
 	}
