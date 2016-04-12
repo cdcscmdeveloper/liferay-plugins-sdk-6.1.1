@@ -623,7 +623,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public boolean isAuditor() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
+		return facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || 
+				facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) || 
+				 facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value());
 	}
 	
 	/**
@@ -644,6 +646,16 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	public boolean isFlFulfilmentApprover() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+	}
+	
+	/**
+	 * Checks if is fl fulfilment approver.
+	 *
+	 * @return true, if is fl fulfilment approver
+	 */
+	public boolean isBPKApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.BPK_APPROVER.value());
 	}
 	
 	/**
@@ -706,7 +718,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				//flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 			}
-			if(isFlFulfilmentApprover() || isAuditor()){
+			if(isFlFulfilmentApprover() || isBPKApprover() || isAuditor()){
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -729,7 +741,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 			}
-			if(isFlFulfilmentApprover() || isAuditor()){
+			if(isFlFulfilmentApprover() || isBPKApprover() || isAuditor()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
