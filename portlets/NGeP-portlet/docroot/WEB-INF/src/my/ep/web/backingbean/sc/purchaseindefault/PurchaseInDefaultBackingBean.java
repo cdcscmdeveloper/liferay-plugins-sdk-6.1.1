@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -174,6 +175,19 @@ public class PurchaseInDefaultBackingBean extends
 			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getContractItemByContractItemId(purchaseInDefaultReqDTO);
 			CtContractItem contractItem = resDTO.getCtContractItem();
 			if (contractItem != null) {
+				//validation for non codify contract item
+				if(contractItem.getScRequestItem() == null ||
+						(contractItem.getScRequestItem() != null && 
+						contractItem.getScRequestItem().getCmItem() == null)) {
+					Locale userLocale = new FacesScopes().getUserLocale();
+					String message = MessageUtils.getMessage(MessageConst.ERROR_760405,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									message));
+				}
 				scPurchaseInDefault.setContractedItem(contractItem);
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
