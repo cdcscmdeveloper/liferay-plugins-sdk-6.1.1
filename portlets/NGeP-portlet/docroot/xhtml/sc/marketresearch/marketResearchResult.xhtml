@@ -10,45 +10,26 @@
 		<p:panel id="researchdetails"
 			header="#{lbl['lbl.sc.mr.search.result']}" toggleable="true">
 			<p:dataTable id="marketdetailsId"
-				rowKey="#{scMarketData.createdDate}" rows="10" lazy="true"
-				value="#{marketResearchBackingBean.searchMarketResearch}"
+				rows="10" lazy="true"
+				value="#{marketResearchBackingBean.marketResearchDataModel}"
 				width="100%" var="scMarketData">
 
 				<ac:paginator for="marketdetailsId"></ac:paginator>
 
-				<p:column>
-					<f:facet name="header">
-					#{lbl['lbl.sc.mr.loa.ack.date']}
-				</f:facet>
-					<h:outputText value="#{scMarketData[0]}">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.no']}">
+					<h:outputText value="#{scMarketData[0]}"/>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.mr.procurement.title']}">
+					<h:outputText value="#{scMarketData[1]}"/>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
+					<h:outputText value="#{marketResearchBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode,scMarketData[2])}"/>
+				</p:column>
+				<p:column  headerText="#{lbl['lbl.sc.mr.loa.ack.date']}">
+					<h:outputText  value="#{scMarketData[3]}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-					#{lbl['lbl.sc.mr.loa.sup.tech']}    
-				</f:facet>
-					<h:commandLink style="text-decoration:underline;color:blue;"
-						value="#{scMarketData[1]}" immediate="true" 
-						action="#{marketResearchBackingBean.downloadReport(scMarketData[2])}"
-						rendered="#{scMarketData[3] eq 1}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-					#{lbl['lbl.sc.mr.loa.sup.fin']} 
-				</f:facet>
-					<h:commandLink style="text-decoration:underline;color:blue;"
-						value="#{scMarketData[1]}" immediate="true" 
-						action="#{marketResearchBackingBean.downloadReport(scMarketData[2])}"
-						rendered="#{scMarketData[3] eq 2}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-					#{lbl['lbl.sc.mr.loa.action']} 
-				</f:facet>
-					<h:commandLink style="text-decoration:underline;color:blue;" 
-						value="#{lbl['lbl.sc.mr.view.report']}" immediate="true" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
