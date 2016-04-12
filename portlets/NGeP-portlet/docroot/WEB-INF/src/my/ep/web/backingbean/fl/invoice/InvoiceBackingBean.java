@@ -564,6 +564,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setButtonVal("View");
 			getManagedBean().setInvoice(resDTO.getInvoice());
+			getManagedBean().setReliefDeclarationCheck(true);
 			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 				getFactoringDtl(); 
