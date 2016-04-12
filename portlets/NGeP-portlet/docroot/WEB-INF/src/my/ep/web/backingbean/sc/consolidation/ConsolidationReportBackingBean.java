@@ -142,6 +142,8 @@ public class ConsolidationReportBackingBean extends
 	
 	/** Public Methods **/
 	public void preRenderView() {
+		getManagedBean().setHasErrors(Boolean.FALSE);
+		
 		try {
 			SCEvaluationDataType dataType 
 					= getBpmTaskDetails(SCEvaluationDataType.class, null);
@@ -160,6 +162,7 @@ public class ConsolidationReportBackingBean extends
 					.handleNavigation(fc, null,
 							QTConstants.DO_CONSOLIDATION_REPORT_PAGE);
 		} catch (Exception e) {
+			getManagedBean().setHasErrors(Boolean.TRUE);
 			handleException(e);
 		}
 	}

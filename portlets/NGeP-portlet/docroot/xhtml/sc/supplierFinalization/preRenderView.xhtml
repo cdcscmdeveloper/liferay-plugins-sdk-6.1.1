@@ -7,6 +7,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 		
 	<ui:define name="contentSection">
+		<c:if test="#{suppFinalizationBackingBean.managedBean.hasErrors}">
+			<p:messages showDetail="true" showSummary="false" 
+						autoUpdate="true" closable="true" severity="error, info" />	
+		</c:if>	
 		<f:event listener="#{suppFinalizationBackingBean.preRenderView}" type="preRenderView" />
 	</ui:define>
 </ui:composition>

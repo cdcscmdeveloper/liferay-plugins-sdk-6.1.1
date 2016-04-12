@@ -211,7 +211,8 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
-
+		getManagedBean().setHasErrors(Boolean.FALSE);
+		
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			Long qtId = Long.valueOf(dataType.getQtId());
@@ -231,6 +232,7 @@ public class SupplierFinalizationBackingBean extends
 					.handleNavigation(fc, null,
 							QTConstants.FC_SUPPLIER_FINALIZATION_PAGE);
 		} catch (Exception e) {
+			getManagedBean().setHasErrors(Boolean.TRUE);
 			handleException(e);
 		}
 	}
