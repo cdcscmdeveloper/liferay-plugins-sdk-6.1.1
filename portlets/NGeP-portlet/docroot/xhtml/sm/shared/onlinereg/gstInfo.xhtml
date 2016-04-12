@@ -94,7 +94,10 @@
 			mode="basic" id="upload" fileLimit="1" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="dtGstDocId"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			oncomplete="uploadDlg.hide();return false;">
+			oncomplete="uploadDlg.hide();return false;" 
+			uploadLabel="#{lbl['lbl.btn.upload']}"  
+			label="#{lbl['lbl.btn.choose']}" 
+			cancelLabel="#{lbl['lbl.btn.cancel']}" >
 		</p:fileUpload>
 	</p:dialog>
 	
