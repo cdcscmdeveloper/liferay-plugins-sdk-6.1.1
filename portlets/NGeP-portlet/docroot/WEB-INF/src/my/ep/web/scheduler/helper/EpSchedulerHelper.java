@@ -33,6 +33,7 @@ import org.quartz.impl.matchers.GroupMatcher;
 public class EpSchedulerHelper {
 	public static Logger log = EpLogger.getLogger(EpSchedulerHelper.class);
 	private static Scheduler instance;
+
 	/**
 	 * Schedule new job or update existing scheduled job
 	 * 
@@ -412,7 +413,7 @@ public class EpSchedulerHelper {
 	public static Scheduler getScheduler() {
 		if (instance == null) {
 			try {
-				instance = new StdSchedulerFactory().getScheduler();
+				instance = StdSchedulerFactory.getDefaultScheduler();
 				if (!instance.isStarted()) {
 					instance.start();
 				}
