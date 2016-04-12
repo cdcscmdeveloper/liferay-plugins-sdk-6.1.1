@@ -134,8 +134,10 @@
 									disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 									value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
 							</td>
+							<ui:remove>
 							<td style="width: 211px;"><p:outputLabel styleClass="outputLabel-view" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 									value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}" /></td>
+							</ui:remove>
 						</tr>
 					</table></td>
 				<td colspan="2"><p:outputLabel
