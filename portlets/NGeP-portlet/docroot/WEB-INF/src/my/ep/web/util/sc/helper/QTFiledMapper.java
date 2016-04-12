@@ -68,8 +68,6 @@ public class QTFiledMapper {
 				QTFieldConst.FILED_QT_FULFILMENT_TYPE,
 				QTFieldConst.FILED_QT_ZONE_COVERAGE,
 				QTFieldConst.FILED_QT_EXISTING_CONTRACT,
-				QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-				QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 				QTFieldConst.FILED_QT_REQUIRED_MINIS_SPEC_APPROVAL}), 
 				
 			QT_PENDING_APPROVALS_CHECKLIST_SCORING(
@@ -106,7 +104,6 @@ public class QTFiledMapper {
 		// Pending QT Schedule & Document
 		QT_PENDING_SCHEDULE_DOCUMENT(
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
-						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_CATEGORY_CODE,
 						QTFieldConst.FILED_QT_LOCATION_COVERAGE,
@@ -129,21 +126,19 @@ public class QTFiledMapper {
 						
         // Pending QT Publication
 		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
-				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
+				new String[] { 
 						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }),
 						
-        //Proposal Preparation 
-		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
-				new String[] { QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD, }),
-						
-        // Briefing/Site visit
+		// Briefing/Site visit
 		QT_BRIEFING_SITE_VISIT(QTStatusConst.QT_BRIEFING_SITE_VISIT,
 				new String[] { QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-						QTFieldConst.FILED_QT_PUB_APPROVAL }),
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD }),
+						
+        //Proposal Preparation 
+		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
+				QT_BRIEFING_SITE_VISIT.value()),
 						
 		// QT Closed				
 		QT_CLOSED(QTStatusConst.QT_CLOSED,
@@ -151,18 +146,31 @@ public class QTFiledMapper {
 
 		// Evaluation Proposal		
 		QT_EVALUATION_PROPOSAL(QTStatusConst.QT_EVALUATION_PROPOSAL,
-				new String[] { QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-						QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
+				QT_CLOSED.value() ),
         // Re Evaluation
-		QT_RE_EVALUATION(QTStatusConst.QT_RE_EVALUATION, new String[] {
-				QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
+		QT_RE_EVALUATION(QTStatusConst.QT_RE_EVALUATION, 
+				QT_CLOSED.value()),
+			
+		// Pending Consolidation Report
+		QT_CONSOLIDATION_REPORT(QTStatusConst.QT_CONSOLIDATION_REPORT,
+						QT_CLOSED.value() ),
 
 		// Supplier Finalization
 		QT_SUPPLIER_FINALIZATION(QTStatusConst.QT_SUPPLIER_FINALIZATION,
-				new String[] { QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-						QTFieldConst.FILED_QT_VALIDITY_PERIOD });
-
+				QT_CLOSED.value() ),
+			
+		// Re-Finalization
+		QT_RE_FINALIZATION(QTStatusConst.QT_RE_FINALIZATION,
+						QT_CLOSED.value() ),
+				
+		// Pending LOI
+		QT_PENDING_LOI(QTStatusConst.QT_PENDING_LOI,
+				QT_CLOSED.value() ),
+		
+		// Pending LOA
+		QT_PENDING_LOA(QTStatusConst.QT_PENDING_LOA,
+				QT_CLOSED.value() );
+		
 		private Long statusId;
 		private String[] toBeEnableFields;
 
