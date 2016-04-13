@@ -1825,10 +1825,10 @@ public class LOIDetailBackingBean extends
 						scLoi.setSupplierAddress(smCompanyAddress
 								.getSmAddress());
 						scLoi.setSupplierContact(supplierHQPersonnel.getName());
-						scLoi.setSupplierPhoneNo(smCompanyBasic.getPhoneNo());
-						scLoi.setSupplierFaxNo(smCompanyBasic.getFaxNo());
+						scLoi.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
+						scLoi.setSupplierFaxNo(smCompanyBasic.getFaxFull());
 						scLoi.setSupplierMobNo(supplierHQPersonnel
-								.getMobileNo());
+								.getMobileFull());
 						scLoi.setSupplierEmail(supplierHQPersonnel.getEmail());
 
 						break;
@@ -1850,13 +1850,13 @@ public class LOIDetailBackingBean extends
 						scLoi.setSupplierContact(supplierBranch.getSmPersonnel()
 								.getName());	
 						scLoi.setSupplierMobNo(supplierBranch.getSmPersonnel()
-								.getMobileNo());
+								.getMobileFull());
 						scLoi.setSupplierEmail(supplierBranch.getSmPersonnel()
 								.getEmail());
 					}
 
-					scLoi.setSupplierPhoneNo(supplierBranch.getPhoneNo());
-					scLoi.setSupplierFaxNo(supplierBranch.getFaxNo());
+					scLoi.setSupplierPhoneNo(supplierBranch.getPhoneFull());
+					scLoi.setSupplierFaxNo(supplierBranch.getFaxFull());
 
 					break;
 				}
@@ -5107,18 +5107,42 @@ public class LOIDetailBackingBean extends
 		ScLoi scLoi = 	getManagedBean().getScLoi();
 		boolean isRequiredSubmitBtn = Boolean.TRUE;
 		getManagedBean().setRecSupplierList(recSupplierList);
-		
+		boolean isRefinalized = isRefinalizedOrNot(recSupplierList);
 		for (ScLoiLoa scLoiLoa : recSupplierList) {
+
 			if(null == scLoiLoa.getLoiRequired()){
 				scLoiLoa.setLoiRequiredDisabled(Boolean.FALSE);
 			} else{
 				scLoiLoa.setLoiRequiredDisabled(Boolean.TRUE);
 			}
 
-			if (null != scLoiLoa.getLoiRequired() && scLoiLoa.getLoiRequired()) {
-				isRequiredSubmitBtn = Boolean.FALSE;
+			// refinalization 
+			if(isRefinalized) {
+
+				if (null != scLoiLoa.getLoiRequired()) {
+					if(scLoiLoa.getLoiRequired() && scLoiLoa.isLoiLoaActive()){
+						isRequiredSubmitBtn = Boolean.FALSE;
+						break;
+					}
+
+				} else{
+					isRequiredSubmitBtn = Boolean.FALSE;
+					break;
+				}
+
+			} else{
+				if (null != scLoiLoa.getLoiRequired() && scLoiLoa.getLoiRequired()) {
+					isRequiredSubmitBtn = Boolean.FALSE;
+					break;
+				}
 			}
-			
+
+			if (isRequiredSubmitBtn) {
+				getManagedBean().setLoiRequired(Boolean.TRUE);
+			} else {
+				getManagedBean().setLoiRequired(Boolean.FALSE);
+			}
+
 			// update current ScLoiLoa Obj in loi after save pending loiloas
 			if(scLoi != null && null != scLoi.getScLoiLoa()){
 				if(scLoiLoa.getLoiLoaId().equals(scLoi.getScLoiLoa().getLoiLoaId())){
