@@ -13,19 +13,19 @@
 		<table cellspacing="100%" style="width: 100%;">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mr.procurement.title']}" /></td>
-				<td><p:inputText id="procuTitleId" maxlength="255"
+				<td colspan="3"><p:inputText id="procuTitleId" maxlength="255"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.procurementTitle}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mr.item.name']}" /></td>
-				<td><p:inputText id="itemNameId" maxlength="255"
+				<td colspan="3"><p:inputText id="itemNameId" maxlength="255"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.itemName}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mr.specification']}" /></td>
-				<td><p:inputText id="specId" maxlength="255"
+				<td colspan="3"><p:inputText id="specId" maxlength="255"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.spec}"/>
 				</td>
 			</tr>
@@ -41,6 +41,7 @@
 							var="procMode" itemLabel="#{procMode.codeName}"
 							itemValue="#{procMode.pmParameter.parameterCode}" />
 					</p:selectOneMenu></td>
+					<td colspan="2"></td>
 
 			</tr>
 			<tr>
@@ -48,12 +49,13 @@
 				<td><p:inputText id="loaNoId" maxlength="255"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.loaNo}"/>
 				</td>
+				<td colspan="2"></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.mr.loa.ack.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mr.loa.ack.date.from']}" /></td>
 				<td><p:calendar  navigator="true"
 					showOn="button" id="ackStartDate"
-					label="#{lbl['lbl.sc.mr.loa.ack.date']}"
+					label="#{lbl['lbl.sc.mr.loa.ack.date.from']}"
 					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{marketResearchBackingBean.managedBean.marketResearchSearchBean.loaAckDateFrom}">
@@ -61,12 +63,10 @@
 						process="@this" />
 				</p:calendar>
 				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.mr.loa.ack.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mr.loa.ack.date.to']}" /></td>
 				<td><p:calendar  navigator="true"
 					showOn="button" id="ackEndDate"
-					label="#{lbl['lbl.sc.mr.loa.ack.date']}"
+					label="#{lbl['lbl.sc.mr.loa.ack.date.to']}"
 					readonlyInput="true"
 					maxdate="#{DateUtils.getCurrentDateWithoutTime()}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
