@@ -148,7 +148,6 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.util.sm.helper.SmVirtualCertHelper;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -2834,7 +2833,16 @@ public class SmApplicationBackingBean extends
 					.getSelectedBranches()) {
 				if (SmApplicationUtil.isBranchBankAssoc(brTmp, getManagedBean()
 						.getSmAppl().getSmSupplierBanks())) {
-					throw new EpException(MessageConst.ERROR_722617);
+					throw new EpException(
+							MessageConst.ERROR_722617,
+							new String[] {
+									brTmp.getBranchName(),
+									SmApplicationUtil
+											.getRelatedBankNameByBranch(
+													getManagedBean()
+															.getSmAppl()
+															.getSmSupplierBanks(),
+													brTmp) });
 				}
 			}
 		}
@@ -7759,20 +7767,17 @@ public class SmApplicationBackingBean extends
 					ReviewApplicationResDTO revApplicationResDTO = reqSO
 							.submitPOorApproverReviewToBPM(reqDTO);
 
-					/*if (revApplicationResDTO.isSuccessful()) {
-						// to auto generate mof cert
-						if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
-							try {
-								SmVirtualCertHelper.getInstance()
-										.autoGenerateVirtualCert(
-												getManagedBean().getSmAppl()
-														.getApplId());
-							} catch (Exception ex) {
-								log.info("<<<<MOF Approval - error when generate Virtual Cert>>>>"
-										+ ex.getMessage());
-							}
-						}
-					}*/
+					/*
+					 * if (revApplicationResDTO.isSuccessful()) { // to auto
+					 * generate mof cert if
+					 * (res.equalsIgnoreCase(my.ep.constant.
+					 * sm.SupplierManagementConst.APPROVE)) { try {
+					 * SmVirtualCertHelper.getInstance()
+					 * .autoGenerateVirtualCert( getManagedBean().getSmAppl()
+					 * .getApplId()); } catch (Exception ex) { log.info(
+					 * "<<<<MOF Approval - error when generate Virtual Cert>>>>"
+					 * + ex.getMessage()); } } }
+					 */
 
 					FacesContext.getCurrentInstance().addMessage(
 							null,
