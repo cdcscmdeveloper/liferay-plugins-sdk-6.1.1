@@ -226,7 +226,7 @@
 				style="width:16%;white-space: normal;text-align: center;">
 				<h:panelGroup id="uploadFinance">
 					<p:commandLink oncomplete="uploadS1Fin.show();return false;"
-						update="financeProposaltwo"
+						update="financeProposaltwo" process="@this" partialSubmit="true"
 						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP' and (specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()))}">
 						<h:graphicImage value="/css/images/design/upload.png" />
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
