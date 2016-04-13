@@ -112,11 +112,11 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 
 		SearchBean<PmTrackingDiary> searchBean = new SearchBean<PmTrackingDiary>();
 		TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-		
+
 		List<String> docTypeLs = new ArrayList<String>();
 		docTypeLs.add("CU");
 		docTypeLs.add("CE");
-		
+
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_IN.value(),docTypeLs));
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),unspscObj[5]));
 		//		searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
@@ -175,53 +175,54 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 				&& codeResDTO.getRequestLs().size() > 0) {
 
 			for (CmRequestCode code : codeResDTO.getRequestLs()) {
+				if(code.getDocNo()!=null && code.getDocNo().trim().length()>0){
+					System.out.println("subSTring:"+code.getDocNo().substring(0, 3));
+					if(code.getDocNo().substring(0, 3).compareToIgnoreCase("RNE")==0){
+						this.getManagedBean().setUnspscInd(false);
+						System.out.println("**extension**");
 
-				System.out.println("subSTring:"+code.getDocNo().substring(0, 3));
-				if(code.getDocNo().substring(0, 3).compareToIgnoreCase("RNE")==0){
-					this.getManagedBean().setUnspscInd(false);
-					System.out.println("**extension**");
+						boolean colorRecommend = false;
+						boolean brandRecommend = false;
+						boolean typeRecommend = false;
+						boolean meaRecommend = false;
+						if (!code.isRequestColor()) { 
+							colorRecommend = true;
+						}
+						if (!code.isRequestBrand()){
+							brandRecommend = true;	
+						}
 
-					boolean colorRecommend = false;
-					boolean brandRecommend = false;
-					boolean typeRecommend = false;
-					boolean meaRecommend = false;
-					if (!code.isRequestColor()) { 
-						colorRecommend = true;
-					}
-					if (!code.isRequestBrand()){
-						brandRecommend = true;	
-					}
+						if (!code.isRequestType()){
 
-					if (!code.isRequestType()){
+							typeRecommend = true;
+						}
 
-						typeRecommend = true;
-					}
+						if (!code.isRequestMeasurement()){
 
-					if (!code.isRequestMeasurement()){
+							meaRecommend = true;
+						}
 
-						meaRecommend = true;
-					}
+						if(colorRecommend && brandRecommend && typeRecommend && meaRecommend){
 
-					if(colorRecommend && brandRecommend && typeRecommend && meaRecommend){
+							System.out.println("recomemd:"+code.getRequestId());
+							this.getManagedBean().getRecommendExtCodeList().add(code);
+						}else{
 
-						System.out.println("recomemd:"+code.getRequestId());
-						this.getManagedBean().getRecommendExtCodeList().add(code);
+							System.out.println("process:"+code.getRequestId());
+							this.getManagedBean().getProceedExtCodeList().add(code);
+
+
+						}
 					}else{
+						System.out.println("****unspsc***");
+						this.getManagedBean().setUnspscInd(true);
+						this.getManagedBean().setRequestCode(code);
+						this.getManagedBean().getReviewExtCodeList().add(code);
 
-						System.out.println("process:"+code.getRequestId());
-						this.getManagedBean().getProceedExtCodeList().add(code);
-
-
-					}
-				}else{
-					System.out.println("****unspsc***");
-					this.getManagedBean().setUnspscInd(true);
-					this.getManagedBean().setRequestCode(code);
-					this.getManagedBean().getReviewExtCodeList().add(code);
-
-					if(this.getManagedBean().getReviewExtCodeList().get(0).getCmRecommendCodes()!=null 
-							&& this.getManagedBean().getReviewExtCodeList().get(0).getCmRecommendCodes().size() >0){
+						if(this.getManagedBean().getReviewExtCodeList().get(0).getCmRecommendCodes()!=null 
+								&& this.getManagedBean().getReviewExtCodeList().get(0).getCmRecommendCodes().size() >0){
 							this.getManagedBean().setUnspscRecommendInd(true);
+						}
 					}
 				}
 			}
@@ -276,15 +277,15 @@ BaseBackingBean<CdTrackingDiaryManagedBean> {
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
-	
-	
+
+
 
 	public void preRenderCodificationTrackingDairyView() {
 		log.info(".................preRenderCodificationTrackingDairyView................");
-		
+
 		this.getManagedBean().reset();
-		
-		
+
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "cdTrackingDiarySearch");
