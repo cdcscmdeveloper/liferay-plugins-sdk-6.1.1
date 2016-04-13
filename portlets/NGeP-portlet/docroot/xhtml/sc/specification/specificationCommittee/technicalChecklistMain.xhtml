@@ -233,7 +233,7 @@
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<h:panelGroup id="uploadtech">
 					<p:commandLink oncomplete="uploadDlg.show();return false;"
-						styleClass="sample#{index}"
+						styleClass="sample#{index}" process="@this" partialSubmit="true"
 						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and (specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()))}"
 						update="stageTwotechProposal">
 						<h:graphicImage value="/css/images/design/upload.png" />
