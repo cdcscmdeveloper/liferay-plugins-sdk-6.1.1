@@ -7,7 +7,8 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<ui:param name="isQTStatusPendingQtSubmission" value="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 			
 		<table width="100%">
 		<tr>
@@ -31,7 +32,8 @@
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
-					update="@form" />
+					update="@form"
+					rendered="#{isQTStatusPendingScheduleAndBefore}" />
 
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
@@ -58,11 +60,12 @@
 							action="#{qTDetailBB.submitQtDetailsFormMaintanace}" process="@form"
 							update="@all"
 							onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" />
+							oncomplete="blockWidget.hide();"
+							rendered="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA)}" />
 					</c:otherwise>
 				</c:choose>
 				
-				<c:if test="#{!qTDetailBB.isQTStatusGreaterThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_CANCELLATION)}">
+				<c:if test="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_LOA)}">
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 						style="float:right;margin-right: 12px;" 
 						onclick="cancelQTDlg.show()" />
