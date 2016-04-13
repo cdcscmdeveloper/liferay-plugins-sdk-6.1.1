@@ -5622,6 +5622,38 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Get related bank name by branch
+	 * 
+	 * @param List
+	 *            <SmSupplierBank> banks
+	 * @param SmSupplierBranch
+	 *            branch
+	 * @return String
+	 */
+	public static String getRelatedBankNameByBranch(List<SmSupplierBank> banks,
+			SmSupplierBranch branch) {
+		String bank = StringUtils.EMPTY;
+		if (!SmCommonUtil.isCollectionEmpty(banks) && branch != null
+				&& branch.getSupplierBranchId() != null) {
+			for (SmSupplierBank smSupplierBank : banks) {
+				if (!EntityHelper.isCollectionEmpty(smSupplierBank
+						.getSmSupplierBranchBanks())) {
+					SmSupplierBranchBank brTmp = (SmSupplierBranchBank) EntityHelper
+							.getEntityBySinglePropertyFromList(
+									branch.getSupplierBranchId(),
+									smSupplierBank.getSmSupplierBranchBanks(),
+									"smSupplierBranch");
+					if (brTmp != null && brTmp.getSmSupplierBranch() != null) {
+						bank = smSupplierBank.getBankBranch();
+						break;
+					}
+				}
+			}
+		}
+		return bank;
+	}
+
+	/**
 	 * Checks if selected personnel is point of contact for any of the listed
 	 * branches.
 	 * 
