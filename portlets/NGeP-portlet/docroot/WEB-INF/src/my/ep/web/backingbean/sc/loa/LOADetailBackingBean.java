@@ -3614,7 +3614,7 @@ public class LOADetailBackingBean extends
 						if(isS1OrS2){
 							Row row0 = serviceSheet.getRow(0);
 							Cell cell9 = row0.getCell(9);
-							cell9.setCellValue("Total Amount (RM)");
+							cell9.setCellValue("Jumlah Harga (RM)");
 						}
 
 						for (JadualHargaBean service : serviceList) {
