@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -394,6 +395,11 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The pid expiry message. */
 	private String pidExpiryMessage;
 	
+	/** The deleted supplier map. */
+	private Map<Long, ScQuoteSupplier> deletedSupplierMap;
+	
+	/** The deleted business nature map. */
+	private Map<Long, ScBusinessNatureQuoteCriteria> deletedBusinessNatureMap;
 
 	/**
 	 * Gets the spki backing bean.
@@ -2530,5 +2536,33 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setPidExpiryMessage(String pidExpiryMessage) {
 		this.pidExpiryMessage = pidExpiryMessage;
 	}
-	
+
+	/**
+	 * @return the deletedSupplierMap
+	 */
+	public Map<Long, ScQuoteSupplier> getDeletedSupplierMap() {
+		return deletedSupplierMap;
+	}
+
+	/**
+	 * @param deletedSupplierMap the deletedSupplierMap to set
+	 */
+	public void setDeletedSupplierMap(Map<Long, ScQuoteSupplier> deletedSupplierMap) {
+		this.deletedSupplierMap = deletedSupplierMap;
+	}
+
+	/**
+	 * @return the deletedBusinessNatureMap
+	 */
+	public Map<Long, ScBusinessNatureQuoteCriteria> getDeletedBusinessNatureMap() {
+		return deletedBusinessNatureMap;
+	}
+
+	/**
+	 * @param deletedBusinessNatureMap the deletedBusinessNatureMap to set
+	 */
+	public void setDeletedBusinessNatureMap(
+			Map<Long, ScBusinessNatureQuoteCriteria> deletedBusinessNatureMap) {
+		this.deletedBusinessNatureMap = deletedBusinessNatureMap;
+	}
 }
