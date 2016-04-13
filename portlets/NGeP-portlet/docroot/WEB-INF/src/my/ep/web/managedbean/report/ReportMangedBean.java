@@ -83,6 +83,9 @@ public class ReportMangedBean extends BaseManagedBean {
 
 	/** The loa report document list. */
 	private List<ScLoaReport> loaReportDocumentList;
+	
+	/** The lovs values map. */
+	private HashMap<String,String> lovValuesMap=new HashMap<String,String>();
 
 	/** The sc loa. */
 	private ScLoa scLoa;
@@ -171,6 +174,25 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public String getReportValue() {
 		return reportValue;
+	}
+
+	/**
+	 * Gets the lovs values map.
+	 * 
+	 * @return the lovsValuesMap
+	 */
+	public HashMap<String, String> getLovValuesMap() {
+		return lovValuesMap;
+	}
+
+	/**
+	 * Sets the lovs values map.
+	 * 
+	 * @param lovsValuesMap
+	 *            the lovsValuesMap to set
+	 */
+	public void setLovValuesMap(HashMap<String, String> lovValuesMap) {
+		this.lovValuesMap = lovValuesMap;
 	}
 
 	/**
