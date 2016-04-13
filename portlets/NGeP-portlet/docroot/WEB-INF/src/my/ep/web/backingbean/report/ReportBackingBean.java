@@ -7968,38 +7968,31 @@ public class ReportBackingBean extends
 	@PostConstruct
 	public void init() {
 
-		/*if (this.getManagedBean().getSelectedMinistry() == null) {
-			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedMinistry()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-
-		if (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
-			this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedPegwaiPengawal()
-					.getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedPegwaiPengawal()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-
-		if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
-			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedKumpulanPTJ()
-					.getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedKumpulanPTJ()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-		if (this.getManagedBean().getSelectedPTJ() == null) {
-			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedPTJ()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}*/
+		/*
+		 * if (this.getManagedBean().getSelectedMinistry() == null) {
+		 * this.getManagedBean().setSelectedMinistry(new PmOrgProfile()); if
+		 * (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() ==
+		 * null) { this.getManagedBean().getSelectedMinistry()
+		 * .setPmOrgValidity(new PmOrgValidity()); } }
+		 * 
+		 * if (this.getManagedBean().getSelectedPegwaiPengawal() == null) {
+		 * this.getManagedBean().setSelectedPegwaiPengawal(new PmOrgProfile());
+		 * if (this.getManagedBean().getSelectedPegwaiPengawal()
+		 * .getPmOrgValidity() == null) {
+		 * this.getManagedBean().getSelectedPegwaiPengawal()
+		 * .setPmOrgValidity(new PmOrgValidity()); } }
+		 * 
+		 * if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
+		 * this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile()); if
+		 * (this.getManagedBean().getSelectedKumpulanPTJ() .getPmOrgValidity()
+		 * == null) { this.getManagedBean().getSelectedKumpulanPTJ()
+		 * .setPmOrgValidity(new PmOrgValidity()); } } if
+		 * (this.getManagedBean().getSelectedPTJ() == null) {
+		 * this.getManagedBean().setSelectedPTJ(new PmOrgProfile()); if
+		 * (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
+		 * this.getManagedBean().getSelectedPTJ() .setPmOrgValidity(new
+		 * PmOrgValidity()); } }
+		 */
 
 		if (this.getManagedBean().getSelectedOrgType() == null) {
 			this.getManagedBean().setSelectedOrgType(new PmParameter());
@@ -8084,9 +8077,11 @@ public class ReportBackingBean extends
 		paymentTypeList = new ArrayList<SelectItem>();
 		if ((null != this.getSmPaymentTo())
 				&& (ReportConst.EMPTY_VAL != this.getSmPaymentTo())) {
-			if (this.getSmPaymentTo().trim().equalsIgnoreCase("Government")) {
+			if (this.getSmPaymentTo().trim()
+					.equalsIgnoreCase(ReportConst.SM_PAYMENT_GOV)) {
 				retrieveGovtPaymentTypeList();
-			} else if (this.getSmPaymentTo().trim().equalsIgnoreCase("CDC")) {
+			} else if (this.getSmPaymentTo().trim()
+					.equalsIgnoreCase(ReportConst.SM_PAYMENT_CDC)) {
 				retrieveCDCPaymentTypeList();
 			} else {
 				retrievePaymentTypeList();
@@ -8328,19 +8323,22 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean()
 					.setSmMandatoryRejectedReportTypeView(false);
 			if (null != this.getSmReportType()
-					&& this.getSmReportType().equalsIgnoreCase(ReportConst.SM_REPORT_TYPE_RECEIVED)) {
+					&& this.getSmReportType().equalsIgnoreCase(
+							ReportConst.SM_REPORT_TYPE_RECEIVED)) {
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryRecievedReportTypeView(true);
 			} else if (null != this.getSmReportType()
-					&& this.getSmReportType().equalsIgnoreCase(ReportConst.SM_REPORT_TYPE_APPROVED)) {
+					&& this.getSmReportType().equalsIgnoreCase(
+							ReportConst.SM_REPORT_TYPE_APPROVED)) {
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryApprovedReportTypeView(true);
 			} else if (null != this.getSmReportType()
-					&& this.getSmReportType().equalsIgnoreCase(ReportConst.SM_REPORT_TYPE_REJECTED)) {
+					&& this.getSmReportType().equalsIgnoreCase(
+							ReportConst.SM_REPORT_TYPE_REJECTED)) {
 				getManagedBean().getRptGenBean()
 						.setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean()
@@ -8392,7 +8390,8 @@ public class ReportBackingBean extends
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 
-			List<Object[]> regStatusList = reportSO.retrieveRegStatusList(ReportConst.ENG_LANGUAGE_CODE);
+			List<Object[]> regStatusList = reportSO
+					.retrieveRegStatusList(ReportConst.ENG_LANGUAGE_CODE);
 			for (Object[] object : regStatusList) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setValue(object[1].toString());
@@ -9791,16 +9790,17 @@ public class ReportBackingBean extends
 	private void assignValReqdToTrue() {
 		log.info("ReportBackingBean-assignValReqdToTrue");
 		this.setShowParentMsg(false);
-		// this.setValueReqd(true);						
-		if (this.reportValue!=null && this.reportValue
-				.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
+		// this.setValueReqd(true);
+		if (this.reportValue != null
+				&& this.reportValue
+						.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
 			getCatDropdownStatusList();
 		} else {
 			this.setMainCatValueReqd(true);
 			this.setSubCatValueReqd(false);
 			this.setSubCatDivisionValueReqd(false);
 		}
-		
+
 	}
 
 	private void getCatDropdownStatusList() {
@@ -12729,7 +12729,7 @@ public class ReportBackingBean extends
 			selectItem.setValue(state.getStateId());
 			stateLst.add(selectItem);
 		}
-		
+
 	}
 
 	/**
@@ -12765,7 +12765,7 @@ public class ReportBackingBean extends
 			this.setSubCatValueReqd(false);
 			this.setSubCatDivisionValueReqd(false);
 		}
-		// to clear the category drop down values		
+		// to clear the category drop down values
 		for (SmSupplierCategory cat : this.getSelectedCatList()) {
 			cat.setPmCategoryL1(new PmCategoryL1());
 			cat.setPmCategoryL2(new PmCategoryL2());
@@ -12935,32 +12935,35 @@ public class ReportBackingBean extends
 	 * On change values for lo vs.
 	 */
 	public void onChangeValuesForLOVs() {
-
+		
 		if (this.getPpYear() != null
 				&& this.getPpYear() != ReportConst.EMPTY_VAL) {
-			if ((this.getManagedBean().getSelectedPTJ() != null && this
-					.getManagedBean().getSelectedPTJ().getPmOrgValidity()
+			if ((this.getManagedBean().getSelectedMinistry() != null && this
+					.getManagedBean().getSelectedMinistry().getPmOrgValidity()
 					.getOrgName() != null)
-					|| (this.getManagedBean().getSelectedMinistry() != null && this
-							.getManagedBean().getSelectedMinistry()
+					|| (this.getManagedBean().getSelectedPegwaiPengawal() != null && this
+							.getManagedBean().getSelectedPegwaiPengawal()
 							.getPmOrgValidity().getOrgName() != null)
 					|| (this.getManagedBean().getSelectedKumpulanPTJ() != null && this
 							.getManagedBean().getSelectedKumpulanPTJ()
 							.getPmOrgValidity().getOrgName() != null)
-					|| (this.getManagedBean().getSelectedPegwaiPengawal() != null && this
-							.getManagedBean().getSelectedPegwaiPengawal()
+					|| (this.getManagedBean().getSelectedPTJ() != null && this
+							.getManagedBean().getSelectedPTJ()
 							.getPmOrgValidity().getOrgName() != null)) {
 				this.setValuesEmpty(false);
 			}
 		}
 	}
 
-	public void onCompanyNameChangeForLOV(){
-		if(this.getManagedBean().getSelectedOrgProfile()!=null && this.getManagedBean().getSelectedOrgProfile().getSmSupplier()!=null){
-			this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+	public void onCompanyNameChangeForLOV() {
+		if (this.getManagedBean().getSelectedOrgProfile() != null
+				&& this.getManagedBean().getSelectedOrgProfile()
+						.getSmSupplier() != null) {
+			this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile()
+					.getSmSupplier().getCompanyName());
 		}
 	}
-	
+
 	/**
 	 * onSelectEffectedValues - On select effected values.S
 	 */
@@ -13218,7 +13221,7 @@ public class ReportBackingBean extends
 				}
 			}
 
-			reloadLovsValues();
+			// reloadLovsValues();
 
 			// this.setCmCompanyName(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
 
@@ -16489,7 +16492,7 @@ public class ReportBackingBean extends
 			this.setCmUnspscTitle(null);
 			// this.setCmUnspscTitle(null);
 			this.setCmCompanyName(null);
-			//to clear the cmCompanyName value while page loading
+			// to clear the cmCompanyName value while page loading
 			this.getManagedBean().setSelectedOrgProfile(new PmOrgProfile());
 			this.setCmRegistrationType(null);
 			this.setCmItemCategory(null);
@@ -17254,7 +17257,8 @@ public class ReportBackingBean extends
 
 		if (this.getSmApplicationStatus() != null) {
 
-			if (this.getSmApplicationStatus().equalsIgnoreCase(ReportConst.SM_REPORT_TYPE_APPROVED)) {
+			if (this.getSmApplicationStatus().equalsIgnoreCase(
+					ReportConst.SM_REPORT_TYPE_APPROVED)) {
 				this.getManagedBean().getRptGenBean()
 						.setSmNonMandatoryDateView(true);
 				this.getManagedBean().getRptGenBean()
@@ -17392,8 +17396,8 @@ public class ReportBackingBean extends
 	public SelectItem[] getOrgTypeDropdownValues() {
 		log.info("ReportBackingBean-getOrgTypeDropdownValues");
 		ISearchBean<PmParameterDesc> searchBean1 = null;
-		//ISearchBean<PmParameterDesc> searchBean2 = null;
-		//SelectItem[] items = null;
+		// ISearchBean<PmParameterDesc> searchBean2 = null;
+		// SelectItem[] items = null;
 		SelectItem[] federalItems = null;
 		SelectItem[] otherItems = null;
 		this.setPmOrgType(null);
@@ -17413,22 +17417,22 @@ public class ReportBackingBean extends
 				searchBean1 = getOrgTypeSearchBean("orgTypeFederalList");
 				if (searchBean1 != null) {
 					searchBean1.getSortColumns();
-					
+
 					itemsList = getDropdownValuesBySearchBean(
 							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
 				}
 			}
 			if (this.getPmOrgCategory() != null) {
 				if (searchBean1 != null) {
-					searchBean1.getSortColumns();				
+					searchBean1.getSortColumns();
 					itemsList = getDropdownValuesBySearchBean(
 							ParameterTypeConst.ORGANISATION_TYPES, searchBean1);
 				}
-			}		
+			}
 
 		} else if (this.reportValue
 				.equals(ReportConst.PM_LIST_OF_PROFILES_RPT_VAL)) {
-			
+
 			itemsList = getAllOrgTypeList(federalItems, otherItems);
 
 		}
@@ -17638,13 +17642,13 @@ public class ReportBackingBean extends
 				OrganizationType.PENGAWAI_PENGAWAL.value(),
 				OrganizationType.MINISTRY.value()));
 		sb.append("^");
-		/*if (this.getManagedBean().getSelectedMinistry() == null) {
-			this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedMinistry()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}*/
+		/*
+		 * if (this.getManagedBean().getSelectedMinistry() == null) {
+		 * this.getManagedBean().setSelectedMinistry(new PmOrgProfile()); if
+		 * (this.getManagedBean().getSelectedMinistry().getPmOrgValidity() ==
+		 * null) { this.getManagedBean().getSelectedMinistry()
+		 * .setPmOrgValidity(new PmOrgValidity()); } }
+		 */
 		if (this.getManagedBean().getSelectedMinistry() != null) {
 			sb.append(this.getManagedBean().getSelectedMinistry()
 					.getOrgProfileId());
@@ -17697,21 +17701,18 @@ public class ReportBackingBean extends
 		sb.append(OrgProfileUtil
 				.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
 		sb.append("^");
-		/*if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
-			this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedKumpulanPTJ()
-					.getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedKumpulanPTJ()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}
-		if (this.getManagedBean().getSelectedPTJ() == null) {
-			this.getManagedBean().setSelectedPTJ(new PmOrgProfile());
-			if (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
-				this.getManagedBean().getSelectedPTJ()
-						.setPmOrgValidity(new PmOrgValidity());
-			}
-		}*/
+		/*
+		 * if (this.getManagedBean().getSelectedKumpulanPTJ() == null) {
+		 * this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile()); if
+		 * (this.getManagedBean().getSelectedKumpulanPTJ() .getPmOrgValidity()
+		 * == null) { this.getManagedBean().getSelectedKumpulanPTJ()
+		 * .setPmOrgValidity(new PmOrgValidity()); } } if
+		 * (this.getManagedBean().getSelectedPTJ() == null) {
+		 * this.getManagedBean().setSelectedPTJ(new PmOrgProfile()); if
+		 * (this.getManagedBean().getSelectedPTJ().getPmOrgValidity() == null) {
+		 * this.getManagedBean().getSelectedPTJ() .setPmOrgValidity(new
+		 * PmOrgValidity()); } }
+		 */
 		if (this.getManagedBean().getSelectedKumpulanPTJ() != null) {
 			sb.append(this.getManagedBean().getSelectedKumpulanPTJ()
 					.getOrgProfileId());
