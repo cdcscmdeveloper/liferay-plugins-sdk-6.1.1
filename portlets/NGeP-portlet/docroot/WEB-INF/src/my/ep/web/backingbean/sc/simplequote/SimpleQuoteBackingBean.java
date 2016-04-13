@@ -10,8 +10,10 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
@@ -2426,42 +2428,30 @@ public class SimpleQuoteBackingBean extends
 
 	}
 
-	/**
-	 * Add business nature for Business nature in supplier criteria
-	 */
-	public void addBusinessNature() {
-		debugLogger("addBusinessNature");
-		ScBusinessNatureQuoteCriteria businessNatureCriteria = new ScBusinessNatureQuoteCriteria();
-		PmBusinessNature businessNature = new PmBusinessNature();
-		businessNatureCriteria.setPmBusinessNature(businessNature);
-		try {
-			List<ScBusinessNatureQuoteCriteria> businessNatureCriterias = getManagedBean()
-					.getScQuote().getBusinessNatureCriterias();
-			if (null == businessNatureCriterias) {
-				businessNatureCriterias = new ArrayList<ScBusinessNatureQuoteCriteria>();
-			}
-			businessNatureCriterias.add(businessNatureCriteria);
-			this.getManagedBean().setBusinessNatureCriterias(
-					businessNatureCriterias);
-		} finally {
-		}
-	}
-
+	
 	/**
 	 * delete business nature from business nature in supplier criteria
 	 */
 	public void deleteBusinessNature() {
 		debugLogger("deleteBusinessNature");
 		if (getManagedBean().getSelectedBusinessNature() != null) {
+			
+			Map<Long, ScBusinessNatureQuoteCriteria> deletedBusinessNatureMap = getManagedBean().getDeletedBusinessNatureMap();
+			if(null == deletedBusinessNatureMap){
+				deletedBusinessNatureMap =  new HashMap<Long, ScBusinessNatureQuoteCriteria>();
+			}
+			
 			for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : getManagedBean()
 					.getSelectedBusinessNature()) {
 				if (getManagedBean().getBusinessNatureCriterias().contains(
 						natureQuoteCriteria)) {
 					List<ScBusinessNatureQuoteCriteria> businessNatureQuoteCriterias = getManagedBean()
 							.getBusinessNatureCriterias();
+					deletedBusinessNatureMap.put(natureQuoteCriteria.getPmBusinessNature().getBusinessNatureId(), natureQuoteCriteria);
 					businessNatureQuoteCriterias.remove(natureQuoteCriteria);
 					getManagedBean().setBusinessNatureCriterias(
 							businessNatureQuoteCriterias);
+					getManagedBean().setDeletedBusinessNatureMap(deletedBusinessNatureMap);
 				}
 			}
 		}
@@ -2474,13 +2464,21 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("deleteSupplier");
 		if (getManagedBean().getSelectedSupplierList() != null
 				&& getManagedBean().getSelectedSupplierList().size() > 0) {
+
+			Map<Long, ScQuoteSupplier> deletedSupplierMap = getManagedBean().getDeletedSupplierMap();
+			if(null == deletedSupplierMap){
+				deletedSupplierMap =  new HashMap<Long, ScQuoteSupplier>();
+			}
+
 			for (ScQuoteSupplier supplier : getManagedBean()
 					.getSelectedSupplierList()) {
 				if (getManagedBean().getSupplierList().contains(supplier)) {
 					List<ScQuoteSupplier> supplierList = getManagedBean()
 							.getSupplierList();
+					deletedSupplierMap.put(supplier.getSmSupplier().getSupplierId(), supplier);
 					supplierList.remove(supplier);
 					getManagedBean().setSupplierList(supplierList);
+					getManagedBean().setDeletedSupplierMap(deletedSupplierMap);
 				}
 			}
 		} else {
@@ -4098,32 +4096,42 @@ public class SimpleQuoteBackingBean extends
 		}
 		if (suppliers != null) {
 			for (SmSupplier supplier : suppliers) {
-				ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
-				quoteSupplier.setSmSupplier(supplier);
-				quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
-				quoteSupplier.setSupplierName(supplier.getCompanyName());
-				quoteSupplier.setQuote(quote);
-				
-				getManagedBean().setSupplierList(supplierList);
-				if (getManagedBean().getSupplierList().isEmpty()) {
-					supplierList.add(quoteSupplier);
-				} else {
-					List<Long> supplierIds = new ArrayList<Long>();
-					for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
-							.getSupplierList()) {
-						supplierIds.add(scQuoteSupplier.getSmSupplier()
-								.getSupplierId());
-					}
-					if (supplierIds.size() > 0) {
-						if (!supplierIds.contains(supplier.getSupplierId())) {
-							supplierList.add(quoteSupplier);
+				// after save supplier list, can't add new supplier if the suppler exists
+				Map<Long, ScQuoteSupplier> deletedSupplierMap = getManagedBean().getDeletedSupplierMap();
+				if(deletedSupplierMap != null && deletedSupplierMap.containsKey(supplier.getSupplierId())){
+					supplierList.add(deletedSupplierMap.get(supplier.getSupplierId()));
+					
+				} else{
+					ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
+					quoteSupplier.setSmSupplier(supplier);
+					quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
+					quoteSupplier.setSupplierName(supplier.getCompanyName());
+					quoteSupplier.setQuote(quote);
 
-						} else {
-							// throw new EpException(MessageConst.ERROR_700027,
-							// new String[]{"Supplier","in the Supplier List"});
+					getManagedBean().setSupplierList(supplierList);
+					if (getManagedBean().getSupplierList().isEmpty()) {
+						supplierList.add(quoteSupplier);
+						
+					} else {
+						List<Long> supplierIds = new ArrayList<Long>();
+						for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
+								.getSupplierList()) {
+							supplierIds.add(scQuoteSupplier.getSmSupplier()
+									.getSupplierId());
+						}
+						if (supplierIds.size() > 0) {
+							if (!supplierIds.contains(supplier.getSupplierId())) {
+								supplierList.add(quoteSupplier);
+
+							} else {
+								// throw new EpException(MessageConst.ERROR_700027,
+								// new String[]{"Supplier","in the Supplier List"});
+							}
 						}
 					}
+
 				}
+
 			}
 		}
 	}
@@ -4144,38 +4152,46 @@ public class SimpleQuoteBackingBean extends
 		}
 		if (businessNatures != null) {
 			for (PmBusinessNature busiNature : businessNatures) {
-				ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
-				natureQuoteCriteria.setPmBusinessNature(busiNature);
-				natureQuoteCriteria.setQuote(getManagedBean().getScQuote());
-				
-				getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
-				if (getManagedBean().getBusinessNatureCriterias() == null
-						|| getManagedBean().getBusinessNatureCriterias()
-								.isEmpty()) {
-					natureQuoteCriterias.add(natureQuoteCriteria);
 
-				} else {
-					List<Long> busNatureIds = new ArrayList<Long>();
-					for (ScBusinessNatureQuoteCriteria bnCriteria : getManagedBean()
-							.getBusinessNatureCriterias()) {
-						busNatureIds.add(bnCriteria.getPmBusinessNature()
-								.getBusinessNatureId());
-					}
-					if (busNatureIds.size() > 0) {
-						if (!busNatureIds.contains(busiNature
-								.getBusinessNatureId())) {
-							natureQuoteCriterias.add(natureQuoteCriteria);
-						} else {
-							throw new EpException(
-									MessageConst.ERROR_700027,
-									new String[] { ResourceBundleUtils
-											.getMessage(
-													natureQuoteCriteria
-															.getPmBusinessNature()
-															.getLevelName(),
-													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-													new FacesScopes()
-															.getUserLocale()) });
+				// after save business nature , can't add new business nature if the business nature exists
+				Map<Long, ScBusinessNatureQuoteCriteria> deletedBusinessNatureMap = getManagedBean().getDeletedBusinessNatureMap();
+				if(deletedBusinessNatureMap != null && deletedBusinessNatureMap.containsKey(busiNature.getBusinessNatureId())){
+					natureQuoteCriterias.add(deletedBusinessNatureMap.get(busiNature.getBusinessNatureId()));
+					
+				} else{
+					ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
+					natureQuoteCriteria.setPmBusinessNature(busiNature);
+					natureQuoteCriteria.setQuote(getManagedBean().getScQuote());
+
+					getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
+					if (getManagedBean().getBusinessNatureCriterias() == null
+							|| getManagedBean().getBusinessNatureCriterias()
+							.isEmpty()) {
+						natureQuoteCriterias.add(natureQuoteCriteria);
+
+					} else {
+						List<Long> busNatureIds = new ArrayList<Long>();
+						for (ScBusinessNatureQuoteCriteria bnCriteria : getManagedBean()
+								.getBusinessNatureCriterias()) {
+							busNatureIds.add(bnCriteria.getPmBusinessNature()
+									.getBusinessNatureId());
+						}
+						if (busNatureIds.size() > 0) {
+							if (!busNatureIds.contains(busiNature
+									.getBusinessNatureId())) {
+								natureQuoteCriterias.add(natureQuoteCriteria);
+							} else {
+								throw new EpException(
+										MessageConst.ERROR_700027,
+										new String[] { ResourceBundleUtils
+												.getMessage(
+														natureQuoteCriteria
+														.getPmBusinessNature()
+														.getLevelName(),
+														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+														new FacesScopes()
+														.getUserLocale()) });
+							}
 						}
 					}
 				}
