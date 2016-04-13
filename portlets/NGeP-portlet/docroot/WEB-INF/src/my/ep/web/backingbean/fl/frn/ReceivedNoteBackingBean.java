@@ -637,7 +637,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 			if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isLastFRNTaxInv()){
-				getManagedBean().setSelectedTabIndex(1);
+				getManagedBean().setSelectedTabIndex(0);
 				onTabChange(getManagedBean().getSelectedTabIndex());
 				throw new EpException(MessageConst.ERROR_745078);
 			}
