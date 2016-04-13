@@ -27,14 +27,14 @@
 							<tr>
 								<td><div align="left" style="width: 99%">
 										<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
-											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 											actionListener="#{backingBean.setTabValue('7','6')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 											update=":form" />
 									</div></td>
 								<td><div align="right" style="width: 99%">
 										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 											actionListener="#{backingBean.setTabValue('7','8')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 											update=":form" />
@@ -65,14 +65,14 @@
 				<tr>
 					<td><div align="left" style="width: 99%">
 							<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 								actionListener="#{backingBean.setTabValue('7','6')}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 								update=":form" />
 						</div></td>
 					<td><div align="right" style="width: 99%">
 							<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 								actionListener="#{backingBean.setTabValue('7','8')}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 								update=":form" />
