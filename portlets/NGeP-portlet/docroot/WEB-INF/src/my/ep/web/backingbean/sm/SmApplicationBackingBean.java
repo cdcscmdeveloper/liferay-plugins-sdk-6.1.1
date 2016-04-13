@@ -1265,7 +1265,6 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.validateCategoryOtherDesc(true, getManagedBean(),
 					currentTab);
 		}
-
 		if (currentPageType
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
 				|| currentPageType
@@ -6925,10 +6924,11 @@ public class SmApplicationBackingBean extends
 	 *            - the current page type
 	 * @return the redirect page
 	 */
-	public String saveApplicationAsDraft(String applType, String currentPageType) {
+	public void saveApplicationAsDraft(String applType, String currentPageType) {
 		log.info("****** Save As Draft **********" + currentPageType
 				+ currentTab);
 		boolean valid = false;
+		boolean isActiveAppl = getManagedBean().getSmAppl().isActiveAppl();
 		try {
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
@@ -6942,32 +6942,44 @@ public class SmApplicationBackingBean extends
 				valid = intializeSaveDraftBpm(currentPageType);
 			}
 			if (valid) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_721204,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																		getManagedBean()
-																				.getSmAppl()
-																				.getApplType()),
-																getManagedBean()
-																		.getSmAppl()
-																		.getApplNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				renewSesionObject();
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-			} else {
-				return null;
+				if (isActiveAppl) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_721204,
+															new String[] {
+																	getParameterDesc(
+																			ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+																			getManagedBean()
+																					.getSmAppl()
+																					.getApplType()),
+																	getManagedBean()
+																			.getSmAppl()
+																			.getApplNo() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+				} else {
+					SmCommonUtil
+							.redirectToPage(
+									SmApplicationUtil.getApplicationErrorPage(),
+									MessageConst.INFO_721204,
+									new String[] {
+											getParameterDesc(
+													ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+													getManagedBean()
+															.getSmAppl()
+															.getApplType()),
+											getManagedBean().getSmAppl()
+													.getApplNo() });
+					renewSesionObject();
+				}
 			}
 		} finally {
 
