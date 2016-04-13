@@ -100,8 +100,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
-import com.asn1c.core.Bool;
-
 /**
  * Implementation for scheduling meeting for supplier finalization
  * 
