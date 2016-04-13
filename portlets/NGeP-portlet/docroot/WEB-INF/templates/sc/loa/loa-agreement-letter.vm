@@ -364,7 +364,7 @@
 			: 
 		</td>
 		<td>
-		  $supplierWitnessUser
+		  $!supplierWitnessUser
 		</td>
 		 </tr>
 	  <tr>
@@ -375,7 +375,7 @@
 			: 
 		</td>
 		<td>
-		    $supplierWitnessIcNo
+		    $!supplierWitnessIcNo
 		</td>
 		 </tr>
 	  <tr>
@@ -386,7 +386,7 @@
 		    : 
 		</td>
 		 <td>
-			$supplierWitnessDesignation
+			$!supplierWitnessDesignation
 		</td>
 		 </tr>
 	  <tr>
@@ -397,7 +397,7 @@
 			: 
 		</td>
 		<td style="white-space: normal;">
-			$supplierWitnessAddress
+			$!supplierWitnessAddress
 		</td>
 		 </tr>
 	  <tr>
@@ -408,7 +408,7 @@
 			: 
 		</td>
 		<td>
-			$supplierWitnessPhoneNo
+			$!supplierWitnessPhoneNo
 		</td>	
 		 </tr>
 	  <tr>
@@ -419,7 +419,7 @@
 		   : 
 	   </td>
 		<td>
-			$supplierWitnessFaxNo
+			$!supplierWitnessFaxNo
 		</td>
 		 </tr>
 	  <tr>
@@ -430,7 +430,7 @@
 			: 
 		</td>
 		<td>
-			$supplierWitnessMobNo
+			$!supplierWitnessMobNo
 		</td>
 		 </tr>
 	  <tr>
@@ -441,7 +441,7 @@
 			: 
 		</td>
 		<td>
-			$supplierWitnessEmail
+			$!supplierWitnessEmail
 		</td>
 	  </tr>
 	</table>
