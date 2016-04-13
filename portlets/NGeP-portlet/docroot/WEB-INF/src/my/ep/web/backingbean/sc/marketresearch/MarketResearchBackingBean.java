@@ -4,7 +4,6 @@
 package my.ep.web.backingbean.sc.marketresearch;
 
 
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -107,13 +106,7 @@ public class MarketResearchBackingBean extends
 				if(StringUtils.isNotBlank(mrSearchBean.getSelectedProcurementMethod())){
 					reqDTO.setProcurementMethod(mrSearchBean.getSelectedProcurementMethod());
 				}
-				
-				if(mrSearchBean.getLoaAckDateFrom() != null && mrSearchBean.getLoaAckDateTo() != null){
-					if (DateUtils.isDateGreaterOrEqual(mrSearchBean.getLoaAckDateFrom() ,
-							mrSearchBean.getLoaAckDateTo())) {
-						throw new EpException("Loa From Date is greater than Loa To Date");
-					}
-				}
+			
 				if(mrSearchBean.getLoaAckDateFrom() != null){
 					reqDTO.setLoaAckDateFrom(mrSearchBean.getLoaAckDateFrom());
 				}
@@ -156,8 +149,18 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void searchMarketResearch(){
+		MarketResearchSearchBean mrSearchBean = getManagedBean().getMarketResearchSearchBean();		
+		if(mrSearchBean.getLoaAckDateFrom() != null && mrSearchBean.getLoaAckDateTo() != null){
+			if (DateUtils.isDateGreater(mrSearchBean.getLoaAckDateFrom() ,
+					mrSearchBean.getLoaAckDateTo())) {
+				throw new EpException("Loa From Date is greater than Loa To Date");
+			}
+		}
 		getMarketResearchDataModel().reloadData();
 	}
+	
+	
+	
 	
 	
 
