@@ -2399,6 +2399,7 @@ public class QTDetailBackingBean extends
 							getManagedBean().getZoneTrees().addAll(
 									LocationSingleton.getInstance()
 											.constuctTreeNode(locCriteria));
+							scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria);
 						}
 					} else {
 						if (isQTStatusGreaterThanOrEqualsScheduleDoc(scQt.getQtStatus().getStatusId())
