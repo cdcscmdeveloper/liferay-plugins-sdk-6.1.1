@@ -23,7 +23,8 @@
           showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" />
 
      <p:panel id="searchId" header="#{lbl['lbl.ct.search']}" toggleable="true"  toggleSpeed="500">
-     	<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20">
+     	<h:panelGrid columns="2" style="width:100%;"
+     	     columnClasses="columnWidth20"  rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
  			<p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
            	<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="110" readonly="true"
 				disabled="#{contractDetailsBackingBean.disableMinistryLov()}"
@@ -81,16 +82,19 @@
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaPhysicalNo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
            	<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
-		   	<p:outputLabel value="#{lbl['lbl.ct.termination.type']}" />
-		   	<p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.searchTerminationType}" style="width:200px; margin-bottom:5px">
+		   	<p:outputLabel value="#{lbl['lbl.ct.termination.type']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}" />
+		   	<p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.searchTerminationType}" 
+		   	    style="width:200px; margin-bottom:5px" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
 		   		<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
 		   	</p:selectOneMenu>
-		  	<p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" />
-		   	<p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}"	style="width:200px;">
+		  	<p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}" />
+		   	<p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}"	
+		   	   style="width:200px;" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchContractStatusDropdown()}" />
 		   	</p:selectOneMenu>
-		   	<p:outputLabel for="status" value="#{lbl['lbl.ct.doc.contract.status']}" />
-		   	<p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.searchStatus}"	style="width:200px; margin-bottom:5px">
+		   	<p:outputLabel for="status" value="#{lbl['lbl.ct.doc.contract.status']}" rendered="#{!contractDetailsBackingBean.isSupplierRole()}"/>
+		   	<p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.searchStatus}"	
+		   	      style="width:200px; margin-bottom:5px" rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
 		   	</p:selectOneMenu>		   
 		</h:panelGrid>
