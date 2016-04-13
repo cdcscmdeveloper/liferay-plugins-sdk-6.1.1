@@ -57,6 +57,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -84,6 +85,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
+import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -3501,6 +3504,49 @@ public class SmCommonUtil {
 		}
 
 		return retVal;
+	}
+	
+	/**
+	 * Verify identification no with MyIdentity
+	 * @param name
+	 * @param identificationNo
+	 * @param postCode
+	 */
+	public void verifyWithMyIdentity(String name, String identificationNo, String postCode){
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IMyIdentitySO.class);
+		
+		reqDTO.setType("Online");
+		reqDTO.setNewIcNo(identificationNo);
+		reqDTO.setPostCode(postCode);
+		reqDTO.setName(name);
+		
+		try{
+			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
+			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
+			if(!resDTO.getSeverity().equalsIgnoreCase(SupplierManagementConst.SM_MYIDENTITY_SEVERITY_SUCC)){
+				switch (resDTO.getStatusCode()) {
+				case "70019" :
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70020" :
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031" :
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+				case "70032" :
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
+				default : 
+					log.info("MyIDENTITY ERROR: " + identificationNo + " - " + resDTO.getStatusCode() + " - " + resDTO.getStatusDesc());
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70099);
+				}
+			}
+		}catch(Exception ex){
+			String message = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+			if(message != null){
+				throw new EpException("MyIdentity: " + message);
+			}else{
+				throw new EpException("MyIdentity: " + ex.getMessage());
+			}
+		}
 	}
 
 	private static SelectItem getLhdnSelectItem() {
