@@ -1155,6 +1155,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setSupplierId(resDTO.getSupplierItem().getSupplierId());
 
 			log.info("resDTO.getSupplierItem().getSupplierId()" + resDTO.getSupplierItem().getSupplierId());
+			
+			
+			retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
+			
 
 			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this.getManagedBean().getDraftSearchDataModel().getList().get(index));
 
@@ -1325,6 +1329,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} finally {
 			catalogueSO = null;
 		}
+		
+		
+		
+		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
 
 		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		this.getManagedBean().getSelectedMaintainItem()
@@ -1385,6 +1393,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} finally {
 			catalogueSO = null;
 		}
+		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
 
 		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		this.getManagedBean().getSelectedMaintainItem()
@@ -1468,7 +1477,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 * ().add(reason.getPmStatus().getStatusId());
 			 * this.getManagedBean().setRejectReason(reason.getRemark()); }
 			 */
-
+			retriveSupplierGstInfomation(catResDTO.getSupplierItem().getSmSupplier());
 			this.getManagedBean().setSelectedMaintainItem(catResDTO.getSupplierItem());
 
 
