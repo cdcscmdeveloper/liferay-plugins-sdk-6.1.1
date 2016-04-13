@@ -19,13 +19,12 @@
 									test="#{ctReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.ministry']}"></p:outputLabel></td>
-									<td><ac:lov id="lovCtMinistry" lovId="PM_ORG_PROFILE_REPORT"
-											size="100" update="@form"
-											headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"	
+									<td><ac:lov id="lovCtMinistry"
+											lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
+											headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"
 											value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedMinistry"
-											conditionField="#{reportBackingBean.constructMinistryConditionFields()}"
-											postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" />
+											conditionField="#{reportBackingBean.constructMinistryConditionFields()}" />
 										<p:message id="lovCtMinistryMsg" for="lovCtMinistry"
 											display="icon" /></td>
 								</c:if>
@@ -43,14 +42,14 @@
 											value="#{lbl['lbl.rpt.pegawaipengawal']}"></p:outputLabel></td>
 									<td><ac:lov id="lovCtPegaWaiPengawal"
 											lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-											headerText="#{lbl['lbl.rpt.pegawaipengawal']}" readonly="true"	
-											disabled="#{reportBackingBean.managedBean.selectedMinistry==null}"	
+											headerText="#{lbl['lbl.rpt.pegawaipengawal']}"
+											readonly="true"
+											disabled="#{reportBackingBean.managedBean.selectedMinistry==null}"
 											value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedPegwaiPengawal"
-											conditionField="#{reportBackingBean.constructPegwaiPengawalConditionFields()}"
-											postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" />
-										<p:message id="lovCtPegaWaiPengawalMsg" for="lovCtPegaWaiPengawal"
-											display="icon" /></td>
+											conditionField="#{reportBackingBean.constructPegwaiPengawalConditionFields()}" />
+										<p:message id="lovCtPegaWaiPengawalMsg"
+											for="lovCtPegaWaiPengawal" display="icon" /></td>
 								</c:if>
 							</tr>
 						</table>
@@ -66,13 +65,11 @@
 											value="#{lbl['lbl.rpt.kumpulan.ptj']}"></p:outputLabel></td>
 									<td><ac:lov id="lovCtKumpulanPTJ"
 											lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
-											headerText="#{lbl['lbl.rpt.kumpulan.ptj']}" readonly="true"	
-											disabled="#{reportBackingBean.managedBean.selectedMinistry==null 
-											or reportBackingBean.managedBean.selectedPegwaiPengawal==null}"	
+											headerText="#{lbl['lbl.rpt.kumpulan.ptj']}" readonly="true"
+											disabled="#{reportBackingBean.managedBean.selectedPegwaiPengawal==null}"
 											value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedKumpulanPTJ"
-											conditionField="#{reportBackingBean.constructKumpulanPTJConditionFields()}"
-											postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" />
+											conditionField="#{reportBackingBean.constructKumpulanPTJConditionFields()}" />
 										<p:message id="lovCtKumpulanPTJMsg" for="lovCtKumpulanPTJ"
 											display="icon" /></td>
 								</c:if>
@@ -88,14 +85,13 @@
 									test="#{ctReportBackingBean.managedBean.rptGenBean.ctPtjView}">
 									<td style="width: 195px;"><p:outputLabel
 											value="#{lbl['lbl.rpt.ptj']}"></p:outputLabel></td>
-									<td><ac:lov id="lovCtPTJ" lovId="PM_ORG_PROFILE_REPORT" readonly="true"	
-											size="100" update="@form" headerText="#{lbl['lbl.rpt.ptj']}"
-											disabled="#{reportBackingBean.managedBean.selectedMinistry==null 
-											or reportBackingBean.managedBean.selectedPegwaiPengawal==null or reportBackingBean.managedBean.selectedKumpulanPTJ==null}"	
+									<td><ac:lov id="lovCtPTJ" lovId="PM_ORG_PROFILE_REPORT"
+											readonly="true" size="100" update="@form"
+											headerText="#{lbl['lbl.rpt.ptj']}"
+											disabled="#{reportBackingBean.managedBean.selectedKumpulanPTJ==null}"
 											value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 											saveObject="reportBackingBean.managedBean.selectedPTJ"
-											conditionField="#{reportBackingBean.constructPTJConditionFields()}"
-											postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}" />
+											conditionField="#{reportBackingBean.constructPTJConditionFields()}" />
 										<p:message id="lovCtPTJMsg" for="lovCtPTJ" display="icon" /></td>
 								</c:if>
 							</tr>
@@ -275,7 +271,7 @@
 						</c:if>
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctAgreementView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.agreement']}" 
+							<p:outputLabel value="#{lbl['lbl.rpt.agreement']}"
 								style="margin-top:5px;width:190px;" />
 							<p:selectOneMenu value="#{reportBackingBean.ctAgreement}"
 								style="margin-top:5px;width:300px;">
@@ -288,10 +284,10 @@
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
-						</c:if>						
+						</c:if>
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctAgreementExtraView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.agreement']}" 
+							<p:outputLabel value="#{lbl['lbl.rpt.agreement']}"
 								style="margin-top:5px;width:280px;" />
 							<p:selectOneMenu value="#{reportBackingBean.ctAgreement}"
 								style="margin-top:5px;width:300px;">
@@ -305,7 +301,7 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
-						
+
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctProcurementModeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.ProcurementMode']}"
@@ -446,8 +442,7 @@
 							<p:column>
 								<table style="width: 100%;">
 									<tr style="width: 100%;">
-										<td><p:outputLabel
-												style="width:190px;"
+										<td><p:outputLabel style="width:190px;"
 												value="#{lbl['lbl.rpt.loaphysicalno']}" /></td>
 									</tr>
 								</table>
@@ -618,7 +613,7 @@
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
-						</c:if>						
+						</c:if>
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupThreeExtraView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
@@ -637,7 +632,7 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
-						
+
 						<c:if
 							test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupFourView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.group']}"
