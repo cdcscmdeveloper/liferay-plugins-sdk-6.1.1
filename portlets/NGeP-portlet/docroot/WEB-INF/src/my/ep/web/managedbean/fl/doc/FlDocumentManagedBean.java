@@ -23,8 +23,6 @@ import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -35,10 +33,6 @@ import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -344,41 +338,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					if(supplierIdList.size()>0) {
 						reqDTO.setSupplierIdList(supplierIdList);
 					}
-				} else {
-					IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-					FacesScopes facesScopes = new FacesScopes();
-					setPmUser(facesScopes.getUserSessionBean());
-					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(getPmUser().getUserId());
-					UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-					Long orgProfileId = null;
-					if(userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
-						orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
-					}
-					// handle for Naik taraf PTJ
-					IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-					OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-					profileReqDTO.setOrgProfileId(orgProfileId);
-					OrgProfileResDTO profileResDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(profileReqDTO);			
-					if(profileResDTO.getOrgProfileIdList()!=null && profileResDTO.getOrgProfileIdList().size()>0) {
-						reqDTO.setOrgProfileList(profileResDTO.getOrgProfileIdList());
-					} else {
-						reqDTO.setOrgProfileId(orgProfileId);
-					}
-				}
-				
-				if(isAuditor()) {
-					FacesScopes facesScopes = new FacesScopes();
-					if(facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
-						reqDTO.setUserRole(RoleCode.AUDITOR_GENERAL.value());
-					} else {
-						reqDTO.setUserRole(RoleCode.AUDITOR_INTERNAL.value());
-					}
-				}
-				
-				if(isFlFulfilmentSupplier()){
-					reqDTO.setUserRole(RoleCode.BASIC_SUPPLIER_USER.value());
-				}
+				} 
 				reqDTO.setUserRoleList(getUserRoles());
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
