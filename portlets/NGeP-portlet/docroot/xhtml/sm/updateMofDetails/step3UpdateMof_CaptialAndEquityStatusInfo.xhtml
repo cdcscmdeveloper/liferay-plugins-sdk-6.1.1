@@ -53,14 +53,14 @@
 								<tr>
 									<td><div align="left" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
-												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 												actionListener="#{backingBean.setTabValue('3','2')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 												update=":form" />
 										</div></td>
 									<td><div align="right" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 												actionListener="#{backingBean.setTabValue('3','4')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 												update=":form" />
