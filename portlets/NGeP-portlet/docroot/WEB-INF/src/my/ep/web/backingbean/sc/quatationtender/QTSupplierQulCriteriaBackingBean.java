@@ -99,6 +99,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
@@ -622,7 +623,15 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 		} else {
 			this.getManagedBean().setSupplierLocationList(getManagedBean().getExistingSupplierLocationList());
-			this.getManagedBean().setZoneTrees(null);
+			if (null != this.getManagedBean().getZoneTrees()
+					&& !this.getManagedBean().getZoneTrees().isEmpty()) {
+				List<ScQtLocCriteria> existingSupplierLocationList = this
+						.getManagedBean().getExistingSupplierLocationList();
+				if (!CollectionUtils.isEmpty(existingSupplierLocationList)) {
+					this.getManagedBean().setSupplierLocationList(existingSupplierLocationList);
+				}
+				this.getManagedBean().setZoneTrees(null);
+			}
 			this.getManagedBean().getQt().getScQtSupplierCriteria()
 			.setLocationLevel(new PmParameter());
 		}
