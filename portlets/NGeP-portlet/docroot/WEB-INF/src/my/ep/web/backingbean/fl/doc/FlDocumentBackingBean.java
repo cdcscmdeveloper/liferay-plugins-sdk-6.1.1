@@ -814,7 +814,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		getManagedBean().setSearchPhysContractNo(null);
 		getManagedBean().setSearchCentralContractName(null);
 		getManagedBean().setSearchPhysLoaNo(null);
-		defaultPtjAndMinistryValues();
 	}
 	
 	/**
@@ -1156,8 +1155,12 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			ptjReqDTO.setDeepLevel(true);
 			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+			PmOrgProfile ministry = null;
 			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
-				condition = condition + "*" + "orgProfileId^" + retrieveMinistryOrgProfile(pmPtjReorg.getOldPtjId()).getOrgProfileId();
+				ministry = retrieveMinistryOrgProfile(pmPtjReorg.getOldPtjId());
+				if(ministry!=null) {
+					condition = condition + "*" + "orgProfileId^" + ministry.getOrgProfileId();
+				}
 			}
 		} 
 		return condition;
@@ -1168,8 +1171,30 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * @return String
 	 */
 	public String getPTJCondition() {
-		return OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value())+
-					"^"+this.getManagedBean().getPtjGroup().getOrgProfileId();
+		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value())+
+				"^"+this.getManagedBean().getPtjGroup().getOrgProfileId();
+		if(hasGovernmentUserRole()) {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			String ptjList = orgProfile.getOrgProfileId()+"";
+			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+			ptjReqDTO.setDeepLevel(true);
+			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
+			}
+			condition = condition + "|orgProfileId^"+ptjList+"^9";
+		}
+		return condition;
 	}
 		
 	/**
@@ -1196,9 +1221,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	  *         false, if login user is not User/internal auditor
 	*/	
 	public boolean disableMinistryLov() {
-		return (hasGovernmentUserRole()
-				|| getFacesScopes().hasRoleUser(
-						RoleCode.AUDITOR_INTERNAL.value()) );
+		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) );
 	}
 	
 	/**
@@ -1228,18 +1251,43 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	}
 	
 	public boolean disableAllLov() {
-		return (hasSupplierRole());
+		return (!hasGovernmentUserRole() && hasSupplierRole());
 	}
-	
 
 	/**
 	 * Get PTJ group condition for construct the LOV listing
 	 * @return String
 	 */
 	//TODO need to test for this method.
-	public String constuctConditionFieldsForPTJGroup() {		
-		return OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
+	public String constuctConditionFieldsForPTJGroup() {	
+		String condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(), OrganizationType.MINISTRY.value())+"^"+
 				this.getManagedBean().getMinistry().getOrgProfileId();
+		if(hasGovernmentUserRole()) {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IPtjReorgSO.class);
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile orgProfile = null;
+			if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+			}
+			String kumpulanPtjList = retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId()+"";
+			PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+			ptjReqDTO.setDeepLevel(true);
+			ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+			PmOrgProfile kumpulanPtj = null;
+			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+				kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
+				if(kumpulanPtj!=null) {
+					kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
+				}
+			}
+			condition = condition + "|orgProfileId^"+kumpulanPtjList+"^9";
+		}
+		return condition;
 	}
 	
 }
