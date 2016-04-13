@@ -3662,12 +3662,9 @@ public class QTDetailBackingBean extends
 			detailSO.validateApprovalDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			int selectedApprovalTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
-			QtAmendMentBean amendMentBean = this.getManagedBean()
-					.getAmendMentBean();
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
-			this.getManagedBean().setAmendMentBean(amendMentBean);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			retrieveApprovalTabDtl();
 			this.getManagedBean().setSelectedApprovalTabIndex(selectedApprovalTabIndex);
