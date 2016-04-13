@@ -3678,6 +3678,7 @@ public class QTDetailBackingBean extends
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
+				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveBriefingSitevisitTabDtl();
 			}
 			break;
