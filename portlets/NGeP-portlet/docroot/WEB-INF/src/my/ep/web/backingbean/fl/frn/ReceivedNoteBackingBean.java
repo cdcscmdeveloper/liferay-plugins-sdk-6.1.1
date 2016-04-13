@@ -545,7 +545,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 		for(FlSupplierEvaluation supplierEvaluation : getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()) {
-			if(supplierEvaluation.getScore()==null) {
+			if(supplierEvaluation.getScore()==null ||  supplierEvaluation.getScore()==0) {
 				throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.score",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getCriteriaDesc(supplierEvaluation.getPmCriteria())});
 			}
 		}
