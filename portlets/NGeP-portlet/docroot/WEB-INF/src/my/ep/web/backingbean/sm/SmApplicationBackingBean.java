@@ -6928,8 +6928,6 @@ public class SmApplicationBackingBean extends
 						getManagedBean(), currentTab);
 			} else {
 				valid = validateBeforeSave(applType, currentPageType);
-				SmApplicationUtil.validateBranchWithoutBankAcc(
-						getManagedBean(), currentTab, valid);
 			}
 
 			if (valid) {
