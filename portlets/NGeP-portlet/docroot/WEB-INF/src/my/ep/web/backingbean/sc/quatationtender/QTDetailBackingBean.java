@@ -1766,6 +1766,8 @@ public class QTDetailBackingBean extends
 					|| SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(this
 							.getManagedBean().getTaskName())
 					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+							.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_SCORING_COMMITTEE
 							.equalsIgnoreCase(taskName)) {
 				if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)
@@ -4083,7 +4085,7 @@ public class QTDetailBackingBean extends
 	 * @return the string
 	 */
 	public String submitQtDetailsFormMaintanace() {
-
+		log.info("submitQtDetailsFormMaintanace");
 		IQTDetailSO detailSO;
 		try {
 			this.getManagedBean().setSaveFlow(false);
