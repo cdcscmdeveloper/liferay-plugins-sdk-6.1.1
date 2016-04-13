@@ -2157,6 +2157,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	/**
+	 * Check if QT Status less than or equals from status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param toStatusId
+	 * 		the to status id
+	 * @return	the indicator qt status less than from status.
+	 */
+	public boolean isQTStatusLessThanOrEquals(Long currentStatusId, Long toStatusId) {
+		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		
+		return orderedStatuses.indexOf(currentStatusId) <= orderedStatuses.indexOf(toStatusId);
+	}
+	
+	/**
 	 * Check if QT Status is in between from and to status.
 	 * 
 	 * @param currentStatusId
