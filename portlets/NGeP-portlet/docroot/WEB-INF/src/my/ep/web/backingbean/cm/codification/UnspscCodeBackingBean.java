@@ -158,6 +158,18 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				|| fs.hasRoleUser("GOVT_SELLER");
 	}
 	
+	public boolean isAllSupplierWithoutTemp() {
+
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("SUPPLIER_USER")
+				|| fs.hasRoleUser("MOF_SUPPLIER_USER")
+				|| fs.hasRoleUser("MOF_SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("BASIC_SUPPLIER_USER")
+				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("GOVT_SELLER");
+	}
+	
 
 	public String submitForRequest(String action) throws Exception {
 
