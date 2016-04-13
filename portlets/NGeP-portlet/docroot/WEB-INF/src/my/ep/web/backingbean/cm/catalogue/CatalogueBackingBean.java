@@ -9209,6 +9209,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			log.info("resDTO.getSupplierItem().getSupplierId()" + resDTO.getSupplierItem().getSupplierId());
 
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+			supplierReqDTO.setAllStatuses(true);
+
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
+
+			log.info("getSmSupplier"
+					+ smResDTO.getResultBean().getResultList().get(0));
+			
+			retriveSupplierGstInfomation( smResDTO.getResultBean().getResultList().get(0));
 
 			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this.getManagedBean().getDraftSupplierItemList().get(index));
 
@@ -9830,12 +9845,5 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 
 	}
-
-
-
-
-
-
-
 
 }
