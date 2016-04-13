@@ -60,8 +60,9 @@
     	});
 	 </script> 	
 	  <ui:param name="isPrepareLoa" value="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission or
-	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaEndorsement or
-	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaRevision}" />
+	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaApproval or
+	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaRevision or
+	  ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaRevisionApproval}" />
 	  <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
