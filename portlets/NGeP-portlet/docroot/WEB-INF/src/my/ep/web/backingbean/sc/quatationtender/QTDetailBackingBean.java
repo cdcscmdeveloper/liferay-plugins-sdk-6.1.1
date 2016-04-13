@@ -2343,9 +2343,14 @@ public class QTDetailBackingBean extends
 				boolean isQuotationThresHold = ParameterConst.PROCUREMENT_MODE_QUOTATION
 						.equals(scQt.getProcurementMode().getParameterCode());
 				if (!isQuotationThresHold
-						&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 						&& !scQt.getScQtSupplierCriteria().isAllState()) {
-					scQt.getScQtSupplierCriteria().setAllState(true);
+					if(this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR){
+						scQt.getScQtSupplierCriteria().setAllState(true);
+					} else if(null == scQt.getScQtSupplierCriteria()
+							.getLocationLevel()){
+						scQt.getScQtSupplierCriteria().setLocationLevel(new PmParameter());
+					}
+					
 				}
 
 				if (isQuotationThresHold
