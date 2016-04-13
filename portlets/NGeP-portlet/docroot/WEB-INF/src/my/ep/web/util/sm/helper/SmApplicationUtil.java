@@ -3579,17 +3579,33 @@ public class SmApplicationUtil {
 	 */
 	public static List<PmReasonDesc> retrieveRejectReasonListByParameterCode(
 			String paramterCode) {
+		List<PmReasonDesc> reasonDescList = null;
 		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IReasonSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IReasonSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonCategory(paramterCode);
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);
+
 		if (resDTO != null) {
-			return resDTO.getReasonDescList();
-		} else {
-			return null;
+			reasonDescList = resDTO.getReasonDescList();
+			if (!EntityHelper.isCollectionEmpty(reasonDescList)) {
+				// sort
+				Collections.sort(reasonDescList,
+						new Comparator<PmReasonDesc>() {
+							@Override
+							public int compare(final PmReasonDesc s1,
+									final PmReasonDesc s2) {
+								return StringUtil.upperCase(s1.getReasonDesc())
+										.compareTo(
+												StringUtil.upperCase(s2
+														.getReasonDesc()));
+							}
+						});
+			}
 		}
+		return reasonDescList;
 	}
 
 	// @SuppressWarnings("unused")
