@@ -1779,7 +1779,7 @@ public class LOADetailBackingBean extends
 		if (scLoa.getBankAddress() != null) {
 			bankAddress = getFullAddress(scLoa.getBankAddress());
 			bankAddress = bankAddress.replaceAll("\r\n", "<br />");
-			bankAddress = bankAddress.replaceAll("&", "&#38;");
+			//bankAddress = bankAddress.replaceAll("&", "&#38;");
 		}
 		context.put("bankAddress", bankAddress);
        
@@ -2157,9 +2157,9 @@ public class LOADetailBackingBean extends
 					scLoa.setSupplierBranch(supplierBranchAsHQ);
 					scLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
 					scLoa.setSupplierContact(supplierHQPersonnel.getName());
-					scLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneNo());
-					scLoa.setSupplierFaxNo(smCompanyBasic.getFaxNo());
-					scLoa.setSupplierMobNo(supplierHQPersonnel.getMobileNo());
+					scLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
+					scLoa.setSupplierFaxNo(smCompanyBasic.getFaxFull());
+					scLoa.setSupplierMobNo(supplierHQPersonnel.getMobileFull());
 					scLoa.setSupplierEmail(supplierHQPersonnel.getEmail());
 					// Get Gst info for HQ
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier()
@@ -2181,12 +2181,12 @@ public class LOADetailBackingBean extends
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
 					scLoa.setSupplierAddress(supplierBranch.getSmAddress());
 					
-					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneNo());
-					scLoa.setSupplierFaxNo(supplierBranch.getFaxNo());
+					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneFull());
+					scLoa.setSupplierFaxNo(supplierBranch.getFaxFull());
 					SmPersonnel personnel = supplierBranch.getSmPersonnel();
 					if(personnel != null){
 						scLoa.setSupplierContact(personnel.getName());
-						scLoa.setSupplierMobNo(personnel.getMobileNo());
+						scLoa.setSupplierMobNo(personnel.getMobileFull());
 						scLoa.setSupplierEmail(personnel.getEmail());
 					}
 					
@@ -4073,9 +4073,11 @@ public class LOADetailBackingBean extends
 				}
 			}
 			if(isCalculateMaxPriceItem){
-				subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
-						scLoiLoaItem.getUnitPrice(), quantity);
-				totalAmount = totalAmount.add(subTotal);
+				if(quantity != null){
+					subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+							scLoiLoaItem.getUnitPrice(), quantity);
+					totalAmount = totalAmount.add(subTotal);
+				}
 			}
 		}
 		totalAmount =  totalAmount.setScale(4, BigDecimal.ROUND_HALF_EVEN);
