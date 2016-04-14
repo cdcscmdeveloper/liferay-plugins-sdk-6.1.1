@@ -1528,6 +1528,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		reqDTO.setSupplierItemId(this.getManagedBean().getApprovedSearchDataModel().getList().get(index).getSupplierItemId());
 		resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+		
+		
+		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
 
 		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		this.getManagedBean()
@@ -1574,26 +1577,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
 
 			this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
-			/*
-			 * this.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
-			 * for(CmItemRejectReason reason :
-			 * this.getManagedBean().getRejectedItemList
-			 * ().get(index).getCmItemRejectReasons()){
-			 * this.getManagedBean().getRejectReasonIds
-			 * ().add(reason.getPmStatus().getStatusId());
-			 * this.getManagedBean().setRejectReason(reason.getRemark()); }
-			 */
+
 			CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 
 			CatalogueResDTO catResDTO = new CatalogueResDTO();
 
 			catReqDTO.setSupplierItemId(this.getManagedBean().getRejectSearchDataModel().getList().get(index).getSupplierItemId());
 			catResDTO = catalogueSO.retrieveSupplierItemById(catReqDTO);
+			
+			
+			retriveSupplierGstInfomation(catResDTO.getSupplierItem().getSmSupplier());
 
-			//			catReqDTO.setToken(languageCode);
-			//			catReqDTO.setSupplierItemId(this.getManagedBean().getRejectedItemList().get(index).getSupplierItemId());
-			//			catReqDTO.setCmSupplierItemObj(this.getManagedBean().getRejectedItemList().get(index));
-			//			catResDTO = catalogueSO.findItemRejectReasons(catReqDTO);
+			
 			this.getManagedBean().getRejectSearchDataModel().getList().get(index).setCmItemRejectReasons(catResDTO.getSupplierItem().getCmItemRejectReasons());
 
 			this.getManagedBean().setSelectedMaintainItem(catResDTO.getSupplierItem());
