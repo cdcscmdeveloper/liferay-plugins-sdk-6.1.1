@@ -130,7 +130,7 @@
 		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
 		    <p:outputLabel value="#{lbl['lbl.ct.panel.loa.verifier']}" />
 			<p:inputText style="width:300px;" disabled="true"
-				value="#{ctBackingBean.managedBean.contractVer.approver.userName}" />
+				value="#{amendmentBackingBean.managedBean.approverName}" />
 			<p:outputLabel value="#{lbl['lbl.ct.required.loa.verifier']}" />			
 			<h:panelGrid columns="4">
 				<p:selectOneRadio id="reqLoaVerifier" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails or

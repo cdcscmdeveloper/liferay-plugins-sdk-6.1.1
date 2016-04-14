@@ -59,6 +59,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String textBeforeSign;
 	private String buttonAction;
 	private String committeeType;
+	private String approverName;
 	private Long meetingStatusId;
 	private Long secretaryId;
 	private Date newAmendmentEffDate;
@@ -974,4 +975,18 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setDisableMeetingDetails(boolean disableMeetingDetails) {
 		this.disableMeetingDetails = disableMeetingDetails;
 	}
+
+	/**
+	 * @return the approverName
+	 */
+	public String getApproverName() {
+		return approverName;
+	}
+
+	/**
+	 * @param approverName the approverName to set
+	 */
+	public void setApproverName(String approverName) {
+		this.approverName = approverName;
+	}	
 }
