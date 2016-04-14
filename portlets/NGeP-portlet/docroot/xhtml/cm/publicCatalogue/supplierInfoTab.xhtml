@@ -15,52 +15,104 @@
 
 		<table width="100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
-				<td><p:inputText value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.companyName}" size="40" readonly="true"></p:inputText></td>
+				<td width="15%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.cm.supplier.name']}" /></td>
+				<td width="35%"><p:outputLabel
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.companyName}"
+						styleClass="outputLabel-view" readonly="true"></p:outputLabel></td>
+				<td width="15%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
+				<td width="35%"><p:outputLabel styleClass="outputLabel-view"
+						value="#{catalogueBackingBean.managedBean.smGstSupplier.gstRegNo}"
+						readonly="true"
+						rendered="#{catalogueBackingBean.managedBean.smGstSupplier ne null}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.companyaddress']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
+						readonly="true" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
+				<td><h:outputText
+						value="#{catalogueBackingBean.managedBean.smGstSupplier.gstEffDate}"
+						rendered="#{catalogueBackingBean.managedBean.smGstSupplier ne null}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText></td>
+
+			</tr>
+
+			<tr>
 				<td></td>
-				<td></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-				<td colspan="2"><p:inputText size="40" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" readonly="true" /></td>
-
-			</tr>
-
-			<tr>
-				<td></td>
-				<td colspan="2"><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
-			</tr>
-
-			<tr>
-				<td></td>
-				<td colspan="2"><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
+				<td><h:outputText
+						value="#{catalogueBackingBean.managedBean.smGstSupplier.gstDeclaredDate}"
+						rendered="#{catalogueBackingBean.managedBean.smGstSupplier ne null}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td colspan="2"><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}"/></td>
+				<td colspan="2"><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"/></td>
+				<td></td>
+				<td colspan="2"><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.postcode']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.cm.tel.no']}" /></td>
-				<td><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.phoneNo}"></p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.cm.fax.no']}" /></td>
-				<td><p:inputText size="40" readonly="true" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.faxNo}"></p:inputText></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.cm.tel.no']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.phoneFull}"></p:outputLabel></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.cm.fax.no']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view"
+						readonly="true"
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.faxNo}"></p:outputLabel></td>
 			</tr>
 		</table>
 
