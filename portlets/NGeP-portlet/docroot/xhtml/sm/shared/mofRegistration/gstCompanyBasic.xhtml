@@ -142,7 +142,7 @@
 							</p:commandLink>
 			
 						</p:column>
-						<p:column headerText="#{lbl['lbl.pm.document.name']} 2222222222"
+						<p:column headerText="#{lbl['lbl.pm.document.name']}"
 							style="width : 20%;">
 							<p:commandLink ajax="false" value="#{tableGstHq.fileName}" rendered="#{not empty tableGstHq.fileName}">
 								<p:fileDownload value="#{backingBean.commonDownload(tableGstHq.filePath,tableGstHq.fileName)}" />
