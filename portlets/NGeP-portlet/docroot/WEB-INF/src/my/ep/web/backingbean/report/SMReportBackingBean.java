@@ -305,7 +305,8 @@ public class SMReportBackingBean extends
 			rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 			// rptGenBean.setSmMandatoryZoneView(true);
 			rptGenBean.setSmQRAllSupplierTypeView(true);
-			rptGenBean.setSmReportTypeView(true);
+			//rptGenBean.setSmReportTypeView(true);
+			rptGenBean.setSmMandatoryReportTypeQRView(true);
 			rptGenBean.setSmNonMandatoryDateView(true);
 			rptGenBean.setSmCreatedDateView(true);
 			break;
