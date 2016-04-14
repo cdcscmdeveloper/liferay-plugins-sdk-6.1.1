@@ -1924,19 +1924,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						scQt.getQtValidityPeriod());
 			}
 		}
-		boolean isDate = false;
-		Date d1 = new Date();
+		
+		boolean isValidityDateNotReached = false;
 		if (null != validityDate) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 			scQt.setProposalValidityUntil(sdf.format(validityDate));
-			long days = DateUtils.getDaysDifference(d1, validityDate);
-			int day = (int) days;
-			if (day >= 0) {
-				isDate = true;
-			}
+			isValidityDateNotReached = 
+						checkProposalValidityDateReach(validityDate);
 		}
 
-		return isDate;
+		return isValidityDateNotReached;
 
 	}
 
@@ -1982,9 +1979,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return isProposalValidityDateReached
 	 */
 	public boolean checkProposalValidityDateReach(Date proposalValidityEndDate){
+		if (proposalValidityEndDate != null) {
+			long days = DateUtils.getDaysDifference(
+								  new Date(), proposalValidityEndDate);
+			int day = (int) days;
+			if (day >= 0) {
+				return true;
+			}
+		}
 		
-		return DateUtils.isDateGreater(proposalValidityEndDate, new Date());
-		
+		return false;
 	}
 	
 	/**
