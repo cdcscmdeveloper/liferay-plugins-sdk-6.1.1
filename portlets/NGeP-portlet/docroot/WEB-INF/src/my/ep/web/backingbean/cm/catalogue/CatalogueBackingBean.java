@@ -4879,6 +4879,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractItemSO.class);
 		try{
 			String allPrice = "";
+			System.out.println("contractNo"+contractNo);
+			System.out.println("docId:"+docId);
 			if(contractNo!=null && contractNo.length()>0) {
 				ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
 				ctItemReqDTO.setContractItemId(docId);
@@ -4887,9 +4889,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			} else {
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				reqDTO.setSupplierItemId(docId);
-				reqDTO.setToken(new FacesScopes().getUserLocale().getLanguage());
+				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 				CatalogueResDTO resDTO = catalogueSO.getAllPriceType(reqDTO);
 
+				System.out.println("resDTO.getList():"+resDTO.getList().size());
 				if(resDTO.getList() != null){
 					for(int i=0;i<resDTO.getList().size();i++){
 						allPrice+=resDTO.getList().get(i);
@@ -4898,6 +4901,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					}
 				}
 			}
+			System.out.println("allPrice:"+allPrice);
 			return allPrice;
 		}catch(Exception e){
 			e.printStackTrace();
