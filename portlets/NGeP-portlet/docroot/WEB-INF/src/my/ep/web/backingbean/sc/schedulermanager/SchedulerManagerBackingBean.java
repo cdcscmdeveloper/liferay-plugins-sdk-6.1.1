@@ -123,12 +123,11 @@ public class SchedulerManagerBackingBean extends
 
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
-			
-			//delete if failed to load job
+
+			// delete if failed to load job
 			if (tmpJobKey != null) {
-				log.info("DELETE FAILED JOB:"+tmpJobKey.getName());
-				EpSchedulerHelper
-						.deleteJobAndAssociatedTriggers(tmpJobKey);
+				log.info("DELETE FAILED JOB:" + tmpJobKey.getName());
+				EpSchedulerHelper.deleteJobAndAssociatedTriggers(tmpJobKey);
 			}
 		}
 		log.info(">>>>>>>>>>>>END INIT ALL JOBS<<<<<<<<<<<<<<<<<<");
@@ -341,12 +340,21 @@ public class SchedulerManagerBackingBean extends
 								.getSelectedJobVO().getJobKey());
 				addJob();
 			} else {
-				JobKey jobKey = new JobKey(getManagedBean().getSelectedJobVO()
-						.getJobName(), getManagedBean().getSelectedJobVO()
-						.getJobGroup());
-				EpSchedulerHelper.updateScheduledJob(jobKey, getManagedBean()
-						.getSelectedJobVO().getDescription(),
-						finalCronExpression, getValidJobClass());
+				if (!finalCronExpression.equals(getManagedBean()
+						.getSelectedJobVO().getCronExpression())) {
+					EpSchedulerHelper
+							.deleteJobAndAssociatedTriggers(getManagedBean()
+									.getSelectedJobVO().getJobKey());
+					addJob();
+				} else {
+					JobKey jobKey = new JobKey(getManagedBean()
+							.getSelectedJobVO().getJobName(), getManagedBean()
+							.getSelectedJobVO().getJobGroup());
+					EpSchedulerHelper.updateScheduledJob(jobKey,
+							getManagedBean().getSelectedJobVO()
+									.getDescription(), finalCronExpression,
+							getValidJobClass());
+				}
 			}
 		}
 	}
