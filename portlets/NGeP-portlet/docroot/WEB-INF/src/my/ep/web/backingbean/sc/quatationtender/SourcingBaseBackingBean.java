@@ -688,7 +688,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					|| !compareUserName(prevRemark.getCreatedUser()
 							.getLoginId())
 					|| (workFlowStatus != null
-							&& prevRemark.getScWorkFlowStatus() != null && !prevRemark
+							&& prevRemark.getScWorkFlowStatus() != null &&
+							prevRemark.getScWorkFlowStatus().getWorkflowStatusId() != null && !prevRemark
 							.getScWorkFlowStatus().getWorkflowStatusId()
 							.equals(workFlowStatus.getWorkflowStatusId()))) {
 
