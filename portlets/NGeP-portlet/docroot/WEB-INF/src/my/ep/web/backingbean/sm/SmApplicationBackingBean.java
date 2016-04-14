@@ -6952,16 +6952,7 @@ public class SmApplicationBackingBean extends
 											null,
 											MessageUtils
 													.getMessage(
-															MessageConst.INFO_721204,
-															new String[] {
-																	getParameterDesc(
-																			ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																			getManagedBean()
-																					.getSmAppl()
-																					.getApplType()),
-																	getManagedBean()
-																			.getSmAppl()
-																			.getApplNo() },
+															MessageConst.INFO_100002,
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
