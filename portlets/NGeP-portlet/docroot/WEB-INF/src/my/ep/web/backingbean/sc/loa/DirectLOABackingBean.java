@@ -1346,9 +1346,7 @@ public class DirectLOABackingBean extends
 			scLoa.setScLoaApproval(scLoaApproval);
 		}
 
-		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
-				|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
-
+		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
 			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
