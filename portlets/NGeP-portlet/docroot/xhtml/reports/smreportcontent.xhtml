@@ -81,7 +81,7 @@
 							<p:outputLabel value="" />
 							<p:selectOneRadio id="reqexpdate" style="width:376px"
 								value="#{reportBackingBean.smRequestExpiryDate}">
-								<f:selectItem itemLabel="#{lbl['lbl.rptsoftcertreqdate']}" 
+								<f:selectItem itemLabel="#{lbl['lbl.rptsoftcertreqdate']}"
 									itemValue="R" />
 								<f:selectItem itemLabel="#{lbl['lbl.rptsoftexpdate']}"
 									itemValue="E" />
@@ -1125,7 +1125,7 @@
 									<tr>
 										<td><p:inputText label="#{lbl['lbl.rpt.cmpName']}"
 												id="CompanyName" maxlength="100"
-												value="#{reportBackingBean.smCompanyName}" 
+												value="#{reportBackingBean.smCompanyName}"
 												style="width:290px;">
 												<p:ajax event="blur" partialSubmit="true"
 													update="@([id$=Msg])" />
@@ -1303,7 +1303,7 @@
 									<tr>
 										<td><p:inputText label="#{lbl['lbl.rpt.applicationNo']}"
 												id="smApplicationNo" maxlength="16"
-												value="#{reportBackingBean.smApplicationNo}" 
+												value="#{reportBackingBean.smApplicationNo}"
 												style="width:290px;">
 												<p:ajax event="blur" partialSubmit="true"
 													update="@([id$=Msg])" />
@@ -1726,6 +1726,38 @@
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
+
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryReportTypeQRView}">
+							<p:column>
+								<table style="width: 100%;">
+									<tr style="width: 100%;">
+										<td><p:outputLabel value="#{lbl['lbl.rpt.reportType']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
+
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%;">
+									<tr>
+										<td><p:selectOneMenu label="#{lbl['lbl.rpt.reportType']}"
+												value="#{reportBackingBean.smReportType}" id="ReportType" 
+												required="true" style="width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.responserpt']}"
+													itemValue="#{lbl['lbl.rpt.response']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.summaryrpt']}"
+													itemValue="#{lbl['lbl.rpt.summary']}"></f:selectItem>
+												<p:ajax event="change" partialSubmit="true"
+													update="@([id$=Msg])" />
+											</p:selectOneMenu></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryReportTypeView}">
 							<p:column>
@@ -2106,7 +2138,7 @@
 							<p:column>
 								<table style="width: 100%;">
 									<tr style="width: 100%;">
-										<td><p:outputLabel 
+										<td><p:outputLabel
 												value="#{lbl['lbl.rpt.supportingDocumentMode']}" /> <p:outputLabel
 												value="*" styleClass="mandatory" /></td>
 
@@ -2377,7 +2409,7 @@
 							<p:column>
 								<table style="width: 100%;">
 									<tr style="width: 100%;">
-										<td><p:outputLabel value="#{lbl['lbl.rpt.state']}" /> </td>
+										<td><p:outputLabel value="#{lbl['lbl.rpt.state']}" /></td>
 
 									</tr>
 								</table>
@@ -3010,7 +3042,7 @@
 								value="#{lbl['lbl.rpt.expectedsitevisitdatefrom']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></TD>
 					</c:if>
-                    <c:if
+					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryExpectedSiteVisiRpttDateView}">
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.expectedsitevisitrptdatefrom']}" /></TD>
@@ -3023,7 +3055,7 @@
 					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smApplicationReceivedDateView}">
-						<TD class="columnGenClass"><p:outputLabel								
+						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.applicationreceiveddatefrom']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></TD>
 					</c:if>
@@ -3187,7 +3219,7 @@
 								label="#{lbl['lbl.rpt.expectedsitevisitrptdatefrom']}"
 								id="MandatoryFromDate" showOn="button" navigator="true"
 								display="inline" readonlyInput="true" size="9"
-								value="#{reportBackingBean.fromDate}" 
+								value="#{reportBackingBean.fromDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								partialSubmit="true" process="@form">
 							</p:calendar></TD>
@@ -3431,8 +3463,7 @@
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
-						</c:if>
-						<c:if
+						</c:if> <c:if
 							test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRegisteredReportTypeDateViewForMY}">
 							<p:selectOneMenu label="#{lbl['lbl.rpt.registeredyearfrom']}"
 								id="MandatoryFromYear"
@@ -3443,8 +3474,7 @@
 								<p:ajax event="change" partialSubmit="true"
 									update="@([id$=Msg])" />
 							</p:selectOneMenu>
-						</c:if>
-						<c:if
+						</c:if> <c:if
 							test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRecievedReportTypeView}">
 							<p:selectOneMenu label="#{lbl['lbl.rpt.receivedyearfrom']}"
 								id="MandatoryFromYear"
@@ -3683,12 +3713,12 @@
 						test="#{reportBackingBean.managedBean.rptGenBean.smSoftCertExpDateView}">
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.softcertexpdatefrom']}" /></TD>
-					</c:if>					
+					</c:if>
 					<c:if
 						test="#{reportBackingBean.managedBean.rptGenBean.smNonMandatoryExpectedSiteVisiRpttDateView}">
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.expectedsitevisitrptdatefrom']}" /></TD>
-					</c:if>					
+					</c:if>
 					<TD class="columnDateFromClass"><p:calendar showOn="button"
 							navigator="true" display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" size="9"
@@ -4062,7 +4092,8 @@
 								<p:column style="width:2%" selectionMode="multiple" />
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-									<h:outputText value="*" rendered="#{reportBackingBean.mainCatValueReqd}"
+									<h:outputText value="*"
+										rendered="#{reportBackingBean.mainCatValueReqd}"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.mainCat']}"
 										id="consultProjParCatCode"
@@ -4088,10 +4119,12 @@
 
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-									<h:outputText value="*" rendered="#{reportBackingBean.subCatValueReqd}"
+									<h:outputText value="*"
+										rendered="#{reportBackingBean.subCatValueReqd}"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.subCat']}"
-										value="#{expCategoryBean.pmCategoryL2.categoryL2Id}" required="#{reportBackingBean.subCatValueReqd}"
+										value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"
+										required="#{reportBackingBean.subCatValueReqd}"
 										id="conslChild" style="width: 320px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -4109,10 +4142,12 @@
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-									<h:outputText value="*" rendered="#{reportBackingBean.subCatDivisionValueReqd}"
+									<h:outputText value="*"
+										rendered="#{reportBackingBean.subCatDivisionValueReqd}"
 										style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />
 									<p:selectOneMenu label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
-										value="#{expCategoryBean.pmCategoryL3.categoryL3Id}" required="#{reportBackingBean.subCatDivisionValueReqd}"
+										value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"
+										required="#{reportBackingBean.subCatDivisionValueReqd}"
 										id="conslSubChild" style="width: 320px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
