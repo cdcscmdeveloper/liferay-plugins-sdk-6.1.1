@@ -172,11 +172,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				      ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 				}
 			    
-			}
-			/*Setting login user id*/
-			if(isCentralContractAdmin()) 
-				getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
-			
+			}			
 			if(getManagedBean().getUserMap().size()==0) {
 				 initializeApproverList();
 				 getManagedBean().getApproverModel().setSource(getAvailableApproverList());
@@ -216,8 +212,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				}
 				
 				
-				CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});			
-				getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
+				CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 				CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerId(dataType.getDocId().longValue());
 				setContractCircularVar(reqDTO);
@@ -531,17 +526,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			     reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			     reqDTO.setTaskId(getManagedBean().getTaskId());
 			     reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			     PmUser pmUSer = new PmUser();
-			     pmUSer.setLoginId(getManagedBean().getCircularAdmin());
-			     reqDTO.setCircularAdmin(pmUSer);
 			     reqDTO.setUserRole(getUserRole());
 			     reqDTO.setTaskName(getManagedBean().getTaskName());
 			     reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			     if(getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value())) {
-				      circularVer.setApprover(getFacesScopes().getUserSessionBean());
-				      circularVer.setApprovedDate(new Date());
-			     }
-			
 			    reqDTO.setCircular(circular);
 			    reqDTO.setCircularVer(circularVer);
 			    reqDTO.setUpdateAction(getManagedBean().isUpdateAction());
