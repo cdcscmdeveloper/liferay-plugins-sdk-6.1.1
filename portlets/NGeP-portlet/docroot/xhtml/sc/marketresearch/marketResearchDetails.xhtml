@@ -1,0 +1,161 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:param name="vo" value="#{marketResearchBackingBean.managedBean.marketResearchVO}" />
+	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
+		toggleable="true">
+
+		<table style="width: 100%;">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
+				<td><p:inputText id="isPanelTxt"
+						value="#{marketResearchBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(vo.panel))}"
+						style="width:195px;" disabled="true" />
+				</td>
+				<td colspan="2"></td>
+			</tr>
+			<h:panelGroup id="panelInfoId">
+				<ui:fragment rendered="#{vo.panel}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.circular.no']}" /></td>
+						<td><p:inputText id="cirPanelTxt"
+								value="#{vo.circularNo}" style="width:195px;"
+								disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.group.item']}" /></td>
+						<td><p:inputText id="groupItemTxt"
+								value="#{vo.groupName}" style="width:200px;"
+								disabled="true" /></td>
+					</tr>
+				</ui:fragment>
+			</h:panelGroup>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td colspan="3"><p:inputTextarea id="title1"
+						disabled="true"
+						label="#{lbl['lbl.sc.title']}" 
+						value="#{vo.procurementTitle}" cols="110" rows="3"
+						style=" margin-bottom:5px; width: 714px;" maxlength="1000">
+				</p:inputTextarea></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" /></td>
+				<td><p:inputText id="estprice"	style="text-align:right; width:195px;"
+						value="#{vo.estimatedAmount}" disabled="true">
+						<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
+				<td>
+					<p:inputText value="#{marketResearchBackingBean.getParameterDesc(vo.procurementMode)}"
+								disabled="true" style="width:195px;" readonly="true" />
+				</td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.open.for']}" /></td>
+				<td><p:inputText id="openForTxt"
+						value="#{marketResearchBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, vo.openFor)}"
+						style="width:200px;" disabled="true" />
+				</td>
+			 </tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
+				<td colspan="3"><p:inputText id="zoneTxt"
+						value="#{marketResearchBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(vo.zonal))}"
+						style="width:195px;" disabled="true" />
+				</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}" /></td>
+				<td><p:inputText id="procTypeCatTxt" value="#{marketResearchBackingBean.getParameterDesc(vo.procurementTypeCatId)}"
+								style="width:195px;" disabled="true" />	</td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurement.category']}" /> </td>
+				<td><p:inputText id="procCatTxt"
+						value="#{marketResearchBackingBean.getParameterDesc(vo.pmProcurementCategory)}"
+						style="width:200px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" /></td>
+				<td colspan="3"><p:inputText id="evalTypeTxt"
+						value="#{marketResearchBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, vo.evaluationType)}"
+						style="width:195px;" disabled="true" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" /></td>
+				<td colspan="3"><p:inputText id="contractTypeTxt"
+								value="#{marketResearchBackingBean.getParameterDesc(vo.contractType)}"
+								style="width:195px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.fullfillent.type']}" /></td>
+				<td><p:inputText id="fulfilTypeTxt"
+					value="#{marketResearchBackingBean.getParameterDesc(vo.fulfilmentType)}"
+					style="width:195px;" disabled="true" />
+				</td>
+				<td style="white-space: nowrap;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> 
+				</td>
+				<td><p:inputText id="contractBo" maxlength="3"
+						label="#{lbl['lbl.sc.spec.complete.period']}"
+						value="#{vo.contractDuration}"
+						style="text-align:right;margin-bottom:5px; width:200px;"
+						disabled="true">
+					</p:inputText>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.off.price']}" /></td>
+				<td><p:inputText style="text-align: right;"
+						value="#{vo.loaAmt}"
+						disabled="true"
+						size="35">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" /></td>
+				<td><p:inputText style="text-align: right;"
+						value="#{vo.gstAmt}"
+						disabled="true"
+						size="35">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
+				<td><p:inputText style="text-align: right;"
+						value="#{vo.overallContractAmt}"
+						size="35" id="ContractAmtId" disabled="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+				<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.mr.loa.ack.date']}" /></td>
+				<td>
+					<p:inputText size="35" disabled="true"  id="ackDateId"
+						value="#{vo.ackDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+				</td>
+			</tr>
+		</table>
+		</p:panel>
+</ui:composition>
