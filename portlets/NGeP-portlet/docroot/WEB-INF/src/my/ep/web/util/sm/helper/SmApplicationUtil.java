@@ -3986,6 +3986,17 @@ public class SmApplicationUtil {
 		// docu.setVerifiedFlg(1);
 		docu.setReceived(false);
 
+		setDefaultSmApplDocFiles(docu);
+		return docu;
+	}
+
+	/**
+	 * Set default supporting doc files
+	 * 
+	 * @param SmApplSupportDoc
+	 *            docu
+	 */
+	public static void setDefaultSmApplDocFiles(SmApplSupportDoc docu) {
 		List<SmApplDocFile> files = new ArrayList<SmApplDocFile>();
 		SmApplDocFile docFile = new SmApplDocFile();
 		docFile.setSmApplSupportDoc(docu);
@@ -3993,7 +4004,6 @@ public class SmApplicationUtil {
 		docFile.setFilePath(" ");
 		files.add(docFile);
 		docu.setSmApplDocFiles(files);
-		return docu;
 	}
 
 	// SM Address Clone code start

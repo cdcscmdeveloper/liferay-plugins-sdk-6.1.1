@@ -2230,7 +2230,12 @@ public class SmApplicationBackingBean extends
 								.getSmAppl().getSmApplSupportDocs()) {
 							if (smDocu.getPmDocument().getDocumentId()
 									.equals(doc.getDocumentId())) {
-								// docs.add(smDocu);
+
+								if (EntityHelper.isCollectionEmpty(smDocu
+										.getSmApplDocFiles())) {
+									SmApplicationUtil
+											.setDefaultSmApplDocFiles(smDocu);
+								}
 								recordExists = true;
 							}
 						}
