@@ -41,6 +41,7 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
+import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -133,25 +134,39 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				        
 				   /*Start if statement to check login user*/
 				    if(contractVerId!=null) {
-				        	 reqDTO = new ContractReqDTO();
-					         reqDTO.setContractVerId(Long.parseLong(contractVerId));
-					         reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
-					         reqDTO.setUpdateAction(false);
-					         setSuspensionContractVer(reqDTO);
+				    	reqDTO = new ContractReqDTO();
+				    	reqDTO.setContractVerId(Long.parseLong(contractVerId));
+				    	reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+				    	reqDTO.setUpdateAction(false);
+				    	setSuspensionContractVer(reqDTO);
 					        	   
-					           /*Start if statement if login user not contract admin*/
-//					          if (!getFacesScopes().getUserSessionBean().getUserId().equals(getManagedBean().getContractVer().getContractAdmin().getUserId())) {
-//									        FacesContext fc = FacesContext.getCurrentInstance();
-//										fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"", MessageUtils.getMessage(MessageConst.ERROR_700116,
-//												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-//										fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
-//										return;
-//								   }/*end if statement*/
+				    	/*Start if statement if login user not contract admin*/
+				    	String roleCode = null;
+				    	if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+				    			ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				    		roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
+				    	} else if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+				    			ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+				    		roleCode = RoleCode.BPK_CCA.value();
+				    	}
+				    	CtActor contractAdminActor = retrieveContractActor(
+				    			getManagedBean().getContractVer().getContractVerId(),
+				    			getManagedBean().getContractVer().getDocType(),
+				    			roleCode);
+					         
+				    	if (contractAdminActor != null
+				    			&& !getFacesScopes().getUserSessionBean().getUserId().equals(contractAdminActor.getUser().getUserId())) {
+				    		FacesContext fc = FacesContext.getCurrentInstance();
+				    		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"", MessageUtils.getMessage(MessageConst.ERROR_700116,
+				    				MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
+							return;
+						}/*end if statement*/
 				        	  
-				        	  getManagedBean().setViewOnly(true);
-				        	  getManagedBean().setTaskId(taskId);
-				        	  return;
-				          }/*End if statement to check  login user */
+				    	getManagedBean().setViewOnly(true);
+				    	getManagedBean().setTaskId(taskId);
+				    	return;
+				    }/*End if statement to check  login user */
 			       
 				          /*Return when not call from tasklist*/
 				          if(taskId==null) 

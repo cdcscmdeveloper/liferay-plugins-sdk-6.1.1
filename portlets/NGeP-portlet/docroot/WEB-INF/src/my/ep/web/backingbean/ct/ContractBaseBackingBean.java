@@ -17,13 +17,17 @@ import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.ct.actor.CtActorReqDTO;
+import my.ep.dto.ct.actor.CtActorResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -222,6 +226,31 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
     public String getCancelConfirmationContent(String docType) {
    	 	return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
     }
+    
+    /**
+	 * Method used to retrieve actor by document Id, document type and role code.
+	 * @Param docId, docType, roleCode
+	 * @return CtActor
+	 */
+	public CtActor retrieveContractActor(Long docId, String docType, String roleCode) {
+		ICtActorSO ctActorSO = null;
+		CtActorResDTO ctActorResDTO = new CtActorResDTO();
+		
+		try {
+			ctActorSO = (ICtActorSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, ICtActorSO.class);
+		    
+			CtActorReqDTO ctActorReqDTO = new CtActorReqDTO();
+			ctActorReqDTO.setDocId(docId);
+			ctActorReqDTO.setDocType(docType);
+			ctActorReqDTO.setRoleCode(roleCode);
+			ctActorResDTO = ctActorSO.retrieveCtActorByDocIdAndTypeAndRole(ctActorReqDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return ctActorResDTO.getCtActor();
+	}
     
 }
 
