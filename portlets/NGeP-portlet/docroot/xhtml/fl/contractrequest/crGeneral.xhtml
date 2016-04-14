@@ -182,7 +182,9 @@
 					</p:calendar></td>
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true" style="vertical-align:-4px"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" />
+						value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+						contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factored : 
+						contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>	
 			</tr>
 			<tr>
@@ -296,11 +298,11 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.phoneNo}"
+									disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.phoneNoFull}"
 									/></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.faxNo}"
+							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.faxNoFull}"
 									/></td>
 						</tr>
 					</table></td>
@@ -319,25 +321,35 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNo}"
+				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull}"
 						 /></td>
 			</tr>
 			
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.fl.factoring.details']}"  toggleable="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}">
+	<p:panel header="#{lbl['lbl.fl.factoring.details']}"  toggleable="true" 
+		rendered="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+						contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factored : 
+						contractRequestBackingBean.managedBean.flRequest.ctContract.factored}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
 						value="#{lbl['lbl.fl.factoring.company']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.ctFactoring.financialOrgName}"/></td>
+				<td><p:inputText disabled="true" size="51" 
+						value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+						contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringOrgName : 
+						contractRequestBackingBean.managedBean.flRequest.ctContract.ctFactoring.financialOrgName}"/>
+				</td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true" autoResize="false"
 						style=" margin-bottom:5px;"
-						value="#{contractRequestBackingBean.managedBean.facSupplierAddress}" /></td>
+						value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+								contractRequestBackingBean.getFullAddress(contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress) : 
+								contractRequestBackingBean.managedBean.facSupplierAddress}" />
+				</td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
@@ -345,26 +357,36 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true" value="#{contractRequestBackingBean.managedBean.phoneNo}" /></td>
+									disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.phoneNoFull : 
+															contractRequestBackingBean.managedBean.phoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.managedBean.faxNo}" /></td>
+							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.faxNoFull :
+															contractRequestBackingBean.managedBean.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.contactPerson}"/></td>
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.contactPerson :
+															contractRequestBackingBean.managedBean.contactPerson}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.contactEmail}"/></td>
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.contactEmail :
+															contractRequestBackingBean.managedBean.contactEmail}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.contactPhoneNo}"/></td>
+				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
+															contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factoringAddress.contactPhoneNoFull :
+															contractRequestBackingBean.managedBean.contactPhoneNo}"/></td>
 			</tr>
 		</table>
 	</p:panel>
