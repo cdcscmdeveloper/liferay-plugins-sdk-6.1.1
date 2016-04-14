@@ -252,7 +252,8 @@
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 142px;"><p:outputLabel
-							value="#{lbl['lbl.fl.factoring.company']}" /></td>
+							value="#{lbl['lbl.fl.factoring.company']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="factoringComp"
 					disabled="#{flOrderBB.managedBean.buttonVal=='View'}"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrgId}" 
