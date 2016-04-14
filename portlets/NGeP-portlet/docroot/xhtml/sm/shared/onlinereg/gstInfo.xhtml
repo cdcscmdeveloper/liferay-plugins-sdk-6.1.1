@@ -79,7 +79,9 @@
 					</p:commandLink>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.gst.document.name']}">
-				#{gstDoc.fileName}
+				<p:commandLink ajax="false" value="#{gstDoc.fileName}" rendered="#{not empty gstDoc.fileName}">
+						<p:fileDownload value="#{registrationBackingBean.commonDownload(gstDoc.filePath,gstDoc.fileName)}" />
+				</p:commandLink>
 				<p:commandLink  rendered="#{not empty gstDoc.fileName}"  onclick="confirmDeleteHqDialog.show();"
 					disabled="#{!registrationBackingBean.managedBean.gstFlag}" action="#{registrationBackingBean.setSelectedGstDoc(gstDoc)}">
 						<p:graphicImage value="/css/images/design/delete.png" style="margin-right:2px;" />
