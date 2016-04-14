@@ -606,7 +606,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						results.add(spacer);	
 					} 
 
-					sb.append(spacer).append(requestNoteDtl.getProcurementTitle());
+					sb.append(requestNoteDtl.getProcurementTitle()).append(spacer).append("/").append(spacer);
 					++counter;
 				} 
 				
@@ -622,6 +622,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}	
 
 			//procurement title limit  - 500 
+			sb.deleteCharAt(sb.toString().lastIndexOf("/"));
 			if(!sb.toString().isEmpty() && sb.toString().length() >= SourcingConstants.PROCUREMENT_TITLE_LIMIT){
 				String procTitle = sb.substring(0, SourcingConstants.PROCUREMENT_TITLE_LIMIT);
 				requestNote.setTitle(procTitle);
