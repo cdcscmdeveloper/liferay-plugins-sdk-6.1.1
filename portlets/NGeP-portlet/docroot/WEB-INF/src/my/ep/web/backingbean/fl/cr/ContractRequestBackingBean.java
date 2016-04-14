@@ -3775,11 +3775,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		if(factoringAddress!=null) {
 			getManagedBean().setFacSupplierAddress(getFullAddress(factoringAddress));
-			getManagedBean().setPhoneNo(factoringAddress.getPhoneNo());
-			getManagedBean().setFaxNo(factoringAddress.getFaxNo());
+			getManagedBean().setPhoneNo(factoringAddress.getPhoneNoFull());
+			getManagedBean().setFaxNo(factoringAddress.getFaxNoFull());
 			getManagedBean().setContactPerson(factoringAddress.getContactPerson());
 			getManagedBean().setContactEmail(factoringAddress.getContactEmail());
-			getManagedBean().setContactPhoneNo(factoringAddress.getContactPhoneNo());
+			getManagedBean().setContactPhoneNo(factoringAddress.getContactPhoneNoFull());
 		}
 	}
 	
