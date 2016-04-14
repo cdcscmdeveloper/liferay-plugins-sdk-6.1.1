@@ -44,7 +44,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -66,8 +65,6 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.ct.actor.CtActorReqDTO;
-import my.ep.dto.ct.actor.CtActorResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
@@ -86,6 +83,7 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -359,7 +357,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    IContractAmendmentSO contractAmendmentSO = null;
 		    ContractReqDTO ctReqDTO = null;
 		    ContractResDTO resDTO = null;
-		    ICtActorSO ctActorSO = null;
 		    try{
 					HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 					HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -448,21 +445,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			          	          getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.agency.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			          	        
 			          	           //retrieve approver from CtActor
-							       ctActorSO = (ICtActorSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICtActorSO.class);
-							       CtActorReqDTO ctActorReqDTO = new CtActorReqDTO();
-								   ctActorReqDTO.setDocId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
-								   ctActorReqDTO.setDocType(ctBackingBean.getManagedBean().getContractVer().getDocType());
+			          	           String roleCode = null;
 								   if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 										   ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-									   ctActorReqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+									   roleCode = RoleCode.CT_APPROVER.value();
 								   } else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 										   ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-									   ctActorReqDTO.setRoleCode(RoleCode.BPK_CC_APPROVER.value());
+									   roleCode = RoleCode.BPK_CC_APPROVER.value();
 								   }
-								   CtActorResDTO ctActorResDTO = ctActorSO.retrieveCtActorByDocIdAndTypeAndRole(ctActorReqDTO);
-									
-							       if(ctActorResDTO.getCtActor() != null) {	  
-							    	   getManagedBean().setApproverName(ctActorResDTO.getCtActor().getUserName());
+								   CtActor approverActor = retrieveContractActor(
+										   ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+										   ctBackingBean.getManagedBean().getContractVer().getDocType(),
+										   roleCode);
+							       if (approverActor != null) {	  
+							    	   getManagedBean().setApproverName(approverActor.getUserName());
 							       }
 			          	          if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 
 			        			        && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null) {
@@ -563,7 +559,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 			   	} finally {
 			   		contractAmendmentSO = null;
-			   		ctActorSO = null;
 			   		resDTO = null;
 				}
 	}

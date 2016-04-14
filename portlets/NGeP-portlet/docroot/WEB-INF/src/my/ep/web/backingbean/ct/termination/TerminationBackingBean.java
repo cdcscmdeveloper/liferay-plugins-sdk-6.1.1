@@ -37,7 +37,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -51,12 +50,11 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.ct.actor.CtActorReqDTO;
-import my.ep.dto.ct.actor.CtActorResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
+import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
@@ -663,7 +661,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		VelocityContext context = null;
 		String vmFile = null;
 		StringBuffer  ministryJabatan = new StringBuffer();
-		ICtActorSO ctActorSO = null;
 		
 		try {
 			      validateViewNotice();
@@ -754,22 +751,22 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						        context.put("remedyEndDate",dateformat.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
 					       }
 					       //retrieve approver from CtActor
-					       ctActorSO = (ICtActorSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICtActorSO.class);
-					       CtActorReqDTO ctActorReqDTO = new CtActorReqDTO();
-						   ctActorReqDTO.setDocId(getManagedBean().getContractVer().getContractVerId());
-						   ctActorReqDTO.setDocType(getManagedBean().getContractVer().getDocType());
+					       String roleCode = null;
 						   if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 								   ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-							   ctActorReqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+							   roleCode = RoleCode.CT_APPROVER.value();
 						   } else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 								   ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-							   ctActorReqDTO.setRoleCode(RoleCode.BPK_CC_APPROVER.value());
+							   roleCode = RoleCode.BPK_CC_APPROVER.value();
 						   }
-						   CtActorResDTO ctActorResDTO = ctActorSO.retrieveCtActorByDocIdAndTypeAndRole(ctActorReqDTO);
-							
-					       if(ctActorResDTO.getCtActor() != null) {
-						         context.put("approverName", ctActorResDTO.getCtActor().getUserName());
-						         context.put("approverDesignation", ctActorResDTO.getCtActor().getDesignation());
+						   CtActor approverActor = retrieveContractActor(
+								   getManagedBean().getContractVer().getContractVerId(),
+								   getManagedBean().getContractVer().getDocType(),
+								   roleCode);
+								   
+					       if(approverActor != null) {
+						         context.put("approverName", approverActor.getUserName());
+						         context.put("approverDesignation", approverActor.getDesignation());
 					       } else {
 						        context.put("approverName", "");
 						        context.put("approverDesignation", "");
