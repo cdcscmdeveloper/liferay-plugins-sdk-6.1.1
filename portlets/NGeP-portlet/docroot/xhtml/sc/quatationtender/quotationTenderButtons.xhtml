@@ -33,7 +33,7 @@
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
-					rendered="#{isQTStatusPendingScheduleAndBefore}" />
+					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" />
 
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
