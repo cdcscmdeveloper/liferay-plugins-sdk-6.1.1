@@ -1450,6 +1450,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
 			invBB.getManagedBean().setHyperLinkPage(true);
 			invBB.getManagedBean().setButtonVal("View");
+			invBB.getManagedBean().setReliefDeclarationCheck(true);
 			flBB.getManagedBean().setHideRemarks(true);
 			invBB.getManagedBean().setDocMaintain(false);
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
