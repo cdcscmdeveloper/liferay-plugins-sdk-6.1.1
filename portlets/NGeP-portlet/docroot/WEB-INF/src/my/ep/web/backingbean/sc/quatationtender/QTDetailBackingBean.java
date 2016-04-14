@@ -1925,7 +1925,8 @@ public class QTDetailBackingBean extends
 			}
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
-			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName) || SCProcessNameConst.ASSIGN_SCORING_COMMITTEE
+					.equalsIgnoreCase(taskName) ) {
 				updateApprovalRequestDtls(qt.getScQtApprovals(),
 						ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
 				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
