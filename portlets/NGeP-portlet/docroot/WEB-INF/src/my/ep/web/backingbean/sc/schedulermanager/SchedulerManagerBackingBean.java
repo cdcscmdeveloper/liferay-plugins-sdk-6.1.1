@@ -53,6 +53,7 @@ public class SchedulerManagerBackingBean extends
 
 	public void initAllJobs() {
 		log.info(">>>>>>>>>>>>START INIT ALL JOBS<<<<<<<<<<<<<<<<<<");
+		JobKey tmpJobKey = null;
 		// loop jobs by group
 		try {
 			String jobAction = "";
@@ -74,6 +75,9 @@ public class SchedulerManagerBackingBean extends
 				// get jobkey
 				for (JobKey jobKey : EpSchedulerHelper.getScheduler()
 						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+
+					// set tmp jobkey to be deleted if got error
+					tmpJobKey = jobKey;
 
 					// get job details
 					JobDetail job = EpSchedulerHelper.getScheduler()
@@ -119,6 +123,13 @@ public class SchedulerManagerBackingBean extends
 
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
+			
+			//delete if failed to load job
+			if (tmpJobKey != null) {
+				log.info("DELETE FAILED JOB:"+tmpJobKey.getName());
+				EpSchedulerHelper
+						.deleteJobAndAssociatedTriggers(tmpJobKey);
+			}
 		}
 		log.info(">>>>>>>>>>>>END INIT ALL JOBS<<<<<<<<<<<<<<<<<<");
 	}
