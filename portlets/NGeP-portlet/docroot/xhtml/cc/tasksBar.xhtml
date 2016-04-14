@@ -72,7 +72,7 @@
 					</tr>
 				</ui:repeat>
 				<h:panelGroup id="pendingDeliveryId"
-					rendered="#{bpmTaskDashSumBackingBean.pendingDeliveryListNum > 0}">
+					rendered="#{(bpmTaskDashSumBackingBean.pendingDeliveryListNum > 0) or false}">
 					<tr>
 						<td colspan="2"><hr class="horizontal_dotted_line" /></td>
 					</tr>
