@@ -13,7 +13,7 @@
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-				<td style="vertical-align: top"><p:outputLabel
+				<td style="vertical-align: top; width: 15%"><p:outputLabel
 						value="#{lbl['lbl.sm.rejection.reasons']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 
@@ -36,12 +36,12 @@
 	<p:outputPanel id="rejRemarksPanelTst">
 		<table style="width: 100%">
 			<tr>
-				<td style="vertical-align: top; width: 14.5%"><p:outputLabel
+				<td style="vertical-align: top; width: 15%"><p:outputLabel
 						value="#{lbl['lbl.sm.remarks.rejection']}" id="rejReasonLbl"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
 						value="*" styleClass="mandatory" id="rejReasonLblMndty"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
-				<td style="padding-top: 5px;"><p:inputTextarea cols="122"
+				<td style="padding-top: 5px;"><p:inputTextarea cols="100"
 						style="width : auto;"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}"
 						value="#{backingBean.managedBean.applnRejectionRemarks}"
