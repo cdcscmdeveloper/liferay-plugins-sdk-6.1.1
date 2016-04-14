@@ -184,7 +184,8 @@
 				<td colspan="3"><p:inputText id="title" required="true"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"
-						size="35" label="#{lbl['lbl.sc.title']}" maxlength="100" /> <p:message
+						size="35" label="#{lbl['lbl.sc.title']}" maxlength="100" >
+						<p:ajax event="keyup" process="title" update="title"/></p:inputText> <p:message
 						id="titleMsg" for="title" display="icon" /></td>
 			</tr>
 			<tr>
@@ -206,15 +207,23 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
-						required="true"
+				<td colspan="3">
+				     <p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
-						label="#{lbl['lbl.sc.qt.fileno']}" size="28" /> <p:spacer
-						width="1px"></p:spacer> <p:inputText required="true"
+						label="#{lbl['lbl.sc.qt.fileno']}" size="28" >
+						<p:ajax event="keyup" process="fileNoId" update="fileNoId"/>
+						</p:inputText>
+						 <p:spacer width="1px" />
+						
+					<p:inputText required="true"
 						id="fileExtNo" styleClass="ppNumericAlign"
 						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
 						size="1" label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
-						maxlength="3" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" /> <p:message
+						maxlength="3" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" >
+						<p:ajax event="keyup" process="fileExtNo" update="fileExtNo"/>
+						</p:inputText>
+						 <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" /></td>
 			</tr>
 
