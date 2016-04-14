@@ -72,9 +72,9 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="basicBUName" maxlength="80"
+					<td><p:inputText id="basicBUName"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.name}"
-							size="35" required="true"
+							size="35" required="true" maxlength="80"
 							label="#{lbl['lbl.sm.userprofile.name']}" disabled="#{smPersonnelBackingBean.managedBean.editMode}"/>
 							<p:message id="basicBUNameMsg" for="basicBUName"
 							showSummary="true" showDetail="false" display="icon" /></td>
@@ -528,8 +528,8 @@
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
-												<p:ajax event="change" process="@this" partialSubmit="true"
-													update="basicMailAddDistrictList, basicMailAddCityList" 
+												<p:ajax event="change"
+													update="basicMailAddDistrictList, basicMailAddCityList"
 													listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId,null)}" />
 											</p:selectOneMenu>
 											<p:message id="basicMailAddStateListMsg"
@@ -550,7 +550,7 @@
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
-												<p:ajax event="change" update="basicMailAddCityList" process="@this" partialSubmit="true"
+												<p:ajax event="change" update="basicMailAddCityList"
 													listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDistrict.districtId)}" />
 											</p:selectOneMenu>
 											<p:message id="basicMailAddDistrictListMsg"
@@ -571,7 +571,6 @@
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
-												<p:ajax event="change" update="@this" process="@this" />
 											</p:selectOneMenu>
 											<p:message id="basicMailAddCityListMsg"
 												for="basicMailAddCityList" showSummary="true"
