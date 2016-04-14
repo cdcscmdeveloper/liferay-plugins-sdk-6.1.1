@@ -96,7 +96,7 @@
 				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText id="ownerNameId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.ownername']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
-						size="40" maxlength="50" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}"/>
+						size="40" maxlength="80" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}"/>
 					&#160;
 					<p:graphicImage id="ownNmti" value="/css/images/design/tooltips.png" />
 					<p:tooltip id="ownNmtt" for="ownNmti">
