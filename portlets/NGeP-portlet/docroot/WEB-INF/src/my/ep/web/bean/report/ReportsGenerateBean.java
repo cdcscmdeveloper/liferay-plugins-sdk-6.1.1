@@ -644,6 +644,9 @@ public class ReportsGenerateBean {
 
 	/** The sm report type view. */
 	private boolean smReportTypeView = false;
+	
+	/** The sm mandatory report type qr view. */
+	private boolean smMandatoryReportTypeQRView=false;
 
 	/** The sm qr all supplier type view. */
 	private boolean smQRAllSupplierTypeView = false;
@@ -17797,6 +17800,25 @@ public class ReportsGenerateBean {
 	 */
 	public boolean isSmApplicationTypeFiveView() {
 		return smApplicationTypeFiveView;
+	}
+
+	/**
+	 * Checks if is sm mandatory report type qr view.
+	 * 
+	 * @return the smMandatoryReportTypeQRView
+	 */
+	public boolean isSmMandatoryReportTypeQRView() {
+		return smMandatoryReportTypeQRView;
+	}
+
+	/**
+	 * Sets the sm mandatory report type qr view.
+	 * 
+	 * @param smMandatoryReportTypeQRView
+	 *            the smMandatoryReportTypeQRView to set
+	 */
+	public void setSmMandatoryReportTypeQRView(boolean smMandatoryReportTypeQRView) {
+		this.smMandatoryReportTypeQRView = smMandatoryReportTypeQRView;
 	}
 
 	/**
