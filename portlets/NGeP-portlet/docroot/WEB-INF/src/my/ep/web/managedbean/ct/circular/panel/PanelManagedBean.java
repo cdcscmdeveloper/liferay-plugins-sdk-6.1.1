@@ -52,7 +52,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	
 	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
 	private String circularDocType;
-	private String circularAdmin;
 	private String action;
 	private String zoneName;
 	private String gotoPreviewPage;	
@@ -352,13 +351,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the circularAdmin
-	 */
-	public String getCircularAdmin() {
-		return circularAdmin;
-	}
-
-	/**
 	 * @return the selectedPanelZone
 	 */
 	public CtPanelZone getSelectedPanelZone() {
@@ -370,13 +362,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedPanelZone(CtPanelZone selectedPanelZone) {
 		this.selectedPanelZone = selectedPanelZone;
-	}
-
-	/**
-	 * @param circularAdmin the circularAdmin to set
-	 */
-	public void setCircularAdmin(String circularAdmin) {
-		this.circularAdmin = circularAdmin;
 	}
 
 	/**

@@ -16,7 +16,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -178,12 +177,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	     /*Setting types of document such panel circular */
 	     } if(getManagedBean().getCircularDocType()==null) {
 			      getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
-		
-	      /*Setting the admin login id*/
-	     } if(isPanelAdmin() || isCentralContractAdmin()) {
-			      FacesScopes facesScopes = new FacesScopes();
-			      getManagedBean().setCircularAdmin(facesScopes.getUserSessionBean().getLoginId());
-		  }
+	     }
 	  }
 	
 	/**
@@ -216,7 +210,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			return;
 			
 			CTCircularContractDataType dataType = super.getBpmTaskDetails(CTCircularContractDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});			
-			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			CircularReqDTO circularReqDTO = new CircularReqDTO();
 			circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 			setPanelCircularVar(circularReqDTO);
@@ -329,8 +322,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			         
 			        circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			        CTCircularCancellationDataType dataType = super.getBpmTaskDetails(CTCircularCancellationDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});			
-					getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
-			        CircularReqDTO cancelReqDTO = new CircularReqDTO();
+					CircularReqDTO cancelReqDTO = new CircularReqDTO();
 			        cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
 			
 			        CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
@@ -457,16 +449,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setTaskName(getManagedBean().getTaskName());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			PmUser pmUSer = new PmUser();
-			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
-			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
-			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
-			if(getFacesScopes().hasRoleUser(RoleCode.BPK_PQ_APPROVER.value())) {
-				circularVer.setApprover(getFacesScopes().getUserSessionBean());
-				circularVer.setApprovedDate(new Date());
-			}
-			
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());	
 			
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
@@ -527,7 +511,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    *Navigate to confirmation message page
 */
 	public String saveCancelCircularReq(String action) {
-		log.debug("PanelBackingBean.saveCircularPanel("+action+")");
+		log.debug("PanelBackingBean.saveCancelCircularReq("+action+")");
 
 		ICircularSO circularSO = null;
 		try {
@@ -563,14 +547,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setTaskName(getManagedBean().getTaskName());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			PmUser pmUSer = new PmUser();
-			pmUSer.setLoginId(getManagedBean().getCircularAdmin());
-			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
-			if(isBPKApprover()) {
-				reqDTO.getCancelCircularReq().setApprover(getFacesScopes().getUserSessionBean());
-				reqDTO.getCancelCircularReq().setApprovedDate(new Date());
-			}
 			
 			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
 			if(resDTO.isSuccessful()) {

@@ -48,8 +48,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
-
-	private String circularAdmin;
+	
 	private String action;
 	private String searchContractNo;
 	private String searchContractName;
@@ -248,20 +247,6 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	 */
 	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
 		this.userGroupMap = userGroupMap;
-	}
-	
-	/**
-	 * @return the circularAdmin
-	 */
-	public String getCircularAdmin() {
-		return circularAdmin;
-	}
-	
-	/**
-	 * @param circularAdmin the circularAdmin to set
-	 */
-	public void setCircularAdmin(String circularAdmin) {
-		this.circularAdmin = circularAdmin;
 	}
 	
 	/**
