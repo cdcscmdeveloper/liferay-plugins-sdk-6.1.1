@@ -79,7 +79,8 @@
 						 </ui:fragment>
 				 </p:column>
 				 <p:column style="width: 15%" styleClass="column-align-center" 
-				     rendered="#{(amendmentBackingBean.managedBean.committeeType == ParameterConst.committeeTypeProcurementBoardA) or (amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeProcurementBoardB)}">
+				     rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
+				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
