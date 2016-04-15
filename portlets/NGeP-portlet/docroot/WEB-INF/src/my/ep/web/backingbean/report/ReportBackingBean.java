@@ -16788,9 +16788,9 @@ public class ReportBackingBean extends
 			log.info(gnrtdURL.toString());
 			urlConnection = (HttpURLConnection) obj.openConnection();
 
-			urlConnection.setConnectTimeout(290000);
-			urlConnection.setReadTimeout(290000);
-			//new Thread(new InterruptThread(urlConnection)).start();
+			urlConnection.setConnectTimeout(306000);
+			urlConnection.setReadTimeout(306000);
+			new Thread(new InterruptThread(urlConnection)).start();
 
 			buf = new BufferedInputStream(urlConnection.getInputStream());
 			PortletResponse portletResponse = (PortletResponse) FacesContext
