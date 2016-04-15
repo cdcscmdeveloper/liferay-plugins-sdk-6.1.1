@@ -6418,8 +6418,14 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmSupplierBanks().remove(bank);
 			}
 			saveOrUpdateAppl();
-			getManagedBean().getSelectedBanks().clear();
 			getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
+
+			if (!EntityHelper.isCollectionEmpty(getManagedBean()
+					.getSelectedSignatoryBankAccts())) {
+				getManagedBean().getSelectedSignatoryBankAccts().removeAll(
+						getManagedBean().getSelectedBanks());
+			}
+			getManagedBean().getSelectedBanks().clear();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { SmCommonUtil.getMessage(
@@ -6433,8 +6439,61 @@ public class SmApplicationBackingBean extends
 	 * @param signAcctBean
 	 *            -SmSupplierBank object
 	 */
-	public void viewSignatories(SmSupplierBank signAcctBean) {
-		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
+	public void viewSignatories() {
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSelectedBanks())) {
+			throw new EpException(MessageConst.ERROR_722640);
+		} else {
+			getManagedBean().setSelectedSignatoryBankAccts(
+					new ArrayList<SmSupplierBank>());
+			for (SmSupplierBank bank : getManagedBean().getSelectedBanks()) {
+				if (!EntityHelper.isCollectionEmpty(bank
+						.getSmChequeSignatories())) {
+					getManagedBean().getSelectedSignatoryBankAccts().add(bank);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(getManagedBean()
+					.getSelectedSignatoryBankAccts())) {
+
+				// sort by bank
+				Collections.sort(getManagedBean()
+						.getSelectedSignatoryBankAccts(),
+						new Comparator<SmSupplierBank>() {
+							@Override
+							public int compare(final SmSupplierBank s1,
+									final SmSupplierBank s2) {
+								String bankName1 = StringUtils.EMPTY;
+								String bankName2 = StringUtils.EMPTY;
+
+								if (s1.getPmFinancialOrg() != null) {
+									bankName1 = s1.getPmFinancialOrg()
+											.getFinOrgName();
+								}
+								if (s2.getPmFinancialOrg() != null) {
+									bankName2 = s2.getPmFinancialOrg()
+											.getFinOrgName();
+								}
+								return StringUtil.upperCase(bankName1)
+										.compareTo(bankName2);
+							}
+						});
+
+				// sort by acc no
+				Collections.sort(getManagedBean()
+						.getSelectedSignatoryBankAccts(),
+						new Comparator<SmSupplierBank>() {
+							@Override
+							public int compare(final SmSupplierBank s1,
+									final SmSupplierBank s2) {
+								return s1.getAccountNo().compareTo(
+										s2.getAccountNo());
+							}
+						});
+			}
+			
+			getManagedBean().getSelectedBanks().clear();
+
+		}
 	}
 
 	public void viewMyIdentityResponse(SmPersonnel per) {
