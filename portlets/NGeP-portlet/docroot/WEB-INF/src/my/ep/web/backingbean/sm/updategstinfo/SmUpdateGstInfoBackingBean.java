@@ -153,16 +153,16 @@ public class SmUpdateGstInfoBackingBean extends
 	}
 
 	public void deleteBrAttachment() {
-		SmSupplierBranch mainBr = (SmSupplierBranch) EntityHelper
+		SmGstBranchVO mainBr = (SmGstBranchVO) EntityHelper
 				.getEntityBySinglePropertyFromList(getManagedBean()
 						.getSelectedBranchDoc().getBranch()
 						.getSupplierBranchId(), getManagedBean().getBranches(),
-						"supplierBranchId");
+						"branch");
 		SmGstSupplierDoc mainDoc = (SmGstSupplierDoc) EntityHelper
 				.getEntityBySinglePropertyFromList(getManagedBean()
 						.getSelectedBranchDoc().getDoc().getPmDocument()
 						.getDocumentId(), mainBr.getGst()
-						.getSmGstSupplierDocs(), "supplierBranchId");
+						.getSmGstSupplierDocs(), "pmDocument");
 
 		mainDoc.setFileName(StringUtils.EMPTY);
 		mainDoc.setFilePath(StringUtils.EMPTY);
