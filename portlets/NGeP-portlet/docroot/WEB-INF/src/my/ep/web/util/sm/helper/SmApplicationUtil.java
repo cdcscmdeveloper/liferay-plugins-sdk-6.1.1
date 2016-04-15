@@ -5684,9 +5684,9 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-			bank = StringUtils.removeEnd(sb.toString(), ",");
+			bank = "(" +StringUtils.removeEnd(sb.toString(), ",")+ ")";
 		}
-		return "(" + bank + ")";
+		return bank;
 	}
 
 	/**
