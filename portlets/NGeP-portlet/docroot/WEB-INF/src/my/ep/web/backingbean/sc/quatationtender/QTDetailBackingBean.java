@@ -1621,14 +1621,11 @@ public class QTDetailBackingBean extends
 								.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
 							fcTitleLabel
 									.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
-							tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
-						} else if (fcSecretary
-								.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD) >= 0) {
+						} else {
 							fcTitleLabel
 									.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
-							tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
 						}
-
+						tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
 						fcTitleName = ResourceBundleUtils.getMessage(
 								fcTitleLabel.toString().toLowerCase(),
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
