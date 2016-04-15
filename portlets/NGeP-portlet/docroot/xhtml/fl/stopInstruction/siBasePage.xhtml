@@ -61,17 +61,21 @@
 						</p:commandButton>
 					</c:if>
 					<c:if
-					test='#{stopInstrBB.managedBean.buttonVal eq "View" and !stopInstrBB.managedBean.isHyperLinkPage()}'>
-					<td colspan="4" style="text-align: right">	
-					<p:commandLink 
-						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrId)}"
-						immediate="true" />&#160;&#160;
-					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-						<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrNo,flDocumentManagedBean.taxable)}" />
-					</p:commandLink>
-					</td>		
-				</c:if>
+						test='#{stopInstrBB.managedBean.buttonVal eq "View" and !stopInstrBB.managedBean.isHyperLinkPage()}'>
+						<td colspan="4" style="text-align: right"><p:commandLink
+								value="#{lbl['lbl.td.doc.trackingDiary']}"
+								action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrId)}"
+								immediate="true" />
+						</td>
+					</c:if>
+					<h:panelGroup id="printButtonSi"
+						rendered="#{stopInstrBB.managedBean.stopInstr.pmStatus.statusId != FulfilmentStatusCont.sdPendingApproval}">
+						<td style="text-align: right; width: 30px;"><p:commandLink
+								value="#{lbl['lbl.btn.print']}" ajax="false">
+								<p:fileDownload
+									value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrNo,flDocumentManagedBean.taxable)}" />
+							</p:commandLink></td>
+					</h:panelGroup>
 				</td>
 			</tr>
 		</table>
