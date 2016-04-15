@@ -272,11 +272,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.phoneNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.phoneNoFull}" /></td>
 							<td style="width: 88px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.faxNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.faxNoFull}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -295,7 +295,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPhoneNo}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull}" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -309,7 +309,7 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringOrgName}" /></td>
 				<td style="width: 170px;"><p:outputLabel
 						value="#{lbl['lbl.fl.bank.acc.no.name']}" /></td>
-				<td><p:inputText size="55" disabled="true" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.accountNo}  #{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.paymentBank.finOrgName}" />
+				<td><p:inputText size="55" disabled="true" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.accountNo}  #{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.paymentBankName}" />
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.bank.name']}"/>
 				</td>						
 			</tr>
@@ -318,7 +318,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="55" rows="8" disabled="true"
 						style=" margin-bottom:5px;" autoResize="false"
-						value="#{paymentMatchBackingBean.managedBean.supplierAddress}" /></td>
+						value="#{paymentMatchBackingBean.getFullAddress(paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
@@ -327,11 +327,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.phoneNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.phoneNoFull}" /></td>
 							<td style="width: 68px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.faxNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.faxNoFull}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -339,18 +339,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.contactPerson}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.contactEmail}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{paymentMatchBackingBean.managedBean.contactPhoneNo}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactPhoneNoFull}" /></td>
 			</tr>
 		</table>
 	</p:panel>
