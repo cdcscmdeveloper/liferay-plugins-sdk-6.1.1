@@ -5659,6 +5659,8 @@ public class SmApplicationUtil {
 	public static String getRelatedBankNameByBranch(List<SmSupplierBank> banks,
 			SmSupplierBranch branch) {
 		String bank = StringUtils.EMPTY;
+		List<String> bankNames = new ArrayList<String>();
+		StringBuilder sb = new StringBuilder();
 		if (!SmCommonUtil.isCollectionEmpty(banks) && branch != null
 				&& branch.getSupplierBranchId() != null) {
 			for (SmSupplierBank smSupplierBank : banks) {
@@ -5669,14 +5671,22 @@ public class SmApplicationUtil {
 									branch.getSupplierBranchId(),
 									smSupplierBank.getSmSupplierBranchBanks(),
 									"smSupplierBranch");
-					if (brTmp != null && brTmp.getSmSupplierBranch() != null) {
-						bank = smSupplierBank.getBankBranch();
-						break;
+					if (brTmp != null && brTmp.getSmSupplierBranch() != null
+							&& smSupplierBank.getPmFinancialOrg() != null) {
+						if (!bankNames.contains(smSupplierBank
+								.getPmFinancialOrg().getFinOrgName())) {
+							bankNames.add(smSupplierBank.getPmFinancialOrg()
+									.getFinOrgName());
+							sb.append(
+									smSupplierBank.getPmFinancialOrg()
+											.getFinOrgName()).append(", ");
+						}
 					}
 				}
 			}
+			bank = StringUtils.removeEnd(sb.toString(), ",");
 		}
-		return bank;
+		return "(" + bank + ")";
 	}
 
 	/**
