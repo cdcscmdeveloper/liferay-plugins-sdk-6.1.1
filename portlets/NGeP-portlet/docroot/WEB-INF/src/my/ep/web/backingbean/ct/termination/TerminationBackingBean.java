@@ -751,26 +751,28 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						        context.put("remedyEndDate",dateformat.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
 					       }
 					       //retrieve approver from CtActor
-					       String roleCode = null;
-						   if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-								   ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-							   roleCode = RoleCode.CT_APPROVER.value();
-						   } else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-								   ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-							   roleCode = RoleCode.BPK_CC_APPROVER.value();
+						   if (getManagedBean().getContractVer().getContractVerId() != null) {
+						       String roleCode = null;
+							   if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+									   ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+								   roleCode = RoleCode.CT_APPROVER.value();
+							   } else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+									   ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+								   roleCode = RoleCode.BPK_CC_APPROVER.value();
+							   }
+							   CtActor approverActor = retrieveContractActor(
+									   getManagedBean().getContractVer().getContractVerId(),
+									   getManagedBean().getContractVer().getDocType(),
+									   roleCode);
+									   
+						       if(approverActor != null) {
+							         context.put("approverName", approverActor.getUserName());
+							         context.put("approverDesignation", approverActor.getDesignation());
+						       } else {
+							        context.put("approverName", "");
+							        context.put("approverDesignation", "");
+						       }
 						   }
-						   CtActor approverActor = retrieveContractActor(
-								   getManagedBean().getContractVer().getContractVerId(),
-								   getManagedBean().getContractVer().getDocType(),
-								   roleCode);
-								   
-					       if(approverActor != null) {
-						         context.put("approverName", approverActor.getUserName());
-						         context.put("approverDesignation", approverActor.getDesignation());
-					       } else {
-						        context.put("approverName", "");
-						        context.put("approverDesignation", "");
-					       }
 							// Extra For Termination Notice
 							context.put("contractAmount", getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString());
 							context.put("effDate", dateformat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
