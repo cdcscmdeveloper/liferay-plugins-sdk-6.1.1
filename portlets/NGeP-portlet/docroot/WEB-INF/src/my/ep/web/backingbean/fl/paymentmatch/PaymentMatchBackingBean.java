@@ -1331,6 +1331,11 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
 			orderBackingBean.getManagedBean().setButtonVal("View");
 			flBB.getManagedBean().setHideRemarks(true);
+			if(resDTO.getFlOrder().isFactored()) {
+				orderBackingBean.getManagedBean().setFactoringCheck("true");
+			} else {
+				orderBackingBean.getManagedBean().setFactoringCheck("false");
+			}
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				return NAV_PO;
 			}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){

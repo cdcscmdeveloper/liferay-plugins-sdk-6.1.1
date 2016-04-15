@@ -255,7 +255,7 @@
 							value="#{lbl['lbl.fl.factoring.company']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="factoringComp"
-					disabled="#{flOrderBB.managedBean.buttonVal=='View'}"
+					rendered="#{flOrderBB.managedBean.buttonVal!='View'}"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrgId}" 
 					style="width: 425px;margin-bottom:5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -266,7 +266,10 @@
 						<p:ajax event="change"
 							listener="#{flOrderBB.getSelectedFactoringCompDtl}"
 							update="factoringCompPnl" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu>
+						<p:inputText disabled="true" size="50" rendered="#{flOrderBB.managedBean.buttonVal=='View'}"
+							value="#{flOrderBB.managedBean.fulfilmentOrder.factoringOrgName}" />						
+					</td>
 				</tr>
 				<tr>
 					<td valign="top"><p:outputLabel
