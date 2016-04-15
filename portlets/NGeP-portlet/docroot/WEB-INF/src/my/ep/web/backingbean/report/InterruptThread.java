@@ -17,7 +17,7 @@ public class InterruptThread implements Runnable {
 
     public void run() {
         try {
-            Thread.sleep(280000); // or Thread.sleep(con.getConnectTimeout())
+            Thread.sleep(300000); // or Thread.sleep(con.getConnectTimeout())
         } catch (InterruptedException e) {
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
         }		
