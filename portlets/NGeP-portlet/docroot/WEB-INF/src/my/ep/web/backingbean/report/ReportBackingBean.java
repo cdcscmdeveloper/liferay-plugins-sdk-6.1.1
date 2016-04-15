@@ -16790,7 +16790,7 @@ public class ReportBackingBean extends
 
 			urlConnection.setConnectTimeout(290000);
 			urlConnection.setReadTimeout(290000);
-			new Thread(new InterruptThread(urlConnection)).start();
+			//new Thread(new InterruptThread(urlConnection)).start();
 
 			buf = new BufferedInputStream(urlConnection.getInputStream());
 			PortletResponse portletResponse = (PortletResponse) FacesContext
