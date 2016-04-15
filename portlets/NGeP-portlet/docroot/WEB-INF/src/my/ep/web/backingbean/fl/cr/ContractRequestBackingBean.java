@@ -1773,6 +1773,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		reqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
+		// For API retrieveContractItemByVersionAndItemCode()
+		reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+		reqDTO.setItemCode(flItemAddr.getItemCode());
+		
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
@@ -2061,14 +2065,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			} else {
 				// skip the validation if the CR is from PID
 				if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode()) && getManagedBean().getFlRequest().getScPurchaseInDefault()==null){
-					if(flItemAddr.getScRequestItem().getQuantity() != null){
-						if(flItemAddr.getOrderedQty().doubleValue() != flItemAddr.getScRequestItem().getQuantity().doubleValue()){
+					ContractItemResDTO itemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(reqDTO);
+					if(itemResDTO.getCtContractItem()!=null) {	
+						if(flItemAddr.getOrderedQty().doubleValue() != itemResDTO.getCtContractItem().getMinimumOrderQty()){
 							flItemAddr.setOrderedQty(BigDecimal.ZERO);
 							flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 							throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
 						}	
 					}
-					
 				}
 				
 				FlFulfilmentItemAddr oriItemAddr = flItemAddr;
