@@ -30,6 +30,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -45,6 +46,8 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -54,6 +57,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.RoleHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -74,6 +78,7 @@ public class ProfilePersonalizationBackingBean extends
 
 	// Navigation Details
 	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml";
+	public static final String NAV_TO_COMMON_DETAILS = "/xhtml/pm/profilePersonalization/userDetails/userCommonDetails.xhtml";
 	// Mapper for DDL object
 	private static Map<Long, Object> identityTypeMapper;
 
@@ -146,6 +151,27 @@ public class ProfilePersonalizationBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_MYACCOUNT);
 	}
+	
+	/**
+	 * load clean view for my account
+	 */
+	public void preLoadingUserCommonDetails() {
+		logger.info("preLoadingUserCommonDetails");
+		renewSesionObject();
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser sUsers = facesScopes.getUserSessionBean();
+		if (sUsers == null) {
+			throw new EpException(MessageConst.ERROR_770045);
+		}
+		loadUserCommonDetails(sUsers.getUserId());
+		constructRolesString();
+		retrieveMofExpDate(getManagedBean().getCurrentProfile());
+	    retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_COMMON_DETAILS);
+	}
+	
 	public void saluationChanged(ValueChangeEvent event){
 		 System.out.println("...........saluationChanged............");
 		this.getManagedBean().getSelectedUser().setModified(true);	
@@ -283,6 +309,42 @@ public class ProfilePersonalizationBackingBean extends
 					new String[] { e.getMessage() });
 		}
 	}
+	
+	
+	private void loadUserCommonDetails(Long id) {
+		logger.info("loadUserCommonDetails");
+		try {
+			if (id == null) {
+				throw new EpException(MessageConst.ERROR_770015);
+			}
+
+			// load user
+			PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
+			this.getManagedBean().setSelectedUser(pmUser);
+			// retrieve current active org
+			List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(id);
+			this.getManagedBean().setCurrentProfile(
+					pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile()
+							: null);
+			this.getManagedBean().setCurrentUserOrg(
+					pmUserOrgs != null ? pmUserOrgs.get(0) : null);
+			this.getManagedBean().setUserActiveRoles(new ArrayList<PmUserRole>());
+			if (this.getManagedBean().getCurrentUserOrg() != null) {
+				for (PmUserRole userRole : this.getManagedBean()
+						.getCurrentUserOrg().getPmUserRoles()) {
+					if(userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+						this.getManagedBean().getUserActiveRoles().add(userRole);
+					}
+
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770016,
+					new String[] { e.getMessage() });
+		}
+	}
+	
 
 	/**
 	 * Get Role description by role code.
@@ -1275,6 +1337,65 @@ public class ProfilePersonalizationBackingBean extends
 		}
 		
 	}
+	
+	private void retrieveMofExpDate(PmOrgProfile orgProfile){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.CM_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())){
+			if(orgProfile.getSmSupplier() != null 
+					&& orgProfile.getSmSupplier().getSmMofAccounts() != null 
+					&& !orgProfile.getSmSupplier().getSmMofAccounts().isEmpty())
+				for(SmMofAccount account : orgProfile.getSmSupplier().getSmMofAccounts()){
+					if(DbValueConst.RECORD_STATUS_ACTIVE == account.getRecordStatusFlg()){
+						getManagedBean().setMofExpDate(account.getExpDate());
+						break;
+					}
+				}
+		}
+	}
+	
+	private void retrieveSoftCertExpDate(PmUser user){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.CM_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())){
+			if(user.getPmUserDigiCert() != null && user.getPmUserDigiCert().getPmDigiCert() != null){
+				getManagedBean().setSoftCertExpDate(user.getPmUserDigiCert().getPmDigiCert().getValidTo());
+			}
+		}
+
+	}
+	
+	private void constructRolesString(){
+		StringBuilder sb = new StringBuilder();
+		
+		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
+			sb.append(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());
+			sb.append(",");;
+		}
+		
+		String roles = sb.toString();
+		if(StringUtils.isNotBlank(roles)){
+			getManagedBean().setRoles(roles.substring(0,roles.length()-1));
+		}
+	}
+	
+	public int numberOfLines(String string, int cols) {
+        int rvalue = 0;
+        for (String strTmp : string.split("\n")) {
+            rvalue ++;
+            rvalue += strTmp.length() >= cols ? strTmp.length() / cols : 0;
+        }
+        return rvalue;
+    }
 
 	// //TODO: testing
 	// public void handleFileUpload(FileUploadEvent event) {

@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.pm.profilepersonalization;
 
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -47,6 +48,9 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private String currentPassword;
 	private boolean profileChanged = false;
 	private String passwordPolicy;
+	private String roles;
+	private Date softCertExpDate;
+	private Date mofExpDate;
 	
 /**
 	 * @return the addressEntered
@@ -238,6 +242,48 @@ public boolean isProfileChanged() {
 	 */
 	public void setPasswordPolicy(String passwordPolicy) {
 		this.passwordPolicy = passwordPolicy;
+	}
+
+	/**
+	 * @return the softCertExpDate
+	 */
+	public Date getSoftCertExpDate() {
+		return softCertExpDate;
+	}
+
+	/**
+	 * @param softCertExpDate the softCertExpDate to set
+	 */
+	public void setSoftCertExpDate(Date softCertExpDate) {
+		this.softCertExpDate = softCertExpDate;
+	}
+
+	/**
+	 * @return the roles
+	 */
+	public String getRoles() {
+		return roles;
+	}
+
+	/**
+	 * @param roles the roles to set
+	 */
+	public void setRoles(String roles) {
+		this.roles = roles;
+	}
+
+	/**
+	 * @return the mofExpDate
+	 */
+	public Date getMofExpDate() {
+		return mofExpDate;
+	}
+
+	/**
+	 * @param mofExpDate the mofExpDate to set
+	 */
+	public void setMofExpDate(Date mofExpDate) {
+		this.mofExpDate = mofExpDate;
 	}
 
 	
