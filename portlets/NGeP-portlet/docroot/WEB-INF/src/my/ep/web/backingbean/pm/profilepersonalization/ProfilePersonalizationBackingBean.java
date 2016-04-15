@@ -79,6 +79,7 @@ public class ProfilePersonalizationBackingBean extends
 	// Navigation Details
 	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml";
 	public static final String NAV_TO_COMMON_DETAILS = "/xhtml/pm/profilePersonalization/userDetails/userCommonDetails.xhtml";
+	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
 	// Mapper for DDL object
 	private static Map<Long, Object> identityTypeMapper;
 
@@ -159,17 +160,33 @@ public class ProfilePersonalizationBackingBean extends
 		logger.info("preLoadingUserCommonDetails");
 		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
-		PmUser sUsers = facesScopes.getUserSessionBean();
-		if (sUsers == null) {
-			throw new EpException(MessageConst.ERROR_770045);
-		}
-		loadUserCommonDetails(sUsers.getUserId());
-		constructRolesString();
-		retrieveMofExpDate(getManagedBean().getCurrentProfile());
-	    retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_COMMON_DETAILS);
+		try{
+			PmUser sUsers = facesScopes.getUserSessionBean();
+			if (sUsers == null) {
+				throw new EpException(MessageConst.ERROR_770045);
+			}
+			loadUserCommonDetails(sUsers.getUserId());
+			constructRolesString();
+			retrieveMofExpDate(getManagedBean().getCurrentProfile());
+		    retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
+		    
+		    
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, NAV_TO_COMMON_DETAILS);
+		}catch(Exception e){
+			fc.addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							MessageConst.ERROR_770045,
+							PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770045,null)
+					));
+			PmCommonUtil.redirectToPage(
+					ERROR_PAGE,
+					null,null);
+		}
+	  
 	}
 	
 	public void saluationChanged(ValueChangeEvent event){
@@ -1389,7 +1406,7 @@ public class ProfilePersonalizationBackingBean extends
 	}
 	
 	public int numberOfLines(String string, int cols) {
-		int rvalue = 0;
+		int rvalue = 2;
 		if(StringUtils.isNotBlank(string)){
 		    for (String strTmp : string.split("\n")) {
 		          rvalue ++;
