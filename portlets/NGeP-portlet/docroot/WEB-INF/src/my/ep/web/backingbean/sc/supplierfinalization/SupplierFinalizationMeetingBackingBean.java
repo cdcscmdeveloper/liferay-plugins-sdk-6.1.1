@@ -689,54 +689,22 @@ public class SupplierFinalizationMeetingBackingBean extends
 		StringBuffer chairPersonRoleCode = new StringBuffer(
 				committeeType + QTConstants.CHAIRPERSON);
 		
-		IUserSO userSO = null;
+		ICommitteSO committeeSO = null;
 		try {
-			UserReqDTO reqDTO = new UserReqDTO();
-			userSO = BusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			committeeSO = BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setPmUser(pmUser);
+			reqDTO.setRoleCode(chairPersonRoleCode.toString());
+			reqDTO.setCommitteeType(committeeType);
 			
 			PmOrgProfile pmOrgProfile = getManagedBean().getScQt().getPmOrgProfile();
-			SearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
-
-			// Filter By - user org info
-			// User id
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"pmUserOrg.pmUser.userId", 
-							SearchOperator.OPERATOR_EQUALS.value(), 
-							pmUser.getUserId()));
+			reqDTO.setPmOrgProfile(pmOrgProfile);
 			
-			// orgProfileId
-			pmOrgProfile = getFcOrgProfileIdByCommitteeType(pmOrgProfile,
-					committeeType);
-			if (pmOrgProfile != null && pmOrgProfile.getOrgTypeCode() != null && 
-					StringUtils.isNotBlank(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"pmUserOrg.pmOrgProfile."
-										+ OrgProfileUtil.getSearchBeanParentString(pmOrgProfile.getOrgTypeCode().getParameterCode()), 
-								SearchOperator.OPERATOR_EQUALS.value(), 
-								pmOrgProfile.getOrgProfileId()));
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"pmUserOrg.recordStatusFlg", 
-								SearchOperator.OPERATOR_EQUALS.value(),
-								DbValueConst.RECORD_STATUS_ACTIVE)					
-						);
-			}
-			
-			// Role Code
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"pmRole.roleCode", 
-							SearchOperator.OPERATOR_EQUALS.value(), 
-							chairPersonRoleCode));
-			
-			reqDTO.setUserRoleSearchBean(searchBean);
-			UserResDTO resDTO = userSO.retrieveUserRoleBySearchBean(reqDTO);
+			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
 			if (resDTO.isSuccessful() && 
-					CollectionUtils.isNotEmpty(resDTO.getUserRoleList())) {
+					resDTO.isHasRequiredCommitteeRole()) {
 				PmParameter chairPersonRole = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, 
 						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 				pmUser.setMemberRole(chairPersonRole);
@@ -744,7 +712,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 			
 		} finally {
-			userSO = null;
+			committeeSO = null;
 		}
 		
 		if (userRole == null) {
