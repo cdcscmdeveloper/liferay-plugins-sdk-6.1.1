@@ -393,10 +393,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 							noteItem.setFlItem(delOrderItem.getFlItem());
 							noteItem.setGstAmount(delOrderItem.getGstAmount());
 							noteItem.setGstUnitPrice(delOrderItem.getGstUnitPrice());
-							if(delOrderItem.getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-								noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
-								noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
-							}	
+							noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
+							noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
 							noteItemList.add(noteItem);
 						}
 					}
