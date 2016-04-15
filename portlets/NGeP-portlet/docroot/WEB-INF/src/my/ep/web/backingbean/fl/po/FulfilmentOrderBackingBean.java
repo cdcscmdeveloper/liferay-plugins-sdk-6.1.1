@@ -97,11 +97,11 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ViewScoped
 public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<FulfilmentOrderManagedBean>{
 
-	public static final String NAV_TO_CREATE_DO = "createDo";
-	public static final String NAV_TO_FL_ORDER = "flOrder";
-	public static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
-	public static final String NAV_CR = "/xhtml/fl/contractrequest/crBasePage.xhtml";
-	public static final String NAV_PR = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
+	private static final String NAV_TO_CREATE_DO = "createDo";
+	private static final String NAV_CR = "/xhtml/fl/contractrequest/crBasePage.xhtml";
+	private static final String NAV_PR = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
+	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 										
 	private static Logger log = Logger.getLogger(FulfilmentOrderBackingBean.class);
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
@@ -1012,7 +1012,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FacesContext fc = FacesContext.getCurrentInstance();
 				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 				orderBackingBean.getManagedBean().setHyperLinkPage(true);
-				return NAV_ORDERNO;
+				orderBackingBean.getManagedBean().setButtonVal("View");				
+				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+					return NAV_PO;
+				}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+					return NAV_CO;
+				}
 			}if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_REQUEST)){
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
