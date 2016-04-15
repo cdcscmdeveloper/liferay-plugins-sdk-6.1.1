@@ -29,7 +29,7 @@
 				</tr>
 				</ui:remove>
 				<tr>
-					<td width="20%">
+					<td width="40%">
 						<p:outputLabel value="#{lbl['lbl.pm.ucd.organization']}" />  
 					</td>
 					<td>
@@ -97,7 +97,7 @@
 					<p:outputLabel value=" #{lbl['lbl.pm.ucd.email']}"/>				
 				</th>
 				<td>
-					<p:selectBooleanCheckbox style="float:left" id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" 
+					<p:selectBooleanCheckbox id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" 
 						disabled="true" /> 
 					<p:inputText id="itEmail" disabled="true" size="20"
 							value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}"/>
@@ -108,7 +108,7 @@
 					<p:outputLabel value=" #{lbl['lbl.pm.ucd.sms']}"/>	
 				</th>
 				<td>					
-					<p:selectBooleanCheckbox style="float:left" id="itPreSms" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" 
+					<p:selectBooleanCheckbox id="itPreSms" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" 
 						disabled="true" />					 
 					<p:inputText id="itMobileNo" disabled="true" size="20"
 							value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull}"/>
