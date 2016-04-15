@@ -1046,6 +1046,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 				crBB.getManagedBean().setButtonVal("View");
+				crBB.getManagedBean().setDeclarationCheck(true);
 				flBB.getManagedBean().setHideRemarks(true);
 				crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 				IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
@@ -1095,6 +1096,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				prBB.setFulfilmentRequestField(resDTO);
 				prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 				prBB.getManagedBean().setButtonVal("View");
+				prBB.getManagedBean().setDeclarationCheck(true);
 				flBB.getManagedBean().setHideRemarks(true);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
