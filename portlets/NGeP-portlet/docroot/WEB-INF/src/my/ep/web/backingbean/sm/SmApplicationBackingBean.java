@@ -6490,7 +6490,7 @@ public class SmApplicationBackingBean extends
 							}
 						});
 			}
-			
+
 			getManagedBean().getSelectedBanks().clear();
 
 		}
@@ -7016,7 +7016,16 @@ public class SmApplicationBackingBean extends
 											null,
 											MessageUtils
 													.getMessage(
-															MessageConst.INFO_100002,
+															MessageConst.INFO_721222,
+															new String[] {
+																	getParameterDesc(
+																			ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+																			getManagedBean()
+																					.getSmAppl()
+																					.getApplType()),
+																	getManagedBean()
+																			.getSmAppl()
+																			.getApplNo() },
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
