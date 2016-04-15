@@ -94,14 +94,14 @@
 						</p:commandButton></td>
 				</h:panelGroup>
 				<c:if test='#{createDOBackingBean.managedBean.buttonVal eq "View"}'>
-					<td colspan="4" style="text-align: right"><p:commandLink
+					<td colspan="4" style="text-align: right"><p:commandLink 
 							rendered="#{!createDOBackingBean.managedBean.isHyperLinkPage()}"
 							value="#{lbl['lbl.td.doc.trackingDiary']}"
 							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderId)}"
 							immediate="true" /></td>
 				</c:if>
 				<h:panelGroup id="printButtonDo"
-					rendered="#{createDOBackingBean.managedBean.flDeliveryOrder.status.statusId != FulfilmentStatusCont.doPendingAcknowledgement}">
+					rendered="#{(createDOBackingBean.managedBean.flDeliveryOrder.status.statusId != FulfilmentStatusCont.doPendingAcknowledgement) and (createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo != null)}">
 					<td style="text-align: right; width: 30px;"><p:commandLink
 							value="#{lbl['lbl.btn.print']}" ajax="false">
 							<p:fileDownload
