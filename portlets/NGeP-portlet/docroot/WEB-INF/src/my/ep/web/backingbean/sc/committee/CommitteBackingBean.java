@@ -332,69 +332,34 @@ public class CommitteBackingBean extends
 	 */
 	public String getRoleDesc(PmUser pmUser) {
 		String userRole = null;
-		String orgType = null;
-		String committeeType = getManagedBean().getQtCommittee()
-				.getScCommittee().getCommitteeType().getParameterCode();
+		String committeeType = getManagedBean().getCommitteeType();
 		StringBuffer chairPersonRoleCode = new StringBuffer(
 				committeeType + QTConstants.CHAIRPERSON);
 		
-		IUserSO userSO = null;
+		ICommitteSO committeeSO = null;
 		try {
-			UserReqDTO reqDTO = new UserReqDTO();
-			userSO = BusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			committeeSO = BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			
-			SearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
-
-			// Filter By - user org info
-			// User id
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"pmUserOrg.pmUser.userId", 
-							SearchOperator.OPERATOR_EQUALS.value(), 
-							pmUser.getUserId()));
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setPmUser(pmUser);
+			reqDTO.setRoleCode(chairPersonRoleCode.toString());
+			reqDTO.setCommitteeType(committeeType);
 			
-			// User Org type
-			if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType) || 
-					ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
-							.equals(committeeType)) {
-				orgType = null;
-
-			} else if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType) || 
-					ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)) {
-				orgType = ParameterConst.ORG_TYPE_PTJ;
-
-			} else {
-				orgType = ParameterConst.ORG_TYPE_MINISTRY;
-			}
-			if (orgType != null) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"pmUserOrg.pmUser.orgTypeCode.parameterCode", 
-								SearchOperator.OPERATOR_EQUALS.value(), 
-								orgType));	
-			}
+			PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
+			reqDTO.setPmOrgProfile(pmOrgProfile);
 			
-			// Role Code
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"pmRole.roleCode", 
-							SearchOperator.OPERATOR_EQUALS.value(), 
-							chairPersonRoleCode));
-			
-			reqDTO.setUserRoleSearchBean(searchBean);
-			UserResDTO resDTO = userSO.retrieveUserRoleBySearchBean(reqDTO);
+			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
 			if (resDTO.isSuccessful() && 
-					CollectionUtils.isNotEmpty(resDTO.getUserRoleList())) {
+					resDTO.isHasRequiredCommitteeRole()) {
 				PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
-						ParameterTypeConst.COMMITTEE_ROLE, 
-						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+						ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 				pmUser.setMemberRole(chairPersonRole);
 				userRole = getParameterDesc(chairPersonRole);
 			}
 			
 		} finally {
-			userSO = null;
+			committeeSO = null;
 		}
 		
 		if (userRole == null) {
