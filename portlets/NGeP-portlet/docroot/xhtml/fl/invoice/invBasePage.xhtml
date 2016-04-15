@@ -69,17 +69,19 @@
 				</h:panelGroup>
 				<c:if
 					test='#{invoiceBackingBean.managedBean.buttonVal eq "View" and !invoiceBackingBean.managedBean.isHyperLinkPage()}'>
-					<td colspan="4" style="text-align: right">	
-					<p:commandLink 
-						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceId)}"
-						immediate="true" />&#160;&#160;
-					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-						<p:fileDownload value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceNo,invoiceBackingBean.managedBean.taxable)}" />
-					</p:commandLink>
-					</td>		
+					<td colspan="4" style="text-align: right"><p:commandLink
+							value="#{lbl['lbl.td.doc.trackingDiary']}"
+							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceId)}"
+							immediate="true" /></td>
 				</c:if>
-					
+				<h:panelGroup id="printButtonInv"
+					rendered="#{invoiceBackingBean.managedBean.invoice.status.statusId != FulfilmentStatusCont.inPendingInvoice}">
+					<td style="text-align: right; width: 30px;"><p:commandLink
+							value="#{lbl['lbl.btn.print']}" ajax="false">
+							<p:fileDownload
+								value="#{flDocumentBackingBean.generateReport(ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceNo,invoiceBackingBean.managedBean.taxable)}" />
+						</p:commandLink></td>
+				</h:panelGroup>
 			</tr>
 		</table>
 		<ui:include src="/xhtml/fl/invoice/invReviewHeaderPage.xhtml" />

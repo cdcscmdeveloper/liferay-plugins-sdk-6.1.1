@@ -61,17 +61,21 @@
 							<f:param name="actionName" value="STOP" />
 						</p:commandButton>
 					</td></c:if>
-					<c:if test='#{flOrderBB.managedBean.buttonVal eq "View"}'>
-						<td colspan="4" style="text-align: right">	
-							<p:commandLink rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
-								value="#{lbl['lbl.td.doc.trackingDiary']}"
-								action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId)}"
-								immediate="true" />&#160;&#160;
-					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-						<p:fileDownload value="#{flDocumentBackingBean.generateReport(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.docNo,flDocumentManagedBean.taxable)}" />
-					</p:commandLink>
-						</td>		
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq "View"}'>
+					<td colspan="4" style="text-align: right"><p:commandLink
+							rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
+							value="#{lbl['lbl.td.doc.trackingDiary']}"
+							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId)}"
+							immediate="true" />&#160;</td>
 				</c:if>
+				<h:panelGroup id="printButton"
+					rendered="#{flOrderBB.managedBean.fulfilmentOrder.status.statusId != FulfilmentStatusCont.poPendingSupplierAcknowledgement}">
+					<td style="text-align: right; width: 30px;"><p:commandLink
+							value="#{lbl['lbl.btn.print']}" ajax="false">
+							<p:fileDownload
+								value="#{flDocumentBackingBean.generateReport(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.docNo,flDocumentManagedBean.taxable)}" />
+						</p:commandLink></td>
+				</h:panelGroup>
 			</tr>
 		</table>
 		
