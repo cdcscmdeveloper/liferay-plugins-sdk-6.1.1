@@ -2017,52 +2017,31 @@ public class LOIDetailBackingBean extends
 	 */
 	public void loiRequiredListener(ScLoiLoa scLoiLoa) {
 		debugLogger("loiRequiredListener");
-		boolean isLoiRequired = Boolean.TRUE;
+		boolean isSubmitButton = Boolean.TRUE;
 
 		int index = getManagedBean().getRecSupplierList().indexOf(scLoiLoa);
 		getManagedBean().getRecSupplierList().set(index, scLoiLoa);
 		List<ScLoiLoa> pendingLois  = getManagedBean().getRecSupplierList();
-		boolean isRefinalized = isRefinalizedOrNot(pendingLois);
 
 		for (ScLoiLoa loiLoa : pendingLois) {
-			// refinalization 
-			if(isRefinalized) {
 
-				if (null != loiLoa.getLoiRequired()) {
-					if(loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()){
-						isLoiRequired = Boolean.FALSE;
-						break;
-					}
-					
-				} else{
-					isLoiRequired = Boolean.FALSE;
+			if (null != loiLoa.getLoiRequired()) {
+				if(loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()){
+					isSubmitButton = Boolean.FALSE;
 					break;
 				}
 
 			} else{
-				if (null != loiLoa.getLoiRequired() && loiLoa.getLoiRequired()) {
-					isLoiRequired = Boolean.FALSE;
-					break;
-				}
+				isSubmitButton = Boolean.FALSE;
+				break;
 			}
 		}
 
-		if (isLoiRequired) {
+		if (isSubmitButton) {
 			getManagedBean().setLoiRequired(Boolean.TRUE);
 		} else {
 			getManagedBean().setLoiRequired(Boolean.FALSE);
 		}
-	}
-	
-	private boolean isRefinalizedOrNot(List<ScLoiLoa> pendinglois){
-		boolean isLoiActive = Boolean.FALSE;
-		for (ScLoiLoa scLoiLoa : pendinglois) {
-			if(scLoiLoa.isLoiLoaActive()){
-				isLoiActive = Boolean.TRUE;
-				break;
-			}
-		}
-		return isLoiActive;
 	}
 
 	/**
@@ -5106,7 +5085,6 @@ public class LOIDetailBackingBean extends
 		ScLoi scLoi = 	getManagedBean().getScLoi();
 		boolean isRequiredSubmitBtn = Boolean.TRUE;
 		getManagedBean().setRecSupplierList(recSupplierList);
-		boolean isRefinalized = isRefinalizedOrNot(recSupplierList);
 		for (ScLoiLoa scLoiLoa : recSupplierList) {
 
 			if(null == scLoiLoa.getLoiRequired()){
@@ -5115,31 +5093,13 @@ public class LOIDetailBackingBean extends
 				scLoiLoa.setLoiRequiredDisabled(Boolean.TRUE);
 			}
 
-			// refinalization 
-			if(isRefinalized) {
-
-				if (null != scLoiLoa.getLoiRequired()) {
-					if(scLoiLoa.getLoiRequired() && scLoiLoa.isLoiLoaActive()){
-						isRequiredSubmitBtn = Boolean.FALSE;
-						break;
-					}
-
-				} else{
+			if (null != scLoiLoa.getLoiRequired()) {
+				if(scLoiLoa.getLoiRequired() && scLoiLoa.isLoiLoaActive()){
 					isRequiredSubmitBtn = Boolean.FALSE;
-					break;
 				}
 
 			} else{
-				if (null != scLoiLoa.getLoiRequired() && scLoiLoa.getLoiRequired()) {
-					isRequiredSubmitBtn = Boolean.FALSE;
-					break;
-				}
-			}
-
-			if (isRequiredSubmitBtn) {
-				getManagedBean().setLoiRequired(Boolean.TRUE);
-			} else {
-				getManagedBean().setLoiRequired(Boolean.FALSE);
+				isRequiredSubmitBtn = Boolean.FALSE;
 			}
 
 			// update current ScLoiLoa Obj in loi after save pending loiloas
