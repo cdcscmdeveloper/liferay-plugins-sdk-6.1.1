@@ -83,5 +83,18 @@
 				</tr>
 			</table>
 		</div>
+		
+		<p:confirmDialog id="saveDraftConfirmDialog" closable="true"
+			message="#{lbl['lbl.sm.savefirsttime.confirm.msg']}"
+			header="#{lbl['lbl.sm.savefirsttime.confirm.header']}" severity="alert"
+			widgetVar="saveDraftConfirmDialog">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="saveDraftConfirmDialog.hide();" 
+					action="#{backingBean.confirmSaveDraftFirstTime}" update="@form"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="saveDraftConfirmDialog.hide();" />
+			</div>
+		</p:confirmDialog>
 	</c:if>
 </ui:composition>
