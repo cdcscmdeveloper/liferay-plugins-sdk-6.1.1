@@ -19,6 +19,7 @@
 		<h:panelGrid width="100%" id="itemDtlId">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl"
 				style="white-space: normal;"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
 				rowKey="#{requestNoteDtl}" rowIndexVar="rowIndex">
 
