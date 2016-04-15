@@ -1145,6 +1145,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+		orderBackingBean.getManagedBean().setSelectedTabIndex(0);
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
 		if(resDTO.getFlOrder().isFactored()) {
 			orderBackingBean.getManagedBean().setFactoringCheck("true");
