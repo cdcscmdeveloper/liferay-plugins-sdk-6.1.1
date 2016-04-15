@@ -2662,8 +2662,7 @@ public class LOIDetailBackingBean extends
 	}
 	
 	private void validateAwardQuantity(ScQtRecommend scQtRecommend) {
-		BigDecimal totalQuantity = scQtRecommend.getRequestItem()
-				.getQuantity();
+		BigDecimal totalQuantity = scQtRecommend.getOrderQty();
 		BigDecimal tempQuantity = new BigDecimal(0.0);
 		for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
 			if (BooleanUtils.isTrue(
