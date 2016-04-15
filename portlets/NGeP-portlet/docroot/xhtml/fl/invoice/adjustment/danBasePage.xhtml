@@ -59,11 +59,15 @@
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.adjustmentId)}"
 						immediate="true" />&#160;&#160;
-					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-						<p:fileDownload value="#{flDocumentBackingBean.generateReport(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,flDocumentManagedBean.taxable)}" />
-					</p:commandLink>
 					</td>		
-				</c:if>	
+				</c:if>
+				<h:panelGroup id="printButtonPm"
+					rendered="#{danBackingBean.managedBean.adjustment.status.statusId != FulfilmentStatusCont.dnPendingApproval}">
+					<td style="text-align: right; width: 30px;"><p:commandLink
+							value="#{lbl['lbl.btn.print']}" ajax="false">
+							<p:fileDownload value="#{flDocumentBackingBean.generateReport(danBackingBean.managedBean.adjustment.docType,danBackingBean.managedBean.adjustment.docNo,flDocumentManagedBean.taxable)}" />
+						</p:commandLink></td>
+				</h:panelGroup>		
 			</tr>
 		</table>
 		<ui:include src="/xhtml/fl/invoice/adjustment/danHeaderPage.xhtml" />
