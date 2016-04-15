@@ -513,22 +513,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			flOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			flOrderBB.getManagedBean().setBackToPrevious(null);
-			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
-			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
-			if(flOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
-					Long supplieContractId=coResDTO.getFlFulfilmentRequest().getCtContract().getContractId();
-					contractSupplierReqDTO.setContractId(supplieContractId);
-					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
-					if(contractSupplierResDTO.getFactoring() != null){
-						coResDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
-						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
-							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
-							flOrderBB.getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
-						}
-					}else{
-						flOrderBB.getManagedBean().getFlRequest().getCtContract().setFactored(false);
-					}
-			}	
+			
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
 				flBB.getManagedBean().setHideRemarks(true);
@@ -685,9 +670,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.getManagedBean().setDocMaintainRemarks(true);
 			} else {
 				flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
-			}
-			if(pmBB.getManagedBean().getPaymentAdvice().getFulfilmentOrder().isFactored()){
-				pmBB.getFactoringDtl(); 
 			}
 			navgPage=NAV_TO_MAINTAIN_PA;
 		} else if(docType.equals(ParameterConst.DOCTYPE_STOP_DELIVERY)){
