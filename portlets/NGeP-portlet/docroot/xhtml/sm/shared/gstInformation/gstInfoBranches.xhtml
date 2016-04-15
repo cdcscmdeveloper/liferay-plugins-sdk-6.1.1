@@ -159,12 +159,13 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.pm.document.name']}"
 						style="width : 20%;">
-						<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
-							style="float: left;white-space: normal;" />
+						<p:commandLink ajax="false" value="#{table.fileName}" rendered="#{not empty table.fileName}">
+							<p:fileDownload value="#{smUpdateGstInfoBackingBean.commonDownload(table.filePath,table.fileName)}" />
+						</p:commandLink>
 						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
 						<p:commandLink id="deleteBrAttId" style="white-space: normal !important;"
 							partialSubmit="true" rendered="#{not empty table.fileName}"
-							process="@this" action="#{smUpdateGstInfoBackingBean.onDeleteBrAttachment(table)}"
+							process="@this" action="#{smUpdateGstInfoBackingBean.onDeleteBrAttachment(br.branch,table)}"
 							update="@form" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
 							&#160;
