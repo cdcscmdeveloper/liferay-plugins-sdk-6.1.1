@@ -1242,12 +1242,12 @@ public class SmApplicationBackingBean extends
 
 		// for new application need to show confirm popup to save draft before
 		// proceed to next section
-		if (!StringUtils.isBlank(applType)
-				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				&& !getManagedBean().getSmAppl().isActiveAppl()) {
-			RequestContext.getCurrentInstance().execute(
-					"saveDraftConfirmDialog.show();");
-		} else {
+//		if (!StringUtils.isBlank(applType)
+//				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+//				&& !getManagedBean().getSmAppl().isActiveAppl()) {
+//			RequestContext.getCurrentInstance().execute(
+//					"saveDraftConfirmDialog.show();");
+//		} else {
 			if ((getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())
 					&& currentPageType
@@ -1316,7 +1316,7 @@ public class SmApplicationBackingBean extends
 					false);
 			log.info("******* Current page AFTER in managed bean ********"
 					+ getManagedBean().getCurrentPageType());
-		}
+//		}
 	}
 
 	/**
