@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -1178,18 +1177,18 @@ public class SupplierFinalizationBackingBean extends
 		// reset the value base on the decision before save
 		String decision = scQtFinalization.getDecision().getParameterCode();
 		if (decision == null) {
-			resetRecommendSupplier(scQtFinalization);
+			resetDecisionRecommendSupplier(scQtFinalization);
 			resetReEvaluate(scQtFinalization);
 			resetRepublish(scQtFinalization);
 			resetCancel(scQtFinalization);
-			resetForwardToHigherAuthority(scQtFinalization);
+			resetDecisionForwardToHigherAuthority(scQtFinalization);
 
 		} else if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
 			resetReEvaluate(scQtFinalization);
 			resetRepublish(scQtFinalization);
 			resetCancel(scQtFinalization);
 			if (!this.getManagedBean().isInitialDecisionFwdHighAuth()) {
-				resetForwardToHigherAuthority(scQtFinalization);
+				resetDecisionForwardToHigherAuthority(scQtFinalization);
 			}
 		} else if (decision
 				.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY)) {
@@ -1198,22 +1197,22 @@ public class SupplierFinalizationBackingBean extends
 			resetCancel(scQtFinalization);
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_EVALUATION)) {
-			resetRecommendSupplier(scQtFinalization);
+			resetDecisionRecommendSupplier(scQtFinalization);
 			resetRepublish(scQtFinalization);
 			resetCancel(scQtFinalization);
-			resetForwardToHigherAuthority(scQtFinalization);
+			resetDecisionForwardToHigherAuthority(scQtFinalization);
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_PUBLISH)) {
-			resetRecommendSupplier(scQtFinalization);
+			resetDecisionRecommendSupplier(scQtFinalization);
 			resetReEvaluate(scQtFinalization);
 			resetCancel(scQtFinalization);
-			resetForwardToHigherAuthority(scQtFinalization);
+			resetDecisionForwardToHigherAuthority(scQtFinalization);
 
 		} else if (decision.equals(ParameterConst.DECISION_CANCEL)) {
-			resetRecommendSupplier(scQtFinalization);
+			resetDecisionRecommendSupplier(scQtFinalization);
 			resetReEvaluate(scQtFinalization);
 			resetRepublish(scQtFinalization);
-			resetForwardToHigherAuthority(scQtFinalization);
+			resetDecisionForwardToHigherAuthority(scQtFinalization);
 		}
 		return scQtFinalization;
 	}
@@ -1353,13 +1352,11 @@ public class SupplierFinalizationBackingBean extends
 		if (toBeValidated) {
 			toBeValidatedRecommendList = new ArrayList<ScQtRecommend>();
 		} 
-
-		boolean isSingleAward = this.getManagedBean().isSingleAward();
 		
-		// If the current zone recommend by is Award, 
+		// If recommend by is Award, 
 		// then have to add the recommended supplier to the recommendedSupppliersByZone map
 		// before saving the data
-		if (isSingleAward) {
+		if (isAward) {
 			resetPreviouslyAwardedSuppliersByZone(currentZone);
 			
 			ScQtEvaluationResultDtl awardedSupplier = this.getManagedBean().getRecommendedSupplier();
@@ -1375,7 +1372,7 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().getResetSupplierList()
 									 .remove(awardedSupplier);					
 			}
-		} else if (!isSingleAward) {
+		} else if (!isAward) {
 			// If no supplier selected in the current zone, 
 			// remove the zone from recommended zones map 
 			// which holds the list of recommended suppliers for that zone
@@ -5664,7 +5661,7 @@ public class SupplierFinalizationBackingBean extends
 			if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
 				this.getManagedBean().setRecommendSupplier(true);
 				if (isInitialDecisionFwdToHighAuth) {
-					resetForwardToHigherAuthority(scQtFinalization);
+					resetDecisionForwardToHigherAuthority(scQtFinalization);
 				}
 			} else {
 				this.getManagedBean().setForwardToHigherAuthority(true);
@@ -5933,7 +5930,7 @@ public class SupplierFinalizationBackingBean extends
 		}		
 	}
 
-	private void resetRecommendSupplier(ScQtFinalization scQtFinalization) {
+	private void resetDecisionRecommendSupplier(ScQtFinalization scQtFinalization) {
 		scQtFinalization.setHigherCommitte(null);
 		scQtFinalization.setHigherSecretary(null);
 		scQtFinalization.setLoiLoaBy(null);
@@ -5948,7 +5945,7 @@ public class SupplierFinalizationBackingBean extends
 		scQtFinalization.setReEvaluateTechReq(false);
 	}
 
-	private void resetForwardToHigherAuthority(ScQtFinalization scQtFinalization) {
+	private void resetDecisionForwardToHigherAuthority(ScQtFinalization scQtFinalization) {
 		resetForwardToHigherAuthorityParams(scQtFinalization);
 		scQtFinalization.setHigherAuthReq(false);
 		this.getManagedBean().setForwardToHigherAuthority(false);
@@ -6783,10 +6780,12 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setDisableSupplierSelection(false);
 		boolean zonalPackageItemsCancelled = getManagedBean().isItemCancelled();
 		
+		List<ScQtRecommend> scQtRecommends = null;
 		Long currentZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		Map<Long,List<ScQtRecommend>> zonalItems = scQtFinalization.getScQtRecommendsByZone();
-		List<ScQtRecommend> scQtRecommends = null;
+		Map<Long,List<ScQtEvaluationResultDtl>> recommendedSuppliersByZone 
+									 	= getManagedBean().getRecommendedSupppliersByZone();
 		
 		if (MapUtils.isNotEmpty(zonalItems) && 
 				zonalItems.containsKey(currentZoneId)) {
@@ -6806,9 +6805,20 @@ public class SupplierFinalizationBackingBean extends
 					}					
 				}
 				
+				if (MapUtils.isNotEmpty(
+						recommendedSuppliersByZone)) {
+					List<ScQtEvaluationResultDtl> recommendedSuppliers 
+								= recommendedSuppliersByZone.get(currentZoneId);
+					if (CollectionUtils.isNotEmpty(recommendedSuppliers)) {
+						recommendedSuppliers.clear();
+					}
+				}
+				
 				// reset awarded & short listed flag of suppliers in current zone
 				resetShortlistedSupplierData(
 						getManagedBean().getShortlistedSupplierList(), null);	
+				
+				getManagedBean().setRecommendedSupplier(null);
 			} else {
 				for (ScQtRecommend scQtRecommend : scQtRecommends) {
 					scQtRecommend.setCancelled(false);
@@ -6857,7 +6867,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		} else if (!this.getManagedBean().isInitialDecisionFwdHighAuth()) {
-			resetForwardToHigherAuthority(scQtFinalization);
+			resetDecisionForwardToHigherAuthority(scQtFinalization);
 		}
 	}
 
