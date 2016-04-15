@@ -82,7 +82,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
+						value="#{flOrderBB.managedBean.fulfilmentOrder.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
@@ -224,11 +224,11 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.phoneNo}"
+									disabled="true" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.phoneNoFull}"
 									/></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.faxNo}"
+							<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.faxNoFull}"
 									/></td>
 						</tr>
 					</table></td>
@@ -247,12 +247,12 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNo}"
+				<td><p:inputText disabled="true" size="15" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull}"
 						 /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.fl.factoring.details']}" toggleable="true" rendered="#{flOrderBB.managedBean.flRequest.ctContract.factored}">
+	<p:panel header="#{lbl['lbl.fl.factoring.details']}" toggleable="true" rendered="#{flOrderBB.managedBean.fulfilmentOrder.factored}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
@@ -272,10 +272,10 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.phoneNo}" /></td>
+									disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.phoneNoFull}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="19" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.faxNo}" /></td>
+							<td><p:inputText size="19" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.faxNoFull}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -291,7 +291,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-				<td><p:inputText disabled="true" size="25" value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPhoneNo}"/></td>
+				<td><p:inputText disabled="true" size="25" value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPhoneNoFull}"/></td>
 			</tr>
 		</table>
 	</p:panel>
