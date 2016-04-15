@@ -82,7 +82,13 @@
 									<td width="15%"><p:outputLabel
 											value="#{lbl['lbl.cm.ep.no']}" /></td>
 									<td width="35%"><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}"></p:inputText></td>
+											value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}">
+										</p:inputText> <p:graphicImage id="epNoId"
+											value="/css/images/design/tooltips.png" /> <p:tooltip
+											for="epNoId">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.tooltip.ep.no']}" />
+										</p:tooltip></td>
 									<td><p:outputLabel value="#{lbl['lbl.sm.mofno']}" /></td>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText>
@@ -326,8 +332,8 @@
 								#{lbl['lbl.cm.no.image.available']}
 								
 								</p:outputPanel>
-								
-									<h:outputText value="#{supplierItem.itemCode}"></h:outputText>
+
+										<h:outputText value="#{supplierItem.itemCode}"></h:outputText>
 
 									</h:panelGroup>
 									<h:panelGroup rendered="#{supplierItem.imagePath != null}">
