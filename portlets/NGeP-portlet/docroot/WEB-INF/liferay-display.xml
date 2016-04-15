@@ -70,7 +70,7 @@
             <portlet id="accessApplicationDtl"></portlet>	
             <portlet id="accessApplicationActivation"></portlet>
            	<portlet id="pmAccessApplicationSearch"></portlet>
-			
+           	<portlet id="pmUserCommonDetails"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 
