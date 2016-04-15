@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<style>
-		.ui-treetable tbody td {
+		.zoneDataTable.ui-treetable tbody td {
 		    border: none !important;
 		} 
 	</style>
@@ -26,7 +26,7 @@
 		  </table>
  		 <h:panelGrid width="100%" style="margin-top:20px">
  		  <p:treeTable id="zoneLocationDataTable"  value="#{ctBackingBean.managedBean.ctZoneTrees}"
- 		    var="zoneTree">
+ 		    var="zoneTree" class="zoneDataTable">
  		    
  		    <p:column style="width:70%;" styleClass="column-align-center">
             <f:facet name="header">#{lbl['lbl.ct.location.name']}</f:facet>
