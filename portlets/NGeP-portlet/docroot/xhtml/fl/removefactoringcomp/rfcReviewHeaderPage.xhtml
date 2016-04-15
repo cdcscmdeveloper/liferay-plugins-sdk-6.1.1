@@ -15,9 +15,12 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.po.co.no']} " /></td>
 					<td class="header-info-text">
+						#{flOrderBB.managedBean.fulfilmentOrder.docNo}
+						<ui:remove>
 						<p:commandLink value="#{flOrderBB.managedBean.fulfilmentOrder.docNo}" 
 						action="#{flOrderBB.navigateDocument(flOrderBB.managedBean.fulfilmentOrder.docType)}"/>
-						</td>
+						</ui:remove>
+					</td>
 				</c:if>
 				<c:if test="#{not empty flOrderBB.managedBean.buttonVal}">
 					<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']} " />
