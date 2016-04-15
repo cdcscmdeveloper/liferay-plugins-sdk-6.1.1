@@ -191,6 +191,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Long selBankBranchId;
 	private SmSupplierBank selectedBank;
 	private SmSupplierBank selectedSignatoryBankAcct;
+	private List<SmSupplierBank> selectedSignatoryBankAccts;
 	private List<SmSupplierBank> selectedBanks;
 	private String delPendAckMsg;
 	private boolean poUser;
@@ -590,6 +591,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		//
 		selectedSignatoryBankAcct = new SmSupplierBank();
+		selectedSignatoryBankAccts = new ArrayList<SmSupplierBank>();
 		smAppl = new SmAppl();
 		smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
 		selectedBank = new SmSupplierBank();
@@ -3247,5 +3249,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPhysicalConsulting(String physicalConsulting) {
 		this.physicalConsulting = physicalConsulting;
+	}
+
+	public List<SmSupplierBank> getSelectedSignatoryBankAccts() {
+		return selectedSignatoryBankAccts;
+	}
+
+	public void setSelectedSignatoryBankAccts(
+			List<SmSupplierBank> selectedSignatoryBankAccts) {
+		this.selectedSignatoryBankAccts = selectedSignatoryBankAccts;
 	}
 }

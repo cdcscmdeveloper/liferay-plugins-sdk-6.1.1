@@ -77,13 +77,6 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
-					<p:commandLink action="#{backingBean.viewSignatories(bankBean)}"
-						partialSubmit="true" process="@this" update=":form:tt:sfieldset"
-						style="padding-right :5px;" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-						<p:graphicImage value="/css/images/design/seller_detail.png"
-							title="#{lbl['lbl.sm.view.signatories']}" />
-					</p:commandLink>
 					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelBank(bankBean)}"
 						update=":form:tt:bankDialog" style="padding-right :5px;" 
@@ -95,6 +88,13 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
+				<p:commandLink action="#{backingBean.viewSignatories}"
+					partialSubmit="true" process="bankInfPan" update="sfieldset,@([id$=Msg])"
+					style="padding-right :5px;" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
+					<p:graphicImage value="/css/images/design/seller_detail.png"
+						title="#{lbl['lbl.sm.view.signatories']}" />
+				</p:commandLink>
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					partialSubmit="true" process="@this"
 					actionListener="#{backingBean.assignNewBank}"
@@ -102,40 +102,44 @@
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.deleteSelectedBanks}" partialSubmit="true"
-					process="bankInfPan" update=":form:tt:bankDt ,:form:tt:sfieldset" 
+					process="bankInfPan" update=":form:tt:bankDt ,sfieldset" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
-			<p:panel id="sfieldset"
-				header="#{lbl['lbl.sm.bankDtls.cheSignPanHdr']} 
-			#{backingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
-				<!-- <p:remoteCommand name="updateSignatory" update="signatory" /> -->
-				<p:dataTable id="signatory" var="auth"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
-					rowKey="#{auth}" rowIndexVar="index">
-					<ac:paginator for="signatory" />
-
-					<p:column headerText="#{lbl['lbl.sm.bankDtls.signName']}">
-						<h:outputText value="#{auth.smPersonnel.name}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sm.bankDtls.signId']}">
-						<h:outputText value="#{auth.smPersonnel.identificationNo}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sm.bankDtls.signIsBumi']}">
-						<h:outputText value="#{lbl['lbl.txt.no']}"
-							rendered="#{auth.smPersonnel.bumiFlg eq 0}" />
-						<h:outputText value="#{lbl['lbl.txt.yes']}"
-							rendered="#{auth.smPersonnel.bumiFlg eq 1}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.sm.bankDtls.signPos']}">
-						<h:outputText value="#{auth.smPersonnel.designation}" />
-						<ac:smFieldChangeTableAlert object="#{auth}" />
-					</p:column>
-				</p:dataTable>
-			</p:panel>
+			
+			<p:outputPanel id="sfieldset">
+				<ui:repeat var="bank" value="#{backingBean.managedBean.selectedSignatoryBankAccts}">
+					<p:panel header="#{lbl['lbl.sm.bankDtls.cheSignPanHdr']}  #{bank.accountNo} (#{bank.pmFinancialOrg.finOrgName})">
+						<p:dataTable id="signatory" var="auth"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							value="#{bank.smChequeSignatories}"
+							rowKey="#{auth}" rowIndexVar="index">
+							<ac:paginator for="signatory" />
+		
+							<p:column headerText="#{lbl['lbl.sm.bankDtls.signName']}">
+								<h:outputText value="#{auth.smPersonnel.name}" />
+							</p:column>
+		
+							<p:column headerText="#{lbl['lbl.sm.bankDtls.signId']}">
+								<h:outputText value="#{auth.smPersonnel.identificationNo}" />
+							</p:column>
+		
+							<p:column headerText="#{lbl['lbl.sm.bankDtls.signIsBumi']}">
+								<h:outputText value="#{lbl['lbl.txt.no']}"
+									rendered="#{auth.smPersonnel.bumiFlg eq 0}" />
+								<h:outputText value="#{lbl['lbl.txt.yes']}"
+									rendered="#{auth.smPersonnel.bumiFlg eq 1}" />
+							</p:column>
+		
+							<p:column headerText="#{lbl['lbl.sm.bankDtls.signPos']}">
+								<h:outputText value="#{auth.smPersonnel.designation}" />
+								<ac:smFieldChangeTableAlert object="#{auth}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<br />
+				</ui:repeat>
+			</p:outputPanel>
+			
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
@@ -545,7 +549,7 @@
 				partialSubmit="true" process=":form:tt:bankDialog"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
 				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
-				update=":form:tt:bankDt , :form:tt:sfieldset, @([id$=Msg])" />
+				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelSmBankFunctions}" />
