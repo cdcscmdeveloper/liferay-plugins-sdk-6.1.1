@@ -772,7 +772,10 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 							        context.put("approverName", "");
 							        context.put("approverDesignation", "");
 						       }
-						   }
+						   } else {
+						        context.put("approverName", "");
+						        context.put("approverDesignation", "");
+					       }
 							// Extra For Termination Notice
 							context.put("contractAmount", getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString());
 							context.put("effDate", dateformat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
