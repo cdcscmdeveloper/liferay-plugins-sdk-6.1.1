@@ -2061,11 +2061,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			} else {
 				// skip the validation if the CR is from PID
 				if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode()) && getManagedBean().getFlRequest().getScPurchaseInDefault()==null){
-					if(flItemAddr.getOrderedQty().doubleValue() != flItemAddr.getScRequestItem().getQuantity().doubleValue()){
-						flItemAddr.setOrderedQty(BigDecimal.ZERO);
-						flItemAddr.setOrderedAmt(BigDecimal.ZERO);
-						throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
+					if(flItemAddr.getScRequestItem().getQuantity() != null){
+						if(flItemAddr.getOrderedQty().doubleValue() != flItemAddr.getScRequestItem().getQuantity().doubleValue()){
+							flItemAddr.setOrderedQty(BigDecimal.ZERO);
+							flItemAddr.setOrderedAmt(BigDecimal.ZERO);
+							throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
+						}	
 					}
+					
 				}
 				
 				FlFulfilmentItemAddr oriItemAddr = flItemAddr;
