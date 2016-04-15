@@ -1389,11 +1389,16 @@ public class ProfilePersonalizationBackingBean extends
 	}
 	
 	public int numberOfLines(String string, int cols) {
-        int rvalue = 0;
-        for (String strTmp : string.split("\n")) {
-            rvalue ++;
-            rvalue += strTmp.length() >= cols ? strTmp.length() / cols : 0;
-        }
+		int rvalue = 0;
+		if(StringUtils.isNotBlank(string)){
+		    for (String strTmp : string.split("\n")) {
+		          rvalue ++;
+		          rvalue += strTmp.length() >= cols ? strTmp.length() / cols : 0;
+		    }
+		}else{
+			rvalue = 1;
+		}
+    
         return rvalue;
     }
 
