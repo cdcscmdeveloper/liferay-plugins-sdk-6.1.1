@@ -38,6 +38,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.comparator.sc.MemberRoleComparator;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -619,7 +620,7 @@ public class QTCommitteBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760121);
 		}
-		Collections.sort(memberList);
+		Collections.sort(memberList,new MemberRoleComparator());
 		scCommittee.setScCommitteeMembers(memberList);
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 
@@ -810,7 +811,7 @@ public class QTCommitteBackingBean extends
 						.getScCommitteeMembers()
 						.addAll(tabs.get(i).getMembers());
 				Collections.sort(tabs.get(i).getScQtCommittee()
-						.getScCommittee().getScCommitteeMembers());
+						.getScCommittee().getScCommitteeMembers(), new MemberRoleComparator());
 
 				tabs.get(i).getMembers().clear();
 			}
