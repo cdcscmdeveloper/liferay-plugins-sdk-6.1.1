@@ -332,7 +332,8 @@ public class CommitteBackingBean extends
 	 */
 	public String getRoleDesc(PmUser pmUser) {
 		String userRole = null;
-		String committeeType = getManagedBean().getCommitteeType();
+		String committeeType = getManagedBean().getQtCommittee()
+				.getScCommittee().getCommitteeType().getParameterCode();
 		StringBuffer chairPersonRoleCode = new StringBuffer(
 				committeeType + QTConstants.CHAIRPERSON);
 		
