@@ -22,6 +22,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -55,6 +56,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
@@ -1471,5 +1473,40 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		} finally {
 			ruleSO = null;
 		}
+	}
+	
+	/**
+	 * Get year drop down
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getYearDropDown(){
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			Calendar now = Calendar.getInstance();
+			int currentYear = now.get(Calendar.YEAR);
+			int yearRange = CommonConstants.YEAR_RANGE;
+			int yearDiff = currentYear - yearRange;
+			
+			items = new SelectItem[yearRange + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			
+			for (int y = currentYear; y > yearDiff; y--){
+				items[i++] = new SelectItem(y, String.valueOf(y));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+		
 	}
 }
