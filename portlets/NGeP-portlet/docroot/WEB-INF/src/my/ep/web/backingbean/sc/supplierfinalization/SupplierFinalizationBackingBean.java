@@ -1401,9 +1401,8 @@ public class SupplierFinalizationBackingBean extends
 					continue;
 				}
 				for (ScQtRecommend scQtRecommend : recommendedItemListByZone) {
-					List<ScQtEvaluationResultDtl> shortlistedSuppliersForCurrentZone 
-								= getShortlistedSuppliersByZone(zoneDtl);
-					scQtRecommend.setShortListedSupplierList(shortlistedSuppliersForCurrentZone);
+					scQtRecommend.setShortListedSupplierList(
+							getShortlistedSuppliersByZone(zoneDtl));
 					
 					if (toBeValidated) {
 						toBeValidatedRecommendList.add(scQtRecommend);
@@ -1413,7 +1412,6 @@ public class SupplierFinalizationBackingBean extends
 						scQtRecommend.setRecommendDtls(
 								new ArrayList<ScQtRecommendDtl>());
 					}					
-
 					
 					if (MapUtils.isNotEmpty(recommendedSuppliersByZone)) {
 						if (recommendedSuppliersByZone.containsKey(
@@ -1539,13 +1537,13 @@ public class SupplierFinalizationBackingBean extends
 								: scQtRecommend.getRecommendDtls()) {
 			
 			// Skip the deletion of rejected suppliers and 
-			// suppliers with LOI or LOA as these records should not be deleted
+			// suppliers with LOI or LOA as these records will have child records
 			if (!recommendDtl.getRecordStatusFlg().equals(
 					DbValueConst.RECORD_STATUS_ACTIVE)
 						|| recommendDtl.getLoiLoaCount() > 0) {
-				if (isReset && (!recommendDtl.getRecordStatusFlg()
+				if (isReset && !(recommendDtl.getRecordStatusFlg()
 						.equals(DbValueConst.RECORD_STATUS_REJECTED) || 
-							!recommendDtl.getRecordStatusFlg()
+							recommendDtl.getRecordStatusFlg()
 								.equals(DbValueConst.RECORD_STATUS_CANCELLED))) {
 					recommendDtl.setRecordStatus(false);
 					recommendDtl.setRecordStatusFlg(
