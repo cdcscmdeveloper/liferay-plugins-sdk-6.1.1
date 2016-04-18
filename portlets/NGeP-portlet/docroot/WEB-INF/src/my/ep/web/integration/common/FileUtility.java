@@ -2364,10 +2364,43 @@ public class FileUtility extends InitializeSO{
 	
 	public String formatBigDecimalField(BigDecimal value,int size) {
 
-		if(null!=value)
-			return String.format("%" + size + "s", value.toString());
-		else
+		if(null!=value){
+			
+			
+		       String valueString = value.toString();
+		       String completeAmt = "";
+		       if(valueString.contains(".")){
+		    	      
+		    	  String decimal= valueString.substring(value.toString().indexOf(".")+1,valueString.trim().length());
+		    	 
+		    	   if(decimal.trim().length()==2){
+		    		 String amout = value.toString().substring(0, value.toString().indexOf("."));
+				     
+				     completeAmt = amout+ decimal;
+				    
+		    	   }else if(decimal.trim().length()==1){
+		    		   String amout = value.toString().substring(0, value.toString().indexOf("."));
+					       
+					     completeAmt = amout+ decimal+"0";   
+		    		   
+		    	   }else{
+		    		   String amout = value.toString().substring(0, value.toString().indexOf("."));
+		    		   String subSrtingDecimal = decimal.substring(0, 2);
+		    		   completeAmt = amout+ subSrtingDecimal;
+		    		  
+		    	   }
+		    	   
+		    	   
+		       }else{
+		    	   completeAmt = valueString +"00";
+		       }
+		       
+		       System.out.println("completeAmt:"+completeAmt);
+		      
+			return String.format("%0" + size + "d", Integer.valueOf(Integer.parseInt(completeAmt)));
+		}else{
 			return String.format("%" + size + "s", IntegrationConstants.EMPTY_TRING);
+		}
 
 	}
 	
