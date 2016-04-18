@@ -775,10 +775,17 @@ public class QTDetailBackingBean extends
 
 					scQt.setScQtCategorys(restrictedList);
 				}
-				List<ScQtSupplier> qtSuppliers = this.getManagedBean()
+				// Setting the Restricted Supplier List to Qtdetails
+				List<ScQtSupplier> qtSupplierList = this.getManagedBean()
 						.getQtSupplierList();
-				if (qtSuppliers != null && !qtSuppliers.isEmpty()) {
-					scQt.setScQtSuppliers(qtSuppliers);
+				if (qtSupplierList != null && !qtSupplierList.isEmpty()) {
+					for (ScQtSupplier scQtSupplier : qtSupplierList) {
+						scQtSupplier
+								.setInvitationType(SourcingConstants.INVITATION_TYPE_INSERT);
+						setUserDetails(scQtSupplier);
+						// qtSupplierList.add(scQtSupplier);
+					}
+					scQt.setScQtSuppliers(qtSupplierList);
 				}
 
 			}
@@ -827,18 +834,7 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
-		// Setting the Restricted Supplier List to Qtdetails
-		List<ScQtSupplier> qtSupplierList = this.getManagedBean()
-				.getQtSupplierList();
-		if (qtSupplierList != null && !qtSupplierList.isEmpty()) {
-			for (ScQtSupplier scQtSupplier : qtSupplierList) {
-				scQtSupplier
-						.setInvitationType(SourcingConstants.INVITATION_TYPE_INSERT);
-				setUserDetails(scQtSupplier);
-				// qtSupplierList.add(scQtSupplier);
-			}
-			scQt.setScQtSuppliers(qtSupplierList);
-		}
+		
 		// Setting the Approval details to Qtdetails
 		List<TabBean> tabList = this.getManagedBean().getTabList();
 
