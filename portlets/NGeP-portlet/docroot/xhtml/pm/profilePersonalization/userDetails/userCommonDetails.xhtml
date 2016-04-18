@@ -42,7 +42,7 @@
 						</table>
 					</td>
 				</tr>
-				<c:if test="#{profilePersonalizationBackingBean.managedBean.mofExpDateShown}">	
+				<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">	
 					<tr>
 						<td>
 							<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.mof.exp']} : " />  
@@ -53,7 +53,7 @@
 						</td>
 					</tr>	
 				</c:if>
-				<c:if test="#{profilePersonalizationBackingBean.managedBean.softCertExpDateShown}">
+				<c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
 					<tr>
 						<td>
 							<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.softcert.exp']} : " />

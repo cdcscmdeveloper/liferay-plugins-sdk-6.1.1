@@ -1386,7 +1386,6 @@ public class ProfilePersonalizationBackingBean extends
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.CM_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())){
-			getManagedBean().setMofExpDateShown(true);
 			return true;
 		}
 		return false;
@@ -1401,7 +1400,6 @@ public class ProfilePersonalizationBackingBean extends
 				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())){
-			getManagedBean().setSoftCertExpDateShown(true);
 			return true;
 		}
 		return false;
