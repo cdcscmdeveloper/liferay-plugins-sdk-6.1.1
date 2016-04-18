@@ -1,12 +1,12 @@
 package my.ep.web.backingbean.sc.directpurchase;
 
-	import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
-import my.ep.biz.service.integration.jms.INtfClientSO;
+import my.ep.biz.service.osb.ntf.INtfClientSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.ntf.dto.NtfRequestDTO;
-import my.ep.ntf.dto.NtfResponseDTO;
+import my.ep.dto.osb.ntf.NtfRequestDTO;
+import my.ep.dto.osb.ntf.NtfResponseDTO;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 
 	/**
