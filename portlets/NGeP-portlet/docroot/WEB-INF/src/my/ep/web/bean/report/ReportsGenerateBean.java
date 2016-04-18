@@ -872,6 +872,9 @@ public class ReportsGenerateBean {
 
 	/** The sm mandatory zone view. */
 	private boolean smMandatoryZoneView = false;
+	
+	/** The sm mandatory zone for svosvl view. */
+	private boolean smMandatoryZoneForSVOSVLView=false;
 
 	/** The sm mandatory ep admin ptj admin zone view. */
 	private boolean smMandatoryEPAdminPTJAdminZoneView = false;
@@ -9521,6 +9524,25 @@ public class ReportsGenerateBean {
 	 */
 	public String getSmSVOUserVar() {
 		return smSVOUserVar;
+	}
+
+	/**
+	 * Checks if is sm mandatory zone for svosvl view.
+	 * 
+	 * @return the smMandatoryZoneForSVOSVLView
+	 */
+	public boolean isSmMandatoryZoneForSVOSVLView() {
+		return smMandatoryZoneForSVOSVLView;
+	}
+
+	/**
+	 * Sets the sm mandatory zone for svosvl view.
+	 * 
+	 * @param smMandatoryZoneForSVOSVLView
+	 *            the smMandatoryZoneForSVOSVLView to set
+	 */
+	public void setSmMandatoryZoneForSVOSVLView(boolean smMandatoryZoneForSVOSVLView) {
+		this.smMandatoryZoneForSVOSVLView = smMandatoryZoneForSVOSVLView;
 	}
 
 	/**

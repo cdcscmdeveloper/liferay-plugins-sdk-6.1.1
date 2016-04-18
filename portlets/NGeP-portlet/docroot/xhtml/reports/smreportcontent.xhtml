@@ -153,9 +153,9 @@
 															itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
 														<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
 															itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
-														<p:ajax event="change"
+														<p:ajax event="change" partialSubmit="true"
 															listener="#{reportBackingBean.retrieveProcessingOfficerList}"
-															partialSubmit="true" update="@form" />
+															update="@([id$=Msg])" />
 													</p:selectOneMenu></td>
 												<td><p:message id="rptZoneMsg" for="Zone"
 														display="icon" showDetail="false" /></td>
@@ -163,6 +163,43 @@
 										</table>
 									</p:column>
 								</c:if>
+
+								<c:if
+									test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryZoneForSVOSVLView}">
+									<p:column>
+										<table style="width: 100%;">
+											<tr style="width: 100%;">
+												<td><p:outputLabel value="#{lbl['lbl.rpt.zone']}" /> <p:outputLabel
+														value="*" styleClass="mandatory" /></td>
+											</tr>
+										</table>
+									</p:column>
+									<p:column>
+										<table style="width: 100%;">
+											<tr>
+												<td><p:selectOneMenu label="#{lbl['lbl.rpt.zone']}"
+														id="Zone1" value="#{reportBackingBean.smZone}"
+														style="width:300px;">
+														<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+															itemValue="#{null}"></f:selectItem>
+														<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}"
+															itemValue="#{lbl['lbl.rpt.semenanjung']}"></f:selectItem>
+														<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}"
+															itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
+														<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
+															itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
+														<p:ajax event="change" partialSubmit="true"
+															listener="#{reportBackingBean.retrieveProcessingOfficerList}"
+															update="@form" />
+													</p:selectOneMenu></td>
+												<td><p:message id="rptZone1Msg" for="Zone1"
+														display="icon" showDetail="false" /></td>
+											</tr>
+										</table>
+									</p:column>
+								</c:if>
+
+
 							</c:if>
 						</c:if>
 
@@ -778,7 +815,7 @@
 													itemValue="K"></f:selectItem>
 												<p:ajax event="change"
 													listener="#{reportBackingBean.supplierTypeConsultant}"
-													partialSubmit="true" update="@form" />
+													partialSubmit="true" update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="supplierTypeMsg" for="SupplierType"
 												display="icon" showDetail="false" /></td>
@@ -1742,7 +1779,7 @@
 								<table style="width: 100%;">
 									<tr>
 										<td><p:selectOneMenu label="#{lbl['lbl.rpt.reportType']}"
-												value="#{reportBackingBean.smReportType}" id="ReportType" 
+												value="#{reportBackingBean.smReportType}" id="ReportType"
 												required="true" style="width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
@@ -1823,7 +1860,7 @@
 													itemValue="#{lbl['lbl.rpt.rpttyperejected']}"></f:selectItem>
 												<p:ajax event="change"
 													listener="#{reportBackingBean.changeReportType}"
-													partialSubmit="true" update="@all" />
+													partialSubmit="true" update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="smReportTypeMsg" for="ReportType"
 												display="icon" showDetail="false" /></td>
