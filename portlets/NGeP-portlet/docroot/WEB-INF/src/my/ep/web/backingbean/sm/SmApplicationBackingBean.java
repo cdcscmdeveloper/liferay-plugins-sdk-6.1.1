@@ -40,6 +40,9 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -133,6 +136,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -1242,12 +1246,12 @@ public class SmApplicationBackingBean extends
 
 		// for new application need to show confirm popup to save draft before
 		// proceed to next section
-//		if (!StringUtils.isBlank(applType)
-//				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-//				&& !getManagedBean().getSmAppl().isActiveAppl()) {
-//			RequestContext.getCurrentInstance().execute(
-//					"saveDraftConfirmDialog.show();");
-//		} else {
+		if (!StringUtils.isBlank(applType)
+				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& !getManagedBean().getSmAppl().isActiveAppl()) {
+			RequestContext.getCurrentInstance().execute(
+					"saveDraftConfirmDialog.show();");
+		} else {
 			if ((getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())
 					&& currentPageType
@@ -1316,7 +1320,7 @@ public class SmApplicationBackingBean extends
 					false);
 			log.info("******* Current page AFTER in managed bean ********"
 					+ getManagedBean().getCurrentPageType());
-//		}
+		}
 	}
 
 	/**
@@ -6992,7 +6996,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * After click yes in confirmation save application for first time
+	 * After click yes in confirmation save application for first time (New MOF
+	 * application only)
 	 */
 	public void confirmSaveDraftFirstTime() {
 		boolean valid = false;
@@ -7010,7 +7015,7 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (valid) {
-			setTabValue(0,1);
+			setTabValue(0, 1);
 			getManagedBean().setTabActiveIndex(outputTab);
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
 				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
@@ -7164,6 +7169,17 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()
 					.isSameAsHq());
 			resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
+			if (StringUtils.isBlank(getManagedBean().getTaskId())) {
+				BpmResponseDTO bpmResDTO = SmCommonUtil
+						.getBpmTaskDetails(resDTO.getSmAppl().getApplNo());
+				if (bpmResDTO != null) {
+					getManagedBean().setTaskName(bpmResDTO.getTaskName());
+					getManagedBean().setBpmActions(bpmResDTO.getAction());
+					getManagedBean().setTaskId(bpmResDTO.getTaskId());
+					getManagedBean().setDraftedAppl(true);
+					getManagedBean().setClaimTask(true);
+				}
+			}
 			if (resDTO != null) {
 				log.info("******* From SO ******** " + resDTO.isBpmSuccess());
 				valid = resDTO.isBpmSuccess();
