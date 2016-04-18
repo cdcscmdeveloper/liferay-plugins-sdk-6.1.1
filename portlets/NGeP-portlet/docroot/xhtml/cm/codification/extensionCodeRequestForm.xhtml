@@ -48,7 +48,8 @@
 					</tr>
 				</table>
 
-				<p:dataTable id="extCodeId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				<p:dataTable id="extCodeId"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowIndexVar="rowIndex"
 					value="#{unspscCodeBackingBean.managedBean.requestExtCodeList}"
 					var="ext">
 					<p:column>
@@ -76,6 +77,22 @@
 					</f:facet>
 						#{ext.colorName}
 					</p:column>
+					<p:column>
+						<f:facet name="header">
+						#{lbl['lbl.cm.action']}
+					</f:facet>
+						<p:commandLink title="#{lbl['lbl.cm.zm.edit']}" update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"
+							action="#{unspscCodeBackingBean.editExtensionRequest(rowIndex)}">
+							<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
+						</p:commandLink>
+						<p:commandLink style="margin-left: 10px;" update=":form:extCodeId"
+							title="#{lbl['lbl.btn.delete']}"
+							action="#{unspscCodeBackingBean.deleteExtensionRequest(rowIndex)}">
+							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+							<f:param name="index" value="#{rowIndex}"></f:param>
+						</p:commandLink>
+					</p:column>
+
 
 				</p:dataTable>
 				<h:panelGroup id="addBtnId">
