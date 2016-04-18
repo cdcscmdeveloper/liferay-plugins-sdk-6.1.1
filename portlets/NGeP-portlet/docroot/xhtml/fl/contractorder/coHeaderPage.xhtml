@@ -9,10 +9,10 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.request.no']} " /></td>
 				<td class="header-info-text">
-					<p:outputLabel rendered="#{flOrderBB.managedBean.supplier}" style="font-weight:normal !important"
+					<p:outputLabel rendered="#{flOrderBB.hasSupplierRole()}" style="font-weight:normal !important"
 					value="#{flOrderBB.managedBean.flRequest.docNo}"></p:outputLabel>
 					<p:commandLink  value="#{flOrderBB.managedBean.flRequest.docNo}" 
-					action="#{flOrderBB.navigateDocument(flOrderBB.managedBean.flRequest.docType)}" rendered="#{!flOrderBB.managedBean.supplier}"/></td>
+					action="#{flOrderBB.navigateDocument(flOrderBB.managedBean.flRequest.docType)}" rendered="#{!flOrderBB.hasSupplierRole()}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
 					#{flOrderBB.managedBean.fulfilmentOrder.docNo}</td>

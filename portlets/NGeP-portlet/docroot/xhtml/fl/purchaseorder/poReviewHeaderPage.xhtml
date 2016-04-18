@@ -10,12 +10,12 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.fl.purchase.request.no']} " /></td>
 				<td class="header-info-text">
-					<p:outputLabel rendered="#{flOrderBB.managedBean.supplier}" style="font-weight:normal !important"
+					<p:outputLabel rendered="#{flOrderBB.hasSupplierRole()}" style="font-weight:normal !important"
 					value="#{flOrderBB.managedBean.flRequest.docNo}"></p:outputLabel>
 					<p:commandLink
 						value="#{flOrderBB.managedBean.flRequest.docNo}"
 						action="#{flOrderBB.navigateDocument(flOrderBB.managedBean.flRequest.docType)}"
-						immediate="true" rendered="#{!flOrderBB.managedBean.supplier}"/></td>
+						immediate="true" rendered="#{!flOrderBB.hasSupplierRole()}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
 					#{flOrderBB.managedBean.fulfilmentOrder.docNo}</td>
