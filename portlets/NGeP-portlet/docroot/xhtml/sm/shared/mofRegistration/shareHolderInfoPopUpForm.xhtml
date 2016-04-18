@@ -679,22 +679,17 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" #{lbl['lbl.sm.year.from']}" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.year.from']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="margin-bottom : 5px;" size="35"
+				<td>
+					<p:selectOneMenu
 						required="#{backingBean.managedBean.valueReqd}"
-						id="equiJbFnInfYrFrm"
+						label="#{lbl['lbl.sm.year.from']}" id="equiJbFnInfYrFrm"
 						value="#{backingBean.managedBean.selectedJobFunction.fromYear}"
-						maxlength="4" label="#{lbl['lbl.sm.year.from']}">
-						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputText> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestJobFunction.fromYear}" 
-						currValue="#{backingBean.managedBean.selectedJobFunction.fromYear}" 
-						alertValue="#{backingBean.managedBean.latestJobFunction.fromYear}"/>
+						style="width: 107px;margin-bottom: 5px;">
+						<f:selectItems value="#{backingBean.getYearDropDown()}" />
+						<p:ajax process="@this" update="equiJbFnInfYrTo" partialSubmit="true"/>
+					</p:selectOneMenu> 
 					<p:message id="equiJbFnInfYrFrmMsg"
 						for=":form:tt:equiJbFnInfYrFrm" showSummary="true"
 						showDetail="false" display="icon" /></td>
@@ -702,20 +697,15 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.year.to']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="35"
+				<td>
+					<p:selectOneMenu disabled="#{empty backingBean.managedBean.selectedJobFunction.fromYear}"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.year.to']}" id="equiJbFnInfYrTo"
 						value="#{backingBean.managedBean.selectedJobFunction.toYear}"
-						maxlength="4">
-						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputText> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestJobFunction.toYear}" 
-						currValue="#{backingBean.managedBean.selectedJobFunction.toYear}" 
-						alertValue="#{backingBean.managedBean.latestJobFunction.toYear}"/>
+						style="width: 107px;margin-bottom: 5px;">
+						<f:selectItems value="#{backingBean.getYearsWorkExp()}" />
+						<p:ajax process="@this" update="@this" partialSubmit="true"/>
+					</p:selectOneMenu>
 					<p:message id="equiJbFnInfYrToMsg" for=":form:tt:equiJbFnInfYrTo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
