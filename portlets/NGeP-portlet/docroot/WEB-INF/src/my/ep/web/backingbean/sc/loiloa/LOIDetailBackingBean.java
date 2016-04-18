@@ -1877,8 +1877,8 @@ public class LOIDetailBackingBean extends
 			
 			parseLOIDetails(scLoi, outcome);
 			
-			//save or update pending loiloas
-			savePendingLois();
+			//pending loiloas
+			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
@@ -1886,6 +1886,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setPendingloiloas(pendingloiloas);
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
 
@@ -1898,6 +1899,25 @@ public class LOIDetailBackingBean extends
 
 		} finally {
 		}
+	}
+	
+	/**
+	 * Gets the pending loi loas.
+	 *
+	 * @param scLoi the sc loi
+	 * @param pendingloiloas the pendingloiloas
+	 * @return the pending loi loas
+	 */
+	private List<ScLoiLoa> getPendingLoiLoas(ScLoi scLoi, List<ScLoiLoa> pendingloiloas){
+		List<ScLoiLoa> results = new ArrayList<ScLoiLoa>();
+		for (ScLoiLoa scLoiLoa : pendingloiloas) {
+			if(scLoi != null && null != scLoi.getScLoiLoa()){
+				if(!scLoiLoa.getLoiLoaId().equals(scLoi.getScLoiLoa().getLoiLoaId())){
+					results.add(scLoiLoa);
+				}
+			}
+		}
+		return results;
 	}
 
 	/**
@@ -2063,8 +2083,8 @@ public class LOIDetailBackingBean extends
 			
 			parseLOIDetails(scLoi, outcome);
 			
-			//save or update pending loiloas
-			savePendingLois();
+			//pending loiloas
+			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
@@ -2077,6 +2097,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPayLoad(awardDataType);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setPendingloiloas(pendingloiloas);
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
 
@@ -5082,7 +5103,6 @@ public class LOIDetailBackingBean extends
 	 * @param recSupplierList the rec supplier list
 	 */
 	private void disableIsLoiRequired(List<ScLoiLoa> recSupplierList){
-		ScLoi scLoi = 	getManagedBean().getScLoi();
 		boolean isRequiredSubmitBtn = Boolean.TRUE;
 		getManagedBean().setRecSupplierList(recSupplierList);
 		for (ScLoiLoa scLoiLoa : recSupplierList) {
@@ -5100,13 +5120,6 @@ public class LOIDetailBackingBean extends
 
 			} else{
 				isRequiredSubmitBtn = Boolean.FALSE;
-			}
-
-			// update current ScLoiLoa Obj in loi after save pending loiloas
-			if(scLoi != null && null != scLoi.getScLoiLoa()){
-				if(scLoiLoa.getLoiLoaId().equals(scLoi.getScLoiLoa().getLoiLoaId())){
-					scLoi.setScLoiLoa(scLoiLoa);
-				}
 			}
 		}
 
