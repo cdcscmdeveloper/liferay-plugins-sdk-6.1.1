@@ -161,11 +161,10 @@
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purchase.year']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="4" size="50" label="#{lbl['lbl.sm.machine.purchase.year']}" 
-				required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseYear}">
-					      <f:validateLongRange minimum="1950" maximum="#{CommonConstants.CURRENT_YEAR}" />
-				</p:inputText>
-				</td>
+				<td><p:selectOneMenu label="#{lbl['lbl.sm.machine.purchase.year']}"  rendered="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine != null}"
+					value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseYear}" required="#{!empty param['disableMsgAutoUpdate']}">
+					<f:selectItems value="#{svoSiteVisitBackingBean.getYearDropDown()}" />
+				</p:selectOneMenu></td>
 			</tr>
 		</table>
 		
