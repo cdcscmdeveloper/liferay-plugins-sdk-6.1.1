@@ -23,13 +23,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.persistence.criteria.JoinType;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
@@ -50,7 +48,6 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -65,7 +62,6 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -77,12 +73,10 @@ import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
-import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -1247,19 +1241,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				log.debug("*********after***********");
 
 				// enable or disable simple quote in search catalogue
-				if (resDTO.getViewSuppItemResultBean().getResultList() != null
-						&& resDTO.getViewSuppItemResultBean().getResultList()
-								.size() > 0) {
-					setSimpleQuoteFlag(Boolean.TRUE);
-				} else {
-					setSimpleQuoteFlag(Boolean.FALSE);
+				if(null == getCatTypeFilterBean().getSearchValue()){
+					if (resDTO.getViewSuppItemResultBean().getResultList() != null
+							&& resDTO.getViewSuppItemResultBean().getResultList()
+							.size() > 0) {
+						setSimpleQuoteFlag(Boolean.TRUE);
+					} else {
+						setSimpleQuoteFlag(Boolean.FALSE);
+					}
 				}
-				
-				// disable sq button when tab search
-                if(getCatTypeFilterBean().getSearchValue() != null){
-                	setSimpleQuoteFlag(Boolean.TRUE);
-                }
-
 				SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
 				/*TemplateSpecBean productTemplateSpecBean = simpleQuoteBackingBean
 						.getManagedBean().getProductTemplateSpecBean();
