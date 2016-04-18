@@ -217,7 +217,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 *
 	 * @return true, if is supplier role
 	 */
-	protected boolean hasSupplierRole(){
+	public boolean hasSupplierRole(){
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 			return Boolean.TRUE;
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
