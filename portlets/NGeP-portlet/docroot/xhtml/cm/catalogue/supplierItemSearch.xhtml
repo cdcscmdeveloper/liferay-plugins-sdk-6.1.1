@@ -277,27 +277,22 @@
 								<p:menuitem id="allmi" value="#{lbl['lbl.cm.catalogue.all']}"
 									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('',0)}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-									oncomplete="updateCatButtons();"
 									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
 								<p:menuitem id="ccmi" value="#{lbl['lbl.cm.central.contract']}"
 									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('CC',1)}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-									oncomplete="updateCatButtons();"
 									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
 								<p:menuitem id="mcmi" value="#{lbl['lbl.cm.ministry.contract']}"
 									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('MC', 2)}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-									oncomplete="updateCatButtons();"
 									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
 								<p:menuitem id="pcmi" value="#{lbl['lbl.cm.panel.item']}"
 									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('PC',3)}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-									oncomplete="updateCatButtons();"
 									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
 								<p:menuitem id="xcmi" value="#{lbl['lbl.cm.non.contracted']}"
 									actionListener="#{catalogueBackingBean.setCatTypeAndTabIndex('XC',4)}"
 									action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-									oncomplete="updateCatButtons();"
 									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
 							</p:tabMenu>
 
