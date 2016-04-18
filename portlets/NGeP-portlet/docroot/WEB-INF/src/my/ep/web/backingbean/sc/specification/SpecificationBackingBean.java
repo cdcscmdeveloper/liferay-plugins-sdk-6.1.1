@@ -5058,7 +5058,9 @@ public class SpecificationBackingBean extends
 					ScQtZoneCriteria zoneCriteria = null;
 					if (null != supplierCriteria
 							&& null != supplierCriteria.getQtZoneCriterias()) {
+						if(this.getManagedBean().getQt().isZonal()){
 						zoneCriteria = supplierCriteria.getQtZoneCriterias();
+						}
 					}
 					TemplateSpecHelper.getInstance().updateZoneDtl(
 							templateSpecBean.getSpecMaster(), zoneCriteria);
@@ -12931,7 +12933,9 @@ public class SpecificationBackingBean extends
 				ScQtZoneCriteria zoneCriteria = null;
 				if (null != supplierCriteria
 						&& null != supplierCriteria.getQtZoneCriterias()) {
+					if(this.getManagedBean().getQt().isZonal()){
 					zoneCriteria = supplierCriteria.getQtZoneCriterias();
+					}
 				}
 				TemplateSpecHelper.getInstance().updateZoneDtl(
 						templateSpecBean.getSpecMaster(), zoneCriteria);
