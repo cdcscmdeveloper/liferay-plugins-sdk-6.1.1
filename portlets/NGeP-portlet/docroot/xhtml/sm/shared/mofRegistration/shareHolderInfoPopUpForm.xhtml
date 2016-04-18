@@ -1139,20 +1139,15 @@
 				<td style="width: 30%"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.contrat.year']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:inputText style="margin-bottom : 5px;"
-						maxlength="4" required="#{backingBean.managedBean.valueReqd}"
+				<td colspan="2">
+					<p:selectOneMenu
+						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sc.spec.contrat.year']}" id="equiStfAcaYr"
 						value="#{backingBean.managedBean.selectedStaffAcademic.year}"
-						size="35">
-						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputText> 
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges
-							and not empty backingBean.managedBean.latestStaffAcademic.staffAcademicId
-							and not empty backingBean.managedBean.latestPersonnel}"
-						oriValue="#{backingBean.managedBean.latestStaffAcademic.year}" 
-						currValue="#{backingBean.managedBean.selectedStaffAcademic.year}" 
-						alertValue="#{backingBean.managedBean.latestStaffAcademic.year}" />
+						style="width: 107px;margin-bottom: 5px;">
+						<f:selectItems value="#{backingBean.getYearDropDown()}" />
+						<p:ajax process="@this" update="@this" partialSubmit="true"/>
+					</p:selectOneMenu>
 					<p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
