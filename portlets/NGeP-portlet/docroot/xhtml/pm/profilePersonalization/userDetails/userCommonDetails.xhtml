@@ -42,7 +42,7 @@
 						</table>
 					</td>
 				</tr>
-				<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">	
+				<c:if test="#{profilePersonalizationBackingBean.managedBean.mofExpDateShown}">	
 					<tr>
 						<td>
 							<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.mof.exp']} : " />  
@@ -53,10 +53,10 @@
 						</td>
 					</tr>	
 				</c:if>
-				<c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
+				<c:if test="#{profilePersonalizationBackingBean.managedBean.softCertExpDateShown}">
 					<tr>
 						<td>
-							<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.softcert.exp']} :" />
+							<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.softcert.exp']} : " />
 							<h:outputText value="#{not empty softCertExpDate ? softCertExpDate : '-'}" >
 								<f:convertDateTime rendered="#{not empty softCertExpDate}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
