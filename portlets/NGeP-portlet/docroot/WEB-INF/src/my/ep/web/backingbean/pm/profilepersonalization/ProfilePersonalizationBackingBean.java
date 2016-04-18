@@ -1356,13 +1356,7 @@ public class ProfilePersonalizationBackingBean extends
 	}
 	
 	private void retrieveMofExpDate(PmOrgProfile orgProfile){
-		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.CM_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())){
+		if(isMofExpiryShown()){
 			if(orgProfile.getSmSupplier() != null 
 					&& orgProfile.getSmSupplier().getSmMofAccounts() != null 
 					&& !orgProfile.getSmSupplier().getSmMofAccounts().isEmpty())
@@ -1376,6 +1370,28 @@ public class ProfilePersonalizationBackingBean extends
 	}
 	
 	private void retrieveSoftCertExpDate(PmUser user){
+		if(isSoftCertExpiryShown()){
+			if(user.getPmUserDigiCert() != null && user.getPmUserDigiCert().getPmDigiCert() != null){
+				getManagedBean().setSoftCertExpDate(user.getPmUserDigiCert().getPmDigiCert().getValidTo());
+			}
+		}
+
+	}
+	
+	public boolean isMofExpiryShown(){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.CM_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isSoftCertExpiryShown(){
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
@@ -1384,11 +1400,9 @@ public class ProfilePersonalizationBackingBean extends
 				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())){
-			if(user.getPmUserDigiCert() != null && user.getPmUserDigiCert().getPmDigiCert() != null){
-				getManagedBean().setSoftCertExpDate(user.getPmUserDigiCert().getPmDigiCert().getValidTo());
-			}
+			return true;
 		}
-
+		return false;
 	}
 	
 	private void constructRolesString(){
@@ -1396,17 +1410,17 @@ public class ProfilePersonalizationBackingBean extends
 		
 		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
 			sb.append(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());
-			sb.append(",");;
+			sb.append("<br/>");;
 		}
-		
-		String roles = sb.toString();
-		if(StringUtils.isNotBlank(roles)){
-			getManagedBean().setRoles(roles.substring(0,roles.length()-1));
-		}
+		getManagedBean().setRoles(sb.toString());
+//		String roles = sb.toString();
+//		if(StringUtils.isNotBlank(roles)){
+//			getManagedBean().setRoles(roles.substring(0,roles.length()-1));
+//		}
 	}
 	
 	public int numberOfLines(String string, int cols) {
-		int rvalue = 2;
+		int rvalue = 1;
 		if(StringUtils.isNotBlank(string)){
 		    for (String strTmp : string.split("\n")) {
 		          rvalue ++;
