@@ -3483,22 +3483,47 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Get BPM task details by task ID
+	 * Get BPM task details by doc number
 	 * 
 	 * @param String
 	 *            taskId
 	 * @return BpmResponseDTO
 	 */
-	public static BpmResponseDTO getBpmTaskDetails(String taskId) {
-		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
+	public static BpmResponseDTO getBpmTaskDetails(String docNo) {
+		BpmResponseDTO resDTO = null;
+		String taskId = StringUtils.EMPTY;
 		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
-		reqDTO.setTaskId(taskId);
-		reqDTO.setToken(token);
-		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISdoReviewSO.class);
-		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO
-				.getBPMTaskDetails(reqDTO);
+		try {
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+			bpmReqDTO.setOffset(0);
+			bpmReqDTO.setState("ASSIGNED");
+			bpmReqDTO.setDocType("");
+			bpmReqDTO.setViewBy("ALL");
+			bpmReqDTO.setAssignment("ALL");
+			bpmReqDTO.setCtxToken(token);
+			resDTO = SmServiceLookup.getBpmSO().getWorklistItems(bpmReqDTO);
+			if (resDTO.getWorklistVO() != null
+					&& !EntityHelper.isCollectionEmpty(resDTO.getWorklistVO()
+							.getWorklistItem())) {
+				for (WorklistItemVO item : resDTO.getWorklistVO()
+						.getWorklistItem()) {
+					if (item.getDocNumber().equals(docNo)) {
+						taskId = item.getTaskId();
+					}
+					break;
+				}
+			}
+			SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
+			reqDTO.setTaskId(taskId);
+			reqDTO.setToken(token);
+			ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", ISdoReviewSO.class);
+			resDTO = (BpmResponseDTO) reqSO.getBPMTaskDetails(reqDTO);
+			resDTO.setTaskId(taskId);
+		} catch (Exception ex) {
+
+		}
 		return resDTO;
 	}
 
