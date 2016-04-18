@@ -71,7 +71,15 @@
 								consolidationReportBackingBean.getITEMIZED_TYPE_TAB_INDEX()}">
 				<ui:include
 					src="#{consolidationReportFolderPath}/supplierRecommendation/supplierRecommendation.xhtml" />
-			</c:if>			
+			</c:if>		
+			
+			<ac:confirmationPopup id="submissionPopupId" 
+				title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+				width="450" height="150" widget="submissionPopup" 
+				okAction="consolidationReportBackingBean.submitAction" 
+				content="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit']}" 
+				update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />	
+				
 		</p:panel>
 
 		<ui:include src="#{consolidationReportFolderPath}/supplierRecommendation/boardofDirectorsDetails.xhtml" />
@@ -92,13 +100,6 @@
 			</p:fileUpload>
 		</p:dialog>
 		
-		<ac:confirmationPopup id="submissionPopupId" 
-			title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
-			width="450" height="150" widget="submissionPopup" 
-			okAction="consolidationReportBackingBean.submitAction" 
-			content="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit']}" 
-			update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />		
-
 	</ui:define>
 
 </ui:composition>
