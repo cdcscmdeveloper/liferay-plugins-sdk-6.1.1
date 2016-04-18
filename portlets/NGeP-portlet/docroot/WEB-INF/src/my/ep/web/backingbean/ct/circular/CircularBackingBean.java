@@ -87,6 +87,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			circularDocTypes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			circularDocTypes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		}
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterType", SearchOperator.OPERATOR_EQUALS.value(), ParameterTypeConst.DOCUMENT_TYPES));
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), circularDocTypes));
 		return getDropdownCodeValuesBySearchBean(ParameterTypeConst.DOCUMENT_TYPES, searchBean);
 	}
