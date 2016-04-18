@@ -721,6 +721,12 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 				scQt.getScQtSupplierCriteria()
 						.setLocationLevel(new PmParameter());
 			}
+			if (CollectionUtils.isNotEmpty(this.getManagedBean()
+					.getQtSupplierList())) {
+				this.getManagedBean().setToBeRemoveRestrictedSupplierList(this.getManagedBean().getQtSupplierList());
+				this.getManagedBean().setQtSupplierList(null);
+				scQt.setScQtSuppliers(null);
+			}
 
 		} else {
 			if(scQt.getTmpExpectedIntendedPrice()== null){
