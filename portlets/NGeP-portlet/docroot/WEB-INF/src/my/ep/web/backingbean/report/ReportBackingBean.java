@@ -9619,6 +9619,8 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setSmZoneLabelView(false);
 			getManagedBean().getRptGenBean().setSmZoneView(false);
 			getManagedBean().getRptGenBean().setSmMandatoryZoneView(false);
+			getManagedBean().getRptGenBean().setSmMandatoryZoneForSVOSVLView(false);
+			
 			if ((null != this.getReportValue())
 					&& (this.getReportValue().equals(
 							ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL)
@@ -9726,9 +9728,15 @@ public class ReportBackingBean extends
 				} else {
 					// if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
 					// if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
-					getManagedBean().getRptGenBean().setSmZoneView(true);
-					getManagedBean().getRptGenBean().setSmMandatoryZoneView(
-							true);
+					if (!getManagedBean().getRptGenBean()
+							.isSmListOfSVOSVLView()) {
+						getManagedBean().getRptGenBean().setSmZoneView(true);
+						getManagedBean().getRptGenBean()
+								.setSmMandatoryZoneView(true);
+					} else {
+						getManagedBean().getRptGenBean()
+								.setSmMandatoryZoneForSVOSVLView(true);
+					}
 					// }
 
 				}
@@ -16845,7 +16853,8 @@ public class ReportBackingBean extends
 					Collections.<String, Object> emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
-		} finally {
+		} 
+		finally {
 			urlConnection.disconnect();
 		}
 
