@@ -215,13 +215,8 @@ public class ConsolidationReportBackingBean extends
 								= getManagedBean().getQualifiedSupppliersByZone();
 			
 			if (MapUtils.isNotEmpty(qualifiedSupppliersByZone)) {
-				if (qualifiedSupppliersByZone
-						.containsKey(selectedZone.getSpecZoneId())) {
-					qualifiedSuppliers = qualifiedSupppliersByZone
-												  .get(selectedZoneId);
-				} else {
-					qualifiedSuppliers = null;
-				}
+				qualifiedSuppliers = qualifiedSupppliersByZone
+										.get(selectedZoneId);
 			} else {
 				qualifiedSuppliers = null;
 			}
@@ -229,11 +224,11 @@ public class ConsolidationReportBackingBean extends
 				getManagedBean().setMaxRank(
 						String.valueOf(qualifiedSuppliers.size()));		
 			}
-			getManagedBean().setQualifiedSuppliers(qualifiedSuppliers);
 		} else {
 			populateScQtRecommendsByZone();
-			getManagedBean().setQualifiedSuppliers(qualifiedSuppliers);
 		}
+		
+		getManagedBean().setQualifiedSuppliers(qualifiedSuppliers);
 	}	
 	
 	/**
@@ -597,15 +592,37 @@ public class ConsolidationReportBackingBean extends
 	}
 	
 	private void setZoneAndTabIndexOnException(boolean isItemized, TplSpecZoneDtl zoneDtl) {
-		List<TplSpecZoneDtl> specZoneDtls 
-					= this.getManagedBean().getZoneDetails();
+		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean().getZoneDetails();
 		if (zoneDtl != null && 
 				CollectionUtils.isNotEmpty(specZoneDtls)) {
 			zoneDtl = getManagedBean().getZoneMap().get(zoneDtl.getSpecZoneId());
 			getManagedBean().setSelectedZone(zoneDtl);
 			getManagedBean().setZoneActiveIndex(
 						zoneDtl.getZoneTabIndex());
+			
+			if (!isItemized) {
+				Map<Long, List<ScQtEvaluationResultDtl>> qualifiedSupppliersByZone 
+								= getManagedBean().getQualifiedSupppliersByZone();
+
+				if (MapUtils.isNotEmpty(qualifiedSupppliersByZone)) {
+					getManagedBean().setQualifiedSuppliers(
+							qualifiedSupppliersByZone.get(zoneDtl.getSpecZoneId()));
+				}				
+			}
 		}
+		
+		if (isItemized) {
+			List<ScQtRecommend> itemList = null;
+			if (zoneDtl != null) {
+				Map<Long,List<ScQtRecommend>> itemsByZone =
+						getManagedBean().getScQtFinalization().getScQtRecommendsByZone();
+				itemList = itemsByZone.get(zoneDtl.getSpecZoneId());
+			} else {
+				itemList = getManagedBean().getScQtFinalization().getScQtRecommends();
+			}
+			getManagedBean().setItemsList(itemList);
+		}
+		
 		if (isItemized) {
 			navigateToItemizedTab();
 		} else {
@@ -995,7 +1012,7 @@ public class ConsolidationReportBackingBean extends
 								   List<ScQtEvaluationResultDtl> packageQualifiedSuppliers) {
 		if (CollectionUtils.isNotEmpty(
 				packageQualifiedSuppliers)) {
-			validateRanking(null, packageQualifiedSuppliers, 
+			validateRanking(packageQualifiedSuppliers, 
 							  false, specZoneDtl);
 		}
 		
@@ -1011,14 +1028,14 @@ public class ConsolidationReportBackingBean extends
 				}
 				if (CollectionUtils.isNotEmpty(
 							itemQualifiedSuppliers)) {
-					validateRanking(item, itemQualifiedSuppliers, 
+					validateRanking(itemQualifiedSuppliers, 
 									  true, specZoneDtl);
 				}
 			}
 		}
 	}
 	
-	private void validateRanking(ScQtRecommend item, List<ScQtEvaluationResultDtl> qualifiedSuppliers, 
+	private void validateRanking(List<ScQtEvaluationResultDtl> qualifiedSuppliers, 
 								   boolean isItemized, TplSpecZoneDtl specZoneDtl) {
 		int totalRanksCount = 0;
 		int totalQualifiedSuppliers = qualifiedSuppliers.size();
@@ -1046,24 +1063,27 @@ public class ConsolidationReportBackingBean extends
 							});
 		
 		int currentRank = 0;
+		EpException epException = null;
 		for (ScQtEvaluationResultDtl qualifiedSupp 
 								: qualifiedSuppliers) {
 			BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
 			if (deskOfficerRank != null) {
 				int doRank = deskOfficerRank.intValue();
 				if (doRank == currentRank) { 
-					setZoneAndTabIndexOnException(isItemized, specZoneDtl);
-					throw new EpException(MessageConst.ERROR_760381, 
+					epException = new EpException(MessageConst.ERROR_760381, 
 								new String[] {String.valueOf(currentRank)});
 				} else if (doRank > totalQualifiedSuppliers) {
-					setZoneAndTabIndexOnException(isItemized, specZoneDtl);
-					throw new EpException(MessageConst.ERROR_760382, 
+					epException = new EpException(MessageConst.ERROR_760382, 
 								new String[] {String.valueOf(totalQualifiedSuppliers)});
 				} else if (doRank != (currentRank + 1)) {
-					setZoneAndTabIndexOnException(isItemized, specZoneDtl);
-					throw new EpException(MessageConst.ERROR_760383, 
-								new String[] {String.valueOf(currentRank)});
+					epException = new EpException(MessageConst.ERROR_760383, 
+										new String[] {String.valueOf(currentRank)});
 				}
+				if (epException != null) {
+					setZoneAndTabIndexOnException(isItemized, specZoneDtl);
+					throw epException;
+				}
+				
 				currentRank = doRank;
 				++totalRanksCount;
 			}
