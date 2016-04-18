@@ -106,7 +106,11 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.remaining']}" /></td>
 					<td><p:inputText id="remaingQtyTxt" style="text-align:right;"
 							value="#{receivedNoteBackingBean.managedBean.remainingQty}"
-							size="15" disabled="true" styleClass="colFloatRight" /></td><td> <ac:iconTooltip
+							size="15" disabled="true" styleClass="colFloatRight">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+					<td> <ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.do.remain.qty']}" /></td>
 					<td></td>
 					<td></td>
