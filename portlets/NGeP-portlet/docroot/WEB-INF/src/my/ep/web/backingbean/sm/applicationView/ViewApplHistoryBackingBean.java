@@ -145,7 +145,8 @@ public class ViewApplHistoryBackingBean extends
 	private void initWorkflowStatus(SmAppl smAppl, int index) {
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER,
-						SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER);
+						SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER,
+						SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM);
 		SmWorkflowStatus sts = SmCommonUtil
 				.getCurrentActiveWokFlowStatus(smAppl.getApplId());
 		if (sts != null && sts.getPmStatus() != null) {
