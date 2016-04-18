@@ -12,106 +12,64 @@
 		<ui:param name="orgName" value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
 					 			profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
 					 			: profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
+		<ui:param name="mofExpDate" value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}" />
+		<ui:param name="softCertExpDate" value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}" />					 			
 		<p:outputPanel id="opUserCommonDet">
-				<table class="ppTwoTable">
-				<ui:remove>
+				<table class="ppTwoTable">				
 				<tr>
 					<td>
-						<p:outputLabel value="#{lbl['lbl.pm.profiles.navigation.org.code']}" />  
+						<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.organization']} : " />  
+						<h:outputText value="#{orgName}" /> 
 					</td>
-					<td>
-						<p:inputText id="itOrgCodeId" size="20"
-							value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
-					 			profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.epNo
-					 			: profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgCode}"
-							disabled="true"/>
-					</td>
-				</tr>
-				</ui:remove>
-				<tr>
-					<td width="40%">
-						<p:outputLabel value="#{lbl['lbl.pm.ucd.organization']}" />  
-					</td>
-					<td>
-						<p:inputTextarea id="itOrgNameId" 
-							rows="#{profilePersonalizationBackingBean.numberOfLines(orgName, 20)}"
-							cols="20"
-							value="#{orgName}"
-							disabled="true"/>
-					 </td>
 				</tr>
 				<tr>
 					<td>
-						<p:outputLabel value="#{lbl['lbl.pm.ucd.roles']}" />  
-					</td>
-					<td>
-						<p:inputTextarea id="itRolesId" 
-							rows="#{profilePersonalizationBackingBean.numberOfLines(
-								profilePersonalizationBackingBean.managedBean.roles, 20)}"
-							cols="20"
-							value="#{profilePersonalizationBackingBean.managedBean.roles}"
-							disabled="true"/>
+						<table>
+							<tr>
+								<td><h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.roles']} : " />  
+								</td>
+								<td><h:outputText escape="false" value="#{profilePersonalizationBackingBean.managedBean.roles}" /> 
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
-				<c:if test="#{not empty profilePersonalizationBackingBean.managedBean.mofExpDate}">	
+				<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">	
 					<tr>
 						<td>
-							<p:outputLabel value="#{lbl['lbl.pm.ucd.mof.exp']}" />  
-						</td>
-						<td>
-							<p:inputText id="itMofExpDate" size="20"
-								value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
-								disabled="true">
-								<f:convertDateTime
+							<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.mof.exp']} : " />  
+							<h:outputText value="#{not empty mofExpDate ? mofExpDate : '-'}">
+								<f:convertDateTime rendered="#{not empty mofExpDate}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</p:inputText>
+							</h:outputText>  
 						</td>
 					</tr>	
 				</c:if>
-				<c:if test="#{not empty profilePersonalizationBackingBean.managedBean.softCertExpDate}">
+				<c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
 					<tr>
 						<td>
-							<p:outputLabel value="#{lbl['lbl.pm.ucd.softcert.exp']}" />  
-						</td>
-						<td>
-							<p:inputText id="itSoftCertId" size="20"
-								value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}"
-								disabled="true">
-								<f:convertDateTime
+							<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.softcert.exp']} :" />
+							<h:outputText value="#{not empty softCertExpDate ? softCertExpDate : '-'}" >
+								<f:convertDateTime rendered="#{not empty softCertExpDate}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</p:inputText>
+							</h:outputText>   
 						</td>
 					</tr>	
 				</c:if>
-				
 				<tr>
-					<td>
-						<p:outputLabel value="#{lbl['lbl.pm.ucd.notification']}" />  
-					</td>
-					<td>
-						
-					</td>
-				</tr>	
-				<tr>
-				<th>
-					<p:outputLabel value=" #{lbl['lbl.pm.ucd.email']}"/>				
-				</th>
 				<td>
 					<p:selectBooleanCheckbox id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" 
 						disabled="true" /> 
-					<p:inputText id="itEmail" disabled="true" size="20"
-							value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}"/>
+					<h:outputText style="font-weight:bold;" value=" #{lbl['lbl.pm.ucd.email']} : "/>	
+					<h:outputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}"/>			
 				</td>
 			</tr>
 			<tr>
-				<th>
-					<p:outputLabel value=" #{lbl['lbl.pm.ucd.sms']}"/>	
-				</th>
-				<td>					
+				<td>
 					<p:selectBooleanCheckbox id="itPreSms" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" 
-						disabled="true" />					 
-					<p:inputText id="itMobileNo" disabled="true" size="20"
-							value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull}"/>
+						disabled="true" />	
+					<h:outputText style="font-weight:bold;" value=" #{lbl['lbl.pm.ucd.sms']} : "/>	
+					<h:outputText	value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull}"/>
 				</td>				
 			</tr>				
 				</table>
