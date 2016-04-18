@@ -51,8 +51,6 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private String roles;
 	private Date softCertExpDate;
 	private Date mofExpDate;
-	private boolean mofExpDateShown;
-	private boolean softCertExpDateShown;
 	
 /**
 	 * @return the addressEntered
@@ -287,37 +285,6 @@ public boolean isProfileChanged() {
 	public void setMofExpDate(Date mofExpDate) {
 		this.mofExpDate = mofExpDate;
 	}
-
-	/**
-	 * @return the softCertExpDateShown
-	 */
-	public boolean isSoftCertExpDateShown() {
-		return softCertExpDateShown;
-	}
-
-	/**
-	 * @param softCertExpDateShown the softCertExpDateShown to set
-	 */
-	public void setSoftCertExpDateShown(boolean softCertExpDateShown) {
-		this.softCertExpDateShown = softCertExpDateShown;
-	}
-
-	/**
-	 * @return the mofExpDateShown
-	 */
-	public boolean isMofExpDateShown() {
-		return mofExpDateShown;
-	}
-
-	/**
-	 * @param mofExpDateShown the mofExpDateShown to set
-	 */
-	public void setMofExpDateShown(boolean mofExpDateShown) {
-		this.mofExpDateShown = mofExpDateShown;
-	}
-
-	
-
 
 }	
 	
