@@ -892,13 +892,19 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			orderTotalAmount = orderTotalAmount.add(invSummary.getOrderedAmt());
 			for(FlInvoiceItem invItem : invSummary.getFlInvoiceItem()){
 				if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
-					gstAmount = (new BigDecimal(invItem.getGstAmount().doubleValue() * (invItem.getReceivedQty().doubleValue())));
-					gstTotalAmount = gstTotalAmount.add(gstAmount);
+					if(invSummary.getFlFulfilmentItem().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+						Double serviceFee = 100 + getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue();
+						BigDecimal serviceGstAmount = (new BigDecimal((invItem.getDeliveryAmt().doubleValue() * getManagedBean().getInvoice().getFlRequest().getGstRate().doubleValue()) / serviceFee));
+						gstTotalAmount = gstTotalAmount.add(serviceGstAmount);
+					}else{
+						gstAmount = (new BigDecimal(invItem.getGstAmount().doubleValue() * (invItem.getReceivedQty().doubleValue())));
+						gstTotalAmount = gstTotalAmount.add(gstAmount);
+					}
 				}
 			}
 		}
 		if(gstTotalAmount.doubleValue()>0) {
-			getManagedBean().setGstAmount(gstTotalAmount);
+			getManagedBean().setGstAmount(gstTotalAmount.setScale(2, RoundingMode.HALF_UP));
 		} else {
 			getManagedBean().setGstAmount(BigDecimal.ZERO);
 		}
