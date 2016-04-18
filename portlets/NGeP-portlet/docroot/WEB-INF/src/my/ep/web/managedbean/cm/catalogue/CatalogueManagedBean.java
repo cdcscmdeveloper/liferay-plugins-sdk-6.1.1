@@ -1254,6 +1254,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				} else {
 					setSimpleQuoteFlag(Boolean.FALSE);
 				}
+				
+				// disable sq button when tab search
+                if(getCatTypeFilterBean().getSearchValue() != null){
+                	setSimpleQuoteFlag(Boolean.TRUE);
+                }
 
 				SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
 				/*TemplateSpecBean productTemplateSpecBean = simpleQuoteBackingBean
