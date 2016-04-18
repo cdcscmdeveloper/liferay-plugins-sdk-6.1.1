@@ -463,14 +463,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 			getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 		}
-		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-		if(getManagedBean().getFlRequest() != null){
-			if(getManagedBean().getFlRequest().getFulfilmentReqId() != null){
-				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFlRequest().getDocType(), getManagedBean().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-				if(actor != null){
-					getManagedBean().setSelectedApprover(actor.getUser().getUserId());
-				}
-			}
+		if(getManagedBean().getFlRequest().getApproverId() != null){
+			getManagedBean().setSelectedApprover(getManagedBean().getFlRequest().getApproverId());
 		}
 		
 		if(isFlFulfilmentRequisitioner()){

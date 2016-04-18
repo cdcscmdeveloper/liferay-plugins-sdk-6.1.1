@@ -391,14 +391,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setSelectedTabIndex(0);
 
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
-		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-		if(resDTO.getFlFulfilmentRequest() != null){
-			if(resDTO.getFlFulfilmentRequest().getFulfilmentReqId() != null){
-				FlActor actor = fulfilmentSO.retrieveFlActors(resDTO.getFlFulfilmentRequest().getDocType(), resDTO.getFlFulfilmentRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-				if(actor != null){
-					getManagedBean().setSelectedApprover(actor.getUser().getUserId());
-				}
-			}
+		if(resDTO.getFlFulfilmentRequest().getApproverId() != null){
+			getManagedBean().setSelectedApprover(resDTO.getFlFulfilmentRequest().getApproverId());
 		}
 		if(isFlFulfilmentRequisitioner()){
 			initializeApproverGroup();
