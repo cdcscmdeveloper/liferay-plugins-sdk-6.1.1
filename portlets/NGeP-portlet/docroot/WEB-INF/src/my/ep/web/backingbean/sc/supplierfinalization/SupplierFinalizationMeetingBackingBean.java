@@ -695,7 +695,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setPmUser(pmUser);
+			reqDTO.setUser(pmUser);
 			reqDTO.setRoleCode(chairPersonRoleCode.toString());
 			reqDTO.setCommitteeType(committeeType);
 			
