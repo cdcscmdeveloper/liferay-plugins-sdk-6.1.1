@@ -18,17 +18,25 @@
 				<table class="ppTwoTable">				
 				<tr>
 					<td>
-						<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.organization']} : " />  
-						<h:outputText value="#{orgName}" /> 
+						<table>
+							<tr>
+								<td style="padding-left: 0px;width:5%;white-space:nowrap;">
+									<h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.organization']} : " />  
+								</td>
+								<td>
+									<h:outputText style="white-space:normal;" value="#{orgName}" /> 
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<table>
 							<tr>
-								<td style="padding-left: 0px;"><h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.roles']} : " />  
+								<td style="padding-left: 0px;width:5%;white-space:nowrap;"><h:outputText style="font-weight:bold;" value="#{lbl['lbl.pm.ucd.roles']} : " />  
 								</td>
-								<td><h:outputText escape="false" value="#{profilePersonalizationBackingBean.managedBean.roles}" /> 
+								<td><h:outputText style="white-space:normal;" escape="false" value="#{profilePersonalizationBackingBean.managedBean.roles}" /> 
 								</td>
 							</tr>
 						</table>
