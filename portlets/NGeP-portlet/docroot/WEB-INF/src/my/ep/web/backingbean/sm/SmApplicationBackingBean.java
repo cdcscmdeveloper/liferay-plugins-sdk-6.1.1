@@ -983,6 +983,9 @@ public class SmApplicationBackingBean extends
 				SmCommonUtil.getInstance().getMachineItemsByCatTypeCode(
 						ParameterConst.CATEGORY_TYPE_TRAVEL));
 
+		// set years drop down
+		getManagedBean().setYearsItems(Arrays.asList(getYearDropDown()));
+
 		getManagedBean().setRegStatusDescList(
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
@@ -1462,6 +1465,33 @@ public class SmApplicationBackingBean extends
 	 */
 	public String getOwnershipTypeLabel(String ownershipType) {
 		return SmCommonUtil.getOwnershipTypeLabel(ownershipType);
+	}
+
+	public List<SelectItem> getYearsWorkExp() {
+		List<SelectItem> initYears = Arrays.asList(getYearDropDown());
+		List<SelectItem> selectYears = new ArrayList<SelectItem>();
+		if (initYears != null
+				&& getManagedBean().getSelectedJobFunction() != null
+				&& getManagedBean().getSelectedJobFunction().getFromYear() != null
+				&& getManagedBean().getSelectedJobFunction().getFromYear()
+						.compareTo(0) != 0) {
+			int minYear = Integer.parseInt(getManagedBean()
+					.getSelectedJobFunction().getFromYear().toString());
+
+			Iterator<SelectItem> itemIt = initYears.iterator();
+			while (itemIt.hasNext()) {
+				SelectItem item = itemIt.next();
+				if (item.getValue() != null) {
+					int tmp = Integer.parseInt(item.getValue().toString());
+					if (tmp >= minYear) {
+						selectYears.add(item);
+					}
+				}else{
+					selectYears.add(item);
+				}
+			}
+		}
+		return selectYears;
 	}
 
 	/**
