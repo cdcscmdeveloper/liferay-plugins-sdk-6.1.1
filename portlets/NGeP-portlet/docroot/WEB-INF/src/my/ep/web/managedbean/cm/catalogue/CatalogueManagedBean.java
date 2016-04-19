@@ -1638,7 +1638,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.min.order",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.delivery.term",
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.delivery.term.days",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		compareLabel.add(ResourceBundleUtils.getMessage(
 				"lbl.cm.additional.item.description",
