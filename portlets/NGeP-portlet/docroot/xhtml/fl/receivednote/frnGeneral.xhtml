@@ -97,11 +97,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.frn.acknowledged.date']}" /></td>
-				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.acknowledgeDate}">
+				<td><p:outputLabel value="#{lbl['lbl.fl.frn.acknowledged.date']}" rendered="#{receivedNoteBackingBean.managedBean.acknowledgeDate != null}"/></td>
+				<td><p:inputText size="10" disabled="true" value="#{receivedNoteBackingBean.managedBean.acknowledgeDate}" rendered="#{receivedNoteBackingBean.managedBean.acknowledgeDate != null}">
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.subb.date']}"/></td>
+				</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.subb.date']}" rendered="#{receivedNoteBackingBean.managedBean.acknowledgeDate != null}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel

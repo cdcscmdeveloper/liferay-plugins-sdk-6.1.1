@@ -62,6 +62,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -497,8 +498,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		if(isFlFulfilmentApprover() || getManagedBean().isFlDocMaintain()){
 			getManagedBean().getFulfilmentRequest().setSubmissionDate(getManagedBean().getFulfilmentRequest().getSubmissionDate());
-		}else {
-			getManagedBean().getFulfilmentRequest().setSubmissionDate(new Timestamp(System.currentTimeMillis()));
 		}
 		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 				getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
@@ -3708,6 +3707,56 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	public void setSelectedPmOrgProfile(PmOrgProfile selectedPmOrgProfile) {
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+	
+	/**
+	 * Retrieve purchase request by fulfilment request id and display in UI
+	 *
+	 */
+	public void viewPurchaseRequest() {
+		IFulfilmentRequestSO fulfilmentRequestSO =(IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String fulfilmentReqId = originalServletRequest.getParameter("fulfilmentReqId");
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		if(fulfilmentReqId!=null) {
+			reqDTO.setFlRequestId(Long.valueOf(fulfilmentReqId));
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+//			reqDTO.setFrnLink(Boolean.TRUE);
+			renewSesionObject();
+			try {
+				resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
+			} catch (EpException e) {
+				handleException(e);
+				return;
+			}
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
+//			getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			
+			getManagedBean().setPmUser(reqDTO.getPmUser());
+			getManagedBean().setButtonVal("View");
+			
+			flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+			getManagedBean().setSubmitButtonStatus(false);
+			getManagedBean().setFlDocId(fulfilmentReqId);
+			getManagedBean().setFlDocMaintain(true);
+			
+			setFulfilmentRequestField(resDTO);
+			getManagedBean().setBackToDocument(null);
+			flBB.getManagedBean().setHideRemarks(true);
+			getManagedBean().setDeclarationCheck(true);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage?faces-redirect=true");
+		}
 	}
 	
 }

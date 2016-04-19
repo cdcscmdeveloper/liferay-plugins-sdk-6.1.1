@@ -195,9 +195,9 @@
 						</p:selectOneMenu> 
 					</td>
 					<td><p:message for="reasonId" display="icon" /></td>
-					<td style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
+					<td style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" rendered="#{stopInstrBB.managedBean.stopInstr.createdDate != null}"/></td>
 					<td>
-						<p:inputText value="#{stopInstrBB.managedBean.stopInstr.createdDate}" disabled="true">
+						<p:inputText value="#{stopInstrBB.managedBean.stopInstr.createdDate}" disabled="true" rendered="#{stopInstrBB.managedBean.stopInstr.createdDate != null}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText> 
 					</td>

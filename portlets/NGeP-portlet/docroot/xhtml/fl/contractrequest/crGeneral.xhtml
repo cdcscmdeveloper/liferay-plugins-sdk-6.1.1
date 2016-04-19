@@ -138,15 +138,15 @@
 							</ui:remove>
 						</tr>
 					</table></td>
-				<td colspan="2"><p:outputLabel
+				<td colspan="2"><p:outputLabel rendered="#{contractRequestBackingBean.managedBean.flRequest.submissionDate != null}"
 						value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td>	
-				<p:inputText size="25" disabled="true"
+				<p:inputText size="25" disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.submissionDate != null}"
 					value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" /></td>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.submissionDate != null}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>

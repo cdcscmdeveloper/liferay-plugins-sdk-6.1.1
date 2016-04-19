@@ -355,12 +355,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
-					if(getManagedBean().getFlApprover() == null){
-						FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-						if(actor != null){
-							getManagedBean().setFlApprover(actor.getUser());
-							getManagedBean().setAcknowledgeDate(actor.getActionDate());
-						}
+					if(getManagedBean().getFulfilmentNote().getApproverId() != null){
+						getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApproverId());
 					}
 				} else {
 					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -368,15 +364,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 					getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-					
-					if(getManagedBean().getFlApprover() == null){
-						FlActor actor = iFulfilmentSO.retrieveFlActors(resDTO.getFlDeliveryOrder().getFlRequest().getDocType(), resDTO.getFlDeliveryOrder().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-						if(actor != null){
-							getManagedBean().setFlApprover(actor.getUser());
-							getManagedBean().setAcknowledgeDate(actor.getActionDate());
-						}
-						
-					}
 					
 					getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 					// Default status
@@ -942,9 +929,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setAcknowledged(true);
 			getManagedBean().setButtonVal("View");
 			if(getManagedBean().getFlApprover() == null){
-				FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+				FlActor actor = iFulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.ACKNOWLEDGE_OFFICER.value());
 				if(actor != null){
-					getManagedBean().setFlApprover(actor.getUser());
 					getManagedBean().setAcknowledgeDate(actor.getActionDate());
 				}
 			}
@@ -1136,8 +1122,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 		getSupplierGst(getManagedBean().getFulfilmentNote());
 	
-		if(getManagedBean().getFlApprover() != null){
-			getManagedBean().setUserLoginId(getManagedBean().getFlApprover().getUserId()); 
+		if(getManagedBean().getFulfilmentNote().getApproverId() != null){
+			getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApproverId()); 
 		}
 		getManagedBean().setSelectedTabIndex(0);
 
