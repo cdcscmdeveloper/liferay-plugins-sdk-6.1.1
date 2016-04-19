@@ -42,7 +42,7 @@
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View' or purchaseRequestBackingBean.isFlFulfilmentApprover()}"
-						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true" size="65"
+						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName,:form:ptjGroup,:form:controlOff,:form:agOffice" readonly="true" size="65"
 						postUpdateListener="purchaseRequestBackingBean.getAgAccount"
 						conditionField="#{purchaseRequestBackingBean.getPreparedPTJCondition()}"
 						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
