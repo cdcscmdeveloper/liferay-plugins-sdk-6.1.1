@@ -19,11 +19,11 @@ import my.ep.web.scheduler.job.eperunding.GovernmentProjectJob;
 import my.ep.web.scheduler.job.eperunding.ManagementPersonnelJob;
 import my.ep.web.scheduler.job.eperunding.RegisteredCategoryJob;
 import my.ep.web.scheduler.job.eperunding.SignatoryJob;
+import my.ep.web.scheduler.job.gfmas.ErrorReceiptInformationJob;
 import my.ep.web.scheduler.job.gfmas.MasterDataVendorInboundJob;
 import my.ep.web.scheduler.job.gfmas.MasterDataVendorOutboundJob;
 import my.ep.web.scheduler.job.gfmas.ReceiptInformationJob;
 import my.ep.web.scheduler.job.sm.CheckBasicAccountExpirationJob;
-import my.ep.web.scheduler.job.sm.DeletePendingActivationJob;
 import my.ep.web.scheduler.job.sm.MOFApplicationPaymentReminderJob;
 import my.ep.web.scheduler.job.sm.SoftCertRenewalReminderJob;
 import my.ep.web.scheduler.job.sm.SupportingDocumentReminderJob;
@@ -72,7 +72,7 @@ public class SmSchedulerServlet extends HttpServlet {
 				SupportingDocumentReminderJob.class,
 				SchedulerConstants.SM_APP_OFFLINE_SUPPORTING_DOC_REMINDER_DESC,
 				SchedulerConstants.SM_DAILY_SUPPORTING_DOC_REMINDER_TIMER);
-
+		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.SM_CHECK_BASIC_ACCOUNT_EXPIRATION_JOB,
 				SchedulerConstants.SM_JOB_GROUP),
@@ -86,12 +86,18 @@ public class SmSchedulerServlet extends HttpServlet {
 				SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 				MasterDataVendorOutboundJob.class, SchedulerConstants.GFMAS_SM_OUT_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));
-				
+		
 		EpSchedulerHelper.scheduleJob(new JobKey(
+				SchedulerConstants.GFMAS_ERR_RECEIPT_INFORMATION,
+				SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+				ErrorReceiptInformationJob.class, SchedulerConstants.GFMAS_SM_RECEIPT_IN_JOB_DESC,
+				EpPropertiesUtils.getInstance().getProperty("0 0 7 * * ?"));  
+				
+			EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.GFMAS_RECEIPT_INFORMATION,
 				SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 				ReceiptInformationJob.class, SchedulerConstants.GFMAS_SM_RECEIPT_OUT_JOB_DESC,
-				EpPropertiesUtils.getInstance().getProperty("1gfmas.smp.Outbound"));
+				EpPropertiesUtils.getInstance().getProperty("0 0 6 * * ?"));  
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.GFMAS_VENDOR_INBOUND,
@@ -165,7 +171,6 @@ public class SmSchedulerServlet extends HttpServlet {
 				SchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
 				DeletedCompanyJob.class, SchedulerConstants.EPERUNDING_INTEGRATION_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("eperunding.sm.outbound11"));
-		
 		
 		log.info("end init sm scheduler servlet....");
 
