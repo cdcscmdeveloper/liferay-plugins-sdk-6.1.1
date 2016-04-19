@@ -173,6 +173,8 @@ public class SchedulerConstants {
 	
 	public static final String GFMAS_RECEIPT_INFORMATION = "RECEIPT INFORMATION JOB";
 	
+	public static final String GFMAS_ERR_RECEIPT_INFORMATION = "ERROR RECEIPT INFORMATION JOB";
+	
 //	1GFMAS IN BOUND
 	
 	public static final String GFMAS_MASTER_DATA_INBOUND = "MASTER GL DATA JOB(Inbound)";
@@ -196,7 +198,8 @@ public class SchedulerConstants {
 	public static final String GFMAS_SC_OUT_JOB_DESC = "Job run once daily 8 AM";
 	public static final String GFMAS_FL_IN_JOB_DESC = "Job runs every 1 hour";
 	public static final String GFMAS_SM_OUT_JOB_DESC = "Job run every 5 minute";
-	public static final String GFMAS_SM_RECEIPT_OUT_JOB_DESC = "Job runs every 1 hour";
+	public static final String GFMAS_SM_RECEIPT_OUT_JOB_DESC = "Job run once daily 6 AM";
+	public static final String GFMAS_SM_RECEIPT_IN_JOB_DESC = "Job run once daily 7 AM";
 	public static final String GFMAS_MASTERDATA_MATERIAL_JOB_DESC = "Job run twice daily 8 AM and 8 PM";
 
 	// NOTIFICATIONS
