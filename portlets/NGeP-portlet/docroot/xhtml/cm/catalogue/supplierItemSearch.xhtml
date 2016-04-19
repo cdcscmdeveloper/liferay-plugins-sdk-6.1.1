@@ -450,7 +450,7 @@
 											oncomplete="blockWidget.hide();" />
 										<p:menuitem value="#{lbl['lbl.cm.add.to.compare']}"
 											actionListener="#{catalogueBackingBean.addToList(supplierItem,3)}"
-											update="@([id$=btnId])" icon="ui-icon-plus"
+											update="@form" icon="ui-icon-plus"
 											rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"
 											onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();" />
