@@ -147,7 +147,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.branchName}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
+						value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.branchName)}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 				
 			</tr>
 			<tr>
@@ -166,11 +166,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="13"
 									disabled="true"
-									value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.phoneNoFull}" /></td>
+									value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.phoneNoFull)}" /></td>
 							<td style="width: 80px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="14" disabled="true"
-									value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.faxNoFull}" /></td>
+									value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.faxNoFull)}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -178,18 +178,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
+						value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactPerson)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
+						value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactEmail)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull}" /></td>
+						value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel
@@ -243,11 +243,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="13"
 									disabled="true"
-									value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.phoneNoFull}" /></td>
+									value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.phoneNoFull)}" /></td>
 							<td style="width: 80px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="11" disabled="true"
-									value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.faxNoFull}" /></td>
+									value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.faxNoFull)}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -255,19 +255,19 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactPerson}" /></td>
+						value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactPerson)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText size="45"
-						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactEmail}"
+						value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactEmail)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactPhoneNoFull}" /></td>
+						value="#{invoiceBackingBean.getText(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factoringAddress.contactPhoneNoFull)}" /></td>
 			</tr>
 		</table>
 	</p:panel>
