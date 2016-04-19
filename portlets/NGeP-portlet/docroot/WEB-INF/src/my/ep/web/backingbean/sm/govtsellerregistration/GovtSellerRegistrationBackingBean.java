@@ -1104,7 +1104,7 @@ public class GovtSellerRegistrationBackingBean extends
 			throw new EpException(MessageConst.ERROR_721013);
 		}
 		// validate IC with MyIdentity
-		getInstance().verifyWithMyIdentity(personnel.getName(),
+		SmCommonUtil.getInstance().verifyWithMyIdentity(personnel.getName(),
 				personnel.getIdentificationNo(),
 				getManagedBean().getSmPermenantAdd().getPostcode());
 
