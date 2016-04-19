@@ -83,6 +83,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private Long bidCancelled = BidStatusConst.BID_CANCELLED;
 	private Long bidCompleted = BidStatusConst.BID_COMPLETED;
 
+	private boolean isBidPaused = false;
+
 	private BigDecimal itemStartPriceTotal;
 	private BigDecimal itemLastBidPriceTotal;
 	private BigDecimal itemNewBidPriceTotal;
@@ -134,7 +136,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 						.getRuleValueList().get(0);
 				BigDecimal tolerancePercentage = new BigDecimal(
 						configRulevalue.getRuleValue());
-				this.setTolerancePrice(tolerancePercentage);
+				BigDecimal tolerancePrice = (new BigDecimal(100))
+						.subtract(tolerancePercentage);
+				this.setTolerancePrice(tolerancePrice);
 			}
 
 		} finally {
@@ -194,8 +198,13 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				setScBidSchedule(bidSchedule);
 				if (null != bidSchedule) {
 					setSelectedBidScheduleId(bidSchedule.getBidScheduleId());
+					if (bidSchedule.getPmStatus().getStatusId()
+							.equals(BidStatusConst.BID_PAUSED)) {
+						this.setBidPaused(true);
+					} else {
+						this.setBidPaused(false);
+					}
 				}
-
 				setBidContactPersons(resDTO.getBidContactPersons());
 				setSmSupplier(resDTO.getSmSupplier());
 
@@ -253,8 +262,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.getExternalContext();
 
 		externalContext.redirect(commonUrl + "/"
-				+ SourcingConstants.NAV_PAGE_ONLINE_BIDDING + SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID + SourcingConstants.NAV_PARAM_SEPARATOR
-				+ bidScheduleId);
+				+ SourcingConstants.NAV_PAGE_ONLINE_BIDDING
+				+ SourcingConstants.NAV_PARAM_BID_SCHEDULE_ID
+				+ SourcingConstants.NAV_PARAM_SEPARATOR + bidScheduleId);
 	}
 
 	/**
@@ -270,9 +280,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
 				getSmSupplier().getSupplierId());
 		if (getScBidSchedule().getPmStatus().getStatusId()
-						.equals(BidStatusConst.BID_PAUSED)) {
+				.equals(BidStatusConst.BID_PAUSED)) {
 			RequestContext.getCurrentInstance().execute(
 					"onlineBiddingNotification.show()");
+		}
+		if (this.isBidPaused()
+				&& getScBidSchedule().getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_IN_PROGRESS)) {
+			navigateUsingExternalContext(getScBidSchedule().getBidScheduleId());
 		}
 
 	}
@@ -311,21 +326,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 					}
 				}
-				setBidPrices(fetchedBidPrices);
-				setScBidSchedule(resDTO.getScBidSchedule());
-				/*
-				 * if (scBidSchedule .getPmStatus() .getStatusId()
-				 * .equals(resDTO.getScBidSchedule().getPmStatus()
-				 * .getStatusId())) {
-				 * setScBidSchedule(resDTO.getScBidSchedule()); } else {
-				 * setScBidSchedule(resDTO.getScBidSchedule()); if
-				 * (getScBidSchedule().getPmStatus().getStatusId()
-				 * .equals(BidStatusConst.BID_CANCELLED) ||
-				 * getScBidSchedule().getPmStatus().getStatusId()
-				 * .equals(BidStatusConst.BID_PAUSED)) {
-				 * RequestContext.getCurrentInstance().execute(
-				 * "onlineBiddingNotification.show()"); } }
-				 */
+				this.setBidPrices(fetchedBidPrices);
+				this.setScBidSchedule(resDTO.getScBidSchedule());
+
 			}
 		} finally {
 			biddingSO = null;
@@ -470,9 +473,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		BigDecimal newPrice = null;
 		Double lastBidpriceTotal = null;
 		Double newBidpriceTotal = null;
-		if (scBidPrice.getNewPrice().remainder(
-				scBidPrice.getScBidSupplierItem().getScBidItem()
-						.getDecrementAmt()).compareTo(BigDecimal.valueOf(0)) != 0) {
+		if (scBidPrice
+				.getNewPrice()
+				.remainder(
+						scBidPrice.getScBidSupplierItem().getScBidItem()
+								.getDecrementAmt())
+				.compareTo(BigDecimal.valueOf(0)) != 0) {
 			throw new EpException(MessageConst.ERROR_760301);
 		}
 		if (scBidPrice.getBidPrice() == null
@@ -498,9 +504,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		if (this.getScBidSchedule().getScBid().getRecommendedTypeId()
 				.getParameterCode().equals("P")) {
-			BigDecimal tolerancePrice = (this.getScBidSchedule().getScBid()
-					.getEstimatedCost().multiply(this.tolerancePrice))
-					.divide(new BigDecimal(100));
+			BigDecimal dividend = this.getScBidSchedule()
+					.getPackageEstimateCost().multiply(this.tolerancePrice);
+			BigDecimal tolerancePrice = dividend.divide(new BigDecimal(100));
+			System.out.println("Tolerance price"+tolerancePrice);
 			if (getItemNewBidPriceTotal().doubleValue() < tolerancePrice
 					.doubleValue()) {
 				throw new EpException(MessageConst.ERROR_760369);
@@ -512,9 +519,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			Double diffPercentage = ((lastBidpriceTotal - newBidpriceTotal) / lastBidpriceTotal) * 100;
 			if (diffPercentage > 10) {
 
-				System.out
-						.println("$$$$$$$$confirm dialogue being executed$$$$$ "
-								+ scBidPrice);
 				this.setScBidPrice(scBidPrice);
 				RequestContext.getCurrentInstance().execute(
 						"newBidPriceConfirm.show()");
@@ -1261,6 +1265,21 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public void setTolerancePrice(BigDecimal tolerancePrice) {
 		this.tolerancePrice = tolerancePrice;
+	}
+
+	/**
+	 * @return the isBidPaused
+	 */
+	public boolean isBidPaused() {
+		return isBidPaused;
+	}
+
+	/**
+	 * @param isBidPaused
+	 *            the isBidPaused to set
+	 */
+	public void setBidPaused(boolean isBidPaused) {
+		this.isBidPaused = isBidPaused;
 	}
 
 }
