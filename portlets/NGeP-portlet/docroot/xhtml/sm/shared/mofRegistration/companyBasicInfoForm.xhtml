@@ -404,39 +404,6 @@
 					</td>
 				</tr>
 				
-				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td colspan="3"><p:inputTextarea autoResize="false" cols="41"
-								maxlength="200" id="poCompBasicRmrk"
-								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
-								value="#{backingBean.managedBean.poSecReview.basicRemark}">
-								<f:validateLength maximum="200" />
-							</p:inputTextarea> <p:message id="poCompBasicRmrkMsg" for="poCompBasicRmrk"
-								showSummary="true" showDetail="false" display="icon" /></td>
-					</tr>
-				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="false" readonly="true"
-								id="poCompBasicRemarkRd" disabled="true" cols="41"
-								maxlength="200"
-								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
-								value="#{backingBean.managedBean.poSecReview.basicRemark}">
-								<f:validateLength maximum="200" />
-							</p:inputTextarea> <p:message id="poCompBasicRemarkRdMsg" for="poCompBasicRemarkRd"
-								showSummary="true" showDetail="false" display="icon" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="false" cols="41"
-								maxlength="200" id="apprvrCompBasicRmrk"
-								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
-								value="#{backingBean.managedBean.apprvrSecReview.basicRemark}">
-								<f:validateLength maximum="200" />
-							</p:inputTextarea> <p:message id="apprvrCompBasicRmrkMsg" for="apprvrCompBasicRmrk"
-								showSummary="true" showDetail="false" display="icon" /></td>
-					</tr>
-				</p:outputPanel>
 				<tr>
 					<td/>
 					<td colspan="3">
@@ -470,6 +437,40 @@
 							longitude="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}" />					
 					</td>
 				</tr>
+				
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td colspan="3"><p:inputTextarea autoResize="false" cols="41"
+								maxlength="200" id="poCompBasicRmrk"
+								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.basicRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="poCompBasicRmrkMsg" for="poCompBasicRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="false" readonly="true"
+								id="poCompBasicRemarkRd" disabled="true" cols="41"
+								maxlength="200"
+								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.poSecReview.basicRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="poCompBasicRemarkRdMsg" for="poCompBasicRemarkRd"
+								showSummary="true" showDetail="false" display="icon" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="false" cols="41"
+								maxlength="200" id="apprvrCompBasicRmrk"
+								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+								value="#{backingBean.managedBean.apprvrSecReview.basicRemark}">
+								<f:validateLength maximum="200" />
+							</p:inputTextarea> <p:message id="apprvrCompBasicRmrkMsg" for="apprvrCompBasicRmrk"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+				</p:outputPanel>
 			</table>
 		</p:outputPanel>
 
