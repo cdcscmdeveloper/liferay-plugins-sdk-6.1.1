@@ -2937,10 +2937,11 @@ public class SmApplicationUtil {
 	 */
 	public static void checkEquityOwnerUpdateAllowance(
 			SmApplicationManagedBean managedBean) {
-		managedBean.setDisAllowOwnerEdit(true);
-		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
-			managedBean.setDisAllowOwnerEdit(false);
-		}
+//		managedBean.setDisAllowOwnerEdit(true);
+//		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
+//			managedBean.setDisAllowOwnerEdit(false);
+//		}
+		managedBean.setDisAllowOwnerEdit(false);
 	}
 
 	/**

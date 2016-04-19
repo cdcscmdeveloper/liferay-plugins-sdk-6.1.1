@@ -46,7 +46,7 @@
 							itemValue="#{shrOffCountry.countryId}"
 							itemLabel="#{shrOffCountry.countryName}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
-							listener="#{backingBean.assignPersonNationality}" />
+							listener="#{backingBean.assignPersonNationality}" update="equiPerIdenType,equiPerDtlIdenTypePan,equiPerDtlIdenTypeLblPan"/>
 					</p:selectOneMenu> 
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
@@ -110,7 +110,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="equiPerIdenType" required="true"
 						label="#{lbl['lbl.sm.identificationtype']}"
-						disabled="#{backingBean.managedBean.disableIcEmail}"
+						disabled="true"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
 						style="width:200px">
 						<f:selectItems

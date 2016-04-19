@@ -1483,7 +1483,7 @@ public class SmApplicationBackingBean extends
 					if (tmp >= minYear) {
 						selectYears.add(item);
 					}
-				}else{
+				} else {
 					selectYears.add(item);
 				}
 			}
@@ -5311,7 +5311,6 @@ public class SmApplicationBackingBean extends
 		shr.setShareAmt(new BigDecimal(0));
 		shr.setSharePercentage(new BigDecimal(0));
 		setDefaultPersonnelValues(shr);
-		getManagedBean().setDisableIcEmail(false);
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
@@ -5370,6 +5369,9 @@ public class SmApplicationBackingBean extends
 				.setPmCountry(
 						SmCommonUtil
 								.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
+		SmCommonUtil.setDefaultPersonnelNationality(getManagedBean()
+				.getSelectedShareHolder());
+		getManagedBean().setDisableIcEmail(false);
 
 		// reset personnel view only to false for add new
 		getManagedBean().setShowPersonnelViewOnly(false);
@@ -6001,6 +6003,8 @@ public class SmApplicationBackingBean extends
 					.getSelectedShareHolder().getPmCountry().getCountryId());
 			if (cntry != null) {
 				getManagedBean().getSelectedShareHolder().setPmCountry(cntry);
+				SmCommonUtil.setDefaultPersonnelNationality(getManagedBean()
+						.getSelectedShareHolder());
 			}
 
 			log.info(" **** Selected Country Id ***** "
