@@ -2461,4 +2461,95 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return days;
 	}
+	
+	/**
+	 * To update publish date
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 */
+	protected void updatePublishDate(ScQt scQt) {
+		Date publishDate = scQt.getPublishDate();
+		if (publishDate != null) {
+			scQt.setPublishDate(DateUtils.setDefaultDateTime(publishDate));
+			
+			updatePublishClosingDate(scQt);
+		}
+	}
+	
+	/**
+	 * To update proposal start date
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 */
+	protected void updateProposalStartDate(ScQt scQt) {
+		if (!scQt.isBsvRequired()) {
+			if (null != scQt.getPublishDate()) {
+				scQt.setProposalStartDate(scQt.getPublishDate());
+			}
+		} else {
+			if (null != scQt.getLatestBsvDate()) {
+				scQt.setProposalStartDate(DateUtils.setDefaultDateTime(scQt.getLatestBsvDate()));
+			} else {
+				scQt.setProposalStartDate(scQt.getPublishDate());	// temporary.
+				log.info("latest bsv date not found.");
+			}
+		}
+	}
+	
+	/**
+	 * To update closing date and proposal validity date.
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 */
+	protected void updatePublishClosingDate(ScQt scQt) {
+		Date clsDate = null;
+		if (null != scQt.getProposalStartDate()) {
+			clsDate = DateUtils.addDays(scQt.getProposalStartDate(),
+					scQt.getPublishPeriod());
+		} else {
+			if (!scQt.isBsvRequired()) {
+				if (null != scQt.getPublishDate()) {
+					clsDate = DateUtils.addDays(scQt.getPublishDate(),
+							scQt.getPublishPeriod());
+				}
+			} else {
+				if (null != scQt.getLatestBsvDate()) {
+					clsDate = DateUtils.addDays(scQt.getLatestBsvDate(),
+							scQt.getPublishPeriod());
+				} else {
+					log.info("latest bsv date not found.");
+				}
+			}
+		}
+		
+		if (null != clsDate) {
+			clsDate = DateUtils.setDefaultDateTime(clsDate);
+			
+			scQt.setClosingDate(clsDate);
+			
+			if(scQt.isSampleReq()){
+				scQt.setSampleClosingDate(clsDate);
+			}
+			
+			updateProposalValidityDate(scQt);
+		}
+
+	}
+	
+	/**
+	 * To update proposal validity date.
+	 * 
+	 * @param scQt
+	 * 		the ScQt instance
+	 */
+	protected void updateProposalValidityDate(ScQt scQt) {
+		Date clsDate = scQt.getClosingDate();
+		if (null != clsDate) {
+			scQt.setProposalValidityEndDate(DateUtils.addDays(clsDate,
+					scQt.getQtValidityPeriod()));
+		}
+	}
 }
