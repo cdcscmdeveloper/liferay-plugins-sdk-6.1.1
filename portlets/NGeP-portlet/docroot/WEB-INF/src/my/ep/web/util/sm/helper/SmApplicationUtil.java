@@ -1991,11 +1991,7 @@ public class SmApplicationUtil {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				log.info("*** Value **** " + s);
 				throw new EpException(
-						MessageConst.ERROR_722554,
-						new String[] { SmCommonUtil
-								.getMessage(
-										"lbl.sm.sum.equity.amount.bumi.nonbumi.nonmsia",
-										null) });
+						MessageConst.ERROR_722554);
 			}
 		}
 		return validAmt;
