@@ -983,9 +983,6 @@ public class SmApplicationBackingBean extends
 				SmCommonUtil.getInstance().getMachineItemsByCatTypeCode(
 						ParameterConst.CATEGORY_TYPE_TRAVEL));
 
-		// set years drop down
-		getManagedBean().setYearsItems(Arrays.asList(getYearDropDown()));
-
 		getManagedBean().setRegStatusDescList(
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
