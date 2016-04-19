@@ -298,30 +298,30 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.phoneNoFull}"
+									disabled="true" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.phoneNoFull)}"
 									/></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.faxNoFull}"
+							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.faxNoFull)}"
 									/></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson}"
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson)}"
 						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactEmail}"
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactEmail)}"
 						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull}"
+				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.getText(contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}"
 						 /></td>
 			</tr>
 			
