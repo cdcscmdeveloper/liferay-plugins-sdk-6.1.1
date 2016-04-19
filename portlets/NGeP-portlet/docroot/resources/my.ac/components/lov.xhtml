@@ -34,7 +34,7 @@
 
 <h:panelGroup id="#{cc.attrs.id}">
 
-	<h:panelGroup id="sMode" rendered="#{cc.attrs.selectionMode eq 'single' and cc.attrs.uiMode ne 'button'}">
+	<h:panelGroup id="sMode" rendered="#{cc.attrs.selectionMode eq 'single' and cc.attrs.uiMode ne 'button' and cc.attrs.uiMode ne 'link'}">
 		<p:inputText id="#{cc.attrs.id}lov" 
 			value="#{cc.attrs.value}"
 			size="#{cc.attrs.size}"
