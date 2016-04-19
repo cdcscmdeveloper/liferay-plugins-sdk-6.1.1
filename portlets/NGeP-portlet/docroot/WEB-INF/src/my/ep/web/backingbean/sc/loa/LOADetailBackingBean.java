@@ -1543,8 +1543,8 @@ public class LOADetailBackingBean extends
 
 			agencyAddress = getFullAddress(pmAddress);
 			agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
-			agencyPhoneNo = pmAddress.getPhoneNo();
-			agencyFaxNo = pmAddress.getFaxNo();
+			agencyPhoneNo = pmAddress.getPhoneFull();
+			agencyFaxNo = pmAddress.getFaxFull();
 		}
 		context.put("agencyAddress", agencyAddress);
 		context.put("agencyPhoneNo", agencyPhoneNo);
