@@ -14,12 +14,6 @@
 					<p:inputText size="54" id="ministry" disabled="true" 
 						value="#{stopInstrBB.retrieveMinistryByOrgProfileId(stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgProfileId)}"/>
 				</td>
-				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.do.title']}" /></td>
-				<td rowspan="3">
-					<p:inputTextarea cols="50" rows="4" id="title" disabled="true" style=" margin-bottom:5px;" autoResize="false"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.title}" /> 
-					<h:outputText value="" />
-				</td>						
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
@@ -41,9 +35,6 @@
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
-				<td><p:inputText size="30" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.getParameterDesc(stopInstrBB.managedBean.stopInstr.flRequest.procurementTypeCategory)}" /></td>				
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
@@ -51,6 +42,25 @@
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>
 				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:379px;" 
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.chargeOrgProfile.orgName}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.do.title']}" /></td>
+				<td >
+					<p:inputTextarea cols="50" rows="4" id="title" disabled="true" style=" margin-bottom:5px;" autoResize="false"
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.title}" /> 
+					<h:outputText value="" />
+				</td>		
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+				<td><p:inputText size="30" disabled="true"
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.getParameterDesc(stopInstrBB.managedBean.stopInstr.flRequest.procurementTypeCategory)}" /></td>				
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
