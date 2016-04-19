@@ -7,10 +7,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 		
 	<ui:define name="contentSection">
-		<c:if test="#{consolidationReportBackingBean.managedBean.hasErrors}">
-			<p:messages showDetail="true" showSummary="false" 
-						autoUpdate="true" closable="true" severity="error, info" />	
-		</c:if>		
 		<f:event listener="#{consolidationReportBackingBean.preRenderView}" type="preRenderView" />
 	</ui:define>
 </ui:composition>
