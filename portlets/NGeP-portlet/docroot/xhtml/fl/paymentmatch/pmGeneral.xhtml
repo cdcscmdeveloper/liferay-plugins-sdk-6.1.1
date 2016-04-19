@@ -255,7 +255,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.branchName}" />
+						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.branchName)}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 			</tr>
 			<tr>
@@ -272,11 +272,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.phoneNoFull}" /></td>
+									value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.phoneNoFull)}" /></td>
 							<td style="width: 88px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.faxNoFull}" /></td>
+									value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.faxNoFull)}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -284,18 +284,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
+						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPerson)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
+						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactEmail)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull}" /></td>
+						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -327,11 +327,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.phoneNoFull}" /></td>
+									value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.phoneNoFull)}" /></td>
 							<td style="width: 68px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.faxNoFull}" /></td>
+									value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.faxNoFull)}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -339,18 +339,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactPerson}" /></td>
+						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactPerson)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactEmail}" /></td>
+						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactEmail)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactPhoneNoFull}" /></td>
+						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factoringAddress.contactPhoneNoFull)}" /></td>
 			</tr>
 		</table>
 	</p:panel>
