@@ -11,75 +11,73 @@
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="66" id="ministry"
+				<td><p:inputText size="65" id="ministry"
 						value="#{contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td valign="top" style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="66" id="controlOff"
-						value="#{contractRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}"
-						disabled="true" /></td>
+				<td>
+					<p:inputTextarea id="controlOff" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
+						value="#{contractRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}" />
+				</td>
 			</tr>
 			<tr>
-				<td style="width: 106px;"><p:outputLabel
+				<td valign="top" style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="66" id="ptjGroup"
-						value="#{contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}"
-						disabled="true" /></td>
+				<td>
+					<p:inputTextarea id="ptjGroup" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
+						value="#{contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}" />
+				</td>
 			</tr>
 			<tr>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td style="width: 560px;"><p:inputText size="8" id="preparedOrgProfileId" readonly="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <ac:lov id="preparedPtj"
+				<td style="width: 560px;">
+					<p:inputTextarea id="preparedOrgProfileId" rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}" />					
+					<ac:lov id="preparedPtj" uiMode="link" 
 						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View' or contractRequestBackingBean.isApprover()}"
-						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName,:form:controlOff" readonly="true"
+						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
 						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
-					</ac:lov></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
-				<td><p:inputText size="8" id="issuedOrgCode" readonly="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="8" /> <p:inputText size="50" id="issuedOrgName"
-						readonly="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"/>
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
+					</ac:lov>
 				</td>
 			</tr>
-			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
+				<td>
+					<p:inputTextarea id="issuedOrgProfile" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
+						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}" />										
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
+				</td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="8" id="chargeOrgProfileId"
-						readonly="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="8" /> <p:inputText size="50" id="chargePtj"
-						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}"
-						disabled="true" /> <p:commandLink
+				<td>
+					<p:inputTextarea id="chargeOrgProfile" rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" />										
+					<p:commandLink
 						oncomplete="dlgChargedPtj.show();"
 						action="#{contractRequestBackingBean.resetChargedPtjDetails}"
-						update=":form:chargeOrgProfileId,chargePtj,chargeResultPanel,dialogChargedPtj"
+						update=":form:chargeOrgProfile,chargeResultPanel,dialogChargedPtj"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 						style="padding-left:10px">
 						<p:graphicImage value="/css/images/design/search.png" />
 					</p:commandLink> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
-				<td><p:inputText size="8" disabled="true" id="agOffice"
-						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeCode}" />
-					<p:spacer width="9" /> <p:inputText size="50" disabled="true" id="agOfficeName"
-						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeName}" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.acct.off']}"/></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
+				<td>
+					<p:inputTextarea id="agOffice" rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeCode} #{contractRequestBackingBean.managedBean.flRequest.agOffice.officeName}" />										
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.acct.off']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -463,7 +461,7 @@
 			 </p:dataTable>
 			 </p:panel>           
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"  update=":form:chargeOrgProfileId,:form:chargePtj" 
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"  update=":form:chargeOrgProfile" 
 				    action="#{contractRequestBackingBean.addChargedPtjDetails()}" onclick="dlgChargedPtj.hide();"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtj.hide();" />
            </div>
