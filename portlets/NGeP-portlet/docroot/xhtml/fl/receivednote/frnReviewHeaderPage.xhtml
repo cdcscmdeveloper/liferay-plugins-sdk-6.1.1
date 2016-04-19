@@ -21,22 +21,25 @@
 					 action="#{receivedNoteBackingBean.navigateDocument(ParameterConst.doctypeDeliveryOrder)}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.no']}"/>
 				</td>
+				
+			</tr>
+			<tr >
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.frn.no']} " /></td>
 				<td class="header-info-text">
 					#{receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo == null ? lbl['lbl.fl.supp.na']:receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo}
 				</td>
-			</tr>
-			<tr >
-				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
-				</td>
-				<td class="header-info-text">
-					#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}
-				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " /></td>
 				<td class="header-info-text">
 					#{receivedNoteBackingBean.getStatusDescById(receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId)}
 				</td>	
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
+				</td>
+				<td class="header-info-text" colspan="3">
+					#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}
+				</td>
 			</tr>
 		</table>
 	</div>
