@@ -42,7 +42,7 @@
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View' or purchaseRequestBackingBean.isFlFulfilmentApprover()}"
-						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true" size="50"
+						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true" size="65"
 						postUpdateListener="purchaseRequestBackingBean.getAgAccount"
 						conditionField="#{purchaseRequestBackingBean.getPreparedPTJCondition()}"
 						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
@@ -55,7 +55,7 @@
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 						<p:spacer width="8"></p:spacer>
-						<p:inputText size="50" id="issuedOrgName"
+						<p:inputText size="65" id="issuedOrgName"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"></p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
@@ -68,7 +68,7 @@
 				<td><p:inputText size="8" id="chargeOrgProfileId"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="8" /> <p:inputText size="50" id="chargePtj"
+					<p:spacer width="8" /> <p:inputText size="65" id="chargePtj"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
 						disabled="true" /> <p:commandLink
 						oncomplete="dlgChargedPtj.show();"
@@ -83,7 +83,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
 				<td><p:inputText size="8" disabled="true" id="agOffice"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeCode}" />
-					<p:spacer width="9" /> <p:inputText size="50" disabled="true"
+					<p:spacer width="9" /> <p:inputText size="65" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeName}" />
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/>	
 				</td>
@@ -282,11 +282,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.phoneNoFull}" /></td>
+									value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.phoneNoFull)}" /></td>
 							<td style="width: 66px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.faxNoFull}" /></td>
+									value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.faxNoFull)}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -294,18 +294,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="51"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
+						value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactPerson)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="51"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
+						value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactEmail)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="15"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactPhoneNoFull}" /></td>
+						value="#{purchaseRequestBackingBean.getText(purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
 			</tr>
 		</table>
 	</p:panel>

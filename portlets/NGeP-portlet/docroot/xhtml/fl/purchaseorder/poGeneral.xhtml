@@ -203,7 +203,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.branchName}" /></td>
+						value="#{flOrderBB.getText(flOrderBB.managedBean.flRequest.flSupplierDtl.branchName)}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
@@ -219,11 +219,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.phoneNoFull}" /></td>
+									value="#{flOrderBB.getText(flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.phoneNoFull)}" /></td>
 							<td style="width: 72px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.faxNoFull}" /></td>
+									value="#{flOrderBB.getText(flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.faxNoFull)}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -231,18 +231,18 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
+						value="#{flOrderBB.getText(flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPerson)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
+						value="#{flOrderBB.getText(flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactEmail)}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull}" /></td>
+						value="#{flOrderBB.getText(flOrderBB.managedBean.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -285,11 +285,11 @@
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
-										value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.phoneNoFull}" /></td>
+										value="#{flOrderBB.getText(flOrderBB.managedBean.fulfilmentOrder.factoringAddress.phoneNoFull)}" /></td>
 								<td style="width: 72px;"><p:outputLabel
 										value="#{lbl['lbl.fl.faxno']}" /></td>
 								<td><p:inputText size="15" disabled="true"
-										value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.faxNoFull}" /></td>
+										value="#{flOrderBB.getText(flOrderBB.managedBean.fulfilmentOrder.factoringAddress.faxNoFull)}" /></td>
 							</tr>
 						</table></td>
 				</tr>
@@ -297,18 +297,18 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPerson}" /></td>
+							value="#{flOrderBB.getText(flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPerson)}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.email']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactEmail}" /></td>
+							value="#{flOrderBB.getText(flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactEmail)}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 					<td><p:inputText disabled="true" size="25"
-							value="#{flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPhoneNoFull}" /></td>
+							value="#{flOrderBB.getText(flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPhoneNoFull)}" /></td>
 				</tr>
 			</table>
 		</p:panel>
