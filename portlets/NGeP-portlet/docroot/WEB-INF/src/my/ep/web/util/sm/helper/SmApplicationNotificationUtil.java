@@ -194,15 +194,15 @@ public class SmApplicationNotificationUtil {
 		rejectedCatCodes.append(SmCommonUtil.getMessage(
 				"lbl.sm.approval.categoryNotif1", null));
 		rejectedCatCodes
-				.append("<table style=\"width:100%; border: 1px solid black;border-collapse: collapse;\">");
+				.append("<table style='width:100%; border: 1px solid black;border-collapse: collapse;'>");
 		rejectedCatCodes.append("<tr>");
 		rejectedCatCodes
-				.append("<th style=\"border: 1px solid black;\">")
+				.append("<th style='border: 1px solid black;'>")
 				.append(SmCommonUtil.getMessage(
 						"lbl.sm.approval.categoryNotif2", null))
 				.append("</th>");
 		rejectedCatCodes
-				.append("<th style=\"border: 1px solid black;\">")
+				.append("<th style='border: 1px solid black;'>")
 				.append(SmCommonUtil.getMessage(
 						"lbl.sm.approval.categoryNotif3", null))
 				.append("</th>");
@@ -225,7 +225,7 @@ public class SmApplicationNotificationUtil {
 				existsRejectedCodes = true;
 				rejectedCatCodes.append("<tr>");
 				rejectedCatCodes
-						.append("<td style=\"border: 1px solid black;\">")
+						.append("<td style='border: 1px solid black;'>")
 						.append("2.2.").append(++j + ") ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
@@ -234,7 +234,7 @@ public class SmApplicationNotificationUtil {
 						.append(cat.getPmCategoryL3().getCategoryName())
 						.append("</td>");
 				rejectedCatCodes
-						.append("<td style=\"border: 1px solid black;\">");
+						.append("<td style='border: 1px solid black;'>");
 				if (managedBean.isPoUser()) {
 					rejectedCatCodes.append(cat.getPoRemarks()).append("</td>");
 				} else {
@@ -247,10 +247,10 @@ public class SmApplicationNotificationUtil {
 		}
 
 		rejectedCatCodes.append("</table>");
-		finalMsg.append("<p style=\"padding-left: 2em;text-indent: -2em;\">")
+		finalMsg.append("<p style='padding-left: 2em;text-indent: -2em;'>")
 				.append(approvedCatCodes.toString()).append("</p>");
 		if (existsRejectedCodes) {
-			finalMsg.append("<div style=\"margin-left: 20px;\">")
+			finalMsg.append("<div style='margin-left: 20px;'>")
 					.append(rejectedCatCodes.toString()).append("</div>");
 		}
 		if (finalMsg.toString() == null) {
