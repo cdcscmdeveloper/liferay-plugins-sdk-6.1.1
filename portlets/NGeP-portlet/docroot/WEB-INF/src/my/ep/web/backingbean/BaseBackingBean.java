@@ -42,6 +42,21 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -97,21 +112,6 @@ import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author siew mei
@@ -1508,5 +1508,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 		return items;
 		
+	}
+	
+	/**
+	 * Return the display text as N/A or T/B if it is null or empty.
+	 * @param text
+	 * @return displayText
+	 */
+	public String getText(String text) {
+		FacesScopes face = new FacesScopes();
+		if(text==null || text.length()==0) {
+			return ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale());
+		} else {
+			return text;
+		}
 	}
 }
