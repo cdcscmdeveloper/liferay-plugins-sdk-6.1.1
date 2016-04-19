@@ -69,6 +69,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -3602,6 +3603,25 @@ public class SmCommonUtil {
 				throw new EpException("MyIdentity: " + message);
 			} else {
 				throw new EpException("MyIdentity: " + ex.getMessage());
+			}
+		}
+	}
+
+	public static void setDefaultPersonnelNationality(SmPersonnel per) {
+		if (per.getPmCountry() != null) {
+			if(per.getPmCountry().getCountryCode()
+					.equals(SupplierManagementConst.MALAYSIA_CODE)){
+				PmParameter ic = retrieveParameterByTypeAndCode(
+						ParameterTypeConst.IDENTIFICATION_TYPES,
+						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+				per.setIdentificationTypeId(ic.getParameterId());
+				per.setIdentificationType(ic);
+			}else{
+				PmParameter passport = retrieveParameterByTypeAndCode(
+						ParameterTypeConst.IDENTIFICATION_TYPES,
+						"P", StringUtils.EMPTY);
+				per.setIdentificationTypeId(passport.getParameterId());
+				per.setIdentificationType(passport);
 			}
 		}
 	}

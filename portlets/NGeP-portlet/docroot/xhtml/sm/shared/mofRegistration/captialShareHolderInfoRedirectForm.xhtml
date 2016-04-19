@@ -27,8 +27,8 @@
 						<p:defaultCommand target="saveBtn" />
 						<p:commandButton id="saveBtn" value="#{lbl['lbl.sm.button.save']}"
 							onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
-							action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
-							update=":form" />
+							action="#{backingBean.addOrUpdateShareHolderToSmAppl}" 
+							update=":form" process="shrHolderPanGroup"/>
 					</div>
 				</c:otherwise>
 			</c:choose>
