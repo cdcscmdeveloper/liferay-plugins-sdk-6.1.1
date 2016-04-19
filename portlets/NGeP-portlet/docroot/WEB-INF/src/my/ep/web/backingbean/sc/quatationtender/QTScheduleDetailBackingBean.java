@@ -574,7 +574,24 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void closeSampleAddressPopUp() {
 		debugLogger("closeSampleAddressPopUp");
-		this.getManagedBean().setScQtSampleSubmission(null);
+		
+		ScQtSampleSubmission sampleSubmission = this.getManagedBean()
+				.getScQtSampleSubmission();
+		if (SourcingConstants.ACTION_EDIT.equalsIgnoreCase(this
+				.getManagedBean().getActionType())
+				&& sampleSubmission != null
+				&& sampleSubmission.getQtSampleSubmissionId() == null) {
+			this.getManagedBean().setScQtSampleSubmission(null);
+			int index = this.getManagedBean().getSampleAddressIndex();
+			ScQtSampleSubmission sampleSubmissionFrmList  = this.getManagedBean()
+					.getScQtSampleSubmissionList().get(index);
+			sampleSubmissionFrmList.setAddress(null);
+			this.getManagedBean()
+			.getScQtSampleSubmissionList().set(index,sampleSubmissionFrmList);
+					
+							
+		}
+		
 		RequestContext.getCurrentInstance().execute("sampledlg.hide();");
 	}
 
