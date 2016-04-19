@@ -110,6 +110,9 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private String extensionConfirmationMsg;
 	
 	private Boolean claim;
+	
+	private boolean editMode = false;
+	private int editModeIndex = 0;
 
 	public CmBrand getSelectedBrand() {
 		return selectedBrand;
@@ -702,6 +705,35 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setClaim(Boolean claim) {
 		this.claim = claim;
 	}
+
+	/**
+	 * @return the editMode
+	 */
+	public boolean isEditMode() {
+		return editMode;
+	}
+
+	/**
+	 * @param editMode the editMode to set
+	 */
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
+	}
+
+	/**
+	 * @return the editModeIndex
+	 */
+	public int getEditModeIndex() {
+		return editModeIndex;
+	}
+
+	/**
+	 * @param editModeIndex the editModeIndex to set
+	 */
+	public void setEditModeIndex(int editModeIndex) {
+		this.editModeIndex = editModeIndex;
+	}
+	
 	
 	
 
