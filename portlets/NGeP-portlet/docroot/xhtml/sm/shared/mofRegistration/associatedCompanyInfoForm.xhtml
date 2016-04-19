@@ -174,8 +174,8 @@
 							label=" #{lbl['lbl.sm.assocCmpny.regNo']}" id="asocRegNo"
 							value="#{backingBean.managedBean.selectedAssocCompany.regNo}"
 							size="35" maxlength="20" >
-							<p:ajax event="blur" process="@this" update="assocMofNoId" partialSubmit="true"
-								listener="#{backingBean.onBlurSetMofNo(backingBean.managedBean.selectedAssocCompany)}"/>
+							<p:ajax event="blur" process="@this" update="assocBlockPanel" partialSubmit="true"
+								listener="#{backingBean.onBlurSetAssociateCompany(backingBean.managedBean.selectedAssocCompany)}"/>
 						</p:inputText> 
 						<p:graphicImage id="asocRegNoImg"
 							value="/css/images/design/tooltips.png" 
