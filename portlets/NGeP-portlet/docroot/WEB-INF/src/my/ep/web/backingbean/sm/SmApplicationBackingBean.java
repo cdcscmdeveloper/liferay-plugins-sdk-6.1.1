@@ -8200,6 +8200,96 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Set associate company related info based on entered registration no
+	 * 
+	 * @param SmAssociateCompany
+	 *            assoc
+	 */
+	public void onBlurSetAssociateCompany(SmAssociateCompany assoc) {
+		if (assoc != null && !StringUtils.isBlank(assoc.getRegNo())) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setRegNo(assoc.getRegNo());
+			SmMofAccount acc = SmServiceLookup.getMofAccountSO()
+					.retriveMofAccountBySupplierRegNo(reqDTO).getMofAccount();
+			if (acc != null) {
+				assoc.setMofNo(acc.getMofNo());
+				if (acc.getSmSupplier() != null) {
+					assoc.setCompanyName(acc.getSmSupplier().getCompanyName());
+					SmAddress assocAddr = assoc.getSmAddress();
+					if (acc.getSmSupplier().getSmAppl() != null
+							&& acc.getSmSupplier().getSmAppl()
+									.getSmCompanyBasic() != null
+							&& !EntityHelper.isCollectionEmpty(acc
+									.getSmSupplier().getSmAppl()
+									.getSmCompanyBasic()
+									.getSmCompanyAddresses())) {
+						if (acc.getSmSupplier().getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().get(0).getSmAddress() != null
+								&& assocAddr != null) {
+							SmCompanyBasic accCompBasic = acc.getSmSupplier()
+									.getSmAppl().getSmCompanyBasic();
+							SmAddress accAddr = accCompBasic
+									.getSmCompanyAddresses().get(0)
+									.getSmAddress();
+
+							assocAddr.setAddress1(accAddr.getAddress1());
+							assocAddr.setAddress2(accAddr.getAddress2());
+							assocAddr.setAddress3(accAddr.getAddress3());
+							assocAddr.setAddress4(accAddr.getAddress4());
+							assocAddr.setPostcode(accAddr.getPostcode());
+							if (accAddr.getPmCountry() != null) {
+								assocAddr.setCountryId(accAddr.getPmCountry()
+										.getCountryId());
+								assocAddr.setPmCountry(SmCommonUtil
+										.getInstance().getCountryById(
+												assocAddr.getCountryId()));
+								onChangeCountry(
+										assocAddr,
+										SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+							}
+							if (accAddr.getPmState() != null) {
+								assocAddr.setStateId(accAddr.getPmState()
+										.getStateId());
+								assocAddr.setPmState(SmCommonUtil.getInstance()
+										.getStateById(assocAddr.getStateId()));
+								onChangeState(
+										assocAddr,
+										SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+							}
+							if (accAddr.getPmDistrict() != null) {
+								assocAddr.setDistrictId(accAddr.getPmDistrict()
+										.getDistrictId());
+								assocAddr.setPmDistrict(SmCommonUtil
+										.getInstance().getDistrictById(
+												assocAddr.getDistrictId()));
+								onChangeDistrict(
+										assocAddr,
+										SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+							}
+							if (accAddr.getPmCity() != null) {
+								assocAddr.setCityId(accAddr.getPmCity()
+										.getCityId());
+								assocAddr.setPmCity(SmCommonUtil.getInstance()
+										.getCityById(assocAddr.getCityId()));
+								onChangeCity(
+										assocAddr,
+										SupplierManagementConst.SM_ASSOC_COMPANY_PANEL);
+							}
+							assoc.setPhoneCountry(accCompBasic
+									.getPhoneCountry());
+							assoc.setPhoneArea(accCompBasic.getPhoneArea());
+							assoc.setPhoneNo(accCompBasic.getPhoneNo());
+							assoc.setFaxCountry(accCompBasic.getFaxCountry());
+							assoc.setFaxArea(accCompBasic.getFaxArea());
+							assoc.setFaxNo(accCompBasic.getFaxNo());
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Get whether supplier already is business office and had approved special
 	 * category
 	 */
@@ -10066,29 +10156,40 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
+		// minus 1 due to the newly added not yet inside supplier categories
+		int maxCatAllowed = ruleHelper.getMaxCategoryAllowed() - 1;
+		boolean validCatCode = true;
+		if (getManagedBean().getSmAppl().getSmSupplierCategories().size() == maxCatAllowed) {
+			validCatCode = false;
+			throw new EpException(MessageConst.ERROR_722517);
+		}
 
 		log.info("pmCategoryL3.getCategoryName(): "
 				+ pmCategoryL3.getCategoryName());
 
-		SmSupplierCategory categ = new SmSupplierCategory();
-		categ.setRevNo(1);
-		categ.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
-		if (getManagedBean().getSmAppl().getApplCategoryType()
-				.equalsIgnoreCase("S")) {
-			categ.setSpecialCategory(true);
+		if (validCatCode) {
+			SmSupplierCategory categ = new SmSupplierCategory();
+			categ.setRevNo(1);
+			categ.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+			if (getManagedBean().getSmAppl().getApplCategoryType()
+					.equalsIgnoreCase("S")) {
+				categ.setSpecialCategory(true);
+			}
+			categ.setSmAppl(getManagedBean().getSmAppl());
+			categ.setSupplierType(getManagedBean().getSmAppl()
+					.getSupplierType());
+			getManagedBean().setSelectedCategory(categ);
+
+			categ.setPmCategoryL3(pmCategoryL3);
+			categ.setPmCategoryL2(pmCategoryL3.getPmCategoryL2());
+			categ.setPmCategoryL1(pmCategoryL3.getPmCategoryL2()
+					.getPmCategoryL1());
+			getManagedBean().setSelectedCategory(categ);
+			saveSelectedCategory();
+
+			log.info("getManagedBean().getActiveCategoryList(): "
+					+ getManagedBean().getActiveCategoryList());
 		}
-		categ.setSmAppl(getManagedBean().getSmAppl());
-		categ.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
-		getManagedBean().setSelectedCategory(categ);
-
-		categ.setPmCategoryL3(pmCategoryL3);
-		categ.setPmCategoryL2(pmCategoryL3.getPmCategoryL2());
-		categ.setPmCategoryL1(pmCategoryL3.getPmCategoryL2().getPmCategoryL1());
-		getManagedBean().setSelectedCategory(categ);
-		saveSelectedCategory();
-
-		log.info("getManagedBean().getActiveCategoryList(): "
-				+ getManagedBean().getActiveCategoryList());
 
 	}
 
