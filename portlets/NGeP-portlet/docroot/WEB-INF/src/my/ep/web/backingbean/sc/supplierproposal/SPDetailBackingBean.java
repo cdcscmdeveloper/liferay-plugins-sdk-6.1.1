@@ -352,6 +352,8 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(3);
 
 		VelocityContext context = new VelocityContext();
+		String ptjName = this.getManagedBean().getQt().getPmOrgProfile().getOrgName();
+		context.put("ptjName", ptjName);
 		String othersTermsConditions = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
 						SourcingConstants.SUPPLIER_PROPOSAL_DECLARATION,
