@@ -155,7 +155,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 					<td colspan="3"><p:inputText size="50" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.branchName}" />
+							value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.branchName)}" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 				</tr>
 				<tr>
@@ -172,11 +172,11 @@
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
-										value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.phoneNoFull}" /></td>
+										value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.phoneNoFull)}" /></td>
 								<td style="width: 65px;white-space: nowrap;"><p:outputLabel
 										value="#{lbl['lbl.fl.faxno']}" /></td>
 								<td><p:inputText size="20" disabled="true"
-										value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.faxNoFull}" /></td>
+										value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.faxNoFull)}" /></td>
 							</tr>
 						</table></td>
 				</tr>
@@ -184,19 +184,19 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 					<td><p:inputText size="50" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactPerson}" /></td>
+							value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactPerson)}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.email']}" /></td>
 					<td><p:inputText size="50"  disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactEmail}" /></td>
+							value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactEmail)}" /></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 					<td><p:inputText size="15" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull}" /></td>
+							value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.flAddress.contactPhoneNoFull)}" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -213,7 +213,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" rendered="false"/></td>
-					<td><p:inputText  disabled="true" size="50" value="#{danBackingBean.managedBean.branchName}" rendered="false"/></td>
+					<td><p:inputText  disabled="true" size="50" value="#{danBackingBean.getText(danBackingBean.managedBean.branchName)}" rendered="false"/></td>
 				</tr>
 				<tr>
 					<td valign="top" style="width: 137px;"><p:outputLabel
@@ -227,27 +227,27 @@
 					<td><table style="width: 100%">
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
-										disabled="true"  value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.phoneNoFull}"/></td>
+										disabled="true"  value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flOrder.factoringAddress.phoneNoFull)}"/></td>
 								<td style="width: 65px;"><p:outputLabel
 										value="#{lbl['lbl.fl.faxno']}" /></td>
-								<td><p:inputText size="20" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.faxNoFull}"/></td>
+								<td><p:inputText size="20" disabled="true" value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flOrder.factoringAddress.faxNoFull)}"/></td>
 							</tr>
 						</table></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-					<td><p:inputText size="50" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactPerson}"/></td>
+					<td><p:inputText size="50" disabled="true" value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactPerson)}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.email']}" /></td>
-					<td><p:inputText size="50"  disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactEmail}"/></td>
+					<td><p:inputText size="50"  disabled="true" value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactEmail)}"/></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
-					<td><p:inputText size="15" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactPhoneNoFull}" /></td>
+					<td><p:inputText size="15" disabled="true" value="#{danBackingBean.getText(danBackingBean.managedBean.adjustment.flOrder.factoringAddress.contactPhoneNoFull)}" /></td>
 				</tr>
 			</table>
 		</p:panel>
