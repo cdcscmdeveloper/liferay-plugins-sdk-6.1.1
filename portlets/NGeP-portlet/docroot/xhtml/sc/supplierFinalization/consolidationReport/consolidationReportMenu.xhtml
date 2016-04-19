@@ -93,11 +93,12 @@
 			</p:fileUpload>
 		</p:dialog>
 		
-		<ac:confirmationPopup title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+		<ac:confirmationPopup id="submissionPopupId"
+				title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 				width="450" height="150" widget="submissionPopup" 
 				okAction="consolidationReportBackingBean.submitAction" 
 				content="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit']}" 
-				update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />		
+				update="@form" />		
 		
 	</ui:define>
 
