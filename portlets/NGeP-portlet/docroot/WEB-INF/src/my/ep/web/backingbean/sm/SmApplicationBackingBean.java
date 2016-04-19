@@ -10156,8 +10156,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
-		// minus 1 due to the newly added not yet inside supplier categories
-		int maxCatAllowed = ruleHelper.getMaxCategoryAllowed() - 1;
+		int maxCatAllowed = ruleHelper.getMaxCategoryAllowed();
 		boolean validCatCode = true;
 		if (getManagedBean().getSmAppl().getSmSupplierCategories().size() == maxCatAllowed) {
 			validCatCode = false;
