@@ -30,11 +30,11 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" 
-				style="white-space:normal;width:298px" >
+				style="white-space:normal;width:270px" >
 				<h:outputText
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.flAddress)}" />
 			</p:column>
-			<p:column style="white-space:normal;width:195px;" headerText="#{lbl['lbl.fl.delivery.date']}" >
+			<p:column style="white-space:normal;width:240px;" headerText="#{lbl['lbl.fl.delivery.date']}" >
 				<h:outputText value="#{lbl['lbl.fl.do.start.date']}" />
 				<p:spacer width="2"/>
 				<p:inputText size="7" disabled="true"
