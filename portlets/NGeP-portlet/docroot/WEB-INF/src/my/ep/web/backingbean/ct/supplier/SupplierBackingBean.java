@@ -1130,8 +1130,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		try {			
 			       context = new VelocityContext();	
 			       if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())  || getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
-					|| getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+					|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())  || getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 				         vmFile = "/ct/factoring/factoring-clause-supplier.vm";
 				         templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER;
 			
@@ -1339,8 +1338,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				              userRole = RoleCode.BASIC_SUPPLIER_USER.value();
 			           } else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 				              userRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
-			           } else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-				             userRole = RoleCode.GOVT_SELLER.value();
 			           }
 		
 		 } else if (getManagedBean().getTaskName() != null && (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME)
@@ -1369,20 +1366,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			       return userRole;
 		      }
     	}
-    
-    /**
-	 * The method used to verify the login user is supplier.
-	 * 
-	 * @return true, if login user is supplier
-	 *         false, if login user is not supplier
-     */
-    public boolean isSupplierRole() {
-		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				||getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()));
-	}
     
     /**
      * The method used to verify the login user is BPK approver 
