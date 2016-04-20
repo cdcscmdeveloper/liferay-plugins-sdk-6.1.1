@@ -34,16 +34,11 @@
 				<td>
 					<p:outputLabel value="#{backingBean.managedBean.smSupplier.epNo}" styleClass="outputLabel-view"/>
 				</td>
-				<td
-					style="color: red; font-weight: bold; text-align: right;">
-					<h:outputText value="#{lbl['lbl.sm.lastSubmitDate']}" />&#160;&#160;
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.application.no']}" />
 				</td>
-				<td
-					style="color: red; font-weight: bold; text-align: left;">
-					<h:outputText
-						value="#{backingBean.managedBean.applStatusInfo.submissionDate} " />
-					<span id="blinkId" class="blinkClass"><h:outputText id="daysLeftId"
-						value="#{backingBean.managedBean.applStatusInfo.daysLeft}" /></span>
+				<td>
+					<p:outputLabel value="#{backingBean.managedBean.smAppl.applNo}" styleClass="outputLabel-view"/>
 				</td>
 			</tr>
 			<tr>
@@ -60,7 +55,17 @@
 				<td>
 					<p:outputLabel value="#{backingBean.managedBean.mofNumber}" styleClass="outputLabel-view"/>
 				</td>
-				<td></td><td></td>
+				<td
+					style="color: red; font-weight: bold; text-align: right;">
+					<h:outputText value="#{lbl['lbl.sm.lastSubmitDate']}" />&#160;&#160;
+				</td>
+				<td
+					style="color: red; font-weight: bold; text-align: left;">
+					<h:outputText
+						value="#{backingBean.managedBean.applStatusInfo.submissionDate} " />
+					<span id="blinkId" class="blinkClass"><h:outputText id="daysLeftId"
+						value="#{backingBean.managedBean.applStatusInfo.daysLeft}" /></span>
+				</td>
 			</tr>
 		</table>
 	</div>
