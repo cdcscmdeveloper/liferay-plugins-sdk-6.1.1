@@ -7393,6 +7393,10 @@ public class SmApplicationUtil {
 		String language = new FacesScopes().getUserLocale().getLanguage();
 		List<SelectItem> categoryTypeItems = new ArrayList<SelectItem>();
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			SelectItem catTypeItem = new SelectItem();
+			catTypeItem.setLabel(SmCommonUtil.getMessage("lbl.sm.caps.others", null));
+			catTypeItem.setValue(-1);
+			categoryTypeItems.add(catTypeItem);
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						&& cat.getPmCategoryL3() != null
@@ -7412,7 +7416,7 @@ public class SmApplicationUtil {
 						if (!EntityHelper.isCollectionEmpty(cat
 								.getPmCategoryL3().getCategoryTypeCode()
 								.getPmParameterDescs())) {
-							SelectItem catTypeItem = new SelectItem();
+							catTypeItem = new SelectItem();
 							PmParameterDesc desc = (PmParameterDesc) EntityHelper
 									.getEntityBySinglePropertyFromList(
 											language, cat.getPmCategoryL3()

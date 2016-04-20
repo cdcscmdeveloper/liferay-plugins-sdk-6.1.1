@@ -4566,41 +4566,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Reset selected machine type when click others machine type checkbox
-	 */
-	public void onTickOtherMachine() {
-		SmMachineDtl machine = (SmMachineDtl) EntityHelper
-				.getEntityByMultiplePropertiesFromList(getManagedBean()
-						.getSelectedMachine(), getManagedBean().getSmAppl()
-						.getSmMachineDtls(), new String[] { "machineDtlId" },
-						null, null);
-		if (machine != null) {
-			if (getManagedBean().isOthersMachine()) {
-				getManagedBean().getSelectedMachine().setMachine(null);
-			} else {
-				getManagedBean().getSelectedMachine().setMachineType(
-						StringUtils.EMPTY);
-				if (machine.getMachine() != null) {
-					getManagedBean().getSelectedMachine().setMachine(
-							machine.getMachine());
-				} else {
-					getManagedBean().getSelectedMachine().setMachine(
-							new PmMachine());
-				}
-			}
-		} else {
-			if (getManagedBean().isOthersMachine()) {
-				getManagedBean().getSelectedMachine().setMachine(null);
-			} else {
-				getManagedBean().getSelectedMachine().setMachineType(
-						StringUtils.EMPTY);
-				getManagedBean().getSelectedMachine().setMachine(
-						new PmMachine());
-			}
-		}
-	}
-
-	/**
 	 * Populate category codes when on change category type selected
 	 */
 	public void onChangeCategoryType() {
