@@ -1990,8 +1990,7 @@ public class SmApplicationUtil {
 				validAmt = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				log.info("*** Value **** " + s);
-				throw new EpException(
-						MessageConst.ERROR_722554);
+				throw new EpException(MessageConst.ERROR_722554);
 			}
 		}
 		return validAmt;
@@ -2775,6 +2774,81 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Sort personnels by role in company
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 */
+	public static void sortPersonnelByRoleInCompany(SmAppl appl) {
+		List<SmPersonnel> equityOwners = new ArrayList<SmPersonnel>();
+		List<SmPersonnel> directors = new ArrayList<SmPersonnel>();
+		List<SmPersonnel> higherManagements = new ArrayList<SmPersonnel>();
+		List<SmPersonnel> managements = new ArrayList<SmPersonnel>();
+		List<SmPersonnel> profs = new ArrayList<SmPersonnel>();
+		List<SmPersonnel> semiProfs = new ArrayList<SmPersonnel>();
+		List<SmPersonnel> staffs = new ArrayList<SmPersonnel>();
+		List<SmPersonnel> noRoles = new ArrayList<SmPersonnel>();
+		if (appl != null
+				&& !EntityHelper.isCollectionEmpty(appl.getSmPersonnels())) {
+
+			for (SmPersonnel per : appl.getSmPersonnels()) {
+				if (per.isEquityOwner()) {
+					equityOwners.add(per);
+				} else if (!per.isEquityOwner() && per.isDirector()) {
+					directors.add(per);
+				} else if (!per.isEquityOwner() && !per.isDirector()
+						&& per.isHigherManagement()) {
+					higherManagements.add(per);
+				} else if (!per.isEquityOwner() && !per.isDirector()
+						&& !per.isHigherManagement() && per.isManagement()) {
+					managements.add(per);
+				} else if (!per.isEquityOwner() && !per.isDirector()
+						&& !per.isHigherManagement() && !per.isManagement()
+						&& per.isProf()) {
+					profs.add(per);
+				} else if (!per.isEquityOwner() && !per.isDirector()
+						&& !per.isHigherManagement() && !per.isManagement()
+						&& !per.isProf() && per.isSemiProf()) {
+					semiProfs.add(per);
+				} else if (!per.isEquityOwner() && !per.isDirector()
+						&& !per.isHigherManagement() && !per.isManagement()
+						&& !per.isProf() && !per.isSemiProf()
+						&& per.isClerical()) {
+					staffs.add(per);
+				} else {
+					noRoles.add(per);
+				}
+			}
+
+			appl.getSmPersonnels().clear();
+			if (!EntityHelper.isCollectionEmpty(equityOwners)) {
+				appl.getSmPersonnels().addAll(equityOwners);
+			}
+			if (!EntityHelper.isCollectionEmpty(directors)) {
+				appl.getSmPersonnels().addAll(directors);
+			}
+			if (!EntityHelper.isCollectionEmpty(higherManagements)) {
+				appl.getSmPersonnels().addAll(higherManagements);
+			}
+			if (!EntityHelper.isCollectionEmpty(managements)) {
+				appl.getSmPersonnels().addAll(managements);
+			}
+			if (!EntityHelper.isCollectionEmpty(profs)) {
+				appl.getSmPersonnels().addAll(profs);
+			}
+			if (!EntityHelper.isCollectionEmpty(semiProfs)) {
+				appl.getSmPersonnels().addAll(semiProfs);
+			}
+			if (!EntityHelper.isCollectionEmpty(staffs)) {
+				appl.getSmPersonnels().addAll(staffs);
+			}
+			if (!EntityHelper.isCollectionEmpty(noRoles)) {
+				appl.getSmPersonnels().addAll(noRoles);
+			}
+		}
+	}
+
+	/**
 	 * Assign professional body list for the normal screen, not in the personnel
 	 * section.
 	 * 
@@ -2933,10 +3007,10 @@ public class SmApplicationUtil {
 	 */
 	public static void checkEquityOwnerUpdateAllowance(
 			SmApplicationManagedBean managedBean) {
-//		managedBean.setDisAllowOwnerEdit(true);
-//		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
-//			managedBean.setDisAllowOwnerEdit(false);
-//		}
+		// managedBean.setDisAllowOwnerEdit(true);
+		// if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
+		// managedBean.setDisAllowOwnerEdit(false);
+		// }
 		managedBean.setDisAllowOwnerEdit(false);
 	}
 
@@ -5681,7 +5755,7 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-			bank = "(" +StringUtils.removeEnd(sb.toString(), ",")+ ")";
+			bank = "(" + StringUtils.removeEnd(sb.toString(), ",") + ")";
 		}
 		return bank;
 	}
@@ -7394,7 +7468,8 @@ public class SmApplicationUtil {
 		List<SelectItem> categoryTypeItems = new ArrayList<SelectItem>();
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			SelectItem catTypeItem = new SelectItem();
-			catTypeItem.setLabel(SmCommonUtil.getMessage("lbl.sm.caps.others", null));
+			catTypeItem.setLabel(SmCommonUtil.getMessage("lbl.sm.caps.others",
+					null));
 			catTypeItem.setValue(-1);
 			categoryTypeItems.add(catTypeItem);
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
