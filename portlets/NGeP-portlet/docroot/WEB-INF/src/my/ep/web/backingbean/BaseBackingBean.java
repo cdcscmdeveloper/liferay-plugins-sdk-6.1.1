@@ -1204,7 +1204,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @return String
 	 */
 	public String getMachineCategoryType(SmMachineDtl machine) {
-		String retVal = StringUtils.EMPTY;
+		String retVal = SmCommonUtil.getMessage("lbl.sm.caps.others", null);
 		String language = new FacesScopes().getUserLocale().getLanguage();
 		if (machine.getCategoryType() != null
 				&& !EntityHelper.isCollectionEmpty(machine.getCategoryType()
