@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
-import com.sun.corba.se.pept.transport.Acceptor;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -809,6 +808,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
 			orderBackingBean.getManagedBean().setButtonVal("View");
 			flBB.getManagedBean().setHideRemarks(true);
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				return NAV_PO;
