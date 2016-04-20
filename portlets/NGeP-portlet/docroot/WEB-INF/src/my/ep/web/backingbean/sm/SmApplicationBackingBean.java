@@ -41,8 +41,6 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -136,7 +134,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
-import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -4461,6 +4458,13 @@ public class SmApplicationBackingBean extends
 						.getMachineId() == null) {
 			getManagedBean().getSelectedMachine().setMachine(null);
 		}
+		if (getManagedBean().getSelectedMachine().getCategoryType() != null
+				&& getManagedBean().getSelectedMachine().getCategoryType()
+						.getParameterId() != null
+				&& getManagedBean().getSelectedMachine().getCategoryType()
+						.getParameterId().compareTo(Long.parseLong("-1")) == 0) {
+			getManagedBean().getSelectedMachine().setCategoryType(null);
+		}
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedMachine(), getManagedBean().getSmAppl()
 				.getSmMachineDtls());
@@ -4601,15 +4605,20 @@ public class SmApplicationBackingBean extends
 	 */
 	public void onChangeCategoryType() {
 		// set selected category type
-		getManagedBean().getSelectedMachine().setCategoryType(
-				SmApplicationUtil.retrievePmParameterById(getManagedBean()
-						.getSelectedMachine().getCategoryType()
-						.getParameterId()));
+		if (getManagedBean().getSelectedMachine().getCategoryType()
+				.getParameterId().compareTo(Long.parseLong("-1")) != 0) {
+			getManagedBean().getSelectedMachine().setCategoryType(
+					SmApplicationUtil.retrievePmParameterById(getManagedBean()
+							.getSelectedMachine().getCategoryType()
+							.getParameterId()));
+		}
 
 		// set dropdown category codes
-		if (getManagedBean().getSelectedMachine().getCategoryType()
-				.getParameterCode()
-				.equals(ParameterConst.CATEGORY_TYPE_PRINTING)) {
+		if (!StringUtils.isBlank(getManagedBean().getSelectedMachine()
+				.getCategoryType().getParameterCode())
+				&& getManagedBean().getSelectedMachine().getCategoryType()
+						.getParameterCode()
+						.equals(ParameterConst.CATEGORY_TYPE_PRINTING)) {
 			getManagedBean().getSelectedMachine().setCategoryCode(
 					new PmCategoryL3());
 			getManagedBean().setCategoryCodeItems(
@@ -4623,7 +4632,8 @@ public class SmApplicationBackingBean extends
 		}
 
 		// set dropdown machines
-		if (getManagedBean().isOthersMachine()) {
+		if (getManagedBean().getSelectedMachine().getCategoryType()
+				.getParameterId().compareTo(Long.parseLong("-1")) == 0) {
 			getManagedBean().getSelectedMachine().setMachine(null);
 			getManagedBean().setMachineItems(null);
 		} else {
