@@ -26,9 +26,8 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton ajax="false" value="#{lbl['lbl.btn.download.all']}"
-				icon="ui-icon-download" styleClass="BtnSpacing"
+				styleClass="BtnSpacing"
 				rendered="#{supplierProposalDetailBackingBean.managedBean.scQtDocReports ne null and supplierProposalDetailBackingBean.managedBean.scQtDocReports.size()>0}"
-				style="background-color:transparent !important; border:0px none;"
 				action="#{supplierProposalDetailBackingBean.downloadAllQTDocuments}" />
 		</div>
 	</p:panel>
