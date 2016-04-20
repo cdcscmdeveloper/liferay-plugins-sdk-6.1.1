@@ -189,19 +189,8 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</p:outputPanel>
-				<tr>
-					<td style="border-style: none !important;float: right !important;">
-						<p:selectBooleanCheckbox value="#{backingBean.managedBean.othersMachine}">
-							<p:ajax event="change" partialSubmit="true" process="@this" 
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update="machineOutPanelId" listener="#{backingBean.onTickOtherMachine()}"/>
-						</p:selectBooleanCheckbox>
-					</td>
-					<td valign="top" style="border-style: none !important;">
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.machine.equiType.others']}" />
-					</td>
-				</tr>
-				<p:outputPanel rendered="#{!backingBean.managedBean.othersMachine}">
+				
+				<p:outputPanel rendered="#{backingBean.managedBean.selectedMachine.categoryType.parameterId ne -1}">
 					<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" /> 
@@ -220,7 +209,7 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.othersMachine}">
+				<p:outputPanel rendered="#{backingBean.managedBean.selectedMachine.categoryType.parameterId eq -1}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -326,16 +315,15 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.machine.purchase.year']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
+					<td>
+						<p:selectOneMenu
 							required="#{backingBean.managedBean.valueReqd}"
-							validatorMessage="#{lbl['lbl.sm.machine.purchase.year.invalid.msg']}"
 							label="#{lbl['lbl.sm.machine.purchase.year']}" id="smMachPurYr"
 							value="#{backingBean.managedBean.selectedMachine.purchaseYear}"
-							size="35">
-							<f:validateLongRange minimum="1950" 
-								maximum="#{backingBean.managedBean.currYear}" />
-							<p:ajax process="@this" update="@this,smMachPurYrMsg" partialSubmit="true" event="blur" />
-						</p:inputText> 
+							style="width: 107px;margin-bottom: 5px;">
+							<f:selectItems value="#{backingBean.getYearDropDown()}" />
+							<p:ajax process="@this" update="@this" partialSubmit="true"/>
+						</p:selectOneMenu> 
 						<p:message id="smMachPurYrMsg" for="smMachPurYr"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
