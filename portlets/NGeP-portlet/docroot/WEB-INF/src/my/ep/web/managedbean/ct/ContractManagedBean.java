@@ -74,6 +74,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtDeduction selectedDeduction;
 	private boolean flgPaymentTracking;
 	private boolean ButtonHideActive = true;
+	private boolean buttonHideDedActive = true;
+	private boolean buttonHideSchActive = true;
 	
 	/*Payment tracking start*/
 	private BigDecimal gstTotalAmount;
@@ -111,7 +113,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	 
 	 private boolean disableAmendDetails;
 	 private CtCircularVer ctCircularVer;
-	 private List<CtPidReason> selectedPidReason;
+	// private List<CtPidReason> selectedPidReason;
 	 
 	  private boolean updateContract = false;
 	  private boolean serviceTaxAlertFlg = false;
@@ -920,18 +922,18 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	/**
 	 * @return the selectedPidReason
-	 */
+	 *//*
 	public List<CtPidReason> getSelectedPidReason() {
 		return selectedPidReason;
 	}
 
-	/**
+	*//**
 	 * @param selectedPidReason the selectedPidReason to set
-	 */
+	 *//*
 	public void setSelectedPidReason(List<CtPidReason> selectedPidReason) {
 		this.selectedPidReason = selectedPidReason;
 	}
-
+*/
 	/**
 	 * @return the serviceTaxAlertFlg
 	 */
@@ -944,5 +946,33 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setServiceTaxAlertFlg(boolean serviceTaxAlertFlg) {
 		this.serviceTaxAlertFlg = serviceTaxAlertFlg;
+	}
+
+	/**
+	 * @return the buttonHideDedActive
+	 */
+	public boolean isButtonHideDedActive() {
+		return buttonHideDedActive;
+	}
+
+	/**
+	 * @param buttonHideDedActive the buttonHideDedActive to set
+	 */
+	public void setButtonHideDedActive(boolean buttonHideDedActive) {
+		this.buttonHideDedActive = buttonHideDedActive;
+	}
+
+	/**
+	 * @return the buttonHideSchActive
+	 */
+	public boolean isButtonHideSchActive() {
+		return buttonHideSchActive;
+	}
+
+	/**
+	 * @param buttonHideSchActive the buttonHideSchActive to set
+	 */
+	public void setButtonHideSchActive(boolean buttonHideSchActive) {
+		this.buttonHideSchActive = buttonHideSchActive;
 	}
 }

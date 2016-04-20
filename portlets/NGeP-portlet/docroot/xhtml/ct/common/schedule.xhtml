@@ -27,18 +27,24 @@
 	                          value="#{ctBackingBean.managedBean.contractVer.ctSchedules}"  var="payScheduleObj" 
 	                          rowIndexVar="index" selection="#{ctBackingBean.selectedSchedule}" rowKey="#{payScheduleObj}" >
 	                                <ac:paginator for="payScheduleTableId" />
-	                                <p:ajax event="toggleSelect" 
-			                              listener="#{ctBackingBean.onToggleSelect}" update=":form:deleteScheduleBtn" />
-			                      <p:ajax event="rowSelect"
-                                       listener="#{ctBackingBean.onRowSelect}" update=":form:deleteScheduleBtn" />
-			                      <p:ajax event="rowSelectCheckbox" 
-			                             listener="#{ctBackingBean.onRowSelect}" update=":form:deleteScheduleBtn" />
-                                  <p:ajax event="rowUnselectCheckbox" 
-                                         listener="#{ctBackingBean.onRowUnselect}" update=":form:deleteScheduleBtn" />
-                                         
-	                                 <p:column selectionMode="multiple"  rendered="#{!ctBackingBean.managedBean.viewContract}"
-	                                      style="width:1%;" disabledSelection="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}" />
-		                             <p:column style="width:9%;"  styleClass="column-align-center"  >
+	                                <p:column style="width:2%;" rendered="#{!ctBackingBean.managedBean.viewContract}">
+		                                   <f:facet name="header">
+							                    <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}"
+							                    disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}">
+								                    <p:ajax partialSubmit="true" process="@this"
+									                      update=":form:payScheduleTableId,:form:deleteScheduleBtn" listener="#{ctBackingBean.selectAllScheduleDtl}" />
+							                 </p:selectBooleanCheckbox>
+						                 </f:facet>
+		           
+		                                <p:selectBooleanCheckbox 
+		                                    disabled="#{payScheduleObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}"
+		                                       value="#{payScheduleObj.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                            <p:ajax event="change" 
+		           		                                update=":form:payScheduleTableId,:form:deleteScheduleBtn" listener="#{ctBackingBean.selectOneScheCheckboxSelect}"></p:ajax>
+			                           </p:selectBooleanCheckbox>
+		                           </p:column>
+	                             
+	                               <p:column style="width:9%;"  styleClass="column-align-center"  >
 		                                     <f:facet name="header">
 		                                           <h:outputText value="#{lbl['lbl.ct.schedule.no']}" styleClass="required"/>
 		                                     </f:facet>
@@ -120,7 +126,7 @@
 		       		       </p:commandButton>
 		 	               <p:commandButton id="deleteScheduleBtn" value="#{lbl['lbl.ct.delete']}" process="@this"  partialSubmit="true"
 			 	        	       rendered="#{!ctBackingBean.managedBean.viewContract}" onsuccess="dlgSchedule.show()"
-			 	        	       disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideActive}">
+			 	        	       disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideSchActive}">
 			 	        	       <p:tooltip for="deleteScheduleBtn">
 							            <h:outputText value="#{lbl['lbl.ct.tooltip.delete.schedule']}" escape="false" />
 							       </p:tooltip>
@@ -143,19 +149,23 @@
 	                       id="progPaymentTableId" var="progPaymentObj"   widgetVar="wdgtProgObj" rowIndexVar="index"
 	                       selection="#{ctBackingBean.selectedProgressive}" rowKey="#{progPaymentObj}">
 		                         <ac:paginator for="progPaymentTableId" />
-		                          <p:ajax event="toggleSelect" 
-			                              listener="#{ctBackingBean.onToggleSelect}" update=":form:delProgressiveBtn" />
-			                      <p:ajax event="rowSelect"
-                                       listener="#{ctBackingBean.onRowSelect}" update=":form:delProgressiveBtn" />
-			                      <p:ajax event="rowSelectCheckbox" 
-			                             listener="#{ctBackingBean.onRowSelect}" update=":form:delProgressiveBtn" />
-                                  <p:ajax event="rowUnselectCheckbox" 
-                                         listener="#{ctBackingBean.onRowUnselect}" update=":form:delProgressiveBtn" />
-		                      
-                                    <p:column selectionMode="multiple" style="width:1%;" 
-		                             disabledSelection="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}" 
-		                             rendered="#{!ctBackingBean.managedBean.viewContract}"/> 
-                  
+		                         <p:column style="width:2%;" rendered="#{!ctBackingBean.managedBean.viewContract}">
+		                                   <f:facet name="header">
+							                    <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}"
+							                    disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}">
+								                    <p:ajax partialSubmit="true" process="@this"
+									                      update=":form:progPaymentTableId,:form:delProgressiveBtn" listener="#{ctBackingBean.selectAllProPaymentDtl}" />
+							                 </p:selectBooleanCheckbox>
+						                 </f:facet>
+		           
+		                                <p:selectBooleanCheckbox 
+		                                    disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.disableAmendDetails}"
+		                                       value="#{progPaymentObj.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                            <p:ajax event="change" 
+		           		                                update=":form:progPaymentTableId,:form:delProgressiveBtn" listener="#{ctBackingBean.selectOneProPaymentCheckboxSelect}"></p:ajax>
+			                           </p:selectBooleanCheckbox>
+		                           </p:column>
+		                       
 				                      <p:column style="width:4%;"  styleClass="column-align-center" >
 					                          <f:facet name="header">
 							                        <h:outputText value="#{lbl['lbl.ct.phase']}" styleClass="required"/>
@@ -253,7 +263,7 @@
 			       </p:commandButton>
 		           <p:spacer width="2"/>
 		           <p:commandButton id="delProgressiveBtn" value="#{lbl['lbl.ct.delete']}" partialSubmit="true" 
-		                 disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideActive}"
+		                 disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.buttonHideSchActive}"
 			             rendered="#{!ctBackingBean.managedBean.viewContract}" process="@this"  onsuccess="progDlgObj.show()">
 			       </p:commandButton>
 		        </div>

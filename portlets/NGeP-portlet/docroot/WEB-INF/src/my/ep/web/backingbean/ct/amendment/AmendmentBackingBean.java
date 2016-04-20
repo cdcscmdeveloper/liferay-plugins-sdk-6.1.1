@@ -3088,6 +3088,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void deleteLoaContents() {
 		this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().remove(this.getManagedBean().getSelectedScLoaReports());
+		this.getManagedBean().setSelectedScLoaReports(null);
 	}
 	
 	/**
