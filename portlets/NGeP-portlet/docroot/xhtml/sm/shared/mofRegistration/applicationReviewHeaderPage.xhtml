@@ -21,17 +21,6 @@
 				<td class="header-info-text">#{backingBean.managedBean.smAppl.applNo}</td>
 				<td><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 				<td class="header-info-text">#{backingBean.managedBean.currentStatus}</td>
-			</tr>
-			<tr>
-
-				<td><h:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
-				<td class="header-info-text"><h:outputLabel
-						value="#{backingBean.managedBean.smAppl.applSubmitDate}"
-						style="font-weight: normal !important;float: left;font-size: 100%;text-align: left;">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputLabel></td>
-
 				<c:if test="#{backingBean.managedBean.approverUser}">
 					<td><h:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 					<td class="header-info-text">
@@ -48,6 +37,20 @@
 						</c:choose>
 					</td>
 				</c:if>
+			</tr>
+			<tr>
+
+				<td><h:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
+				<td class="header-info-text"><h:outputLabel
+						value="#{backingBean.managedBean.smAppl.applSubmitDate}"
+						style="font-weight: normal !important;float: left;font-size: 100%;text-align: left;">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputLabel></td>
+				<td><h:outputLabel value="#{lbl['lbl.sm.epNo']}" /></td>
+				<td class="header-info-text">#{backingBean.managedBean.smSupplier.epNo}</td>
+				<td><h:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
+				<td class="header-info-text">#{backingBean.managedBean.mofNumber}</td>
 			</tr>
 		</table>
 		
