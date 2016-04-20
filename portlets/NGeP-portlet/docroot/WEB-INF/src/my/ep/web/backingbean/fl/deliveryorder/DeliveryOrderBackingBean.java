@@ -1143,6 +1143,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 		flBB.getManagedBean().setHideRemarks(true);
 		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		orderBackingBean.getManagedBean().setSelectedTabIndex(0);
