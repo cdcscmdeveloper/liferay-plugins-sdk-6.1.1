@@ -191,6 +191,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean selectAllMeetings;
 	private String action;
 	private Long loggedInUserId;
+	private Long originalFinalizationSecretaryUserId;
 	
 	private int preparationTabIndex;
 	private int reportTabIndex;
@@ -1774,6 +1775,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setLoggedInUserId(Long loggedInUserId) {
 		this.loggedInUserId = loggedInUserId;
+	}
+
+	/**
+	 * @return the originalFinalizationSecretaryUserId
+	 */
+	public Long getOriginalFinalizationSecretaryUserId() {
+		return originalFinalizationSecretaryUserId;
+	}
+
+	/**
+	 * @param originalFinalizationSecretaryUserId
+	 *            the originalFinalizationSecretaryUserId to set
+	 */
+	public void setOriginalFinalizationSecretaryUserId(
+			Long originalFinalizationSecretaryUserId) {
+		this.originalFinalizationSecretaryUserId = originalFinalizationSecretaryUserId;
 	}
 
 	/**
