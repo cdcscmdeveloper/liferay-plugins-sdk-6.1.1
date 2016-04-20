@@ -30,11 +30,15 @@
 						maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button">
 						<p:ajax event="dateSelect" process="@this"
-							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}"
-							update="proposalvalidityid, publishClosingDate,publicationApprovalScheduleDetailsId" />
-					</p:calendar> <p:inputText value="12:00 PM" disabled="true" size="4"
-						style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /> <p:message
-						id="noticePublishMsg" for="noticePublish" display="icon" /></td>
+							listener="#{qTScheduleDetailBackingBean.handlePublishedDate}"
+							update="proposalvalidityid, publishClosingDate,publicationApprovalScheduleDetailsId, publishTime, closingTime" />
+					</p:calendar> 
+					<p:inputText id="publishTime" value="#{approvalBackingBean.managedBean.qt.publishDate}" disabled="true" size="4"
+						style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+					</p:inputText> 
+					<p:message id="noticePublishMsg" for="noticePublish" display="icon" />
+				</td>
 			</tr>
 			<c:if
 				test="#{approvalBackingBean.managedBean.qt.bsvRequired eq 'true'}">
@@ -65,9 +69,12 @@
 						style="width: 111px;margin-top:5px">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<p:inputText
-						value="12:00 PM" disabled="true" size="4"
-						style="width: 65px;margin-top: 5px;margin-bottom: 0px;" /></td>
+					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+					<p:inputText id="closingTime" value="#{approvalBackingBean.managedBean.qt.closingDate}" disabled="true" size="4"
+						style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+					</p:inputText>
+				</td>
 			</tr>
 			
 			<c:if
@@ -82,9 +89,12 @@
 							<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 							</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
-							<p:inputText
-							value="12:00 PM" disabled="true" size="4"
-							style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /> <p:message
+						<p:inputText id="sampleClosingTime" value="#{approvalBackingBean.managedBean.qt.sampleClosingDate}" 
+							disabled="true" size="4"
+							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+						</p:inputText> 
+						<p:message
 							id="proposalPreparationMsg" for="proposalPreparation"
 							display="icon" /></td>
 				</tr>
