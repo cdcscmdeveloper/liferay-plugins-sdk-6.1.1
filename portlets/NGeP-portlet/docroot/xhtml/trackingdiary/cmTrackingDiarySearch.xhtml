@@ -30,7 +30,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.supp.name']}" /></td>
 						<td><p:inputText size="50"
-								value="#{cmTrackingDiaryBackingBean.managedBean.searchSupplierValue}"></p:inputText></td>
+								value="#{cmTrackingDiaryBackingBean.managedBean.searchSupplierValue}" disabled="#{unspscCodeBackingBean.allSupplier}"></p:inputText></td>
 					</tr>
 					<tr>
 						<td width="15%"><p:outputLabel
@@ -44,29 +44,7 @@
 						<td width="35%%"><p:inputText size="50"
 								value="#{cmTrackingDiaryBackingBean.managedBean.searchItemNameValue}"></p:inputText></td>
 					</tr>
-					<!-- 							<tr> -->
-					<!-- 								<td width="15%"><p:outputLabel -->
-					<!-- 										value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td> -->
-					<!-- 								<td width="35%"><p:calendar mode="popup" showOn="button" -->
-					<!-- 										readonlyInput="true" -->
-					<!-- 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
-					<!-- 										value="#{cmTrackingDiaryBackingBean.managedBean.searchCreatedFromDuration}"> -->
-					<!-- 									</p:calendar> -->
-					<!-- 									<p:spacer width="5" /> -->
-					<!-- 									<p:calendar mode="popup" showOn="button" -->
-					<!-- 										readonlyInput="true" -->
-					<!-- 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
-					<!-- 										value="#{cmTrackingDiaryBackingBean.managedBean.searchCreatedToDuration}"> -->
-					<!-- 									</p:calendar></td> -->
-					<!-- 							</tr> -->
-					<!-- 							<tr> -->
-					<!-- 								<td width="15%"><p:outputLabel value="Status" /></td> -->
-					<!-- 								<td width="35%"><p:selectOneMenu style="width: 314px;" -->
-					<!-- 											value="#{cmTrackingDiaryBackingBean.managedBean.searchStatusId}"> -->
-					<!-- 											<f:selectItems -->
-					<!-- 												value="#{cmTrackingDiaryBackingBean.getItemStatusOptions()}" /> -->
-					<!-- 									</p:selectOneMenu></td> -->
-					<!-- 							</tr> -->
+				
 				</table>
 
 				<div class="ppRightBtn">
