@@ -35,7 +35,7 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 560px;">
-					<p:inputTextarea id="preparedOrgProfileId" rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+					<p:inputTextarea id="preparedOrgProfileId" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}" />					
 					<ac:lov id="preparedPtj" uiMode="link" 
 						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
@@ -61,7 +61,7 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td>
-					<p:inputTextarea id="chargeOrgProfile" rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+					<p:inputTextarea id="chargeOrgProfile" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" />										
 					<p:commandLink
 						oncomplete="dlgChargedPtj.show();"
