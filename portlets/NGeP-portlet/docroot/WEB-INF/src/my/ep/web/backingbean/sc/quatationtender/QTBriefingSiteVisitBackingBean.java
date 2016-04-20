@@ -865,7 +865,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			ScQtBsvDtl bsvDetail ) {
 
 		if (!(compareScQTBsvDtlObjs(tempScQtBsvDtl,bsvDetail))) {
-			QtAmendMentBean amendMentBean = this.getManagedBean()
+			/*QtAmendMentBean amendMentBean = this.getManagedBean()
 					.getAmendMentBean();
 			if (null == amendMentBean) {
 				amendMentBean = new QtAmendMentBean();
@@ -878,7 +878,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				amendMentBean.setSiteVisitChangedDate(new Timestamp(today
 						.getTime()));
 			}
-			this.getManagedBean().setAmendMentBean(amendMentBean);
+			this.getManagedBean().setAmendMentBean(amendMentBean);*/
 		}
 		 this.getManagedBean().setTempScQtBsvDtl(null);
 
