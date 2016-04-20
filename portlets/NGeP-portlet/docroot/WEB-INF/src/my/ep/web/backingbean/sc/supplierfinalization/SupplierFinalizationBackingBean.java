@@ -34,6 +34,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -57,6 +58,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -189,7 +192,7 @@ public class SupplierFinalizationBackingBean extends
 
 	private int currentTab;
 	private String textBeforeSign;
-
+	
 	private static final String SPACE = " ";
 	
 	private static final int PREPARE_ACTIVE_INDEX_MEETING = 0;
@@ -3564,6 +3567,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean isRepublish = false;
 		boolean isReEvaluate = false;
 		boolean isCancel = false;
+		String ministryName = null;
 		
 		String decisionTypeCode = scQtFinalization.getDecision()
 									.getParameterCode();
@@ -3598,6 +3602,31 @@ public class SupplierFinalizationBackingBean extends
 			isCancel = true;
 		}
 		
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId());
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+			
+			if (resDTO.getPmOrgProfile() != null) {
+				ministryName = resDTO.getPmOrgProfile().getOrgName();
+				ministryName = ministryName.toUpperCase();
+			}
+		} finally {
+			orgProfileSO = null;
+		}
+		
+		context.put("qtTitle", scQt.getQtTitle().toUpperCase());
+		String committeeTypeStr = ParameterHelper.getInstance()
+				.getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
+						getManagedBean().getCommitteeType(), SourcingConstants.MY_LOCALE);
+		if (committeeTypeStr != null) {
+			committeeTypeStr = committeeTypeStr.toUpperCase();
+		}
+		context.put("committeeTypeStr", committeeTypeStr);
+		context.put("ministryName", ministryName);
 		context.put("isSupplierFinalization", 
 					 isSupplierFinalization);
 		context.put("isForwardToHigherAuthority", 
@@ -4341,10 +4370,16 @@ public class SupplierFinalizationBackingBean extends
 					ScWorkFlowStatus reFinalizationWrkFlowStatus = null;
 					for (ScWorkFlowStatus wrkFlowStatus 
 												: statusList) {
-						if (QTStatusConst.QT_RE_EVALUATION.equals(
-								wrkFlowStatus.getPmStatus().getStatusId())) {
+						if (reEvalWrkFlowStatus != null && 
+								reFinalizationWrkFlowStatus != null) {
+							break;
+						}
+						if (reEvalWrkFlowStatus == null && 
+								QTStatusConst.QT_RE_EVALUATION.equals(
+										wrkFlowStatus.getPmStatus().getStatusId())) {
 							reEvalWrkFlowStatus = wrkFlowStatus;
-						} else if (QTStatusConst.QT_RE_FINALIZATION.equals(
+						} else if (reFinalizationWrkFlowStatus == null && 
+									QTStatusConst.QT_RE_FINALIZATION.equals(
 										wrkFlowStatus.getPmStatus().getStatusId())) {
 							reFinalizationWrkFlowStatus = wrkFlowStatus;
 						}

@@ -76,13 +76,13 @@
     </tr>
 	<tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> LEMBAGA PEROLEHAN B </span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $!committeeTypeStr </span>
             <br/>
         </td>
     </tr>
 	<tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KEMENTERIAN KESELAMATAN DALAM NEGERI </span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $!ministryName </span>
             <br/><br/>
         </td>
     </tr>
@@ -106,7 +106,7 @@
     </tr>
 	<tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> TENDER PEMBEKALAN MINYAK PELINCIR (MARIN) UNTUK POLIS DIRAJA MALAYSIA </span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $!qtTitle </span>
             <br/><br/><br/><br/>
         </td>
     </tr>
