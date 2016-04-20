@@ -503,32 +503,24 @@ public class QTScheduleDetailBackingBean extends
 	}
 
 	/**
+	 * To update publish date
+	 */
+	public void handlePublishedDate() {
+		debugLogger("handlePublishedDate");
+		ScQt scQt = this.getManagedBean().getQt();
+
+		updatePublishDate(scQt);
+		updateProposalStartDate(scQt);
+	}
+	
+	/**
 	 * To update closing date and proposal validity days..
 	 */
 	public void handlePublishClosingDate() {
 		debugLogger("handlePublishClosingDate");
 		ScQt scQt = this.getManagedBean().getQt();
 
-		Date clsDate = null;
-		if (!scQt.isBsvRequired()) {
-			if (null != scQt.getPublishDate()) {
-				clsDate = DateUtils.addDays(scQt.getPublishDate(),
-						scQt.getPublishPeriod());
-			}
-		} else {
-			if (null != scQt.getLatestBsvDate()) {
-				clsDate = DateUtils.addDays(scQt.getLatestBsvDate(),
-						scQt.getPublishPeriod());
-			}
-		}
-		if (null != clsDate) {
-			scQt.setClosingDate(clsDate);
-			scQt.setProposalValidityEndDate(DateUtils.addDays(clsDate,
-					scQt.getQtValidityPeriod()));
-		}if(scQt.isSampleReq()){
-			scQt.setSampleClosingDate(clsDate);
-		}
-
+		updatePublishClosingDate(scQt);
 	}
 
 	/**

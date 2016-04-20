@@ -27,12 +27,18 @@
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}"
 										maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}">
 										<p:ajax event="dateSelect" process="@this"
-											listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate()}"
-											update="proposalvalidityid, closingDate, publishId,scheduleDetalsPublishingClosing" />
-									</p:calendar> <p:inputText value="12:00 PM" disabled="true" size="4"
-										style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /></td>
-								<td><p:message id="noticePublishMsg" for="noticePublish"
-										display="icon" /></td>
+											listener="#{qTScheduleDetailBackingBean.handlePublishedDate()}"
+											update="proposalvalidityid, closingDate, publishId,scheduleDetalsPublishingClosing,publishTime, closingTime" />
+									</p:calendar> 
+									<p:inputText id="publishTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" disabled="true" size="4"
+										style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+									</p:inputText>
+								</td>
+								<td>
+									<p:message id="noticePublishMsg" for="noticePublish"
+										display="icon" />
+								</td>
 							</tr>
 						</table>
 					</h:panelGroup></td>
@@ -67,10 +73,14 @@
 						style="width: 111px;margin-top:5px">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<p:inputText
-						value="12:00 PM" disabled="true" size="4"
-						style="width: 65px;margin-top: 5px;margin-bottom: 0px;" /> <ac:iconTooltip
-						value="#{lbl['lbl.sc.closing.date.tooltip']}" /></td>
+					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+					<p:inputText id="closingTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}" 
+						disabled="true" size="4"
+						style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+					</p:inputText> 
+					<ac:iconTooltip value="#{lbl['lbl.sc.closing.date.tooltip']}" />
+				</td>
 			</tr>
 
 			<c:if
@@ -88,9 +98,13 @@
 										style="width: 111px;margin-top:5px">
 										<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-									</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <p:inputText
-										value="12:00 PM" disabled="true" size="4"
-										style="width: 65px;margin-top: 1px;margin-bottom: 0px;" /></td>
+									</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; 
+									<p:inputText id="sampleClosingTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}" 
+										disabled="true" size="4"
+										style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+									</p:inputText>
+								</td>
 								<td><p:message id="sampledate" for="sampleclsdate"
 										display="icon" /></td>
 								<td><ac:iconTooltip
