@@ -42,9 +42,12 @@ public class ScSchedulerServlet extends HttpServlet {
 		
 		// daily Job to be run at server startup
 
-		EpSchedulerHelper.runBuildJobNow(new JobKey(
+		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_DAILY_JOB,
-				SchedulerConstants.SC_JOB_GROUP));
+				SchedulerConstants.SC_JOB_GROUP),BidSchedulesPoolingJob.class);
+		
+
+		
 
 		// Sc Continous job
 		EpSchedulerHelper
