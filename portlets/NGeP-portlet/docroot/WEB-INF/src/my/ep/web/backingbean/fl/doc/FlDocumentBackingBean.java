@@ -625,6 +625,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				FlActor actor = iFulfilmentSO.retrieveFlActors(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				if(actor != null){
 					recNoteBB.getManagedBean().setFlApprover(actor.getUser());
+				}
+			}
+			if(recNoteBB.getManagedBean().getAcknowledgeDate() == null){
+				FlActor actor = iFulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE, recNoteBB.getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.ACKNOWLEDGE_OFFICER.value());
+				if(actor != null){
 					recNoteBB.getManagedBean().setAcknowledgeDate(actor.getActionDate());
 				}
 			}
