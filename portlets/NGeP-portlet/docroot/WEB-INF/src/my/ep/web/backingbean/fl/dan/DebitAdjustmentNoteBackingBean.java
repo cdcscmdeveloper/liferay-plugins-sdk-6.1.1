@@ -81,8 +81,8 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	/** The log. */
 	private static Logger log = Logger.getLogger(DebitAdjustmentNoteBackingBean.class);
 	
-	/** The Constant NAV_ORDERNO. */
-	private static final String NAV_ORDERNO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
+	private static final String NAV_CO = "/xhtml/fl/contractorder/coBasePage.xhtml";
 	
 	/** The Constant NAV_INVOICE. */
 	private static final String NAV_INVOICE = "/xhtml/fl/invoice/invBasePage.xhtml";
@@ -361,7 +361,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 */
 	public String navigateDocument(String docType){
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFlOrderId(getManagedBean().getAdjustment().getFlOrder().getFulfilmentOrderId());
@@ -382,7 +382,13 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			FacesContext fc = FacesContext.getCurrentInstance();
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			flBB.getManagedBean().setHideRemarks(true);
-			return NAV_ORDERNO;
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+				return NAV_PO;
+			}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+				return NAV_CO;
+			}			
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)){
 			IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();

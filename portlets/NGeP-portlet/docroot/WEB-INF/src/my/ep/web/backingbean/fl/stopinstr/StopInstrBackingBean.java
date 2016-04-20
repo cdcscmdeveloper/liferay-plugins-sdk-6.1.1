@@ -539,6 +539,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
 		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 		flBB.getManagedBean().setHideRemarks(true);
+		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			return NAV_PO;
 		}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){

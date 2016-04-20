@@ -1331,6 +1331,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
 			orderBackingBean.getManagedBean().setButtonVal("View");
 			flBB.getManagedBean().setHideRemarks(true);
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			if(resDTO.getFlOrder().isFactored()) {
 				orderBackingBean.getManagedBean().setFactoringCheck("true");
 			} else {
