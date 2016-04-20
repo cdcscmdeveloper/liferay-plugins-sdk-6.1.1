@@ -88,7 +88,7 @@
 		<div>
 			<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
 				<div class="ppRightBtn">
-					<c:if test="#{isPendingSubmissionStatus}">
+					<c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
 						<p:commandButton value="#{lbl['lbl.btn.item.search']}"
 							process="@this" partialSubmit="true" style="float:left;"
 							immediate="true"
