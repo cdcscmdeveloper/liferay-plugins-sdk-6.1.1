@@ -1013,7 +1013,7 @@ public class ConsolidationReportBackingBean extends
 		if (CollectionUtils.isNotEmpty(
 				packageQualifiedSuppliers)) {
 			validateRanking(packageQualifiedSuppliers, 
-							  false, specZoneDtl);
+							  false, null, specZoneDtl);
 		}
 		
 		List<ScQtEvaluationResultDtl> itemQualifiedSuppliers = null;
@@ -1029,14 +1029,15 @@ public class ConsolidationReportBackingBean extends
 				if (CollectionUtils.isNotEmpty(
 							itemQualifiedSuppliers)) {
 					validateRanking(itemQualifiedSuppliers, 
-									  true, specZoneDtl);
+									  true, item, specZoneDtl);
 				}
 			}
 		}
 	}
 	
 	private void validateRanking(List<ScQtEvaluationResultDtl> qualifiedSuppliers, 
-								   boolean isItemized, TplSpecZoneDtl specZoneDtl) {
+								   boolean isItemized, ScQtRecommend item, 
+								   TplSpecZoneDtl specZoneDtl) {
 		int totalRanksCount = 0;
 		int totalQualifiedSuppliers = qualifiedSuppliers.size();
 		int minRankCount = totalQualifiedSuppliers;
@@ -1064,6 +1065,12 @@ public class ConsolidationReportBackingBean extends
 		
 		int currentRank = 0;
 		EpException epException = null;
+		String expMsgForItem = StringUtils.EMPTY;
+		
+		if (isItemized) {
+			expMsgForItem = "- Item : " + item.getRequestItem().getItemName();
+		}
+		
 		for (ScQtEvaluationResultDtl qualifiedSupp 
 								: qualifiedSuppliers) {
 			BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
@@ -1071,13 +1078,13 @@ public class ConsolidationReportBackingBean extends
 				int doRank = deskOfficerRank.intValue();
 				if (doRank == currentRank) { 
 					epException = new EpException(MessageConst.ERROR_760381, 
-								new String[] {String.valueOf(currentRank)});
+								new String[] {String.valueOf(currentRank), expMsgForItem});
 				} else if (doRank > totalQualifiedSuppliers) {
 					epException = new EpException(MessageConst.ERROR_760382, 
-								new String[] {String.valueOf(totalQualifiedSuppliers)});
+								new String[] {String.valueOf(totalQualifiedSuppliers), expMsgForItem});
 				} else if (doRank != (currentRank + 1)) {
 					epException = new EpException(MessageConst.ERROR_760383, 
-										new String[] {String.valueOf(currentRank)});
+										new String[] {String.valueOf(currentRank), expMsgForItem});
 				}
 				if (epException != null) {
 					setZoneAndTabIndexOnException(isItemized, specZoneDtl);
@@ -1092,7 +1099,7 @@ public class ConsolidationReportBackingBean extends
 		if (totalRanksCount < minRankCount) {
 			setZoneAndTabIndexOnException(isItemized, specZoneDtl);
 			throw new EpException(MessageConst.ERROR_760384, 
-						new String[] {String.valueOf(minRankCount)});
+						new String[] {String.valueOf(minRankCount), expMsgForItem});
 		}
 	}
 	
