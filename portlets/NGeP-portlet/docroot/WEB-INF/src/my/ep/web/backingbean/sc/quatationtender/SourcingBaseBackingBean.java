@@ -51,6 +51,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -620,15 +621,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public String getMessgeConstant(String outCome) {
 		String msgCode = null;
-		if (outCome.equalsIgnoreCase("SUBMIT")) {
+		if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			msgCode = MessageConst.INFO_700005;
-		} else if (outCome.equalsIgnoreCase("REJECT")) {
+		} else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			msgCode = MessageConst.INFO_700008;
-		} else if (outCome.equalsIgnoreCase("REVISE")) {
+		} else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			msgCode = MessageConst.INFO_700012;
-		} else if (outCome.equalsIgnoreCase("APPROVE")) {
+		} else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			msgCode = MessageConst.INFO_700007;
-		} else if (outCome.equalsIgnoreCase("ACCEPT")) {
+		} else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
 			msgCode = MessageConst.INFO_700013;
 		}
 		return msgCode;
@@ -1271,7 +1272,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtApprovalRequest> approvalRequests, String outCome) {
 
 		PmParameter parameter = null;
-		if (!"SUBMIT".equalsIgnoreCase(outCome)) {
+		if (!BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)) {
 			parameter = getParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, ApprovalStatus
 							.valueOf(outCome).getApprovalStatus());
