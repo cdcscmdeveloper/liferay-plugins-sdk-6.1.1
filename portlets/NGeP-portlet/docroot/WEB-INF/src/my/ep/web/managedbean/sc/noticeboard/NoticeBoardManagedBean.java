@@ -2,12 +2,13 @@
 package my.ep.web.managedbean.sc.noticeboard;
 
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.constant.pm.ParameterConst;
@@ -159,8 +160,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String mofNo = null;
 	private String supplierMofNo;
 	private boolean validMofNo;
-	private QtAmendMentBean qtAmendMentBean;
-	private String changedDate;
+	private Map<String, Date> amendmentDateMap;
 	private String ministryName;
 	private String jabatan;
 	private Long qtId;
@@ -1092,31 +1092,17 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the qtAmendMentBean
+	 * @return the amendmentDateMap
 	 */
-	public QtAmendMentBean getQtAmendMentBean() {
-		return qtAmendMentBean;
+	public Map<String, Date> getAmendmentDateMap() {
+		return amendmentDateMap;
 	}
 
 	/**
-	 * @param qtAmendMentBean the qtAmendMentBean to set
+	 * @param amendmentDateMap the amendmentDateMap to set
 	 */
-	public void setQtAmendMentBean(QtAmendMentBean qtAmendMentBean) {
-		this.qtAmendMentBean = qtAmendMentBean;
-	}
-
-	/**
-	 * @return the changedDate
-	 */
-	public String getChangedDate() {
-		return changedDate;
-	}
-
-	/**
-	 * @param changedDate the changedDate to set
-	 */
-	public void setChangedDate(String changedDate) {
-		this.changedDate = changedDate;
+	public void setAmendmentDateMap(Map<String, Date> amendmentDateMap) {
+		this.amendmentDateMap = amendmentDateMap;
 	}
 
 	/**
