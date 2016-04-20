@@ -593,6 +593,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
        getManagedBean().setChkSchedule(false);
   	   getManagedBean().setChkProgressive(false);
   	   getManagedBean().setProgSchedButtonDeactive(false);
+  	   getManagedBean().setButtonHideSchActive(true);
   	   if (getManagedBean().getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
   		 getManagedBean().getContractVer().getCtContract().setFrequencySchedule(true);
   	   } else if (getManagedBean().getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
@@ -806,21 +807,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
    	 * The method used to delete the selected frequency schedule.
    	 */
    	public void deleteScheduleDetails() {
-   		for (int i = 0; i < selectedSchedule.length; i++) {
-   			CtSchedule ctSchedule = selectedSchedule[i];
-   			this.getManagedBean().getContractVer().getCtSchedules().remove(ctSchedule);
-   		}
-   		selectedSchedule = null;	
-   		getManagedBean().setButtonHideActive(true);
+   		try {
+			Iterator<CtSchedule> ctScheduleIterator = getManagedBean().getContractVer().getCtSchedules() .iterator();
+			while(ctScheduleIterator.hasNext()){
+				CtSchedule  ctSchedules = ctScheduleIterator.next();
+				if(ctSchedules.isSelectedCheckBox()){
+					ctScheduleIterator.remove();
+				}
+			}
+			getManagedBean().setSelectAll(false);
+			getManagedBean().setButtonHideSchActive(true);
+	} catch (Exception e) {
+		e.printStackTrace();
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	}
    	}
    	
    	public void deleteProgressiveDetails(){
-   		for (int i = 0; i < selectedProgressive.length; i++) {
-   			CtProgressivePayment ctProgressivePayments  = selectedProgressive [i];
-   			this.getManagedBean().getContractVer().getCtProgressivePayments().remove(ctProgressivePayments);
-   		}
-   		selectedSchedule = null;	
-   		getManagedBean().setButtonHideActive(true);
+   		try {
+			Iterator<CtProgressivePayment> ctProIterator = getManagedBean().getContractVer().getCtProgressivePayments().iterator();
+			while(ctProIterator.hasNext()){
+				CtProgressivePayment  ctProgressivePayments = ctProIterator.next();
+				if(ctProgressivePayments.isSelectedCheckBox()){
+					ctProIterator.remove();
+				}
+			}
+			getManagedBean().setSelectAll(false);
+	} catch (Exception e) {
+		e.printStackTrace();
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	}
    	}
        
        /**
@@ -1100,6 +1116,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					}
 				}
 				getManagedBean().setSelectedDeduction(null);
+				getManagedBean().setSelectAll(false);
+				getManagedBean().setButtonHideDedActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1120,12 +1138,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to delete the selected deduction clause.
 	 */
 	public void deleteClauseDetails() {
-		for (int i = 0; i < selectedDeductionClauses.length; i++) {
-			 CtDeductionClause clause = selectedDeductionClauses[i];
-			 this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().remove(clause);
-		}
-		selectedDeductionClauses = null;
-		getManagedBean().setButtonHideActive(true);
+		try {
+			Iterator<CtDeductionClause> deductionClauseIterator = getManagedBean().getSelectedDeduction().getCtDeductionClauses() .iterator();
+			while(deductionClauseIterator.hasNext()){
+				CtDeductionClause  clause = deductionClauseIterator.next();
+				if(clause.isSelectedCheckBox()){
+					deductionClauseIterator.remove();
+				}
+			}
+			getManagedBean().setSelectAll(false);
+			getManagedBean().setButtonHideDedActive(true);
+	} catch (Exception e) {
+		e.printStackTrace();
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	}
 	}
 
 	public CtDeductionClause[] getSelectedDeductionClauses() {
@@ -1151,7 +1177,41 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}	
 	}
     
+    /**
+     * Method to set boolean value for checkbox 
+     * @param pass ajax event type
+     * Set boolean value for user action 
+     * */
+    public void selectOneDeductCheckboxSelect(AjaxBehaviorEvent e){
+    	getManagedBean().setSelectAll(false);
+    	for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
+    		if(deduct.isSelectedCheckBox()){
+    			getManagedBean().setButtonHideDedActive(false);
+    			return;
+    		}
+    	}
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setButtonHideDedActive(false);
+		}else{
+			getManagedBean().setButtonHideDedActive(true);
+		}	
+	}
     
+    public void selectOneClauseCheckboxSelect(AjaxBehaviorEvent e){
+    	getManagedBean().setSelectAll(false);
+    	for (CtDeductionClause ctDeductionClauses : getManagedBean().getSelectedDeduction().getCtDeductionClauses()) {
+    		if(ctDeductionClauses.isSelectedCheckBox()){
+    			getManagedBean().setButtonHideDedActive(false);
+    			return;
+    		}
+    	}
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setButtonHideDedActive(false);
+		}else{
+			getManagedBean().setButtonHideDedActive(true);
+		}	
+    }
+	
     /**
 	 * @return the paidPercentage
 	 */
@@ -1954,12 +2014,125 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				
 				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideDedActive(false);
+				}else{
+					getManagedBean().setButtonHideDedActive(true);
+				}	
+			}
+			
+			
+			public void selectAllDeductionClause(AjaxBehaviorEvent e) {
+				
+				for (CtDeductionClause ctDeductionClauses : getManagedBean().getSelectedDeduction().getCtDeductionClauses()) {
+					if (getManagedBean().isSelectAll()) {
+						ctDeductionClauses.setSelectedCheckBox(true);
+				       }else {
+				    	   ctDeductionClauses.setSelectedCheckBox(false);
+				       }
+			}
+			
+			if((boolean) e.getComponent().getAttributes().get("value")){
+				getManagedBean().setButtonHideDedActive(false);
+			}else{
+				getManagedBean().setButtonHideDedActive(true);
+			}	
+		}
+			
+			public void selectAllScheduleDtl(AjaxBehaviorEvent e) {
+				
+				for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
+					if (getManagedBean().isSelectAll()) {
+						ctSchedules.setSelectedCheckBox(true);
+				       }else {
+				    	   ctSchedules.setSelectedCheckBox(false);
+				       }
+			}
+			
+			if((boolean) e.getComponent().getAttributes().get("value")){
+				getManagedBean().setButtonHideSchActive(false);
+			}else{
+				getManagedBean().setButtonHideSchActive(true);
+			}	
+		}
+			
+		public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e){
+			    	getManagedBean().setSelectAll(false);
+			    	for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
+			    		if(ctSchedules.isSelectedCheckBox()){
+			    			getManagedBean().setButtonHideSchActive(false);
+			    			return;
+			    		}
+			    	}
+					if((boolean) e.getComponent().getAttributes().get("value")){
+						getManagedBean().setButtonHideSchActive(false);
+					}else{
+						getManagedBean().setButtonHideSchActive(true);
+					}	
+			    }
+		
+		public void selectAllPidDtl(AjaxBehaviorEvent e) {
+			
+			for (CtPidReason ctPidReasons : getManagedBean().getContractVer().getCtPidReasons()) {
+				if (getManagedBean().isSelectAll()) {
+					ctPidReasons.setSelectedCheckBox(true);
+			       }else {
+			    	   ctPidReasons.setSelectedCheckBox(false);
+			       }
+		}
+		
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setButtonHideActive(false);
+		}else{
+			getManagedBean().setButtonHideActive(true);
+		}	
+	}
+		
+	public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
+		    	getManagedBean().setSelectAll(false);
+		    	for (CtPidReason ctPidReasons : getManagedBean().getContractVer().getCtPidReasons()) {
+		    		if(ctPidReasons.isSelectedCheckBox()){
+		    			getManagedBean().setButtonHideActive(false);
+		    			return;
+		    		}
+		    	}
+				if((boolean) e.getComponent().getAttributes().get("value")){
 					getManagedBean().setButtonHideActive(false);
 				}else{
 					getManagedBean().setButtonHideActive(true);
 				}	
-			}
+		    }
+		
+		public void selectAllProPaymentDtl(AjaxBehaviorEvent e) {
 			
+			for (CtProgressivePayment ctProgressivePayments : getManagedBean().getContractVer().getCtProgressivePayments()) {
+				if (getManagedBean().isSelectAll()) {
+					ctProgressivePayments.setSelectedCheckBox(true);
+			       }else {
+			    	   ctProgressivePayments.setSelectedCheckBox(false);
+			       }
+		}
+		
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setButtonHideSchActive(false);
+		}else{
+			getManagedBean().setButtonHideSchActive(true);
+		}	
+	}
+		
+	public void selectOneProPaymentCheckboxSelect(AjaxBehaviorEvent e){
+		    	getManagedBean().setSelectAll(false);
+		    	for (CtProgressivePayment ctProgressivePayments : getManagedBean().getContractVer().getCtProgressivePayments()) {
+		    		if(ctProgressivePayments.isSelectedCheckBox()){
+		    			getManagedBean().setButtonHideSchActive(false);
+		    			return;
+		    		}
+		    	}
+				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideSchActive(false);
+				}else{
+					getManagedBean().setButtonHideSchActive(true);
+				}	
+		    }
 			/**
 			 * The method used for generating a list of available financial institution
 			 * for performance bond as selection.
@@ -2508,12 +2681,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	  */		
 	  public void deletePidPurchase(){
 		  try {
-				  getManagedBean().getContractVer().getCtPidReasons().removeAll(getManagedBean().getSelectedPidReason());
-		          getManagedBean().setButtonHideActive(true);
-		  } catch (Exception e) {
-				  e.printStackTrace();
-				  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		   }
+				Iterator<CtPidReason> ctPidReasonIterator = getManagedBean().getContractVer().getCtPidReasons().iterator();
+				while(ctPidReasonIterator.hasNext()){
+					CtPidReason  ctPidReasons = ctPidReasonIterator.next();
+					if(ctPidReasons.isSelectedCheckBox()){
+						ctPidReasonIterator.remove();
+					}
+				}
+				getManagedBean().setSelectAll(false);
+				getManagedBean().setButtonHideActive(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
 	  }
 	 /**
 	   * This method used to compare

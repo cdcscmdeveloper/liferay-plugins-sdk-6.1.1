@@ -60,7 +60,7 @@
 			   rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
 			    disabled="#{amendmentBackingBean.managedBean.selectedScLoaReports == null or  (amendmentBackingBean.managedBean.selectedScLoaReports != null  and 
 			            amendmentBackingBean.managedBean.selectedScLoaReports.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined)
-			            or amendmentBackingBean.managedBean.disableFinalAmendDetails or ctBackingBean.managedBean.buttonHideActive}"/>
+			            or amendmentBackingBean.managedBean.disableFinalAmendDetails}"/>
 			<p:spacer width="1" />
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{amendmentBackingBean.downloadAll()}" />
 		 </div>
