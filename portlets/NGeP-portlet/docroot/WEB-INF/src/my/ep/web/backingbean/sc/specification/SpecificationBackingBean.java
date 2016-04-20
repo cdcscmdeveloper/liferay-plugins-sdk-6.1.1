@@ -4746,7 +4746,14 @@ public class SpecificationBackingBean extends
 							|| "".equals(this.getManagedBean()
 									.getPanelItemCategory())) {
 						retriveSupplierQualificationCriteria("SC");
+						List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
+						
+						if (CollectionUtils.isNotEmpty(panelItemList)){
+							if(null!=panelItemList.get(0).getItemCategoryId()){
+							 this.getManagedBean().setPanelItemCategory(panelItemList.get(0).getItemCategoryId().getParameterCode());
+							 }
 
+					}
 					}
 					if ((null != this.getManagedBean().getPanelItemCategory() && !""
 							.equals(this.getManagedBean()
