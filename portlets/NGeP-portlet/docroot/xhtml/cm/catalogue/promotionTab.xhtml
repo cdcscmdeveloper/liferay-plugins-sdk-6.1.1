@@ -20,9 +20,6 @@
 		<f:facet name="header">
 			<p:row>
 				<p:column>
-				#{lbl['lbl.cm.pricing.type']}
-						</p:column>
-				<p:column>
 							#{lbl['lbl.cm.price']}
 						</p:column>
 				<p:column>
@@ -38,9 +35,7 @@
 
 
 		<p:row>
-			<p:column>
-				<p:outputLabel value="#{lbl['lbl.cm.promotion']}" />
-			</p:column>
+			
 			<p:column>
 				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}" maxlength="18" style="text-align:right">
