@@ -56,12 +56,13 @@
 							oncomplete="blockWidget.hide();" />
 					</c:when>
 					<c:otherwise>
-						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+						<p:commandButton value="#{lbl['lbl.btn.submit']}" styleClass="amendButton"
 							action="#{qTDetailBB.submitQtDetailsFormMaintanace}" process="@form"
 							update="@all"
 							onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
-							rendered="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA)}" />
+							rendered="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA)}"
+							disabled="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) and (empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew)}" />
 					</c:otherwise>
 				</c:choose>
 				
