@@ -27,7 +27,7 @@
 		+
 		<p:inputText value="#{cc.attrs.countryCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.country.code']}" 
 			required="#{cc.attrs.required}" id="countryCodeCompId" disabled="#{cc.attrs.disabled}" />
-		<p:inputText value="#{cc.attrs.areaCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{lbl['lbl.sm.area.code']}"
+		<p:inputText value="#{cc.attrs.areaCode}" size="4" maxlength="4" label="#{cc.attrs.label} - #{cc.attrs.isMobile ? lbl['lbl.sm.mobile.prefix'] : lbl['lbl.sm.area.code']}"
 			required="#{cc.attrs.required}" id="areaCodeCompId" disabled="#{cc.attrs.disabled}" />
 		<p:inputText value="#{cc.attrs.number}" size="10" maxlength="10" disabled="#{cc.attrs.disabled}"
 			required="#{cc.attrs.required}" id="phoneNoCompId"  label="#{cc.attrs.label}">
