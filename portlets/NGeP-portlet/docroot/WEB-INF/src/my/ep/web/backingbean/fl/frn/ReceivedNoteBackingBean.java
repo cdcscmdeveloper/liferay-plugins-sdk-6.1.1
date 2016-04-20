@@ -345,6 +345,15 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					FulfilmentResDTO errRes = iFulfilmentRequestSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
+				if(getManagedBean().getFlApprover() == null){
+					FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+					if(actor != null){
+						getManagedBean().setFlApprover(actor.getUser());
+					}
+				}
+				if(getManagedBean().getFulfilmentNote().getApproverId() != null){
+					getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApproverId());
+				}
 			}else{
 				FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
 				reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
@@ -357,12 +366,25 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					if(getManagedBean().getFulfilmentNote().getApproverId() != null){
 						getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApproverId());
 					}
+					if(getManagedBean().getFlApprover() == null){
+						FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+						if(actor != null){
+							getManagedBean().setFlApprover(actor.getUser());
+						}
+					}
 				} else {
 					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 					resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 					getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 					getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+					
+					if(getManagedBean().getFlApprover() == null){
+						FlActor actor = iFulfilmentSO.retrieveFlActors(resDTO.getFlDeliveryOrder().getFlRequest().getDocType(), resDTO.getFlDeliveryOrder().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+						if(actor != null){
+							getManagedBean().setFlApprover(actor.getUser());
+						}
+					}
 					
 					getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 					// Default status
@@ -412,9 +434,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
 				}
 				getSupplierGst(getManagedBean().getFulfilmentNote());
-			}
-			if(getManagedBean().getFlApprover() != null){
-				getManagedBean().setUserLoginId(getManagedBean().getFlApprover().getUserId()); 
 			}
 			getManagedBean().setSelectedTabIndex(0);
 			System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
@@ -929,10 +948,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setDocMaintainRemarks(true);
 			getManagedBean().setAcknowledged(true);
 			getManagedBean().setButtonVal("View");
-			if(getManagedBean().getFlApprover() == null){
+			if(getManagedBean().getAcknowledgeDate() == null){
 				FlActor actor = iFulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.ACKNOWLEDGE_OFFICER.value());
 				if(actor != null){
 					getManagedBean().setAcknowledgeDate(actor.getActionDate());
+				}
+			}
+			if(getManagedBean().getFlApprover() == null){
+				FlActor actor = iFulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+				if(actor != null){
+					getManagedBean().setFlApprover(actor.getUser());
 				}
 			}
 			
