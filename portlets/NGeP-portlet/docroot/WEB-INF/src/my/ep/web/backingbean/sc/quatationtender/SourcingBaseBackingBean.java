@@ -2490,7 +2490,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		} else {
 			if (null != scQt.getLatestBsvDate()) {
-				scQt.setProposalStartDate(DateUtils.setDefaultDateTime(scQt.getLatestBsvDate()));
+				scQt.setProposalStartDate(scQt.getLatestBsvDate());
 			} else {
 				scQt.setProposalStartDate(scQt.getPublishDate());	// temporary.
 				log.info("latest bsv date not found.");
