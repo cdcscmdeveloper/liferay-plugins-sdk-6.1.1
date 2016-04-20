@@ -294,7 +294,7 @@ public class SupplierFinalizationBackingBean extends
 	 * @param qtId
 	 *            The id of the quotation/tender to be loaded
 	 */
-	public void retrieveQTDetails(Long qtId) {
+	private void retrieveQTDetails(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -309,6 +309,8 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
+			getManagedBean().setOriginalFinalizationSecretaryUserId(
+						scQt.getFinalizationSecratery().getUserId());
 
 			boolean isMedicalProcCategory = isMedicalProcurementCategory(
 												scQt.getPmProcurementCategory());
@@ -1305,7 +1307,8 @@ public class SupplierFinalizationBackingBean extends
 	private void setItemHigherAuthorityReqStatus(ScQtRecommend scQtRecommend) {
 		Long loggedInUserId = getFacesScopes().getUserSessionBean()
 									  		  .getUserId();
-		if (scQtRecommend.getCreatedBy().equals(loggedInUserId)) {
+		if (loggedInUserId.equals(
+				getManagedBean().getOriginalFinalizationSecretaryUserId())) {
 			if (!this.getManagedBean().isForwardToHigherAuthority() ||  
 					!this.getManagedBean().isItemize()) {
 				scQtRecommend.setHigherAuthReq(false);
@@ -4352,56 +4355,18 @@ public class SupplierFinalizationBackingBean extends
 		Boolean isRefinalized = getManagedBean().getQtRefinalized();
 		
 		if (isRefinalized == null) {
-			IQTDetailSO qtDetailSO = null;
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			
 			try {
-				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-				tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());	
-				List<Long> statusIds = new ArrayList<Long>();
-				statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
-				statusIds.add(QTStatusConst.QT_RE_EVALUATION);
-				tenderReqDTO.setStatusIds(statusIds);
+				qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+				reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 				
-				List<ScWorkFlowStatus> statusList = qtDetailSO.retrieveWorkFlowStatus(tenderReqDTO);
-				if (CollectionUtils.isNotEmpty(statusList)) {
-					ScWorkFlowStatus reEvalWrkFlowStatus = null;
-					ScWorkFlowStatus reFinalizationWrkFlowStatus = null;
-					for (ScWorkFlowStatus wrkFlowStatus 
-												: statusList) {
-						if (reEvalWrkFlowStatus != null && 
-								reFinalizationWrkFlowStatus != null) {
-							break;
-						}
-						if (reEvalWrkFlowStatus == null && 
-								QTStatusConst.QT_RE_EVALUATION.equals(
-										wrkFlowStatus.getPmStatus().getStatusId())) {
-							reEvalWrkFlowStatus = wrkFlowStatus;
-						} else if (reFinalizationWrkFlowStatus == null && 
-									QTStatusConst.QT_RE_FINALIZATION.equals(
-										wrkFlowStatus.getPmStatus().getStatusId())) {
-							reFinalizationWrkFlowStatus = wrkFlowStatus;
-						}
-					}
-					if (reFinalizationWrkFlowStatus == null) {
-						isRefinalized = Boolean.FALSE;
-					} else if (reEvalWrkFlowStatus == null) {
-						isRefinalized = Boolean.TRUE;
-					} else if (reEvalWrkFlowStatus != null && 
-									reFinalizationWrkFlowStatus != null) {
-						if (reEvalWrkFlowStatus.getChangedDate().after(
-								reFinalizationWrkFlowStatus.getChangedDate())) {
-							isRefinalized = Boolean.FALSE; 
-						} else {
-							isRefinalized = Boolean.TRUE;
-						}
-					}
-				} else {
-					isRefinalized = Boolean.FALSE;
-				}
+				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.checkIfQTRefinalized(reqDTO);
+				isRefinalized = resDTO.isQtRefinalized();
 			} finally {
-				qtDetailSO = null;
+				qtSuppFinalizationSO = null;
 			}
 			
 			getManagedBean().setQtRefinalized(isRefinalized);
@@ -4576,7 +4541,8 @@ public class SupplierFinalizationBackingBean extends
 					.getUserId();
 			for (ScQtRecommend scQtRecommend : recommendList) {
 				if (scQtRecommend.isHigherAuthReq() && 
-						!(scQtRecommend.getCreatedBy().equals(loggedInUserId))) {
+						!(loggedInUserId.equals(
+								getManagedBean().getOriginalFinalizationSecretaryUserId()))) {
 					this.getManagedBean().setItemFwdToHighAuthority(true);
 				}
 				
@@ -4591,14 +4557,18 @@ public class SupplierFinalizationBackingBean extends
 										scQtFinalization.getHigherSecretary().getUserId()
 											.equals(loggedInUserId))))) {
 					scQtRecommend.setDisabled(false);
-				} else if (scQtRecommend.getCreatedBy()
-										.equals(loggedInUserId)) {
+				} else if (loggedInUserId.equals(
+								getManagedBean().getOriginalFinalizationSecretaryUserId())) {
 					scQtRecommend.setDisabled(false);
 				} else if (!scQtRecommend.isHigherAuthReq() && 
 								CollectionUtils.isEmpty(
 										scQtRecommend.getRecommendDtls())) {
 					scQtRecommend.setDisabled(false);
-				} else {
+				}
+//				else if (isQTRefinalized()) {
+//					scQtRecommend.setDisabled(false);
+//				} 
+				else {
 					scQtRecommend.setDisabled(true);
 				}
 				
