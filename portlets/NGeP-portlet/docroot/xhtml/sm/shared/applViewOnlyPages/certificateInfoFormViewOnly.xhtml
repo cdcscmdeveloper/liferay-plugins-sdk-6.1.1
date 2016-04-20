@@ -18,6 +18,11 @@
 				<p:column headerText="#{lbl['lbl.sm.cert.certName']}">
 					<h:outputText value="#{certBean.certName}" />
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.cert.certBody']}">
+					<h:outputText value="#{certBean.pmCertBody.bodyName}" rendered="#{not empty certBean.pmCertBody}"/>
+					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty certBean.pmCertBody}"/>
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.cert.strtDate']}">
 					<ac:labelDate value="#{certBean.certStartDate}" styleClass="outputLabel-view"/>
