@@ -12,6 +12,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
@@ -82,8 +83,8 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setShowBranchPointOfContact(false);
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/govtSellerRegistration/govtSellerTncPage.xhtml",
-				"", null);
+				"/xhtml/sm/govtSellerRegistration/govtSellerTncPage.xhtml", "",
+				null);
 
 	}
 
@@ -845,6 +846,21 @@ public class GovtSellerRegistrationBackingBean extends
 					getManagedBean().getIdentificationTypeItems().add(item);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Get minimum gst end date
+	 * 
+	 * @return Date
+	 */
+	public Date getMinGstEndDate() {
+		if (getManagedBean().getSmGstSupplier() != null
+				&& getManagedBean().getSmGstSupplier().getGstEffDate() != null) {
+			return getManagedBean().getSmGstSupplier().getGstEffDate();
+		} else {
+			CommonConstants commonConst = new CommonConstants();
+			return commonConst.getGST_LAUNCH_DATE();
 		}
 	}
 
