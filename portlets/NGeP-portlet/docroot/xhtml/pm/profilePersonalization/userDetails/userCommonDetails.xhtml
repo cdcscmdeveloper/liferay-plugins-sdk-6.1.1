@@ -59,9 +59,9 @@
 						disabled="false" >
 					<p:ajax event="change" update="@form"></p:ajax>		
 					</p:selectBooleanCheckbox> 
-					<h:outputText  value=" #{lbl['lbl.pm.ucd.email']}: "/>	
+					<h:outputText  value="#{lbl['lbl.pm.ucd.email']}"/>	
 					<h:outputText  rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}"
-					value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}"/>			
+					value="#{profilePersonalizationBackingBean.managedBean.selectedUser.emailFull}"/>			
 				</td>
 			</tr>
 			<tr>
@@ -70,7 +70,7 @@
 						disabled="false" >
 					<p:ajax event="change" update="@form"></p:ajax>		
 					</p:selectBooleanCheckbox>	
-					<h:outputText   value=" #{lbl['lbl.pm.ucd.sms']}: "/>	
+					<h:outputText   value=" #{lbl['lbl.pm.ucd.sms']}"/>	
 					<h:outputText	rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}"
 					value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull}"/>
 				</td>				
