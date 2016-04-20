@@ -28,6 +28,12 @@
 				<td>
 					<p:outputLabel value="#{backingBean.managedBean.applStatusInfo.createdByAndDate}" styleClass="outputLabel-view"/>
 				</td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.epNo']}" />
+				</td>
+				<td>
+					<p:outputLabel value="#{backingBean.managedBean.smSupplier.epNo}" styleClass="outputLabel-view"/>
+				</td>
 				<td
 					style="color: red; font-weight: bold; text-align: right;">
 					<h:outputText value="#{lbl['lbl.sm.lastSubmitDate']}" />&#160;&#160;
@@ -48,8 +54,13 @@
 					<p:outputLabel styleClass="outputLabel-view"
 						value="#{backingBean.managedBean.applStatusInfo.modifiedByAndDate}" />
 				</td>
-				<td></td>
-				<td></td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.mofNo']}" />
+				</td>
+				<td>
+					<p:outputLabel value="#{backingBean.managedBean.mofNumber}" styleClass="outputLabel-view"/>
+				</td>
+				<td></td><td></td>
 			</tr>
 		</table>
 	</div>
