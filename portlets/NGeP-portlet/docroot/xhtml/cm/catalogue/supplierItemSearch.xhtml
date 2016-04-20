@@ -469,19 +469,21 @@
 
 									<p:spacer width="5px" />
 
-									<p:commandLink disabled="#{!supplierItem.atcRequired}"
-										action="#{requestNoteBackingBean.addToCart(supplierItem.docId, false, null)}"
-										update="@form"
-										rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }"
-										partialSubmit="true" process="@this"
-										onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-										<p:graphicImage value="/css/images/design/cart.png"
-											id="addToCartId" style="max-width: 16px;" />
-									</p:commandLink>
-									<p:tooltip for="addToCartId">
-										<h:outputText value="#{lbl['lbl.sc.atc.tooltip']}"
-											escape="false" />
-									</p:tooltip>
+									<h:panelGroup rendered="#{supplierItem.atcRequired}">
+										<p:commandLink disabled="#{!supplierItem.atcRequired}"
+											action="#{requestNoteBackingBean.addToCart(supplierItem.docId, false, null)}"
+											update="@form"
+											rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }"
+											partialSubmit="true" process="@this"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<p:graphicImage value="/css/images/design/cart.png"
+												id="addToCartId" style="max-width: 16px;" />
+										</p:commandLink>
+										<p:tooltip for="addToCartId">
+											<h:outputText value="#{lbl['lbl.sc.atc.tooltip']}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
 								</p:column>
 
 							</p:dataTable>
