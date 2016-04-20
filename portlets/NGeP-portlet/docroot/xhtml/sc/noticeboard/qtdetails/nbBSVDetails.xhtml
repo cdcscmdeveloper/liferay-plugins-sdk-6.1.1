@@ -62,19 +62,6 @@
 			<p:panel toggleable="true">
 				<f:facet name="header">
 					<span style="float: left">#{lbl['lbl.sc.briefing.dtls']}</span>
-					<h:outputText
-						value="&#160; &#160;(#{lbl['lbl.sc.updated.on']} &#160;"
-						style="float:left" styleClass="lastUpdated" escape="false" 
-						rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.briefingChangedDate ne null}"/>
-					<h:outputText
-						value="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.briefingChangedDate}"
-						styleClass="lastUpdated" escape="false"
-						rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.briefingChangedDate ne null}">
-						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
-					</h:outputText>
-					<h:outputText value=")" styleClass="lastUpdated" escape="false" 
-					rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.briefingChangedDate ne null}"/>
 				</f:facet>
 				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
 				   <h:outputText value="* " styleClass="mandatory" />
@@ -126,19 +113,6 @@
 			<p:panel toggleable="true">
 				<f:facet name="header">
 					<span style="float: left">#{lbl['lbl.sc.site.visit.dtls']}</span>
-					<h:outputText
-						value="&#160; &#160;(#{lbl['lbl.sc.updated.on']} &#160;"
-						style="float:left;" styleClass="lastUpdated" escape="false" 
-						rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.siteVisitChangedDate ne null}"/>
-					<h:outputText
-						value="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.siteVisitChangedDate}"
-						styleClass="lastUpdated" escape="false"
-						rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.siteVisitChangedDate ne null}">
-						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
-					</h:outputText>
-					<h:outputText value=")" styleClass="lastUpdated" escape="false" 
-					rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.siteVisitChangedDate ne null}"/>
 				</f:facet>
 
 				<h:panelGroup rendered="#{!bsvDetails.sitevisitList.isEmpty()}">
