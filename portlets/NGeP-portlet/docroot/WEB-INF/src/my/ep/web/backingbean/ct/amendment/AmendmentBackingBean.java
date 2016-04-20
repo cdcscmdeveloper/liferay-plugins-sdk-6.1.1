@@ -5114,8 +5114,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					userRole = RoleCode.BASIC_SUPPLIER_USER.value();
 				} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 					userRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
-				} else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-					userRole = RoleCode.GOVT_SELLER.value();
 				}
 			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
