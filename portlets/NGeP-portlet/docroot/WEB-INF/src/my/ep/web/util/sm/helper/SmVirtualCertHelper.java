@@ -61,6 +61,7 @@ public class SmVirtualCertHelper {
 				if(mCert != null){
 					log.info("****MCert****" + mCert);
 					if(mCert.getFileName() == null || mCert.getFilePath() == null){
+						log.info("****MCert id****" + mCert.getMofCertId());
 						log.info("****MCert bumi****" + mCert.isBumiCert());
 						genReport(getReportType(mCert.isBumiCert()), getReportParam(mCert), mCert);
 					}
