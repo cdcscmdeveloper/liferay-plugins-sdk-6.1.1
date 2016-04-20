@@ -18,7 +18,7 @@
 				  value="#{consolidationReportBackingBean.checkProposalValidityDateReach(
 		     					consolidationReportBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 
-		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
+		<p:messages id="consolidationReportErr" showDetail="true" showSummary="false" 
 					autoUpdate="true" closable="true" severity="error, info" />
 
 		<div align="right" class="BtnSpacing">
@@ -37,6 +37,13 @@
 					process="@this" oncomplete="submissionPopup.show();"
 					rendered="#{validityDaysExpiredQt}" />
 			</ui:repeat>
+
+			<ac:confirmationPopup id="submissionPopupId"
+					title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+					width="450" height="150" widget="submissionPopup" 
+					okAction="consolidationReportBackingBean.submitAction" 
+					content="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit']}" 
+					update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide(); submissionPopup.hide();" />				
 		</div>
 
 		<ui:include src="#{consolidationReportFolderPath}/consolidationReportHeader.xhtml"/>
@@ -92,13 +99,6 @@
 				update="contentPanel" oncomplete="attachmentPopupDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
-		
-		<ac:confirmationPopup id="submissionPopupId"
-				title="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
-				width="450" height="150" widget="submissionPopup" 
-				okAction="consolidationReportBackingBean.submitAction" 
-				content="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit']}" 
-				update="@form" />		
 		
 	</ui:define>
 
