@@ -1,15 +1,15 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.noticeboard;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -19,6 +19,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -78,7 +79,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtAmend;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -108,7 +108,6 @@ import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -119,6 +118,7 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
@@ -304,15 +304,9 @@ public class NoticeBoardBackingBean extends
 			
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 			String selectedTab = getManagedBean().getSelectedTab();
-			this.getManagedBean().setChangedDate(null);
-			this.getManagedBean().setQtAmendMentBean(null);
+			this.getManagedBean().setAmendmentDateMap(null);
 			if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
-				CommonUtils commonUtils = new CommonUtils();
-				this.getManagedBean().setChangedDate(
-						resDTO.getScQtAmend() != null ? commonUtils.getFormattedDate(new Date(resDTO
-								.getScQtAmend().getChangedDate().getTime()),CommonConstants.DEFAULT_12HR_DATETIME_FORMAT)
-								: null);
-				this.getManagedBean().setQtAmendMentBean(getAmendMentDtls(resDTO));
+				populateQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBeans());
 			}
 		} finally {
 			qtNoticeBoardSO = null;
@@ -323,6 +317,31 @@ public class NoticeBoardBackingBean extends
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication().getNavigationHandler()
 				.handleNavigation(context, null, pageUrl);
+	}
+	
+	private void populateQtAmendIntoAmendmentBeanMap(List<QtAmendMentBean> qtAmendMentBeans) {
+		Map<String, Date> amendmentBeanMap = new HashMap<String, Date>();
+		
+		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
+			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
+				if (amendMentBean.getValueMap() != null) {
+					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
+						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
+						Date approvalDate = valueBean.getApprovalDate();
+						if (approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
+							Date prevApprovalDate = amendmentBeanMap.get(amendMentBeanValue.getKey());
+							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
+								continue;
+							}
+							amendmentBeanMap.put(amendMentBeanValue.getKey(), approvalDate);	
+						}
+					}
+					
+				}
+			}	
+		}
+		
+		this.getManagedBean().setAmendmentDateMap(amendmentBeanMap);
 	}
 
 	/**
@@ -2349,31 +2368,6 @@ public class NoticeBoardBackingBean extends
 			supplierSearchSO = null;
 		}
 		
-	}
-	
-	private QtAmendMentBean getAmendMentDtls(NoticeBoardResDTO resDTO) {
-
-		ByteArrayInputStream byteArrayInputStream = null;
-		ObjectInputStream objectInputStream = null;
-		QtAmendMentBean amendMentBean = null;
-		ScQtAmend scQtAmend = resDTO.getScQtAmend();
-
-		if (scQtAmend != null) {
-			byteArrayInputStream = new ByteArrayInputStream(
-					scQtAmend.getAmendContent());
-			try {
-				objectInputStream = new ObjectInputStream(byteArrayInputStream);
-				amendMentBean = (QtAmendMentBean) objectInputStream
-						.readObject();
-			} catch (IOException e) {
-				log.error("Problem while doing deserialization"
-						+ e.getMessage());
-			} catch (ClassNotFoundException e) {
-				log.error("Problem while doing deserialization"
-						+ e.getMessage());
-			}
-		}
-		return amendMentBean;
 	}
 
 	/**

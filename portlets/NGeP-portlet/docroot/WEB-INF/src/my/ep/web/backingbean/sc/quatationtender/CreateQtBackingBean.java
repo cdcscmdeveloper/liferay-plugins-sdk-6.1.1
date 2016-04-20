@@ -18,6 +18,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -35,6 +36,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -2177,60 +2179,58 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 	 */
 	private void updateQtAmmendMentDtls(String componentId, Object oldValue,
 			Object newValue) {
-		QtAmendMentBean amendMentBean = this.getManagedBean()
-				.getAmendMentBean();
-		if (null == amendMentBean) {
-			amendMentBean = new QtAmendMentBean();
-		}
+		QtAmendMentBean amendMentBean = null;
+		
 		if ("title1".equalsIgnoreCase(componentId)) {
+			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FILED_QT_TITLE,
+					oldValue, newValue, false);
 
-			if (null == amendMentBean.getOldTitle()) {
-				amendMentBean.setOldTitle((String) oldValue);
-
-			}
-
-			amendMentBean.setNewTitle((String) newValue);
-
-		} else if ("estprice".equalsIgnoreCase(componentId)) {
-
-			if (null == amendMentBean.getOldEstmtPrice()) {
-				amendMentBean.setOldEstmtPrice((BigDecimal) oldValue);
-
-			}
-			amendMentBean.setNewEstmtPrice((BigDecimal) newValue);
-			if (!amendMentBean.getOldEstmtPrice().equals(
-					amendMentBean.getNewEstmtPrice())) {
-				amendMentBean.setPTJApprovalReq(true);
-			}
 		} else if ("proposalvalidity".equalsIgnoreCase(componentId)) {
-
-			if (0 == amendMentBean.getOldValidityPeriodDays()) {
-				amendMentBean.setOldValidityPeriodDays((Integer) oldValue);
-
-			}
-			if (amendMentBean.getOldValidityPeriodDays() != amendMentBean
-					.getNewValidityPeriodDays()) {
-
-			}
-			amendMentBean.setNewValidityPeriodDays((Integer) newValue);
+			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+					oldValue, newValue, false);
 
 		} else if ("publishperiod".equalsIgnoreCase(componentId)) {
-
-			if (0 == amendMentBean.getOldPublishPeriodDays()) {
-				amendMentBean.setOldPublishPeriodDays((Integer) oldValue);
-
-			}
-
-			amendMentBean.setNewPublishPeriodDays((Integer) newValue);
-			if (amendMentBean.getOldPublishPeriodDays() != amendMentBean
-					.getNewPublishPeriodDays()) {
-				amendMentBean.setPTJApprovalReq(true);
-			}
+			amendMentBean = putIntoAmendmentValueMap(QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+					oldValue, newValue, true);
 		}
 
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 	}
 	
+	private QtAmendMentBean putIntoAmendmentValueMap(String field, Object oldValue, Object newValue, boolean ptjApprovalReqFlg) {
+		QtAmendMentBean amendMentBean = this.getManagedBean()
+				.getAmendMentBean();
+		
+		if (null == amendMentBean) {
+			amendMentBean = new QtAmendMentBean();
+		}
+		
+		QtAmendMentValueBean valueBean = amendMentBean.getValueMap().get(field);
+		if (null == valueBean) {
+			valueBean = new QtAmendMentValueBean();
+			valueBean.setOldValue(oldValue);
+			
+			amendMentBean.getValueMap().put(field, valueBean);
+		}
+		valueBean.setNewValue(newValue);
+		
+		if (valueBean.getOldValue() != null && newValue != null) {
+			if (!valueBean.getOldValue().equals(newValue)) {
+				if (ptjApprovalReqFlg) {
+					amendMentBean.setPTJApprovalReq(true);	
+				}
+			} else {
+				amendMentBean.getValueMap().remove(field);
+			}
+		}
+		
+		// remove amendment bean if no changes available.
+		if (amendMentBean.getValueMap() != null && amendMentBean.getValueMap().size() > 0) {
+			return amendMentBean;
+		} else {
+			return null;
+		}
+	}
 	
 	private void ZonesUpdateWarningMessage(boolean warningMessage) {
 		if (warningMessage == true) {
