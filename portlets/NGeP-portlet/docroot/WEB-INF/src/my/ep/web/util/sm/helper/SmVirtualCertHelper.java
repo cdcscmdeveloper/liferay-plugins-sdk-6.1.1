@@ -62,8 +62,8 @@ public class SmVirtualCertHelper {
 					log.info("****MCert****" + mCert);
 					if(mCert.getFileName() == null || mCert.getFilePath() == null){
 						log.info("****MCert id****" + mCert.getMofCertId());
-						log.info("****MCert bumi****" + mCert.isBumiCert());
-						genReport(getReportType(mCert.isBumiCert()), getReportParam(mCert), mCert);
+						log.info("****MCert bumi****" + mCert.getBumiCertFlg());
+						genReport(getReportType(mCert.getBumiCertFlg()), getReportParam(mCert), mCert);
 					}
 				}
 			}
@@ -170,8 +170,8 @@ public class SmVirtualCertHelper {
 		return resDTO.getSmMofCerts();
 	}
 	
-	public String getReportType(boolean isBumi){
-		if(isBumi){
+	public String getReportType(Integer isBumi){
+		if(isBumi != null && isBumi == 1){
 			return ReportConst.SM_VIRTUAL_VERIFICATION_BUMI_jsp;
 		}else{
 			return ReportConst.SM_VIRTUAL_VERIFICATION_jsp;
