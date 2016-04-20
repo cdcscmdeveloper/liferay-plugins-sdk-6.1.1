@@ -21,25 +21,25 @@
 			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}" style="text-align:center">
 				<h:outputText value="#{flOrderBB.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, pending.docType)}" style="float:left;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}" style="text-align:center">
-				<h:outputText value="#{pending.flFulfilmentRequest.title}" style="float:left;"/>
+			<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}" style="white-space:normal;text-align:center">
+				<p:commandLink value="#{pending.flFulfilmentRequest.title}"
+					action="#{flOrderBB.navigateToFlOrder(rowIndex)}" style="text-align:left;float:left;">
+					<f:setPropertyActionListener
+						target="#{flOrderBB.managedBean.selectedFlOrder}"
+						value="#{pending}"></f:setPropertyActionListener>
+						<f:param name="status" value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" />
+				</p:commandLink>				
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.ptj.name']}" style="text-align:center">
-				<h:outputText value="#{pending.flFulfilmentRequest.preparedOrgProfile.orgName}" style="float:left;"/>
+			<p:column headerText="#{lbl['lbl.fl.ptj.name']}" style="white-space:normal;text-align:center">
+				<h:outputText value="#{pending.flFulfilmentRequest.preparedOrgProfile.orgName}" style="text-align:left;float:left;"/>
 			</p:column>			
 			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center">
 				<h:outputText value="#{pending.createdDate}" style="float:left;">
 					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Status" style="text-align:center">
-			<p:commandLink value="#{flOrderBB.getStatusDescById(pending.status.statusId)}"
-					action="#{flOrderBB.navigateToFlOrder(rowIndex)}" style="float:left;">
-					<f:setPropertyActionListener
-						target="#{flOrderBB.managedBean.selectedFlOrder}"
-						value="#{pending}"></f:setPropertyActionListener>
-						<f:param name="status" value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" />
-				</p:commandLink>
+			<p:column headerText="Status" style="white-space:normal;text-align:center">
+				<h:outputText value="#{flOrderBB.getStatusDescById(pending.status.statusId)}" style="text-align:left;float:left;" />
 			</p:column>
 		</p:dataTable>
 	</ui:define>
