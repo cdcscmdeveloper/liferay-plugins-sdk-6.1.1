@@ -51,20 +51,18 @@
 				</p:dataGrid></td>
 		</tr>
 	</table>
-	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false"
-		hideEffect="explode" resizable="false" width="700px"
-		height="350" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false"	resizable="false" width="700px"	height="350" 
+		styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" 
 			fileUploadListener="#{fulfilmentBackingBean.handleFileUpload}"
-			mode="advanced" multiple="true" id="upload" fileLimit="2" 
+			mode="advanced" multiple="true" id="upload"  
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			widgetVar="fileUplaod" 
 			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="lampiran,uploadDlg">
+			update="lampiran">
 		</p:fileUpload>
 	</p:dialog>
 	
