@@ -4,10 +4,12 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -29,6 +31,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -36,6 +39,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -50,6 +54,7 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -71,6 +76,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -95,6 +101,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -2464,5 +2471,68 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 		return EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
+	
+	public String getPublishingPeriodDaysToolTip() {
+		StringBuilder tooltip = new StringBuilder();
+		ScQt scQt = getManagedBean().getQt();
+		
+		if (scQt != null) {
+			List<PmConfigRuleValue> ruleValueList = getPublishingPeriodDaysRuleValues(scQt.getQtType());
+			Locale locale = new FacesScopes().getUserLocale();
+			CommonUtils commonUtils = new CommonUtils();
+			DecimalFormat dformat = new DecimalFormat(commonUtils
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
+			
+			for (PmConfigRuleValue configRuleValue : ruleValueList) {
+				if (configRuleValue.getFromValue() != null) {
+					tooltip.append(dformat.format(configRuleValue.getFromValue()));	
+				}
+				
+				if (configRuleValue.getToValue() != null) {
+					tooltip.append(" - ");
+					tooltip.append(dformat.format(configRuleValue.getToValue()));	
+				} else {
+					tooltip.append(" ");
+					tooltip.append(ResourceBundleUtils.getMessage(
+							"lbl.sc.qty.and.above", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale));
+				}
+				
+				tooltip.append(" : ");
+				tooltip.append(configRuleValue.getRuleValue());
+				tooltip.append(" ");
+				tooltip.append(ResourceBundleUtils.getMessage(
+						"lbl.sc.days", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						locale));
+				tooltip.append("<br/>");
+			}
+		}
+		
+		return tooltip.toString();
+	}
 
+	private List<PmConfigRuleValue> getPublishingPeriodDaysRuleValues(String qtType) {
+		IRuleSO ruleSO = null;
+
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.QT_PUBLISHING_PERIOD_DAYS);
+			List<PmConfigRuleValue> ruleValueList = ruleSO
+					.getRuleValuesByTypeInCurrentDate(reqDTO)
+					.getRuleValueList();
+			if (ruleValueList != null && ruleValueList.size() > 0) {
+				return ruleValueList;
+			} else {
+				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(reqDTO.getRuleType())});
+			}
+
+		} finally {
+			ruleSO = null;
+		}
+	}
 }

@@ -20,7 +20,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QTActivityBean;
-import my.ep.biz.bean.sc.QTRuleDataBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
@@ -855,7 +854,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private boolean paidupcapital;
 
-	private QTRuleDataBean ruleDataBean;
 	private List<TplSpecZoneDtl> templateSpecZoneDtls;
 	private ScQtBsvDtl tempScQtBsvDtl;
 
@@ -6889,21 +6887,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setAmendMentBean(QtAmendMentBean amendMentBean) {
 		this.amendMentBean = amendMentBean;
-	}
-
-	/**
-	 * @return the ruleDataBean
-	 */
-	public QTRuleDataBean getRuleDataBean() {
-		return ruleDataBean;
-	}
-
-	/**
-	 * @param ruleDataBean
-	 *            the ruleDataBean to set
-	 */
-	public void setRuleDataBean(QTRuleDataBean ruleDataBean) {
-		this.ruleDataBean = ruleDataBean;
 	}
 
 	/**
