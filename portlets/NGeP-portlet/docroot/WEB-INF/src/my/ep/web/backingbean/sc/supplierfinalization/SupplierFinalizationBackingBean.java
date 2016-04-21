@@ -2128,20 +2128,20 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 
-			Long currentStatusId = getManagedBean().getCurrentStatusId();
-			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-						.equals(currentStatusId) || 
-					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
-						.equals(currentStatusId)) && 
-							ParameterConst.DECISION_RECOMMEND_SUPPLIER
-								.equals(decisionTypeCode) ) {
-				try {
-					debugLogger("Generating all reports...");
-					downloadAllReports();	
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
+//			Long currentStatusId = getManagedBean().getCurrentStatusId();
+//			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+//						.equals(currentStatusId) || 
+//					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
+//						.equals(currentStatusId)) && 
+//							ParameterConst.DECISION_RECOMMEND_SUPPLIER
+//								.equals(decisionTypeCode) ) {
+//				try {
+//					debugLogger("Generating all reports...");
+//					downloadAllReports();	
+//				} catch(Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
 			
 			resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
 
