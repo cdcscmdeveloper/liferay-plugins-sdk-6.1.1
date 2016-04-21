@@ -103,6 +103,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -302,7 +303,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (scAttachment instanceof ScLoaReportAttachment
 				|| scAttachment instanceof ScQtCheckListAttachment
 				|| scAttachment instanceof ScQtProposalChecklistAttachment
-				|| scAttachment instanceof ScQtFinalizationAttachment) {
+				|| scAttachment instanceof ScQtFinalizationAttachment
+				|| scAttachment instanceof ScQtFinalizationReportAttachment) {
 
 			return new AttachmentDateFormat();
 		} else {
