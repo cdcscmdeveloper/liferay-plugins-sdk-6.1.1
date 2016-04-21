@@ -385,6 +385,7 @@ public class ConsolidationReportBackingBean extends
 			if (null == reportAttachment) {
 				reportAttachment = new ScQtFinalizationReportAttachment();
 				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
 				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 			}
 			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
@@ -409,41 +410,8 @@ public class ConsolidationReportBackingBean extends
 		
 		ScQtFinalizationReportAttachment reportAttachment 
 				= scQtFinalizationReport.getScQtFinalizationReportAttachment();
-		boolean isEvaluationReport = false;
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(scQtFinalizationReport.getDefinationType().getParameterCode())) {
-			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-											.getDocDefinitionKey();
-			String docType = null;
-			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
-								.equals(docDefinitionKey)) { 
-				isEvaluationReport = true;
-				docType = QTConstants.EVALUATION_REPORT;
-			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
-								.equals(docDefinitionKey)) {
-				isEvaluationReport = true;
-				docType = QTConstants.OPENING_COMMITTEE_REPORT;
-			} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
-								.equals(docDefinitionKey)) {
-				isEvaluationReport = true;
-				docType = QTConstants.TECHNICAL_EVALUATION_REPORT;
-			} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
-								.equals(docDefinitionKey)) {
-				isEvaluationReport = true;
-				docType = QTConstants.FINANCIAL_EVALUATION_REPORT;
-			}
-			
-			if (reportAttachment != null && isEvaluationReport) {
-				reportAttachment.setDocType(docType);
-				String filePath = reportAttachment.getFilePath();
-				if (StringUtils.isNotBlank(filePath)) {
-					reportAttachment.setFilePath(filePath.replaceAll("KTR", docType));
-				}
-			}
-		}		
 		
-		if (reportAttachment == null 
-					&& !isEvaluationReport) {
+		if (reportAttachment == null) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
@@ -465,45 +433,12 @@ public class ConsolidationReportBackingBean extends
 				.getScQtFinalization().getScQtFinalizationReports();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
-		for (ScQtFinalizationReport report : scQtFinalizationReports) {
-			ScQtFinalizationReportAttachment attachment = report
+		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports.get(i)
 					.getScQtFinalizationReportAttachment();
-			boolean isEvaluationReport = false;
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-					.equals(report.getDefinationType().getParameterCode())) {
-				String docDefinitionKey = report.getPmDocument()
-												.getDocDefinitionKey();
-				String docType = null;
-				if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
-						.equals(docDefinitionKey)) { 
-					isEvaluationReport = true;
-					docType = QTConstants.EVALUATION_REPORT;
-				} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
-									.equals(docDefinitionKey)) {
-					isEvaluationReport = true;
-					docType = QTConstants.OPENING_COMMITTEE_REPORT;
-				} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-					isEvaluationReport = true;
-					docType = QTConstants.TECHNICAL_EVALUATION_REPORT;
-				} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-					isEvaluationReport = true;
-					docType = QTConstants.FINANCIAL_EVALUATION_REPORT;
-				}
-				
-				if (attachment != null && isEvaluationReport) {
-					attachment.setDocType(docType);
-					String filePath = attachment.getFilePath();
-					if (StringUtils.isNotBlank(filePath)) {
-						attachment.setFilePath(filePath.replaceAll("KTR", docType));
-					}
-				}
-			}
-			if (attachment == null && 
-					!isEvaluationReport) {
-				attachment = generateDocumentAttachment(report);
-				report.setScQtFinalizationReportAttachment(attachment);
+			if (attachment == null) {
+				attachment = generateDocumentAttachment(scQtFinalizationReports.get(i));
+				scQtFinalizationReports.get(i).setScQtFinalizationReportAttachment(attachment);
 			}
 			scAttachments.add(attachment);
 		}
@@ -1124,17 +1059,29 @@ public class ConsolidationReportBackingBean extends
 		ScQtFinalizationReportAttachment reportAttachment = null;
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
 				.equals(definitionType)) {
-//			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-//					.getDocDefinitionKey();
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+					.getDocDefinitionKey();
 			ScQt scQt = getManagedBean().getScQt();
 			reportAttachment = new ScQtFinalizationReportAttachment();
 			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
-			ScAttachment attachment = (ScAttachment) reportAttachment;
 			StringBuilder filename = new StringBuilder();
 			// replace white space due to firefox
 			filename.append(scQtFinalizationReport.getTitle().replaceAll("\\s",
 					"_"));
+			
+			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				reportAttachment.setFileName(filename.toString());			
+				generateKertasTaklimatPdf(scQt, reportAttachment);
+				scQtFinalizationReport
+						.setScQtFinalizationReportAttachment(reportAttachment);
+
+			} else {
+				debugLogger("No document type is exists with the key "
+						+ docDefinitionKey);
+				reportAttachment = null;
+			}
 
 			// Redmine SIR#7782
 //			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
@@ -1172,16 +1119,12 @@ public class ConsolidationReportBackingBean extends
 //
 //			} 
 			
-			filename.append(".pdf");
-			reportAttachment.setFileName(filename.toString());			
-			generateKertasTaklimatPdf(scQt, attachment);
-			scQtFinalizationReport
-					.setScQtFinalizationReportAttachment(reportAttachment);
+			
 		}
 		return reportAttachment;
 	}	
 	
-	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment) 
+	private void generateKertasTaklimatPdf(ScQt qt, ScQtFinalizationReportAttachment attachment) 
 										   throws Exception {
 		debugLogger("generateKertasTaklimatPdf");
 		populateAttachmentDetails(attachment);
