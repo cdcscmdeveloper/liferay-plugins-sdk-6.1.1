@@ -3259,12 +3259,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			for (SmSupplierBank supplierBank : this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
 				if (supplierBank.getAccountNo().equalsIgnoreCase(
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
-					this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());  
-					if (supplierBank.getSmSupplierBranch() != null) {
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
-					} else {
-						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
-					}
+					this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+					this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
 					if (supplierBank.getSmAddress() != null) {
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setBankAddress(CtAddressUtil.convertSmAddressToCtAddress(supplierBank.getSmAddress()));
 					} else {
