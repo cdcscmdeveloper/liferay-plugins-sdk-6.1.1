@@ -54,6 +54,11 @@
 					</tr>	
 				</c:if>
 				<tr>
+					<td colspan="2" style="padding-left: 0px;width:5%;white-space:nowrap;vertical-align: top;">
+						<h:outputText value="#{lbl['lbl.pm.ucd.notification']}:" />  
+					</td>
+				</tr>
+				<tr>
 				<td>
 					<p:selectBooleanCheckbox id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" 
 						disabled="false" >
@@ -80,9 +85,13 @@
 					<table>
 							<tr>
 								<td style="padding-left: 0px;width:5%;white-space:nowrap;vertical-align: top;"><h:outputText  value="#{lbl['lbl.pm.ucd.roles']}: " />  
-								</td>
-								<td><h:outputText style="white-space:normal;" escape="false" value="#{profilePersonalizationBackingBean.managedBean.roles}" /> 
-								</td>
+								</td>								  
+							</tr>
+							<tr>
+							 <td>
+							 <p:scrollPanel style="height:50px;width:214px;" mode="native"  >							    
+							 <h:outputText style="white-space:normal;" escape="false" value="#{profilePersonalizationBackingBean.managedBean.roles}" /> 								
+							 </p:scrollPanel></td>
 							</tr>
 						</table>
 					</td>
