@@ -101,7 +101,7 @@
 							immediate="true" /></td>
 				</c:if>
 				<h:panelGroup id="printButtonDo"
-					rendered="#{(createDOBackingBean.managedBean.flDeliveryOrder.status.statusId != FulfilmentStatusCont.doPendingAcknowledgement) and (createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo != null)}">
+					rendered="#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo != null}">
 					<td style="text-align: right; width: 30px;"><p:commandLink
 							value="#{lbl['lbl.btn.print']}" ajax="false">
 							<p:fileDownload
