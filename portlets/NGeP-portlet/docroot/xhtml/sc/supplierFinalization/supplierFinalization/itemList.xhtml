@@ -20,16 +20,14 @@
 			rows="10" rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="itemListTbl" />
 
-			<p:ajax event="rowSelect" 
-				listener="#{suppFinalizationBackingBean.selectItemEvent}"
+			<p:ajax event="rowSelect" listener="#{suppFinalizationBackingBean.selectItemEvent}" 
 				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])" 
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
 				
-			<p:ajax event="rowUnselect" 
-				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
+			<p:ajax event="rowUnselect" listener="#{suppFinalizationBackingBean.unselectItemEvent}" 
 				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
 				
-			<p:column styleClass="td-check-box-spacing" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
+			<p:column styleClass="td-check-box-spacing" rendered="#{isSecretaryUser or 
 													 				isBPKTaskAndClaimed}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
@@ -70,7 +68,7 @@
 				<h:selectOneMenu value="#{item.cancelled}" 
 						required="true" label="#{lbl['lbl.sc.cancelled']}" 
 						disabled="#{item.disabled or item.awardedItem or 
-									!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+									!(isSecretaryUser or 
 										isBPKTaskAndClaimed)}" 
 						style="width:95%;">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown(item)}" />
@@ -140,7 +138,7 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}" 
-					disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+					disabled="#{!(isSecretaryUser or 
 										isBPKTaskAndClaimed)}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems value="#{suppFinalizationBackingBean.getAwardSupplierListDropDown()}" />
@@ -152,7 +150,7 @@
 					process="@this" partialSubmit="true" 
 					action="#{suppFinalizationBackingBean.awardSupplierEvent}" 
 					update="@([id$=itemListTbl],[id$=awardSupplier])"
-					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"
+					rendered="#{isSecretaryUser}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			</h:column>
 			
