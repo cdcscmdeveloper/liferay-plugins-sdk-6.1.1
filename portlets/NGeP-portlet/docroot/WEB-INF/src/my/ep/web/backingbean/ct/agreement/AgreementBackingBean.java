@@ -2016,8 +2016,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    	ptjAddress = getFullAddress(getManagedBean().getContractVer().getOwnerOrgAddress());
 		    	ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
 		    	ptjAddress = ptjAddress.replaceAll("&", "&#38;");
-			    ptjTelNo = getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNo();
-			    ptjFaksNo = getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNo();
+			    ptjTelNo = getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNoFull();
+			    ptjFaksNo = getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNoFull();
 			    ptjEmel = getManagedBean().getContractVer().getOwnerOrgAddress().getContactEmail();
 			}
 			if (getManagedBean().getContractVer().getCtContractValue().getSupplierName() != null)
@@ -2027,10 +2027,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 			
-				if (getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() != null)
-					supplierTelNo = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo();
-				if (getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() != null)
-					supplierFaksNo = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo();
+				supplierTelNo = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNoFull();
+				supplierFaksNo = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNoFull();
 				if (getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getContactEmail() != null)
 					supplierEmel = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getContactEmail();		
 			}
