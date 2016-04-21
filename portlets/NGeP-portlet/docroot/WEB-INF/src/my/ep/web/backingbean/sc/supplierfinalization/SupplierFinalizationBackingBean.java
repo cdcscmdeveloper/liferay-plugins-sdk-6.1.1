@@ -2128,20 +2128,20 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 
-//			Long currentStatusId = getManagedBean().getCurrentStatusId();
-//			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-//						.equals(currentStatusId) || 
-//					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
-//						.equals(currentStatusId)) && 
-//							ParameterConst.DECISION_RECOMMEND_SUPPLIER
-//								.equals(decisionTypeCode) ) {
-//				try {
-//					debugLogger("Generating all reports...");
-//					downloadAllReports();	
-//				} catch(Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
+			Long currentStatusId = getManagedBean().getCurrentStatusId();
+			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+						.equals(currentStatusId) || 
+					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
+						.equals(currentStatusId)) && 
+							ParameterConst.DECISION_RECOMMEND_SUPPLIER
+								.equals(decisionTypeCode) ) {
+				try {
+					debugLogger("Generating all reports...");
+					downloadAllReports();	
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
 			
 			resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
 
@@ -2516,7 +2516,7 @@ public class SupplierFinalizationBackingBean extends
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports();
-		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
+//		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
 		for (ScQtFinalizationReport report : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment = report
@@ -2560,14 +2560,15 @@ public class SupplierFinalizationBackingBean extends
 								attachment == null) && !isEvaluationReport) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
+				downloadFile(attachment);
 			}
-			scAttachments.add(attachment);
+//			scAttachments.add(attachment);
 		}
 		
 		// Generate all the reports before submission
-		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
-		}
+//		if (!getManagedBean().isSubmit()) {
+//			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+//		}
 	}
 	
 	 
