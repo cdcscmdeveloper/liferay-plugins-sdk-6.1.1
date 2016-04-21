@@ -1256,8 +1256,9 @@ public class TemplateSpecBackingBean extends
 
 		TplSpecQuestion specQuestion = templateSpecBean
 				.getSelectedSpecQuestion();
-
-		if (CollectionUtils.isEmpty(specQuestion.getTplSpecAnswers())) {
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE
+				.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode());
+		//if(CollectionUtils.isEmpty(specQuestion.getTplSpecAnswers())) {
 			String priceType = specQuestion.getClPriceTypeCode()
 					.getParameterCode();
 			TplSpecZone specZone = specQuestion.getTplSpecMaster()
@@ -1299,6 +1300,7 @@ public class TemplateSpecBackingBean extends
 								.createNewSpecAnswer(templateSpecBean,
 										specQuestion, specZoneDtl, null);
 
+						calcTotalAmount(templateSpecBean, specAnswer, isItemTypeService);
 						specAnswers.add(specAnswer);
 					} else {
 						populateTierSpecAnswers(templateSpecBean, specQuestion,
@@ -1312,7 +1314,8 @@ public class TemplateSpecBackingBean extends
 			}
 
 			specQuestion.setTplSpecAnswers(specAnswers);
-		}
+		//}
+			
 	}
 
 	private void populateTierSpecAnswers(TemplateSpecBean templateSpecBean,
