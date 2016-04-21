@@ -615,7 +615,6 @@ public class QTDetailBackingBean extends
 					.setContractNo(selectedScQt.getExistingContractNo());
 			
 			setAmmendMentBean(resDTO.getAmendMentBean());
-			this.getManagedBean().setRuleDataBean(resDTO.getRuleDataBean());
 
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -1082,9 +1081,6 @@ public class QTDetailBackingBean extends
 
 		quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
 				.getAmendMentBean());
-
-		quationTenderReqDTO.setRuleDataBean(this.getManagedBean()
-				.getRuleDataBean());
 
 		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
