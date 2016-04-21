@@ -362,7 +362,7 @@
 					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
 					and backingBean.managedBean.smSupplier.businessType ne 'P'}"/>
 			<h:outputText styleClass="instruction" value="#{lbl[lblPersonnelInstruction]}" escape="false" /><br />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" 
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" id="reachAuthLimitMsgId"
 				escape="false" rendered="#{backingBean.managedBean.validSmUserLimit}"/>
 			
 			<table style="width: 100%">
@@ -516,10 +516,11 @@
 							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form" />
 						<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-							process="persInfoDtPanel" partialSubmit="true" disabled="#{backingBean.managedBean.disAllowOwnerEdit}"
+							process="persInfoDtPanel" partialSubmit="true" 
+							disabled="#{backingBean.managedBean.disAllowOwnerEdit or empty backingBean.managedBean.selectedShareHolders}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
-							update=":form:tt:personDt , :form:tt:stfSummaryPan " />
+							action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF,false)}"
+							update="smPersonnelParentPan , :form:tt:stfSummaryPan " />
 					</div>
 				</p:outputPanel>
 				<br />
@@ -565,5 +566,18 @@
 			message="#{backingBean.getMyIdentityStatusDescription(backingBean.managedBean.selectedShareHolder.identityResponseCode)}"
 			header="#{lbl['lbl.sm.person.myIdResp']}" severity="alert" widgetVar="myIdentityDlg"/>
 	</h:panelGroup>
+	
+	<p:confirmDialog id="deleteAuthPersConfirmDialog" closable="true"
+		message="#{lbl['lbl.sm.confirm.delete.auth.personnel.msg']}"
+		header="#{lbl['lbl.sm.confirm.delete.auth.personnel.header']}" severity="alert"
+		widgetVar="deleteAuthPersConfirmDialog">
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="deleteAuthPersConfirmDialog.hide();" 
+				action="#{backingBean.confirmDeleteAuthorizedPersonnel}" update="@form" process="@this"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="deleteAuthPersConfirmDialog.hide();" />
+		</div>
+	</p:confirmDialog>
 
 </ui:composition>
