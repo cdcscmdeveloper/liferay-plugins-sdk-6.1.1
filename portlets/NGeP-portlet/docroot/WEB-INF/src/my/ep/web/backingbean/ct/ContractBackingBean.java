@@ -1986,7 +1986,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			/**
 			 * The method used to select all added performance bond(s).
 		     */
-			public void selectAllBond(AjaxBehaviorEvent e) {
+			public void selectAllBond(AjaxBehaviorEvent e) { 
 				
 					for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
 						if (getManagedBean().isSelectAll()) {
@@ -2002,6 +2002,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().setButtonHideActive(true);
 				}	
 			}
+			
+	  public void selectOnePerformanceCheckboxSelect(AjaxBehaviorEvent e){
+		    	getManagedBean().setSelectAll(false);
+			for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
+		    		if(bonds.isSelectedCheckBox()){
+		    			getManagedBean().setButtonHideActive(false);
+		    			return;
+		    		}
+		    	}
+				if((boolean) e.getComponent().getAttributes().get("value")){
+					getManagedBean().setButtonHideActive(false);
+				}else{
+					getManagedBean().setButtonHideActive(true);
+				}	
+		}
 			
 			public void selectAllDeduction(AjaxBehaviorEvent e) {
 				
@@ -2133,6 +2148,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().setButtonHideSchActive(true);
 				}	
 		    }
+	
+	public void selectOneAgencyCheckboxSelect(AjaxBehaviorEvent e){
+		getManagedBean().setSelectAll(false);
+    	for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
+    		if(ctAgencies.isSelectedCheckBox()){
+    			getManagedBean().setButtonHideActive(false);
+    			return;
+    		}
+    	}
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			getManagedBean().setButtonHideActive(false);
+		}else{
+			getManagedBean().setButtonHideActive(true);
+		}	
+	}
 			/**
 			 * The method used for generating a list of available financial institution
 			 * for performance bond as selection.
@@ -2226,6 +2256,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							}
 						}
 					}
+					getManagedBean().setSelectAll(false);
+					getManagedBean().setButtonHideActive(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
