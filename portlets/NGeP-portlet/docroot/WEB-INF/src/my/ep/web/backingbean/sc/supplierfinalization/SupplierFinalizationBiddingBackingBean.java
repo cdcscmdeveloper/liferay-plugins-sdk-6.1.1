@@ -1218,24 +1218,57 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void addMeetingAttendance() {
 		debugLogger("..In addMeetingAttendance()..");
-		try {
-			List<ScQtMeetingAttendance> meetingAttendanceList = getManagedBean()
-					.getMeetingAttendanceList();
-			if (null == meetingAttendanceList) {
-				meetingAttendanceList = new ArrayList<ScQtMeetingAttendance>();
-			}
-
-			ScQtMeetingAttendance meeting = new ScQtMeetingAttendance();
-			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
-			setUserDetails(meeting);
-			meetingAttendanceList.add(meeting);
-
+		List<ScQtMeetingAttendance> meetingAttendanceList = getManagedBean()
+				.getMeetingAttendanceList();
+		if (null == meetingAttendanceList) {
+			meetingAttendanceList = new ArrayList<ScQtMeetingAttendance>();
 			this.getManagedBean().setMeetingAttendanceList(
-					meetingAttendanceList);
-		} finally {
+									 meetingAttendanceList);
+		}
 
+		ScQtMeetingAttendance meeting = new ScQtMeetingAttendance();
+		meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
+		setUserDetails(meeting);
+		meetingAttendanceList.add(meeting);
+	}
+	
+	/**
+	 * Event to handle selection of all committee meeting attendance record(s)
+	 */
+	public void selectAllMeetingAttendeesEvent() {
+		boolean isSelectAllMeetingAttendees = 
+					getManagedBean().isSelectAllMeetingAttendees();
+		List<ScQtMeetingAttendance> meetingAttendanceList = 
+				getManagedBean().getMeetingAttendanceList();
+		if (CollectionUtils.isNotEmpty(meetingAttendanceList)) {
+			for (ScQtMeetingAttendance meetingAttd 
+					: meetingAttendanceList) {
+				if (meetingAttd.getRecordStatusFlg() == 
+							DbValueConst.RECORD_STATUS_ACTIVE) {
+					meetingAttd.setSelected(isSelectAllMeetingAttendees);
+					selectMeetingAttendeeEvent(meetingAttd);
+				}
+			}
 		}
 	}
+	
+	/**
+	 * Event to handle selection of single committee meeting attendance record
+	 */	
+	public void selectMeetingAttendeeEvent(
+						ScQtMeetingAttendance meetingAttendance) {
+		List<ScQtMeetingAttendance> selectedMeetingAttdList = 
+					getManagedBean().getSelectedMeetingAttList();
+		if (selectedMeetingAttdList == null) {
+			selectedMeetingAttdList = new ArrayList<ScQtMeetingAttendance>();
+			getManagedBean().setSelectedMeetingAttList(selectedMeetingAttdList);
+		}
+		if (meetingAttendance.isSelected()) {
+			selectedMeetingAttdList.add(meetingAttendance);
+		} else {
+			selectedMeetingAttdList.remove(meetingAttendance);
+		}
+	}	
 	
 	/**
 	 * Event to handle deletion of the selected list of committee meeting
