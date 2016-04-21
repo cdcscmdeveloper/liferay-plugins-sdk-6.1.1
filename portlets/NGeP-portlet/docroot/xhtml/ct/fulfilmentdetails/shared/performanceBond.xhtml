@@ -36,7 +36,7 @@
 							</p:selectBooleanCheckbox>
 						</f:facet>
 						<p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox">
-							<p:ajax event="change"  update="@this, :form:delPdBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}" />
+							<p:ajax event="change"  update="@this, :form:tableBond, :form:delPdBtn" listener="#{ctBackingBean.selectOnePerformanceCheckboxSelect}" />
 						</p:selectBooleanCheckbox>
 				      </p:column>
 					

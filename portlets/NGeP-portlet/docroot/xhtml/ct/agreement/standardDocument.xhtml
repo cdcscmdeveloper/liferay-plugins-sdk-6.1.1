@@ -22,10 +22,10 @@
 				
 				<p:column style="width:40%;" styleClass="column-align-center">
 					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.ct.contents']}"/>
+						<h:outputText value="#{lbl['lbl.ct.contents']}"  />
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content']}"/>
 				  	</f:facet>
-					    <h:outputText value="#{contentsVar.title}" style="text-align:left;float:left;" 
+					    <p:outputLabel value="#{contentsVar.title}" style="text-align:left;float:left;" 
 					        rendered="#{contentsVar.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
 					<p:inputText value="#{contentsVar.title}"  maxlength="50" 
 					     style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
@@ -33,16 +33,16 @@
 				
 				<p:column style="width:30%px;" styleClass="column-align-center">
 					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.ct.type']}"/>
+						<h:outputText value="#{lbl['lbl.ct.type']}" />
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
 				  	</f:facet>
-					<h:outputText style="text-align:left; float:left;"
+					<p:outputLabel style="text-align:left; float:left;"
 					   value="#{agreementBackingBean.getParameterDesc(contentsVar.contentType.parameterType,contentsVar.contentType.parameterCode)}" />
 				</p:column>
 				
 				<p:column style="width:30%;" styleClass="column-align-center">
 					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.ct.action']}"/>
+						<h:outputText value="#{lbl['lbl.ct.action']}"  />
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
 				  	</f:facet>
 				   	<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementTemplateDoc}">
@@ -58,14 +58,14 @@
 					</h:panelGroup>
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
 						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}" immediate="true">
-							<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
+							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 						</h:commandLink>
 					</h:panelGroup>
 					
 					<h:panelGroup id="uploadUserDefinePg" 
 					    rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
 						
-						<p:commandButton icon="iconAttachment"  rendered="#{contentsVar.filePath  == null}"
+						<p:commandButton icon="ui-icon-upload"  rendered="#{contentsVar.filePath  == null}"
 					   		update=":form:contentTable, :form:uploadUserDefineDlg" oncomplete="uploadUserDefineDlg.show();return false;"  >
 							<f:setPropertyActionListener value="#{contentsVar}" 
 						    	target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
@@ -77,7 +77,7 @@
 					    </h:commandLink>
 					    
 					     	<p:commandLink 
-			   	                 onclick="deleteContentDlg.show();" action="#{agreementBackingBean.setIndexProperty(rowIndex)}"
+			   	                 onclick="deleteContentId.show();" action="#{agreementBackingBean.setIndexProperty(rowIndex)}"
 						         rendered="#{contentsVar.filePath  != null}">
 			   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	          </p:commandLink>
@@ -85,13 +85,13 @@
 					 </h:panelGroup>
 				</p:column>
 			</p:dataTable>
-			<p:dialog id="uploadUserDefineDlg" widgetVar="uploadUserDefineDlg" height="350"
+			<p:dialog id="uploadUserDefineDlg" widgetVar="uploadUserDefineDlg" height="350px" resizable="false"
 				modal="true" width="700px" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 				<p:ajax event="close" />
-				<p:fileUpload style="display:inline;" mode="advanced" 
-				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-				    fileUploadListener="#{agreementBackingBean.fileUpload}"
-					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false"
+				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false" 
+				    fileUploadListener="#{agreementBackingBean.fileUpload}" multiple="false"
+					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" fileLimit="1"
 					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update=":form:contentTable">
 				</p:fileUpload>
 			</p:dialog>
@@ -100,7 +100,7 @@
                 severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                  <div class="ppRightBtn">
 		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		                       update=":form:contentTable" 
+		                       update=":form:contentTable,:form:delContentBtn" 
 		                       action="#{agreementBackingBean.deleteContentAttachement()}" oncomplete="deleteContentId.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteContentId.hide();" type="button" />
 		           </div>
@@ -135,7 +135,7 @@
                 severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                  <div class="ppRightBtn">
 		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		                       update=":form:contentTable" 
+		                       update=":form:contentTable, :form:delContentBtn" 
 		                       action="#{agreementBackingBean.delAgreementContents()}" oncomplete="dlgDocumentDel.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDocumentDel.hide();" type="button" />
 		           </div>
