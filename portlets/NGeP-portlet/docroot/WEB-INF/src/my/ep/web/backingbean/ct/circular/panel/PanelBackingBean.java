@@ -254,7 +254,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		             	if(getManagedBean().getUserMap().size()==0) {
 		     			   initializeApproverList();
-		     			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList(RoleCode.BPK_PQ_APPROVER.value()));
 		     			  }
 		             	
 		               getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -263,16 +262,28 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		   
 		               if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 			                    getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			                    List<PmUser> invalidApproverList = new ArrayList<PmUser>();
 			                    for (PmUser approverUser : resDTO.getApproverList())  {
 						              Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
-					          	      while (sourceIt.hasNext()) {
+						              boolean isValidApprover = false;
+						              while (sourceIt.hasNext()) {
 							                PmUser user = sourceIt.next();
 							                if (user.getUserId() == approverUser.getUserId()) {
 								                 sourceIt.remove();
+								                 isValidApprover = true;
+								                 break;
 							                }
 						             }
+						             if (!isValidApprover) {
+				                			invalidApproverList.add(approverUser);
+				                	 }
 					           }
-		              }
+			                    if (invalidApproverList.size() > 0) {
+			                		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
+			                	}
+		              } else {
+		  				getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+		  			}
 
 		            getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		            initializeRemarks();
@@ -339,9 +350,29 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	             	}
 			        getManagedBean().getApproverModel().setSource(getAvailableApproverList(getApproverRoleCodeByDocType()));
 			        if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
-				          getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-				          getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			        }
+			        	getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+	                	List<PmUser> invalidApproverList = new ArrayList<PmUser>();
+	                	for (PmUser approverUser : resDTO.getApproverList())  {
+	                		Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();	
+	                		boolean isValidApprover = false;
+	                		while (sourceIt.hasNext()) {
+	                			PmUser user = sourceIt.next();
+	                			if (user.getUserId() == approverUser.getUserId()) {
+	                				sourceIt.remove();
+	                				isValidApprover = true;
+	                				break;
+	                			}
+	                		}
+	                		if (!isValidApprover) {
+	                			invalidApproverList.add(approverUser);
+	                		}
+	                	}
+	                	if (invalidApproverList.size() > 0) {
+	                		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
+	                	}
+			        } else {
+						getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+					}
 			
 			        getManagedBean().setRemarkList(resDTO.getRemarkList());
 			        getManagedBean().setAttachmentList(resDTO.getAttachmentList());
