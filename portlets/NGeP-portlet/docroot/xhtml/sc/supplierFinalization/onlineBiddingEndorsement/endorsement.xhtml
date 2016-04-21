@@ -18,9 +18,11 @@
 		<ui:param name="validityDaysExpiredQt"
 			value="#{suppFinalBiddingBackingBean.checkProposalValidityDateReach(
 		     				suppFinalBiddingBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+		     				
+		<ui:param name="isSecretaryUser"
+				  value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />		     				
 
-		<ac:gpkiPopup
-			textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
+		<ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
 		<div align="right" class="BtnSpacing">
