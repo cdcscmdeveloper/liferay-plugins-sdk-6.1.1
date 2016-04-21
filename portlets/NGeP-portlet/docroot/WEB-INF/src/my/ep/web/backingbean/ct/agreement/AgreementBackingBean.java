@@ -399,15 +399,27 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 			if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
 				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+				List<PmUser> invalidApproverList = new ArrayList<PmUser>();
 				for (PmUser approverUser : resDTO.getApproverList())  {
 					Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+					boolean isValidApprover = false;
 					while (sourceIt.hasNext()) {
 						PmUser user = sourceIt.next();
 						if (user.getUserId() == approverUser.getUserId()) {
 							sourceIt.remove();
+							isValidApprover = true;
+							break;
 						}
 					}
+					if (!isValidApprover) {
+            			invalidApproverList.add(approverUser);
+            		}
 				}
+				if (invalidApproverList.size() > 0) {
+            		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
+            	}
+			} else {
+				getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 			}
 		
 			String docType = ParameterConst.DOCTYPE_AGREEMENT;
