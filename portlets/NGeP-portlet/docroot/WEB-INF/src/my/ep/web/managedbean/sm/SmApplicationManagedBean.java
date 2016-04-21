@@ -415,9 +415,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poInquiryRespond;
 
 	private boolean showNewChanges;
-	
+
 	private String businessTypeParamCode;
 	private String physicalConsulting;
+	private String personType;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -3258,5 +3259,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedSignatoryBankAccts(
 			List<SmSupplierBank> selectedSignatoryBankAccts) {
 		this.selectedSignatoryBankAccts = selectedSignatoryBankAccts;
+	}
+
+	public String getPersonType() {
+		return personType;
+	}
+
+	public void setPersonType(String personType) {
+		this.personType = personType;
 	}
 }
