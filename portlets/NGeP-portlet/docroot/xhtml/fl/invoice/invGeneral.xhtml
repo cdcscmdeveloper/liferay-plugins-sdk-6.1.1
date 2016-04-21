@@ -197,16 +197,19 @@
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" /></td>
-				<td><p:selectOneMenu id="accountId" label="#{lbl['lbl.fl.bank.acc.no']}" required="true"
-						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' }"
-						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View' || !bpmTasklistBackingBean.managedBean.claim}"
-						style="width:300px;margin-bottom: 5px;"
+				<td><p:selectOneMenu id="accountId" label="#{lbl['lbl.fl.bank.acc.no']}" required="true" 
+						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.buttonVal ne 'View'}"
+						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK' || !bpmTasklistBackingBean.managedBean.claim}"
+						style="width:350px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems value="#{invoiceBackingBean.populateBankAccountList}" />
 						<p:ajax event="change" 
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
-					</p:selectOneMenu> <p:message for="accountId" display="icon" />
+					</p:selectOneMenu>
+					<p:message for="accountId" display="icon" /> 
+					<p:inputText size="45" disabled="true" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.buttonVal eq 'View' }"
+						value="#{invoiceBackingBean.managedBean.invoice.accountNo} #{invoiceBackingBean.managedBean.invoice.paymentBankName}" />
 					 </td>		
 			</tr>
 			<tr>
