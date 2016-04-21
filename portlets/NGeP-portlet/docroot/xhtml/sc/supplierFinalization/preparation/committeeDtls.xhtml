@@ -59,7 +59,7 @@
 			<p:column headerText="#{lbl['lbl.sc.attendance']}"
 				styleClass="td-check-box-spacing">
 				<p:selectBooleanCheckbox value="#{committeeDtl.attended}"
-					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"
+					disabled="#{!isSecretaryUser}"
 					styleClass="td-check-box-spacing" />
 			</p:column>
 		</p:dataTable>
@@ -88,8 +88,7 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}"
-										disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+										rendered="#{remarkVar.remarkId eq null}">
 										<p:ajax partialSubmit="true" process="@this" update="@this" />
 									</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"

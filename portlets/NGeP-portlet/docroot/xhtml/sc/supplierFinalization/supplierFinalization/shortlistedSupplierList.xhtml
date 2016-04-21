@@ -35,7 +35,7 @@
 						<td>
 							<p:selectOneMenu id="cancelItems" label="#{lbl['lbl.sc.cancelled']}" required="true"
 								value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
-								disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+								disabled="#{!(isSecretaryUser or 
 												isBPKTaskAndClaimed)}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
 								<p:ajax event="change" process="@this" update="@([id$=cancelItems],[id$=supplierListTblPanel])" 
@@ -190,7 +190,7 @@
 				</p:column>				
 								
 				<p:column styleClass="td-check-box-spacing" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
-					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+					disabledSelection="#{!(isSecretaryUser or 
 											isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
 												suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
 		            rendered="#{showSelectionColumn}" />
@@ -329,7 +329,7 @@
 				
 				<p:column styleClass="td-check-box-spacing" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectAwardSupplier" value="#{shortlistedSupp.awareded}" 
-						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+						disabled="#{!(isSecretaryUser or 
 										isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
 											suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
 						rendered="#{suppFinalizationBackingBean.managedBean.finalizationMethod eq 
@@ -340,7 +340,7 @@
 					</p:selectBooleanCheckbox>
 					
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
-						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+						disabled="#{!(isSecretaryUser or 
 										isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
 											suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
 						rendered="#{(suppFinalizationBackingBean.managedBean.finalizationMethod == ParameterConst.recommendByOnlineBidding or 
@@ -491,8 +491,7 @@
 				</p:column>
 								
 				<p:column styleClass="td-check-box-spacing" selectionMode="single" 
-					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-											isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
+					disabledSelection="#{!(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
 												suppFinalizationBackingBean.managedBean.disableSupplierSelection}" 
 		            rendered="#{showSelectionColumn}" />														
 																

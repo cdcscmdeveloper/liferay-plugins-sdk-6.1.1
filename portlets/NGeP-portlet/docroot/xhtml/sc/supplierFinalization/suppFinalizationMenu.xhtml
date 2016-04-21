@@ -27,6 +27,9 @@
 		<ui:param name="readOnlyTask" 
 				  value="#{suppFinalizationBackingBean.managedBean.readOnly}" />
 		<ui:param name="isBPKTaskAndClaimed"  value="#{isBPKTask and !readOnlyTask}" />		
+		
+		<ui:param name="isSecretaryUser" 
+				  value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />		
 		     				
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
 					autoUpdate="true" closable="true" severity="error, info" />
@@ -42,8 +45,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 						partialSubmit="true" update="@form"
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
-						rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
-										isBPKTaskAndClaimed}"
+						rendered="#{isSecretaryUser or isBPKTaskAndClaimed}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 					<ui:repeat var="bpmAction"
