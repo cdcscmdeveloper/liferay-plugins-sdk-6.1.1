@@ -244,19 +244,18 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 			<tr>
-				
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
+				<td><p:inputText disabled="true" size="53"
+						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.branchName)}" />
+				</td>
+			</tr>			
+			<tr>
 				<td style="width: 80px;"><p:outputLabel
 						value="#{lbl['lbl.fl.bank.acc.no.name']}" 
 						rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'false'}"/></td>
 				<td><p:inputText disabled="true" size="53"
 						rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'false'}"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.accountNo}  #{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.paymentBank.finOrgName}" /></td>			
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50"
-						value="#{paymentMatchBackingBean.getText(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.branchName)}" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
