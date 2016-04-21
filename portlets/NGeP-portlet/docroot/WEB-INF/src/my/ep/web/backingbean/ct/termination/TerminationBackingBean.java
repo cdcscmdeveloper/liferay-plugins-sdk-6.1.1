@@ -221,17 +221,29 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 										getManagedBean().getUserMap()));
 
 						if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-							     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-							     for (PmUser approverUser : resDTO.getApproverList())  {
-									Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
-									while (sourceIt.hasNext()) {
-										PmUser user = sourceIt.next();
-										if (user.getUserId() == approverUser.getUserId()) {
-											sourceIt.remove();
-										}
-								 }
-	                      }
-                     } 
+							getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+		                	List<PmUser> invalidApproverList = new ArrayList<PmUser>();
+		                	for (PmUser approverUser : resDTO.getApproverList())  {
+		                		Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();	
+		                		boolean isValidApprover = false;
+		                		while (sourceIt.hasNext()) {
+		                			PmUser user = sourceIt.next();
+		                			if (user.getUserId() == approverUser.getUserId()) {
+		                				sourceIt.remove();
+		                				isValidApprover = true;
+		                				break;
+		                			}
+		                		}
+		                		if (!isValidApprover) {
+		                			invalidApproverList.add(approverUser);
+		                		}
+		                	}
+		                	if (invalidApproverList.size() > 0) {
+		                		getManagedBean().getApproverModel().getTarget().removeAll(invalidApproverList);
+		                	}
+						} else {
+			  				getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
+			  			}
 
 						getManagedBean().setRemarkList(resDTO.getCtRemarks());
 						getManagedBean().setAttachmentList(resDTO.getCtAttachments());
