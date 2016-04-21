@@ -715,14 +715,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					        	 ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
 					        	 ptjAddress = ptjAddress.replaceAll("&", "&#38;");  
 					        	 context.put("ptjAddress", ptjAddress);
-					        	 if (getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNo() != null)
-					        		 context.put("telNo", getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNo());
-					        	 else
-					        		 context.put("telNo", "");
-					        	 if (getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNo() != null)
-					        		 context.put("faxNo", getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNo());						
-					        	 else
-					        		 context.put("faxNo", "");
+					        	 context.put("telNo", getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNoFull());
+					        	 context.put("faxNo", getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNoFull());
 					         } else {
 						           context.put("ptjAddress", " ");
 						           context.put("telNo", " ");
