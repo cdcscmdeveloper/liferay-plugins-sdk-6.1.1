@@ -15,7 +15,7 @@
 			<ac:paginator for="meetingDtlTbl" />
 
 			<ui:param name="disableMeeting"
-				      value="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
+				      value="#{!isSecretaryUser or 
 										meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
 			<p:column styleClass="td-check-box-spacing">
 				<f:facet name="header">
@@ -99,11 +99,11 @@
 				process="@this,meetingDtlTbl" partialSubmit="true"
 				action="#{suppFinalizationBackingBean.addMeetingDtls}"
 				update="meetingDtlTbl"
-				rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />
+				rendered="#{isSecretaryUser}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				onsuccess="dlgPerformDel.show();" update="meetingDtlTbl"
-				rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />
+				rendered="#{isSecretaryUser}" />
 
 		</div>
 
