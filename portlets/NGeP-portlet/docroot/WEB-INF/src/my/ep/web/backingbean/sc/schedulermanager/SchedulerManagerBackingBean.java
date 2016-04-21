@@ -122,12 +122,12 @@ public class SchedulerManagerBackingBean extends
 					SchedulerHelper.getInstance().getJobBidScheduleList());
 
 		} catch (SchedulerException e) {
-			log.error(e.getMessage());
-
-			// delete if failed to load job
 			if (tmpJobKey != null) {
-				log.info("DELETE FAILED JOB:" + tmpJobKey.getName());
-				EpSchedulerHelper.deleteJobAndAssociatedTriggers(tmpJobKey);
+				log.error(">>>>>>ERROR INIT JOB:" + tmpJobKey.getName()
+						+ " WITH EXCEPTION:" + e.getMessage() + "<<<<<<<<<");
+			} else {
+				log.error(">>>>>>ERROR INIT JOB EXCEPTION:" + e.getMessage()
+						+ "<<<<<<<<<");
 			}
 		}
 		log.info(">>>>>>>>>>>>END INIT ALL JOBS<<<<<<<<<<<<<<<<<<");
