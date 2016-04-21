@@ -1176,11 +1176,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				    	   supplierAddress = getFullAddress(ctContractVer.getCtContractValue().getSupplierAddress());
 				    	   supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 				    	   supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-								
-				    	   if (ctContractVer.getCtContractValue().getSupplierAddress().getPhoneNo() != null)
-				    		   supplierTelNo = ctContractVer.getCtContractValue().getSupplierAddress().getPhoneNo();
-				    	   if (ctContractVer.getCtContractValue().getSupplierAddress().getFaxNo() != null)
-				    		   supplierFaksNo = ctContractVer.getCtContractValue().getSupplierAddress().getFaxNo();
+				    	   supplierTelNo = ctContractVer.getCtContractValue().getSupplierAddress().getPhoneNoFull();
+				    	   supplierFaksNo = ctContractVer.getCtContractValue().getSupplierAddress().getFaxNoFull();
 				       }
 				       context.put("supplierAddress", supplierAddress);
 				       context.put("telNo", supplierTelNo);

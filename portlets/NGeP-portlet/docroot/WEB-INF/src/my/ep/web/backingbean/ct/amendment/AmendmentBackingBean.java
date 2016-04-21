@@ -506,10 +506,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 									supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 							    	context.put("supplierAddress", supplierAddress);
-									context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() != null 
-											? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() : "");
-									context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() != null 
-											? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() : "");
+									context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNoFull());
+									context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNoFull());
 								} else {
 									context.put("supplierAddress", "");
 									context.put("supplierPhoneNo", "");
@@ -4499,10 +4497,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
 					supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 			    	context.put("supplierAddress", supplierAddress);
-					context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() != null 
-							? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNo() : "");
-					context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() != null 
-							? ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNo() : "");
+					context.put("supplierPhoneNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPhoneNoFull());
+					context.put("supplierFaxNo", ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getFaxNoFull());
 				} else {
 					context.put("supplierAddress", "");
 					context.put("supplierPhoneNo", "");
@@ -4556,8 +4552,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    	ptjAddress = getFullAddress(ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress());
 		    	ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
 		    	ptjAddress = ptjAddress.replaceAll("&", "&#38;");
-		    	phoneNo = ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNo();
-		    	faxNo = ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNo();
+		    	phoneNo = ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNoFull();
+		    	faxNo = ctBackingBean.getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNoFull();
 			}
 			context.put("ptjAddress", ptjAddress);
 			context.put("phoneNo", phoneNo);
@@ -4721,8 +4717,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				supplierUserID = getFacesScopes().getUserSessionBean().getIdentificationNo();
 				supplierUserDesignation = getFacesScopes().getUserSessionBean().getDesignation() != null
 						? getFacesScopes().getUserSessionBean().getDesignation(): "";
-				supplierTelNo = getFacesScopes().getUserSessionBean().getPhoneNo() != null
-						? getFacesScopes().getUserSessionBean().getPhoneNo() : "";
+				supplierTelNo = getFacesScopes().getUserSessionBean().getPhoneNo() != null 
+						? getFacesScopes().getUserSessionBean().getPhoneNo() : ""; //TODO: Full Phone No
 				supplierFaxNo = getFacesScopes().getUserSessionBean().getFaxNo() != null
 						? getFacesScopes().getUserSessionBean().getFaxNo() : "";
 				supplierMobileNo = getFacesScopes().getUserSessionBean().getMobileNo() != null
@@ -4736,7 +4732,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				witnessID = getManagedBean().getScLoaWitness().getIdentificationNo();
 				witnessDesignation = getManagedBean().getScLoaWitness().getDesignation();
 				witnessAddress = getManagedBean().getScLoaWitness().getAddress();
-				witnessTelNo = getManagedBean().getScLoaWitness().getPhoneNo();
+				witnessTelNo = getManagedBean().getScLoaWitness().getPhoneNo();	//TODO: Full Phone No
 				witnessFaxNo = getManagedBean().getScLoaWitness().getFaxNo();
 				witnessMobileNo = getManagedBean().getScLoaWitness().getMobileNo();
 				witnessEmail = getManagedBean().getScLoaWitness().getEmail();
