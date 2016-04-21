@@ -69,7 +69,8 @@
 						</td>
 					</c:if>
 					<h:panelGroup id="printButtonSi"
-						rendered="#{stopInstrBB.managedBean.stopInstr.pmStatus.statusId != FulfilmentStatusCont.sdPendingApproval}">
+						rendered="#{(stopInstrBB.managedBean.stopInstr.pmStatus.statusId != FulfilmentStatusCont.sdPendingSubmission) and 
+						     (stopInstrBB.managedBean.stopInstr.pmStatus.statusId != FulfilmentStatusCont.sdPendingApproval)}">
 						<td style="text-align: right; width: 30px;"><p:commandLink
 								value="#{lbl['lbl.btn.print']}" ajax="false">
 								<p:fileDownload
