@@ -371,9 +371,19 @@
 				    	  var districtName = document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').options[document.getElementById('#{p:component(&quot;busDistrict&quot;)}_input').selectedIndex].text;
 				    	  var stateName = document.getElementById('#{p:component(&quot;busState&quot;)}_input').options[document.getElementById('#{p:component(&quot;busState&quot;)}_input').selectedIndex].text;
 				    	  var countryName = document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').options[document.getElementById('#{p:component(&quot;compCountryId&quot;)}_input').selectedIndex].text;
+							
+				    	  
+				    	  //if(addr1.substring(addr1.length - 2, addr1.length - 1) == ',') {
 
-				    	  var address = addr1 + addr2 + addr3 + addr4 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
-
+				    	  //}
+				    	  //alert('city ulu: ' + cityName.substring(1, 3));
+				    	  if(districtName.substring(0,3) == 'ULU') {
+				    		  districtName = 'H' + districtName;
+				    	  }
+				    	  
+				    	  //var address = addr1 + addr2 + addr3 + addr4 + postcode + cityName + ',' + districtName + ',' + stateName + ',' + countryName;
+				    	  //var address = stateName + ',' + districtName + ',' + postcode + ' ' + cityName + addr4 + addr3 + addr2 + addr1;
+				    	  var address = countryName + ',' + districtName + ',' + cityName + addr4 + addr3 + addr2 + addr1;
 				      	return address;
 				      }
 				      </SCRIPT>
