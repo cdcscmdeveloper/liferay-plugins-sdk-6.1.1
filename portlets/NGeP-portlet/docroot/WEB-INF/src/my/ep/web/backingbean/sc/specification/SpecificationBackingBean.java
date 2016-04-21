@@ -11235,6 +11235,15 @@ public class SpecificationBackingBean extends
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && 
 					(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId) ||
 							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(statusId))) {
+				if(null==scQt.getEstimatedAmount()){
+					SpecificationReqDTO estimatedReqDTo=new SpecificationReqDTO();
+					estimatedReqDTo.setQtId(scQt.getQtId());
+					IQTSpecSO specSO = getSpecSO();
+					SpecificationResDTO resTO=specSO.calCulateTemplateSpecEstimations(estimatedReqDTo);
+					if(null!=resTO && null!=resTO.getTotalSpecEstimatedAmount()){
+						scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount());
+					}
+				}
 				new CreateQtBackingBean().setProcurementMode(scQt, scQt.getEstimatedAmount());
 			}
 
