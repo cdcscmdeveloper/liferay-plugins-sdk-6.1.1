@@ -27,12 +27,12 @@
 					rows="5" style="width:300px;margin-bottom: 5px;" maxlength="200" autoResize="false"/>
 			</h:panelGrid>
 				<p:outputLabel value="#{lbl['lbl.ct.tel']}" />
-			<p:inputText style="width:150px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNo}" />
+			<p:inputText style="width:150px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNoFull}" />
 			<p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
 			<h:panelGrid columns="3" style="width:420px;" columnClasses="columnWidth30,columnWidth30">
-				<p:inputText style="width:150px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactMobileNo}" />
+				<p:inputText style="width:150px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactMobileNoFull}" />
 				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
-				<p:inputText style="width:140px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.faxNo}" />
+				<p:inputText style="width:140px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.faxNoFull}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.email']}" />
 			<p:inputText style="width:420px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactEmail}" />
