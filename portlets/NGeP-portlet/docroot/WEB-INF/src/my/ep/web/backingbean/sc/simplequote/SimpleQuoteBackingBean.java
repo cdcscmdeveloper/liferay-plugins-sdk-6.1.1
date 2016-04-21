@@ -4221,9 +4221,12 @@ public class SimpleQuoteBackingBean extends
 			for (PmOrgProfile orgProfile : orgProfiles) {
 				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 				reqDTO.setSupplierId(orgProfile.getOrgProfileId());
-				scQuoteSupplier.setSmSupplier(qtSupplierSO
-						.retrieveGovSellerById(reqDTO).getSmSupplier());
+				SmSupplier smSupplier = qtSupplierSO
+						.retrieveGovSellerById(reqDTO).getSmSupplier();
+				scQuoteSupplier.setSmSupplier(smSupplier);
 				scQuoteSupplier.setQuote(getManagedBean().getScQuote());
+				scQuoteSupplier.setMofNumber(getMofNor(smSupplier.getSupplierId()));
+				scQuoteSupplier.setSupplierName(smSupplier.getCompanyName());
 				
 				getManagedBean().setGovtSellers(govtSuppliers);
 				if(getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()){
@@ -4238,7 +4241,7 @@ public class SimpleQuoteBackingBean extends
 						if(!govtSellerIds.contains(scQuoteSupplier.getSmSupplier().getSupplierId())){
 							govtSuppliers.add(scQuoteSupplier);
 							
-						} else {
+						} /*else {
 							throw new EpException(
 									MessageConst.ERROR_700027,
 									new String[] { ResourceBundleUtils
@@ -4247,7 +4250,7 @@ public class SimpleQuoteBackingBean extends
 													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 													new FacesScopes()
 													.getUserLocale()) });
-						}
+						}*/
 					}
 				}
 			}
