@@ -384,35 +384,32 @@
 			<br /><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" escape="false"/><br />
 		</p:outputPanel>
 		<table>
-			<p:outputPanel rendered="#{!backingBean.managedBean.validSmUserLimit or (backingBean.managedBean.validSmUserLimit and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1')}">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
-					<td><p:selectOneRadio disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' 
-						or backingBean.managedBean.selectedShareHolder.epRole eq 'SUPPLIER_TEMP'}"
-							value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
-							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-							<p:ajax event="change" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:shareHolderAddrDialog,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
-								listener="#{backingBean.assignShareHolderPrivilege}" partialSubmit="true"/>
-						</p:selectOneRadio></td>
-					<td><p:graphicImage id="tooltip3"
-							value="/css/images/design/tooltips.png"
-							style="padding-bottom : 7px;" /> <p:tooltip id="toolinfo3"
-							for="tooltip3">
-							<p:outputLabel escape="false"
-								value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
-						</p:tooltip>
-						<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges
-								and not empty backingBean.managedBean.latestPersonnel}"
-							oriValue="#{backingBean.managedBean.latestPersonnel.authorizedFlg}" 
-							currValue="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}" 
-							alertValue="#{backingBean.managedBean.latestPersonnel.authorizedFlg eq '1' ? 
-								lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
-					</td>
-				</tr>
-			</p:outputPanel>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
+				<td><p:selectOneRadio disabled="#{backingBean.disableAuthorizedRadio(backingBean.managedBean.selectedShareHolder)}"
+						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
+						<p:ajax event="change" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							update=":form:tt:shareHolderAddrDialog,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
+							listener="#{backingBean.assignShareHolderPrivilege}" partialSubmit="true"/>
+					</p:selectOneRadio></td>
+				<td><p:graphicImage id="tooltip3"
+						value="/css/images/design/tooltips.png"
+						style="padding-bottom : 7px;" /> <p:tooltip id="toolinfo3"
+						for="tooltip3">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
+					</p:tooltip>
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.latestPersonnel}"
+						oriValue="#{backingBean.managedBean.latestPersonnel.authorizedFlg}" 
+						currValue="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}" 
+						alertValue="#{backingBean.managedBean.latestPersonnel.authorizedFlg eq '1' ? 
+							lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
+				</td>
+			</tr>
 		</table>
 		<table>
 			<tr><td></td></tr>
