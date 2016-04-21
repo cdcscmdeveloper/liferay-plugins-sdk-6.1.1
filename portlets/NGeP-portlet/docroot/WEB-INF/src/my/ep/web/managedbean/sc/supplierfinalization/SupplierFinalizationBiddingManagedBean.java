@@ -124,6 +124,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private boolean secretaryUser;
 	private boolean selectAll;
 	private boolean selectAllMeetings;
+	private boolean SelectAllMeetingAttendees;
 	private boolean zonal;
 	private boolean isItemized;
 	private boolean onlineBiddingEscalation;
@@ -1026,6 +1027,21 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAllMeetings(boolean selectAllMeetings) {
 		this.selectAllMeetings = selectAllMeetings;
+	}
+
+	/**
+	 * @return the selectAllMeetingAttendees
+	 */
+	public boolean isSelectAllMeetingAttendees() {
+		return SelectAllMeetingAttendees;
+	}
+
+	/**
+	 * @param selectAllMeetingAttendees
+	 *            the selectAllMeetingAttendees to set
+	 */
+	public void setSelectAllMeetingAttendees(boolean selectAllMeetingAttendees) {
+		SelectAllMeetingAttendees = selectAllMeetingAttendees;
 	}
 
 	/**

@@ -189,6 +189,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private boolean selectAll;
 	private boolean selectAllMeetings;
+	private boolean selectAllMeetingAttendees;
 	private String action;
 	private Long loggedInUserId;
 	private Long originalFinalizationSecretaryUserId;
@@ -1745,6 +1746,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAllMeetings(boolean selectAllMeetings) {
 		this.selectAllMeetings = selectAllMeetings;
+	}
+
+	/**
+	 * @return the selectAllMeetingAttendees
+	 */
+	public boolean isSelectAllMeetingAttendees() {
+		return selectAllMeetingAttendees;
+	}
+
+	/**
+	 * @param selectAllMeetingAttendees
+	 *            the selectAllMeetingAttendees to set
+	 */
+	public void setSelectAllMeetingAttendees(boolean selectAllMeetingAttendees) {
+		this.selectAllMeetingAttendees = selectAllMeetingAttendees;
 	}
 
 	/**
