@@ -68,7 +68,7 @@
 							    rendered="#{!ctBackingBean.managedBean.viewContract}">
 	     		                   <p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" 
 	     		                     disabled="#{ctBackingBean.managedBean.disableAmendDetails}">
-			  		               <p:ajax event="change" update=":form:delBtn" listener="#{ctBackingBean.selectOneCheckboxSelect}"></p:ajax>
+			  		               <p:ajax event="change" update=":form:delBtn" listener="#{ctBackingBean.selectOneAgencyCheckboxSelect}"></p:ajax>
 		       	                   </p:selectBooleanCheckbox>
 	      	                 </p:column>
 	      	                 
