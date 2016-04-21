@@ -1107,6 +1107,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				agreementContent.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			}
 		}
+		RequestContext.getCurrentInstance().execute("uploadUserDefineDlg.hide()");
 	}
 
 	/**
@@ -1610,6 +1611,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void delAgreementContents() {
 		this.getManagedBean().getCtAgreement().getAgreementContents().remove(
 				getManagedBean().getSelectedAgreementContent());
+		getManagedBean().setSelectedAgreementContent(null);
 	}
 
 	/**
