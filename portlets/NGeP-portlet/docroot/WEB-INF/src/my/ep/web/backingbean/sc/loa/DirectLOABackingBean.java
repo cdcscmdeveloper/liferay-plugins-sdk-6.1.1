@@ -240,7 +240,7 @@ public class DirectLOABackingBean extends
 					.getToBeRemoveSchedules());
 			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
 					.getToBedeletedSupplierZone());
-			reqDTO.setLocale(new FacesScopes().getUserLocale());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.saveDirectAwardDetails(reqDTO);
 			scLoa = resDTO.getLoa();
@@ -348,7 +348,7 @@ public class DirectLOABackingBean extends
 					.getToBeRemoveSchedules());
 			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
 					.getToBedeletedSupplierZone());
-			reqDTO.setLocale(new FacesScopes().getUserLocale());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.submitDirectAwardDetails(reqDTO);
 
@@ -4292,7 +4292,7 @@ public class DirectLOABackingBean extends
 					.getToBeRemoveProgPayments());
 			reqDTO.setToBeDeleteschedules(this.getManagedBean()
 					.getToBeRemoveSchedules());
-			reqDTO.setLocale(new FacesScopes().getUserLocale());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			resDTO = getQtDirectAwardSO().updateBpmTask(reqDTO);
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getLoa();
