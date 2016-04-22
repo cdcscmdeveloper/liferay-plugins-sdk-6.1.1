@@ -494,6 +494,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	/** The back to document. */
 	private String backToDocument;
+	private List<FlRemark> previousRemarkList;
+	private List<FlAttachment> previousAttachmentList;	
 	
 	private String gstRegistrationNo;
 	private Date gstRegistrationDate;
@@ -3325,6 +3327,22 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setFlManualAddress(FlDeliveryAddress flManualAddress) {
 		this.flManualAddress = flManualAddress;
+	}
+
+	public List<FlRemark> getPreviousRemarkList() {
+		return previousRemarkList;
+	}
+
+	public void setPreviousRemarkList(List<FlRemark> previousRemarkList) {
+		this.previousRemarkList = previousRemarkList;
+	}
+
+	public List<FlAttachment> getPreviousAttachmentList() {
+		return previousAttachmentList;
+	}
+
+	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
+		this.previousAttachmentList = previousAttachmentList;
 	}
 
 }
