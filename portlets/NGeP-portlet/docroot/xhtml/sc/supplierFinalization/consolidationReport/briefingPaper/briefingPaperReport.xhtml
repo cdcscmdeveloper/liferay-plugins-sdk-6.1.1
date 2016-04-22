@@ -17,22 +17,27 @@
 			<ac:paginator for="reportTbl" />
 			
 			<p:column selectionMode="multiple" style="width:2%" 
-					  disabledSelection="#{!empty report.pmDocument}" />
+					  disabledSelection="#{!empty report.pmDocument or 
+					  	report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" />
 
-			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:78%;">
-				<h:inputText style="width:96%" value="#{report.title}" rendered="#{empty report.pmDocument}">
+			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:68%; white-space:normal;">
+				<h:inputText style="width:96%" value="#{report.title}" 
+					rendered="#{empty report.pmDocument and 
+								report.docCategory ne ParameterConst.documentCategoryEndorsementReport}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</h:inputText>
-				<h:outputText value="#{report.title}" rendered="#{!empty report.pmDocument}" />
+				<h:outputText value="#{report.title}" rendered="#{!empty report.pmDocument or 
+								report.docCategory eq ParameterConst.documentCategoryEndorsementReport}" />
 			</p:column>
 			
-			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
+			<p:column style="width:20%; white-space:normal;" headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
 					<h:commandLink value="#{report.scQtFinalizationReportAttachment.fileName}" styleClass="blue_font"
 								   action="#{consolidationReportBackingBean.downloadFile(
 													report.scQtFinalizationReportAttachment)}" />
-					<p:commandLink immediate="true" 
-						rendered="#{!empty report.scQtFinalizationReportAttachment.fileName}" update="reportTbl">
+					<p:commandLink immediate="true" rendered="#{!empty report.scQtFinalizationReportAttachment.fileName and
+						report.docCategory ne ParameterConst.documentCategoryEndorsementReport}" update="reportTbl">
+						
 						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
 							styleClass="tasklist_title1" />
 
@@ -52,7 +57,7 @@
 				</ui:fragment>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:20%; text-align:center;">
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%; text-align:center;">
 				<p:commandButton id="download" icon="ui-icon-download" 
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false" action="#{consolidationReportBackingBean.downloadReport(report)}"
