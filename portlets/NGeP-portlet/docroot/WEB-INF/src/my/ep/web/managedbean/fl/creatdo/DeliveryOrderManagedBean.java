@@ -21,15 +21,10 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
-
-import org.apache.log4j.Logger;
-// TODO: Auto-generated Javadoc
-//import my.ep.persistence.entity.pm.common.PmMaksud;
 
 /**
  * Managed Bean for Create Delivery Order.
@@ -40,9 +35,6 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "doMB")
 @SessionScoped
 public class DeliveryOrderManagedBean extends BaseManagedBean {
-	
-	/** The log. */
-	private static Logger log = Logger.getLogger(DeliveryOrderManagedBean.class);
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -67,17 +59,9 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     
     /** The del order item. */
     private FlDelOrderItem delOrderItem = new FlDelOrderItem();
-	//private List<DeliveryAddressPopup> daPopupList;
-	//private List<DeliveryAddressPopup> selectedPopupAddress;
 	
 	/** The selected addr row. */
 	private FlDeliveryAddress selectedAddrRow;
-	
-	/** The selected pm del addr list. */
-	private List<PmOrgAddress> selectedPmDelAddrList;
-	
-	/** The del addr list. */
-	private List<PmOrgAddress> delAddrList;
 	
 	/** The selected del addr. */
 	private FlDeliveryAddress selectedDelAddr;
@@ -213,6 +197,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     
     /** The back to previous. */
 	private String backToPrevious;
+	private List<FlRemark> previousRemarkList;
+	private List<FlAttachment> previousAttachmentList;	
 	
 	private boolean hyperLinkPage = false;
     
@@ -288,42 +274,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedAddrRow(FlDeliveryAddress selectedAddrRow) {
 		this.selectedAddrRow = selectedAddrRow;
-	}
-
-	/**
-	 * Gets the selected pm del addr list.
-	 *
-	 * @return the selectedPmDelAddrList
-	 */
-	public List<PmOrgAddress> getSelectedPmDelAddrList() {
-		return selectedPmDelAddrList;
-	}
-
-	/**
-	 * Sets the selected pm del addr list.
-	 *
-	 * @param selectedPmDelAddrList the selectedPmDelAddrList to set
-	 */
-	public void setSelectedPmDelAddrList(List<PmOrgAddress> selectedPmDelAddrList) {
-		this.selectedPmDelAddrList = selectedPmDelAddrList;
-	}
-
-	/**
-	 * Gets the del addr list.
-	 *
-	 * @return the delAddrList
-	 */
-	public List<PmOrgAddress> getDelAddrList() {
-		return delAddrList;
-	}
-
-	/**
-	 * Sets the del addr list.
-	 *
-	 * @param delAddrList the delAddrList to set
-	 */
-	public void setDelAddrList(List<PmOrgAddress> delAddrList) {
-		this.delAddrList = delAddrList;
 	}
 
 	/**
@@ -1252,6 +1202,22 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setHyperLinkPage(boolean hyperLinkPage) {
 		this.hyperLinkPage = hyperLinkPage;
+	}
+
+	public List<FlRemark> getPreviousRemarkList() {
+		return previousRemarkList;
+	}
+
+	public void setPreviousRemarkList(List<FlRemark> previousRemarkList) {
+		this.previousRemarkList = previousRemarkList;
+	}
+
+	public List<FlAttachment> getPreviousAttachmentList() {
+		return previousAttachmentList;
+	}
+
+	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
+		this.previousAttachmentList = previousAttachmentList;
 	}
 	
 }
