@@ -17,15 +17,15 @@
 			
 			<ac:paginator for="reportTbl" />
 
-			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:78%">
+			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:70%;">
 				<h:outputText value="#{report.title}" />
 			</p:column>			
 			
-			<p:column headerText="#{lbl['lbl.sc.type']}" style="width:20%">
+			<p:column headerText="#{lbl['lbl.sc.type']}" style="width:15%; white-space:normal;">
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(report.definationType)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:20%; text-align: center;">
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%; white-space:normal; text-align: center;">
 				<p:commandButton id="download" 
 					icon="ui-icon-download" 
 					style="background-color:transparent !important; border:0px none;"
