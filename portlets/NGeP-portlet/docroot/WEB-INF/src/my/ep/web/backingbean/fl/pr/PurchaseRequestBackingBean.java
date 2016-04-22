@@ -108,7 +108,6 @@ import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -2924,6 +2923,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	public String backToPervious() {
 		if(getManagedBean().getBackToDocument() !=null){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
 			return getManagedBean().getBackToDocument();
 		}
 		else{

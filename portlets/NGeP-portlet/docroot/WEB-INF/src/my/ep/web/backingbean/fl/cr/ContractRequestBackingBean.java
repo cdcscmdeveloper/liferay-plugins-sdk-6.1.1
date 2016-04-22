@@ -146,7 +146,6 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
-import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -3417,6 +3416,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public String backToPervious() {
 		if(getManagedBean().getBackToDocument() !=null){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
 			return getManagedBean().getBackToDocument();
 		}
 		else{

@@ -828,6 +828,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
 			orderBackingBean.getManagedBean().setButtonVal("View");
 			flBB.getManagedBean().setHideRemarks(true);
@@ -1276,6 +1278,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			crBB = new ContractRequestBackingBean();
 			crBB.getManagedBean().setSelectedTabIndex(0);
 			crBB.getManagedBean().setDocProcess(getManagedBean().getDocType());
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			crBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			crBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
+			
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
 			
@@ -1313,8 +1321,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					}
 				}
 			}
-			FacesContext fc = FacesContext.getCurrentInstance();
-			crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 			crBB.getManagedBean().setHyperLinkPage(true);
 			return NAV_CR;
 		}if(getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
@@ -1328,13 +1334,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			prBB.getManagedBean().setSubmitButtonStatus(false);
 			prBB.getManagedBean().setDocProcess(getManagedBean().getDocType());
 			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			prBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
+			
 			prBB.setFulfilmentRequestField(resDTO);
 			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			prBB.getManagedBean().setButtonVal("View");
 			flBB.getManagedBean().setHideRemarks(true);
-			FacesContext fc = FacesContext.getCurrentInstance();
 			prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-			prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 			prBB.getManagedBean().setHyperLinkPage(true);
 			return NAV_PR;
 		}
