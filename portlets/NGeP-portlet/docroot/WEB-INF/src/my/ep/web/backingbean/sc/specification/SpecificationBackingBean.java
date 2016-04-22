@@ -12413,6 +12413,8 @@ public class SpecificationBackingBean extends
 			specReqDTO.setScQt(this.getManagedBean().getQt());
 			SpecificationResDTO resDTO = specSo.deleteChecklists(specReqDTO);
 			if (resDTO.isSuccessful()) {
+				this.getManagedBean().getQt().setEstimatedAmount(resDTO.getEstimatedamount());
+				this.getManagedBean().getQt().setDecryptedEstAmt(resDTO.getDecryptedAmount());
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						null);
 				this.getManagedBean().setFinancialScoring(null);
