@@ -2387,6 +2387,14 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void procurementTypeEvent() {
 		debugLogger("procurementTypeEvent");
+		PortletSession portletSession = (PortletSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(false);
+		TemplateSpecBackingBean templateSpecBackingBean = (TemplateSpecBackingBean) portletSession
+				.getAttribute("templateSpecBackingBean");
+		if (templateSpecBackingBean == null) {
+			templateSpecBackingBean = new TemplateSpecBackingBean();
+		}
+		templateSpecBackingBean.getManagedBean().setG2G(false);
 		if (getManagedBean().getScQuote().getProcurementType()
 				.getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
@@ -2404,7 +2412,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
 			getManagedBean().setByBusinessNature(Boolean.FALSE);
 			getManagedBean().setByLocality(Boolean.FALSE);
-
+			templateSpecBackingBean.getManagedBean().setG2G(true);
 		} else if (getManagedBean().getScQuote().getProcurementType()
 				.getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {

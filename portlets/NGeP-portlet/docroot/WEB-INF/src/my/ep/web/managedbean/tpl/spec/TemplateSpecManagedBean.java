@@ -43,6 +43,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private Long searchItemTypeId;
 	private Long searchSpecTypeId;
 	private boolean pidSQ;
+	private boolean isG2G;
 	
 	private List<TplSpecQuestion> tplSpecQuestions;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -232,5 +233,19 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setPidSQ(boolean pidSQ) {
 		this.pidSQ = pidSQ;
+	}
+
+	/**
+	 * @return the isG2G
+	 */
+	public boolean isG2G() {
+		return isG2G;
+	}
+
+	/**
+	 * @param isG2G the isG2G to set
+	 */
+	public void setG2G(boolean isG2G) {
+		this.isG2G = isG2G;
 	}
 }

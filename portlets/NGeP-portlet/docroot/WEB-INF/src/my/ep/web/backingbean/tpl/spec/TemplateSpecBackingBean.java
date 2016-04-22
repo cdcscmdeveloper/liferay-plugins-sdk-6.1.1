@@ -554,7 +554,7 @@ public class TemplateSpecBackingBean extends
 		List<String> filteredList = new ArrayList<String>();
 		
 		// For Pid SQ ,No periodic schedule
-		if(!getManagedBean().isPidSQ()){
+		if(!(getManagedBean().isPidSQ() || getManagedBean().isG2G())){
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
 		}
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
