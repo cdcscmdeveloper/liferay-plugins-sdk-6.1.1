@@ -15,6 +15,8 @@ import my.ep.web.scheduler.job.sc.CloseQTSchedulerJob;
 import my.ep.web.scheduler.job.sc.ContinuousBidSchedulerJob;
 import my.ep.web.scheduler.job.sc.InviteSuppliersJob;
 import my.ep.web.scheduler.job.sc.ProposalValidityExpiaryJob;
+import my.ep.web.scheduler.job.sc.QTProposalCloseJob;
+import my.ep.web.scheduler.job.sc.QTPublishJob;
 import my.ep.web.scheduler.job.sc.ScFailoverHandlerJob;
 
 import org.apache.log4j.Logger;
@@ -75,18 +77,7 @@ public class ScSchedulerServlet extends HttpServlet {
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_UPDATE_SUPPLIERS));
 	
 
-		// Sc Daily job for Close Quatation Tenders.
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.SC_QT_CLOSED_JOB,
-								SchedulerConstants.SC_JOB_GROUP),
-						CloseQTSchedulerJob.class,
-						SchedulerConstants.SC_QT_CLOSED_JOB_DESCRIPTION,
-						EpPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QTCLOSING));
-
+	
 		// Sc Daily job for Proposal Validity Expiary Quatation Tenders.
 		EpSchedulerHelper
 				.scheduleJob(
@@ -116,6 +107,35 @@ public class ScSchedulerServlet extends HttpServlet {
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_FAILOVER_HANDLER_JOB,
 				SchedulerConstants.SC_JOB_GROUP),ScFailoverHandlerJob.class);
+		
+		// Sc Qt Publish job
+		EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.SC_QT_PUBLISH_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
+								QTPublishJob.class,
+						SchedulerConstants.SC_QT_PUBLISH_JOB_DESCRIPTION,
+						EpPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QT_PUBLISH_JOB));
+		
+		// Job to be run at server startup
+				EpSchedulerHelper.runJobOnce(new JobKey(
+						SchedulerConstants.SC_QT_PUBLISH_JOB,
+						SchedulerConstants.SC_JOB_GROUP),QTPublishJob.class);
+		//Qt Proposal Close job
+		
+				EpSchedulerHelper
+				.scheduleJob(
+						new JobKey(SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB,
+								SchedulerConstants.SC_JOB_GROUP),
+								QTProposalCloseJob.class,
+						SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION,
+						EpPropertiesUtils
+								.getInstance()
+								.getProperty(
+										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QT_PUBLISH_JOB));	
 
 	}
 
