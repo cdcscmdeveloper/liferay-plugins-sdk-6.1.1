@@ -49,6 +49,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean profileChanged = false;
 	private String passwordPolicy;
 	private String roles;
+	private List<String> rolesList;
 	private Date softCertExpDate;
 	private Date mofExpDate;
 	
@@ -207,6 +208,20 @@ public boolean isProfileChanged() {
 	 */
 	public List<ChallengeQAList> getChallengeQAList() {
 		return challengeQAList;
+	}
+
+	/**
+	 * @return the rolesList
+	 */
+	public List<String> getRolesList() {
+		return rolesList;
+	}
+
+	/**
+	 * @param rolesList the rolesList to set
+	 */
+	public void setRolesList(List<String> rolesList) {
+		this.rolesList = rolesList;
 	}
 
 	/**
