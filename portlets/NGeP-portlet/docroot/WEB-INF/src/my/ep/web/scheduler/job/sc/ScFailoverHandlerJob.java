@@ -1,19 +1,11 @@
 package my.ep.web.scheduler.job.sc;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sc.BidStatusConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sc.helper.SchedulerHelper;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -38,9 +30,6 @@ public class ScFailoverHandlerJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-
-		
-		System.out.println("*******&&&&&&&&&&&&&@@@@@@@@@@ Failover Handler Job Called@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&**************");
 		IBiddingSO biddingSO = null;
 
 		try {
