@@ -7,15 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<script>
-		$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.item.code.search']}");
+		$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text')
+				.html("#{lbl['lbl.cm.item.code.search']}");
 	</script>
-	
-	
+
+
 	<h:panelGroup id="cmUNSPSCsearchID">
-		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
+		<h:panelGroup
+			rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
 			<table style="width: 80%">
 				<tr>
-					<td style="width: 80%;"><div class="navDiv" id="menuDiv" align="center">
+					<td style="width: 80%;"><div class="navDiv" id="menuDiv"
+							align="center">
 							<ul class="menu-text" style="margin: 5px 0 0 -50px;">
 								<li style="width: 210px;"><h:outputText
 										value="#{lbl['lbl.cm.choose.unspsc']}" /></li>
@@ -60,14 +63,15 @@
 					update="unspscTableID itemCodeSearchMsg" />
 			</div>
 		</p:panel>
-		
+
 
 
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable id="unspscTableID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{codificationBackingBean.managedBean.searchDataModel}" var="unspscObj"
-				width="100%" rows="10">
+			<p:dataTable id="unspscTableID" lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{codificationBackingBean.managedBean.searchDataModel}"
+				var="unspscObj" width="100%" rows="10">
 
 
 
@@ -85,13 +89,24 @@
 							#{unspscObj.unspscCode}
 							</p:commandLink>
 
-					<p:commandLink action="#{codificationBackingBean.goToAddServiceConfirmPopUp(unspscObj)}"
-						rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}"
-						onclick="confirmationPopUp.show()"
-						update=":form:confirmationPopUpId">
+					<h:panelGroup rendered="#{unspscCodeBackingBean.allSupplier}">
+						<p:commandLink
+							action="#{codificationBackingBean.goToAddServiceConfirmPopUp(unspscObj)}"
+							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}"
+							onclick="confirmationPopUp.show()"
+							update=":form:confirmationPopUpId">
 							#{unspscObj.unspscCode}
 							</p:commandLink>
-
+					</h:panelGroup>
+					
+					
+					<h:panelGroup rendered="#{!unspscCodeBackingBean.allSupplier}">
+						<h:outputLabel value="#{unspscObj.unspscCode}" style="float:left;"
+							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}">
+							
+							</h:outputLabel>
+					</h:panelGroup>
+					
 					<p:commandLink
 						action="#{codificationBackingBean.unspscPopUpSearch(unspscObj)}"
 						onclick="unspscPopUp.show()" update=":form:codificationPopUpId"
@@ -128,7 +143,8 @@
 		</p:dialog>
 
 		<p:dialog id="confirmationPopUp" widgetVar="confirmationPopUp"
-			modal="true" header="#{lbl['lbl.cm.add.to.catalogue']}" width="350" height="200">
+			modal="true" header="#{lbl['lbl.cm.add.to.catalogue']}" width="350"
+			height="200">
 
 			<ui:include src="addServiceConfirmationPopUp.xhtml"></ui:include>
 
