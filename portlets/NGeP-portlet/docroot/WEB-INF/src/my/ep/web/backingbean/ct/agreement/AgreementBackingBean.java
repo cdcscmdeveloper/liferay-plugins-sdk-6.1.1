@@ -1166,7 +1166,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void downloadSampleFile() throws IOException{
 		if(getManagedBean().getCtContract().getQuotationTender() == null 
 				|| getManagedBean().getCtContract().getQuotationTender().getQtId() == null) {
-			throw new EpException(MessageConst.INFO_758001);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_758001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
 		
 		 IAgreementSO agreementSO = null;
@@ -1178,7 +1179,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 if(resDTO.getScQtDocReport() != null && resDTO.getScQtDocReport().getScQtDocReportAttachment() != null) {
             downloadFile(resDTO.getScQtDocReport().getScQtDocReportAttachment().getFilePath(),resDTO.getScQtDocReport().getScQtDocReportAttachment().getFileName());
         } else {
-        	throw new EpException(MessageConst.INFO_758001);
+        	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_758001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
         }
 	 }
 

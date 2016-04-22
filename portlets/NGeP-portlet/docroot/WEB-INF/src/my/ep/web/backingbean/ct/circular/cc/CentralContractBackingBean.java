@@ -694,6 +694,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	    fileOuputStream.close();
 		getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
 		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
 	}
 	
 	/**
@@ -1820,7 +1821,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	     * @param pass ajax event type
 	     * Set boolean value for user action 
 	     * */
-		
+        public void delCircularVerFile(){
+        	getManagedBean().getCircularVer().setCircularFilePath(null);
+        	getManagedBean().getCircularVer().setCircularFileName(null);
+        }
+        
 		public void onToggleSelect(ToggleSelectEvent event) {
 			getManagedBean().setButtonHideActive(false);
 		}
