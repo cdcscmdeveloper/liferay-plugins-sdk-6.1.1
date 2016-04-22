@@ -803,6 +803,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			//doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 			doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			doBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			doBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			// Set DO status
 			doBB.getManagedBean().setFulfilmentOrder(new FlFulfilmentOrder());
 			doBB.getManagedBean().getFulfilmentOrder().setFulfilmentOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
@@ -812,6 +814,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			doBB.getManagedBean().setButtonVal("View");
 			doBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			return NAV_DELIVERYORDER_PAGE;
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)||docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
