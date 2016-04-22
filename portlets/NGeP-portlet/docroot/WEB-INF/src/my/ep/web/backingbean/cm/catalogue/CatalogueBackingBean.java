@@ -551,7 +551,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		codeReqDTO = new CodificationReqDTO();
-		
+
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
@@ -1155,10 +1155,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setSupplierId(resDTO.getSupplierItem().getSupplierId());
 
 			log.info("resDTO.getSupplierItem().getSupplierId()" + resDTO.getSupplierItem().getSupplierId());
-			
-			
+
+
 			retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
-			
+
 
 			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this.getManagedBean().getDraftSearchDataModel().getList().get(index));
 
@@ -1329,9 +1329,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} finally {
 			catalogueSO = null;
 		}
-		
-		
-		
+
+
+
 		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
 
 		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
@@ -1528,8 +1528,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		reqDTO.setSupplierItemId(this.getManagedBean().getApprovedSearchDataModel().getList().get(index).getSupplierItemId());
 		resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
-		
-		
+
+
 		retriveSupplierGstInfomation(resDTO.getSupplierItem().getSmSupplier());
 
 		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
@@ -1584,11 +1584,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			catReqDTO.setSupplierItemId(this.getManagedBean().getRejectSearchDataModel().getList().get(index).getSupplierItemId());
 			catResDTO = catalogueSO.retrieveSupplierItemById(catReqDTO);
-			
-			
+
+
 			retriveSupplierGstInfomation(catResDTO.getSupplierItem().getSmSupplier());
 
-			
+
 			this.getManagedBean().getRejectSearchDataModel().getList().get(index).setCmItemRejectReasons(catResDTO.getSupplierItem().getCmItemRejectReasons());
 
 			this.getManagedBean().setSelectedMaintainItem(catResDTO.getSupplierItem());
@@ -1728,7 +1728,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				retriveSupplierGstInfomation(resDTO.getSupplierItemList().get(0).getSmSupplier());
 				resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 				this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-				
+
 			}
 			//remove N/A from Item name if any
 			String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName().replaceAll("N/A", "");
@@ -3190,7 +3190,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							ISupplierSearchSO.class);
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-			
+
 			supplierReqDTO.setUserId(pmUser.getUserId());
 
 			SupplierSearchResDTO smResDTO = supplierSearchSO
@@ -4330,7 +4330,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			supplierReqDTO = new SupplierSearchReqDTO();
 
-			
+
 			supplierReqDTO.setUserId(pmUser.getUserId());
 			supplierReqDTO.setAllStatuses(true);
 			smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
@@ -4779,7 +4779,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 
-			
+
 				if (catalog.isReviewRequired()) {
 
 					log.info("tracking diary for catalog Items to Pending approval:submitToReviewItems");
@@ -4826,7 +4826,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-				
+
 				supplierReqDTO.setUserId(pmUser.getUserId());
 
 				SupplierSearchResDTO smResDTO = supplierSearchSO
@@ -5205,7 +5205,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				csiList.add(csi);
 				reqDTO.setTrackingStatus(true);
 				reqDTO.setSupplierId(csi.getSupplierId());
-				
+
 				String actionDesc ="Item "+this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName()+" telah diiklankan oleh "+(pmUser.getUserName()!=null?pmUser.getUserName():"SYS");
 				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}			
@@ -7217,7 +7217,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			System.out.println("*******standard********"+cmPricing.getPrice());
 			System.out.println("*******promotion*******"+pricing.getPrice());
 
-			
+
 			if (pricing.getStand_group_id() == cmPricing.getStand_group_id() && (cmPricing.getPrice().compareTo(pricing.getPrice()) <= 0)){
 				priceInvalid = true;
 			}
@@ -7247,16 +7247,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 		}
-		
+
 		System.out.println("priceInvalidFirstRow"+priceInvalidFirstRow);
-		
-		
-		
-		
+
+
+
+
 		if(priceInvalidFirstRow){
 			pricing.setCheckOk(false);
 			this.getManagedBean().setError99(true);
-			
+
 
 		}else{
 			pricing.setCheckOk(true);
@@ -8908,10 +8908,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			boolean found = false;
 			for(VCmSupplierItem vCmSupplierItem: this.getManagedBean().getSelectViewItems()){
 				if(vCmSupplierItem.getDocId()==supplierItem.getDocId()){
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+									
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							null, MessageUtils.getMessage(MessageConst.ERROR_715054, new String[]{vCmSupplierItem.getItemName()},MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					found = true;
 					break;
 				}
@@ -9230,7 +9230,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			log.info("getSmSupplier"
 					+ smResDTO.getResultBean().getResultList().get(0));
-			
+
 			retriveSupplierGstInfomation( smResDTO.getResultBean().getResultList().get(0));
 
 			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this.getManagedBean().getDraftSupplierItemList().get(index));
