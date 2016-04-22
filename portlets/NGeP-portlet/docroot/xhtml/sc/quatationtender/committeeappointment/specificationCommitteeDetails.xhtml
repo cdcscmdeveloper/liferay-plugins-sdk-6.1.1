@@ -16,7 +16,7 @@
 						size="30" readonly="true" disabled="true" /></td>
 				<td style="width: 20px"><p:selectBooleanCheckbox
 						value="#{committe.approvalReq}"
-						disabled="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee or !isCommitteeInfoEditable}">
+						disabled="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee or !isCommitteeInfoEditable or qTDetailBB.managedBean.taskName == 'Assign EC/OC Committee'}">
 						<p:ajax update="@(.scMemberDtl)"
 							listener="#{qTCommitteBackingBean.checkCommitteFormedOrNot()}" />
 					</p:selectBooleanCheckbox></td>
