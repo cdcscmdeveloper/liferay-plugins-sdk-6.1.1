@@ -31,6 +31,12 @@
 				<td><p:inputText disabled="true" size="85"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
+				<td><p:inputText disabled="true" size="85"
+						value="#{receivedNoteBackingBean.getText(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.branchName)}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
+			</tr>
 		</table>
 		<p:dataTable id="suppEvalutionDt" var="suppEvalution" rowKey="#{suppEvalution}"
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flSupplierEvaluation}">
