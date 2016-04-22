@@ -1144,13 +1144,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 		orderBackingBean.getManagedBean().setButtonVal("View");
 		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
-		flBB.getManagedBean().setHideRemarks(true);
-		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		orderBackingBean.getManagedBean().setSelectedTabIndex(0);
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
+		orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+		orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+		
+		flBB.getManagedBean().setHideRemarks(true);
+		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+
 		if(resDTO.getFlOrder().isFactored()) {
 			orderBackingBean.getManagedBean().setFactoringCheck("true");
 			orderBackingBean.getFactoringCompanyDtl();
