@@ -16090,7 +16090,8 @@ public class ReportBackingBean extends
 
 				|| ((this.getPmOrgName() != null) && (this.getPmOrgName() != ReportConst.EMPTY_VAL))
 
-				|| ((this.getPmZone() != null) && (this.getPmZone() != ReportConst.EMPTY_VAL))
+				|| ((this.getPmZone() != null || this.getPmZone() == null) && (this.getPmZone() != ReportConst.EMPTY_VAL ||
+				     this.getPmZone() == ReportConst.EMPTY_VAL))
 
 				|| ((this.getPmProfileStatus() != null) && (this
 						.getPmProfileStatus() != ReportConst.EMPTY_VAL))) {
