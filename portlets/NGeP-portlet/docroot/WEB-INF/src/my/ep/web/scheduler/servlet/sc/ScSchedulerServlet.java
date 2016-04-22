@@ -108,34 +108,7 @@ public class ScSchedulerServlet extends HttpServlet {
 				SchedulerConstants.SC_FAILOVER_HANDLER_JOB,
 				SchedulerConstants.SC_JOB_GROUP),ScFailoverHandlerJob.class);
 		
-		// Sc Qt Publish job
-		EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.SC_QT_PUBLISH_JOB,
-								SchedulerConstants.SC_JOB_GROUP),
-								QTPublishJob.class,
-						SchedulerConstants.SC_QT_PUBLISH_JOB_DESCRIPTION,
-						EpPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QT_PUBLISH_JOB));
 		
-		// Job to be run at server startup
-				EpSchedulerHelper.runJobOnce(new JobKey(
-						SchedulerConstants.SC_QT_PUBLISH_JOB,
-						SchedulerConstants.SC_JOB_GROUP),QTPublishJob.class);
-		//Qt Proposal Close job
-		
-				EpSchedulerHelper
-				.scheduleJob(
-						new JobKey(SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB,
-								SchedulerConstants.SC_JOB_GROUP),
-								QTProposalCloseJob.class,
-						SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION,
-						EpPropertiesUtils
-								.getInstance()
-								.getProperty(
-										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QT_PUBLISH_JOB));	
 
 	}
 
