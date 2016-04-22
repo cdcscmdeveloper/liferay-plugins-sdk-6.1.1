@@ -782,6 +782,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 */
 	public String backAction() {
 		if(this.getManagedBean().getBackToPrevious() !=null){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
 			return getManagedBean().getBackToPrevious();
 		}
 		else{
