@@ -87,11 +87,13 @@
 								<td style="padding-left: 0px;width:5%;white-space:nowrap;vertical-align: top;"><h:outputText  value="#{lbl['lbl.pm.ucd.roles']}: " />  
 								</td>								  
 							</tr>
-							<tr>
-							 <td>
-							 <p:scrollPanel style="height:50px;width:214px;" mode="native"  >							    
-							 <h:outputText style="white-space:normal;" escape="false" value="#{profilePersonalizationBackingBean.managedBean.roles}" /> 								
-							 </p:scrollPanel></td>
+							<tr>							
+							<td><p:selectManyMenu label="#{lbl['lbl.pm.ucd.roles']}" disabled="true"
+										style="width: 210px;height:59px" >										
+										<f:selectItems  
+											value="#{profilePersonalizationBackingBean.managedBean.rolesList}" >
+										</f:selectItems>														
+								</p:selectManyMenu></td>
 							</tr>
 						</table>
 					</td>

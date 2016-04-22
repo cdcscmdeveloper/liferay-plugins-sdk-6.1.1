@@ -1406,13 +1406,20 @@ public class ProfilePersonalizationBackingBean extends
 	}
 	
 	private void constructRolesString(){
-		StringBuilder sb = new StringBuilder();
+		//StringBuilder sb = new StringBuilder();
+		List<String> rolesList=new ArrayList<String>();
 		
-		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
+		/*for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
 			sb.append(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());
 			sb.append("<br/>");;
 		}
-		getManagedBean().setRoles(sb.toString());
+		getManagedBean().setRoles(sb.toString());*/
+		
+		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
+			rolesList.add(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());			
+		}
+		getManagedBean().setRolesList(rolesList);
+		
 //		String roles = sb.toString();
 //		if(StringUtils.isNotBlank(roles)){
 //			getManagedBean().setRoles(roles.substring(0,roles.length()-1));
