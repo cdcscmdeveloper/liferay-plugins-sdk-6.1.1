@@ -1727,6 +1727,35 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get BPM assigned task by doc number
+	 * 
+	 * @param String
+	 *            docNo
+	 * @return WorklistItemVO
+	 */
+	public static WorklistItemVO getBpmAssignedTaskByDocNo(String docNo) {
+		WorklistItemVO retVal = null;
+		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
+		bpmReqDTO.setDocNumber(docNo);
+		bpmReqDTO.setCtxToken(token);
+		BpmResponseDTO bpmResDTO = (BpmResponseDTO) SmServiceLookup.getBpmSO()
+				.getTasksByDocNumber(bpmReqDTO);
+		if (bpmResDTO.getWorklistVO() != null
+				&& !EntityHelper.isCollectionEmpty(bpmResDTO.getWorklistVO()
+						.getWorklistItem())) {
+			for (WorklistItemVO item : bpmResDTO.getWorklistVO()
+					.getWorklistItem()) {
+				if (item.getState().equals("ASSIGNED")) {
+					retVal = item;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
 	 * Get bpm tasklist by login Id
 	 * 
 	 * @param String
@@ -3609,17 +3638,17 @@ public class SmCommonUtil {
 
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
-			if(per.getPmCountry().getCountryCode()
-					.equals(SupplierManagementConst.MALAYSIA_CODE)){
+			if (per.getPmCountry().getCountryCode()
+					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
 				PmParameter ic = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES,
 						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 				per.setIdentificationTypeId(ic.getParameterId());
 				per.setIdentificationType(ic);
-			}else{
+			} else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES,
-						"P", StringUtils.EMPTY);
+						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
+						StringUtils.EMPTY);
 				per.setIdentificationTypeId(passport.getParameterId());
 				per.setIdentificationType(passport);
 			}
