@@ -322,7 +322,7 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
 			parseLOADetails(scLoa, outcome, reqDTO);
-			scLoa.setScLoaWorkFlowStatuses(null);
+			
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 
 			validateSupplierDetails(scLoa);
@@ -331,6 +331,7 @@ public class DirectLOABackingBean extends
 
 			validateContractAmount(scLoa.getLoaAmt());
 
+			scLoa.setScLoaWorkFlowStatuses(null);
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
