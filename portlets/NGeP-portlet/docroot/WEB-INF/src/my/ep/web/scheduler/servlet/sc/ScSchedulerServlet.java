@@ -11,12 +11,9 @@ import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.gfmas.SSTInformationJob;
 import my.ep.web.scheduler.job.sc.BidSchedulesPoolingJob;
-import my.ep.web.scheduler.job.sc.CloseQTSchedulerJob;
 import my.ep.web.scheduler.job.sc.ContinuousBidSchedulerJob;
 import my.ep.web.scheduler.job.sc.InviteSuppliersJob;
 import my.ep.web.scheduler.job.sc.ProposalValidityExpiaryJob;
-import my.ep.web.scheduler.job.sc.QTProposalCloseJob;
-import my.ep.web.scheduler.job.sc.QTPublishJob;
 import my.ep.web.scheduler.job.sc.ScFailoverHandlerJob;
 
 import org.apache.log4j.Logger;
