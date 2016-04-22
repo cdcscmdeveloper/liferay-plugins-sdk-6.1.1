@@ -40,7 +40,9 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -1243,79 +1245,81 @@ public class SmApplicationBackingBean extends
 
 		// for new application need to show confirm popup to save draft before
 		// proceed to next section
-		// if (!StringUtils.isBlank(applType)
-		// && applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-		// && !getManagedBean().getSmAppl().isActiveAppl()) {
-		// RequestContext.getCurrentInstance().execute(
-		// "saveDraftConfirmDialog.show();");
-		// } else {
-		if ((getManagedBean().isApproverUser() || getManagedBean().isPoUser())
-				&& currentPageType
-						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-			for (SmSupplierCategory cat : getManagedBean()
-					.getActiveCategoryList()) {
-				log.info(" ***** Cat code is ****** " + cat.getPoDecFlg());
-				for (SmSupplierCategory parentCat : getManagedBean()
-						.getSmAppl().getSmSupplierCategories()) {
-					if (parentCat.getSupplierCategoryId().equals(
-							cat.getSupplierCategoryId())) {
-						getManagedBean()
-								.getSmAppl()
-								.getSmSupplierCategories()
-								.set(getManagedBean().getSmAppl()
-										.getSmSupplierCategories()
-										.indexOf(parentCat), cat);
-						break;
+		if (!StringUtils.isBlank(applType)
+				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& !getManagedBean().getSmAppl().isActiveAppl()) {
+			RequestContext.getCurrentInstance().execute(
+					"saveDraftConfirmDialog.show();");
+		} else {
+			if ((getManagedBean().isApproverUser() || getManagedBean()
+					.isPoUser())
+					&& currentPageType
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				for (SmSupplierCategory cat : getManagedBean()
+						.getActiveCategoryList()) {
+					log.info(" ***** Cat code is ****** " + cat.getPoDecFlg());
+					for (SmSupplierCategory parentCat : getManagedBean()
+							.getSmAppl().getSmSupplierCategories()) {
+						if (parentCat.getSupplierCategoryId().equals(
+								cat.getSupplierCategoryId())) {
+							getManagedBean()
+									.getSmAppl()
+									.getSmSupplierCategories()
+									.set(getManagedBean().getSmAppl()
+											.getSmSupplierCategories()
+											.indexOf(parentCat), cat);
+							break;
+						}
 					}
-				}
 
+				}
+			} else if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				SmApplicationUtil.validateCategoryOtherDesc(true,
+						getManagedBean(), currentTab);
 			}
-		} else if (currentPageType
-				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-			SmApplicationUtil.validateCategoryOtherDesc(true, getManagedBean(),
-					currentTab);
+			if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
+					|| currentPageType
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
+				retriveCurrentAppl();
+			} else if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
+					&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.isEmpty()) {
+				log.info("*** Clear the rejection list ******* ");
+				getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
+			} else if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
+					&& getManagedBean().isSupplierUser()) {
+				if (getManagedBean().getSmAppl().getSupportingDocMode() != null
+						&& getManagedBean()
+								.getSmAppl()
+								.getSupportingDocMode()
+								.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)
+						&& (currentTab < outputTab)) {
+					validateSupportingDocs();
+				}
+				if (getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses() != null
+						&& !getManagedBean().getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().isEmpty()) {
+					SmCompanyAddress comAdd = getManagedBean().getSmAppl()
+							.getSmCompanyBasic().getSmCompanyAddresses().get(0);
+					getManagedBean().setPrevBasicStateId(
+							comAdd.getSmAddress().getPmState().getStateId());
+				}
+			} else if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
+					&& getManagedBean().isSupplierUser()) {
+				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+						ruleHelper);
+			}
+			setSupplierChangeValues(currentPageType);
+			validateUpdateSmAppl(applType, currentPageType, outputPageType,
+					false);
+			log.info("******* Current page AFTER in managed bean ********"
+					+ getManagedBean().getCurrentPageType());
 		}
-		if (currentPageType
-				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
-				|| currentPageType
-						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
-			retriveCurrentAppl();
-		} else if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
-				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
-						.isEmpty()) {
-			log.info("*** Clear the rejection list ******* ");
-			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
-		} else if (currentPageType
-				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
-				&& getManagedBean().isSupplierUser()) {
-			if (getManagedBean().getSmAppl().getSupportingDocMode() != null
-					&& getManagedBean()
-							.getSmAppl()
-							.getSupportingDocMode()
-							.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)
-					&& (currentTab < outputTab)) {
-				validateSupportingDocs();
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses() != null
-					&& !getManagedBean().getSmAppl().getSmCompanyBasic()
-							.getSmCompanyAddresses().isEmpty()) {
-				SmCompanyAddress comAdd = getManagedBean().getSmAppl()
-						.getSmCompanyBasic().getSmCompanyAddresses().get(0);
-				getManagedBean().setPrevBasicStateId(
-						comAdd.getSmAddress().getPmState().getStateId());
-			}
-		} else if (currentPageType
-				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
-				&& getManagedBean().isSupplierUser()) {
-			SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
-					ruleHelper);
-		}
-		setSupplierChangeValues(currentPageType);
-		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
-		log.info("******* Current page AFTER in managed bean ********"
-				+ getManagedBean().getCurrentPageType());
-		// }
 	}
 
 	/**
@@ -7247,16 +7251,8 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()
 					.isSameAsHq());
 			resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
-			if (StringUtils.isBlank(getManagedBean().getTaskId())) {
-				BpmResponseDTO bpmResDTO = SmCommonUtil
-						.getBpmTaskDetails(resDTO.getSmAppl().getApplNo());
-				if (bpmResDTO != null) {
-					getManagedBean().setTaskName(bpmResDTO.getTaskName());
-					getManagedBean().setBpmActions(bpmResDTO.getAction());
-					getManagedBean().setTaskId(bpmResDTO.getTaskId());
-					getManagedBean().setDraftedAppl(true);
-					getManagedBean().setClaimTask(true);
-				}
+			if(StringUtils.isBlank(getManagedBean().getTaskId())){
+				getManagedBean().setTaskId(resDTO.getTaskId());
 			}
 			if (resDTO != null) {
 				log.info("******* From SO ******** " + resDTO.isBpmSuccess());
@@ -8516,12 +8512,6 @@ public class SmApplicationBackingBean extends
 					.retrieveFinancialOrgListByServiceType(reqDTO);
 
 			this.getManagedBean().setFinOrgLs(resDTO.getFinancialOrgList());
-			if ((getManagedBean().getSelectedBank().getAccountPurpose()
-					.equalsIgnoreCase("P") || getManagedBean()
-					.getSelectedBank().getAccountPurpose()
-					.equalsIgnoreCase("B"))
-					&& getManagedBean().getSelectedBank().getSmSupplierBranch() == null) {
-			}
 		}
 		log.info("****** After getting the fin org list *******"
 				+ getManagedBean().getFinOrgLs().size());
