@@ -71,103 +71,106 @@
 					</tr>
 				</table>
 			</c:if>
-			<c:choose>
-				<c:when
-					test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser  and backingBean.managedBean.smAppl.supplierType ne 'J'}">
-					<table>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
-							<td><p:selectOneRadio
-									value="#{backingBean.managedBean.smAppl.applCategoryType}">
-									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
-										itemValue="N" />
-									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
-										itemValue="S"
-										itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
-									<p:ajax event="change" oncomplete="typeConfirmation.show()"
-										listener="#{backingBean.applicationCategorySelected}"
-										update="@([id$=typeConfirmationId])" />
-								</p:selectOneRadio></td>
-						</tr>
-					</table>
-					<table>
-						<tr>
-							<td align="left" colspan="2"><h:outputText
-									value="#{backingBean.managedBean.catTypeConfirm}"
-									rendered="#{backingBean.managedBean.smAppl.applCategoryType != null}"
-									style="color: blue; font-weight: bold;" /></td>
-
-						</tr>
-					</table>
-				</c:when>
-				<c:otherwise>
-					<table style="width: 100%">
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.applCatType']}" /></td>
-							<td>
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
-										<c:choose>
-											<c:when test="#{backingBean.managedBean.supplierUser}">
-												<td><p:selectOneRadio
-													value="#{backingBean.managedBean.physicalConsulting}">
-													<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.physical.service']}"
-														itemValue="33" />
-													<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.non.physical.service']}"
-														itemValue="34" />
-													<p:ajax event="change" oncomplete="typeConfirmation.show()"
-														listener="#{backingBean.applicationCategorySelected}"
-														update="@([id$=typeConfirmationId])" process="@this"/>
-												</p:selectOneRadio></td>
-											</c:when>
-											<c:otherwise>
-												<p:outputPanel rendered="#{backingBean.managedBean.physicalConsulting eq '33'}">
-													#{lbl['lbl.sm.catCodes.physical.service']}
-												</p:outputPanel>
-												<p:outputPanel rendered="#{backingBean.managedBean.physicalConsulting eq '34'}">
-													#{lbl['lbl.sm.catCodes.non.physical.service']}
-												</p:outputPanel>
-											</c:otherwise>
-										</c:choose>
-									</c:when>
-									<c:otherwise>
-										<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applCategoryType eq 'N'}">
-											#{lbl['lbl.sm.catCodes.catTypeNrm']}
-										</p:outputPanel>
-										<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
-											#{lbl['lbl.sm.catCodes.catTypeSpl']}
-										</p:outputPanel>
-									</c:otherwise>
-								</c:choose>
-							</td>
-							<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
+			
+			<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">
+				<c:choose>
+					<c:when
+						test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser  and backingBean.managedBean.smAppl.supplierType ne 'J'}">
+						<table>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
+								<td><p:selectOneRadio
+										value="#{backingBean.managedBean.smAppl.applCategoryType}">
+										<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
+											itemValue="N" />
+										<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
+											itemValue="S"
+											itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
+										<p:ajax event="change" oncomplete="typeConfirmation.show()"
+											listener="#{backingBean.applicationCategorySelected}"
+											update="@([id$=typeConfirmationId])" />
+									</p:selectOneRadio></td>
+							</tr>
+						</table>
+						<table>
+							<tr>
+								<td align="left" colspan="2"><h:outputText
+										value="#{backingBean.managedBean.catTypeConfirm}"
+										rendered="#{backingBean.managedBean.smAppl.applCategoryType != null}"
+										style="color: blue; font-weight: bold;" /></td>
+	
+							</tr>
+						</table>
+					</c:when>
+					<c:otherwise>
+						<table style="width: 100%">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.applCatType']}" /></td>
 								<td>
-									<div align="right" style="width: 99%">
-										<p:commandButton value="#{lbl['lbl.sm.approve.all']}"
-											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-											action="#{backingBean.approveAllCategoryCodesByPOorApprover}"
-											update=":form">
-											<f:param name="disableValidation" value="true" />
-										</p:commandButton>
-									</div>
+									<c:choose>
+										<c:when test="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
+											<c:choose>
+												<c:when test="#{backingBean.managedBean.supplierUser}">
+													<td><p:selectOneRadio
+														value="#{backingBean.managedBean.physicalConsulting}">
+														<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.physical.service']}"
+															itemValue="33" />
+														<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.non.physical.service']}"
+															itemValue="34" />
+														<p:ajax event="change" oncomplete="typeConfirmation.show()"
+															listener="#{backingBean.applicationCategorySelected}"
+															update="@([id$=typeConfirmationId])" process="@this"/>
+													</p:selectOneRadio></td>
+												</c:when>
+												<c:otherwise>
+													<p:outputPanel rendered="#{backingBean.managedBean.physicalConsulting eq '33'}">
+														#{lbl['lbl.sm.catCodes.physical.service']}
+													</p:outputPanel>
+													<p:outputPanel rendered="#{backingBean.managedBean.physicalConsulting eq '34'}">
+														#{lbl['lbl.sm.catCodes.non.physical.service']}
+													</p:outputPanel>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applCategoryType eq 'N'}">
+												#{lbl['lbl.sm.catCodes.catTypeNrm']}
+											</p:outputPanel>
+											<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+												#{lbl['lbl.sm.catCodes.catTypeSpl']}
+											</p:outputPanel>
+										</c:otherwise>
+									</c:choose>
 								</td>
-							</c:if>
-						</tr>
-					</table>
-				</c:otherwise>
-			</c:choose>
-			<br />
-			<h:inputHidden
-				value="#{backingBean.managedBean.smAppl.supportingDocMode}" />
-			<c:choose>
-				<c:when test="#{backingBean.managedBean.smAppl.applType ne 'R'}">
-					<ui:include src="regCatCodesApprovedAndPendingCodesTable.xhtml" />
-				</c:when>
-				<c:otherwise>
-					<ui:include src="regCatCodesFoRenewalApplicationTable.xhtml" />
-				</c:otherwise>
-			</c:choose>
-
+								<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
+									<td>
+										<div align="right" style="width: 99%">
+											<p:commandButton value="#{lbl['lbl.sm.approve.all']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												action="#{backingBean.approveAllCategoryCodesByPOorApprover}"
+												update=":form">
+												<f:param name="disableValidation" value="true" />
+											</p:commandButton>
+										</div>
+									</td>
+								</c:if>
+							</tr>
+						</table>
+					</c:otherwise>
+				</c:choose>
+				<br />
+				<h:inputHidden
+					value="#{backingBean.managedBean.smAppl.supportingDocMode}" />
+				<c:choose>
+					<c:when test="#{backingBean.managedBean.smAppl.applType ne 'R'}">
+						<ui:include src="regCatCodesApprovedAndPendingCodesTable.xhtml" />
+					</c:when>
+					<c:otherwise>
+						<ui:include src="regCatCodesFoRenewalApplicationTable.xhtml" />
+					</c:otherwise>
+				</c:choose>
+			</p:panel>
+			
 			<br />
 		</p:outputPanel>
 	</p:panel>
