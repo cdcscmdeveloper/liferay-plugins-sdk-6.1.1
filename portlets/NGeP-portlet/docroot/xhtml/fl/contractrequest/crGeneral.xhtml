@@ -168,7 +168,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
 				<td><p:calendar mode="popup" showOn="button" id="delEndDate" 
-						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal=='View'}" 
+						disabled="true" 
 						readonlyInput="true"
 						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing == 'false'}"
 						mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}" 
