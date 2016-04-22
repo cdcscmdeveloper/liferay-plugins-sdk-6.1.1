@@ -526,11 +526,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isDeliveryTermPrompt = Boolean.FALSE;
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		parseRequestNote(scRequestNote, outcome);
 		if(outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || 
 				outcome.isEmpty() || 
 				outcome.equals(BpmOutcomeConst.BPM_APPROVE)){
-
-			parseRequestNote(scRequestNote, outcome);
 
 			// validate RN
 			validateRequestNote(scRequestNote);
