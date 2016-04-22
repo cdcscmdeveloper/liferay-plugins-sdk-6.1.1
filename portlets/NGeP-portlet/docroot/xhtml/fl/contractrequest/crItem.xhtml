@@ -38,7 +38,7 @@
 					target="#{contractRequestBackingBean.managedBean.required}"
 					value="true" />
 				</p:commandLink>
-				<h:outputText rendered="#{address.flAddress != null}" style="text-align:left; float:left;"
+				<h:outputText rendered="#{address.flAddress != null}" style="text-align:left; float:left;width:280px;"
 					value="#{contractRequestBackingBean.getFullAddress(address.flAddress)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="white-space:normal;text-align:center" >
@@ -68,6 +68,7 @@
 					mindate="#{address.startDate}"
 					style="float:right;"
 					readonlyInput="true"
+					disabled="true"
 					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing }"
 					size="8"
 					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
