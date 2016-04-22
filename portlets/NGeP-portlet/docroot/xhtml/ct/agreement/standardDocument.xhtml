@@ -25,7 +25,7 @@
 						<h:outputText value="#{lbl['lbl.ct.contents']}"  />
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content']}"/>
 				  	</f:facet>
-					    <p:outputLabel value="#{contentsVar.title}" style="text-align:left;float:left;" 
+					    <h:outputText value="#{contentsVar.title}" style="text-align:left;float:left;" 
 					        rendered="#{contentsVar.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
 					<p:inputText value="#{contentsVar.title}"  maxlength="50" 
 					     style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
@@ -36,7 +36,7 @@
 						<h:outputText value="#{lbl['lbl.ct.type']}" />
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.content.type']}"/>
 				  	</f:facet>
-					<p:outputLabel style="text-align:left; float:left;"
+					<h:outputText style="text-align:left; float:left;"
 					   value="#{agreementBackingBean.getParameterDesc(contentsVar.contentType.parameterType,contentsVar.contentType.parameterCode)}" />
 				</p:column>
 				
@@ -65,7 +65,8 @@
 					<h:panelGroup id="uploadUserDefinePg" 
 					    rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
 						
-						<p:commandButton icon="ui-icon-upload"  rendered="#{contentsVar.filePath  == null}"
+						<p:commandButton icon="ui-icon-upload"
+						    rendered="#{contentsVar.filePath  == null}"
 					   		update=":form:contentTable, :form:uploadUserDefineDlg" oncomplete="uploadUserDefineDlg.show();return false;"  >
 							<f:setPropertyActionListener value="#{contentsVar}" 
 						    	target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
@@ -91,7 +92,7 @@
 				<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false"
 				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false" 
 				    fileUploadListener="#{agreementBackingBean.fileUpload}" multiple="false"
-					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" fileLimit="1"
+					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" 
 					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update=":form:contentTable">
 				</p:fileUpload>
 			</p:dialog>

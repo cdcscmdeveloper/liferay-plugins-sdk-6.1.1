@@ -81,18 +81,38 @@
 				   
 				<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 		 		<h:panelGroup id="uploadCircularPg">
-			  		<p:commandButton value="#{lbl['lbl.bpm.choose.file']}" update="uploadCircularPg, uploadCircularDlg"
+			  		<p:commandButton icon="ui-icon-upload" update="uploadCircularPg, uploadCircularDlg"
+			  		  rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath == null}"
 						action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
+				 
 				 	<h:commandLink action="#{centralContractBackingBean.downloadFile(1)}" 
-				 		styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />					
+				 	  rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}"
+				 		styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />			
+				 	
+					     	<p:commandLink 
+			   	                 onclick="deleteCircularFileDlg.show();"
+						         rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}">
+			   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	          </p:commandLink>		
 			  		</h:panelGroup>
 			</h:panelGrid>
-	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="true" 
-	    width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+			
+			 <p:confirmDialog id="circularFileId" widgetVar="deleteCircularFileDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                       update=":form:uploadCircularPg" 
+		                       action="#{centralContractBackingBean.delCircularVerFile()}" oncomplete="deleteCircularFileDlg.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteCircularFileDlg.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+          
+	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="true" resizable="false"
+	    width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced" 
-		     sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			fileUploadListener="#{centralContractBackingBean.fileUpload}" 
+		<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false"
+		     sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
+			fileUploadListener="#{centralContractBackingBean.fileUpload}"  multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="uploadCircularPg" >
