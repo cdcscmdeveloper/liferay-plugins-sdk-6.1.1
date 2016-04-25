@@ -12,6 +12,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.fl.FlAttachment;
+import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
@@ -192,6 +194,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean docMaintain = false;
 	
 	private String backToPrevious;
+	private List<FlRemark> previousRemarkList;
+	private List<FlAttachment> previousAttachmentList;	
+	
 	private boolean isTaxInvoice = false;
 	
 	private boolean isTaxable=false;
@@ -1152,5 +1157,21 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setPhysicalContractNo(String physicalContractNo) {
 		this.physicalContractNo = physicalContractNo;
+	}
+
+	public List<FlRemark> getPreviousRemarkList() {
+		return previousRemarkList;
+	}
+
+	public void setPreviousRemarkList(List<FlRemark> previousRemarkList) {
+		this.previousRemarkList = previousRemarkList;
+	}
+
+	public List<FlAttachment> getPreviousAttachmentList() {
+		return previousAttachmentList;
+	}
+
+	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
+		this.previousAttachmentList = previousAttachmentList;
 	}
 }
