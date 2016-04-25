@@ -336,6 +336,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 */
 	public String backToPervious() {
 		if(getManagedBean().getBackToPrevious() !=null){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());			
 			return getManagedBean().getBackToPrevious();
 		}
 		else{
