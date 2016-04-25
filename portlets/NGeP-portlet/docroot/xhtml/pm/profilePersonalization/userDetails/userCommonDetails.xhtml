@@ -61,22 +61,20 @@
 				<tr>
 				<td>
 					<p:selectBooleanCheckbox id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" 
-						disabled="false" >
-					<p:ajax event="change" update="@form"></p:ajax>		
+						disabled="true" >					
 					</p:selectBooleanCheckbox> 
 					<h:outputText  value="#{lbl['lbl.pm.ucd.email']}"/>	
-					<h:outputText  rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}"
+					<h:outputText  
 					value="#{profilePersonalizationBackingBean.managedBean.selectedUser.emailFull}"/>			
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<p:selectBooleanCheckbox id="itPreSms" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" 
-						disabled="false" >
-					<p:ajax event="change" update="@form"></p:ajax>		
+						disabled="true" >							
 					</p:selectBooleanCheckbox>	
 					<h:outputText   value="#{lbl['lbl.pm.ucd.sms']}"/>	
-					<h:outputText	rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}"
+					<h:outputText	
 					value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull}"/>
 				</td>				
 			</tr>	
