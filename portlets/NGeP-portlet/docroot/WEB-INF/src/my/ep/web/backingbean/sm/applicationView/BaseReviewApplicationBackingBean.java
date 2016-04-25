@@ -943,11 +943,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		getManagedBean().setBankBranchName(sb.toString());
 
-		if (shareBankBean.getSmSupplierBranch() != null
-				&& shareBankBean.getSmSupplierBranch().getSupplierBranchId() != null) {
-			getManagedBean().setSelBankBranchName(
-					shareBankBean.getSmSupplierBranch().getBranchName());
-		}
+//		if (shareBankBean.getSmSupplierBranch() != null
+//				&& shareBankBean.getSmSupplierBranch().getSupplierBranchId() != null) {
+//			getManagedBean().setSelBankBranchName(
+//					shareBankBean.getSmSupplierBranch().getBranchName());
+//		}
 		getManagedBean().setSelectedBank(shareBankBean);
 		if (shareBankBean.getSmAddress() == null) {
 			shareBankBean.setSmAddress(setDefaultAddr());
