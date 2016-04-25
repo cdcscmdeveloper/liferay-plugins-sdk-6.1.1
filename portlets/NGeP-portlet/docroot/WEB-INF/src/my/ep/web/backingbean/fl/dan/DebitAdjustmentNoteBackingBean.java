@@ -381,6 +381,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			orderBackingBean.getManagedBean().setButtonVal("View");
 			FacesContext fc = FacesContext.getCurrentInstance();
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+			
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -403,7 +406,13 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			invBB.getManagedBean().setDocMaintain(false);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+			
 			flBB.getManagedBean().setHideRemarks(true);
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
 			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
 				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
