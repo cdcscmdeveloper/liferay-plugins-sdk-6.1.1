@@ -12,10 +12,10 @@ package my.ep.web.scheduler.job.sc;
 
 import java.util.Date;
 
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -51,18 +51,18 @@ public class QTProposalCloseScheduleJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		debugLogger("Start execute ");
 
-		IQTDetailSO qtDetailSO;
+		IQTNoticeBoardSO noticeBoardSO;
 
 		try {
 			// Close QT's Which are scheduled today for Proposal Close
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 			JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 			Long qtId = dataMap.getLong("qtId");;
 			reqDTO.setQtId(qtId);
-			QuationTenderResDTO resDTO = qtDetailSO
+			NoticeBoardResDTO resDTO = noticeBoardSO
 					.closeQtAndSaveProposalAmount(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -78,7 +78,7 @@ public class QTProposalCloseScheduleJob implements Job {
 			log.info("$$$$$ QT Closure Job run failed at " + new Date());
 			log.error(closeJobException.getLocalizedMessage());
 		} finally {
-			qtDetailSO = null;
+			noticeBoardSO = null;
 		}
 		debugLogger("End execute ");
 
