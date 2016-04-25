@@ -8395,68 +8395,6 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Retrive supplier by zonal.retrieve suppliers based on zonal in supplier
-	 * qualification criteria.
-	 * 
-	 * @param event
-	 *            the event
-	 */
-	public void retriveSupplierByZonal(NodeSelectEvent event) {
-		TreeNode selectedTreeNode = event.getTreeNode();
-
-		TplSpecZoneDtl tplSpecZoneDtl = null;
-		selectedTreeNode.setSelected(true);
-		this.getManagedBean().setDeletePanelTreenode(null);
-		if (null != selectedTreeNode) {
-			this.getManagedBean().setDeletePanelTreenode(selectedTreeNode);
-			tplSpecZoneDtl = retriveTplSpecZoneDtls(selectedTreeNode);
-
-		}
-
-		QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
-		if (null != tplSpecZoneDtl) {
-			this.getManagedBean().setTplSpecZoneDtl(tplSpecZoneDtl);
-			supplierReqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone()
-					.getPanelZoneId());
-		}
-		/*
-		 * IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO)
-		 * BusinessDelegate .getInstance().getServiceObject(
-		 * ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
-		 * PanelSupplierResDTO resDTO = panelSupplierSO
-		 * .retrieveSupplierByZone(reqDTO);
-		 */
-		IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTSupplierSO.class);
-		QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
-		supplierResDTO = supplierSo
-				.retrievePanelSuppliersByCircularZoneId(supplierReqDTO);
-		this.getManagedBean().setCtZoneSupplierList(
-				new ArrayList<CtPanelSupplier>());
-		this.getManagedBean().setTotalSuppliers(0);
-
-		if (null != supplierResDTO.getCtPanelSuppliers()
-				&& !supplierResDTO.getCtPanelSuppliers().isEmpty()) {
-
-			this.getManagedBean().setTotalSuppliers(
-					supplierResDTO.getCtPanelSuppliers().size());
-
-			this.getManagedBean().setCtZoneSupplierList(
-					supplierResDTO.getCtPanelSuppliers());
-			/*
-			 * List<CtPanelItem> itemList = this.getManagedBean()
-			 * .getSelectpanelItem(); itemList = new ArrayList<CtPanelItem>();
-			 * itemList.add(this.getManagedBean().getCtPanelItem());
-			 * 
-			 * this.getManagedBean().setSelectpanelItem(itemList);
-			 */
-		}
-
-	}
-
-	/**
 	 * Un select panel yes treenode.Event handle to unselect panel treenodes.
 	 * 
 	 * @param event
