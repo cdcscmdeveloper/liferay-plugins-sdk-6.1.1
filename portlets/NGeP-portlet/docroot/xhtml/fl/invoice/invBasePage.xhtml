@@ -41,6 +41,7 @@
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						action="#{invoiceBackingBean.backToPervious}" /></td>
 				<td colspan="4" style="text-align: right;">
+				<c:if test="#{invoiceBackingBean.managedBean.buttonVal ne 'View'}" >
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 						<ui:define name="outComeSection">
 							<ui:repeat var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
@@ -50,7 +51,9 @@
 								action="#{invoiceBackingBean.signingAction(bpmAction)}" />
 							</ui:repeat>
 						</ui:define>
-					</ui:decorate></td>
+					</ui:decorate>
+					</c:if>
+				</td>
 			<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
