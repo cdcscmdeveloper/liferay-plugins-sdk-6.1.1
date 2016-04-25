@@ -29,6 +29,14 @@
 			.columnWidth300 {
 				width: 300px;
 			}
+			
+			 .fileupload-buttonbar.ui-widget-header.ui-corner-top {
+                padding: 0.0em 0.0em;
+                padding-top: 0em;
+                padding-right: 0em;
+                padding-bottom: 0em;
+                padding-left: 0em;
+        }
 		</style>
 		
 			<p:blockUI block=":form" widgetVar="blockWidget">
@@ -231,7 +239,7 @@
 				    <h:panelGroup id="uploadFactoringPg">
 					    <h:panelGrid columns="5">
 						    <p:commandButton  oncomplete="uploadFactoringDlg.show();return false;"
-							   value="#{lbl['lbl.btn.upload']}" immediate="true" update="factoringPanel" 
+							  icon="ui-icon-upload"  immediate="true" update="factoringPanel" 
 							   actionListener="#{supplierBackingBean.setUploadIndexValue(2)}"
 							   rendered="#{supplierBackingBean.managedBean.factoring.filePath == null}"/>
 						      <p:spacer width="1" />
@@ -272,7 +280,7 @@
 					  styleClass="required" rendered="#{supplierBackingBean.managedBean.removeFactoring}"  />
 				     <h:panelGroup id="uploadRemoveFactoringPg" rendered="#{supplierBackingBean.managedBean.removeFactoring}">
 					     <h:panelGrid columns="3">
-						     <p:commandButton oncomplete="uploadFactoringDlg.show();return false;"
+						     <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" icon="ui-icon-upload"
 							      value="#{lbl['lbl.btn.upload']}" actionListener="#{supplierBackingBean.setUploadIndexValue(3)}"
 							      update="factoringPanel"
 							      disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() or supplierBackingBean.managedBean.viewOnly}" />
@@ -288,11 +296,11 @@
 			</h:panelGrid>
 
 			<p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg"
-				modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+				modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}" resizable="false">
 				<p:ajax event="close" />
-				<p:fileUpload style="display:inline;" mode="advanced"
-				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-					fileUploadListener="#{supplierBackingBean.fileUpload}"
+				<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" multiple="false"
+					fileUploadListener="#{supplierBackingBean.fileUpload}"  showButtons="false"
 					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 					update="factoringPanel">
