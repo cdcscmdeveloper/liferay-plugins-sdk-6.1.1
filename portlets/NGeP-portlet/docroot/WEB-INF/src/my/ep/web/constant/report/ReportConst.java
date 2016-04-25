@@ -916,6 +916,7 @@ public class ReportConst {
 	public static final String PARAM_RELIEF_ORDER_DOC_NO = "PRELIEFORDERNO";
 	public static final String PARAM_DOC_ID = "PDOCID"; 
 	public static final String PARAM_DOC_TYPE = "PDOCTYPE"; 
+	public static final String PARAM_ESTIMATED_AMOUNT = "PESTAMT";
 	
 
 	// Report parameter key for s1 market research report
