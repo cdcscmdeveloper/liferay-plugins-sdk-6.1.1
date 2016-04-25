@@ -414,7 +414,7 @@
 											value="#{remarkVar.remark}" maxlength="1000" label="Remarks"
 											rendered="#{remarkIndex==0}" id="remark"
 											disabled="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-											required="#{isPendingSubmissionStatus}" /> <h:outputText
+											required="true" /> <h:outputText
 											value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"
 											style="display: inline-block; width:220px;word-wrap: break-word;" />
 									</td>
