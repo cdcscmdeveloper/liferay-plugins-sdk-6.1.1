@@ -5,10 +5,13 @@
 package my.ep.web.managedbean.fl.dan;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.fl.FlAttachment;
+import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -121,6 +124,8 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private String buttonVal;
 	
 	private String backToPrevious;
+	private List<FlRemark> previousRemarkList;
+	private List<FlAttachment> previousAttachmentList;
 	
 	/** The text before sign. */
 	private String textBeforeSign;
@@ -751,6 +756,22 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setValidated(boolean validated) {
 		this.validated = validated;
+	}
+
+	public List<FlRemark> getPreviousRemarkList() {
+		return previousRemarkList;
+	}
+
+	public void setPreviousRemarkList(List<FlRemark> previousRemarkList) {
+		this.previousRemarkList = previousRemarkList;
+	}
+
+	public List<FlAttachment> getPreviousAttachmentList() {
+		return previousAttachmentList;
+	}
+
+	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
+		this.previousAttachmentList = previousAttachmentList;
 	}
 	
 }

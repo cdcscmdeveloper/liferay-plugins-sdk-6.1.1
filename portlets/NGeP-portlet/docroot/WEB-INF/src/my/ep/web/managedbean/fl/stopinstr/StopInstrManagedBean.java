@@ -10,6 +10,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.fl.FlAttachment;
+import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -63,6 +65,8 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	
 	/** The back to document. */
 	private String backToDocument;
+	private List<FlRemark> previousRemarkList;
+	private List<FlAttachment> previousAttachmentList;	
 	
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -358,6 +362,22 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	 */
 	public void setCoGstr(boolean coGstr) {
 		this.coGstr = coGstr;
+	}
+
+	public List<FlRemark> getPreviousRemarkList() {
+		return previousRemarkList;
+	}
+
+	public void setPreviousRemarkList(List<FlRemark> previousRemarkList) {
+		this.previousRemarkList = previousRemarkList;
+	}
+
+	public List<FlAttachment> getPreviousAttachmentList() {
+		return previousAttachmentList;
+	}
+
+	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
+		this.previousAttachmentList = previousAttachmentList;
 	}
 
 }

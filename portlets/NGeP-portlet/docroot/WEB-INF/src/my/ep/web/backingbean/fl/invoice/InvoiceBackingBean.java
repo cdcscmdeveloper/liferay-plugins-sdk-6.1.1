@@ -1485,6 +1485,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		if(getManagedBean().isDocMaintain()) {
 			return "flDocSearch";
 		}else if(getManagedBean().isHyperLinkPage()){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());					
 			return getManagedBean().getBackToPrevious();
 		} else {
 			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
