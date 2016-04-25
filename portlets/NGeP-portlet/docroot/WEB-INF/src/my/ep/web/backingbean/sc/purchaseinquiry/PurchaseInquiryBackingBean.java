@@ -562,7 +562,6 @@ public class PurchaseInquiryBackingBean extends
 			prInquiry.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, getManagedBean().getPriceType()));	
 		}
 		
-		System.out.println("getManagedBean().getScRequestSupplierItem().getSupplierItemPrices() "+ getManagedBean().getScRequestSupplierItem().getSupplierItemPrices());
 		if (scRequestSupplierItem != null
 				&& scRequestSupplierItem.getSupplierItemPrices() != null) {
 
@@ -572,7 +571,6 @@ public class PurchaseInquiryBackingBean extends
 				itemPriceList = new ArrayList<ScSupplierItemPrice>();
 				for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
 					if (scSupplierItemPrice.getPriceType() != null) {
-						System.out.println("itemPriceList "+itemPriceList);
 						if(prInquiry.getPriceType() != null){
 
 							if (scSupplierItemPrice.getPriceType()
@@ -599,8 +597,6 @@ public class PurchaseInquiryBackingBean extends
 						itemPricesMap.keySet());
 			}
 			getManagedBean().setSupplierItemPrices(itemPriceList);
-			
-			System.out.println("itemPriceList "+itemPriceList);
 		}
 	}
 
