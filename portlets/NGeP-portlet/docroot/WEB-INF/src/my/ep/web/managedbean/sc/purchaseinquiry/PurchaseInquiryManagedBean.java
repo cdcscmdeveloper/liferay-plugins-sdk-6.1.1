@@ -23,6 +23,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -134,6 +135,9 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	
 	 /** The show back button. */
      private boolean showBackButton;
+     
+     /** The supplier item prices. */
+     private List<ScSupplierItemPrice>	supplierItemPrices;
     
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -700,5 +704,18 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setShowBackButton(boolean showBackButton) {
 		this.showBackButton = showBackButton;
 	}
-	
+
+	/**
+	 * @return the supplierItemPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemPrices() {
+		return supplierItemPrices;
+	}
+
+	/**
+	 * @param supplierItemPrices the supplierItemPrices to set
+	 */
+	public void setSupplierItemPrices(List<ScSupplierItemPrice> supplierItemPrices) {
+		this.supplierItemPrices = supplierItemPrices;
+	}
 }

@@ -264,7 +264,7 @@ public class PurchaseInquiryBackingBean extends
 				}
 				requestSupplierItem
 						.setSupplierItemPrices(createScSupplierItemPrices(
-								requestSupplierItem, cmPricings, Boolean.FALSE));
+								requestSupplierItem, cmPricings));
 			}
 			// PriceType drop down list in AddToCart
 			getManagedBean().setPriceTypes(
@@ -361,11 +361,7 @@ public class PurchaseInquiryBackingBean extends
 		scPrInquiry.setRequestItem(requestItem);
 
 		requestSupplierItem.setRequestNoteItem(requestItem);
-		getManagedBean().setScRequestSupplierItem(requestSupplierItem);
-
 		requestNoteDtl.setRequestItem(requestItem);
-		requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
-		getManagedBean().setRequestNoteDtl(requestNoteDtl);
 
 		// pr inquiry status
 		IStatusSO statusSO = null;
@@ -559,28 +555,35 @@ public class PurchaseInquiryBackingBean extends
 		debugLogger("priceTypeChangeListener");
 		ScPrInquiry prInquiry  = getManagedBean().getScPrInquiry();
 		Map<ScSupplierItemPrice, ScSupplierItemPrice> itemPricesMap = new HashMap<ScSupplierItemPrice, ScSupplierItemPrice>();
-		List<ScSupplierItemPrice> itemPriceList = new ArrayList<ScSupplierItemPrice>();
-		if (getManagedBean().getScRequestSupplierItem() != null
-				&& getManagedBean().getScRequestSupplierItem()
-				.getSupplierItemPrices() != null
-				&& getManagedBean().getScRequestSupplierItem()
-				.getSupplierItemPrices().size() > 0) {
-			ScRequestSupplierItem scRequestSupplierItem = new ScRequestSupplierItem();
-			List<ScSupplierItemPrice> supplierItemPrices = getManagedBean()
-					.getScRequestSupplierItem().getSupplierItemPrices();
+		List<ScSupplierItemPrice> itemPriceList = null;
+		ScRequestSupplierItem scRequestSupplierItem = getManagedBean().getScRequestSupplierItem();
+		
+		if(prInquiry.isBrandNew()){
+			prInquiry.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, getManagedBean().getPriceType()));	
+		}
+		
+		System.out.println("getManagedBean().getScRequestSupplierItem().getSupplierItemPrices() "+ getManagedBean().getScRequestSupplierItem().getSupplierItemPrices());
+		if (scRequestSupplierItem != null
+				&& scRequestSupplierItem.getSupplierItemPrices() != null) {
+
+			List<ScSupplierItemPrice> supplierItemPrices = scRequestSupplierItem.getSupplierItemPrices();
+
 			if (supplierItemPrices != null && supplierItemPrices.size() > 0) {
+				itemPriceList = new ArrayList<ScSupplierItemPrice>();
 				for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
-
 					if (scSupplierItemPrice.getPriceType() != null) {
-
+						System.out.println("itemPriceList "+itemPriceList);
 						if(prInquiry.getPriceType() != null){
 
 							if (scSupplierItemPrice.getPriceType()
 									.getParameterCode()
 									.equals(prInquiry.getPriceType().getParameterCode())) {
+								
 								if (DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE
 										.equals(getManagedBean().getPriStatus()
 												.getStatusId())) {
+									
+									
 									scSupplierItemPrice.setItemPrice(null);
 									itemPricesMap.put(scSupplierItemPrice,
 											scSupplierItemPrice);
@@ -592,12 +595,12 @@ public class PurchaseInquiryBackingBean extends
 						}
 					}
 				}
-
 				itemPriceList = new ArrayList<ScSupplierItemPrice>(
 						itemPricesMap.keySet());
 			}
-			scRequestSupplierItem.setSupplierItemPrices(itemPriceList);
-			prInquiry.setRequestSupplierItem(scRequestSupplierItem);
+			getManagedBean().setSupplierItemPrices(itemPriceList);
+			
+			System.out.println("itemPriceList "+itemPriceList);
 		}
 	}
 
@@ -732,6 +735,10 @@ public class PurchaseInquiryBackingBean extends
 		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		ScRequestSupplierItem scRequestSupplierItem = getManagedBean()
 				.getScRequestSupplierItem();
+		
+		// update pricing
+		updatePricing(scRequestSupplierItem);
+		
 		finalizeRemarks(prInquiry.getRemarks());
 
 		// gpki only for govt seller 
@@ -790,6 +797,16 @@ public class PurchaseInquiryBackingBean extends
 			throw new EpException(MessageConst.ERROR_700020);
 		}
 		return null;
+	}
+	
+	private void updatePricing(ScRequestSupplierItem scRequestSupplierItem){
+		List<ScSupplierItemPrice> result = getManagedBean().getSupplierItemPrices();
+		if(result != null && result.size()>0){
+			for (ScSupplierItemPrice scSupplierItemPrice : result) {
+				int index =  scRequestSupplierItem.getSupplierItemPrices().indexOf(scSupplierItemPrice);
+				scRequestSupplierItem.getSupplierItemPrices().set(index, scSupplierItemPrice);
+			}
+		}
 	}
 
 	/**
@@ -1259,6 +1276,7 @@ public class PurchaseInquiryBackingBean extends
 				
 				getManagedBean().setRequestNoteDtl(requestNoteDtl);
 				getManagedBean().setScRequestSupplierItem(requestSupplierItem);
+				getManagedBean().setSupplierItemPrices(requestSupplierItem.getSupplierItemPrices());
 
 				// RequestNote Details - checking workflow status exits or not
 				// for PI to RN
@@ -1408,44 +1426,33 @@ public class PurchaseInquiryBackingBean extends
 		getManagedBean().setPriStatus(pmStatus);
 	}
 
+
 	/**
 	 * Creates the sc supplier item prices.
-	 * 
-	 * @param scRequestSupplierItem
-	 *            the sc request supplier item
-	 * @param pricings
-	 *            the pricings
-	 * @param selectedSupplierPrice
-	 *            the selected supplier price
+	 *
+	 * @param scRequestSupplierItem the sc request supplier item
+	 * @param pricings the pricings
 	 * @return the list
 	 */
 	private List<ScSupplierItemPrice> createScSupplierItemPrices(
 			ScRequestSupplierItem scRequestSupplierItem,
-			List<CmPricing> pricings, boolean selectedSupplierPrice) {
+			List<CmPricing> pricings) {
 		List<ScSupplierItemPrice> results = new ArrayList<>();
 		for (CmPricing pricing : pricings) {
-			results.add(createSupplierItemPrice(scRequestSupplierItem, pricing,
-					selectedSupplierPrice));
+			results.add(createSupplierItemPrice(scRequestSupplierItem, pricing));
 		}
 		return results;
 	}
 
 	/**
 	 * Creates the supplier item price.
-	 * 
-	 * @param scRequestSupplierItem
-	 *            the sc request supplier item
-	 * @param pricing
-	 *            the pricing
-	 * @param selectedSupplierPrice
-	 *            the selected supplier price
+	 *
+	 * @param scRequestSupplierItem the sc request supplier item
+	 * @param pricing the pricing
 	 * @return the sc supplier item price
 	 */
 	private ScSupplierItemPrice createSupplierItemPrice(
-			ScRequestSupplierItem scRequestSupplierItem, CmPricing pricing,
-			boolean selectedSupplierPrice) {
-		// price type
-
+			ScRequestSupplierItem scRequestSupplierItem, CmPricing pricing) {
 		ScSupplierItemPrice result = new ScSupplierItemPrice();
 		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		ScPIZone zone = getManagedBean().getScPIZone();
@@ -1544,6 +1551,7 @@ public class PurchaseInquiryBackingBean extends
 		getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
 		getManagedBean().setPriceType(getParameterDesc(prInquiry.getPriceType()));
 		getManagedBean().setScRequestSupplierItem(requestSupplierItem);
+		getManagedBean().setSupplierItemPrices(requestSupplierItem.getSupplierItemPrices());
 
 		// no of response days
 		prInquiry.setDayToResponse((int)DateUtils.getDaysDifference(prInquiry.getCreatedDate(), prInquiry.getDateToResponse()));

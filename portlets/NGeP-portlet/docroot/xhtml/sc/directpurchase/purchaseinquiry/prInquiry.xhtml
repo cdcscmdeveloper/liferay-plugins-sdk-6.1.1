@@ -263,7 +263,7 @@
 			</tr>
 		</table>
 		<p:dataTable id="respDtl" var="supplierItemPrice"
-			value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierItemPrices}"
+			value="#{purchaseInquiryBackingBean.managedBean.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}"
 				sortBy="#{supplierItemPrice.tplSpecZone.zoneName}" style="width:25%">
