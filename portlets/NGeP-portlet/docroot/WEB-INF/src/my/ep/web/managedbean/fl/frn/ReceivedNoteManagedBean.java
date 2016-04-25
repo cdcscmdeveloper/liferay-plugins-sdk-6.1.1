@@ -145,6 +145,8 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	/** The back to previous. */
 	private String backToPrevious;
+	private List<FlRemark> previousRemarkList;
+	private List<FlAttachment> previousAttachmentList;		
 	
 	private boolean hyperLinkPage = false;
 	
@@ -928,6 +930,22 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 
 	public void setFlApprover(PmUser flApprover) {
 		this.flApprover = flApprover;
+	}
+
+	public List<FlRemark> getPreviousRemarkList() {
+		return previousRemarkList;
+	}
+
+	public void setPreviousRemarkList(List<FlRemark> previousRemarkList) {
+		this.previousRemarkList = previousRemarkList;
+	}
+
+	public List<FlAttachment> getPreviousAttachmentList() {
+		return previousAttachmentList;
+	}
+
+	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
+		this.previousAttachmentList = previousAttachmentList;
 	}
 
 }
