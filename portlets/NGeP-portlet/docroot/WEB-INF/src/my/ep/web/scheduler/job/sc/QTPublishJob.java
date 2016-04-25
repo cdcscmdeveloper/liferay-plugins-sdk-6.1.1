@@ -13,7 +13,7 @@ package my.ep.web.scheduler.job.sc;
 import java.util.Date;
 import java.util.List;
 
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -50,12 +50,12 @@ public class QTPublishJob implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		debugLogger("Start execute ");
 
-		IQTDetailSO qtDetailSO;
+		IQTNoticeBoardSO noticeBoardSO;
 		try {
 			// Publish QT's scheduled for today and by this hour
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			List<ScQt> publisingQts = qtDetailSO
+			noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			List<ScQt> publisingQts = noticeBoardSO
 					.retriveQuotationTendersScheduledToPublish().getQtlist();
 			if (!publisingQts.isEmpty()) {
 				for (ScQt qtToPublish : publisingQts) {
@@ -66,7 +66,7 @@ public class QTPublishJob implements Job {
 			log.info("$$$$$ QT Publish Job run failed at " + new Date());
 			log.error(e.getLocalizedMessage());
 		} finally {
-			qtDetailSO = null;
+			noticeBoardSO = null;
 		}
 
 	}
