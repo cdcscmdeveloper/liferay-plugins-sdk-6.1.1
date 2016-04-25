@@ -1671,6 +1671,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    fileOuputStream.close();
 		getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
 		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
 	}
 	
 	/**
