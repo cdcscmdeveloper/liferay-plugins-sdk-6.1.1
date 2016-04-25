@@ -74,9 +74,9 @@
 				</f:facet>
 				<p:inputText id="contractAmt" value="#{financenongovt.contractAmt}"
 					size="15" style="text-align: right;" disabled="#{statusHide}"
-					maxlength="19" required="true"
+					maxlength="14" required="true"
 					label="#{lbl['lbl.sc.spec.contarct.amount']}">
-					<f:validateLongRange minimum="1" maximum="99999999999" />
+					<f:validateLongRange minimum="1" maximum="99999999999999" />
 					<p:ajax event="blur" process="@this"
 						listener="#{supplierProposalDetailBackingBean.totalContractAmount}"
 						update="@this,contractAmtMsg, :form:totalcontractamt" />
