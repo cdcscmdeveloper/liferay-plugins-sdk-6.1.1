@@ -364,7 +364,7 @@
 					<td><p:selectOneMenu label="#{lbl['lbl.pm.status']}"
 							required="true" 
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.recordStatusFlg}"
-							disabled="false">
+						    disabled="#{categoryBackingBean.managedBean.pmCategoryL3.brandNew}">
 							<f:selectItems
 								value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
 						</p:selectOneMenu></td>

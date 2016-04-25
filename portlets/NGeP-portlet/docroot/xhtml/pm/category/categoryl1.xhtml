@@ -85,7 +85,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
-						<p:selectOneMenu required="true" label="#{lbl['lbl.pm.status']}"
+						<p:selectOneMenu required="true" label="#{lbl['lbl.pm.status']}" disabled="#{categoryBackingBean.managedBean.pmCategoryL1.brandNew}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}">
 							<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
