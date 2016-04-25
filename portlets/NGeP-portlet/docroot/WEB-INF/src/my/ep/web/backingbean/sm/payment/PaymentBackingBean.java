@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
+import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
@@ -29,6 +31,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -47,6 +50,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.payment.PaymentManagedBean;
 import my.ep.web.util.DateUtils;
@@ -82,6 +86,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 	/*@ManagedProperty(value = "#{paymentBean}")
 	private PaymentBean paymentBean;*/
+	
+	public void preRenderApplicationPayment(){
+		CommonApplBackingBean applBackingBean = new CommonApplBackingBean();
+		applBackingBean.preRenderView();
+	}
 
 	/**
 	 * Construct and initialized PaymentBackingBean
