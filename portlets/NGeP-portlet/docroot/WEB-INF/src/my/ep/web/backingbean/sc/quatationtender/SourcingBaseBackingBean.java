@@ -1050,6 +1050,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
 		List<String> roleCodes = new ArrayList<String>();
 		roleCodes.add(RoleCode.GOVT_SELLER.toString());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_USER.toString());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.toString());
 		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.toString());
 		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.toString());
 		roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.toString());
