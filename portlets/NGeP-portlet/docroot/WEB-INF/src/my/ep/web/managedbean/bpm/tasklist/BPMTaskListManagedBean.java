@@ -383,7 +383,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if(getSelectedOrgProfile()!=null){
 					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
 				}
-				System.out.println("getSelectedStatusDesc()"+getSelectedStatusDesc());
+				
+				if(getSelectedStatusDesc()!=null && getSelectedStatusDesc().getPmStatus()!=null && getSelectedStatusDesc().getPmStatus().getStatusId()>0){
+					System.out.println("getSelectedStatusDesc()"+getSelectedStatusDesc().getPmStatus().getStatusId().intValue());
+					reqDTO.setStatus(getSelectedStatusDesc().getPmStatus().getStatusId().intValue());
+				}
 				
 				
 				reqDTO.setAssignment("MY");
@@ -509,9 +513,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if(getDocNoGroup()!=null && getDocNoGroup().trim().length()>0){
 					reqDTO.setDocNumber(getDocNoGroup());
 				}
-				
+			
 				if(getSelectedOrgProfileGroup()!=null){
 					System.out.println("getOrgProfileId"+getSelectedOrgProfileGroup().getOrgProfileId());
+				}
+				
+				if(getSelectedStatusDescAdvance()!=null && getSelectedStatusDescAdvance().getPmStatus()!=null && getSelectedStatusDescAdvance().getPmStatus().getStatusId()>0){
+					System.out.println("getSelectedStatusDescAdvance"+getSelectedStatusDescAdvance().getPmStatus().getStatusId().intValue());
+					reqDTO.setStatus(getSelectedStatusDescAdvance().getPmStatus().getStatusId().intValue());
 				}
 				
 				reqDTO.setViewBy(getViewByGroup());
