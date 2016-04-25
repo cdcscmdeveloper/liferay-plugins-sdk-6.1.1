@@ -36,7 +36,7 @@
 				</f:facet>
 				<p:inputText id="balanceAmt" value="#{bankstmt.balanceAmt}"
 					disabled="#{statusHide}" size="30" style="text-align:right"
-					maxlength="19" required="true"
+					maxlength="14" required="true"
 					label="#{bankstmt.month} #{lbl['lbl.sc.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />

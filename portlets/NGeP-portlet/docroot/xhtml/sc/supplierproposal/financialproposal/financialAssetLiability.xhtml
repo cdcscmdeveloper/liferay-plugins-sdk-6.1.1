@@ -20,6 +20,7 @@
 				<td colspan="3"><p:inputText id="currentAsset"
 						style="text-align:right;margin-bottom: 5px;" required="true"
 						label="#{lbl['lbl.sc.current.asset']}" disabled="#{statusHide}"
+						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"
 						size="30">
 						<p:ajax event="blur" process="@this"
@@ -36,9 +37,10 @@
 				<td colspan="3"><p:inputText id="currentLiabilities"
 						style="text-align:right;margin-bottom: 5px;" required="true" disabled="#{statusHide}"
 						label="#{lbl['lbl.sc.current.liability']}"
+						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"
 						size="30">
-						<f:validateLongRange minimum="1" maximum="99999999999" />
+						<f:validateLongRange minimum="1" maximum="99999999999999" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur" process="@this"
@@ -54,6 +56,7 @@
 				<td colspan="3"><p:inputText id="totalCashInHand"
 						style="text-align:right;margin-bottom: 5px;" required="true"
 						label="#{lbl['lbl.sc.total.cash.hand']}" disabled="#{statusHide}"
+						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalCashInHand}"
 						size="30">
 						<p:ajax event="blur" process="@this"
@@ -69,10 +72,10 @@
 					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.total.account.receivable']}" /></td>
 				<td colspan="3"><p:inputText id="totalAccountReceivable"
 						style="text-align:right;margin-bottom: 5px;" required="true" disabled="#{statusHide}"
-						label="#{lbl['lbl.sc.total.account.receivable']}"
+						label="#{lbl['lbl.sc.total.account.receivable']}" maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalAccountReceivable}"
 						size="30">
-						<f:validateLongRange minimum="1" maximum="99999999999" />
+						<f:validateLongRange minimum="1" maximum="99999999999999" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur" process="@this"
