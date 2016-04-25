@@ -42,9 +42,10 @@
 						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
 						action="#{receivedNoteBackingBean.backAction}" /></td>
 				<td colspan="4" style="text-align: right">
+					<c:if test='#{receivedNoteBackingBean.managedBean.buttonVal ne "View"}'>
 					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 						<ui:define name="outComeSection">
-							<ui:repeat
+							<ui:repeat 
 							var="bpmAction"
 							value="#{receivedNoteBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
@@ -54,7 +55,7 @@
 							</ui:repeat>
 						</ui:define>
 					</ui:decorate>
-					
+					</c:if>
 					<c:if
 						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
 						<td colspan="4" style="text-align: right"><p:commandButton

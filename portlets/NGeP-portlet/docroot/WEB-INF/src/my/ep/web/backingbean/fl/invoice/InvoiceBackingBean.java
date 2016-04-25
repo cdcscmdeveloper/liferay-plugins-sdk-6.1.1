@@ -1714,6 +1714,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				FacesContext fc = FacesContext.getCurrentInstance();
 				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+				orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+				orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
+				
 				orderBackingBean.getManagedBean().setHyperLinkPage(true);
 				orderBackingBean.getManagedBean().setButtonVal("View");
 				boolean isFactoredSelected=getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored();
@@ -2040,58 +2043,66 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 				//doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 				doBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+				doBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+				doBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
+				
 				doBB.getManagedBean().setButtonVal("View");
 				doBB.getManagedBean().setHyperLinkPage(true);
 				flBB.getManagedBean().setHideRemarks(true);
+				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 				return NAV_DELIVERYORDER_PAGE;
 		}
 		
-		/**
-		 * Navigate to other page based on document type.
-		 *
-		 * @param docType the doc type
-		 * @return the string
-		 */
-		
-		public String navigateFulfilmentNote(FlDeliveryOrder delOrder){
-				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-				IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
-				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-				reqDTO.setFulfilmentNoteId(delOrder.getFulfilmentNote().getFulfilmentNoteId());
-				reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
-				ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
-				recNoteBB.renewSesionObject();
-				recNoteBB.getManagedBean().setSelectedTabIndex(0);
-				recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
-				recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
-				recNoteBB.getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
-				reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
-				recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-				for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
-					recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
-				}
-				recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
-				if(recNoteBB.getManagedBean().getFlApprover() == null){
-					FlActor actor = iFulfilmentSO.retrieveFlActors(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-					if(actor != null){
-						recNoteBB.getManagedBean().setFlApprover(actor.getUser());
-						recNoteBB.getManagedBean().setAcknowledgeDate(actor.getActionDate());
-					}
-				}
-				recNoteBB.getManagedBean().setAcknowledged(true);
-				recNoteBB.getManagedBean().setButtonVal("View");
-				recNoteBB.getManagedBean().setHyperLinkPage(true);
-				flBB.getManagedBean().setHideRemarks(true);
-				
-				FacesContext fc = FacesContext.getCurrentInstance();
-				recNoteBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
-				//recNoteBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
-				
-				
-			return NAV_FULFILMENTNOTE_PAGE;
+	/**
+	 * Navigate to other page based on document type.
+	 *
+	 * @param docType the doc type
+	 * @return the string
+	 */
+
+	public String navigateFulfilmentNote(FlDeliveryOrder delOrder) {
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFulfilmentNoteId(delOrder.getFulfilmentNote().getFulfilmentNoteId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+		FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
+		ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
+		recNoteBB.renewSesionObject();
+		recNoteBB.getManagedBean().setSelectedTabIndex(0);
+		recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+		recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+		recNoteBB.getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
+		reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+		recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+		for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
+			recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 		}
+		recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
+		if(recNoteBB.getManagedBean().getFlApprover() == null){
+			FlActor actor = iFulfilmentSO.retrieveFlActors(recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getDocType(), recNoteBB.getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+			if(actor != null){
+				recNoteBB.getManagedBean().setFlApprover(actor.getUser());
+				recNoteBB.getManagedBean().setAcknowledgeDate(actor.getActionDate());
+			}
+		}
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		recNoteBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+		recNoteBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+		recNoteBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());	
+
+		recNoteBB.getManagedBean().setAcknowledged(true);
+		recNoteBB.getManagedBean().setButtonVal("View");
+		recNoteBB.getManagedBean().setHyperLinkPage(true);
+		flBB.getManagedBean().setHideRemarks(true);
+		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+
+		return NAV_FULFILMENTNOTE_PAGE;
+	}
 		
 	private void setTextBeforeSign(String outcome) {
 		StringBuffer sb = new StringBuffer();

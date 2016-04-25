@@ -894,6 +894,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 */
 	public String backAction() {
 		if(getManagedBean().getBackToPrevious() !=null){
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
+			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());			
 			return getManagedBean().getBackToPrevious();
 		}
 		else{
