@@ -8575,37 +8575,47 @@ public class EvaluationBackingBean extends
 			throws Exception {
 		debugLogger("generateEvaluationPdf");
 		populateAttachmentDetails(attachment);
-
+		
 		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
-//		String reportId = "";
-		String reportName = "";
+		String reportName = StringUtils.EMPTY;
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_EC_RPT_JSP;
-//			reportId = ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL; // SC_032
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_OC_RPT_JSP;
-//			reportId = ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL; // SC_018
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_TEC_RPT_JSP;
-//			reportId = ReportConst.PSDABK_TEC_RPT_VAL; // SC_010
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_FEC_RPT_JSP;
-//			reportId = ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL; // SC_018
+		}
+		
+		String estimatedAmountStr = null;
+		IQTDetailSO qtDetailSO = null;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
+			estimatedAmountStr = estimatedAmount.toPlainString();
+		} finally {
+			qtDetailSO = null;
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
-//		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
-
-		generatePdfFromOracle(reportName, paramMap, attachment, this
-				.getManagedBean().isCheckReportDownload());
+		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		
+		if (StringUtils.isNotBlank(reportName)) { 
+			generatePdfFromOracle(reportName, paramMap, attachment, this
+					.getManagedBean().isCheckReportDownload());
+		} else {
+			log.info("ReportName is empty");
+		}
 	}
 
 	/*
