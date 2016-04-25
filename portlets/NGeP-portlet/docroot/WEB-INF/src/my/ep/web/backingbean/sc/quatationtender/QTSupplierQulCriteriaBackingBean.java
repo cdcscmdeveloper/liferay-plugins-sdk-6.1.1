@@ -58,6 +58,7 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -930,6 +931,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 		}
 		QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
+		List<CtPanelItem> panelItems = getManagedBean().getPanelItemList();
+		if (CollectionUtils.isNotEmpty(panelItems)) {
+			supplierReqDTO.setPanelItemId(panelItems.get(0).getPanelItemId());	
+		}
 		if (null != tplSpecZoneDtl) {
 			this.getManagedBean().setTplSpecZoneDtl(tplSpecZoneDtl);
 			supplierReqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone()
