@@ -7,8 +7,8 @@ import java.util.Set;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.web.scheduler.job.sc.QTProposalCloseScheduleJob;
-import my.ep.web.scheduler.job.sc.QTPublishScheduleJob;
+import my.ep.web.scheduler.job.sc.QTProposalCloseJob;
+import my.ep.web.scheduler.job.sc.QTPublishJob;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -433,7 +433,7 @@ public class EpSchedulerHelper {
 			throws SchedulerException {
 
 		// define the job and tie it to our QTPublishJob class
-		JobDetail job = JobBuilder.newJob(QTPublishScheduleJob.class)
+		JobDetail job = JobBuilder.newJob(QTPublishJob.class)
 				.withIdentity("QT Publish Job"+qt.getQtNo(), "QtPublishingJobGroup")
 				.usingJobData("qtId", qt.getQtId()).build();
 		// define a simple trigger that runs at specific time (publish time)
@@ -450,7 +450,7 @@ public class EpSchedulerHelper {
 			throws SchedulerException {
 
 		// define the job and tie it to our QTPublishJob class
-		JobDetail job = JobBuilder.newJob(QTProposalCloseScheduleJob.class)
+		JobDetail job = JobBuilder.newJob(QTProposalCloseJob.class)
 				.withIdentity("QT Proposal Close Job"+qt.getQtNo(), "QtPublishingJobGroup")
 				.usingJobData("qtId", qt.getQtId()).build();
 		// define a simple trigger that runs at specific time (closing time)
