@@ -36,7 +36,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -481,8 +480,18 @@ public class ApprovalBackingBean extends
 				.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagPublication());
-			this.getManagedBean().setApprovalType(
-					SourcingConstants.APPROVAL_TYPE_PUBLICATION_APPROVAL);
+			if (CollectionUtils.isNotEmpty(paramTypes)) {
+				// temporary for exiting bpm payload which store as PTJ.
+				if (paramTypes.contains(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
+					List<String> paramTypes2 = new ArrayList<String>();
+					paramTypes2.add(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL);
+					paramTypes2.addAll(paramTypes);
+					paramTypes = paramTypes2;
+				}
+				
+				this.getManagedBean().setApprovalType(paramTypes.get(0));
+			}
+			
 			approvalRequests = getApprovalRequests(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
@@ -613,7 +622,7 @@ public class ApprovalBackingBean extends
 				RequestContext.getCurrentInstance().execute(
 						"reviceApprovalDlg.show()");
 			} else {
-				if (SourcingConstants.APPROVAL_TYPE_PUBLICATION_APPROVAL.equalsIgnoreCase(this
+				if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
 						.getManagedBean().getApprovalType())) {
 	
 					updatePublishDate(reqDTO.getQtdetail());
@@ -793,7 +802,7 @@ public class ApprovalBackingBean extends
 
 				String approvalCategoryCode = approval.getApprovalCategory()
 						.getParameterCode();
-				qtReqDTO.setApprovalType(approvalCategoryCode);
+				qtReqDTO.setApprovalCategory(approvalCategoryCode);
 				List<ScQtApprovalRequest> approvalRequests = this
 						.getManagedBean().getScQtApprovalRequestList();
 				if (ParameterConst.APPROVAL_CATEGORY_BPK
@@ -1009,13 +1018,13 @@ public class ApprovalBackingBean extends
 	 * @return the ScQtApproval
 	 */
 	private List<ScQtApprovalRequest> getApprovalRequests(Long qtId,
-			String approvalType, String docType, List<String> reqTypes) {
+			String approvalCategory, String docType, List<String> reqTypes) {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 
 		tenderReqDTO.setQtId(qtId);
 		tenderReqDTO.setDocType(docType);
 		tenderReqDTO.setApprovalReqTypes(reqTypes);
-		tenderReqDTO.setApprovalType(approvalType);
+		tenderReqDTO.setApprovalCategory(approvalCategory);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -1224,7 +1233,7 @@ public class ApprovalBackingBean extends
 							.getChangedValue()));
 					updatePublishClosingDate(scQt);
 					
-				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
+				} else if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL
 						.equalsIgnoreCase(approvalType)) {
 					updatePublishDate(scQt);
 					QTDetailBackingBean backingBean = new QTDetailBackingBean();

@@ -2760,7 +2760,7 @@ public class QTDetailBackingBean extends
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(scQt.getQtId());
-				reqDTO.setApprovalType(ParameterConst.APPROVAL_CATEGORY_PTJ);
+				reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
 				QuationTenderResDTO resDTO = detailSO
 						.retrieveApprovalDtlsByQtIdNType(reqDTO);
 				publicationApproval = resDTO.getQtApproval();
@@ -2778,8 +2778,8 @@ public class QTDetailBackingBean extends
 					List<ScQtApprovalRequest> approvalDtls = new ArrayList<ScQtApprovalRequest>();
 					ScQtApprovalRequest scQtApprovalDtl = new ScQtApprovalRequest();
 					ParameterReqDTO reqDTO1 = new ParameterReqDTO();
-					reqDTO1.setParameterCode(ParameterConst.APPROVAL_CATEGORY_PTJ);
-					reqDTO1.setParameterType(ParameterConst.APPROVAL_CATEGORY_TYPE);
+					reqDTO1.setParameterCode(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL);
+					reqDTO1.setParameterType(ParameterTypeConst.APPROVAL_CATEGORY);
 					PmParameter parameter = getParameterSO()
 							.retrieveParameterByTypeAndCode(reqDTO1)
 							.getPmParameter();
@@ -4126,7 +4126,7 @@ public class QTDetailBackingBean extends
 			if (isQTStatusGreaterThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.QT_PENDING_PUBLICATION)) {
 				quationTenderReqDTO.setQtId(scQt.getQtId());
 				quationTenderReqDTO
-						.setApprovalType(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+						.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
 				QuationTenderResDTO resDTO = detailSO
 						.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
 				this.getManagedBean().setQt(resDTO.getQtDetail());
