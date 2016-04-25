@@ -6822,11 +6822,11 @@ public class SmApplicationBackingBean extends
 					.getBpmAssignedTaskByDocNo(getManagedBean().getSmAppl()
 							.getApplNo());
 			if (item != null) {
-				String parameter = "taskId=" + item.getTaskId() + "&claim=false";
+				String parameter = "taskId=" + item.getTaskId()
+						+ "&claim=false";
 				urlParam = EpPropertiesUtils.getInstance().getProperty(
 						EpPropertiesConst.PORTAL_APPLICATION_URL)
-						+ "mof-application?"
-						+ parameter;
+						+ "mof-application?" + parameter;
 			}
 		} else {
 			msgConst = MessageConst.INFO_700005;
@@ -10203,11 +10203,16 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
-		int maxCatAllowed = ruleHelper.getMaxCategoryAllowed();
 		boolean validCatCode = true;
-		if (getManagedBean().getSmAppl().getSmSupplierCategories().size() == maxCatAllowed) {
-			validCatCode = false;
-			throw new EpException(MessageConst.ERROR_722517);
+		if (!getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& !getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			int maxCatAllowed = ruleHelper.getMaxCategoryAllowed();
+			if (getManagedBean().getApprovedCategoryList().size() == maxCatAllowed) {
+				validCatCode = false;
+				throw new EpException(MessageConst.ERROR_722517);
+			}
 		}
 
 		log.info("pmCategoryL3.getCategoryName(): "
