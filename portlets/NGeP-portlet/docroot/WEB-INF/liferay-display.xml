@@ -277,6 +277,7 @@
 		
 		<portlet id="SmApplRevisionView"></portlet>
 		<portlet id="SoftCertPayment"></portlet>
+		<portlet id="ApplicationPayment"></portlet>
 		<portlet id="viewSupplierProfile"></portlet>
 		<portlet id="viewApplicationHistory"></portlet>
 		<portlet id="gstHistory"></portlet>
