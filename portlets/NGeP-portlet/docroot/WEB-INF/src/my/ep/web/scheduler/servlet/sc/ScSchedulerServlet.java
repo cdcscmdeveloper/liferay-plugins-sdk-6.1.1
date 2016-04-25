@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.SchedulerPropertiesUtils;
 import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.gfmas.SSTInformationJob;
@@ -14,8 +15,6 @@ import my.ep.web.scheduler.job.sc.BidSchedulesPoolingJob;
 import my.ep.web.scheduler.job.sc.ContinuousBidSchedulerJob;
 import my.ep.web.scheduler.job.sc.InviteSuppliersJob;
 import my.ep.web.scheduler.job.sc.ProposalValidityExpiaryJob;
-import my.ep.web.scheduler.job.sc.QTProposalCloseJob;
-import my.ep.web.scheduler.job.sc.QTPublishJob;
 import my.ep.web.scheduler.job.sc.ScFailoverHandlerJob;
 
 import org.apache.log4j.Logger;
@@ -36,7 +35,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								SchedulerConstants.SC_JOB_GROUP),
 						BidSchedulesPoolingJob.class,
 						SchedulerConstants.SC_DAILY_JOB_DESCRIPTION,
-						EpPropertiesUtils
+						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_DAILY_JOB));
@@ -54,7 +53,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								SchedulerConstants.SC_JOB_GROUP),
 						ContinuousBidSchedulerJob.class,
 						SchedulerConstants.SC_CONTINUOUS_JOB_DESCRIPTION,
-						EpPropertiesUtils
+						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_CONTINUOUS_JOB));
@@ -66,7 +65,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								SchedulerConstants.SC_JOB_GROUP),
 						InviteSuppliersJob.class,
 						SchedulerConstants.SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION,
-						EpPropertiesUtils
+						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_UPDATE_SUPPLIERS));
@@ -79,7 +78,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								SchedulerConstants.SC_JOB_GROUP),
 						ProposalValidityExpiaryJob.class,
 						SchedulerConstants.SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION,
-						EpPropertiesUtils
+						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_PROPOSAL_VALIDITY_EXPIRY));
@@ -90,7 +89,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 						SSTInformationJob.class,
 						SchedulerConstants.GFMAS_SC_OUT_JOB_DESC,
-						EpPropertiesUtils
+						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_1GFMAS_SC_OUTBOUND));
@@ -107,7 +106,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								SchedulerConstants.SC_JOB_GROUP),
 						QTPublishJob.class,
 						SchedulerConstants.SC_QT_PUBLISH_JOB_DESCRIPTION,
-						EpPropertiesUtils
+						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QT_PUBLISH_JOB));
@@ -124,7 +123,7 @@ public class ScSchedulerServlet extends HttpServlet {
 								SchedulerConstants.SC_JOB_GROUP),
 						QTProposalCloseJob.class,
 						SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION,
-						EpPropertiesUtils
+						SchedulerPropertiesUtils
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QT_PUBLISH_JOB));
