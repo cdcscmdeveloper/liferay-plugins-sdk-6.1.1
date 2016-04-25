@@ -96,7 +96,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -1236,24 +1235,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * 
 		 * FacesContext.getCurrentInstance().addMessage(null, message);
 		 */
-	}
-
-	public boolean isApprovalRequestApproved(String reqType,
-			ScQtApproval approval) {
-
-		if (null != approval) {
-			List<ScQtApprovalRequest> approvalRequests = approval
-					.getScQtApprovalDtls();
-			if (CollectionUtils.isNotEmpty(approvalRequests)) {
-				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-					if (reqType.equalsIgnoreCase(approvalRequest
-							.getApprovalType().getParameterCode())) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 	public List<String> getRequestTypes(String paramaterTypes) {
