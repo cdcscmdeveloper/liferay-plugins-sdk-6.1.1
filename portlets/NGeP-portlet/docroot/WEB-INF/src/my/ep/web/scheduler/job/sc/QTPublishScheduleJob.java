@@ -12,10 +12,10 @@ package my.ep.web.scheduler.job.sc;
 
 import java.util.Date;
 
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -50,17 +50,18 @@ public class QTPublishScheduleJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		debugLogger("Start execute ");
 
-		IQTDetailSO qtDetailSO;
+		IQTNoticeBoardSO noticeBoardSO;
 		try {
 			// Publish QT's scheduled for today and by this hour
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 			JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-			Long qtId = dataMap.getLong("qtId");;
+			Long qtId = dataMap.getLong("qtId");
+			
 			if(qtId != null){
 				reqDTO.setQtId(qtId);
-				QuationTenderResDTO resDTO = qtDetailSO
+				NoticeBoardResDTO resDTO = noticeBoardSO
 						.publishQtAndInsertSuppliers(reqDTO);
 
 				if (resDTO.isSuccessful()) {
@@ -78,7 +79,7 @@ public class QTPublishScheduleJob implements Job {
 			log.info("$$$$$ QT Publish Job run failed at " + new Date());
 			log.error(e.getLocalizedMessage());
 		} finally {
-			qtDetailSO = null;
+			noticeBoardSO = null;
 		}
 
 	}
