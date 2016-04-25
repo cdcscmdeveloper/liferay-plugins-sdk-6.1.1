@@ -40,9 +40,8 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -6814,10 +6813,21 @@ public class SmApplicationBackingBean extends
 		}
 		initiateSmApplicationTask();
 		String msgConst = "";
+		String urlParam = StringUtils.EMPTY;
 		if ((applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW))
 				&& !getManagedBean().getSmAppl().isResubmit()) {
 			msgConst = MessageConst.INFO_700053;
+			WorklistItemVO item = SmCommonUtil
+					.getBpmAssignedTaskByDocNo(getManagedBean().getSmAppl()
+							.getApplNo());
+			if (item != null) {
+				String parameter = "taskId=" + item.getTaskId() + "&claim=false";
+				urlParam = EpPropertiesUtils.getInstance().getProperty(
+						EpPropertiesConst.PORTAL_APPLICATION_URL)
+						+ "mof-application?"
+						+ parameter;
+			}
 		} else {
 			msgConst = MessageConst.INFO_700005;
 		}
@@ -6851,7 +6861,7 @@ public class SmApplicationBackingBean extends
 														SmRuleHelper
 																.getInstance()
 																.getApplicationSubmissionDays()
-																+ "" },
+																+ "", urlParam },
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes()
 														.getUserLocale())));
@@ -7251,7 +7261,7 @@ public class SmApplicationBackingBean extends
 			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()
 					.isSameAsHq());
 			resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
-			if(StringUtils.isBlank(getManagedBean().getTaskId())){
+			if (StringUtils.isBlank(getManagedBean().getTaskId())) {
 				getManagedBean().setTaskId(resDTO.getTaskId());
 			}
 			if (resDTO != null) {
