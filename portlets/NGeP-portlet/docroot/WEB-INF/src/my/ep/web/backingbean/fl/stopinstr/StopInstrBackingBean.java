@@ -535,6 +535,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+		orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
+		orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 		orderBackingBean.getManagedBean().setButtonVal("View");
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
 		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
@@ -627,13 +629,20 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			crBB = new ContractRequestBackingBean();
 			crBB.getManagedBean().setSelectedTabIndex(0);
 			crBB.getManagedBean().setDocProcess(getManagedBean().getStopInstr().getFlRequest().getDocType());
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			crBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			crBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());	
+			crBB.getManagedBean().setHyperLinkPage(true);
+			flBB.getManagedBean().setHideRemarks(true);
+			
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
 			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			crBB.getManagedBean().setButtonVal("View");
-			flBB.getManagedBean().setHideRemarks(true);
 			crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
@@ -664,9 +673,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					}
 				}
 			}
-			FacesContext fc = FacesContext.getCurrentInstance();
-			crBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
-			crBB.getManagedBean().setHyperLinkPage(true);
 			return NAV_CR;
 		}if(getManagedBean().getStopInstr().getFlRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
@@ -679,14 +685,18 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			prBB.getManagedBean().setSubmitButtonStatus(false);
 			prBB.getManagedBean().setDocProcess(getManagedBean().getStopInstr().getFlRequest().getDocType());
 			
-			prBB.setFulfilmentRequestField(resDTO);
-			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			prBB.getManagedBean().setButtonVal("View");
-			flBB.getManagedBean().setHideRemarks(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+			prBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
+			prBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());					
 			prBB.getManagedBean().setHyperLinkPage(true);
+			flBB.getManagedBean().setHideRemarks(true);
+			
+			prBB.setFulfilmentRequestField(resDTO);
+			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			prBB.getManagedBean().setButtonVal("View");
+
 			return NAV_PR;
 		}
 		return null;
