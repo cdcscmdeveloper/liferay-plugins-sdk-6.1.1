@@ -1806,10 +1806,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			//// check measurement
 			
 			if(code.isRequestMeasurement()){
-				if(!typeMap.containsKey(code.getMeasurementName())){
+				if(!meaMap.containsKey(code.getMeasurementName())){
 					System.out.println("********1st time create new************");
 					
-					typeMap.put(code.getMeasurementName(),code.getMeasurementName());
+					meaMap.put(code.getMeasurementName(),code.getMeasurementName());
 				}else{
 					facesContext.addMessage(
 							null,
@@ -1825,10 +1825,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			/// check color
 			
 			if(code.isRequestColor()){
-				if(!typeMap.containsKey(code.getColorName())){
+				if(!colorMap.containsKey(code.getColorName())){
 					System.out.println("********1st time create new************");
 					
-					typeMap.put(code.getColorName(),code.getColorName());
+					colorMap.put(code.getColorName(),code.getColorName());
 				}else{
 					facesContext.addMessage(
 							null,
