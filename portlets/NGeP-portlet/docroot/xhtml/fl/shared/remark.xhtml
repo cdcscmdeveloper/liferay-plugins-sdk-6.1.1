@@ -27,17 +27,17 @@
 							<td></td>
 							<td>
 								<p:inputTextarea cols="40" 
-									value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
-									disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks() or !bpmTasklistBackingBean.managedBean.claim}"
+									value="#{remarkVar.remark}" rendered="#{remarkIndex==0 and !fulfilmentBackingBean.managedBean.isHideRemarks()}"
+									disabled="#{!bpmTasklistBackingBean.managedBean.claim}"
 									autoResize="false"
 									onkeyup="limitTextArea(this,1000);"
 									onkeydown="limitTextArea(this,1000);">
 									<p:ajax event="blur" process="@this" />
 								</p:inputTextarea> 
-								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0 or fulfilmentBackingBean.managedBean.isHideRemarks()}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
 							<td>
-								<h:panelGroup rendered="#{remarkIndex==0}">
+								<h:panelGroup rendered="#{remarkIndex==0 and !fulfilmentBackingBean.managedBean.isHideRemarks()}">
 								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.remarks']}"/> 
 								</h:panelGroup>
 							</td>
