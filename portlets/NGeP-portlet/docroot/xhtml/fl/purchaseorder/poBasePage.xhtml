@@ -41,6 +41,7 @@
 				<c:if
 						test='#{flOrderBB.managedBean.outComes ne "null"}'>		
 				<td colspan="4" style="text-align: right">
+					<c:if test='#{flOrderBB.managedBean.buttonVal ne "View"}'>
 					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 						<ui:define name="outComeSection">
 							<ui:repeat
@@ -53,6 +54,7 @@
 							</ui:repeat> 
 						</ui:define>
 					</ui:decorate>
+					</c:if>
 					</td></c:if><c:if
 						test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
 						<td colspan="4" style="text-align: right">

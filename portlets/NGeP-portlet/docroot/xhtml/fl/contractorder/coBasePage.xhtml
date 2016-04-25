@@ -35,6 +35,7 @@
 						action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<td colspan="4" style="text-align: right">
+				<c:if test='#{flOrderBB.managedBean.buttonVal ne "View"}'>
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 					<ui:define name="outComeSection">
 						<ui:repeat
@@ -46,7 +47,9 @@
 							action="#{flOrderBB.signingAction(bpmAction)}" />
 						</ui:repeat>
 					</ui:define>
-				</ui:decorate></td>
+				</ui:decorate>
+				</c:if>
+				</td>
 							<c:if test='#{flOrderBB.managedBean.buttonVal eq "Update"}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.update']}" 
