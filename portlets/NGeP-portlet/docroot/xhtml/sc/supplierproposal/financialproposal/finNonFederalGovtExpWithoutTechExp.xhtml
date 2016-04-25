@@ -180,9 +180,9 @@
 					rendered="#{technongovt.brandNew eq false}" />
 				<p:inputText id="contractAmt" value="#{technongovt.contractAmt}"
 					size="15" style="text-align: right;" disabled="#{statusHide}"
-					maxlength="19" required="true" rendered="#{technongovt.brandNew eq true}"
+					maxlength="14" required="true" rendered="#{technongovt.brandNew eq true}"
 					label="#{lbl['lbl.sc.spec.contarct.amount']}">
-					<f:validateLongRange minimum="1" maximum="99999999999" />
+					<f:validateLongRange minimum="1" maximum="99999999999999" />
 					<p:ajax event="blur" process="@this"
 						listener="#{supplierProposalDetailBackingBean.totalContractAmount}"
 						update="@this,contractAmtMsg, :form:totalcontractamt" />
