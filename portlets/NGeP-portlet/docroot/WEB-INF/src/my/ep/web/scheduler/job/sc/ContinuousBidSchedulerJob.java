@@ -38,18 +38,16 @@ public class ContinuousBidSchedulerJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		debugLogger("***** continuous Bid Scheduler job triggered from dev server*******");
-		System.out.println("***** continuous Bid Scheduler job triggered from dev server*******");
-		// SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
-
-		List<Long> localBidScheduleIdList = SchedulerHelper
-				.getJobBidScheduleIdList();
 		IBiddingSO biddingSO = null;
-		List<Long> toDeleteIdList = null;
+		try {
+			// SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
+			List<Long> localBidScheduleIdList = SchedulerHelper
+					.getJobBidScheduleIdList();
 
-		for (int i = 0; i < localBidScheduleIdList.size(); i++) {
+			List<Long> toDeleteIdList = null;
 
-			try {
+			for (int i = 0; i < localBidScheduleIdList.size(); i++) {
+
 				biddingSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 
@@ -70,9 +68,10 @@ public class ContinuousBidSchedulerJob implements Job {
 								.updateSchedulerJobBidSchedule(reqDTO);
 						if (resDTO.isSuccessful()) {
 							debugLogger("*****Bidding is in Progress for BidSchedule with id"
-									+ resDTO.getScBidSchedule().getBidScheduleId());
+									+ resDTO.getScBidSchedule()
+											.getBidScheduleId());
 						}
-						
+
 					} else if (currentSchedule.getPmStatus().getStatusId()
 							.equals(BidStatusConst.BID_CANCELLED)) {
 						if (toDeleteIdList == null) {
@@ -88,10 +87,14 @@ public class ContinuousBidSchedulerJob implements Job {
 				} else if (currentSchedule.getEndDate()
 						.equals(getCompareTime())) {
 					// TODO check what if paused bid is not resumed
-					debugLogger("currentScheduleId : " + currentSchedule.getBidScheduleId());
-					debugLogger("currentScheduleEndDate : " + currentSchedule.getEndDate());
+					debugLogger("currentScheduleId : "
+							+ currentSchedule.getBidScheduleId());
+					debugLogger("currentScheduleEndDate : "
+							+ currentSchedule.getEndDate());
 					debugLogger("comparecurrentTime : " + getCompareTime());
-					debugLogger("Is schedule end : " + currentSchedule.getEndDate().equals(getCompareTime()));
+					debugLogger("Is schedule end : "
+							+ currentSchedule.getEndDate().equals(
+									getCompareTime()));
 					if (currentSchedule.getPmStatus().getStatusId()
 							.equals(BidStatusConst.BID_IN_PROGRESS)
 							|| currentSchedule.getPmStatus().getStatusId()
@@ -120,16 +123,20 @@ public class ContinuousBidSchedulerJob implements Job {
 
 				}
 
-			} finally {
-				biddingSO = null;
 			}
+			if (toDeleteIdList != null && toDeleteIdList.size() > 0) {
+				for (Long deletedId : toDeleteIdList) {
+					SchedulerHelper.getJobBidScheduleIdList().remove(deletedId);
+				}
+				toDeleteIdList = null;
+			}
+
+		}catch(Exception e){
+			log.error(e);
 		}
 
-		if (toDeleteIdList != null && toDeleteIdList.size() > 0) {
-			for (Long deletedId : toDeleteIdList) {
-				SchedulerHelper.getJobBidScheduleIdList().remove(deletedId);
-			}
-			toDeleteIdList = null;
+		finally {
+			biddingSO = null;
 		}
 
 	}
