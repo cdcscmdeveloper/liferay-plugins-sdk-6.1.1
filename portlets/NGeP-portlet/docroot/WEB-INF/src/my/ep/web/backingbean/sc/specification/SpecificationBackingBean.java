@@ -1083,6 +1083,7 @@ public class SpecificationBackingBean extends
 					checkPanelItemIsZonalOrNonzonal(panelCoverage,item);
 				}
 				else if(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL.equals(item.getItemCategoryId().getParameterCode())){
+					specMaster.setCtPanelItem(item);
 					String description=item.getCtPanelItemGroup().getGroupName();
 					itemName=description.concat(item.getItemName());
 					panelCoverage=item.getPanelCoverageId().getParameterCode();
@@ -4742,18 +4743,23 @@ public class SpecificationBackingBean extends
 							templateSpecBean.getSpecMaster(), zoneCriteria);
 				}
 				if (this.getManagedBean().getQt().isPanel()) {
+					this.getManagedBean().setPanelItemCategory("");
+					this.getManagedBean().setSpecNewable(true);
 					if (null == this.getManagedBean().getPanelItemCategory()
 							|| "".equals(this.getManagedBean()
 									.getPanelItemCategory())) {
-						retriveSupplierQualificationCriteria("SC");
-						List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
+					//	retriveSupplierQualificationCriteria("SC");
+						//List<CtPanelItem> panelItemList = getManagedBean().getPanelItemList();
 						
-						if (CollectionUtils.isNotEmpty(panelItemList)){
+					/*	if (CollectionUtils.isNotEmpty(panelItemList)){
 							if(null!=panelItemList.get(0).getItemCategoryId()){
 							 this.getManagedBean().setPanelItemCategory(panelItemList.get(0).getItemCategoryId().getParameterCode());
 							 }
 
-					}
+					}*/
+						if(null!=templateresDTO.getSpecMaster() && null==templateresDTO.getSpecMaster().getCtPanelItem()){
+							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
+						}
 					}
 					if ((null != this.getManagedBean().getPanelItemCategory() && !""
 							.equals(this.getManagedBean()
