@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.approval;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -71,6 +72,8 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -82,6 +85,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
+import org.quartz.SchedulerException;
 
 /**
  * Backing Bean for Approvals.
@@ -788,6 +792,7 @@ public class ApprovalBackingBean extends
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
 			} else {
+				List<String> approvalTypes = null;
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				SCQuotationTenderDataType dataType = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
 				qtReqDTO.setApprovalFlow(true);
@@ -831,7 +836,7 @@ public class ApprovalBackingBean extends
 						revertToOldValues(qt, approvalRequests);
 					} else if (BpmOutcomeConst.BPM_APPROVE
 							.equalsIgnoreCase(outcome)) {
-						approveApprovalRequests(qt, approvalRequests, 
+						approvalTypes = approveApprovalRequests(qt, approvalRequests, 
 								(dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList())));
 					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
@@ -841,7 +846,7 @@ public class ApprovalBackingBean extends
 						qtReqDTO.setRejected(true);
 					} else if (BpmOutcomeConst.BPM_APPROVE
 							.equalsIgnoreCase(outcome)) {
-						approveApprovalRequests(qt, approvalRequests, true);
+						approvalTypes = approveApprovalRequests(qt, approvalRequests, true);
 					}
 				}
 				updateApprovalRequest(approvalRequests, outcome);
@@ -872,6 +877,20 @@ public class ApprovalBackingBean extends
 				tenderResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
 				// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
+				
+				if (CollectionUtils.isNotEmpty(approvalTypes) && 
+						approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
+					Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+					if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
+						try {
+							log.info("call simple scheduler if QT is publishing today.");
+							EpSchedulerHelper.scheduleSimplePublishingJob(qt);
+						} catch (SchedulerException e) {
+							e.printStackTrace();
+							log.error(e.getMessage());
+						}
+					}
+				}
 			}
 		} finally {
 		}
@@ -1218,7 +1237,9 @@ public class ApprovalBackingBean extends
 		this.pmDigiSign = pmDigiSign;
 	}
 	
-	private void approveApprovalRequests(ScQt scQt, List<ScQtApprovalRequest> approvalRequests, boolean isFinalApproval) {
+	private List<String> approveApprovalRequests(ScQt scQt, List<ScQtApprovalRequest> approvalRequests, boolean isFinalApproval) {
+		List<String> approvalTypes = new ArrayList<String>();
+		
 		if (CollectionUtils.isNotEmpty(approvalRequests)) {
 			for (int i = 0; i < approvalRequests.size(); i++) {
 				ScQtApprovalRequest approvalRequest = approvalRequests.get(i);
@@ -1264,8 +1285,11 @@ public class ApprovalBackingBean extends
 					}
 				}
 
+				approvalTypes.add(approvalType);
 			}
 		}
+		
+		return approvalTypes;
 	}
 
 	private void revertToOldValues(ScQt scQt, List<ScQtApprovalRequest> approvalRequests) {
