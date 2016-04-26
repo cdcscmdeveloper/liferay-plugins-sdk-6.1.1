@@ -400,7 +400,10 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	
 	/** The deleted business nature map. */
 	private Map<Long, ScBusinessNatureQuoteCriteria> deletedBusinessNatureMap;
-
+	
+	/** The store location tree. */
+	private List<TreeNode> storeLocationTree;
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2565,4 +2568,22 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 			Map<Long, ScBusinessNatureQuoteCriteria> deletedBusinessNatureMap) {
 		this.deletedBusinessNatureMap = deletedBusinessNatureMap;
 	}
+
+	/**
+	 * @return the storeLocationTree
+	 */
+	public List<TreeNode> getStoreLocationTree() {
+		return storeLocationTree;
+	}
+
+	/**
+	 * @param storeLocationTree the storeLocationTree to set
+	 */
+	public void setStoreLocationTree(List<TreeNode> storeLocationTree) {
+		this.storeLocationTree = storeLocationTree;
+	}
+
+
+	
+	
 }
