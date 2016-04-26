@@ -20,24 +20,24 @@
       <br/>
       <br/>
       #foreach( $ctAgencySigner in $ctAgencySignerList )
-      Di hadapan		: $ctAgencySigner.officerName 
+      Di hadapan		: #if ( $ctAgencySigner.officerName ) $ctAgencySigner.officerName #end
       <br/>
-      Nama			:  $ctAgencySigner.officerName
+      Nama			:  #if ( $ctAgencySigner.officerName ) $ctAgencySigner.officerName #end
       <br/>
-      No. K/Pengenalan	: $ctAgencySigner.officerIc 
+      No. K/Pengenalan	: #if ( $ctAgencySigner.officerIc ) $ctAgencySigner.officerIc #end
       <br/>
-      Jawatan		:  $ctAgencySigner.officerPosition
+      Jawatan		:  #if ( $ctAgencySigner.officerPosition ) $ctAgencySigner.officerPosition #end
       <br/>
       <br/>
       #end
       #foreach( $ctSignAgencyWitness in $ctSignAgencyWitnessList )
-      Di hadapan		: $ctSignAgencyWitness.officerName 
+      Di hadapan		: #if ( $ctSignAgencyWitness.officerName ) $ctSignAgencyWitness.officerName #end
       <br/>
-      Nama			:  $ctSignAgencyWitness.officerName
+      Nama			:  #if ( $ctSignAgencyWitness.officerName ) $ctSignAgencyWitness.officerName #end
       <br/>
-      No. K/Pengenalan	: $ctSignAgencyWitness.officerIc 
+      No. K/Pengenalan	: #if ( $ctSignAgencyWitness.officerIc ) $ctSignAgencyWitness.officerIc #end
       <br/>
-      Jawatan		:  $ctSignAgencyWitness.officerPosition
+      Jawatan		:  #if ( $ctSignAgencyWitness.officerPosition ) $ctSignAgencyWitness.officerPosition #end
       <br/>
       <br/>
       #end
@@ -53,24 +53,24 @@
       <br/>
       <br/>
       #foreach( $ctSupplierSigner in $ctSupplierSignerList )
-      Di hadapan		: $ctSupplierSigner.officerName 
+      Di hadapan		: #if ( $ctSupplierSigner.officerName ) $ctSupplierSigner.officerName #end
       <br/>
-      Nama			:  $ctSupplierSigner.officerName
+      Nama			:  #if ( $ctSupplierSigner.officerName ) $ctSupplierSigner.officerName #end
       <br/>
-      No. K/Pengenalan	: $ctSupplierSigner.officerIc 
+      No. K/Pengenalan	: #if ( $ctSupplierSigner.officerIc ) $ctSupplierSigner.officerIc #end
       <br/>
-      Jawatan		:  $ctSupplierSigner.officerPosition
+      Jawatan		:  #if ( $ctSupplierSigner.officerPosition ) $ctSupplierSigner.officerPosition #end
       <br/>
       <br/>
       #end
       #foreach( $ctSupplierWitness in $ctSupplierWitnessList )
-      Di hadapan		: $ctSupplierWitness.officerName 
+      Di hadapan		: #if ( $ctSupplierWitness.officerName ) $ctSupplierWitness.officerName #end
       <br/>
-      Nama			:  $ctSupplierWitness.officerName
+      Nama			:  #if ( $ctSupplierWitness.officerName ) $ctSupplierWitness.officerName #end
       <br/>
-      No. K/Pengenalan	: $ctSupplierWitness.officerIc 
+      No. K/Pengenalan	: #if ( $ctSupplierWitness.officerIc ) $ctSupplierWitness.officerIc #end
       <br/>
-      Jawatan		:  $ctSupplierWitness.officerPosition
+      Jawatan		:  #if ( $ctSupplierWitness.officerPosition ) $ctSupplierWitness.officerPosition #end
       <br/>
       <br/>
       #end
