@@ -10,6 +10,7 @@ import my.ep.web.scheduler.constants.common.SchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.cm.CmDropSequenceJob;
 import my.ep.web.scheduler.job.cm.CmUpdateExpiredItemJob;
+import my.ep.web.scheduler.job.gfmas.MaterialMasterDataInformationJob;
 import my.ep.web.scheduler.job.phis.MasterDataMaterialInformationJob;
 import my.ep.web.scheduler.job.phis.MasterDataMaterialJob;
 
@@ -36,6 +37,13 @@ public class CmSchedulerServlet extends HttpServlet {
 				SchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 				MasterDataMaterialInformationJob.class, SchedulerConstants.PHIS_MASTERDATA_MATERIAL_JOB_DESC,
 				EpPropertiesUtils.getInstance().getProperty("phis.cm.outbound"));
+		
+		// 1GFMAS Master Data Material Information job
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				SchedulerConstants.GFMAS_MASTER_DATA_MATERIAL,
+				SchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
+				MaterialMasterDataInformationJob.class, SchedulerConstants.GFMAS_MASTERDATA_MATERIAL_JOB_DESC,
+				EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound1"));
 
 		///CM Expired Item
 		EpSchedulerHelper.scheduleJob(new JobKey(
