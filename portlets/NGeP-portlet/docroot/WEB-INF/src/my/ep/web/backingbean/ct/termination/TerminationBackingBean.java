@@ -718,9 +718,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					        	 context.put("telNo", getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNoFull());
 					        	 context.put("faxNo", getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNoFull());
 					         } else {
-						           context.put("ptjAddress", " ");
-						           context.put("telNo", " ");
-						           context.put("faxNo", " ");
+						           context.put("ptjAddress", "");
+						           context.put("telNo", "");
+						           context.put("faxNo", "");
 					        }
 					  
 					         if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
@@ -748,13 +748,21 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					
 					         context.put("contractNo",getManagedBean().getCtContract().getContractNo());
 				            //	context.put("currentDate",dateFormat.format(date));
-					        context.put("reasonList", getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons());
+					         if (getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null) {
+					        	 context.put("reasonList", getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons());
+					         } else {
+					        	 context.put("reasonList", "");
+					         }
 					
 					        if(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()!=null) {
 						         context.put("remedyStartDate",dateformat.format(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()));
+					        } else {
+					        	context.put("remedyStartDate", "");
 					        }
 					       if(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()!=null) {
 						        context.put("remedyEndDate",dateformat.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
+					       } else {
+					    	   context.put("remedyEndDate", "");
 					       }
 					       //retrieve approver from CtActor
 						   if (getManagedBean().getContractVer().getContractVerId() != null) {
@@ -772,8 +780,16 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 									   roleCode);
 									   
 						       if(approverActor != null) {
-							         context.put("approverName", approverActor.getUserName());
+						    	   if (approverActor.getUserName() != null) {
+						    		   context.put("approverName", approverActor.getUserName());
+						    	   } else {
+						    		   context.put("approverName", "");
+						    	   }
+						    	   if (approverActor.getDesignation() != null) {
 							         context.put("approverDesignation", approverActor.getDesignation());
+						    	   } else {
+						    		   
+						    	   } context.put("approverDesignation", "");
 						       } else {
 							        context.put("approverName", "");
 							        context.put("approverDesignation", "");
@@ -788,15 +804,23 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 							context.put("expDate", dateformat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
 							if(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()!=null) {
 								context.put("lastRemedyDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()));
+							} else {
+								context.put("lastRemedyDate", "");
 							}
 							if(getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo()!=null && getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo().length()>0) {
 								context.put("lastRemedyFileNo", getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo());
+							} else {
+								context.put("lastRemedyFileNo", "");
 							}
 							if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency()!=null && getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length()>0) {
 								context.put("recommendAgency", getManagedBean().getContractVer().getCtTermination().getRecommendedAgency());
-							}		
+							} else {
+								context.put("recommendAgency", "");
+							}	
 							if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()!=null) {
 								context.put("recommendAgencyDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()));
+							} else {
+								context.put("recommendAgencyDate", "");
 							}					
 						getManagedBean().setEditorValue(DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context));
 						RequestContext.getCurrentInstance().execute("noticeDlg.show()");
