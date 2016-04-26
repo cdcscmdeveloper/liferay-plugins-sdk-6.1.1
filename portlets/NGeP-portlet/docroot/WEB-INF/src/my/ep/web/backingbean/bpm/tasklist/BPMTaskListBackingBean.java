@@ -271,6 +271,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
 					+ SCProcessNameConst.VIEW_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
+					+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
+			
 
 			temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_PCB,
@@ -287,6 +290,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
 			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
 					+ SCProcessNameConst.REVISE_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
+					+ SCProcessNameConst.ASSIGN_SCORING_COMMITTEE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 			temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME
 					+ SCProcessNameConst.FINALIZE_ATTANDANCE,
