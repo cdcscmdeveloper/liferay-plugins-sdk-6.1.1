@@ -23,7 +23,7 @@
          <strong>DAN</strong>
       </div>
       <br/>
-      <strong>$supplierName</strong> (<strong>$supplierRegNo</strong>), sebuah perniagaan yang diperbadankan di Malaysia di bawah Akta Perniagaan 1956 mempunyai pejabat berdaftar di <strong>$supplierAddress</strong>. (kemudian daripada ini disebut sebagai 'Kontraktor') bagi pihak yang satu lagi.
+      <strong>$supplierName</strong> (<strong>$supplierRegNo</strong>), sebuah perniagaan yang diperbadankan di Malaysia di bawah Akta Perniagaan 1956 mempunyai pejabat berdaftar di $supplierAddress. (kemudian daripada ini disebut sebagai 'Kontraktor') bagi pihak yang satu lagi.
       <br/><br/>
       Kerajaan dan Kontraktor secara individu boleh dirujuk sebagai 'Pihak' dan secara kolektifnya dirujuk sebagai 'Pihak-pihak'.
       <br/><br/><br/>
