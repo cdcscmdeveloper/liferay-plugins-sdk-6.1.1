@@ -3209,14 +3209,20 @@ public class SmApplicationUtil {
 	 * @return the list PmRace
 	 */
 	public static List<PmRace> retrievePmRaceList() {
+		List<PmRace> retVal = null;
 		IRaceSO reqSO = (IRaceSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IRaceSO.class);
 		RaceResDTO resDTO = reqSO.retrieveRaceList();
-		if (resDTO != null) {
-			return resDTO.getRaceList();
-		} else {
-			return null;
+		if (resDTO != null
+				&& !EntityHelper.isCollectionEmpty(resDTO.getRaceList())) {
+			retVal = new ArrayList<PmRace>();
+			for (PmRace race : resDTO.getRaceList()) {
+				if (race.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					retVal.add(race);
+				}
+			}
 		}
+		return retVal;
 	}
 
 	/**
@@ -7619,6 +7625,9 @@ public class SmApplicationUtil {
 			SmMachineDtl machine) {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		if (machine != null) {
+			SelectItem others = new SelectItem();
+			others.setValue(-1);
+			others.setLabel(SmCommonUtil.getMessage("lbl.sm.caps.others", null));
 			if (machine.getCategoryType() != null
 					&& machine.getCategoryType().getParameterId() != null
 					&& (machine.getCategoryCode() == null || machine
@@ -7633,6 +7642,9 @@ public class SmApplicationUtil {
 							.getPrintingMachineItemsByCategoryCode(machine
 									.getCategoryCode());
 				}
+			}
+			if (!EntityHelper.isCollectionEmpty(machineItems)) {
+				machineItems.add(others);
 			}
 		}
 		return machineItems;
