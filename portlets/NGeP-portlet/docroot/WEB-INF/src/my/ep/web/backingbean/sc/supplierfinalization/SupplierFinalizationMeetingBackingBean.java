@@ -38,7 +38,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -721,45 +720,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 		}
 		
 		return userRole;
-	}
-	
-	private PmOrgProfile getFcOrgProfileIdByCommitteeType(PmOrgProfile ptjOrgProfile,
-			String committeType) {
-		PmOrgProfile pmOrgProfile = null;
-
-		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH
-				.equals(committeType)
-				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
-						.equals(committeType)) {
-			// TODO - filter by sabah/sarawak users.
-
-		} else if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B
-				.equals(committeType)
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A
-						.equals(committeType)) {
-			pmOrgProfile = ptjOrgProfile;
-
-		} else {
-			if (ptjOrgProfile != null) {
-				IOrgProfileSO orgProfileSO = null;
-				try {
-					orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-
-					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-					reqDTO.setOrgProfileId(ptjOrgProfile.getOrgProfileId());
-					
-					OrgProfileResDTO resDTO = orgProfileSO
-							.retrieveMinistryByOrgProfileId(reqDTO);
-					pmOrgProfile = resDTO.getPmOrgProfile();
-
-				} finally {
-					orgProfileSO = null;
-				}
-			}
-		}
-
-		return pmOrgProfile;
 	}
 	
 	/**
