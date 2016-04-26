@@ -57,8 +57,7 @@
 								lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 								headerText="#{lbl['lbl.rpt.pegawaipengawal']}" readonly="true"
 								disabled="#{reportBackingBean.managedBean.selectedMinistry==null}"
-								value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"
-								postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}"
+								value="#{reportBackingBean.managedBean.selectedPegwaiPengawal.pmOrgValidity.orgName}"							
 								saveObject="reportBackingBean.managedBean.selectedPegwaiPengawal"
 								conditionField="#{reportBackingBean.constructPegwaiPengawalConditionFields()}" /></td>
 						<td><p:message id="lovPpPegaWaiPengawalMsg"
@@ -73,8 +72,7 @@
 								lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 								headerText="#{lbl['lbl.rpt.kumpulan.ptj']}" readonly="true"
 								disabled="#{reportBackingBean.managedBean.selectedPegwaiPengawal==null}"
-								value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
-								postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}"
+								value="#{reportBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"							
 								saveObject="reportBackingBean.managedBean.selectedKumpulanPTJ"
 								conditionField="#{reportBackingBean.constructKumpulanPTJConditionFields()}" /></td>
 						<td><p:message id="lovPpKumpulanPTJMsg"
@@ -88,8 +86,7 @@
 								readonly="true" size="100" update="@form"
 								headerText="#{lbl['lbl.rpt.ptj']}"
 								disabled="#{reportBackingBean.managedBean.selectedKumpulanPTJ==null}"
-								value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
-								postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}"
+								value="#{reportBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"								
 								saveObject="reportBackingBean.managedBean.selectedPTJ"
 								conditionField="#{reportBackingBean.constructPTJConditionFields()}" /></td>
 						<td><p:message id="lovPpPTJMsg" for="lovPpPTJ" display="icon" /></td>
