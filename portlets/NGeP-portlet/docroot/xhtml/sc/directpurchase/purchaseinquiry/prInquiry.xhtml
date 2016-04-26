@@ -70,6 +70,18 @@
 						<p:ajax event="keyup" />
 					</p:inputText></td>
 			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.inquiry.date']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.createdDate}"
+						size="28">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText></td>
+			</tr>
+			
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /> <p:outputLabel
@@ -88,6 +100,43 @@
 
 					</p:inputText> <p:message id="oderQtyIdMsg" for="oderQtyId" display="icon" /></td>
 			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.delivery.term']}" />
+					 <p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
+				<td><p:inputText
+						label="#{lbl['lbl.sc.delivery.term']}"
+						value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.deliverTerm}"
+						required="true"
+						disabled="#{isViewOnly}"
+						style="text-align:right;" size="28">
+					</p:inputText></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.day.to.resp']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+
+				<td><p:inputText id="dayToResponse" size="3" maxlength="2"
+						required="true" label="#{lbl['lbl.sc.price.inquiry.day.to.resp']}"
+						disabled="#{isViewOnly}" style="text-align:right;"
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dayToResponse}">
+						<p:ajax event="keyup" update="dayToRespId"
+							listener="#{purchaseInquiryBackingBean.calcDayToResponse(purchaseInquiryBackingBean.managedBean.scPrInquiry)}" />
+					</p:inputText> <p:spacer width="6px" /> <p:inputText disabled="true"
+						id="dayToRespId"
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dateToResponse}"
+						size="18">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText></td>
+				<td><p:message id="dayToResponseMsg" for="dayToResponse"
+						display="icon" /></td>
+			</tr>
+				
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.price.type']}" /> <p:outputLabel
@@ -128,44 +177,7 @@
 
 				</td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.delivery.term']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.leadTime}"
-						style="text-align:right;" size="28">
-					</p:inputText></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.price.inquiry.inquiry.date']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.createdDate}"
-						size="28">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-					</p:inputText></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.price.inquiry.day.to.resp']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-
-				<td><p:inputText id="dayToResponse" size="3" maxlength="2"
-						required="true" label="#{lbl['lbl.sc.price.inquiry.day.to.resp']}"
-						disabled="#{isViewOnly}" style="text-align:right;"
-						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dayToResponse}">
-						<p:ajax event="keyup" update="dayToRespId"
-							listener="#{purchaseInquiryBackingBean.calcDayToResponse(purchaseInquiryBackingBean.managedBean.scPrInquiry)}" />
-					</p:inputText> <p:spacer width="6px" /> <p:inputText disabled="true"
-						id="dayToRespId"
-						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.dateToResponse}"
-						size="18">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-					</p:inputText></td>
-				<td><p:message id="dayToResponseMsg" for="dayToResponse"
-						display="icon" /></td>
-			</tr>
+			
 			<tr>
 				<td colspan="4"><h:panelGroup
 						rendered="#{isPendingSubmissionStatus and !isTrackingDairyView}" id="justiId">

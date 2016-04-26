@@ -1515,9 +1515,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @param text
 	 * @return displayText
 	 */
-	public String getText(String text) {
+	public Object getText(Object text) {
 		FacesScopes face = new FacesScopes();
-		if(text==null || text.length()==0) {
+		if(text == null ||(text instanceof String && ((String) text).length() == 0)) {
 			return ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale());
 		} else {
 			return text;
