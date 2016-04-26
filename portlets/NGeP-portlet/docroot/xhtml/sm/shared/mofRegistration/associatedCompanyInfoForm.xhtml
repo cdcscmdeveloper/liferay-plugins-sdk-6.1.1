@@ -155,7 +155,9 @@
 							label="#{lbl['lbl.sm.assocCmpny.companyName']}"
 							id="asocCompCmpName"
 							value="#{backingBean.managedBean.selectedAssocCompany.companyName}"
-							size="35" /> 
+							size="35" >
+								<p:ajax event="blur" process="@this" update="@this" partialSubmit="true" />
+							</p:inputText>
 							<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
