@@ -25,13 +25,13 @@
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.mof.reg.no']}" /></td>
 				<td><p:inputText disabled="true" size="30"
-						value="#{simpleQuoteBackingBean.managedBean.scQuoteSupplier.mofNumber}" />
+						value="#{simpleQuoteBackingBean.getText(simpleQuoteBackingBean.managedBean.scQuoteSupplier.mofNumber)}" />
 
 				</td>
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
 				<td><p:inputText disabled="true" size="40"
-						value="#{simpleQuoteBackingBean.managedBean.smGstSupplier.gstRegNo}" />
+						value="#{simpleQuoteBackingBean.getText(simpleQuoteBackingBean.managedBean.smGstSupplier.gstRegNo)}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
 				</td>
 			</tr>
@@ -39,7 +39,7 @@
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
 				<td><p:inputText disabled="true" size="30"
-						value="#{simpleQuoteBackingBean.managedBean.smGstSupplier.gstEffDate}">
+						value="#{simpleQuoteBackingBean.getText(simpleQuoteBackingBean.managedBean.smGstSupplier.gstEffDate)}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText> <ac:iconTooltip
@@ -48,7 +48,7 @@
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
 				<td><p:inputText disabled="true" size="40"
-						value="#{simpleQuoteBackingBean.managedBean.smGstSupplier.gstDeclaredDate}">
+						value="#{simpleQuoteBackingBean.getText(simpleQuoteBackingBean.managedBean.smGstSupplier.gstDeclaredDate)}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" />

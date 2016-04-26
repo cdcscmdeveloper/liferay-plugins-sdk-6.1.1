@@ -248,6 +248,10 @@ public class PurchaseInquiryBackingBean extends
 									ParameterTypeConst.PROCUREMENT_TYPE,
 									Boolean.FALSE));
 		}
+		
+		if(cmSupplierItem.getLeadTime() != null) {
+			requestNoteDtl.setDeliverTerm(cmSupplierItem.getLeadTime().intValue());
+		}
 
 		List<CmPricing> cmPricings = new ArrayList<CmPricing>();
 		if (cmSupplierItem.getCmPricings() != null
