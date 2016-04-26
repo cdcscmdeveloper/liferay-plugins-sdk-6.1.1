@@ -4454,8 +4454,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("amendBondValue", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() != null 
 						? amountDF.format(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt()) : amountDF.format(BigDecimal.ZERO));
 			} else {
-				context.put("bondValue","TB");
-				context.put("amendBondValue","TB");
+				context.put("bondValue","T/B");
+				context.put("amendBondValue","T/B");
 			}
 		}
 		// Integrity Pact (Akuan Pembida Berjaya)
