@@ -1736,11 +1736,10 @@ public class SmCommonUtil {
 	public static WorklistItemVO getBpmAssignedTaskByDocNo(String docNo) {
 		WorklistItemVO retVal = null;
 		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
 		bpmReqDTO.setDocNumber(docNo);
-		bpmReqDTO.setCtxToken(token);
+		bpmReqDTO.setState("ASSIGNED");
 		BpmResponseDTO bpmResDTO = (BpmResponseDTO) SmServiceLookup.getBpmSO()
-				.getTasksByDocNumber(bpmReqDTO);
+				.getTasks(bpmReqDTO);
 		if (bpmResDTO.getWorklistVO() != null
 				&& !EntityHelper.isCollectionEmpty(bpmResDTO.getWorklistVO()
 						.getWorklistItem())) {
