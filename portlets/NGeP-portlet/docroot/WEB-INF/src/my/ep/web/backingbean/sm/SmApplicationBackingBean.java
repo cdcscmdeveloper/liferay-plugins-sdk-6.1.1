@@ -4436,16 +4436,20 @@ public class SmApplicationBackingBean extends
 						.getCategoryL3Id() == null) {
 			getManagedBean().getSelectedMachine().setCategoryCode(null);
 		}
-		if (getManagedBean().getSelectedMachine().getMachine() != null
-				&& getManagedBean().getSelectedMachine().getMachine()
-						.getMachineId() == null) {
-			getManagedBean().getSelectedMachine().setMachine(null);
+		if (getManagedBean().getSelectedMachine().getMachine() != null) {
+			if ((getManagedBean().getSelectedMachine().getMachine()
+					.getMachineId() == null || getManagedBean()
+					.getSelectedMachine().getMachine().getMachineId()
+					.compareTo(Long.parseLong("-1")) == 0)) {
+				getManagedBean().getSelectedMachine().setMachine(null);
+			} else {
+				getManagedBean().getSelectedMachine().setMachineType(
+						StringUtils.EMPTY);
+			}
 		}
 		if (getManagedBean().getSelectedMachine().getCategoryType() != null
 				&& getManagedBean().getSelectedMachine().getCategoryType()
-						.getParameterId() != null
-				&& getManagedBean().getSelectedMachine().getCategoryType()
-						.getParameterId().compareTo(Long.parseLong("-1")) == 0) {
+						.getParameterId() == null) {
 			getManagedBean().getSelectedMachine().setCategoryType(null);
 		}
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -4486,10 +4490,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setRentPrevVal(macBean.getValue());
-		if (StringUtils.isBlank(macBean.getMachineType())) {
-			getManagedBean().setOthersMachine(false);
-		} else {
-			getManagedBean().setOthersMachine(true);
+		if (!StringUtils.isBlank(macBean.getMachineType())) {
+			macBean.setMachine(new PmMachine());
+			macBean.getMachine().setMachineId(-1L);
 		}
 		getManagedBean().setCategoryTypeItems(
 				SmApplicationUtil.getSelectedCategoryTypeItems(getManagedBean()
@@ -4553,13 +4556,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public void onChangeCategoryType() {
 		// set selected category type
-		if (getManagedBean().getSelectedMachine().getCategoryType()
-				.getParameterId().compareTo(Long.parseLong("-1")) != 0) {
-			getManagedBean().getSelectedMachine().setCategoryType(
-					SmApplicationUtil.retrievePmParameterById(getManagedBean()
-							.getSelectedMachine().getCategoryType()
-							.getParameterId()));
-		}
+		getManagedBean().getSelectedMachine().setCategoryType(
+				SmApplicationUtil.retrievePmParameterById(getManagedBean()
+						.getSelectedMachine().getCategoryType()
+						.getParameterId()));
 
 		// set dropdown category codes
 		if (!StringUtils.isBlank(getManagedBean().getSelectedMachine()
@@ -4580,19 +4580,12 @@ public class SmApplicationBackingBean extends
 		}
 
 		// set dropdown machines
-		if (getManagedBean().getSelectedMachine().getCategoryType()
-				.getParameterId().compareTo(Long.parseLong("-1")) == 0) {
-			getManagedBean().getSelectedMachine().setMachine(null);
-			getManagedBean().setMachineItems(null);
-		} else {
-			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
-			getManagedBean().getSelectedMachine().setMachineType(
-					StringUtils.EMPTY);
-			getManagedBean().setMachineItems(
-					SmApplicationUtil
-							.getMachineItemsByMachineDetails(getManagedBean()
-									.getSelectedMachine()));
-		}
+		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
+		getManagedBean().getSelectedMachine().setMachineType(StringUtils.EMPTY);
+		getManagedBean().setMachineItems(
+				SmApplicationUtil
+						.getMachineItemsByMachineDetails(getManagedBean()
+								.getSelectedMachine()));
 
 		getManagedBean().getSelectedMachine().setCategoryCode(
 				new PmCategoryL3());
@@ -4611,17 +4604,21 @@ public class SmApplicationBackingBean extends
 						.retrieveCategoryL3ById(reqDTO).getCategoryL3());
 
 		// set dropdown machines
-		if (getManagedBean().isOthersMachine()) {
-			getManagedBean().getSelectedMachine().setMachine(null);
-			getManagedBean().setMachineItems(null);
-		} else {
-			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
-			getManagedBean().getSelectedMachine().setMachineType(
-					StringUtils.EMPTY);
-			getManagedBean().setMachineItems(
-					SmApplicationUtil
-							.getMachineItemsByMachineDetails(getManagedBean()
-									.getSelectedMachine()));
+		getManagedBean().getSelectedMachine().setMachine(new PmMachine());
+		getManagedBean().getSelectedMachine().setMachineType(StringUtils.EMPTY);
+		getManagedBean().setMachineItems(
+				SmApplicationUtil
+						.getMachineItemsByMachineDetails(getManagedBean()
+								.getSelectedMachine()));
+	}
+
+	public void onChangeMachine() {
+		if (getManagedBean().getSelectedMachine().getMachine() != null) {
+			if (getManagedBean().getSelectedMachine().getMachine()
+					.getMachineId().compareTo(Long.parseLong("-1")) != 0) {
+				getManagedBean().getSelectedMachine().setMachineType(
+						StringUtils.EMPTY);
+			}
 		}
 	}
 
