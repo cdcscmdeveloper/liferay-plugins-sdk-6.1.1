@@ -1512,21 +1512,21 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			if (getManagedBean().getContractVer().getOwnerOrgAddress() != null) {
 				String jabatanAddress = getFullAddress(getManagedBean().getContractVer().getOwnerOrgAddress());
-				jabatanAddress = jabatanAddress.replaceAll("\r\n", "<br />");
-		    	jabatanAddress = jabatanAddress.replaceAll("&", "&#38;");
+				//jabatanAddress = jabatanAddress.replaceAll("\r\n", "<br />");
+		    	//jabatanAddress = jabatanAddress.replaceAll("&", "&#38;");
 				context.put("jabatanAddress", jabatanAddress);
 			} else {
-				context.put("jabatanAddress", " ");
+				context.put("jabatanAddress", "");
 			}
 			context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			context.put("supplierRegNo", getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
 			if (getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
 				String supplierAddress = getFullAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-				supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+				//supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+				//supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		    	context.put("supplierAddress", supplierAddress);
 			} else {
-				context.put("supplierAddress", " ");
+				context.put("supplierAddress", "");
 			}
 			context.put("contractTitle", getManagedBean().getCtContract().getContractName());
 
