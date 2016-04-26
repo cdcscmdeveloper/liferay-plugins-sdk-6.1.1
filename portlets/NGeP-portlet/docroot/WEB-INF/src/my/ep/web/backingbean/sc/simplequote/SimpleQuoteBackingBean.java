@@ -618,7 +618,7 @@ public class SimpleQuoteBackingBean extends
 						
 					} else{
 						// copy all selected suppliers from the catalogue search
-						if (compareSupplierItems == null) {
+				        /*	if (compareSupplierItems == null) {
 							catalogueReqDTO = new CatalogueReqDTO();
 							catalogueReqDTO
 							.setViewSearchBean(new CatalogueBackingBean()
@@ -644,6 +644,7 @@ public class SimpleQuoteBackingBean extends
 							}
 							selectedSuppliers.add(selectedSupplierItem
 									.getSmSupplier());
+							
 							supplierListListener(selectedSuppliers, scQuote);
 
 						} else {
@@ -651,8 +652,14 @@ public class SimpleQuoteBackingBean extends
 							supplierListListener(
 									addSelectedSuppliers(compareSupplierItems,
 											selectedSupplierItem), scQuote);
-						}
+						}*/
 					}
+					
+					List<SmSupplier> selectedSuppliers = new ArrayList<SmSupplier>();
+					selectedSuppliers.add(selectedSupplierItem
+							.getSmSupplier());
+					
+					supplierListListener(selectedSuppliers, scQuote);
 					
 					List<CmSupplierItem> supplierItems = getManagedBean()
 							.getSupplierItems();
@@ -2332,16 +2339,23 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().setSupplierLocLevel(
 						ParameterConst.LOCATION_LEVEL_DISTRICT);
 			}
-			ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
+
+			if(null == getManagedBean().getStoreLocationTree()){
+				ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
+			} else{
+				getManagedBean().setLocationTrees(getManagedBean().getStoreLocationTree());
+			}
 
 		} else {
 			getManagedBean().setByLocality(Boolean.FALSE);
 			if (getManagedBean().getLocationTrees() != null
 					&& getManagedBean().getLocationTrees().size() > 0) {
+				List<TreeNode> locationTrees = new ArrayList<TreeNode>();
+				locationTrees.addAll(getManagedBean().getLocationTrees());
+				getManagedBean().setStoreLocationTree(locationTrees);
 				getManagedBean().getLocationTrees().clear();
 			}
-
-			if (getManagedBean().getScQuote().getLocationStateCriterias() != null
+			/*if (getManagedBean().getScQuote().getLocationStateCriterias() != null
 					&& getManagedBean().getScQuote()
 							.getLocationStateCriterias().size() > 0) {
 				getManagedBean().getScQuote().getLocationStateCriterias()
@@ -2358,25 +2372,39 @@ public class SimpleQuoteBackingBean extends
 							.getLocationDistrictCriterias().size() > 0) {
 				getManagedBean().getScQuote().getLocationDistrictCriterias()
 						.clear();
-			}
+			}*/
 			getManagedBean().setSupplierLocLevel(null);
 		}
 
 		if (getManagedBean().isByBusinessNature()) {
 			getManagedBean().setTabActiveIndex(1);
+
 		} else {
-			if (getManagedBean().getBusinessNatureCriterias() != null
-					&& getManagedBean().getBusinessNatureCriterias().size() > 0) {
-				getManagedBean().getBusinessNatureCriterias().clear();
+			List<ScBusinessNatureQuoteCriteria> businessNatureCriterias = getManagedBean().getBusinessNatureCriterias();
+			if (businessNatureCriterias != null
+					&& businessNatureCriterias.size() > 0) {
+
+				// issue : select one business nature and save then uncheck and check business nature checkbox
+				//re add same business nature and then save 
+				Map<Long, ScBusinessNatureQuoteCriteria> deletedBusinessNatureMap = getManagedBean().getDeletedBusinessNatureMap();
+				if(null == deletedBusinessNatureMap){
+					deletedBusinessNatureMap =  new HashMap<Long, ScBusinessNatureQuoteCriteria>();
+				}
+
+				for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : businessNatureCriterias) {
+					deletedBusinessNatureMap.put(natureQuoteCriteria.getPmBusinessNature().getBusinessNatureId(), natureQuoteCriteria);
+				}
+				getManagedBean().setDeletedBusinessNatureMap(deletedBusinessNatureMap);
+
+				businessNatureCriterias.clear();
 			}
+
 			if (getManagedBean().getBusinessNatures() != null
 					&& getManagedBean().getBusinessNatures().size() > 0) {
 				getManagedBean().getBusinessNatures().clear();
 			}
-		}
 
-		if (!getManagedBean().isByBusinessNature()
-				&& !getManagedBean().isByBusinessNature()) {
+			// set index to default tab
 			getManagedBean().setTabActiveIndex(0);
 		}
 	}
