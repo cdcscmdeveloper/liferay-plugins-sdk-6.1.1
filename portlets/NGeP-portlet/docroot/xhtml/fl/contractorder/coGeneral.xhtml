@@ -117,14 +117,12 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
-				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true"
-						value="#{flOrderBB.managedBean.flRequest.startDate}"
-						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						<p:ajax event="dateSelect"
-							listener="#{flOrderBB.updateDeliveryDate}"
-							update="delEndDate" />
-					</p:calendar></td>
+				<td>
+					<p:inputText size="25" disabled="true" value="#{flOrderBB.managedBean.flRequest.startDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td>
 				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
 						value="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"
@@ -133,11 +131,12 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
-				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true" id="delEndDate"
-						value="#{flOrderBB.managedBean.flRequest.endDate}"
-						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					</p:calendar></td>
+				<td>
+					<p:inputText size="25" disabled="true" value="#{flOrderBB.managedBean.flRequest.endDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>					
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" rendered="false"/></td>
