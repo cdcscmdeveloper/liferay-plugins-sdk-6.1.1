@@ -4130,6 +4130,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    		reports.getScLoaReportAttachment().setFileDesc(item.getFileName());
 	        }
 	    }
+	    
+	    RequestContext.getCurrentInstance().execute("uploadLetterDlg.hide()");
 	}
 	
 	/**
@@ -4161,6 +4163,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		ctBackingBean.getManagedBean().getContractVer().getCommitteDecisionAttachements().add(attachment);
+		RequestContext.getCurrentInstance().execute("uploadComitteDlg.hide()");
 	}
 
 	/**
