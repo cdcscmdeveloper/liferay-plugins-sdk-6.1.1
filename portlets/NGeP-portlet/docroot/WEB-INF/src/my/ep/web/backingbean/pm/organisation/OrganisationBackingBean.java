@@ -1860,13 +1860,23 @@ public class OrganisationBackingBean extends
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnels()
 				.get(index);
 		smPersonnel.setDeleted(true);
+		Long selectedUserId = smPersonnel.getPmUser().getUserId();
+		
 		// this.getManagedBean().getDeletedSmPersonnels()
 		// .add(smPersonnel);// should added to original list before
 		// // save
 		this.getManagedBean().getSmPersonnels().remove(smPersonnel);
 		
-		PmUser user  = getManagedBean().getSupplierUsers().get(index);
-		getManagedBean().getSupplierUsers().remove(user);
+		if(selectedUserId != null && selectedUserId.longValue() > 0) {
+			if(this.getManagedBean().getSupplierUsers() != null && this.getManagedBean().getSupplierUsers().size() > 0) {
+				for(int i = 0; i < this.getManagedBean().getSupplierUsers().size(); i++) {
+					PmUser selectedUser = this.getManagedBean().getSupplierUsers().get(i);
+					if(selectedUser.getUserId().longValue() == selectedUserId.longValue()) {
+						getManagedBean().getSupplierUsers().remove(selectedUser);
+					}
+				}
+			}
+		}
 	}
 
 	/**
