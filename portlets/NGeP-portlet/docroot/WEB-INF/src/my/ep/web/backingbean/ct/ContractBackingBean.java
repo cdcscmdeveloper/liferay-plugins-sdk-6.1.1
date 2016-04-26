@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
@@ -2240,6 +2241,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			    		ctPerformanceBond.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			    	 }
 			     }
+			    RequestContext.getCurrentInstance().execute("uploadBondDlg.hide()");
 			}
 		    
 			/**

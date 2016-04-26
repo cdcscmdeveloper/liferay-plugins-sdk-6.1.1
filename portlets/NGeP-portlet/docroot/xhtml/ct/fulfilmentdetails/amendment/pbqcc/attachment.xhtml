@@ -10,7 +10,7 @@
 			           <td class="TableFieldRight">
 				         <p:commandButton oncomplete="uploadComitteDlg.show();return false;"
 				           disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
-					        update="lampiranComitte, uploadComitteDlg" value="#{lbl['lbl.ct.upload.attach.files']}" immediate="true"/>
+					        update="lampiranComitte, uploadComitteDlg" icon="ui-icon-upload" immediate="true"/>
 			           </td>
 		             </tr>
 		             <tr>
@@ -46,11 +46,11 @@
 		</tr>
 	</table>
 
-	<p:dialog id="uploadComitteDlg" widgetVar="uploadComitteDlg" 
-	   modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+	<p:dialog id="uploadComitteDlg" widgetVar="uploadComitteDlg" resizable="false"
+	   modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+		<p:fileUpload style="display:inline;" dragDropSupport="false" multiple="false"
+		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{amendmentBackingBean.committeeFileUpload}"
 			mode="advanced" id="CommitteUploadId"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
@@ -69,9 +69,6 @@
 			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteComitteDlg.hide();" type="button" />
 		                 </div>
                    </p:confirmDialog>
-
-			
-		
 	</p:panel>		
 		
 </ui:composition>
