@@ -1048,21 +1048,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
 		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
 		List<String> roleCodes = new ArrayList<String>();
-		roleCodes.add(RoleCode.GOVT_SELLER.toString());
-		roleCodes.add(RoleCode.G2G_SUPPLIER_USER.toString());
-		roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.toString());
-		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.toString());
-		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.toString());
-		roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.toString());
-		roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.toString());
-		roleCodes.add(RoleCode.REQUISITIONER.toString());
-		roleCodes.add(RoleCode.RN_APPROVER.toString());
-		roleCodes.add(RoleCode.CT_APPROVER.toString());
-		roleCodes.add(RoleCode.BPK_APPROVER.toString());
-		roleCodes.add(RoleCode.DESK_OFFICER.toString());
-		roleCodes.add(RoleCode.SC_SECRETARY.toString());
-		roleCodes.add(RoleCode.SC_MEMBER.toString());
-		roleCodes.add(RoleCode.SC_CHAIRPERSON.toString());
+		roleCodes.add(RoleCode.GOVT_SELLER.value());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.REQUISITIONER.value());
+		roleCodes.add(RoleCode.RN_APPROVER.value());
+		roleCodes.add(RoleCode.CT_APPROVER.value());
+		roleCodes.add(RoleCode.BPK_APPROVER.value());
+		roleCodes.add(RoleCode.DESK_OFFICER.value());
+		roleCodes.add(RoleCode.SC_SECRETARY.value());
+		roleCodes.add(RoleCode.SC_MEMBER.value());
+		roleCodes.add(RoleCode.SC_CHAIRPERSON.value());
 
 		String roleCode = null;
 
