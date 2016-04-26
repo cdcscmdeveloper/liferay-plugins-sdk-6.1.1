@@ -486,12 +486,15 @@ public class TemplateSpecBackingBean extends
 				&& tplSpecMaster.isWeightageReq()) {
 			newQuestion.setWeightageReq(true);
 		}
-
+		if(null!=tplSpecMaster.getCtPanelItem() && TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newQuestion
+				.getQuestionType())){
+			newQuestion.setCtPanelItem(tplSpecMaster.getCtPanelItem());
+		}
 		if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(newQuestion
 				.getQuestionType()) && row < questionList.size()) {
 			TplSpecQuestion prevSpecQuestion = questionList.get(row);
 			String prevQuestionType = prevSpecQuestion.getQuestionType();
-
+            
 			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(prevQuestionType)) {
 				newQuestion.setParentSpecQuestion(prevSpecQuestion);
 			} else if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC
