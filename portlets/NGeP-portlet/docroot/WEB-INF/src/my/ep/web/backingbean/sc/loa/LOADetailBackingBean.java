@@ -38,6 +38,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -68,6 +69,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
@@ -93,6 +95,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
@@ -130,6 +133,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -2927,9 +2931,16 @@ public class LOADetailBackingBean extends
 			}
 
 		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			Long userId = null;
 
-			Long userId = new FacesScopes().getUserSessionBean().getUserId();
-			
+			if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+				// for s2
+				userId = getActorUserIdByQtIdAndRoleCode(scLoa.getScLoiLoa().getDocId());
+			} else{
+				// for s1
+				userId = new FacesScopes().getUserSessionBean().getUserId();
+			}
+
 			if (userId != null) {
 				IUserSO userSO = null;
 				try {
@@ -2961,6 +2972,32 @@ public class LOADetailBackingBean extends
 		}
 
 		contractAgencyChanged();
+	}
+	
+	private Long getActorUserIdByQtIdAndRoleCode(Long qtId) {
+		Long userId = null;
+		IScActorSO actorSO = null;
+		try {
+			actorSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+
+			ScActorReqDTO reqDTO = new ScActorReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			reqDTO.setDocId(qtId);
+			reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+			
+			ScActor scActor = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO)
+					.getScActor();
+			
+			if (scActor != null) {
+			  userId = scActor.getUserId();	
+			}
+			
+			return userId;
+
+		} finally {
+			actorSO = null;
+		}
 	}
 
 	/**
