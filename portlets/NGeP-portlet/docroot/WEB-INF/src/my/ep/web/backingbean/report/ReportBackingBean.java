@@ -12161,7 +12161,7 @@ public class ReportBackingBean extends
 		smMofRegistrationFeeList = new ArrayList<SelectItem>();
 		smProcessingFeeList = new ArrayList<SelectItem>();
 		smSoftCertificateFeeList = new ArrayList<SelectItem>();
-
+		this.getManagedBean().getLovValuesMap().clear();
 		/*
 		 * if (this.getManagedBean().getSelectedMinistry() == null) {
 		 * this.getManagedBean().setSelectedMinistry(new PmOrgProfile());
@@ -12271,7 +12271,6 @@ public class ReportBackingBean extends
 			// retrieveMinistryList();
 			retriveUserrloeByUserId(this.getModuleValue());
 			retrieveParamCodeByUser();
-
 			roleCodeUsersSetup();
 
 			if ((this.getModuleValue().equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
@@ -12944,7 +12943,7 @@ public class ReportBackingBean extends
 	 */
 	public void onChangeValuesForLOVs() {
 		
-		if (this.getPpYear() != null
+		/*if (this.getPpYear() != null
 				&& this.getPpYear() != ReportConst.EMPTY_VAL) {
 			if ((this.getManagedBean().getSelectedMinistry() != null && this
 					.getManagedBean().getSelectedMinistry().getPmOrgValidity()
@@ -12960,9 +12959,74 @@ public class ReportBackingBean extends
 							.getPmOrgValidity().getOrgName() != null)) {
 				this.setValuesEmpty(false);
 			}
-		}
+		}*/
+		
+		refreshLovData();
 	}
 
+	
+	/**
+	 * Refresh lov data.
+	 */
+	private void refreshLovData() {
+
+		if (this.getManagedBean().getSelectedMinistry() != null
+				&& this.getManagedBean().getSelectedMinistry()
+						.getPmOrgValidity().getOrgName() != null) {
+
+			if (this.getManagedBean().getLovValuesMap() != null
+					&& !(this.getManagedBean().getLovValuesMap().isEmpty())
+					&& !this.getManagedBean()
+							.getLovValuesMap()
+							.get("0")
+							.equals(this.getManagedBean().getSelectedMinistry()
+									.getPmOrgValidity().getOrgName())) {
+
+				this.getManagedBean().setSelectedPegwaiPengawal(null);
+
+				this.getManagedBean().setSelectedKumpulanPTJ(null);
+
+				this.getManagedBean().setSelectedPTJ(null);
+			}
+
+			this.getManagedBean()
+					.getLovValuesMap()
+					.put("0",
+							this.getManagedBean().getSelectedMinistry()
+									.getPmOrgValidity().getOrgName());
+
+			if (this.getManagedBean().getSelectedPegwaiPengawal() != null
+					&& this.getManagedBean().getSelectedPegwaiPengawal()
+							.getPmOrgValidity() != null) {
+				this.getManagedBean()
+						.getLovValuesMap()
+						.put("1",
+								this.getManagedBean()
+										.getSelectedPegwaiPengawal()
+										.getPmOrgValidity().getOrgName());
+			}
+			if (this.getManagedBean().getSelectedKumpulanPTJ() != null
+					&& this.getManagedBean().getSelectedKumpulanPTJ()
+							.getPmOrgValidity() != null) {
+				this.getManagedBean()
+						.getLovValuesMap()
+						.put("2",
+								this.getManagedBean().getSelectedKumpulanPTJ()
+										.getPmOrgValidity().getOrgName());
+			}
+			if (this.getManagedBean().getSelectedPTJ() != null
+					&& this.getManagedBean().getSelectedPTJ()
+							.getPmOrgValidity() != null) {
+				this.getManagedBean()
+						.getLovValuesMap()
+						.put("3",
+								this.getManagedBean().getSelectedPTJ()
+										.getPmOrgValidity().getOrgName());
+			}
+
+		}
+	}
+	
 	public void onCompanyNameChangeForLOV() {
 		if (this.getManagedBean().getSelectedOrgProfile() != null
 				&& this.getManagedBean().getSelectedOrgProfile()

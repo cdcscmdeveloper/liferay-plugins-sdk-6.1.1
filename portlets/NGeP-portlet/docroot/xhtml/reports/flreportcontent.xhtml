@@ -24,6 +24,7 @@
 											lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 											headerText="#{lbl['lbl.rpt.ministry']}" readonly="true"
 											value="#{reportBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+											postUpdateListener="#{reportBackingBean.onChangeValuesForLOVs()}"
 											saveObject="reportBackingBean.managedBean.selectedMinistry"
 											conditionField="#{reportBackingBean.constructMinistryConditionFields()}" />
 										<p:message id="lovFlMinistryMsg" for="lovFlMinistry"
