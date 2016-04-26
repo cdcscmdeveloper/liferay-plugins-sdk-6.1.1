@@ -2779,7 +2779,7 @@ public class QTDetailBackingBean extends
 					ScQtApprovalRequest scQtApprovalDtl = new ScQtApprovalRequest();
 					ParameterReqDTO reqDTO1 = new ParameterReqDTO();
 					reqDTO1.setParameterCode(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL);
-					reqDTO1.setParameterType(ParameterTypeConst.APPROVAL_CATEGORY);
+					reqDTO1.setParameterType(ParameterTypeConst.APPROVAL_REQUEST_TYPES);
 					PmParameter parameter = getParameterSO()
 							.retrieveParameterByTypeAndCode(reqDTO1)
 							.getPmParameter();
@@ -2787,6 +2787,11 @@ public class QTDetailBackingBean extends
 					scQtApprovalDtl.setScQtApproval(publicationApproval);
 					approvalDtls.add(scQtApprovalDtl);
 					publicationApproval.setScQtApprovalDtls(approvalDtls);
+					reqDTO1.setParameterCode(ParameterConst.APPROVAL_CATEGORY_PTJ);
+					reqDTO1.setParameterType(ParameterTypeConst.APPROVAL_CATEGORY);
+					parameter = getParameterSO()
+							.retrieveParameterByTypeAndCode(reqDTO1)
+							.getPmParameter();
 					publicationApproval.setApprovalCategory(parameter);
 
 				} 
