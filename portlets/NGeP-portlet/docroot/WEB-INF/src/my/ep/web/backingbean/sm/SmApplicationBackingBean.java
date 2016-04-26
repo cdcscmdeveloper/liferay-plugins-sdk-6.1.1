@@ -4461,6 +4461,12 @@ public class SmApplicationBackingBean extends
 		}
 		saveOrUpdateAppl();
 		assignValReqdToFalse();
+		
+		//set default machine if null to avoid null in screen dialog after save
+		if(getManagedBean().getSelectedMachine().getMachine()==null){
+			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
+		}
+		
 		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
 	}
 
