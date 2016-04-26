@@ -229,7 +229,7 @@
 					<p:inputText style="width:20px;margin-top: 8px;"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 						size="6" maxlength="4"
-						disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag or isViewOnly}"
+						disabled="#{(requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag or isViewOnly) or requestNoteDtl.showPurchaseInquiry}"
 						id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}"
 						required="#{!requestNoteDtl.selected}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
