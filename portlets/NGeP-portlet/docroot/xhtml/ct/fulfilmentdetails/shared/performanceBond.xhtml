@@ -105,7 +105,7 @@
 							<p:commandButton oncomplete="uploadBondDlg.show();return false;" 
 							   process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
 									rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null}" 
-							     style="float:left;" icon="iconAttachment">
+							     style="float:left;" icon="ui-icon-upload">
 							</p:commandButton>
 							<h:commandLink
 								title="#{varBond.fileName}"
@@ -147,10 +147,10 @@
 			width="700px" height="350" styleClass="pop_up_top"
 			header="#{lbl['lbl.bpm.choose.file']}">
 			<p:ajax event="close" />
-			<p:fileUpload style="display:inline;" 
+			<p:fileUpload style="display:inline;"  dragDropSupport="false"
 			   	fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
-			    mode="advanced" id="performanceFileuploadId"
-			 	sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+			    mode="advanced" id="performanceFileuploadId" multiple="false"
+			 	sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  
 				update=":form:tableBond">
