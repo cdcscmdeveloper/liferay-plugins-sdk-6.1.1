@@ -9798,7 +9798,7 @@ public class ReportBackingBean extends
 	private void assignValReqdToTrue() {
 		log.info("ReportBackingBean-assignValReqdToTrue");
 		this.setShowParentMsg(false);
-		// this.setValueReqd(true);
+		this.setValueReqd(true);
 		if (this.reportValue != null
 				&& this.reportValue
 						.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL)) {
