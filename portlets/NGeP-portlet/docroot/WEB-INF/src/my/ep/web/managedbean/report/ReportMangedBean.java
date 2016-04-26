@@ -86,6 +86,9 @@ public class ReportMangedBean extends BaseManagedBean {
 	
 	/** The lovs values map. */
 	private HashMap<String,String> lovValuesMap=new HashMap<String,String>();
+	
+	/** The lov new values map. */
+	private HashMap<String,String> lovNewValuesMap=new HashMap<String,String>();
 
 	/** The sc loa. */
 	private ScLoa scLoa;
@@ -188,8 +191,8 @@ public class ReportMangedBean extends BaseManagedBean {
 	/**
 	 * Sets the lovs values map.
 	 * 
-	 * @param lovsValuesMap
-	 *            the lovsValuesMap to set
+	 * @param lovValuesMap
+	 *            the lov values map
 	 */
 	public void setLovValuesMap(HashMap<String, String> lovValuesMap) {
 		this.lovValuesMap = lovValuesMap;
@@ -599,6 +602,25 @@ public class ReportMangedBean extends BaseManagedBean {
 	 */
 	public PmOrgProfile getSelectedMinistry() {			
 		return selectedMinistry;
+	}
+
+	/**
+	 * Gets the lov new values map.
+	 * 
+	 * @return the lovNewValuesMap
+	 */
+	public HashMap<String, String> getLovNewValuesMap() {
+		return lovNewValuesMap;
+	}
+
+	/**
+	 * Sets the lov new values map.
+	 * 
+	 * @param lovNewValuesMap
+	 *            the lovNewValuesMap to set
+	 */
+	public void setLovNewValuesMap(HashMap<String, String> lovNewValuesMap) {
+		this.lovNewValuesMap = lovNewValuesMap;
 	}
 
 	/**
