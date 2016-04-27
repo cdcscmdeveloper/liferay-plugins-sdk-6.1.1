@@ -47,8 +47,8 @@
 						<h:outputText value="#{lbl['lbl.sc.date']}"/>
 				</f:facet>
 				<p:calendar id="date" readonlyInput="true" disabled="#{!isEditableStatus or afterNegotiation or lOIDetailBackingBean.managedBean.readOnly}" required="#{!negoloc.selected}" label="#{lbl['lbl.sc.date']}"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
-					mindate="#{DateUtils.getCurrentDateWithoutTime()}"
+					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" showOn="button"
+					mindate="#{DateUtils.getCurrentDate()}"
 					size="12" value="#{negoloc.negoDate}" />
 					<p:message id="dateMsg" for="date" display="icon" />
 			</p:column>
