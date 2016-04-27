@@ -1085,6 +1085,7 @@ public class SpecificationBackingBean extends
 				else if(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL.equals(item.getItemCategoryId().getParameterCode())){
 					specMaster.setCtPanelItem(item);
 					String description=item.getCtPanelItemGroup().getGroupName();
+					description=description.concat("-");
 					itemName=description.concat(item.getItemName());
 					panelCoverage=item.getPanelCoverageId().getParameterCode();
 					//locationLevel=item.getLocationLevelId().getParameterCode();
