@@ -302,8 +302,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
+				boolean isPendingAP59Decision = false;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
+					isPendingAP59Decision = true;
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
@@ -316,7 +318,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
-					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && !isPendingAP59Decision) {
 						Map<String, String> paramMap = new HashMap<String, String>();
 						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getInvoiceNo());
 						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
