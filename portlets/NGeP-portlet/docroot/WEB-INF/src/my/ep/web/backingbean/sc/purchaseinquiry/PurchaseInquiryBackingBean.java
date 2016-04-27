@@ -1076,16 +1076,16 @@ public class PurchaseInquiryBackingBean extends
 								.getProcurementTypeCategory().getParameterId());
 					}
 					
+					StringBuilder sb = new StringBuilder();
+					sb.append("requestNoteItem.requestNoteItemId^");
+					sb.append(scRequestNoteDtl.getRequestItem()
+							.getRequestNoteItemId());
+					
 					// purchase inquiry
 					if (prInquiry.getIsStockAvailable().equals(
 							ParameterConst.PI_NO_STOCK)){
 						
 						// set condition field for saved request note
-						StringBuilder sb = new StringBuilder();
-						sb.append("requestNoteItem.requestNoteItemId^");
-						sb.append(scRequestNoteDtl.getRequestItem()
-								.getRequestNoteItemId());
-
 						if (scRequestNoteDtl.isShowPurchaseInquiry()) {
 							sb.append("|");
 							sb.append("requestSupplierItemId^");
@@ -1095,7 +1095,6 @@ public class PurchaseInquiryBackingBean extends
 							sb.append("^");
 							sb.append(SearchOperator.OPERATOR_NOT_IN.value());
 						}
-						scRequestNoteDtl.setConditionField(sb.toString());
 
 						// bofore save rn set null as supplier item for no stock supplier
 						if (null == requestNote.getCurrentStatus()) {
@@ -1119,6 +1118,8 @@ public class PurchaseInquiryBackingBean extends
 							}
 						}
 					}
+					
+					scRequestNoteDtl.setConditionField(sb.toString());
 					
 					reqNoteBackingBean.getManagedBean().setProcurementType(
 							scRequestNoteDtl.getProcurementType()
