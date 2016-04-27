@@ -1374,7 +1374,7 @@
 												<p:ajax event="blur" partialSubmit="true"
 													update="@([id$=Msg])" />
 											</p:inputText></td>
-										<td><p:message id="smApplicationNoMsg"
+										<td style="width:50%;"><p:message id="smApplicationNoMsg"
 												for="smApplicationNo" display="icon" showDetail="false" /></td>
 									</tr>
 								</table>
@@ -2502,7 +2502,7 @@
 													update="ManDistrict,@([id$=Msg])" />
 
 											</p:selectOneMenu></td>
-										<td><p:message id="ManStateMsg" for="ManState"
+										<td style="width:50%;"><p:message id="ManStateMsg" for="ManState"
 												display="icon" showDetail="false" /></td>
 									</tr>
 								</table>
@@ -2937,7 +2937,7 @@
 								listener="#{reportBackingBean.mofRegNoNumericValidation()}"
 								process="@form" partialSubmit="true" update="@form" />
 						</p:inputText></TD>
-					<TD><p:message id="smMofRegNoToMsg" for="smMofRegNoTo"
+					<TD style="width:12%;"><p:message id="smMofRegNoToMsg" for="smMofRegNoTo"
 							display="icon" showDetail="false" /></TD>
 				</TR>
 			</TABLE>
@@ -3295,7 +3295,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
-					<TD><p:message id="MandatoryToDateMsg" for="MandatoryToDate"
+					<TD style="width:53%;"><p:message id="MandatoryToDateMsg" for="MandatoryToDate"
 							display="icon" showDetail="false" /></TD>
 				</TR>
 			</TABLE>
@@ -3612,7 +3612,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
-					<TD><p:message id="MandatoryCreatedToDateMsg"
+					<TD style="width:53%;"><p:message id="MandatoryCreatedToDateMsg"
 							for="MandatoryCreatedToDate" display="icon" showDetail="false" /></TD>
 				</TR>
 			</TABLE>
@@ -3646,7 +3646,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
-					<TD><p:message id="MandatoryReceivedToDateMsg"
+					<TD style="width:53%;"><p:message id="MandatoryReceivedToDateMsg"
 							for="MandatoryReceivedToDate" display="icon" showDetail="false" /></TD>
 				</TR>
 			</TABLE>
@@ -3836,11 +3836,10 @@
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.receiptdatefrom']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></TD>
-
 						<TD class="columnDateFromClass"><p:calendar showOn="button"
 								navigator="true" required="true"
 								label="#{lbl['lbl.rpt.receiptdatefrom']}" display="inline"
-								readonlyInput="true" size="9"
+								readonlyInput="true" size="9" id="MandatoryFromDate"
 								value="#{reportBackingBean.fromDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								partialSubmit="true" process="@form">
@@ -3851,27 +3850,28 @@
 						<TD class="columnGenClass"><p:outputLabel
 								value="#{lbl['lbl.rpt.transactiondatefrom']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></TD>
-
 						<TD class="columnDateFromClass"><p:calendar showOn="button"
-								navigator="true" required="true"
+								navigator="true" required="true" id="MandatoryFromDate"
 								label="#{lbl['lbl.rpt.transactiondatefrom']}" display="inline"
 								readonlyInput="true" size="9"
 								value="#{reportBackingBean.fromDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								partialSubmit="true" process="@form">
-							</p:calendar></TD>
+							</p:calendar></TD>						
 					</c:if>
-
+	                <TD><p:message id="MandatoryFromDateMsg" for="MandatoryFromDate"
+							display="icon" showDetail="false" /></TD>
 					<TD class="columnDateToClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
 					<TD><p:calendar showOn="button" navigator="true"
 							required="true" label="#{lbl['lbl.rpt.dtRangeTo']}"
 							display="inline" readonlyInput="true" size="9"
-							value="#{reportBackingBean.toDate}"
+							value="#{reportBackingBean.toDate}" id="MandatoryToDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
-
 						</p:calendar></TD>
+						<TD style="width:53%;"><p:message id="MandatoryToDateMsg" for="MandatoryToDate"
+							display="icon" showDetail="false" /></TD>
 				</TR>
 			</TABLE>
 		</c:if>
@@ -3892,21 +3892,24 @@
 					<TD class="columnDateFromClass"><p:calendar showOn="button"
 							navigator="true" required="true"
 							label="#{lbl['lbl.rpt.dateFrom']}" display="inline"
-							readonlyInput="true" size="9"
+							readonlyInput="true" size="9" id="MandatoryFromDate"
 							value="#{reportBackingBean.fromDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
+						<TD><p:message id="MandatoryFromDateMsg" for="MandatoryFromDate"
+							display="icon" showDetail="false" /></TD>
 					<TD class="columnDateToClass"><p:outputLabel
 							value="#{lbl['lbl.rpt.dtRangeTo']}" /></TD>
 					<TD><p:calendar showOn="button" navigator="true"
 							required="true" label="#{lbl['lbl.rpt.dtRangeTo']}"
 							display="inline" readonlyInput="true" size="9"
-							value="#{reportBackingBean.toDate}"
+							value="#{reportBackingBean.toDate}" id="MandatoryToDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form">
-
 						</p:calendar></TD>
+					<TD style="width:53%;"><p:message id="MandatoryToDateMsg" for="MandatoryToDate"
+							display="icon" showDetail="false" /></TD>
 				</TR>
 			</TABLE>
 		</c:if>
