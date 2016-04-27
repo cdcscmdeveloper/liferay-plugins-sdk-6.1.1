@@ -9,7 +9,7 @@
 	      columnClasses="columnWidth200,columnWidth200,columnWidth180,columnWidth300">
 			 
 			     <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required" />
-				 <h:panelGrid columns="5">
+				 <h:panelGrid columns="5" styleClass="top-aligned-columns">
 				     <p:inputTextarea id="circularNoUpTxt" style="width:170px; margin-top:2px;margin-bottom:2px" rows="5"
 					 	required="true" maxlength="60"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}"  
@@ -22,7 +22,7 @@
 				  </h:panelGrid>
 				   
 				  	<p:outputLabel  value="#{lbl['lbl.ct.circular.central.name']}"  styleClass="required"/>
-				    <h:panelGrid columns="5">
+				    <h:panelGrid columns="5" styleClass="top-aligned-columns">
 				        <p:inputTextarea id="circularNameUpTxt" rows="5" style="width:200px;" 
 				              maxlength="500" required="true" 
 						      disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
