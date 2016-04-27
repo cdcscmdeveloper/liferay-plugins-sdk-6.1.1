@@ -19,6 +19,7 @@
 				value="#{specificationBackingBean.managedBean.stageTwoTechComplianceList}"
 				editable="true"
 				selection="#{specificationBackingBean.managedBean.stageTwoTechComplianceSelect}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{compilance.documentId}" rowIndexVar="index">
 				<ac:paginator for="compilencestageTwo"></ac:paginator>
 				<p:column selectionMode="multiple"

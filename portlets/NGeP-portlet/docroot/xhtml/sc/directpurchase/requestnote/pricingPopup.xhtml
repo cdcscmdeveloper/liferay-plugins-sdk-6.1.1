@@ -41,6 +41,7 @@
 
 		<h:panelGroup>
 			<p:dataTable id="priceDtl" var="itemPrice" styleClass="BtnSpacing"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{requestNoteBackingBean.managedBean.pricingList}"
 				rowKey="#{itemPrice}" rowIndexVar="index">
 				<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:45%"

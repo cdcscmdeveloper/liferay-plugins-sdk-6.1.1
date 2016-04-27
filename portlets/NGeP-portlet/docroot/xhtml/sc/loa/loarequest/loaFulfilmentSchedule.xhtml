@@ -36,6 +36,7 @@
 				</h:panelGrid>
 				<p:dataTable id="frequencySchedule" var="frequency"
 					rowIndexVar="index"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scQtSchedules}">
 					<ac:paginator for="frequencySchedule" />
 
@@ -131,6 +132,7 @@
 				</h:panelGrid>
 				<p:dataTable id="progressivePayment" var="payment"
 					rowIndexVar="index"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{lOADetailBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
 

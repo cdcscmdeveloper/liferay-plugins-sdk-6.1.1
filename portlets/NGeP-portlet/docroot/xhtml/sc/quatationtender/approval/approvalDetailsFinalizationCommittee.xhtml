@@ -9,6 +9,7 @@
 	<p:panel id="fcreqDetails" header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="fcareqdtlsid"
 			value="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="fcrequestdetails" >
 
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
@@ -23,6 +24,7 @@
 		toggleable="true">
 		<p:dataTable id="finalizationsecretaryid"
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="approverSettings">
 			<p:column headerText="#{lbl['lbl.sc.finalization.committee']}">
 				<c:choose>

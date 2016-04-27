@@ -13,6 +13,7 @@
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scQtDeductions}"
 			selection="#{lOIDetailBackingBean.managedBean.selectedScQtDeduction}"
 			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selectionMode="single">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
@@ -95,6 +96,7 @@
 				var="scQtDeductionClause"
 				value="#{lOIDetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedDeductionClauses}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
 
 				<ac:paginator for="deductClauseTbl" />

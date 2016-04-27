@@ -16,6 +16,7 @@
 			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.stage.instruction']}" escape="false" />
 
 			<p:dataTable var="technicalEvaluate" id="technicalEvaluation"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				editable="true" rowIndexVar="index"
 				first="#{evaluationBackingBean.managedBean.evaluationtechnicalTableRow}"
 				rowKey="#{technicalEvaluate}"

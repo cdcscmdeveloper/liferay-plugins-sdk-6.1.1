@@ -15,6 +15,7 @@
 		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}" toggleable="true">
 			<p:dataTable id="dpLoaTbl" var="scPurchaseRequest"
 				value="#{dpLOABackingBean.managedBean.purchaseRequestList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rows="10" rowIndexVar="rowIndex">
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">

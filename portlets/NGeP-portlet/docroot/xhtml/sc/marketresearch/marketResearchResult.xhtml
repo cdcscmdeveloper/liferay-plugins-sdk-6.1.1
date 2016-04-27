@@ -12,6 +12,7 @@
 			<p:dataTable id="marketdetailsId"
 				rows="10" lazy="true"
 				value="#{marketResearchBackingBean.marketResearchDataModel}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				width="100%" var="scMarketData">
 
 				<ac:paginator for="marketdetailsId"></ac:paginator>

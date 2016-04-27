@@ -123,6 +123,7 @@
 							rows="10"
 							selection="#{lOIDetailBackingBean.managedBean.selectedRecommendList}"
 							rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							rendered="#{lOIDetailBackingBean.managedBean.itemized}">
 
 							<p:ajax event="rowSelect" partialSubmit="true" process="@this"

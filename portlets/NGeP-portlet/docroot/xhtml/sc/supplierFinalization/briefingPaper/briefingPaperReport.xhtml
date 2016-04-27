@@ -13,6 +13,7 @@
 			widgetVar="reportWidget" var="report"
 			value="#{suppFinalizationBackingBean.managedBean.documentList}" 
 			rows="10" styleClass="documentslist"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{report}" rowIndexVar="rowIndex">
 			
 			<ac:paginator for="reportTbl" />

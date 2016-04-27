@@ -11,7 +11,8 @@
 		
 		<p:dataTable id="reportTbl" value="#{consolidationReportBackingBean.managedBean.finalizationReports}" 
 			widgetVar="reportWidget" var="report" rows="10" rowKey="#{report}" 
-			rowIndexVar="rowIndex" styleClass="documentslist" 
+			rowIndexVar="rowIndex" styleClass="documentslist"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{consolidationReportBackingBean.managedBean.selectedFinalizationReports}">
 						
 			<ac:paginator for="reportTbl" />

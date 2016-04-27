@@ -10,6 +10,7 @@
 		<p:dataTable id="fcRequestPnlid"
 			value="#{approvalBackingBean.managedBean.scQtApprovalRequestList}"
 			var="fcRequestDtls" rowIndexVar="index" editable="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{fcRequestDtls}">
 
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
@@ -28,6 +29,7 @@
 		rendered="#{approvalBackingBean.managedBean.qt.qtType eq 'R'}">
 		<p:dataTable id="supplierlistid" var="qtSupplier" rows="10"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{qtSupplier}">
 			
 			<ac:paginator for="supplierlistid" />

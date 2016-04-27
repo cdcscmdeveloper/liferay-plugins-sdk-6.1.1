@@ -40,6 +40,7 @@
 			<p:spacer height="20px"></p:spacer>
 
 			<p:dataTable id="loiLoaDtl" var="loiLoa"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{lOIDetailBackingBean.managedBean.recSupplierList}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedLoiLoa}"
 				selectionMode="single" rowKey="#{loiLoa}" rows="10"
@@ -94,6 +95,7 @@
 				value="#{lOIDetailBackingBean.managedBean.loiLoaListTitle}" />
 			
 				<p:dataTable id="loiLoaId" var="loiloaBean"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{lOIDetailBackingBean.managedBean.loiLoaBeans}"
 					rowIndexVar="rowIndex">
 

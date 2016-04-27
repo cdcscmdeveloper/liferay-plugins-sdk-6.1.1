@@ -12,6 +12,7 @@
 		<p:dataTable id="negoSuppList" var="scLoi"
 			value="#{lOIDetailBackingBean.managedBean.lois}"
 			selection="#{lOIDetailBackingBean.managedBean.scLoi}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selectionMode="single" rowKey="#{scLoi}">
 
 			<p:ajax event="rowSelect" update=":form:ItemDetAndNegoTerm"
@@ -37,6 +38,7 @@
 			rendered="#{lOIDetailBackingBean.managedBean.itemDetailsFlag}">
 			<p:dataTable id="itemDtlID" var="loiLoaItem"
 				value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{itemPrice}" rowIndexVar="index">
 
 				<p:columnGroup type="header">
@@ -248,6 +250,7 @@
 			<p:dataTable id="negoTermList" var="scLoiTerm"
 				value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoTerms}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedNegoTermsList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{scLoiTerm}" widgetVar="negoTermListWidget">
 
 				<ac:paginator for="negoTermList" />
@@ -275,6 +278,7 @@
 				widgetVar="suppDocTblWidget"
 				value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs}"
 				rows="10" rowKey="#{scLoiSuppDoc}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs}">
 				<ac:paginator for="suppDocTbl" />
 

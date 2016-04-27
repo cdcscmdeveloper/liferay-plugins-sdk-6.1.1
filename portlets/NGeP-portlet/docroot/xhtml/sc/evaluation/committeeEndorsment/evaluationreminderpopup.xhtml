@@ -11,6 +11,7 @@
 		widgetVar="evaluationreminder" position="top" width="600" height="400">
 		<p:panel>
 			<p:dataTable id="evaluationcommitteereminder" var="reminderpopup"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				editable="true">
 				<ac:paginator for="evaluationcommitteereminder" />
 				<p:column headerText="#{lbl['lbl.sc.name']}"

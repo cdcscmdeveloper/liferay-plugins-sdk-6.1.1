@@ -10,6 +10,7 @@
 		toggleable="true">
 		<p:dataTable id="bankdetails" selectionMode="single" rows="10"
 			value="#{smAppl.smSupplierBanks}" rowIndexVar="index" var="bankDtls"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{bankDtls}">
 			<ac:paginator for="bankdetails" />
 			<p:ajax event="rowSelect"
@@ -32,6 +33,7 @@
 		<p:dataTable id="cheque"
 			value="#{supplierProposalDetailBackingBean.managedBean.smChequeSignatories}"
 			rowIndexVar="index" var="cheque" rows="10"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{cheque}">
 			<ac:paginator for="cheque"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.spec.cheque.sign']}" style="width : 25%;">

@@ -10,7 +10,8 @@
 		styleClass="pop_up_top" header="#{lbl['lbl.sc.sf.board.of.directors']}" 
 		width="750" height="250">
 		
-		<p:dataTable var="smPersonnel" value="#{consolidationReportBackingBean.managedBean.boardofDirectors}" 
+		<p:dataTable var="smPersonnel" value="#{consolidationReportBackingBean.managedBean.boardofDirectors}"
+		             emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 					 rows="10">
 
 			<p:column headerText="#{lbl['lbl.sc.mof.no']}"

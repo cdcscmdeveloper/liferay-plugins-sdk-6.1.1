@@ -17,6 +17,7 @@
 		
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{suppFinalizationBackingBean.managedBean.itemList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="itemListTbl" />
 

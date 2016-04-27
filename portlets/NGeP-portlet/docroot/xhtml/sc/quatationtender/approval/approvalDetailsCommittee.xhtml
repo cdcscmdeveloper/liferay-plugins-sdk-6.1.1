@@ -8,6 +8,7 @@
 	
 	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="committeereqdtlsid" var="committeerequestdetails"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{committeeApprovalDtlsList}" rowIndexVar="index"
 			editable="true" rowKey="#{committeerequestdetails}">
 

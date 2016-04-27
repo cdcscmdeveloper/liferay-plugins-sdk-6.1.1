@@ -46,6 +46,7 @@
 
 			<p:dataTable id="itemdtlid" var="panelItem" rowIndexVar="index"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.panelItemList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{panelItem}" rows="10">
 
 				<ac:paginator for="itemdtlid" />

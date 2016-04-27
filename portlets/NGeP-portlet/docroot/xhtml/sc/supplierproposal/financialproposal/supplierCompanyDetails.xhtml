@@ -121,6 +121,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.factory.type']}" toggleable="true">
 		<p:dataTable id="facility" rowIndexVar="index" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{supplierProposalDetailBackingBean.managedBean.supplierFacilities}" var="facility">
 			<ac:paginator for="facility"></ac:paginator>
 			<p:column headerText=" #{lbl['lbl.sc.name']}" style="width : 25%; white-space : normal;">

@@ -21,6 +21,7 @@
 
 		<p:dataTable id="bankstatmentsid" var="bankstmt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPBankStmts}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{bankstmt}" rowIndexVar="rowIndex">
 
 			<p:column headerText="#{lbl['lbl.sc.sp.month']}">

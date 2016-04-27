@@ -11,6 +11,7 @@
 		
 		<p:dataTable id="committeeEndorsement" var="endorsement"
 			value="#{suppFinalBiddingBackingBean.managedBean.committeeEndorsementList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{endorsement}" rowIndexVar="index">
 			<ac:paginator for="committeeEndorsement" />
 

@@ -16,6 +16,7 @@
 		<p:dataTable id="pjtDelivered" var="delivery" editable="true"
 			rows="10" style="width:100%" widgetVar="deliveryService"
 			rowIndexVar="index" value="#{deliveryList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{selectDeliveryList}" rowKey="#{delivery}">
 			<ac:paginator for="pjtDelivered" />
 

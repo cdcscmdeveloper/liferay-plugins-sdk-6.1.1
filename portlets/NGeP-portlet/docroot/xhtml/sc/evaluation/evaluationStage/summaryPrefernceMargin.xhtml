@@ -16,6 +16,7 @@
 		</f:facet>
 
 		<p:dataTable var="prefQualSupplier"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			id="evaluationSummaryPreferencemarginQualifiedSuppliers"
 			value="#{qualifiedPreferenceList}" rows="10" editable="true"
 			lazy="true" rowIndexVar="index" rowKey="#{qualifiedPreferenceListId}">
@@ -143,6 +144,7 @@
 		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			id="evaluationSummaryPreferencemarginDisQualifiedSuppliers"
 			value="#{disQualifiedPreferenceList}" rows="10" editable="true"
 			lazy="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">

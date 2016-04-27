@@ -11,6 +11,7 @@
 
 		<p:dataTable id="scEndorsement" var="committeActivity" rows="10"
 			rowIndexVar="index" widgetVar="prepareCommittee"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{committeeActivityList}">
 			<ac:paginator for="scEndorsement" />
 

@@ -10,6 +10,7 @@
 			 toggleable="true">
 		<p:dataTable id="committeeDtlTbl" var="committeeDtl"
 			value="#{suppFinalBiddingBackingBean.managedBean.committeeList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" rowKey="#{committeeDtl}" rowIndexVar="rowIndex"
 			resizableColumns="false">
 			<ac:paginator for="committeeDtlTbl" />

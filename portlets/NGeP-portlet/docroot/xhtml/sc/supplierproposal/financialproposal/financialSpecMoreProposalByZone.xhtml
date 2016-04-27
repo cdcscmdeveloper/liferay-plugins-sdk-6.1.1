@@ -29,6 +29,7 @@
 		<h:panelGroup id="zoneproposaldtls">
 			<p:dataTable id="proposalid" var="proposalList"
 				value="#{supplierProposalDetailBackingBean.managedBean.qtProposalsList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{proposalList}" rowIndexVar="rowIndex">
 				<p:column style="width:2%">
 					<f:facet name="header">

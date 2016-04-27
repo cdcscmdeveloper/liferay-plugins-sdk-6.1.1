@@ -13,6 +13,7 @@
 
 			<p:dataTable style="width:100%"
 				value="#{noticeBoardBackingBean.categoryCodesDataModel}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				var="scQtCategory" id="restrcatcode" lazy="true" rows="5">
 				 <ac:paginator for="restrcatcode" />
 

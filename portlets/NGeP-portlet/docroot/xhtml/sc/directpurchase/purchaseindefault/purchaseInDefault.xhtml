@@ -108,6 +108,7 @@
 				value="#{lbl['lbl.sc.purchase.in.default.item.details']}" />
 		</f:facet>
 		<p:dataTable id="respDtl" var="itemPrice"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctItemPrices}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
 
@@ -218,6 +219,7 @@
 	<p:panel toggleable="true" header="#{lbl['lbl.sc.companyinfo']}"
 		rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 		<p:dataTable id="panelSuppId" var="panelSupplier"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctPanelSuppliers}"
 			rowKey="#{panelSupplier}" rowIndexVar="index">
 			<ui:param name="smGstSupplier"

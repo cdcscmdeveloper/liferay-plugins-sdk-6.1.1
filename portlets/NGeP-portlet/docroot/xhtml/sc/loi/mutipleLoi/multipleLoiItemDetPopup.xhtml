@@ -13,6 +13,7 @@
 			<p:spacer height="15px" />
 			<p:dataTable id="itemDtl" var="loiloaItem"
 				value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{itemPrice}" rowIndexVar="index">
 
 				<p:column headerText="#{lbl['lbl.sc.zone']}" rendered="#{isZonal}">

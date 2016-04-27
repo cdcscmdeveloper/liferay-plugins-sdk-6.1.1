@@ -36,6 +36,7 @@
 			rendered="#{!simpleQuoteBackingBean.managedBean.scQuote.panel}">
 			<h:panelGrid width="100%" style="margin-top:20px">
 				<p:dataTable id="zoneLocationDataTable"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{simpleQuoteBackingBean.managedBean.zoneTrees}"
 					var="zoneTree" rowIndexVar="index">
 
@@ -105,6 +106,7 @@
 			rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
 			<h:panelGrid width="100%" style="margin-top:20px">
 				<p:dataTable id="panelzoneDataTable"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{simpleQuoteBackingBean.managedBean.zoneTrees}"
 					var="zoneTree" rowIndexVar="index">
 					<p:column headerText="Location">

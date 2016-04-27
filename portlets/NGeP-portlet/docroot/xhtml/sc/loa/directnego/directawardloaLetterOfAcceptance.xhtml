@@ -9,6 +9,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents.content']}"
 		toggleable="true">
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="scLoaReport"
 			value="#{directLOABackingBean.managedBean.scLoa.scLoaReports}"
 			rows="10" rowKey="#{scLoaReport}"
@@ -124,6 +125,7 @@
 	<p:panel header="#{lbl['lbl.sc.supporting.document']}"
 		rendered="#{!isSupplierAckStatus}" toggleable="true">
 		<p:dataTable id="suppDocTbl" var="scLoaSuppDoc"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			widgetVar="suppDocTblWidget"
 			value="#{directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs}"
 			rows="10" rowKey="#{scLoaSuppDoc}"

@@ -11,6 +11,7 @@
 		id="technicalFinancialUploadNoActionChecklistNoScoringSupplierListIds"
 		toggleable="true">
 		<p:dataTable var="complianceTechnicalSupplier" rows="10" lazy="true"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
 			id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"
 			style="width:100%" rowKey="#{complianceTechnicalSupplier}">

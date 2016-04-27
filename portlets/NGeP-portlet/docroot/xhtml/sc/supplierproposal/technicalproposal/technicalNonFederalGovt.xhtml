@@ -24,6 +24,7 @@
 		</table>
 		<p:dataTable id="technongovtid" var="technongovt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{technongovt}" rowIndexVar="rowIndex" rows="10">
 			<ac:paginator for="technongovtid" />
 			<p:column style="width:2% ;" rendered="#{!statusHide}">

@@ -23,6 +23,7 @@
 		<p:dataTable id="briefingdtlid" var="briefingdtls"
 			value="#{bsvdtlbean.briefingList}" rowKey="#{briefingdtls}"
 			rowIndexVar="index" styleClass="briefDetails"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{bsvdtlbean.selectedBriefingDtls}">
 
 			<ac:paginator for="briefingdtlid" />
@@ -127,6 +128,7 @@
 				<p:dataTable id="sitevisitdtlid" var="sitevisitdtls"
 					value="#{bsvdtlbean.sitevisitList}" styleClass="briefDetails"
 					selection="#{bsvdtlbean.selectedSiteVisitDtls}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{sitevisitdtls}" rowIndexVar="rowIndex" editable="true">
 
 					<ac:paginator for="sitevisitdtlid" />

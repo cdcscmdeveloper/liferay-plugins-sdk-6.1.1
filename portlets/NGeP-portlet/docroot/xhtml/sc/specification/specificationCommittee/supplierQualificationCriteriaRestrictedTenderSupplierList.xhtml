@@ -11,6 +11,7 @@
 
 		<p:dataTable id="suppliersTblCommitteeRestricted" rows="10"
 			var="qtSupplier"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{specificationBackingBean.managedBean.restrictedSupplierList}">
 
 			<ac:paginator for="suppliersTblCommitteeRestricted" />

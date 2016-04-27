@@ -9,6 +9,7 @@
 		<p:dataTable id="publicrequestdtlid"
 			value="#{approvalBackingBean.managedBean.scQtApprovalRequestList}"
 			var="publicapproval" rowIndexVar="index" editable="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{publicapproval}">
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
 				<h:outputText

@@ -16,6 +16,7 @@
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
 			rowIndexVar="index" rows="10"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{cateGory}">
 
 			<p:column selectionMode="multiple" style="width:1%" rendered="#{!categoryCodeReadonly}" />
@@ -146,6 +147,7 @@
 			<h:panelGrid width="100%">
 				<p:dataTable id="zoneLocationDataTable" rows="10"
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					var="zoneTree" style="width:100%" rowIndexVar="index">
 	
 					<ac:paginator for="zoneLocationDataTable" />

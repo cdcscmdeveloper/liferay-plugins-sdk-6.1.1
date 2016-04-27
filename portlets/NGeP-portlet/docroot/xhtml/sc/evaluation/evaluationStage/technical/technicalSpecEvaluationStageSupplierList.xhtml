@@ -13,6 +13,7 @@
 
 		<p:dataTable var="templateSpec" id="templateSpecId" editable="true"
 			rows="10" lazy="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
 			rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}">
 			<ac:paginator for="templateSpecId" />

@@ -9,6 +9,7 @@
 	<p:panel id="evaluationReportsFilesDownloadIds" header="#{lbl['lbl.sc.content']}" toggleable="true">
 		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
 			widgetVar="documentWidget"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationBackingBean.managedBean.scQtEvaluationReportList}"
 			selection="#{evaluationBackingBean.managedBean.selectedScQtEvaluationReports}"
 			rowKey="#{scQtEvaluationReport}" rowIndexVar="rowIndex" rows="10">

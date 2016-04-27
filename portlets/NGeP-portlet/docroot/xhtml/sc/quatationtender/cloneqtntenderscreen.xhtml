@@ -69,6 +69,7 @@
 					id="cloneQtsearch" var="tenders"
 					rowKey="#{tenders}" rowIndexVar="rowIndex" 
 					selection="#{qTDetailBB.managedBean.selectedCloneTenderList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					lazy="true">
 				<p:column selectionMode="single" style="width:2%" />
 				<ac:paginator for="cloneQtsearch" />
@@ -106,10 +107,11 @@
 			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 
 
-				<p:dataTable id="clonesection" var="clone"
-					value="#{qTDetailBB.managedBean.cloneAllData}" 
-					selection="#{qTDetailBB.managedBean.selectedCloneAllList}"
+			<p:dataTable id="clonesection" var="clone"
+				value="#{qTDetailBB.managedBean.cloneAllData}" 
+				selection="#{qTDetailBB.managedBean.selectedCloneAllList}"
 				rowKey="#{clone}" rowIndexVar="rowIndex"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rows="10">
 				<p:column selectionMode="multiple" style="width:2%" />
 				

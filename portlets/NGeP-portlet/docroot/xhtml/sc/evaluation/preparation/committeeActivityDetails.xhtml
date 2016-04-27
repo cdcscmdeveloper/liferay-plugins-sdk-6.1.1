@@ -11,6 +11,7 @@
 		toggleable="true">
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" rowKey="#{committeeMember.qtCommitteeActivityId}"
 			value="#{evaluationBackingBean.managedBean.committeeMemberList}"
 			selection="#{evaluationBackingBean.managedBean.committeeActivitymultiSelect}" rowIndexVar="index">

@@ -16,6 +16,7 @@
 			value="#{lbl['lbl.sc.meeting.details.instruction']}" escape="false" />
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			widgetVar="evaluationMeeting"
 			value="#{evaluationBackingBean.managedBean.scQtMeetings}"
 			selection="#{evaluationBackingBean.managedBean.meetingMultiSelect}"

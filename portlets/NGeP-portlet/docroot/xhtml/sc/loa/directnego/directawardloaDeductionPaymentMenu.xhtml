@@ -11,6 +11,7 @@
 
 		<p:dataTable id="deductTbl" widgetVar="deductTblWidget"
 			var="scQtDeduction"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{directLOABackingBean.managedBean.scLoa.scQtDeductions}"
 			selection="#{directLOABackingBean.managedBean.selectedScQtDeduction}"
 			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
@@ -96,6 +97,7 @@
 
 			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
 				var="scQtDeductionClause"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{directLOABackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
 				selection="#{directLOABackingBean.managedBean.selectedDeductionClauses}"
 				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">

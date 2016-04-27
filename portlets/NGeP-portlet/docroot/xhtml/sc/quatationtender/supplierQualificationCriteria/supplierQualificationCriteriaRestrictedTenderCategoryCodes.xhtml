@@ -17,6 +17,7 @@
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
 			rowIndexVar="index" rows="10"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{cateGory}">
 
 			<p:column selectionMode="multiple" style="width:1%"

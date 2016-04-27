@@ -62,6 +62,7 @@
 				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
 					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled and  specificationBackingBean.managedBean.qt.scheduleType eq ParameterConst.periodicScheduleTypeFrequencySchedule}"
 					rowIndexVar="index"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{specificationBackingBean.managedBean.scheduleList}">
 					<ac:paginator for="frequencySchedule" />
 
@@ -206,6 +207,7 @@
 
 				<p:dataTable id="progressivePayment" var="payment"
 					rowIndexVar="index" rows="10"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{specificationBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
 

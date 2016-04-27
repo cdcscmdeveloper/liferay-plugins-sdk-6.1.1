@@ -12,6 +12,7 @@
 			widgetVar="reportContentsTblWidget" var="scLoiReport"
 			value="#{lOIDetailBackingBean.managedBean.recommendedLoi.scLoiReports}"
 			rows="10" rowKey="#{scLoiReport}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiReports}">
 
 			<ac:paginator for="reportContentsTbl" />

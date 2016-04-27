@@ -12,6 +12,7 @@
 
 		<p:dataTable id="openPnlId" var="cateGory" rowIndexVar="index"
 			styleClass="openPnlId" rows="10"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}">
 
 
@@ -91,6 +92,7 @@
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneyesDataTable" rows="10"
 				value="#{specificationBackingBean.managedBean.zoneTrees}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				var="zoneTree" style="width:100%" rowIndexVar="index">
 				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<p:tree value="#{zoneTree}" var="location">
@@ -159,6 +161,7 @@
 
 			<p:dataTable id="zoneLocationDataTable" rows="10"
 				value="#{specificationBackingBean.managedBean.zoneTrees}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				var="zoneTree" style="width:100%" rowIndexVar="index">
 				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<p:tree value="#{zoneTree}" var="location">

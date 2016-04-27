@@ -23,6 +23,7 @@
 
 		<p:spacer height="15px" />
 		<p:dataTable id="priceDtl" var="pricing"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmPricings}"
 			rowKey="#{pricing}" rowIndexVar="index">
 

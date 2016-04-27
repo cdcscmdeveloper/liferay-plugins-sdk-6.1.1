@@ -16,6 +16,7 @@
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}" escape="false" />
 
 		<p:dataTable var="complianceTech" id="complianceTechnicalProposal"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalCheckList}"
 			first="#{evaluationBackingBean.managedBean.evaluationtechnicalTableRow}"

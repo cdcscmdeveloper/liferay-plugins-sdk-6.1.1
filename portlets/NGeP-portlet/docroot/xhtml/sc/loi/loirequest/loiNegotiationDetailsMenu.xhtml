@@ -13,6 +13,7 @@
 		</f:facet>
 		<p:dataTable id="negoloctbl" var="negoloc"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoLocations}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" rowKey="#{negoloc}" rowIndexVar="rowIndex">
 			<ac:paginator for="negoloctbl" />
 
@@ -90,6 +91,7 @@
 			
 		<p:dataTable id="negoTermstbl" var="negoTerm"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoTerms}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{negoTerm}" rowIndexVar="rowIndex">
 
 			<p:column style="width:2%">

@@ -10,6 +10,7 @@
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget" var="scLoaReport"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoaReports}" rows="10"
 			rowKey="#{scLoaReport}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{lOADetailBackingBean.managedBean.selectedScLoaReports}">
 			
 			<ac:paginator for="contentsTbl" />

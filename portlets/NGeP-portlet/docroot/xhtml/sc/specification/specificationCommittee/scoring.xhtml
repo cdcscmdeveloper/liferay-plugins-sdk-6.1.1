@@ -11,6 +11,7 @@
 		<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="50"
 			widgetVar="scoreWidget" value="#{scoringList}"
 			selection="#{selectionList}" var="checkListScoring"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{checkListScoring}">
 			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
 			<p:column style="width:3px;text-align:center;">

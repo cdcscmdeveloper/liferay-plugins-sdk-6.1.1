@@ -14,6 +14,7 @@
 			widgetVar="suppDocTblWidget"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs}"
 			rows="10" rowKey="#{scLoiSuppDoc}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs}">
 
 			<ac:paginator for="suppDocTbl" />

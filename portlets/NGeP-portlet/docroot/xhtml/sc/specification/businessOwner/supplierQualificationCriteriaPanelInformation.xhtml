@@ -54,6 +54,7 @@
 			<p:dataTable id="panelDataItemList" var="panelItem"
 				rowIndexVar="index" rows="10"
 				value="#{specificationBackingBean.managedBean.selectpanelItem}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{panelItem}">
 
 				<ac:paginator for="panelDataItemList"></ac:paginator>

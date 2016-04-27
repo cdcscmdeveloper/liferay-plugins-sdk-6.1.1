@@ -9,6 +9,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.document.list']}" toggleable="true">
 			<p:dataTable var="document" id="doctbl"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{noticeBoardBackingBean.managedBean.scQtDocReports}"
 				styleClass="documentslist" rows="10">
 				<ac:paginator for="doctbl" />

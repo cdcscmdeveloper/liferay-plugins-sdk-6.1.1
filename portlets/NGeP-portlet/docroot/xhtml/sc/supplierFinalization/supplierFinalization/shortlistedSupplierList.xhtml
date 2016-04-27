@@ -59,6 +59,7 @@
 				value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
 				selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
 				editable="true" rowIndexVar="index" style="width:100%;" rowKey="#{shortlistedSupp}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single' and 
 								!suppFinalizationBackingBean.managedBean.itemize}">
 				<ac:paginator for="supplierListTblSingle" />
@@ -202,6 +203,7 @@
 					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
 					editable="true" rowIndexVar="index" style="width:100%;"
 					rowKey="#{shortlistedSupp}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple' 
 								 and !isQTStatusReFinalized}">
 								
@@ -361,6 +363,7 @@
 					selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplierByItem}"
 					editable="true" rowIndexVar="index" style="width:100%"
 					rowKey="#{shortlistedSupp}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single' and
 									suppFinalizationBackingBean.managedBean.itemize}">
 								

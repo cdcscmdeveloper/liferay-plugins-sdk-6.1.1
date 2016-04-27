@@ -15,6 +15,7 @@
 
 			<p:dataTable id="suppliersTbl" var="qtSupplier" rows="10"
 				value="#{specificationBackingBean.managedBean.ctZoneSupplierList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}">
 				<ui:param name="mof"
 					value="#{specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier)}" />
