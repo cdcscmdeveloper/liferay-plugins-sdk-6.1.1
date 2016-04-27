@@ -120,6 +120,7 @@
 		toggleable="true">
 
 		<p:dataTable id="biddingList" rowIndexVar="index"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.searchDataModel}" var="bid"
 			lazy="true" rows="10">
 

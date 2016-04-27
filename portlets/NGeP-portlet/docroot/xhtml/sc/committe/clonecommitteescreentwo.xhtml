@@ -49,7 +49,9 @@
 
 		<p:panel header="Search Committee" toggleable="true">
 		   <h:panelGroup  style="width:100%;">
-				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committesearch" editable="true">
+				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" 
+				   emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				   var="committesearch" editable="true">
 				
 				  <p:ajax event="rowEdit" />  
                   <p:ajax event="rowEditCancel" /> 
@@ -84,7 +86,9 @@
 		
 		<p:panel header="Clone Committee Result" toggleable="true">
 		   <h:panelGroup style="width:100%;">
-				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committeresult" editable="true" >
+				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+				    var="committeresult" editable="true" >
 
 					<p:column selectionMode="multiple">
 					   <p:selectBooleanCheckbox />

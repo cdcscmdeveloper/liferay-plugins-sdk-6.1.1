@@ -12,6 +12,7 @@
 			value="#{lbl['lbl.sc.bidding.schedule.instruction']}" escape="false" />
 
 		<p:dataTable id="bidScheduleByItem" var="bidItem" rowKey="#{bidItem}"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selectionMode="single" rows="10" rowIndexVar="index"
 			selection="#{scheduleBiddingBB.managedBean.selectedBidItem}"
 			value="#{scheduleBiddingBB.managedBean.bidItemList}">

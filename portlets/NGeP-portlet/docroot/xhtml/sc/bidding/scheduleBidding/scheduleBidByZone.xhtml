@@ -17,6 +17,7 @@
 			escape="false" />
 
 		<p:dataTable id="bidScheduleByZonal" rows="10" selectionMode="single"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList}"
 			selection="#{scheduleBiddingBB.managedBean.rowSelectedBid}"
 			var="scheduleZoneBid" rowIndexVar="index" rowKey="#{scheduleZoneBid}">
@@ -86,6 +87,7 @@
 				value="#{lbl['lbl.sc.bidding.zone.name.supplier.tooltip']}" />
 		</f:facet>
 		<p:dataTable id="bidScheduleByZoneBidItems" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selectionMode="single" 
 			selection="#{scheduleBiddingBB.managedBean.selectedBidItem}"
 			value="#{scheduleBiddingBB.managedBean.rowSelectedBid.scBidItems}"

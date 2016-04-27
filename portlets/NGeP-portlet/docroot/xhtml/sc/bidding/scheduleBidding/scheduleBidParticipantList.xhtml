@@ -8,6 +8,7 @@
 	<div>
 
 		<p:dataTable id="participantList"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{scheduleBiddingBB.managedBean.bidParticipants}"
 			var="bidParticipant">
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">

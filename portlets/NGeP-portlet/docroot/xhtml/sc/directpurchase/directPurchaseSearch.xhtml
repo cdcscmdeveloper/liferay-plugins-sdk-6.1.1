@@ -29,14 +29,12 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.document.title']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.document.title']}" /></td>
 					<td colspan="3"><p:inputText size="99"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentTitle}"></p:inputText></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td><p:inputText size="30"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentNo}"></p:inputText></td>
 				</tr>
@@ -67,8 +65,7 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{directPurchaseBackingBean.search}"
-					update="resultPanel" />
+					action="#{directPurchaseBackingBean.search}" update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{directPurchaseBackingBean.reset}" update=":form" />
 			</div>
@@ -77,6 +74,7 @@
 			toggleable="true">
 
 			<p:dataTable id="scDocumentTableID" lazy="true"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{directPurchaseBackingBean.managedBean.dpDocumentDataModel}"
 				var="Obj" width="100%" rows="10">
 
@@ -121,11 +119,17 @@
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
 					</f:facet>
-					<p:commandLink
-						action="#{directPurchaseBackingBean.viewDoc(Obj)}">
-						<p:graphicImage value="/css/images/design/ico-view.png" />
-					</p:commandLink>
+
+					<p:menuButton value="#{lbl['lbl.btn.option']}">
+						<p:menuitem value="#{lbl['lbl.btn.view']}"
+							icon="ui-icon-view"
+							action="#{directPurchaseBackingBean.viewDoc(Obj)}" />
+						<p:menuitem value="#{lbl['lbl.td.doc.trackingDiary']}"
+							icon="ui-icon-view"
+							action="#{dpTrackingDiaryBackingBean.goToTrackingDiarySearch(Obj)}" />
+					</p:menuButton>
 				</p:column>
+
 			</p:dataTable>
 
 		</p:panel>

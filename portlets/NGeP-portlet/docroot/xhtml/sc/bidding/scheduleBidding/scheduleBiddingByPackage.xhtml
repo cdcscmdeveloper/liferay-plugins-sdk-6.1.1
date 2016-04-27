@@ -67,6 +67,7 @@
 		</div>
 
 		<p:dataTable id="bidScheduleByPackage" var="bidItem" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selectionMode="single" rowKey="#{bidItem}" rowIndexVar="index"  
 			selection="#{scheduleBiddingBB.managedBean.selectedBidItem}"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].scBidItems}">

@@ -100,6 +100,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 			<p:dataTable id="publicrequestdtlid"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{qTScheduleDetailBackingBean.managedBean.scQtApprovalRequestList}"
 				var="publicapproval" rowIndexVar="index" editable="true"
 				rowKey="#{publicapproval}">
@@ -124,6 +125,7 @@
 			</h:panelGroup> -->
 
 			<p:dataTable id="samebsvdtls" var="brfsitdtl"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing}"
 				style="width:100%">
 
@@ -167,6 +169,7 @@
 			toggleable="true" id="attRegPnl">
 
 			<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{qTScheduleDetailBackingBean.managedBean.briefingRegistrationList}">
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">

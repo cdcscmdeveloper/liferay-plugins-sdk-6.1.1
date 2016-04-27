@@ -35,6 +35,7 @@
 
 			</h:panelGrid>
 			<p:dataTable id="itemWiseBidListOB"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				style="word-wrap: break-word ; table-layout: fixed "
 				value="#{onlineBiddingBB.bidPrices}" var="bidPriceItem">
 
@@ -302,6 +303,7 @@
 		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
 			toggleable="true">
 			<p:dataTable id="contactPersonDT"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{onlineBiddingBB.bidContactPersons}" var="contact">
 
 				<p:column headerText="#{lbl['lbl.sc.name']}" style="width : 70%">
