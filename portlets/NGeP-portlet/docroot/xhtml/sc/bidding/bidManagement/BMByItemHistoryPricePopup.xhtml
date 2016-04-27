@@ -57,6 +57,7 @@
 		</div>
 		<div>
 			<p:dataTable id="historySummary"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{biddingBB.managedBean.bidHistoryPriceList}" var="history">
 				<ac:paginator for="historySummary"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.sc.submitted.time']}">

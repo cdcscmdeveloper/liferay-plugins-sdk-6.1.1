@@ -9,6 +9,7 @@
 	<p:panel header="#{lbl['lbl.sc.item.details']}" toggleable="true">
 
 		<p:dataTable id="biddingListBMBI" selectionMode="single" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}"
 			var="bidItem" rowIndexVar="index" rowKey="#{bidItem.bidItemId}"
 			selection="#{biddingBB.managedBean.selectedBidItem}">
@@ -72,6 +73,7 @@
 			</div>
 
 			<p:dataTable id="rankingList" rowIndexVar="index" rows="10"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{biddingBB.managedBean.bidPriceItems}" var="bidPriceItem">
 				<ac:paginator for="rankingList"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.sc.ranking']}"

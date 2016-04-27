@@ -41,6 +41,7 @@
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails"
 			widgetVar="meetingDtls" rows="10"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationMeetingBackingBean.managedBean.scQtMeetings}"
 			selection="#{evaluationMeetingBackingBean.managedBean.meetingMultiSelect}"
 			editable="true" rowIndexVar="index" rowKey="#{meeting}">
@@ -128,6 +129,7 @@
 			escape="false" />
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			widgetVar="prepareCommittee" rows="10" rowIndexVar="index"
 			value="#{evaluationMeetingBackingBean.managedBean.committeeMemberActivity}"
 			rowKey="#{committeeMember}">

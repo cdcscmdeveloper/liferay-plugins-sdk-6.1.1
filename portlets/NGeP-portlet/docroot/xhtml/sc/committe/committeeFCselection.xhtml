@@ -13,6 +13,7 @@
 				action="#{committeBackingBean.viewHistoryAction(committeBackingBean.managedBean.qtCommittee)}" />
 		</div>
 		<p:dataTable id="fcMembersId" rowKey="#{committeemember}"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
 			var="committeemember" rowIndexVar="index" editable="true" rows="10">
 

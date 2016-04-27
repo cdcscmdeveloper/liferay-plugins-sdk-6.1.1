@@ -55,6 +55,7 @@
 				</p:panel>
 				<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
 					<p:dataTable id="userexistid"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
 						selection="#{committeBackingBean.managedBean.selectedPmUser}"
 						rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"

@@ -42,6 +42,7 @@
 			<p:spacer height="5"></p:spacer>
 
 			<p:dataTable id="itemWiseBidListOB"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				style="word-wrap: break-word ; table-layout: fixed"
 				value="#{onlineBiddingBB.bidPrices}" var="bidPriceItem">
 

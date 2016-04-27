@@ -243,6 +243,7 @@
 
 			<h:panelGrid style="width:100%;">
 				<p:dataTable id="createList" var="tplSpecMaster" rows="10"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{specificationBackingBean.templateSpecCreate}"
 					rowKey="#{tplSpecMaster.specMasterId}" rowIndexVar="index"
 					lazy="true">

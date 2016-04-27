@@ -73,6 +73,7 @@
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 			<p:dataTable id="searchQTs"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{committeBackingBean.managedBean.searchQTDataModel}"
 				var="scqtcommittee" rowIndexVar="index" lazy="true" rows="10">
 

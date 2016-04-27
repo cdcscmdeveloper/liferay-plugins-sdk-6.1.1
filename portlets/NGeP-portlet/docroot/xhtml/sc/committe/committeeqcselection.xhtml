@@ -9,6 +9,7 @@
 	<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
 		toggleable="true" styleClass="committeMemberDtl">
 		<p:dataTable id="committeMembersListId"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
 			var="committeemember" rowIndexVar="index" rowKey="#{committeemember}"
 			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">

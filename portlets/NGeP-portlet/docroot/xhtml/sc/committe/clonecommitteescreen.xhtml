@@ -89,6 +89,7 @@
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 			<p:dataTable id="clonesearchCommitteid"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{committeBackingBean.managedBean.cloneSearchQTDataModel}"
 				selection="#{committeBackingBean.managedBean.selectedCloneTender}"
 				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
@@ -129,6 +130,7 @@
 			header="#{committeBackingBean.managedBean.commTypeTitle}"
 			toggleable="true">
 			<p:dataTable id="committeelistid"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{committeBackingBean.managedBean.cloneCommitteMemebers}"
 				var="member" rowKey="#{member.committeeMemberId}"
 				selection="#{committeBackingBean.managedBean.selectedCloneCommitteMemebers}"

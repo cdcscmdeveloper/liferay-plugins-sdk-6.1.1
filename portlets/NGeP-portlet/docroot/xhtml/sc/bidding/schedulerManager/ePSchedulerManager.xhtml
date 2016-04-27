@@ -48,6 +48,7 @@
 			</table><br />
 			
 			<p:dataTable var="jobBean" id="jobBeanDt" widgetVar="jobBeanWidVar"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{schedulerManagerBB.managedBean.epSchedulerJobList}"
 				rows="10" rowKey="#{jobBean}" rowIndexVar="index">
 
@@ -196,6 +197,7 @@
 			toggleable="true">
 
 			<p:dataTable id="biddingList"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{schedulerManagerBB.managedBean.currentDayBids}" var="bid">
 
 				<p:column headerText="#{lbl['lbl.sc.bidding.no']}">
