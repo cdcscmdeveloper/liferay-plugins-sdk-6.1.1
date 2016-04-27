@@ -54,11 +54,11 @@
 				</f:facet>
 
 				<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
-					value="#{committeeapprover.memberRole.parameterId}"
+					value="#{committeeapprover.memberRoleId}"
 					style="width: 110px;margin-bottom: 5px;"
 					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED or approvalBackingBean.managedBean.readOnly}">
 					<p:ajax event="change" partialSubmit="true" process="@this"
-						listener="#{approvalBackingBean.roleChangeListner(committeeapprover)}" />
+						listener="#{approvalBackingBean.roleChangedListener(committeeapprover)}" />
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems var="role"

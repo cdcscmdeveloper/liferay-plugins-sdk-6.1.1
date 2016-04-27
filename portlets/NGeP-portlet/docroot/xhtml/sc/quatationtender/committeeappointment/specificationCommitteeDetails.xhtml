@@ -77,10 +77,10 @@
 				<c:choose>
 					<c:when test="#{isCommitteeInfoEditable}">
 						<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
-							value="#{specificationcommittee.memberRole.parameterId}"
+							value="#{specificationcommittee.memberRoleId}"
 							style="width: 130px;margin-bottom: 5px;">
 							<p:ajax event="change" partialSubmit="true" process="@this"
-								listener="#{qTCommitteBackingBean.roleChangeListner(specificationcommittee)}" />
+								listener="#{qTCommitteBackingBean.roleChangedListener(specificationcommittee)}" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="role"

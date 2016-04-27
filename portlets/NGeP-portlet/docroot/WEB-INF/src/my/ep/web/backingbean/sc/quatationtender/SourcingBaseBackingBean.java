@@ -2538,4 +2538,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					scQt.getQtValidityPeriod()));
 		}
 	}
+	
+	/**
+	 * Role change listner.
+	 * 
+	 * @param member
+	 *            the member
+	 */
+	public void roleChangedListener(ScCommitteeMember member) {
+		if (member.getMemberRoleId() != null) {
+			member.setMemberRole(ParameterHelper
+					.getInstance()
+					.getPmParameterById(member.getMemberRoleId()));
+		}
+	}
 }

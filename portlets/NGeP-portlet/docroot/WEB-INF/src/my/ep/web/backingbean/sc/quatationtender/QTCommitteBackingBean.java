@@ -993,6 +993,7 @@ public class QTCommitteBackingBean extends
 				getManagedBean().getCommitteMember().getUserSelection())) {
 			getManagedBean().getCommitteMember().setMemberRole(
 					new PmParameter());
+			getManagedBean().getCommitteMember().setMemberRoleId(null);
 
 		}
 	}
@@ -1227,6 +1228,9 @@ public class QTCommitteBackingBean extends
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
 			member.setMemberRole(getManagedBean().getCommitteMember()
 					.getMemberRole());
+			if (member.getMemberRole() != null) {
+				member.setMemberRoleId(member.getMemberRole().getParameterId());	
+			}
 			member.setAccessRight(QTConstants.ACCESS_RIGHT);
 			member.setPmOrgProfile(scQt.getPmOrgProfile());
 
@@ -1345,6 +1349,9 @@ public class QTCommitteBackingBean extends
 						committeeMember.setMemberRole(resDTO.getPmParameter());
 					} else {
 						committeeMember.setMemberRole(new PmParameter());
+					}
+					if (committeeMember.getMemberRole() != null) {
+						committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());	
 					}
 
 					/*
@@ -1718,21 +1725,6 @@ public class QTCommitteBackingBean extends
 		 * getFinalizationCommitteeTypeDtl(pmCode, null),null)); }
 		 * this.getManagedBean().setScCommitteeMemberTabList(committeTabs); }
 		 */
-	}
-
-	/**
-	 * Role change listner.
-	 * 
-	 * @param member
-	 *            the member
-	 */
-	public void roleChangeListner(ScCommitteeMember member) {
-		if (member.getMemberRole() != null
-				&& member.getMemberRole().getParameterId() != null) {
-			member.setMemberRole(ParameterHelper
-					.getInstance()
-					.getPmParameterById(member.getMemberRole().getParameterId()));
-		}
 	}
 
 	// To check whether committe needs to be clone or not..
