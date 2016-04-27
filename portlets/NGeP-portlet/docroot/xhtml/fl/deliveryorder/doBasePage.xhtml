@@ -20,11 +20,12 @@
 					'.portlet-title-text').html(
 					'#{createDOBackingBean.getPortletTitle()}');
 		</script>
-		<f:event listener="#{createDOBackingBean.preRenderView}"
-			type="preRenderView" />
+		<f:event listener="#{createDOBackingBean.preRenderView}" type="preRenderView" />
+		<c:if test="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or createDOBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{createDOBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeDeliveryOrder)}" />
+		</c:if>			
 		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{createDOBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info, warn" />
-			
 		<table>
 			<tr>
 				<td><p:outputLabel value="1GFMAS Error: "

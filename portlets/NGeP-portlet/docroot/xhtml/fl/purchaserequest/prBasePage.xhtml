@@ -20,7 +20,10 @@
 			textBeforeSign="#{purchaseRequestBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{purchaseRequestBackingBean.preSubmitFulfillmentRequest(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{purchaseRequestBackingBean.enableAutoUpdate()}"	/>
-			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{purchaseRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
+		<c:if test="#{purchaseRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or purchaseRequestBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{purchaseRequestBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypePurchaseRequest)}" />
+		</c:if>			
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{purchaseRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
 		<table>
 			<tr>
 				<td><p:outputLabel value="1GFMAS Error: " rendered="#{purchaseRequestBackingBean.managedBean.gfmasError}"/> </td>

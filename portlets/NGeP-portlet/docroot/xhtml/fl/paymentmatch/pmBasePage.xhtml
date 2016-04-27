@@ -21,8 +21,12 @@
 			postSignAction="#{paymentMatchBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{paymentMatchBackingBean.enableAutoUpdate()}" 
 		/>	
-		<f:event listener="#{paymentMatchBackingBean.preRenderView}"
-			type="preRenderView" />
+		<f:event listener="#{paymentMatchBackingBean.preRenderView}" type="preRenderView" />
+		<c:if test="#{paymentMatchBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or paymentMatchBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypePaymentAdvice)}" />
+		</c:if>			
+		<p:messages id="messages" showDetail="true" autoUpdate="#{paymentMatchBackingBean.managedBean.autoUpdate}" showSummary="false"
+			closable="true" severity="error, info, warn" />
 		<table>
 			<tr>
 				<td><p:outputLabel value="1GFMAS Error: " rendered="#{paymentMatchBackingBean.managedBean.gfmasError}"/> </td>
@@ -33,9 +37,7 @@
 					</p:commandLink>
 				</td>
 			</tr>
-		</table>
-		<p:messages id="messages" showDetail="true" autoUpdate="#{paymentMatchBackingBean.managedBean.autoUpdate}" showSummary="false"
-			closable="true" severity="error, info, warn" />
+		</table>			
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 

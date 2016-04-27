@@ -21,8 +21,10 @@
 					'.portlet-title-text').html(
 					'#{invoiceBackingBean.getPortletTitle()}');
 		</script>
-		<f:event listener="#{invoiceBackingBean.preRenderView}"
-			type="preRenderView" />
+		<f:event listener="#{invoiceBackingBean.preRenderView}"	type="preRenderView" />
+		<c:if test="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or invoiceBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{invoiceBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeInvoice)}" />
+		</c:if>				
 		<p:messages id="messages" showDetail="true" autoUpdate="#{invoiceBackingBean.managedBean.autoUpdate}"
 			showSummary="false" closable="true" severity="error, info, warn" />
 		<ac:gpkiPopup 
