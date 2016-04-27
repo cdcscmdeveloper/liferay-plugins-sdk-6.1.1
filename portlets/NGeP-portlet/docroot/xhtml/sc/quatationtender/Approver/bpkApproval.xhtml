@@ -17,17 +17,24 @@
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.from.value']}">
-				<h:outputText value="#{requestdetails.originalValue}" />
+				<h:panelGroup
+					rendered="#{requestdetails.originalValue eq ParameterConst.openForBumi or requestdetails.originalValue eq ParameterConst.openForAll}">
+					<h:outputText
+						value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.originalValue)}" />
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{requestdetails.originalValue ne ParameterConst.openForBumi and requestdetails.originalValue ne ParameterConst.openForAll}">
+					<h:outputText value="#{requestdetails.originalValue}" />
+				</h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.to.value']}">
 				<h:panelGroup
-					rendered="#{requestdetails.changedValue eq 'B' or requestdetails.changedValue eq 'A'}">
+					rendered="#{requestdetails.changedValue eq ParameterConst.openForBumi or requestdetails.changedValue eq ParameterConst.openForAll}">
 					<h:outputText
 						value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.changedValue)}" />
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{requestdetails.changedValue ne 'B' and requestdetails.changedValue ne 'A'}">
-
+					rendered="#{requestdetails.changedValue ne ParameterConst.openForBumi and requestdetails.changedValue ne ParameterConst.openForAll}">
 					<h:outputText value="#{requestdetails.changedValue}" />
 				</h:panelGroup>
 			</p:column>
