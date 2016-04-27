@@ -163,11 +163,10 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.stop.instr.rejection.details']}" toggleable="true" rendered="#{createDOBackingBean.managedBean.isDisplayStopIntrDetls()}">
 		<table style="width: 100%">
-			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
+				<td width="200px;"><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
 				<td><p:commandLink value="#{createDOBackingBean.managedBean.flStopInstr.stopInstrNo}" immediate="true"
-				action="#{createDOBackingBean.navigateDocument(createDOBackingBean.managedBean.flStopInstr.stopInstrId)}"/></td>
+					action="#{createDOBackingBean.navigateDocument(createDOBackingBean.managedBean.flStopInstr.stopInstrId)}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.txt.reject.date']}" /></td>
 				<td><p:inputText disabled="true" size="15"
 						value="#{createDOBackingBean.managedBean.flStopInstr.changedDate}">
@@ -176,9 +175,7 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.reason.justification']}" /></td>
-				<td><p:inputText disabled="true" size="60"	value="#{createDOBackingBean.managedBean.reasonDesc}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.remark']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.remark']}" /></td>
 				<td><p:inputTextarea cols="40"  value="#{createDOBackingBean.managedBean.rejectedRemark.get(0).remark}" autoResize="false" disabled="true"/> </td>
 			</tr>
 		</table>
