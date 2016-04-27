@@ -206,7 +206,7 @@
 
 					<p:selectOneMenu id="meetingRoleId" required="true"
 						label="#{lbl['lbl.sc.role']}"
-						value="#{committeeMember.memberRole.parameterId}"
+						value="#{committeeMember.memberRoleId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(committeeMember.PNP,evaluationMeetingBackingBean.managedBean.qt,committeeMember.pmUser)}" />
