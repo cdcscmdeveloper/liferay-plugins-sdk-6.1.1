@@ -54,6 +54,7 @@
 
 				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
 					rowIndexVar="index"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{directLOABackingBean.managedBean.scLoa.scQtSchedules}">
 					<ac:paginator for="frequencySchedule" />
 
@@ -184,6 +185,7 @@
 
 			<p:dataTable id="progressivePayment" var="payment"
 				rowIndexVar="index" rows="10"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{directLOABackingBean.managedBean.scLoa.scQtProgPayments}">
 				<ac:paginator for="progressivePayment" />
 

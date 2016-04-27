@@ -13,6 +13,7 @@
 			<p:dataTable id="supplierListTbl"
 				var="qualifiedSupp" widgetVar="shortlistedSuppDtls" 
 				value="#{consolidationReportBackingBean.managedBean.qualifiedSuppliers}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				editable="true" rowIndexVar="index" style="width:100%;" rowKey="#{qualifiedSupp}">
 				<ac:paginator for="supplierListTbl" />
 				

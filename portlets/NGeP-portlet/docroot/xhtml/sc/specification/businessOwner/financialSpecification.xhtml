@@ -13,6 +13,7 @@
 		<p:dataTable id="financialSpecification" var="financialSpec" rows="10"
 			style="width:100%" rowIndexVar="index"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{financialSpec}">
 			<ac:paginator for="financialSpecification" />
 

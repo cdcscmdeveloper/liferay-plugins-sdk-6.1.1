@@ -275,6 +275,7 @@
 			</tr>
 		</table>
 		<p:dataTable id="respDtl" var="supplierItemPrice"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{purchaseInquiryBackingBean.managedBean.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}"

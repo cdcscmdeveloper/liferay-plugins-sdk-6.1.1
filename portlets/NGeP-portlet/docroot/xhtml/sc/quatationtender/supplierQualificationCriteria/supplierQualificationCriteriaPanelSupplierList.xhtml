@@ -14,6 +14,7 @@
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.ctzones eq 'true'}">
 				<p:dataTable id="ctSupplierTreeZones" rows="10"
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					var="ctZones" rowIndexVar="index" dynamic="true">
 					<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:90%">
 						<p:tree value="#{ctZones}" var="location" selectionMode="single">

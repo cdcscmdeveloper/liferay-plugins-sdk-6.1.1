@@ -17,6 +17,7 @@
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
 			lazy="true" rowKey="#{qualifiedSupplier}">
@@ -57,6 +58,7 @@
 		toggleable="true">
 
 		<p:dataTable var="disQualifiedSupplier"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
 			lazy="true" id="complianceDisQualifiedSupplier" editable="true"
 			rows="10" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">

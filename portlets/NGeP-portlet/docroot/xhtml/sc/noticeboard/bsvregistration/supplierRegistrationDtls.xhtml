@@ -28,6 +28,7 @@
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					style="width:100%" rowKey="#{brfsitdtl.qtBsvDtlId}"
 					selectionMode="single"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
 					styleClass="bsvDtls">
 					<p:ajax event="rowSelect"
@@ -77,6 +78,7 @@
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					rowKey="#{brfsitdtl.qtBsvDtlId}" style="width:100%"
 					selectionMode="single"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
 					styleClass="bsvDtls">
 					<p:ajax event="rowSelect"
@@ -124,6 +126,7 @@
 				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
 					rowKey="#{sitevisitDtls.qtBsvDtlId}" selectionMode="single"
 					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="bsvDtls">
 
 					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
@@ -185,6 +188,7 @@
 		
 		<p:dataTable id="attendanceDetailstbl" var="bsvAttandance"
 				value="#{noticeBoardBackingBean.managedBean.briefingDtls.tempRegistration.bsvAttendance}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rows="10">
 
 				<p:columnGroup type="header">

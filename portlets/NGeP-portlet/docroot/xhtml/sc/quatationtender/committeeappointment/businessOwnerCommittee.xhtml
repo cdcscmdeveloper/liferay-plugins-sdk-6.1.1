@@ -21,6 +21,7 @@
 		<p:dataTable id="businessownercommitteeId"
 			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
 			rowIndexVar="index" editable="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{specificationcommittee}" selection="#{selectedMembersList}">
 
 			

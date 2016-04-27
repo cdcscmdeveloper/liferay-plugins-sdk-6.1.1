@@ -47,6 +47,7 @@
 	<p:panel header="#{lbl['lbl.sc.present.demo.shortlist.supplier']}"
 		toggleable="true">
 		<p:dataTable id="presentationsuppliers" rowIndexVar="index"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			style="width:100%">
 			<ac:paginator for="presentationsuppliers" />
 

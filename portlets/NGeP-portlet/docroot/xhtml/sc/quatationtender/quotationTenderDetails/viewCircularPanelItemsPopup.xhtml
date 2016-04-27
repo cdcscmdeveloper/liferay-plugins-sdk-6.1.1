@@ -28,6 +28,7 @@
 				<p:dataTable id="viewCircularItemsGroupIds" rowIndexVar="index"
 					var="panelItem" style="width:100%" rows="10"
 					value="#{createQtBB.managedBean.searchDataModelPanelItem}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{panelItem.panelItemId}" lazy="true">
 
 					<ac:paginator for="viewCircularItemsGroupIds"></ac:paginator>

@@ -32,6 +32,7 @@
 				id="financialCurrrentRationCheckListIds"
 				rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
 				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{scoringList}" var="checkListScoring"
 					rowKey="#{checkListScoring}">
 					<ac:paginator for="#{scoringPnlId}"></ac:paginator>

@@ -9,6 +9,7 @@
 	<p:panel header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
 		<p:dataTable id="supplierCategory" rowIndexVar="index" rows="10"
 			rowKey="#{supplierCategory}" value="#{smAppl.smSupplierCategories}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="supplierCategory">
 			<ac:paginator for="supplierCategory"></ac:paginator>
 

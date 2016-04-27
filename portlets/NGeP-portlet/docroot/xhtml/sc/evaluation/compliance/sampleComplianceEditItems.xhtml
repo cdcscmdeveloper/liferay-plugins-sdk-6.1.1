@@ -58,6 +58,7 @@
 				escape="false" />
 
 			<p:dataTable var="sampleItem" id="sampleItemId" editable="true"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rows="10" selectionMode="single" lazy="true"
 				selection="#{evaluationBackingBean.managedBean.sampleItemSelection}"
 				value="#{evaluationBackingBean.managedBean.complianceSampleItemListDM}"
@@ -122,6 +123,7 @@
 			#{evaluationBackingBean.managedBean.itemName}>#{lbl['lbl.sc.eva.item.specification']}
 			</ui:fragment>
 				<p:dataTable var="itemspec" id="itemSpecId" editable="true"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rows="10"
 					value="#{evaluationBackingBean.managedBean.sampleItemSpecifications}"
 					rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">

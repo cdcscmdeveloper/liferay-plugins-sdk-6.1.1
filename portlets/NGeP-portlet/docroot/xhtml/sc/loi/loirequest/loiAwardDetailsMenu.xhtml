@@ -32,6 +32,7 @@
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 		<p:dataTable id="afterNegoItemList" var="loiLoaItem"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
 	       <ac:paginator for="afterNegoItemList" />
 			

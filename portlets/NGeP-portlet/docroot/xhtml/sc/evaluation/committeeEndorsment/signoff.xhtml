@@ -13,6 +13,7 @@
 		toggleable="true">
 
 		<p:dataTable id="evaluationSignOff" var="committeActivity" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{evaluationBackingBean.managedBean.endorscommitteeMemberList}"
 			rowKey="#{committeActivity}" rowIndexVar="index">
 

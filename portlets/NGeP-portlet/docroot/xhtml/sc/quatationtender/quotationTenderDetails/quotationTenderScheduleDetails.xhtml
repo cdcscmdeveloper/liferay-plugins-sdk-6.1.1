@@ -156,6 +156,7 @@
 				rowIndexVar="rowIndex" rowKey="#{samplesubmissiondtl}"
 				value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmissionList}"
 				selection="#{qTScheduleDetailBackingBean.managedBean.selectedSubmissionList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				styleClass="submissionlist">
 
 				<p:column selectionMode="multiple" style="width:2%"
@@ -351,6 +352,7 @@
 			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
 			styleClass="contactdetails" rowKey="#{contactpersondetails}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="rowIndex" rows="10">
 
 			<p:column selectionMode="multiple" style="width:2%"
@@ -409,6 +411,7 @@
 		<p:dataTable id="doaaid" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex" rows="10">
 
 			<p:column selectionMode="multiple" style="width:2%"

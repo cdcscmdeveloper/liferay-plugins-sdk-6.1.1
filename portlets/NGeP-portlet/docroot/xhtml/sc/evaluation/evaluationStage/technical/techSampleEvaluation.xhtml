@@ -30,6 +30,7 @@
 						escape="false" />
 
 					<p:dataTable var="techComplianceList" id="sampleComplianceListId"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rows="10"
 						value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
 						rowIndexVar="index" style="width:100%"

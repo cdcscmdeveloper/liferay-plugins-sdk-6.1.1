@@ -39,6 +39,7 @@
 						escape="false" />
 
 					<p:dataTable var="itemofferPricelist" id="itemOfferpriceId"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rows="10"
 						value="#{evaluationBackingBean.managedBean.specItemScoringList}"
 						rowIndexVar="index" style="width:100%"

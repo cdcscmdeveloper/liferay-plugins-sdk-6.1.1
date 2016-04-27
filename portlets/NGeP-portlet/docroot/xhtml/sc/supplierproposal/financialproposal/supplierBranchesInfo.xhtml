@@ -9,6 +9,7 @@
 	
 	<p:panel header="#{lbl['lbl.sc.spec.company.branches']}" toggleable="true" >
 			<p:dataTable id="companyBranch" rowIndexVar="index" var="companyBranch" value="#{smAppl.smSupplierBranches}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{companyBranch}" rows="10">
 				<ac:paginator for="companyBranch"></ac:paginator>
 				

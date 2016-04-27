@@ -10,6 +10,7 @@
 		<p:dataTable id="committeeapprovalId"
 			value="#{membersList.scCommitteeMembers}" var="committeeapprover"
 			rowIndexVar="index" editable="true" rowKey="#{committeeapprover}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{selectedMembersList}">
 
 			<p:column selectionMode="multiple" style="width:2%" />

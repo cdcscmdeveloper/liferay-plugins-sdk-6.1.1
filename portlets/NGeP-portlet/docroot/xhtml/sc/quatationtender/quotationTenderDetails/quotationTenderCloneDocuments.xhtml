@@ -127,6 +127,7 @@
 					value="#{qTDocumentsBackingBean.managedBean.cloneDocumentDataModel}"
 					selection="#{qTDocumentsBackingBean.managedBean.selectedDocumentCloneTender}"
 					rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rows="10">
 
 					<ac:paginator for="clonesearchdocid" />
@@ -184,6 +185,7 @@
 					value="#{qTDocumentsBackingBean.managedBean.cloneScQtDocReports}"
 					var="doclist" rowKey="#{doclist}"
 					selection="#{qTDocumentsBackingBean.managedBean.selectedCloneScQtDocReports}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="cloneResults,cloneDocumentList">
 
 					<p:column selectionMode="multiple" style="width:2%" />

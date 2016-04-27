@@ -24,6 +24,7 @@
 		</table>
 		<p:dataTable id="financenongovtid" var="financenongovt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{financenongovt}" rowIndexVar="rowIndex">
 
 			<p:column headerText="#{lbl['lbl.sc.spec.customer.name']}"

@@ -138,6 +138,7 @@
 			toggleable="true">
 			<p:dataTable id="sharePerson" rowIndexVar="index" var="sharePerson"
 				value="#{supplierProposalDetailBackingBean.managedBean.equityShareHolders}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="sharePerson" rows="10">
 				<ac:paginator for="sharePerson" />
 				<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}" style="width : 20%;">
@@ -165,6 +166,7 @@
 		<p:panel header="#{lbl['lbl.sc.spec.shareholder.company']}"
 			toggleable="true">
 			<p:dataTable id="shareCompany" rowIndexVar="index" var="shareCompany"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{smAppl.smEquityCompanies}" rowKey="#{shareCompany}" rows="10" >
 				<ac:paginator for="shareCompany" />
 				<p:column headerText="#{lbl['lbl.sc.company.name']}" style="width : 25%;">

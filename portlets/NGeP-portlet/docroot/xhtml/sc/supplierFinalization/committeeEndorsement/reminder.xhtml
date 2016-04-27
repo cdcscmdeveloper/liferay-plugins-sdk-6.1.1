@@ -13,6 +13,7 @@
 			
 			<p:dataTable id="committeeReminder" var="reminder"
 				value="#{suppFinalizationBackingBean.managedBean.reminderList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{reminder}" rowIndexVar="index">
 				<ac:paginator for="committeeReminder" />
 

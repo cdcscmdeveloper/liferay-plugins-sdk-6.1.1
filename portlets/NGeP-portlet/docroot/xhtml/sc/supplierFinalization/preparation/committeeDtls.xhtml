@@ -11,6 +11,7 @@
 		<p:dataTable id="committeeDtlTbl" var="committeeDtl"
 			value="#{suppFinalizationBackingBean.managedBean.committeeList}"
 			rows="10" rowKey="#{committeeDtl}" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			resizableColumns="false">
 			<ac:paginator for="committeeDtlTbl" />
 

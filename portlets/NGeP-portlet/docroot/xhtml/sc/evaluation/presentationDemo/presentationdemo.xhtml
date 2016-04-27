@@ -15,6 +15,7 @@
 		header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 		<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" lazy="true"
 			value="#{evaluationBackingBean.managedBean.presentationDemoSupplierListDM}"
 			rowIndexVar="index" rowKey="#{demoSupplier}">

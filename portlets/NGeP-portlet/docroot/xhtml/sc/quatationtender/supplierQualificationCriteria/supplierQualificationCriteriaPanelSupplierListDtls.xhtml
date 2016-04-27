@@ -10,6 +10,7 @@
 		<h:panelGroup>
 			<p:dataTable id="panelsuppliersTbl" var="qtSupplier"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSupplierList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}">
 
 				<ui:param name="mof" value="#{qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier)}" />

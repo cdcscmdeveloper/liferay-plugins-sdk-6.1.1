@@ -20,6 +20,7 @@
 		</table>
 		<p:dataTable id="financegovtid" var="financegovt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scLoaList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{financegovt}" rowIndexVar="rowIndex" rows="10">
 
 			<ac:paginator for="financegovtid" />

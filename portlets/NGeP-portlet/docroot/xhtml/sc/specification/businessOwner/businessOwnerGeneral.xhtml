@@ -317,6 +317,7 @@
 					<p:dataTable id="zoneGeneralDataTable" rows="10"
 						value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rowKey="#{zoneTree}">
 
 						<p:column style="width:250%;">

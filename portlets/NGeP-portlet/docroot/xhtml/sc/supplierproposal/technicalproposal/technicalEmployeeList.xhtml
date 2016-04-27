@@ -13,6 +13,7 @@
 
 		<p:dataTable id="techEmployeeList" var="techEmployee"
 			value="#{supplierProposalDetailBackingBean.managedBean.smPersonnelList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="index">
 			<ac:paginator for="techEmployeeList"></ac:paginator>
 

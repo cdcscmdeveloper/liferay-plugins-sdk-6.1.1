@@ -12,6 +12,7 @@
 		<p:dataTable id="templateTechSpecification" var="technicalSpec"
 			style="width:100%" rowIndexVar="index"
 			value="#{qTDetailBB.managedBean.technicalSpecList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{technicalSpec}">
 
 			<ac:paginator for="templateTechSpecification" />

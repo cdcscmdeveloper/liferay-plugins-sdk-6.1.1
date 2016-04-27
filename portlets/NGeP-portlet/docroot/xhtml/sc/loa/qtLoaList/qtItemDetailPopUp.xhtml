@@ -12,6 +12,7 @@
 		resizable="false" styleClass="pop_up_top" width="690">
 
 		<p:dataTable id="itemtbl" var="scLoiLoaItem"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{qtLOABackingBean.managedBean.selectedSuppLoiLoaBean.scLoiLoaItems}"
 			rows="10">
 

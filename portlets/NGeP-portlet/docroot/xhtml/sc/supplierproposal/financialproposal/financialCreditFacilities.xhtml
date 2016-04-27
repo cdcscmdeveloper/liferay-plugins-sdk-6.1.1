@@ -16,6 +16,7 @@
 
 		<p:dataTable id="creditfaciitiesid" var="creditfacilities"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
 			<ac:paginator for="creditfaciitiesid" />
 

@@ -46,6 +46,7 @@
 							<p:dataTable id="meetingTbl" style="width:100%"  
 								value="#{suppFinalMeetingBackingBean.managedBean.scQtMeetings}"
 								var="meeting" widgetVar="meetingDtls" rowKey="#{meeting}" 
+								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 								rowIndexVar="rowIndex" editable="true">
 								
 								<ui:param name="disableMeeting" value="#{meeting.recordStatusFlg ne DbValueConst.recordStatusActive}" />
@@ -146,6 +147,7 @@
 								var="committeeMember"
 								widgetVar="committeeMemberWidVar"
 								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
+								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 								rowKey="#{committeeMember}" update="@this" selectionMode="single">
 								<ac:paginator for="memberListTbl" />
 								

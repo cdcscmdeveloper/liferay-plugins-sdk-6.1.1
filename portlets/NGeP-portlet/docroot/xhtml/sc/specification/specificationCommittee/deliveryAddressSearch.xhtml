@@ -127,6 +127,7 @@
 				rowKey="#{deliveryLoc}" rowIndexVar="index"
 				value="#{specificationBackingBean.managedBean.searchDeliveryAddressDataModel}"
 				selection="#{specificationBackingBean.managedBean.deliveryAddressSelect}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				lazy="true">
 
 				<ac:paginator for="deliveryAddress" />

@@ -22,6 +22,7 @@
 
 		<h:panelGroup>
 			<p:dataTable id="itemDtl" var="loiLoaItem"  styleClass="BtnSpacing"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{lOIDetailBackingBean.managedBean.selectedLoiLoaBean.scLoiLoaItems}"
 				rowKey="#{itemPrice}" rowIndexVar="index">
 

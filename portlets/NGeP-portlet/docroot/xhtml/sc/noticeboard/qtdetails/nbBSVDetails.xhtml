@@ -17,6 +17,7 @@
 						style="font-weight:bold;text-align: left;" />
 				</h:panelGroup>
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
 					<p:column headerText="#{lbl['lbl.sc.description']}"
@@ -69,6 +70,7 @@
 						style="font-weight:bold;text-align: left;" />
 				</h:panelGroup>
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
 					<p:column headerText="#{lbl['lbl.sc.description']}"
@@ -130,6 +132,7 @@
 				</h:panelGroup>
 
 				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					style="width:100%">
 					<ac:paginator for="sitevisitDtls"></ac:paginator>
 					<p:column headerText="#{lbl['lbl.sc.description']}"

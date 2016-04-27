@@ -15,6 +15,7 @@
 				id="evaluationStageTechnicalSampleItemsListForDatatable"
 				toggleable="true">
 				<p:dataTable var="sampleItem" id="techSampleEvaluateId" rows="10"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{evaluationBackingBean.managedBean.sampleItemList}"
 					selectionMode="single"
 					selection="#{evaluationBackingBean.managedBean.sampleItemSelection}"
@@ -81,6 +82,7 @@
 				id="evaluationStageTechnicalsampleSpecificationsDataTableItemsListIds"
 				header="#{lbl['lbl.sc.eva.item.specification']}" toggleable="true">
 				<p:dataTable var="itemspec" id="techSampleSpecId" editable="true"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rows="10"
 					value="#{evaluationBackingBean.managedBean.sampleItemSpecifications}"
 					rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">

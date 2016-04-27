@@ -15,6 +15,7 @@
 			widgetVar="restricedCodes" rows="10"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
 			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="index" rowKey="#{cateGory}">
 
 			<p:column selectionMode="multiple" styleClass="td-check-box-spacing"></p:column>
