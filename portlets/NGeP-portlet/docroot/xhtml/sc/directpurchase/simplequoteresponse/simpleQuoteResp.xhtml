@@ -75,7 +75,7 @@
 			</tr>
 			<tr>
 				<td style="vertical-align: top;"><p:outputLabel
-						value="#{lbl['lbl.sc.direct.purchase.title']}" /> </td>
+						value="#{lbl['lbl.sc.direct.purchase.title']}" /></td>
 				<td colspan="4"><p:inputTextarea
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 						disabled="true" rows="3" autoResize="false" style="width: 800px;" />
@@ -84,11 +84,9 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.quote.scope.of.work.and.services']}" /></td>
-				<td colspan="3">
-				   <p:commandButton process="@this"
+				<td colspan="3"><p:commandButton process="@this"
 						icon="iconAttachment" disabled="true"
-						value="#{lbl['lbl.txt.attachment']}" /> 
-				   <ui:param
+						value="#{lbl['lbl.txt.attachment']}" /> <ui:param
 						name="attachFile"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment}" />
 
@@ -96,7 +94,7 @@
 						styleClass="blue_font" immediate="true"
 						action="#{simpleQuoteBackingBean.downloadFile(attachFile)}" /></td>
 			</tr>
-			
+
 			<tr>
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.zonal']}" /></td>
@@ -166,6 +164,7 @@
 			<h:panelGroup style="width: 100%;"
 				rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specAnswerList) ne '0'}">
 				<ac:templateSpec
+					editable="#{simpleQuoteBackingBean.managedBean.submitButtonFlg}"
 					templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
 					title="#{lbl['lbl.sc.simple.quote.product.list']}" />
 			</h:panelGroup>
@@ -174,6 +173,7 @@
 				rendered="#{fn:length(simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specAnswerList) ne '0'}">
 				<p:spacer height="25px" />
 				<ac:templateSpec
+					editable="#{simpleQuoteBackingBean.managedBean.submitButtonFlg}"
 					templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
 					title="#{lbl['lbl.sc.simple.quote.service.list']}" />
 			</h:panelGroup>
