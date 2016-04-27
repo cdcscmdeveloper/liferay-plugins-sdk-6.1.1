@@ -514,6 +514,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		} else if (SelectionType.New.value().equalsIgnoreCase(getManagedBean().getCommitteMember().getUserSelection())) {
 			committeeMember.setMemberRole(new PmParameter());
 		}
+		committeeMember.setMemberRoleId(null);
 		this.getManagedBean().setCommitteMember(committeeMember);
 	}
 	
@@ -1011,7 +1012,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 				user.setMemberRole(memberRole);
 				committeeMember.setRepresentativeType(new PmParameter());
 			} 
-			committeeMember.setMemberRole(user.getMemberRole());	
+			committeeMember.setMemberRole(user.getMemberRole());
+			if (committeeMember.getMemberRole() != null) {
+				committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());	
+			}
 			committeeMember.setAccessRight("E");
 			committeeMember.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
 			setUserDetails(committeeMember);

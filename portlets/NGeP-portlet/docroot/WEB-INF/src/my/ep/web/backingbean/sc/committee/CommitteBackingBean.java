@@ -1484,6 +1484,7 @@ public class CommitteBackingBean extends
 				getManagedBean().getCommitteMember().getUserSelection())) {
 			getManagedBean().getCommitteMember().setMemberRole(
 					new PmParameter());
+			getManagedBean().getCommitteMember().setMemberRoleId(null);
 			getManagedBean().getCommitteMember().setRepresentativeType(
 					new PmParameter());
 		}
@@ -1608,6 +1609,9 @@ public class CommitteBackingBean extends
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
 			member.setMemberRole(getManagedBean().getCommitteMember()
 					.getMemberRole());
+			if (member.getMemberRole() != null) {
+				member.setMemberRoleId(member.getMemberRole().getParameterId());	
+			}			
 			member.setAccessRight("E");
 			member.setPmOrgProfile(scQt.getPmOrgProfile());
 
@@ -1727,6 +1731,9 @@ public class CommitteBackingBean extends
 						} else {
 							committeeMember.setMemberRole(new PmParameter());
 						}
+					}
+					if (committeeMember.getMemberRole() != null) {
+						committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());
 					}
 					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
 					committeeMember.setScCommittee(scCommittee);
@@ -1848,6 +1855,9 @@ public class CommitteBackingBean extends
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
 			member.setMemberRole(getManagedBean().getCommitteMember()
 					.getMemberRole());
+			if (member.getMemberRole() != null) {
+				member.setMemberRoleId(member.getMemberRole().getParameterId());	
+			}
 			member.setRepresentativeType(getManagedBean().getCommitteMember()
 					.getRepresentativeType());
 			member.setAccessRight("E");
@@ -1960,7 +1970,10 @@ public class CommitteBackingBean extends
 								ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
 						user.setMemberRole(memberRole);
 					} 
-					committeeMember.setMemberRole(user.getMemberRole());					
+					committeeMember.setMemberRole(user.getMemberRole());		
+					if (committeeMember.getMemberRole() != null) {
+						committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());	
+					}
 	
 					committeeMember.setAccessRight("E");
 					if (ParameterConst.COMMITTEE_ROLE_MEMBER
