@@ -774,9 +774,40 @@ public class CommitteBackingBean extends
 		// finalizeRemarks(scQtCommittee.getScCommittee().getScCommitteeRemarks());
 
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		
+		// If a record is deleted and added back to the same committee,
+		// remove the record from deleted members list
+		List<ScCommitteeMember> committeeMembers = getManagedBean().getCommitteMembers();
+		List<ScCommitteeMember> deletedCommitteeMembers 
+										= this.getManagedBean().getToBeDelCommitteMemebers();
+		List<ScCommitteeMember> toBeAddedMembers = new ArrayList<ScCommitteeMember>();
+		
+		if (CollectionUtils.isNotEmpty(
+					deletedCommitteeMembers)) {
+			for (ScCommitteeMember deletedCommitteeMember 
+										: deletedCommitteeMembers) {
+				if (committeeMembers.contains(
+							deletedCommitteeMember)) {
+					ScCommitteeMember committeeMember = committeeMembers.get(
+										committeeMembers.indexOf(deletedCommitteeMember));
+					deletedCommitteeMember.setRepresentativeType(
+								committeeMember.getRepresentativeType());
+					toBeAddedMembers.add(deletedCommitteeMember);
+				}
+			}
+		}
+		if (CollectionUtils.isNotEmpty(
+						toBeAddedMembers)) {
+			deletedCommitteeMembers.removeAll(toBeAddedMembers);
+		}
+		if (CollectionUtils.isEmpty(
+				deletedCommitteeMembers)) {
+			getManagedBean().setToBeDelCommitteMemebers(null);
+		}
 
 		committeReqDTO.setScQtCommittee(scQtCommittee);
-		committeReqDTO.setToBeDeletedMembers(getManagedBean().getToBeDelCommitteMemebers());
+		committeReqDTO.setToBeDeletedMembers(
+				getManagedBean().getToBeDelCommitteMemebers());
 		if (null != this.getManagedBean().getPayLoad()) {
 			SCEvaluationDataType evalDataType = (SCEvaluationDataType) this
 					.getManagedBean().getPayLoad();
@@ -1905,7 +1936,8 @@ public class CommitteBackingBean extends
 			tobeAddedList.add(member);
 			// this.getManagedBean().setScCommitteeMemberList(tobeAddedList);
 		} else {
-			if (!this.getManagedBean().getSelectedPmUser().isEmpty()) {
+			if (CollectionUtils.isNotEmpty(
+					this.getManagedBean().getSelectedPmUser())) {
 				for (PmUser user : getManagedBean().getSelectedPmUser()) {
 					ScCommitteeMember committeeMember = new ScCommitteeMember();
 					committeeMember.setMemberName(user.getUserName());
