@@ -1755,12 +1755,15 @@ public class QTDetailBackingBean extends
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 							.equalsIgnoreCase(taskName)
-					|| SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(this
-							.getManagedBean().getTaskName())
+					|| SCProcessNameConst.ASSIGN_FC_SECRETARY
+							.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 							.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.ASSIGN_SCORING_COMMITTEE
 							.equalsIgnoreCase(taskName)) {
+				
+				boolean isCommitteeAppointmentRemark = !SCProcessNameConst.ASSIGN_FC_SECRETARY.equalsIgnoreCase(taskName);
+				
 				if (!SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)
 						&& !SCProcessNameConst.ASSIGN_FC_SECRETARY
@@ -1771,14 +1774,13 @@ public class QTDetailBackingBean extends
 					SCCommitteeDataType committeDataType = (SCCommitteeDataType) payLoad;
 
 					qtId = committeDataType.getQtId().longValue();
-					this.getManagedBean().setPendingRevision(true);
 				} else {
 
 					SCEvaluationDataType evalDataType = (SCEvaluationDataType) payLoad;
 					qtId = evalDataType.getQtId().longValue();
 
 				}
-				this.getManagedBean().setActiveIndex(2);
+				
 				retrieveQuationTenderDetails(new Long(qtId));
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 						.equalsIgnoreCase(taskName)) {
@@ -1789,7 +1791,8 @@ public class QTDetailBackingBean extends
 				} else {
 					retrieveCommitteeAppointmentTabDtl(false, false);
 				}
-				if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				
+				if (isCommitteeAppointmentRemark) {
 					List<ScQtApproval> approvals = this.getManagedBean().getQt()
 							.getScQtApprovals();
 
@@ -1807,6 +1810,12 @@ public class QTDetailBackingBean extends
 						}
 					}
 				}
+				
+				this.getManagedBean().setDeskOfficer(true);
+				this.getManagedBean().setCommitteeAppointment(true);
+				this.getManagedBean().setCommitteeAppointmentRemark(isCommitteeAppointmentRemark);
+				this.getManagedBean().setActiveIndex(2);
+				
 			} else {
 				// qtId = quotationTenderDataType.getQtId().longValue();
 				SCQuotationTenderDataType quationDataType = (SCQuotationTenderDataType) payLoad;
@@ -1916,13 +1925,19 @@ public class QTDetailBackingBean extends
 			}
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
-			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName) || SCProcessNameConst.ASSIGN_SCORING_COMMITTEE
-					.equalsIgnoreCase(taskName) ) {
-				updateApprovalRequestDtls(qt.getScQtApprovals(),
-						ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_SCORING_COMMITTEE
+							.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
+							.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+							.equalsIgnoreCase(taskName)) {
+				
 				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								ICommitteSO.class);
+				updateApprovalRequestDtls(qt.getScQtApprovals(),
+						ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 				committeReqDTO.setToken(ctxToken);
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -1934,56 +1949,7 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
-			} else if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
-					.equalsIgnoreCase(taskName)
-					|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
-							.equalsIgnoreCase(taskName)) {
-
-				// TODO - temporary for FC.
-				if (payLoad instanceof SCEvaluationDataType) {
-					if ("FC".equals(((SCEvaluationDataType) payLoad)
-							.getCommitteeType())) {
-						ICommitteSO committeSO = EpEjbBusinessDelegate
-								.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION,
-										ICommitteSO.class);
-						CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-						committeReqDTO.setToken(ctxToken);
-						committeReqDTO.setTaskId(this.getManagedBean()
-								.getTaskId());
-						committeReqDTO.setPayLoad(payLoad);
-						committeReqDTO.setOutcome(outcome);
-						committeReqDTO.setPmUser(facesScopes
-								.getUserSessionBean());
-						committeReqDTO.setRoleCode(getUserRoleCode());
-						committeReqDTO.setScQt(qt);
-						committeResDto = committeSO
-								.updateFinalizateSecrataryTask(committeReqDTO);
-					} else {
-						ICommitteSO committeSO = EpEjbBusinessDelegate
-								.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION,
-										ICommitteSO.class);
-						updateApprovalRequestDtls(
-								qt.getScQtApprovals(),
-								ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
-						CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-						committeReqDTO.setToken(ctxToken);
-						committeReqDTO.setTaskId(this.getManagedBean()
-								.getTaskId());
-						committeReqDTO.setPayLoad(payLoad);
-						committeReqDTO.setOutcome(outcome);
-						committeReqDTO.setPmUser(facesScopes
-								.getUserSessionBean());
-						committeReqDTO.setRoleCode(getUserRoleCode());
-						committeReqDTO.setScQt(qt);
-						committeReqDTO.setToBeDeletedMembers(this
-								.getManagedBean().getToBeDelCommitteMemebers());
-						committeResDto = committeSO
-								.updateBPMAction(committeReqDTO);
-					}
-				}
-
+				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
 					.equalsIgnoreCase(taskName)) {
 				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
@@ -3557,7 +3523,8 @@ public class QTDetailBackingBean extends
 		String locationLevel = this.getManagedBean().getLocalLevelCode();
         boolean isDeskOfficer = this.getManagedBean().isDeskOfficer();
         boolean isViewQtDetails = this.getManagedBean().isViewQtDetails();
-		boolean pendingRevision = this.getManagedBean().isPendingRevision();
+		boolean isCommitteeAppointment = this.getManagedBean().isCommitteeAppointment();
+		boolean isCommitteeAppointmentRemark = this.getManagedBean().isCommitteeAppointmentRemark();
 
 		QuationTenderResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
@@ -3722,7 +3689,8 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setLocalLevelCode(locationLevel);
 		this.getManagedBean().setTemplateSpecZoneDtls(specZoneDtls);
 		this.getManagedBean().setTaskName(taskName);
-		this.getManagedBean().setPendingRevision(pendingRevision);
+		this.getManagedBean().setCommitteeAppointment(isCommitteeAppointment);
+		this.getManagedBean().setCommitteeAppointmentRemark(isCommitteeAppointmentRemark);
 		this.getManagedBean().setPayLoad(payLoad);
 		this.getManagedBean().setCreateQt(isCreateQt);
 		this.getManagedBean().setMaintanceFlow(isMaintFlow);

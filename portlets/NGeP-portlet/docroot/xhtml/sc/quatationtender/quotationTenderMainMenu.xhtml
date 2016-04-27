@@ -6,7 +6,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<c:if test="#{qTDetailBB.managedBean.pendingRevision eq 'false'}">
+	<c:choose>
+	<c:when test="#{qTDetailBB.managedBean.committeeAppointment}">
+		<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
+	</c:when>
+	<c:otherwise>
 	<ui:param name="statusId" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId}" />
 	<ui:param name="isQTStatusScheduleDocAndAfter" value="#{qTDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
@@ -150,8 +154,6 @@
 			update="menuQTContent" oncomplete="attachDlg1.hide()">
 		</p:fileUpload>
 	</p:dialog>
-	</c:if>
-	<c:if test="#{qTDetailBB.managedBean.pendingRevision eq 'true'}">
-		<ui:include src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
-	</c:if>
+	</c:otherwise>
+	</c:choose>
 </ui:composition>
