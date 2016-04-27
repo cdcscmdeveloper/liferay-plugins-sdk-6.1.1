@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -558,7 +559,7 @@ public class PurchaseInquiryBackingBean extends
 	public void priceTypeChangeListener() {
 		debugLogger("priceTypeChangeListener");
 		ScPrInquiry prInquiry  = getManagedBean().getScPrInquiry();
-		Map<ScSupplierItemPrice, ScSupplierItemPrice> itemPricesMap = new HashMap<ScSupplierItemPrice, ScSupplierItemPrice>();
+		Map<ScSupplierItemPrice, ScSupplierItemPrice> itemPricesMap = new LinkedHashMap<ScSupplierItemPrice, ScSupplierItemPrice>();
 		List<ScSupplierItemPrice> itemPriceList = null;
 		ScRequestSupplierItem scRequestSupplierItem = getManagedBean().getScRequestSupplierItem();
 		
