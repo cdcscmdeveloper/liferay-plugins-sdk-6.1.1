@@ -208,7 +208,8 @@
 					</td>
 					<td>
 						<p:inputText size="53" maxlength="255" value="#{stopInstrBB.managedBean.stopInstr.reasonDesc}" id="otherId" 
-							disabled="#{stopInstrBB.managedBean.buttonVal=='View' or stopInstrBB.managedBean.stopInstr.pmReason.reasonCode ne 'OTHERS'}" />
+							disabled="#{stopInstrBB.managedBean.buttonVal=='View' or stopInstrBB.managedBean.stopInstr.pmReason.reasonCode ne 'OTHERS'
+								or stopInstrBB.managedBean.taskName eq 'Review SD'}" />
 					</td>
 				</tr>
 			</table>
