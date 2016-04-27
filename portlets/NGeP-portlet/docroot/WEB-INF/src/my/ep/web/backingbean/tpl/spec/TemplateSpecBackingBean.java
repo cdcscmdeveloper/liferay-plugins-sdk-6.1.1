@@ -1028,6 +1028,25 @@ public class TemplateSpecBackingBean extends
 			tplSpecQuestion.setTplSpecZoneQties(tplSpecZoneQties);
 			
 		} else {
+			List<Long> zoneIds=new ArrayList<Long>();
+			for(TplSpecZoneQty oriSpecZoneQty:tplSpecZoneQties){
+				if(!zoneIds.contains(oriSpecZoneQty.getTplSpecZoneDtl().getSpecZoneId())){
+					zoneIds.add(oriSpecZoneQty.getTplSpecZoneDtl().getSpecZoneId());
+				}
+			}
+			if(null!=specZoneDtls && null!=tplSpecZoneQties){
+			boolean isChange=false;
+				for(TplSpecZoneDtl zoneDtl:specZoneDtls){
+					if(!zoneIds.contains(zoneDtl.getSpecZoneId())){
+						isChange=true;
+					}
+				}
+				if(isChange){
+				for(int i=0;i<tplSpecZoneQties.size();i++){
+					tplSpecZoneQties.get(i).setTplSpecZoneDtl(specZoneDtls.get(i));
+				}
+				}
+				}
 			List<TplSpecZoneQty> oriSpecZoneQties = TemplateSpecHelper
 					.getInstance().cloneTplSpecZoneQty(oriSpecQuestion,
 							tplSpecZoneQties);
