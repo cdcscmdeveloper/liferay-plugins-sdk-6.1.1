@@ -137,7 +137,10 @@
 					<td><p:selectBooleanCheckbox id="isGovtSellerCheckBoxId"
 							disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}"
 							value="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
-							<p:ajax update="@form" />
+							<p:ajax  event="change" 
+								listener="#{organisationBackingBean.govtSellerChange()}"
+								process="@this"
+								update="@form" />
 						</p:selectBooleanCheckbox></td>
 				</ui:fragment>				
 			</tr>
