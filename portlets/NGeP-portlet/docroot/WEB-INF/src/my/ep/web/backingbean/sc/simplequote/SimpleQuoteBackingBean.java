@@ -4786,12 +4786,11 @@ public class SimpleQuoteBackingBean extends
 							.getScQuoteSupplier();
 
 					if (scQuote.getMultipleQuote()) { // for multiple quote
+						getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
 						if (sQuoteSupplier.isSubmitted()) {
 							getManagedBean().setSaveButtonFlg(Boolean.FALSE);
-							getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
 						} else {
 							getManagedBean().setSaveButtonFlg(Boolean.TRUE);
-							getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
 						}
 					} else { // for single quote
 						if (sQuoteSupplier.isSubmitted()) {
@@ -5306,12 +5305,11 @@ public class SimpleQuoteBackingBean extends
 			ScQuoteSupplier sQuoteSupplier = quoteResDTO.getScQuoteSupplier();
 
 			if (scQuote.getMultipleQuote()) { // for multiple quote
+				getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
 				if (sQuoteSupplier.isSubmitted()) {
 					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
-					getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
 				} else {
 					getManagedBean().setSaveButtonFlg(Boolean.TRUE);
-					getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
 				}
 			} else {
 				if (sQuoteSupplier.isSubmitted()) {
