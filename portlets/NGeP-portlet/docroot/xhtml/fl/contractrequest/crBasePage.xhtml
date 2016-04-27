@@ -16,6 +16,15 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+		<ac:gpkiPopup 
+			textBeforeSign="#{contractRequestBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{contractRequestBackingBean.preSubmitFulfillmentRequest(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{contractRequestBackingBean.enableAutoUpdate()}" />		
+		<f:event listener="#{contractRequestBackingBean.preRenderView}"	type="preRenderView" />		
+		<c:if test="#{contractRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or contractRequestBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeContractRequest)}" />
+		</c:if>			
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
 		<table>
 			<tr>
 				<td><p:outputLabel value="1GFMAS Error: " rendered="#{contractRequestBackingBean.managedBean.gfmasError}"/> </td>
@@ -27,13 +36,6 @@
 				</td>
 			</tr>
 		</table>
-		<ac:gpkiPopup 
-			textBeforeSign="#{contractRequestBackingBean.managedBean.textBeforeSign}"
-			postSignAction="#{contractRequestBackingBean.preSubmitFulfillmentRequest(gpkiBackingBean.pmDigiSign)}"
-			enableAutoUpdate="#{contractRequestBackingBean.enableAutoUpdate()}" />		
-		<f:event listener="#{contractRequestBackingBean.preRenderView}"
-			type="preRenderView" />
-		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
 		<table style="width: 100%">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{contractRequestBackingBean.managedBean.buttonVal != null}" 

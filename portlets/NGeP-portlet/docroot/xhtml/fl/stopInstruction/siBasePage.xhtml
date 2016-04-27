@@ -16,17 +16,6 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
-		<table>
-			<tr>
-				<td><p:outputLabel value="1GFMAS Error: " rendered="#{stopInstrBB.managedBean.gfmasError}"/> </td>
-				<td><p:commandLink oncomplete="gfmasError.show();"
-					action="#{stopInstrBB.show1GFMASError()}"
-					rendered="#{stopInstrBB.managedBean.gfmasError}">
-						<p:graphicImage value="/css/images/design/exclamation.png" />
-					</p:commandLink>
-				</td>
-			</tr>
-		</table>	
 		<ac:gpkiPopup 
 			textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
 			postSignAction="#{stopInstrBB.preSubmitStopInstruction(gpkiBackingBean.pmDigiSign)}"
@@ -38,7 +27,21 @@
   		 	challengeQues1="#{stopInstrBB.managedBean.spkiBackingBean.challengeQues1}"
 			textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
 			postSignAction="#{stopInstrBB.preSubmitStopInstruction(spkiBackingBean.pmDigiSign)}"/>
+		<c:if test="#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or stopInstrBB.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{stopInstrBB.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeStopDelivery)}" />
+		</c:if>				
 		<p:messages id="messages" showDetail="true" autoUpdate="#{stopInstrBB.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
+		<table>
+			<tr>
+				<td><p:outputLabel value="1GFMAS Error: " rendered="#{stopInstrBB.managedBean.gfmasError}"/> </td>
+				<td><p:commandLink oncomplete="gfmasError.show();"
+					action="#{stopInstrBB.show1GFMASError()}"
+					rendered="#{stopInstrBB.managedBean.gfmasError}">
+						<p:graphicImage value="/css/images/design/exclamation.png" />
+					</p:commandLink>
+				</td>
+			</tr>
+		</table>
 		<table style="width: 100%;">
 			<tr>
 				<td>

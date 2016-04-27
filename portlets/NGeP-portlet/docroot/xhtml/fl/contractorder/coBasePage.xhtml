@@ -17,6 +17,9 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		<f:event listener="#{flOrderBB.preRenderViewCR}" type="preRenderView" />
+		<c:if test="#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or flOrderBB.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{flOrderBB.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeContractOrder)}" />
+		</c:if>					
 		<p:messages id="messages" showDetail="true" autoUpdate="#{flOrderBB.managedBean.autoUpdate}"
 			closable="true" severity="error, info" />
 		<ac:gpkiPopup 
