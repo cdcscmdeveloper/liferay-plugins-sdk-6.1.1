@@ -16,8 +16,16 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
-		<f:event listener="#{danBackingBean.preRenderView}"
-			type="preRenderView" />
+		<f:event listener="#{danBackingBean.preRenderView}"	type="preRenderView" />
+		<ac:gpkiPopup 
+			textBeforeSign="#{danBackingBean.managedBean.textBeforeSign}"
+			postSignAction="#{danBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{danBackingBean.enableAutoUpdate()}" />
+		<f:event listener="#{danBackingBean.preRenderView}" type="preRenderView" />
+		<c:if test="#{danBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or danBackingBean.managedBean.isHyperLinkPage()}">
+			<ac:title value="#{danBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, danBackingBean.managedBean.adjustment.docType)}" />
+		</c:if>	
+		<p:messages id="messages" showDetail="true" autoUpdate="#{danBackingBean.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
 		<table>
 			<tr>
 				<td><p:outputLabel value="1GFMAS Error: " rendered="#{danBackingBean.managedBean.gfmasError}"/> </td>
@@ -28,15 +36,7 @@
 					</p:commandLink>
 				</td>
 			</tr>
-		</table>
-		<ac:gpkiPopup 
-			textBeforeSign="#{danBackingBean.managedBean.textBeforeSign}"
-			postSignAction="#{danBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
-			enableAutoUpdate="#{danBackingBean.enableAutoUpdate()}" />
-		<f:event listener="#{danBackingBean.preRenderView}" type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="#{danBackingBean.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
-			
-
+		</table>			
 		<table style="width: 100%;">
 			<tr>
 				<td>
