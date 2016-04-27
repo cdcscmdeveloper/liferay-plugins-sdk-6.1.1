@@ -878,7 +878,7 @@ public class ApprovalBackingBean extends
 						.updateBPMAction(qtReqDTO);
 				// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
 				
-				/*if (CollectionUtils.isNotEmpty(approvalTypes) && 
+				if (CollectionUtils.isNotEmpty(approvalTypes) && 
 						approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
 					Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 					if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
@@ -890,7 +890,7 @@ public class ApprovalBackingBean extends
 							log.error(e.getMessage());
 						}
 					}
-				}*/
+				}
 			}
 		} finally {
 		}
