@@ -86,6 +86,13 @@
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
 	
+	<managed-bean>
+		<description>BPM Outcome Constants</description>
+		<managed-bean-name>BpmOutcomeConstant</managed-bean-name>
+		<managed-bean-class>my.ep.constant.BpmOutcomeConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
 	<render-kit>
 		<renderer>
 			<component-family>org.primefaces.component</component-family>
