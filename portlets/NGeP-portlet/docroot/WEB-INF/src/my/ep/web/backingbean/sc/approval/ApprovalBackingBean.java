@@ -13,7 +13,6 @@ package my.ep.web.backingbean.sc.approval;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -72,8 +71,6 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.scheduler.helper.EpSchedulerHelper;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -85,7 +82,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
-import org.quartz.SchedulerException;
 
 /**
  * Backing Bean for Approvals.
@@ -1062,21 +1058,6 @@ public class ApprovalBackingBean extends
 	 */
 	public String viewApprovalAction() {
 		return "/xhtml/sc/quatationtender/Approver/approverMain.xhtml?faces-redirect=true";
-	}
-
-	/**
-	 * Role change listner.
-	 * 
-	 * @param member
-	 *            the member
-	 */
-	public void roleChangeListner(ScCommitteeMember member) {
-		if (member.getMemberRole() != null
-				&& member.getMemberRole().getParameterId() != null) {
-			member.setMemberRole(ParameterHelper
-					.getInstance()
-					.getPmParameterById(member.getMemberRole().getParameterId()));
-		}
 	}
 
 	/**
