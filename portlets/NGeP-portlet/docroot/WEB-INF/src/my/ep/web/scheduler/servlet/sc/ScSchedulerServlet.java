@@ -128,6 +128,11 @@ public class ScSchedulerServlet extends HttpServlet {
 								.getInstance()
 								.getProperty(
 										EpPropertiesConst.SCHEDULER_JOB_CRONEXPRESSION_SC_QT_PUBLISH_JOB));
+		
+		// Job to be run at server startup
+		EpSchedulerHelper.runJobOnce(new JobKey(
+				SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB,
+				SchedulerConstants.SC_JOB_GROUP), QTPublishSchedulingJob.class);
 
 	}
 
