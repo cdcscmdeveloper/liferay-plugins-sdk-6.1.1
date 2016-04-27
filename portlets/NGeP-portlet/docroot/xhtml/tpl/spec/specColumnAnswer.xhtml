@@ -68,8 +68,9 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard}" />
 		</f:facet>
 		
-		<p:inputText id="ratePerUom" style="min-width:0px !important;width:86px; text-align:right;"
+		<p:inputText id="ratePerUom" style="min-width:0px !important;width:110px; text-align:right;"
 			value="#{tplSpecAnswer.ratePerUom}"
+			disabled="#{!editable}"
 			rendered="#{isQuestionTypeItem}" required="#{isSpecificationReq and isValidationReq}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
