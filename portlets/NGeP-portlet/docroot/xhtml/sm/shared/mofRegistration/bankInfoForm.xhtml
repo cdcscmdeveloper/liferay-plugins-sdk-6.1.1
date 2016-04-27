@@ -267,6 +267,11 @@
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
 						</p:inputText> 
+						&#160;
+						<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
+						<p:tooltip id="bantt" for="banti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
+						</p:tooltip>
 						<p:message id="smBankAcctNoMsg" for="smBankAcctNo"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
