@@ -10,13 +10,15 @@
  */
 package my.ep.web.scheduler.job.sc;
 
-import java.util.Date;
-
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
+import my.ep.dto.sc.quationtender.ProposalReqDTO;
+import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -47,8 +49,32 @@ public class QTPublishJob implements Job {
 	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
 	 */
 	@Override
-	public void execute(JobExecutionContext context) throws JobExecutionException {
+	public void execute(JobExecutionContext context)
+			throws JobExecutionException {
 		debugLogger("Start execute ");
+		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+		Long qtId = dataMap.getLong("qtId");
+		IQTProposalSO proposalSO;
+
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
+			proposalReqDTO.setQtId(qtId);
+			ProposalResDTO proposalResDTO = proposalSO
+					.updateProposalWorkFlowStatus(proposalReqDTO);
+			if (proposalResDTO.isSuccessful()) {
+				log.info("$$$$$ qt Work Flow status updated suceessfully from QTPublishJob job");
+			} else {
+				log.info("$$$$$ qt Work Flow status updated failed from QTPublishJob job");
+			}
+
+		} catch (Exception e) {
+			log.info("$$$$$ qt Work Flow status updated failed from QTPublishJob job");
+			log.error(e.getLocalizedMessage());
+		} finally {
+			proposalSO = null;
+		}
 
 		IQTNoticeBoardSO noticeBoardSO;
 		try {
@@ -56,27 +82,26 @@ public class QTPublishJob implements Job {
 			noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-			JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-			Long qtId = dataMap.getLong("qtId");
-			
-			if(qtId != null){
+
+			if (qtId != null) {
 				reqDTO.setQtId(qtId);
 				NoticeBoardResDTO resDTO = noticeBoardSO
 						.publishQtAndInsertSuppliers(reqDTO);
 
 				if (resDTO.isSuccessful()) {
-					log.info("##### Publishing Successful for the QT Id :"
+					log.info("$$$$$ Publishing Successful for the QT Id :"
 							+ qtId);
 				} else {
-					log.info("##### Publishing Failed for the QT Id :"
-							+ qtId);
+					log.info("$$$$$ Publishing Failed for the QT Id :" + qtId);
 				}
-			}else{
-				log.info("$$$$$ QT Publish Job run failed at " + new Date());
+			} else {
+				log.info("$$$$$ QT Publish Job run failed at "
+						+ DateUtils.getCurrentDate());
 			}
-			
+
 		} catch (Exception e) {
-			log.info("$$$$$ QT Publish Job run failed at " + new Date());
+			log.info("$$$$$ QT Publish Job run failed at "
+					+ DateUtils.getCurrentDate());
 			log.error(e.getLocalizedMessage());
 		} finally {
 			noticeBoardSO = null;
