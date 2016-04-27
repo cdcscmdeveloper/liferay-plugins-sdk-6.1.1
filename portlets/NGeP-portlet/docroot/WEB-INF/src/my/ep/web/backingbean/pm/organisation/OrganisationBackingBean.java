@@ -654,12 +654,12 @@ public class OrganisationBackingBean extends
 				if (orgProfile.getSmSupplier().getSmAppl().getSmPersonnels() != null
 						&& !orgProfile.getSmSupplier().getSmAppl()
 								.getSmPersonnels().isEmpty()) {
-					for (SmPersonnel supplierBank : orgProfile.getSmSupplier()
+					for (SmPersonnel personnel : orgProfile.getSmSupplier()
 							.getSmAppl().getSmPersonnels()) {
-						if (supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-								|| supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+						if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+								|| personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 							this.getManagedBean().getSmPersonnels()
-									.add(supplierBank);
+									.add(personnel);
 
 						}
 					}
@@ -2551,5 +2551,85 @@ public class OrganisationBackingBean extends
 			getManagedBean().getOrgProfile().setPmZone(new PmZone());
 		}
 		
+	}
+	
+	public void govtSellerChange(){
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile().getOrgProfileId());
+		reqDTO.setFetchGovtSeller(true);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+
+		OrgProfileResDTO orgResDTO = orgProfileSO
+				.retrieveOrgDetailsByOrgId(reqDTO);
+		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
+		if (orgProfile.getSmSupplier() != null && getManagedBean().getOrgProfile().isGovtSeller()) {
+			log.info("Supplier Test");
+			/*
+			 * this.getManagedBean().setSmSupplierBanks(
+			 * orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks());
+			 */
+			if (orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks() != null
+					&& !orgProfile.getSmSupplier().getSmAppl()
+							.getSmSupplierBanks().isEmpty()) {
+				for (SmSupplierBank supplierBank : orgProfile
+						.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
+					if (supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+							|| supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+						this.getManagedBean().getSmSupplierBanks()
+								.add(supplierBank);
+
+					}
+				}
+			}
+
+			log.info("Supplier Bank-----> "
+					+ orgProfile.getSmSupplier().getSmAppl()
+							.getSmSupplierBanks().size());
+			if (orgProfile.getSmSupplier().getSmAppl().getSmPersonnels() != null
+					&& !orgProfile.getSmSupplier().getSmAppl()
+							.getSmPersonnels().isEmpty()) {
+				for (SmPersonnel personnel : orgProfile.getSmSupplier()
+						.getSmAppl().getSmPersonnels()) {
+					if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+							|| personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+						this.getManagedBean().getSmPersonnels()
+								.add(personnel);
+
+					}
+				}
+			}
+			// this.getManagedBean().setSmPersonnels(orgProfile.getSmSupplier().getSmAppl().getSmPersonnels());
+			log.info("Supplier Users ---->"
+					+ orgProfile.getSmSupplier().getSmAppl()
+							.getSmPersonnels().size());
+			
+//			if(orgProfile.getSmSupplier().getSmGstSuppliers() != null 
+//					&& !orgProfile.getSmSupplier().getSmGstSuppliers().isEmpty()){
+//				for(SmGstSupplier gstSupplier : orgProfile.getSmSupplier().getSmGstSuppliers()){
+//					if(gstSupplier.getIsCurrent()){
+//						getManagedBean().setGstSupplier(gstSupplier);
+//						break;
+//					}
+//				}
+//			}
+			ISupplierGstSO supplierGstSO = null;
+			try{
+				supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								ISupplierGstSO.class);
+				SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+				gstReqDTO.setSupplierId(orgProfile.getSmSupplier().getSupplierId());
+				SupplierGstResDTO gstResDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+				if(gstResDTO.isSuccessful() && gstResDTO.getSmGstSupplier() != null){
+					getManagedBean().setGstSupplier(gstResDTO.getSmGstSupplier());
+				}
+				
+			}finally{ 
+				supplierGstSO = null;
+			}
+		}
 	}
 }
