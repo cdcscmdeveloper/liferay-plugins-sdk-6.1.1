@@ -412,13 +412,7 @@
 		      <p:column    headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}" 
 		          styleClass="column-align-center" style="width:15%; white-space:normal;"  rendered="false" >
 		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.txt.na'] : serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" style="float:right;" />
-		      </p:column>				
-				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;" styleClass="column-align-center">
-					<h:outputText value="#{serviceItemVar.minimumOrderQty}" style="float:right;">
-						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, serviceItemVar.scRequestItem.uom.uomCode)}" />
-					</h:outputText>
-				</p:column>				
+		      </p:column>		
 				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;" styleClass="column-align-center">
 		            <h:outputText value="#{serviceItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		        </p:column> 
