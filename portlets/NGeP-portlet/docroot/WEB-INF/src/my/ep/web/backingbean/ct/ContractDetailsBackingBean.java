@@ -324,6 +324,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	              if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
 	    	               ctBB.getManagedBean().setShowItem(null);
 	    	               ctBB.getManagedBean().setSelectedItem(null);
+	    	               ctBB.getManagedBean().setShowServiceItem(null);
 	    	               ctBB.getManagedBean().setSelectedServiceItem(null);	    	  
  		         
 	    	               for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
@@ -1422,6 +1423,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    setValidateContractField(reqDTO);
 	    getManagedBean().setSelectedTabIndex(0);
 	    ctBB.getManagedBean().setShowItem(null);
+	    ctBB.getManagedBean().setShowServiceItem(null);
 	    getManagedBean().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
 	    reqDTO.setCtContractVer(ctBB.getManagedBean().getContractVer());
 	    getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
