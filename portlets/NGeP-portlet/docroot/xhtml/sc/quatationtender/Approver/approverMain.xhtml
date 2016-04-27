@@ -85,7 +85,7 @@
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.dialog.yesbtn.message']}" /></td>
+							value="#{lbl['lbl.sc.dialog.confirm.revise']}" /></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
@@ -95,6 +95,26 @@
 					action="#{approvalBackingBean.updateReviceBpmTask}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlg.hide();" type="button" />
+			</div>
+		</p:dialog>
+		
+		<p:dialog id="rejectApprovalDlg" widgetVar="rejectApprovalDlg"
+			header="#{lbl['lbl.sc.dialog.confirm.header.reject']}"
+			resizable="false" width="325" height="90" modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.reject']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="rejectApprovalDlg.hide();"
+					action="#{approvalBackingBean.updateRejectBpmTask}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="rejectApprovalDlg.hide();" type="button" />
 			</div>
 		</p:dialog>
 	</ui:define>
