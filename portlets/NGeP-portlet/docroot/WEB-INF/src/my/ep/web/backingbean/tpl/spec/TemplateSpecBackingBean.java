@@ -1042,8 +1042,10 @@ public class TemplateSpecBackingBean extends
 					}
 				}
 				if(isChange){
+				if(specZoneDtls.size()==tplSpecZoneQties.size()){
 				for(int i=0;i<tplSpecZoneQties.size();i++){
 					tplSpecZoneQties.get(i).setTplSpecZoneDtl(specZoneDtls.get(i));
+				}
 				}
 				}
 				}
