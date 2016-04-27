@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -742,7 +743,14 @@ public class SimpleQuoteBackingBean extends
 		}
 		
 		if (null == scQuote.getStartDate()) {
-			scQuote.setStartDate(new Date());
+			Date startDate = new Date();
+			Calendar cal = Calendar.getInstance();
+			cal.clear(); 
+			cal.setTime(startDate);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			startDate = cal.getTime();
+			scQuote.setStartDate(startDate);
 		}
 		
 		// to get ptj
@@ -3727,6 +3735,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		if (quote.getEndDate() != null && quote.getStartDate() != null) {
 			Date currentDate = new Date();
+			Date startDate = quote.getStartDate();
 			Date endDate = quote.getEndDate();
 			String message ="";
 
@@ -3755,8 +3764,16 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			if (endDate.after(currentDate)) {
-				String hours = getHours(currentDate, endDate);
-				String mins = getMinuts(currentDate, endDate);
+				String hours;
+				String mins;
+				if(startDate.after(currentDate)) {
+					hours = getHours(startDate, endDate);
+					mins = getMinuts(startDate, endDate);
+				} else {
+					hours = getHours(currentDate, endDate);
+					mins = getMinuts(currentDate, endDate);
+				}
+				
 				message = getMessage(
 						"lbl.sc.quote.supplier.resp.duration", new String[] {hours, mins});
 				getManagedBean().setConformDlgBtnFlag(Boolean.TRUE);
