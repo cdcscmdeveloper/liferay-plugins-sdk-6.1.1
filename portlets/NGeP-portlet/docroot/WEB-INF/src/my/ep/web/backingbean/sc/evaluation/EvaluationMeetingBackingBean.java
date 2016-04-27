@@ -448,6 +448,7 @@ public class EvaluationMeetingBackingBean extends
 			// getManagedBean().getCommitteMember().setExternalUser(true);
 
 		}
+		committeeMember.setMemberRoleId(null);
 		this.getManagedBean().setCommitteMember(committeeMember);
 	}
 
@@ -480,6 +481,9 @@ public class EvaluationMeetingBackingBean extends
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
 			member.setMemberRole(getManagedBean().getCommitteMember()
 					.getMemberRole());
+			if (member.getMemberRole() != null) {
+				member.setMemberRoleId(member.getMemberRole().getParameterId());	
+			}
 			member.setAccessRight(QTConstants.ACCESS_RIGHT);
 			member.setPmOrgProfile(this.getManagedBean().getQt()
 					.getPmOrgProfile());
@@ -623,7 +627,9 @@ public class EvaluationMeetingBackingBean extends
 								.retrieveParameterByTypeAndCode(reqDTO);
 						committeeMember.setMemberRole(resDTO.getPmParameter());
 					}
-
+					if (committeeMember.getMemberRole() != null) {
+						committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());	
+					}
 					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
 					committeeMember.setScCommittee(this.getManagedBean()
 							.getScQtCommittee().getScCommittee());
@@ -1021,6 +1027,9 @@ public class EvaluationMeetingBackingBean extends
 									.retrieveParameterByTypeAndCode(reqDTO);
 							committees.setMemberRole(resDTO.getPmParameter());
 						}
+						if (committees.getMemberRole() != null) {
+							committees.setMemberRoleId(committees.getMemberRole().getParameterId());	
+						}
 						// activity.setScCommitteeMember(committees);
 						// setUserDetails(activity);
 						localList.add(committees);
@@ -1341,11 +1350,11 @@ public class EvaluationMeetingBackingBean extends
 		ScCommitteeMember activity = committeeActivity.get(index);
 
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.COMMITTEE_ROLE);
-		if (null != activity.getMemberRole().getParameterId()) {
+		if (null != activity.getMemberRoleId()) {
 			for (PmParameterDesc paramDesc : localParamDesc) {
 
 				if (paramDesc.getPmParameter().getParameterId()
-						.equals(activity.getMemberRole().getParameterId())) {
+						.equals(activity.getMemberRoleId())) {
 
 					activity.setMemberRole(paramDesc.getPmParameter());
 					break;
