@@ -23,7 +23,6 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
-import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -108,6 +107,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	 
 	 private CtContractItem selectedItem;
 	 private String showItem;
+	 private String showServiceItem;
 	 private List<CtContractItem> ctItemServiceList;
 	private CtContractItem selectedServiceItem;
 	 
@@ -845,8 +845,22 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setShowItem(String showItem) {
 		this.showItem = showItem;
-	}
+	}	
 	
+	/**
+	 * @return the showServiceItem
+	 */
+	public String getShowServiceItem() {
+		return showServiceItem;
+	}
+
+	/**
+	 * @param showServiceItem the showServiceItem to set
+	 */
+	public void setShowServiceItem(String showServiceItem) {
+		this.showServiceItem = showServiceItem;
+	}
+
 	/**
 	 * @return the ctItemServiceList
 	 */

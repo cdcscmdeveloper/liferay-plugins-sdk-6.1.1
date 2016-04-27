@@ -88,8 +88,9 @@
 		             <h:outputLabel for="show" value="#{lbl['lbl.ct.show']}" style="width:50px;"/>
 		             <h:panelGrid columns="3">
 			             <p:selectOneMenu id="show" value="#{ctBackingBean.managedBean.showItem}" style="width:200px;">
-			                 <f:selectItems value="#{ctBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
-			                 <p:ajax event="change" update=":form:changeField" listener="#{ctBackingBean.changeField}" process="@form"
+			                 <f:selectItems value="#{ctBackingBean.getItemDisplayTypeDropdownList(
+			                 	ctBackingBean.managedBean.selectedItem.itemType.parameterCode)}" />
+			                 <p:ajax event="change" update=":form:changeField" listener="#{ctBackingBean.changeShowItem}" process="@form"
 			                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 				         </p:selectOneMenu>
 				         <p:spacer width="1"/>
@@ -568,15 +569,7 @@
 		      
 		      <p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}"  style="width:8%; white-space:normal;"  rendered="false" styleClass="column-align-center">
 		          	<h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomPerYear == null ? lbl['lbl.txt.na'] : data.scRequestItem.tplSpecQuestion.clUomPerYear}" style="float:right;" />
-		      </p:column>
-		      
-		      <p:column headerText="#{lbl['lbl.ct.quantity']}"  style="width:10%; white-space:normal;" styleClass="column-align-center">
-		          <h:outputText value="#{data.minimumOrderQty}" style="float:right;">
-     				<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.scRequestItem.uom.uomCode)}" />		
-		          </h:outputText>		        
-		      </p:column>  
-		      
+		      </p:column>	      
 		      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:7%; white-space:normal;" styleClass="column-align-center">
 		            <h:outputText value="#{data.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		      </p:column>   
@@ -585,9 +578,25 @@
         </h:panelGrid>
        
         <p:outputPanel id="showServicePrice">
-		   <p:spacer height="20"/>
-		    <h:panelGrid columns="1" style="width:100%" 
-		       rendered="#{ctBackingBean.managedBean.selectedServiceItem != null}">
+        	<p:spacer height="20"/>
+	        <h:panelGrid columns="2" style="height:50px;text-align:bottom;" 
+	        	rendered="#{ctBackingBean.managedBean.selectedServiceItem != null}">
+	    		<h:outputLabel for="show" value="#{lbl['lbl.ct.show']}" style="width:50px;"/>
+	   			<h:panelGrid columns="3">
+		   			<p:selectOneMenu id="showService" value="#{ctBackingBean.managedBean.showServiceItem}" style="width:200px;">
+		      			<f:selectItems value="#{ctBackingBean.getItemDisplayTypeDropdownList(
+		      				ctBackingBean.managedBean.selectedServiceItem.itemType.parameterCode)}" />
+		         		<p:ajax event="change" update=":form:showServicePrice" process="@form"
+		         			onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
+			  		</p:selectOneMenu>
+					<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls.show']}" />
+	  			</h:panelGrid>
+			</h:panelGrid>
+		   	<p:spacer height="20"/>
+		    <h:panelGroup style="width:100%" 
+		       rendered="#{ctBackingBean.managedBean.selectedServiceItem != null and 
+			        ctBackingBean.managedBean.showServiceItem == ParameterConst.itemDisplayTypePrice}">
 		    
 		      <p:dataTable id="servicePriceTable" var="itemPricesVar"
 		          value="#{ctBackingBean.managedBean.selectedServiceItem.ctItemPrices}">
@@ -633,11 +642,42 @@
                               <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                             </h:outputText>
 			            </p:column>   
-			      </c:if>                
-		  
-		  
+			      </c:if>
 		   </p:dataTable>
-	    </h:panelGrid>
+	    </h:panelGroup>
+	    <h:panelGroup  style="width:100%"
+			        rendered="#{ctBackingBean.managedBean.selectedServiceItem != null and 
+			           ctBackingBean.managedBean.showServiceItem == ParameterConst.itemDisplayTypeQty}">
+		     
+		           <p:dataTable id="serviceItemMaxQtyTbl" var="serviceItemMaxQty" 
+		                value="#{ctBackingBean.managedBean.selectedServiceItem.ctItemMaxQties}">
+			            <ac:paginator for="serviceItemMaxQtyTbl"/>
+			            
+			            <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:30%; white-space:normal;"
+				             rendered="#{ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
+			  		         ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
+			  		         ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+				               <p:outputLabel value="#{serviceItemMaxQty.ctContractZone.zoneName}" style="float:left;" rendered="#{!serviceItemMaxQty.changeZoneLabel}" />
+				               <p:outputLabel value="#{serviceItemMaxQty.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{serviceItemMaxQty.changeZoneLabel}" />
+						</p:column>				            
+			            <p:column headerText="#{lbl['lbl.ct.quantity']}" style="width: 30%; white-space:normal;" styleClass="column-align-center">
+		               		<h:outputText value="#{serviceItemMaxQty.maxQuantity}" style="float:right;">
+		               			<f:converter converterId="dynamicNumberConverter" />
+								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedServiceItem.scRequestItem.uom.uomCode)}" />
+			             	</h:outputText>
+						</p:column>  
+			            <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width: 20%; white-space:normal;" styleClass="column-align-center">
+			                <h:outputText value="#{serviceItemMaxQty.effDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>			            
+			            </p:column>       
+			            <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width: 20%; white-space:normal;" styleClass="column-align-center">
+			                <h:outputText value="#{serviceItemMaxQty.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>			            
+			 			</p:column>
+			    </p:dataTable>
+		  </h:panelGroup>	    
 	 </p:outputPanel>
    </p:panel>
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
