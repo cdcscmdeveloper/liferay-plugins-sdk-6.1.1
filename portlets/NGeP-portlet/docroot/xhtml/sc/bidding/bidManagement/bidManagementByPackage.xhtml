@@ -11,6 +11,7 @@
 
 		<p:dataTable id="scBidItemsList" rows="10" var="item"
 			rowIndexVar="index"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}">
 			<ac:paginator for="scBidItemsList"></ac:paginator>
 
@@ -68,6 +69,7 @@
 		</div>
 		
 		<p:dataTable id="bidPackagesListForBMBP"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.bidPackages}" var="item">
 			<ac:paginator for="bidPackagesListForBMBP"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.ranking']}">

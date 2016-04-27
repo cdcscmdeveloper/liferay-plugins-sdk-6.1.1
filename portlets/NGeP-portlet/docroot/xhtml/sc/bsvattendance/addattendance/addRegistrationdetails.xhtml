@@ -10,6 +10,7 @@
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true" id="attRegPnl">
 		<ac:lovPopup />
 		<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}"
 			selection="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration}"
 			rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
@@ -73,6 +74,7 @@
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.supplier.attendene.list.instruction']}" escape="false" />
 		
 		<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.bsvAttendance}"
 			rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
 			selection="#{bsvAttendanceBackingBean.managedBean.scQtBriefingAttendance}"

@@ -132,6 +132,7 @@
 				<p:spacer height="3" />
 				<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true" id="evaluationCloneCommitteeMeetingIds">
 					<p:dataTable id="clonesearchCommitteid" rows="10"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{evaluationMeetingBackingBean.searchQuotatioTender}"
 						rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
 						styleClass="cloneResults">
@@ -193,6 +194,7 @@
 				</ui:fragment>
 
 					<p:dataTable id="cloneCommittee" var="committeeMember" rows="10" rowIndexVar="index"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebers}"
 						selection="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebersSelect}"
 						rowKey="#{committeeMember.committeeMemberId}">

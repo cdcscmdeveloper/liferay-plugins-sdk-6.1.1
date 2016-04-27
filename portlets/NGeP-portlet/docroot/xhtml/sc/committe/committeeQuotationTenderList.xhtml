@@ -8,6 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 		<p:dataTable id="qtDetailsId"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{committeBackingBean.managedBean.committeeQTDataModel}"
 			var="scQtCommittees" rowIndexVar="index" lazy="true" rows="10">
 

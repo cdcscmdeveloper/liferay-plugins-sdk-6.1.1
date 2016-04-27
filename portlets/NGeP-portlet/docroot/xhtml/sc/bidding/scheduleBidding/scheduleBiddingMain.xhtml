@@ -80,6 +80,7 @@
 			header="#{lbl['lbl.sc.participant.list']}">
 
 			<p:dataTable id="participantList" rows="10"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{scheduleBiddingBB.managedBean.bidParticipants}"
 				var="bidParticipant">
 				<ac:paginator for="participantList"></ac:paginator>
@@ -108,6 +109,7 @@
 			</f:facet>
 
 			<p:dataTable var="contact" id="contactPersonDetails" Var="contact"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{scheduleBiddingBB.managedBean.scBidContactPersonList}"
 				rowIndexVar="index" rows="10" rowKey="#{contact.bidContactPersonId}">
 				<ac:paginator for="contactPersonDetails" />

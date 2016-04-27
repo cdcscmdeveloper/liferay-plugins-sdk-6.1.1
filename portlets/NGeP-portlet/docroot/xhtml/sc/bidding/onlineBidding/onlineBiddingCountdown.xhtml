@@ -43,6 +43,7 @@
 			<div style="width: 100%">
 
 				<p:dataTable id="bidItemWisePriceListPB"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{onlineBiddingBB.bidPrices}" var="bidPriceItem">
 
 					<p:columnGroup type="header">

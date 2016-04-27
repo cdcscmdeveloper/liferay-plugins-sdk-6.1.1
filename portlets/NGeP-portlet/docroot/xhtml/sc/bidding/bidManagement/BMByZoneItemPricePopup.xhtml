@@ -21,6 +21,7 @@
 		<div>
 
 			<p:dataTable id="itemPriceList"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{biddingBB.managedBean.scBidPriceList}" var="itemPrice">
 				<ac:paginator for="itemPriceList"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.sc.item.name']}">

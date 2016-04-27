@@ -25,6 +25,7 @@
 
 	
 			<p:dataTable id="committeMember"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{committeBackingBean.managedBean.committemembers}"
 				var="committemember" rowIndexVar="index" editable="true">
 				 <ac:paginator for="committeMember" />
