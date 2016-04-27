@@ -3635,6 +3635,12 @@ public class SmCommonUtil {
 		}
 	}
 
+	/**
+	 * Set default personnel identification type based on selected nationality
+	 * 
+	 * @param SmPersonnel
+	 *            per
+	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
 			if (per.getPmCountry().getCountryCode()
@@ -3652,6 +3658,25 @@ public class SmCommonUtil {
 				per.setIdentificationType(passport);
 			}
 		}
+	}
+
+	/**
+	 * Generate velocity template to PDF
+	 * 
+	 * @param svTask
+	 * @param templateType
+	 * @return String
+	 * @throws Exception
+	 */
+	public static String generateToPdf(String vm, VelocityContext context,
+			String fileNamePath) throws Exception {
+		File tempFile1 = new File(fileNamePath);
+		OutputStream os1 = new FileOutputStream(tempFile1);
+		DocumentGenerator.getInstance().generatePdfFromVelocity(vm, context,
+				os1);
+		os1.flush();
+		os1.close();
+		return fileNamePath;
 	}
 
 	private static SelectItem getLhdnSelectItem() {
