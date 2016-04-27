@@ -18,6 +18,7 @@
 		<br/>			  
 		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" 
 					 var="price" rowKey="#{price}" rowIndexVar="rowIndex" 
+					 emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					 selection="#{suppFinalBiddingBackingBean.managedBean.selectedPackageBean}">
 			<ac:paginator for="supplierPackageTbl"/>
 			

@@ -21,6 +21,7 @@
 				rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
 
 				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index" rows="10"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{scoringList}" var="checkListScoring"
 					rowKey="#{checkListScoring}">
 					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
@@ -55,6 +56,7 @@
 				id="technicalSupplierNoofYearsGovernmentEvaluationAutoScoringId"
 				rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
 				<p:dataTable id="#{scoringPnlId}" rowIndexVar="index"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{scoringList}" var="checkListScoring" rows="10"
 					rowKey="#{checkListScoring}">
 					<ac:paginator for="#{scoringPnlId}"></ac:paginator>

@@ -20,6 +20,7 @@
 
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
 			first="#{specificationBackingBean.managedBean.financialTableRow}"

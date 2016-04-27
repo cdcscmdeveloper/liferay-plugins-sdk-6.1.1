@@ -11,6 +11,7 @@
 
 		<p:dataTable id="nbsearchresults"
 			value="#{noticeBoardBackingBean.qtDataModel}" lazy="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			styleClass="nbsrhresultsStyleClass" style="width:100%" var="scqt"
 			rows="20">
 

@@ -27,6 +27,7 @@
 		</tr>
 		</table> 
 		<p:dataTable id="itemtbl" var="scLoiLoaItem"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoaItems}" rows="10">
 			
 			<ac:paginator for="itemtbl" />

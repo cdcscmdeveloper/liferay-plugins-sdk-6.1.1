@@ -129,6 +129,7 @@
 			<p:dataTable id="cloneCommitteeSearchTbl"
 				value="#{suppFinalMeetingBackingBean.managedBean.cloneSearchQTDataModel}"
 				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				styleClass="cloneResults">
 
 				<ac:paginator for="cloneCommitteeSearchTbl" />

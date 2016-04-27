@@ -10,6 +10,7 @@
 		test="#{approvalBackingBean.managedBean.qt.scQtGosodoBudgets ne null and approvalBackingBean.managedBean.qt.scQtGosodoBudgets.size() > 0}">
 		<p:panel header="#{lbl['lbl.sc.qt.goso.list']}" toggleable="true">
 			<p:dataTable id="gosoList"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{approvalBackingBean.managedBean.qt.scQtGosodoBudgets}"
 				var="goso" style="width : 100%">
 

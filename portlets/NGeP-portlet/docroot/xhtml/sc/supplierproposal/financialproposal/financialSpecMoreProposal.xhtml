@@ -31,6 +31,7 @@
 			<p:dataTable id="proposalid" var="proposalList"
 				selection="#{supplierProposalDetailBackingBean.managedBean.selectMultipleProposalList}"
 				value="#{supplierProposalDetailBackingBean.managedBean.qtProposalsList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{proposalList}" rowIndexVar="rowIndex">
 
 				<p:column selectionMode="multiple" style="width:2%" />

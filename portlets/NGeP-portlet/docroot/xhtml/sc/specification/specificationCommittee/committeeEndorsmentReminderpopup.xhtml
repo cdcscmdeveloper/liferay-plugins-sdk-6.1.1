@@ -11,6 +11,7 @@
 		modal="true" width="600" height="250" position="top">
 		<p:panel id="signOffreminder">
 			<p:dataTable id="specificationReminder" var="reminderpopup" rows="10"
+			   emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				editable="true">
 				<ac:paginator for="specificationReminder" />
 				<p:column headerText="#{lbl['lbl.sc.name']}"

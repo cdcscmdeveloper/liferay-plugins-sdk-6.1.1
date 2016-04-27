@@ -51,6 +51,7 @@
 				escape="false" />
 
 			<p:dataTable var="complianceSample" id="complianceSample" rows="10"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowIndexVar="index" style="width:100%" lazy="true"
 				value="#{evaluationBackingBean.managedBean.complianceSampleLblsupplierDM}"
 				first="#{evaluationBackingBean.managedBean.evaluationsampleTableRow}"

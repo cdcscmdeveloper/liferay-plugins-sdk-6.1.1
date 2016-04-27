@@ -17,6 +17,7 @@
 		</f:facet>
 
 		<p:dataTable var="finEvaluationqualifiedSupplier" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			id="qualifiedListId"
 			value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
 			lazy="true" editable="true" rowIndexVar="index"
@@ -83,6 +84,7 @@
 		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			id="disQualifiedListId" editable="true"
 			value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
 			lazy="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">

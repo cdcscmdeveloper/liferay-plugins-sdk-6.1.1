@@ -14,6 +14,7 @@
 		<h:panelGroup>
 			<h:panelGrid width="100%">
 				<p:dataTable id="locationDataTable" rows="10"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{directLOABackingBean.managedBean.locationTreeNodes}"
 					var="locationTree" style="width:100%" rowIndexVar="index"
 					rowKey="#{locationTree}">

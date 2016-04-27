@@ -122,6 +122,7 @@
 					value="#{qTCommitteBackingBean.managedBean.cloneSearchQTDataModel}"
 					selection="#{qTCommitteBackingBean.managedBean.selectedCloneTender}"
 					rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="cloneResults" rows="10">
 
 					<ac:paginator for="clonesearchCommitteid" />

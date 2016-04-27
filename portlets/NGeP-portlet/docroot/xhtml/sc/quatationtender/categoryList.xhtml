@@ -10,6 +10,7 @@
 		<p:dataTable id="#{criteriaPnlId}" var="scQtCategory"
 			value="#{criteriaList}" editable="true" style="width:100%"
 			rowIndexVar="index" rowKey="#{scQtCategory}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{criteriaselectList}">
 
 			<p:column selectionMode="multiple" style="width:2%" />

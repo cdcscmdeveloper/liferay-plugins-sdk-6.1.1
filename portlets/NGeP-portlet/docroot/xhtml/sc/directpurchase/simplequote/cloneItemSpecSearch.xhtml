@@ -70,6 +70,7 @@
 		<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true"
 			id="citemId">
 			<p:dataTable id="scQuoteDataModel"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{simpleQuoteBackingBean.managedBean.scQuoteDataModel}"
 				var="scQuote"
 				selection="#{simpleQuoteBackingBean.managedBean.selectedQuote}"

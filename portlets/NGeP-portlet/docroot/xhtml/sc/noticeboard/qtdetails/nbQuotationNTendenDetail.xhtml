@@ -71,6 +71,7 @@
 
 				<p:dataTable
 					value="#{noticeBoardBackingBean.managedBean.locationNodes}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					var="locTree" style="width:100%">
 					<p:column headerText="#{lbl['lbl.sc.location']}">
 						<p:tree value="#{locTree}" var="location">
@@ -99,6 +100,7 @@
 				<p:spacer height="10px"></p:spacer>
 				<p:dataTable
 					value="#{noticeBoardBackingBean.managedBean.zoneTree}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					var="zonTree" style="width:100%">
 					<p:column headerText="#{lbl['lbl.sc.zone.name']}">
 
@@ -147,6 +149,7 @@
 			toggleable="true">
 			<p:dataTable var="contactPerson" style="width:100%"
 				value="#{noticeBoardBackingBean.managedBean.contactPersons}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				styleClass="test" rows="20">
 
 				<p:column headerText="#{lbl['lbl.sc.name']}"

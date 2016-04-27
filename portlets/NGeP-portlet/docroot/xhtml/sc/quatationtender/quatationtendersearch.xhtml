@@ -158,6 +158,7 @@
 			<h:panelGroup id="table-wrapper" style="width:100%;">
 				<p:dataTable id="searchQTs"
 					value="#{qTDetailBB.managedBean.searchQTDataModel}" var="scQt"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowIndexVar="index" lazy="true" rows="10">
 
 					<ac:paginator for="searchQTs" />

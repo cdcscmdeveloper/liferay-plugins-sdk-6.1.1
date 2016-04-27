@@ -8,6 +8,7 @@
 	
 		<p:dataTable id="supplierPriceDtls"
 			value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			var="supplierBean" rows="10">
 			<ac:paginator for="supplierPriceDtls"></ac:paginator>
 

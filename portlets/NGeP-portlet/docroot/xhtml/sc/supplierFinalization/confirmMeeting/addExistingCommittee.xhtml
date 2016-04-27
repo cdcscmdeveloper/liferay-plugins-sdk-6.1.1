@@ -56,6 +56,7 @@
 						selection="#{suppFinalMeetingBackingBean.managedBean.selectedPmUsers}"
 						rowKey="#{existingMember.userId}" var="existingMember"
 						lazy="true" styleClass="existingCommitteeResults" style="width : 100%;"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rows="10">
 
 						<ac:paginator for="existingMemberTbl" />

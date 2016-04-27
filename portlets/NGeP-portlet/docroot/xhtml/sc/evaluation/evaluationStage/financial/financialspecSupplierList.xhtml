@@ -22,6 +22,7 @@
 				escape="false" />
 
 			<p:dataTable var="finSpec" editable="true" lazy="true"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				id="financialSpecEvaluationStage" rows="10"
 				value="#{finSpecsupplierList}" rowIndexVar="index"
 				style="width:100%" rowKey="#{finSpec}">

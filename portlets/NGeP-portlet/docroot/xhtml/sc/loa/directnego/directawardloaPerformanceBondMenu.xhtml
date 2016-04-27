@@ -72,6 +72,7 @@
 	</p:panel>
 	<p:dataTable id="performancebondtbl" var="bondList"
 		value="#{directLOABackingBean.managedBean.scLoa}"
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		rows="10" rowIndexVar="rowIndex">
 		<ac:paginator for="performancebondtbl" />
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.bond.ref.no']}"

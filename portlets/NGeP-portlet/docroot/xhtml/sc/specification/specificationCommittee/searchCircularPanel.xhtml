@@ -142,6 +142,7 @@
 					style="width:100%" rows="10"
 					value="#{specificationBackingBean.managedBean.panelItemList}"
 					selection="#{specificationBackingBean.managedBean.selectCtPanelItem}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{panelItem}">
 
 					<ac:paginator for="panelItemList"></ac:paginator>

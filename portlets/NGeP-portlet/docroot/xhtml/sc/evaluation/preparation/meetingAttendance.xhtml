@@ -16,6 +16,7 @@
 			value="#{lbl['lbl.sc.join.in.instruction']}" escape="false" />
 
 		<p:dataTable var="meetingAttendance" id="turuthadir" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			widgetVar="tirutWidget"
 			value="#{evaluationBackingBean.managedBean.meetingAttendanceList}"
 			selection="#{evaluationBackingBean.managedBean.meetingAttendanceSelectList}"

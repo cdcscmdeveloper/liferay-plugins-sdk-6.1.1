@@ -30,6 +30,7 @@
 		<p:spacer height="5px"></p:spacer>
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneGeneralDataTable" rows="10"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{directLOABackingBean.managedBean.zoneTrees}" var="zoneTree"
 				style="width:100%" rowIndexVar="index" rowKey="#{zoneTree}">
 

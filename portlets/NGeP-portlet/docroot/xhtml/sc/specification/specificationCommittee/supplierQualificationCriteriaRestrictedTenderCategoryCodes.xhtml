@@ -12,6 +12,7 @@
 
 		<p:dataTable id="restrictedPnlId" var="cateGory" rows="10"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			style="width:100%" rowIndexVar="index">
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}"

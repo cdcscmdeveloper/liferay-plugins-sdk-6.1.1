@@ -65,6 +65,7 @@
 						<tr>
 							<td />
 							<td><p:dataGrid id="attachedIds"
+							        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									value="#{approvalBackingBean.managedBean.attachments}" var="attachFile"
 									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 									<table>

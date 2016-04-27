@@ -56,6 +56,7 @@
 					selection="#{qTCommitteBackingBean.managedBean.selectedPmUser}"
 					rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
 					lazy="true" style="width : 100%;" rows="10"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					styleClass="existingCommitteeResults">
 
 					<ac:paginator for="existingcommitteesearchid" />

@@ -11,6 +11,7 @@
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 
 		<p:dataTable var="summaryItem" id="evaluationSummaryItem"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			editable="true" value="#{itemList}" rows="10"
 			selection="#{evaluationBackingBean.managedBean.singlesummaryItemList}"
 			selectionMode="single" rowIndexVar="index" rowKey="#{summaryItem}">
@@ -39,6 +40,7 @@
 			</f:facet>
 
 			<p:dataTable var="summaryqualSup"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				id="evaluationSummaryItemQualifiedSuppliers" rows="10"
 				value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
 				lazy="true" editable="true" rowIndexVar="index"
@@ -104,6 +106,7 @@
 			</f:facet>
 
 			<p:dataTable var="disQualifiedSupplier"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				id="evaluationSummaryItemDisQualifiedSuppliers" rows="10"
 				value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
 				lazy="true" editable="true" rowIndexVar="index"

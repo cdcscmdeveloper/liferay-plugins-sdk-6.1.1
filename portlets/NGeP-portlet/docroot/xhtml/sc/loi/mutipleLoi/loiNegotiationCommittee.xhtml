@@ -15,6 +15,7 @@
 				toggleable="false">
 				<p:dataTable id="ecMemberTbl" var="committeeDtl"
 					value="#{lOIDetailBackingBean.managedBean.ecActivityList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 
 					<ac:paginator for="ecMemberTbl" />
@@ -68,6 +69,7 @@
 				toggleable="false">
 				<p:dataTable id="tecMemberTbl" var="committeeDtl"
 					value="#{lOIDetailBackingBean.managedBean.tecActivityList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 
 					<ac:paginator for="tecMemberTbl" />
@@ -117,6 +119,7 @@
 				toggleable="false">
 				<p:dataTable id="fecMemberTbl" var="committeeDtl"
 					value="#{lOIDetailBackingBean.managedBean.fecActivityList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 
 					<ac:paginator for="fecMemberTbl" />
@@ -168,6 +171,7 @@
 			<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
 				value="#{lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances}"
 				rows="10" rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedMeetingAttList}">
 
 				<ac:paginator for="meetingAttDtlTbl" />
@@ -225,6 +229,7 @@
 			rendered="#{lOIDetailBackingBean.managedBean.scQtCommittee ne null}">
 			<p:dataTable id="fcMemberTbl" var="committeeDtl"
 				value="#{lOIDetailBackingBean.managedBean.fcActivityList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 
 				<ac:paginator for="fcMemberTbl" />

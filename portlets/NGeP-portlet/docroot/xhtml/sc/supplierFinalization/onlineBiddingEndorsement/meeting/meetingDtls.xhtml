@@ -10,6 +10,7 @@
 		<p:dataTable id="meetingDtlTbl" var="meetingDtl"
 			value="#{suppFinalBiddingBackingBean.managedBean.meetingList}"
 			rows="10" rowKey="#{meetingDtl}" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			editable="true">
 
 			<ac:paginator for="meetingDtlTbl" />

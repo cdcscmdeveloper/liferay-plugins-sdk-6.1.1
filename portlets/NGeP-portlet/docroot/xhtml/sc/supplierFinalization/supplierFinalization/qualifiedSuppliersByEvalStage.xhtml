@@ -21,6 +21,7 @@
 					 var="qualifiedSupp" widgetVar="qualifiedSupplierDtls" 
 					 rowKey="#{qualifiedSupp.evaluationResultDtlId}" 
 					 rowIndexVar="index" rows="10" lazy="true" 
+					 emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					 value="#{suppFinalizationBackingBean.managedBean.qualifiedSuppliersByEvalStage}">
 
 			<ac:paginator for="evaluationQualifiedSuppliers" />

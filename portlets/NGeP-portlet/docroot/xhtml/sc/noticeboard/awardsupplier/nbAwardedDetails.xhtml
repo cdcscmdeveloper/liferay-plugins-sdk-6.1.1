@@ -15,6 +15,7 @@
 			</h:panelGrid>
 			<p:dataTable id="itemizedtbl" var="awardedItem" style="width:100%"
 				value="#{noticeBoardBackingBean.managedBean.awardedItems}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowIndexVar="index">
 				<p:columnGroup type="header">
 					<p:row>

@@ -20,6 +20,7 @@
 		<p:dataTable id="suppliersTbl" var="qtSupplier" rows="10"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"
 			rowIndexVar="index" editable="true" rowKey="#{qtSupplier}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedQtSupplierList}">
 
 			<ac:paginator for="suppliersTbl" />

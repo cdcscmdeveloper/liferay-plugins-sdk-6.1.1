@@ -23,6 +23,7 @@
 			<p:dataTable id="qtLoaTbl" var="scLoiLoa"
 				value="#{qtLOABackingBean.managedBean.scLoiLoaList}" rows="10"
 				selection="#{qtLOABackingBean.managedBean.selectedLoiLoa}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{scLoiLoa}" rowIndexVar="rowIndex" selectionMode="single">
 				<ac:paginator for="qtLoaTbl" />
 				<p:ajax event="rowSelect"
@@ -48,6 +49,7 @@
 			<h:panelGroup id="supploaloalistPnl">
 				<p:dataTable id="qtLoiLoaList" var="loiloa" rows="10"
 					value="#{qtLOABackingBean.managedBean.suppLoiLoaList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowIndexVar="rowIndex">
 					<ac:paginator for="qtLoiLoaList" />
 					<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">

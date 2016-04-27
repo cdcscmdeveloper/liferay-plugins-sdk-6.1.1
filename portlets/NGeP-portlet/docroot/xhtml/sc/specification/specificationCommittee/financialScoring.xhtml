@@ -32,6 +32,7 @@
 
 		<p:dataTable id="financialweightage" var="finance" rowKey="#{finance}"
 			value="#{specificationBackingBean.managedBean.financialScoring}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			style="width:100%" rowIndexVar="index">
 			<!-- <ac:paginator for="financialweightage" /> -->
 			<!-- 	<p:column selectionMode="multiple" style="text-align:center;" /> -->

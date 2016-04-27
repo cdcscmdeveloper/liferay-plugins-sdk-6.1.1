@@ -16,6 +16,7 @@
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
 			rowIndexVar="index" rows="10"
 			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{cateGory}">
 
 			<p:column selectionMode="multiple" styleClass="td-check-box-spacing"></p:column>
@@ -172,6 +173,7 @@
 					<p:dataTable id="zoneLocationDataTable" rows="10"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rowKey="#{zoneTree}">
 
 						<ac:paginator for="zoneLocationDataTable" />
@@ -293,6 +295,7 @@
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
 
 						<ac:paginator for="zoneyesDataTable" />

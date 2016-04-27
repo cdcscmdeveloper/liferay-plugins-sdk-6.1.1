@@ -10,6 +10,7 @@
 		toggleable="true">
 		<p:dataTable id="cashonhandid" var="cashonhand"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCashOnHand}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{cashonhand}" rowIndexVar="rowIndex">
 			<ac:paginator for="cashonhand" />
 			<p:column style="width:2%" rendered="#{!statusHide}">

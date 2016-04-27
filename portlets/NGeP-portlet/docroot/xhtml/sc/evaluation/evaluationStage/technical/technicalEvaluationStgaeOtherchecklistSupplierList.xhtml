@@ -14,6 +14,7 @@
 			escape="false" />
 
 		<p:dataTable var="othersList" id="othersTechListId" editable="true"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			lazy="true"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
 			rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}"

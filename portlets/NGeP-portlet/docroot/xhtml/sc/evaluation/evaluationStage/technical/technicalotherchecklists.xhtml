@@ -63,6 +63,7 @@
 					escape="false" />
 
 				<p:dataTable var="cashHand" id="complianceTech" rows="10"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{evaluationBackingBean.managedBean.technicalComplinaceList}"
 					rowIndexVar="index" style="width:100%" rowKey="#{cashHand}">
 					<ac:paginator for="complianceTech" />

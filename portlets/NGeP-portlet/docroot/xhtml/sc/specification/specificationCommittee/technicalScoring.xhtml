@@ -38,6 +38,7 @@
 		<p:dataTable id="technicalWeigtage" var="tech"
 			value="#{specificationBackingBean.managedBean.technicalScoring}"
 			rowKey="#{tech}" editable="true" style="width:100%"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="index">
 			<!-- <ac:paginator for="technicalWeigtage" /> -->
 			<!-- <p:column selectionMode="multiple" style="text-align:center;" /> -->

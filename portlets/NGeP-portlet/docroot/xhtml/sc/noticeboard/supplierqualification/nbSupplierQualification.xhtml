@@ -54,6 +54,7 @@
 			style="margin-bottom:5px;" toggleable="true">
 			<p:dataTable id="supplierQulification"
 				value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				var="qulificationBean" styleClass="test" tyle="width:70%;">
 
 				<p:column headerText="#{lbl['lbl.sc.notice.board.criteria']}" style="width:30%;">

@@ -16,6 +16,7 @@
 		</f:facet>
 
 		<p:dataTable var="finEvaluationqualifiedSupplier" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			id="summaryQualifiedpackage" value="#{qualifiedList}" editable="true"
 			rowIndexVar="index" rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="summaryQualifiedpackage" />
@@ -78,6 +79,7 @@
 		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier" rows="10"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			id="summaryDisqualifiedQualifiedpackage" editable="true"
 			value="#{disQualifiedList}" rowIndexVar="index"
 			rowKey="#{disQualifiedSupplier}">

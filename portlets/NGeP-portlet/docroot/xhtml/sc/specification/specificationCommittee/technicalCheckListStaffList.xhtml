@@ -49,6 +49,7 @@
 				toggleable="true">
 
 				<p:dataTable id="techEmployeeList" var="techEmployee"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowIndexVar="index">
 					<ac:paginator for="techEmployeeList"></ac:paginator>
 

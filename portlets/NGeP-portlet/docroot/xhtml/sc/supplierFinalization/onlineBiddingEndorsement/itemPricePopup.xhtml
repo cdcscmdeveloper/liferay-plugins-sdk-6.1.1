@@ -21,7 +21,9 @@
 		<div>
 
 			<p:dataTable id="itemPriceList"
-				value="#{suppFinalBiddingBackingBean.managedBean.scBidPriceList}" var="itemPrice">
+				value="#{suppFinalBiddingBackingBean.managedBean.scBidPriceList}" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				var="itemPrice">
 				<ac:paginator for="itemPriceList"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.sc.item.name']}">
 					<h:outputText

@@ -11,6 +11,7 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
 			rowKey="#{techList}" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			first="#{supplierProposalDetailBackingBean.managedBean.technicalTableRow}">
 
 			<p:columnGroup type="header">

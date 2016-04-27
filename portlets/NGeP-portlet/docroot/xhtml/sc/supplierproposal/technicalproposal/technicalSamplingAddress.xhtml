@@ -27,6 +27,7 @@
 		<p:dataTable id="samplesubmissionid" var="samplesubmissiondtl"
 			style="width : 100%" editable="true" rowIndexVar="rowIndex"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmissionList}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			styleClass="submissionlist" rowKey="#{samplesubmissiondtl}">
 
 			<p:column headerText="#{lbl['lbl.sc.qt.zone.location']}">
@@ -99,6 +100,7 @@
 		<p:dataTable id="sampleitemid" var="sampleitemdtl"
 			style="width : 100%" editable="true" rowIndexVar="rowIndex"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
 			<p:column headerText="#{lbl['lbl.sc.item']}">
 				<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />

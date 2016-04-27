@@ -72,6 +72,7 @@
 					</tr>
 				</table>
 				<p:dataTable id="experience" rowIndexVar="index" var="experience"
+				    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{experience}" style="width:1090px">
 					<ac:paginator for="experience"></ac:paginator>
 					<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->

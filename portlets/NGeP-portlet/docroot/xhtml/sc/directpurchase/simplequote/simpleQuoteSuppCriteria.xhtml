@@ -58,6 +58,7 @@
 							</tr>
 						</table>
 						<p:dataTable id="locationDataTable"
+						    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{simpleQuoteBackingBean.managedBean.locationTrees}"
 							var="locationTree" rowIndexVar="index">
 							<p:column headerText="#{lbl['lbl.sc.location.name']}">
@@ -124,6 +125,7 @@
 				<p:tab title="#{lbl['lbl.sc.sq.business.nature']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.byBusinessNature}">
 					<p:dataTable id="byBusNatureDtl" var="busiNatureCriteria"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rowKey="#{busiNatureCriteria}" rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
 						value="#{simpleQuoteBackingBean.managedBean.businessNatureCriterias}">
@@ -170,6 +172,7 @@
 				<p:tab title="#{lbl['lbl.sc.supplier.list']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
 					<p:dataTable id="supplierItemDt" var="quoteSupplier"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rowKey="#{quoteSupplier}" rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedSupplierList}"
 						value="#{simpleQuoteBackingBean.managedBean.supplierList}">
@@ -216,6 +219,7 @@
 					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag}">
 					<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
 						rowIndexVar="index"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedGovtSellers}"
 						value="#{simpleQuoteBackingBean.managedBean.govtSellers}">
 						<ac:paginator for="govtSellerId" />
@@ -263,6 +267,7 @@
 				<p:tab title="#{lbl['lbl.sc.sq.panel.supplier']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
 					<p:dataTable id="bypanelItemId" var="data" rowKey="#{data}"
+					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedPanelSuppliers}"
 						value="#{simpleQuoteBackingBean.managedBean.panelSuppliers}">

@@ -14,6 +14,7 @@
 		<p:dataTable var="scQtDocReport" id="doctbl" widgetVar="documentWidget"
 			value="#{qTDocumentsBackingBean.managedBean.scQtDocReportList}"
 			selection="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReports}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{scQtDocReport}" rowIndexVar="rowIndex" rows="10">
 
 			<ac:paginator for="doctbl" />

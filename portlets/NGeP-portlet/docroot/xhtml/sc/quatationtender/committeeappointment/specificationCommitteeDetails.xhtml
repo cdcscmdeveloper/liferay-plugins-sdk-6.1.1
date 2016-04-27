@@ -29,6 +29,7 @@
 		<p:dataTable id="specificationcommitteeid" styleClass="clonetecid"
 			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
 			rowIndexVar="index" rowKey="#{specificationcommittee}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{selectedCommittee}">
 
 			<p:column selectionMode="multiple" style="width:2%"

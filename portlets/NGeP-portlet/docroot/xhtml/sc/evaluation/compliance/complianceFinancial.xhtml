@@ -17,6 +17,7 @@
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}" escape="false" />
 
 		<p:dataTable var="complianceFinancial"
+		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			id="complianceFinancialProposal" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.compliancefinancialCheckList}"
 			first="#{evaluationBackingBean.managedBean.evaluationfinancialTableRow}"

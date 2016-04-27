@@ -51,6 +51,7 @@
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplierDataModel}"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedSupplierList}"
 			rowKey="#{smSupplier.supplierId}" lazy="true" style="width : 100%;"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10">
 			<ui:param name="mof" value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccountFromSmSupplier(smSupplier)}" />
 			<ac:paginator for="ressupplier" />
