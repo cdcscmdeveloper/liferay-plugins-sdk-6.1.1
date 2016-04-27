@@ -575,6 +575,8 @@ public class SupplierManagementConst {
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_ALL = "C";
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_BEFORE = "B";
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_AFTER = "A";
+	
+	public static final String OFFLINE_SUPP_DOC_CHECKLIST_PREFIX = "_SUPP_DOC_CHECKLIST.pdf";
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
