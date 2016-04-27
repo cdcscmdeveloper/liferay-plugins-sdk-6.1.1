@@ -871,7 +871,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private boolean isPcbProcess;
 
-	private boolean pendingRevision;
+	private boolean isCommitteeAppointment;
+	private boolean isCommitteeAppointmentRemark;
 
 	private boolean deskOfficer;
 
@@ -7035,18 +7036,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the pendingRevision
+	 * @return the isCommitteeAppointment
 	 */
-	public boolean isPendingRevision() {
-		return pendingRevision;
+	public boolean isCommitteeAppointment() {
+		return isCommitteeAppointment;
 	}
 
 	/**
-	 * @param pendingRevision
-	 *            the pendingRevision to set
+	 * @param isCommitteeAppointment the isCommitteeAppointment to set
 	 */
-	public void setPendingRevision(boolean pendingRevision) {
-		this.pendingRevision = pendingRevision;
+	public void setCommitteeAppointment(boolean isCommitteeAppointment) {
+		this.isCommitteeAppointment = isCommitteeAppointment;
+	}
+
+	/**
+	 * @return the isCommitteeAppointmentRemark
+	 */
+	public boolean isCommitteeAppointmentRemark() {
+		return isCommitteeAppointmentRemark;
+	}
+
+	/**
+	 * @param isCommitteeAppointmentRemark the isCommitteeAppointmentRemark to set
+	 */
+	public void setCommitteeAppointmentRemark(boolean isCommitteeAppointmentRemark) {
+		this.isCommitteeAppointmentRemark = isCommitteeAppointmentRemark;
 	}
 
 	/**

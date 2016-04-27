@@ -40,7 +40,9 @@
 			
 		<ui:include src="committeeappointmenttabList.xhtml" />
 		
-		<h:panelGroup rendered="#{qTDetailBB.managedBean.taskName eq 'Revise Committee'}">
+		
+	</p:panel>
+	<c:if test="#{qTDetailBB.managedBean.committeeAppointmentRemark}">
 		<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
 		id="committeeremarksupDtls">
 		<h:outputText styleClass="instruction"
@@ -121,23 +123,22 @@
 				</td>
 			</tr>
 		</table>
-	</p:panel>
-	<p:dialog id="commitAttchDlg"
-		widgetVar="commitAttchDlg" modal="true" dynamic="true"
-		resizable="false" width="700px" height="200"
-		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{qTDetailBB.handleFileUpload}"
-			mode="advanced" id="dlgsuploadsids"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="committeeremarksupDtls"
-			oncomplete="commitAttchDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
-	</h:panelGroup>
-	</p:panel>
+		</p:panel>
+		<p:dialog id="commitAttchDlg"
+			widgetVar="commitAttchDlg" modal="true" dynamic="true"
+			resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{qTDetailBB.handleFileUpload}"
+				mode="advanced" id="dlgsuploadsids"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				update="committeeremarksupDtls"
+				oncomplete="commitAttchDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
+	</c:if>
 </ui:composition>
