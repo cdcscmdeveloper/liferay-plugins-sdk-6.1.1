@@ -1,5 +1,8 @@
 package my.ep.web.util.sm.helper;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -163,6 +166,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -171,6 +175,8 @@ import my.ep.web.vo.SmSupplierBasicInfoVO;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -3712,7 +3718,12 @@ public class SmApplicationUtil {
 				.getInstance().getServiceObject("pm", IEducationFieldSO.class);
 		EducationFieldResDTO resDTO = reqSO.retrieveEducationFieldList(reqDTO);
 		if (resDTO != null) {
-			eduFieldList = resDTO.getEduFieldList();
+			eduFieldList = new ArrayList<PmEduField>();
+			for (PmEduField eduField : resDTO.getEduFieldList()) {
+				if (eduField.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					eduFieldList.add(eduField);
+				}
+			}
 
 			// sort
 			Collections.sort(eduFieldList, new Comparator<PmEduField>() {
@@ -7665,6 +7676,27 @@ public class SmApplicationUtil {
 			}
 		}
 		return retVal;
+	}
+
+	public static String generateOfflineSuppDocChecklistPdf(SmAppl smAppl)
+			throws Exception {
+		StreamedContent file;
+		String tmpPath = null;
+		String tmpFolder = "SupportingDoc" + File.separator;
+		tmpPath = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tmpPath = tmpPath + File.separator + tmpFolder;
+		File dir = new File(tmpPath);
+		if (!dir.exists())
+			dir.mkdirs();
+		String fileName = smAppl.getApplNo() + "_SUPP_DOC_CHECKLIST.pdf";
+		String fileNameAndPath = tmpPath + fileName;
+		VelocityContext context = new VelocityContext();
+		String vm = "/sm/application/supp-doc-checklist.vm";
+		context.put("header", SmCommonUtil.getMessage(
+				"lbl.sm.suppDoc.offline.checklist.application.no", null));
+		context.put("applNo", smAppl.getApplNo());
+		return SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
 	}
 
 	public static SmAppl deleteApplChildEntities(SmAppl appl) {
