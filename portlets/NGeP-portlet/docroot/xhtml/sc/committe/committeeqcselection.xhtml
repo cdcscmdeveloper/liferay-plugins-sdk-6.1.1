@@ -67,10 +67,12 @@
 				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
 				<p:column headerText="#{lbl['lbl.sc.role']}"
 					style="width: 10%">
-					<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
+					<p:selectOneMenu value="#{committeemember.memberRoleId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{committeBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(committeemember.PNP,committeBackingBean.managedBean.qtCommittee.scQt,committeemember.pmUser)}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{committeBackingBean.roleChangedListener(committeemember)}" />
 					</p:selectOneMenu>
 				</p:column>
 			</c:if>
