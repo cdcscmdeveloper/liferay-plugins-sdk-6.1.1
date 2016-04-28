@@ -27,13 +27,13 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox 
 						onchange="goToSelectAll()"
-						rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
+						rendered="#{contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 						value="#{contractRequestBackingBean.selectAllCheckbox}">
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
-					rendered="#{chargeLineNode.parent == 'true' and contractRequestBackingBean.managedBean.buttonVal!='View'}"
+					rendered="#{chargeLineNode.parent == 'true' and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 					listener="#{contractRequestBackingBean.selectCheckbox}"
@@ -273,7 +273,7 @@
 						update="chargeLineTbl,chargeAss,chargeLineSection"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
-						rendered="#{contractRequestBackingBean.managedBean.buttonVal!='View'}"
+						rendered="#{contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 						action="#{contractRequestBackingBean.chargeLineApply}" /></td>
 			</tr>
 		</table>
