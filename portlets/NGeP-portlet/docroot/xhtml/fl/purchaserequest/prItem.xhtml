@@ -18,7 +18,7 @@
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 				update=":form:itemDetPanelGroup"
 				listener="#{purchaseRequestBackingBean.selectAddrEvent()}" />
-			<p:column rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}">
+			<p:column rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}">
 				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
@@ -31,7 +31,7 @@
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
 					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
-					disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+					disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
 					<p:graphicImage value="/css/images/design/ico-view-edit.png" />
 					<f:setPropertyActionListener
@@ -85,12 +85,12 @@
 						saveObject="purchaseRequestBackingBean.managedBean.selectedPmDelAddrList"
 						conditionField="recordStatus^1|addressType^#{purchaseRequestBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
-						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
+						rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 						/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
 				action="#{purchaseRequestBackingBean.flManualDeliveryAddr}"
 				update="addManualDelAddrPnl,@(.orderSummaryChange) "
-				rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
+				rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 				process="@this" oncomplete="addManualDeliveryAddr.show();"
 				title="#{lbl['lbl.fl.tooltip.other.address']}">
 				<f:setPropertyActionListener
@@ -101,7 +101,7 @@
 				onclick="delAddrDlg.show()" process="@this"
 				update="addressDataTable,@(.orderSummaryChange)"
 				disabled="#{purchaseRequestBackingBean.managedBean.deleteButtonHide}"
-				rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!='View'}"
+				rendered="#{purchaseRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 				title="#{lbl['lbl.fl.tooltip.delete']}">
 			</p:commandButton>
 		</div>
@@ -148,7 +148,7 @@
 					</f:facet>				
 					<p:selectBooleanCheckbox value="#{flItem.gst}"
 						disabled="#{(purchaseRequestBackingBean.managedBean.selectedDelAddr == null or 
-							flItem.orderedQty == 0) or purchaseRequestBackingBean.managedBean.buttonVal=='View'}">
+							flItem.orderedQty == 0) or purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}">
 						<p:ajax process="@this" listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>
@@ -191,7 +191,7 @@
 						label="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right"
 						styleClass="colFloatLeft"
 						maxlength="#{flItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
-						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern"

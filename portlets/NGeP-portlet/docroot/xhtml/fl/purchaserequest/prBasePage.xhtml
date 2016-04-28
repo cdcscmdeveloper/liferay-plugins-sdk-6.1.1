@@ -52,7 +52,7 @@
 				
 				</td>
 				<c:if
-					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "View" and !purchaseRequestBackingBean.managedBean.isHyperLinkPage() }'>
+					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !purchaseRequestBackingBean.managedBean.isHyperLinkPage() }'>
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -60,27 +60,6 @@
 						immediate="true" />
 					</td>		
 				</c:if>
-			</tr>
-		</table>
-		<table style="width: 100%;">
-			<tr>
-				<c:if
-					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "Update"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="#{lbl['lbl.btn.update']}"
-							action="#{purchaseRequestBackingBean.fulfillmentRequestAction('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
-						</p:commandButton></td>
-				</c:if>
-				<c:if
-					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "Cancel"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="#{lbl['lbl.btn.cancel']}"
-							action="#{purchaseRequestBackingBean.fulfillmentRequestAction('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
-						</p:commandButton></td>
-				</c:if>
-				
 			</tr>
 		</table>
 		<ui:include src="prReviewHeaderPage.xhtml" />
@@ -127,7 +106,7 @@
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top" />
 									<p:selectOneMenu style="width:350px; margin-bottom:5px;"
-										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" >
 										<p:ajax event="change" process="@this" update="approverDropdown"
 											listener="#{purchaseRequestBackingBean.userGroupChangeListener()}"  />
@@ -137,7 +116,7 @@
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" />
 									<p:selectOneMenu id="approverDropdown"
-										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{purchaseRequestBackingBean.managedBean.selectedApprover}"
 										style="width:350px;">
 										<f:selectItems

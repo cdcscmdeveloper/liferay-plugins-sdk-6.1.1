@@ -43,7 +43,7 @@
 						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
-						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View' or purchaseRequestBackingBean.isFlFulfilmentApprover()}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or purchaseRequestBackingBean.isFlFulfilmentApprover()}"
 						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice" readonly="true"
 						postUpdateListener="purchaseRequestBackingBean.getAgAccount"
 						conditionField="#{purchaseRequestBackingBean.getPreparedPTJCondition()}"
@@ -68,7 +68,7 @@
 					<p:commandLink oncomplete="dlgChargedPtj.show();"
 						action="#{purchaseRequestBackingBean.resetChargedPtjDetails}"
 						update=":form:chargeOrgProfile,chargeResultPanel,dialogChargedPtj"
-						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						style="padding-left:10px">
 						<p:graphicImage value="/css/images/design/search.png" />
 					</p:commandLink> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
@@ -95,7 +95,7 @@
 						autoResize="false"
 						style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
-						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"/>
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.pr.tooltip.title']}"/></td>
 						<td><p:message for="title" display="icon" /></td>
 				<td style="width: 134px;"><p:outputLabel
@@ -158,7 +158,7 @@
 				<td><p:calendar mode="popup" readonlyInput="true"
 						showOn="button"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
 						<p:ajax event="dateSelect"
 							listener="#{purchaseRequestBackingBean.updateDeliveryDate}"
@@ -181,7 +181,7 @@
 		</table>
 		<table>
 		<tr>
-			<td><p:selectBooleanCheckbox disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}" value="#{purchaseRequestBackingBean.managedBean.declarationCheck}"/></td>
+			<td><p:selectBooleanCheckbox disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}" value="#{purchaseRequestBackingBean.managedBean.declarationCheck}"/></td>
 			<td><h:outputText style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
 		</tr>
 	</table>
@@ -246,7 +246,7 @@
 				
 				<td><p:selectOneMenu id="suppBranch"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchCode}"
-						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View' or empty purchaseRequestBackingBean.managedBean.supplierBranchesList}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or empty purchaseRequestBackingBean.managedBean.supplierBranchesList}"
 						style="width: 360px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="suppBranchList"
