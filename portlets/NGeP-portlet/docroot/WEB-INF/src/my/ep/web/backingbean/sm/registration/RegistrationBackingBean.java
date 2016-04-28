@@ -2088,7 +2088,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSelectedGstSupplierDoc().setFileName(fileName);
 			getManagedBean().getSelectedGstSupplierDoc().setFilePath(filePath);
 			
-			commonUploadFile(event, filePath);
+			SmCommonUtil.processUpload(filePath, event, fileName);
 		}
 	}
 	
