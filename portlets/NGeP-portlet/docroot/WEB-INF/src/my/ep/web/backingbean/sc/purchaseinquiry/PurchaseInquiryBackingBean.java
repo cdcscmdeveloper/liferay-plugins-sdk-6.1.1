@@ -559,8 +559,7 @@ public class PurchaseInquiryBackingBean extends
 	public void priceTypeChangeListener() {
 		debugLogger("priceTypeChangeListener");
 		ScPrInquiry prInquiry  = getManagedBean().getScPrInquiry();
-		Map<ScSupplierItemPrice, ScSupplierItemPrice> itemPricesMap = new LinkedHashMap<ScSupplierItemPrice, ScSupplierItemPrice>();
-		List<ScSupplierItemPrice> itemPriceList = null;
+		List<ScSupplierItemPrice>	priceList = new ArrayList<ScSupplierItemPrice>();
 		ScRequestSupplierItem scRequestSupplierItem = getManagedBean().getScRequestSupplierItem();
 		
 		if(prInquiry.isBrandNew()){
@@ -573,7 +572,6 @@ public class PurchaseInquiryBackingBean extends
 			List<ScSupplierItemPrice> supplierItemPrices = scRequestSupplierItem.getSupplierItemPrices();
 
 			if (supplierItemPrices != null && supplierItemPrices.size() > 0) {
-				itemPriceList = new ArrayList<ScSupplierItemPrice>();
 				for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
 					if (scSupplierItemPrice.getPriceType() != null) {
 						if(prInquiry.getPriceType() != null){
@@ -585,23 +583,15 @@ public class PurchaseInquiryBackingBean extends
 								if (DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE
 										.equals(getManagedBean().getPriStatus()
 												.getStatusId())) {
-									
-									
 									scSupplierItemPrice.setItemPrice(null);
-									itemPricesMap.put(scSupplierItemPrice,
-											scSupplierItemPrice);
-								} else {
-									itemPricesMap.put(scSupplierItemPrice,
-											scSupplierItemPrice);
-								}
+								} 
+								priceList.add(scSupplierItemPrice);
 							}
 						}
 					}
 				}
-				itemPriceList = new ArrayList<ScSupplierItemPrice>(
-						itemPricesMap.keySet());
 			}
-			getManagedBean().setSupplierItemPrices(itemPriceList);
+			getManagedBean().setSupplierItemPrices(priceList);
 		}
 	}
 
