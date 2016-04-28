@@ -713,7 +713,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @return the portlet title
 	 */
 	public String getPortletTitle() {
-		String rfc = ResourceBundleUtils.getMessage("lbl.fl.rfc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
+		String rfc = ResourceBundleUtils.getMessage("lbl.fl.doc.maintain.action.factory.comp.removal",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		String title = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		String portletTitle = title;
 		if(getManagedBean().isRemoveFactoring()) {
