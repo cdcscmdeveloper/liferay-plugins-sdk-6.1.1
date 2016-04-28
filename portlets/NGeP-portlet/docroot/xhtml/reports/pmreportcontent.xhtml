@@ -92,7 +92,7 @@
 													value="#{reportBackingBean.itemsList}"></f:selectItems>
 												<p:ajax event="change" partialSubmit="true" update="@form" />
 											</p:selectOneMenu></td>
-										<td><p:message id="rptOrgTypeMsg" for="orgType"
+										<td style="width:47%;"><p:message id="rptOrgTypeMsg" for="orgType"
 												display="icon" showDetail="false" /></td>
 									</tr>
 								</table>
@@ -113,14 +113,14 @@
 							<p:column>
 								<table style="width: 100%">
 									<tr>
-										<td style="width: 100%"><p:inputText
+										<td><p:inputText
 												label="#{lbl['lbl.rpt.orgName']}" id="orgName"
 												maxlength="100" value="#{reportBackingBean.pmOrgName}"
 												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="blur" partialSubmit="true"
-													update="@([id$=Msg])" />
+												<p:ajax event="change" partialSubmit="true"
+													update="@form" />
 											</p:inputText></td>
-										<td><p:message id="orgNameMsg" for="orgName"
+										<td style="width:47%;"><p:message id="orgNameMsg" for="orgName"
 												display="icon" showDetail="false" /></td>
 									</tr>
 								</table>
