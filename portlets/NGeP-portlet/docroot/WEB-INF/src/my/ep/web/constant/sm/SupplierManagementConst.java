@@ -503,7 +503,7 @@ public class SupplierManagementConst {
 
 	public static final double MIN_AMT_RANGE = 0.01;
 	public static final double MAX_AMT_RANGE = 99999999999999.99;
-	public static final double MIN_EXP_RANGE = 1.00;
+	public static final double MIN_EXP_RANGE = 0.00;
 	public static final double MAX_EXP_RANGE = 99.11;
 
 	// PM Cert body
