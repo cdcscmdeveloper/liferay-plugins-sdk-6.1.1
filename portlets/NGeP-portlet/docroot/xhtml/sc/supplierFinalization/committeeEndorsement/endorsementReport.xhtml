@@ -16,6 +16,7 @@
 				</td>
 				<td class="TableFieldRight">
 					<p:dataGrid var="remarkVar"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{suppFinalizationBackingBean.managedBean.finalizationEndorsementRemarks}"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>

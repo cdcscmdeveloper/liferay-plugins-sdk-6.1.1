@@ -189,6 +189,7 @@
 							value="#{lbl['lbl.sc.remark']}" /></td>
 					<td class="TableFieldRight"><p:dataGrid id="bpkremarklist"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 							<table>
 								<tr>

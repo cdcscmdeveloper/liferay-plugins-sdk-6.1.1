@@ -24,6 +24,7 @@
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{specificationBackingBean.managedBean.scQtRemarksList}"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>

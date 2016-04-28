@@ -98,6 +98,7 @@
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
 
 						<p:dataGrid var="remarkVar"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{evaluationBackingBean.managedBean.scQt.scQtEvaluationCommitteeRemarks}"
 							rowIndexVar="remarkIndex" columns="1">
 							<table>
@@ -129,6 +130,7 @@
 					</ui:fragment> <ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'OC'}">
 						<p:dataGrid var="remarkVar"
+						    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{evaluationBackingBean.managedBean.scQt.scQtOpeningCommitteeRemarks}"
 							rowIndexVar="remarkIndex" columns="1">
 							<table>
@@ -160,6 +162,7 @@
 					</ui:fragment> <ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
 						<p:dataGrid var="remarkVar"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{evaluationBackingBean.managedBean.scQt.scQtTechnicalCommitteeRemarks}"
 							rowIndexVar="remarkIndex" columns="1">
 							<table>
@@ -191,6 +194,7 @@
 					</ui:fragment> <ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
 						<p:dataGrid var="remarkVar"
+						    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{evaluationBackingBean.managedBean.scQt.scQtFinancialCommitteeRemarks}"
 							rowIndexVar="remarkIndex" columns="1">
 							<table>

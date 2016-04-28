@@ -202,6 +202,7 @@
 				<td class="TableFieldLeft" width="24%"><h:outputLabel
 						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
+				        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{bsvDetails.scQtBsv.bsvRemarks}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">
 
