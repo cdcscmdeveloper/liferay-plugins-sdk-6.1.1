@@ -4607,39 +4607,81 @@ public class SpecificationBackingBean extends
 	private void calculateBankMonths(int j, int currentYear) {
 		String Startmonth = "";
 		if (j == 0) {
-			Startmonth = "January";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.january",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 1) {
-			Startmonth = "February";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.february",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 2) {
-			Startmonth = "March";
+			Startmonth =  ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.march",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 3) {
-			Startmonth = "April";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.april",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 4) {
-			Startmonth = "May";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.may",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 5) {
-			Startmonth = "June";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.june",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		}
 
 		else if (j == 6) {
-			Startmonth = "July";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.july",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 7) {
-			Startmonth = "August";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.august",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 8) {
-			Startmonth = "September";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.september",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 9) {
-			Startmonth = "October";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.october",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 10) {
-			Startmonth = "November";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.november",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 11) {
 
-			Startmonth = "December";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.december",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 		} else if (j == 12) {
 			currentYear = currentYear + 1;
-			Startmonth = "January";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.january",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 
 		} else if (j == 13) {
 			currentYear = currentYear + 1;
-			Startmonth = "February";
+			Startmonth = ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.february",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 
 		}
 
@@ -5847,52 +5889,88 @@ public class SpecificationBackingBean extends
 
 				if (enddate.equalsIgnoreCase("01")) {
 					endToMonth = "0";
-					endMonth = "January";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.january",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("02")) {
 					endToMonth = "1";
-					endMonth = "February";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.february",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("03")) {
 					endToMonth = "2";
-					endMonth = "March";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.march",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("04")) {
 					endToMonth = "3";
-					endMonth = "April";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.april",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("05")) {
 					endToMonth = "4";
-					endMonth = "May";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.may",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("06")) {
 					endToMonth = "5";
-					endMonth = "June";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.june",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 
 				if (enddate.equalsIgnoreCase("07")) {
 					endToMonth = "6";
-					endMonth = "July";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.july",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("08")) {
 					endToMonth = "7";
-					endMonth = "August";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.august",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("09")) {
 					endToMonth = "8";
-					endMonth = "September";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.september",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("10")) {
 					endToMonth = "9";
-					endMonth = "October";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.october",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("11")) {
 					endToMonth = "10";
-					endMonth = "November";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.november",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				if (enddate.equalsIgnoreCase("12")) {
 					endToMonth = "11";
-					endMonth = "December";
+					endMonth = ResourceBundleUtils
+							.getMessage("lbl.sc.checklist.month.december",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale());
 				}
 				this.getManagedBean().setFromMonth(startMonth);
 				this.getManagedBean().setBankstmntTomonth(endMonth);
@@ -7906,18 +7984,54 @@ public class SpecificationBackingBean extends
 					.getMessage("lbl.txt.select",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(0, "January"));
-			selectItems.add(new SelectItem(1, "February"));
-			selectItems.add(new SelectItem(2, "March"));
-			selectItems.add(new SelectItem(3, "April"));
-			selectItems.add(new SelectItem(4, "May"));
-			selectItems.add(new SelectItem(5, "June"));
-			selectItems.add(new SelectItem(6, "July"));
-			selectItems.add(new SelectItem(7, "August"));
-			selectItems.add(new SelectItem(8, "September"));
-			selectItems.add(new SelectItem(9, "October"));
-			selectItems.add(new SelectItem(10, "November"));
-			selectItems.add(new SelectItem(11, "December"));
+			selectItems.add(new SelectItem(0, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.january",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(1,  ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.february",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(2,  ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.march",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(3,  ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.april",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(4,  ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.may",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(5,  ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.june",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(6, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.july",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(7, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.august",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(8, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.september",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(9, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.october",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(10, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.november",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(11, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.month.december",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
 
 			this.getManagedBean().setYearList(selectItems);
 		} finally {
@@ -7969,8 +8083,14 @@ public class SpecificationBackingBean extends
 					.getMessage("lbl.txt.select",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(1, "Auto Score"));
-			selectItems.add(new SelectItem(2, "User Score"));
+			selectItems.add(new SelectItem(1, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.auto.score",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(2, ResourceBundleUtils
+					.getMessage("lbl.sc.checklist.user.score",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
 
 			this.getManagedBean().setScoreTypeList(selectItems);
 		} finally {
