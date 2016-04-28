@@ -60,7 +60,7 @@
 						showOn="button" size="10"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						mindate="#{doDelAddress.startDate}" 
-						disabled="#{createDOBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{createDOBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{doDelAddress.flTempDoAddr.estDeliveryDate}">
 					</p:calendar>
 			</p:column>
