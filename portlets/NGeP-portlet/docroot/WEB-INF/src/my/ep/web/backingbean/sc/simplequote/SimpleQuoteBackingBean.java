@@ -458,9 +458,10 @@ public class SimpleQuoteBackingBean extends
 					isPanelItemAdded = Boolean.TRUE;
 					CtPanelItem panelItem = getTopPanelItem();
 					if(panelItem == null) {
-						//general panel item 
-						//ERR-760160 = Simple quote must have only one Panel Item.
-						throw new EpException(MessageConst.ERROR_760160);
+						panelItem = scQuote.getPanelItem();
+					}
+					if(panelItem == null) {
+						isPanelItemAdded = false;
 					}
 					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
