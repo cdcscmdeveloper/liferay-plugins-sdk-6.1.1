@@ -440,7 +440,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			getManagedBean().setSelectedTabIndex(0);
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
@@ -541,7 +541,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			getManagedBean().setSelectedTabIndex(0);
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
@@ -1035,7 +1035,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FacesContext fc = FacesContext.getCurrentInstance();
 				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 				orderBackingBean.getManagedBean().setHyperLinkPage(true);
-				orderBackingBean.getManagedBean().setButtonVal("View");				
+				orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);				
 				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 					return NAV_PO;
 				}else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
@@ -1065,7 +1065,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 				crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-				crBB.getManagedBean().setButtonVal("View");
+				crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				crBB.getManagedBean().setDeclarationCheck(true);
 				flBB.getManagedBean().setHideRemarks(true);
 				crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
@@ -1118,7 +1118,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 				prBB.setFulfilmentRequestField(resDTO);
 				prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-				prBB.getManagedBean().setButtonVal("View");
+				prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				prBB.getManagedBean().setDeclarationCheck(true);
 				flBB.getManagedBean().setHideRemarks(true);
 				prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
@@ -1154,7 +1154,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				getManagedBean().setButtonVal("View");
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				getManagedBean().setHyperLinkPage(true);
 				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 				
@@ -1203,7 +1203,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				getManagedBean().setButtonVal("View");
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				getManagedBean().setHyperLinkPage(true);
 				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
