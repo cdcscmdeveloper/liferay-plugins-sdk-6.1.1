@@ -19,6 +19,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
+
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
@@ -82,12 +88,6 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.stopinstr.StopInstrManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -718,5 +718,41 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 		}
 		getManagedBean().setTextBeforeSign(sb.toString());
+	}
+	
+	/**
+	 * Retrieve stop instruction by stop instruction id and display in UI
+	 *
+	 */
+	public void viewStopInstruction() {
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String stopInstrId = originalServletRequest.getParameter("stopInstructionId");
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		if(stopInstrId!=null) {
+			reqDTO.setStopRequestId(Long.valueOf(stopInstrId));
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
+			renewSesionObject();
+			try {
+				resDTO = getFulfilmentOrderSO().retrieveStopInstruction(reqDTO);
+			} catch (EpException e) {
+				handleException(e);
+				return;
+			}
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
+			getManagedBean().setButtonVal("View");
+			getManagedBean().setBackToDocument(null);
+			getPopulateReasonList();
+			populateChargeLineData();
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.initializeRemarkAndAttachement(resDTO.getFlStopInstr().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "siBasePage?faces-redirect=true");
+		}
 	}
 }
