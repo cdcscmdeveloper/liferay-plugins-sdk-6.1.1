@@ -2546,10 +2546,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *            the member
 	 */
 	public void roleChangedListener(ScCommitteeMember member) {
-		if (member.getMemberRoleId() != null) {
+		Long paramId = member.getMemberRoleId();
+		if (paramId != null) {
 			member.setMemberRole(ParameterHelper
 					.getInstance()
-					.getPmParameterById(member.getMemberRoleId()));
+					.getPmParameterById(paramId));
+		}
+	}
+	
+	/**
+	 * Representive type change.
+	 *
+	 * @param member the member
+	 */
+	public void representiveTypeChangedListener(ScCommitteeMember member) {
+		Long paramId = member.getRepresentativeTypeId();
+		if (null != paramId) {
+			member.setRepresentativeType(ParameterHelper.getInstance()
+					.getPmParameterById(paramId));
 		}
 	}
 }
