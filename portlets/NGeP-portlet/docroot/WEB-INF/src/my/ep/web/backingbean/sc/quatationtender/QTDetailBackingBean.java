@@ -3943,10 +3943,10 @@ public class QTDetailBackingBean extends
 			List<ScQtBsvDtl> siteVisit = bsvDtlBean.getSitevisitList();
 
 			if (!scQtBsv.isSameBsv()) {
-				if (!briefings.isEmpty()) {
+				if (!CollectionUtils.isEmpty(briefings)) {
 					bsvDetils.addAll(briefings);
 				}
-				if (!siteVisit.isEmpty()) {
+				if (!CollectionUtils.isEmpty(siteVisit)) {
 					bsvDetils.addAll(siteVisit);
 					if (bsvDetils.size() >= 2) {
 						if (!scQtBsv.isAllSiteVisitReq()) {
@@ -3957,7 +3957,7 @@ public class QTDetailBackingBean extends
 					}
 				}
 			} else {
-				if (!briefings.isEmpty()) {
+				if (!CollectionUtils.isEmpty(briefings)) {
 					bsvDetils.addAll(briefings);
 					scQtBsv.setAllSiteVisitReq(false);
 					scQtBsv.setMinSiteVisitAttend(1);
