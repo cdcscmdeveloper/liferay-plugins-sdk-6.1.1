@@ -1809,13 +1809,18 @@ public class SpecificationBackingBean extends
 						list.setQtScoreWeightage(scoreWeightage);
 						setUserDetails(list.getQtScoreWeightage());
 					}
-
+                    if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
+                     }
 					score = (int) addScore;
 					if (list.isScoringReq()) {
 						this.getManagedBean().getTechnicalScoring().add(list);
 					}
+					if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
+					list.getQtScoreWeightage().setScore(new BigDecimal(list.getQtScoreWeightage().getScore().intValueExact()));
+					}
+					
 				}
 
 				this.getManagedBean().setTechPoints(score);
@@ -1974,9 +1979,10 @@ public class SpecificationBackingBean extends
 						list.setQtScoreWeightage(scoreWeightage);
 
 					}
-
+                    if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
+                     }
 
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(list.getDefinationType()
@@ -2012,6 +2018,9 @@ public class SpecificationBackingBean extends
 
 					int local = (int) addScore;
 					this.getManagedBean().setFinPoints(local);
+					if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
+						list.getQtScoreWeightage().setScore(new BigDecimal(list.getQtScoreWeightage().getScore().intValueExact()));
+						}
 				} //
 					// ScQtCheckList schecklist = specChecklist.get(0);
 				if (null != specChecklist && specChecklist.size() > 0) {
