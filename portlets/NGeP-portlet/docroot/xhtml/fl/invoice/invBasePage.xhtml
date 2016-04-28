@@ -22,7 +22,10 @@
 					'#{invoiceBackingBean.getPortletTitle()}');
 		</script>
 		<f:event listener="#{invoiceBackingBean.preRenderView}"	type="preRenderView" />
-		<c:if test="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or invoiceBackingBean.managedBean.isHyperLinkPage()}">
+		<c:if test="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate or
+					  invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or
+					  invoiceBackingBean.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{invoiceBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeInvoice)}" />
 		</c:if>				
 		<p:messages id="messages" showDetail="true" autoUpdate="#{invoiceBackingBean.managedBean.autoUpdate}"
@@ -43,7 +46,7 @@
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						action="#{invoiceBackingBean.backToPervious}" /></td>
 				<td colspan="4" style="text-align: right;">
-				<c:if test="#{invoiceBackingBean.managedBean.buttonVal ne 'View'}" >
+				<c:if test="#{invoiceBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}" >
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 						<ui:define name="outComeSection">
 							<ui:repeat var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
@@ -57,23 +60,23 @@
 					</c:if>
 				</td>
 			<h:panelGroup
-					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Update'}">	
+					rendered="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{invoiceBackingBean.signingAction('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
+							action="#{invoiceBackingBean.signingAction(BpmOutcomeConstant.bpmUpdate)}">
+							<f:param name="actionName" value="#{BpmOutcomeConstant.bpmUpdate}" />
 						</p:commandButton></td>
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Cancel'}">	
+					rendered="#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{invoiceBackingBean.signingAction('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
+							action="#{invoiceBackingBean.signingAction(BpmOutcomeConstant.bpmCancel)}">
+							<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 						</p:commandButton></td>
 				</h:panelGroup>
 				<c:if
-					test='#{invoiceBackingBean.managedBean.buttonVal eq "View" and !invoiceBackingBean.managedBean.isHyperLinkPage()}'>
+					test='#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !invoiceBackingBean.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right"><p:commandLink
 							value="#{lbl['lbl.td.doc.trackingDiary']}"
 							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceId)}"
