@@ -31,8 +31,8 @@ public class SchedulerConstants {
 	public static final String SC_UPDATE_SUPPLIERS_JOB_DESCRIPTION = "Job run every day at 11:55 PM";
 	public static final String SC_QT_CLOSED_JOB_DESCRIPTION ="Job run every day by batch";
 	public static final String SC_PROPOSAL_EXPIRY_JOB_DESCRIPTION = "Job run every day at 12:05 AM";
-	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run every day at 23:55 pm to publish Qt's";
-	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run every  day at 23:55 pm to close proposal";
+	public static final String SC_QT_PUBLISH_JOB_DESCRIPTION = "Job to run every day at 12:00 am to publish Qt's";
+	public static final String SC_QT_PROPOSAL_CLOSE_JOB_DESCRIPTION = "Job to run every  day at 12:00 am to close proposal";
 	// Contracts Module Constants
 	public static final String TRIGGER_TIME = "0 01 00 * * ?";
 	// CT Job Group ID
