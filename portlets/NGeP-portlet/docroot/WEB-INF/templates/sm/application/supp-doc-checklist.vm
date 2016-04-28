@@ -1,7 +1,7 @@
 <html>
 <body>
 
-<table style="width: 80%;">
+<table style="width: 100%;">
 	<tr>
 		<td style="background-color:whitesmoke;font-size: 14px;font-weight: bold;">
 			$header :  $applNo
@@ -19,7 +19,7 @@
 
 <br />
 
-<table style="width: 80%;">
+<table style="width: 100%;">
 	<tr>
 		<td style="width: 33%">
 			<table>
