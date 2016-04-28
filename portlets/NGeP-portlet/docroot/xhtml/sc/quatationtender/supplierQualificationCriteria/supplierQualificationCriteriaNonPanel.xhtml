@@ -19,7 +19,8 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{cateGory}">
 
-			<p:column selectionMode="multiple" style="width:1%" rendered="#{!categoryCodeReadonly}" />
+			<p:column selectionMode="multiple" style="width:1%"
+				rendered="#{!categoryCodeReadonly}" />
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
@@ -48,12 +49,14 @@
 		</p:dataTable>
 		<c:if test="#{!categoryCodeReadonly}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
-					process="@this, openPnlId" partialSubmit="true"
-					update="@([id$=catCodePopup])" oncomplete="catCodePopup.show();"
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					styleClass="BtnSpacing" process="@this, openPnlId"
+					partialSubmit="true" update="@([id$=catCodePopup])"
+					oncomplete="catCodePopup.show();"
 					action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" styleClass="BtnSpacing"
-					process="@this, openPnlId" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					styleClass="BtnSpacing" process="@this, openPnlId"
+					partialSubmit="true"
 					oncomplete="supplierOpencategoryDeletePopUp.show();"
 					update="@([id$=#{supplierOpencategoryDeleteId}])" />
 			</div>
@@ -97,11 +100,9 @@
 				</tr>
 			</c:if>
 			<tr>
-				<td style="width: 210px">
-					<p:outputLabel value="#{lbl['lbl.sc.paidup']}" />
-				</td>
-				<td>
-					<p:inputText maxlength="18"
+				<td style="width: 210px"><p:outputLabel
+						value="#{lbl['lbl.sc.paidup']}" /></td>
+				<td><p:inputText maxlength="18"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_MINIMUM_PAID_UP_CAPITAL)}"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right; width:210px;">
@@ -109,16 +110,14 @@
 							listener="#{qTSupplierQulCriteriaBackingBean.validatePaidupcapital}" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
-				</td>
+					</p:inputText></td>
 			</tr>
-			<c:if test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
+			<c:if
+				test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 				<tr>
-					<td>
-						<p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
+					<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
 						<p:outputLabel value="*" styleClass="mandatory"
-							rendered="#{!locCoverageReadonly}" />
-					</td>
+							rendered="#{!locCoverageReadonly}" /></td>
 					<td><c:choose>
 							<c:when test="#{!locCoverageReadonly}">
 								<p:selectOneMenu id="locLevels"
@@ -137,27 +136,28 @@
 									value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel)}"
 									style="width:210px;" disabled="true" />
 							</c:otherwise>
-						</c:choose>
-					</td>
+						</c:choose></td>
 				</tr>
 			</c:if>
 		</table>
-		
-		<c:if test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
+
+		<c:if
+			test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 			<h:panelGrid width="100%">
 				<p:dataTable id="zoneLocationDataTable" rows="10"
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					var="zoneTree" style="width:100%" rowIndexVar="index">
-	
+
 					<ac:paginator for="zoneLocationDataTable" />
-	
+
 					<p:column style="width:90%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.location']}" />
 						</f:facet>
-						<p:tree value="#{zoneTree}" var="location" selectionMode="checkbox">
+						<p:tree value="#{zoneTree}" var="location"
+							selectionMode="checkbox">
 							<p:ajax event="select"
 								listener="#{qTSupplierQulCriteriaBackingBean.selectLocationTreeNode}" />
 							<p:ajax event="unselect"
@@ -171,10 +171,10 @@
 							<p:treeNode type="district">
 								<h:outputText value="#{location.pmDistrict.districtName}" />
 							</p:treeNode>
-	
+
 						</p:tree>
 					</p:column>
-	
+
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%"
 						rendered="#{!locCoverageReadonly}">
 						<p:commandLink
@@ -186,10 +186,10 @@
 								styleClass="tasklist_title1" />
 						</p:commandLink>
 					</p:column>
-	
+
 				</p:dataTable>
 			</h:panelGrid>
-			
+
 			<c:if test="#{!locCoverageReadonly}">
 				<div align="right">
 					<p:selectBooleanCheckbox id="checkAll"
@@ -218,7 +218,7 @@
 					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
 					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
 					update="@([id$=zoneLocationDataTable])" />
-					
+
 				<p:dialog header="#{lbl['lbl.sc.add.location']}"
 					widgetVar="ZoneLocation" modal="true" position="top" height="65%">
 					<p:panel id="zonePopupPanel">
@@ -283,27 +283,24 @@
 			</c:if>
 		</c:if>
 	</p:panel>
-	
-	<table>
+
+	<table width="100%">
 		<tr>
 			<td style="width: 219px"><p:outputLabel
 					value="#{lbl['lbl.sc.totalsup']}" /></td>
-			<td><p:inputText id="totalSuppliersId" style="margin-right:5px; width:210px; text-align:right;"
-					disabled="true" 
+			<td><p:inputText id="totalSuppliersId"
+					style="margin-right:5px; width:210px; text-align:right;"
+					disabled="true"
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-				</p:inputText>
-			</td>
-			<td>
-				<c:if test="#{!suppQualificationReadonly}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</p:inputText> <c:if test="#{!suppQualificationReadonly}">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						update="totalSuppliersId"
 						action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
 						partialSubmit="true" process="@this" />
-				</c:if>
-			</td>
-			<td />
+				</c:if></td> 
 		</tr>
 	</table>
 </ui:composition>

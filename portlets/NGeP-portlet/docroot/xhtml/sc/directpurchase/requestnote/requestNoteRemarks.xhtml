@@ -14,7 +14,9 @@
 			<td class="TableFieldLeft" width="152px"></td>
 			<td class="TableFieldRight">
 				<h:panelGroup id="remark">
-				<p:dataGrid id="catatan" value="#{requestNoteBackingBean.managedBean.requestNote.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+				<p:dataGrid id="catatan" value="#{requestNoteBackingBean.managedBean.requestNote.remarks}" 
+				   emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				   var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 					<table>
 						<tr>
 							<td rowspan="2" style="vertical-align: top;" align="left">
