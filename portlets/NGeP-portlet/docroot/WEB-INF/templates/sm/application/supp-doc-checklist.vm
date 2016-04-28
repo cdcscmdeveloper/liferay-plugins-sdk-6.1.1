@@ -55,5 +55,32 @@
 		</td>
 	</tr>
 </table>
+
+<br />
+
+<table style="width: 100%;">
+	<tr>
+		<td style="background-color:gray;color:white;font-size: 14px;font-weight: bold;">
+			No.
+		</td>
+		<td style="background-color:gray;color:white;font-size: 14px;font-weight: bold;">
+			$docDesc
+		</td>
+	</tr>
+	
+	#foreach($suppDoc in $supportDocs)
+		
+		<tr>
+			<td style="font-size: 14px;">
+				$velocityCount
+			</td>
+			<td style="font-size: 14px;white-space: normal;">
+				$suppDoc.pmDocument.docName
+			</td>
+		</tr>
+		
+	#end
+</table>
+
 </body>
 </html>
