@@ -1,0 +1,54 @@
+<html>
+<body>
+
+<table style="width: 80%;">
+	<tr>
+		<td style="background-color:whitesmoke;font-size: 14px;font-weight: bold;">
+			$header :  $applNo
+		</td>
+	</tr>
+	<tr>
+		<td>
+			$note1<br /> 
+			$note2<br /> 
+			$note3<br />
+		</td>
+	</tr>
+
+</table>
+
+<br />
+
+<table style="width: 80%;">
+	<tr>
+		<td style="width: 33%">
+			<table>
+				<tr>
+					<td>$peninAddr1</td>
+				</tr>
+				<tr>
+					<td style="padding-top: 10px;">$peninAddr2</td>
+				</tr>
+			</table>
+		</td>
+
+		<td style="width: 33%"><table>
+				<tr>
+					<td>$sabahAddr1</td>
+				</tr>
+				<tr>
+					<td style="padding-top: 10px;">$sabahAddr2</td>
+				</tr>
+			</table></td>
+		<td style="width: 33%"><table>
+				<tr>
+					<td>$sarawakAddr1</td>
+				</tr>
+				<tr>
+					<td style="padding-top: 10px;">$sarawakAddr2</td>
+				</tr>
+			</table></td>
+	</tr>
+</table>
+</body>
+</html>

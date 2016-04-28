@@ -559,6 +559,7 @@ public class SupplierManagementConst {
 
 	public static final String GST_FILE_PATH = "/SM/GST/";
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
+	public static final String OFFLINE_DOC_CHECKLIST_PATH = "/SM/OFFLINE_DOC/CHECKLIST/";
 
 	// SME STATUS
 	public static final String SME_STATUS_SERVICES = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_SERVICES;
