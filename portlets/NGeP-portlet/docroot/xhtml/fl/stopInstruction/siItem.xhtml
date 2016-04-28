@@ -110,7 +110,7 @@
 				</tr>
 				<tr>
 					<td><p:selectBooleanCheckbox rendered="#{stopInstrBB.managedBean.coGstr}"
-							disabled="#{stopInstrBB.managedBean.buttonVal=='View'}"
+							disabled="#{stopInstrBB.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 							value="#{stopInstrBB.managedBean.issuanceCogstrCheck}" /></td>
 					<td><h:outputText style="text-align:left"
 							value="#{lbl['lbl.fl.issuance.of.cogstr']}" rendered="#{stopInstrBB.managedBean.coGstr}" /></td>
