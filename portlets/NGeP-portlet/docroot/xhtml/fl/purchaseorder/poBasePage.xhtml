@@ -27,6 +27,17 @@
 		</c:if>			
 		<p:messages id="messages" showDetail="true" autoUpdate="#{flOrderBB.managedBean.autoUpdate}"
 			showSummary="false" closable="true" severity="error, info" />
+			<table>
+			<tr>
+				<td><p:outputLabel value="1GFMAS Error: " rendered="#{flOrderBB.managedBean.gfmasError}"/> </td>
+				<td><p:commandLink oncomplete="gfmasError.show();" immediate="true"
+					action="#{flOrderBB.show1GFMASError()}"
+					rendered="#{flOrderBB.managedBean.gfmasError}">
+						<p:graphicImage value="/css/images/design/exclamation.png" />
+					</p:commandLink>
+				</td>
+			</tr>
+		</table>
 		<ac:gpkiPopup 
 			textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
 			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(gpkiBackingBean.pmDigiSign)}"/>
@@ -109,5 +120,19 @@
 					</p:outputPanel></td>
 			</tr>
 		</table>
+		<p:dialog id="gfmasErrorDlg" header="1GFMAS Error" widgetVar="gfmasError"
+		showEffect="fade" hideEffect="fade" modal="true" 
+		resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td><p:messages id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" escape="false"/></td>
+			</tr>
+		</table>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Close" oncomplete="gfmasError.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
 	</ui:define>
 </ui:composition>

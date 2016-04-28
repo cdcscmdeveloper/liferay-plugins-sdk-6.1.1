@@ -205,6 +205,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
     
     private boolean hyperLinkPage = false;
     private List<PmUser> approverList;
+    private boolean gfmasError=false;
+	private String gfmasErrorContent;
     
     private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
     
@@ -1173,6 +1175,22 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
 		this.previousAttachmentList = previousAttachmentList;
+	}
+
+	public boolean isGfmasError() {
+		return gfmasError;
+	}
+
+	public void setGfmasError(boolean gfmasError) {
+		this.gfmasError = gfmasError;
+	}
+
+	public String getGfmasErrorContent() {
+		return gfmasErrorContent;
+	}
+
+	public void setGfmasErrorContent(String gfmasErrorContent) {
+		this.gfmasErrorContent = gfmasErrorContent;
 	}
 
 }
