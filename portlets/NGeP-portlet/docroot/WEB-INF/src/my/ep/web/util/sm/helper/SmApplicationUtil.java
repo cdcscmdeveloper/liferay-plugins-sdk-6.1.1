@@ -7678,7 +7678,8 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
-	public static String generateOfflineSuppDocChecklistPdf(SmAppl smAppl)
+	
+	public static void generateOfflineSuppDocChecklistPdf(SmAppl smAppl)
 			throws Exception {
 		String tmpPath = null;
 		String tmpFolder = SmCommonUtil
@@ -7703,19 +7704,22 @@ public class SmApplicationUtil {
 				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note2", null));
 		context.put("note3",
 				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note3", null));
-		context.put("peninAddr1",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.peninAddr1", null));
-		context.put("peninAddr2",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.peninAddr2", null));
-		context.put("sabahAddr1",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.sabahAddr1", null));
-		context.put("sabahAddr2",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.sabahAddr2", null));
-		context.put("sarawakAddr1",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.sarawakAddr1", null));
-		context.put("sarawakAddr2",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.sarawakAddr2", null));
-		return SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
+		context.put("peninAddr1", SmCommonUtil.getMessage(
+				"lbl.sm.suppDoc.offline.peninAddr1", null));
+		context.put("peninAddr2", SmCommonUtil.getMessage(
+				"lbl.sm.suppDoc.offline.peninAddr2", null));
+		context.put("sabahAddr1", SmCommonUtil.getMessage(
+				"lbl.sm.suppDoc.offline.sabahAddr1", null));
+		context.put("sabahAddr2", SmCommonUtil.getMessage(
+				"lbl.sm.suppDoc.offline.sabahAddr2", null));
+		context.put("sarawakAddr1", SmCommonUtil.getMessage(
+				"lbl.sm.suppDoc.offline.sarawakAddr1", null));
+		context.put("sarawakAddr2", SmCommonUtil.getMessage(
+				"lbl.sm.suppDoc.offline.sarawakAddr2", null));
+		context.put("supportDocs", smAppl.getSmApplSupportDocs());
+		context.put("docDesc", SmCommonUtil.getMessage(
+				"lbl.sm.suppDoc.document.description", null));
+		SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
 	}
 
 	public static SmAppl deleteApplChildEntities(SmAppl appl) {
