@@ -188,18 +188,7 @@ public class QTCommitteBackingBean extends
 				populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
 				userReqDTO.setUserSearchBean(searchBean);
 
-                UserResDTO resDto = userSO.searchUserProfileDtl(userReqDTO);
-
-				if (null != resDto.getUserResultBean().getResultList()) {
-					getManagedBean().setExternalUsers(
-							resDto.getUserResultBean().getResultList());
-					for (PmUser user : getManagedBean().getExternalUsers()) {
-						if (user.getMemberRole() == null) {
-							user.setMemberRole(new PmParameter());
-						}
-					}
-				}
-				return resDto.getUserResultBean();
+				return userSO.searchUserProfileDtl(userReqDTO).getUserResultBean();
 			} finally {
 				userSO = null;
 			}
@@ -980,7 +969,6 @@ public class QTCommitteBackingBean extends
 		userSelection = this.getManagedBean().getCommitteMember()
 				.getUserSelection();
 		logger.info("User Selection : " + userSelection);
-		this.getManagedBean().setExternalUsers(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection(userSelection);
@@ -1340,10 +1328,9 @@ public class QTCommitteBackingBean extends
 					committeeMember.setPNP(users.get(i).isPMP());
 					committeeMember.setPmUser(users.get(i));
 					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-					if (null != users.get(i).getMemberRole().getParameterId()) {
+					if (null != users.get(i).getMemberRoleId()) {
 						ParameterReqDTO reqDTO = new ParameterReqDTO();
-						reqDTO.setParameterId(users.get(i).getMemberRole()
-								.getParameterId());
+						reqDTO.setParameterId(users.get(i).getMemberRoleId());
 						ParameterResDTO resDTO = getParameterSO()
 								.retrieveParameterById(reqDTO);
 						committeeMember.setMemberRole(resDTO.getPmParameter());
@@ -1822,6 +1809,7 @@ public class QTCommitteBackingBean extends
 
 				selectedList.get(i).setDeleted(true);
 				selectedList.get(i).setRepresentativeType(null);
+				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
 			}
 

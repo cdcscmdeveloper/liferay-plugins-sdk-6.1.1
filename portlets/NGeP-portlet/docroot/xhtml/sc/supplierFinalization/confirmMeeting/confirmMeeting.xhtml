@@ -210,14 +210,13 @@
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
-									<p:selectOneMenu value="#{committeeMember.representativeType.parameterCode}" 
+									<p:selectOneMenu value="#{committeeMember.representativeTypeId}" 
 										label="#{lbl['lbl.sc.representative.type']}"
 										style="width: 100%; margin-bottom: 5px; white-space:normal" 
 										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 										<f:selectItems value="#{suppFinalMeetingBackingBean.getRepresentativeTypeDropdownValues()}" />
 										<p:ajax event="change" 
-											listener="#{suppFinalMeetingBackingBean.representativeTypeEvent(
-														committeeMember,committeeMember.representativeType.parameterCode)}" process="@this" />
+											listener="#{suppFinalMeetingBackingBean.representiveTypeChangedListener(committeeMember)}" process="@this" />
 									</p:selectOneMenu>
 								</p:column>
 							</p:dataTable>

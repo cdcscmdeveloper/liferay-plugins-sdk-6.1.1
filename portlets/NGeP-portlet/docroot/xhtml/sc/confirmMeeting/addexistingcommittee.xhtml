@@ -116,15 +116,13 @@
 									</f:facet>
 									<h:outputText
 										value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
-									<h:outputText
-										value="#{existcommitteeuser.memberRole.parameterCode}" />
 								</p:column>
 
 								<p:column style="width:10%;white-space: normal;"
 									headerText="#{lbl['lbl.sc.role']}">
 
 									<p:selectOneMenu id="appaction"
-										value="#{existcommitteeuser.memberRole.parameterId}"
+										value="#{existcommitteeuser.memberRoleId}"
 										style="width: 110px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(existcommitteeuser.PMP,evaluationMeetingBackingBean.managedBean.qt,existcommitteeuser)}" />

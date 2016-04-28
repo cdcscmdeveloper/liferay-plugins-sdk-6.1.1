@@ -148,12 +148,12 @@
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{committeeMember.selected}"
 					disabled="true"
-					rendered="#{committeeMember.memberRole.parameterCode eq 'S'}">
+					rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
 
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{committeeMember.selected}"
-					rendered="#{committeeMember.memberRole.parameterCode ne 'S'}">
+					rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -196,13 +196,13 @@
 					<h:outputText value="#{lbl['lbl.sc.role']}"></h:outputText>
 				</f:facet>
 				<ui:fragment
-					rendered="#{committeeMember.memberRole.parameterCode eq 'S'}">
+					rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
 					<h:outputText
 						value="#{evaluationMeetingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, ParameterConst.committeeRoleSecretary)}"
-						rendered="#{committeeMember.memberRole.parameterCode eq 'S'}" />
+						rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}" />
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{committeeMember.memberRole.parameterCode ne 'S'}">
+					rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
 
 					<p:selectOneMenu id="meetingRoleId" required="true"
 						label="#{lbl['lbl.sc.role']}"

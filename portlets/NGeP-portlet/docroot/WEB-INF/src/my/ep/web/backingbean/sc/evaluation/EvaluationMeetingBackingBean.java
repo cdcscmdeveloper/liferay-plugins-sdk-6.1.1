@@ -384,7 +384,6 @@ public class EvaluationMeetingBackingBean extends
 		getManagedBean().setName(null);
 		getManagedBean().setIdentificationType(null);
 		getManagedBean().setIdentificationNo(null);
-		getManagedBean().setExternalUsers(null);
 		getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
@@ -427,7 +426,6 @@ public class EvaluationMeetingBackingBean extends
 		userSelection = this.getManagedBean().getCommitteMember()
 				.getUserSelection();
 		// logger.info("User Selection : " + userSelection);
-		this.getManagedBean().setExternalUsers(null);
 		ScCommitteeMember committeeMember = this.getManagedBean()
 				.getCommitteMember();
 		if (null == committeeMember.getPmUser()) {
@@ -1499,17 +1497,7 @@ public class EvaluationMeetingBackingBean extends
 				IUserSO userSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IUserSO.class);
-				resDto = userSO.searchUserProfileDtl(userReqDTO);
-				if (resDto != null) {
-					getManagedBean().setExternalUsers(
-							resDto.getUserResultBean().getResultList());
-					for (PmUser user : getManagedBean().getExternalUsers()) {
-						if (user.getMemberRole() == null) {
-							user.setMemberRole(new PmParameter());
-						}
-					}
-				}
-				return resDto.getUserResultBean();
+				return userSO.searchUserProfileDtl(userReqDTO).getUserResultBean();
 
 			} finally {
 
