@@ -40,11 +40,12 @@
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 				</h:outputText>
 
+				<ui:param name="closingChangeDate" value="#{noticeBoardBackingBean.managedBean.amendmentClosingDateMap[scqt[0]]}" />
 				<h:outputText
 					value="&#60;br/&#62;&#60;br/&#62;#{lbl['lbl.sc.updated.on']} "
 					styleClass="lastUpdated" escape="false"
-					rendered="#{isChangesTab and !empty scqt[6]}" />
-				<h:outputText value="#{scqt[6]}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty scqt[6]}">
+					rendered="#{isChangesTab and !empty closingChangeDate}" />
+				<h:outputText value="#{closingChangeDate}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty closingChangeDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>

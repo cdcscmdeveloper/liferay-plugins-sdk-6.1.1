@@ -304,9 +304,11 @@ public class NoticeBoardBackingBean extends
 			
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 			String selectedTab = getManagedBean().getSelectedTab();
-			this.getManagedBean().setAmendmentDateMap(null);
+			
 			if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
 				populateQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBeans());
+			} else {
+				this.getManagedBean().setAmendmentDateMap(null);
 			}
 		} finally {
 			qtNoticeBoardSO = null;
@@ -1326,12 +1328,43 @@ public class NoticeBoardBackingBean extends
 				reqDTO.setLevels(level);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO
 						.searchQTNoticeBoard(reqDTO);
+				
+				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
+					populateClosingQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBeans());
+				} else {
+					getManagedBean().setAmendmentClosingDateMap(null);
+				}
 
 				return resDTO.getQtResultBean();
 			} finally {
 				qtNoticeBoardSO = null;
 			}
 		}
+	}
+	
+	private void populateClosingQtAmendIntoAmendmentBeanMap(List<QtAmendMentBean> qtAmendMentBeans) {
+		Map<BigDecimal, Date> amendmentClosingDateMap = new HashMap<BigDecimal, Date>();
+		
+		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
+			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
+				if (amendMentBean.getValueMap() != null) {
+					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
+						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
+						Date approvalDate = valueBean.getApprovalDate();
+						if (approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
+							Date prevApprovalDate = amendmentClosingDateMap.get(amendMentBeanValue.getKey());
+							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
+								continue;
+							}
+							amendmentClosingDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);	
+						}
+					}
+					
+				}
+			}	
+		}
+		
+		this.getManagedBean().setAmendmentClosingDateMap(amendmentClosingDateMap);
 	}
 
 	private SearchFilterBean getSearchFilterBeanByDataBean(String searchField,
