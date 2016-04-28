@@ -388,12 +388,27 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setContractRequest(Boolean.TRUE);
 			}else {
-				FLContractOrderDataType crDataType = (FLContractOrderDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
-
-				flReqDTO.setFlOrderId(crDataType.getOrderDetails().getOrderId());
-				flReqDTO.setDocType(crDataType.getOrderDetails().getOrderType());
+				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
+					FLOrderCancelReqType orderCancelReqType = (FLOrderCancelReqType)obj;
+					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+					flReqDTO.setFlOrderId(orderCancelReqType.getOrderDetails().getOrderId());
+					if(orderCancelReqType.getErrorIds() != null && orderCancelReqType.getErrorIds().length() > 0){
+						getManagedBean().setAutoUpdate(Boolean.FALSE);
+						getManagedBean().setGfmasError(true);
+						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+						errReq.setErrorId(new Long(orderCancelReqType.getErrorIds()));
+						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+					}
+				}else{
+					FLContractOrderDataType crDataType = (FLContractOrderDataType)obj;
+					flReqDTO.setFlOrderId(crDataType.getOrderDetails().getOrderId());
+					flReqDTO.setDocType(crDataType.getOrderDetails().getOrderType());
+				}
+				
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
@@ -479,31 +494,36 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 				flBB.getManagedBean().setHideRemarks(false);
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-			}else if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
-				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-				FulfilmentResDTO resDTO = new FulfilmentResDTO();
-				
-				FLOrderCancelReqType orderCancelReqType = (FLOrderCancelReqType)obj;
-				flReqDTO.setFlOrderId(orderCancelReqType.getOrderDetails().getOrderId());
-				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
-				getManagedBean().setStopRequestId(orderCancelReqType.getOrderDetails().getOrderId().longValue());
-				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
-				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-				getManagedBean().setContractRequest(Boolean.TRUE);
 			}else {
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
-				
+				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				if(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION.equalsIgnoreCase(this.getManagedBean().getProcessName())){
 					FLOrderCancelReqType orderCancelReqType = (FLOrderCancelReqType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flReqDTO.setFlOrderId(orderCancelReqType.getOrderDetails().getOrderId());
+					if(orderCancelReqType.getErrorIds() != null && orderCancelReqType.getErrorIds().length() > 0){
+						getManagedBean().setAutoUpdate(Boolean.FALSE);
+						getManagedBean().setGfmasError(true);
+						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+						errReq.setErrorId(new Long(orderCancelReqType.getErrorIds()));
+						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+					}
 				}else{
 					FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
 					flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flReqDTO.setFlOrderId(flPurchaseOrd.getOrderDetails().getOrderId());
+					if(flPurchaseOrd.getOrderDetails().getErrorId() != null && flPurchaseOrd.getOrderDetails().getErrorId() > 0){
+						getManagedBean().setAutoUpdate(Boolean.FALSE);
+						getManagedBean().setGfmasError(true);
+						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+						errReq.setErrorId(flPurchaseOrd.getOrderDetails().getErrorId());
+						FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+					}
 				}
-					
+				
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				if(resDTO.getFlOrder().isFactored()) {
@@ -1215,6 +1235,16 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		sb.append(outcome+"|");
 		sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
 		getManagedBean().setTextBeforeSign(sb.toString());		
+	}
+	
+	/**
+	 * Show 1GFMAS error
+	 *
+	 */
+	public void show1GFMASError(){
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().update("@form");
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 		
 }
