@@ -360,7 +360,8 @@
 			<h:outputText styleClass="instruction" value="#{lbl[lblShareholderInstruction]}" escape="false" 
 				rendered="#{backingBean.managedBean.smSupplier.businessType ne 'K' and backingBean.managedBean.smSupplier.businessType ne 'L'
 					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
-					and backingBean.managedBean.smSupplier.businessType ne 'P'}"/>
+					and backingBean.managedBean.smSupplier.businessType ne 'I' and backingBean.managedBean.smSupplier.businessType ne 'J'
+					and backingBean.managedBean.smSupplier.businessType ne 'P' and backingBean.managedBean.smSupplier.businessType ne 'B'}"/>
 			<h:outputText styleClass="instruction" value="#{lbl[lblPersonnelInstruction]}" escape="false" /><br />
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" id="reachAuthLimitMsgId"
 				escape="false" rendered="#{backingBean.managedBean.validSmUserLimit}"/>
