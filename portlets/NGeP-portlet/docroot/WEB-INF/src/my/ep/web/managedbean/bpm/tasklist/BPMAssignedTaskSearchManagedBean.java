@@ -21,6 +21,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasksearch.BPMAssignedTaskSearchBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.commons.lang.StringUtils;
@@ -68,13 +69,13 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
 				ISearchBean<WorklistItemVO> searchBean) {
 
-			log.info(" *******pageChangeListener*******");
+			log.info("*****************pageChangeListener****************");
 			log.info(" *******" + "getDocNo: " + getDocNo() + " *******");
 			log.info(" *******" + "getDocType: "+ getDocType() + " *******");
 			log.info(" *******" + "getDocStatus: "+ getDocStatus() + " *******");
 			log.info(" *******" + "getSearchFromCreatedDate: "+ getSearchFromCreatedDate() + " *******");
 			log.info(" *******" + "getSearchToCreatedDate: "+ getSearchToCreatedDate() + " *******");
-			log.info("*********************************************************");
+			log.info("***************************************************");
 
 			if ((getDocNo() == null && getDocType() == null) ||
 				(StringUtils.isBlank(getDocNo()) && getDocType() == null) ||
@@ -85,6 +86,8 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+			reqDTO.setOffset((getPageNo() - 1) * PagingConst.ROWS_PER_PAGE);
 			reqDTO.setState("ASSIGNED");
 			reqDTO.setAssignment("ALL");
 
@@ -101,20 +104,23 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 				if (getDocStatus() != 0) {
 					reqDTO.setStatus(getDocStatus());
 				}
-				if (getSearchFromCreatedDate() != null && getSearchToCreatedDate() != null) {
+				if (getSearchFromCreatedDate() != null) {
 					Calendar afterDate = Calendar.getInstance();
 				    afterDate.setTime(getSearchFromCreatedDate()); 
 					reqDTO.setAfterDate(afterDate);
-
+				}
+				if (getSearchToCreatedDate() != null) {
 					Calendar beforeDate = Calendar.getInstance();
 					beforeDate.setTime(getSearchToCreatedDate());
+					beforeDate.add(Calendar.DATE, 1);
 					reqDTO.setBeforeDate(beforeDate);
 				}
 			}
 
-
-
 			log.info("*******reqDTO*******");
+			log.info("*******" + "reqDTO.getLimit(): " + reqDTO.getLimit() + " *******");
+			log.info("*******" + "getPageNo(): " + getPageNo() + " *******");
+			log.info("*******" + "reqDTO.getOffset(): " + reqDTO.getOffset() + " *******");
 			log.info("*******" + "reqDTO.getState(): " + reqDTO.getState() + " *******");
 			log.info("*******" + "reqDTO.getAssignment(): " + reqDTO.getAssignment() + " *******");
 
@@ -135,10 +141,10 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 			log.info("*********************************************************");
 
 			SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-			
-			resultBean.setTotalRecord(resDTO.getWorklistVO().getWorklistItem().size());
+
+			resultBean.setTotalRecord(resDTO.getWorklistVO().getTotal());
 			resultBean.setResultList(resDTO.getWorklistVO().getWorklistItem());
-			
+
 			return resultBean;
 		}
 	}
