@@ -47,7 +47,8 @@
 
 				<table style="width: 100%">
 					<tr>
-						<td width="200px"><p:outputLabel
+						<td width="200px">
+							<p:outputLabel
 								value="#{lbl['lbl.sm.staff.totalStaff']} "
 								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CONTRACTOR}" />
 							<p:outputLabel value="#{lbl['lbl.sm.staff.profStaff']}"
@@ -55,10 +56,12 @@
 							<p:outputLabel value="#{lbl['lbl.sm.staff.semiProfStaff']}"
 								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_SEMIPROF}" />
 							<p:outputLabel value="#{lbl['lbl.sm.staff.clericalStaff']}"
-								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CLERICAL}" /></td>
-						<td width="110px"><p:outputLabel
-								value="#{lbl['lbl.sm.staff.bumi']}" /> <p:outputLabel value="*"
-								styleClass="mandatory" /></td>
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CLERICAL}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td width="110px">
+							<p:outputLabel value="#{lbl['lbl.sm.staff.bumi']}" /> 
+						</td>
 						<td width="55px"><p:inputText size="4" id="bumiStf"
 								value="#{staff.totalBumi}" maxlength="4"
 								style="min-width: 0px !important;"
@@ -75,9 +78,9 @@
 								currValue="#{staff.totalBumi}" 
 								alertValue="#{backingBean.getStaffTotalByCategory(staff.staffCategory).totalBumi}"/>
 						</td>
-						<td width="150px"><p:outputLabel
-								value="#{lbl['lbl.sm.staff.nonBumi']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
+						<td width="150px">
+							<p:outputLabel value="#{lbl['lbl.sm.staff.nonBumi']}" />
+						</td>
 						<td width="55px"><p:inputText size="4" id="nonBumStf"
 								style="min-width: 0px !important;"
 								label="#{lbl['lbl.sm.staff.nonBumi']}"
@@ -94,9 +97,9 @@
 								currValue="#{staff.totalNonBumi}" 
 								alertValue="#{backingBean.getStaffTotalByCategory(staff.staffCategory).totalNonBumi}"/>
 						</td>
-						<td width="250px"><p:outputLabel
-								value="#{lbl['lbl.sm.staff.frgnr']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
+						<td width="250px">
+							<p:outputLabel value="#{lbl['lbl.sm.staff.frgnr']}" />
+						</td>
 						<td width="55px"><p:inputText id="frgStf" size="4"
 								value="#{staff.totalForeigner}"
 								label="#{lbl['lbl.sm.staff.frgnr']}" maxlength="4"
