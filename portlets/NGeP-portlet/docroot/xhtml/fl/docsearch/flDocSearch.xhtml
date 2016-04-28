@@ -288,7 +288,7 @@
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
 							        	rendered="#{flDocument.isViewAction()}"
 							        	icon="ui-icon-view"
-							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
 										rendered="#{!(flDocument.docType==ParameterConst.doctypePurchaseRequest || flDocument.docType==ParameterConst.doctypeContractRequest || flDocument.docType==ParameterConst.doctypeShippingInstruction || (flDocument.docType==ParameterConst.doctypeFulfilmentNote and flDocument.statusId!=FulfilmentStatusCont.fnAcknowledged) )}"
 										icon="ui-icon-print" 
@@ -300,19 +300,19 @@
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.update']}"  
 							        	rendered="#{flDocument.isUpdateAction()}"
 							        	icon="ui-icon-update"
-							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmUpdate}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.cancel']}" 
 							        	rendered="#{flDocument.isCancelAction()}"
 							        	icon="ui-icon-fl-cancel"
-										onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+										onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCancel}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.stop.fulfilment']}"  
 							        	rendered="#{flDocument.isStopFulfilmentAction()}"
 							        	icon="ui-icon-stop"
-							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Stop Fulfilment'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmStopFulfilment}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.factory.comp.removal']}"  
 							        	rendered="#{flDocument.isRemoveFactoringAction()}"
 							        	icon="ui-icon-termination"
-							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Remove Factoring'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmRemoveFactoring}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 					</p:menuButton>
 				</p:column>
 			</p:dataTable>

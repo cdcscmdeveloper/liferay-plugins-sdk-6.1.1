@@ -41,6 +41,7 @@ import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
 import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -95,7 +96,6 @@ import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
-import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.frn.ReceivedNoteManagedBean;
@@ -461,7 +461,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}			
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
@@ -811,7 +811,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			doBB.getManagedBean().getFulfilmentOrder().setDocNo(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocNo());
 			doBB.getManagedBean().getFulfilmentOrder().setDocType(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getDocType());
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
-			doBB.getManagedBean().setButtonVal("View");
+			doBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			doBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -831,7 +831,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
-			orderBackingBean.getManagedBean().setButtonVal("View");
+			orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -956,7 +956,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			getManagedBean().setDocMaintainRemarks(true);
 			getManagedBean().setAcknowledged(true);
-			getManagedBean().setButtonVal("View");
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			if(getManagedBean().getAcknowledgeDate() == null){
 				FlActor actor = iFulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentNote().getFulfilmentNoteId(), RoleCode.ACKNOWLEDGE_OFFICER.value());
 				if(actor != null){
@@ -1294,7 +1294,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			crBB.getManagedBean().setButtonVal("View");
+			crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
@@ -1345,7 +1345,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			prBB.setFulfilmentRequestField(resDTO);
 			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			prBB.getManagedBean().setButtonVal("View");
+			prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			prBB.getManagedBean().setHyperLinkPage(true);
 			return NAV_PR;

@@ -46,6 +46,7 @@ import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
@@ -104,7 +105,6 @@ import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
-import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
@@ -344,7 +344,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
@@ -1332,7 +1332,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
-			orderBackingBean.getManagedBean().setButtonVal("View");
+			orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -1368,7 +1368,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			adjBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			adjBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			
-			adjBB.getManagedBean().setButtonVal("View");
+			adjBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			adjBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -1398,7 +1398,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			adjBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			adjBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			
-			adjBB.getManagedBean().setButtonVal("View");
+			adjBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			adjBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -1416,7 +1416,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			siBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			siBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 			
-			siBB.getManagedBean().setButtonVal("View");
+			siBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			siBB.getManagedBean().setHyperLinkPage(true);
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -1433,7 +1433,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
 			invBB.getManagedBean().setHyperLinkPage(true);
-			invBB.getManagedBean().setButtonVal("View");
+			invBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			invBB.getManagedBean().setReliefDeclarationCheck(true);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1488,9 +1488,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			doBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
 
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
-			//doBB.getManagedBean().setButtonVal("Review");
 			doBB.getManagedBean().setHyperLinkPage(true);
-			doBB.getManagedBean().setButtonVal("View");
+			doBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
@@ -1518,7 +1517,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 			recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
-			recNoteBB.getManagedBean().setButtonVal("View");
+			recNoteBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 			recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){

@@ -628,7 +628,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
@@ -1142,7 +1142,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
 		orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 		orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-		orderBackingBean.getManagedBean().setButtonVal("View");
+		orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1186,7 +1186,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 		siBB.getManagedBean().setSelectedTabIndex(0);
 		siBB.populateChargeLineData();
-		siBB.getManagedBean().setButtonVal("View");
+		siBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 		siBB.getManagedBean().setHyperLinkPage(true);
 		flBB.getManagedBean().setHideRemarks(true);
 		flBB.initializeRemarkAndAttachement(resDTO.getFlStopInstr().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());

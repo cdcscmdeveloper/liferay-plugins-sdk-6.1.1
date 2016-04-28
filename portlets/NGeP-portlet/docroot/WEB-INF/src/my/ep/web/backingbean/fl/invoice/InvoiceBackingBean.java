@@ -529,7 +529,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
@@ -564,7 +564,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 			getManagedBean().setInvoiceId(resDTO.getInvoice().getInvoiceId());
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal("View");
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			getManagedBean().setInvoice(resDTO.getInvoice());
 			getManagedBean().setReliefDeclarationCheck(true);
 			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
@@ -1745,7 +1745,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
 				
 				orderBackingBean.getManagedBean().setHyperLinkPage(true);
-				orderBackingBean.getManagedBean().setButtonVal("View");
+				orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				boolean isFactoredSelected=getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored();
 				if(isFactoredSelected){
 					orderBackingBean.getManagedBean().setFactoringCheck("true");
@@ -1773,7 +1773,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				invBB.getManagedBean().setInvoice(resDTO.getInvoice());
 				FacesContext fc = FacesContext.getCurrentInstance();
 				invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
-				invBB.getManagedBean().setButtonVal("View");
+				invBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				invBB.getManagedBean().setHyperLinkPage(true);
 				flBB.getManagedBean().setHideRemarks(true);
 				return NAV_INVOICE;
@@ -2073,7 +2073,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				doBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 				doBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());		
 				
-				doBB.getManagedBean().setButtonVal("View");
+				doBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				doBB.getManagedBean().setHyperLinkPage(true);
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -2122,7 +2122,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		recNoteBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());	
 
 		recNoteBB.getManagedBean().setAcknowledged(true);
-		recNoteBB.getManagedBean().setButtonVal("View");
+		recNoteBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 		recNoteBB.getManagedBean().setHyperLinkPage(true);
 		flBB.getManagedBean().setHideRemarks(true);
 		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());

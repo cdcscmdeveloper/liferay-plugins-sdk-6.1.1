@@ -232,7 +232,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
@@ -540,7 +540,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		orderBackingBean.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
 		orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
-		orderBackingBean.getManagedBean().setButtonVal("View");
+		orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 		orderBackingBean.getManagedBean().setHyperLinkPage(true);
 		orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 		flBB.getManagedBean().setHideRemarks(true);
@@ -645,7 +645,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			crBB.getManagedBean().setButtonVal("View");
+			crBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
@@ -698,7 +698,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			
 			prBB.setFulfilmentRequestField(resDTO);
 			prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			prBB.getManagedBean().setButtonVal("View");
+			prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 
 			return NAV_PR;
 		}
@@ -745,7 +745,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
-			getManagedBean().setButtonVal("View");
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			getManagedBean().setBackToDocument(null);
 			getPopulateReasonList();
 			populateChargeLineData();

@@ -33,6 +33,7 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -59,7 +60,6 @@ import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
-import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.dan.DebitAdjustmentNoteManagedBean;
@@ -186,7 +186,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			}
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase("View")){
+			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
@@ -381,7 +381,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 				orderBackingBean.getManagedBean().setFactoringCheck("false");
 			}
 			orderBackingBean.getManagedBean().setHyperLinkPage(true);
-			orderBackingBean.getManagedBean().setButtonVal("View");
+			orderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			orderBackingBean.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
@@ -405,7 +405,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
 			invBB.getManagedBean().setHyperLinkPage(true);
-			invBB.getManagedBean().setButtonVal("View");
+			invBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 			invBB.getManagedBean().setDocMaintain(false);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());

@@ -53,7 +53,7 @@
 							action="#{danBackingBean.gpkiSignAction(bpmAction)}"/>
 					</ui:repeat></td>
 				<c:if
-					test='#{danBackingBean.managedBean.buttonVal eq "View" and !danBackingBean.managedBean.isHyperLinkPage()}'>
+					test='#{danBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !danBackingBean.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
