@@ -22,7 +22,7 @@
 						label="#{lbl['lbl.pm.financialorg.buzregno']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"						 
 						size="40" maxlength="20" >
-						
+						<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
 						</p:inputText></td>
 				<td><p:message id="bizRegNoMsg" for="bizRegNo" display="icon" /></td>
 			</tr>
@@ -33,7 +33,10 @@
 						label="#{lbl['lbl.pm.financialorg.name']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.finOrgName}"
 						disabled ="#{financialOrgBackingBean.checkFinancialServices()}"
-						required="#{!empty param['disableValidation']}" size="40" maxlength="100" /></td>
+						required="#{!empty param['disableValidation']}" size="40" maxlength="100" >
+						<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+						</p:inputText>						
+						</td>
 				<td><p:message id="finOrgNameMsg" for="finOrgName"
 						display="icon" /></td>
 			</tr>

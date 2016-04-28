@@ -35,7 +35,7 @@
 				</td>
 				<td style="width:33%;">
 					<p:selectOneMenu id="facState" required="true" tabindex="1"
-						label="#{lbl['lbl.pm.address.state']}"
+						label="#{lbl['lbl.pm.address.state']}" style="width:225px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmState.stateId}"
 						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -71,7 +71,7 @@
 					
 				</td>
 				<td >
-					<p:selectOneMenu id="facDivision" tabindex="8"
+					<p:selectOneMenu id="facDivision" tabindex="8" style="width:122px;"
 						disabled="#{not financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"
 						required="#{financialOrgBackingBean.managedBean.pmAddress.pmState.adoptDivision}"
 						label="#{lbl['lbl.pm.address.division']}"
@@ -95,7 +95,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td >
 					<p:selectOneMenu id="facDistrict" required="true" tabindex="9"
-						label="#{lbl['lbl.pm.address.district']}"
+						label="#{lbl['lbl.pm.address.district']}" style="width:225px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmDistrict.districtId}"
 						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -118,7 +118,7 @@
 				<td ><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="facCity" required="true"  tabindex="10"
-						label="#{lbl['lbl.pm.address.city']}"
+						label="#{lbl['lbl.pm.address.city']}" style="width:225px;"
 						value="#{financialOrgBackingBean.managedBean.pmAddress.pmCity.cityId}"
 						>
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
