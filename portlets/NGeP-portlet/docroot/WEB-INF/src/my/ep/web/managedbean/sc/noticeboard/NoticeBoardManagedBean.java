@@ -2,6 +2,7 @@
 package my.ep.web.managedbean.sc.noticeboard;
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -161,6 +162,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String supplierMofNo;
 	private boolean validMofNo;
 	private Map<String, Date> amendmentDateMap;
+	private Map<BigDecimal, Date> amendmentClosingDateMap;
 	private String ministryName;
 	private String jabatan;
 	private Long qtId;
@@ -1103,6 +1105,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setAmendmentDateMap(Map<String, Date> amendmentDateMap) {
 		this.amendmentDateMap = amendmentDateMap;
+	}
+
+	/**
+	 * @return the amendmentClosingDateMap
+	 */
+	public Map<BigDecimal, Date> getAmendmentClosingDateMap() {
+		return amendmentClosingDateMap;
+	}
+
+	/**
+	 * @param amendmentClosingDateMap the amendmentClosingDateMap to set
+	 */
+	public void setAmendmentClosingDateMap(Map<BigDecimal, Date> amendmentClosingDateMap) {
+		this.amendmentClosingDateMap = amendmentClosingDateMap;
 	}
 
 	/**
