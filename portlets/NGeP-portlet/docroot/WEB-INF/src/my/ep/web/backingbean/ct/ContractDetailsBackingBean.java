@@ -320,12 +320,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 	              // Retrieve Items
 	              ctBB.getManagedBean().getCtItemList().clear();
-	               ctBB.getManagedBean().getCtItemServiceList().clear();
-	              if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
-	    	               ctBB.getManagedBean().setShowItem(null);
-	    	               ctBB.getManagedBean().setSelectedItem(null);
-	    	               ctBB.getManagedBean().setShowServiceItem(null);
-	    	               ctBB.getManagedBean().setSelectedServiceItem(null);	    	  
+	              ctBB.getManagedBean().getCtItemServiceList().clear();	        	   
+	              ctBB.getManagedBean().setShowItem(null);
+	              ctBB.getManagedBean().setShowServiceItem(null);
+	              ctBB.getManagedBean().setSelectedItem(null);
+	              ctBB.getManagedBean().setSelectedServiceItem(null);	  
+	              if (ctBB.getManagedBean().getContractVer().getCtContractItems().size() > 0) {  	  
  		         
 	    	               for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 	    		                // If effective date is after current date, status is still display old status
@@ -1364,9 +1364,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			 
 			AmendmentBackingBean amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setSelectedTabIndex(0);
-			amendBB.getManagedBean().setShowItem(null);
-			amendBB.getManagedBean().setSelectedItem(null);
-			amendBB.getManagedBean().setSelectedServiceItem(null);
 			//amendBB.getManagedBean().setDisableGstRadio(true);
 			amendBB.setAmendmentContractVer(reqDTO);
 		    return PROCESS_AMEND_PAGE;
@@ -1421,9 +1418,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setCommonView(true);
         ctBB.getManagedBean().setViewContract(true);
 	    setValidateContractField(reqDTO);
-	    getManagedBean().setSelectedTabIndex(0);
-	    ctBB.getManagedBean().setShowItem(null);
-	    ctBB.getManagedBean().setShowServiceItem(null);
+	    getManagedBean().setSelectedTabIndex(0); 
 	    getManagedBean().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
 	    reqDTO.setCtContractVer(ctBB.getManagedBean().getContractVer());
 	    getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
