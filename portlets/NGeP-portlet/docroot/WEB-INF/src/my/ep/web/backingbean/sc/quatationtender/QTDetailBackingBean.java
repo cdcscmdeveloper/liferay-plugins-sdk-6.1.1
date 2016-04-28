@@ -4960,6 +4960,8 @@ public class QTDetailBackingBean extends
 	 * 		the quotation / tender id
 	 */
 	public void closeProposal(Long qtId) {
+		log.info("loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
+		
 		IQTProposalSO qtProposalSO = null;
 		try {
 			qtProposalSO = BusinessDelegate.getInstance().getServiceObject(
