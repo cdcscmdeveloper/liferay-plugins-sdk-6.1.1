@@ -27,9 +27,13 @@
   		 	challengeQues1="#{stopInstrBB.managedBean.spkiBackingBean.challengeQues1}"
 			textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
 			postSignAction="#{stopInstrBB.preSubmitStopInstruction(spkiBackingBean.pmDigiSign)}"/>
-		<c:if test="#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or stopInstrBB.managedBean.isHyperLinkPage()}">
+		<c:if test="#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  stopInstrBB.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{stopInstrBB.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeStopDelivery)}" />
-		</c:if>				
+		</c:if>		
+		<c:if test="#{ stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmStopFulfilment}">
+			<ac:title value="#{stopInstrBB.getParameterDesc(ParameterTypeConst.documentTypes, stopInstrBB.managedBean.stopInstr.flFulfilmentOrder.docType)}" />
+		</c:if>					
 		<p:messages id="messages" showDetail="true" autoUpdate="#{stopInstrBB.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
 		<table>
 			<tr>
@@ -60,11 +64,11 @@
 					<c:if test='#{stopInstrBB.managedBean.stopInstr.brandNew}'>
 						<p:commandButton value="#{lbl['lbl.btn.stop.fulfilment']}" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{stopInstrBB.signingAction('STOP FULFILMENT')}"  update="@form">
+							action="#{stopInstrBB.signingAction(BpmOutcomeConstant.bpmStopFulfilment)}"  update="@form">
 						</p:commandButton>
 					</c:if>
 					<c:if
-						test='#{stopInstrBB.managedBean.buttonVal eq "View" and !stopInstrBB.managedBean.isHyperLinkPage()}'>
+						test='#{stopInstrBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !stopInstrBB.managedBean.isHyperLinkPage()}'>
 						<td colspan="4" style="text-align: right"><p:commandLink
 								value="#{lbl['lbl.td.doc.trackingDiary']}"
 								action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeStopDelivery,stopInstrBB.managedBean.stopInstr.stopInstrId)}"

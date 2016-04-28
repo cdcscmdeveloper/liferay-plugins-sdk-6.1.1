@@ -21,7 +21,9 @@
 			postSignAction="#{receivedNoteBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{receivedNoteBackingBean.enableAutoUpdate()}" />		
 		<f:event listener="#{receivedNoteBackingBean.preRenderView}" type="preRenderView" />
-		<c:if test="#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or receivedNoteBackingBean.managedBean.isHyperLinkPage()}">
+		<c:if test="#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or
+					  receivedNoteBackingBean.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{receivedNoteBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeFulfilmentNote)}" />
 		</c:if>					
 		<p:messages id="messages" showDetail="true" autoUpdate="#{receivedNoteBackingBean.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
@@ -42,7 +44,7 @@
 						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
 						action="#{receivedNoteBackingBean.backAction}" /></td>
 				<td colspan="4" style="text-align: right">
-					<c:if test='#{receivedNoteBackingBean.managedBean.buttonVal ne "View"}'>
+					<c:if test='#{receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
 					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 						<ui:define name="outComeSection">
 							<ui:repeat 
@@ -57,23 +59,23 @@
 					</ui:decorate>
 					</c:if>
 					<c:if
-						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
+						test='#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}'>
 						<td colspan="4" style="text-align: right"><p:commandButton
 								value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								action="#{receivedNoteBackingBean.submitAction('UPDATE')}">
-								<f:param name="actionName" value="UPDATE" />
+								action="#{receivedNoteBackingBean.submitAction(BpmOutcomeConstant.bpmUpdate)}">
+								<f:param name="actionName" value="#{BpmOutcomeConstant.bpmUpdate}" />
 							</p:commandButton></td>
 					</c:if>
 					<c:if
-						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Cancel"}'>
+						test='#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}'>
 						<td colspan="4" style="text-align: right"><p:commandButton
 								value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								action="#{receivedNoteBackingBean.submitAction('CANCEL')}">
-								<f:param name="actionName" value="CANCEL" />
+								action="#{receivedNoteBackingBean.submitAction(BpmOutcomeConstant.bpmCancel)}">
+								<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 							</p:commandButton></td>
 					</c:if>	
 					<c:if
-						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "View"}'>
+						test='#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
 						<td colspan="4" style="text-align: right"><p:commandLink
 								rendered="#{!receivedNoteBackingBean.managedBean.isHyperLinkPage()}"
 								value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -131,7 +133,7 @@
 		resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:messages id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" /></td>
+				<td><p:messages id="gfmasMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" escape="false" /></td>
 			</tr>
 		</table>
 		<p:spacer height="2px"></p:spacer>

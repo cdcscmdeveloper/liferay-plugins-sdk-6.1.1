@@ -108,8 +108,8 @@
 						value="#{lbl['lbl.fl.frn.act.received.date']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 190px;"><p:calendar mode="popup" showOn="button" id="receivedDate" label="#{lbl['lbl.fl.frn.act.received.date']}" required="true"
-						disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}"
-						rendered="#{receivedNoteBackingBean.managedBean.buttonVal ne 'Cancel' or  receivedNoteBackingBean.managedBean.buttonVal ne 'View'}"
+						disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel or  receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
+						rendered="#{receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmCancel or  receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}"
 						readonlyInput="true"
 						size="10"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.receivedDate}"
@@ -143,7 +143,7 @@
 						style="text-align: top" /><p:outputLabel rendered="#{receivedNoteBackingBean.isReceivingOfficer()}" 
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width:350px; margin-bottom:5px;" rendered="#{receivedNoteBackingBean.isReceivingOfficer()}"
-						disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}" label="#{lbl['lbl.fl.acknowledgeOfficer']}"
+						disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}" label="#{lbl['lbl.fl.acknowledgeOfficer']}"
 						value="#{receivedNoteBackingBean.managedBean.userLoginId}">
 						<f:selectItems
 							value="#{receivedNoteBackingBean.getAcknowledgeOfficerDropdown()}" />
@@ -169,7 +169,7 @@
 				</tr>
 				<tr>
 					<td><p:selectBooleanCheckbox rendered="#{receivedNoteBackingBean.managedBean.lastFRNTaxInv}"
-							disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='View'}"
+							disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 							value="#{receivedNoteBackingBean.managedBean.issuanceCogstrCheck}" /></td>
 					<td><h:outputText style="text-align:left"
 							value="#{lbl['lbl.fl.issuance.of.cogstr']}" rendered="#{receivedNoteBackingBean.managedBean.lastFRNTaxInv}" /></td>

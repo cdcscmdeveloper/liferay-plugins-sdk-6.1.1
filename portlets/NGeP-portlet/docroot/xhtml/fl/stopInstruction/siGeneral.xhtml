@@ -185,7 +185,7 @@
 					<td style="width: 295px;">
 						<p:selectOneMenu id="reasonId" required="true" label="#{lbl['lbl.fl.stop.instuc.reason.justification']}" 
 							style="width:365px;margin-bottom: 5px;" 
-							disabled="#{stopInstrBB.managedBean.buttonVal=='View' or stopInstrBB.managedBean.taskName eq 'Review SD'}"
+							disabled="#{stopInstrBB.managedBean.buttonVal==BpmOutcomeConstant.bpmView or stopInstrBB.managedBean.taskName eq 'Review SD'}"
 							value="#{stopInstrBB.managedBean.stopInstr.pmReason.reasonCode}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{stopInstrBB.populateReasonList}" var="reason"
@@ -208,7 +208,7 @@
 					</td>
 					<td>
 						<p:inputText size="53" maxlength="255" value="#{stopInstrBB.managedBean.stopInstr.reasonDesc}" id="otherId" 
-							disabled="#{stopInstrBB.managedBean.buttonVal=='View' or stopInstrBB.managedBean.stopInstr.pmReason.reasonCode ne 'OTHERS'
+							disabled="#{stopInstrBB.managedBean.buttonVal==BpmOutcomeConstant.bpmView or stopInstrBB.managedBean.stopInstr.pmReason.reasonCode ne 'OTHERS'
 								or stopInstrBB.managedBean.taskName eq 'Review SD'}" />
 					</td>
 				</tr>
