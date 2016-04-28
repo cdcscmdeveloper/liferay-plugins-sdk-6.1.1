@@ -15,7 +15,7 @@
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex">
 			<ac:paginator for="financialsrv" />
 
-			<p:column width="35%">
+			<p:column width="45%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
@@ -48,22 +48,21 @@
 						itemValue="#{serviceType.pmParameter.parameterId}"
 						value="#{financialOrgBackingBean.getServiceTypeList()}" />
 					<p:ajax event="change" process="@this" 
-				 		update="@form"
+				 		update="@form" 
 						listener="#{financialOrgBackingBean.updateService}"  />
 				</p:selectOneMenu>
 				<p:message for="svcType" id="svcTypeMsg" display="icon" /> 
 				</ui:fragment>
 			</p:column>
-
-			<p:column width="45%" headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
+			<!-- <p:column width="45%" headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
 				<ui:fragment
 					rendered="#{financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}">
 
 					<p:inputText value="#{financialsrv.bankCode}" disabled="true"
 						styleClass="ppDisplayTextM" size="30" maxlength="20" />
 				</ui:fragment>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" width="15%">
+			</p:column> -->
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" width="35%">
 				<p:selectOneMenu style="width: 110px !important;" id="finServiceStatusId"
 					disabled="#{financialsrv.serviceTypeCode.parameterCode eq  ParameterConst.bankServicesPaymentBank ? true : financialsrv.brandNew}"
 					value="#{financialsrv.recordStatusFlg}" required="true"	>
@@ -73,7 +72,7 @@
 
 			</p:column>
 			
-			<p:column width="5%" headerText="#{lbl['lbl.pm.financialorg.action']}">
+			<p:column width="27%" headerText="#{lbl['lbl.pm.financialorg.action']}">
 	             <p:commandLink partialSubmit="true" disabled="#{!financialsrv.brandNew}"
 					process="@this" action="#{financialOrgBackingBean.deleteFinancialService(rowIndex)}"
 					update="financialsrvid" >
