@@ -1523,4 +1523,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			return text;
 		}
 	}
+
+	/**
+	 * File Upload 
+	 * @param String path
+	 * @param String fileName
+	 * @param String displayFileName
+	 * @return
+	 * @throws IOException
+	 */
+	public StreamedContent commonDownload(String path, String fileName, String displayFileName) throws IOException{
+		String finalFilePath = path + "/" + fileName;
+		
+		return commonDownload(finalFilePath, displayFileName);
+	}
+
 }
