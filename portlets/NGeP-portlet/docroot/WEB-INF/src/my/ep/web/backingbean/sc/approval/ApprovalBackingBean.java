@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.approval;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -53,7 +54,6 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -71,6 +71,8 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -82,6 +84,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
+import org.quartz.SchedulerException;
 
 /**
  * Backing Bean for Approvals.
@@ -874,7 +877,7 @@ public class ApprovalBackingBean extends
 						.updateBPMAction(qtReqDTO);
 				// tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
 				
-				/*if (CollectionUtils.isNotEmpty(approvalTypes) && 
+				if (CollectionUtils.isNotEmpty(approvalTypes) && 
 						approvalTypes.contains(ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL)) {
 					Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
 					if (!DateUtils.isDateGreater(qt.getPublishDate(), todayDate)) {
@@ -886,7 +889,7 @@ public class ApprovalBackingBean extends
 							log.error(e.getMessage());
 						}
 					}
-				}*/
+				}
 			}
 		} finally {
 		}
