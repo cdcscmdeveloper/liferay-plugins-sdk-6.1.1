@@ -3,10 +3,11 @@
 
 <table style="width: 100%;">
 	<tr>
-		<td style="background-color:whitesmoke;font-size: 14px;font-weight: bold;">
-			$header :  $applNo
+		<td style="background-color:gray;color:white;font-size: 14px;font-weight: bold;">
+			$header $applNo
 		</td>
 	</tr>
+	<tr><td height="10"></td></tr>
 	<tr>
 		<td>
 			$note1<br /> 
@@ -32,22 +33,26 @@
 			</table>
 		</td>
 
-		<td style="width: 33%"><table>
+		<td style="width: 33%">
+			<table>
 				<tr>
 					<td>$sabahAddr1</td>
 				</tr>
 				<tr>
 					<td style="padding-top: 10px;">$sabahAddr2</td>
 				</tr>
-			</table></td>
-		<td style="width: 33%"><table>
+			</table>
+		</td>
+		<td style="width: 33%">
+			<table>
 				<tr>
 					<td>$sarawakAddr1</td>
 				</tr>
 				<tr>
 					<td style="padding-top: 10px;">$sarawakAddr2</td>
 				</tr>
-			</table></td>
+			</table>
+		</td>
 	</tr>
 </table>
 </body>
