@@ -37,6 +37,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -46,6 +47,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
+import org.quartz.SchedulerException;
 
 /**
  * BSV Attendance BackingBean class is used to display Brifing, Sitevisit
@@ -294,16 +296,28 @@ public class BSVAttendanceBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			FacesScopes facesScopes = new FacesScopes();
+			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setBsvDetails(bsvs);
-			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setOutcome(outCome);
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
+				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+				if (!DateUtils.isDateGreater(scQt.getClosingDate(), todayDate)) {
+					try {
+						log.info("call simple scheduler if QT is closing today.");
+						EpSchedulerHelper.scheduleSimpleQTClosingJob(scQt);
+					} catch (SchedulerException e) {
+						e.printStackTrace();
+						log.error(e.getMessage());
+					}
+				}
+				
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
