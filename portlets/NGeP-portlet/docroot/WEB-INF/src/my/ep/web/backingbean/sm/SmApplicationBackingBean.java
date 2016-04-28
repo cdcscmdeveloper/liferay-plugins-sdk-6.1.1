@@ -4440,7 +4440,7 @@ public class SmApplicationBackingBean extends
 			if ((getManagedBean().getSelectedMachine().getMachine()
 					.getMachineId() == null || getManagedBean()
 					.getSelectedMachine().getMachine().getMachineId()
-					.compareTo(Long.parseLong("-1")) == 0)) {
+					.compareTo(-1L) == 0)) {
 				getManagedBean().getSelectedMachine().setMachine(null);
 			} else {
 				getManagedBean().getSelectedMachine().setMachineType(
@@ -4461,12 +4461,12 @@ public class SmApplicationBackingBean extends
 		}
 		saveOrUpdateAppl();
 		assignValReqdToFalse();
-		
-		//set default machine if null to avoid null in screen dialog after save
-		if(getManagedBean().getSelectedMachine().getMachine()==null){
+
+		// set default machine if null to avoid null in screen dialog after save
+		if (getManagedBean().getSelectedMachine().getMachine() == null) {
 			getManagedBean().getSelectedMachine().setMachine(new PmMachine());
 		}
-		
+
 		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
 	}
 
@@ -8852,6 +8852,24 @@ public class SmApplicationBackingBean extends
 			e.printStackTrace();
 		}
 
+	}
+
+	public void downloadOfflineSuppDocCheckList() {
+		try {
+			SmApplicationUtil
+					.generateOfflineSuppDocChecklistPdf(getManagedBean()
+							.getSmAppl());
+			file = commonDownload(
+					SmCommonUtil
+							.getUploadFilePath(SupplierManagementConst.OFFLINE_DOC_CHECKLIST_PATH)
+							+ getManagedBean().getSmAppl().getApplNo()
+							+ SupplierManagementConst.OFFLINE_SUPP_DOC_CHECKLIST_PREFIX,
+					getManagedBean().getSmAppl().getApplNo()
+							+ SupplierManagementConst.OFFLINE_SUPP_DOC_CHECKLIST_PREFIX);
+
+		} catch (Exception e) {
+			throw new EpException(e.getMessage());
+		}
 	}
 
 	/**
