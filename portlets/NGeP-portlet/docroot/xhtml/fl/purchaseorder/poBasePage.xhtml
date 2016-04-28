@@ -22,7 +22,9 @@
 					'#{flOrderBB.getPortletTitle()}');
 		</script>
 		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
-		<c:if test="#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or flOrderBB.managedBean.isHyperLinkPage()}">
+		<c:if test="#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or					 
+					  flOrderBB.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{flOrderBB.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypePurchaseOrder)}" />
 		</c:if>			
 		<p:messages id="messages" showDetail="true" autoUpdate="#{flOrderBB.managedBean.autoUpdate}"
@@ -52,32 +54,24 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
-				<c:if
-						test='#{flOrderBB.managedBean.outComes ne "null"}'>		
-				<td colspan="4" style="text-align: right">
-					<c:if test='#{flOrderBB.managedBean.buttonVal ne "View"}'>
-					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
-						<ui:define name="outComeSection">
-							<ui:repeat
-							var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
-							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-							<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							update="@form"
-							action="#{flOrderBB.signingAction(bpmAction)}" />
-							</ui:repeat> 
-						</ui:define>
-					</ui:decorate>
-					</c:if>
-					</td></c:if><c:if
-						test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
-						<td colspan="4" style="text-align: right">
-						<p:commandButton value="STOP FULFILMENT" update="@form"
-							action="#{flOrderBB.signingAction('STOP FULFILMENT')}">
-							<f:param name="actionName" value="STOP" />
-						</p:commandButton>
-					</td></c:if>
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq "View"}'>
+				<c:if test='#{flOrderBB.managedBean.outComes ne "null"}'>
+					<td colspan="4" style="text-align: right">
+						<c:if test='#{flOrderBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
+							<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
+								<ui:define name="outComeSection">
+									<ui:repeat var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
+										<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											styleClass="ui-button" onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();" update="@form"
+											action="#{flOrderBB.signingAction(bpmAction)}" />
+									</ui:repeat>
+								</ui:define>
+							</ui:decorate>
+						</c:if>
+					</td>
+				</c:if>
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
 					<td colspan="4" style="text-align: right"><p:commandLink
 							rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
 							value="#{lbl['lbl.td.doc.trackingDiary']}"
