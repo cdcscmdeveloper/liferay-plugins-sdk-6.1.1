@@ -135,7 +135,7 @@
 			<p:column headerText="#{lbl['lbl.pm.document.name']}"
 				style="width : 20% !important;">
 				<p:commandLink ajax="false" value="#{table.fileName}" rendered="#{not empty table.fileName}">
-					<p:fileDownload value="#{smUpdateGstInfoBackingBean.commonDownload(table.filePath,table.fileName)}" />
+					<p:fileDownload value="#{smUpdateGstInfoBackingBean.commonDownload(table.filePath,table.fileName,table.fileName)}" />
 				</p:commandLink>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
 				<p:commandLink id="deleteHqAttId" style="white-space: normal !important;"
