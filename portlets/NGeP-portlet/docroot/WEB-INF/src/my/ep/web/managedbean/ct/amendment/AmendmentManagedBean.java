@@ -48,6 +48,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String taskName;
 	private String ackFA;
 	private String showItem;
+	private String showServiceItem;
 	private String committeeName = null;
 	private String identificationNo = null;
 	private String identificationType;
@@ -164,7 +165,21 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setShowItem(String showItem) {
 		this.showItem = showItem;
 	}
-	
+		
+	/**
+	 * @return the showServiceItem
+	 */
+	public String getShowServiceItem() {
+		return showServiceItem;
+	}
+
+	/**
+	 * @param showServiceItem the showServiceItem to set
+	 */
+	public void setShowServiceItem(String showServiceItem) {
+		this.showServiceItem = showServiceItem;
+	}
+
 	/**
 	 * @return the committeeName
 	 */
