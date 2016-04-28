@@ -373,38 +373,54 @@ public class PurchaseInDefaultBackingBean extends
 			// WorkFlow Status
 			scPurchaseInDefault.setWorkFlowStatuses(null);
 
+			boolean isQuantityCheckNeeded = false;
+			
 			// justification
 			if (scPurchaseInDefault.getReasonType().getReasonCode() != null) {
 				for (PmReasonDesc reasonDesc : getManagedBean().getPidJustifications()) {
+					PmReason pmReason = reasonDesc.getPmReason();
 					if (scPurchaseInDefault
 							.getReasonType()
 							.getReasonCode()
 							.equalsIgnoreCase(
-									reasonDesc.getPmReason().getReasonCode())) {
-						scPurchaseInDefault.setReasonType(reasonDesc
-								.getPmReason());
+									pmReason.getReasonCode())) {
+						scPurchaseInDefault.setReasonType(pmReason);
 					}
 				}
 			}
 			
+			if(getManagedBean().isVisibleOrderQty()) {
+				isQuantityCheckNeeded = true;
+			}
+			
 			// validate pid
 			validatePID(scPurchaseInDefault);
+			int checkQty = 0;
 			
-			if (scPurchaseInDefault.getContractedItem() != null) {
-				if (scPurchaseInDefault.getContractedItem().getCtContractVer()
+			CtContractItem contractItem = scPurchaseInDefault.getContractedItem();
+			CtPanelItem ctPanelItem = scPurchaseInDefault.getPanelItem();  
+			
+			if (contractItem != null) {
+				if (contractItem.getCtContractVer()
 						.getCtContract().getContractType() != null) {
-					if (scPurchaseInDefault.getContractedItem()
+					if (contractItem
 							.getCtContractVer().getCtContract()
 							.getContractType().getParameterCode()
 							.equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						reqDTO.setContractType(SourcingConstants.PID_TYPE_MINISTRY);
-					} else if (scPurchaseInDefault.getContractedItem()
+					} else if (contractItem
 							.getCtContractVer().getCtContract()
 							.getContractType().getParameterCode()
 							.equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 						reqDTO.setContractType(SourcingConstants.PID_TYPE_CENTRAL);
 					}
 				}
+				if (scPurchaseInDefault.getQuantity() != null) {
+					checkQty = Double.compare(scPurchaseInDefault.getQuantity()
+							.doubleValue(), contractItem
+							.getMinimumOrderQty());
+				}
+				
 
 				/*
 				 * if(scPurchaseInDefault.getReasonType().getReasonCode().
@@ -420,13 +436,12 @@ public class PurchaseInDefaultBackingBean extends
 				 * ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				 * facesScopes.getUserLocale())}); } }
 				 */
-			} else if (scPurchaseInDefault.getPanelItem() != null) {
+			} else if (ctPanelItem != null) {
 				reqDTO.setContractType(SourcingConstants.PID_TYPE_PANEL);
-				int checkQty = 0;
 
 				if (scPurchaseInDefault.getQuantity() != null) {
 					checkQty = Double.compare(scPurchaseInDefault.getQuantity()
-							.doubleValue(), scPurchaseInDefault.getPanelItem()
+							.doubleValue(), ctPanelItem
 							.getMinimumOrderQty());
 				}
 				/*
@@ -440,27 +455,28 @@ public class PurchaseInDefaultBackingBean extends
 				 * ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				 * facesScopes.getUserLocale())}); } }
 				 */
-				if (scPurchaseInDefault.getReasonType().getReasonCode()
-						.equalsIgnoreCase(ParameterConst.PID_RI)) {
-					if (checkQty > 0) {
-						throw new EpException(
-								MessageConst.ERROR_760203,
-								new String[] {
-										ResourceBundleUtils
-												.getMessage(
-														"lbl.sc.order.qty",
-														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-														facesScopes
-																.getUserLocale()),
-										ResourceBundleUtils
-												.getMessage(
-														"lbl.sc.purchase.in.default.min.qty",
-														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-														facesScopes
-																.getUserLocale()) });
-					}
+			}
+			
+			if (isQuantityCheckNeeded) {
+				if (checkQty > 0) {
+					throw new EpException(
+							MessageConst.ERROR_760203,
+							new String[] {
+									ResourceBundleUtils
+											.getMessage(
+													"lbl.sc.order.qty",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													facesScopes
+															.getUserLocale()),
+									ResourceBundleUtils
+											.getMessage(
+													"lbl.sc.purchase.in.default.min.qty",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													facesScopes
+															.getUserLocale()) });
 				}
 			}
+			
 			reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 			// Hoa: add token authenticate to support BPM
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -498,7 +514,7 @@ public class PurchaseInDefaultBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		// validate quantity
 		if (scPurchaseInDefault.getQuantity() != null
-				&& scPurchaseInDefault.getQuantity().intValue() < 0) {
+				&& scPurchaseInDefault.getQuantity().intValue() < 1) {
 			throw new EpException(MessageConst.ERROR_100033, new String[] {
 					ResourceBundleUtils.getMessage("lbl.sc.order.qty",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
