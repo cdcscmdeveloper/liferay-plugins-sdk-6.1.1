@@ -53,35 +53,29 @@
 				<p:calendar showOn="button" size="25" label="#{lbl['lbl.pm.cal.frmdate']}"
 							maxdate="#{bpmAssignedTaskSearchBackingBean.managedBean.searchToCreatedDate}"
 							id="fromDate" readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-							value="#{bpmAssignedTaskSearchBackingBean.managedBean.searchFromCreatedDate}"
-							required="#{not empty bpmAssignedTaskSearchBackingBean.managedBean.searchToCreatedDate}" >
-				<p:ajax event="dateSelect" update="toDate" />
-				</p:calendar>
+							value="#{bpmAssignedTaskSearchBackingBean.managedBean.searchFromCreatedDate}" />
 			</td>
 			<td><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
 			<td><div style="margin-top: 3px;"></div>
 				<p:calendar showOn="button" size="25" label="#{lbl['lbl.pm.cal.todate']}"
 							mindate="#{bpmAssignedTaskSearchBackingBean.managedBean.searchFromCreatedDate}"
 							id="toDate" readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-							value="#{bpmAssignedTaskSearchBackingBean.managedBean.searchToCreatedDate}"
-							required="#{not empty bpmAssignedTaskSearchBackingBean.managedBean.searchFromCreatedDate}" >
-				<p:ajax event="dateSelect" update="fromDate" />
-				</p:calendar>
+							value="#{bpmAssignedTaskSearchBackingBean.managedBean.searchToCreatedDate}" />
 			</td>
 		</tr>
 	</table>
 
 	<div style="text-align: right;">
-			<p:commandButton id="schBtn"
-				value="#{lbl['lbl.btn.search']}"
-				action="#{bpmAssignedTaskSearchBackingBean.searchAction}"
-				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-				update="resultPanel" />
 			<p:commandButton
 				value="#{lbl['lbl.btn.reset']}"
 				action="#{bpmAssignedTaskSearchBackingBean.reset}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				update=":form" />
+			<p:commandButton id="schBtn"
+				value="#{lbl['lbl.btn.search']}"
+				action="#{bpmAssignedTaskSearchBackingBean.searchAction}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				update="resultPanel" />
 	</div>
 
 	</p:panel>
@@ -89,7 +83,7 @@
 	<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 	
 		<p:dataTable id="taskListTableId" value="#{bpmAssignedTaskSearchBackingBean.managedBean.taskListDataModel}"
-			rows="5" var="taskList" lazy="true" >
+			rows="10" var="taskList" lazy="true" >
 			<ac:paginator for="taskListTableId"></ac:paginator>
 			
 			<p:column width="5%;">

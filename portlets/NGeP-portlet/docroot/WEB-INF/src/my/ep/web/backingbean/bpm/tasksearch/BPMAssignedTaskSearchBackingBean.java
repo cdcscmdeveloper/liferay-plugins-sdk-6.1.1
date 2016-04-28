@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.bpm.tasksearch;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +30,12 @@ import org.apache.log4j.Logger;
 
 @ManagedBean(name = "bpmAssignedTaskSearchBackingBean")
 @RequestScoped
-public class BPMAssignedTaskSearchBackingBean extends BaseBackingBean<BPMAssignedTaskSearchManagedBean> {
+public class BPMAssignedTaskSearchBackingBean extends BaseBackingBean<BPMAssignedTaskSearchManagedBean> implements Serializable {
 
 	/**
 	 * 
 	 */
-
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(BPMAssignedTaskSearchBackingBean.class);
 
 	private String language = new FacesScopes().getUserLocale().getLanguage();
