@@ -67,6 +67,15 @@
 							style="float:left" value="#{lbl['lbl.sm.suppDoc.offline.note2']}" />
 						<br /> <h:outputText style="float:left"
 							value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br /></td>
+					<td>
+						<div align="right">
+							<p:commandLink ajax="false" action="#{backingBean.downloadOfflineSuppDocCheckList}">
+								<p:graphicImage value="/css/images/design/print.png"
+											style="margin-right:2px;" title="#{lbl['lbl.sm.printList']}"/>
+								<p:fileDownload value="#{backingBean.file}" />
+							</p:commandLink>
+						</div>
+					</td>
 
 				</tr>
 
@@ -210,11 +219,4 @@
 			<p:spacer height="2px;" />
 		</p:panel>
 	</div>
-	<p:outputPanel>
-		<div align="right">
-			<h:commandButton value="#{lbl['lbl.sm.printList']}"
-				onclick="printDiv();" type="button" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
-			</h:commandButton>
-		</div>
-	</p:outputPanel>
 </ui:composition>
