@@ -49,7 +49,7 @@
 							action="#{contractRequestBackingBean.gpkiSignAction(bpmAction)}" />
 					</ui:repeat></td>
 				<c:if
-					test='#{contractRequestBackingBean.managedBean.buttonVal eq "View" and !contractRequestBackingBean.managedBean.isHyperLinkPage()}'>
+					test='#{contractRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !contractRequestBackingBean.managedBean.isHyperLinkPage()}'>
 					<td colspan="4" style="text-align: right">	
 					<p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -118,7 +118,7 @@
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" />
 									<p:selectOneMenu
-										disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}"
 										style="width:340px;">
 										<p:ajax event="change"
@@ -132,7 +132,7 @@
 								<h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" />
 									<p:selectOneMenu id="approverDropdown"
-										disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.selectedApprover}"
 										style="width:340px;">
 										<f:selectItems

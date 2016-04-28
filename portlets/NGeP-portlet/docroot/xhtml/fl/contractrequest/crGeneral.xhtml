@@ -41,7 +41,7 @@
 						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View' or contractRequestBackingBean.isApprover()}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or contractRequestBackingBean.isApprover()}"
 						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
@@ -67,7 +67,7 @@
 						oncomplete="dlgChargedPtj.show();"
 						action="#{contractRequestBackingBean.resetChargedPtjDetails}"
 						update=":form:chargeOrgProfile,chargeResultPanel,dialogChargedPtj"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						style="padding-left:10px">
 						<p:graphicImage value="/css/images/design/search.png" />
 					</p:commandLink> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
@@ -93,7 +93,7 @@
 						onkeydown="limitTextArea(this,500);"
 						autoResize="false"
 						style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.title}" /> 						
 						<ac:iconTooltip value="#{lbl['lbl.fl.cr.tooltip.title']}"/></td>
 						<td><p:message for="title" display="icon" /></td>
@@ -151,7 +151,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
 				<td><p:calendar mode="popup" showOn="button" 
-						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal=='View'}" 
+						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}" 
 						readonlyInput="true"
 						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
@@ -202,7 +202,7 @@
 		</table>
 		<table>
 		<tr>
-			<td><p:selectBooleanCheckbox disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}" value="#{contractRequestBackingBean.managedBean.declarationCheck}"/></td>
+			<td><p:selectBooleanCheckbox disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}" value="#{contractRequestBackingBean.managedBean.declarationCheck}"/></td>
 			<td><h:outputText style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
 		</tr>
 	</table>
@@ -269,7 +269,7 @@
 				
 				<td><p:selectOneMenu id="suppBranch"
 						value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.branchCode}"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View' or empty contractRequestBackingBean.managedBean.supplierBranchesList}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or empty contractRequestBackingBean.managedBean.supplierBranchesList}"
 						style="width: 360px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="suppBranchList"
