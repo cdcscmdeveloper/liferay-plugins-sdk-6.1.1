@@ -9,6 +9,7 @@
 		<tr>
 			<td class="TableFieldLeft" style="width: 17%"></td>
 			<td class="TableFieldRight"><p:dataGrid id="catatan"
+			    	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}"
 					var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 					<table>

@@ -47,6 +47,7 @@
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>
@@ -86,6 +87,7 @@
 						<tr>
 							<td />
 							<td><p:dataGrid id="attaIds"
+									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachments}"
 									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
 									style="width:100%">

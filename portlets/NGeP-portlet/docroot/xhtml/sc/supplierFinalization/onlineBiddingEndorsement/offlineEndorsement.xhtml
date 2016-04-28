@@ -17,6 +17,7 @@
 					</h:column>
 					<h:column>
 						<p:dataGrid var="remarkVar"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{suppFinalBiddingBackingBean.managedBean.remarks}"
 							rowIndexVar="remarkIndex" columns="1">
 							<table>

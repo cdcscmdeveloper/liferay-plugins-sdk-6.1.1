@@ -73,6 +73,7 @@
 
 				<td class="TableFieldRight">
 					<p:dataGrid var="remarkVar"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{suppFinalBiddingBackingBean.managedBean.committeeRemarkList}"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>

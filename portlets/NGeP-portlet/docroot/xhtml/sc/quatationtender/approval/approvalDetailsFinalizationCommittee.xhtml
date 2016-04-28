@@ -83,6 +83,7 @@
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid id="cancelRemarks"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{fcaApprovalRemarkList}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">
 						<table>
@@ -125,6 +126,7 @@
 						<tr>
 							<td />
 							<td><p:dataGrid id="fcAttachId"
+									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									value="#{fcaApprovalTab.scQtApproval.scQtApprovalAttachments}"
 									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
 									style="width:100%">
