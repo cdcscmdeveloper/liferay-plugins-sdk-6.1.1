@@ -1330,7 +1330,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 		}
 		invBB.getManagedBean().setSumOrderedAmt(sumOrderedAmt);
-		BigDecimal serviceFee = null;
+		BigDecimal serviceFee = new BigDecimal(0);
 		if(resDTO.getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
 		} else {
@@ -1376,10 +1376,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		String action = BpmOutcomeConst.BPM_SUBMIT;
+		List<PmUser> listOfApprover = null;
+		IFulfilmentSO fulfilmentSO = null;
+		IFulfilmentRequestSO requestSO = null;
 		try {
+			fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
-			
+			requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			reqDTO.setStatusId(getManagedBean().getStatusId());
 			reqDTO.setInvoice(invoice);
 			reqDTO.setOutcome(action);
@@ -1390,6 +1394,20 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			if(flBB.getManagedBean().getRemarkList().size() >0){
 				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
+			reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
+			reqDTO.setApproverLimit(sumItemAmt);
+			try {
+				resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(resDTO.getApproverGroupUserList().isEmpty()){
+				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
+			}
+			FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+			listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
+			reqDTO.setApproverUserList(listOfApprover);
 			resDTO = invoiceSO.updateInvoiceWithAP59(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745007;
