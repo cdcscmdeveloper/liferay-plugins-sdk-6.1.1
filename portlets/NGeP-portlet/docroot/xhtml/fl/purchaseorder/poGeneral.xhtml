@@ -255,7 +255,7 @@
 							value="#{lbl['lbl.fl.factoring.company']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="factoringComp"
-					rendered="#{flOrderBB.managedBean.buttonVal!='View'}"
+					rendered="#{flOrderBB.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrgId}" 
 					style="width: 425px;margin-bottom:5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -267,7 +267,7 @@
 							listener="#{flOrderBB.getSelectedFactoringCompDtl}"
 							update="factoringCompPnl" />
 						</p:selectOneMenu>
-						<p:inputText disabled="true" size="50" rendered="#{flOrderBB.managedBean.buttonVal=='View'}"
+						<p:inputText disabled="true" size="50" rendered="#{flOrderBB.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 							value="#{flOrderBB.managedBean.fulfilmentOrder.factoringOrgName}" />						
 					</td>
 				</tr>
@@ -309,40 +309,6 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 					<td><p:inputText disabled="true" size="25"
 							value="#{flOrderBB.getText(flOrderBB.managedBean.fulfilmentOrder.factoringAddress.contactPhoneNoFull)}" /></td>
-				</tr>
-			</table>
-		</p:panel>
-	</h:panelGroup>
-	<h:panelGroup>
-		<p:panel header="#{lbl['lbl.fl.stop.instuc.reason']}" toggleable="true" id="stopInstructionPnl"
-			rendered="#{flOrderBB.managedBean.buttonVal eq 'Stop Fulfilment'}">
-			<table style="width: 100%">
-				<tr>
-					<td style="width: 100px;"><p:outputLabel
-						value="#{lbl['lbl.fl.stop.instuc.reason.justification']}"/>
-					<p:outputLabel value="*" styleClass="mandatory"/></td>
-				<td style="width: 295px;"><p:selectOneMenu id="reasonId" label="Reason" required="true"
-						style="width:288px;margin-bottom: 5px;"
-						value="#{flOrderBB.managedBean.stopIns.pmReason.reasonCode}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems value="#{flOrderBB.populateReasonList}" var="reason"
-							itemLabel="#{reason.reasonDesc}"
-							itemValue="#{reason.pmReason.reasonCode}"/>
-						<p:ajax event="change" update="otherId"/>
-					</p:selectOneMenu> 
-					</td>
-					<td><p:message for="reasonId" display="icon" /></td>
-					<td style="width: 257px;"><p:outputLabel
-							value="Submission Date" /></td>
-					<td><p:inputText value="#{flOrderBB.managedBean.stopIns.createdDate}" disabled="true">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</p:inputText> </td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.others']}" /></td>
-					<td><p:inputText size="50" value="#{flOrderBB.managedBean.stopIns.reasonDesc}" id="otherId" 
-					disabled="#{flOrderBB.managedBean.stopIns.pmReason.reasonCode ne 'OTHERS'}" /></td>
 				</tr>
 			</table>
 		</p:panel>
