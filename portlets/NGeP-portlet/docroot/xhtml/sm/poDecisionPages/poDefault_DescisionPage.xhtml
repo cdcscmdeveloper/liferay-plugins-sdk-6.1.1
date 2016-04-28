@@ -271,7 +271,7 @@
 		</p:outputPanel>
 
 	</p:dialog>
-	<p:dialog width="650px" header="#{lbl['lbl.sm.submit.to.approver']}"
+	<p:dialog width="650px" header="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT' ? lbl['lbl.sm.button.recommend.to.reject'] : lbl['lbl.sm.button.recommend.to.approve']}"
 		closable="false" id="submitApprvrDialog" height="350px"
 		widgetVar="submitApprvrDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
