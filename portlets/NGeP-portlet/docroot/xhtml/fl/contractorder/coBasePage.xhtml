@@ -17,7 +17,9 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
 		<f:event listener="#{flOrderBB.preRenderViewCR}" type="preRenderView" />
-		<c:if test="#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or flOrderBB.managedBean.isHyperLinkPage()}">
+		<c:if test="#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or 
+					  flOrderBB.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{flOrderBB.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeContractOrder)}" />
 		</c:if>					
 		<p:messages id="messages" showDetail="true" autoUpdate="#{flOrderBB.managedBean.autoUpdate}"
@@ -49,7 +51,7 @@
 						action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<td colspan="4" style="text-align: right">
-				<c:if test='#{flOrderBB.managedBean.buttonVal ne "View"}'>
+				<c:if test='#{flOrderBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 					<ui:define name="outComeSection">
 						<ui:repeat
@@ -64,21 +66,21 @@
 				</ui:decorate>
 				</c:if>
 				</td>
-							<c:if test='#{flOrderBB.managedBean.buttonVal eq "Update"}'>
+							<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.update']}" 
-						action="#{flOrderBB.fulfillmentOrderAction('UPDATE')}">
-						<f:param name="actionName" value="UPDATE" />
+						action="#{flOrderBB.fulfillmentOrderAction(BpmOutcomeConstant.bpmUpdate)}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.bpmUpdate}" />
 					</p:commandButton></td>
 			</c:if>
-			<c:if test='#{flOrderBB.managedBean.buttonVal eq "Cancel"}'>
+			<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.cancel']}" update="@form"
-						action="#{flOrderBB.signingAction('CANCEL')}">
-						<f:param name="actionName" value="CANCEL" />
+						action="#{flOrderBB.signingAction(BpmOutcomeConstant.bpmCancel)}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 					</p:commandButton></td>
 			</c:if>
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq "View"}'>
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
 					<td colspan="4" style="text-align: right"><p:commandLink
 							rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
 							value="#{lbl['lbl.td.doc.trackingDiary']}"
