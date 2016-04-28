@@ -135,9 +135,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	/** The user qc search bean. */
 	private UserCommitteeSearchBean userQCSearchBean;
-
-	/** The external users. */
-	private List<PmUser> externalUsers;
 	
 	/** The selected pm user. */
 	private List<PmUser> selectedPmUser;
@@ -986,24 +983,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	/**
-	 * Gets the external users.
-	 *
-	 * @return the external users
-	 */
-	public List<PmUser> getExternalUsers() {
-		return externalUsers;
-	}
-
-	/**
-	 * Sets the external users.
-	 *
-	 * @param externalUsers the new external users
-	 */
-	public void setExternalUsers(List<PmUser> externalUsers) {
-		this.externalUsers = externalUsers;
 	}
 
 	/**

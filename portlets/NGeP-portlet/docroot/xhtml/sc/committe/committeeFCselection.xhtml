@@ -32,7 +32,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectMember" value="#{committeemember.selected}" 
-						disabled="#{committeemember.memberRole.parameterCode eq 'S'}">
+						disabled="#{committeemember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{committeBackingBean.selectMemberEvent(committeemember)}" />
 				</p:selectBooleanCheckbox>
@@ -74,12 +74,12 @@
 						rendered="#{isCommitteeRecordStatusActive}" />
 					<h:outputText value="#{lbl['lbl.sc.representative.type']}" />
 				</f:facet>
-				<ui:fragment rendered="#{committeemember.memberRole.parameterCode eq 'M'}">
+				<ui:fragment rendered="#{committeemember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 					<p:selectOneMenu required="#{!committeemember.selected}"
-						id="representativeType" value="#{committeemember.representativeType.parameterId}"
+						id="representativeType" value="#{committeemember.representativeTypeId}"
 						label="#{lbl['lbl.sc.representative.type']}" style="width: 150px;margin-bottom: 5px;">
 						<f:selectItems value="#{committeBackingBean.managedBean.representativesTypeslist}" />
-						<p:ajax event="change" listener="#{committeBackingBean.representiveTypeChange(committeemember)}"
+						<p:ajax event="change" listener="#{committeBackingBean.representiveTypeChangedListener(committeemember)}"
 							partialSubmit="true" process="@this" />
 					</p:selectOneMenu>
 				</ui:fragment>

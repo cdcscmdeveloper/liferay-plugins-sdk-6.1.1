@@ -202,20 +202,8 @@ public class CommitteBackingBean extends
 				UserReqDTO userReqDTO = new UserReqDTO();
 				populateUserSearchCriteria(userQCSearchBean, searchBean);
 				userReqDTO.setUserSearchBean(searchBean);
-				UserResDTO resDto = userSO.searchUserProfileDtl(userReqDTO);
-				if (resDto != null) {
-					getManagedBean().setExternalUsers(
-							resDto.getUserResultBean().getResultList());
-					for (PmUser user : getManagedBean().getExternalUsers()) {
-						if (user.getMemberRole() == null) {
-							user.setMemberRole(new PmParameter());
-						}
-						if (user.getRepresentativesType() == null) {
-							user.setRepresentativesType(new PmParameter());
-						}
-					}
-				}
-				return resDto.getUserResultBean();
+				
+				return userSO.searchUserProfileDtl(userReqDTO).getUserResultBean();
 			} finally {
 				userSO = null;
 			}
@@ -355,7 +343,7 @@ public class CommitteBackingBean extends
 					resDTO.isHasRequiredCommitteeRole()) {
 				PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
 						ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-				pmUser.setMemberRole(chairPersonRole);
+				pmUser.setMemberRoleId(chairPersonRole.getParameterId());
 				userRole = getParameterDesc(chairPersonRole);
 			}
 			
@@ -792,6 +780,9 @@ public class CommitteBackingBean extends
 										committeeMembers.indexOf(deletedCommitteeMember));
 					deletedCommitteeMember.setRepresentativeType(
 								committeeMember.getRepresentativeType());
+					if (deletedCommitteeMember.getRepresentativeType() != null) {
+						deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType().getParameterId());
+					}
 					toBeAddedMembers.add(deletedCommitteeMember);
 				}
 			}
@@ -968,8 +959,8 @@ public class CommitteBackingBean extends
 				for (ScCommitteeMember committeeMember : qtCommitte
 						.getScCommittee().getScCommitteeMembers()) {
 					if (committeeMember.getRepresentativeType() == null) {
-						committeeMember
-								.setRepresentativeType(new PmParameter());
+						committeeMember.setRepresentativeType(new PmParameter());
+						committeeMember.setRepresentativeTypeId(null);
 					}
 				}
 				this.getManagedBean().setQtCommittee(qtCommitte);
@@ -1472,7 +1463,6 @@ public class CommitteBackingBean extends
 		userSelection = this.getManagedBean().getCommitteMember()
 				.getUserSelection();
 		logger.info("User Selection : " + userSelection);
-		this.getManagedBean().setExternalUsers(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection(userSelection);
@@ -1487,6 +1477,7 @@ public class CommitteBackingBean extends
 			getManagedBean().getCommitteMember().setMemberRoleId(null);
 			getManagedBean().getCommitteMember().setRepresentativeType(
 					new PmParameter());
+			getManagedBean().getCommitteMember().setRepresentativeTypeId(null);
 		}
 	}
 
@@ -1517,59 +1508,6 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setSelectedCommitteMemebers(null);
 		
 		toBeDelCommitteMemebers.addAll(selectedList);
-	}
-
-	/**
-	 * Existing committee search action.
-	 */
-	public void existingCommitteeSearchAction() {
-		debugLogger("existingCommitteeSearchAction");
-		UserReqDTO userReqDTO = new UserReqDTO();
-		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-		UserResDTO resDto = null;
-		if (getManagedBean().getName() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getName())) {
-			SearchFilterBean usernameSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			usernameSearchBean.setSearchField("userName");
-			usernameSearchBean.setSearchValue(getManagedBean().getName());
-			searchBean.getDataFilterBeans().add(usernameSearchBean);
-		}
-		if (getManagedBean().getIdentificationNo() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())) {
-			SearchFilterBean idNoSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			idNoSearchBean.setSearchField("identificationNo");
-			idNoSearchBean.setSearchValue(getManagedBean()
-					.getIdentificationNo());
-			searchBean.getDataFilterBeans().add(idNoSearchBean);
-		}
-		
-		SearchFilterBean recordStatus = new SearchFilterBean(
-				SearchOperator.OPERATOR_EQUALS.value());
-		recordStatus.setSearchField("recordStatusFlg");
-		recordStatus.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
-		searchBean.getDataFilterBeans().add(recordStatus);
-		
-		userReqDTO.setUserSearchBean(searchBean);
-		
-		try {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDto = userSO.searchUserProfileDtl(userReqDTO);
-			if (resDto != null) {
-				this.getManagedBean().setExternalUsers(
-						resDto.getUserResultBean().getResultList());
-
-				for (PmUser user : this.getManagedBean().getExternalUsers()) {
-					if (user.getMemberRole() == null) {
-						user.setMemberRole(new PmParameter());
-					}
-				}
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 	}
 
 	/**
@@ -1719,11 +1657,9 @@ public class CommitteBackingBean extends
 								.retrieveParameterByTypeAndCode(reqDTO);
 						committeeMember.setMemberRole(resDTO.getPmParameter());
 					} else {
-						if (null != users.get(i).getMemberRole()
-								.getParameterId()) {
+						if (null != users.get(i).getMemberRoleId()) {
 							ParameterReqDTO reqDTO = new ParameterReqDTO();
-							reqDTO.setParameterId(users.get(i).getMemberRole()
-									.getParameterId());
+							reqDTO.setParameterId(users.get(i).getMemberRoleId());
 							ParameterResDTO resDTO = getParameterSO()
 									.retrieveParameterById(reqDTO);
 							committeeMember.setMemberRole(resDTO
@@ -1860,6 +1796,9 @@ public class CommitteBackingBean extends
 			}
 			member.setRepresentativeType(getManagedBean().getCommitteMember()
 					.getRepresentativeType());
+			if (member.getRepresentativeType() != null) {
+				member.setRepresentativeTypeId(member.getRepresentativeType().getParameterId());
+			}
 			member.setAccessRight("E");
 			member.setPmOrgProfile(scQt.getPmOrgProfile());
 
@@ -1958,29 +1897,28 @@ public class CommitteBackingBean extends
 					committeeMember.setPNP(user.isPMP());
 					committeeMember.setPmUser(user);
 					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-	
-					PmParameter roleParaMeter = ParameterHelper.getInstance()
-							.getParameterByTypeAndCode(
-									ParameterTypeConst.COMMITTEE_ROLE,
-									ParameterConst.COMMITTEE_ROLE_MEMBER);
-					committeeMember.setMemberRole(roleParaMeter);
 					
-					if (user.getMemberRole() == null || user.getMemberRole().getParameterId() == null) {
+					if (user.getMemberRoleId() == null) {
 						PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
 								ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
-						user.setMemberRole(memberRole);
+						user.setMemberRoleId(memberRole.getParameterId());
 					} 
-					committeeMember.setMemberRole(user.getMemberRole());		
+					PmParameter userMemberRole = ParameterHelper.getInstance().getPmParameterById(
+							user.getMemberRoleId());
+					committeeMember.setMemberRole(userMemberRole);		
 					if (committeeMember.getMemberRole() != null) {
 						committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());	
 					}
 	
 					committeeMember.setAccessRight("E");
 					if (ParameterConst.COMMITTEE_ROLE_MEMBER
-							.equals(user.getMemberRole().getParameterCode())) {
+							.equals(userMemberRole.getParameterCode())) {
 						committeeMember.setRepresentativeType(new PmParameter());
 					} else {
 						committeeMember.setRepresentativeType(null);						
+					}
+					if (committeeMember.getRepresentativeType() != null) {
+						committeeMember.setRepresentativeTypeId(committeeMember.getRepresentativeType().getParameterId());
 					}
 					committeeMember.setScCommittee(scCommittee);
 					// memberList.add(committeeMember);
@@ -2413,19 +2351,6 @@ public class CommitteBackingBean extends
 	private IOrgProfileSO getOrgProfileSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-	}
-
-	/**
-	 * Representive type change.
-	 *
-	 * @param member the member
-	 */
-	public void representiveTypeChange(ScCommitteeMember member) {
-		Long paramId = member.getRepresentativeType().getParameterId();
-		if (null != paramId) {
-			member.setRepresentativeType(ParameterHelper.getInstance()
-					.getPmParameterById(paramId));
-		}
 	}
 	
 	/**

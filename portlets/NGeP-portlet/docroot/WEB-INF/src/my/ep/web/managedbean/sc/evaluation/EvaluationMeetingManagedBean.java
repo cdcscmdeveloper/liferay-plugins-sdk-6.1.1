@@ -63,9 +63,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	/** The identification type. */
 	private String identificationType;
 
-	/** The external users. */
-	private List<PmUser> externalUsers;
-
 	/** The selected pm user. */
 	private List<PmUser> selectedPmUser;
 
@@ -347,25 +344,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setIdentificationType(String identificationType) {
 		this.identificationType = identificationType;
-	}
-
-	/**
-	 * Gets the external users.
-	 * 
-	 * @return the external users
-	 */
-	public List<PmUser> getExternalUsers() {
-		return externalUsers;
-	}
-
-	/**
-	 * Sets the external users.
-	 * 
-	 * @param externalUsers
-	 *            the new external users
-	 */
-	public void setExternalUsers(List<PmUser> externalUsers) {
-		this.externalUsers = externalUsers;
 	}
 
 	/**
