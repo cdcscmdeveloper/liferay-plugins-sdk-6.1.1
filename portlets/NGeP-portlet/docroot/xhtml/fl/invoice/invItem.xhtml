@@ -99,7 +99,7 @@
 		<table>	
 			<tr>
 				<td><p:selectBooleanCheckbox
-						disabled="#{invoiceBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}"
+						disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 						value="#{invoiceBackingBean.managedBean.reliefDeclarationCheck}" /></td>
 				<td><h:outputText style="text-align:left"
 						value="#{lbl['lbl.fl.invoice.relief.declaration']}" /></td>
