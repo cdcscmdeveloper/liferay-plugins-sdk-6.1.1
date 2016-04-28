@@ -3745,7 +3745,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			
 			getManagedBean().setPmUser(reqDTO.getPmUser());
-			getManagedBean().setButtonVal("View");
 			
 //			flBB.initializeRemarkAndAttachement(resDTO.getFlFulfilmentRequest().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			getManagedBean().setSubmitButtonStatus(false);

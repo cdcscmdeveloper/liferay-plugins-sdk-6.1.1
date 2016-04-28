@@ -22,6 +22,9 @@
 					'#{flOrderBB.getPortletTitle()}');
 		</script>
 		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
+		<c:if test="#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmRemoveFactoring}">
+			<ac:title value="#{flOrderBB.getParameterDesc(ParameterTypeConst.documentTypes, flOrderBB.managedBean.fulfilmentOrder.docType)}" />
+		</c:if>				
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			showSummary="false" closable="true" severity="error, info" />
 		<ac:gpkiPopup 
