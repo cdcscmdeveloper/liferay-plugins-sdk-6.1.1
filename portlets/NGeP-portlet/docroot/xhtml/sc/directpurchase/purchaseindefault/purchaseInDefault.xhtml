@@ -71,21 +71,28 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.val.period']}" /></td>
-						
-				<td><p:inputText disabled="true" size="19"
-						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.effDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText> <p:spacer width="2px" /> #{lbl['lbl.sc.purchase.in.default.val.period']}<p:inputText disabled="true" size="20"
-						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
-									
-					
-					
-					
-					
+
+				<td style="width: 35%;">
+					<table>
+						<tr>
+							<td style="width: 150px;"><p:inputText disabled="true"
+									size="19"
+									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.effDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</p:inputText></td>
+
+							<td style="width: 36px;">
+								#{lbl['lbl.sc.purchase.in.default.val.period.until']}</td>
+
+							<td><p:inputText disabled="true" size="15"
+									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</p:inputText></td>
+						</tr>
+					</table>
+				</td>
 
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
@@ -114,7 +121,7 @@
 				value="#{lbl['lbl.sc.purchase.in.default.item.details']}" />
 		</f:facet>
 		<p:dataTable id="respDtl" var="itemPrice"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctItemPrices}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
 
@@ -198,15 +205,27 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.val.period']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.startDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText> <p:spacer width="2px" /> <p:inputText disabled="true"
-						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.endDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+
+				<td style="width: 35%;">
+					<table>
+						<tr>
+							<td style="width: 150px;"><p:inputText disabled="true" size="15"
+									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.startDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</p:inputText></td>
+
+							<td style="width: 36px;">
+								#{lbl['lbl.sc.purchase.in.default.val.period.until']}</td>
+
+							<td><p:inputText disabled="true" size="15"
+									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.endDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</p:inputText></td>
+						</tr>
+					</table>
+				</td>
 
 			</tr>
 			<tr>
@@ -346,7 +365,7 @@
 						</table>
 					</td>
 				</tr>
-				
+
 				<tr>
 					<td style="width: 23%;"><p:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.method']}" /> <p:outputLabel
@@ -362,9 +381,9 @@
 										<f:selectItems
 											value="#{purchaseInDefaultBackingBean.managedBean.sourceMethods}" />
 
-									</p:selectOneMenu> 
-								</td>
-								<td><p:message id="methodIdMsg" for="methodId" display="icon" /></td>
+									</p:selectOneMenu></td>
+								<td><p:message id="methodIdMsg" for="methodId"
+										display="icon" /></td>
 							</tr>
 						</table>
 					</td>
@@ -423,8 +442,8 @@
 											value="#{remarkVar.remark}" maxlength="1000" label="Remarks"
 											rendered="#{remarkIndex==0}" id="remark"
 											disabled="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-											required="true" /> <h:outputText
-											value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"
+											required="true" /> <h:outputText value="#{remarkVar.remark}"
+											rendered="#{remarkIndex>0}"
 											style="display: inline-block; width:220px;word-wrap: break-word;" />
 									</td>
 									<td
@@ -482,7 +501,7 @@
 						value="#{lbl['lbl.sc.ptj.approver.group']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="appGroupId"
-				        style="width:300px; margin-bottom:5px;"
+						style="width:300px; margin-bottom:5px;"
 						disabled="#{!isPendingSubmissionStatus}" required="true"
 						label="#{lbl['lbl.sc.ptj.approver.group']}"
 						value="#{purchaseInDefaultBackingBean.managedBean.userGroupId}">
@@ -507,7 +526,8 @@
 							var="user" itemLabel="#{user.userName}"
 							itemValue="#{user.userId}" />
 						<p:ajax event="change" update="approversId" />
-					</p:selectOneMenu> <p:message id="approverDropdownMsg" for="approverDropdown" display="icon" /></td>
+					</p:selectOneMenu> <p:message id="approverDropdownMsg" for="approverDropdown"
+						display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -523,9 +543,10 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="@form" oncomplete="uploadDlg.hide()">
+			label="#{lbl['lbl.btn.choose']}"
+			uploadLabel="#{lbl['lbl.btn.upload']}"
+			cancelLabel="#{lbl['lbl.btn.cancel']}" update="@form"
+			oncomplete="uploadDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 </ui:composition>
