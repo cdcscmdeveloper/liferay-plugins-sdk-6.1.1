@@ -176,6 +176,9 @@
 			<portlet id="flViewDebitAdjustment" />
 			<portlet id="flReliefOrder" />
 			<portlet id="flDocumentSearch" />
+			<portlet id="flViewPurchaseRequest" />
+			<portlet id="flViewContractRequest" />
+			<portlet id="flViewStopInstuction" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />

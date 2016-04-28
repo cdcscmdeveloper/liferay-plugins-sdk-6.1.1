@@ -430,6 +430,27 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>fldocseach-portlet</css-class-wrapper>
 	</portlet>	
+	<portlet>
+		<portlet-name>flViewPurchaseRequest</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>flviewpr-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>flViewContractRequest</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>flviewcr-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>flViewStopInstruction</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>flviewsi-portlet</css-class-wrapper>
+	</portlet>	
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>
