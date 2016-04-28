@@ -116,8 +116,8 @@
 							value="#{lbl['lbl.fl.do.supp.do.no']}" /></td>
 					<td><p:inputText size="35" maxlength="30"
 							value="#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef}" 
-							readonly="#{createDOBackingBean.managedBean.buttonVal == 'View' or 
-										createDOBackingBean.managedBean.buttonVal == 'Cancel' or 
+							readonly="#{createDOBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView or 
+										createDOBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmCancel or 
 										createDOBackingBean.managedBean.modificationCancel}"/></td>		
 			</tr>
 			<tr>

@@ -21,7 +21,10 @@
 					'#{createDOBackingBean.getPortletTitle()}');
 		</script>
 		<f:event listener="#{createDOBackingBean.preRenderView}" type="preRenderView" />
-		<c:if test="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or createDOBackingBean.managedBean.isHyperLinkPage()}">
+		<c:if test="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or 
+					  createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate or
+					  createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel or
+					  createDOBackingBean.managedBean.isHyperLinkPage()}">
 			<ac:title value="#{createDOBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeDeliveryOrder)}" />
 		</c:if>			
 		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{createDOBackingBean.managedBean.autoUpdate}"
@@ -79,22 +82,22 @@
 				</h:panelGroup>
 				
 				<h:panelGroup
-					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Update'}">	
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{createDOBackingBean.signingAction('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
+							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmUpdate)}">
+							<f:param name="actionName" value="#{BpmOutcomeConstant.bpmUpdate}" />
 						</p:commandButton></td>
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Cancel'}">	
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{createDOBackingBean.signingAction('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
+							action="#{createDOBackingBean.signingAction(BpmOutcomeConstant.bpmCancel)}">
+							<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 						</p:commandButton></td>
 				</h:panelGroup>
-				<c:if test='#{createDOBackingBean.managedBean.buttonVal eq "View"}'>
+				<c:if test='#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
 					<td colspan="4" style="text-align: right"><p:commandLink 
 							rendered="#{!createDOBackingBean.managedBean.isHyperLinkPage()}"
 							value="#{lbl['lbl.td.doc.trackingDiary']}"
