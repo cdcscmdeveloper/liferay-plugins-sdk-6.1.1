@@ -1183,7 +1183,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());	
 		context.put("applNo", svTask.getSmAppl().getApplNo());
 		context.put("businessRegistrationNo",  svTask.getSmAppl().getSmSupplier().getRegNo());
-		context.put("visitingPurpose", templateDesc);
+		context.put("visitingPurpose", templateDesc.toUpperCase());
 		context.put("catApplicable", getManagedBean().getSmSvTask().getSmSvCategories());
 		context.put("telNo", svTask.getSmAppl().getSmCompanyBasic().getPhoneNo());
 		
