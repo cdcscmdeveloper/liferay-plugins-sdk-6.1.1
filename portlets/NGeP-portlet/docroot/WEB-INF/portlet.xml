@@ -1638,7 +1638,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Remove Factoring Company</title>
+			<title>Factoring Company Removal</title>
 			<short-title>RFC</short-title>
 			<keywords></keywords>
 		</portlet-info>
