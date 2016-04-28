@@ -181,7 +181,7 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}/#{paymentMatchBackingBean.managedBean.invoiceDate}">
 					</p:inputText>
 					<p:inputText size="24" maxlength="24"
-						disabled="#{paymentMatchBackingBean.managedBean.buttonVal=='View' or !bpmTasklistBackingBean.managedBean.claim}"
+						disabled="#{paymentMatchBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}"
 						required="#{bpmTasklistBackingBean.managedBean.claim}"
 						label="#{lbl['lbl.fl.payment.match.payment.desc']}">
