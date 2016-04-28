@@ -509,7 +509,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	}
 	
 	protected FlAddress convertSmAddressToFlAddress(SmAddress smAddress,FlAddress flAddress){
-		
+		if(smAddress == null){
+			return null;
+		}
 		flAddress.setAddress1(smAddress.getAddress1());
 		flAddress.setAddress2(smAddress.getAddress2());
 		flAddress.setAddress3(smAddress.getAddress3());
