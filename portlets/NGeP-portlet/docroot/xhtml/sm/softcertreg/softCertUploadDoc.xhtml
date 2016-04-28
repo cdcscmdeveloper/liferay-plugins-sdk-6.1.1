@@ -78,6 +78,11 @@
 					<f:facet name="header">
 						<h:outputText value="*" styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sm.softcert.suppdoc']}" />
+						&#160;
+						<p:graphicImage id="codeti" value="/css/images/design/tooltips.png" />
+						<p:tooltip id="codett" for="codeti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.softcert.upload.suppdoc']}" />
+						</p:tooltip>
 					</f:facet>
 					<table width="100%">
 						<ui:repeat var="suppDoc" value="#{upload.suppDocList}">
