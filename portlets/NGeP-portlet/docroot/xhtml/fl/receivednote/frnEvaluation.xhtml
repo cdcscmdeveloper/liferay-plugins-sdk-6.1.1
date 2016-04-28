@@ -53,7 +53,7 @@
 					<h:outputText value="#{lbl['lbl.fl.frn.score']}"  />
 				</f:facet>
 				<h:selectOneMenu id="score" value="#{suppEvalution.score}" label="#{lbl['lbl.fl.frn.score']}" 
-					disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.isDisableEvaluation() or receivedNoteBackingBean.managedBean.buttonVal eq 'View' or !bpmTasklistBackingBean.managedBean.claim}" >
+					disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.isDisableEvaluation() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}" >
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItem itemLabel="1" itemValue="1" />
 					<f:selectItem itemLabel="2" itemValue="2" />
@@ -67,7 +67,7 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.remarks']}" />
 				</f:facet>
-				<p:inputText value="#{suppEvalution.remark}" maxlength="255" style="width:450px" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.isDisableEvaluation() or receivedNoteBackingBean.managedBean.buttonVal eq 'View' or !bpmTasklistBackingBean.managedBean.claim}"/>
+				<p:inputText value="#{suppEvalution.remark}" maxlength="255" style="width:450px" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks() or receivedNoteBackingBean.managedBean.isDisableEvaluation() or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"/>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="20" />
