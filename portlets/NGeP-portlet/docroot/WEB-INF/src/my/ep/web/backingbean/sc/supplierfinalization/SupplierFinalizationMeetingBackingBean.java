@@ -92,6 +92,7 @@ import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationMeeting
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -249,6 +250,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 					if (activity.getScCommitteeMember().getRepresentativeType() == null && 
 							ParameterConst.COMMITTEE_ROLE_MEMBER.equals(memberRole.getParameterCode())) {
 						activity.getScCommitteeMember().setRepresentativeType(new PmParameter());
+						activity.getScCommitteeMember().setRepresentativeTypeId(null);
 					}
 				}
 			} else {
@@ -260,6 +262,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 								ParameterConst.COMMITTEE_ROLE_MEMBER
 									.equals(memberRole.getParameterCode())) {
 							member.setRepresentativeType(new PmParameter());
+							member.setRepresentativeTypeId(null);
 						}
 					}
 				}
@@ -443,57 +446,21 @@ public class SupplierFinalizationMeetingBackingBean extends
 		String committeeType = getManagedBean().getCommitteeType();
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
-			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
-			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(committeeType)) {
-			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA);
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA);
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)) {
-			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH);
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH);
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
-			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
 		}
 		return items;
-	}
-	
-	/**
-	 * Event for representative type selection
-	 * @param scCommitteeMember  the selected committee member
-	 * @param code  the representative type code
-	 */
-	public void representativeTypeEvent(ScCommitteeMember scCommitteeMember, String code) {
-		List<ScCommitteeMember> committeeMemberList = getManagedBean().getCommitteeMembersList();
-		String committeeType = getManagedBean().getCommitteeType();
-		
-		for(ScCommitteeMember member : committeeMemberList){
-			if(scCommitteeMember.getPmUser().equals(member.getPmUser())){
-				String parameterType = "";
-				
-				if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) 
-					|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)){
-					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-					
-				}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
-					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
-					
-				}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
-					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
-					
-				}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
-					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
-					
-				}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
-					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
-				}
-				
-				PmParameter pmParameter = getPmParameterByTypeAndCode(parameterType, code);
-				member.setRepresentativeType(pmParameter);
-			}
-		}
 	}
 	
 	// TODO :: Not in use
@@ -707,7 +674,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 					resDTO.isHasRequiredCommitteeRole()) {
 				PmParameter chairPersonRole = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, 
 						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-				pmUser.setMemberRole(chairPersonRole);
+				pmUser.setMemberRoleId(chairPersonRole.getParameterId());
 				userRole = getParameterDesc(chairPersonRole);
 			}
 			
@@ -1006,13 +973,16 @@ public class SupplierFinalizationMeetingBackingBean extends
 			committeeMember.setPNP(user.isPMP());
 			committeeMember.setPmUser(user);
 			committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-			if (user.getMemberRole() == null) {
+			if (user.getMemberRoleId() == null) {
 				PmParameter memberRole = getPmParameterByTypeAndCode(
 						ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
-				user.setMemberRole(memberRole);
+				user.setMemberRoleId(memberRole.getParameterId());
 				committeeMember.setRepresentativeType(new PmParameter());
+				committeeMember.setRepresentativeTypeId(null);
 			} 
-			committeeMember.setMemberRole(user.getMemberRole());
+			PmParameter userMemberRole = ParameterHelper.getInstance().getPmParameterById(
+					user.getMemberRoleId());
+			committeeMember.setMemberRole(userMemberRole);
 			if (committeeMember.getMemberRole() != null) {
 				committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());	
 			}
@@ -1151,6 +1121,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 //					members.setCommitteeMemberId(null); 
 					PmParameter respresentativeType = members.getRepresentativeType();
 					members.setRepresentativeType(respresentativeType != null ? respresentativeType : new PmParameter());
+					if (members.getRepresentativeType() != null) {
+						members.setRepresentativeTypeId(members.getRepresentativeType().getParameterId());
+					}
 					members.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
 					setUserDetails(members);
 
@@ -1420,6 +1393,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 											committeeMembers.indexOf(deletedCommitteeMember));
 						deletedCommitteeMember.setRepresentativeType(
 									committeeMember.getRepresentativeType());
+						if (deletedCommitteeMember.getRepresentativeType() != null) {
+							deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType().getParameterId());
+						}
 						toBeAddedMembers.add(deletedCommitteeMember);
 					}
 				}

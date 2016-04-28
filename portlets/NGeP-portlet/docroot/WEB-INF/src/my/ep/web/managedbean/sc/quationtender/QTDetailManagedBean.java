@@ -451,9 +451,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The selections. */
 	private List<SelectItem> selections;
 
-	/** The external users. */
-	private List<PmUser> externalUsers;
-
 	/** The selected pm user. */
 	private List<PmUser> selectedPmUser;
 
@@ -2311,25 +2308,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setCloneSearchCommittes(List<ScQtCommittee> cloneSearchCommittes) {
 		this.cloneSearchCommittes = cloneSearchCommittes;
-	}
-
-	/**
-	 * Gets the external users.
-	 * 
-	 * @return the external users
-	 */
-	public List<PmUser> getExternalUsers() {
-		return externalUsers;
-	}
-
-	/**
-	 * Sets the external users.
-	 * 
-	 * @param externalUsers
-	 *            the new external users
-	 */
-	public void setExternalUsers(List<PmUser> externalUsers) {
-		this.externalUsers = externalUsers;
 	}
 
 	/**
