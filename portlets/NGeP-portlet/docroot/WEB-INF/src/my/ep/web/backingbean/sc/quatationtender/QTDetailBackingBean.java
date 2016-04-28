@@ -45,6 +45,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -76,6 +77,7 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
@@ -4970,9 +4972,23 @@ public class QTDetailBackingBean extends
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtId);
 			
-			boolean isSucessful = qtProposalSO.closeProposal(reqDTO)
+			boolean isUpdateSucessful = qtProposalSO.updateProposalWorkFlowStatus(reqDTO)
 				.isSuccessful();
-			
+			boolean isSucessful = false;
+			if(isUpdateSucessful){
+				IQTNoticeBoardSO noticeBoardSO = null;
+				try{
+					noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+					NoticeBoardReqDTO nbReqDTO = new NoticeBoardReqDTO();
+					nbReqDTO.setQtId(qtId);
+					isSucessful = noticeBoardSO.closeQtAndSaveProposalAmount(nbReqDTO).isSuccessful();
+				}catch(Exception e){
+					log.info("Close failed");
+					log.error(e.getLocalizedMessage());
+				}
+				
+			}
 			if (isSucessful) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
