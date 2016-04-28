@@ -56,6 +56,13 @@
 				<td><p:message id="countryMsg" for="country" display="icon" /></td>
 			</tr>
 			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.pm.financialorg.bankcode']}" /></td>
+				<td><p:inputText
+						value="#{financialOrgBackingBean.getBankCode()}" disabled="true"
+						styleClass="ppDisplayTextM" size="30" maxlength="20" /></td>
+			</tr>
+			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.status']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>

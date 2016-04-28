@@ -98,6 +98,18 @@ public class FinancialOrgBackingBean extends
 	//Mapper for DDL object
 	private static Map<Long, Object> serviceTypeMapper;
 	
+	
+	public String getBankCode(){
+		String retVal = StringUtils.EMPTY;
+		for(PmFinancialSvc tmp:getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
+			if(!StringUtils.isBlank(tmp.getBankCode())){
+				retVal = tmp.getBankCode();
+				break;
+			}
+		}
+		return retVal;
+	}
+	
 
 	public FinancialOrgBackingBean() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
