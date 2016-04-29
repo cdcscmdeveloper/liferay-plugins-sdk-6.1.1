@@ -377,8 +377,15 @@
 		id="shrRolesPanel">
 		<ui:include src="personnelRolesPanel.xhtml" />
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
-		id="shrPrivPanel">
+	<p:panel toggleable="true" id="shrPrivPanel">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sm.person.shrPrvHdr']}" />
+			&#160;
+			<p:graphicImage id="codeti" value="/css/images/design/tooltips.png" />
+			<p:tooltip id="codett" for="codeti">
+				<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
+			</p:tooltip>
+		</f:facet>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.disabled.role.msg']}" rendered="#{backingBean.managedBean.disableRoleSelection}"/>
 		<p:outputPanel rendered="#{backingBean.managedBean.validSmUserLimit}">
 			<br /><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" escape="false"/><br />
@@ -394,13 +401,7 @@
 							update=":form:tt:shareHolderAddrDialog,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
 							listener="#{backingBean.assignShareHolderPrivilege}" partialSubmit="true"/>
 					</p:selectOneRadio></td>
-				<td><p:graphicImage id="tooltip3"
-						value="/css/images/design/tooltips.png"
-						style="padding-bottom : 7px;" /> <p:tooltip id="toolinfo3"
-						for="tooltip3">
-						<p:outputLabel escape="false"
-							value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
-					</p:tooltip>
+				<td>
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.latestPersonnel}"
