@@ -21,17 +21,17 @@
 					<td style="width:165px"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 					<td colspan="3"><p:inputText
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtTitle}"
-							 maxlength="100" style="width:750px"/></td>
+							 maxlength="100" style="width:840px"/></td>
 				</tr>
 				<tr>
 					<td style="width: 165px;"><h:outputLabel for="qtnno" value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td style="width:385px"><p:inputText id="qtnno"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtNo}"
-							maxlength="21" style="width:210px;"/></td>
+							maxlength="21" style="width:288px;"/></td>
 					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 					<td style="width:385px"><p:selectOneMenu id="procurementid"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}"
-							style="width:212px;margin-bottom: 5px;">
+							style="width:297px;margin-bottom: 5px;">
 							<f:selectItems
 								value="#{qTDetailBB.getProcurementModeDropdownValues()}" />
 						</p:selectOneMenu></td>
@@ -67,12 +67,12 @@
 						<td>
 						<p:inputText
 								value="#{qTDetailBB.managedBean.ministryProfile.orgName}"
-								disabled="true" size="25" readonly="true" style="width:210px;"></p:inputText>
+								disabled="true" size="25" readonly="true" style="width:288px;"></p:inputText>
 						</td>
 						<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 						<td><p:inputText
 								value="#{qTDetailBB.managedBean.ptjProfile.orgName}"
-								disabled="true" size="25" readonly="true" style="width:200px;"></p:inputText>
+								disabled="true" size="25" readonly="true" style="width:288px;"></p:inputText>
 						</td>
 					</tr>
 				</h:panelGroup>
