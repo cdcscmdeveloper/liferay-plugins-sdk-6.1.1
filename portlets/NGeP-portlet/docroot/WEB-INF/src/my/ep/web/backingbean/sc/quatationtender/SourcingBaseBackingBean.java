@@ -95,6 +95,9 @@ import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
@@ -107,6 +110,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -303,7 +307,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				|| scAttachment instanceof ScQtCheckListAttachment
 				|| scAttachment instanceof ScQtProposalChecklistAttachment
 				|| scAttachment instanceof ScQtFinalizationAttachment
-				|| scAttachment instanceof ScQtFinalizationReportAttachment) {
+				|| scAttachment instanceof ScQtFinalizationReportAttachment
+				|| scAttachment instanceof ScEvaluationCommitteeReportAttachment
+				|| scAttachment instanceof ScOpenCommitteeReportAttachment
+				|| scAttachment instanceof ScTechnicalEvaluationReportAttachment
+				|| scAttachment instanceof ScFinancialEvaluationReportAttachment) {
 
 			return new AttachmentDateFormat();
 		} else {
