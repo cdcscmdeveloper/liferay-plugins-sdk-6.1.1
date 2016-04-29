@@ -154,6 +154,26 @@
 						<table style="width: 100%">
 							<tr>
 								<td><p:outputLabel
+										value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
+								<td><p:selectOneRadio
+										value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
+										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
+											itemValue="F" />
+										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.others']}"
+											itemValue="O" />
+									</p:selectOneRadio>
+									<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges
+											and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+										oriValue="#{backingBean.managedBean.latestCompanyExperience.clientType}" 
+										currValue="#{backingBean.managedBean.selectedCompanyExperience.clientType}" 
+										alertValue="#{empty backingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
+										(backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
+										? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
+								</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
 										value="#{lbl['lbl.sm.projDtls.projTitle']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText maxlength="500"
@@ -237,26 +257,6 @@
 										alertValue="#{backingBean.getLabelFromSelectItems(backingBean.managedBean.latestCompanyExperience.paymentMethodId,'PYM')}"/>
 									<p:message id="supCnstntPayMthdMsg" for="supCnstntPayMthd"
 										showSummary="true" showDetail="false" display="icon" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel
-										value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
-								<td><p:selectOneRadio
-										value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
-										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
-											itemValue="F" />
-										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.others']}"
-											itemValue="O" />
-									</p:selectOneRadio>
-									<ac:smFieldChangeAlert 
-										isShow="#{backingBean.managedBean.showFieldChanges
-											and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-										oriValue="#{backingBean.managedBean.latestCompanyExperience.clientType}" 
-										currValue="#{backingBean.managedBean.selectedCompanyExperience.clientType}" 
-										alertValue="#{empty backingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
-										(backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
-										? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
-								</td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.refNo']}" /></td>
