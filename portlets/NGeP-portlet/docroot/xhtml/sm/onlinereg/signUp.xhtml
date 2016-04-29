@@ -38,12 +38,6 @@
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.govt']}" itemValue="#{SupplierManagementConst.ACC_GOVT_SELLER}" />
 							<p:ajax event="change" update="agreementId,btnProceed" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneRadio></td>
-						<td>&#160;
-						<p:graphicImage id="regType" value="/css/images/design/tooltips.png"  style="vertical-align:top"/>
-						<p:tooltip id="regiType" for="regType">
-							<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.type']}"  />
-						</p:tooltip>&#160;						
-						</td>
 				</tr>
 			</table>
 		</p:panel>
@@ -52,7 +46,7 @@
 			<p:scrollPanel style="height:300px;border:0;" mode="native">
 				<c:choose>
 					<c:when
-						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
+						test="#{registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
 						<b>#{lbl['lbl.sm.basic.account.mof']}</b>
 						<br />
 						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.mofdesc']}" /></p>
@@ -61,9 +55,17 @@
 					</c:when>
 
 					<c:otherwise>
-						<b>#{lbl['lbl.sm.basic.account.basic']}</b>
-						<br />
-						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.basicdesc']}" /></p>
+						<c:choose>
+							<c:when test="#{not empty registrationBackingBean.managedBean.applType}">
+									<b>#{lbl['lbl.sm.basic.account.basic']}</b>
+									<br />
+									<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.basicdesc']}" /></p>
+							</c:when>
+							
+							<c:otherwise>
+								<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.default']}" /></p>
+							</c:otherwise>
+						</c:choose>
 					</c:otherwise>
 				</c:choose>
 			</p:scrollPanel>
