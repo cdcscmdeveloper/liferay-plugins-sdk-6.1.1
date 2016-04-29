@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -40,6 +41,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.log4j.Logger;
@@ -171,6 +173,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<SmChequeSignatory> smChequeSignatories;
 	private List<SmPersonnel> equityShareHolders;
 	private SmPersonnleCalcVO personCalc;
+	private String businessType;
 
 	private int technicalTableRow;
 	private int financialTableRow;
@@ -1555,6 +1558,27 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public TemplateSpecBackingBean getTemplateSpecBackingBean() {
 		return templateSpecBackingBean;
+	}
+
+	/**
+	 * @return the businessType
+	 */
+	public String getBusinessType() {
+		this.setBusinessType(SmCommonUtil
+		        .getDropDownViewOnlyValueByCode(
+		                this.getSmAppl()
+		                    .getSupplierType().equals("K") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE
+		                    : ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT,
+		                  this.getSmSupplier()
+		                    .getBusinessType()));
+		return businessType;
+	}
+
+	/**
+	 * @param businessType the businessType to set
+	 */
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
 	}
 	
 	
