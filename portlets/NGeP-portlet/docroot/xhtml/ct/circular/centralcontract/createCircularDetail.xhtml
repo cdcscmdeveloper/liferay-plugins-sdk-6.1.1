@@ -86,7 +86,8 @@
 						action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
 				 
 				 	<h:commandLink action="#{centralContractBackingBean.downloadFile(1)}" 
-				 	  rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}"
+				 	  	disabled="#{centralContractBackingBean.managedBean.viewContract}"
+				 	  	rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}"
 				 		styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />			
 				 	
 					     	<p:commandLink 
