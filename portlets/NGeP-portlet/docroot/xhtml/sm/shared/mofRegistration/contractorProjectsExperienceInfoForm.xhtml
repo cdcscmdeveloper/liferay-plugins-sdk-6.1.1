@@ -151,6 +151,31 @@
 	
 			<table style="width: 100%">
 				<tr>
+					<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
+					<td style="width: 39%"><p:selectOneRadio
+							value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
+								itemValue="F" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
+								itemValue="O" />
+						</p:selectOneRadio>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
+							oriValue="#{backingBean.managedBean.latestCompanyExperience.clientType}" 
+							currValue="#{backingBean.managedBean.selectedCompanyExperience.clientType}" 
+							alertValue="#{empty backingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
+							(backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
+							? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
+					</td>
+					<td>&#160; <p:graphicImage id="tooltip"
+							style="padding-bottom : 7px;" value="/css/images/design/tooltips.png" /> <p:tooltip id="toolinfo" for="tooltip">
+							<p:outputLabel escape="false"
+								value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
+						</p:tooltip>&#160;
+					</td>
+				</tr>
+				<tr>
 					<td style="width: 30%"><p:outputLabel
 							value="#{lbl['lbl.sm.projDtls.projTitle']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -235,31 +260,6 @@
 							alertValue="#{backingBean.getLabelFromSelectItems(backingBean.managedBean.latestCompanyExperience.procurementModeId,'PM')}"/>
 						<p:message id="supCntrPrcModMsg" for="supCntrPrcMod"
 							showSummary="true" showDetail="false" display="icon" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
-					<td style="width: 39%"><p:selectOneRadio
-							value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
-							<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
-								itemValue="F" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
-								itemValue="O" />
-						</p:selectOneRadio>
-						<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges
-								and not empty backingBean.managedBean.selectedCompanyExperience.companyExperienceId}"
-							oriValue="#{backingBean.managedBean.latestCompanyExperience.clientType}" 
-							currValue="#{backingBean.managedBean.selectedCompanyExperience.clientType}" 
-							alertValue="#{empty backingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
-							(backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
-							? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
-					</td>
-					<td>&#160; <p:graphicImage id="tooltip"
-							style="padding-bottom : 7px;" value="/css/images/design/tooltips.png" /> <p:tooltip id="toolinfo" for="tooltip">
-							<p:outputLabel escape="false"
-								value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
-						</p:tooltip>&#160;
-					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" />
