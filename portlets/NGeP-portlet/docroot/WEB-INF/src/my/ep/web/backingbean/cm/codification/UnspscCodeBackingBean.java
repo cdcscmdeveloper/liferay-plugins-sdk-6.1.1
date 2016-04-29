@@ -155,6 +155,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				|| fs.hasRoleUser("BASIC_SUPPLIER_USER")
 				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
 				|| fs.hasRoleUser("SUPPLIER_TEMP")
+				|| fs.hasRoleUser("G2G_USER")
+				|| fs.hasRoleUser("G2G_ADMIN")
 				|| fs.hasRoleUser("GOVT_SELLER");
 	}
 	
