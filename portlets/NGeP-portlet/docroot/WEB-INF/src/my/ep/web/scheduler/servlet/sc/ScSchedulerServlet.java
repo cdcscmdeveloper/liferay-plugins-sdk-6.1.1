@@ -132,7 +132,7 @@ public class ScSchedulerServlet extends HttpServlet {
 		// Job to be run at server startup
 		EpSchedulerHelper.runJobOnce(new JobKey(
 				SchedulerConstants.SC_QT_PROPOSAL_CLOSE_JOB,
-				SchedulerConstants.SC_JOB_GROUP), QTPublishSchedulingJob.class);
+				SchedulerConstants.SC_JOB_GROUP), QTProposalCloseSchedulingJob.class);
 
 	}
 
