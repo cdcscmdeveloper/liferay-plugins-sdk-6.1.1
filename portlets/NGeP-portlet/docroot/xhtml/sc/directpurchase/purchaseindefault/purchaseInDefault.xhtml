@@ -14,7 +14,7 @@
 				<td style="width: 23%;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText size="46" id="ctitle"
+				<td colspan="3"><p:inputText size="45" id="ctitle"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{!isPendingSubmissionStatus}"
@@ -85,7 +85,7 @@
 							<td style="width: 30px;">
 								#{lbl['lbl.sc.purchase.in.default.val.period.until']}</td>
 
-							<td><p:inputText disabled="true" size="17"
+							<td><p:inputText disabled="true" size="18"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -218,7 +218,7 @@
 							<td style="width: 30px;">
 								#{lbl['lbl.sc.purchase.in.default.val.period.until']}</td>
 
-							<td><p:inputText disabled="true" size="17"
+							<td><p:inputText disabled="true" size="18"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.endDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
