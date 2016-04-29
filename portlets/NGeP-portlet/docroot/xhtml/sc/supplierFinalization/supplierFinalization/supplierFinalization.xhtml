@@ -313,10 +313,9 @@
 		
 		<p:spacer height="1px" />
 		<p:outputPanel id="rePublishPanel">
-			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-				columnClasses="columnWidth20"
+			<h:panelGroup 
 				rendered="#{suppFinalizationBackingBean.managedBean.rePublish}">
-				<h:column>
+				<!-- <h:column>
 					<p:outputLabel value="#{lbl['lbl.sc.required.specification.changes']}" />
 		   		</h:column>
 		   		<h:column>
@@ -324,11 +323,37 @@
 						<p:selectBooleanCheckbox id="reqSpecChanges" 
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.specChangeReq}" 
 							disabled="#{!(isBPKTaskAndClaimed or 
-												isSecretaryUser)}"/>
+												suppFinalizationBackingBean.managedBean.secretaryUser)}"/>
 					</div>
 					<ac:iconTooltip value="#{lbl['lbl.sc.required.specification.changes.tooltip']}" />
-				</h:column>
-			</h:panelGrid>
+				</h:column> -->
+				
+				<table><tr><td style="width:240px;">
+					<p:outputLabel value="#{lbl['lbl.sc.sf.republish.option']}" />
+					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}"
+						styleClass="mandatory" />
+			</td><td>
+				<table><tr><td>
+
+					<p:selectOneMenu id="republishOptionId" style="width: 250px;"
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.rePublishOption.parameterId}"
+						required="true" label="#{lbl['lbl.sc.sf.republish.option']}"
+						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+										isBPKTaskAndClaimed)}">
+						<f:selectItems
+									value="#{suppFinalizationBackingBean.getDropdownValues(ParameterTypeConst.rePublishOption)}" />
+						<p:ajax event="change" partialSubmit="true" update="@this"
+							process="@this" />
+					</p:selectOneMenu>
+					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.sc.required.specification.changes.tooltip']}" /></td>
+					</tr>
+					</table>
+				
+			</td>
+			</tr>
+			</table>
+			</h:panelGroup>
 		</p:outputPanel>
 		
 	</p:panel>
