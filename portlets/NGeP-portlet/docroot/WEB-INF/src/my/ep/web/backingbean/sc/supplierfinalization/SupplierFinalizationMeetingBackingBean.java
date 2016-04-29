@@ -5,8 +5,11 @@ package my.ep.web.backingbean.sc.supplierfinalization;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -77,6 +80,7 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.type.sc.MemberRole;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -215,14 +219,17 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			ScCommittee scCommittee = resDTO.getQtCommittee().getScCommittee();
 			if(scCommittee != null){
-				if (CollectionUtils.isNotEmpty(scCommittee.getScCommitteeMembers())) {
-					getManagedBean().setCommitteeMembersList(
-							scCommittee.getScCommitteeMembers());
+				List<ScCommitteeMember> membersList = 
+							scCommittee.getScCommitteeMembers();
+				if (CollectionUtils.isNotEmpty(membersList)) {
+					Collections.sort(membersList);
 					
-					List<ScCommitteeMember> list = scCommittee.getScCommitteeMembers();
+					getManagedBean().setCommitteeMembersList(
+										membersList);
 					getManagedBean().setOriginalCommitteeMembersList(
 										new ArrayList<ScCommitteeMember>());
-					getManagedBean().getOriginalCommitteeMembersList().addAll(list);
+					getManagedBean().getOriginalCommitteeMembersList()
+									.addAll(membersList);
 				}
 				/*}else{
 					getManagedBean().setCommitteeMembersList(new ArrayList<ScCommitteeMember>());
@@ -739,6 +746,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		if (memberList != null){
 			committeeMemberList.addAll(memberList);
 		}
+		Collections.sort(committeeMemberList);
 		
 		this.getManagedBean().setCommitteeMembersList(committeeMemberList);
 		
@@ -759,22 +767,23 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 */
 	public void committeeDeleteAction() {
 		try {
-			List<ScCommitteeMember> committeeList 
+			List<ScCommitteeMember> currentCommitteeMemList 
 							= getManagedBean().getCommitteeMembersList();
-			List<ScCommitteeMember> selectedCommitteeList 
+			List<ScCommitteeMember> selectedCommitteeMemList 
 							= getManagedBean().getSelectedCommitteeMembersList();
 			
-			if (CollectionUtils.isNotEmpty(committeeList) && 
-					CollectionUtils.isNotEmpty(selectedCommitteeList)) {
-				if (committeeList.size() == selectedCommitteeList.size()) {
-					committeeList.clear();
+			if (CollectionUtils.isNotEmpty(currentCommitteeMemList) && 
+					CollectionUtils.isNotEmpty(selectedCommitteeMemList)) {
+				if (currentCommitteeMemList.size() == 
+							selectedCommitteeMemList.size()) {
+					currentCommitteeMemList.clear();
 				} else {
 					for (ScCommitteeMember committeeMember 
-									: selectedCommitteeList) {
-						committeeList.remove(committeeMember);
+									: selectedCommitteeMemList) {
+						currentCommitteeMemList.remove(committeeMember);
 					}
 				}
-				prepareToDeleteCommitteeMembers(selectedCommitteeList);
+				prepareToDeleteCommitteeMembers(selectedCommitteeMemList);
 				getManagedBean().setSelectedCommitteeMembersList(null);
 			}
 		} finally {
@@ -782,17 +791,19 @@ public class SupplierFinalizationMeetingBackingBean extends
 	}
 	
 	private void prepareToDeleteCommitteeMembers(
-			List<ScCommitteeMember> selectedCommitteeList) {
-		if (CollectionUtils.isNotEmpty(selectedCommitteeList)) {
+			List<ScCommitteeMember> selectedCommitteeMemList) {
+		if (CollectionUtils.isNotEmpty(selectedCommitteeMemList)) {
 			if (getManagedBean().getDeletedCommitteeMembers() == null) {
 				getManagedBean().setDeletedCommitteeMembers(
 									new ArrayList<ScCommitteeMember>());
 			}
 			for (ScCommitteeMember committeeMember 
-								: selectedCommitteeList) {
-				committeeMember.setDeleted(true);
-				getManagedBean().getDeletedCommitteeMembers()
-										.add(committeeMember);
+								: selectedCommitteeMemList) {
+				if (!committeeMember.isBrandNew()) {
+					committeeMember.setDeleted(true);
+					getManagedBean().getDeletedCommitteeMembers()
+											.add(committeeMember);
+				}
 			}
 		}
 	}
@@ -1002,6 +1013,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	public void clonePopupAction() {
 		QtnTenderSearchBean cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = new cloneSearchQTDataModel("cloneCommitteeSearchTbl", cloneQtnTenderSearchBean);
+		cloneSearchQTDataModel.resetData();
 		getManagedBean().setCloneSearchQTDataModel(cloneSearchQTDataModel);
 		getManagedBean().setCloneQtnTenderSearchBean(cloneQtnTenderSearchBean);
 	}
@@ -1073,17 +1085,18 @@ public class SupplierFinalizationMeetingBackingBean extends
 			committeeMemberList = new ArrayList<ScCommitteeMember>();
 		}
 		
-		List<ScCommitteeMember> cloneCommitteeList = this.getManagedBean().getCloneCommitteMembersSelect();
-		if (cloneCommitteeList == null) {
-			cloneCommitteeList = new ArrayList<ScCommitteeMember>();
+		List<ScCommitteeMember> clonedCommitteeMembersList = 
+					this.getManagedBean().getCloneCommitteMembersSelect();
+		if (clonedCommitteeMembersList == null) {
+			clonedCommitteeMembersList = new ArrayList<ScCommitteeMember>();
 		}
 
 		// Check if the members being cloned already exist
 		if (CollectionUtils.isNotEmpty(committeeMemberList) 
-				&& CollectionUtils.isNotEmpty(cloneCommitteeList)) {
+				&& CollectionUtils.isNotEmpty(clonedCommitteeMembersList)) {
 			List<String> duplicateUsersList = new ArrayList<String>();
 			for (ScCommitteeMember committeeMember : committeeMemberList) {
-				for (ScCommitteeMember cloneCommitteeMember : cloneCommitteeList) {
+				for (ScCommitteeMember cloneCommitteeMember : clonedCommitteeMembersList) {
 					if (StringUtils.equalsIgnoreCase(committeeMember.getIcPassport(), cloneCommitteeMember.getIcPassport())) {
 						duplicateUsersList.add(cloneCommitteeMember.getIcPassport());
 					}
@@ -1102,41 +1115,60 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 		}
 		
-		List<ScCommitteeMember> localList = new ArrayList<ScCommitteeMember>();
-		List<String> itemIds = new ArrayList<String>();
-		if (committeeMemberList.isEmpty()) {
-			for (ScCommitteeMember scCommitteeMember : cloneCommitteeList) {
-				scCommitteeMember.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
-				setUserDetails(scCommitteeMember);
-
-				localList.add(scCommitteeMember);
-			}
-		} else {
-			for (ScCommitteeMember committee : committeeMemberList) {
-				itemIds.add(committee.getIcPassport());
-			}
-			
-			for (ScCommitteeMember members : cloneCommitteeList) {
-				if (itemIds.size() > 0 && !itemIds.contains(members.getIcPassport())) {
-//					members.setCommitteeMemberId(null); 
-					PmParameter respresentativeType = members.getRepresentativeType();
-					members.setRepresentativeType(respresentativeType != null ? respresentativeType : new PmParameter());
-					if (members.getRepresentativeType() != null) {
-						members.setRepresentativeTypeId(members.getRepresentativeType().getParameterId());
-					}
-					members.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
-					setUserDetails(members);
-
-					localList.add(members);
-				}
-			}
+		List<ScCommitteeMember> localList = null;
+		if (CollectionUtils.isNotEmpty(
+				clonedCommitteeMembersList)) {
+			localList = addClonedCommitteeMembers();
+			committeeMemberList.addAll(localList);
 		}
-		committeeMemberList.addAll(localList);
+		Collections.sort(committeeMemberList);
+		
 		this.getManagedBean().setCommitteeMembersList(committeeMemberList);
 		
 		// Hide the clone dialog, if there are no errors with the cloning process
 		RequestContext.getCurrentInstance().execute("cloneMemberWidgetVar.hide()");
 	}
+	
+	private List<ScCommitteeMember> addClonedCommitteeMembers() {
+		List<ScCommitteeMember> memberList = new ArrayList<ScCommitteeMember>();
+		ScQt scQt = this.getManagedBean().getScQt();
+		
+		for (ScCommitteeMember commMember : 
+					getManagedBean().getCloneCommitteMembersSelect()) {
+			ScCommitteeMember committeeMember = new ScCommitteeMember();
+			committeeMember.setMemberName(commMember.getMemberName());
+			committeeMember.setIcPassport(commMember.getIcPassport());
+			committeeMember.setDesignation(commMember.getDesignation());
+			committeeMember.setEmail(commMember.getEmail());
+			committeeMember.setGrade(commMember.getGrade());
+			committeeMember.setPNP(commMember.isPNP());
+			committeeMember.setPmUser(commMember.getPmUser());
+			committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+			
+			if (commMember.getMemberRole() == null || 
+					MemberRole.SECRETARY.getMemberRole()
+						.equals(commMember.getMemberRole().getParameterCode())) {
+				PmParameter memberRole = getPmParameterByTypeAndCode(
+											ParameterTypeConst.COMMITTEE_ROLE, 
+											ParameterConst.COMMITTEE_ROLE_MEMBER);
+				commMember.setMemberRole(memberRole);
+				committeeMember.setRepresentativeType(new PmParameter());
+			}
+			committeeMember.setMemberRole(commMember.getMemberRole());
+			
+			if (committeeMember.getMemberRole() != null) {
+				committeeMember.setMemberRoleId(
+						committeeMember.getMemberRole().getParameterId());	
+			}
+			committeeMember.setAccessRight("E");
+			committeeMember.setScCommittee(
+					getManagedBean().getScQtCommittee().getScCommittee());
+			setUserDetails(committeeMember);
+			
+			memberList.add(committeeMember);
+		}
+		return memberList;
+	}	
 	
 	private class cloneSearchQTDataModel extends PagingDataModel<ScQt> {
 		private static final long serialVersionUID = 1L;
@@ -1378,23 +1410,37 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScQtMeeting> deletedMeetingList = this.getManagedBean().getDeletedMeetingList();
 			reqDTO.setDeletedMeetingList(deletedMeetingList);
 			
-			List<ScCommitteeMember> committeeMembers = getManagedBean().getCommitteeMembersList();
-			List<ScCommitteeMember> deletedCommitteeMembers 
-											= this.getManagedBean().getDeletedCommitteeMembers();
-			List<ScCommitteeMember> toBeAddedMembers = new ArrayList<ScCommitteeMember>();
+			Map<String, ScCommitteeMember> currentCommMemberIcs = 
+										new HashMap<String, ScCommitteeMember>();
+			List<ScCommitteeMember> toBeAddedMembers = 
+										new ArrayList<ScCommitteeMember>();
+			List<ScCommitteeMember> currentCommitteeMembers = 
+										getManagedBean().getCommitteeMembersList();
+			List<ScCommitteeMember> deletedCommitteeMembers =
+										getManagedBean().getDeletedCommitteeMembers();
+			
+			for (ScCommitteeMember currCommMem : 
+							currentCommitteeMembers) {
+				currentCommMemberIcs.put(
+						currCommMem.getIcPassport(), currCommMem);
+			}
 			
 			if (CollectionUtils.isNotEmpty(
 					getManagedBean().getDeletedCommitteeMembers())) {
 				for (ScCommitteeMember deletedCommitteeMember 
 											: deletedCommitteeMembers) {
-					if (committeeMembers.contains(
-								deletedCommitteeMember)) {
-						ScCommitteeMember committeeMember = committeeMembers.get(
-											committeeMembers.indexOf(deletedCommitteeMember));
+					if (currentCommMemberIcs.containsKey(
+							deletedCommitteeMember.getIcPassport())) {
+						ScCommitteeMember committeeMember = currentCommMemberIcs.get(
+												deletedCommitteeMember.getIcPassport());
+						deletedCommitteeMember.setDeleted(false);
 						deletedCommitteeMember.setRepresentativeType(
 									committeeMember.getRepresentativeType());
+						currentCommitteeMembers.remove(committeeMember);
+						currentCommitteeMembers.add(deletedCommitteeMember);
 						if (deletedCommitteeMember.getRepresentativeType() != null) {
-							deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType().getParameterId());
+							deletedCommitteeMember.setRepresentativeTypeId(
+									deletedCommitteeMember.getRepresentativeType().getParameterId());
 						}
 						toBeAddedMembers.add(deletedCommitteeMember);
 					}
@@ -1402,11 +1448,12 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 			if (CollectionUtils.isNotEmpty(
 							toBeAddedMembers)) {
-				deletedCommitteeMembers.removeAll(toBeAddedMembers);
+				deletedCommitteeMembers.removeAll(
+								 toBeAddedMembers);
 			}
 			
 			scQtCommittee.getScCommittee().setScCommitteeMembers(
-													committeeMembers);
+										   currentCommitteeMembers);
 			reqDTO.setDeletedCommitteeActivityList(deletedCommitteeMembers);
 			
 			finalizeRemarks(scQtCommittee.getQtCommitteRemarks());
