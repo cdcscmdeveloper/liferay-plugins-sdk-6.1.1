@@ -1129,8 +1129,20 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	public boolean checkUserAuthority(){
 		boolean userAuthority = false;
 		
-		if(this.getManagedBean().getProcessName() != null){
-			userAuthority = true;
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
 		}
 		
 		return userAuthority;
