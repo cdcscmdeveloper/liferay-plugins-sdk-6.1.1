@@ -10,9 +10,7 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="true" escape="false"/>
 		<ui:param name="orgName" value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
 					 			profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
-					 			: profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
-		<ui:param name="mofExpDate" value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}" />
-		<ui:param name="softCertExpDate" value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}" />					 			
+					 			: profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />	
 		<p:outputPanel id="opUserCommonDet">
 		     <table class="ppTwoTable">		
 		     	<tr>
@@ -29,7 +27,7 @@
 						</table>
 					</td>
 		          </tr>
-		       	<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">	
+		     <c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">	
 		         <tr>
 		          <td>		
 				  <table>
@@ -40,9 +38,12 @@
 									<td style="padding-left: 0px;width:150px;">
 									     <h:outputText value="#{lbl['lbl.pm.ucd.mof.exp']} " /> 
 									</td>
-								<td>
-									 <h:outputText value=":#{not empty mofExpDate ? mofExpDate : '-'}">
-						             <f:convertDateTime rendered="#{not empty mofExpDate}"
+								<td style="font-weight: bold;">
+								       <h:outputText value=":" rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}"/>
+								       <h:outputText value=": -" rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate == null}"/>
+									 <h:outputText value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
+									    rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}" >
+						             <f:convertDateTime 
 									     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					                 </h:outputText>  
 								</td>
@@ -50,8 +51,8 @@
 						</table>
 					</td>
 		          </tr>
-		         </c:if>
-				<c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
+		       </c:if>
+				<c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">	
 		          <tr>
 		          <td>		
 				  <table>
@@ -62,9 +63,12 @@
 									<td style="padding-left: 0px;width:150px;">
 									     <h:outputText  value="#{lbl['lbl.pm.ucd.softcert.exp']}" />
 									</td>
-								<td>
-									   <h:outputText value=":#{ not empty softCertExpDate ? softCertExpDate : '-'}" >
-						               <f:convertDateTime rendered="#{not empty softCertExpDate}"
+								<td style="font-weight: bold;">
+								       <h:outputText value=":" rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}"/>
+								       <h:outputText value=": -" rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate == null}"/>
+									   <h:outputText value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}" 
+									       rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}" >
+						               <f:convertDateTime
 									        pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					                 </h:outputText>   
 								</td>
@@ -72,7 +76,7 @@
 						</table>
 					</td>
 		          </tr>
-		         </c:if> 
+		         </c:if>
 		         <tr><td>  <hr style="border-top: 1px dotted black"/></td>
 		         </tr>
 		          <tr>
