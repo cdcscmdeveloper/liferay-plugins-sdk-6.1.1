@@ -40,12 +40,11 @@ public class NumberWordUtil {
 
 	public static String convert(String phrase) {
 		long dollars = 0;
-		int cent = 0;
+		long cent = 0;
 		if (phrase.contains(".")) {
-			dollars = Integer.parseInt(phrase.substring(0,
+			dollars = Long.parseLong(phrase.substring(0,
 					phrase.lastIndexOf(".")));
-			cent = Integer
-					.parseInt(phrase.substring(phrase.lastIndexOf(".") + 1));
+			cent = Long.parseLong(phrase.substring(phrase.lastIndexOf(".") + 1));
 		} else {
 			dollars = Long.parseLong(phrase);
 		}
