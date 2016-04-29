@@ -3,7 +3,11 @@ package my.ep.web.util.sm.helper;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -163,6 +168,8 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
@@ -3677,6 +3684,40 @@ public class SmCommonUtil {
 		os1.flush();
 		os1.close();
 		return fileNamePath;
+	}
+
+	/**
+	 * Get as PDF type stream content
+	 * 
+	 * @param String
+	 *            fullPathName
+	 * @return StreamedContent
+	 * @throws IOException
+	 */
+	public static StreamedContent getPdfFileStreamContentByActualPath(
+			String path) throws IOException {
+		String filePath = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		filePath += "/" + path;
+		File file = new File(filePath);
+		ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+		FileInputStream in = new FileInputStream(file);
+		byte[] buf = new byte[512];
+		int len;
+		while (true) {
+			len = in.read(buf);
+			if (len == -1) {
+				break;
+			}
+			tmpOut.write(buf, 0, len);
+		}
+		in.close();
+		tmpOut.close();
+		ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0, tmpOut.size());
+
+		ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+
+		return new DefaultStreamedContent(stream, "application/pdf");
 	}
 
 	private static SelectItem getLhdnSelectItem() {

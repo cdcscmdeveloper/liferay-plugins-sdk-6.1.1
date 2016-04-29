@@ -7679,47 +7679,50 @@ public class SmApplicationUtil {
 	}
 
 	
-	public static void generateOfflineSuppDocChecklistPdf(SmAppl smAppl)
-			throws Exception {
-		String tmpPath = null;
-		String tmpFolder = SmCommonUtil
-				.getUploadFilePath(SupplierManagementConst.OFFLINE_DOC_CHECKLIST_PATH);
-		tmpPath = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		tmpPath = tmpPath + File.separator + tmpFolder;
-		File dir = new File(tmpPath);
-		if (!dir.exists())
-			dir.mkdirs();
-		String fileName = smAppl.getApplNo()
-				+ SupplierManagementConst.OFFLINE_SUPP_DOC_CHECKLIST_PREFIX;
-		String fileNameAndPath = tmpPath + fileName;
-		String vm = "/sm/application/supp-doc-checklist.vm";
-		VelocityContext context = new VelocityContext();
-		context.put("header", SmCommonUtil.getMessage(
-				"lbl.sm.suppDoc.offline.checklist.application.no", null));
-		context.put("applNo", smAppl.getApplNo());
-		context.put("note1",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note1", null));
-		context.put("note2",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note2", null));
-		context.put("note3",
-				SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note3", null));
-		context.put("peninAddr1", SmCommonUtil.getMessage(
-				"lbl.sm.suppDoc.offline.peninAddr1", null));
-		context.put("peninAddr2", SmCommonUtil.getMessage(
-				"lbl.sm.suppDoc.offline.peninAddr2", null));
-		context.put("sabahAddr1", SmCommonUtil.getMessage(
-				"lbl.sm.suppDoc.offline.sabahAddr1", null));
-		context.put("sabahAddr2", SmCommonUtil.getMessage(
-				"lbl.sm.suppDoc.offline.sabahAddr2", null));
-		context.put("sarawakAddr1", SmCommonUtil.getMessage(
-				"lbl.sm.suppDoc.offline.sarawakAddr1", null));
-		context.put("sarawakAddr2", SmCommonUtil.getMessage(
-				"lbl.sm.suppDoc.offline.sarawakAddr2", null));
-		context.put("supportDocs", smAppl.getSmApplSupportDocs());
-		context.put("docDesc", SmCommonUtil.getMessage(
-				"lbl.sm.suppDoc.document.description", null));
-		SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
+	public static void generateOfflineSuppDocChecklistPdf(SmAppl smAppl){
+		try{
+			String tmpPath = null;
+			String tmpFolder = SmCommonUtil
+					.getUploadFilePath(SupplierManagementConst.OFFLINE_DOC_CHECKLIST_PATH);
+			tmpPath = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+			tmpPath = tmpPath + File.separator + tmpFolder;
+			File dir = new File(tmpPath);
+			if (!dir.exists())
+				dir.mkdirs();
+			String fileName = smAppl.getApplNo()
+					+ SupplierManagementConst.OFFLINE_SUPP_DOC_CHECKLIST_PREFIX;
+			String fileNameAndPath = tmpPath + fileName;
+			String vm = "/sm/application/supp-doc-checklist.vm";
+			VelocityContext context = new VelocityContext();
+			context.put("header", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.checklist.application.no", null));
+			context.put("applNo", smAppl.getApplNo());
+			context.put("note1",
+					SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note1", null));
+			context.put("note2",
+					SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note2", null));
+			context.put("note3",
+					SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note3", null));
+			context.put("peninAddr1", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.peninAddr1", null));
+			context.put("peninAddr2", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.peninAddr2", null));
+			context.put("sabahAddr1", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.sabahAddr1", null));
+			context.put("sabahAddr2", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.sabahAddr2", null));
+			context.put("sarawakAddr1", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.sarawakAddr1", null));
+			context.put("sarawakAddr2", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.sarawakAddr2", null));
+			context.put("supportDocs", smAppl.getSmApplSupportDocs());
+			context.put("docDesc", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.document.description", null));
+			SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
+		}
 	}
 
 	public static SmAppl deleteApplChildEntities(SmAppl appl) {

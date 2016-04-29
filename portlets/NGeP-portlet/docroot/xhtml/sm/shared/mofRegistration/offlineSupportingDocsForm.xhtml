@@ -5,23 +5,22 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<script>
-		function printDiv() {
-			newWin = window.open();
-
-			var divToPrint = document.getElementById('printArea');
-			newWin.document.write(divToPrint.innerHTML);
-
-			var style = newWin.document.createElement('style');
-			style.type = 'text/css';
-			style.innerHTML = '.ui-panel-title{font-family: Arial;margin: 0 0 0 5px !important;border: 0px !important;border-radius: 0px !important;background: none !important;color: #5BA218;font-size: 14px !important;font-weight: bold;}.ui-panel-titlebar{padding: 2px 0 3px 5px !important;background: none !important;height: 19px !important;border-radius: 0px;text-transform: uppercase;}.ui-outputlabel{display: inline-block;text-align: left !important;font-size: 12px;vertical-align: middle;padding: 0 10px 0 0;font-family: Arial;}table {border-collapse: collapse;border-spacing: 0;font-family: Tahoma;font-size: 11px;overflow: hidden;}.ui-datatable{font-family: Arial;color: #333333 !important;text-decoration: none;}.ui-datatable-tablewrapper{overflow: auto;}.ui-widget .ui-widget{font-size: 12px;}.ui-datatable th.ui-state-default{font-family: Arial;font-weight: bold !important;text-decoration: none;background: #F0EFEF;}thead>tr>th.ui-state-default{color: #555555 !important;font-size: 12px !important;text-align: left;}.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td{border: 1px solid #DDDDDD !important;}.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td{padding: 4px 10px;overflow: hidden;white-space: nowrap;border-width: 1px;border-style: solid;}.ui-state-default{text-shadow: none !important;box-shadow: none !important;}';
-			newWin.document.getElementsByTagName('head')[0].appendChild(style);
-
-			newWin.print();
-			newWin.close();
-		}
-	</script>
+	
+	<p:dialog id="docCheckListDlg" widgetVar="docCheckListDlg" modal="true"
+		dynamic="true" resizable="false" width="900px"
+		height="700px" styleClass="pop_up_top" 
+		header="#{lbl['lbl.sm.printchecklist.header']}">
+		<p:media value="#{backingBean.getOfflineSuppDocCheckList()}" 
+			width="100%" height="700px" player="pdf" />
+		<p:panelGrid styleClass="noBorders tr,noBorders td" >
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.btn.close']}"
+						onclick="docCheckListDlg.hide()" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:dialog>
 
 	<table>
 		<tr>
@@ -32,7 +31,7 @@
 						itemValue="H" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
 						itemValue="S" />
-					<p:ajax update="supDocPan" event="change" />
+					<p:ajax update="supDocPan" event="change" process="@this"/>
 				</p:selectOneRadio></td>
 		</tr>
 
@@ -69,10 +68,10 @@
 							value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br /></td>
 					<td>
 						<div align="right">
-							<p:commandLink ajax="false" action="#{backingBean.downloadOfflineSuppDocCheckList}">
+							<p:commandLink action="#{backingBean.printDocCheckList}" update="@form"
+							   onstart="blockWidget.show()" oncomplete="blockWidget.hide()" process="@this">
 								<p:graphicImage value="/css/images/design/print.png"
 											style="margin-right:2px;" title="#{lbl['lbl.sm.printList']}"/>
-								<p:fileDownload value="#{backingBean.file}" />
 							</p:commandLink>
 						</div>
 					</td>
