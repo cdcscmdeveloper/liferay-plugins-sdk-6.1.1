@@ -1742,8 +1742,9 @@ public class SupplierFinalizationBackingBean extends
 			}
 			setItemHigherAuthorityReqStatus(scQtRecommend);
 			
-			if (isDecRecommendSupplier || 
-					isDecFwdToHighAuthority) {
+			if (isSubmit && 
+					(isDecRecommendSupplier || 
+						isDecFwdToHighAuthority)) {
 				if (!(scQtRecommend.isAwardedItem() ||
 						scQtRecommend.isCancelled() || 
 							scQtRecommend.isDisabled())) {
@@ -2345,7 +2346,7 @@ public class SupplierFinalizationBackingBean extends
 													if (report1.getChangedDate().getTime() == 
 															report2.getChangedDate().getTime()) {
 														return 0;
-													} else if (report1.getChangedDate().getTime() == 
+													} else if (report1.getChangedDate().getTime() > 
 															report2.getChangedDate().getTime()) {
 														return 1;
 													} else {
