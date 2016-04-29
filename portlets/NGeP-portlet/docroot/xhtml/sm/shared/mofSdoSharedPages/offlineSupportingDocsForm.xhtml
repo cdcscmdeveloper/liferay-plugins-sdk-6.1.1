@@ -6,9 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel
-		header="#{lbl['lbl.sm.suppDoc.document.offLnHdrLst']} - #{backingBean.managedBean.smAppl.applNo} ">
-
+	<p:panel>
+		
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sm.suppDoc.document.offLnHdrLst']}" escape="false"/>
+			&#160;
+			<h:outputText value="#{backingBean.managedBean.smAppl.applNo}" />
+		</f:facet>
 
 		<p:dataTable var="offTable" id="revOffSdList"
 			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}" rowIndexVar="index">
