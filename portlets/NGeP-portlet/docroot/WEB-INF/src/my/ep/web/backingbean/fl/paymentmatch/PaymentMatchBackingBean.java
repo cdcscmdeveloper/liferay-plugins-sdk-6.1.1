@@ -1208,6 +1208,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setOutcome(outcome);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());				
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			if(paymentAdvice.getDescription() == null){
+				throw new EpException(MessageConst.ERROR_100022, new String[]{
+						ResourceBundleUtils.getMessage("lbl.fl.payment.match.payment.desc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
 			validateDuplicateDeduction(outcome);
 			validateDeductionAmt();
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
