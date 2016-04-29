@@ -6,9 +6,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<script>
-		$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.item.code.search']}");
-	</script>
+	<h:panelGroup rendered="#{unspscCodeBackingBean.allSupplier}">
+		<script>
+			$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.cm.item.code.search']}");
+		</script>
+	</h:panelGroup>
+	<h:panelGroup rendered="#{!unspscCodeBackingBean.allSupplier}">
+		<script>
+			$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.cm.item.code.search.title']}");
+		</script>
+	</h:panelGroup>
 	
 	
 	<h:panelGroup id="cmUNSPSCsearchID">
