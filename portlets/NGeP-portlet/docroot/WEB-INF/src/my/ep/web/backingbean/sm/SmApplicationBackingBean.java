@@ -7091,6 +7091,57 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Click print icon and process offline supporting document checklist pdf
+	 */
+	public void printDocCheckList() {
+		if (!getManagedBean().getSmAppl().isActiveAppl()) {
+			boolean valid = false;
+			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				valid = SmApplicationUtil.validateCategoryOtherDesc(true,
+						getManagedBean(), currentTab);
+			} else {
+				valid = validateBeforeSave(getManagedBean().getSmAppl()
+						.getApplType(), getManagedBean().getCurrentPageType());
+			}
+
+			if (valid) {
+				valid = intializeSaveDraftBpm(getManagedBean()
+						.getCurrentPageType());
+			}
+
+			if (valid) {
+
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_721222,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+																		getManagedBean()
+																				.getSmAppl()
+																				.getApplType()),
+																getManagedBean()
+																		.getSmAppl()
+																		.getApplNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+			}
+		}
+		SmApplicationUtil.generateOfflineSuppDocChecklistPdf(getManagedBean()
+				.getSmAppl());
+		RequestContext.getCurrentInstance().execute("docCheckListDlg.show()");
+	}
+
+	/**
 	 * After click yes in confirmation save application for first time (New MOF
 	 * application only)
 	 */
@@ -8854,22 +8905,23 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	public void downloadOfflineSuppDocCheckList() {
+	/**
+	 * Generate Offline Supporting Document Stream Content
+	 * 
+	 * @return StreamedContent
+	 */
+	public StreamedContent getOfflineSuppDocCheckList() {
+		StreamedContent retVal = null;
 		try {
-			SmApplicationUtil
-					.generateOfflineSuppDocChecklistPdf(getManagedBean()
-							.getSmAppl());
-			file = commonDownload(
-					SmCommonUtil
+			retVal = SmCommonUtil
+					.getPdfFileStreamContentByActualPath(SmCommonUtil
 							.getUploadFilePath(SupplierManagementConst.OFFLINE_DOC_CHECKLIST_PATH)
 							+ getManagedBean().getSmAppl().getApplNo()
-							+ SupplierManagementConst.OFFLINE_SUPP_DOC_CHECKLIST_PREFIX,
-					getManagedBean().getSmAppl().getApplNo()
 							+ SupplierManagementConst.OFFLINE_SUPP_DOC_CHECKLIST_PREFIX);
-
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new EpException(e.getMessage());
 		}
+		return retVal;
 	}
 
 	/**
@@ -9596,26 +9648,6 @@ public class SmApplicationBackingBean extends
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
 		generateReport(ReportConst.SM_SUPPLIER_UNREGIS_REPORT, paramMap);
-	}
-
-	/**
-	 * Gets the file.
-	 * 
-	 * @return file -StreamedContent
-	 */
-	public StreamedContent getFile() {
-		return file;
-	}
-
-	/**
-	 * Sets the file.
-	 * 
-	 * @param file
-	 *            - StreamedContent
-	 * 
-	 */
-	public void setFile(StreamedContent file) {
-		this.file = file;
 	}
 
 	/**
@@ -10808,6 +10840,14 @@ public class SmApplicationBackingBean extends
 			}
 			cat.setCategoryEffDate(c.getTime());
 		}
+	}
+
+	public StreamedContent getFile() {
+		return file;
+	}
+
+	public void setFile(StreamedContent file) {
+		this.file = file;
 	}
 
 }
