@@ -110,7 +110,7 @@
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem  value="#{lbl['lbl.fl.menu.frn.evaluation']}" update="@form" rendered="#{!receivedNoteBackingBean.hasSupplierRole()}">
+						<p:menuitem  value="#{lbl['lbl.fl.menu.frn.evaluation']}" update="@form" rendered="#{receivedNoteBackingBean.checkUserAuthority() == 'true'}">
 							<f:setPropertyActionListener
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
