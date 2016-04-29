@@ -389,6 +389,10 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
+			throw new EpException(MessageConst.ERROR_100022, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		}
 		if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
 			if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740026);
