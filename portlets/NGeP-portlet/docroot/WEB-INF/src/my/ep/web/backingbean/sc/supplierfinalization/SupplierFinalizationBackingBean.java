@@ -2308,6 +2308,28 @@ public class SupplierFinalizationBackingBean extends
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
 				 			+ SPACE + "(" + totalFinalizationRounds + ")";
 					addFinalizationReport(reportTitle);
+					// Sort the reports as per the last updated date (in ascending order)
+					Collections.sort(finalizationReports, 
+										new Comparator<ScQtFinalizationReport>() {
+											public int compare(ScQtFinalizationReport report1, 
+													ScQtFinalizationReport report2) {
+												if (report1.getChangedDate() != null && 
+														report2.getChangedDate() != null) {
+													
+													// Ascending order
+													if (report1.getChangedDate().getTime() == 
+															report2.getChangedDate().getTime()) {
+														return 0;
+													} else if (report1.getChangedDate().getTime() ==
+															report2.getChangedDate().getTime()) {
+														return 1;
+													} else {
+														return -1;
+													}
+												}
+												return -1;
+											}
+										});
 				} else {
 					finalizationReports.removeAll(endorsementReports);
 					
@@ -5819,11 +5841,16 @@ public class SupplierFinalizationBackingBean extends
 			}
 
 		} else if (decision.equals(ParameterConst.DECISION_RE_EVALUATION)) {
+			scQtFinalization.setRePublishOption(null);
 			this.getManagedBean().setReEvaluate(true);
 		} else if (decision.equals(ParameterConst.DECISION_RE_PUBLISH)) {
+			if(null==scQtFinalization.getRePublishOption()){
+			scQtFinalization.setRePublishOption(new PmParameter());
+			}
 			this.getManagedBean().setRePublish(true);
 		} else if (decision.equals(ParameterConst.DECISION_CANCEL)) {
 			this.getManagedBean().setCancel(true);
+			scQtFinalization.setRePublishOption(null);
 		}
 	}
 	
@@ -5954,6 +5981,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void resetRepublish(ScQtFinalization scQtFinalization) {
+		scQtFinalization.setRePublishOption(null);
 		scQtFinalization.setSpecChangeReq(false);
 	}
 
