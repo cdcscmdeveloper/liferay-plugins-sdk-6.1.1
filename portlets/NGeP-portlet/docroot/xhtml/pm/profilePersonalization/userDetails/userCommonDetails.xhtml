@@ -102,7 +102,7 @@
 								<td style="padding-left: 0px;width:25px;">
 									        <h:graphicImage value="/css/images/design/icon-sms.png" />
 								</td>
-									<td style="padding-left: 0px;width:265px;">
+									<td style="padding-left: 0px;width:285px;">
 									        <h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull}" /> 
 									</td>
 								    <td>
@@ -122,7 +122,7 @@
 								<td style="padding-left: 0px;width:25px;">
 									           <h:graphicImage value="/css/images/design/icon-email.png" />
 								</td>
-									<td style="padding-left: 0px;width:265px;">
+									<td style="padding-left: 0px;width:285px;">
 									    <h:outputText  value="#{profilePersonalizationBackingBean.managedBean.selectedUser.emailFull}"/>	
 									</td>
 								    <td>
@@ -144,12 +144,12 @@
 						   </td>								  
 							</tr>
 							<tr>							
-							<td><p:selectManyMenu label="#{lbl['lbl.pm.ucd.roles']}" 
-										style="width: 320px;height:65px;color: dimgrey;" >										
-										<f:selectItems  
-											value="#{profilePersonalizationBackingBean.managedBean.rolesList}" >
-										</f:selectItems>														
-								</p:selectManyMenu>	</td>
+							<td><p:dataTable var="rolesList" value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
+							     scrollable="true" scrollHeight="80" styleClass="myTable">
+							      <p:column>
+                                      <h:outputText value="#{rolesList}" />
+                                  </p:column>
+							</p:dataTable></td>
 							</tr>
 						</table>
 					</td>
