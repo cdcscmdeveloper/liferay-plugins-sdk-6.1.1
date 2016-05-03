@@ -7,6 +7,18 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="contentSection">
+	<style>
+	.ui-datatable-odd {
+    background: #ffffff;
+}
+
+.ui-datatable-even {
+    background: #F2F5F9;
+}
+.myTable thead {
+    display:none;
+}
+	</style>
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="true" escape="false"/>
 		<ui:param name="orgName" value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
 					 			profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
@@ -133,11 +145,11 @@
 							</tr>
 							<tr>							
 							<td><p:selectManyMenu label="#{lbl['lbl.pm.ucd.roles']}" 
-										style="width: 302px;height:65px;color: dimgrey;" >										
+										style="width: 320px;height:65px;color: dimgrey;" >										
 										<f:selectItems  
 											value="#{profilePersonalizationBackingBean.managedBean.rolesList}" >
 										</f:selectItems>														
-								</p:selectManyMenu></td>
+								</p:selectManyMenu>	</td>
 							</tr>
 						</table>
 					</td>
