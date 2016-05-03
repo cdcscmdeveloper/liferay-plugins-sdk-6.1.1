@@ -59,7 +59,14 @@
 
 					<h:commandLink value="#{attachFile.fileName}" id="attachmentId"
 						styleClass="blue_font" immediate="true"
-						action="#{simpleQuoteBackingBean.downloadFile(attachFile)}" /></td>
+						action="#{simpleQuoteBackingBean.downloadFile(attachFile)}"/>
+					<p:commandLink
+						action="#{simpleQuoteBackingBean.deleteUploadFile}"
+						rendered="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment ne null}"
+						immediate="true" update="sqinfoId"
+						disabled="#{!isEditable}">
+						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					</p:commandLink></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
