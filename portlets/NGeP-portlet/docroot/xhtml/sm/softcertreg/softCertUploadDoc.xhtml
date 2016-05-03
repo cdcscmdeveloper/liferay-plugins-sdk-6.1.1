@@ -96,8 +96,10 @@
 									</p:commandLink>
 								</td>
 								<td width="40%" style="border-style: none !important;">
-									<h:outputText value="#{suppDoc.smSofcertDocFiles[0].fileName}"
-										style="float: left;white-space: normal;" rendered="#{not empty suppDoc.smSofcertDocFiles}"/>
+									<p:commandLink ajax="false" value="#{suppDoc.smSofcertDocFiles[0].fileName}" 
+										rendered="#{not empty suppDoc.smSofcertDocFiles and not empty suppDoc.smSofcertDocFiles[0].fileName}">
+										<p:fileDownload value="#{softCertBackingBean.commonDownload(suppDoc.smSofcertDocFiles[0].filePath,suppDoc.smSofcertDocFiles[0].fileName,suppDoc.smSofcertDocFiles[0].fileName)}" />
+									</p:commandLink>
 								</td>
 							</tr>
 						</ui:repeat>
@@ -158,17 +160,17 @@
 		</p:panel>
 		
 		<p:dialog id="uploadDialog" widgetVar="uploadDialog" modal="true"
-				dynamic="true" resizable="false" width="700px" height="200"
-				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-				<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
-					sizeLimit="1000000"
-					invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
-					invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
-					fileUploadListener="#{softCertBackingBean.handleSupDocFileAttachment}"
-					update=":form" oncomplete="uploadDialog.hide();" 
-					uploadLabel="#{lbl['lbl.btn.upload']}"  
-					label="#{lbl['lbl.btn.choose']}" 
-					cancelLabel="#{lbl['lbl.btn.cancel']}" />
-			</p:dialog>
+			dynamic="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+			<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+				sizeLimit="1000000"
+				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
+				fileUploadListener="#{softCertBackingBean.handleSupDocFileAttachment}"
+				update=":form" oncomplete="uploadDialog.hide();" 
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.choose']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}" />
+		</p:dialog>
 
 </ui:composition>
