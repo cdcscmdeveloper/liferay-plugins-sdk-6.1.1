@@ -1556,6 +1556,9 @@ public class NoticeBoardBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTBriefingSO.class);
 		BriefingReqDTO reqDTO = new BriefingReqDTO();
+		String languageCode = new FacesScopes().getUserLocale()
+				.getLanguage();
+		reqDTO.setLanguageCode(languageCode);
 		List<ScQtBsvRegistration> registrations = new ArrayList<ScQtBsvRegistration>();
 		
 		if (!bsvDetails.isEmpty()) {
