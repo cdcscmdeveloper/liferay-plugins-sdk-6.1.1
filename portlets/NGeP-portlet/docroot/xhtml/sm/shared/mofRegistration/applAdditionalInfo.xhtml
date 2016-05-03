@@ -38,7 +38,8 @@
 					<p:outputLabel value="#{lbl['lbl.sm.application.no']}" />
 				</td>
 				<td>
-					<p:outputLabel value="#{backingBean.managedBean.smAppl.applNo}" styleClass="outputLabel-view"/>
+					<p:outputLabel value="#{backingBean.managedBean.smAppl.applNo}" styleClass="outputLabel-view" 
+						rendered="#{backingBean.managedBean.smAppl.activeAppl or backingBean.managedBean.smAppl.resubmit}"/>
 				</td>
 			</tr>
 			<tr>
