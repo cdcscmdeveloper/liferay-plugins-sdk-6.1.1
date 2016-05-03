@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="ccc" header="#{lbl['lbl.ct.panel.central.contract.circular']}" toggleable="true" toggleSpeed="500">
-		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer == null
+		<h:panelGroup  rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer == null
 		 or centralContractBackingBean.managedBean.viewContract}">
 			<ui:include src="createCircularDetail.xhtml" />
 		</h:panelGroup>
@@ -207,7 +207,7 @@
                  </p:confirmDialog>
 	    
 	              <p:dialog id="dialogExemptedMinistry"  header="#{lbl['lbl.ct.panel.exempted.org.dlg']}" 
-	                     widgetVar="dlgExemptedMinistry" styleClass="pop_up_top" modal="true" width="600" height="500">
+	                     widgetVar="dlgExemptedMinistry" styleClass="pop_up_top" modal="true" width="650" height="530">
 			            <p:panel id="popUpExmptedDlg" header="Search" toggleable="true" toggleSpeed="500">
 			                  <p:messages id="exemptedMsgId" showSummary="false"
 			                         showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
@@ -219,7 +219,7 @@
                                             </p:selectOneMenu>
 		                                   <p:spacer height="1"/>
 		                                   <p:selectOneMenu id="OrgTypeId"   label="#{lbl['lbl.ct.panel.exempted.type']}"  
-		                                         style="width:200px" value="#{centralContractBackingBean.managedBean.orgTypeCode}">
+		                                         style="width:300px" value="#{centralContractBackingBean.managedBean.orgTypeCode}">
             	                               <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
             	                                   <p:ajax event="change"  update=":form:exmptedMinistryId,:form:tablePtjCode"
             	                                         process="@this"  listener="#{centralContractBackingBean.resetMinistryDetails}" ></p:ajax>
@@ -265,7 +265,7 @@
             	                           <p:ajax process="@this"/>
                                       </p:selectOneMenu>
 				                      <p:spacer height="1"/>
-                                      <p:inputText id="ptjCodeVaue"  style="width:300px;" onkeypress="if (event.keyCode == 13) { orgSearchBtn.jq.click(); return false; }" 
+                                      <p:inputText id="ptjCodeVaue"  style="width:305px;" onkeypress="if (event.keyCode == 13) { orgSearchBtn.jq.click(); return false; }" 
                                              value="#{centralContractBackingBean.managedBean.ptjCodeNameSearchValues}" >
                                             <p:ajax process="@this"/>
                                       </p:inputText>
