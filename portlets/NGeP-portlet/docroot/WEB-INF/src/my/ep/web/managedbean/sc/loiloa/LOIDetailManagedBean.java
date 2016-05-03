@@ -30,7 +30,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -117,9 +116,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** The pm user. */
 	private PmUser pmUser;
-	
-	/** The sc qt proposal ranking. */
-	private ScQtProposalRanking scQtProposalRanking;
 	
 	/** The branchs list. */
 	private List<SmSupplierBranch> branchsList;
@@ -637,24 +633,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
-	}
-
-	/**
-	 * Gets the sc qt proposal ranking.
-	 *
-	 * @return the scQtProposalRanking
-	 */
-	public ScQtProposalRanking getScQtProposalRanking() {
-		return scQtProposalRanking;
-	}
-
-	/**
-	 * Sets the sc qt proposal ranking.
-	 *
-	 * @param scQtProposalRanking            the scQtProposalRanking to set
-	 */
-	public void setScQtProposalRanking(ScQtProposalRanking scQtProposalRanking) {
-		this.scQtProposalRanking = scQtProposalRanking;
 	}
 
 	/**
