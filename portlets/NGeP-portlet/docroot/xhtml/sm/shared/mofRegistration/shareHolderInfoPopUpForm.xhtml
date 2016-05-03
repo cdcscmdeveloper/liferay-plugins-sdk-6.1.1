@@ -223,14 +223,14 @@
 					<p:message id="equiEpfNoMsg" for="equiEpfNo" showSummary="true"
 						showDetail="false" display="icon" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+						value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}"/></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.exp']}"
-						id="equiExper" required="true"
+						id="equiExper" required="#{backingBean.managedBean.smAppl.supplierType eq 'J'}"
 						validatorMessage="#{lbl['lbl.sm.person.exp']} - #{lbl['lbl.sm.expRange.validMsg']}"
 						value="#{backingBean.managedBean.selectedShareHolder.workExperienceYear}"
 						size="35" maxlength="5">
 						<f:validateDoubleRange for="equiExper"
-							minimum="#{SupplierManagementConst.MIN_EXP_RANGE}"
+							minimum="#{backingBean.managedBean.smAppl.supplierType eq 'J' ? SupplierManagementConst.MIN_EXP_RANGE : 0.00}"
 							maximum="#{SupplierManagementConst.MAX_EXP_RANGE}" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
