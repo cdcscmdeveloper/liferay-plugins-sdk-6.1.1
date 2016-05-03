@@ -90,10 +90,10 @@
 			widgetVar="saveDraftConfirmDialog">
 			
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="saveDraftConfirmDialog.hide();" 
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="saveDraftConfirmDialog.hide();" 
 					action="#{backingBean.confirmSaveDraftFirstTime}" update="@form"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="saveDraftConfirmDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="saveDraftConfirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
 	</c:if>
