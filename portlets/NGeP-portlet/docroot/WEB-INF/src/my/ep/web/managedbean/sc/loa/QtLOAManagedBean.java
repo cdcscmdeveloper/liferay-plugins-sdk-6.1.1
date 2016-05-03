@@ -11,7 +11,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.loa.SuppLoiLoaBean;
@@ -47,12 +46,6 @@ public class QtLOAManagedBean extends BaseManagedBean {
 
 	/** The pm user. */
 	private PmUser pmUser;
-
-	/** The sc qt proposal ranking. */
-	private ScQtProposalRanking scQtProposalRanking;
-	
-	/** The sc qt proposal ranking list. */
-	private List<ScQtProposalRanking> scQtProposalRankingList;
 	
 	/** The sc qt evaluation result. */
 	private ScQtEvaluationResult scQtEvaluationResult;
@@ -114,43 +107,6 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	public void setScQtEvaluationResultList(
 			List<ScQtEvaluationResult> scQtEvaluationResultList) {
 		this.scQtEvaluationResultList = scQtEvaluationResultList;
-	}
-
-	/**
-	 * Gets the sc qt proposal ranking list.
-	 *
-	 * @return the scQtProposalRankingList
-	 */
-	public List<ScQtProposalRanking> getScQtProposalRankingList() {
-		return scQtProposalRankingList;
-	}
-
-	/**
-	 * Sets the sc qt proposal ranking list.
-	 *
-	 * @param scQtProposalRankingList the scQtProposalRankingList to set
-	 */
-	public void setScQtProposalRankingList(
-			List<ScQtProposalRanking> scQtProposalRankingList) {
-		this.scQtProposalRankingList = scQtProposalRankingList;
-	}
-
-	/**
-	 * Gets the sc qt proposal ranking.
-	 *
-	 * @return the scQtProposalRanking
-	 */
-	public ScQtProposalRanking getScQtProposalRanking() {
-		return scQtProposalRanking;
-	}
-
-	/**
-	 * Sets the sc qt proposal ranking.
-	 *
-	 * @param scQtProposalRanking            the scQtProposalRanking to set
-	 */
-	public void setScQtProposalRanking(ScQtProposalRanking scQtProposalRanking) {
-		this.scQtProposalRanking = scQtProposalRanking;
 	}
 
 	/**
