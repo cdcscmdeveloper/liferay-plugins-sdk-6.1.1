@@ -64,9 +64,7 @@
 				} 
 			  });
 		});
-			
 	</script>
-		
 	<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true" id="pnlCompInfo">
 		<table class="customTbl">
 			<tr>
@@ -85,9 +83,10 @@
 							<f:validator validatorId="busRegNoValidator" />
 							</p:inputText>
 						&#160;
-						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" />
-						<p:tooltip id="regNott" for="regNoti">
-							<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.no']}"  />
+						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}"/>
+						<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{registrationBackingBean.managedBean.smSupp.businessType}" />
+						<p:tooltip id="regNott" for="regNoti" rendered="#{not empty registrationBackingBean.managedBean.smSupp.businessType}" >
+							<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
 						</p:tooltip>&#160;
 						<p:message id="regNoMsg" for="regNo" display="icon" />
 					</p:outputPanel>
