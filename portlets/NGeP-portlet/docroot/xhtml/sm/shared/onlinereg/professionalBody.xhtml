@@ -45,7 +45,7 @@
 
 			<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
 				<p:calendar navigator="true" value="#{suppAssocBody.expDate}" id="assocBodyExpDateId" required="#{!empty param['disableValidation']}"
-				label="#{lbl['lbl.sm.profBody.expDate']}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" mindate="#{CommonConstants.THREE_MONTHS_LATER_DATE}"/>
+				label="#{lbl['lbl.sm.prof.enddate']}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" mindate="#{CommonConstants.THREE_MONTHS_LATER_DATE}"/>
 				<p:message id="assocBodyExpDateMsg" for="assocBodyExpDateId" display="icon" />
 			</p:column>
 		</p:dataTable>
