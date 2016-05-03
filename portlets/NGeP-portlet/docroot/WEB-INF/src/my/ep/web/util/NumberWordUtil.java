@@ -75,13 +75,13 @@ public class NumberWordUtil {
 		snumber = df.format(number);
 
 		// XXXnnnnnnnnn
-		int billions = Integer.parseInt(snumber.substring(0, 3));
+		int billions = (int) Long.parseLong(snumber.substring(0, 3));
 		// nnnXXXnnnnnn
-		int millions = Integer.parseInt(snumber.substring(3, 6));
+		int millions = (int) Long.parseLong(snumber.substring(3, 6));
 		// nnnnnnXXXnnn
-		int hundredThousands = Integer.parseInt(snumber.substring(6, 9));
+		int hundredThousands = (int) Long.parseLong(snumber.substring(6, 9));
 		// nnnnnnnnnXXX
-		int thousands = Integer.parseInt(snumber.substring(9, 12));
+		int thousands = (int) Long.parseLong(snumber.substring(9, 12));
 
 		String tradBillions;
 		switch (billions) {
