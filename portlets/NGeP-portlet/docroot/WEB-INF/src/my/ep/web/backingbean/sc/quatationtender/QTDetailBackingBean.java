@@ -465,6 +465,7 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
@@ -2699,6 +2700,7 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			// reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setQtdetail(this.getManagedBean().getQt());
 			QuationTenderResDTO resDTO = detailSO.retrieveQTActivities(reqDTO);

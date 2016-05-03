@@ -867,6 +867,7 @@ public class ApprovalBackingBean extends
 				qtReqDTO.setPmUser(facesScope.getUserSessionBean());
 				qtReqDTO.setRoleCode(getUserRoleCode());
 				qtReqDTO.setOutcome(outcome);
+				qtReqDTO.setUserLocale(facesScope.getUserLocale());
 
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign, approvalDocType,
