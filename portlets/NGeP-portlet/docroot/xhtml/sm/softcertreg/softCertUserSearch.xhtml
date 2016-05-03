@@ -58,8 +58,6 @@
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" disabledSelection="#{personnel.disableRowSelection}">
 					<ac:smRoleDesc backingBean="#{softCertBackingBean}" roleCode="#{personnel.epRole}" />
-					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
-						rendered="#{personnel.contractSigner}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}" disabledSelection="#{personnel.disableRowSelection}">
