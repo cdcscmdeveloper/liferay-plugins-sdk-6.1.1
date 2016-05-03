@@ -1175,6 +1175,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 		getManagedBean().getContractVer().getCtTermination().setFileName(item.getFileName());
 		getManagedBean().getContractVer().getCtTermination().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		 RequestContext.getCurrentInstance().execute("uploadTerminatinDlg.hide()");
 	}
     
     /**
@@ -1335,6 +1336,11 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
     }
+	
+	public void deleteAttachAgrementDoc(){
+		getManagedBean().getContractVer().getCtTermination().setFileName(null);
+		getManagedBean().getContractVer().getCtTermination().setFilePath(null);
+	}
 	
 	public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActive(false);
