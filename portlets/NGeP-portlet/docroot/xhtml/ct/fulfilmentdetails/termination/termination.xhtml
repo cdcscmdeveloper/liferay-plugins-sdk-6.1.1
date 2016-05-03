@@ -49,12 +49,10 @@
 		      <p:outputLabel value="#{lbl['lbl.ct.copy.mutual.termination.agreement']}" style="padding-top:10px" 
 		         styleClass="required"  rendered="#{terminationBackingBean.managedBean.mutualTermination}"  />
 		     <h:panelGroup id="uploadTerminationPg" rendered="#{terminationBackingBean.managedBean.mutualTermination}">
-			<h:panelGrid columns="3">
 				<p:commandButton 
 					oncomplete="uploadTerminatinDlg.show();return false;"
-					value="#{lbl['lbl.btn.upload']}" immediate="true"
-					rendered="#{!terminationBackingBean.managedBean.viewContract}" />
-				<p:spacer width="3" />
+					 icon="ui-icon-upload" immediate="true" disabled="#{terminationBackingBean.managedBean.viewContract}"
+					rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath == null}" />
 				<h:commandLink
 					title="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileName}"
 					value="#{terminationBackingBean.getShortFileName(terminationBackingBean.managedBean.contractVer.ctTermination.fileName)}"
@@ -62,7 +60,11 @@
 					rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}"
 					action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.contractVer.ctTermination.filePath, 
 						terminationBackingBean.managedBean.contractVer.ctTermination.fileName)}" />
-			</h:panelGrid>
+				<p:spacer width="3" />
+						 <p:commandLink onclick="dlgAttachAgrementDoc.show();" style="margin-bottom:-5px;"
+						        rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}">
+			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			        	     </p:commandLink>
 		</h:panelGroup>
 		
 		   <p:outputLabel value="#{lbl['lbl.ct.remedy.start.date']}" styleClass="required" rendered="#{terminationBackingBean.managedBean.remedy}"  />
@@ -225,21 +227,32 @@
 				          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgTerminationReason.hide();" />	
 			       </div>
 			</p:confirmDialog>
+			
+			 <p:confirmDialog id="delAttachAgrementDoc" widgetVar="dlgAttachAgrementDoc"  appendToBody="true" 
+	   	           message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+			       <div class="ppRightBtn">
+				         <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
+					             partialSubmit="true"  update=":form:uploadTerminationPg,:form:uploadTerminatinDlg"
+					             action="#{terminationBackingBean.deleteAttachAgrementDoc()}"
+					             oncomplete="dlgAttachAgrementDoc.hide();" />
+				          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAttachAgrementDoc.hide();" />	
+			       </div>
+			</p:confirmDialog>
      </p:panel>
 	
 	<p:dialog header="#{lbl['lbl.ct.notice']}" widgetVar="noticeDlg" modal="true" height="450" width="820" styleClass="pop_up_top">
 		<p:editor controls="print" id="editorDisplay" value="#{terminationBackingBean.managedBean.editorValue}" width="800" height="430" />
 	</p:dialog>
 	<p:dialog id="uploadTerminatinDlg" widgetVar="uploadTerminatinDlg"
-		modal="true" width="700px" height="350"
+		modal="true" width="700px" height="350px" resizable="false"
 		styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced"
-		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			fileUploadListener="#{terminationBackingBean.fileUpload}"
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
+			fileUploadListener="#{terminationBackingBean.fileUpload}" 
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update="uploadTerminationPg">
+			update=":form:uploadTerminationPg">
 		</p:fileUpload>
 	</p:dialog>
 	<p:dialog id="searchAgencyDlg"  header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.ct.recommended.agency']}" widgetVar="searchAgencyDlg" 
