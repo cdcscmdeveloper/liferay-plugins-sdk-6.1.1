@@ -358,6 +358,9 @@ public class BSVAttendanceBackingBean extends
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
+			String languageCode = new FacesScopes().getUserLocale()
+					.getLanguage();
+			reqDTO.setLanguageCode(languageCode);
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
 
@@ -976,6 +979,9 @@ public class BSVAttendanceBackingBean extends
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
+			String languageCode = new FacesScopes().getUserLocale()
+					.getLanguage();
+			reqDTO.setLanguageCode(languageCode);
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
 			boolean invokeBPM = false;
