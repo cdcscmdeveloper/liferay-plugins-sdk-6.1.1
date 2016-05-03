@@ -14,7 +14,7 @@
 				<td style="width: 218px;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText size="46" id="ctitle"
+				<td colspan="3"><p:inputText size="43" id="ctitle"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{!isPendingSubmissionStatus}"
@@ -27,7 +27,7 @@
 						value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.smSupplier.companyName}"
-						size="46" /></td>
+						size="43" /></td>
 				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstRegNo}"
@@ -39,7 +39,7 @@
 						value="#{lbl['lbl.sc.purchase.in.default.prod.code']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.cmItem.extensionCode}"
-						size="46" /></td>
+						size="43" /></td>
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
 				<td><p:inputText disabled="true"
@@ -55,7 +55,7 @@
 						value="#{lbl['lbl.sc.purchase.in.default.min.qty']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.minimumOrderQty}"
-						size="46">
+						size="43">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
@@ -85,7 +85,7 @@
 							<td style="width: 39px;text-align: center;">
 								#{lbl['lbl.sc.purchase.in.default.val.period.until']}</td>
 
-							<td><p:inputText disabled="true" size="15"
+							<td><p:inputText disabled="true" size="13"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -105,7 +105,7 @@
 						value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.maxProcureAmt}"
-						size="46">
+						size="43">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
@@ -163,7 +163,7 @@
 				<td style="width: 218px;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="46" id="ptitle" required="true"
+				<td><p:inputText size="43" id="ptitle" required="true"
 						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
@@ -175,13 +175,13 @@
 						value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctPanelSuppliers[0].supplier.companyName}"
-						size="46" /></td>
+						size="43" /></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.prod.code']}" /></td>
-				<td><p:inputText disabled="true" size="46"
+				<td><p:inputText disabled="true" size="43"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.extensionCode}" /></td>
 
 
@@ -195,7 +195,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.min.qty']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
-						size="46"
+						size="43"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.minimumOrderQty}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -209,16 +209,16 @@
 				<td>
 					<table>
 						<tr>
-							<td style="width: 145px;"><p:inputText disabled="true" size="17"
+							<td style="width: 145px;"><p:inputText disabled="true" size="18"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.startDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</p:inputText></td>
 
-							<td style="width: 30px;text-align: center;">
+							<td style="width: 39px;text-align: center;">
 								#{lbl['lbl.sc.purchase.in.default.val.period.until']}</td>
 
-							<td><p:inputText disabled="true" size="18"
+							<td><p:inputText disabled="true" size="13"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.endDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -232,7 +232,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
-						size="46"
+						size="43"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.maxProcureAmt}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -329,7 +329,7 @@
 							required="true"
 							label="#{lbl['lbl.sc.purchase.in.default.valid.period']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
-							size="46" style="text-align:right;margin-right: 5px;"
+							size="43" style="text-align:right;margin-right: 5px;"
 							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
@@ -346,7 +346,7 @@
 										label="#{lbl['lbl.sc.purchase.in.default.just']}"
 										disabled="#{!isPendingSubmissionStatus}" required="true"
 										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType.reasonCode}"
-										style="margin-bottom: 5px;width:346px;">
+										style="margin-bottom: 5px;width:340px;">
 										<f:selectItems
 											value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
 
@@ -377,7 +377,7 @@
 										label="#{lbl['lbl.sc.request.note.header.method']}"
 										disabled="#{!isPendingSubmissionStatus}" required="true"
 										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.sourceMethod}"
-										style="margin-bottom: 5px;width:346px;">
+										style="margin-bottom: 5px;width:340px;">
 										<f:selectItems
 											value="#{purchaseInDefaultBackingBean.managedBean.sourceMethods}" />
 
@@ -403,7 +403,7 @@
 							validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999999.999"
 							label="#{lbl['lbl.sc.purchase.in.default.order.qty']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}"
-							style="text-align:right;" size="46"
+							style="text-align:right;" size="43"
 							disabled="#{!isPendingSubmissionStatus}">
 							<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
@@ -501,7 +501,7 @@
 						value="#{lbl['lbl.sc.ptj.approver.group']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="appGroupId"
-						style="width:300px; margin-bottom:5px;"
+						style="width:340px; margin-bottom:5px;"
 						disabled="#{!isPendingSubmissionStatus}" required="true"
 						label="#{lbl['lbl.sc.ptj.approver.group']}"
 						value="#{purchaseInDefaultBackingBean.managedBean.userGroupId}">
@@ -519,7 +519,7 @@
 						label="#{lbl['lbl.sc.approverName']}"
 						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.selectedApproverId}"
-						style="width:300px;">
+						style="width:340px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
 							value="#{purchaseInDefaultBackingBean.managedBean.approverList}"
