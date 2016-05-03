@@ -87,8 +87,7 @@
 		<table style="width: 100%">
 			<c:if test="#{!isQuotationThresHold}">
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"
-							style="width : 80px" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"/></td>
 					<td><p:selectBooleanCheckbox
 							disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode.value() eq 'Peninsular' }"
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
