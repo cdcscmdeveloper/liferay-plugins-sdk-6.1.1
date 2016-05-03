@@ -130,21 +130,7 @@
 				value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
 				escape="false" />
 
-			<table>
-				<tr>
-					<td style="width: 250px;"><p:outputLabel
-							value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText style="text-align:right" maxlength="5"
-							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-							value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
-							<p:ajax event="blur" process="@all" partialSubmit="true"
-								listener="#{specificationBackingBean.checkFinancialPassingScore(specificationBackingBean.managedBean.financialScoreSetting)}" />
-						</p:inputText> <p:spacer width="5"></p:spacer></td>
-				</tr>
-			</table>
-
-			<br />
+		
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.score.variance.instruction']}"
 				escape="false" />
@@ -208,7 +194,22 @@
 				</p:row>
 
 			</p:panelGrid>
+			<p:spacer height="15"></p:spacer>
+	<table>
+				<tr>
+					<td style="width: 250px;"><p:outputLabel
+							value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText style="text-align:right" maxlength="5"
+							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+							value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
+							<p:ajax event="blur" process="@all" partialSubmit="true"
+								listener="#{specificationBackingBean.checkFinancialPassingScore(specificationBackingBean.managedBean.financialScoreSetting)}" />
+						</p:inputText> <p:spacer width="5"></p:spacer></td>
+				</tr>
+			</table>
 
+			
 
 		</p:panel>
 	</h:panelGroup>
@@ -218,22 +219,7 @@
 			value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
 			escape="false" />
 
-		<table>
-			<tr>
-				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="text-align:right" maxlength="5"
-						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.passingScore}">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="5" integerOnly="true" />
-						<f:attribute name="min" value="0"></f:attribute>
-						<f:attribute name="max" value="100"></f:attribute>
-					</p:inputText> <p:spacer width="5"></p:spacer></td>
-			</tr>
-		</table>
+		
 
 
 		<p:panelGrid style="margin-top:5px;width:100%;">
@@ -290,8 +276,24 @@
 			</p:row>
 
 		</p:panelGrid>
+		<p:spacer height="15"></p:spacer>
 
-
+<table>
+			<tr>
+				<td style="width: 250px;"><p:outputLabel
+						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText style="text-align:right" maxlength="5"
+						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
+						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.passingScore}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="5" integerOnly="true" />
+						<f:attribute name="min" value="0"></f:attribute>
+						<f:attribute name="max" value="100"></f:attribute>
+					</p:inputText> <p:spacer width="5"></p:spacer></td>
+			</tr>
+		</table>
 	</p:panel>
 
 
