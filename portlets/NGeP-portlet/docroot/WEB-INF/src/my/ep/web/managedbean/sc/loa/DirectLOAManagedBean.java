@@ -26,7 +26,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -144,9 +143,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	/** The approval date. */
 	public String approvalDate;
-
-	/** The sc qt proposal ranking. */
-	private ScQtProposalRanking scQtProposalRanking;
 
 	/** The address. */
 	public String address;
@@ -826,25 +822,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setApprovalDate(String approvalDate) {
 		this.approvalDate = approvalDate;
-	}
-
-	/**
-	 * Gets the sc qt proposal ranking.
-	 * 
-	 * @return the scQtProposalRanking
-	 */
-	public ScQtProposalRanking getScQtProposalRanking() {
-		return scQtProposalRanking;
-	}
-
-	/**
-	 * Sets the sc qt proposal ranking.
-	 * 
-	 * @param scQtProposalRanking
-	 *            the scQtProposalRanking to set
-	 */
-	public void setScQtProposalRanking(ScQtProposalRanking scQtProposalRanking) {
-		this.scQtProposalRanking = scQtProposalRanking;
 	}
 
 	/**
