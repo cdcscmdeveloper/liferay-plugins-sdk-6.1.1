@@ -168,7 +168,7 @@
 
 						</tr>
 						
-						<c:if test="#{not empty backingBean.managedBean.applRegStatus}">
+						<c:if test="#{not empty backingBean.managedBean.applRegStatus and backingBean.managedBean.applRegStatus ne ' '}">
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.regStatus']}" /></td>
 								<td><p:outputLabel value="   : " /></td>
