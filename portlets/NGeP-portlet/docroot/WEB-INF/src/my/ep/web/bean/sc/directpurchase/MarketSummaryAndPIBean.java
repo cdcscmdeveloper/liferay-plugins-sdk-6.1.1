@@ -44,6 +44,9 @@ public class MarketSummaryAndPIBean implements Serializable {
 	/** The stock availability. */
 	private String stockAvailability;
 	
+	/** The catalogue price. */
+	private String cataloguePrice;
+	
 	/**
 	 * Instantiates a new market summary and pi bean.
 	 */
@@ -246,5 +249,18 @@ public class MarketSummaryAndPIBean implements Serializable {
 	public void setSupplierId(Long supplierId) {
 		this.supplierId = supplierId;
 	}
-	
+
+	/**
+	 * @return the cataloguePrice
+	 */
+	public String getCataloguePrice() {
+		return cataloguePrice;
+	}
+
+	/**
+	 * @param cataloguePrice the cataloguePrice to set
+	 */
+	public void setCataloguePrice(String cataloguePrice) {
+		this.cataloguePrice = cataloguePrice;
+	}
 }

@@ -2,101 +2,89 @@
    <head>
       <style>
          @page { size: B3 landscape;}
-  		        body {	 
-  		        font-size: 0.7em !important;
-   				font-family: Arial !important;
-  		        } 
-		 
-		 .table2 {
-    border-collapse: collapse;
-	width:100%;
-}
-		.table2 th, .table2 td {
-			border: 1px solid black;
-		}
-		 th{
-			background-color: #DEDEDE;
-		 }
-
+         body {	 
+         font-size: 0.7em !important;
+         font-family: Arial !important;
+         } 
+         .table2 {
+         border-collapse: collapse;
+         width:100%;
+         }
+         .table2 th, .table2 td {
+         border: 1px solid black;
+         }
+         th{
+         background-color: #DEDEDE;
+         }
+         @media print {
+         thead {display: table-header-group;}
+         .break {page-break-after: always;}
+         }
+         @page {
+         @bottom-right {
+         content: "Page No:" counter(page) "/" counter(pages);
+         font-size: 0.7em !important;
+         font-family: Arial !important;
+         }
+         }
       </style>
-   </head>   
+   </head>
    <body>
+        <table width="100%">
+         <tbody>
+            <tr>
+               <td width="25%">
+                  <img src="$imgUrl" align="left" height="50" width="60"/>
+               </td>
+                <td style="font-family:bold ;text-align:center; vertical-align:middle;"> KERAJAAN MALAYSIA
+				<br/>
+				<br/>
+                	MAKLUMAT MAKLUM BALAS PEMBEKAL PERTANYAAN ITEM 
+               </td>
+                <td width="25%">
+                 <img src="$rightImgUrl" align="right" height="36" width="153"/>				
+               </td>
+            </tr>
+         </tbody>
+      </table>
+     <hr/>
 
-   <table width="100%">
-   <tr>
-   <td width="20%">
-   Item Code
-   </td>
-   <td>
-  $productCode
-   </td>
-   </tr>
-   
-   <tr>
-   <td>
-   Item
-   </td>
-   <td>
-     $itemName
-   </td>
-   </tr>
-   
-   <tr>
-   <td>
-    Additional Description
-   </td>
-   <td>
-    $desc
-   </td>
-   </tr>
-   
-      <tr>
-   <td>
-   UOM
-      </td>
-   <td>
-    $uom
-   </td>
-   </tr>
-
-   </table>
+  <table width="100%">
+		<tr>
+		   <td width="20%"> Kod Item  </td>
+		   <td> $productCode  </td>
+		</tr>
+		<tr>
+		   <td> Item  </td>
+		   <td> $itemName </td>
+	  </tr>
+	  <tr>
+		   <td> Maklumat Tambahan </td>
+		   <td> $desc </td>
+	  </tr>
+	  <tr>
+		   <td> Unit Ukuran </td>
+		   <td> $uom </td>
+	 </tr>
+  </table>
+  
    <br/>
    <br/>
-   
-   <table class="table2">
-<tr>
-<th width="15%">
-Supplier
-</th>
-<th width="8%">
-Delivery Terms
-</th>
-<th width="8%">
-Minimum Order
-</th>
-<th width="15%">
-Additional Description
-</th>
-<th width="10%">
-Price Type
-</th>
-<th width="13%">
-Stock Availability
-</th>
-<th width="6%">
-Zone
-</th>
-<th width="8%">
-From Quantity
-</th>
-<th width="7%">
-To Quantity
-</th>
-<th width="10%">
-Unit Price (RM)
-</th>
-
-</tr>
+ <table class="table2">
+		<tr>
+		<th width="15%"> Pembekal </th>
+		<th width="8%"> Tempoh Penghantara </th>
+		<th width="8%"> Pesanan Minima </th>
+		<th width="15%"> Maklumat Tambahan </th>
+		<th width="10%"> Jenis Harga </th>
+		<th width="10%"> Harga Katalog (RM) </th>
+		<th width="13%"> Ketersediaan Stok </th>
+		<th width="6%"> Zon </th>
+		<th width="8%"> Dari Kuantiti </th>
+		<th width="7%"> Kepada Kuantiti </th>
+		<th width="10%"> Harga Seunit (RM) </th>
+     </tr>
+     
       #set( $count = 0 )	
  	  #set ($prevSupplierId = "")
       #set ($supplierId = "")
@@ -109,6 +97,7 @@ Unit Price (RM)
 			<td style="text-align:right">$requestNoteVo.minQty</td>
 		    <td>$requestNoteVo.addItemDesc</td>
 		    <td>$requestNoteVo.priceType</td>
+		    <td>$requestNoteVo.cataloguePrice</td>
 		    <td>$requestNoteVo.stockAvailability</td>
 		    <td>$requestNoteVo.zone</td>
 		    <td style="text-align:right">
@@ -136,8 +125,8 @@ Unit Price (RM)
 			<td></td>
 		    <td></td>
 		    #end
-		    
 		    <td>$requestNoteVo.priceType</td>
+		    <td>$requestNoteVo.cataloguePrice</td>
 		    <td>$requestNoteVo.stockAvailability</td>
 		    <td>$requestNoteVo.zone</td>
  			<td style="text-align:right">
@@ -157,9 +146,6 @@ Unit Price (RM)
 		#set( $prevSupplierId = $requestNoteVo.supplierId )
       	#set( $count = $count + 1 )
       #end
-
-
-
    </table>
    
    </body>   
