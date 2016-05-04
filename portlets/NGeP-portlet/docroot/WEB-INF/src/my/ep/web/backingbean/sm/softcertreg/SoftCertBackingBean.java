@@ -21,6 +21,7 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -50,6 +51,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "softCertBackingBean")
@@ -351,14 +353,45 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 			if (resDTO.isSuccessful()) {
 				String msgKey = MessageConst.INFO_721060;
+				String[] params = null;
 				if (getManagedBean().getTotalPaymentAmount().compareTo(
 						BigDecimal.ZERO) == 0) {
 					msgKey = MessageConst.INFO_721061;
+					StringBuilder sbName = null;
+					StringBuilder sbEmail = null;
+					String name = StringUtils.EMPTY;
+					String email = StringUtils.EMPTY;
+
+					if (getManagedBean().getSupplierTmpPersonnel() != null) {
+						name = getManagedBean().getSupplierTmpPersonnel()
+								.getName();
+						email = getManagedBean().getSupplierTmpPersonnel()
+								.getEmail();
+					} else if (!EntityHelper.isCollectionEmpty(reqDTO
+							.getFreeSofcertPersonnelList())) {
+						sbName = new StringBuilder();
+						sbEmail = new StringBuilder();
+						for (SmPersonnel per : reqDTO
+								.getFreeSofcertPersonnelList()) {
+							sbName.append(per.getName()).append(",");
+							sbEmail.append(per.getEmail()).append(",");
+						}
+						name = sbName.toString();
+						if (name.endsWith(",")) {
+							name = name.substring(0, name.length() - 1);
+						}
+						email = sbEmail.toString();
+						if (email.endsWith(",")) {
+							email = email.substring(0, email.length() - 1);
+						}
+
+					}
+					params = new String[] { name, email };
 				}
 				renewSesionObject();
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(), msgKey,
-						null);
+						params);
 			} else {
 				throw new EpException(MessageConst.ERROR_721037);
 			}
