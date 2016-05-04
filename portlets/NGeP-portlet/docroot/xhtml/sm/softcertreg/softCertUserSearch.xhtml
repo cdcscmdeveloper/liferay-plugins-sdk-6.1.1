@@ -41,15 +41,17 @@
 				<p:column selectionMode="single" style="width:2%" disabledSelection="#{personnel.disableRowSelection}" 
 					rendered="#{not empty softCertBackingBean.managedBean.authorizedPersonnels}"/>
 
-				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}" disabledSelection="#{personnel.disableRowSelection}">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}" style="width : 30%;white-space : normal" 
+					disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{personnel.name}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" disabledSelection="#{personnel.disableRowSelection}">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}"  disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{personnel.pmCountry.countryName}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}" disabledSelection="#{personnel.disableRowSelection}">
+				<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}" style="width : 8%;white-space : normal" 
+					disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{lbl['lbl.txt.yes']}"
 						rendered="#{personnel.authorizedFlg eq '1'}" />
 					<h:outputText value="#{lbl['lbl.txt.no']}"
