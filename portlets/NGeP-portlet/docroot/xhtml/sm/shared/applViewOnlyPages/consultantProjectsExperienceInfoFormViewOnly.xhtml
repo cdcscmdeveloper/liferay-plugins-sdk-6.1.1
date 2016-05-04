@@ -32,6 +32,10 @@
 						rendered="#{consBean.progressStatus eq 'S'}" />
 					<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}"
 						rendered="#{consBean.progressStatus eq 'F'}" />
+					<h:outputText value="#{lbl['lbl.sm.projDtls.kiv']}" 
+						rendered="#{consBean.progressStatus eq 'K'}"/>
+					<h:outputText value="#{lbl['lbl.sm.projDtls.repeal']}" 
+						rendered="#{consBean.progressStatus eq 'R'}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink onstart="blockWidget.show()"
@@ -98,7 +102,9 @@
 								<td>
 									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.projDtls.inProgress']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus eq 'P'}"/>
 									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.projDtls.success']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus eq 'S'}"/>
-									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.projDtls.fail']}" rendered="viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus eq 'F'}"/>
+									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.projDtls.fail']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus eq 'F'}"/>
+									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.projDtls.kiv']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus eq 'K'}"/>
+									<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.projDtls.repeal']}" rendered="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus eq 'R'}"/>
 								</td>
 							</tr>
 							<tr>
