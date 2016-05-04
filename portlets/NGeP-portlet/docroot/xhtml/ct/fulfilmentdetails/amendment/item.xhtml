@@ -189,20 +189,15 @@
 								</p:column>
 				        
 				        </p:dataTable>
-			          	<p:dialog id="dlgItemPrices" widgetVar="dlgItemPrices"  modal="true"
-			          	    styleClass="screen-title" width="330">
-					        <h:panelGrid columns="3">
-						         <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-						         <p:spacer width="10" />
-						         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-					        </h:panelGrid>
-				
-				  	        <div class="ppRightBtn">
-						       <p:commandButton value="#{lbl['lbl.btn.yes']}" 	update=":form:itemPriceTable" 
-						        	process="@form" action="#{amendmentBackingBean.deleteItemPriceOnIndexs()}" onclick="dlgItemPrices.hide();" />
-						       <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgItemPrices.hide();" type="button" />
-					       </div>
-				      </p:dialog>
+				        <p:confirmDialog id="dlgItemPrices" widgetVar="dlgItemPrices" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                             severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                 <div class="ppRightBtn">
+		                            <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                                update=":form:itemPriceTable" 
+		                                action="#{amendmentBackingBean.deleteItemPriceOnIndexs()}" oncomplete="dlgItemPrices.hide();"/>
+			                       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgItemPrices.hide();" type="button" />
+		                     </div>
+                      </p:confirmDialog>
 			    </p:outputPanel>
 				<!-- Ceiling Quantity -->
 				<p:outputPanel style="width:100%" 
@@ -275,20 +270,16 @@
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
-				<p:dialog id="dlgCeilQuantity" widgetVar="dlgCeilQuantity" styleClass="screen-title"
-					modal="true" width="330">
-					<h:panelGrid columns="3">
-						<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-						<p:spacer width="10" />
-						<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-					</h:panelGrid>
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:ceilingTable" process="@form"
-							action="#{amendmentBackingBean.deleteCeilingQuantityOnIndexs()}"
-							onclick="dlgCeilQuantity.hide();" />
-						<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgCeilQuantity.hide();" type="button" />
-					</div>
-				</p:dialog>
+				
+				 <p:confirmDialog id="dlgCeilQuantity" widgetVar="dlgCeilQuantity" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                             severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                 <div class="ppRightBtn">
+		                            <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                                update=":form:ceilingTable" 
+		                                action="#{amendmentBackingBean.deleteCeilingQuantityOnIndexs()}" oncomplete="dlgCeilQuantity.hide();"/>
+			                       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgCeilQuantity.hide();" type="button" />
+		                     </div>
+                      </p:confirmDialog>
 			</p:outputPanel>
 			<!-- Maximum Order Quantity -->
 			<p:outputPanel style="width:100%" 
@@ -355,20 +346,16 @@
 							</p:column>
 			        
 			        </p:dataTable>
-		          	<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty"  modal="true"
-		          	    styleClass="screen-title" width="330">
-				        <h:panelGrid columns="3">
-					         <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-					         <p:spacer width="10" />
-					         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-				        </h:panelGrid>
-			
-			  	        <div class="ppRightBtn">
-					       <p:commandButton value="#{lbl['lbl.btn.yes']}" 	update=":form:itemMaxQtyTable" 
-					        	process="@form" action="#{amendmentBackingBean.deleteItemMaxQtyOnIndexs()}" onclick="dlgItemMaxQty.hide();" />
-					       <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgItemMaxQty.hide();" type="button" />
-				       </div>
-			      </p:dialog>
+			        
+			         <p:confirmDialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                             severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                 <div class="ppRightBtn">
+		                            <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                                update=":form:itemMaxQtyTable" 
+		                                action="#{amendmentBackingBean.deleteItemMaxQtyOnIndexs()}" oncomplete="dlgItemMaxQty.hide();"/>
+			                       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgItemMaxQty.hide();" type="button" />
+		                     </div>
+                      </p:confirmDialog>
 		    </p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
@@ -488,19 +475,16 @@
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
-				<p:dialog id="dlgSvcItemPrices" widgetVar="dlgSvcItemPrices" styleClass="screen-title"
-					modal="true" width="330">
-					<h:panelGrid columns="3">
-						<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-						<p:spacer width="10" />
-						<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-					</h:panelGrid>
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.yes']}" update=":form:servicePriceTable" process="@form"
-							action="#{amendmentBackingBean.deleteServiceItemPriceOnIndexs()}" onclick="dlgSvcItemPrices.hide();" />
-						<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSvcItemPrices.hide();" type="button" />
-					</div>
-				</p:dialog>			
+				
+				 <p:confirmDialog id="dlgSvcItemPrices" widgetVar="dlgSvcItemPrices" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                             severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                                 <div class="ppRightBtn">
+		                            <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                                update=":form:servicePriceTable" 
+		                                action="#{amendmentBackingBean.deleteServiceItemPriceOnIndexs()}" oncomplete="dlgSvcItemPrices.hide();"/>
+			                       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgSvcItemPrices.hide();" type="button" />
+		                     </div>
+                      </p:confirmDialog>	
 			</p:outputPanel>		    
 			<!-- Quantity -->
 			<p:outputPanel style="width:100%" 
