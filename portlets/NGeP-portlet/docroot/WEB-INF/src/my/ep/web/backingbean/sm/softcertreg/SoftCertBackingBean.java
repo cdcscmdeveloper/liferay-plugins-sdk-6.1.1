@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
@@ -27,6 +28,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
@@ -51,7 +53,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "softCertBackingBean")
@@ -870,20 +871,43 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * to be uploaded
 	 */
 	private void initRequestedSoftcertUserSuppDoc() {
-		List<PmDocument> softcertSuppDocList = SmServiceLookup.getDocumentSO()
-				.retrieveSoftcertSuppDocuments().getDocumentList();
+		SmAppl appl = getManagedBean().getLoginUserPersonnelInfo() != null ? getManagedBean()
+				.getLoginUserPersonnelInfo().getSmAppl() : null;
+		boolean basic = (appl != null
+				&& !StringUtils.isBlank(appl.getApplType()) && appl
+				.getApplType().equals(SupplierManagementConst.ACC_BASIC)) ? true
+				: false;
+		String businessType = (appl != null && appl.getSmSupplier() != null) ? appl
+				.getSmSupplier().getBusinessType() : StringUtils.EMPTY;
+		List<PmDocument> softcertSuppDocList = new ArrayList<PmDocument>();
+		DocumentReqDTO reqDTO = null;
 		setSoftcertUserSuppDoc();
-		if (getManagedBean().getSoftcertUploadSuppDocList() != null
-				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSoftcertUploadSuppDocList())) {
 			SmSoftcertDoc softcertDoc = null;
 			for (SoftcertUploadSuppDocVO softcertUploadSuppDocVO : getManagedBean()
 					.getSoftcertUploadSuppDocList()) {
-				if (softcertSuppDocList != null
-						&& !softcertSuppDocList.isEmpty()
-						&& (softcertUploadSuppDocVO.getSuppDocList() == null || softcertUploadSuppDocVO
-								.getSuppDocList().isEmpty())) {
+				if (EntityHelper.isCollectionEmpty(softcertUploadSuppDocVO
+						.getSuppDocList())) {
 					softcertUploadSuppDocVO
 							.setSuppDocList(new ArrayList<SmSoftcertDoc>());
+					reqDTO = new DocumentReqDTO();
+					reqDTO.setBasicAccount(basic);
+					reqDTO.setCompanyTypeCode(businessType);
+					reqDTO.setOwner(softcertUploadSuppDocVO.getPersonnel()
+							.isEquityOwner());
+					reqDTO.setFirstUser(softcertUploadSuppDocVO.getPersonnel()
+							.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value()) ? true
+							: false);
+					reqDTO.setForeigner(softcertUploadSuppDocVO
+							.getPersonnel()
+							.getPmCountry()
+							.getCountryCode()
+							.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ? false
+							: true);
+					softcertSuppDocList = SmServiceLookup.getDocumentSO()
+							.retrieveSoftcertSuppDocuments(reqDTO)
+							.getDocumentList();
 					for (PmDocument softcertSuppDoc : softcertSuppDocList) {
 						softcertDoc = new SmSoftcertDoc();
 						softcertDoc.setPmDocument(softcertSuppDoc);
@@ -909,14 +933,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	private void setSoftcertUserSuppDoc() {
 		deleteUploadSoftcertDocSession();
-		if (getManagedBean().getSoftcertUploadSuppDocList() == null
-				|| getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+		if (EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSoftcertUploadSuppDocList())) {
 			getManagedBean().setSoftcertUploadSuppDocList(
 					new ArrayList<SoftcertUploadSuppDocVO>());
 		}
 
-		if (getManagedBean().getSoftCertSelectList() != null
-				&& !getManagedBean().getSoftCertSelectList().isEmpty()) {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSoftCertSelectList())) {
 			SoftcertUploadSuppDocVO suppDocVO = null;
 			for (SmPersonnel requestedPersonnel : getManagedBean()
 					.getSoftCertSelectList()) {
@@ -1062,8 +1086,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private SoftcertUploadSuppDocVO getSoftcertUploadDocVO(
 			SmPersonnel smPersonnel) {
 		SoftcertUploadSuppDocVO retVal = null;
-		if (getManagedBean().getSoftcertUploadSuppDocList() != null
-				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSoftcertUploadSuppDocList())) {
 			for (SoftcertUploadSuppDocVO docVO : getManagedBean()
 					.getSoftcertUploadSuppDocList()) {
 				if (docVO.getPersonnel().getIdentificationNo()
