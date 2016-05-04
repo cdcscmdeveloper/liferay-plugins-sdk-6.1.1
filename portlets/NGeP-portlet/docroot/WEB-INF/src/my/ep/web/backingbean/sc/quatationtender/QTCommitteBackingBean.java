@@ -1789,7 +1789,7 @@ public class QTCommitteBackingBean extends
 		}
 		
 		ScCommittee scCommitte = bean.getScQtCommittee().getScCommittee();
-		scCommitte.getScCommitteeMembers().removeAll(selectedList);
+		//scCommitte.getScCommitteeMembers().removeAll(selectedList);
 		if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 				.equalsIgnoreCase(scCommitte.getCommitteeType()
 						.getParameterCode())
@@ -1805,6 +1805,8 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.add(this.getManagedBean().getSelectedTabIndex(), bean);
 		for (int i = 0; i < selectedList.size(); i++) {
+			log.info("====delete committee member name==="+selectedList.get(i).getMemberName());
+			scCommitte.getScCommitteeMembers().remove(selectedList.get(i));
 			if (null != selectedList.get(i).getCommitteeMemberId()) {
 
 				selectedList.get(i).setDeleted(true);
@@ -1812,7 +1814,7 @@ public class QTCommitteBackingBean extends
 				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
 			}
-
+			
 		}
 
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
