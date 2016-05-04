@@ -373,6 +373,7 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2 = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2 = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;
 
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
