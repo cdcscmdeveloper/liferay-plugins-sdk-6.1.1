@@ -3305,9 +3305,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			  isEmpty = false;
 		  }else if(this.getManagedBean().getPlanSearchBean().getVotType().getParameterId()!=null){
 			  isEmpty = false;
-		  }else if(this.getManagedBean().getPlanSearchBean().getPtj()!=null 
-				  || this.getManagedBean().getPlanSearchBean().getKptj()!=null
-				  || this.getManagedBean().getPlanSearchBean().getMinistry()!=null){
+		  }else if((this.getManagedBean().getPlanSearchBean().getPtj()!=null && this.getManagedBean().getPlanSearchBean().getPtj().getOrgProfileId() != null)
+				  || this.getManagedBean().getPlanSearchBean().getKptj()!=null && this.getManagedBean().getPlanSearchBean().getKptj().getOrgProfileId() != null
+				  || this.getManagedBean().getPlanSearchBean().getMinistry()!=null && this.getManagedBean().getPlanSearchBean().getMinistry().getOrgProfileId() != null){
 			  isEmpty = false;
 		  }
 		  if(isEmpty){
