@@ -262,20 +262,37 @@
 	   	           styleClass="required"    rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}"/>
 	   <h:panelGroup id="uploadAp201Pg">
 			 <p:commandButton oncomplete="uploadAp201Dlg.show();return false;"
-				 update="uploadAp201Pg" value="#{lbl['lbl.bpm.choose.file']}" 
+				 update="uploadAp201Pg" icon="ui-icon-upload"
+				 rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FilePath == null}"
 				 disabled="#{ctBackingBean.managedBean.viewContract
 				 or ctBackingBean.getValueFromAmendment() or ctBackingBean.managedBean.disableAmendDetails}"/>	
 		     <h:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName}" 
+		           rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FilePath != null}"
 		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.contractVer.ctContractValue.ap201FilePath, ctBackingBean.managedBean.contractVer.ctContractValue.ap201FileName)}" />					
+		     <p:spacer width="3"/>
+		         <p:commandLink onclick="Ap201AttachDocDlg.show();" 
+			           rendered="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap201FilePath != null}"
+			           disabled="#{ctBackingBean.managedBean.viewContract}">
+			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			      </p:commandLink>
 		</h:panelGroup>
     </h:panelGrid> 
   </p:outputPanel>
-  <p:dialog id="uploadAp201Dlg" widgetVar="uploadAp201Dlg" modal="true" 
-	   	width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+   <p:confirmDialog id="Ap201AttachDocId" widgetVar="Ap201AttachDocDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                   update=":form:uploadAp201Pg, :form:uploadAp201Dlg" 
+		                   action="#{ctBackingBean.del201AttachDoc()}" oncomplete="Ap201AttachDocDlg.hide();"/>
+			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="Ap201AttachDocDlg.hide();" type="button" />
+		           </div>
+          </p:confirmDialog>
+  <p:dialog id="uploadAp201Dlg" widgetVar="uploadAp201Dlg" modal="true" resizable="false"
+	   	width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced" 
-			fileUploadListener="#{ctBackingBean.uploadAp201File}" 
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+			fileUploadListener="#{ctBackingBean.uploadAp201File}"  showButtons="false"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" 
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="uploadAp201Pg" >
 		</p:fileUpload> 
@@ -288,21 +305,38 @@
 			<p:outputLabel value="#{lbl['lbl.ct.bond.exempted.letter']}"  styleClass="required"/>
 	  		 <h:panelGroup id="uploadBondExemptedPg">
 			 <p:commandButton oncomplete="uploadBondExemptedDlg.show();return false;"
-				 update="uploadBondExemptedPg" value="#{lbl['lbl.bpm.choose.file']}" 
+				 update="uploadBondExemptedPg"  icon="ui-icon-upload"
+				  rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath == null}"
 				 disabled="#{ctBackingBean.managedBean.viewContract
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}"/>	
 		     <h:commandLink value="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName}" 
+		            rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath != null}"
 		          styleClass="blue_font" action="#{ctBackingBean.downloadFile(ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath, ctBackingBean.managedBean.ctContractAmount.bondExemptedFileName)}" />					
+		     <p:spacer width="3"/>
+		         <p:commandLink onclick="bondExemptedDocDlg.show();" 
+			           rendered="#{ctBackingBean.managedBean.ctContractAmount.bondExemptedFilePath != null}"
+			           disabled="#{ctBackingBean.managedBean.viewContract}">
+			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			      </p:commandLink>
 		</h:panelGroup>
     </h:panelGrid> 
   </p:outputPanel>
-  <p:dialog id="uploadBondExemptedDlg" widgetVar="uploadBondExemptedDlg" modal="true" 
-	   	width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+  <p:confirmDialog id="bondExemptedDocId" widgetVar="bondExemptedDocDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+                severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+                 <div class="ppRightBtn">
+		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		                   update=":form:uploadBondExemptedPg, :form:uploadBondExemptedDlg" 
+		                   action="#{ctBackingBean.delBondExemptedDoc()}" oncomplete="bondExemptedDocDlg.hide();"/>
+			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="bondExemptedDocDlg.hide();" type="button" />
+		           </div>
+    </p:confirmDialog>
+  <p:dialog id="uploadBondExemptedDlg" widgetVar="uploadBondExemptedDlg" modal="true" resizable="false"
+	   	width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced" 
-			fileUploadListener="#{ctBackingBean.uploadBondExemptedFile}" 
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+			fileUploadListener="#{ctBackingBean.uploadBondExemptedFile}"  showButtons="false"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" 
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="uploadBondExemptedPg" >
 		</p:fileUpload> 
