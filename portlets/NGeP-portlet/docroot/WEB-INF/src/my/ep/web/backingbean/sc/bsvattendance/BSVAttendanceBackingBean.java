@@ -1113,4 +1113,10 @@ public class BSVAttendanceBackingBean extends
 			}
 			briefingRegistration.setBsvAttendance(attanedList);
 		}
+	
+	public void updateBriefingAttendance(ScQtBsvAttendance bsvAttendance,List<ScQtBsvAttendance> listAttendance,boolean attendance){
+		int i=listAttendance.indexOf(bsvAttendance);
+		bsvAttendance.setAttended(attendance);
+		listAttendance.set(i, bsvAttendance);
+	}
 }
