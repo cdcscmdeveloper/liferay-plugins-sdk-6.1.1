@@ -329,7 +329,7 @@ public class BSVAttendanceBackingBean extends
 												.getMessage(
 														MessageConst.INFO_700026,
 														new String[] {
-																"Briefing and Site Visit",
+																 getMessageCommon("lbl.sc.notice.board.briefing.and.sitevisit.dtls"),
 																"" },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
