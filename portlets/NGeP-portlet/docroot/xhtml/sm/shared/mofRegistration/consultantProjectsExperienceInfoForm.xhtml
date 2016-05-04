@@ -77,6 +77,10 @@
 						rendered="#{consBean.progressStatus eq 'S'}" />
 					<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}"
 						rendered="#{consBean.progressStatus eq 'F'}" />
+					<h:outputText value="#{lbl['lbl.sm.projDtls.kiv']}" 
+						rendered="#{consBean.progressStatus eq 'K'}"/>
+					<h:outputText value="#{lbl['lbl.sm.projDtls.repeal']}" 
+						rendered="#{consBean.progressStatus eq 'R'}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
@@ -159,7 +163,7 @@
 										value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
 										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
 											itemValue="F" />
-										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.others']}"
+										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
 											itemValue="O" />
 									</p:selectOneRadio>
 									<ac:smFieldChangeAlert 
@@ -316,6 +320,10 @@
 											itemValue="S" />
 										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}"
 											itemValue="F" />
+										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.kiv']}"
+											itemValue="K" />
+										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.repeal']}"
+											itemValue="R" />
 									</p:selectOneRadio> 
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges
