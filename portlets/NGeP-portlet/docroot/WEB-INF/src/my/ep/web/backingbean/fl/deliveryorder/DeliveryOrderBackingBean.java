@@ -785,6 +785,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
 			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
+			if(getManagedBean().isFromDoPage()){
+				FulfilmentOrderBackingBean flOrderBB = new FulfilmentOrderBackingBean();
+				flOrderBB.getManagedBean().getPendingDoDataModel().reloadData();
+			}
 			return getManagedBean().getBackToPrevious();
 		}
 		else{
