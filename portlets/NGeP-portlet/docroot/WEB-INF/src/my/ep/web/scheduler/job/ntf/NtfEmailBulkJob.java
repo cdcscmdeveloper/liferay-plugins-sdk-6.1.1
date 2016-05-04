@@ -4,6 +4,7 @@
 package my.ep.web.scheduler.job.ntf;
 
 import my.ep.biz.service.intg.gfmas.IGfmasServiceSO;
+import my.ep.biz.service.ntf.scheduler.INtfEmailBulkSchedulerSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -22,9 +23,14 @@ public class NtfEmailBulkJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
-		IGfmasServiceSO  gfmasServiceSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.INTEGRATION,
-						IGfmasServiceSO.class);
+		INtfEmailBulkSchedulerSO iNtfEmailBulkSchedulerSO
+		= EpEjbBusinessDelegate.getInstance()
+		.getServiceObject(ModuleCodeConst.NTF_SCH,
+				INtfEmailBulkSchedulerSO.class);
+		
+		iNtfEmailBulkSchedulerSO.retrieveDb();
+		iNtfEmailBulkSchedulerSO.sendEmail();
+		iNtfEmailBulkSchedulerSO.updateDb();
 		
 	}
 }

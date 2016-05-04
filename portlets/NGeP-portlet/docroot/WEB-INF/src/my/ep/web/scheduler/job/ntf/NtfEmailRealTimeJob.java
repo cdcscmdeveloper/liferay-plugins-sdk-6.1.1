@@ -3,7 +3,12 @@
  */
 package my.ep.web.scheduler.job.ntf;
 
+import my.ep.biz.service.ntf.scheduler.INtfEmailRealTimeSchedulerSO;
+import my.ep.biz.service.ntf.scheduler.INtfMessageBulkSchedulerSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+
 import org.apache.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -17,6 +22,14 @@ public class NtfEmailRealTimeJob implements Job {
 	
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		log.info("1");
+		
+		INtfEmailRealTimeSchedulerSO iNtfEmailRealTimeSchedulerSO
+		= EpEjbBusinessDelegate.getInstance()
+		.getServiceObject(ModuleCodeConst.NTF_SCH,
+				INtfEmailRealTimeSchedulerSO.class);
+		
+		iNtfEmailRealTimeSchedulerSO.retrieveDb();
+		iNtfEmailRealTimeSchedulerSO.sendEmail();
+		iNtfEmailRealTimeSchedulerSO.updateDb();
 	}
 }
