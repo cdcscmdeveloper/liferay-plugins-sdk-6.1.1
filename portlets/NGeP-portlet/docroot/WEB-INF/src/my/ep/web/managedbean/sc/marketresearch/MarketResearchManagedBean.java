@@ -24,6 +24,7 @@ public class MarketResearchManagedBean extends BaseManagedBean{
 	private int activeIndex;
 	
 	private MarketResearchVO marketResearchVO;
+	private boolean isSearch;
 	
 	public MarketResearchManagedBean(){
 		
@@ -87,6 +88,20 @@ public class MarketResearchManagedBean extends BaseManagedBean{
 	 */
 	public void setScLoa(ScLoa scLoa) {
 		this.scLoa = scLoa;
+	}
+
+	/**
+	 * @return the isSearch
+	 */
+	public boolean isSearch() {
+		return isSearch;
+	}
+
+	/**
+	 * @param isSearch the isSearch to set
+	 */
+	public void setSearch(boolean isSearch) {
+		this.isSearch = isSearch;
 	}
 
 	

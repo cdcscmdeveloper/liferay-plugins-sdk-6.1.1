@@ -104,57 +104,60 @@ public class MarketResearchBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public MarketResearchPagingDataModel() {
-			super("marketdetailsId",false);
+			super("marketdetailsId");
 		}
 
 		@Override
 		protected ISearchResultBean<ScLoa> pageChangeListener(
 					ISearchBean<ScLoa> searchBean) {
-			IQTAwardSO qtAwardSO = null;
-			try {
-				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-				MarketResearchSearchBean mrSearchBean = getManagedBean().getMarketResearchSearchBean();
-				if(StringUtils.isNotBlank(mrSearchBean.getProcurementTitle())){
-					reqDTO.setProcurementTitle(mrSearchBean.getProcurementTitle());
-				}
-				
-				if(StringUtils.isNotBlank(mrSearchBean.getItemName())){
-					reqDTO.setItemName(mrSearchBean.getItemName());
-				}
-				
-				if(StringUtils.isNotBlank(mrSearchBean.getSpec())){
-					reqDTO.setSpec(mrSearchBean.getSpec());
-				}
-				
-				if(StringUtils.isNotBlank(mrSearchBean.getLoaNo())){
-					reqDTO.setLoaNo(mrSearchBean.getLoaNo());
-				}
-				
-				if(StringUtils.isNotBlank(mrSearchBean.getSelectedProcurementMethod())){
-					reqDTO.setProcurementMethod(mrSearchBean.getSelectedProcurementMethod());
-				}
 			
-				if(mrSearchBean.getLoaAckDateFrom() != null){
-					reqDTO.setLoaAckDateFrom(mrSearchBean.getLoaAckDateFrom());
-				}
+			if(getManagedBean().isSearch()){
+				IQTAwardSO qtAwardSO = null;
+				try {
+					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+					MarketResearchSearchBean mrSearchBean = getManagedBean().getMarketResearchSearchBean();
+					if(StringUtils.isNotBlank(mrSearchBean.getProcurementTitle())){
+						reqDTO.setProcurementTitle(mrSearchBean.getProcurementTitle());
+					}
+					
+					if(StringUtils.isNotBlank(mrSearchBean.getItemName())){
+						reqDTO.setItemName(mrSearchBean.getItemName());
+					}
+					
+					if(StringUtils.isNotBlank(mrSearchBean.getSpec())){
+						reqDTO.setSpec(mrSearchBean.getSpec());
+					}
+					
+					if(StringUtils.isNotBlank(mrSearchBean.getLoaNo())){
+						reqDTO.setLoaNo(mrSearchBean.getLoaNo());
+					}
+					
+					if(StringUtils.isNotBlank(mrSearchBean.getSelectedProcurementMethod())){
+						reqDTO.setProcurementMethod(mrSearchBean.getSelectedProcurementMethod());
+					}
 				
-				if(mrSearchBean.getLoaAckDateTo() != null){
-					reqDTO.setLoaAckDateTo(mrSearchBean.getLoaAckDateTo());
-				}
-				
-				reqDTO.setScLoaSearchBean(searchBean);
-				qtAwardSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTAwardSO.class);
-				AwardSupplierResDTO resDTO = qtAwardSO
-						.searchMarketResearchLOA(reqDTO);
-				if (resDTO != null) {
-					return resDTO.getLoaResultBean();
-				}
-			}catch(Exception e){
-				throw e;
-			}finally{
-				qtAwardSO = null;
+					if(mrSearchBean.getLoaAckDateFrom() != null){
+						reqDTO.setLoaAckDateFrom(mrSearchBean.getLoaAckDateFrom());
+					}
+					
+					if(mrSearchBean.getLoaAckDateTo() != null){
+						reqDTO.setLoaAckDateTo(mrSearchBean.getLoaAckDateTo());
+					}
+					
+					reqDTO.setScLoaSearchBean(searchBean);
+					qtAwardSO = BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTAwardSO.class);
+					AwardSupplierResDTO resDTO = qtAwardSO
+							.searchMarketResearchLOA(reqDTO);
+					if (resDTO != null) {
+						return resDTO.getLoaResultBean();
+					}
+				}catch(Exception e){
+					throw e;
+				}finally{
+					qtAwardSO = null;
+				}	
 			}
 			return null;
 		}
@@ -176,6 +179,7 @@ public class MarketResearchBackingBean extends
 	}
 	
 	public void searchMarketResearch(){
+		getManagedBean().setSearch(true);
 		MarketResearchSearchBean mrSearchBean = getManagedBean().getMarketResearchSearchBean();		
 		if(mrSearchBean.getLoaAckDateFrom() != null && mrSearchBean.getLoaAckDateTo() != null){
 			if (DateUtils.isDateGreater(mrSearchBean.getLoaAckDateFrom() ,
