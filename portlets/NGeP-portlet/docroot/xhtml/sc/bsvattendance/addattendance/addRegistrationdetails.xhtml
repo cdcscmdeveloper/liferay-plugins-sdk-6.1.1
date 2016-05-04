@@ -154,8 +154,8 @@
 			<p:column style="width:6%;white-space: normal; text-align:center;">
 				<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}"
 					disabled="#{(bsvAttendanceBackingBean.managedBean.maintanceFlow and !scQtBriefAttendace.brandNew ) or !scQtBriefAttendace.authorized}">
-					<p:ajax event="change" process="@this" partialSubmit="true"
-						update="@this"></p:ajax>
+					<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
+						 listener="#{bsvAttendanceBackingBean.updateBriefingAttendance(scQtBriefAttendace,bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.bsvAttendance,scQtBriefAttendace.attended)}"></p:ajax>
 				</p:selectBooleanCheckbox>
 			</p:column>
 		</p:dataTable>

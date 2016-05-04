@@ -28,12 +28,12 @@
 							style="float:left;" />
 					</p:column>
 					<p:column width="10%" style="text-align:right" >
-					<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@form"
+					<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@form" update="@form"
 						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						style="float:right;" />
 						
-					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
+					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form" update="@form"
 						action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('save')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						style="float:right;" />
