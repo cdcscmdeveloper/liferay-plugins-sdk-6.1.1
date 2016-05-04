@@ -450,7 +450,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		double totalDeliveryQty = 0;
 		double totalDeliveryAmount = 0;
 		if(!anyAddressSelected){
-			throw new EpException(MessageConst.ERROR_740045, new String[]{ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			throw new EpException(MessageConst.ERROR_740045, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}else{
 			if(!FLProcessNameConst.UPDATE_BTN.equalsIgnoreCase(actionName)){
 				for(FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
