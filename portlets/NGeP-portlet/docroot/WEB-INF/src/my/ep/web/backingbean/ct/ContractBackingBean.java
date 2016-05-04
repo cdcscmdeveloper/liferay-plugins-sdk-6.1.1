@@ -1959,6 +1959,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			    
 			    getManagedBean().getContractVer().getCtContractValue().setAp201FileName(item.getFileName());
 			    getManagedBean().getContractVer().getCtContractValue().setAp201FilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			    RequestContext.getCurrentInstance().execute("uploadAp201Dlg.hide()");
 			}
 			
 			 /**
@@ -1982,6 +1983,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			    
 			    getManagedBean().getCtContractAmount().setBondExemptedFileName(item.getFileName());
 			    getManagedBean().getCtContractAmount().setBondExemptedFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			    RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();");
 			}
 			
 			/**
@@ -2901,6 +2903,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
 		}
 		
+		public void del201AttachDoc(){
+			getManagedBean().getContractVer().getCtContractValue().setAp201FilePath(null);
+			getManagedBean().getContractVer().getCtContractValue().setAp201FileName(null);
+		}
+		
+		public void delBondExemptedDoc(){
+			 getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFilePath(null);
+			 getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFileName(null);
+		}
 		
 		/**
 		 * The method used for searching the agency.
