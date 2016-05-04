@@ -92,8 +92,8 @@
 					</p:outputPanel>
 				</td>
 				
-				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td class="tdContent"><p:inputText id="ownerNameId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.ownername']}"
+				<td class="tdTitle"><p:outputLabel value="#{lbl[registrationBackingBean.getOwnerLabel()]}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:inputText id="ownerNameId" required="#{!empty param['disableValidation']}" label="#{lbl[registrationBackingBean.getOwnerLabel()]}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
 						size="40" maxlength="80" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}"/>
 					&#160;
