@@ -37,6 +37,7 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 	private String supplierName;
 	private String epNo;
 	private String siteVisitType;
+	private List<Long> stateLs;
 	
 	private IPagingDataModel<SmAppl> searchDataModel = new SearchPagingDataModel();
 
@@ -66,15 +67,20 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 		protected ISearchResultBean<SmAppl> pageChangeListener(
 				ISearchBean<SmAppl> searchBean) {
 			SVCTaskListBackingBean bb = new SVCTaskListBackingBean();
-			System.out.println("getApplNo:"+bb.getManagedBean().getApplNo());
-			System.out.println("getStateId:"+bb.getManagedBean().getStateId());
-			System.out.println("getDistrictId:"+bb.getManagedBean().getDistrictId());
-			System.out.println("getSupplierName:"+bb.getManagedBean().getSupplierName());
-			System.out.println("getSitevisitType:"+bb.getManagedBean().getSiteVisitType());
+			//System.out.println("getApplNo:"+bb.getManagedBean().getApplNo());
+			//System.out.println("getStateId:"+bb.getManagedBean().getStateId());
+			//System.out.println("getDistrictId:"+bb.getManagedBean().getDistrictId());
+			//System.out.println("getSupplierName:"+bb.getManagedBean().getSupplierName());
+			//System.out.println("getSitevisitType:"+bb.getManagedBean().getSiteVisitType());
+			//System.out.println("getStateLS:"+bb.getManagedBean().getStateLs().size());
 			if (bb.getManagedBean().getDistrictId()==0 && bb.getManagedBean().getStateId()==0 && StringUtils.isBlank(bb.getManagedBean().getApplNo()) && 
 					StringUtils.isBlank(bb.getManagedBean().getSupplierName()) && StringUtils.isBlank(bb.getManagedBean().getEpNo())) {
 				System.out.println("******SearchResultBean******");
-				return new SearchResultBean();
+				
+				if(bb.getManagedBean().getStateLs() == null  || bb.getManagedBean().getStateLs().size() < 1){
+					return new SearchResultBean();
+				}
+				
 			}
 
 			ISiteAssignSO siteAssignSO = (ISiteAssignSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteAssignSO.class);
@@ -97,6 +103,10 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 					}
 				}
 				
+				if(bb.getManagedBean().getStateLs() != null && bb.getManagedBean().getStateLs().size() > 0){
+					reqDTO.setStateLs(bb.getManagedBean().getStateLs());
+				}
+				
 				reqDTO.setSearchBean(searchBean);
 				
 
@@ -115,21 +125,24 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 	
 	public List<Long> getSiteVisitStatusesByType(String svType){
 		List<Long> statusLs = new ArrayList<Long>();
-		
-		 switch(svType)
-	      {
-	         case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL :
-	        	statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL); 
-	        	statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL);
-	            break;
-	         case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_BEFORE :
-	        	 statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL);
-	        	 break;
-	         case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_AFTER :
-	        	 statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL);
-	            break;
-	      }
-
+		if(svType != null){
+			switch(svType)
+			{
+			case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL :
+				statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL); 
+				statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL);
+				break;
+			case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_BEFORE :
+				statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL);
+				break;
+			case SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_AFTER :
+				statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL);
+				break;
+			}
+		}else{
+			statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_BEFORE_APPROVAL); 
+			statusLs.add(my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL);
+		}
 		 return statusLs;
 	}
 	
@@ -189,6 +202,16 @@ public class SVCTaskListManagedBean extends BaseManagedBean {
 	}
 	public void setSiteVisitType(String siteVisitType) {
 		this.siteVisitType = siteVisitType;
+	}
+
+
+	public List<Long> getStateLs() {
+		return stateLs;
+	}
+
+
+	public void setStateLs(List<Long> stateLs) {
+		this.stateLs = stateLs;
 	}
 	
 	
