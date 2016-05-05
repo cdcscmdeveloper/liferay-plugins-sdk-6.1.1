@@ -107,6 +107,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<PmDocument> gstDocLs;
 	private SmGstSupplierDoc selectedGstSupplierDoc;
 	
+	private boolean myOwner;
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -598,6 +600,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSalutationItems(List<SelectItem> salutationItems) {
 		this.salutationItems = salutationItems;
+	}
+
+	public boolean isMyOwner() {
+		return myOwner;
+	}
+
+	public void setMyOwner(boolean myOwner) {
+		this.myOwner = myOwner;
 	}
 
 }
