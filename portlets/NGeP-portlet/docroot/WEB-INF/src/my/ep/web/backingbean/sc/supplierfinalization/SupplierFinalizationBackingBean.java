@@ -4428,7 +4428,7 @@ public class SupplierFinalizationBackingBean extends
 			rejectedRecommendDtlIds = dataType.getGroupkeyAll();
 
 			for (int i = 0; i < rejectedRecommendDtlIds.size(); i++) {
-				String rejectedRecommendDtlId = rejectedRecommendDtlIds.get(0);
+				String rejectedRecommendDtlId = rejectedRecommendDtlIds.get(i);
 				if (StringUtils.isBlank(rejectedRecommendDtlId)) {
 					rejectedRecommendDtlIds.remove(i--);
 				}
