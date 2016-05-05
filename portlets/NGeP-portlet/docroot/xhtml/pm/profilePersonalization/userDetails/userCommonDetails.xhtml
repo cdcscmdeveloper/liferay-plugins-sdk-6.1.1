@@ -1,160 +1,125 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<ui:define name="contentSection">
-	<style>
-	.ui-datatable-odd {
-    background: #ffffff;
-}
-
-.ui-datatable-even {
-    background: #F2F5F9;
-}
-.myTable thead {
-    display:none;
-}
-	</style>
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="true" escape="false"/>
-		<ui:param name="orgName" value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
-					 			profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
-					 			: profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />	
-		<p:outputPanel id="opUserCommonDet">
-		     <table class="ppTwoTable">		
-		     	<tr>
-			   <td>		
-				<table>
-							<tr>
-								<td style="padding-left: 0px;width:25px;">
-									 <h:graphicImage value="/css/images/design/icon-organization.png" />
-								</td>
-								<td>
-									<h:outputText style="white-space:normal;" value="#{orgName}" /> 
-								</td>
-							</tr>
-						</table>
-					</td>
-		          </tr>
-		     <c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">	
-		         <tr>
-		          <td>		
-				  <table>
-							<tr>
-								<td style="padding-left: 0px;width:25px;">
-									    <h:graphicImage value="/css/images/design/icon-account-info.png" />
-								</td>
-									<td style="padding-left: 0px;width:150px;">
-									     <h:outputText value="#{lbl['lbl.pm.ucd.mof.exp']} " /> 
-									</td>
-								<td style="font-weight: bold;">
-								       <h:outputText value=":" rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}"/>
-								       <h:outputText value=": -" rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate == null}"/>
-									 <h:outputText value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
-									    rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}" >
-						             <f:convertDateTime 
-									     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					                 </h:outputText>  
-								</td>
-							</tr>
-						</table>
-					</td>
-		          </tr>
-		       </c:if>
-				<c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">	
-		          <tr>
-		          <td>		
-				  <table>
-							<tr>
-								<td style="padding-left: 0px;width:25px;">
-									    <h:graphicImage value="/css/images/design/icon-account-info.png" />
-								</td>
-									<td style="padding-left: 0px;width:150px;">
-									     <h:outputText  value="#{lbl['lbl.pm.ucd.softcert.exp']}" />
-									</td>
-								<td style="font-weight: bold;">
-								       <h:outputText value=":" rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}"/>
-								       <h:outputText value=": -" rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate == null}"/>
-									   <h:outputText value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}" 
-									       rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}" >
-						               <f:convertDateTime
-									        pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					                 </h:outputText>   
-								</td>
-							</tr>
-						</table>
-					</td>
-		          </tr>
-		         </c:if>
-		          <tr style="border-bottom: 2px dotted #ddd">
-		          <td> <h:outputText value="#{lbl['lbl.pm.ucd.notification']}" style="font-weight: bold;"/> </td>
-		          </tr>
-		         
-		            <tr>
-		          <td>		
-				  <table>
-							<tr>
-								<td style="padding-left: 0px;width:25px;">
-									        <h:graphicImage value="/css/images/design/icon-sms.png" />
-								</td>
-									<td style="padding-left: 0px;width:285px;">
-									        <h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull}" /> 
-									</td>
-								    <td>
-									       <p:selectBooleanCheckbox id="itPreSms" 
-									          value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" disabled="true" >							
-					                      </p:selectBooleanCheckbox>	
-								   </td>
-							</tr>
-						</table>
-					</td>
-		          </tr>
-		          
-		          <tr>
-		          <td>		
-				  <table>
-							<tr style="border-bottom: 2px dotted #ddd">
-								<td style="padding-left: 0px;width:25px;">
-									           <h:graphicImage value="/css/images/design/icon-email.png" />
-								</td>
-									<td style="padding-left: 0px;width:285px;">
-									    <h:outputText  value="#{profilePersonalizationBackingBean.managedBean.selectedUser.emailFull}"/>	
-									</td>
-								    <td>
-									          <p:selectBooleanCheckbox id="itPreEmail" 
-									               value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}"  disabled="true" >					
-					</p:selectBooleanCheckbox> 
-								   </td>
-							</tr>
-						</table>
-					</td>
-		          </tr>
-		        
-		         <tr>
-			    <td>
-					<table>
-							<tr>
-								<td><h:outputText  value="#{lbl['lbl.pm.ucd.roles']}" style="font-weight: bold;height:10px;vertical-align:top;"/>  
-						   </td>								  
-							</tr>
-							<tr>							
-							<td style="width:345px;"> 
-							
-							<p:dataTable var="rolesList" value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
-							     scrollable="true" scrollHeight="80" styleClass="myTable">
-							      <p:column>
-                                      <h:outputText value="#{rolesList}" />
-                                  </p:column>
-							</p:dataTable></td>
-							</tr>
-						</table>
-					</td>
-				</tr>			
-		         
-		  </table>
-		  </p:outputPanel>
-	</ui:define>
+   template="/WEB-INF/facelets/templates/basic_template.xhtml"
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:p="http://primefaces.org/ui"
+   xmlns:c="http://java.sun.com/jsp/jstl/core">
+   <ui:define name="contentSection">
+      <style>
+         .ui-datatable-odd {
+         background: #ffffff;
+         }
+         .ui-datatable-even {
+         background: #F2F5F9;
+         }
+         .myTable thead {
+         display:none;
+         }
+      </style>
+      <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="true" escape="false"/>
+      <ui:param name="orgName" value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
+         profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
+         : profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
+      <p:outputPanel id="opUserCommonDet">
+         <table class="ppTwoTable">
+            <tr>
+               <td style="padding-left: 0px;width:25px;">
+                  <h:graphicImage value="/css/images/design/icon-organization.png" />
+               </td>
+               <td>
+                  <h:outputText style="white-space:normal;" value="#{orgName}" />
+               </td>
+               <td rowspan="4">
+                  <table>
+                     <c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">
+                        <tr>
+                           <td colspan="2" style="font-weight: bold;">
+                              <h:outputText value="#{lbl['lbl.pm.ucd.mof.exp']}" />
+                              <h:outputText value="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null ? ' : ' : ' : - '}" />
+                              <h:outputText value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
+                                 rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}" >
+                                 <f:convertDateTime 
+                                    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+                              </h:outputText>
+                           </td>
+                        </tr>
+                     </c:if>
+                     <c:if test="#{profilePersonalizationBackingBean.virtualCertShown}">
+                        <tr>
+                           <td style="width:15px;">
+                              <h:graphicImage value="/css/images/design/ico-view.png" />
+                           </td>
+                           <td style="color: blue; font-weight: bold; text-align: left;">
+                              <p:commandLink action="#{supplierAlertBackingBean.navigateToViewVirtualCert}" value="View Virtual Cert" />
+                           </td>
+                        </tr>
+                     </c:if>
+                     <c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
+                        <tr>
+                           <td colspan="2" style="font-weight: bold;">
+                              <h:outputText  value="#{lbl['lbl.pm.ucd.softcert.exp']}" />
+                              <h:outputText value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null ? ' : ' : ' : - '}"/>
+                              <h:outputText value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}" 
+                                 rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}" >
+                                 <f:convertDateTime
+                                    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+                              </h:outputText>
+                           </td>
+                        </tr>
+                     </c:if>
+                     <c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
+                        <tr>
+                           <td style="width:15px;">
+                              <h:graphicImage value="/css/images/design/ico-view.png" />
+                           </td>
+                           <td style="color: blue; font-weight: bold; text-align: left;">
+                              <p:commandLink action="#{softCertBackingBean.navigateToViewSoftCert}"  value="View Soft Cert" />
+                           </td>
+                        </tr>
+                     </c:if>
+                  </table>
+               </td>
+            </tr>
+            <tr>
+               <td style="width:25px;">
+                  <h:graphicImage value="/css/images/design/icon-email.png" />
+               </td>
+               <td style="width:285px;">
+                  <h:outputText  value="#{profilePersonalizationBackingBean.managedBean.selectedUser.emailFull}"/>&#160;
+                  <h:graphicImage value="/css/images/design/tick.png" rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}"/>
+               </td>
+            </tr>
+            <tr>
+               <td style="width:25px;">
+                  <h:graphicImage value="/css/images/design/icon-sms.png" />
+               </td>
+               <td style="width:285px;">
+                  <h:outputText style="white-space:normal;" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull}" />&#160;
+                  <h:graphicImage value="/css/images/design/tick.png" rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}"/>
+               </td>
+            </tr>
+            <tr>
+               <td style="width:25px;">
+                  <h:graphicImage value="/css/images/design/icon-account-info.png" />
+               </td>
+               <td>
+                  <table>
+                     <tr>
+                        <td style="width:345px;">
+                           <p:dataTable var="rolesList" value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
+                              scrollable="true" scrollHeight="80" styleClass="myTable">
+                              <p:column>
+                                 <h:outputText value="#{rolesList}" />
+                              </p:column>
+                           </p:dataTable>
+                        </td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+         </table>
+      </p:outputPanel>
+   </ui:define>
 </ui:composition>
