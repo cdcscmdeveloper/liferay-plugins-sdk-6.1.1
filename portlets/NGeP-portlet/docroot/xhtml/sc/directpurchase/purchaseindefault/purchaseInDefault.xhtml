@@ -83,7 +83,7 @@
 								</p:inputText></td>
 
 							<td style="width: 39px;text-align: center;">
-								#{lbl['lbl.sc.purchase.in.default.val.period.until']}</td>
+							<h:outputText value="#{lbl['lbl.sc.purchase.in.default.val.period.until']}" style="font-weight:bold" /></td>
 
 							<td><p:inputText disabled="true" size="12"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}">
@@ -216,7 +216,7 @@
 								</p:inputText></td>
 
 							<td style="width: 39px;text-align: center;">
-								#{lbl['lbl.sc.purchase.in.default.val.period.until']}</td>
+								<h:outputText value="#{lbl['lbl.sc.purchase.in.default.val.period.until']}" style="font-weight:bold" /></td>
 
 							<td><p:inputText disabled="true" size="12"
 									value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.endDate}">
