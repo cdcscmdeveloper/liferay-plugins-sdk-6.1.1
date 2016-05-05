@@ -2535,4 +2535,24 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 			ruleSO = null;
 		}
 	}
+	
+	/**
+	 * To update closing date and proposal validity days..
+	 */
+	public void handlePublishClosingDate() {
+		debugLogger("handlePublishClosingDate");
+		ScQt scQt = this.getManagedBean().getQt();
+
+		updatePublishClosingDate(scQt);
+	}
+	
+	/**
+	 * To update proposal validity days..
+	 */
+	public void handleProposalValidityDate() {
+		debugLogger("handleProposalValidityDate");
+		ScQt scQt = this.getManagedBean().getQt();
+
+		updateProposalValidityDate(scQt);
+	}
 }
