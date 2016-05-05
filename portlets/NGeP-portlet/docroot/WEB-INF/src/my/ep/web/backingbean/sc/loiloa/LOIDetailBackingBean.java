@@ -4472,7 +4472,7 @@ public class LOIDetailBackingBean extends
 		
 		if (scQtRecommend.getActiveSupplierCount() == 0) {
 			scQtRecommendDtl.setAwardQty(
-					scQtRecommend.getRequestItem().getQuantity());
+					scQtRecommend.getOrderQty());
 		} else {
 			if (scQtRecommendDtl.getAwardQty() == null) {
 				scQtRecommendDtl.setAwardQty(new BigDecimal(0));
