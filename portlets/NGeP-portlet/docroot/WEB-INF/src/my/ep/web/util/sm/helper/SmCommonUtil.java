@@ -239,11 +239,42 @@ public class SmCommonUtil {
 		reqDTO.setParameterType(paramType);
 		reqDTO.setLanguageCode(lang);
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IParameterSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
 		ParameterResDTO resDTO = reqSO.retrieveParameterDescListByType(reqDTO);
 
 		return resDTO.getParameterDescList();
 	}
+
+	/**
+	 * Retrieve parameter description list by param type,param code and language
+	 * code.
+	 * 
+	 * @param String
+	 *            paramType
+	 * @param String
+	 *            lang
+	 * @param String
+	 *            paramCode
+	 * @return PmParameterDesc
+	 */
+	public static PmParameterDesc retrieveParameterDescByTypeAndCodeAndLang(
+			String paramType, String paramCode) {
+		PmParameterDesc retVal = null;
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(paramType);
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		reqDTO.setParameterCode(paramCode);
+		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		ParameterResDTO resDTO = reqSO.retrieveParameterDescListByType(reqDTO);
+		if (!EntityHelper.isCollectionEmpty(resDTO.getParameterDescList())) {
+			retVal = resDTO.getParameterDescList().get(0);
+		}
+		return retVal;
+	}
+	
 
 	/**
 	 * Retrieve country by country code.

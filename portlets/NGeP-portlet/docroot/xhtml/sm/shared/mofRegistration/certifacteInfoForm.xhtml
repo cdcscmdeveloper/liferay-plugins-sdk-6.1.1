@@ -55,11 +55,11 @@
 				
 				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierCerts}"/>
 
-				<p:column headerText="#{lbl['lbl.sm.cert.certName']}">
+				<p:column headerText="#{lbl['lbl.sm.cert.certName']}" style="width : 35%;white-space : normal">
 					<h:outputText value="#{certBean.certName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.cert.certBody']}">
+				<p:column headerText="#{lbl['lbl.sm.cert.certBody']}" style="width : 35%;white-space : normal">
 					<h:outputText value="#{certBean.pmCertBody.bodyName}" rendered="#{not empty certBean.pmCertBody}"/>
 					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty certBean.pmCertBody}"/>
 				</p:column>
@@ -138,7 +138,7 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="500px" height="275px"
+	<p:dialog width="550px" height="275px"
 		header="#{lbl['lbl.sm.cert.certDiaHdrMsg']}" widgetVar="certDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
 		id="certPop" closable="false">
@@ -149,32 +149,13 @@
 	
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.cert.certType']}"
-							value="#{backingBean.managedBean.selectedCert.certTypeId}"
-							id="certTypeId" rendered="true">
-							<f:selectItems value="#{backingBean.getDropdownValues('CRT')}" />
-							<p:ajax event="change" partialSubmit="true" process="@this"
-								update="certBody" listener="#{backingBean.assignCertBodyList}" />
-						</p:selectOneMenu> 
-						<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges 
-								and not empty backingBean.managedBean.selectedCert.supplierCertId}"
-							oriValue="#{backingBean.managedBean.latestCert.certTypeId}" 
-							currValue="#{backingBean.managedBean.selectedCert.certTypeId}" 
-							alertValue="#{(not empty backingBean.managedBean.latestCert.certTypeId) ?
-								backingBean.getCertTypeLabelById(backingBean.managedBean.latestCert.certTypeId)
-								: lbl['lbl.txt.na']}"/>
-						<p:message id="certTypeMsg" for="certTypeId" showSummary="true"
-							showDetail="false" display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']}" /></td>
+					<td><h:outputText value="#{backingBean.managedBean.glp.codeName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 230px;margin-bottom: 5px;"
 							id="certBody" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.cert.certBody']}"
 							value="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}">
@@ -183,6 +164,8 @@
 								value="#{backingBean.managedBean.certBodyLs}"
 								itemValue="#{certBody.certBodyId}"
 								itemLabel="#{certBody.bodyName}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								update="certNameOutPanelId" listener="#{backingBean.onChangeCertBody}" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -195,20 +178,12 @@
 				</tr>
 	
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="certName"
-							required="#{backingBean.managedBean.valueReqd}"
-							label=" #{lbl['lbl.sm.cert.certName']}"
-							value="#{backingBean.managedBean.selectedCert.certName}" size="35" />
-						<ac:smFieldChangeAlert 
-							isShow="#{backingBean.managedBean.showFieldChanges 
-								and not empty backingBean.managedBean.selectedCert.supplierCertId}"
-							oriValue="#{backingBean.managedBean.latestCert.certName}" 
-							currValue="#{backingBean.managedBean.selectedCert.certName}" 
-							alertValue="#{backingBean.managedBean.latestCert.certName}"/>
-						<p:message id="certNameMsg" for="certName" showSummary="true"
-							showDetail="false" display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']}" /></td>
+					<td style="white-space : normal">
+						<p:outputPanel id="certNameOutPanelId">
+							<h:outputText value="#{backingBean.managedBean.selectedCert.certName}" />
+						</p:outputPanel>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']}" /> <p:outputLabel

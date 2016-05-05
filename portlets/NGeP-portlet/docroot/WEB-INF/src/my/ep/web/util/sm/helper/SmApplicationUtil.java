@@ -7678,9 +7678,8 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
-	
-	public static void generateOfflineSuppDocChecklistPdf(SmAppl smAppl){
-		try{
+	public static void generateOfflineSuppDocChecklistPdf(SmAppl smAppl) {
+		try {
 			String tmpPath = null;
 			String tmpFolder = SmCommonUtil
 					.getUploadFilePath(SupplierManagementConst.OFFLINE_DOC_CHECKLIST_PATH);
@@ -7698,12 +7697,12 @@ public class SmApplicationUtil {
 			context.put("header", SmCommonUtil.getMessage(
 					"lbl.sm.suppDoc.offline.checklist.application.no", null));
 			context.put("applNo", smAppl.getApplNo());
-			context.put("note1",
-					SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note1", null));
-			context.put("note2",
-					SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note2", null));
-			context.put("note3",
-					SmCommonUtil.getMessage("lbl.sm.suppDoc.offline.note3", null));
+			context.put("note1", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.note1", null));
+			context.put("note2", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.note2", null));
+			context.put("note3", SmCommonUtil.getMessage(
+					"lbl.sm.suppDoc.offline.note3", null));
 			context.put("peninAddr1", SmCommonUtil.getMessage(
 					"lbl.sm.suppDoc.offline.peninAddr1", null));
 			context.put("peninAddr2", SmCommonUtil.getMessage(
@@ -7720,7 +7719,7 @@ public class SmApplicationUtil {
 			context.put("docDesc", SmCommonUtil.getMessage(
 					"lbl.sm.suppDoc.document.description", null));
 			SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		}
 	}
@@ -7751,6 +7750,18 @@ public class SmApplicationUtil {
 		appl = SmServiceLookup.getMofRegistrationSO().updateSmAppl(reqDTO)
 				.getSmAppl();
 		return appl;
+	}
+
+	public static PmDocument getCertDocByCertBodyId(Long certBodyId) {
+		DocumentReqDTO reqDTO = new DocumentReqDTO();
+		reqDTO.setCertBodyId(certBodyId);
+		List<PmDocument> docList = SmServiceLookup.getDocumentSO()
+				.retrieveGlpCertificatesByCertBodyId(reqDTO).getDocumentList();
+		if (!EntityHelper.isCollectionEmpty(docList)) {
+			return docList.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
