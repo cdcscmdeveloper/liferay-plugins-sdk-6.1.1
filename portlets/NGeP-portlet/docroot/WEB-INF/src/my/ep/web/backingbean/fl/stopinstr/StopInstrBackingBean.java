@@ -175,7 +175,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			throw new EpException(MessageConst.ERROR_700020);
 		}
 		renewSesionObject();
-		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
+		/*if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFlStopInstr().getStopInstrNo());
 			paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
@@ -184,7 +184,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.StopInstructionNo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 			commonBackingBean.getManagedBean().setParamMap(paramMap);
 			return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-		}
+		}*/
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
