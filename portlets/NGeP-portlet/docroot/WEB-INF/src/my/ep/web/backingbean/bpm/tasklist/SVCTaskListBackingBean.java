@@ -21,13 +21,20 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
@@ -35,6 +42,8 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.bpm.tasklist.SVCTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmSvcTaskVO;
 
@@ -303,6 +312,29 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 			getManagedBean().setSupplierName(null);
 			getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
 			getManagedBean().getSearchDataModel().reloadData();
+		}else{
+			getManagedBean().setApplNo(null);
+			getManagedBean().setDistrictId(0);
+			getManagedBean().setSupplierName(null);
+			getManagedBean().setEpNo(null);
+			getManagedBean().setStateId(0);
+			getManagedBean().setSiteVisitType(SupplierManagementConst.SITE_VISIT_ASSIGNMENT_TYPE_ALL);
+			
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			getManagedBean().setStateLs(null);
+			List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
+			if(activeOrg.size() > 0){
+				PmUserOrg userOrg = activeOrg.get(0);
+				PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
+				
+				if(pmZone != null){
+					List<Long> zoneLs = getStateIdLsByZoneId(pmZone.getZoneId());
+					
+					getManagedBean().setStateLs(zoneLs);
+					getManagedBean().getSearchDataModel().reloadData();
+				}
+			}
+			
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -310,5 +342,24 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 				.getNavigationHandler()
 				.handleNavigation(fc, null,SVC_TASK_LIST_XHTML);
 
+	}
+	
+	private List<Long> getStateIdLsByZoneId(Long zoneId){
+		ZoneReqDTO reqDTO =  new ZoneReqDTO();
+		reqDTO.setZoneId(zoneId);
+		ZoneResDTO resDTO =SmServiceLookup.getZoneSO().retrieveZoneStateByZoneId(reqDTO);
+		PmZone pmZone = resDTO.getPmZone();
+		
+		List<Long> zstateLs = new ArrayList<Long>();
+		
+		if(pmZone != null){
+			if(pmZone.getPmZoneStates().size() > 0){
+				for(PmZoneState zState : pmZone.getPmZoneStates()){
+					zstateLs.add(zState.getPmState().getStateId());
+				}
+			}
+		}
+		
+		return zstateLs;
 	}
 }
