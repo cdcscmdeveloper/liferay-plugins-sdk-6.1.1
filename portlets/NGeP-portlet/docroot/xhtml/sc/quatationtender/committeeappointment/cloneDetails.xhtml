@@ -178,7 +178,7 @@
 					rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
 					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
 				</ui:fragment>
-				<p:dataTable id="committeeListId"
+				<p:dataTable id="cloneappointMentcommitteeListId"
 					value="#{qTCommitteBackingBean.managedBean.cloneCommitteMemebers}"
 					var="committeeMember" rowKey="#{committeeMember}"
 					selection="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}"
