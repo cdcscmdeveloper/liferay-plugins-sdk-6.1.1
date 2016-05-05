@@ -1,7 +1,10 @@
 package my.ep.web.managedbean.sc.supplierproposal;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +80,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	// Tab Menu
 	private int prepareActiveIndex;
-	
+
 	private List<ScQtDocReport> scQtDocReports;
 
 	private ScQtProposalChecklist selectDetails;
@@ -190,28 +193,29 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	private Map<Long, TemplateSpecBean> zoneTplSpecBeanMap;
 	private StreamedContent sampleLabelStreamContent;
-	
-	/** The spki backing bean. */
-    @ManagedProperty(value="#{spkiBackingBean}")
-    private SpkiBackingBean spkiBackingBean;
-    
-    /**
-     * Gets the spki backing bean.
-     *
-     * @return the spki backing bean
-     */
-    public SpkiBackingBean getSpkiBackingBean() {
-    	return spkiBackingBean;
-    }
 
-    /**
-     * Sets the spki backing bean.
-     *
-     * @param spkiBackingBean the new spki backing bean
-     */
-    public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
-    	this.spkiBackingBean = spkiBackingBean;
-    }
+	/** The spki backing bean. */
+	@ManagedProperty(value = "#{spkiBackingBean}")
+	private SpkiBackingBean spkiBackingBean;
+
+	/**
+	 * Gets the spki backing bean.
+	 * 
+	 * @return the spki backing bean
+	 */
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	/**
+	 * Sets the spki backing bean.
+	 * 
+	 * @param spkiBackingBean
+	 *            the new spki backing bean
+	 */
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
+	}
 
 	/**
 	 * 
@@ -419,7 +423,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtProposal the scQtProposal to set
+	 * @param scQtProposal
+	 *            the scQtProposal to set
 	 */
 	public void setScQtProposal(ScQtProposal scQtProposal) {
 		this.scQtProposal = scQtProposal;
@@ -1054,6 +1059,21 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 * @return the noOfYears
 	 */
 	public int getNoOfYears() {
+
+		if (this.getScLoaList() != null && !this.getScLoaList().isEmpty()) {
+			List<Date> effectiveDates = new ArrayList<Date>();
+			List<Date> expiryDates = new ArrayList<Date>();
+			for (ScLoa loa : this.getScLoaList()) {
+				effectiveDates.add(loa.getContractEffDate());
+				expiryDates.add(loa.getContractExpDate());
+			}
+			Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
+			Date maxExpiryDate = getMaxExpiryDate(expiryDates);
+			this.noOfYears = numberOfMonthsBetweenTwoDates(minEffectiveDate,
+					maxExpiryDate);
+			effectiveDates = null;
+			expiryDates = null;
+		}
 		return noOfYears;
 	}
 
@@ -1115,6 +1135,25 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 * @return the totalYears
 	 */
 	public int getTotalYears() {
+		if (this.getScQtPRPExperiences() != null
+				&& !this.getScQtPRPExperiences().isEmpty()) {
+			List<Date> effectiveDates = new ArrayList<Date>();
+			List<Date> expiryDates = new ArrayList<Date>();
+			for (ScQtPRPExperience experience : this.getScQtPRPExperiences()) {
+				if (experience.getEffectiveDate() != null
+						&& experience.getExpiryDate() != null) {
+					effectiveDates.add(experience.getEffectiveDate());
+					expiryDates.add(experience.getExpiryDate());
+				}
+			}
+			Date minEffectiveDate = getMinEffectiveDate(effectiveDates);
+			Date maxExpiryDate = getMaxExpiryDate(expiryDates);
+			this.totalYears = numberOfMonthsBetweenTwoDates(minEffectiveDate,
+					maxExpiryDate);
+			effectiveDates = null;
+			expiryDates = null;
+		}
+
 		return totalYears;
 	}
 
@@ -1533,7 +1572,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtDocReports the scQtDocReports to set
+	 * @param scQtDocReports
+	 *            the scQtDocReports to set
 	 */
 	public void setScQtDocReports(List<ScQtDocReport> scQtDocReports) {
 		this.scQtDocReports = scQtDocReports;
@@ -1547,7 +1587,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finanicialOnlyCheckList the finanicialOnlyCheckList to set
+	 * @param finanicialOnlyCheckList
+	 *            the finanicialOnlyCheckList to set
 	 */
 	public void setFinanicialOnlyCheckList(boolean finanicialOnlyCheckList) {
 		this.finanicialOnlyCheckList = finanicialOnlyCheckList;
@@ -1565,22 +1606,59 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public String getBusinessType() {
 		this.setBusinessType(SmCommonUtil
-		        .getDropDownViewOnlyValueByCode(
-		                this.getSmAppl()
-		                    .getSupplierType().equals("K") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE
-		                    : ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT,
-		                  this.getSmSupplier()
-		                    .getBusinessType()));
+				.getDropDownViewOnlyValueByCode(
+						this.getSmAppl().getSupplierType().equals("K") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE
+								: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT,
+						this.getSmSupplier().getBusinessType()));
 		return businessType;
 	}
 
 	/**
-	 * @param businessType the businessType to set
+	 * @param businessType
+	 *            the businessType to set
 	 */
 	public void setBusinessType(String businessType) {
 		this.businessType = businessType;
 	}
-	
-	
-	
+
+	private Date getMinEffectiveDate(List<Date> effectiveDates) {
+		Date minEffectiveDate = effectiveDates.remove(0);
+		if (!effectiveDates.isEmpty()) {
+			for (Date date : effectiveDates) {
+				if (date.before(minEffectiveDate)) {
+					minEffectiveDate = date;
+				}
+			}
+		}
+		return minEffectiveDate;
+	}
+
+	private Date getMaxExpiryDate(List<Date> expiryDates) {
+		Date maxExpiryDate = expiryDates.remove(0);
+		if (!expiryDates.isEmpty()) {
+			for (Date date : expiryDates) {
+				if (date.after(maxExpiryDate)) {
+					maxExpiryDate = date;
+				}
+			}
+		}
+		return maxExpiryDate;
+	}
+
+	private int numberOfMonthsBetweenTwoDates(Date effectiveDate,
+			Date expiryDate) {
+		Calendar startCalendar = new GregorianCalendar();
+		startCalendar.setTime(effectiveDate);
+		Calendar endCalendar = new GregorianCalendar();
+		// to resolve one day difference
+		Calendar c = Calendar.getInstance();
+		c.setTime(expiryDate);
+		c.add(Calendar.DATE, 1);
+		endCalendar.setTime(c.getTime());
+		int diffYear = endCalendar.get(Calendar.YEAR)
+				- startCalendar.get(Calendar.YEAR);
+		int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH)
+				- startCalendar.get(Calendar.MONTH);
+		return diffMonth;
+	}
 }

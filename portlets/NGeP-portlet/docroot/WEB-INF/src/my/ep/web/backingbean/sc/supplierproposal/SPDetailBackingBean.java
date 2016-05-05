@@ -1005,6 +1005,15 @@ public class SPDetailBackingBean extends
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
 			
+			MathContext mc = new MathContext(4);
+			CriteriaValue totalContractsVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV,
+					BigDecimal.valueOf(getManagedBean().getTotalContracts()));
+			CriteriaValue totalYearsVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV,
+					BigDecimal.valueOf(getManagedBean().getTotalYears())
+							.divide(BigDecimal.valueOf(12), mc));
+			
 			// Added to set null which is the data will be encrypted and save .
 				List<List<EncryptDataBean>>	encryptExpriencList = new ArrayList<List<EncryptDataBean>>();	
 				 for(ScQtPRPExperience experience:experiences){
@@ -1040,15 +1049,6 @@ public class SPDetailBackingBean extends
 					experiencesTosave.add(prpExperience);
 				}
 			}
-
-			MathContext mc = new MathContext(4);
-			CriteriaValue totalContractsVal = new CriteriaValue(
-					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV,
-					BigDecimal.valueOf(getManagedBean().getTotalContracts()));
-			CriteriaValue totalYearsVal = new CriteriaValue(
-					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV,
-					BigDecimal.valueOf(getManagedBean().getTotalYears())
-							.divide(BigDecimal.valueOf(12), mc));
 
 			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
 					scQtProposalChecklist, this.getManagedBean()
@@ -1611,13 +1611,13 @@ public class SPDetailBackingBean extends
 			}
 			this.getManagedBean().setTotalContracts(totalContracts);
 
-			int totalYears = 0;
+			/*int totalYears = 0;
 			if (contractYearsScore != null
 					&& contractYearsScore.getCriteriaValue() != null) {
 				totalYears = contractYearsScore.getCriteriaValue()
 						.multiply(BigDecimal.valueOf(12)).intValue();
 			}
-			this.getManagedBean().setTotalYears(totalYears);
+			this.getManagedBean().setTotalYears(totalYears);*/
 
 			return NAV_TO_NON_FEDERAL_GOVT_PAGE;
 
@@ -1626,66 +1626,6 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	/**
-	 * method to retrieve technical non government experience details
-	 * 
-	 * @param scQtProposalChecklist
-	 * @return navigation path
-	 */
-	public String retrieveTechNonGovCompanyExpDtls(
-			ScQtProposalChecklist scQtProposalChecklist) {
-
-		getManagedBean().setYear(
-				scQtProposalChecklist.getScQtCheckList()
-						.getScQtCheckListValue().getYear());
-		Calendar mindate = Calendar.getInstance();
-		mindate.set(getManagedBean().getYear().intValue(), 0, 1);
-		getManagedBean().setNonFedEffMinDate(mindate.getTime());
-		getManagedBean().setNonFedMinDate(mindate.getTime());
-
-		IQTProposalSO proposalSO = null;
-		try {
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
-			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
-					.getPmDocument().getDocDefinitionKey());
-			reqDTO.setScQt(this.getManagedBean().getQt());
-			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			ProposalResDTO resDTO = proposalSO
-					.retrieveNonGovCompanyExpDtls(reqDTO);
-			this.getManagedBean().setScQtProposalScoreList(
-					resDTO.getProposalScores());
-			this.getManagedBean().setScQtPRPExperiences(
-					resDTO.getPrpExperience());
-
-			ScQtProposalScore totalContractScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
-			ScQtProposalScore contractYearsScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
-
-			int totalContracts = 0;
-			if (totalContractScore != null
-					&& totalContractScore.getCriteriaValue() != null) {
-				totalContracts = totalContractScore.getCriteriaValue()
-						.intValue();
-			}
-			this.getManagedBean().setTotalContracts(totalContracts);
-
-			int totalYears = 0;
-			if (contractYearsScore != null
-					&& contractYearsScore.getCriteriaValue() != null) {
-				totalYears = contractYearsScore.getCriteriaValue()
-						.multiply(BigDecimal.valueOf(12)).intValue();
-			}
-			this.getManagedBean().setTotalYears(totalYears);
-
-			return NAV_TO_NON_FEDERAL_GOVT_PAGE;
-
-		} finally {
-			proposalSO = null;
-		}
-	}
 
 	/**
 	 * method to retrieve technical no of employees involved details
@@ -2805,29 +2745,9 @@ public class SPDetailBackingBean extends
 
 		}
 		getManagedBean().getScQtPRPExperiences().set(index, prpExperience);
-		totalContractYears();
 	}
 
-	/**
-	 * method to calculate total Contract Years
-	 */
-	public void totalContractYears() {
-		debugLogger("totalContractYears");
-
-		int totalYears = 0;
-		List<ScQtPRPExperience> experiencesList = this.getManagedBean()
-				.getScQtPRPExperiences();
-		if (experiencesList == null) {
-			experiencesList = new ArrayList<ScQtPRPExperience>();
-		}
-		for (int i = 0; i < experiencesList.size(); i++) {
-			ScQtPRPExperience experience = (ScQtPRPExperience) experiencesList
-					.get(i);
-			totalYears = totalYears + experience.getContractPeriod();
-		}
-
-		this.getManagedBean().setTotalYears(totalYears);
-	}
+	
 
 	/**
 	 * method to calculate total Contract Amount
@@ -2968,7 +2888,6 @@ public class SPDetailBackingBean extends
 		getManagedBean().setSelected(false);
 		getManagedBean().setSelectedPRPExperiences(null);
 
-		totalContractYears();
 		if (this.getManagedBean().isFinanicialOnlyCheckList()) {
 			totalContractAmount();
 		}
