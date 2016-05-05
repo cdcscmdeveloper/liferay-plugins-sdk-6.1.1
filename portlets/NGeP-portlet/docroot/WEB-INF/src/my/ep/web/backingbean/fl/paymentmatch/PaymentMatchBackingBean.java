@@ -211,7 +211,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_700026;
+				String messageId = MessageConst.INFO_745013;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				}				
@@ -224,7 +224,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 								new FacesScopes().getUserLocale())));
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
-					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
+					/*if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
 						Map<String, String> paramMap = new HashMap<String, String>();
 						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getPaymentAdviceNo());
 						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
@@ -233,7 +233,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.payment.match",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 						commonBackingBean.getManagedBean().setParamMap(paramMap);
 						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-					}					
+					}				*/	
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					reqDTO.setFlOrderId(resDTO.getFulfilmentOrderId());
