@@ -525,7 +525,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 			item.setCmColor(codeResDTO.getColorList().get(0));
-			item.setItemName(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscTitle());
+			item.setItemName(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscTitle().replaceAll("N/A", ""));
 			item.setExtensionCode(bb.getManagedBean().getRequestCode().getCmRecommendCodes().get(0).getUnspscCode());
 			codeReqDTO.setCmItem(item);
 			codeResDTO = codificationSO.saveNewItem(codeReqDTO);
@@ -726,6 +726,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						+ typeName + " " + brandName + " " + measurementName + " "
 						+ colorName;
 
+				itemName =itemName.replaceAll("N/A", "");
 
 				item.setCmColor(colorCodeResDTO.getColorList().get(0));
 				item.setItemName(itemName);
@@ -788,7 +789,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		return "/xhtml/common/acknowledge.xhtml";
 	}
-
+	
 
 
 	/**
