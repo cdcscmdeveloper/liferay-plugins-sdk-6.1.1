@@ -27,6 +27,7 @@ import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -37,6 +38,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -155,6 +157,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 			this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 			this.getManagedBean().setSmAppl(new SmAppl());
+			getManagedBean().setSmSuppOwner(new SmSupplierOwner());
+			getManagedBean().getSmSuppOwner().setNationality(new PmCountry());
 			//this.getManagedBean().setSmSuppBanks(new ArrayList<SmSupplierBank>());
 
 			SmAppl smAppl = this.getManagedBean().getSmAppl();
@@ -2374,6 +2378,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}else{
 			return "lbl.sm.ownername";
+		}
+	}
+	
+	public void ownerNationalityOnChange(){
+		SmSupplierOwner owner = getManagedBean().getSmSuppOwner();
+		Long countryId = owner.getNationality().getCountryId();
+		
+		if(countryId != null){
+			PmCountry country = SmCommonUtil.retrievePmCountryById(countryId);
+			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
+				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+				PmParameter identObj = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqDTO).getPmParameter();
+				owner.setIdentificationTypeId(identObj.getParameterId());
+				owner.setIdentificationType(identObj);
+				getManagedBean().setMyOwner(true);
+			}else{
+				getManagedBean().setMyOwner(false);
+			}
+		}else{
+			getManagedBean().setMyOwner(false);
 		}
 	}
 }
