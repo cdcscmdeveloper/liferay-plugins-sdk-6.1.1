@@ -9,13 +9,24 @@
    <ui:define name="contentSection">
       <style>
          .ui-datatable-odd {
-         background: #ffffff;
+         	background: #ffffff;
          }
          .ui-datatable-even {
-         background: #F2F5F9;
+        	background: #F2F5F9;
          }
          .myTable thead {
-         display:none;
+         	display:none;
+         }
+         .myTable > .ui-datatable-scrollable-header{
+         	display:none;
+         }
+         
+         .myTable > .ui-datatable-scrollable-footer{
+         	display:none;
+         }
+         
+         .myTable > .ui-datatable-scrollable-body > table{
+         	margin:0px;
          }
       </style>
       <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="true" escape="false"/>
@@ -25,13 +36,13 @@
       <p:outputPanel id="opUserCommonDet">
          <table class="ppTwoTable">
             <tr>
-               <td style="padding-left: 0px;width:25px;">
+               <td style="padding-left: 0px;width:25px;vertical-align:top;">
                   <h:graphicImage value="/css/images/design/icon-organization.png" />
                </td>
                <td>
                   <h:outputText style="white-space:normal;" value="#{orgName}" />
                </td>
-               <td rowspan="4">
+               <td rowspan="4" style="vertical-align:top;">
                   <table>
                      <c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">
                         <tr>
@@ -48,11 +59,11 @@
                      </c:if>
                      <c:if test="#{profilePersonalizationBackingBean.virtualCertShown}">
                         <tr>
-                           <td style="width:15px;">
+                           <td style="width:20px;">
                               <h:graphicImage value="/css/images/design/ico-view.png" />
                            </td>
                            <td style="color: blue; font-weight: bold; text-align: left;">
-                              <p:commandLink action="#{supplierAlertBackingBean.navigateToViewVirtualCert}" value="View Virtual Cert" />
+                              <p:commandLink action="#{supplierAlertBackingBean.navigateToViewVirtualCert}" value="#{lbl['lbl.pm.ucd.virtual.cert']}" />
                            </td>
                         </tr>
                      </c:if>
@@ -71,11 +82,11 @@
                      </c:if>
                      <c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
                         <tr>
-                           <td style="width:15px;">
+                           <td style="width:20px;">
                               <h:graphicImage value="/css/images/design/ico-view.png" />
                            </td>
                            <td style="color: blue; font-weight: bold; text-align: left;">
-                              <p:commandLink action="#{softCertBackingBean.navigateToViewSoftCert}"  value="View Soft Cert" />
+                              <p:commandLink action="#{softCertBackingBean.navigateToViewSoftCert}"  value="#{lbl['lbl.pm.ucd.soft.cert']}" />
                            </td>
                         </tr>
                      </c:if>
@@ -83,7 +94,7 @@
                </td>
             </tr>
             <tr>
-               <td style="width:25px;">
+               <td style="width:25px;vertical-align:top;">
                   <h:graphicImage value="/css/images/design/icon-email.png" />
                </td>
                <td style="width:285px;">
@@ -92,7 +103,7 @@
                </td>
             </tr>
             <tr>
-               <td style="width:25px;">
+               <td style="width:25px;vertical-align:top;">
                   <h:graphicImage value="/css/images/design/icon-sms.png" />
                </td>
                <td style="width:285px;">
@@ -101,7 +112,7 @@
                </td>
             </tr>
             <tr>
-               <td style="width:25px;">
+               <td style="width:25px;vertical-align:top;padding-top:8px;">
                   <h:graphicImage value="/css/images/design/icon-account-info.png" />
                </td>
                <td>
