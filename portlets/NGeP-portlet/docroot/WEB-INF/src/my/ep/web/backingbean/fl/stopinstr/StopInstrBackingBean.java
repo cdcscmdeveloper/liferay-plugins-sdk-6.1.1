@@ -150,7 +150,11 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		if(resDTO.isSuccessful()) {
 			String messageId = MessageConst.INFO_700005;
 			if(reqDTO.isApprover()) {
-				messageId = MessageConst.INFO_745011;
+				if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
+					messageId = MessageConst.INFO_745011;
+				}else{
+					messageId = MessageConst.INFO_700007;
+				}
 			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				messageId = MessageConst.INFO_700008;
