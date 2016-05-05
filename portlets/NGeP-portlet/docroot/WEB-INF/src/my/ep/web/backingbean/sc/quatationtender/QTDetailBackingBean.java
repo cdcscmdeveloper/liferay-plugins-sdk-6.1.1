@@ -755,7 +755,7 @@ public class QTDetailBackingBean extends
 				// TODO need to check why updating the twice.. sagar
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getQtCategoryList();
-				if (openList != null && !openList.isEmpty()) {
+				if (CollectionUtils.isNotEmpty(openList)) {
 					/*
 					 * for (ScQtCategory scQtCategory : openList) { if (null !=
 					 * scQtCategory.getPmCategoryL3()) {
@@ -2256,10 +2256,10 @@ public class QTDetailBackingBean extends
 	 */
 	public void retrieveSuppQualificationTabDtl() {
 		debugLogger("retrieveSuppQualificationTabDtl");
-		if (this.getManagedBean().getQt().isZonal()
-				&& this.getManagedBean().getQt().isPanel()) {
-			retrieveQuationTenderDetails(this.getManagedBean().getQt()
-					.getQtId());
+		
+		ScQt scQt = this.getManagedBean().getQt();
+		if (!scQt.isBrandNew() && scQt.isZonal() && scQt.isPanel()) {
+			retrieveQuationTenderDetails(scQt.getQtId());
 		}
 		IQTDetailSO QtDetailsSO;
 		QuationTenderResDTO tenderResDTO;
@@ -2273,9 +2273,9 @@ public class QTDetailBackingBean extends
 
 			tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
 
-			ScQt scQt = tenderResDTO.getQtDetail();
+			// Commented as a fix for SIR#9289
+//			scQt = tenderResDTO.getQtDetail();
 			this.getManagedBean().setAllStateCode(tenderResDTO.getStateCode());
-			this.getManagedBean().setQt(scQt);
 			if (!this.getManagedBean().getQt().isPanel()) {
 				if (CollectionUtils.isEmpty(this.getManagedBean()
 						.getQtCategoryList())) {
