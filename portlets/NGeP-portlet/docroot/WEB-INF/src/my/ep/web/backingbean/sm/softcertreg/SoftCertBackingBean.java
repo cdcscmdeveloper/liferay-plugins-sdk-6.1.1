@@ -11,6 +11,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +54,8 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "softCertBackingBean")
@@ -1181,5 +1184,34 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				getManagedBean().setRenderRevokeButton(false);
 			}
 		}
+	}
+	
+	public void navigateToViewSoftCert() {
+		log.info("navigateToViewSoftCert");
+
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+				.getRequestScope(WebKeys.THEME_DISPLAY);
+
+		log.info("getURLCurrent" + themeDisplay.getURLCurrent());
+
+		try {
+			String commonUrl = themeDisplay.getURLCurrent().substring(
+					0,
+					themeDisplay.getURLCurrent().indexOf(
+							themeDisplay.getLayout().getGroup()
+									.getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup()
+									.getFriendlyURL().length());
+			log.info("commonUrl" + commonUrl);
+
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+
+			externalContext.redirect(commonUrl + "/" + "my-softcert");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
 	}
 }
