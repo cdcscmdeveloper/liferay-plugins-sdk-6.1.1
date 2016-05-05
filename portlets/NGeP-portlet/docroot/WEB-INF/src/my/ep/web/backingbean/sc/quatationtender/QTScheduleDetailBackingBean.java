@@ -509,18 +509,16 @@ public class QTScheduleDetailBackingBean extends
 		debugLogger("handlePublishedDate");
 		ScQt scQt = this.getManagedBean().getQt();
 
-		updatePublishDate(scQt);
-		updateProposalStartDate(scQt);
-	}
-	
-	/**
-	 * To update closing date and proposal validity days..
-	 */
-	public void handlePublishClosingDate() {
-		debugLogger("handlePublishClosingDate");
-		ScQt scQt = this.getManagedBean().getQt();
-
-		updatePublishClosingDate(scQt);
+		Date newPublishDate = scQt.getNewPublishDate();
+		if (newPublishDate != null) {
+			scQt.setPublishDate(DateUtils.setDefaultDateTime(newPublishDate));
+			
+			if (!scQt.isBsvRequired()) {
+				scQt.setProposalStartDate(scQt.getPublishDate());
+			}
+			
+			updatePublishClosingDate(scQt);
+		}
 	}
 
 	/**
@@ -595,13 +593,13 @@ public class QTScheduleDetailBackingBean extends
 	public Date handleMaximumDate() {
 		debugLogger("handleMaximumDate");
 		ScQt scQt = this.getManagedBean().getQt();
+		Date proposalStartDate = scQt.getProposalStartDate();
 
 		if (scQt.isBsvRequired()
-				&& DateUtils.isDateGreater(scQt.getLatestBsvDate(), new Date())) {
+				&& proposalStartDate != null
+				&& DateUtils.isDateGreater(proposalStartDate, new Date())) {
 
-			Date briefingDate = scQt.getLatestBsvDate();
-
-			return DateUtils.minusDays(briefingDate, 1);
+			return DateUtils.minusDays(proposalStartDate, 1);
 
 		} else {
 			Calendar c1 = Calendar.getInstance();

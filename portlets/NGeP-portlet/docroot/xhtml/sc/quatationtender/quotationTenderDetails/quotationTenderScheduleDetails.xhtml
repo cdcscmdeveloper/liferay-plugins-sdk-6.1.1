@@ -17,27 +17,41 @@
 				<td><h:panelGroup id="publishId">
 						<table>
 							<tr>
-								<td><p:calendar label="#{lbl['lbl.sc.publish.date']}"
-										mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
-										value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
-										id="noticePublish" 
-										readonlyInput="true"
-										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-										showOn="button"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}"
-										maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}">
-										<p:ajax event="dateSelect" process="@this"
-											listener="#{qTScheduleDetailBackingBean.handlePublishedDate()}"
-											update="proposalvalidityid, closingDate, publishId,scheduleDetalsPublishingClosing,publishTime, closingTime" />
-									</p:calendar> 
+								<td>
+									<c:choose>
+										<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}">
+											<p:calendar label="#{lbl['lbl.sc.publish.date']}"
+												mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
+												value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}"
+												id="noticePublish" 
+												readonlyInput="true"
+												pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+												showOn="button"
+												maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
+												size="15">
+												<p:ajax event="dateSelect" process="@this"
+													listener="#{qTScheduleDetailBackingBean.handlePublishedDate()}"
+													update="proposalvalidityid, closingDate, publishId,scheduleDetalsPublishingClosing,publishTime, closingTime" />
+											</p:calendar>
+										</c:when>
+										<c:otherwise>
+											<p:inputText id="publishDate" 
+												value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
+												 disabled="true" style="width: 120px;margin-top:5px;">
+												 <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+											</p:inputText>
+										</c:otherwise>
+									</c:choose> 
 									<p:inputText id="publishTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" disabled="true" size="4"
 										style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 									</p:inputText>
 								</td>
 								<td>
-									<p:message id="noticePublishMsg" for="noticePublish"
-										display="icon" />
+									<c:if test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}">
+										<p:message id="noticePublishMsg" for="noticePublish"
+											display="icon" />
+									</c:if>
 								</td>
 							</tr>
 						</table>
@@ -48,9 +62,9 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.bsv.date']}" /></td>
 					<td><p:inputText id="bsvDate"
-							value="#{qTScheduleDetailBackingBean.managedBean.bsvDate}"
+							value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}"
 							readonly="true" disabled="true"
-							style="width: 111px;margin-top:5px">
+							style="width: 120px;margin-top:5px">
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 						</p:inputText></td>
@@ -62,7 +76,7 @@
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishPeriod}"
 						readonly="true" id="publishingperiod" disabled="true"
-						style="width: 111px;margin-top:5px; text-align:right" /> <ac:iconTooltip
+						style="width: 120px;margin-top:5px; text-align:right" /> <ac:iconTooltip
 						value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" /></td>
 			</tr>
 			<tr>
@@ -70,10 +84,10 @@
 				<td><p:inputText id="closingDate"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
 						readonly="true" disabled="true"
-						style="width: 111px;margin-top:5px">
+						style="width: 120px;margin-top:5px">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+					</p:inputText>
 					<p:inputText id="closingTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}" 
 						disabled="true" size="4"
 						style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
@@ -95,10 +109,10 @@
 										label="#{lbl['lbl.sc.sample.closingdate']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}"
 										id="sampleclsdate" readonly="true" disabled="true"
-										style="width: 111px;margin-top:5px">
+										style="width: 120px;margin-top:5px">
 										<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-									</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; 
+									</p:inputText>
 									<p:inputText id="sampleClosingTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}" 
 										disabled="true" size="4"
 										style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
@@ -121,7 +135,7 @@
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
 						readonly="true" disabled="true"
-						style="width: 111px;margin-top:5px;text-align:right" /></td>
+						style="width: 120px;margin-top:5px;text-align:right" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -129,7 +143,7 @@
 				<td><p:inputText id="proposalvalidityid"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalValidityEndDate}"
 						readonly="true" disabled="true"
-						style="width: 111px;margin-top:5px;">
+						style="width: 120px;margin-top:5px;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>

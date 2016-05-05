@@ -706,14 +706,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The selected contact persons. */
 	private List<ScQtContactPerson> selectedContactPersons;
 
-	/** The proposal validity until. */
-	private Date proposalValidityUntil;
-
 	/** The closing date. */
 	private Date closingDate;
-
-	/** The bsv date. */
-	private Date bsvDate;
 
 	
 
@@ -4666,25 +4660,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the proposal validity until.
-	 * 
-	 * @return the proposal validity until
-	 */
-	public Date getProposalValidityUntil() {
-		return proposalValidityUntil;
-	}
-
-	/**
-	 * Sets the proposal validity until.
-	 * 
-	 * @param proposalValidityUntil
-	 *            the new proposal validity until
-	 */
-	public void setProposalValidityUntil(Date proposalValidityUntil) {
-		this.proposalValidityUntil = proposalValidityUntil;
-	}
-
-	/**
 	 * Gets the closing date.
 	 * 
 	 * @return the closing date
@@ -6476,25 +6451,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setToday(Date today) {
 		this.today = today;
-	}
-
-	/**
-	 * Gets the bsv date.
-	 * 
-	 * @return the bsv date
-	 */
-	public Date getBsvDate() {
-		return bsvDate;
-	}
-
-	/**
-	 * Sets the bsv date.
-	 * 
-	 * @param bsvDate
-	 *            the new bsv date
-	 */
-	public void setBsvDate(Date bsvDate) {
-		this.bsvDate = bsvDate;
 	}
 
 	/**

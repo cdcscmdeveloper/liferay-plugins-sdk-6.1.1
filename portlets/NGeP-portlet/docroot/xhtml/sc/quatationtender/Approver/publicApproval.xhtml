@@ -26,7 +26,7 @@
 				<td><p:calendar label="#{lbl['lbl.sc.publish.date']}"
 						disabled="#{approvalBackingBean.managedBean.readOnly}"
 						mindate="#{approvalBackingBean.managedBean.today}"
-						value="#{approvalBackingBean.managedBean.qt.publishDate}"
+						value="#{approvalBackingBean.managedBean.qt.newPublishDate}"
 						id="noticePublish" required="true"
 						maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button">
@@ -46,7 +46,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.bsv.date']}" /></td>
 					<td><p:inputText id="publishBsvDate"
-							value="#{approvalBackingBean.managedBean.qt.latestBsvDate}"
+							value="#{approvalBackingBean.managedBean.qt.proposalStartDate}"
 							readonly="true" disabled="true"
 							style="width: 111px;margin-top:5px">
 							<f:convertDateTime

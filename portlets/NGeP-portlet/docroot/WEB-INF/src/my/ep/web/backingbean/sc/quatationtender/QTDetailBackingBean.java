@@ -159,7 +159,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -875,7 +874,6 @@ public class QTDetailBackingBean extends
 					.getBriefingZoneBean();
 			List<ScQtBsv> bsvs = null;
 			if (beansList != null && !beansList.isEmpty()) {
-				boolean isRequired = false;
 				bsvs = new ArrayList<ScQtBsv>();
 				for (BriefingZoneBean bsvDtlBean : beansList) {
 					ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
@@ -893,14 +891,6 @@ public class QTDetailBackingBean extends
 					if (bsvDtls == null || !(bsvDtls.size() > 0)) {
 						bsvs.remove(i--);
 					}
-					if (null != bsvDtls && bsvDtls.size() > 0 && !isRequired) {
-						isRequired = true;
-					}
-				}
-				if (bsvs.size() > 0) {
-					scQt.setBsvRequired(isRequired);
-					scQt.setLatestBsvDate(getLatestBsvDate(bsvs.get(0)
-							.getScQtBsvDtls()));
 				}
 
 			} else {
@@ -915,32 +905,11 @@ public class QTDetailBackingBean extends
 					// scQtBsv.setScQt(this.getManagedBean().getQt());
 					bsvs = new ArrayList<ScQtBsv>();
 					bsvs.add(scQtBsv);
-					scQt.setBsvRequired(scQtBsv.getScQtBsvDtls().size() > 0 ? true
-							: false);
-					scQt.setLatestBsvDate(getLatestBsvDate(bsvs.get(0)
-							.getScQtBsvDtls()));
 				}
 
 			}
 
 			scQt.setScQtBriefings(bsvs);
-
-			// Publish/Closing/sample Date
-			Date publishDate = scQt.getPublishDate();
-			if (publishDate != null) {
-				scQt.setPublishDate(DateUtils.setDefaultDateTime(publishDate));
-			}
-
-			Date closingDate = scQt.getClosingDate();
-			if (closingDate != null) {
-				scQt.setClosingDate(DateUtils.setDefaultDateTime(closingDate));
-			}
-
-			Date sampleClosingDate = scQt.getSampleClosingDate();
-			if (sampleClosingDate != null) {
-				scQt.setSampleClosingDate(DateUtils
-						.setDefaultDateTime(closingDate));
-			}
 
 			// Setting Sample Submission to qtDetails.
 			List<ScQtSampleSubmission> sampleSubmissionList = null;
@@ -1914,11 +1883,10 @@ public class QTDetailBackingBean extends
 				}
 				
 				qt.setClosingDate(getManagedBean().getQt().getClosingDate());
-				if (null == qt.getLatestBsvDate()) {
-					qt.setLatestBsvDate(getManagedBean().getQt()
-							.getLatestBsvDate());
+				if (null == qt.getProposalStartDate()) {
+					qt.setProposalStartDate(getManagedBean().getQt()
+							.getProposalStartDate());
 				}
-				updateProposalStartDate(qt);
 				/*
 				 * QTScheduleDetailBackingBean scheduleBackingBean = new
 				 * QTScheduleDetailBackingBean();
@@ -2517,7 +2485,10 @@ public class QTDetailBackingBean extends
 				reqDTO.setQtdetail(this.getManagedBean().getQt());
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTScheduleDetails(reqDTO);
-				this.getManagedBean().setQt(resDTO.getQtDetail());
+				ScQt scQt = resDTO.getQtDetail();
+				this.getManagedBean().setQt(scQt);
+				// Set New publish date for update publish date. To solve issue on publish date reset back to original time during primefaces calender update phase.
+				scQt.setNewPublishDate(scQt.getPublishDate());
 				ISearchResultBean<ScQtContactPerson> contactPersons = resDTO
 						.getContactPersons();
 				List<ScQtContactPerson> qtContactPerson = contactPersons
@@ -2578,57 +2549,6 @@ public class QTDetailBackingBean extends
 			if (!getManagedBean().isSubmit()) {
 				backingBean.retrievePmStateList();
 			}
-		}
-		Date bsvDate = null;
-		/*
-		 * List<BriefingZoneBean> briefingList = this.getManagedBean()
-		 * .getBriefingZoneBean(); if (briefingList == null ||
-		 * briefingList.size() == 0) { retrieveBriefingSitevisitTabDtl(); }
-		 */
-		if (getManagedBean().getQt().isZonal()) {
-			List<BriefingZoneBean> briefingBeans = getManagedBean()
-					.getBriefingZoneBean();
-			if (null != briefingBeans && !briefingBeans.isEmpty()) {
-				for (BriefingZoneBean briefing : briefingBeans) {
-					briefing.getScQtBsv().getScQtBsvDtls();
-					ScQtBsv bsv = briefing.getScQtBsv();
-					if (bsv.getScQtBsvDtls() != null) {
-						for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
-							bsvDate = bsvDtl.getBsvDate();
-							this.getManagedBean().setBsvDate(bsvDate);
-							if (null != getManagedBean().getQt()
-									.getLatestBsvDate()) {
-								getManagedBean().getQt().setLatestBsvDate(
-										bsvDate);
-							}
-						}
-					}
-				}
-			} 
-		} else {
-			if (getManagedBean().getBsvDtlBean() != null) {
-				List<ScQtBsvDtl> selectedBriefList = getManagedBean()
-						.getBsvDtlBean().getScQtBsv().getScQtBsvDtls();
-				if (selectedBriefList != null && !selectedBriefList.isEmpty()) {
-					for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
-						bsvDate = scQtBsvDtl.getBsvDate();
-						this.getManagedBean().setBsvDate(bsvDate);
-						if (null != getManagedBean().getQt().getLatestBsvDate()) {
-							getManagedBean().getQt().setLatestBsvDate(bsvDate);
-						}
-					}
-				} 
-			} 
-		}
-		
-		updateProposalStartDate(this.getManagedBean().getQt());
-		updatePublishClosingDate(this.getManagedBean().getQt());
-		
-		Date clsDate = this.getManagedBean().getQt().getClosingDate();
-		if (null != clsDate) {
-			this.getManagedBean().setProposalValidityUntil(
-					DateUtils.addDays(clsDate, this.getManagedBean().getQt()
-							.getQtValidityPeriod()));
 		}
 	}
 
