@@ -11,8 +11,8 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +21,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -48,6 +47,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
@@ -63,6 +63,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -360,6 +361,8 @@ public class QTBriefingSiteVisitBackingBean extends
 		
 		this.getManagedBean().setRequired(Boolean.FALSE);
 		
+		updateLatestBsvDate();
+		
 		ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
 		if (null != tempScQtBsvDtl) {
 			updateQtAmmendMentDtls(bsvType, tempScQtBsvDtl,bsvDetail);
@@ -400,6 +403,8 @@ public class QTBriefingSiteVisitBackingBean extends
 			briefingDtlBean.setSelectedSiteVisitDtls(null);
 		}
 		this.getManagedBean().setBsvDtlBean(briefingDtlBean);
+		
+		updateLatestBsvDate();
 	}
 
 	/**
@@ -722,6 +727,8 @@ public class QTBriefingSiteVisitBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760199);
 		}
+		
+		updateLatestBsvDate();
 	}
 
 	/**
@@ -920,5 +927,54 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		return isEqual;
 	}
+
+	private void updateLatestBsvDate() {
+		ScQt scQt = getManagedBean().getQt();
+		Date latestBsvDate = null;
+		
+		scQt.setBsvRequired(false);
+		
+		if (scQt.isZonal()) {
+			List<BriefingZoneBean> briefingBeans = getManagedBean()
+					.getBriefingZoneBean();
+			if (null != briefingBeans && !briefingBeans.isEmpty()) {
+				for (BriefingZoneBean bsvDtlBean : briefingBeans) {
+					latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getBriefingList());
+					latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getSitevisitList());
+				}
+			} 
+		} else {
+			BriefingZoneBean bsvDtlBean = getManagedBean().getBsvDtlBean();
+			if (bsvDtlBean != null) {
+				latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getBriefingList());
+				latestBsvDate = updateProposalStartDate(latestBsvDate, bsvDtlBean.getSitevisitList());
+			} 
+		}
+		
+		// if no briefing / site visit.
+		if (!scQt.isBsvRequired()) {
+			latestBsvDate = scQt.getPublishDate();
+		} 
+		
+		scQt.setProposalStartDate(latestBsvDate);
+		
+		updatePublishClosingDate(scQt);
+	}
 	
+	private Date updateProposalStartDate(Date latestBsvDate, List<ScQtBsvDtl> scQtBsvDtls) {
+		ScQt scQt = getManagedBean().getQt();
+		
+		if (CollectionUtils.isNotEmpty(scQtBsvDtls)) {
+			for (ScQtBsvDtl scQtBsvDtl : scQtBsvDtls) {
+				Date bsvDate = scQtBsvDtl.getBsvDate();
+				
+				if (bsvDate != null && (latestBsvDate == null || (latestBsvDate != null && bsvDate.after(latestBsvDate)))) {
+					latestBsvDate = bsvDate;
+				}
+			}
+			scQt.setBsvRequired(true);
+		}
+		
+		return latestBsvDate;
+	}
 }
