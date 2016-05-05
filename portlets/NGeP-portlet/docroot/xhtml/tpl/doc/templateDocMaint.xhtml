@@ -247,12 +247,12 @@
 		</p:dialog>
 		
 		<p:dialog id="popupImportSec" widgetVar="popupImportSec" modal="false" 
-			resizable="false" header="#{lbl['lbl.tpl.doc.import.section']}" width="850" height="460">
+			resizable="false" header="#{lbl['lbl.tpl.doc.import.section']}" width="900" height="460">
 			
 			<p:remoteCommand name="tempDocFunc" action="#{templateDocBackingBean.imptSearchResult}" 
 			process="@this,imptTemplateCategory,imptProcessType,imptTitle" update="impMasterList,impSectionList"></p:remoteCommand>
 			
-			<table width="100%">
+			<table style="width:100%;">
 				<tr>
 					<td class="TableFieldLeft" style="width: 80px"><h:outputLabel value="#{lbl['lbl.sc.procurement.category']}" /></td>
 					<td class="TableFieldRight">
