@@ -120,7 +120,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			
 			FulfilmentResDTO resDTO = adjustmentSO.saveAdjustment(reqDTO);
 			if(resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_700026;
+				String messageId = MessageConst.INFO_745013;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				}
@@ -131,8 +131,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 			}
-			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				renewSesionObject();
+				/*if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					Map<String, String> paramMap = new HashMap<String, String>();
 					paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getAdjustment().getDocNo());
 					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
@@ -140,9 +141,8 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_DEBIT_NOTE);
 					commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.dan",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 					commonBackingBean.getManagedBean().setParamMap(paramMap);
-					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-				}		
+				}		*/
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
