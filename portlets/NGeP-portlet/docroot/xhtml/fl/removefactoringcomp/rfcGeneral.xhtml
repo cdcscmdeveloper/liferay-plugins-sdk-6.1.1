@@ -15,31 +15,29 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 142px;"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="preparedPtj"
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}"
-						disabled="true" /></td>
+				<td valign="top" style="width: 142px;"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
+				<td>
+					<p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
+						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}" />
+				</td>				
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="issuePtj"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"
-						disabled="true" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
+				<td>
+					<p:inputTextarea rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
+						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}" />
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="chargedPtj"
-						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"
-						disabled="true" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td>
+					<p:inputTextarea rows="2" cols="67"
+						readonly="true" autoResize="false" style="resize:none;"
+						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}" />
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
 				<td><p:inputText size="8" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeCode}"/> <p:spacer
 						width="5" /> <p:inputText size="50" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}"/></td>
 			</tr>
@@ -49,7 +47,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td rowspan="3" valign="top" style="width: 142px;"><p:outputLabel
-						value="* #{lbl['lbl.fl.title']}" /></td>
+						value="#{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="3"><p:inputTextarea cols="50" rows="4"
 						style=" margin-bottom:5px;"
 						autoResize="false"
@@ -75,9 +73,8 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.term']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="10" /> <p:spacer
-						width="5" /> <p:inputText size="2" value="Days" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><p:inputText size="12" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.deliveryTerm}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.po.approved.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.agApprovedDate}">
