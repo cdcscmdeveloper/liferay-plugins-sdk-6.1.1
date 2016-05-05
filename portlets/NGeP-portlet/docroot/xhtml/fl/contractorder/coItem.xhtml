@@ -7,16 +7,34 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="#{lbl['lbl.fl.menu.order.summary']}" toggleable="true">
 		<p:dataTable id="delAddressSummary" var="delAddressSummary"
-			styleClass="orderSummaryChange hide-column-names"
+			styleClass="orderSummaryChange"
 			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
 			<ac:paginator for="delAddressSummary" />
 			<p:ajax event="rowToggle" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;width:350px;">
 				<h:outputText value="#{flOrderBB.getFullAddress(delAddressSummary.flAddress)}" />
 			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="white-space:normal;">
+				<p:inputText size="4" style="width:75px; text-align:right;" disabled="true" value="#{delAddressSummary.deliveryTerm}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.delivery.start']}" style="white-space:normal;">
+				<p:inputText size="8" value="#{delAddressSummary.startDate}"
+					disabled="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}" style="white-space:normal;">
+				<p:inputText size="8" value="#{delAddressSummary.startDate}"
+					disabled="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
+			</p:column>
+			<ui:remove>
 			<p:column style="white-space:normal;" >
 			<table style="width : 100%;" class="noBorder" >
 			<tr>
@@ -73,6 +91,7 @@
 			</tr>
 			</table>
 			</p:column>
+			</ui:remove>
 			<p:rowExpansion>
 
 				<p:dataTable id="newItems" var="newItems"
