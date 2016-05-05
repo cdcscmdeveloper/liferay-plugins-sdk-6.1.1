@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.pm.notify;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -37,6 +38,9 @@ public class NotifyManagedBean extends BaseManagedBean {
 	private boolean isInit = true;
 	private boolean isUnRead = false;
 	private boolean deleteButtonHide;
+	
+	private String searchItem;
+	private String searchValue;
 	
 	public boolean isUnRead() {
 		return isUnRead;
@@ -116,5 +120,32 @@ public class NotifyManagedBean extends BaseManagedBean {
 	public void setDeleteButtonHide(boolean deleteButtonHide) {
 		this.deleteButtonHide = deleteButtonHide;
 	}
-	
+
+	/**
+	 * @return the searchValue
+	 */
+	public String getSearchValue() {
+		return searchValue;
+	}
+
+	/**
+	 * @return the searchItem
+	 */
+	public String getSearchItem() {
+		return searchItem;
+	}
+
+	/**
+	 * @param searchItem the searchItem to set
+	 */
+	public void setSearchItem(String searchItem) {
+		this.searchItem = searchItem;
+	}
+
+	/**
+	 * @param searchValue the searchValue to set
+	 */
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
+	}
 }

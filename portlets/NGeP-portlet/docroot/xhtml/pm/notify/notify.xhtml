@@ -13,16 +13,21 @@
 		.ui-scrollpanel-native{
 			background-color : #FFFFFF!important;
 		}
+		
+		.ui-menubutton .ui-state-default .ui-icon {
+		    background-image: url("/css/images/design/icon_trash.png") !important; 
+		}
 	</style>
 	
 	</ui:define>
 	<ui:define name="contentSection">
+	
 		<p:messages id="messages" autoUpdate="true" closable="true" />
 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="42%" valign="top">
 					<table width="100%">
-						<tr>
+						<tr style="background-color:gainsboro">
 							<td style="text-align: left; vertical-align: middle;"><p:commandLink
 									id="allLink" action="#{notifyBackingBean.retrieveNotifyList}"
 									update=":form:pnldetail,:form:notifyTable">
@@ -48,7 +53,7 @@
 						<tr>
 							<td colspan="2" width="100%" valign="top"><p:dataTable
 									value="#{notifyBackingBean.notifyDataModel}" var="notify"
-									id="notifyTable" rows="5" rowIndexVar="index" width="100%"
+									id="notifyTable" rows="10" rowIndexVar="index" width="100%"
 									rowKey="#{notify}" 
 									lazy="true" 
 									selection="#{notifyBackingBean.managedBean.selectedNotifys}">
@@ -91,8 +96,32 @@
 					</table>
 				</td>
 				<td width="1%"><p:spacer width="3" /></td>
-				<td width="57%" valign="top"><p:panel id="pnldetail"
-						style="border-width:1px 1px; border:1px solid #ddd!important;padding:10px!important; background:transparent !important; "
+				<td width="57%" valign="top">
+				<table width="100%">
+					<tr style="background-color:gainsboro">
+						<td style="text-align: left; vertical-align: middle;"></td>
+							<td style="text-align: right;">
+								<p:selectOneMenu id="searchItem" value="#{notifyBackingBean.managedBean.searchItem}">
+									<f:selectItem itemLabel="Choose" itemValue="1"/>
+									<f:selectItem itemLabel="Sender" itemValue="2"/>
+									<f:selectItem itemLabel="Subject" itemValue="3"/>
+									<f:selectItem itemLabel="Content" itemValue="4"/>
+									<f:selectItem itemLabel="Date From" itemValue="5"/>
+									<p:ajax event="change" listener="#{notifyBackingBean.searchItem}" update=":form:searchValue"/>
+								</p:selectOneMenu>
+								<p:inputText id="searchValue" value="#{notifyBackingBean.managedBean.searchValue}">
+									<p:ajax event="change" listener="#{notifyBackingBean.searchValue}"/>
+								</p:inputText>
+								<p:commandButton id="searchBtn"
+										value="Search"
+										action="#{notifyBackingBean.searchNotify}"
+										update=":form:pnldetail,:form:notifyTable"/>
+ 							</td>
+						</tr>
+						<tr>
+							<td colspan="2" width="100%" valign="top">
+								<p:panel id="pnldetail"
+						style="border-width:1px 1px; border:1px solid #ddd!important;padding:10px!important; background:transparent !important; overflow: auto; margin: 5px 0 0;"
 						toggleable="true">
 						<table border="0" width="100%" cellpadding="0" cellspacing="0">
 							<c:if
@@ -137,21 +166,24 @@
 													<td>
 														<p:outputPanel>
 															<p>
-															<h:outputText escape="false"
-																style="text-align:left;width:98%;height:220px;overflow: auto;"
-																value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.content}"></h:outputText>
+																<h:outputText escape="false"
+																		style="text-align:left;width:98%;height:220px;overflow: auto;"
+																		value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.content}"></h:outputText>
 															</p>
 														</p:outputPanel>
 													</td>
 												</tr>
 											</table>
-											
-										</p:scrollPanel>
-									</td>
-								</tr>
-							</c:if>
-						</table>
-					</p:panel></td>
+											</p:scrollPanel>
+											</td>
+										</tr>
+									</c:if>
+								</table>
+							</p:panel>
+							</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 		</table>
 		
