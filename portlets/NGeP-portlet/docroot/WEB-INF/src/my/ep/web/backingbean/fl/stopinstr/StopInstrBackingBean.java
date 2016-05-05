@@ -155,7 +155,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				messageId = MessageConst.INFO_700008;
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				messageId = MessageConst.INFO_745011;
+				if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
+					messageId = MessageConst.INFO_745011;
+				}else{
+					messageId = MessageConst.INFO_700007;
+				}
+				
 			}
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null,
@@ -758,5 +763,10 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "siBasePage?faces-redirect=true");
 		}
+	}
+	
+	private boolean checkTaxInvoice(Long reqId){
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		return fulfilmentSO.checkTaxInvoice(reqId);
 	}
 }
