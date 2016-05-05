@@ -505,7 +505,7 @@
 										valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
 										style="text-align:right; width:195px;">
 										<p:ajax event="blur" process="@this" partialSubmit="true" update="@this, @(.amendButton)"
-											listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
+											listener="#{createQtBB.handlePublishClosingDate}" />
 									</p:inputMask></td>
 								<td><p:message id="publishperiodMsg" for="publishperiod"
 										display="icon" /></td>
@@ -527,7 +527,8 @@
 										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew)}"
 										valueChangeListener="#{createQtBB.proposalValidityChanged}"
 										style="text-align:right; width:200px;">
-										<p:ajax event="blur" process="@this" partialSubmit="true" update="@this, @(.amendButton)" />
+										<p:ajax event="blur" process="@this" partialSubmit="true" update="@this, @(.amendButton)"
+											listener="#{createQtBB.handleProposalValidityDate}" />
 									</p:inputMask></td>
 								<td><p:message id="proposalvalidityMsg"
 										for="proposalvalidity" display="icon" /></td>

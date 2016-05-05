@@ -499,7 +499,9 @@ public class ApprovalBackingBean extends
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
 			
-			updatePublishDate(this.getManagedBean().getQt());
+			ScQt scQt = getManagedBean().getQt();
+			// Set New publish date for update publish date. To solve issue on publish date reset back to original time during primefaces calender update phase.
+			scQt.setNewPublishDate(scQt.getPublishDate());
 
 		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
@@ -627,8 +629,6 @@ public class ApprovalBackingBean extends
 			} else {
 				if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
 						.getManagedBean().getApprovalType())) {
-	
-					updatePublishDate(reqDTO.getQtdetail());
 					detailSO.validatePublicationScheduleDetails(reqDTO);
 					// detailSO.validateScheduleDetails(reqDTO);
 				}
@@ -1241,7 +1241,6 @@ public class ApprovalBackingBean extends
 					
 				} else if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL
 						.equalsIgnoreCase(approvalType)) {
-					updatePublishDate(scQt);
 					QTDetailBackingBean backingBean = new QTDetailBackingBean();
 					backingBean.retrieveDocumentTabDtl();
 
