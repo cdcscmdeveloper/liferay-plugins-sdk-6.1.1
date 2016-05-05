@@ -18,15 +18,15 @@
 						immediate="true" rendered="#{!flOrderBB.hasSupplierRole()}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
-					#{flOrderBB.managedBean.fulfilmentOrder.docNo}</td>
+					<p:outputLabel style="font-weight:normal !important" value="#{flOrderBB.managedBean.fulfilmentOrder.docNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
-					#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}</td>
+					<p:outputLabel style="font-weight:normal !important" value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " />
 				</td>
 				<td class="header-info-text">
-					#{flOrderBB.getStatusDescById(flOrderBB.managedBean.fulfilmentOrder.status.statusId)}
+					<p:outputLabel style="font-weight:normal !important" value="#{flOrderBB.getStatusDescById(flOrderBB.managedBean.fulfilmentOrder.status.statusId)}" />
 				</td>
 			</tr>
 		</table>
