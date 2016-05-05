@@ -2471,9 +2471,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    			getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 	    		}
 	    		// retrieve zone label for new price
-	    		if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-	    				|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-	    				|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+	    		if (getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+	    				|| getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+	    				|| getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
 	    			itemPriceZoneLabelList(getManagedBean().getSelectedServiceItem());
 	    			itemMaxQtyZoneLabelList(getManagedBean().getSelectedServiceItem());
 	    		}
