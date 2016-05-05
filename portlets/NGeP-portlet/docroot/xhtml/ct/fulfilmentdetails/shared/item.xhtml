@@ -416,8 +416,8 @@
 				             rendered="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
 			  		         ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
 			  		         ctBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-				               <p:outputLabel value="#{itemMaxQty.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemMaxQty.changeZoneLabel}" />
-				               <p:outputLabel value="#{itemMaxQty.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemMaxQty.changeZoneLabel}" />
+				               <h:outputText value="#{itemMaxQty.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemMaxQty.changeZoneLabel}" />
+				               <h:outputText value="#{itemMaxQty.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemMaxQty.changeZoneLabel}" />
 						</p:column>
 						<p:column style="width: 30%;" styleClass="column-align-center" >
 				            <f:facet name="header">
@@ -623,8 +623,8 @@
 			   
 			     <c:if test="#{ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 			           <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;" styleClass="column-align-center">
-			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPricesVar.changeZoneLabel}" />
-			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPricesVar.changeZoneLabel}" />
+			                 <h:outputText value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPricesVar.changeZoneLabel}" />
+			                 <h:outputText value="#{itemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPricesVar.changeZoneLabel}" />
 			            </p:column>    
 			            <p:column headerText="#{lbl['lbl.ct.price']}" style="white-space:normal;" styleClass="column-align-center">
 			               <h:outputText value="#{itemPricesVar.unitPrice}" style="float:right;">
@@ -657,8 +657,8 @@
 				             rendered="#{ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
 			  		         ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
 			  		         ctBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-				               <p:outputLabel value="#{serviceItemMaxQty.ctContractZone.zoneName}" style="float:left;" rendered="#{!serviceItemMaxQty.changeZoneLabel}" />
-				               <p:outputLabel value="#{serviceItemMaxQty.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{serviceItemMaxQty.changeZoneLabel}" />
+				               <h:outputText value="#{serviceItemMaxQty.ctContractZone.zoneName}" style="float:left;" rendered="#{!serviceItemMaxQty.changeZoneLabel}" />
+				               <h:outputText value="#{serviceItemMaxQty.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{serviceItemMaxQty.changeZoneLabel}" />
 						</p:column>				            
 			            <p:column headerText="#{lbl['lbl.ct.quantity']}" style="width: 30%; white-space:normal;" styleClass="column-align-center">
 		               		<h:outputText value="#{serviceItemMaxQty.maxQuantity}" style="float:right;">
