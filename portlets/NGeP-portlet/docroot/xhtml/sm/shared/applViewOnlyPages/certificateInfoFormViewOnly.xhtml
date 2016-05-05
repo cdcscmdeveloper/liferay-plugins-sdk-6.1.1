@@ -15,11 +15,11 @@
 				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
 				<ac:paginator for="certDt" />
 
-				<p:column headerText="#{lbl['lbl.sm.cert.certName']}">
+				<p:column headerText="#{lbl['lbl.sm.cert.certName']}" style="width : 35%;white-space : normal">
 					<h:outputText value="#{certBean.certName}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.cert.certBody']}">
+				<p:column headerText="#{lbl['lbl.sm.cert.certBody']}" style="width : 35%;white-space : normal">
 					<h:outputText value="#{certBean.pmCertBody.bodyName}" rendered="#{not empty certBean.pmCertBody}"/>
 					<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty certBean.pmCertBody}"/>
 				</p:column>

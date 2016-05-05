@@ -3008,6 +3008,11 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateCertsToSmAppl() throws ParseException {
 		getManagedBean().getSelectedCert().setSmAppl(
 				getManagedBean().getSmAppl());
+		if (getManagedBean().getSelectedCert().getCertTypeId() == null) {
+			getManagedBean().getSelectedCert().setCertTypeId(
+					new BigDecimal(getManagedBean().getGlp().getPmParameter()
+							.getParameterId()));
+		}
 		if (getManagedBean().getSelectedCert().getCertEndDate() != null
 				&& getManagedBean()
 						.getSelectedCert()
@@ -3045,7 +3050,6 @@ public class SmApplicationBackingBean extends
 		} else {
 			getManagedBean().setSelectedCert(certBean);
 		}
-		assignCertBodyList();
 		assignValReqdToTrue();
 		if (getManagedBean().getLatestAppl() != null) {
 			getManagedBean().setLatestCert(
@@ -3057,6 +3061,18 @@ public class SmApplicationBackingBean extends
 									new String[] { "pmCertBody" }, null));
 		}
 		RequestContext.getCurrentInstance().execute("certDialog.show()");
+	}
+
+	/**
+	 * set cert name when on change selection cert body
+	 */
+	public void onChangeCertBody() {
+		PmDocument docCert = SmApplicationUtil
+				.getCertDocByCertBodyId(getManagedBean().getSelectedCert()
+						.getPmCertBody().getCertBodyId());
+		getManagedBean().getSelectedCert().setCertName(
+				docCert == null ? SmCommonUtil.getMessage("lbl.txt.na", null)
+						: docCert.getDocName());
 	}
 
 	/**
@@ -3078,28 +3094,8 @@ public class SmApplicationBackingBean extends
 		cert.setRevNo(1);
 		getManagedBean().setSelectedCert(cert);
 		cert.setSmAppl(getManagedBean().getSmAppl());
-		getManagedBean().setCertBodyLs(new ArrayList<PmCertBody>());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("certDialog.show()");
-	}
-
-	/**
-	 * Assign cert body list.
-	 */
-	public void assignCertBodyList() {
-		if (getManagedBean().getSelectedCert() != null
-				&& getManagedBean().getSelectedCert().getCertTypeId() != null) {
-			PmParameter param = SmApplicationUtil
-					.retrievePmParameterById(getManagedBean().getSelectedCert()
-							.getCertTypeId().longValue());
-			if (param != null) {
-				getManagedBean().setCertBodyLs(
-						SmApplicationUtil.retrievePmCertBodyList(param
-								.getParameterCode()));
-
-			}
-
-		}
 	}
 
 	/**

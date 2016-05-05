@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 
 import org.primefaces.model.StreamedContent;
 
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -29,6 +30,7 @@ import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -388,6 +390,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter glpCert;
 	private PmEduLevel certEduLevel;
 	private PmEduLevel diplomaEduLevel;
+	private PmParameterDesc glp;
 	private List<SelectItem> acadQualifications;
 	private List<SelectItem> travellingSoftwareItems;
 	private List<SelectItem> categoryTypeItems;
@@ -648,6 +651,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		companyBasicGst = new SmGstSupplier();
 		salutationSelectItems = SmCommonUtil.getSalutationItems();
 		addrSameAsItems = new ArrayList<SelectItem>();
+		glp = SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang("CRT",
+				"GLP");
+		certBodyLs = SmApplicationUtil.retrievePmCertBodyList(glp
+				.getPmParameter().getParameterCode());
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -3269,5 +3276,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPersonType(String personType) {
 		this.personType = personType;
+	}
+
+	public PmParameterDesc getGlp() {
+		return glp;
+	}
+
+	public void setGlp(PmParameterDesc glp) {
+		this.glp = glp;
 	}
 }
