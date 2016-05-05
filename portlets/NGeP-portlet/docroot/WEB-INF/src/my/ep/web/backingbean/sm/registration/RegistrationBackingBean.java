@@ -2028,6 +2028,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									.getIdentificationTypeId());
 			getManagedBean().getSmPersonnel().setIdentificationNo(
 					getManagedBean().getSmSuppOwner().getIdentificationNo());
+			getManagedBean().getSmPersonnel().setPmCountry(getManagedBean().getSmSuppOwner().getNationality());
 		}
 	}
 
