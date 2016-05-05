@@ -1,9 +1,12 @@
 package my.ep.web.backingbean.pm.notify;
 
+import java.util.Date;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -36,6 +39,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 
 	public NotifyBackingBean() {
 		this.getManagedBean().setDeleteButtonHide(true);
+		this.getManagedBean().setSearchItem("1");
+		this.getManagedBean().setSearchValue("");
 	}
 
 	public void retrieveNotifyList() {
@@ -186,6 +191,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			}
 
 			INotifySO ntfSO;
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				PmUser user = facesScopes.getUserSessionBean();
@@ -225,7 +231,39 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 										SearchOperator.OPERATOR_EQUALS.value(),
 										0));
 					}
-
+					
+					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("2")){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("sender.userName",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										getManagedBean().getSearchValue(), false));
+					}
+					
+					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("3")){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmNotifyDashboard.subject",
+										SearchOperator.OPERATOR_LIKE.value(), 
+										getManagedBean().getSearchValue(), false));
+					}
+					
+					
+					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("4")){
+						
+						searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("pmNotifyDashboard.content",
+											SearchOperator.OPERATOR_LIKE.value(), 
+											getManagedBean().getSearchValue(), false));
+					}
+						
+					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("5")){
+						
+						searchBean
+								.getDataFilterBeans()
+								.add(new SearchFilterBean("pmNotifyDashboard.createdDate",
+										SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getSearchValue(), false));
+						
+					}
+					
 					NotifyReqDTO reqDTO = new NotifyReqDTO();
 					reqDTO.setSearchBean(searchBean);
 					NotifyResDTO resDTO = ntfSO.searchNotifyList(reqDTO);
@@ -258,7 +296,33 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			IPagingDataModel<PmNotifyUser> specMasterDataModel) {
 		this.notifyDataModel = specMasterDataModel;
 	}
-
+	
+	public void searchNotify() {
+		notifyDataModel.reloadData();
+	}
+	
+	public void searchItem(AjaxBehaviorEvent event) {
+		
+		String itemId = (String) event.getComponent().getAttributes().get("value");
+		
+		if(itemId == null){
+			return;
+		}
+		
+		if(itemId.equals("1")){
+			this.getManagedBean().setSearchValue("");
+		}
+	}
+	
+	public void searchValue(AjaxBehaviorEvent event) {
+		
+		String itemId = (String) event.getComponent().getAttributes().get("value");
+		
+		if(itemId == null){
+			return;
+		}
+	}
+	
 	private void resetSelectedNotify() {
 		getManagedBean().setSelectedNotify(null);
 	}

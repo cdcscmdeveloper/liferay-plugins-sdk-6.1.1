@@ -44,7 +44,7 @@ public class NtfSchedulerServlet extends HttpServlet {
 				SchedulerConstants.NTF_EMAIL_BULK_INTERNAL_JOB,
 				SchedulerConstants.NTF_EMAIL_BULK_JOB_GROUP),
 				NtfEmailBulkJob.class,
-				SchedulerConstants.NTF_EMAIL_BULK_JOB_DESC, "0 0/60 * * * ?");
+				SchedulerConstants.NTF_EMAIL_BULK_JOB_DESC, "0 0/20 * * * ?");
 		
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				SchedulerConstants.NTF_EMAIL_REAL_TIME_INTERNAL_JOB,
