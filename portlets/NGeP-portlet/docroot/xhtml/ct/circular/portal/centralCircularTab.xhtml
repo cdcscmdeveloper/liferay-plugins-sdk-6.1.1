@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<ui:define name="contentSection">
 		<script>
 			$('#portlet_ctCcCircular_WAR_NGePportlet').find(
@@ -47,6 +48,9 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+		<c:if test="#{!centralContractBackingBean.managedBean.fromCircularNotice}">
+			<ac:title value="#{centralContractBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.doctypeCentralContractCircular)}" />
+		</c:if>
 		<p:messages id="messages" showSummary="false" escape="false"
 			showDetail="false" rendered="#{!centralContractBackingBean.managedBean.viewContract}" />
      <f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />
