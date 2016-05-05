@@ -41,7 +41,7 @@
 									oncomplete="delFileDlg.show()" 
 									action="#{fulfilmentBackingBean.confirmDeleteAttachment(attachFileIndex)}"
 									immediate="true"
-									rendered="#{fulfilmentBackingBean.compareAttachmentUserName(attachFile.createdUsername)}"
+									rendered="#{fulfilmentBackingBean.compareAttachmentUserName(attachFile.createdUsername) and bpmTasklistBackingBean.managedBean.claim}"
 									update="lampiran">
 									<p:graphicImage value="/css/images/design/delete.png"
 										styleClass="tasklist_title1" />
