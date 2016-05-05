@@ -452,7 +452,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			outcome[0] = BpmOutcomeConst.BPM_REMOVE_FACTORING;
 			flOrderBB.getManagedBean().setOutComes(outcome);
 			flOrderBB.getManagedBean().setBackToPrevious(null);
-			flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			navgPage=NAV_TO_REMOVE_FACTORING_COMPANY;
 		} else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
