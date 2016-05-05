@@ -38,26 +38,33 @@
 		           		                        update=":form:delPidBtn,:form:pidTableId" listener="#{centralContractBackingBean.selectOnePidCheckboxSelect}"></p:ajax>
 			                             </p:selectBooleanCheckbox>
 				                       </p:column>
-				             
-				                 <p:column style="width:50%;" 
+				                      <p:column style="width:50%;" 
 				                       headerText="#{lbl['lbl.ct.pid.reason']}" id="updateColumn"  styleClass="column-align-center">
-		                                   <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" 
+		                                <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">  
+		                                    <p:selectOneMenu value="#{pidObj.pmReason.reasonId}" 
 		                                             disabled="#{centralContractBackingBean.managedBean.viewContract}" style="width:360px;float:left;text-align:left;">
 			                                             <f:selectItems value="#{centralContractBackingBean.getDropdownPidCodeValues(pidObj.pmReason.reasonId)}" />
 			                                             <p:ajax event="change" partialSubmit="true" update=":form:pidTableId"></p:ajax>
 			                               </p:selectOneMenu>
+			                               </c:if>
+			                                 <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
+			                                     <h:outputText value="#{centralContractBackingBean.getReasonDesc(pidObj.pmReason)}" style="float:left;"/>
+			                                </c:if>
 			                    </p:column> 
-		              
 		                        <p:column  headerText="#{lbl['lbl.ct.pid.reason.desc']}" 
 		                                  id="updatePidPurchase"  styleClass="column-align-center" style="width:45%;">
-		                                   <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"
+		                                     <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">  
+		                                        <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"
 		                                            style="width:350px;float:left;text-align:left;"  disabled="#{centralContractBackingBean.managedBean.viewContract}" 
-		                                            rendered="#{centralContractBackingBean.PidPurchaseTypeOther(pidObj.pmReason.reasonId)}">
-		                                  </p:inputText>  
+		                                            rendered="#{centralContractBackingBean.PidPurchaseTypeOther(pidObj.pmReason.reasonId)}"/>
+		                                    </c:if>
+		                                   <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
+		                                        <h:outputText value="#{pidObj.reasonDesc}"  style="float:left;"/>
+		                                  </c:if>
 		                       </p:column>  
-				   </p:dataTable>
+				        </p:dataTable>
 	             
-	                <div class="ppRightBtn"> 
+	                    <div class="ppRightBtn"> 
 			                 <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   
 				                     partialSubmit="true" action="#{centralContractBackingBean.addPurchaseInDefault()}" update=":form:pidTableId" 
 				                     oncomplete="PidReasonObj.paginator.endLink.click();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>	
@@ -97,36 +104,53 @@
 		           		                         <p:ajax event="change" update=":form:delCtPerson,:form:contactPersonDt" 
 		           		                             listener="#{centralContractBackingBean.selectOnePersonCheckboxSelect}"></p:ajax>
 			                              </p:selectBooleanCheckbox>
-				                  </p:column>
-			
-			                    <p:column style="width:20%;" styleClass="column-align-center">
-			                         <f:facet name="header">
-			                             <h:outputText value="#{lbl['lbl.ct.contact.person.name']}"  styleClass="required"></h:outputText>
-			                         </f:facet>
-				                     <p:inputText id="cperson" value="#{contactPersonsVar.name}" 
-				                           maxlength="20"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
-				   	                       style="width:90%;" label="#{lbl['lbl.ct.contact.person.name']}" onkeypress="if (event.keyCode == 13) { return false; }">
-				   	                 </p:inputText>
-			                   </p:column>
-			
-			                   <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;" styleClass="column-align-center">
-				                      <p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200"
-					                       disabled="#{centralContractBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
-			                   </p:column>
-			
-			                   <p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;" styleClass="column-align-center">
-				                      <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
-				                             style="width:90%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}"
-				                             disabled="#{centralContractBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }">
-				                      </p:inputText>
-			                    </p:column>
-			
-			                    <p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;" styleClass="column-align-center">
-				                     <p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
-				                           value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"
-				                           disabled="#{centralContractBackingBean.managedBean.viewContract}"
-				                           onkeypress="if (event.keyCode == 13) {  return false; }"/>
-			                    </p:column>
+				                   </p:column>
+						           <p:column style="width:20%;" styleClass="column-align-center">
+						                  <f:facet name="header">
+						                        <h:outputText value="#{lbl['lbl.ct.contact.person.name']}"  styleClass="required"></h:outputText>
+						                   </f:facet>
+						                   <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">
+							                     <p:inputText id="cperson" value="#{contactPersonsVar.name}" 
+							                            maxlength="20"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
+							   	                        style="width:90%;" label="#{lbl['lbl.ct.contact.person.name']}" onkeypress="if (event.keyCode == 13) { return false; }"/>
+							   	           </c:if>
+							   	           <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
+							   	                  <h:outputText  value="#{contactPersonsVar.name}" style="float:left;" />
+							   	            </c:if>
+						                </p:column>
+						                <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;" styleClass="column-align-center">
+							                   <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">
+							                      <p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200"
+								                       disabled="#{centralContractBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
+								               </c:if>
+							   	                      <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
+							   	                              <h:outputText  value="#{contactPersonsVar.address}" style="float:left;"/>
+							   	                      </c:if>
+						                   </p:column>
+						
+						                   <p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;" styleClass="column-align-center">
+							                      <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">
+							                
+							                      <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
+							                             style="width:90%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}"
+							                             disabled="#{centralContractBackingBean.managedBean.viewContract}" onkeypress="if (event.keyCode == 13) { return false; }"/>
+							                       </c:if>
+							   	                      <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
+							   	                              <h:outputText  value="#{contactPersonsVar.email}" style="float:left;" />
+							   	                      </c:if>
+						                    </p:column>
+						
+						                    <p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;" styleClass="column-align-center">
+						                       <c:if test="#{!centralContractBackingBean.managedBean.viewContract}">
+							                     <p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
+							                           value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"
+							                           disabled="#{centralContractBackingBean.managedBean.viewContract}"
+							                           onkeypress="if (event.keyCode == 13) {  return false; }"/>
+							                             </c:if>
+							   	                      <c:if test="#{centralContractBackingBean.managedBean.viewContract}">
+							   	                              <h:outputText  value="#{contactPersonsVar.phoneNo}" style="float:left;" />
+							   	                      </c:if>
+						                    </p:column>
 		               </p:dataTable>
 	
 	                	<div class="ppRightBtn"> 
@@ -152,10 +176,10 @@
 	       <p:panel id="exemptedOrgPnl" header="#{lbl['lbl.ct.panel.exempted.ministry']}" toggleable="true" toggleSpeed="500">
 		  
 		   <p:dataTable id="exemptedOrgDt" var="exemptedOrgsVar"  rowIndexVar="index" 
-		       value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
-		 	   rowKey="#{exemptedOrgsVar}"  selection="#{centralContractBackingBean.selectedExemptedOrgs}">
-			        <ac:paginator for="exemptedOrgDt" />
-	                 <p:column  style="width:5%; text-align:center" 
+		           value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
+		 	       rowKey="#{exemptedOrgsVar}"  selection="#{centralContractBackingBean.selectedExemptedOrgs}">
+			            <ac:paginator for="exemptedOrgDt" />
+	                     <p:column  style="width:5%; text-align:center" 
 				                         rendered="#{!centralContractBackingBean.managedBean.viewContract}">
 				                           <f:facet name="header">
 							                     <p:selectBooleanCheckbox value="#{centralContractBackingBean.managedBean.selectAll}">
@@ -169,18 +193,18 @@
 		           		                         <p:ajax event="change" update=":form:delExemptedBtn,:form:exemptedOrgDt" 
 		           		                             listener="#{centralContractBackingBean.selectExemptedOrgCheckboxSelect}"></p:ajax>
 			                              </p:selectBooleanCheckbox>
-				                  </p:column>
-		            <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.type']}" 
-		                   style="width:30%;" styleClass="column-align-center">
-		                    <p:selectOneMenu id="OrgTypeId" 
-		                           style="width:200px;float:left;" value="#{exemptedOrgsVar.orgTypeCode}" disabled="true">
-            	                   <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
-            	            </p:selectOneMenu>
-		            </p:column>
-		             <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.name']}" 
-		                  style="width:65%;" styleClass="column-align-center">
-		                     <h:outputText value="#{exemptedOrgsVar.orgProfile.orgName}" style="float:left;"/>
-		             </p:column>
+				             </p:column>
+		                    <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.type']}" 
+				                   style="width:30%;" styleClass="column-align-center">
+				                    <p:selectOneMenu id="OrgTypeId" 
+				                           style="width:200px;float:left;" value="#{exemptedOrgsVar.orgTypeCode}" disabled="true">
+		            	                   <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
+		            	            </p:selectOneMenu>
+		                   </p:column>
+		                   <p:column headerText="#{lbl['lbl.ct.panel.exempted.org.name']}" 
+		                         style="width:65%;" styleClass="column-align-center">
+		                               <h:outputText value="#{exemptedOrgsVar.orgProfile.orgName}" style="float:left;"/>
+		                   </p:column>
 	       </p:dataTable>
 	     
 	       <div class="ppRightBtn">
