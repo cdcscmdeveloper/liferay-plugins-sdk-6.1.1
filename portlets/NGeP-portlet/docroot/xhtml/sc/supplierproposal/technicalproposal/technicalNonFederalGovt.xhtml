@@ -188,7 +188,7 @@
 				process="@all" styleClass="BtnSpacing"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
-				update="@([id$=nonFedExpPanel])" />
+				update="@([id$=technongovtid])" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				partialSubmit="true" process="@this" styleClass="BtnSpacing"
