@@ -167,7 +167,7 @@ public class ProfilePersonalizationBackingBean extends
 				throw new EpException(MessageConst.ERROR_770045);
 			}
 			loadUserCommonDetails(sUsers.getUserId());
-			constructRolesString();
+			constructRoles();
 			retrieveMofExpDate(getManagedBean().getCurrentProfile());
 		    retrieveSoftCertExpDate(getManagedBean().getSelectedUser());
 		    
@@ -1381,11 +1381,15 @@ public class ProfilePersonalizationBackingBean extends
 	public boolean isMofExpiryShown(){
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.CM_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isVirtualCertShown(){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
 			return true;
 		}
 		return false;
@@ -1396,7 +1400,6 @@ public class ProfilePersonalizationBackingBean extends
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.CM_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())){
@@ -1405,25 +1408,15 @@ public class ProfilePersonalizationBackingBean extends
 		return false;
 	}
 	
-	private void constructRolesString(){
-		//StringBuilder sb = new StringBuilder();
+	
+	
+	private void constructRoles(){
 		List<String> rolesList=new ArrayList<String>();
-		
-		/*for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
-			sb.append(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());
-			sb.append("<br/>");;
-		}
-		getManagedBean().setRoles(sb.toString());*/
 		
 		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
 			rolesList.add(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());			
 		}
 		getManagedBean().setRolesList(rolesList);
-		
-//		String roles = sb.toString();
-//		if(StringUtils.isNotBlank(roles)){
-//			getManagedBean().setRoles(roles.substring(0,roles.length()-1));
-//		}
 	}
 	
 	public int numberOfLines(String string, int cols) {
