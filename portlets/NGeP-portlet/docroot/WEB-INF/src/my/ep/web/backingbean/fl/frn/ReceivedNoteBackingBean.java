@@ -224,7 +224,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			log.info("######## FRN SLA end : "+System.currentTimeMillis()+" : "+new Date());
 			if (resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_700011;
+				String messageId = MessageConst.INFO_745014;
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 						messageId = MessageConst.INFO_700004;
@@ -278,7 +278,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					renewSesionObject();
-					if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE))) {
+					/*if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE))) {
 						Map<String, String> paramMap = new HashMap<String, String>();
 						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFulfilmentNoteNo());
 						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
@@ -287,7 +287,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.frn",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 						commonBackingBean.getManagedBean().setParamMap(paramMap);
 						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
-					}
+					}*/
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					reqDTO.setFulfilmentNoteId(resDTO.getFulfilmentNoteId());
