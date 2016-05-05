@@ -28,6 +28,7 @@ public class MaterialMasterDataInformationJob implements Job {
 		log.info("MaterialMasterDataInformationJob start");
 		try {
 
+			gfmasServiceSO.temporarMasterDataMaterialInfoGfmas();
 			gfmasServiceSO.permanentMasterDataMaterialInfoGfmas();
 		} catch (Exception e) {
 			log.info("ReceiptInformationErrorJob :" + e.getMessage());
