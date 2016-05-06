@@ -7,9 +7,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<ui:define name="contentSection">
 	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_assignedTaskSearch_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.txt.assignedtasksearch']}");
+		</script>
+	</ui:define>
+
+	<ui:define name="contentSection">	
+
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>		
@@ -17,24 +23,24 @@
 	<p:messages id="srchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 	
 	<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-	
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.assignedtasksearch.instruction']}"/>
 	<table>
  		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.txt.docNo']}" /></td>
-			<td>
+			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.txt.docNo']}" /></td>
+			<td class="tdContent">
 			<p:inputText id="docNo" size="50" value="#{bpmAssignedTaskSearchBackingBean.managedBean.docNo}"></p:inputText>
 			</td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.txt.docType']}" /></td>
-			<td>
+			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.txt.docType']}" /></td>
+			<td class="tdContent">
 			<p:selectOneMenu size="50" id="docType" value="#{bpmAssignedTaskSearchBackingBean.managedBean.docType}">
 				<f:selectItems value="#{bpmAssignedTaskSearchBackingBean.getDropdownCodeValues(ParameterTypeConst.documentTypes)}" />
 				<p:ajax listener="#{bpmAssignedTaskSearchBackingBean.findDocStatus}" update="docStatus" />
 			</p:selectOneMenu>
 			</td>
-			<td><p:outputLabel value="#{lbl['lbl.txt.docStatus']}"/></td>
-			<td>
+			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.txt.docStatus']}"/></td>
+			<td class="tdContent">
 				<p:selectOneMenu id="docStatus" size="50" value="#{bpmAssignedTaskSearchBackingBean.managedBean.docStatus}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems 	value="#{bpmAssignedTaskSearchBackingBean.managedBean.docStatusList}"
@@ -46,8 +52,8 @@
 			</td>						
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.pm.cal.frmdate']}" /></td>
-			<td>
+			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.pm.cal.frmdate']}" /></td>
+			<td class="tdContent">
 				<p:calendar showOn="button" size="25" label="#{lbl['lbl.pm.cal.frmdate']}"
 							maxdate="#{bpmAssignedTaskSearchBackingBean.managedBean.searchToCreatedDate}"
 							id="fromDate" readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
@@ -55,8 +61,8 @@
 					<p:ajax event="dateSelect" update="toDate" />
 				</p:calendar>
 			</td>
-			<td><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
-			<td>
+			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
+			<td class="tdContent">
 				<p:calendar showOn="button" size="25" label="#{lbl['lbl.pm.cal.todate']}"
 							mindate="#{bpmAssignedTaskSearchBackingBean.managedBean.searchFromCreatedDate}"
 							id="toDate" readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
@@ -67,7 +73,7 @@
 		</tr>
 	</table>
 
-	<div style="text-align: right;">
+	<div align="right">
 			<p:commandButton id="schBtn"
 				value="#{lbl['lbl.btn.search']}"
 				action="#{bpmAssignedTaskSearchBackingBean.searchAction}"
