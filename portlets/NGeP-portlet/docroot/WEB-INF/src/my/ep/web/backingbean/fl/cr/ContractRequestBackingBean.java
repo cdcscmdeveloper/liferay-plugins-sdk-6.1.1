@@ -1,6 +1,5 @@
 /**
-
-\q * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.fl.cr;
 
@@ -2058,9 +2057,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			} else {
 				// skip the validation if the CR is from PID
 				if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode()) && getManagedBean().getFlRequest().getScPurchaseInDefault()==null){
-					ContractItemResDTO itemResDTO = contractItemSO.retrieveContractItemByVersionAndItemCode(reqDTO);
-					if(itemResDTO.getCtContractItem()!=null) {	
-						if(flItemAddr.getOrderedQty().doubleValue() != itemResDTO.getCtContractItem().getMinimumOrderQty()){
+					ContractItemResDTO itemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
+					// Validation on service quantity without zone
+					if(itemResDTO.getCtItemMaxQuantity()!=null && itemResDTO.getCtItemMaxQuantity().getMaxQuantity()!=null) {	
+						if(flItemAddr.getOrderedQty().doubleValue() != itemResDTO.getCtItemMaxQuantity().getMaxQuantity().doubleValue()){
 							flItemAddr.setOrderedQty(BigDecimal.ZERO);
 							flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 							throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
@@ -2086,6 +2086,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							oriItemAddr.setOrderedQty(BigDecimal.ZERO);
 							flItemAddr.setOrderedQty(BigDecimal.ZERO);
 							throw new EpException(MessageConst.ERROR_745056);
+						} else if (ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){ 
+							reqDTO.setContractZoneId(itemResDTO.getContractZoneId());
+							// Validation on service quantity with zone
+							itemResDTO = contractItemSO.getItemMaxQuantity(reqDTO);
+							if(itemResDTO.getCtItemMaxQuantity()!=null && itemResDTO.getCtItemMaxQuantity().getMaxQuantity()!=null) {	
+								if(flItemAddr.getOrderedQty().doubleValue() != itemResDTO.getCtItemMaxQuantity().getMaxQuantity().doubleValue()){
+									flItemAddr.setOrderedQty(BigDecimal.ZERO);
+									flItemAddr.setOrderedAmt(BigDecimal.ZERO);
+									throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
+								}	
+							}							
 						}
 					}
 				}
