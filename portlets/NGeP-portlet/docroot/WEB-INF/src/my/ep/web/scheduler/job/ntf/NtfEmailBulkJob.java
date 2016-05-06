@@ -3,7 +3,6 @@
  */
 package my.ep.web.scheduler.job.ntf;
 
-import my.ep.biz.service.intg.gfmas.IGfmasServiceSO;
 import my.ep.biz.service.ntf.scheduler.INtfEmailBulkSchedulerSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.factory.EpLogger;
@@ -28,9 +27,11 @@ public class NtfEmailBulkJob implements Job {
 		.getServiceObject(ModuleCodeConst.NTF_SCH,
 				INtfEmailBulkSchedulerSO.class);
 		
-		iNtfEmailBulkSchedulerSO.retrieveDb();
-		iNtfEmailBulkSchedulerSO.sendEmail();
-		iNtfEmailBulkSchedulerSO.updateDb();
+		for(int i = 0; i<3; i++){
+			iNtfEmailBulkSchedulerSO.retrieveDb();
+			iNtfEmailBulkSchedulerSO.sendEmail();
+			iNtfEmailBulkSchedulerSO.updateDb();
+		}
 		
 	}
 }
