@@ -1,0 +1,203 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<title>Created by BCL easyConverter SDK 3 (html Version)</title>
+<style type="text/css">
+@page { 
+	size: A4 portrait;
+	margin-top: 0cm;
+	margin-left: 0cm;
+	margin-right: 0cm;
+	margin-bottom: 0cm;
+}
+body {margin-top: 0px;margin-left: 0px;}
+
+#page_1 {position:relative; overflow: hidden;margin: 24px 0px 38px 120px;padding: 0px;border: none;width: 696px;}
+
+#page_1 #dimg1 {position:absolute;top:0px;left:168px;z-index:-1;width:240px;height:102px;}
+#page_1 #dimg1 #img1 {width:240px;height:102px;}
+
+
+
+
+.dclr {clear:both;float:none;height:1px;margin:0px;padding:0px;overflow:hidden;}
+
+.ft0{font: bold 15px 'Times New Roman';line-height: 17px;}
+.ft1{font: bold 15px 'Times New Roman';line-height: 16px;}
+.ft2{font: 15px 'Times New Roman';line-height: 17px;}
+.ft3{font: 15px 'Times New Roman';line-height: 16px;}
+.ft4{font: 1px 'Times New Roman';line-height: 1px;}
+.ft5{font: 1px 'Times New Roman';line-height: 7px;}
+.ft6{font: 14px 'Times New Roman';line-height: 16px;}
+
+.p0{text-align: left;padding-left: 151px;margin-top: 106px;margin-bottom: 0px;}
+.p1{text-align: left;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p2{text-align: right;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p3{text-align: left;margin-top: 16px;margin-bottom: 0px;}
+.p4{text-align: left;margin-top: 0px;margin-bottom: 0px;}
+.p5{text-align: left;padding-left: 7px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p6{text-align: left;padding-left: 77px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p7{text-align: left;padding-right: 125px;margin-top: 21px;margin-bottom: 0px;}
+.p8{text-align: left;padding-left: 17px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p9{text-align: left;padding-left: 115px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p10{text-align: left;padding-left: 66px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p11{text-align: left;padding-left: 107px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+
+.td0{padding: 0px;margin: 0px;width: 225px;vertical-align: bottom;}
+.td1{padding: 0px;margin: 0px;width: 20px;vertical-align: bottom;}
+.td2{padding: 0px;margin: 0px;width: 144px;vertical-align: bottom;}
+.td3{padding: 0px;margin: 0px;width: 469px;vertical-align: bottom;}
+.td4{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 144px;vertical-align: bottom;}
+.td5{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 469px;vertical-align: bottom;}
+.td6{border-left: #000000 1px solid;padding: 0px;margin: 0px;width: 143px;vertical-align: bottom;background: #c0c0c0;}
+.td7{border-right: #000000 1px solid;padding: 0px;margin: 0px;width: 468px;vertical-align: bottom;background: #c0c0c0;}
+.td8{border-left: #000000 1px solid;border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 143px;vertical-align: bottom;background: #c0c0c0;}
+.td9{border-right: #000000 1px solid;border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 468px;vertical-align: bottom;background: #c0c0c0;}
+.td10{border-left: #000000 1px solid;border-right: #000000 1px solid;border-top: #000000 1px solid;border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 54px;vertical-align: bottom;}
+.td11{border-right: #000000 1px solid;border-top: #000000 1px solid;border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 338px;vertical-align: bottom;}
+.td12{border-right: #000000 1px solid;border-top: #000000 1px solid;border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 217px;vertical-align: bottom;}
+.td13{border-left: #000000 1px solid;border-right: #000000 1px solid;border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 54px;vertical-align: bottom;}
+.td14{border-right: #000000 1px solid;border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 338px;vertical-align: bottom;}
+.td15{border-right: #000000 1px solid;border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 217px;vertical-align: bottom;}
+.td16{padding: 0px;margin: 0px;width: 336px;vertical-align: bottom;}
+.td17{padding: 0px;margin: 0px;width: 227px;vertical-align: bottom;}
+
+.tr0{height: 17px;}
+.tr1{height: 38px;}
+.tr2{height: 34px;}
+.tr3{height: 33px;}
+.tr4{height: 19px;}
+.tr5{height: 22px;}
+.tr6{height: 7px;}
+.tr7{height: 37px;}
+.tr8{height: 35px;}
+.tr9{height: 20px;}
+
+.t0{width: 245px;margin-top: 29px;font: bold 15px 'Times New Roman';}
+.t1{width: 613px;margin-top: 13px;font: bold 15px 'Times New Roman';}
+.t2{width: 612px;margin-top: 14px;font: bold 15px 'Times New Roman';}
+.t3{width: 563px;margin-top: 15px;font: 15px 'Times New Roman';}
+
+</style>
+</head>
+
+<body>
+<div id="page_1">
+<div id="dimg1">
+<img src="http://localhost:8080/NGeP-portlet/css/images/Bank_verification_form.jpg" id="img1" />
+</div>
+
+
+<div class="dclr"></div>
+<p class="p0 ft0">(Borang Pengesahan Akaun Bank Syarikat)</p>
+<table cellpadding="0" cellspacing="0" class="t0">
+<tr>
+	<td class="tr0 td0"><p class="p1 ft1">Nama Syarikat</p></td>
+	<td class="tr0 td1"><p class="p2 ft1">:</p></td>
+</tr>
+<tr>
+	<td class="tr1 td0"><p class="p1 ft0">No. Pendaftaran ROC/ROB/ROS</p></td>
+	<td class="tr1 td1"><p class="p2 ft0">:</p></td>
+</tr>
+</table>
+<p class="p3 ft2">Setiausaha,</p>
+<p class="p4 ft2">Bahagian Perolehan Kerajaan,</p>
+<p class="p4 ft2">Tingkat Bawah, Blok Utara,</p>
+<p class="p4 ft3">Kompleks Kementerian Kewangan,</p>
+<p class="p4 ft2">Presint 2,</p>
+<p class="p4 ft2">Pusat Pentadbiran Kerajaan Persekutuan</p>
+<p class="p4 ft2">62592 Putrajaya</p>
+<p class="p4 ft2">Tel : <NOBR>03-88823000</NOBR></p>
+<table cellpadding="0" cellspacing="0" class="t1">
+<tr>
+	<td class="tr0 td2"><p class="p1 ft3">Tuan,</p></td>
+	<td class="tr0 td3"><p class="p1 ft4">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr2 td2"><p class="p1 ft1">Nama Bank</p></td>
+	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>...............................</p></td>
+</tr>
+<tr>
+	<td class="tr2 td2"><p class="p1 ft0">Cawangan Bank</p></td>
+	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>...............................</p></td>
+</tr>
+<tr>
+	<td class="tr3 td2"><p class="p1 ft1">Alamat Bank</p></td>
+	<td class="tr3 td3"><p class="p1 ft3"><span class="ft1">: </span>...............................</p></td>
+</tr>
+<tr>
+	<td class="tr2 td2"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr2 td3"><p class="p5 ft3">...............................</p></td>
+</tr>
+<tr>
+	<td class="tr2 td2"><p class="p1 ft1">Poskod</p></td>
+	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>............<span class="ft0">Negeri : </span>.............</p></td>
+</tr>
+<tr>
+	<td class="tr3 td2"><p class="p1 ft1">No. Akaun</p></td>
+	<td class="tr3 td3"><p class="p1 ft3"><span class="ft1">: </span>...............................</p></td>
+</tr>
+<tr>
+	<td class="tr4 td4"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr4 td5"><p class="p1 ft4">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr5 td6"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr5 td7"><p class="p6 ft1">PENANDATANGAN CEK</p></td>
+</tr>
+<tr>
+	<td class="tr6 td8"><p class="p1 ft5">&#160;</p></td>
+	<td class="tr6 td9"><p class="p1 ft5">&#160;</p></td>
+</tr>
+</table>
+<p class="p7 ft2">Adalah diakui bahawa <NOBR>nama-nama</NOBR> berikut telah diberi kuasa oleh syarikat untuk menandatangani cek akaun di atas:</p>
+<table cellpadding="0" cellspacing="0" class="t2">
+<tr>
+	<td class="tr0 td10"><p class="p8 ft1">No<span class="ft3">.</span></p></td>
+	<td class="tr0 td11"><p class="p9 ft1">Nama  No. K/P</p></td>
+	<td class="tr0 td12"><p class="p10 ft1">Tandatangan</p></td>
+</tr>
+<tr>
+	<td class="tr7 td13"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr7 td14"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr7 td15"><p class="p1 ft4">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr8 td13"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td14"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td15"><p class="p1 ft4">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr8 td13"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td14"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td15"><p class="p1 ft4">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr8 td13"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td14"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr8 td15"><p class="p1 ft4">&#160;</p></td>
+</tr>
+</table>
+<table cellpadding="0" cellspacing="0" class="t3">
+<tr>
+	<td class="tr0 td16"><p class="p1 ft1">Terma dan keadaan untuk tandatangan cek <span class="ft3">:</span></p></td>
+	<td class="tr0 td17"><p class="p1 ft4">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr2 td16"><p class="p1 ft3">...................</p></td>
+	<td class="tr2 td17"><p class="p1 ft4">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr2 td16"><p class="p1 ft2">Tarikh :_________________</p></td>
+	<td class="tr2 td17"><p class="p1 ft6">Disahkan Oleh: __________________</p></td>
+</tr>
+<tr>
+	<td class="tr9 td16"><p class="p1 ft4">&#160;</p></td>
+	<td class="tr9 td17"><p class="p11 ft0"><span class="ft2">(</span>Pengurus Bank <span class="ft2">)</span></p></td>
+</tr>
+</table>
+</div>
+</body>
+</html>
