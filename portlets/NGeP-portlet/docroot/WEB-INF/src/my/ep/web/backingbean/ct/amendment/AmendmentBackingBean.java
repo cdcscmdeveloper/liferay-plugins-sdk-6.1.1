@@ -5211,13 +5211,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Integer days = 0;
 		IRuleSO ruleSO = null;
 		try {
-		          ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		          RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		          ruleReqDTO.setRuleType(RuleType);
-		          List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		          if (ruleValueList != null && ruleValueList.size() > 0) {
-			           days  = Integer.valueOf(ruleValueList.get(0).getRuleValue());
-	           	}
+			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		 	RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		   	ruleReqDTO.setRuleType(RuleType);
+		 	List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		  	if (ruleValueList != null && ruleValueList.size() > 0) {
+		  		days  = Integer.valueOf(ruleValueList.get(0).getRuleValue());
+		  	} else {
+				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+			}
 		} finally{
 		    	  ruleSO = null;
 		      }
