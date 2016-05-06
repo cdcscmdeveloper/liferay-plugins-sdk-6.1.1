@@ -184,7 +184,7 @@
 				<td colspan="3"><p:inputText id="title" required="true"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"
-						size="35" label="#{lbl['lbl.sc.title']}" maxlength="100" >
+						size="35" label="#{lbl['lbl.sc.title']}" maxlength="500" >
 						<p:ajax event="blur" process="title" update="title"/></p:inputText> <p:message
 						id="titleMsg" for="title" display="icon" /></td>
 			</tr>
