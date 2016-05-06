@@ -179,7 +179,8 @@
 				<p:treeTable id="committeeTbl" var="committeeNode"
 					value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"
 					selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
-					selectionMode="checkbox">
+					selectionMode="checkbox"
+					rowIndexVar="index">
 
 					<p:ajax event="unselect"
 						listener="#{qTCommitteBackingBean.onNodeUnselect}" />
@@ -220,7 +221,7 @@
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 						</f:facet>
 						<h:outputText
 							value="#{lbl[committeeNode.object.PNP ? 'lbl.txt.yes' : 'lbl.txt.no']}"

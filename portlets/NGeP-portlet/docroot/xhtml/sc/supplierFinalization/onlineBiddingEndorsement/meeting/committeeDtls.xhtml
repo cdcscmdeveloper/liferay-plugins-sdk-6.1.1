@@ -11,7 +11,7 @@
 		<p:dataTable id="committeeDtlTbl" var="committeeDtl"
 			value="#{suppFinalBiddingBackingBean.managedBean.committeeList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rows="10" rowKey="#{committeeDtl}" rowIndexVar="rowIndex"
+			rows="10" rowKey="#{committeeDtl}" rowIndexVar="index"
 			resizableColumns="false">
 			<ac:paginator for="committeeDtlTbl" />
 
@@ -40,7 +40,7 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
 				<h:outputText
 					value="#{suppFinalBiddingBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
