@@ -85,6 +85,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<ui:param name="briefingDelPopUp" value="briefingDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />
 		<div class="ppRightBtn BtnSpacing">
 			<h:panelGroup id="addtositebutton">
 				<p:commandButton id="addtositevisitid"
@@ -104,14 +105,13 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, briefingdtlid"
 				partialSubmit="true"
-				oncomplete="briefingDtlsDeletePopUp.show();"
+				oncomplete="#{briefingDelPopUp}.show();"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-				update="@form" />
+				update="@this" />
 			
 		</div>
-		<ui:param name="briefingDtlsDeleteId" value="briefingDtlsDeleteId" />
-		<ac:confirmationPopup id="#{briefingDtlsDeleteId}"
-			widget="briefingDtlsDeletePopUp"
+		<ac:confirmationPopup id="briefingDtlsDeleteId"
+			widget="#{briefingDelPopUp}"
 			okAction="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
 			width="37%" height="100"
 			title="#{lbl['lbl.sc.briefing.dtls']}"
@@ -193,6 +193,7 @@
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
+				<ui:param name="siteVisitDelPopUp" value="siteVisitDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />
 				<div class="ppRightBtn BtnSpacing">
 					<p:commandButton id="addsitevisitid" 
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
@@ -202,18 +203,17 @@
 
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, sitevisitdtlid" partialSubmit="true"
-						oncomplete="sitevisitDtlsDeletePopUp.show();"
+						oncomplete="#{siteVisitDelPopUp}.show();"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-						update="@form" />
+						update="@this" />
 				</div>
-				<ui:param name="sitevisitDtlsDeleteId" value="sitevisitDtlsDeleteId" />
-				<ac:confirmationPopup id="#{sitevisitDtlsDeleteId}"
-					widget="sitevisitDtlsDeletePopUp"
+				<ac:confirmationPopup id="sitevisitDtlsDeleteId"
+					widget="#{siteVisitDelPopUp}"
 					okAction="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
 					width="35%" height="100"
 					title="#{lbl['lbl.sc.site.visit.dtls']}"
 					content="#{lbl['lbl.sc.dialog.confirm.sitevisit.details.dtls']}"
-					update="@([id$=sitevisitdtlid]), @([id$=panelGrpId])" >
+					update="@([id$=sitevisitdtlid])" >
 				</ac:confirmationPopup>
 				<!--  commentd by VidyasagarReddy  -->
 				<!-- <h:panelGroup id="panelGrpId" rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
