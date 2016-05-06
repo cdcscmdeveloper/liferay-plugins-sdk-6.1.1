@@ -18,7 +18,7 @@
 			</div>
 			<div style="width: 100%; text-align: right">
 				<p:commandButton
-					value="#{zoneBackingBean.managedBean.pmZone.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
+					value="#{zoneBackingBean.managedBean.pmZone.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
 					style="float:right;" action="#{zoneBackingBean.saveZone}"
 					update="@([id$=Msg])" />
 			</div>

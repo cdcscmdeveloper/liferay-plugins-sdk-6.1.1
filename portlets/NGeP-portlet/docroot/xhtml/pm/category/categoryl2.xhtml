@@ -29,7 +29,7 @@
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
 				</td>
 				
-				<td><p:commandButton value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
+				<td><p:commandButton value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
 						action="#{categoryBackingBean.saveSubCategory}"
 						update=":form" style="float:right;" /></td>				
 			</tr>

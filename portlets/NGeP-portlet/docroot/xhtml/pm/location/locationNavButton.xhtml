@@ -20,7 +20,7 @@
 					<div align="right" style="width: 100%">
 
 						<p:commandButton
-							value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
+							value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
 							update="@([id$=Msg])"
 							action="#{locationBackingBean.saveLocation}" style="float:right;" />
 					</div>
