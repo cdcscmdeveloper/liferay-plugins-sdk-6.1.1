@@ -2472,7 +2472,7 @@
 	 	<portlet-name>assignedTaskSearch</portlet-name>
 	 	<icon>/icon.png</icon>
 	 	<instanceable>false</instanceable>
-	 	<header-portlet-css>/css/main.css</header-portlet-css>
+	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 	 	<footer-portlet-javascript>
 	 		/js/main.js
 	 	</footer-portlet-javascript>
