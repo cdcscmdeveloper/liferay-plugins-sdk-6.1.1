@@ -77,7 +77,8 @@
 								value="#{evaluationMeetingBackingBean.searchExistingUser}"
 								selection="#{evaluationMeetingBackingBean.managedBean.selectedPmUser}"
 								rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
-								styleClass="existingCommitteeResults" style="width : 100%;">
+								styleClass="existingCommitteeResults" style="width : 100%;"
+								rowIndexVar="index">
 
 								<ac:paginator for="existingcommitteesearch" />
 
@@ -112,7 +113,7 @@
 								<p:column style="width:6%;">
 									<f:facet name="header">
 										<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-										<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+										<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 									</f:facet>
 									<h:outputText
 										value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />

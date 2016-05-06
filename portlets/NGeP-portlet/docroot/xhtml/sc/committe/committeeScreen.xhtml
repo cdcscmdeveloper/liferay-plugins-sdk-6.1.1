@@ -11,7 +11,8 @@
 		<p:dataTable id="committelistid"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
-			var="committeemember">
+			var="committeemember"
+			rowIndexVar="index">
 
 			<ac:paginator for="committelistid" />
 
@@ -45,7 +46,7 @@
 			<p:column style="width: 5%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
 				<h:outputText
 					value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />

@@ -16,7 +16,7 @@
 				<p:dataTable id="ecMemberTbl" var="committeeDtl"
 					value="#{lOIDetailBackingBean.managedBean.ecActivityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
+					rowKey="#{committeeDtl}" rowIndexVar="index">
 
 					<ac:paginator for="ecMemberTbl" />
 
@@ -44,7 +44,7 @@
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 						</f:facet>
 					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
 											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}				
@@ -70,7 +70,7 @@
 				<p:dataTable id="tecMemberTbl" var="committeeDtl"
 					value="#{lOIDetailBackingBean.managedBean.tecActivityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
+					rowKey="#{committeeDtl}" rowIndexVar="index">
 
 					<ac:paginator for="tecMemberTbl" />
 
@@ -98,7 +98,7 @@
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 						</f:facet>
 					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
 											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}
@@ -120,7 +120,7 @@
 				<p:dataTable id="fecMemberTbl" var="committeeDtl"
 					value="#{lOIDetailBackingBean.managedBean.fecActivityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
+					rowKey="#{committeeDtl}" rowIndexVar="index">
 
 					<ac:paginator for="fecMemberTbl" />
 
@@ -148,7 +148,7 @@
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 						</f:facet>
 					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
 											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}					
@@ -170,7 +170,7 @@
 			id="meetingAttDetailsId">
 			<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
 				value="#{lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances}"
-				rows="10" rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
+				rows="10" rowKey="#{meetingAttDtl}" rowIndexVar="index"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedMeetingAttList}">
 
@@ -230,7 +230,7 @@
 			<p:dataTable id="fcMemberTbl" var="committeeDtl"
 				value="#{lOIDetailBackingBean.managedBean.fcActivityList}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
+				rowKey="#{committeeDtl}" rowIndexVar="index">
 
 				<ac:paginator for="fcMemberTbl" />
 

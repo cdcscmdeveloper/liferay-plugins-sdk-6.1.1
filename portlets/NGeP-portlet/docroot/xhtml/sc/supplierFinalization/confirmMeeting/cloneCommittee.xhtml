@@ -183,7 +183,8 @@
 			<p:dataTable id="cloneCommitteeTbl" var="committeeMember"
 				value="#{suppFinalMeetingBackingBean.managedBean.cloneCommitteMembers}"
 				selection="#{suppFinalMeetingBackingBean.managedBean.cloneCommitteMembersSelect}"
-				rowKey="#{committeeMember.committeeMemberId}">
+				rowKey="#{committeeMember.committeeMemberId}"
+				rowIndexVar="index">
 				<ac:paginator for="cloneCommitteeTbl" />
 
 				<p:column selectionMode="multiple" style="width:2%"></p:column>
@@ -211,7 +212,7 @@
 				<p:column>
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+						<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 					</f:facet>
 					<h:outputText value="#{committeeMember.PNP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"></h:outputText>
 				</p:column>

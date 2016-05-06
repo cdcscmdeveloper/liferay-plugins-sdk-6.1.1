@@ -230,7 +230,7 @@
 						<p:column style="width:5%;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+								<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 							</f:facet>
 							<h:outputText
 								value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
