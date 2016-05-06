@@ -1412,10 +1412,12 @@ public class ProfilePersonalizationBackingBean extends
 	
 	private void constructRoles(){
 		List<String> rolesList=new ArrayList<String>();
-		
+		int i = 0;
 		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()){
-			rolesList.add(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());			
+			rolesList.add(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());	
+			i++;
 		}
+		getManagedBean().setRoleTableScrollHeight(i > 2 ? 71 : (i * 24) + 2);
 		getManagedBean().setRolesList(rolesList);
 	}
 	

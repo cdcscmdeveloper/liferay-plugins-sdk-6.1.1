@@ -52,6 +52,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private List<String> rolesList;
 	private Date softCertExpDate;
 	private Date mofExpDate;
+	private int roleTableScrollHeight;
 	
 /**
 	 * @return the addressEntered
@@ -299,6 +300,20 @@ public boolean isProfileChanged() {
 	 */
 	public void setMofExpDate(Date mofExpDate) {
 		this.mofExpDate = mofExpDate;
+	}
+
+	/**
+	 * @return the roleTableScrollHeight
+	 */
+	public int getRoleTableScrollHeight() {
+		return roleTableScrollHeight;
+	}
+
+	/**
+	 * @param roleTableScrollHeight the roleTableScrollHeight to set
+	 */
+	public void setRoleTableScrollHeight(int roleTableScrollHeight) {
+		this.roleTableScrollHeight = roleTableScrollHeight;
 	}
 
 }	
