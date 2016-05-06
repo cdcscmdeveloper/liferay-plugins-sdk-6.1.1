@@ -660,8 +660,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 	public String getRoleDesc(PmUser pmUser) {
 		String userRole = null;
 		String committeeType = getManagedBean().getCommitteeType();
-		StringBuffer chairPersonRoleCode = new StringBuffer(
-				committeeType + QTConstants.CHAIRPERSON);
 		
 		ICommitteSO committeeSO = null;
 		try {
@@ -670,7 +668,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setUser(pmUser);
-			reqDTO.setRoleCode(chairPersonRoleCode.toString());
 			reqDTO.setCommitteeType(committeeType);
 			
 			PmOrgProfile pmOrgProfile = getManagedBean().getScQt().getPmOrgProfile();
