@@ -4912,6 +4912,8 @@ public class QTDetailBackingBean extends
 				
 			}
 			if (isSucessful) {
+				qtProposalSO.closeProposal(reqDTO);
+				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(
