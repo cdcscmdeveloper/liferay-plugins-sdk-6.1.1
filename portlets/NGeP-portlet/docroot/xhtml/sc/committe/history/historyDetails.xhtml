@@ -11,7 +11,8 @@
 			toggleable="true">
 			<p:dataTable id="hisMembers" var="scCommitteeMember"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scCommitteeMembers}">
+				value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scCommitteeMembers}"
+				rowIndexVar="index">
 
 				<ac:paginator for="hisMembers" />
 
@@ -43,7 +44,7 @@
 				<p:column style="width: 5%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+						<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 					</f:facet>
 					#{lbl[scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}
 				</p:column>

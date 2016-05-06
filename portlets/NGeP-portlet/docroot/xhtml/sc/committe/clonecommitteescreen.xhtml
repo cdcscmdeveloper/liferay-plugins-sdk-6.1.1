@@ -134,7 +134,8 @@
 				value="#{committeBackingBean.managedBean.cloneCommitteMemebers}"
 				var="member" rowKey="#{member.committeeMemberId}"
 				selection="#{committeBackingBean.managedBean.selectedCloneCommitteMemebers}"
-				styleClass="cloneResults,cloneCommitteMembers">
+				styleClass="cloneResults,cloneCommitteMembers"
+				rowIndexVar="index">
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
@@ -162,7 +163,7 @@
 				<p:column>
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+						<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 					</f:facet>
 					<h:outputText value="#{member.PNP ? 'Yes' : 'No'}" />
 				</p:column>

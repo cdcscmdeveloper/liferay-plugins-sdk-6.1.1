@@ -57,7 +57,8 @@
 						rowKey="#{existingMember.userId}" var="existingMember"
 						lazy="true" styleClass="existingCommitteeResults" style="width : 100%;"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						rows="10">
+						rows="10"
+						rowIndexVar="index">
 
 						<ac:paginator for="existingMemberTbl" />
 
@@ -84,7 +85,7 @@
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+								<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 							</f:facet>
 							<h:outputText
 								value="#{lbl[existingMember.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />

@@ -60,7 +60,8 @@
 						selection="#{committeBackingBean.managedBean.selectedPmUser}"
 						rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
 						lazy="true" styleClass="committeeResults" style="width : 100%;"
-						rows="10">
+						rows="10"
+						rowIndexVar="index">
 
 						<ac:paginator for="userexistid" />
 
@@ -89,7 +90,7 @@
 						<p:column>
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+								<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 							</f:facet>
 							<h:outputText
 								value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
