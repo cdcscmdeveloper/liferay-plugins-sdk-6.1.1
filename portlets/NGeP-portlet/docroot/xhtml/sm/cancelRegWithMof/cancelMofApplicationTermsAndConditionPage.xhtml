@@ -18,25 +18,21 @@
 		<p:messages id="defCancelMofApplMsgs" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
 		<p:panel id="cancelMofTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
-			<p:scrollPanel style="height:100px;border:0;" mode="native">
-				<table style="width: 100%">
-					<tr>
-						<td><h:outputText value="#{lbl['lbl.sm.mof.reg.cancel.reason.suppdocs']}" escape="false" style="float : left" /></td>
-					</tr>
-				</table>
+			
+			<p:scrollPanel style="height:150px;border:0;" mode="native">
+				<br /><p><h:outputText escape="false" value="#{lbl['lbl.sm.mof.reg.cancel.reason.suppdocs']}" style="white-space : normal !important"/></p>
 			</p:scrollPanel>
 			
 			<table>
 				<tr>
-	
 					<td width="10px" style="padding: 4px 2px 0px 8px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.termsAccepted}">
 							<p:ajax event="change" update=":form:canApplCmdBtn" />
 						</p:selectBooleanCheckbox></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
 				</tr>
-	
 			</table>
+			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.proceed']}" id="canApplCmdBtn"
 					action="#{backingBean.proceedToApplication('C')}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"

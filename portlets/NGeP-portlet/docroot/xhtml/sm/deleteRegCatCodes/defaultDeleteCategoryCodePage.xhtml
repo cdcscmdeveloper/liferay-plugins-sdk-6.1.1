@@ -20,27 +20,21 @@
 		</p:blockUI>
 		
 		<p:panel id="deleteCatCodeTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
-			<p:scrollPanel style="height:100px;border:0;" mode="native">
-				<table style="width: 100%">
-					<tr>
-						<td><h:outputText value="#{lbl['lbl.sm.catcode.delete.msg']}"
-								escape="false" style="float : left;" /></td>
-					</tr>
-				</table>
-			</p:scrollPanel>
 			
-			<br />
+			<p:scrollPanel style="height:50px;border:0;" mode="native">
+				<br /><p><h:outputText escape="false" value="#{lbl['lbl.sm.catcode.delete.msg']}" style="white-space : normal !important"/></p>
+			</p:scrollPanel>
+
 			<table>
 				<tr>
-	
 					<td width="10px" style="padding: 4px 2px 0px 8px;"><p:selectBooleanCheckbox
 							value="#{deleteCategoryCodeBB.managedBean.termsAccepted}">
 							<p:ajax event="change" update=":form:delCatCmdBtn" />
 						</p:selectBooleanCheckbox></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
 				</tr>
-	
 			</table>
+			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.proceed']}"
 					id="delCatCmdBtn" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
