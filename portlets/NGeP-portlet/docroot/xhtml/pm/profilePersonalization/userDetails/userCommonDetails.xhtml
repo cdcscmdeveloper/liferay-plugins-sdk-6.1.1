@@ -8,6 +8,12 @@
    xmlns:c="http://java.sun.com/jsp/jstl/core">
    <ui:define name="contentSection">
       <style>
+      	#content{
+      		background-color: #dddddd;
+      		border: 1px solid #d3d3d3;
+      		border-radius: 5px;
+      	}
+      
          .ui-datatable-odd {
          	background: #ffffff;
          }
@@ -34,7 +40,7 @@
          profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
          : profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
       <p:outputPanel id="opUserCommonDet">
-         <table class="ppTwoTable">
+         <table class="ppTwoTable" style="margin-left:15px">
             <tr>
                <td style="width:25px;vertical-align:top;">
                   <h:graphicImage value="/css/images/design/icon-organization.png" />
@@ -60,7 +66,7 @@
                      <c:if test="#{profilePersonalizationBackingBean.virtualCertShown}">
                         <tr>
                            <td style="width:20px;">
-                              <h:graphicImage value="/css/images/design/ico-view.png" />
+                              <h:graphicImage value="/css/images/design/icon-view.png" />
                            </td>
                            <td style="color: blue; font-weight: bold; text-align: left;">
                               <p:commandLink action="#{supplierAlertBackingBean.navigateToViewVirtualCert}" value="#{lbl['lbl.pm.ucd.virtual.cert']}" />
@@ -83,7 +89,7 @@
                      <c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
                         <tr>
                            <td style="width:20px;">
-                              <h:graphicImage value="/css/images/design/ico-view.png" />
+                              <h:graphicImage value="/css/images/design/icon-view.png" />
                            </td>
                            <td style="color: blue; font-weight: bold; text-align: left;">
                               <p:commandLink action="#{softCertBackingBean.navigateToViewSoftCert}"  value="#{lbl['lbl.pm.ucd.soft.cert']}" />
@@ -121,7 +127,7 @@
                      <tr>
                         <td style="width:345px;">
                            <p:dataTable var="rolesList" value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
-                              scrollable="true" scrollHeight="93" styleClass="myTable">
+                              scrollable="true" scrollHeight="#{profilePersonalizationBackingBean.managedBean.roleTableScrollHeight}" styleClass="myTable">
                               <p:column>
                                  <h:outputText value="#{rolesList}" />
                               </p:column>
