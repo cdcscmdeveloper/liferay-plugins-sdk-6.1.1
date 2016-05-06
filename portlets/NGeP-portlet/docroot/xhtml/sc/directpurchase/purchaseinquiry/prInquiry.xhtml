@@ -18,7 +18,7 @@
 				<td style="width: 19%;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText size="46" id="title"
+				<td><p:inputText size="46" id="title"
 						required="true" maxlength="100"
 						label="#{lbl['lbl.sc.direct.purchase.title']}"
 						disabled="#{isViewOnly}"
@@ -49,9 +49,9 @@
 			<tr>
 				<td style="vertical-align: top; text-align: left;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.desc']}" /></td>
-				<td colspan="4"><p:inputTextarea disabled="true"
+				<td><p:inputTextarea disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.itemDesc}"
-						rows="2" cols="122" style="margin-bottom: 5px; width: 352px;" /></td>
+						rows="2" cols="122" style="margin-bottom: 5px; width: 325px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.price.inquiry.uom']}" /></td>
@@ -233,13 +233,13 @@
 									<td style="vertical-align: top; text-align: left;"><p:outputLabel
 											value="#{lbl['lbl.sc.price.inquiry.just.rmks']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td colspan="4"><p:inputTextarea
+									<td><p:inputTextarea
 											value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
 											id="justificationRmk"
 											label="#{lbl['lbl.sc.price.inquiry.just.rmks']}"
 											maxlength="100"
 											required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A'}"
-											rows="3" cols="122" style="margin-bottom: 5px; width: 352px;" />
+											rows="3" cols="122" style="margin-bottom: 5px; width: 325px;" />
 										<p:message id="justRmksMsg" for="justificationRmk"
 											display="icon" /></td>
 								</ui:fragment>
@@ -251,9 +251,9 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}"
 		toggleable="true">
-		<table style="width: 100%">
+		<table>
 			<tr>
-				<td style="width: 19%;"><p:outputLabel
+				<td style="width: 212px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" /> <p:outputLabel
 						value="*" styleClass="mandatory"
 						rendered="#{isPendingSupplierRespStatus}" /></td>
@@ -327,9 +327,9 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
-		<table style="width: 100%">
+		<table>
 			<tr>
-				<td class="TableFieldLeft" width="15%"></td>
+				<td class="TableFieldLeft" style="width: 165px;"></td>
 
 				<td class="TableFieldRight"><p:dataGrid id="catatan"
 				        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -351,7 +351,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea style="width:350px;" maxlength="1000"
+								<td><p:inputTextarea style="width:325px;" maxlength="1000"
 										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
 										id="remark" /> <h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkIndex>0}"
