@@ -1,0 +1,245 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<title>Created by BCL easyConverter SDK 3 (html Version)</title>
+<style type="text/css">
+@page { 
+	size: A4 portrait;
+	margin-top: 0cm;
+	margin-left: 0cm;
+	margin-right: 0cm;
+	margin-bottom: 0cm;
+}
+body {margin-top: 0px;margin-left: 0px;}
+
+#page_1 {position:relative; overflow: hidden;margin: 27px 0px 0px 0px;padding: 0px;border: none;width: 800px;}
+#page_1 #id_1 {border:none;margin: 0px 0px 0px 0px;padding: 0px;border:none;width: 800px;overflow: hidden;}
+#page_1 #id_2 {border:none;margin: 24px 0px 0px 40px;padding: 0px;width: 700px;overflow: hidden;}
+
+#page_1 #dimg1 {position:absolute;top:122px;left:69px;z-index:-1;width:687px;height:864px;}
+#page_1 #dimg1 #img1 {width:687px;height:864px;}
+
+
+
+
+.ft0{font: 11px 'Arial';line-height: 14px;}
+.ft1{font: bold 15px 'Arial';line-height: 18px;}
+.ft2{font: bold 13px 'Arial';line-height: 16px;}
+.ft3{font: 11px 'Arial';margin-left: 19px;line-height: 14px;}
+.ft4{font: 11px 'Arial';text-decoration: underline;line-height: 14px;}
+.ft5{font: 10px 'Arial';line-height: 13px;}
+.ft6{font: 10px 'Arial';margin-left: 19px;line-height: 13px;}
+.ft7{font: 10px 'Arial';text-decoration: underline;line-height: 13px;}
+.ft8{font: 10px 'Arial';margin-left: 12px;line-height: 13px;}
+.ft9{font: 1px 'Arial';line-height: 1px;}
+.ft10{font: 1px 'Arial';line-height: 5px;}
+.ft11{font: 1px 'Arial';line-height: 6px;}
+.ft12{font: 1px 'Arial';line-height: 7px;}
+.ft13{font: 9px 'Arial';line-height: 12px;}
+.ft14{font: 1px 'Arial';line-height: 8px;}
+.ft15{font: 1px 'Arial';line-height: 10px;}
+.ft16{font: 1px 'Arial';line-height: 4px;}
+.ft17{font: 11px 'Arial';line-height: 13px;}
+.ft18{font: 1px 'Arial';line-height: 13px;}
+
+.p0{text-align: right;padding-right: 78px;margin-top: 0px;margin-bottom: 0px;}
+.p1{text-align: left;padding-left: 79px;margin-top: 12px;margin-bottom: 0px;}
+.p2{text-align: left;padding-left: 248px;margin-top: 1px;margin-bottom: 0px;}
+.p3{text-align: left;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p4{text-align: right;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p5{text-align: left;padding-left: 1px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p6{text-align: left;padding-left: 153px;margin-top: 15px;margin-bottom: 0px;}
+.p7{text-align: justify;padding-left: 101px;padding-right: 98px;margin-top: 12px;margin-bottom: 0px;text-indent: -29px;}
+.p8{text-align: justify;padding-left: 101px;padding-right: 99px;margin-top: 21px;margin-bottom: 0px;text-indent: -29px;}
+.p9{text-align: justify;padding-left: 101px;padding-right: 102px;margin-top: 9px;margin-bottom: 0px;text-indent: -29px;}
+.p10{text-align: justify;padding-left: 101px;padding-right: 102px;margin-top: 18px;margin-bottom: 0px;text-indent: -29px;}
+.p11{text-align: justify;padding-left: 101px;padding-right: 102px;margin-top: 17px;margin-bottom: 0px;text-indent: -29px;}
+.p12{text-align: justify;padding-left: 101px;padding-right: 102px;margin-top: 15px;margin-bottom: 0px;text-indent: -29px;}
+.p13{text-align: justify;padding-left: 101px;padding-right: 102px;margin-top: 20px;margin-bottom: 0px;text-indent: -29px;}
+.p14{text-align: justify;padding-left: 101px;padding-right: 95px;margin-top: 20px;margin-bottom: 0px;text-indent: -29px;}
+.p15{text-align: justify;padding-left: 101px;padding-right: 102px;margin-top: 29px;margin-bottom: 0px;text-indent: -29px;}
+.p16{text-align: justify;padding-left: 101px;padding-right: 97px;margin-top: 12px;margin-bottom: 0px;text-indent: -29px;}
+.p17{text-align: right;padding-right: 6px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p18{text-align: center;padding-left: 43px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p19{text-align: left;padding-left: 43px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p20{text-align: left;margin-top: 0px;margin-bottom: 0px;}
+
+.td0{padding: 0px;margin: 0px;width: 142px;vertical-align: bottom;}
+.td1{padding: 0px;margin: 0px;width: 27px;vertical-align: bottom;}
+.td2{padding: 0px;margin: 0px;width: 149px;vertical-align: bottom;}
+.td3{padding: 0px;margin: 0px;width: 19px;vertical-align: bottom;}
+.td4{padding: 0px;margin: 0px;width: 2px;vertical-align: bottom;}
+.td5{padding: 0px;margin: 0px;width: 350px;vertical-align: bottom;}
+.td6{padding: 0px;margin: 0px;width: 139px;vertical-align: bottom;}
+.td7{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 2px;vertical-align: bottom;}
+.td8{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 350px;vertical-align: bottom;}
+
+.tr0{height: 18px;}
+.tr1{height: 19px;}
+.tr2{height: 31px;}
+.tr3{height: 5px;}
+.tr4{height: 6px;}
+.tr5{height: 25px;}
+.tr6{height: 28px;}
+.tr7{height: 7px;}
+.tr8{height: 36px;}
+.tr9{height: 21px;}
+.tr10{height: 8px;}
+.tr11{height: 24px;}
+.tr12{height: 14px;}
+.tr13{height: 10px;}
+.tr14{height: 15px;}
+.tr15{height: 4px;}
+.tr16{height: 13px;}
+.tr17{height: 32px;}
+
+.t0{width: 169px;margin-left: 71px;margin-top: 10px;font: 11px 'Arial';}
+.t1{width: 661px;margin-left: 61px;margin-top: 54px;font: 11px 'Arial';}
+
+</style>
+</head>
+
+<body>
+<div id="page_1">
+<div id="dimg1">
+<img src="http://localhost:8080/NGeP-portlet/css/images/MOF_declaration_form.jpg" id="img1" />
+</div>
+
+
+<div id="id_1">
+<p class="p0 ft0"><NOBR>PU/UPS/1-V.1/10(BI)</NOBR></p>
+<p class="p1 ft1">DECLARATION FORM FOR REGISTRATION OF COMPANY/CONSULTING FIRM WITH</p>
+<p class="p2 ft1">THE MINISTRY OF FINANCE MALAYSIA</p>
+<table cellpadding="0" cellspacing="0" class="t0">
+<tr>
+	<td class="tr0 td0"><p class="p3 ft0">Application Reference No</p></td>
+	<td class="tr0 td1"><p class="p4 ft0">:</p></td>
+</tr>
+<tr>
+	<td class="tr1 td0"><p class="p5 ft0">Application Type</p></td>
+	<td class="tr1 td1"><p class="p4 ft0">:</p></td>
+</tr>
+</table>
+<p class="p6 ft2">Declaration For Application To Register With The Ministry Of Finance Malaysia</p>
+<p class="p7 ft0"><span class="ft0">1.</span><span class="ft3">I/We declare that submission of all information in this declaration form, application form and supporting documents is correct and valid. I/We hereby allow the Ministry of Finance to verify any information in this declaration form, application form and supporting documents with the company/consulting firm or any other third party. I/We agree that I/we am/are responsible to update any changes in the company's information if any, after registration within </span><NOBR><span class="ft4">twenty-one</span></NOBR><span class="ft4"> (21) days from the date the changes occur</span>. If I/we fail to do so, the Ministry of Finance Malaysia may cancel the registration or take other actions.</p>
+<p class="p8 ft0"><span class="ft0">2.</span><span class="ft3">I/We consent to the Ministry of Finance Malaysia representative to visit the company/consulting firm premises for the inspection/audit purposes and to verify the documents and related information.</span></p>
+<p class="p9 ft0"><span class="ft0">3.</span><span class="ft3">I/We declare that the company/consulting firm does not have Owners, Board of Directors/Directors, Managers and Employees in any company/consulting firm who have been registered with the Ministry of Finance in the same category/categories. I/We agree that only personnel authorized by the company/consulting firm and the names stated in the Company/Consulting Firm Registration Certificate are allowed to do any transaction in Government procurement on behalf of the company/consulting firm.</span></p>
+<p class="p10 ft0"><span class="ft0">4.</span><span class="ft3">I/We agree that the company/consulting firm after being newly registered is not allowed to make any changes to Equity Ownership and Board of Directors/Managers </span><span class="ft4">within six (6) months from the date of registration</span>.</p>
+<p class="p11 ft0"><span class="ft0">5.</span><span class="ft3">I/We allow the Ministry of Finance Malaysia to provide information of the company/consulting firm to other Agency/Agencies for the purpose of Government procurement and to third party/parties for the purpose of improving the Government delivery system.</span></p>
+<p class="p12 ft0"><span class="ft0">6.</span><span class="ft3">I/We understand that failure to comply with any of the above conditions, the Ministry of Finance Malaysia has the right to reject the company/consulting firm's application. If the application is rejected, the documents submitted will be returned by post/courier </span><span class="ft4">except </span>when requested by the company/consulting firms, the documents will be held temporarily for <span class="ft4">fourteen (14) days from the date of rejection</span>. The document will return by mail if they remain unclaimed within this period.</p>
+<p class="p13 ft0"><span class="ft0">7.</span><span class="ft3">I/We understand that whatever documents submitted for registration will become the Government property for any applications that have been approved or rejected after the visit/audit.</span></p>
+<p class="p14 ft5"><span class="ft5">8.</span><span class="ft6">I/We agree to give permission to the Ministry of Finance Malaysia to cancel the registration and delete all records/data automatically from the ePerolehan system if I/we do not renew the company/consulting firm registration </span><span class="ft7">within one (1) year </span>from the expiry date of specify registration. I/We may make a new application if still interested to register with the Ministry of Finance Malaysia after the period.</p>
+<p class="p15 ft0"><span class="ft0">9.</span><span class="ft3">I/We understand that the Government and the Ministry of Finance Malaysia is not responsible for any loss(es) or damage(s) on the company /consulting firm that have been registered with the Ministry of Finance Malaysia and/or use any information obtained from this website: </span><span class="ft4">www.eperolehan.gov.my</span>. I/We also agree that the approval of registration will not in any way bind the Government to offer any Government procurement to the company/consulting firm.</p>
+<p class="p16 ft5"><span class="ft5">10.</span><span class="ft8">I/We understand that any act or attempt to corruptly offer or give, solicit or receive any gratification to and from any person relating to Government procurement is a criminal offence under the Malaysian </span><NOBR>Anti-Corruption</NOBR> Commission Act 2009 [Act 694]. If any individual attempts to seek bribe from the company/consulting firm as an offer/or gratification pertaining to Government procurement, I/we will immediately lodge a report at the nearest office of the Malaysian <NOBR>Anti-Corruption</NOBR> Commission (MACC) or police station.</p>
+<table cellpadding="0" cellspacing="0" class="t1">
+<tr>
+	<td class="tr0 td2"><p class="p3 ft0">Signature</p></td>
+	<td class="tr0 td3"><p class="p17 ft0">:</p></td>
+	<td class="tr0 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr0 td5"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr0 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr0 td6"><p class="p3 ft9">&#160;</p></td>
+</tr>
+<tr>
+	<td rowspan="2" class="tr2 td2"><p class="p3 ft0">Applicant's Name*</p></td>
+	<td rowspan="2" class="tr2 td3"><p class="p17 ft0">:</p></td>
+	<td class="tr3 td7"><p class="p3 ft10">&#160;</p></td>
+	<td class="tr3 td8"><p class="p3 ft10">&#160;</p></td>
+	<td class="tr4 td4"><p class="p3 ft11">&#160;</p></td>
+	<td class="tr4 td6"><p class="p3 ft11">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr5 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td5"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td6"><p class="p3 ft9">&#160;</p></td>
+</tr>
+<tr>
+	<td rowspan="2" class="tr6 td2"><p class="p3 ft0">NRIC/Passport No.</p></td>
+	<td rowspan="2" class="tr6 td3"><p class="p17 ft0">:</p></td>
+	<td class="tr4 td7"><p class="p3 ft11">&#160;</p></td>
+	<td class="tr4 td8"><p class="p3 ft11">&#160;</p></td>
+	<td class="tr7 td4"><p class="p3 ft12">&#160;</p></td>
+	<td rowspan="3" class="tr8 td6"><p class="p18 ft13">Official Seal Of</p></td>
+</tr>
+<tr>
+	<td class="tr9 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr9 td5"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr9 td4"><p class="p3 ft9">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr10 td2"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr10 td3"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr7 td7"><p class="p3 ft12">&#160;</p></td>
+	<td class="tr7 td8"><p class="p3 ft12">&#160;</p></td>
+	<td class="tr10 td4"><p class="p3 ft14">&#160;</p></td>
+</tr>
+<tr>
+	<td rowspan="2" class="tr11 td2"><p class="p3 ft0">Designation</p></td>
+	<td rowspan="2" class="tr11 td3"><p class="p17 ft0">:</p></td>
+	<td class="tr12 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr12 td5"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr12 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr12 td6"><p class="p19 ft13">Company/Consulting</p></td>
+</tr>
+<tr>
+	<td class="tr13 td4"><p class="p3 ft15">&#160;</p></td>
+	<td class="tr13 td5"><p class="p3 ft15">&#160;</p></td>
+	<td class="tr13 td4"><p class="p3 ft15">&#160;</p></td>
+	<td rowspan="2" class="tr14 td6"><p class="p18 ft0">Firm</p></td>
+</tr>
+<tr>
+	<td class="tr3 td2"><p class="p3 ft10">&#160;</p></td>
+	<td class="tr3 td3"><p class="p3 ft10">&#160;</p></td>
+	<td class="tr15 td7"><p class="p3 ft16">&#160;</p></td>
+	<td class="tr15 td8"><p class="p3 ft16">&#160;</p></td>
+	<td class="tr3 td4"><p class="p3 ft10">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr5 td2"><p class="p3 ft0">Name of Company/Consulting</p></td>
+	<td class="tr5 td3"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td5"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr5 td6"><p class="p3 ft9">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr16 td2"><p class="p3 ft17">Firm</p></td>
+	<td class="tr16 td3"><p class="p17 ft17">:</p></td>
+	<td class="tr16 td4"><p class="p3 ft18">&#160;</p></td>
+	<td class="tr16 td5"><p class="p3 ft18">&#160;</p></td>
+	<td class="tr16 td4"><p class="p3 ft18">&#160;</p></td>
+	<td class="tr16 td6"><p class="p3 ft18">&#160;</p></td>
+</tr>
+<tr>
+	<td rowspan="2" class="tr17 td2"><p class="p3 ft0">Date</p></td>
+	<td rowspan="2" class="tr17 td3"><p class="p17 ft0">:</p></td>
+	<td class="tr10 td4"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr7 td8"><p class="p3 ft12">&#160;</p></td>
+	<td class="tr7 td7"><p class="p3 ft12">&#160;</p></td>
+	<td class="tr10 td6"><p class="p3 ft14">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr11 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr11 td5"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr11 td4"><p class="p3 ft9">&#160;</p></td>
+	<td class="tr11 td6"><p class="p3 ft9">&#160;</p></td>
+</tr>
+<tr>
+	<td class="tr10 td2"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr10 td3"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr10 td4"><p class="p3 ft14">&#160;</p></td>
+	<td class="tr7 td8"><p class="p3 ft12">&#160;</p></td>
+	<td class="tr7 td7"><p class="p3 ft12">&#160;</p></td>
+	<td class="tr10 td6"><p class="p3 ft14">&#160;</p></td>
+</tr>
+</table>
+</div>
+<div id="id_2">
+<p class="p20 ft0">* Notes: To be signed by Owner/Director/Manager of the company/consulting firm which have been declared in the ePerolehan System only.</p>
+</div>
+</div>
+</body>
+</html>
