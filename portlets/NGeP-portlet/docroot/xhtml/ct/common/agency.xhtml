@@ -13,7 +13,8 @@
         	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.dtls']}"/>
   	   </f:facet>
        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
-	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/><br/>
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>	   
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
        <p:dataTable id="tableAgencyDetails" var="agencyData"  value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
   			selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
   			rowIndexVar="indexVar" >
@@ -315,10 +316,10 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000"
-													disabled="#{!ctBackingBean.contractSharing or ctBackingBean.managedBean.disableAmendDetails}" />
-												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.remark']}" rendered="#{remarkIndex==0}" />
-												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+												<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
+													disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}"/> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:200px;word-wrap: break-word;" />
 											</td>
 										</tr>
 									</table>
