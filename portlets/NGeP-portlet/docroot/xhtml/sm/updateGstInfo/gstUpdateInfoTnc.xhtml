@@ -19,29 +19,27 @@
 		</p:blockUI>	
 
 		<p:panel header="#{lbl['lbl.sm.term.and.condition.header']}">
-		<p:scrollPanel style="height:200px;border:0;" mode="native">
-			<b>#{lbl['lbl.sm.gst.tnc.header']}</b>
-			<br />
-			<p><h:outputText escape="false" value="#{lbl['lbl.sm.gst.tnc.msg']}" /></p>
-		</p:scrollPanel>
-		
-		<table>
-			<tr>
-				<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
-						value="#{smUpdateGstInfoBackingBean.managedBean.agreeTC}">
-						<p:ajax update="btnProceed" partialSubmit="true" process="@this" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
-					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
-			</tr>
-		</table>
-		
-		<div align="right">
-			<p:commandButton id="btnProceed" value="#{lbl['lbl.btn.proceed']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			disabled="#{!smUpdateGstInfoBackingBean.managedBean.agreeTC}" 
-			action="#{smUpdateGstInfoBackingBean.proceedAfterAcceptTnC}" />
-		</div>
+			<p:scrollPanel style="height:100px;border:0;" mode="native">
+				<br /><p><h:outputText escape="false" value="#{lbl['lbl.sm.gst.tnc.msg']}" style="white-space : normal !important"/></p>
+			</p:scrollPanel>
+			
+			<table>
+				<tr>
+					<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+							value="#{smUpdateGstInfoBackingBean.managedBean.agreeTC}">
+							<p:ajax update="btnProceed" partialSubmit="true" process="@this" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
+			</table>
+			
+			<div align="right">
+				<p:commandButton id="btnProceed" value="#{lbl['lbl.btn.proceed']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				disabled="#{!smUpdateGstInfoBackingBean.managedBean.agreeTC}" 
+				action="#{smUpdateGstInfoBackingBean.proceedAfterAcceptTnC}" />
+			</div>
 		</p:panel>
 	</ui:define>
 

@@ -20,28 +20,21 @@
 		</p:blockUI>
 		
 		<p:panel id="renewMofTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
-			<p:scrollPanel style="height:200px;border:0;" mode="native">
-				<table style="width: 100%">
-					<tr>
-						<td style="padding-left: 4px;">
-							<p:outputPanel><p><h:outputText value="#{lbl['lbl.sm.renewMof.descData']}" escape="false" /></p></p:outputPanel>
-						</td>
-					</tr>
-				</table>
-			</p:scrollPanel>
 			
-			<br />
+			<p:scrollPanel style="height:200px;border:0;" mode="native">
+				<br /><p><h:outputText escape="false" value="#{lbl['lbl.sm.renewMof.descData']}" style="white-space : normal !important"/></p>
+			</p:scrollPanel>
+
 			<table>
 				<tr>
-	
 					<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.termsAccepted}">
 							<p:ajax event="change" update=":form:renCmdBtn" />
 						</p:selectBooleanCheckbox></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
 				</tr>
-	
 			</table>
+			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="renCmdBtn"
 					action="#{backingBean.proceedToApplication('R')}"
