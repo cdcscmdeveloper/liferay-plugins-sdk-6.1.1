@@ -1840,7 +1840,10 @@ public class NoticeBoardBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug("getClosingDays");
 		}
-		String closingDays = "0 Days";
+		String closingDays = "0"+ ResourceBundleUtils
+				.getMessage("lbl.sc.notice.board.days",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
 
 		Date closingDate = DateUtils.convertStringToDate(
 				"yyyy-MM-dd HH:mm:ss.S", clsDate);
@@ -1851,7 +1854,10 @@ public class NoticeBoardBackingBean extends
 			Date today = new Date();
 			long days = DateUtils.getDaysDifference(today, closingDate);
 			DecimalFormat df = new DecimalFormat("#00");
-			closingDays = df.format(days) + " Days";
+			closingDays = df.format(days) +  ResourceBundleUtils
+					.getMessage("lbl.sc.notice.board.days",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
 
 			if (days == 0) {
 				Long durationInMills = DateUtils.getDateDiffInMillis(
