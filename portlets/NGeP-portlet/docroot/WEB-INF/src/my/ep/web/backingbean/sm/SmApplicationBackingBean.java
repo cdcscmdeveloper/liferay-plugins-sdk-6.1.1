@@ -8393,6 +8393,18 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * When click radio button at facility type, check whether is allowed to
+	 * change
+	 */
+	public void onChangeFacilityType() {
+		if (getManagedBean().isAlreadyBusinessSpecialCatcode()) {
+			getManagedBean().getBasicCompanyFacility().setFacilityType("B");
+			RequestContext.getCurrentInstance().execute(
+					"alertFacTypeChangeDlg.show();");
+		}
+	}
+
+	/**
 	 * Get whether supplier already is business office and had approved special
 	 * category
 	 */
