@@ -19,7 +19,6 @@
 				<ui:repeat var="bpmAction" value="#{committeBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-							process="@all" partialSubmit="true" update="@all"
 							action="#{committeBackingBean.updateCommitteDetails(bpmAction)}" />
 				</ui:repeat>
 			</td>
