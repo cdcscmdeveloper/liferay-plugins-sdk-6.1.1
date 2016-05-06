@@ -322,8 +322,6 @@ public class CommitteBackingBean extends
 		String userRole = null;
 		String committeeType = getManagedBean().getQtCommittee()
 				.getScCommittee().getCommitteeType().getParameterCode();
-		StringBuffer chairPersonRoleCode = new StringBuffer(
-				committeeType + QTConstants.CHAIRPERSON);
 		
 		ICommitteSO committeeSO = null;
 		try {
@@ -332,7 +330,6 @@ public class CommitteBackingBean extends
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setUser(pmUser);
-			reqDTO.setRoleCode(chairPersonRoleCode.toString());
 			reqDTO.setCommitteeType(committeeType);
 			
 			PmOrgProfile pmOrgProfile = getManagedBean().getQt().getPmOrgProfile();
