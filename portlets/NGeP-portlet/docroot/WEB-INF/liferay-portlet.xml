@@ -225,7 +225,7 @@
 	<!-- Procurement Plan - END -->
 
 
-	<portlet>
+	<!-- <portlet>
 		<portlet-name>codification</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>true</instanceable>
@@ -234,7 +234,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>codification-portlet</css-class-wrapper>
-	</portlet>
+	</portlet>-->
 
 	<portlet>
 		<portlet-name>Catalogue</portlet-name>
