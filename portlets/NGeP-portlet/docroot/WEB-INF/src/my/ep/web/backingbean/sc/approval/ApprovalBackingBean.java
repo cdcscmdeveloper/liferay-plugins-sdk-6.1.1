@@ -626,6 +626,20 @@ public class ApprovalBackingBean extends
 				}
 				RequestContext.getCurrentInstance().execute(
 						"reviceApprovalDlg.show()");
+			} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
+				List<ScQtApprovalRemark> remarks = this.getManagedBean()
+						.getScQtApproval().getScQtApprovalRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { "Remark" });
+						}
+					}
+				}
+				RequestContext.getCurrentInstance().execute(
+						"rejectApprovalDlg.show()");
 			} else {
 				if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
 						.getManagedBean().getApprovalType())) {
