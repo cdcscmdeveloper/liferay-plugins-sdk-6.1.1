@@ -46,13 +46,6 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.officeFacilityVerfied : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.officeFacilityVerfied : false)}" />
 
 			<table style="width: 100%">
-				<p:outputPanel rendered="#{backingBean.managedBean.alreadyBusinessSpecialCatcode}">
-					<tr>
-						<td colspan="4" style="white-space: normal;">
-							<h:outputText styleClass="instruction" value="#{backingBean.managedBean.businessOfficeCatCodeMsg}" escape="false"/>
-						</td>
-					</tr>
-				</p:outputPanel>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -90,7 +83,7 @@
 									id="rentedFacTypeId"
 									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
 									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
-									<f:selectItem itemDisabled="#{backingBean.managedBean.alreadyBusinessSpecialCatcode}"
+									<f:selectItem
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
 										itemValue="H" />
 	
@@ -98,7 +91,8 @@
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}"
 										itemValue="B" />
 										
-									<p:ajax event="change" process="@this" partialSubmit="true"/>
+									<p:ajax event="change" process="@this" partialSubmit="true" update="@this"
+										listener="#{backingBean.onChangeFacilityType}"/>
 								</p:selectOneRadio> 
 								
 								<ac:smFieldChangeAlert 
@@ -459,5 +453,20 @@
 				</p:outputPanel>
 			</table>
 		</p:outputPanel>
+		
+		<p:confirmDialog id="alertFacTypeChangeDlg" closable="true"
+			header="#{lbl['lbl.sm.facility.facilityType.change.alertheader']}" severity="alert"
+			widgetVar="alertFacTypeChangeDlg">
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="alertFacTypeChangeDlg.hide();" />
+			</div>
+			
+			<f:facet name="message">
+		    	<h:outputText styleClass="instruction" value="#{backingBean.managedBean.businessOfficeCatCodeMsg}" escape="false"/>
+		    </f:facet>
+		    
+		</p:confirmDialog>
+		
 	</p:panel>
 </ui:composition>
