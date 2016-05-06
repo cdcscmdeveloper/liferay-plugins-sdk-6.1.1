@@ -8,13 +8,11 @@
 	<p:panel header="#{lbl['lbl.sc.qt.req.ptj']}" toggleable="true">
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 150px;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
-				<td><p:inputText
+				<td colspan="3"><p:inputText
 						value="#{approvalBackingBean.retrieveMinistryByOrgProfileId(approvalBackingBean.managedBean.qt.pmOrgProfile.orgProfileId)}"
-						disabled="true" readonly="true" size="50" /></td>
-				<td />
-				<td />
+						disabled="true" readonly="true" style="width:866px;" /></td>
 			</tr>
 			<!-- <tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.department']}" /></td>
@@ -26,22 +24,20 @@
 			</tr> -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-				<td><p:inputText
+				<td colspan="3"><p:inputText
 						value="#{approvalBackingBean.managedBean.qt.pmOrgProfile.orgName}"
-						disabled="true" readonly="true" size="50" /></td>
-				<td />
-				<td />
+						disabled="true" readonly="true" style="width:866px;" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.requestor']}" /></td>
-				<td><p:inputText
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.requestor']}" /></td>
+				<td style="width: 450px;"><p:inputText
 						value="#{approvalBackingBean.retriveUserName(approvalBackingBean.managedBean.qt.createdBy)}"
-						disabled="true" readonly="true" size="50" /></td>
+						disabled="true" readonly="true" style="width:350px;" /></td>
 				
-				<td><p:outputLabel value="#{lbl['lbl.sc.request.date']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.request.date']}" /></td>
 				<td><p:inputText
 						value="#{approvalBackingBean.managedBean.scQtApproval.requestDate}"
-						disabled="true" readonly="true" size="50">
+						disabled="true" readonly="true" style="width:212px;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
@@ -50,17 +46,17 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
 						value="#{approvalBackingBean.managedBean.qt.qtNo}" disabled="true"
-						readonly="true" size="50" /></td>
+						readonly="true" style="width:350px;" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 				<td><p:inputText
 						value="#{approvalBackingBean.getParameterDesc(approvalBackingBean.managedBean.qt.procurementMode)}"
-						disabled="true" readonly="true" size="50" /></td>
+						disabled="true" readonly="true" style="width:212px;" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
 						value="#{approvalBackingBean.managedBean.qt.qtTitle}" cols="170"
-						rows="3" style=" margin-bottom:5px; width: 98%;" disabled="true" /></td>
+						rows="3" style=" margin-bottom:5px; width:866px;" disabled="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
