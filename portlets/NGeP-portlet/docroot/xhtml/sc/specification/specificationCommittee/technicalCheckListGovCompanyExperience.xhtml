@@ -33,13 +33,6 @@
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveCheckListScores}">
-						<f:setPropertyActionListener
-							target="#{specificationBackingBean.managedBean.criteriaType}"
-							value="10" />
-						<f:setPropertyActionListener
-							target="#{specificationBackingBean.managedBean.otherCriteriaType}"
-							value="11" />
-
 					</p:commandButton></td>
 			</tr>
 		</table>
