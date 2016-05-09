@@ -379,7 +379,9 @@
 											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
-										</p:selectOneRadio></td>
+												<p:ajax event="change" process="@this" partialSubmit="true" update="@this"></p:ajax>
+										</p:selectOneRadio>
+										</td>
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
 									<td style="margin-top: -3px"><ac:iconTooltip
 											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
@@ -419,7 +421,7 @@
 									itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 								<p:ajax event="change"
 									listener="#{createQtBB.contractTypeSelection}"
-									partialSubmit="true" process="@this" />
+									partialSubmit="true" process="@this" update="@form" />
 							</p:selectOneMenu>
 							<p:message id="contractTypeMsg" for="contractType" display="icon" />
 						</c:when>
@@ -458,6 +460,7 @@
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FULFILMENT_TYPE) and !specCommitteeReadOnly}">
 							<p:selectOneMenu required="#{isRequire}" id="fulfilId"
+							disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
 								style="width: 205px;margin-bottom: 5px;">
