@@ -1434,6 +1434,10 @@ public class ProfilePersonalizationBackingBean extends
     
         return rvalue;
     }
+	
+	public boolean isTempSupplierRole(){
+		return getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? true : false;
+	}
 
 	// //TODO: testing
 	// public void handleFileUpload(FileUploadEvent event) {
