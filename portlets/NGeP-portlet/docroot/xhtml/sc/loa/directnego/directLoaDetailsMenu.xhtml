@@ -74,7 +74,7 @@
 								<td><p:selectOneMenu id="branch"
 								disabled="#{directLOABackingBean.managedBean.readOnly}"
 										value="#{directLOABackingBean.managedBean.selectedSupplierBranchName}"
-										style="width: 284px;margin-bottom: 5px;"
+										style="width: 246px;margin-bottom: 5px;"
 										label="#{lbl['lbl.sc.branch']}">
 										<f:selectItem itemLabel="HQ" itemValue="#{null}" />
 										<f:selectItems
@@ -100,28 +100,28 @@
 			<tr>
 				<td rowspan="3" valign="top" width="18%"><p:outputLabel
 						value="#{lbl['lbl.sc.address']}" /></td>
-				<td rowspan="3" width="32%">
+				<td rowspan="3">
 					<p:inputTextarea id="suppAddr" label="#{lbl['lbl.sc.address']}" 
-						cols="36" disabled="true" rows="5" style=" margin-bottom:5px; width: 274px" maxlength="200" 
+						cols="36" disabled="true" rows="5" style=" margin-bottom:5px; width: 250px" maxlength="200" 
 						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.supplierAddress)}"
 						required="true" /></td>
 
-				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
+				<td width="140px"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				</td>
-				<td><p:inputText id="suppPhoneNo" size="25" disabled="true" 
+				<td><p:inputText id="suppPhoneNo" size="28" disabled="true" 
 								 value="#{directLOABackingBean.managedBean.scLoa.supplierPhoneNo}" />
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
-				<td><p:inputText id="suppFaxNo" size="25" disabled="true"
+				<td><p:inputText id="suppFaxNo" size="28" disabled="true"
 						value="#{directLOABackingBean.managedBean.scLoa.supplierFaxNo}" />
 				</td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" /></td>
-				<td><p:inputText id="suppMobNo" size="25" disabled="true"
+				<td><p:inputText id="suppMobNo" size="28" disabled="true"
 						value="#{directLOABackingBean.managedBean.scLoa.supplierMobNo}" />
 				</td>
 			</tr>
@@ -132,7 +132,7 @@
 						value="#{directLOABackingBean.managedBean.scLoa.supplierContact}" />
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
-				<td><p:inputText id="suppEmail" size="25"
+				<td><p:inputText id="suppEmail" size="28"
 						style=" margin-bottom:5px;" disabled="true"
 						value="#{directLOABackingBean.managedBean.scLoa.supplierEmail}" />
 				</td>
@@ -145,21 +145,20 @@
 		<table width="100%">
 			<tr>
 				<td width="21%"><h:outputLabel
-						value="#{lbl['lbl.sc.minsistry']}" /></td>
+						value="#{lbl['lbl.sc.ministry']}" /></td>
 				<td colspan="3"><p:inputText disabled="#{!isEditableStatus}"
 						readonly="true"
 						value="#{directLOABackingBean.managedBean.scQt.ministryOrgProfile.orgName}"
-						size="35" maxlength="100" /></td>
+						size="106" maxlength="100" /></td>
 			</tr>
 			<tr>
-
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="Supplier Lov"
 						selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scQt.pmOrgProfile"
-						readonly="true" size="35"
+						readonly="true" size="106"
 						value="#{directLOABackingBean.managedBean.scQt.pmOrgProfile.orgName}"
 						update="@form"
 						conditionField="#{directLOABackingBean.constuctConditionFields()}" /></td>
@@ -181,12 +180,14 @@
 			<tr>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText id="title" required="true"
+				<td colspan="3"><p:inputTextarea
+						id="title"
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						label="#{lbl['lbl.sc.title']}" required="true" size="110"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.qtTitle}"
-						size="35" label="#{lbl['lbl.sc.title']}" maxlength="500" >
-						<p:ajax event="blur" process="title" update="title"/></p:inputText> <p:message
-						id="titleMsg" for="title" display="icon" /></td>
+						cols="110" rows="3" style=" margin-bottom:5px;width: 650px;" maxlength="500">
+						<p:ajax event="blur" process="title" update="title" />
+					</p:inputTextarea><p:message id="titleMsg" for="title" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -195,7 +196,7 @@
 				<td colspan="3"><p:selectOneMenu id="procTypeBoCategory" required="true"
 						disabled="#{isPendingApprovalStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.procurementTypeCatId.parameterId}"
-						style="margin-bottom:5px;width:284px;"
+						style="margin-bottom:5px;width:246px;"
 						label="#{lbl['lbl.sc.procurment.type.category']}">
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
@@ -276,7 +277,7 @@
 						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" required="true"
 						label="#{lbl['lbl.sc.fullfillent.type']}"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId}"
-						style="width: 284px;margin-bottom: 5px;">
+						style="width: 246px;margin-bottom: 5px;">
 
 						<f:selectItems
 							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -311,11 +312,11 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td width="21%"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
-				<td width="26%"><p:selectOneRadio id="insWarranty" styleClass="commonLabel"
+				<td><p:selectOneRadio id="insWarranty" styleClass="commonLabel"
 						value="#{directLOABackingBean.managedBean.scLoa.insWarrantyReq}"
 						required="true" label="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}"
 						disabled="#{!isEditableStatus}">
@@ -323,7 +324,7 @@
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					</p:selectOneRadio> <p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
 				</td>
-				<td width="21%"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
@@ -336,8 +337,7 @@
 						<f:selectItems
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						<p:ajax partialSubmit="true" process="@this" update="menuTab" />
-					</p:selectOneRadio> <p:message id="bondReqMsg" for="bondReq" display="icon" /></td>
-				<td style="margin-top: -3px"><ac:iconTooltip
+					</p:selectOneRadio> <p:message id="bondReqMsg" for="bondReq" display="icon" /><ac:iconTooltip
 						value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond.tooltip']}" /></td>
 			</tr>
 
@@ -367,7 +367,7 @@
 				<td colspan="3"><p:selectOneMenu id="contractType"
 						required="true" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterId}"
-						style="width: 284px;margin-bottom: 5px;"
+						style="width: 246px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
@@ -384,28 +384,32 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><h:panelGroup id="contractAgencyPG" rendered="#{isContractTypeAsMinistry}">
+				<td colspan="3"><h:panelGroup id="contractAgencyPG" rendered="#{isContractTypeAsMinistry}">
 						 <ac:lov 
 							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="PM_ORG_PROFILE"
 							postUpdateListener="directLOABackingBean.contractAgencyChanged()"
 							headerText="Contract Agency" selectionMode="single"
-							readonly="true" size="35"
+							readonly="true" size="106"
 							saveObject="directLOABackingBean.managedBean.scLoa.contractAgency"
 							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}"
 							required="true"
 							update="@form" />
 					</h:panelGroup>
-					<p:inputText id="contractAgency" disabled="true" style="width:234px; margin-bottom:5px;"
+					<p:inputText id="contractAgency" disabled="true" size="106" style="margin-bottom:5px;"
 									 value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}" 
 									 rendered="#{!isContractTypeAsMinistry}" />	
 					</td>
+			</tr>
+
+			<tr>
 				<td style="width: 10%;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td style="width: 30%;"><p:selectOneMenu id="contractAdmin"
-						required="true" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+				<td><p:selectOneMenu id="contractAdmin"
+						required="true"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 214px;margin-bottom: 5px;"
+						style="width: 246px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -449,7 +453,7 @@
 						readonlyInput="true"
 						value="#{directLOABackingBean.managedBean.scLoa.contractEffDate}"
 						mindate="#{DateUtils.getCurrentDateWithoutTime()}"
-						label="#{lbl[lbleffDate]}" size="25">
+						label="#{lbl[lbleffDate]}" size="28">
 						<p:ajax event="dateSelect" process="@this contractDuration"
 							partialSubmit="true"
 							listener="#{directLOABackingBean.contractEffDateChanged()}"
@@ -461,7 +465,7 @@
 						showOn="button" required="true"
 						value="#{directLOABackingBean.managedBean.scLoa.contractExpDate}"
 						mindate="#{directLOABackingBean.managedBean.scLoa.contractEffDate}"
-						label="#{lbl[lblexpDate]}" size="25" /></td>
+						label="#{lbl[lblexpDate]}" size="28" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
