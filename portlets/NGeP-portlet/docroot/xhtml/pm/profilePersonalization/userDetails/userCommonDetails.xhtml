@@ -39,12 +39,12 @@
       <ui:param name="orgName" value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
          profilePersonalizationBackingBean.managedBean.currentProfile.smSupplier.companyName
          : profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
-      <p:outputPanel id="opUserCommonDet">
+      <p:outputPanel id="opUserCommonDet" rendered="#{not profilePersonalizationBackingBean.tempSupplierRole}">
       	<div id="opUserCommonDetDiv">
          <table class="ppTwoTable" style="margin-left:15px">
             <tr>
                <td style="width:25px;vertical-align:top;">
-                  <h:graphicImage value="/css/images/design/icon-organization.png" />
+                  <p:graphicImage value="/css/images/design/icon-organization.png" title="#{lbl['lbl.pm.access.app.org']}" />
                </td>
                <td style="width:400px;">
                   <h:outputText style="white-space:normal;" value="#{orgName}" />
@@ -67,7 +67,7 @@
                      <c:if test="#{profilePersonalizationBackingBean.virtualCertShown}">
                         <tr>
                            <td style="width:20px;">
-                              <h:graphicImage value="/css/images/design/icon-view.png" />
+                              <p:graphicImage value="/css/images/design/icon-view.png" title="#{lbl['lbl.pm.ucd.mof.exp']}" />
                            </td>
                            <td style="color: blue; font-weight: bold; text-align: left;">
                               <p:commandLink action="#{supplierAlertBackingBean.navigateToViewVirtualCert}" value="#{lbl['lbl.pm.ucd.virtual.cert']}" />
@@ -90,7 +90,7 @@
                      <c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
                         <tr>
                            <td style="width:20px;">
-                              <h:graphicImage value="/css/images/design/icon-view.png" />
+                              <h:graphicImage value="/css/images/design/icon-view.png" title="#{lbl['lbl.pm.ucd.softcert.exp']}"/>
                            </td>
                            <td style="color: blue; font-weight: bold; text-align: left;">
                               <p:commandLink action="#{softCertBackingBean.navigateToViewSoftCert}"  value="#{lbl['lbl.pm.ucd.soft.cert']}" />
@@ -102,7 +102,7 @@
             </tr>
             <tr>
                <td style="width:25px;vertical-align:top;">
-                  <h:graphicImage value="/css/images/design/icon-email.png" />
+                  <p:graphicImage value="/css/images/design/icon-email.png" title="#{lbl['lbl.pm.address.email']}"/>
                </td>
                <td style="width:400px;">
                   <h:outputText  value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}"/>&#160;
@@ -111,7 +111,7 @@
             </tr>
             <tr>
                <td style="width:25px;vertical-align:top;">
-                  <h:graphicImage value="/css/images/design/icon-sms.png" />
+                  <p:graphicImage value="/css/images/design/icon-sms.png" title="#{lbl['lbl.pm.profiles.preferences.sms']}"/>
                </td>
                <td style="width:400px;">
                   <h:outputText style="white-space:normal;" value="#{not empty profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull 
@@ -121,18 +121,20 @@
             </tr>
             <tr>
                <td style="width:25px;vertical-align:top;padding-top:3px;">
-                  <h:graphicImage value="/css/images/design/icon-account-info.png" />
+                  <p:graphicImage value="/css/images/design/icon-account-info.png" title="#{lbl['lbl.pm.profiles.authorisation.roles']}"/>
                </td>
                <td>
                   <table>
                      <tr>
                         <td style="width:345px;">
-                           <p:dataTable var="rolesList" value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
-                              scrollable="true" scrollHeight="#{profilePersonalizationBackingBean.managedBean.roleTableScrollHeight}" styleClass="myTable">
-                              <p:column>
-                                 <h:outputText value="#{rolesList}" />
-                              </p:column>
-                           </p:dataTable>
+                        	<p:scrollPanel style="width:345px;height:#{profilePersonalizationBackingBean.managedBean.roleTableScrollHeight}px" mode="native">
+	                           <p:dataTable var="rolesList" value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
+	                             styleClass="myTable">
+	                              <p:column>
+	                                 <h:outputText value="#{rolesList}" />
+	                              </p:column>
+	                           </p:dataTable>
+                           </p:scrollPanel>
                         </td>
                      </tr>
                   </table>
