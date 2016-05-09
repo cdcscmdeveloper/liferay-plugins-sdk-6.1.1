@@ -86,12 +86,12 @@
 						action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
 				 
 				 	<h:commandLink action="#{centralContractBackingBean.downloadFile(1)}" 
-				 	  	disabled="#{centralContractBackingBean.managedBean.viewContract}"
 				 	  	rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}"
 				 		styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />			
 				 	
 					     	<p:commandLink 
 			   	                 onclick="deleteCircularFileDlg.show();"
+			   	                disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						         rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}">
 			   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	          </p:commandLink>		
