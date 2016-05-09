@@ -84,7 +84,7 @@
 			  	      <f:verbatim/> <f:verbatim/>
 				
 				
-		       <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+		       <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" rendered="#{centralContractBackingBean.managedBean.circularVer.circularFileName != null}" />
 		        <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
 		        	styleClass="blue_font" 
 					action="#{centralContractBackingBean.downloadFile(1)}" />
