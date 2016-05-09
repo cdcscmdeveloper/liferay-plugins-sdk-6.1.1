@@ -35,7 +35,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -55,8 +54,6 @@ import my.ep.dto.pm.common.clause.ClauseReqDTO;
 import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -267,7 +264,6 @@ public class LOIDetailBackingBean extends
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
-		IStatusSO statusSO;
 		try {
 			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
 
@@ -278,13 +274,7 @@ public class LOIDetailBackingBean extends
 
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(currentStatusId);
-			StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
-			getManagedBean().setDocType(resDTO.getPmStatus().getDocType());
+			getManagedBean().setDocType(getPmStatusByStatusId(currentStatusId).getDocType());
 
 			Long loiId = Long.valueOf(awardDataType.getAwardId());
 			getManagedBean().setSourceId(sourceId);
@@ -302,7 +292,6 @@ public class LOIDetailBackingBean extends
 		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			statusSO = null;
 			// qtAwardSO = null;
 		}
 	}

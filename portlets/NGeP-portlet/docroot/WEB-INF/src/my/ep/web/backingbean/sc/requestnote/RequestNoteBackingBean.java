@@ -261,12 +261,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	// WorkFlow Status 
 	    	List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 	    	ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
-	    	StatusReqDTO statusReqDTO = new StatusReqDTO();
-	    	statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-	    	StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
-	    	getCurrentStatus(statusResDTO.getPmStatus());
+	    	PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+	    	getCurrentStatus(currentStatus);
 	    	scWorkFlowStatus.setCurrent(Boolean.TRUE);
-	    	scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+	    	scWorkFlowStatus.setPmStatus(currentStatus);
 	    	scWorkFlowStatus.setRequestNote(requestNote);
 	    	workFlowStatuses.add(scWorkFlowStatus);
 	    	requestNote.setWorkFlowStatuses(workFlowStatuses);
@@ -928,18 +926,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// For status 
 		if(docStatusId != null){
 			try {
-				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				Long statusId = null;
 				if (DPStatusConstants.PRI_PENDING_RN_CREATION.equals(docStatusId) || 
 						DPStatusConstants.PID_PENDING_RN_CREATION.equals(docStatusId) ||
 						DPStatusConstants.SQ_PENDING_RN_CREATION.equals(docStatusId)){
-					statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+					statusId = DPStatusConstants.RN_PENDING_SUBMISSION;
 				} else {
-					statusReqDTO.setStatusId(docStatusId);
+					statusId = docStatusId;
 				}
-
-				StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
-
-				getCurrentStatus(statusResDTO.getPmStatus());
+				getCurrentStatus(getPmStatusByStatusId(statusId));
 
 			} finally {
 				//statusSO = null;
@@ -1273,19 +1268,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		getManagedBean().setJustRequired(Boolean.FALSE);
 		
-		try {
-			
-			
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-			
-			StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
-			
-			getCurrentStatus(statusResDTO.getPmStatus());
-			
-		} finally {
-			//statusSO = null;
-		}		
+		getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION));	
 		
 		// clear the justification type, price type and justification remarks
 		getManagedBean().setPriceType("");
@@ -1784,12 +1767,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// WorkFlow Status 
 				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 				ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
-				StatusReqDTO statusReqDTO = new StatusReqDTO();
-				statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-				StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
-				getCurrentStatus(statusResDTO.getPmStatus());
+				PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+				getCurrentStatus(currentStatus);
 				scWorkFlowStatus.setCurrent(Boolean.TRUE);
-				scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+				scWorkFlowStatus.setPmStatus(currentStatus);
 				scWorkFlowStatus.setRequestNote(requestNote);
 				workFlowStatuses.add(scWorkFlowStatus);
 				requestNote.setWorkFlowStatuses(workFlowStatuses);
@@ -2600,12 +2581,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// WorkFlow Status 
 				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 				ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
-				StatusReqDTO statusReqDTO = new StatusReqDTO();
-				statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-				StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
-				getCurrentStatus(statusResDTO.getPmStatus());
+				PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+				getCurrentStatus(currentStatus);
 				scWorkFlowStatus.setCurrent(Boolean.TRUE);
-				scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+				scWorkFlowStatus.setPmStatus(currentStatus);
 				scWorkFlowStatus.setRequestNote(scRequestNote);
 				workFlowStatuses.add(scWorkFlowStatus);
 				scRequestNote.setWorkFlowStatuses(workFlowStatuses);

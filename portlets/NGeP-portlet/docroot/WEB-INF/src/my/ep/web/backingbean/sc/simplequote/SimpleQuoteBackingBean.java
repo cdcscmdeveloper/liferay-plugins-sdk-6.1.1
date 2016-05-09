@@ -713,12 +713,9 @@ public class SimpleQuoteBackingBean extends
 		if (null == scQuote.getCurrentStatus()) {
 			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
 			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-			StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(
-					statusReqDTO);
-			getCurrentStatus(statusResDTO.getPmStatus());
-			scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
+			getCurrentStatus(currentStatus);
+			scWorkFlowStatus.setPmStatus(currentStatus);
 			scWorkFlowStatus.setQuote(scQuote);
 			scWorkFlowStatus.setCurrent(Boolean.TRUE);
 			workFlowStatuses.add(scWorkFlowStatus);
@@ -1651,12 +1648,9 @@ public class SimpleQuoteBackingBean extends
 		if (scQuote.getCurrentStatus() == null) {
 			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
 			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-			StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(
-					statusReqDTO);
-			getCurrentStatus(statusResDTO.getPmStatus());
-			scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
+			getCurrentStatus(currentStatus);
+			scWorkFlowStatus.setPmStatus(currentStatus);
 			scWorkFlowStatus.setQuote(scQuote);
 			scWorkFlowStatus.setCurrent(Boolean.TRUE);
 			workFlowStatuses.add(scWorkFlowStatus);
@@ -5459,18 +5453,13 @@ public class SimpleQuoteBackingBean extends
 						IOrgProfileSO.class);
 
 		scQuote.setMultipleQuote(Boolean.FALSE);
-		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		// WorkFlow Status should be set In the save
 		if (scQuote.getCurrentStatus() == null) {
 			List<ScSQWorkFlowStatus> workFlowStatuses = new ArrayList<ScSQWorkFlowStatus>();
 			ScSQWorkFlowStatus scWorkFlowStatus = new ScSQWorkFlowStatus();
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			getCurrentStatus(statusResDTO.getPmStatus());
-			scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			PmStatus currentStatus = getPmStatusByStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
+			getCurrentStatus(currentStatus);
+			scWorkFlowStatus.setPmStatus(currentStatus);
 			scWorkFlowStatus.setQuote(scQuote);
 			scWorkFlowStatus.setCurrent(Boolean.TRUE);
 			workFlowStatuses.add(scWorkFlowStatus);
@@ -6348,11 +6337,7 @@ public class SimpleQuoteBackingBean extends
 		
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		if(currentStatusId != null) {
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(currentStatusId);
-			StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(
-					statusReqDTO);
-			getCurrentStatus(statusResDTO.getPmStatus());
+			getCurrentStatus(getPmStatusByStatusId(currentStatusId));
 		}
 
 		// remarks
