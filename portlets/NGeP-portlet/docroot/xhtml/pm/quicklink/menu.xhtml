@@ -17,45 +17,33 @@
 		<tr>
 			<td class="menuContent">
 				<c:forEach var="menuBean" items="#{menuBackingBean.menuBeans}">
-					<h:panelGroup layout="block" styleClass="menuColumn">
-						<h:panelGroup layout="block" styleClass="menuCategory">
-							<c:if test="#{menuBean.imageId != null}">
-								<h:graphicImage value="/../image/layout_icon?img_id=#{menuBean.imageId}" 
-									title="#{menuBean.title}"
-									styleClass="menuImage" />
-							</c:if>
-							<c:if test="#{menuBean.imageId == null}">		
-								<h:graphicImage 
-									value="#{CommonUIConstant.imagePathUptoDesign}/ico-application.png"
-									title="#{menuBean.title}"
-									styleClass="menuImage" />
-							</c:if>
+						<h:panelGroup layout="block" styleClass="menuColumn">
+							<h:panelGroup layout="block" styleClass="menuCategory">
+								<c:if test="#{menuBean.imageId != null}">
+									<h:graphicImage
+										value="/../image/layout_icon?img_id=#{menuBean.imageId}"
+										title="#{menuBean.title}" styleClass="menuImage" />
+								</c:if>
 												
-							#{menuBean.name}
-						</h:panelGroup>
-						
-						<ul class="menuList">
-							<h:dataTable 
-								var="childMenuBean"
+								#{menuBean.name}
+							</h:panelGroup>
+
+							<h:dataTable var="childMenuBean"
 								value="#{!empty menuBean.children ? menuBean.children : menuBean}"
 								columns2="1"
 								columns1="#{fn:length(menuBean.children) ge 3 ? 3 : fn:length(menuBean.children)}"
 								columnClasses="menuItemColumn">
-								
+
 								<h:column>
-									<li>
-										<h:outputLink value="#{childMenuBean.url}" 
-											styleClass="menuItemLink#{menuBackingBean.selectedMenu == childMenuBean.name ? '-selected' : ''}">
-																							
-											#{childMenuBean.name}
-										</h:outputLink>
-									</li>
+									<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon-quick-links.png" 
+										styleClass="menuImage" />&#160;
+									<h:outputLink value="#{childMenuBean.url}"
+										styleClass="menuItemLink#{menuBackingBean.selectedMenu == childMenuBean.name ? '-selected' : ''}">#{childMenuBean.name}</h:outputLink>
 								</h:column>
-								
+
 							</h:dataTable>
-						</ul>
-					</h:panelGroup>
-				</c:forEach>
+						</h:panelGroup>
+					</c:forEach>
 			</td>
 		</tr>
 		
