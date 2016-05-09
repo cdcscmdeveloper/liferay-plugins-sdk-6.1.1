@@ -127,9 +127,6 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
 		
-		//Timestamp timestamp = new Timestamp(new Date().getTime());
-		//selectedNotify.setChangedDate(timestamp);
-		
 		debugLogger("IsRead[" + selectedNotify.isRead() + "]");
 		
 		if (!selectedNotify.isRead()) {
@@ -238,14 +235,14 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("sender.userName",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										getManagedBean().getSearchValue(), false));
+										getManagedBean().getSearchValue(), true));
 					}
 					
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("3")){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("pmNotifyDashboard.subject",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										getManagedBean().getSearchValue(), false));
+										getManagedBean().getSearchValue(), true));
 					}
 					
 					
@@ -254,7 +251,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						searchBean.getDataFilterBeans().add(
 									new SearchFilterBean("pmNotifyDashboard.content",
 											SearchOperator.OPERATOR_LIKE.value(), 
-											getManagedBean().getSearchValue(), false));
+											getManagedBean().getSearchValue(), true));
 					}
 						
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("5")){
@@ -304,6 +301,10 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 	
 	public void searchNotify() {
+		
+		//this.getManagedBean().setSelectedNotify(new PmNotifyUser());
+		
+		notifyDataModel.resetData();
 		notifyDataModel.reloadData();
 	}
 	
