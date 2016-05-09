@@ -29,7 +29,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -47,8 +46,6 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -83,7 +80,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -299,7 +295,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
 
-			PmStatus status = getStatusById(QTStatusConst.MS_PENDING);
+			PmStatus status = getPmStatusByStatusId(QTStatusConst.MS_PENDING);
 			meeting.setMeetingStatus(status);
 			
 			meetingList.add(meeting);
@@ -1594,23 +1590,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 		super.renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-	}
-	
-	private PmStatus getStatusById(Long statusId){
-		IStatusSO statusSO = null;
-		try{
-			statusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(statusId);
-			
-			StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
-			PmStatus status = resDTO.getPmStatus();
-		
-			return status;
-		} finally {
-			statusSO = null;
-		}
 	}
 	
 	///to be removed

@@ -37,7 +37,6 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -64,8 +63,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
@@ -630,15 +627,7 @@ public class SupplierFinalizationBackingBean extends
 			// meeting.setPmStatus(new PmStatus());
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
-
-			IStatusSO statussO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStatusSO.class);
-			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(QTStatusConst.MS_PENDING);
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
-			meeting.setMeetingStatus(statusres.getPmStatus());
+			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
 
 			meetingList.add(meeting);
 			this.getManagedBean().setMeetingList(meetingList);
@@ -729,14 +718,7 @@ public class SupplierFinalizationBackingBean extends
 	 *            the selected ScQtMeeting entity
 	 */
 	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
-		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(scQtMeeting.getMeetingStatusStr());
-
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		scQtMeeting.setMeetingStatus(statusResDTO.getPmStatus());
+		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
 	}
 
 	/**
