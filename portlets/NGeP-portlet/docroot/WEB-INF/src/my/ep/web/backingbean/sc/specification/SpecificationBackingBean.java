@@ -52,7 +52,6 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -92,8 +91,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
@@ -3820,8 +3817,6 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
@@ -3852,22 +3847,14 @@ public class SpecificationBackingBean extends
 						.setParameterCode(ParameterConst.CHECKLIST_ACTION_MANUAL_SUBMISSION);
 				ParameterResDTO docDefTypeResDTO = parameterSo
 						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				list.setPmStatus(statusres.getPmStatus());
+				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 				list.setAction(docDefTypeResDTO.getPmParameter());
 				list.setScQtCheckListAttachment(null);
 
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(parameterCode)) {
 				if (null == list.getScQtCheckListAttachment()) {
-					StatusReqDTO statusreq = new StatusReqDTO();
-					statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-					StatusResDTO statusres = statussO
-							.retrieveStatusByStatusId(statusreq);
-					list.setPmStatus(statusres.getPmStatus());
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 				}
 
 				List<String> recommendList = new ArrayList<String>();
@@ -3896,11 +3883,7 @@ public class SpecificationBackingBean extends
 						.setParameterCode(ParameterConst.CHECKLIST_ACTION_PRESENTATION_DEMO);
 				ParameterResDTO docDefTypeResDTO = parameterSo
 						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				list.setPmStatus(statusres.getPmStatus());
+				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 				list.setAction(docDefTypeResDTO.getPmParameter());
 				list.setScQtCheckListAttachment(null);
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
@@ -3913,11 +3896,7 @@ public class SpecificationBackingBean extends
 						.setParameterCode(ParameterConst.CHECKLIST_ACTION_SUPPLIER_UPLOAD);
 				ParameterResDTO docDefTypeResDTO = parameterSo
 						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				list.setPmStatus(statusres.getPmStatus());
+				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 
 				list.setAction(docDefTypeResDTO.getPmParameter());
 				list.setScQtCheckListAttachment(null);
@@ -3927,8 +3906,6 @@ public class SpecificationBackingBean extends
 					.set(index, list);
 		} finally {
 			parameterSo = null;
-			statussO = null;
-			;
 		}
 
 	}
@@ -3950,8 +3927,6 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
@@ -3974,11 +3949,7 @@ public class SpecificationBackingBean extends
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(parameterCode)) {
 				if (null == list.getScQtCheckListAttachment()) {
-					StatusReqDTO statusreq = new StatusReqDTO();
-					statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-					StatusResDTO statusres = statussO
-							.retrieveStatusByStatusId(statusreq);
-					list.setPmStatus(statusres.getPmStatus());
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 				}
 
 				List<String> recommendList = new ArrayList<String>();
@@ -4006,11 +3977,7 @@ public class SpecificationBackingBean extends
 						.setParameterCode(ParameterConst.CHECKLIST_ACTION_SUPPLIER_UPLOAD);
 				ParameterResDTO docDefTypeResDTO = parameterSo
 						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				list.setPmStatus(statusres.getPmStatus());
+				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 
 				list.setAction(docDefTypeResDTO.getPmParameter());
 				list.setScQtCheckListAttachment(null);
@@ -4019,7 +3986,6 @@ public class SpecificationBackingBean extends
 					.set(index, list);
 		} finally {
 			parameterSo = null;
-			statussO = null;
 		}
 
 	}
@@ -4163,8 +4129,6 @@ public class SpecificationBackingBean extends
 	 */
 	public void technicalChecklistDropDownActionChange(int index,
 			List<ScQtCheckList> checklist) {
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		ScQtCheckList list = checklist.get(index);
 
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SC_SUPPLIER_ACTION);
@@ -4178,11 +4142,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(parameterCode)) {
 					list.setScoringReq(false);
 				}
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				list.setPmStatus(statusres.getPmStatus());
+				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 
 				list.setAction(paramDesc.getPmParameter());
 				break;
@@ -4204,8 +4164,6 @@ public class SpecificationBackingBean extends
 	 */
 	public void financialCheckListDropDownActionChange(int index,
 			List<ScQtCheckList> checklist) {
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		ScQtCheckList list = checklist.get(index);
 
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SC_SUPPLIER_ACTION);
@@ -4219,11 +4177,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(parameterCode)) {
 					list.setScoringReq(false);
 				}
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				list.setPmStatus(statusres.getPmStatus());
+				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 
 				list.setAction(paramDesc.getPmParameter());
 				break;
@@ -6109,11 +6063,8 @@ public class SpecificationBackingBean extends
 	 * datatable.
 	 */
 	public void addFinancialCheckList() {
-		IStatusSO statussO;
 		// IParameterSO parameterSo = null;
 		try {
-			statussO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			/*
 			 * parameterSo = BusinessDelegate.getInstance().getServiceObject(
 			 * ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -6151,12 +6102,7 @@ public class SpecificationBackingBean extends
 
 			setUserDetails(st2financeproposalList2);
 
-			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
-
-			st2financeproposalList2.setPmStatus(statusres.getPmStatus());
+			st2financeproposalList2.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			// st2financeproposalList2.setEvaluationStage("2");
 			PmStatus evalStatus = new PmStatus();
 			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
@@ -6167,7 +6113,6 @@ public class SpecificationBackingBean extends
 					st2financeproposalList);
 			this.getManagedBean().setFinStandaraChecklist(false);
 		} finally {
-			statussO = null;
 		}
 	}
 
@@ -6224,43 +6169,28 @@ public class SpecificationBackingBean extends
 					scqtlist.setScQt(this.getManagedBean().getQt());
 
 					// scqtlist.setQtScoreWeightage(new ScQtScoreWeightage());
-					IStatusSO statussO = BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IStatusSO.class);
-
-					StatusReqDTO statusreq = new StatusReqDTO();
 
 					if (null != scqtlist.getDefinationType()
 							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 									.equalsIgnoreCase(scqtlist
 											.getDefinationType()
 											.getParameterCode())) {
+						Long statusId = null;
 						if (!scqtlist.isScoringReq()) {
-							statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+							statusId = QTStatusConst.TS_COMPLETED;
 						} else if (scqtlist.isScoringReq()) {
-							statusreq
-									.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+							statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 						}
-						StatusResDTO statusres = statussO
-								.retrieveStatusByStatusId(statusreq);
-						scqtlist.setPmStatus(statusres.getPmStatus());
+						scqtlist.setPmStatus(getPmStatusByStatusId(statusId));
 					}
 					if (null != scqtlist.getDefinationType()
 							&& ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 									.equalsIgnoreCase(scqtlist
 											.getDefinationType()
 											.getParameterCode())) {
-
-						statusreq
-								.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-						StatusResDTO statusres = statussO
-								.retrieveStatusByStatusId(statusreq);
-						scqtlist.setPmStatus(statusres.getPmStatus());
+						scqtlist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					}
-					PmStatus evalStatus = new PmStatus();
-					evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-					scqtlist.setPmEvalStatus(evalStatus);
+					scqtlist.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					compilance.add(scqtlist);
 				}
 
@@ -6280,8 +6210,6 @@ public class SpecificationBackingBean extends
 	 * datatable.
 	 */
 	public void addTechnicalCheckList() {
-		IStatusSO statussO;
-
 		try {
 			List<ScQtCheckList> st2technicalproposalList = getManagedBean()
 					.getScQtCheckSt2techProposal();
@@ -6303,18 +6231,8 @@ public class SpecificationBackingBean extends
 			st2technicalproposalList1.setAction(new PmParameter());
 
 			setUserDetails(st2technicalproposalList1);
-			statussO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
-
-			st2technicalproposalList1.setPmStatus(statusres.getPmStatus());
-			PmStatus evalStatus = new PmStatus();
-			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			st2technicalproposalList1.setPmEvalStatus(evalStatus);
+			st2technicalproposalList1.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			st2technicalproposalList1.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 
 			st2technicalproposalList.add(st2technicalproposalList1);
 
@@ -6322,7 +6240,6 @@ public class SpecificationBackingBean extends
 					st2technicalproposalList);
 			this.getManagedBean().setTechStandaraChecklist(false);
 		} finally {
-			statussO = null;
 		}
 	}
 
@@ -6331,8 +6248,6 @@ public class SpecificationBackingBean extends
 	 * checklist datatable.
 	 */
 	public void addFinancialComplianceList() {
-		IStatusSO statussO;
-
 		try {
 
 			List<ScQtCheckList> compilance = this.getManagedBean()
@@ -6384,44 +6299,29 @@ public class SpecificationBackingBean extends
 
 					setUserDetails(scqtlist);
 					// scqtlist.setQtScoreWeightage(new ScQtScoreWeightage());
-					statussO = BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IStatusSO.class);
 
-					StatusReqDTO statusreq = new StatusReqDTO();
 					if (null != scqtlist.getDefinationType()
 							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 									.equalsIgnoreCase(scqtlist
 											.getDefinationType()
 											.getParameterCode())) {
-
+						Long statusId = null;
 						if (!scqtlist.isScoringReq()) {
-							statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+							statusId = QTStatusConst.TS_COMPLETED;
 						} else if (scqtlist.isScoringReq()) {
-							statusreq
-									.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+							statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 						}
-						StatusResDTO statusres = statussO
-								.retrieveStatusByStatusId(statusreq);
-						scqtlist.setPmStatus(statusres.getPmStatus());
+						scqtlist.setPmStatus(getPmStatusByStatusId(statusId));
 					}
 					if (null != scqtlist.getDefinationType()
 							&& ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 									.equalsIgnoreCase(scqtlist
 											.getDefinationType()
 											.getParameterCode())) {
-
-						statusreq
-								.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-						StatusResDTO statusres = statussO
-								.retrieveStatusByStatusId(statusreq);
-						scqtlist.setPmStatus(statusres.getPmStatus());
+						scqtlist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					}
 
-					PmStatus evalStatus = new PmStatus();
-					evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-					scqtlist.setPmEvalStatus(evalStatus);
+					scqtlist.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					compilance.add(scqtlist);
 				}
 			}
@@ -6429,7 +6329,6 @@ public class SpecificationBackingBean extends
 			getManagedBean().setScQtCheckSt2financeProposalList(compilance);
 
 		} finally {
-			statussO = null;
 		}
 		this.getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance().execute("stageTwoFinance.hide();");
@@ -8155,8 +8054,6 @@ public class SpecificationBackingBean extends
 	 */
 	public void checkListFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
 		if (null != scQtChecklist) {
 			ScQtCheckListAttachment attachment = scQtChecklist
@@ -8171,11 +8068,7 @@ public class SpecificationBackingBean extends
 
 			scQtChecklist.setScQtCheckListAttachment(attachment);
 			if (null != scQtChecklist.getScQtCheckListAttachment()) {
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				scQtChecklist.setPmStatus(statusres.getPmStatus());
+				scQtChecklist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			}
 		}
 	}
@@ -12978,21 +12871,14 @@ public class SpecificationBackingBean extends
 	 */
 	public void deleteCheckListAttachmentFile(
 			ScQtCheckListAttachment checkListAttachment) {
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		checkListAttachment = null;
 		this.getManagedBean().getScQtChecklist()
 				.setScQtCheckListAttachment(checkListAttachment);
 		if (null != this.getManagedBean().getScQtChecklist()
 				&& null == this.getManagedBean().getScQtChecklist()
 						.getScQtCheckListAttachment()) {
-
-			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
 			this.getManagedBean().getScQtChecklist()
-					.setPmStatus(statusres.getPmStatus());
+					.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 
 		}
 
@@ -13320,8 +13206,6 @@ public class SpecificationBackingBean extends
 
 	public void technicalCheckListScoreReqChange(int index,
 			List<ScQtCheckList> checklist) {
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		ScQtCheckList list = checklist.get(index);
 
 		if (((null != list.getDefinationType()) && (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
@@ -13334,15 +13218,13 @@ public class SpecificationBackingBean extends
 								.getParameterCode()) && !ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO
 					.equalsIgnoreCase(list.getDefinationType()
 							.getParameterCode())))) {
-			StatusReqDTO statusreq = new StatusReqDTO();
+			Long statusId = null;
 			if (list.isScoringReq()) {
-				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 			} else if (!list.isScoringReq()) {
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+				statusId = QTStatusConst.TS_COMPLETED;
 			}
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
-			list.setPmStatus(statusres.getPmStatus());
+			list.setPmStatus(getPmStatusByStatusId(statusId));
 		}
 
 		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
@@ -13361,8 +13243,6 @@ public class SpecificationBackingBean extends
 
 	public void financialCheckListScoreReqChange(int index,
 			List<ScQtCheckList> checklist) {
-		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		ScQtCheckList list = checklist.get(index);
 
 		if ((null != list.getDefinationType())
@@ -13371,15 +13251,13 @@ public class SpecificationBackingBean extends
 								.getParameterCode()) && !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
 						.equalsIgnoreCase(list.getDefinationType()
 								.getParameterCode()))) {
-			StatusReqDTO statusreq = new StatusReqDTO();
+			Long statusId = null;
 			if (list.isScoringReq()) {
-				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				statusId = QTStatusConst.TS_PENDING_SUBMISSION;
 			} else if (!list.isScoringReq()) {
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+				statusId = QTStatusConst.TS_COMPLETED;
 			}
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
-			list.setPmStatus(statusres.getPmStatus());
+			list.setPmStatus(getPmStatusByStatusId(statusId));
 		}
 
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
@@ -14394,9 +14272,6 @@ public class SpecificationBackingBean extends
 	private void setTechncialChecklistEvaluationStatus(
 			List<ScQtCheckList> technicalCheckList) {
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
-			IStatusSO statussO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStatusSO.class);
 			for (ScQtCheckList checkList : technicalCheckList) {
 				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 						.equalsIgnoreCase(checkList.getDefinationType()
@@ -14405,12 +14280,7 @@ public class SpecificationBackingBean extends
 								.equalsIgnoreCase(checkList.getDefinationType()
 										.getParameterCode())) {
 					if (!checkList.isScoringReq()) {
-						StatusReqDTO statusreq = new StatusReqDTO();
-						statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-						StatusResDTO statusres = statussO
-								.retrieveStatusByStatusId(statusreq);
-
-						checkList.setPmEvalStatus(statusres.getPmStatus());
+						checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 					}
 
 				}
@@ -14422,9 +14292,6 @@ public class SpecificationBackingBean extends
 	private void setFinancialChecklistEvaluationStatus(
 			List<ScQtCheckList> financialCheckList) {
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
-			IStatusSO statussO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStatusSO.class);
 			for (ScQtCheckList financialcheckList : financialCheckList) {
 				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 						.equalsIgnoreCase(financialcheckList
@@ -14433,13 +14300,7 @@ public class SpecificationBackingBean extends
 								.equalsIgnoreCase(financialcheckList
 										.getDefinationType().getParameterCode())) {
 					if (!financialcheckList.isScoringReq()) {
-						StatusReqDTO statusreq = new StatusReqDTO();
-						statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-						StatusResDTO statusres = statussO
-								.retrieveStatusByStatusId(statusreq);
-
-						financialcheckList.setPmEvalStatus(statusres
-								.getPmStatus());
+						financialcheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 					}
 
 				}

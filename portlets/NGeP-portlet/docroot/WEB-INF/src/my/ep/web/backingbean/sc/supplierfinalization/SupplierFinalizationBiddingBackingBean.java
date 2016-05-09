@@ -23,7 +23,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -37,8 +36,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -1118,14 +1115,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 *            the selected ScQtMeeting entity
 	 */
 	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
-		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(scQtMeeting.getMeetingStatusStr());
-
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		scQtMeeting.setMeetingStatus(statusResDTO.getPmStatus());
+		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
 	}	
 	
 	/**
@@ -1144,15 +1134,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// meeting.setPmStatus(new PmStatus());
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
-
-			IStatusSO statussO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStatusSO.class);
-			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(QTStatusConst.MS_PENDING);
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
-			meeting.setMeetingStatus(statusres.getPmStatus());
+			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
 
 			meetingList.add(meeting);
 		} finally {
