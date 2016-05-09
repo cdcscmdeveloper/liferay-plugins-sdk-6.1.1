@@ -396,6 +396,10 @@ public class QTCommitteBackingBean extends
 						c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 				fromDate.set(Calendar.MILLISECOND, 0);
 				fromCreatedDate = fromDate.getTime();
+				// Setting current date as To-date to perform search if user selected only From Date
+				if(toCreatedDate == null){
+					toCreatedDate = DateUtils.getCurrentDateWithoutTime();
+				}
 				if (toCreatedDate != null) {
 					Calendar c2 = Calendar.getInstance();
 					c2.setTime(toCreatedDate);
@@ -421,6 +425,10 @@ public class QTCommitteBackingBean extends
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.PUBLISH_DATE);
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				// Setting current date as To-date to perform search if user selected only From Date
+				if(toPublishDate == null){
+					toPublishDate = DateUtils.getCurrentDateWithoutTime();
+				}
 				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
 						fromPublishDate, toPublishDate);
 				bean.setSearchValue(betweenVal);
@@ -434,6 +442,10 @@ public class QTCommitteBackingBean extends
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.CLOSED_DATE);
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				// Setting current date as To-date to perform search if user selected only From Date
+				if(toClosingDate == null){
+					toClosingDate = DateUtils.getCurrentDateWithoutTime();
+				}
 				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
 						fromClosingDate, toClosingDate);
 				bean.setSearchValue(betweenVal);
@@ -1597,6 +1609,8 @@ public class QTCommitteBackingBean extends
 				.setToPublishDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setFromClosingDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+		.setToClosingDate(null);
 		getManagedBean().setCloneCommitteeSelectQt(null);
 	}
 
