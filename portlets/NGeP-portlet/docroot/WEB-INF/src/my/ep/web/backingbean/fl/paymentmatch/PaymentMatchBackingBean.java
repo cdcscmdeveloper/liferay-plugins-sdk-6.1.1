@@ -1328,6 +1328,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setDocType(docType);
 			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 			FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
+			orderBackingBean.getManagedBean().setSelectedTabIndex(0);
 			orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1368,6 +1369,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			resDTO.setAdjLink(true);
 			adjBB.setAdjustmentNote(resDTO);
 			FacesContext fc = FacesContext.getCurrentInstance();
+			adjBB.getManagedBean().setSelectedTabIndex(0);
 			adjBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			adjBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			adjBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -1416,6 +1418,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			siBB.populateChargeLineData();
 			FacesContext fc = FacesContext.getCurrentInstance();
+			siBB.getManagedBean().setSelectedTabIndex(0);
 			siBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 			siBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			siBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -1441,6 +1444,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			invBB.getManagedBean().setReliefDeclarationCheck(true);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
+			invBB.getManagedBean().setSelectedTabIndex(0);
 			invBB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			invBB.getManagedBean().setPreviousRemarkList(flBB.getManagedBean().getRemarkList());
 			invBB.getManagedBean().setPreviousAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -1483,6 +1487,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			DeliveryOrderBackingBean doBB = new DeliveryOrderBackingBean();
 			doBB.renewSesionObject();
 			FacesContext fc = FacesContext.getCurrentInstance();
+			doBB.getManagedBean().setSelectedTabIndex(0);
 			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
