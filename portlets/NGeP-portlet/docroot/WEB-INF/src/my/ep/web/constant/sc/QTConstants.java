@@ -190,4 +190,23 @@ public interface QTConstants {
 	public static final int DEDUCTION_TAB_INDEX = 6;
 	public static final int DOCUMENTS_TAB_INDEX = 7;
 	public static final int ACTIVE_TAB_INDEX = 8;
+	
+	
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV = 10; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV = 11; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV = 12; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV = 15;
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV = 16;
+	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV = 17;
+	public static final int CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE = 20; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_EMPLOYEE = 21;
+	public static final int CRITERIA_TYPE_NO_OF_YEARS_WARRANTY = 30; // TODO
+	public static final int CRITERIA_TYPE_NO_OF_MONTH_OF_TRAINING = 40; // TODO
+	public static final int CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT = 50;
+	public static final int CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES = 51;
+	public static final int CRITERIA_TYPE_TOTAL_CASH_ON_HAND = 52;
+	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO = 60;
+	public static final int CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT = 70; // TODO
+	public static final int CRITERIA_TYPE_SUPPLIER_DETAILS = 30;
+	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO = 61;
 }
