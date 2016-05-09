@@ -74,8 +74,8 @@
 	<ui:define name="contentSection">
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="@([id$=Msg])" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
-				action="#{registrationBackingBean.submitRegistration}">
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="firstUserTncDialog" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
+				action="#{registrationBackingBean.onCallFirstUserTncDialog}">
 				<f:param name="disableValidation" value="true" />
 		</p:commandButton>
 	</div>
@@ -83,6 +83,35 @@
 		<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
 			closable="false" resizable="false" showHeader="false">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:dialog>
+		
+		<p:dialog id="firstUserTncDialog" header="#{lbl['lbl.sm.suppadmin.appointment.header']}"
+			widgetVar="firstUserTncDialog" modal="true" width="600px" height="400px">
+			<p:panel id="firstUserTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
+		
+				<p:scrollPanel style="height:200px;border:0;" mode="native">
+					<br /><p><h:outputText escape="false" value="#{lbl['lbl.sm.suppadmin.appointment.msg']}" style="white-space : normal !important"/></p>
+				</p:scrollPanel>
+	
+				<table>
+					<tr>
+						<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+								value="#{registrationBackingBean.managedBean.aggreeDeclareAdmin}">
+								<p:ajax event="change" update=":form:basCmdBtn" />
+							</p:selectBooleanCheckbox></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+					</tr>
+				</table>
+				
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
+						action="#{registrationBackingBean.submitRegistration}" 
+						update="@form" onclick="firstUserTncDialog.hide();"
+						disabled="#{!registrationBackingBean.managedBean.aggreeDeclareAdmin}" 
+						onstart="submissionDialog.show()" oncomplete="submissionDialog.hide()" />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="firstUserTncDialog.hide();" />
+				</div>
+			</p:panel>
 		</p:dialog>
 
 		<!-- 	<p:messages id="messages" showDetail="true" autoUpdate="true" />   -->
