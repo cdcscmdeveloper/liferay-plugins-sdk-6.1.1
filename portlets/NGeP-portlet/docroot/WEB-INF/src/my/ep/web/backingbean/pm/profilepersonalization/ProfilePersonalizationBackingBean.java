@@ -1417,7 +1417,7 @@ public class ProfilePersonalizationBackingBean extends
 			rolesList.add(RoleHelper.getInstance().getRoleDescByCode(userRole.getPmRole().getRoleCode()).getRoleName());	
 			i++;
 		}
-		getManagedBean().setRoleTableScrollHeight(i > 2 ? 71 : (i * 24) + 2);
+		getManagedBean().setRoleTableScrollHeight(i > 2 ? 66 : (i * 22));
 		getManagedBean().setRolesList(rolesList);
 	}
 	

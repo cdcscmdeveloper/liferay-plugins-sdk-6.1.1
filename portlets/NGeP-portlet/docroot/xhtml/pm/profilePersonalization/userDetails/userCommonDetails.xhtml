@@ -23,16 +23,16 @@
          .myTable thead {
          	display:none;
          }
-         .myTable > .ui-datatable-scrollable-header{
-         	display:none;
+         .myTable {
+         	margin:0px !important;
          }
          
-         .myTable > .ui-datatable-scrollable-footer{
-         	display:none;
+         .myTable > .ui-datatable-tablewrapper{
+         	margin:0px !important;
          }
          
-         .myTable > .ui-datatable-scrollable-body > table{
-         	margin:0px;
+         .myTable > .ui-datatable-tablewrapper > table{
+         	margin:0px !important;
          }
       </style>
       <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="true" escape="false"/>
@@ -127,13 +127,14 @@
                   <table>
                      <tr>
                         <td style="width:345px;">
-                        	<p:scrollPanel style="width:345px;height:#{profilePersonalizationBackingBean.managedBean.roleTableScrollHeight}px" mode="native">
-	                           <p:dataTable var="rolesList" value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
-	                             styleClass="myTable">
-	                              <p:column>
-	                                 <h:outputText value="#{rolesList}" />
-	                              </p:column>
-	                           </p:dataTable>
+                        	<p:scrollPanel style="width:345px;height:#{profilePersonalizationBackingBean.managedBean.roleTableScrollHeight}px;padding: 0px !important;margin-top: 0px !important;" mode="native">
+                        		<table style="width:100%;">
+                        			<ui:repeat var="role" value="#{profilePersonalizationBackingBean.managedBean.rolesList}" varStatus="status">
+										<tr>
+											<td class="#{status.odd ? 'ui-datatable-odd' : 'ui-datatable-even'}">#{role}</td>
+										</tr>
+									</ui:repeat>
+								</table>
                            </p:scrollPanel>
                         </td>
                      </tr>
