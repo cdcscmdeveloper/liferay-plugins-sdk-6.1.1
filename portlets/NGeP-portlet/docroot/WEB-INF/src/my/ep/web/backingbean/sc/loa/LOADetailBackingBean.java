@@ -1983,6 +1983,7 @@ public class LOADetailBackingBean extends
 		context.put("isZonal", getManagedBean().isZonal());
 		context.put("scLois", lois);
 		context.put("bean", this);
+		context.put("status", QTStatusConst.LOI_REJECTED);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT , 
 				context, new FileOutputStream(getActualFilePath(attachment)));
