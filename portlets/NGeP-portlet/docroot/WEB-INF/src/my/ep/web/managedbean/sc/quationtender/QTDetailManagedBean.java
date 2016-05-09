@@ -1392,10 +1392,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckListScore> otherScoreSelected;
 
 	/** The criteria type. */
-	private String criteriaType;
+	private int criteriaType;
 
 	/** The other criteria type. */
-	private String otherCriteriaType;
+	private int otherCriteriaType;
 
 	/** The check list title. */
 	private String checkListTitle;
@@ -8174,21 +8174,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.otherScoreSelected = otherScoreSelected;
 	}
 
-	public String getCriteriaType() {
-		return criteriaType;
-	}
-
-	public void setCriteriaType(String criteriaType) {
-		this.criteriaType = criteriaType;
-	}
-
-	public String getOtherCriteriaType() {
-		return otherCriteriaType;
-	}
-
-	public void setOtherCriteriaType(String otherCriteriaType) {
-		this.otherCriteriaType = otherCriteriaType;
-	}
+	
 
 	public String getCheckListTitle() {
 		return checkListTitle;
@@ -8682,6 +8668,34 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSearchDataModelPanelItem(
 			IPagingDataModel<CtPanelItem> searchDataModelPanelItem) {
 		this.searchDataModelPanelItem = searchDataModelPanelItem;
+	}
+
+	/**
+	 * @return the criteriaType
+	 */
+	public int getCriteriaType() {
+		return criteriaType;
+	}
+
+	/**
+	 * @param criteriaType the criteriaType to set
+	 */
+	public void setCriteriaType(int criteriaType) {
+		this.criteriaType = criteriaType;
+	}
+
+	/**
+	 * @return the otherCriteriaType
+	 */
+	public int getOtherCriteriaType() {
+		return otherCriteriaType;
+	}
+
+	/**
+	 * @param otherCriteriaType the otherCriteriaType to set
+	 */
+	public void setOtherCriteriaType(int otherCriteriaType) {
+		this.otherCriteriaType = otherCriteriaType;
 	}
 
 }
