@@ -26,12 +26,12 @@
     <tr>
 		<td>
 			<p style="text-align:justify;"><span>Saya, <span style='font-weight:bold;font-size:12px;font-family: Albertus Medium;' class="underline">$!userName</span> nombor K.P. <span style='font-weight:bold;font-size:13px;font-family: Albertus Medium;' class="underline">$!icNo</span> yang mewakili <span style='font-weight:bold;font-size:12px;font-family: Albertus Medium;' class="underline">$supplierName</span> nombor Pendaftaran <span style='font-weight:bold;font-size:13px;font-family: Albertus Medium;' class="underline">$!mofNo</span> dengan ini mengisytiharkan bahawa saya atau mana-mana individu yang mewakili syarikat ini tidak akan menawar atau memberi rasuah kepada mana-mana individu dalam <span style='font-weight:bold;font-size:12px;font-family: Albertus Medium;' class="underline">$!agency</span> atau mana-mana individu lain, sebagai sogokan untuk dipilih dalam $title seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini.</span></p>
-			<ol> <li value="2"> 
+			<ol> <li> 
 			     <span>
 				  <p style="text-align:justify;">Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam <span style='font-weight:bold;font-size:12px;font-family: Albertus Medium;' class="underline">$agency</span> atau mana-mana individu lain sebagai sogokan untuk dipilih dalam $title, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil: </p>
-				   2.1 penarikan balik tawaran kontrak bagi $title; atau<br />
-				   2.2 penamatan kontrak bagi $title; dan<br />
-				   2.3 lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan.
+				   1.1 penarikan balik tawaran kontrak bagi $title; atau<br />
+				   1.2 penamatan kontrak bagi $title; dan<br />
+				   1.3 lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan.
 			</span></li>
 			<li><span> <p style="text-align:justify;">Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai sogokan untuk dipilih dalam $title, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Perkhidmatan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran.</p></span>
 		   </li>
