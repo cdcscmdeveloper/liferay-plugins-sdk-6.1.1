@@ -4024,7 +4024,7 @@ public class LOIDetailBackingBean extends
 		context.put("isZonal", getManagedBean().isZonal());
 		context.put("decimalFormatter", new DecimalFormat("#,###,##0.00"));
 		context.put("scLois", lois);
-		context.put("status", 62406);
+		context.put("status", QTStatusConst.LOI_REJECTED);
 		context.put("bean", this);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT, context,
