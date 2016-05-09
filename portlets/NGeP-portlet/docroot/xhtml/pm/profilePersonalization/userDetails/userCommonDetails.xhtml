@@ -15,9 +15,11 @@
       	}
       
          .role-odd {
+         	font-size:14px;
          	background: #ffffff;
          }
          .role-even {
+         	font-size:14px;
         	background: #F2F5F9;
          }
          
@@ -118,7 +120,9 @@
                         		<table style="width:100%;">
                         			<ui:repeat var="role" value="#{profilePersonalizationBackingBean.managedBean.rolesList}" varStatus="status">
 										<tr>
-											<td class="#{status.odd ? 'role-odd' : 'role-even'}">#{role}</td>
+											<td class="#{status.odd ? 'role-odd' : 'role-even'}">
+												 <h:outputText value="#{role}"/>
+											</td>
 										</tr>
 									</ui:repeat>
 								</table>
