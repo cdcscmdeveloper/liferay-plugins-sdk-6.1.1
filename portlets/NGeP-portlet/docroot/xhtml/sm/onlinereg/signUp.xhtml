@@ -42,16 +42,14 @@
 			</table>
 		</p:panel>
 
-		<p:panel id="agreementId">
+		<p:panel id="agreementId" header="#{lbl['lbl.sm.term.and.condition.header']}">
 			<p:scrollPanel style="height:300px;border:0;" mode="native">
 				<c:choose>
 					<c:when
 						test="#{registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
 						<b>#{lbl['lbl.sm.basic.account.mof']}</b>
 						<br />
-						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.mofdesc']}" /></p>
-						<br />
-						<p><h:outputText escape="false" value="#{lbl['lbl.sm.mofReg.descData']}" /></p>
+						<h:outputText escape="false" value="#{lbl['lbl.sm.renewMof.descData']}" style="white-space : normal !important"/>
 					</c:when>
 
 					<c:otherwise>
@@ -59,7 +57,7 @@
 							<c:when test="#{not empty registrationBackingBean.managedBean.applType}">
 									<b>#{lbl['lbl.sm.basic.account.basic']}</b>
 									<br />
-									<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.basicdesc']}" /></p>
+									<h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.basicdesc']}" style="white-space : normal !important"/>
 							</c:when>
 							
 							<c:otherwise>
