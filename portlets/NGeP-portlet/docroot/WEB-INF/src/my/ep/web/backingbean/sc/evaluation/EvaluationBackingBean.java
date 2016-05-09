@@ -7807,7 +7807,7 @@ public class EvaluationBackingBean extends
 				RequestContext.getCurrentInstance().execute(
 						"reviceApprovalDlgs.show()");
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)
-					|| BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome)) {
+					|| BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outCome) || BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(outCome)) {
 
 				EvaluationResDTO resDTO = updateEvaluationCommitteDtls(outCome,
 						null);
@@ -7890,7 +7890,7 @@ public class EvaluationBackingBean extends
 	 */
 	public String gpkiSignAction(PmDigiSign digiSign) {
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(
-				BpmOutcomeConst.BPM_SUBMIT, digiSign);
+				this.getManagedBean().getLocalOutCome(), digiSign);
 		if (resDTO.isSuccessful()) {
 			ScQtCommittee qt = resDTO.getQtCommittee();
 			FacesContext
@@ -7902,7 +7902,7 @@ public class EvaluationBackingBean extends
 									null,
 									MessageUtils
 											.getMessage(
-													getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
+													getMessgeConstant(this.getManagedBean().getLocalOutCome()),
 													new String[] {
 															"Prepare Evaluation",
 															qt.getScQt()
