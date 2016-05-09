@@ -108,6 +108,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private SmGstSupplierDoc selectedGstSupplierDoc;
 	
 	private boolean myOwner;
+	private boolean aggreeDeclareAdmin;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -608,6 +609,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setMyOwner(boolean myOwner) {
 		this.myOwner = myOwner;
+	}
+
+	public boolean isAggreeDeclareAdmin() {
+		return aggreeDeclareAdmin;
+	}
+
+	public void setAggreeDeclareAdmin(boolean aggreeDeclareAdmin) {
+		this.aggreeDeclareAdmin = aggreeDeclareAdmin;
 	}
 
 }

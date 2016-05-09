@@ -597,6 +597,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 //		return null;
 	}
+	
+	public void onCallFirstUserTncDialog(){
+		getManagedBean().setAggreeDeclareAdmin(false);
+		RequestContext.getCurrentInstance().execute("firstUserTncDialog.show()");
+	}
 
 	/**
 	 * update Basic Supplier Account
