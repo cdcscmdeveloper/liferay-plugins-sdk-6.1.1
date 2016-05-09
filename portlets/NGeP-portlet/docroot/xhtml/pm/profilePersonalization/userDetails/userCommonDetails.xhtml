@@ -14,26 +14,13 @@
       		border-radius: 5px;
       	}
       
-         .ui-datatable-odd {
+         .role-odd {
          	background: #ffffff;
          }
-         .ui-datatable-even {
+         .role-even {
         	background: #F2F5F9;
          }
-         .myTable thead {
-         	display:none;
-         }
-         .myTable {
-         	margin:0px !important;
-         }
          
-         .myTable > .ui-datatable-tablewrapper{
-         	margin:0px !important;
-         }
-         
-         .myTable > .ui-datatable-tablewrapper > table{
-         	margin:0px !important;
-         }
       </style>
       <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="true" escape="false"/>
       <ui:param name="orgName" value="#{ParameterConst.orgTypeSupplier eq profilePersonalizationBackingBean.managedBean.currentProfile.orgTypeCode.parameterCode ? 
@@ -131,7 +118,7 @@
                         		<table style="width:100%;">
                         			<ui:repeat var="role" value="#{profilePersonalizationBackingBean.managedBean.rolesList}" varStatus="status">
 										<tr>
-											<td class="#{status.odd ? 'ui-datatable-odd' : 'ui-datatable-even'}">#{role}</td>
+											<td class="#{status.odd ? 'role-odd' : 'role-even'}">#{role}</td>
 										</tr>
 									</ui:repeat>
 								</table>

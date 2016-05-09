@@ -1436,7 +1436,7 @@ public class ProfilePersonalizationBackingBean extends
     }
 	
 	public boolean isTempSupplierRole(){
-		return getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? true : false;
+		return getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) ? true : false;
 	}
 
 	// //TODO: testing
