@@ -2808,7 +2808,7 @@ public class LOIDetailBackingBean extends
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(
 				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME));
 		DecimalFormat numberDF = new DecimalFormat(
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
