@@ -11,7 +11,6 @@
 			widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
 			value="#{backingBean.managedBean.approvedCategoryList}"
 			rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
-			rendered="#{backingBean.managedBean.smAppl.applType ne 'R'}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catApprDt" />
 			
@@ -73,7 +72,7 @@
 										itemValue="N" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
 										itemValue="S"
-										itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
+										itemDisabled="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H' or backingBean.managedBean.smAppl.applType eq 'R'}" />
 									<p:ajax event="change" oncomplete="typeConfirmation.show()"
 										listener="#{backingBean.applicationCategorySelected}"
 										update="@([id$=typeConfirmationId])" />
