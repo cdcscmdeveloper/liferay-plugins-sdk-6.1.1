@@ -703,6 +703,8 @@ public class BSVAttendanceBackingBean extends
 							bsvRegistration);
 					getAttandanceDtlsBySelectedRegistartion(bsvRegistration);
 				}
+				setSlectedHeaderName(bsvRegistration.getSupplier()
+						.getCompanyName().concat("  ").concat(">"));
 			}
 
 		}
