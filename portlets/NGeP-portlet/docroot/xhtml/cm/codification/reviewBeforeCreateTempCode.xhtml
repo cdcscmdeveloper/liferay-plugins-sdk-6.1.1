@@ -19,17 +19,20 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
-					<ui:param name="lblBpmBtn"
-						value="lbl.bpm.action.#{action}" />
+					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
 					<p:commandButton
 						disabled="#{(action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1))}"
-						value="#{lbl[lblBpmBtn]}" rendered="#{bpmTasklistBackingBean.managedBean.claim}"
+						value="#{lbl[lblBpmBtn]}"
+						rendered="#{bpmTasklistBackingBean.managedBean.claim}"
 						action="#{unspscCodeBackingBean.savetempCode(action)}"
 						update="@form" />
 				</ui:repeat>
-					<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}" action="#{bpmTasklistBackingBean.claimTaskInDetailPage}" rendered="#{!bpmTasklistBackingBean.managedBean.claim}" update="@form"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
+					action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
+					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
+					update="@form"></p:commandButton>
 			</div>
-			
+
 
 
 
@@ -39,14 +42,14 @@
 
 			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
-			<p:remoteCommand id="updateForm" name="updateForm" update="@form"></p:remoteCommand>
-			
+				<p:remoteCommand id="updateForm" name="updateForm" update="@form"></p:remoteCommand>
+
 				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu
-								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" onchange="updateForm();"
-								style="width:228px;">
+								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
+								onchange="updateForm();" style="width:228px;">
 								<f:selectItem itemValue="P"
 									itemLabel="#{lbl['lbl.txt.product']}" />
 								<f:selectItem itemValue="S"
@@ -57,8 +60,8 @@
 					</tr>
 
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
-							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText disabled="true"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
 								size="40"></p:inputText></td>
@@ -71,13 +74,13 @@
 					<h:panelGroup id="extensionFiledsId"
 						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.cm.type']}" />
-								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.type']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
 									size="40"></p:inputText></td>
-							<td><p:outputLabel value="#{lbl['lbl.cm.brand']}" />
-								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.brand']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
 									size="40"></p:inputText></td>
@@ -88,8 +91,8 @@
 							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
 									size="40"></p:inputText></td>
-							<td><p:outputLabel value="#{lbl['lbl.cm.color']}" />
-								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.color']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
 									size="40"></p:inputText></td>
@@ -101,13 +104,9 @@
 
 			<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true">
 
-				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.cm.search']}" disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
-						action="#{unspscCodeBackingBean.navigateCodeAdminToSearch}"></p:commandButton>
-				</div>
+
 
 				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
 					var="unspscObj" width="100%">
 
@@ -146,6 +145,12 @@
 					</p:column>
 
 				</p:dataTable>
+
+				<div style="text-align: right;">
+					<p:commandButton value="#{lbl['lbl.cm.item.code.search.title']}"
+						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
+						action="#{unspscCodeBackingBean.navigateCodeAdminToSearch}"></p:commandButton>
+				</div>
 
 
 			</p:panel>
