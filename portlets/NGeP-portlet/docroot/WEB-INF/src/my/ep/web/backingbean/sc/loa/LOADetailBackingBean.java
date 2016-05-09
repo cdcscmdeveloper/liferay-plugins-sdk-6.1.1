@@ -36,7 +36,6 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
@@ -66,8 +65,6 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -3871,23 +3868,10 @@ public class LOADetailBackingBean extends
 	 * @return the string
 	 */
 	public String createQtLOAAction(ScLoiLoa scLoiLoa) {
-		IStatusSO statusSO = null;
 		ScLoa scLoa = new ScLoa();
-		try {
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			scLoa.setScLoiLoa(scLoiLoa);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(QTStatusConst.LOA_PENDING_SUBMISSION);
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			scLoa.setPmStatus(statusResDTO.getPmStatus());
-			//scLoa.setLoaNo(getQtAwardSO().generateLoaNo());
-		
-		} finally {
-			statusSO = null;
-		}
+		scLoa.setScLoiLoa(scLoiLoa);
+		scLoa.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_PENDING_SUBMISSION));
+		//scLoa.setLoaNo(getQtAwardSO().generateLoaNo());
 
 		FacesContext fc = FacesContext.getCurrentInstance();
         getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());

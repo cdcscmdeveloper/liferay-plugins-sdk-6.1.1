@@ -26,7 +26,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
@@ -42,8 +41,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
@@ -153,9 +150,6 @@ public class PurchaseInDefaultBackingBean extends
 	public String pidAction(VCmSupplierItem vCmSupplierItem) {
 		debugLogger("pidAction");
 		ISearchBean<VCmSupplierItem> viewSearchBean = null;
-		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStatusSO.class);
 		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
@@ -234,11 +228,7 @@ public class PurchaseInDefaultBackingBean extends
 	
 		// WorkFlow Status
 		ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
-		StatusResDTO statusResDTO = iStatusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+		workFlowStatus.setPmStatus(getPmStatusByStatusId(DPStatusConstants.PID_PENDING_SUBMISSION));
 		workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
 		// scPurchaseInDefault.setCurrentStatus(workFlowStatus);
 		getCurrentStatus(workFlowStatus.getPmStatus());
@@ -1060,23 +1050,7 @@ public class PurchaseInDefaultBackingBean extends
 
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
 
-		IStatusSO statusSO = null;
-		try {
-
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(getManagedBean().getCurrentStatusId());
-
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-
-			getCurrentStatus(statusResDTO.getPmStatus());
-
-		} finally {
-			statusSO = null;
-		}
+		getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));
 
 		// remarks
 		purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault,
@@ -1155,17 +1129,7 @@ public class PurchaseInDefaultBackingBean extends
 						purchaseInDefaultResDTO.getCircularPidReasonList());
 				justificationTypeEvent();
 
-				try {
-					StatusReqDTO statusReqDTO = new StatusReqDTO();
-					statusReqDTO.setStatusId(DPStatusConstants.PID_COMPLETED);
-
-					StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
-
-					getCurrentStatus(statusResDTO.getPmStatus());
-
-				} finally {
-					//statusSO = null;
-				}
+				getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PID_COMPLETED));
 				
 				// disable all for pid view
 				getManagedBean().setPidBtnFlag(Boolean.FALSE);
@@ -1178,16 +1142,6 @@ public class PurchaseInDefaultBackingBean extends
 		} finally {
 			purchaseInDefaultSO = null;
 		}
-	}
-
-	
-	/**
-	 * Gets the status so.
-	 *
-	 * @return the status so
-	 */
-	private IStatusSO getStatusSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
 	
 	/**
