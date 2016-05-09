@@ -340,8 +340,9 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value=" #{lbl['lbl.sm.projDtls.consultFee']}" /></td>
-								<td><p:inputText id="consultantProjConsultFee"
+										value=" #{lbl['lbl.sm.projDtls.consultFee']}" /><p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:inputText id="consultantProjConsultFee" required="#{backingBean.managedBean.valueReqd}"
 										disabled="#{!backingBean.managedBean.valueReqd}"
 										label=" #{lbl['lbl.sm.projDtls.consultFee']}" maxlength="17"
 										validatorMessage="#{lbl['lbl.sm.projDtls.consultFee']} - #{lbl['lbl.sm.minAmt.validMsg']}"
