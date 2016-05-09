@@ -2743,14 +2743,16 @@ public class LOADetailBackingBean extends
 			}
 		}
 
-		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_REVISION.equals(statusId)
-				&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
-			if(scLoa.isApprovalReq()){
-				if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
-					throw new EpException(
-							MessageConst.ERROR_760315,
-							new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
+			
+			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
+				if(scLoa.isApprovalReq()){
+					if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
+						throw new EpException(
+								MessageConst.ERROR_760315,
+								new String[] {ResourceBundleUtils.getMessage("lbl.sc.approver",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
 				}
 			}
 
