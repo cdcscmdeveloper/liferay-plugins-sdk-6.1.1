@@ -14,7 +14,7 @@
 		
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 			<h:panelGroup style="width:765px;" >
-			<table style="width: 100%">
+			<table style="width: 100%;">
 				<tr>
 					<td class="columnWidth150">
 						<p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
@@ -39,7 +39,7 @@
 							style="width:130px;" maxlength="30" required="true" label="#{lbl['lbl.ct.physical.no']}" >
 							<p:ajax update="@this" />
 						</p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+						<ac:iconTooltip  value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
 					</td>
 					</h:panelGroup>
 				</tr>
@@ -48,19 +48,25 @@
 						<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 					</td> 
 					<td>
+					<h:panelGrid columns="3" styleClass="top-aligned-columns">
 						<p:inputTextarea autoResize="false"  style="width:130px;margin-bottom:5px;" 
 						     disabled="true" rows="2" maxlength="30" 
 						     value="#{agreementBackingBean.managedBean.agreementContractVer.ctContractValue.loaNo}" />
-						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
+						     <p:spacer width="1" />
+						<ac:iconTooltip  value="#{lbl['lbl.ct.tooltip.loa.no']}" />
+					</h:panelGrid>
 					</td>
 					<td class="columnWidth150">
 						<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
 					</td>
-					<td>
+					<td >
+					<h:panelGrid columns="3" styleClass="top-aligned-columns">
 						<p:inputTextarea autoResize="false" maxlength="1000" 
 							disabled="true" rows="2" style="width:130px;margin-bottom:5px;"
 							value="#{agreementBackingBean.managedBean.agreementContractVer.ctContractValue.loaPhysicalNo}" />
+							  <p:spacer width="1" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+					</h:panelGrid>
 					</td>					
 				</tr>
 				<tr>
