@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.pm.notify;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
@@ -257,11 +259,15 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("5")){
 						
-						searchBean
-								.getDataFilterBeans()
-								.add(new SearchFilterBean("pmNotifyDashboard.createdDate",
-										SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getSearchValue(), false));
+						Date date = covertStringToDate(getManagedBean().getSearchValue());
 						
+						if(date != null){
+						
+							searchBean
+									.getDataFilterBeans()
+									.add(new SearchFilterBean("pmNotifyDashboard.createdDate",
+											SearchOperator.OPERATOR_GREATER_EQUAL.value(), date));
+						}
 					}
 					
 					NotifyReqDTO reqDTO = new NotifyReqDTO();
@@ -321,6 +327,29 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		if(itemId == null){
 			return;
 		}
+	}
+	
+	public String getMask(){
+		
+		if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("5")){
+			return "99-99-9999";
+		} else {
+			return "";
+		}
+	}
+	
+	private Date covertStringToDate(String dateInString){
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = null;
+		
+		try {
+			date = formatter.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return date;
 	}
 	
 	private void resetSelectedNotify() {

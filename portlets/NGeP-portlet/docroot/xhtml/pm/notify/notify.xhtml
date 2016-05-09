@@ -27,8 +27,8 @@
 			<tr>
 				<td width="42%" valign="top">
 					<table width="100%">
-						<tr style="background-color:gainsboro">
-							<td style="text-align: left; vertical-align: middle;"><p:commandLink
+						<tr style="background-color:#f4f4f4;">
+							<td style="text-align: left; vertical-align: middle; padding:5px!important;"><p:commandLink
 									id="allLink" action="#{notifyBackingBean.retrieveNotifyList}"
 									update=":form:pnldetail,:form:notifyTable">
 									<h:outputText value="#{lbl['lbl.portal.notify.all']}"></h:outputText>
@@ -98,19 +98,20 @@
 				<td width="1%"><p:spacer width="3" /></td>
 				<td width="57%" valign="top">
 				<table width="100%">
-					<tr style="background-color:gainsboro">
-						<td style="text-align: left; vertical-align: middle;"></td>
-							<td style="text-align: right;">
+					<tr style="background-color:#f4f4f4;">
+						<td style="text-align: left; vertical-align: middle; padding:5px!important;"></td>
+							<td style="text-align: right; padding:5px!important;">
 								<p:selectOneMenu id="searchItem" value="#{notifyBackingBean.managedBean.searchItem}">
 									<f:selectItem itemLabel="Choose" itemValue="1"/>
 									<f:selectItem itemLabel="Sender" itemValue="2"/>
 									<f:selectItem itemLabel="Subject" itemValue="3"/>
 									<f:selectItem itemLabel="Content" itemValue="4"/>
+									<f:selectItem itemLabel="Date" itemValue="5"/>
 									<p:ajax event="change" listener="#{notifyBackingBean.searchItem}" update=":form:searchValue"/>
 								</p:selectOneMenu>
-								<p:inputText id="searchValue" value="#{notifyBackingBean.managedBean.searchValue}">
+								<p:inputMask id="searchValue" value="#{notifyBackingBean.managedBean.searchValue}" mask="#{notifyBackingBean.mask}">
 									<p:ajax event="change" listener="#{notifyBackingBean.searchValue}"/>
-								</p:inputText>
+								</p:inputMask>
 								<p:commandButton id="searchBtn"
 										value="Search"
 										action="#{notifyBackingBean.searchNotify}"
