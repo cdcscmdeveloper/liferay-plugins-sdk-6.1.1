@@ -9,8 +9,6 @@ import java.util.List;
 
 import my.ep.factory.EpLogger;
 import my.ep.ntf.vo.AttachmentVO;
-import my.ep.ntf.dto.NtfRequestDTO;
-import my.ep.ntf.service.INtfSO;
 
 import org.apache.log4j.Logger;
 
@@ -117,64 +115,5 @@ public class TestNtfViaEmail {
 		}
 		return b;
 	}
-	
-	public void sendFilestoMail(INtfSO ntfSO){
-		
-		Date curDate = new Date();
 
-		SimpleDateFormat format = null;
-		String DateToStr1,DateToStr2;
-
-		format = new SimpleDateFormat("dd/MM/yyyy");
-		DateToStr1 = format.format(curDate);
-
-		format = new SimpleDateFormat("ddMMyyyy");
-		DateToStr2 = format.format(curDate)+"/";
-		
-		log.info("sendFilestoMail");
-//		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
-//				.getOSBServiceObject(INtfSO.class);
-
-		NtfRequestDTO reqDTO = new NtfRequestDTO();
-		reqDTO.setTemplateId("800025");
-
-		List<String> subParaLst = new ArrayList<String>();
-		subParaLst.add("None");
-		subParaLst.add(DateToStr1);
-		reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
-		List<String> cntParaLst = new ArrayList<String>();
-		cntParaLst.add("None");
-		cntParaLst.add(DateToStr1);
-		reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
-
-		List<String> emailLst = new ArrayList<String>();
-		emailLst.add("gangaprasad21@gmail.com");
-		emailLst.add("integration-test@commercedc.com.my");
-//	
-//		emailLst.add("ahmadfaizul@commercedc.com.my");
-		emailLst.add("mohdyusri@commercedc.com.my");
-//		emailLst.add("ahmadasyraf@commercedc.com.my");
-//		emailLst.add("sharudin@commercedc.com.my");
-		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
-
-//		 Attachments
-		 String filePath = IntegrationConstants.EPERUNDING_UPLOAD_DIR_LOCAL+DateToStr2;
-		 
-		 File folder = new File(filePath);
-		 File[] listOfFiles = folder.listFiles();
-		 
-		 AttachmentVO[] attArr = new AttachmentVO[listOfFiles.length];
-		 AttachmentVO attachment = null;
-		 for (int i = 0; i < listOfFiles.length; i++) {
-		      if (listOfFiles[i].isFile()) {
-		    	  attachment = new AttachmentVO();
-		    	  attachment.setData(processToByte(filePath+listOfFiles[i].getName()));
-		    	  attachment.setFilename(listOfFiles[i].getName());
-		    	  attArr[i] = attachment;
-		      } 
-		    }
-		
-		reqDTO.setAttachmentArr(attArr);
-		ntfSO.processAndPublishViaEmail(reqDTO);
-	}
 }
