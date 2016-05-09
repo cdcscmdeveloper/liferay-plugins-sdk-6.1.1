@@ -3,15 +3,16 @@ package my.ep.web.backingbean.sm.email;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.ep.biz.service.osb.ntf.INtfClientSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.NotificationTextConst;
+import my.ep.dto.osb.ntf.NtfRequestDTO;
+import my.ep.dto.osb.ntf.NtfResponseDTO;
 import my.ep.exception.EpException;
-import my.ep.ntf.dto.NtfRequestDTO;
-import my.ep.ntf.dto.NtfResponseDTO;
-import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.lookupservice.EpNtfBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
 
@@ -20,10 +21,7 @@ public class SmEmailNotificationHelper {
 	public static void sendEmail(String templateId, List<String> emailLst,
 			List<String> subParams, List<String> contentParams) {
 		System.out.println("initiateTask******");
-		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
-				.getOSBServiceObject(INtfSO.class);
-		//TODO NTF
-		//INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
+		INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
 
 		NtfRequestDTO reqDTO = new NtfRequestDTO();
 
@@ -34,7 +32,7 @@ public class SmEmailNotificationHelper {
 				.size()]));
 
 		try {
-			NtfResponseDTO resDTO = ntfSO
+			NtfResponseDTO resDTO = ntfClientSO
 					.processAndPublishViaEmail(reqDTO);
 			if (!NotificationTextConst.STATUS_CODE_SUCCESS
 					.equals(resDTO.getStatusCode())) {
@@ -50,10 +48,8 @@ public class SmEmailNotificationHelper {
 			List<String> receiverIdList, String senderId,
 			List<String> subParams, List<String> contentParams) {
 		System.out.println("initiateTask******");
-		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
-				.getOSBServiceObject(INtfSO.class);
 		//TODO NTF
-		//INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
+		INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
 
 		NtfRequestDTO reqDTO = new NtfRequestDTO();
 
@@ -68,7 +64,7 @@ public class SmEmailNotificationHelper {
 				.size()]));
 
 		try {
-			NtfResponseDTO resDTO = ntfSO
+			NtfResponseDTO resDTO = ntfClientSO
 					.processAndPublishViaEmail(reqDTO);
 			if (!NotificationTextConst.STATUS_CODE_SUCCESS
 					.equals(resDTO.getStatusCode())) {
