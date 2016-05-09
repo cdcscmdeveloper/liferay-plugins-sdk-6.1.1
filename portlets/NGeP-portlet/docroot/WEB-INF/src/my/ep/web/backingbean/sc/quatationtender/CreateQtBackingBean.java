@@ -30,7 +30,6 @@ import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -53,7 +52,6 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
@@ -470,7 +468,7 @@ public class CreateQtBackingBean extends
 			}
 			if (null != financialSpecCheckList
 					&& !financialSpecCheckList.isEmpty()) {
-				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
 					if (QTConstants.TEMPLETE_SPEC_CODE
 							.equalsIgnoreCase(financialchecklist.getDefinationType()
@@ -482,7 +480,7 @@ public class CreateQtBackingBean extends
 			}
 			if (null != technicalSpecCheckList
 					&& !technicalSpecCheckList.isEmpty()) {
-				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 				boolean zonelevelChange = false;
 				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
 					zonelevelChange = true;
@@ -516,15 +514,6 @@ public class CreateQtBackingBean extends
 
 		}
 
-	}
-
-	private PmStatus getPmStatus(Long statusId) {
-		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStatusSO.class);
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setStatusId(statusId);
-		return iStatusSO.retrieveStatusByStatusId(reqDTO).getPmStatus();
 	}
 	
 	/**
@@ -2291,7 +2280,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 					&& !financialSpecCheckList.isEmpty()) {
 				
 				this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
-				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
 					if (QTConstants.TEMPLETE_SPEC_CODE
 							.equalsIgnoreCase(financialchecklist.getDefinationType()
@@ -2313,7 +2302,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 			}
 			if (null != technicalSpecCheckList
 					&& !technicalSpecCheckList.isEmpty()) {
-				PmStatus status = getPmStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+				PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 				boolean zonelevelChange = false;
 				for (ScQtCheckList technicalchecklist : technicalSpecCheckList) {
 					zonelevelChange = true;

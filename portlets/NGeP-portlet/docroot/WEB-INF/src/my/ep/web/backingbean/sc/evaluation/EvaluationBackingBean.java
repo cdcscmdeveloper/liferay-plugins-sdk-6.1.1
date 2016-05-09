@@ -49,7 +49,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
@@ -71,8 +70,6 @@ import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReportReqDTO;
@@ -1189,7 +1186,7 @@ public class EvaluationBackingBean extends
 					.getPresentationDemoSupplierListDM().getList();
 
 			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
-				PmStatus Status = getPmStatus();
+				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
 				for (ScQtProposalChecklist demoChecklist : presentatiodemo) {
 					demoChecklist.setEvaluationStatus(Status);
 				}
@@ -1304,13 +1301,10 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 		this.getManagedBean().setComplianceActiveIndex(0);
-		IStatusSO statussO = null;
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			statussO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			// this.getManagedBean().getScQt().getQtId()
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
@@ -1340,11 +1334,7 @@ public class EvaluationBackingBean extends
 								&& QTStatusConst.TS_PENDING_SUBMISSION
 										.equals(checkList.getPmEvalStatus()
 												.getStatusId())) {
-							StatusReqDTO statusreq = new StatusReqDTO();
-							statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-							StatusResDTO statusres = statussO
-									.retrieveStatusByStatusId(statusreq);
-							checkList.setPmEvalStatus(statusres.getPmStatus());
+							checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 
 						}
 
@@ -1361,13 +1351,7 @@ public class EvaluationBackingBean extends
 									&& QTStatusConst.TS_PENDING_SUBMISSION
 											.equals(checkList.getPmEvalStatus()
 													.getStatusId())) {
-								StatusReqDTO statusreq = new StatusReqDTO();
-								statusreq
-										.setStatusId(QTStatusConst.TS_COMPLETED);
-								StatusResDTO statusres = statussO
-										.retrieveStatusByStatusId(statusreq);
-								checkList.setPmEvalStatus(statusres
-										.getPmStatus());
+								checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 
 							}
 
@@ -1383,7 +1367,6 @@ public class EvaluationBackingBean extends
 					resDTO.getCheckListResultBean().getResultList());
 
 		} finally {
-			statussO = null;
 			evaluationSO = null;
 		}
 
@@ -1424,7 +1407,6 @@ public class EvaluationBackingBean extends
 	public void retriveComplianceFinancial() {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
-		IStatusSO statussO = null;
 
 		try {
 			if (this.getManagedBean().getScQt().isSampleReq()) {
@@ -1435,8 +1417,6 @@ public class EvaluationBackingBean extends
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			statussO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			// this.getManagedBean().getScQt().getQtId()
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
@@ -1460,11 +1440,7 @@ public class EvaluationBackingBean extends
 								&& QTStatusConst.TS_PENDING_SUBMISSION
 										.equals(checkList.getPmEvalStatus()
 												.getStatusId())) {
-							StatusReqDTO statusreq = new StatusReqDTO();
-							statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-							StatusResDTO statusres = statussO
-									.retrieveStatusByStatusId(statusreq);
-							checkList.setPmEvalStatus(statusres.getPmStatus());
+							checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 
 						}
 
@@ -1479,7 +1455,6 @@ public class EvaluationBackingBean extends
 
 		} finally {
 			evaluationSO = null;
-			statussO = null;
 		}
 
 	}
@@ -1720,7 +1695,6 @@ public class EvaluationBackingBean extends
 	private ScQtCheckList checkStausForUploadNoActionCheckLists(
 			ScQtCheckList checkList, String evalStage) {
 		IQTEvaluationSO evaluationSO = null;
-		IStatusSO statussO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -1731,35 +1705,19 @@ public class EvaluationBackingBean extends
 			reqDTO.setEvalStage(evalStage);
 			resDTO = evaluationSO.checkDemoAndUploadChecklistStatus(reqDTO);
 			if (resDTO.getPendingCount() > 0) {
-
-				statussO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				checkList.setPmEvalStatus(statusres.getPmStatus());
+				checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 
 			} else {
 				if (null != checkList.getPmEvalStatus()
 						&& QTStatusConst.TS_PENDING_SUBMISSION.equals(checkList
 								.getPmEvalStatus().getStatusId())) {
-					statussO = BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IStatusSO.class);
-					StatusReqDTO statusreq = new StatusReqDTO();
-					statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-					StatusResDTO statusres = statussO
-							.retrieveStatusByStatusId(statusreq);
-					checkList.setPmEvalStatus(statusres.getPmStatus());
+					checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 				}
 
 			}
 
 		} finally {
 			evaluationSO = null;
-			statussO = null;
 		}
 		return checkList;
 	}
@@ -9926,32 +9884,7 @@ public class EvaluationBackingBean extends
 	 *            the selected ScQtMeeting entity
 	 */
 	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
-		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(scQtMeeting.getMeetingStatusStr());
-
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
-		scQtMeeting.setMeetingStatus(statusResDTO.getPmStatus());
-	}
-
-	private PmStatus getPmStatus() {
-		IStatusSO statussO = null;
-		PmStatus status = null;
-		try {
-			statussO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(QTStatusConst.PR_COMPLETED);
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
-			status = statusres.getPmStatus();
-		} finally {
-
-		}
-		return status;
-
+		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
 	}
 
 	/**
@@ -9970,7 +9903,7 @@ public class EvaluationBackingBean extends
 					.getComplianceTechnicalProposalCheckListDM().getList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
-				PmStatus Status = getPmStatus();
+				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
 				for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
 					uploadedChecklist.setEvaluationStatus(Status);
 				}
@@ -10966,7 +10899,7 @@ public class EvaluationBackingBean extends
 					.getComplianceTechnicalProposalCheckListDM().getList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
-				PmStatus Status = getPmStatus();
+				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
 				for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
 					uploadedChecklist.setEvaluationStatus(Status);
 				}

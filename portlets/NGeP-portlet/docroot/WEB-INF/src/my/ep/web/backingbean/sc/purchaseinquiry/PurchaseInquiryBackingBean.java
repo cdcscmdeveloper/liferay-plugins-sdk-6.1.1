@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -369,23 +368,8 @@ public class PurchaseInquiryBackingBean extends
 		requestNoteDtl.setRequestItem(requestItem);
 
 		// pr inquiry status
-		IStatusSO statusSO = null;
-		try {
-
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
-
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-
-			getCurrentStatus(statusResDTO.getPmStatus());
-
-		} finally {
-			statusSO = null;
-		}
+		getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION));
+		
 		scPrInquiry.setCreatedBy(new FacesScopes().getUserSessionBean()
 				.getUserId());
 
@@ -1148,26 +1132,8 @@ public class PurchaseInquiryBackingBean extends
 					reqNoteBackingBean.initializeApproverGroup();
 //					reqNoteBackingBean.initialInformation(requestNote);
 
-					IStatusSO statusSO = null;
-					try {
-						statusSO = BusinessDelegate.getInstance()
-								.getServiceObject(
-										ModuleCodeConst.PROFILE_MANAGEMENT,
-										IStatusSO.class);
-
-						StatusReqDTO statusReqDTO = new StatusReqDTO();
-						statusReqDTO
-						.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-
-						StatusResDTO statusResDTO = statusSO
-								.retrieveStatusByStatusId(statusReqDTO);
-
-						reqNoteBackingBean.getCurrentStatus(statusResDTO
-								.getPmStatus());
-
-					} finally {
-						statusSO = null;
-					}
+					reqNoteBackingBean.getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION));
+					
 					requestNote.setRemarks(initializeRemarks(requestNote,
 							requestNote.getCurrentStatus(),
 							requestNote.getRemarks(), ScRequestNoteRemark.class));
@@ -1305,22 +1271,7 @@ public class PurchaseInquiryBackingBean extends
 		getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
 		getManagedBean().setScPrInquiry(prInquiry);
 
-		IStatusSO statusSO = null;
-		try {
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(currentStatusId);
-
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-
-			getCurrentStatus(statusResDTO.getPmStatus());
-
-		} finally {
-			statusSO = null;
-		}
+		getCurrentStatus(getPmStatusByStatusId(currentStatusId));
 		
 		// remarks
 		prInquiry.setRemarks(initializeRemarks(prInquiry,
