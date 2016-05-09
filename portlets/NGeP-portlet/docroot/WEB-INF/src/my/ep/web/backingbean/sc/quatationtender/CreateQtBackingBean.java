@@ -2019,6 +2019,17 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			this.getManagedBean().getQt()
 					.setContractType(resDTO.getPmParameter());
+			if(null!=this.getManagedBean().getQt()
+					.getContractType() &&ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
+					.getContractType().getParameterCode())){
+				ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
+				fulfilMentAsandWhen
+						.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+				fulfilMentAsandWhen.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+				ParameterResDTO fulfilMentAsandWhenresDTO = parameterSO
+						.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
+				this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
+			}
 
 		} finally {
 			parameterSO = null;
