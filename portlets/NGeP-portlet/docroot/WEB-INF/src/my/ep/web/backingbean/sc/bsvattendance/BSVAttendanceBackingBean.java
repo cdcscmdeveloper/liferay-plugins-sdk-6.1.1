@@ -332,7 +332,7 @@ public class BSVAttendanceBackingBean extends
 														MessageConst.INFO_700026,
 														new String[] {
 																 getMessageCommon("lbl.sc.notice.board.briefing.and.sitevisit.dtls"),
-																"" },
+																 scQt.getQtNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
