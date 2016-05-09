@@ -425,6 +425,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setScoringForYears(null);
 		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
+		
 		return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 
 	}
@@ -4498,10 +4499,12 @@ public class SpecificationBackingBean extends
 			toBeRemoveList = new ArrayList<ScQtCheckListScore>();
 		}
 		if (null != scoreType && !"".equalsIgnoreCase(scoreType)) {
-			if (scoreType.equalsIgnoreCase("2")) {
-
+			if (scoreType.equalsIgnoreCase(QTConstants.USER_SCORE)) {
+				ScQtCheckListScore score = new ScQtCheckListScore();
+			score.setCriteriaType(this.getManagedBean().getCriteriaType());
+			setUserDetails(score);
 				this.getManagedBean().setScQtCheckListScore(
-						new ScQtCheckListScore());
+						score);
 				// toBeRemoveList.add(this.getManagedBean().getCheckListScore());
 				if (null != this.getManagedBean().getCheckListScore()
 						&& !this.getManagedBean().getCheckListScore().isEmpty()) {
@@ -4539,10 +4542,12 @@ public class SpecificationBackingBean extends
 		}
 		if (null != scoreType && !"".equalsIgnoreCase(scoreType)) {
 
-			if (scoreType.equalsIgnoreCase("2")) {
-
+			if (scoreType.equalsIgnoreCase(QTConstants.USER_SCORE)) {
+				ScQtCheckListScore score = new ScQtCheckListScore();
+				score.setCriteriaType(this.getManagedBean().getOtherCriteriaType());
+				setUserDetails(score);
 				this.getManagedBean().setScQtContractScore(
-						new ScQtCheckListScore());
+						score);
 				if (null != this.getManagedBean().getScoringForYears()
 						&& !this.getManagedBean().getScoringForYears()
 								.isEmpty()) {
@@ -4830,7 +4835,8 @@ public class SpecificationBackingBean extends
 			} else {
 				setUserDetails(checkList);
 				this.getManagedBean().setChecklistScoreType(null);
-
+				 this.getManagedBean().setCriteriaType(0);
+                 this.getManagedBean().setOtherCriteriaType(0);
 				this.getManagedBean().setCompanyScoreType(null);
 				this.getManagedBean().setCheckListScore(
 						new ArrayList<ScQtCheckListScore>());
@@ -4845,7 +4851,7 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
-
+                
 						this.getManagedBean().setChecklistScoreType(null);
 
 						this.getManagedBean().setCompanyScoreType(null);
@@ -4861,7 +4867,8 @@ public class SpecificationBackingBean extends
 						List<ScQtCheckListScore> noOfYears = new ArrayList<ScQtCheckListScore>();
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 10) {
+							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV) {
+								
 								if (checklistScore.getScoreType().intValue() == 1) {
 
 									this.getManagedBean()
@@ -4884,8 +4891,7 @@ public class SpecificationBackingBean extends
 													checklistScore);
 								}
 
-							} else if (checklistScore.getCriteriaType() == 11) {
-
+							} else if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 
 									this.getManagedBean()
@@ -4937,6 +4943,8 @@ public class SpecificationBackingBean extends
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
 					}
+					   this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV);
+	                   this.getManagedBean().setOtherCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/technicalCheckListGovCompanyExperience.xhtml?faces-redirect=true";
 				} else if (QTConstants.TECHNICAL_PRIVATE_CODE
@@ -4946,7 +4954,7 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
-
+						
 						this.getManagedBean().setChecklistScoreType(null);
 
 						this.getManagedBean().setCompanyScoreType(null);
@@ -4964,7 +4972,9 @@ public class SpecificationBackingBean extends
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
 
-							if (checklistScore.getCriteriaType() == 15) {
+							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV) {
+								
+				                  
 								if (checklistScore.getScoreType().intValue() == 1) {
 
 									this.getManagedBean()
@@ -4987,8 +4997,8 @@ public class SpecificationBackingBean extends
 													checklistScore);
 								}
 
-							} else if (checklistScore.getCriteriaType() == 16) {
-
+							} else if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV) {
+								
 								if (checklistScore.getScoreType().intValue() == 1) {
 
 									this.getManagedBean()
@@ -5040,6 +5050,8 @@ public class SpecificationBackingBean extends
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
 					}
+					 this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
+	                   this.getManagedBean().setOtherCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/technicalCheckListPrivateCompanyExperience.xhtml?faces-redirect=true";
 				}
@@ -5063,7 +5075,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 20) {
+							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5103,6 +5115,7 @@ public class SpecificationBackingBean extends
 						}
 
 					}
+					 this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/technicalCheckListStaffList.xhtml?faces-redirect=true";
 				} else if (QTConstants.TECHNICAL_NUMBER_EMPLOYEES
@@ -5112,7 +5125,6 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
-
 						this.getManagedBean().setChecklistScoreType(null);
 						this.getManagedBean().setCompanyScoreType(null);
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
@@ -5127,7 +5139,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 21) {
+							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_EMPLOYEE) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5170,6 +5182,7 @@ public class SpecificationBackingBean extends
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
 					}
+					 this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_EMPLOYEE);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/technicalCheckListNoOfEmployees.xhtml?faces-redirect=true";
 				}
@@ -5279,6 +5292,8 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/boSctemplatespec/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
+				 this.getManagedBean().setCriteriaType(0);
+                 this.getManagedBean().setOtherCriteriaType(0);
 				this.getManagedBean().setCheckListScore(
 						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setScoringForYears(
@@ -5306,7 +5321,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 12) {
+							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5349,6 +5364,7 @@ public class SpecificationBackingBean extends
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
 					}
+					 this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/financialCheckListGovernementCompany.xhtml?faces-redirect=true";
 				} else if (QTConstants.FINANCIAL_PRIVATE_CODE
@@ -5372,7 +5388,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 17) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5414,6 +5430,7 @@ public class SpecificationBackingBean extends
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
 					}
+					this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/financialCheckListPrivateCompany.xhtml?faces-redirect=true";
 
@@ -5435,7 +5452,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 51) {
+							if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5472,6 +5489,7 @@ public class SpecificationBackingBean extends
 									.getScQtCheckListValue());
 						}
 					}
+					this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/financialCheckListCreditFacility.xhtml?faces-redirect=true";
 				}
@@ -5492,7 +5510,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 52) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5529,6 +5547,7 @@ public class SpecificationBackingBean extends
 									.getScQtCheckListValue());
 						}
 					}
+					this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND);
 					this.getManagedBean().setScQtChecklist(checkList);
 
 					return "/xhtml/sc/specification/specificationCommittee/financialCheckListCashOnhand.xhtml?faces-redirect=true";
@@ -5560,7 +5579,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 50) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5614,6 +5633,7 @@ public class SpecificationBackingBean extends
 						checkList.setScQtCheckListValue(checkListValue);
 
 					}
+					this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/financialCheckListBankStatement.xhtml?faces-redirect=true";
 				}
@@ -5636,7 +5656,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 60) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5658,7 +5678,7 @@ public class SpecificationBackingBean extends
 													checklistScore);
 								}
 
-							} else if (checklistScore.getCriteriaType() == 61) {
+							} else if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO) {
 
 								if (checklistScore.getScoreType().intValue() == 1) {
 
@@ -5703,6 +5723,8 @@ public class SpecificationBackingBean extends
 									.getScQtCheckListValue());
 						}
 					}
+					this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO);
+					this.getManagedBean().setOtherCriteriaType(QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/financialCheckListAssetsLiabilities.xhtml?faces-redirect=true";
 				} else if (QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
@@ -5718,7 +5740,7 @@ public class SpecificationBackingBean extends
 								QTConstants.USER_SCORE);
 
 						ScQtCheckListScore checklistScore = new ScQtCheckListScore();
-						checklistScore.setCriteriaType(new Integer("30"));
+						checklistScore.setCriteriaType(QTConstants.CRITERIA_TYPE_SUPPLIER_DETAILS);
 						checklistScore.setScoreType(new BigDecimal(this
 								.getManagedBean().getChecklistScoreType()));
 						setUserDetails(checklistScore);
@@ -5731,7 +5753,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 30) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_SUPPLIER_DETAILS) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5768,6 +5790,7 @@ public class SpecificationBackingBean extends
 									.getScQtCheckListValue());
 						}
 					}
+					this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_SUPPLIER_DETAILS);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/financialChecklistSupplierinfoMain.xhtml?faces-redirect=true";
 				} else if (QTConstants.FINANCIAL_PAID_UP_CAPITAL_CODE
@@ -5786,7 +5809,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtCheckListScore checklistScore : resDTO
 								.getCheckListScores()) {
-							if (checklistScore.getCriteriaType() == 70) {
+							if (checklistScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT) {
 								if (checklistScore.getScoreType().intValue() == 1) {
 									this.getManagedBean()
 											.setChecklistScoreType(
@@ -5823,6 +5846,7 @@ public class SpecificationBackingBean extends
 									.getScQtCheckListValue());
 						}
 					}
+					this.getManagedBean().setCriteriaType(QTConstants.CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT);
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/financialCheckListPaidUpCapital.xhtml?faces-redirect=true";
 				}
@@ -7582,8 +7606,8 @@ public class SpecificationBackingBean extends
 							.getScQtCheckListScore();
 					noContract.setScoreType(new BigDecimal(this
 							.getManagedBean().getChecklistScoreType()));
-					noContract.setCriteriaType(new Integer(this
-							.getManagedBean().getCriteriaType()));
+					//noContract.setCriteriaType(new Integer(this
+							//.getManagedBean().getCriteriaType()));
 					noContract.setCheckList(checkList);
 					setUserDetails(noContract);
 					noOfContractScore.add(noContract);
@@ -7648,8 +7672,8 @@ public class SpecificationBackingBean extends
 								.getScQtContractScore();
 						scoreOfYears.setScoreType(new BigDecimal(this
 								.getManagedBean().getCompanyScoreType()));
-						scoreOfYears.setCriteriaType(new Integer(this
-								.getManagedBean().getOtherCriteriaType()));
+						//scoreOfYears.setCriteriaType(new Integer(this
+								//.getManagedBean().getOtherCriteriaType()));
 						scoreOfYears.setCheckList(checkList);
 						setUserDetails(scoreOfYears);
 						noOfYearsScore.add(scoreOfYears);
@@ -7832,8 +7856,8 @@ public class SpecificationBackingBean extends
 							.getScQtCheckListScore();
 					noContract.setScoreType(new BigDecimal(this
 							.getManagedBean().getChecklistScoreType()));
-					noContract.setCriteriaType(new Integer(this
-							.getManagedBean().getCriteriaType()));
+					//noContract.setCriteriaType(new Integer(this
+							//.getManagedBean().getCriteriaType()));
 					noContract.setCheckList(checkList);
 					setUserDetails(noContract);
 					noOfContractScore.add(noContract);
@@ -10630,7 +10654,7 @@ public class SpecificationBackingBean extends
 
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)
-					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
@@ -10680,7 +10704,7 @@ public class SpecificationBackingBean extends
 
 						return CommonUIConst.ACKNOWLEDGE_PAGE;
 					}
-				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
 					SpecificationResDTO resDTO = updateSpecCommitteDtls(action,
 							null);
 					if (resDTO.isSuccessful()) {
@@ -11299,7 +11323,7 @@ public class SpecificationBackingBean extends
 		ScQt scQt = this.getManagedBean().getQt();
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)) {
 			
 			loadPrepareSpecCommitteeDetails(scQt.getQtId());
 			
