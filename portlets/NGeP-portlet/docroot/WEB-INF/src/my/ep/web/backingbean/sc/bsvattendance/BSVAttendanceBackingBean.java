@@ -33,6 +33,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
@@ -62,7 +63,8 @@ public class BSVAttendanceBackingBean extends
 
 	private static final String NAV_TO_BSV_REG_PAGE = "/xhtml/sc/bsvattendance/addattendance/bsvAttendanceRegisterPopup.xhtml";
     private static final String BSV_MAIN_PAGE = "/xhtml/sc/bsvattendance/attendancedetails/bsvAttendanceRegisterMain.xhtml";
-	
+    private static final String SAVE_SUCCESS_MSG_KEY = "lbl.sc.bsv.save.message";
+    
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 	private String slectedHeaderName;
 
@@ -434,18 +436,11 @@ public class BSVAttendanceBackingBean extends
 						.getCurrentInstance()
 						.addMessage(
 								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700004,
-														new String[] {
-																"Registered Attandance For Briefing/SiteVisit",
-																"" },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+								new FacesMessage(FacesMessage.SEVERITY_INFO,
+										null, ResourceBundleUtils.getMessage(
+												SAVE_SUCCESS_MSG_KEY, 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes().getUserLocale())));
 
 			}
 
