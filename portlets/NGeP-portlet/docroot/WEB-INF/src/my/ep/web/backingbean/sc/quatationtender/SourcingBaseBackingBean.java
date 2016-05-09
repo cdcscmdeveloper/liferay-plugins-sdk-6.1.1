@@ -47,6 +47,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -67,6 +68,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -87,6 +89,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -2531,5 +2534,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			member.setRepresentativeType(ParameterHelper.getInstance()
 					.getPmParameterById(paramId));
 		}
+	}
+	
+	/**
+	 * Get PmStatus by status id
+	 * 
+	 * @param statusId
+	 * 		the status id
+	 * @return	the PmStatus instance
+	 */
+	public PmStatus getPmStatusByStatusId(Long statusId) {
+		if (statusId != null) {
+			IStatusSO statusSO = null;
+			try {
+				statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setStatusId(statusId);
+				return statusSO
+						.retrieveStatusByStatusId(reqDTO)
+						.getPmStatus();
+
+			} finally {
+				statusSO = null;
+			}	
+		}
+		
+		return null;
 	}
 }
