@@ -2165,7 +2165,7 @@ public class SupplierFinalizationBackingBean extends
 						+ " " + getManagedBean().getScQt().getQtNo();
 				String variable2 = getMessageCommon("lbl.sc.supplier.finalization");
 
-				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
+				commonMessageAcknowledmentPage(getMessgeConstant(outcome),
 						variable1, variable2);
 			}
 
