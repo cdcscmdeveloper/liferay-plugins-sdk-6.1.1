@@ -86,7 +86,7 @@ body {margin-top: 0px;margin-left: 0px;}
 <body>
 <div id="page_1">
 <div id="dimg1">
-<img src="http://localhost:8080/NGeP-portlet/css/images/Bank_verification_form.jpg" id="img1" />
+<img src="http://$hostUrl/NGeP-portlet/css/images/Bank_verification_form.jpg" id="img1" />
 </div>
 
 
@@ -117,27 +117,27 @@ body {margin-top: 0px;margin-left: 0px;}
 </tr>
 <tr>
 	<td class="tr2 td2"><p class="p1 ft1">Nama Bank</p></td>
-	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>...............................</p></td>
+	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>..................................................................................................................</p></td>
 </tr>
 <tr>
 	<td class="tr2 td2"><p class="p1 ft0">Cawangan Bank</p></td>
-	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>...............................</p></td>
+	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>..................................................................................................................</p></td>
 </tr>
 <tr>
 	<td class="tr3 td2"><p class="p1 ft1">Alamat Bank</p></td>
-	<td class="tr3 td3"><p class="p1 ft3"><span class="ft1">: </span>...............................</p></td>
+	<td class="tr3 td3"><p class="p1 ft3"><span class="ft1">: </span>..................................................................................................................</p></td>
 </tr>
 <tr>
 	<td class="tr2 td2"><p class="p1 ft4">&#160;</p></td>
-	<td class="tr2 td3"><p class="p5 ft3">...............................</p></td>
+	<td class="tr2 td3"><p class="p5 ft3">..................................................................................................................</p></td>
 </tr>
 <tr>
 	<td class="tr2 td2"><p class="p1 ft1">Poskod</p></td>
-	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>............<span class="ft0">Negeri : </span>.............</p></td>
+	<td class="tr2 td3"><p class="p1 ft2"><span class="ft0">: </span>................................................<span class="ft0">&#160; Negeri : </span>.................................................</p></td>
 </tr>
 <tr>
 	<td class="tr3 td2"><p class="p1 ft1">No. Akaun</p></td>
-	<td class="tr3 td3"><p class="p1 ft3"><span class="ft1">: </span>...............................</p></td>
+	<td class="tr3 td3"><p class="p1 ft3"><span class="ft1">: </span>..................................................................................................................</p></td>
 </tr>
 <tr>
 	<td class="tr4 td4"><p class="p1 ft4">&#160;</p></td>
@@ -186,7 +186,7 @@ body {margin-top: 0px;margin-left: 0px;}
 	<td class="tr0 td17"><p class="p1 ft4">&#160;</p></td>
 </tr>
 <tr>
-	<td class="tr2 td16"><p class="p1 ft3">...................</p></td>
+	<td class="tr2 td16"><p class="p1 ft3">.............................................................................</p></td>
 	<td class="tr2 td17"><p class="p1 ft4">&#160;</p></td>
 </tr>
 <tr>
