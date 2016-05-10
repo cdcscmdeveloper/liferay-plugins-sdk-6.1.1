@@ -63,6 +63,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
@@ -587,7 +588,11 @@ public class ApprovalBackingBean extends
 							String userRemark = remarks.get(i).getRemark();
 							if (null == userRemark || "".equals(userRemark)) {
 								throw new EpException(MessageConst.ERROR_100022,
-										new String[] { "Remark" });
+										new String[] { 
+											ResourceBundleUtils.getMessage(
+												"lbl.sc.remark", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes().getUserLocale()) });
 							}
 						}
 					}
@@ -620,7 +625,11 @@ public class ApprovalBackingBean extends
 						String userRemark = remarks.get(i).getRemark();
 						if (null == userRemark || "".equals(userRemark)) {
 							throw new EpException(MessageConst.ERROR_100022,
-									new String[] { "Remark" });
+									new String[] { 
+										ResourceBundleUtils.getMessage(
+											"lbl.sc.remark", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) });
 						}
 					}
 				}
@@ -634,7 +643,11 @@ public class ApprovalBackingBean extends
 						String userRemark = remarks.get(i).getRemark();
 						if (null == userRemark || "".equals(userRemark)) {
 							throw new EpException(MessageConst.ERROR_100022,
-									new String[] { "Remark" });
+									new String[] { 
+										ResourceBundleUtils.getMessage(
+											"lbl.sc.remark", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) });
 						}
 					}
 				}
@@ -655,7 +668,11 @@ public class ApprovalBackingBean extends
 							String userRemark = remarks.get(i).getRemark();
 							if (null == userRemark || "".equals(userRemark)) {
 								throw new EpException(MessageConst.ERROR_100022,
-										new String[] { "Remark" });
+										new String[] { 
+											ResourceBundleUtils.getMessage(
+												"lbl.sc.remark", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes().getUserLocale()) });
 							}
 						}
 					}
