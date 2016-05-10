@@ -11,7 +11,9 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+		</p:blockUI>
 		<p:messages id="bsvattanadance" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
 
@@ -28,7 +30,9 @@
 					<p:column width="100%" style="text-align:right">
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
 							process="@form"
-							action="#{bsvAttendanceBackingBean.saveBsvRegistarionFromMaintanceFlow}" />
+							action="#{bsvAttendanceBackingBean.saveBsvRegistarionFromMaintanceFlow}"
+							onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();" />
 					</p:column>
 				</p:row>
 			</p:panelGrid>
