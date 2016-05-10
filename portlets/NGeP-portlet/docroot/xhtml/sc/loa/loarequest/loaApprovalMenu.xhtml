@@ -39,7 +39,7 @@
 					<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
-					<p:inputText size="34"
+					<p:inputText size="40"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractSigner.userName}"
 						disabled="true" />
 				</c:if>
@@ -55,7 +55,7 @@
 						maxlength="100"
 						value="#{lOADetailBackingBean.managedBean.scLoa.loaSignerDesig}"
 						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
-						size="34">
+						size="40">
 					</p:inputText>
 					<p:message id="loaSignerDesigIdIdMsg" for="loaSignerDesigId"
 						display="icon" /></td>
@@ -117,7 +117,7 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea style="width:350px;" maxlength="1000"
+								<td><p:inputTextarea style="width:280px;" maxlength="1000"
 								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
 										id="remark" /> <h:outputText value="#{remarkVar.remark}"
