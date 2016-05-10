@@ -305,9 +305,14 @@
 							size="30" showOn="button" /> <p:message id="receiveCalIdMsg"
 							for="receiveCalId" display="icon" /></td>
 					<td>
-						<p:outputLabel value="&#160;" />
+						<p:outputLabel value="#{lbl['lbl.sm.submissionType']}" />
 					</td>
-					<td><p:outputLabel value="&#160;" /></td>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" style="text-transform: uppercase;" value="#{lbl['lbl.sm.suppDoc.online']}" 
+						rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode == SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+						<p:outputLabel styleClass="outputLabel-view" style="text-transform: uppercase;" value="#{lbl['lbl.sm.suppDoc.offline']}" 
+						rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode == SupplierManagementConst.SUPPORTING_DOC_OFFLINE}"  />
+					</td>
 					<td>
 						<p:commandButton value="#{lbl['lbl.sm.receive.all']}" style="float:right;"			    		
 				    		action="#{sdoReviewBackingBean.receiveAllSuppDoc}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}"
