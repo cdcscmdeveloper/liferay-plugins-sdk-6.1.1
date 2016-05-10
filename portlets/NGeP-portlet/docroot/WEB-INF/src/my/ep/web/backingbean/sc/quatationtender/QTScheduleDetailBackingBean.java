@@ -637,15 +637,15 @@ public class QTScheduleDetailBackingBean extends
 
 			BriefingResDTO briefingResDTO = briefingSO
 					.retrieveRegistartionDtlsByQt(briefingReqDTO);
-
+			ScQt scQt = briefingResDTO.getScQt();
 			List<ScQtApprovalRequest> approvalRequests = briefingResDTO
 					.getApprovalRequests();
 			ScQtApproval approval = approvalRequests.get(0).getScQtApproval();
-			approval.setScQtApprovalRemarks(initializeRemarks(approval, null,
+			approval.setScQtApprovalRemarks(initializeRemarks(approval, scQt.getCurrentWorkFlowStatus(),
 					approval.getScQtApprovalRemarks(), ScQtApprovalRemark.class));
 			this.getManagedBean().setScQtApproval(approval);
 			this.getManagedBean().setScQtApprovalRequestList(approvalRequests);
-			this.getManagedBean().setQt(briefingResDTO.getScQt());
+			this.getManagedBean().setQt(scQt);
 			this.getManagedBean().setBriefingRegistrationList(
 					briefingResDTO.getBriefingRegResultBean().getResultList());
 			this.getManagedBean().setQtBriefing(
