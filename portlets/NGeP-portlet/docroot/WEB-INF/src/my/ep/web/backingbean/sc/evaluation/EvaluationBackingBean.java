@@ -9570,9 +9570,7 @@ public class EvaluationBackingBean extends
 		tplDocMaster.setItemTypeId(itemType);
 
 		// Status
-		PmStatus status = new PmStatus();
-		status.setStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT);
-		tplDocMaster.setPmStatus(status);
+		tplDocMaster.setPmStatus(getPmStatusByStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT));
 
 		tplDocMaster.setScReport(scQtEvaluationReport);
 
