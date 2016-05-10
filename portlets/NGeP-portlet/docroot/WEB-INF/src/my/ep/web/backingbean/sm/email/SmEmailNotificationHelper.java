@@ -21,7 +21,7 @@ public class SmEmailNotificationHelper {
 	public static void sendEmail(String templateId, List<String> emailLst,
 			List<String> subParams, List<String> contentParams) {
 		System.out.println("initiateTask******");
-		INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
+		INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.NTF, INtfClientSO.class);
 
 		NtfRequestDTO reqDTO = new NtfRequestDTO();
 
@@ -49,7 +49,7 @@ public class SmEmailNotificationHelper {
 			List<String> subParams, List<String> contentParams) {
 		System.out.println("initiateTask******");
 		//TODO NTF
-		INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
+		INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.NTF, INtfClientSO.class);
 
 		NtfRequestDTO reqDTO = new NtfRequestDTO();
 
