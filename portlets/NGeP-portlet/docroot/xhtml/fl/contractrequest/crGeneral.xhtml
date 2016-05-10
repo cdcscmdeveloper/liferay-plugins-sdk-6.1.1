@@ -202,8 +202,11 @@
 		</table>
 		<table>
 		<tr>
-			<td><p:selectBooleanCheckbox disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}" value="#{contractRequestBackingBean.managedBean.declarationCheck}"/></td>
-			<td><h:outputText style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
+				<td><p:selectBooleanCheckbox
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+						value="#{contractRequestBackingBean.managedBean.declarationCheck}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><h:outputText style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
 		</tr>
 	</table>
 	</p:panel>
