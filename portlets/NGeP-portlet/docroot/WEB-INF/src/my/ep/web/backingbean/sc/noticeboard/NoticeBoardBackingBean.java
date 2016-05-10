@@ -2629,11 +2629,15 @@ public class NoticeBoardBackingBean extends
 		List<ScQtDocReport> scQtDocReports = this.getManagedBean()
 				.getScQtDocReports();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
+		int increment = 1;
 		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
 				ScQtDocReportAttachment attachment = scQtDocReport
 						.getScQtDocReportAttachment();
+				String PrefixFileName = (String) (increment <= 9 ?"0"+increment:Integer.toString(increment));
+				attachment.setPrefixFileName(PrefixFileName);
 				scAttachments.add(attachment);
+				increment++;
 			}
 			if (!scAttachments.isEmpty()) {
 				downloadAllFiles("NGeP-QT-Documents", scAttachments);
