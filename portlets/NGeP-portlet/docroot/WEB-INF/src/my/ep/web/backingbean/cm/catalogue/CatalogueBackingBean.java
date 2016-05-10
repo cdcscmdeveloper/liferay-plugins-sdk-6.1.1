@@ -4975,7 +4975,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public String backToPervious() {
 
-		return "supplierItemView";
+		return "supplierItemView?faces-redirect=true";
 	}
 
 	/**
