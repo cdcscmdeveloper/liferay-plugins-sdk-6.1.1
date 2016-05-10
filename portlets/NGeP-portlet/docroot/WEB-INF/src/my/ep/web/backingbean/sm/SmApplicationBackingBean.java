@@ -6871,9 +6871,8 @@ public class SmApplicationBackingBean extends
 			if (item != null) {
 				String parameter = "taskId=" + item.getTaskId()
 						+ "&claim=false";
-				urlParam = EpPropertiesUtils.getInstance().getProperty(
-						EpPropertiesConst.PORTAL_APPLICATION_URL)
-						+ "mof-application?" + parameter;
+				urlParam = SmCommonUtil.getBasePortalUrl()
+						+ "/web/epapp/mof-application?" + parameter;
 			}
 		} else {
 			msgConst = MessageConst.INFO_700005;
