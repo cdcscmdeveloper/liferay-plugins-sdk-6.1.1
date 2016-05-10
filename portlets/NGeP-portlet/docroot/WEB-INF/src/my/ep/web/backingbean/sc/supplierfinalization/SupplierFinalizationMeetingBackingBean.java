@@ -65,7 +65,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -295,8 +294,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
 
-			PmStatus status = getPmStatusByStatusId(QTStatusConst.MS_PENDING);
-			meeting.setMeetingStatus(status);
+			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
 			
 			meetingList.add(meeting);
 			this.getManagedBean().setScQtMeetings(meetingList);
@@ -1498,9 +1496,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			ScCommittee newScCommittee = new ScCommittee();
 			newScCommittee.setCommitteeId(null);
 			newScCommittee.setCommitteeType(oldScCommittee.getCommitteeType());
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.CMT_COMPLETED);
-			newScCommittee.setCommitteStatus(status);
+			newScCommittee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_COMPLETED));
 			setUserDetails(newScCommittee);
 			
 			for(ScCommitteeMember member : scCommitteeMemberList){

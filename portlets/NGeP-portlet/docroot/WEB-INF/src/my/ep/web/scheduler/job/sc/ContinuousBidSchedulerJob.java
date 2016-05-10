@@ -5,12 +5,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.BidStatusConst;
+import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sc.helper.SchedulerHelper;
@@ -61,8 +64,7 @@ public class ContinuousBidSchedulerJob implements Job {
 					if (currentSchedule.getPmStatus().getStatusId()
 							.equals(BidStatusConst.BID_PENDING_BIDDING)) {
 
-						currentSchedule.getPmStatus().setStatusId(
-								BidStatusConst.BID_IN_PROGRESS);
+						currentSchedule.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_IN_PROGRESS));
 						reqDTO.setScBidSchedule(currentSchedule);
 						resDTO = biddingSO
 								.updateSchedulerJobBidSchedule(reqDTO);
@@ -99,8 +101,7 @@ public class ContinuousBidSchedulerJob implements Job {
 							.equals(BidStatusConst.BID_IN_PROGRESS)
 							|| currentSchedule.getPmStatus().getStatusId()
 									.equals(BidStatusConst.BID_PAUSED)) {
-						currentSchedule.getPmStatus().setStatusId(
-								BidStatusConst.BID_COMPLETED);
+						currentSchedule.setPmStatus(getPmStatusByStatusId(BidStatusConst.BID_COMPLETED));
 						reqDTO.setScBidSchedule(currentSchedule);
 						resDTO = biddingSO
 								.updateSchedulerJobBidSchedule(reqDTO);
@@ -149,4 +150,31 @@ public class ContinuousBidSchedulerJob implements Job {
 		return compareTime;
 	}
 
+	/**
+	 * Get PmStatus by status id
+	 * 
+	 * @param statusId
+	 * 		the status id
+	 * @return	the PmStatus instance
+	 */
+	private PmStatus getPmStatusByStatusId(Long statusId) {
+		if (statusId != null) {
+			IStatusSO statusSO = null;
+			try {
+				statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setStatusId(statusId);
+				return statusSO
+						.retrieveStatusByStatusId(reqDTO)
+						.getPmStatus();
+
+			} finally {
+				statusSO = null;
+			}	
+		}
+		
+		return null;
+	}
 }

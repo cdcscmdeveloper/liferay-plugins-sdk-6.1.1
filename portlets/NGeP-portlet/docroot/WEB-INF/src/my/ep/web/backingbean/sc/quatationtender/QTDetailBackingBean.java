@@ -679,12 +679,6 @@ public class QTDetailBackingBean extends
 			if (!viewQT) {
 				this.getManagedBean().setAuditorRoleView(true);
 				this.getManagedBean().setEditable(true);
-				if (getManagedBean().getCurrentStatusId() >= 60002) {
-
-				} else {
-					this.getManagedBean().getQt().getQtStatus()
-							.setStatusId(60015L);
-				}
 			}
 
 			setScQtTrackingDairyObject(scQt);
@@ -3108,9 +3102,7 @@ public class QTDetailBackingBean extends
 				qtCommitte.setQtCommitteRemarks(null);
 				qtCommitte.setScQtMeetings(null);
 				ScCommittee committee = new ScCommittee();
-				PmStatus status = new PmStatus();
-				status.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
-				committee.setCommitteStatus(status);
+				committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 				committee.setCommitteeType(parameterResDTO.getPmParameter());
 				if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 						.equalsIgnoreCase(commType)) {
@@ -4158,9 +4150,7 @@ public class QTDetailBackingBean extends
 				ScQt scQt = resDTO1.getQtDetail();
 				ScQtStatus qtStatus = new ScQtStatus();
 				qtStatus.setScQt(scQt);
-				PmStatus pmStatus = new PmStatus();
-				pmStatus.setStatusId(QTStatusConst.QT_CANCELLED);
-				qtStatus.setPmStatus(pmStatus);
+				qtStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.QT_CANCELLED));
 				qtStatus.setCurrent(Boolean.TRUE);
 				qtStatus.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 

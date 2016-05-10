@@ -44,6 +44,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -67,7 +68,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeRemark;
@@ -866,9 +866,7 @@ public class CommitteBackingBean extends
 					ScCommittee committee = new ScCommittee();
 					committee.setCommitteeType(commType);
 					setUserDetails(committee);
-					PmStatus committeStatus = new PmStatus();
-					committeStatus.setStatusId(60200l);
-					committee.setCommitteStatus(committeStatus);
+					committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 					committee
 							.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 					qtCommitte.setScCommittee(committee);
@@ -946,9 +944,7 @@ public class CommitteBackingBean extends
 					ScCommittee committee = new ScCommittee();
 					committee.setCommitteeType(commType);
 					setUserDetails(committee);
-					PmStatus committeStatus = new PmStatus();
-					committeStatus.setStatusId(60200l);
-					committee.setCommitteStatus(committeStatus);
+					committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 					committee
 							.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 					qtCommitte.setScCommittee(committee);
@@ -996,9 +992,7 @@ public class CommitteBackingBean extends
 					ScCommittee committee = new ScCommittee();
 					committee.setCommitteeType(commType);
 					setUserDetails(committee);
-					PmStatus committeStatus = new PmStatus();
-					committeStatus.setStatusId(60200l);
-					committee.setCommitteStatus(committeStatus);
+					committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
 					committee
 							.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 					qtCommitte.setScCommittee(committee);
@@ -2025,9 +2019,7 @@ public class CommitteBackingBean extends
 			}
 		}
 		scCommittee.setScCommitteeMembers(memberList);
-		PmStatus committeStatus = new PmStatus();
-		committeStatus.setStatusId(60202l);
-		scCommittee.setCommitteStatus(committeStatus);
+		scCommittee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_COMPLETED));
 		for (ScCommitteeMember scCommitteeMember : memberList) {
 			scCommitteeMember.setScCommittee(scCommittee);
 		}
