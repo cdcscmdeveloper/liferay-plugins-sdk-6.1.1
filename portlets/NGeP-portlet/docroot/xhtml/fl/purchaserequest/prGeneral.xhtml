@@ -181,8 +181,11 @@
 		</table>
 		<table>
 		<tr>
-			<td><p:selectBooleanCheckbox disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}" value="#{purchaseRequestBackingBean.managedBean.declarationCheck}"/></td>
-			<td><h:outputText style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
+				<td><p:selectBooleanCheckbox
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+						value="#{purchaseRequestBackingBean.managedBean.declarationCheck}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><h:outputText style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
 		</tr>
 	</table>
 	</p:panel>
