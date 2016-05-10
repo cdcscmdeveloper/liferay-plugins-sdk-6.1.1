@@ -53,6 +53,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -91,6 +92,9 @@ public class QTScheduleDetailBackingBean extends
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
+	
+	/** The text before sign. */
+	private String textBeforeSign;
 
 	/**
 	 * Debug logger.
@@ -655,15 +659,85 @@ public class QTScheduleDetailBackingBean extends
 				.handleNavigation(fc, null,
 						"/xhtml/sc/bsvattendance/approval/additionalAttandanceApproval.xhtml");
 	}
+	
+	/**
+	 * Submit Approval Details. Event handle to submit data for bpm.
+	 * 
+	 * @param action
+	 * 		the action out come
+	 */
+	public String updateBpmTask(String action) {
+		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
+			ScQtApproval approval = this.getManagedBean().getScQtApproval();
+			if (null != approval) {
+				List<ScQtApprovalRemark> remarks = approval.getScQtApprovalRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { 
+										ResourceBundleUtils.getMessage(
+											"lbl.sc.remark", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) });
+						}
+					}
+				}	
+			}
+			
+			return approveAdditionalAttendance(action, null);
+		} else {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			return null;
+		}
+	}
+	
+	/**
+	 * Gpki sign action.Event handle when Approver submit.
+	 * 
+	 * @param digiSign
+	 *            (Mandatory)
+	 * @return the string(ACKNOWLEDGE_PAGE)
+	 */
+	public String gpkiSignAction(PmDigiSign digiSign) {
+		return approveAdditionalAttendance(this.getManagedBean()
+				.getAction(), digiSign);
+	}
+	
+	/**
+	 * Gets the text before sign.
+	 * 
+	 * @return the text before sign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	/**
+	 * Sets the text before sign.
+	 * 
+	 * @param textBeforeSign
+	 *            the new text before sign
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getQt().getQtNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		this.textBeforeSign = sb.toString();
+	}
 
 	/**
 	 * Submit registarion details.
 	 * 
 	 * @param outcome
 	 *            the outcome
+	 * @param digiSign
+	 * 			the PmDigiSign instance
 	 * @return the string
 	 */
-	public String submitRegistarionDetails(String outcome) {
+	public String approveAdditionalAttendance(String outcome, PmDigiSign digiSign) {
 
 		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 
@@ -695,6 +769,13 @@ public class QTScheduleDetailBackingBean extends
 				briefingReqDTO.setApproval(approval);
 
 			}
+			
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_BSV_ATTENDANCE,
+						scQt.getQtId(), scQt.getQtNo());
+			}
+			briefingReqDTO.setDigiSignData(digiSign);
+			
 			briefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 
