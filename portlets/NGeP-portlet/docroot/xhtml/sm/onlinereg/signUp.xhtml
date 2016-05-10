@@ -27,10 +27,10 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>		
 
-		<p:panel header="#{lbl['lbl.sm.account.type.header']}">
+		<p:panel header="#{lbl['lbl.sm.header.new.registration']}">
 			<table>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.account.type.header']}" /></td>
 					<td><p:selectOneRadio
 							value="#{registrationBackingBean.managedBean.applType}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
