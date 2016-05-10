@@ -22,7 +22,6 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
@@ -392,13 +391,9 @@ public class BSVAttendanceBackingBean extends
 			}
 
 			if (SourcingConstants.COMPLETE.equalsIgnoreCase(flowType)) {
-				PmStatus bsvStatus = new PmStatus();
-				bsvStatus.setStatusId(QTStatusConst.BSV_COMPLETED);
-				scQtBrief.setBsvStatus(bsvStatus);
+				scQtBrief.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_COMPLETED));
 			} else {
-				PmStatus bsvStatus = new PmStatus();
-				bsvStatus.setStatusId(QTStatusConst.BSV_PENDING);
-				scQtBrief.setBsvStatus(bsvStatus);
+				scQtBrief.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
 			}
 
 			// reqDTO.setQtBriefingList(briefingDetails);

@@ -46,7 +46,6 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -273,9 +272,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		address.setPmDivision(new PmDivision());
 		address.setPmDistrict(new PmDistrict());
 		bsvDtl.setAddress(address);
-		PmStatus pmStatus = new PmStatus();
-		pmStatus.setStatusId(QTStatusConst.BSV_PENDING);
-		bsvDtl.setBsvStatus(pmStatus);
+		bsvDtl.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
 		this.getManagedBean().setQtBriefing(bsvDtl);
 		retrievePmStateList();
 		getManagedBean().setAutoUpdate(false);

@@ -312,8 +312,7 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setScCommitteeMemberList(
 					qtCommitte.getScCommittee().getScCommitteeMembers());
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());*/
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
+			PmStatus status = getPmStatusByStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
 			scQt.setQtStatus(status);            
 			/* scQt.setQtNo(dto.getQtNo()); */
 			ScQtStatus qtStatus = new ScQtStatus();

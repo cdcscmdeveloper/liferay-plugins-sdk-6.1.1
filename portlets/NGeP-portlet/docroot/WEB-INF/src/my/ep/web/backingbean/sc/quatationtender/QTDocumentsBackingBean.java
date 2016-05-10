@@ -73,7 +73,6 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScReport;
@@ -851,9 +850,7 @@ public class QTDocumentsBackingBean extends
 		tplDocMaster.setItemTypeId(itemType);
 
 		// Status
-		PmStatus status = new PmStatus();
-		status.setStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT);
-		tplDocMaster.setPmStatus(status);
+		tplDocMaster.setPmStatus(getPmStatusByStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT));
 
 		tplDocMaster.setScReport(scQtDocReport);
 

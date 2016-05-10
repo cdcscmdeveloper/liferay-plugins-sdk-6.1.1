@@ -43,6 +43,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -66,7 +67,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -359,10 +359,7 @@ public class EvaluationMeetingBackingBean extends
 			setUserDetails(meeting);
 			meetingList.add(meeting);
 
-			PmStatus status = new PmStatus();
-			status.setStatusId(62650L);
-
-			meeting.setMeetingStatus(status);
+			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
 			this.getManagedBean().setScQtMeetings(meetingList);
 
 		} catch (Exception e) {

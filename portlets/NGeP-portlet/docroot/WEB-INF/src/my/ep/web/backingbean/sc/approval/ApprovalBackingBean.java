@@ -755,12 +755,9 @@ public class ApprovalBackingBean extends
 								.equalsIgnoreCase(outcome)) {
 							qtCommittee
 									.getScCommittee()
-									.getCommitteStatus()
-									.setStatusId(
-											QTStatusConst.CMT_PENDING_REVISION);
+									.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_REVISION));
 						} else {
-							qtCommittee.getScCommittee().getCommitteStatus()
-									.setStatusId(QTStatusConst.CMT_COMPLETED);
+							qtCommittee.getScCommittee().setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_COMPLETED));
 
 						}
 

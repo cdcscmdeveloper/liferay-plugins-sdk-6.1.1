@@ -124,7 +124,6 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -1120,11 +1119,7 @@ public class SpecificationBackingBean extends
 			ParameterResDTO checkListactionresDTO = parameterSo
 					.retrieveParameterByTypeAndCode(checkListActionType);
 
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			PmStatus evalStatus = new PmStatus();
-			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			checkList.setPmEvalStatus(evalStatus);
+			checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			checkList.setTitle(itemName);
 			checkList.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 			checkList
@@ -1135,7 +1130,7 @@ public class SpecificationBackingBean extends
 			checkList.setScQt(this.getManagedBean().getQt());
 			checkList.setDefinationType(specTyperesDTO.getPmParameter());
 			setUserDetails(checkList);
-			checkList.setPmStatus(status);
+			checkList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			checkList.setManditory(false);
 			checkList.setRecordStatus(true);
 			checkList.setScQtDoc(scqtDocDest);
@@ -1189,9 +1184,6 @@ public class SpecificationBackingBean extends
 			 * .retrieveParameterByTypeAndCode(itemTypeReqDTO);
 			 */
 
-			PmStatus templateStaus = new PmStatus();
-			templateStaus.setStatusId(60550L);
-
 			ParameterReqDTO localGoodsReqDTO = new ParameterReqDTO();
 			localGoodsReqDTO.setParameterType(ParameterTypeConst.ITEM_ORIGIN);
 			localGoodsReqDTO.setParameterCode(ParameterConst.LOCAL_GOODS);
@@ -1215,7 +1207,7 @@ public class SpecificationBackingBean extends
 			specMaster.setProcurementCategory(procurementResDTO
 					.getPmParameter());
 			specMaster.setItemTypeCode(panelItems.get(0).getItemType());
-			specMaster.setStatus(templateStaus);
+			specMaster.setStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
 			specMaster.setItemOriginCode(localGoodsResDTO.getPmParameter());
 			specMaster.setQtyByZone(true);
 			setUserDetails(specMaster);
@@ -6104,9 +6096,7 @@ public class SpecificationBackingBean extends
 
 			st2financeproposalList2.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			// st2financeproposalList2.setEvaluationStage("2");
-			PmStatus evalStatus = new PmStatus();
-			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			st2financeproposalList2.setPmEvalStatus(evalStatus);
+			st2financeproposalList2.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			st2financeproposalList.add(st2financeproposalList2);
 
 			this.getManagedBean().setScQtCheckSt2financeProposalList(
@@ -7641,39 +7631,25 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(contractScoreType)) || (QTConstants.AUTO_SCORE
 						.equalsIgnoreCase(contractScoreType) && (null == totalNoOfYearsType || ""
 						.equals(totalNoOfYearsType))))) {
-					PmStatus evalStatus = new PmStatus();
-					// evalStatus=new PmStatus();
-					evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
-					reqDTO.setEvaluationStatus(evalStatus);
+					reqDTO.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 					// checkList.setPmEvalStatus(evalStatus);
 
 				} else {
-					PmStatus evalStatus = new PmStatus();
-					// evalStatus=new PmStatus();
-					evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-					reqDTO.setEvaluationStatus(evalStatus);
+					reqDTO.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					// checkList.setPmEvalStatus(evalStatus);
 				}
 
 			} else {
 				if (QTConstants.AUTO_SCORE.equalsIgnoreCase(contractScoreType)) {
-					PmStatus evalStatus = new PmStatus();
-					// evalStatus=new PmStatus();
-					evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
-					reqDTO.setEvaluationStatus(evalStatus);
+					reqDTO.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 					// checkList.setPmEvalStatus(evalStatus);
 				} else {
-					PmStatus evalStatus = new PmStatus();
-					// evalStatus=new PmStatus();
-					evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-					reqDTO.setEvaluationStatus(evalStatus);
+					reqDTO.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 					// checkList.setPmEvalStatus(evalStatus);
 				}
 
 			}
-			PmStatus specificationStatus = new PmStatus();
-			specificationStatus.setStatusId(QTStatusConst.TS_COMPLETED);
-			reqDTO.setSpecificationStatus(specificationStatus);
+			reqDTO.setSpecificationStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			reqDTO.setTobeRemoveScores(removedList);
 			reqDTO.setScQtCheckList(checkList);
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
@@ -7851,23 +7827,15 @@ public class SpecificationBackingBean extends
 				}
 			}
 			if (QTConstants.AUTO_SCORE.equalsIgnoreCase(contractScoreType)) {
-				PmStatus evalStatus = new PmStatus();
-				// evalStatus=new PmStatus();
-				evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
-				reqDTO.setEvaluationStatus(evalStatus);
+				reqDTO.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 				// checkList.setPmEvalStatus(evalStatus);
 			} else {
-				PmStatus evalStatus = new PmStatus();
-				// evalStatus = new PmStatus();
-				evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-				reqDTO.setEvaluationStatus(evalStatus);
+				reqDTO.setEvaluationStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 				// checkList.setPmEvalStatus(evalStatus);
 			}
 
 			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
-			PmStatus specificationStatus = new PmStatus();
-			specificationStatus.setStatusId(QTStatusConst.TS_COMPLETED);
-			reqDTO.setSpecificationStatus(specificationStatus);
+			reqDTO.setSpecificationStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			reqDTO.setTobeRemoveScores(removedList);
 			reqDTO.setScQtCheckList(checkList);
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
@@ -11662,12 +11630,8 @@ public class SpecificationBackingBean extends
 		}
 
 		if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			scQtCheckList.setPmStatus(status);
-			PmStatus evalStatus = new PmStatus();
-			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			scQtCheckList.setPmEvalStatus(evalStatus);
+			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			if (getManagedBean().getQt().isZonal()) {
 				ScQtSupplierCriteria supplierCriteria = getManagedBean()
 						.getQt().getScQtSupplierCriteria();
@@ -11685,13 +11649,8 @@ public class SpecificationBackingBean extends
 			}
 
 		} else {
-
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			scQtCheckList.setPmStatus(status);
-			PmStatus evalStatus = new PmStatus();
-			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			scQtCheckList.setPmEvalStatus(evalStatus);
+			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 		}
 		List<ScQtCheckList> toBeRemoveList = null;
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
@@ -12132,9 +12091,7 @@ public class SpecificationBackingBean extends
 			}
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
 					.getTplSpecMaster().getSpecName());
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.TS_COMPLETED);
-			scQtCheckList.setPmStatus(status);
+			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			// Code to construct financial checklist..
@@ -12191,9 +12148,7 @@ public class SpecificationBackingBean extends
 							.getTplSpecQuestions());
 			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
 					SourcingConstants.FINANCIAL_DOCTYPE);
-			PmStatus financialstatus = new PmStatus();
-			financialstatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			qtCheckList.setPmStatus(financialstatus);
+			qtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			qtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.getSpecName());
 			qtCheckList.setScoringReq(true);
@@ -12255,12 +12210,8 @@ public class SpecificationBackingBean extends
 			}
 			reqDTO.setTobeRemoveList(toBeRemoveList);
 		} else {
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.TS_COMPLETED);
-			scQtCheckList.setPmStatus(status);
-			PmStatus evalStatus = new PmStatus();
-			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-			scQtCheckList.setPmEvalStatus(evalStatus);
+			scQtCheckList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+			scQtCheckList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			updatedCheckLists.add(scQtCheckList);
@@ -12288,9 +12239,7 @@ public class SpecificationBackingBean extends
 					for (ScQtCheckList checkList : reqDTO.getCheckLists()) {
 						if (SourcingConstants.TECHNICAL_DOCTYPE
 								.equalsIgnoreCase(checkList.getDocCategory())) {
-							PmStatus status = new PmStatus();
-							status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-							checkList.setPmStatus(status);
+							checkList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 							this.getManagedBean().setScQtChecklist(checkList);
 						}
 					}
@@ -12303,9 +12252,7 @@ public class SpecificationBackingBean extends
 							if (SourcingConstants.FINANCIAL_DOCTYPE
 									.equalsIgnoreCase(checkList
 											.getDocCategory())) {
-								PmStatus status = new PmStatus();
-								status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-								checkList.setPmStatus(status);
+								checkList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 								this.getManagedBean().setScQtChecklist(
 										checkList);
 							}
@@ -12517,12 +12464,7 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ScQtDoc scqtDocDest = new ScQtDoc();
 		setUserDetails(scqtDocDest);
-		PmStatus status = specMaster.getStatus();
-		if (null == status) {
-			status = new PmStatus();
-		}
-		status.setStatusId(60550L);
-		specMaster.setStatus(status);
+		specMaster.setStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
 		specMaster.setScQtDoc(scqtDocDest);
 		if (null == specMaster.getItemOriginCode()
 				|| null == specMaster.getItemOriginCode().getParameterId()) {
@@ -12565,12 +12507,8 @@ public class SpecificationBackingBean extends
 		checkList.setAction(checkListactionresDTO.getPmParameter());
 		checkList.setScQt(this.getManagedBean().getQt());
 		checkList.setDefinationType(specTyperesDTO.getPmParameter());
-		PmStatus checklistStatus = new PmStatus();
-		checklistStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-		checkList.setPmStatus(checklistStatus);
-		PmStatus evalStatus = new PmStatus();
-		evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-		checkList.setPmEvalStatus(evalStatus);
+		checkList.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+		checkList.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 		setUserDetails(checkList);
 		scqtDocDest.setScQtCheckList(checkList);
 
@@ -13946,9 +13884,7 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setZonesWarnMessageUpdate(
 								Boolean.TRUE);
 						this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
-						PmStatus status = new PmStatus();
-						status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-						financialchecklist.setPmStatus(status);
+						financialchecklist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 
 					}
 
