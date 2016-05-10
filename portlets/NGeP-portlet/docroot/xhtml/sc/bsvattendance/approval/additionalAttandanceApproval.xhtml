@@ -15,6 +15,9 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+		
+		<ac:gpkiPopup textBeforeSign="#{qTScheduleDetailBackingBean.textBeforeSign}"
+			postSignAction="#{qTScheduleDetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
@@ -30,7 +33,7 @@
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							styleClass="ui-button" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
-							action="#{qTScheduleDetailBackingBean.submitRegistarionDetails(bpmAction)}" />
+							action="#{qTScheduleDetailBackingBean.updateBpmTask(bpmAction)}" />
 					</ui:repeat>
 				</p:column>
 			</p:row>
