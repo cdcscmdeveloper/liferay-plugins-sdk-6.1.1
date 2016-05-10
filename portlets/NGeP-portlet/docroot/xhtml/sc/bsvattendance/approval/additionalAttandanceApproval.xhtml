@@ -37,66 +37,7 @@
 
 		</p:panelGrid>
 
-		<p:panel header="#{lbl['lbl.sc.qt.req.ptj']}" toggleable="true">
-			<table>
-				<tr>
-					<td style="width: 150px;"><p:outputLabel
-							value="#{lbl['lbl.sc.ministry']}" /></td>
-					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.parentOrgProfile.orgName}"
-							disabled="true" readonly="true" size="80" /></td>
-					<td />
-					<td />
-				</tr>
-				<!-- <tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.department']}" /></td>
-				<td><p:inputText
-						value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.parentOrgProfile.orgName}"
-						disabled="true" readonly="true" size="80" /></td>
-				<td />
-				<td />
-			</tr> -->
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.orgName}"
-							disabled="true" readonly="true" size="80" /></td>
-					<td />
-					<td />
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.requestor']}" /></td>
-
-					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.retriveUserName(qTScheduleDetailBackingBean.managedBean.qt.createdBy)}"
-							disabled="true" readonly="true" size="80" /></td>
-					<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.request.date']}" /></td>
-					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.scQtApproval.requestDate}"
-							disabled="true" readonly="true" size="30">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
-					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.qtNo}"
-							disabled="true" readonly="true" size="30" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
-					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.getParameterDesc(qTScheduleDetailBackingBean.managedBean.qt.procurementMode)}"
-							disabled="true" readonly="true" size="30" /></td>
-				</tr>
-				<tr>
-					<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
-					<td colspan="3"><p:inputTextarea
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.qtTitle}"
-							cols="170" rows="3" style=" margin-bottom:5px; width: 98%;"
-							disabled="true" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		<ui:include src="/xhtml/sc/quatationtender/Approver/requestPTJdetails.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 			<p:dataTable id="publicrequestdtlid"
