@@ -153,7 +153,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
 					messageId = MessageConst.INFO_745011;
 				}else{
-					messageId = MessageConst.INFO_700007;
+					messageId = MessageConst.INFO_745015;
 				}
 			}
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -162,7 +162,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				if(checkTaxInvoice(getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId())){
 					messageId = MessageConst.INFO_745011;
 				}else{
-					messageId = MessageConst.INFO_700007;
+					messageId = MessageConst.INFO_745015;
 				}
 				
 			}
