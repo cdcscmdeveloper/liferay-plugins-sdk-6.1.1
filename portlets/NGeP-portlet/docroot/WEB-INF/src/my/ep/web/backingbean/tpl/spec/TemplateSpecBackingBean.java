@@ -1988,7 +1988,7 @@ public class TemplateSpecBackingBean extends
 		 * Constructor for Specification Master Paging Data Model
 		 */
 		public SpecMasterPagingDataModel() {
-			super("tplSpecMasterTbl");
+			super("tplSpecMasterTbl",false);
 		}
 
 		/*
