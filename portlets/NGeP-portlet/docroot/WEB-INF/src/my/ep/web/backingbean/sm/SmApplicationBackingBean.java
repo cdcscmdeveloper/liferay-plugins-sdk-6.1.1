@@ -5554,7 +5554,9 @@ public class SmApplicationBackingBean extends
 	 * selected SmPersonnel.
 	 */
 	public void addOrUpdateJobFunctions() {
-
+		Long expCode = getManagedBean().getSelectedJobFunction()
+				.getStaffExpCode() == null ? getMaxExpCode() + 1
+				: getManagedBean().getSelectedJobFunction().getStaffExpCode();
 		if (!EntityHelper.isCollectionEmpty(getManagedBean()
 				.getSelectedShareHolder().getSmStaffExperiences())) {
 			StringBuilder sb1 = null;
@@ -5572,21 +5574,31 @@ public class SmApplicationBackingBean extends
 					sb2.append(exp.getCompanyName());
 					sb2.append(exp.getDesignation());
 
-					if (sb1.toString().equals(sb2.toString())
-							&& getManagedBean().getSelectedJobFunction()
-									.getFromYear().equals(exp.getFromYear())
-							&& getManagedBean().getSelectedJobFunction()
-									.getToYear().equals(exp.getToYear())) {
-						throw new EpException(MessageConst.ERROR_722638,
-								new String[] { exp.getCompanyName() });
-					} else if (sb1.toString().equals(sb2.toString())
-							&& (SmCommonUtil.isBetweenDuration(getManagedBean()
-									.getSelectedJobFunction().getFromYear(),
-									getManagedBean().getSelectedJobFunction()
-											.getToYear(), exp.getFromYear(),
-									exp.getToYear()))) {
-						throw new EpException(MessageConst.ERROR_722639,
-								new String[] { exp.getCompanyName() });
+					if (getManagedBean().getSelectedJobFunction()
+							.getStaffExpCode() == null
+							|| (expCode != null
+									&& exp.getStaffExpCode() != null && expCode
+									.compareTo(exp.getStaffExpCode()) != 0)) {
+						if (sb1.toString().equals(sb2.toString())
+								&& getManagedBean().getSelectedJobFunction()
+										.getFromYear()
+										.equals(exp.getFromYear())
+								&& getManagedBean().getSelectedJobFunction()
+										.getToYear().equals(exp.getToYear())) {
+							throw new EpException(MessageConst.ERROR_722638,
+									new String[] { exp.getCompanyName() });
+						} else if (sb1.toString().equals(sb2.toString())
+								&& (SmCommonUtil.isBetweenDuration(
+										getManagedBean()
+												.getSelectedJobFunction()
+												.getFromYear(),
+										getManagedBean()
+												.getSelectedJobFunction()
+												.getToYear(),
+										exp.getFromYear(), exp.getToYear()))) {
+							throw new EpException(MessageConst.ERROR_722639,
+									new String[] { exp.getCompanyName() });
+						}
 					}
 				}
 			}
@@ -5600,9 +5612,30 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722531);
 
 		}
-		EntityHelper.addOrUpdateEntityToList(getManagedBean()
-				.getSelectedJobFunction(), getManagedBean()
-				.getSelectedShareHolder().getSmStaffExperiences());
+		if (getManagedBean().getSelectedJobFunction().getStaffExpCode() == null) {
+			getManagedBean().getSelectedJobFunction().setStaffExpCode(expCode);
+		}
+
+		SmStaffExperience existingExp = (SmStaffExperience) EntityHelper
+				.getEntityBySinglePropertyFromList(expCode, getManagedBean()
+						.getSelectedShareHolder().getSmStaffExperiences(),
+						"staffExpCode");
+		if (existingExp == null) {
+			getManagedBean().getSelectedShareHolder().getSmStaffExperiences()
+					.add(getManagedBean().getSelectedJobFunction());
+		} else {
+			int i = 0;
+			for (SmStaffExperience tmp : getManagedBean()
+					.getSelectedShareHolder().getSmStaffExperiences()) {
+				if (tmp.getStaffExpCode().equals(existingExp.getStaffExpCode())) {
+					break;
+				}
+				i++;
+			}
+			getManagedBean().getSelectedShareHolder().getSmStaffExperiences()
+					.set(i, getManagedBean().getSelectedJobFunction());
+		}
+
 		if (getManagedBean().getSelectedJobFunction().getStaffExperienceId() == null) {
 			RequestContext.getCurrentInstance().execute(
 					"suppPrsnJobFunDtWidVar.paginator.endLink.click()");
@@ -5613,6 +5646,21 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute(
 				"equiJobFunctionInfo.hide()");
 
+	}
+
+	public Long getMaxExpCode() {
+		Long expCode = 0L;
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedShareHolder().getSmStaffExperiences())) {
+			for (SmStaffExperience exp : getManagedBean()
+					.getSelectedShareHolder().getSmStaffExperiences()) {
+				if (exp.getStaffExpCode() != null
+						&& exp.getStaffExpCode().compareTo(expCode) > 0) {
+					expCode = exp.getStaffExpCode();
+				}
+			}
+		}
+		return expCode;
 	}
 
 	/**
