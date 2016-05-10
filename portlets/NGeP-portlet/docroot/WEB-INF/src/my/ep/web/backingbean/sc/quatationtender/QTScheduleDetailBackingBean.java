@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +49,6 @@ import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -65,6 +65,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -671,17 +672,13 @@ public class QTScheduleDetailBackingBean extends
 		
 		IQTBriefingSO briefingSO;
 		try {
+			ScQt scQt = this.getManagedBean().getQt();
 			List<ScQtBsvRegistration> registrations = this.getManagedBean()
 					.getBriefingRegistrationList();
-			if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-				for (ScQtBsvRegistration registration : registrations) {
-					registration
-							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-				}
-			}
+			
 			briefingReqDTO.setBriefingReqDtls(registrations);
 			briefingReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			briefingReqDTO.setScQt(this.getManagedBean().getQt());
+			briefingReqDTO.setScQt(scQt);
 			briefingReqDTO.setToken(ctxToken);
 			briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			briefingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
@@ -708,6 +705,7 @@ public class QTScheduleDetailBackingBean extends
 
 				renewSesionObject();
 
+				Locale locate = new FacesScopes().getUserLocale();
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -719,11 +717,13 @@ public class QTScheduleDetailBackingBean extends
 												.getMessage(
 														getMsgCodeByOutCome(outcome),
 														new String[] {
-																"Additional attandance For Briefing And SiteVisit",
-																"" },
+															ResourceBundleUtils.getMessage(
+																	"lbl.sc.bsv.additional.attendance", 
+																	ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+																	locate),
+																scQt.getQtNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+														locate)));
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {

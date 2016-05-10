@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -22,6 +23,7 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
@@ -214,7 +216,7 @@ public class BSVAttendanceBackingBean extends
 
 		log.info("** attendanceRegistration **");
 		this.getManagedBean().setPreviousPage(BSV_MAIN_PAGE);
-		getregistrationDetails(briefing);
+		getregistrationDetails(briefing, false);
 
 		return NAV_TO_BSV_REG_PAGE;
 	}
@@ -426,7 +428,7 @@ public class BSVAttendanceBackingBean extends
 				this.getManagedBean().setScQt(scQt);
 				this.getManagedBean().setBsvZoneindx(bsvZoneindx);
 
-				getregistrationDetails(bsv);
+				getregistrationDetails(bsv, false);
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -768,7 +770,15 @@ public class BSVAttendanceBackingBean extends
 		return true;
 	}
 
-	private void getregistrationDetails(ScQtBsvDtl briefing) {
+	/**
+	 * Get BSV Registration Details.
+	 * 
+	 * @param briefing
+	 * 		the ScQtBsvDtl instance
+	 * @param maintanceFlow
+	 * 		the maintenance flow flag.
+	 */
+	public void getregistrationDetails(ScQtBsvDtl briefing, boolean maintanceFlow) {
 
 		this.getManagedBean().setBriefingAttendanceList(null);
 		IQTBriefingSO qTBriefingSO = null;
@@ -782,6 +792,7 @@ public class BSVAttendanceBackingBean extends
 				this.getManagedBean().setScQtBriefing(briefing);
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
 				reqDTO.setQtBriefingId(briefing.getQtBsvDtlId());
+				reqDTO.setMaintanceFlow(maintanceFlow);
 
 				BriefingResDTO resDTO = qTBriefingSO
 						.retrieveBriefingRegistrationList(reqDTO);
@@ -997,6 +1008,7 @@ public class BSVAttendanceBackingBean extends
 					if (null == registration.getBsvRegistrationId()) {
 						invokeBPM = true;
 						registration.setPostRegistered(true);
+						registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 					}
 				} else {
 					throw new EpException(MessageConst.ERROR_760043,
@@ -1025,7 +1037,9 @@ public class BSVAttendanceBackingBean extends
 				this.getManagedBean().setPreviousPage(previousPage);
 				this.getManagedBean().setScQt(scQt);
 
-				getregistrationDetails(bsv);
+				getregistrationDetails(bsv, true);
+				
+				Locale locate = new FacesScopes().getUserLocale();
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -1037,11 +1051,13 @@ public class BSVAttendanceBackingBean extends
 												.getMessage(
 														MessageConst.INFO_700005,
 														new String[] {
-																"New Registations for Briefing/SiteVisit",
-																"" },
+																ResourceBundleUtils.getMessage(
+																		"lbl.sc.bsv.additional.attendance", 
+																		ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+																		locate),
+																scQt.getQtNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+														locate)));
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
