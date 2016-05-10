@@ -5,6 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:param name="isBSVEnabled" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
+	
 	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true"
 		styleClass="briefingList">
 		<table style="width: 100%" border="0">
@@ -12,7 +14,7 @@
 				<td style="width: 280px; white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.briefing.sameas.sv']}" /></td>
 				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}">
+						disabled="#{!isBSVEnabled}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
 						<p:ajax update="sameasbsvrequired, addtositebutton"
@@ -28,7 +30,7 @@
 
 			<ac:paginator for="briefingdtlid" />
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
+				rendered="#{isBSVEnabled}" />
 			<p:column headerText="#{lbl['lbl.sc.description']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:panelGroup
@@ -74,9 +76,9 @@
 					value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(briefingdtls.bsvStatus.statusId)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:5%;white-space: normal;text-align: center;">
-				<p:commandLink
-					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+				style="width:5%;white-space: normal;text-align: center;"
+				rendered="#{isBSVEnabled}">
+				<p:commandLink 
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
 					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 					<h:graphicImage
@@ -93,12 +95,12 @@
 					value="#{lbl['lbl.sc.qt.addtositevisit']}"
 					process="@this,briefingdtlid" partialSubmit="true"
 					actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
-					rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false' and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
+					rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'false' and isBSVEnabled}" />
 			</h:panelGroup>
 			<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
 				process="@this"
 				disabled="#{bsvdtlbean.briefingList.size() eq 1}"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+				rendered="#{isBSVEnabled}"
 				action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
 				oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
@@ -106,7 +108,7 @@
 				process="@this, briefingdtlid"
 				partialSubmit="true"
 				oncomplete="#{briefingDelPopUp}.show();"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+				rendered="#{isBSVEnabled}"
 				update="@this" />
 			
 		</div>
@@ -133,7 +135,7 @@
 
 					<ac:paginator for="sitevisitdtlid" />
 					<p:column selectionMode="multiple" style="width:2%"
-						disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
+						rendered="#{isBSVEnabled}" />
 
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="white-space: normal;word-wrap: break-word;">
@@ -182,9 +184,9 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.action']}"
-						style="width:5%;white-space: normal;text-align: center;">
+						style="width:5%;white-space: normal;text-align: center;"
+						rendered="#{isBSVEnabled}">
 						<p:commandLink
-							rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
 							partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 							<h:graphicImage
@@ -196,7 +198,7 @@
 				<ui:param name="siteVisitDelPopUp" value="siteVisitDelPopUp#{!empty bsvdtlbean.tplSpecZoneDtl ? bsvdtlbean.tplSpecZoneDtl.specZoneId : ''}" />
 				<div class="ppRightBtn BtnSpacing">
 					<p:commandButton id="addsitevisitid" 
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+						rendered="#{isBSVEnabled}"
 						value="#{lbl['lbl.btn.add']}" process="@this"
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
@@ -204,7 +206,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, sitevisitdtlid" partialSubmit="true"
 						oncomplete="#{siteVisitDelPopUp}.show();"
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+						rendered="#{isBSVEnabled}"
 						update="@this" />
 				</div>
 				<ac:confirmationPopup id="sitevisitDtlsDeleteId"
@@ -224,7 +226,7 @@
 							<td style="width: 145px;"><p:outputLabel
 									value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
 							<td style="width: 145px;"><p:selectOneRadio
-									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+									disabled="#{!isBSVEnabled}"
 									value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
 									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}"
 										itemValue="true" />
@@ -270,7 +272,7 @@
 							<tr>
 								<td></td>
 								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+										disabled="#{!isBSVEnabled}"
 										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
