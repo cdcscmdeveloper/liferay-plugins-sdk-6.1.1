@@ -97,6 +97,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long selectedApprover;
 	private List<Long> approverList;
 	private List<PmUserGroupUser> approverGroupUserList;
+	private List<Long> bpmApproverList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -2781,6 +2782,17 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
 		this.previousAttachmentList = previousAttachmentList;
+	}
+
+	public List<Long> getBpmApproverList() {
+		if(bpmApproverList == null){
+			bpmApproverList = new ArrayList<Long>();
+		}
+		return bpmApproverList;
+	}
+
+	public void setBpmApproverList(List<Long> bpmApproverList) {
+		this.bpmApproverList = bpmApproverList;
 	}
 
 }

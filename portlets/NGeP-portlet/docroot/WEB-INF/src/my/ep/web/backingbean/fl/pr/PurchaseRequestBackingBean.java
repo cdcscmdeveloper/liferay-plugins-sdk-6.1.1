@@ -104,6 +104,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -323,6 +324,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					reqDTO.setApproverUserList(approverUserList);
 					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 				}
+			}
+			if(reqDTO.getApproverUserList() == null || reqDTO.getApproverUserList().isEmpty()){
+				reqDTO.setBpmApproverList(getManagedBean().getBpmApproverList());
 			}
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -1361,6 +1365,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().setSubmitButtonStatus(false);
 			}
 			
+			if(!flPurchaseOrd.getOrderDetails().getApproverList().isEmpty()){
+				for(FLUserDataType userDataType : flPurchaseOrd.getOrderDetails().getApproverList()){
+					getManagedBean().getBpmApproverList().add(userDataType.getUserId());	
+				}
+			}
 			
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId().longValue());

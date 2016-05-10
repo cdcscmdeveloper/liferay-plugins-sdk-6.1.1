@@ -130,6 +130,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
+import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.phis.codata.FLPHISContractOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -378,6 +379,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
+			if(reqDTO.getApproverUserList() == null || reqDTO.getApproverUserList().isEmpty()){
+				reqDTO.setBpmApproverList(getManagedBean().getBpmApproverList());
+			}
 			getSumOrderedQty(flRequest);
 			
 			if(getManagedBean().getPmDigiSign() != null){
@@ -1018,6 +1022,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				coObj = (FLContractOrderDataType) obj;
 			}
 			flReqDTO.setFlRequestId(coObj.getOrderDetails().getRequestId().longValue());
+			
+			if(!coObj.getOrderDetails().getApproverList().isEmpty()){
+				for(FLUserDataType userDataType : coObj.getOrderDetails().getApproverList()){
+					getManagedBean().getBpmApproverList().add(userDataType.getUserId());	
+				}
+			}
 
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
