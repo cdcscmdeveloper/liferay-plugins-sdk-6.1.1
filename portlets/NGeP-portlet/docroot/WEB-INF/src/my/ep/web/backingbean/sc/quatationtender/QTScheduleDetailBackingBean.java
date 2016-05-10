@@ -688,6 +688,7 @@ public class QTScheduleDetailBackingBean extends
 			
 			return approveAdditionalAttendance(action, null);
 		} else {
+			this.getManagedBean().setAction(action);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			
 			return null;
