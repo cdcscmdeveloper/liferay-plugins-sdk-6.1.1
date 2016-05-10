@@ -20,7 +20,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 	public class TestNtfOSBRs {
 	     public static void main(String args[]) {
 	         System.out.println("initiateTask******");
-	         INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.MDB, INtfClientSO.class);
+	         INtfClientSO ntfClientSO = (INtfClientSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.NTF, INtfClientSO.class);
 
 	         NtfRequestDTO reqDTO = new NtfRequestDTO();
 	         reqDTO.setTemplateId("399999");
