@@ -12,6 +12,7 @@
       		background-color: #f4f4f4;
       		border: 1px solid #d3d3d3;
       		border-radius: 5px;
+      		margin:10px 15px;
       	}
       
          .role-odd {
@@ -30,7 +31,7 @@
          : profilePersonalizationBackingBean.managedBean.currentProfile.pmOrgValidity.orgName}" />
       <p:outputPanel id="opUserCommonDet" rendered="#{not profilePersonalizationBackingBean.tempSupplierRole}">
       	<div id="opUserCommonDetDiv">
-         <table class="ppTwoTable" style="margin:10px 15px">
+         <table class="ppTwoTable">
             <tr>
                <td style="width:25px;vertical-align:top;">
                   <p:graphicImage value="/css/images/design/icon-organization.png" title="#{lbl['lbl.pm.access.app.org']}" />
