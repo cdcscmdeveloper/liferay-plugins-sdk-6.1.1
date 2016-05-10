@@ -106,7 +106,6 @@
 									<f:selectItem itemLabel="Sender" itemValue="2"/>
 									<f:selectItem itemLabel="Subject" itemValue="3"/>
 									<f:selectItem itemLabel="Content" itemValue="4"/>
-									<f:selectItem itemLabel="Date" itemValue="5"/>
 									<p:ajax event="change" listener="#{notifyBackingBean.searchItem}" update=":form:searchValue"/>
 								</p:selectOneMenu>
 								<p:inputMask id="searchValue" value="#{notifyBackingBean.managedBean.searchValue}" mask="#{notifyBackingBean.mask}">
