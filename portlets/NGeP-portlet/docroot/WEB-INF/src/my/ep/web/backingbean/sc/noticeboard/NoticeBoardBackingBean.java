@@ -685,7 +685,18 @@ public class NoticeBoardBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, url);
 	}
-
+	
+	/**
+	 * Navigate to NoticeBoard view page on click of NoticeBoard tab
+	 */
+	public void preRenderNBView() {
+		
+		super.renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NB_MAIN_PAGE);
+	}
+	
 	/**
 	 * Navigate to supplier registration screen on click of register icon
 	 * 
