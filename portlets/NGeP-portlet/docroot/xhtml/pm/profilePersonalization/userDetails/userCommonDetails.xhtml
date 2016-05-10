@@ -56,7 +56,7 @@
                      <c:if test="#{profilePersonalizationBackingBean.virtualCertShown}">
                         <tr>
                            <td style="width:20px;">
-                              <p:graphicImage value="/css/images/design/icon-view.png" title="#{lbl['lbl.pm.ucd.mof.exp']}" />
+                              <p:graphicImage value="/css/images/design/icon-view.png" />
                            </td>
                            <td style="color: blue; font-weight: bold; text-align: left;">
                               <p:commandLink action="#{supplierAlertBackingBean.navigateToViewVirtualCert}" value="#{lbl['lbl.pm.ucd.virtual.cert']}" />
@@ -79,7 +79,7 @@
                      <c:if test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
                         <tr>
                            <td style="width:20px;">
-                              <h:graphicImage value="/css/images/design/icon-view.png" title="#{lbl['lbl.pm.ucd.softcert.exp']}"/>
+                              <h:graphicImage value="/css/images/design/icon-view.png" />
                            </td>
                            <td style="color: blue; font-weight: bold; text-align: left;">
                               <p:commandLink action="#{softCertBackingBean.navigateToViewSoftCert}"  value="#{lbl['lbl.pm.ucd.soft.cert']}" />
