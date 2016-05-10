@@ -6873,6 +6873,8 @@ public class SmApplicationBackingBean extends
 						+ "&claim=false";
 				urlParam = SmCommonUtil.getBasePortalUrl()
 						+ "/web/epapp/mof-application?" + parameter;
+				log.info(">>>>>>>>>>>>>>>>>>>>>URL PAYMENT:" + urlParam
+						+ "<<<<<<<<<<<<<<<<<<<<");
 			}
 		} else {
 			msgConst = MessageConst.INFO_700005;
