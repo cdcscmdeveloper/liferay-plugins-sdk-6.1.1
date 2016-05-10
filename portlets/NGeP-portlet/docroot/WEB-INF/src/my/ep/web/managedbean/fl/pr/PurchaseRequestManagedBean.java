@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -504,6 +505,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private PmOrgProfile currentChargePtjGroup;
 	private Long selectedApprover;
 	private List<Long> approverIdList;
+	private List<Long> bpmApproverList;
 	
 	private boolean selectChargeLineRow=false;
 	private boolean gstRateChange;
@@ -3343,6 +3345,17 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	public void setPreviousAttachmentList(List<FlAttachment> previousAttachmentList) {
 		this.previousAttachmentList = previousAttachmentList;
+	}
+
+	public List<Long> getBpmApproverList() {
+		if(bpmApproverList == null){
+			bpmApproverList = new ArrayList<Long>();
+		}
+		return bpmApproverList;
+	}
+
+	public void setBpmApproverList(List<Long> bpmApproverList) {
+		this.bpmApproverList = bpmApproverList;
 	}
 
 }
