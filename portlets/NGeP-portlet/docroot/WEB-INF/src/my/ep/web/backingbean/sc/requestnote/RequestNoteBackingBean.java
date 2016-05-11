@@ -2854,30 +2854,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void downloadPurchaseInqReport(ScRequestNoteDtl scRequestNoteDtl) throws IOException {
 		debugLogger("downloadPurchaseInqReport");
-		
+		ScRequestSupplierItem piRequestSupplierItem = null;
+		List<ScSupplierItemPrice> supplierItemPrices = null;
 		ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
-		ScPrInquiry scPrInquiry = scRequestNoteDtl.getScRequestSupplierItem().getScPrInquiy();
+		ScPrInquiry scPrInquiry = scRequestNoteDtl.getPiRequestSupplierItem().getScPrInquiy();
+		
+		if(requestItem.getSupplierItems() !=null && requestItem.getSupplierItems().size()>0 ){
+			for (ScRequestSupplierItem requestSupplierItem : requestItem.getSupplierItems()) {
+				if(requestSupplierItem.getScPrInquiy() != null){
+					piRequestSupplierItem = requestSupplierItem;
+					break;
+				}
+			}
+		}
+		
+		// Filter selected request supplier item and pricing
+		supplierItemPrices = filterSupplierItemPricesByPriceType(piRequestSupplierItem, scPrInquiry);
 		ScPIReportAttachment scPIReportAttachment = scRequestNoteDtl.getScPIReportAttachment();
 		
 		if (scPIReportAttachment == null) {
-			IPrInquirySO prInquirySO = null;
-			
 			try {
-				prInquirySO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
-				
-				PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
-				reqDTO.setPrInquiryId(scPrInquiry.getPrInquiryId());
-
-				PrInquiryResDTO resDTO = prInquirySO.retrievePurchaseInquiryPricesById(reqDTO);
-				
 				scPIReportAttachment = new ScPIReportAttachment();
 				scPIReportAttachment.setScRequestNoteDtl(scRequestNoteDtl);
 				scPIReportAttachment.setDocNo(scRequestNoteDtl.getScRequestNote().getRequestNoteNo());
 				scPIReportAttachment.setPrefixFileName(getItemCode(requestItem));
 				
-				generatePurchaseInqPdfFromVelocity((ScAttachment)scPIReportAttachment, 
-						resDTO.getSupplierItemPrices());
+				generatePurchaseInqPdfFromVelocity((ScAttachment)scPIReportAttachment, piRequestSupplierItem, 
+						supplierItemPrices);
 				
 				scRequestNoteDtl.setScPIReportAttachment(scPIReportAttachment);
 				
@@ -2885,11 +2888,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
 			} finally {
-				prInquirySO = null;
 			}
 		}
 		
 		downloadFile(scPIReportAttachment);
+	}
+	
+	/**
+	 * Filter supplier item prices by price type.
+	 *
+	 * @param piRequestSupplierItem the pi request supplier item
+	 * @param scPrIifnquiry the sc pr iifnquiry
+	 * @return the list
+	 */
+	private List<ScSupplierItemPrice> filterSupplierItemPricesByPriceType(ScRequestSupplierItem piRequestSupplierItem, ScPrInquiry scPrIifnquiry ){
+		List<ScSupplierItemPrice> supplierItemPrices = new ArrayList<ScSupplierItemPrice>();
+		for (ScSupplierItemPrice scSupplierItemPrice : piRequestSupplierItem.getSupplierItemPrices()) {
+			if(scSupplierItemPrice.getPriceType() != null && scPrIifnquiry.getPriceType() != null){
+				if(scSupplierItemPrice.getPriceType().getParameterId().equals(scPrIifnquiry.getPriceType().getParameterId())){
+					supplierItemPrices.add(scSupplierItemPrice);
+				}  
+			}
+		}
+		return supplierItemPrices;
 	}
 
 
@@ -3005,8 +3026,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							marketSummaryAndPIBean.setMinQty(scRequestItem.getMinqty() != null ? scRequestItem.getMinqty().toString() :"T/B");
 							marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing() !=null && supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "T/B");
 							marketSummaryAndPIBean.setAddItemDesc(supplierItemPrice.getPricing() !=null && supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc().replaceAll("&", "&#38;") : "T/B");
-							marketSummaryAndPIBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().intValue() : 0);
-							marketSummaryAndPIBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().intValue() : 0);
+							marketSummaryAndPIBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "T/B");
+							marketSummaryAndPIBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().toString(): "T/B");
 							marketSummaryAndPIBean.setPriceType(supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "T/B");
 							marketSummaryAndPIBean.setUnitPrice(supplierItemPrice.getItemPrice() !=null ? amountDF.format(supplierItemPrice.getItemPrice()).toString() : "T/B");			    
 							marketSummaryAndPIBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName().replaceAll("&", "&#38;") : "T/B");
@@ -3061,8 +3082,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					marketSummaryAndPIBean.setMinQty(scRequestItem.getMinqty() != null ? scRequestItem.getMinqty().toString() :"T/B");
 					marketSummaryAndPIBean.setDeliveryTerm(cmPrice.getCmSupplierItem().getLeadTime() != null ? cmPrice.getCmSupplierItem().getLeadTime().toString() : "T/B");
 					marketSummaryAndPIBean.setAddItemDesc(cmPrice.getCmSupplierItem().getItemDesc() != null ? cmPrice.getCmSupplierItem().getItemDesc().replaceAll("&", "&#38;") : "T/B");
-					marketSummaryAndPIBean.setFrQty(cmPrice.getFromQty() != null ? cmPrice.getFromQty().intValue() : 0);
-					marketSummaryAndPIBean.setToQty(cmPrice.getToQty() != null ? cmPrice.getToQty().intValue() : 0);
+					marketSummaryAndPIBean.setFrQty(cmPrice.getFromQty() != null ? cmPrice.getFromQty().toString() : "T/B");
+					marketSummaryAndPIBean.setToQty(cmPrice.getToQty() != null ? cmPrice.getToQty().toString() : "T/B");
 					marketSummaryAndPIBean.setPriceType(cmPrice.getPricingType() != null ? getParameterDesc(
 							ParameterTypeConst.PRICE_TYPE, cmPrice.getPricingType()) : "T/B");
 					marketSummaryAndPIBean.setUnitPrice(cmPrice.getPrice() !=null ? amountDF.format(cmPrice.getPrice()).toString() : "T/B");			    
@@ -3087,7 +3108,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param scSupplierItemPrices the sc supplier item prices
 	 * @throws Exception the exception
 	 */
-	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment, List<ScSupplierItemPrice> scSupplierItemPrices) throws Exception {
+	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment,ScRequestSupplierItem supplierItem, List<ScSupplierItemPrice> scSupplierItemPrices) throws Exception {
 		attachment.setFileName("pi_report.pdf");
 		populateAttachmentDetails(attachment);
 		
@@ -3102,10 +3123,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<MarketSummaryAndPIBean> requestNoteVOList = new ArrayList<MarketSummaryAndPIBean>();
 		MarketSummaryAndPIBean marketSummaryAndPIBean = null;
 		ScSupplierItemPrice supplierItemPrice= null;
-		ScRequestSupplierItem supplierItem = null;	
 			for(int i = 0; i< scSupplierItemPrices.size();i++){
 				supplierItemPrice = scSupplierItemPrices.get(i);
-				supplierItem = supplierItemPrice.getScRequestSupplierItem();
 				marketSummaryAndPIBean = new MarketSummaryAndPIBean();
 				if(i==0){
 					context.put("productCode", supplierItem.getRequestNoteItem().getCmItem().getExtensionCode());
@@ -3118,8 +3137,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				marketSummaryAndPIBean.setMinQty(supplierItem.getRequestNoteItem().getMinqty() != null ? supplierItem.getRequestNoteItem().getMinqty().toString() :"T/B");
 				marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "T/B");
 				marketSummaryAndPIBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc().replaceAll("&", "&#38;") : "T/B");
-				marketSummaryAndPIBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().intValue() : 0);
-				marketSummaryAndPIBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().intValue(): 0);
+				marketSummaryAndPIBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "T/B");
+				marketSummaryAndPIBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().toString(): "T/B");
 				marketSummaryAndPIBean.setPriceType(supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "T/B");
 				marketSummaryAndPIBean.setCataloguePrice(supplierItemPrice.getPricing().getPrice() != null ? amountDF.format(supplierItemPrice.getPricing().getPrice()).toString() : "T/B");
 				marketSummaryAndPIBean.setUnitPrice(supplierItemPrice.getItemPrice() !=null ? amountDF.format(supplierItemPrice.getItemPrice()).toString() : "T/B");			    
