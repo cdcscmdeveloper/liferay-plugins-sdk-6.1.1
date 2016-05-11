@@ -32,7 +32,6 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -63,7 +62,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
@@ -79,6 +77,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
@@ -562,6 +561,7 @@ public class ApprovalBackingBean extends
 	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
 	public void approvalBpmTask(String action) {
+		String showDialog = null;
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -570,6 +570,7 @@ public class ApprovalBackingBean extends
 		reqDTO.setApproval(this.getManagedBean().getScQtApproval());
 		reqDTO.setApprovalRequests(this.getManagedBean()
 						.getScQtApprovalRequestList());
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		this.getManagedBean().setAction(action);
 		logger.info("Task Name : " + this.getManagedBean().getTaskName());
 		if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
@@ -581,21 +582,6 @@ public class ApprovalBackingBean extends
 				
 				if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED.equalsIgnoreCase(approverAction) ||
 						ParameterConst.RESTR_APPROVAL_DECISION_TYPE_REVISE.equalsIgnoreCase(approverAction)) {
-					List<ScQtApprovalRemark> remarks = this.getManagedBean()
-							.getScQtApproval().getScQtApprovalRemarks();
-					if (null != remarks) {
-						for (int i = 0; i < remarks.size(); i++) {
-							String userRemark = remarks.get(i).getRemark();
-							if (null == userRemark || "".equals(userRemark)) {
-								throw new EpException(MessageConst.ERROR_100022,
-										new String[] { 
-											ResourceBundleUtils.getMessage(
-												"lbl.sc.remark", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()) });
-							}
-						}
-					}
 					isRevised = true;
 					
 				} else if (ParameterConst.APPROVAL_DECISION_TYPE_APPROVED.equalsIgnoreCase(approverAction) ||
@@ -609,77 +595,37 @@ public class ApprovalBackingBean extends
 			}
 			
 			if (isRevised) {
-				RequestContext.getCurrentInstance().execute("reviceApprovalDlg.show()");
+				action = BpmOutcomeConst.BPM_REVISE;
+				showDialog = "reviceApprovalDlg.show()";
 			} else if (isApproved) {
-				detailSO.validateQtApprovalDtl(reqDTO);
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				action = BpmOutcomeConst.BPM_APPROVE;
+				showDialog = "gpki_dlg.show()";
 			} else if (isRejected) {
-				RequestContext.getCurrentInstance().execute("rejectApprovalDlg.show()");
-			} 
+				action = BpmOutcomeConst.BPM_REJECT;
+				showDialog = "rejectApprovalDlg.show()";
+			}
+			
 		} else {
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-				List<ScQtApprovalRemark> remarks = this.getManagedBean()
-						.getScQtApproval().getScQtApprovalRemarks();
-				if (null != remarks) {
-					for (int i = 0; i < remarks.size(); i++) {
-						String userRemark = remarks.get(i).getRemark();
-						if (null == userRemark || "".equals(userRemark)) {
-							throw new EpException(MessageConst.ERROR_100022,
-									new String[] { 
-										ResourceBundleUtils.getMessage(
-											"lbl.sc.remark", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()) });
-						}
-					}
-				}
-				RequestContext.getCurrentInstance().execute(
-						"reviceApprovalDlg.show()");
+				showDialog = "reviceApprovalDlg.show()";
 			} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
-				List<ScQtApprovalRemark> remarks = this.getManagedBean()
-						.getScQtApproval().getScQtApprovalRemarks();
-				if (null != remarks) {
-					for (int i = 0; i < remarks.size(); i++) {
-						String userRemark = remarks.get(i).getRemark();
-						if (null == userRemark || "".equals(userRemark)) {
-							throw new EpException(MessageConst.ERROR_100022,
-									new String[] { 
-										ResourceBundleUtils.getMessage(
-											"lbl.sc.remark", 
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											new FacesScopes().getUserLocale()) });
-						}
-					}
-				}
-				RequestContext.getCurrentInstance().execute(
-						"rejectApprovalDlg.show()");
+				showDialog = "rejectApprovalDlg.show()";
 			} else {
 				if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
 						.getManagedBean().getApprovalType())) {
 					detailSO.validatePublicationScheduleDetails(reqDTO);
 					// detailSO.validateScheduleDetails(reqDTO);
-				}
-				if (SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
-						.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
-					List<ScQtApprovalRemark> remarks = this.getManagedBean()
-							.getScQtApproval().getScQtApprovalRemarks();
-					if (null != remarks) {
-						for (int i = 0; i < remarks.size(); i++) {
-							String userRemark = remarks.get(i).getRemark();
-							if (null == userRemark || "".equals(userRemark)) {
-								throw new EpException(MessageConst.ERROR_100022,
-										new String[] { 
-											ResourceBundleUtils.getMessage(
-												"lbl.sc.remark", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()) });
-							}
-						}
-					}
-				}
-				detailSO.validateQtApprovalDtl(reqDTO);
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				} 
+				showDialog = "gpki_dlg.show()";
 			}
+			
+			
+		}
+		
+		if (StringUtils.isNotBlank(showDialog)) {
+			reqDTO.setOutcome(action);
+			detailSO.validateQtApprovalDtl(reqDTO);
+			RequestContext.getCurrentInstance().execute(showDialog);	
 		}
 	}
 
