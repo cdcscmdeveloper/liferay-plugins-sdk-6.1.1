@@ -487,6 +487,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private String expiryAlert;
 	
 	private CmUnspsc unspscObj;
+	
+	private String totalRecords;
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -1240,16 +1242,36 @@ public class CatalogueManagedBean extends BaseManagedBean {
 						.getResultList());
 				log.debug("*********after***********");
 
+				Locale locale = new FacesScopes().getUserLocale();
 				// enable or disable simple quote in search catalogue
 				if(null == getCatTypeFilterBean().getSearchValue()){
 					if (resDTO.getViewSuppItemResultBean().getResultList() != null
 							&& resDTO.getViewSuppItemResultBean().getResultList()
 							.size() > 0) {
 						setSimpleQuoteFlag(Boolean.TRUE);
+						
 					} else {
 						setSimpleQuoteFlag(Boolean.FALSE);
+					
 					}
 				}
+				
+				if (resDTO.getViewSuppItemResultBean().getResultList() != null
+						&& resDTO.getViewSuppItemResultBean().getResultList()
+						.size() > 0) {
+					
+					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getResultList().size()},
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+					
+				
+				} else {
+					
+					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+resDTO.getViewSuppItemResultBean().getResultList().size()},
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+				}
+				
+				
+				System.out.println("getTotalRecords:"+getTotalRecords());
 				SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
 				/*TemplateSpecBean productTemplateSpecBean = simpleQuoteBackingBean
 						.getManagedBean().getProductTemplateSpecBean();
@@ -1276,7 +1298,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 								setSimpleQuoteFlag(false);
 							}
 						}*/
-				}
+				}	
 
 				return resDTO.getViewSuppItemResultBean();
 			} catch (Exception e) {
@@ -3814,6 +3836,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public void setUnspscObj(CmUnspsc unspscObj) {
 		this.unspscObj = unspscObj;
+	}
+
+	/**
+	 * @return the totalRecords
+	 */
+	public String getTotalRecords() {
+		return totalRecords;
+	}
+
+	/**
+	 * @param totalRecords the totalRecords to set
+	 */
+	public void setTotalRecords(String totalRecords) {
+		this.totalRecords = totalRecords;
 	}
 
 	
