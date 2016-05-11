@@ -7,6 +7,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
+		<style>
+			div[id$="fuSuppDoc"] .start ,div[id$="fuSuppDoc"] .cancel {
+   		  display: none;
+		}
+		
+		</style>
 		<ui:param name="isBrandNew" value="#{accessApplBackingBean.managedBean.accessAppl.brandNew}" />	
 		<!-- Message Section -->
 		<p:messages id="messages" showDetail="true" showSummary="false" 
@@ -43,16 +49,17 @@
 		<p:dialog id="accessApplUploadDialog" widgetVar="accessApplUploadDlg" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
 			position="top" style="z-index:-1;" header="#{lbl['lbl.bpm.choose.file']}">
-			<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+			<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/" id="fuSuppDoc"
 				fileLimit="1"
+				mode="advanced"
 				sizeLimit="2000000" process="@this"
 				invalidFileMessage="#{lbl['lbl.pm.access.app.upload.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.pm.access.app.upload.fileSize.errmsg']}"
 				fileUploadListener="#{accessApplBackingBean.handleFileUpload}"
 				update="@this,:form:suppDocPnl" oncomplete="accessApplUploadDlg.hide();"
-				uploadLabel="#{lbl['lbl.btn.upload']}" 
+				uploadLabel="#{lbl['lbl.btn.upload.all']}" 
 		   		label="#{lbl['lbl.btn.choose']}" 
-		   		cancelLabel="#{lbl['lbl.btn.cancel']}" />
+		   		cancelLabel="#{lbl['lbl.btn.remove.all']}"/>	  
 		</p:dialog>
  	
  		<p:dialog id="deleteAttachmentDlg" widgetVar="deleteAttachmentDlg"

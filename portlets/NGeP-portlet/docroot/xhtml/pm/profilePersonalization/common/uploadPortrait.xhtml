@@ -6,6 +6,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"	
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
+	<style>
+		div[id$="fuPortrait"] .start, div[id$="fuPortrait"] .cancel {
+   		  display: none;
+		}
+		
+	</style>
+	
 	<p:dialog id="dlImageUpload" header="#{lbl['lbl.pm.profiles.userdetails.upload.image']}" 
 		widgetVar="dlImageUpload" dynamic="true" width="700px" height="200">
 		<p:outputPanel id="opImageUpload">
@@ -13,8 +20,11 @@
 				 	fileUploadListener="#{profilePersonalizationBackingBean.handlePortraitUpload}" mode="advance" 
          					sizeLimit="1000000" allowTypes="/(\.|\/)(png)$/" multiple="false"
          					invalidFileMessage="Only PNG file is accepted" 
-         					fileLimit="1" dragDropSupport="false" uploadLabel="#{lbl['lbl.btn.confirm']}" 
-         					label="#{lbl['lbl.btn.browse']}" oncomplete="dlImageUpload.hide();" />
+         					fileLimit="1" dragDropSupport="false" 
+         					uploadLabel="#{lbl['lbl.btn.upload.all']}" 
+		   					label="#{lbl['lbl.btn.choose']}" 
+		   					cancelLabel="#{lbl['lbl.btn.remove.all']}"  
+		   					oncomplete="dlImageUpload.hide();" />
 		
 			
 		</p:outputPanel>
