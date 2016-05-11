@@ -1536,7 +1536,7 @@ public class EvaluationMeetingBackingBean extends
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(
 									getMessgeConstant("SUBMIT"), new String[] {
-											"Evaluation Meeting", qtNum },
+										getMessageCommon("lbl.sc.evaluation.meeting"), qtNum },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 		} finally {
