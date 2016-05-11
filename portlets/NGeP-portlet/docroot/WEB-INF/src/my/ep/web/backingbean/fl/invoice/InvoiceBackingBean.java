@@ -1545,7 +1545,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
 			if(null == getManagedBean().getInvoice().getAccountNo() || getManagedBean().getInvoice().getAccountNo().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.bank.acc.no.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-			} else if(null == getManagedBean().getInvoice().getSupplierInvoiceRef() || getManagedBean().getInvoice().getSupplierInvoiceRef().length()==0  || " ".equalsIgnoreCase(getManagedBean().getInvoice().getSupplierInvoiceRef())) {
+			} else if(null == getManagedBean().getInvoice().getSupplierInvoiceRef() || getManagedBean().getInvoice().getSupplierInvoiceRef().length()==0  || "".equalsIgnoreCase(getManagedBean().getInvoice().getSupplierInvoiceRef())) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.supp.invoice.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			} else {
 				reqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
