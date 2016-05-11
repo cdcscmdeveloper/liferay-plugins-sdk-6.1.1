@@ -1007,7 +1007,10 @@
 	<portlet>
 		<portlet-name>codification</portlet-name>
 		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template> -->
 		<instanceable>true</instanceable>
+		<render-weight>1</render-weight>
+		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
