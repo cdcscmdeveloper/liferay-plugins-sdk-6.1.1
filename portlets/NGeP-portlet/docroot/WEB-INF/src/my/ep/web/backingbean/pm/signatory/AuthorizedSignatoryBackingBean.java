@@ -370,7 +370,7 @@ public class AuthorizedSignatoryBackingBean extends
 				log.info("Tracking diary for virtual certificate: add new value :saveCertSignatoryDetials");
 				log.info(".............pmcertSignatory.getSinnatoryName()="
 						+ pmcertSignatory.getSinnatoryName());
-				messageId = MessageConst.TD_80025;
+				messageId = MessageConst.TD_80900;
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 
 			} else {
@@ -378,20 +378,20 @@ public class AuthorizedSignatoryBackingBean extends
 				if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 					log.info("Tracking diary for virtual certificate: de-activating status :saveRuleCatalog");
-					messageId = MessageConst.TD_80027;
+					messageId = MessageConst.TD_80902;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 
 					
 				}else if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					log.info("Tracking diary for virtual certificate: re-activating status :saveRuleCatalog");
-					messageId = MessageConst.TD_80028;
+					messageId = MessageConst.TD_80903;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				}
 				Date originalExpDate = this.getManagedBean().getIdToCertSignMapForChangedRecs().get(pmcertSignatory.getCertSignatoryId());
 				if(originalExpDate != null && pmcertSignatory.getExpDate() != originalExpDate){
 					log.info("Tracking diary for virtual certificate: updating Expire Date :saveRuleCatalog");
-					messageId = MessageConst.TD_80026;
+					messageId = MessageConst.TD_80901;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				}
 			}
