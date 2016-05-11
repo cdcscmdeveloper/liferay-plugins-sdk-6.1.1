@@ -15,14 +15,9 @@
 			<tr>
 				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
-				<td colspan="3"><ac:lov id="supplierMofNo" label="#{lbl['lbl.sc.mof.no']}" 
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="SM_SUPPLIER_MOFNO"
-						postUpdateListener="directLOABackingBean.mofNoListener(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
-						headerText="#{lbl['lbl.sc.supp.mof.no']}" selectionMode="single"
-						readonly="true" size="35" conditionField="recordStatus^1|smSupplier.recordStatus^1" 
-						saveObject="directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount"
+				<td colspan="3"><p:inputText size="35"
 						value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
-						update="@form" required="true" /></td>
+						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
@@ -155,7 +150,7 @@
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td colspan="3"><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="Supplier Lov"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="#{lbl['lbl.sc.ptj']}"
 						selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scQt.pmOrgProfile"
 						readonly="true" size="106"
@@ -167,7 +162,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td colspan="3"><ac:lov id="directLoaQT" lovId="DIRECT_LOA_QT"
-						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="#{lbl['lbl.sc.qtn.list']}"
+						disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" headerText="#{lbl['lbl.sc.quotation.tender']}"
 						selectionMode="single"
 						saveObject="directLOABackingBean.managedBean.scQt"
 						readonly="true" size="35"
@@ -388,7 +383,7 @@
 						 <ac:lov 
 							disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" lovId="PM_ORG_PROFILE"
 							postUpdateListener="directLOABackingBean.contractAgencyChanged()"
-							headerText="Contract Agency" selectionMode="single"
+							headerText="#{lbl['lbl.sc.loiloa.loa.agency']}" selectionMode="single"
 							readonly="true" size="106"
 							saveObject="directLOABackingBean.managedBean.scLoa.contractAgency"
 							value="#{directLOABackingBean.managedBean.scLoa.contractAgency.orgName}"
