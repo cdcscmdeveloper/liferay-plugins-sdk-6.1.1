@@ -2480,7 +2480,7 @@ public void setProcurementMode(ScQt scQt, BigDecimal amount) {
 			Locale locale = new FacesScopes().getUserLocale();
 			CommonUtils commonUtils = new CommonUtils();
 			DecimalFormat dformat = new DecimalFormat(commonUtils
-					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 			
 			for (PmConfigRuleValue configRuleValue : ruleValueList) {
 				if (configRuleValue.getFromValue() != null) {

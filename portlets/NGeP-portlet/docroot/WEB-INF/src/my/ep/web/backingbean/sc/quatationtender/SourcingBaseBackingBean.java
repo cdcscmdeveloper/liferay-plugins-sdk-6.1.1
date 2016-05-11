@@ -1412,7 +1412,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QUOTATION_THRESHOLD);
-			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
+			reqDTO.setCompareValue(estimatedAmount.toString());
 			List<String> ruleValueStrList = ruleSO
 					.getRuleValuesByTypeAndCurrentDateRange(reqDTO)
 					.getRuleValueStrList();
