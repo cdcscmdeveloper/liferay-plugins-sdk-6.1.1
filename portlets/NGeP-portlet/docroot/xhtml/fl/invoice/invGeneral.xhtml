@@ -217,7 +217,7 @@
 						value="#{lbl['lbl.fl.supp.invoice.no']}" /><p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="30" maxlength="30" disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView || !bpmTasklistBackingBean.managedBean.claim}" 
-						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" required="true" label="#{lbl['lbl.fl.supp.inv.no']}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.inv.no']}"/><p:message for="supplierInvoiceRef" display="icon" /></td>		
+						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" label="#{lbl['lbl.fl.supp.inv.no']}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.inv.no']}"/><p:message for="supplierInvoiceRef" display="icon" /></td>		
 			</tr>			
 		</table>
 	</p:panel>
