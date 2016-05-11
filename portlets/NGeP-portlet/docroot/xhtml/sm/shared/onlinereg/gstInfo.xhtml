@@ -72,7 +72,7 @@
 			<p:column headerText="#{lbl['lbl.sm.gst.document.desc']}">
 				#{gstDoc.pmDocument.docName}
 			</p:column>
-			<p:column headerText="Upload Document">
+			<p:column headerText="#{lbl['lbl.btn.upload.doc']}">
 					<p:commandLink oncomplete="uploadDlg.show();return false;" update="@([id$=uploadDlg])" 
 					disabled="#{!registrationBackingBean.managedBean.gstFlag}" action="#{registrationBackingBean.setSelectedGstDoc(gstDoc)}">
 						<p:graphicImage value="/css/images/design/upload.png" style="margin-right:2px;" />
