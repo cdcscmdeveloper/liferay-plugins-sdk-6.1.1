@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.dockyard.details']}" toggleable="true"
-		id="smDocDtPanel">
+		id="smDocDtPanel" rendered="#{backingBean.managedBean.showDockyardPanel}">
 		<p:outputPanel rendered="#{backingBean.managedBean.showDockyardPanel}">
 			<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
