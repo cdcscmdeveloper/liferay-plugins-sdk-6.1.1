@@ -33,10 +33,10 @@ public class MarketSummaryAndPIBean implements Serializable {
 	private String zone;
 	
 	/** The fr qty. */
-	private int frQty;
+	private String frQty;
 	
 	/** The to qty. */
-	private int toQty;
+	private String toQty;
 	
 	/** The unit price. */
 	private String unitPrice;
@@ -201,7 +201,7 @@ public class MarketSummaryAndPIBean implements Serializable {
 	 *
 	 * @return the fr qty
 	 */
-	public int getFrQty() {
+	public String getFrQty() {
 		return frQty;
 	}
 
@@ -210,7 +210,7 @@ public class MarketSummaryAndPIBean implements Serializable {
 	 *
 	 * @param frQty the new fr qty
 	 */
-	public void setFrQty(int frQty) {
+	public void setFrQty(String frQty) {
 		this.frQty = frQty;
 	}
 
@@ -219,7 +219,7 @@ public class MarketSummaryAndPIBean implements Serializable {
 	 *
 	 * @return the to qty
 	 */
-	public int getToQty() {
+	public String getToQty() {
 		return toQty;
 	}
 
@@ -228,7 +228,7 @@ public class MarketSummaryAndPIBean implements Serializable {
 	 *
 	 * @param toQty the new to qty
 	 */
-	public void setToQty(int toQty) {
+	public void setToQty(String toQty) {
 		this.toQty = toQty;
 	}
 
