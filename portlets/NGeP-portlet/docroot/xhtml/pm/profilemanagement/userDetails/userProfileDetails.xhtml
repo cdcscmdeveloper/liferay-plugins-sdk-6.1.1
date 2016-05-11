@@ -10,6 +10,26 @@
 		div[id$="tfno"] > br ,div[id$="tfaxno"] > br ,div[id$="mbno"] > br {
    		  display: none;
 		}
+		.ppDisplayTextL {
+			width: 230px !important;
+			}
+		.ui-selectonemenu.ppDropDownWidthL label{
+			width: 240px !important;
+		}
+		.ui-selectonemenu.ppDropDownWidthL{
+			width: 240px !important;
+		}
+		.icTextL {
+			width: 265px !important;
+		}
+			
+		div[id$="somIdTypeMsg"],
+		div[id$="orgTypeFederalListMsg"],
+		div[id$="orgTypeOthersListMsg"],
+		div[id$="lovResOrgMsg"]{
+			display:inline-block;
+		}
+		
 	</style>
 	<!-- User Profile -->
 	<p:panel header="#{lbl['lbl.pm.profiles.org.detail']}" id="orgDetailPanel"
@@ -51,7 +71,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
-						<td width="20%">
+						<td width="80%">
 						<ui:fragment rendered="#{profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
 							<p:selectOneMenu id="orgTypeFederalList"
 								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}"
@@ -84,12 +104,12 @@
 							</ui:fragment>
 							<ui:fragment rendered="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
 								<p:inputText id="itOrgTypeName" 
-										disabled="true"
+										disabled="true" styleClass="ppDisplayTextL" 
 										value="#{profileManagementBackingBean.getParameterDesc(profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode)}"
 										size="30">
 								</p:inputText>
 							</ui:fragment>
-							</td><td width="5%">
+							&#160;
 							<ui:fragment rendered="#{profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
 							<p:message id="orgTypeFederalListMsg" 
 								for="orgTypeFederalList"
@@ -99,8 +119,7 @@
 								for="orgTypeOthersList"
 								display="icon" 
 								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"/>
-								</ui:fragment></td>
-						<td colspan="2" align="left"><div style="float: left">
+								</ui:fragment><div style="display:inline-block;">
 							<c:if test="#{isFFCOrgType}">
 							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_FFC" size="40" 
 							    	required="true" 
@@ -141,14 +160,9 @@
 												postUpdateListener="profileManagementBackingBean.changeOrgUnit"  />
 											
 							</c:if>
+							<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
 							</div>
 							</td>
-							<td width="5%">
-							<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
-							</td>
-							<td></td>
-						<td></td>
-
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -164,7 +178,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
-						<td width="20%"><p:selectOneMenu styleClass="ppDropDownWidthL"
+						<td colspan="2" width="80%"><p:selectOneMenu styleClass="ppDropDownWidthL"
 								id="somIdType" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
@@ -175,16 +189,14 @@
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
 									partialSubmit="true" process="@this" update="@form" />
-							</p:selectOneMenu>
-							</td>
-							<td width="5%"> <p:message id="somIdTypeMsg" for="somIdType" display="icon" />
-							</td>
-						
-						<td width="30%">
-						<c:choose>
+							</p:selectOneMenu>&#160;
+							<p:message id="somIdTypeMsg" for="somIdType" display="icon" />
+							
+										<div style="display:inline-block;">
+							<c:choose>
 								<c:when
 									test="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode == ProfileManagementConst.newIc}">
-									<p:inputText id="itIdentityNo" styleClass="ppDisplayTextL"
+									<p:inputText id="itIdentityNo" styleClass="icTextL"
 										required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
@@ -199,7 +211,7 @@
 								</c:when>
 
 								<c:otherwise>
-									<p:inputText id="itIdentityNo" styleClass="ppDisplayTextL"
+									<p:inputText id="itIdentityNo" styleClass="icTextL"
 										required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
@@ -211,7 +223,7 @@
 									</p:inputText>
 								</c:otherwise>
 							</c:choose>
-							&#160;&#160; <p:graphicImage id="giIcNo"
+							&#160;<p:graphicImage id="giIcNo"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giIcNo" id="ttIcNo"
 								showEffect="fade" hideEffect="fade" > 
@@ -219,26 +231,9 @@
 								</p:tooltip>
 								<p:message id="itIdentityNoMsg" for="itIdentityNo"
 								display="icon" />
+							</div>
 							</td>
-						<!-- Profile Photo -->
-						<td colspan="2" rowspan="9"><p:outputPanel id="opPortrait"
-								rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
-								<div align="center">
-									<h:graphicImage id="giUserImage"
-										value="#{profileManagementBackingBean.userImagePathWithDefaultImage(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
-										width="140" height="160" />
-
-									<div align="center">
-										<p:commandButton
-											value="#{lbl['lbl.pm.profiles.userdetails.changepic']}"
-											oncomplete="dlImageUpload.show();" immediate="true" />
-										<p:commandButton
-											value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
-											action="#{profileManagementBackingBean.deletePortrait}"
-											immediate="true" update="giUserImage" />
-									</div>
-								</div>
-							</p:outputPanel></td>
+							
 					</tr>
 
 
@@ -246,7 +241,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
-						<td><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
+						<td width="40%"><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
 								maxlength="75" converter="toLowerCaseConverter"
 								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
 								required="#{!empty param['disableValidation']}"
@@ -257,13 +252,28 @@
 								<p:ajax event="blur"
 									partialSubmit="true" process="@this" update="@this" />
 							</p:inputText> 
+							<p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
 						</td>
-						<td><p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
+						<td rowspan="7">
+							<p:outputPanel id="opPortrait"
+								rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
+								<div align="left">
+									<h:graphicImage id="giUserImage"
+										value="#{profileManagementBackingBean.userImagePathWithDefaultImage(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
+										width="140" height="160" />
 
-						</td>
-						<td></td>
-						<td></td>						
-						<td></td>
+									<div align="left">
+										<p:commandButton
+											value="#{lbl['lbl.pm.profiles.userdetails.changepic']}"
+											oncomplete="dlImageUpload.show();" immediate="true" />
+										<p:commandButton
+											value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
+											action="#{profileManagementBackingBean.deletePortrait}"
+											immediate="true" update="giUserImage" />
+									</div>
+								</div>
+							</p:outputPanel>
+						</td>	
 					</tr>
 
 					<tr>
@@ -283,12 +293,11 @@
 									itemValue="#{salutation.salutationId}" />
 								<p:ajax event="change"
 									partialSubmit="true" process="@this" update="@this" />
-							</p:selectOneMenu> </td>
-							<td><p:message id="somSalutationMsg" for="somSalutation"
-								display="icon" /></td>
-						<td></td>
-						<td></td>						
-						<td></td>
+							</p:selectOneMenu>&#160;
+							<p:message id="somSalutationMsg" for="somSalutation"
+								display="icon" />
+						</td>
+						
 					</tr>
 
 					<tr>
@@ -304,17 +313,16 @@
 								<f:validateRegex pattern="^([\S]+[\s\S]{1,80})?$" />
 								<p:ajax event="blur"
 									partialSubmit="true" process="@this" update="@this" />
-							</p:inputText>&#160;&#160;<p:graphicImage id="giUserUsername"
+							</p:inputText> &#160;<p:graphicImage id="giUserUsername"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserUsername"
 								value="#{lbl['lbl.pm.profiles.userdetails.username.tooltip']}"
-								showEffect="fade" hideEffect="fade" />
+								showEffect="fade" hideEffect="fade" /> &#160;
+							<p:message
+								id="itUserNameMsg" for="itUserName" display="icon" />
+								
 						</td>
-						<td> <p:message
-								id="itUserNameMsg" for="itUserName" display="icon" /></td>
-						<td></td>
-						<td></td>						
-						<td></td>
+						
 					</tr>
 
 
@@ -336,13 +344,11 @@
 									itemValue="#{countrylist.countryId}" />
 									<p:ajax event="change"
 										partialSubmit="true" process="@this" update="@this" />
-							</p:selectOneMenu> 
+							</p:selectOneMenu>&#160;
+							<p:message id="somNationalityMsg" for="somNationality"
+								display="icon" />
 						</td>
-						<td><p:message id="somNationalityMsg" for="somNationality"
-								display="icon" /></td>
-						<td></td>
-						<td></td>						
-						<td></td>
+						
 					</tr>
 
 					<tr>
@@ -355,13 +361,10 @@
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.designation}" />
+								<p:message id="itDesignationMsg" for="itDesignation"
+									display="icon" />
 						</td>
-						<td>
-							<p:message id="itDesignationMsg" for="itDesignation"
-								display="icon" /></td>
-						<td></td>
-						<td></td>						
-						<td></td>
+						
 					</tr>
 
 					<tr>
@@ -374,10 +377,6 @@
 								<f:selectItems
 									value="#{profileManagementBackingBean.getYesNoOptions()}" />
 							</p:selectOneRadio></td>
-						<td></td>
-						<td></td>						
-						<td></td>
-						<td></td>
 					</tr>
 
 					<tr>
@@ -393,16 +392,14 @@
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.grade}"
 								maxlength="10"
 								disabled="#{isSupplierOrgType}"
-								label="#{lbl['lbl.pm.profiles.userdetails.grade']}" /> &#160;&#160; <p:graphicImage id="giUserGrade"
+								label="#{lbl['lbl.pm.profiles.userdetails.grade']}" /> &#160; <p:graphicImage id="giUserGrade"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserGrade"
 								value="#{lbl['lbl.pm.profiles.userdetails.grade.tooltip']}"
-								showEffect="fade" hideEffect="fade" /></td>
-						<td><p:message id="userGradeMsg" for="userGrade"
-								display="icon" /></td>
-						<td></td>						
-						<td></td>
-						<td></td>
+								showEffect="fade" hideEffect="fade" /> &#160;
+								<p:message id="userGradeMsg" for="userGrade"
+								display="icon" />
+						</td>	
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
@@ -416,46 +413,42 @@
 								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 								<f:validateRegex disabled="#{empty param['disableValidation']}"
 									pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							</p:inputText> &#160;&#160; <p:graphicImage id="giEmail"
+							</p:inputText> &#160; <p:graphicImage id="giEmail"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giEmail" id="ttEmail"
 								value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}"
-								showEffect="fade" hideEffect="fade" /> 
-								</td>
-								<td><p:message
-								id="itEmailMsg" for="itEmail" display="icon" /></td>
-						<td></td>						
-						<td></td>
-						<td></td>
+								showEffect="fade" hideEffect="fade" /> &#160;
+								<p:message
+								id="itEmailMsg" for="itEmail" display="icon" />
+								</td>	
+					
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>
-						<td colspan="3"><ac:phone id="itTelNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.telno']}"
+						<td colspan="2"><ac:phone id="itTelNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.telno']}"
 						countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneCountry}" 
 						areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneArea}" 
 						number="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneNo}"  
 						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
 						</td>
-						<td><p:message id="itTelNoMsg" for="itTelNo" display="icon" /></td>					
-						<td></td>
+						
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th>
-						<td colspan="3"><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
+						<td colspan="2"><ac:phone id="itFaxNo" isMobile="false" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
 						countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxCountry}" 
 						areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxArea}" 
 						number="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxNo}"  
 						validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}" />
 						</td>
-						<td> <p:message id="itFaxNoMsg" for="itFaxNo" display="icon" /></td>						
-						<td></td>
+						
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>
-						<td colspan="3"><ac:phone id="itMobileNo" label="#{lbl['lbl.pm.profiles.userdetails.mobileno']}"
+						<td colspan="2"><ac:phone id="itMobileNo" label="#{lbl['lbl.pm.profiles.userdetails.mobileno']}"
 							countryCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileCountry}" 
 							areaCode="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileArea}" 
 							number="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileNo}" 
@@ -463,9 +456,7 @@
 							validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}"
 							telcoId="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileTelcoId}" />
 						</td>
-						<td> <p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
-						</td>						
-						<td></td>
+						
 					</tr>
 
 					<tr>
@@ -484,10 +475,7 @@
 									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr" />
 
 							</p:selectOneMenu></td>
-						<td></td>					
-						<td></td>
-						<td></td>
-						<td></td>
+						
 					</tr>
 
 				</table>
