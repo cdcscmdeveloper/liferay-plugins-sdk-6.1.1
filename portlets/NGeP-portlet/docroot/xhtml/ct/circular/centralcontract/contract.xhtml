@@ -254,7 +254,7 @@
 				               	</f:facet>
 			               		<h:outputText value="#{itemPrice.toQty}" style="float:right;">
                						<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.uom.uomCode)}" />			
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.scRequestItem.uom.uomCode)}" />			
 				             	</h:outputText>		           
 			                 </p:column>    
 			                 <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
