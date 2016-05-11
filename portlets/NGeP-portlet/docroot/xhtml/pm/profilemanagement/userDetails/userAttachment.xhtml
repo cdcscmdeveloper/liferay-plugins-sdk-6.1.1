@@ -13,20 +13,20 @@
 	  		 emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 		     value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserAttachments}">   
 		    <ac:paginator for="dtAttachment"/>
-		    <p:column style="width:65%;text-align:center;white-space:normal;" headerText="#{lbl['lbl.pm.profiles.authorisation.filename']}" >
+		    <p:column style="width:55%;text-align:left;white-space:normal;" headerText="#{lbl['lbl.pm.profiles.authorisation.filename']}" >
 	          	#{attachment.fileName}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.created.by']}" style="width:17%;text-align:center;white-space:normal;">
 	          	#{profileManagementBackingBean.getUsername(attachment.createdBy)}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.created.date']}" style="width:10%;text-align:center;" >
+	        <p:column headerText="#{lbl['lbl.pm.created.date']}" style="width:17%;text-align:center;" >
 	        	<h:outputText value="#{attachment.createdDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
 	        <p:column style="text-align:center;width:8%;" headerText="#{lbl['lbl.pm.action']}" >
 	          	<p:commandLink action="#{profileManagementBackingBean.downloadAttachment(attachment)}" 
-	          		immediate="true" ajax="false" disabled="#{attachment.brandNew}">
+	          		immediate="true" ajax="false" rendered="#{!attachment.brandNew}">
  					  <p:graphicImage value="/css/images/design/attach.png" />
  				</p:commandLink>
 				<p:commandLink action="#{profileManagementBackingBean.deleteAttachment(attachment)}" 
@@ -48,8 +48,11 @@
 				mode="advanced" sizeLimit="1000000" 
 		        allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			    fileLimit="1" dragDropSupport="false" uploadLabel="#{lbl['lbl.btn.upload']}" 
-		   		label="#{lbl['lbl.btn.choose']}" cancelLabel="#{lbl['lbl.btn.cancel']}"/>	            	
+			    fileLimit="3" dragDropSupport="false" 
+			    uploadLabel="#{lbl['lbl.btn.upload.all']}" 
+		   		label="#{lbl['lbl.btn.choose']}" 
+		   		cancelLabel="#{lbl['lbl.btn.remove.all']}"
+		   		multiple="true"/>	            	
 				
 		</p:dialog>	
 		
