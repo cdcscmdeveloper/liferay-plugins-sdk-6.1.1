@@ -609,18 +609,30 @@ public class EvaluationMeetingBackingBean extends
 
 					if (user.isPMP() == true) {
 						ParameterReqDTO reqDTO = new ParameterReqDTO();
+						if(null==user.getMemberRoleId()){
 						reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
 						reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 						ParameterResDTO resDTO = getParameterSO()
 								.retrieveParameterByTypeAndCode(reqDTO);
 						committeeMember.setMemberRole(resDTO.getPmParameter());
+						}else{
+							reqDTO.setParameterId(user.getMemberRoleId());
+							ParameterResDTO resDTO=getParameterSO().retrieveParameterById(reqDTO);
+							committeeMember.setMemberRole(resDTO.getPmParameter());
+						}
 					} else {
 						ParameterReqDTO reqDTO = new ParameterReqDTO();
+						if(null==user.getMemberRoleId()){
 						reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
 						reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_MEMBER);
 						ParameterResDTO resDTO = getParameterSO()
 								.retrieveParameterByTypeAndCode(reqDTO);
 						committeeMember.setMemberRole(resDTO.getPmParameter());
+						}else{
+							reqDTO.setParameterId(user.getMemberRoleId());
+							ParameterResDTO resDTO=getParameterSO().retrieveParameterById(reqDTO);
+							committeeMember.setMemberRole(resDTO.getPmParameter());
+						}
 					}
 					if (committeeMember.getMemberRole() != null) {
 						committeeMember.setMemberRoleId(committeeMember.getMemberRole().getParameterId());	
