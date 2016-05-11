@@ -838,7 +838,7 @@ public class ProfilePersonalizationBackingBean extends
 							.retrieveStatusByStatusId(statusReqDTO);
 					
 				logger.info("Tracking diary for my profile :saveUserProfile");
-				String messageId = MessageConst.TD_80023;
+				String messageId = MessageConst.TD_80014;
 				String[] msgParam = new String[] {user.getUserName()};
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
@@ -1089,7 +1089,7 @@ public class ProfilePersonalizationBackingBean extends
 			StatusResDTO statusResDTO = statusSO
 					.retrieveStatusByStatusId(statusReqDTO);
 			logger.info("Tracking diary for my profile: change password :changePassword");
-			String messageId = MessageConst.TD_80024;
+			String messageId = MessageConst.TD_80015;
 			String[] msgParam = new String[] {user.getUserName()};
 			reqDTO.setTrackingStatus(true);
 			reqDTO.getTrackDairyVOs().add(
@@ -1217,7 +1217,7 @@ public class ProfilePersonalizationBackingBean extends
 				StatusResDTO statusResDTO = statusSO
 						.retrieveStatusByStatusId(statusReqDTO);
 				logger.info("Tracking diary for my profile: change challenge Questions :changeChallengeQuestions");
-				String messageId = MessageConst.TD_80029;
+				String messageId = MessageConst.TD_80024;
 				String[] msgParam = new String[] {user.getUserName()};
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(

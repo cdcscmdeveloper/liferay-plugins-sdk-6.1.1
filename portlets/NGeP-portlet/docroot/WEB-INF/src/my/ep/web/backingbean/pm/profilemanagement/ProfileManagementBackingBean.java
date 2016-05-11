@@ -3740,7 +3740,7 @@ public class ProfileManagementBackingBean extends
 		}
 		if(isProfileDetailsChanged){
 			logger.info("Tracking diary for user profile updated :saveUserProfile");
-			String messageId = MessageConst.TD_80023;
+			String messageId = MessageConst.TD_80014;
 			String[] msgParam = new String[] {user.getUserName()};
 			reqDTO.setTrackingStatus(true);
 			reqDTO.getTrackDairyVOs().add(
@@ -3751,8 +3751,8 @@ public class ProfileManagementBackingBean extends
 		if (!this.getManagedBean().getPmUserOrgOriginal().getRecordStatusFlg().equals(userOrg
 				.getRecordStatusFlg())) {
 			logger.info("Tracking diary for user profile: change user state :saveUserProfile");
-			String messageId = userOrg.getRecordStatusFlg() == 0 ? MessageConst.TD_80005
-					: MessageConst.TD_80006;
+			String messageId = userOrg.getRecordStatusFlg() == 0 ? MessageConst.TD_80004
+					: MessageConst.TD_80005;
 			String[] msgParam = new String[] {
 					user.getUserName(),
 					userOrg.getPmOrgProfile().getOrgCode(),
@@ -3771,7 +3771,7 @@ public class ProfileManagementBackingBean extends
 				if (userRole.isBrandNew()) {
 
 					logger.info("Tracking diary for user profile: add new Role :saveUserProfile");
-					String messageId = MessageConst.TD_80002;
+					String messageId = MessageConst.TD_80001;
 					String[] msgParam = new String[] { user.getUserName() , getRoleDescByRoleCode(userRole
 							.getPmRole().getRoleCode(), CommonConstants.LANGUAGE_CODE_MALAY) };
 					logger.info("......msgParam[1]"+msgParam[1]);
@@ -3783,7 +3783,7 @@ public class ProfileManagementBackingBean extends
 
 				} else if (userRole.isModified()) {// the role's activated
 					logger.info("Tracking diary for user profile: Role is re-activated :saveUserProfile");
-					String messageId = MessageConst.TD_80004;
+					String messageId = MessageConst.TD_80003;
 					String[] msgParam = new String[] { user.getUserName() ,getRoleDescByRoleCode(userRole
 							.getPmRole().getRoleCode(), CommonConstants.LANGUAGE_CODE_MALAY)};
 					logger.info("..222....msgParam[1]"+msgParam[1]);
@@ -3798,7 +3798,7 @@ public class ProfileManagementBackingBean extends
 				if (!userRole.isBrandNew()) {// the role's de-activated
 					logger.info("Tracking diary for user profile: Role is de-activated :saveUserProfile");
 					
-					String messageId = MessageConst.TD_80003;
+					String messageId = MessageConst.TD_80002;
 					String[] msgParam = new String[] {user.getUserName() ,getRoleDescByRoleCode(userRole
 							.getPmRole().getRoleCode(), CommonConstants.LANGUAGE_CODE_MALAY)};
 					logger.info("..333....msgParam[1]"+msgParam[1]);
@@ -3820,7 +3820,7 @@ public class ProfileManagementBackingBean extends
 					if (oldLetterNo != null && !oldLetterNo.isEmpty()
 							&& !oldLetterNo.equalsIgnoreCase(newLetterNo)) {
 						logger.info("Tracking diary for user profile: letterNo is changed :saveUserProfile");
-						String messageId = MessageConst.TD_80008;
+						String messageId = MessageConst.TD_80007;
 						String[] msgParam = new String[] {user.getUserName() , oldLetterNo,
 								newLetterNo };
 						reqDTO.setTrackingStatus(true);
@@ -3841,7 +3841,7 @@ public class ProfileManagementBackingBean extends
 					if (oldApprovalLimit != null
 							&& (oldApprovalLimit.compareTo(newApprovalLimit) != 0)) {
 						logger.info("Tracking diary for user profile: approvalLimit is changed :saveUserProfile");
-						String messageId = MessageConst.TD_80007;
+						String messageId = MessageConst.TD_80006;
 						String[] msgParam = new String[] {user.getUserName() ,
 								oldApprovalLimit.toString(),
 								newApprovalLimit.toString() };
@@ -3887,7 +3887,7 @@ public class ProfileManagementBackingBean extends
 
 			reqDTO.setPmUser(pmUser);
 			logger.info("Tracking diary for user profile: reset password :saveUserProfile");
-			String messageId = MessageConst.TD_80024;
+			String messageId = MessageConst.TD_80015;
 			String[] msgParam = new String[] {pmUser.getUserName()};
 			reqDTO.setTrackingStatus(true);
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
@@ -4032,7 +4032,7 @@ public class ProfileManagementBackingBean extends
 					orgName = userOrg.getPmOrgProfile().getOrgName();
 				}
 				
-				String messageId = MessageConst.TD_80001;
+				String messageId = MessageConst.TD_80000;
 				String[] msgParam = new String[] {
 						user.getUserName() ,
 						orgCode,
