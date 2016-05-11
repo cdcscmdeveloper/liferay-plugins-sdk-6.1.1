@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="createAgreement" header="#{agreementBackingBean.managedBean.agreementType eq CtConst.supplementalAgreement ? lbl['lbl.ct.panel.supplemental.agreement.content'] : lbl['lbl.ct.panel.agreement.content']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid style="width:100%">
-			  <h:panelGrid columns="2">
+			  <h:panelGrid columns="2" rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectNego}">
 				<p:outputLabel value="#{lbl['lbl.ct.sample.contract']}" />
 				<h:commandLink action="#{agreementBackingBean.downloadSampleFile()}">
 					<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
