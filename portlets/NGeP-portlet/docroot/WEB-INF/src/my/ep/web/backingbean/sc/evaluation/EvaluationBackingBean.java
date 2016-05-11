@@ -7042,7 +7042,7 @@ public class EvaluationBackingBean extends
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
 										MessageConst.INFO_700004, new String[] {
-												"Prepare Evaluation", QtNum },
+												getMessageCommon("lbl.sc.prepare.evaluation"), QtNum },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
@@ -7707,7 +7707,7 @@ public class EvaluationBackingBean extends
 															.getManagedBean()
 															.getLocalOutCome()),
 													new String[] {
-															"Prepare Evaluation Submitted Successfully",
+														getMessageCommon("lbl.sc.prepare.evaluation"),
 															qtCommittee
 																	.getScQt()
 																	.getQtNo() },
@@ -7782,7 +7782,7 @@ public class EvaluationBackingBean extends
 													.getMessage(
 															getMessgeConstant(outCome),
 															new String[] {
-																	"Prepare Evaluation",
+																getMessageCommon("lbl.sc.prepare.evaluation"),
 																	qtCommittee
 																			.getScQt()
 																			.getQtNo() },
@@ -7862,7 +7862,7 @@ public class EvaluationBackingBean extends
 											.getMessage(
 													getMessgeConstant(this.getManagedBean().getLocalOutCome()),
 													new String[] {
-															"Prepare Evaluation",
+														getMessageCommon("lbl.sc.prepare.evaluation"),
 															qt.getScQt()
 																	.getQtNo() },
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
