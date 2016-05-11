@@ -6875,6 +6875,8 @@ public class SmApplicationBackingBean extends
 						+ "/web/epapp/mof-application?" + parameter;
 				log.info(">>>>>>>>>>>>>>>>>>>>>URL PAYMENT:" + urlParam
 						+ "<<<<<<<<<<<<<<<<<<<<");
+			} else {
+				log.info(">>>>>>>>>>>>>>>>>>>>>TASK ITEM IS NULL<<<<<<<<<<<<<<<<<<<<");
 			}
 		} else {
 			msgConst = MessageConst.INFO_700005;
