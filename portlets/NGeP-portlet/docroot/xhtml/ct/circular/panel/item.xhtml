@@ -92,13 +92,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 							             </c:if>
 				                   </p:column>
               
-                                   <p:column style="width:16%;" styleClass="column-align-center">
+                                   <p:column style="width:16%;white-space:pre-line" styleClass="column-align-center">
                                        <f:facet name="header">
 			                               <h:outputText value="#{lbl['lbl.ct.item.name']}" styleClass="required"/>
 			                           </f:facet>
 			               
 			                           <c:if test="#{!panelBackingBean.managedBean.viewContract}">
-                                           <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:75px;" autoResize="false"/>
+                                           <p:inputTextarea value="#{panelItemsVar.itemName}"  maxlength="100" rows="2" style="width:75px;" autoResize="false"/>
                                   	   </c:if>
 					                   <c:if test="#{panelBackingBean.managedBean.viewContract}">
 			                                 <h:outputText value="#{panelItemsVar.itemName}" style="float:left; text-align:left;"/>
@@ -395,7 +395,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			action="#{panelBackingBean.updateZoneGeneralLocation}">
 		</p:commandButton>
 		
-		<p:commandButton rendered="#{!panelBackingBean.managedBean.viewContract}"
+		<p:commandButton
 			value="#{lbl['lbl.btn.cancel']}" onclick="ZoneGeneral.hide();"  />
 	</div>
 	</p:panel>
