@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -68,7 +66,7 @@ import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
+import my.ep.jaxb.fl.frndata.FLFulFillmentReceivedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -89,7 +87,6 @@ import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
@@ -97,7 +94,6 @@ import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.frn.ReceivedNoteManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -355,7 +351,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					getManagedBean().setUserLoginId(getManagedBean().getFulfilmentNote().getApproverId());
 				}
 			}else{
-				FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
+				FLFulFillmentReceivedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentReceivedNoteDataType)obj;
 				reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
 				
 				resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
