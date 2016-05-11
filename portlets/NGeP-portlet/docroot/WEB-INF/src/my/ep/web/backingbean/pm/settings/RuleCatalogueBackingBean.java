@@ -1779,7 +1779,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			if (!fee.isBrandNew()
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				messageId = MessageConst.TD_80022;
+				messageId = MessageConst.TD_80207;
 				
 				msgParam = new String[] {
 							fee.getOrgTypeId().getParameterCode(), "" };
@@ -1911,7 +1911,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 
-				messageId = MessageConst.TD_80022;
+				messageId = MessageConst.TD_80207;
 				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER)) {
 					msgParam = new String[] {
 							fee.getOrgProfileId().getSmSupplier()
@@ -2176,7 +2176,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			if (!fee.isBrandNew()
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				messageId = MessageConst.TD_80022;
+				messageId = MessageConst.TD_80211;
 				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT)) {
 					msgParam = new String[] {
 							fee.getContractId().getContractNo(), "" };
@@ -2337,7 +2337,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 			if (!fee.isBrandNew()
 					&& fee.isModified()
 					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				messageId = MessageConst.TD_80022;
+				messageId = MessageConst.TD_80209;
 				if (fee.getFeeExemptionType().equals(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMONDITY_AND_TYPE)) {
 					msgParam = new String[] {
 							fee.getUnspscId().getUnspscTitle(), "" };
@@ -2665,7 +2665,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 						&& !originalUnplanndthreshold.equals(centralizedLevelThreshold
 								.getS2Unplanned())) {// track change
 					log.info("Tracking diary for Threshold : Centeralized Unplanned changed");
-					String messageId = MessageConst.TD_80018;
+					String messageId = MessageConst.TD_80203;
 					String[] msgParam = new String[] {
 							originalUnplanndthreshold.toString(),
 							centralizedLevelThreshold.getS2Unplanned()
@@ -2696,7 +2696,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							&& !originalUnplanndthreshold.equals(threshold
 									.getS2Unplanned())) {// track change
 						log.info("Tracking diary for Threshold : ministery Unplanned changed");
-						String messageId = MessageConst.TD_80017;
+						String messageId = MessageConst.TD_80202;
 						String[] msgParam = new String[] {
 								threshold.getOrgProfileId().getPmOrgValidity()
 										.getOrgName(),
@@ -2731,7 +2731,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 						&& !originalBudgetThreshold.equals(centralizedLevelThreshold
 								.getBudgetSpent())) {// track change
 					log.info("Tracking diary for Threshold : Centeralized BudgetVsSpent changed");
-					String messageId = MessageConst.TD_80020;
+					String messageId = MessageConst.TD_80205;
 					String[] msgParam = new String[] {
 							originalBudgetThreshold.toString(),
 							centralizedLevelThreshold.getBudgetSpent()
@@ -2762,7 +2762,7 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 							&& !originalUnplanndthreshold.equals(threshold
 									.getBudgetSpent())) {// track change
 						log.info("Tracking diary for Threshold : ministery BudgetVsSpent changed");
-						String messageId = MessageConst.TD_80019;
+						String messageId = MessageConst.TD_80204;
 						String[] msgParam = new String[] {
 								threshold.getOrgProfileId().getPmOrgValidity()
 										.getOrgName(),
@@ -3747,21 +3747,21 @@ public void setDupplicateOrgTypeName(String dupplicateOrgTypeName) {
 					// if (da.getRecordStatusFlg() ==
 					// DbValueConst.RECORD_STATUS_SUSPENDED) {
 					// log.info("Tracking diary for Designated-Area: de-activating designatedArea:saveDesignatedArea");
-					// messageId = MessageConst.TD_80032;
+					// messageId = MessageConst.TD_80214;
 					// msgParam = new String[] { da.getvPmLocation()
 					// .getLocationName() };
 					//
 					// } else {// da.getRecordStatusFlg() ==
 					// // DbValueConst.RECORD_STATUS_ACTIVE
 					// log.info("Tracking diary for Designated-Area: re-activating designatedArea:saveDesignatedArea");
-					// messageId = MessageConst.TD_80031;
+					// messageId = MessageConst.TD_80213;
 					// msgParam = new String[] { da.getvPmLocation()
 					// .getLocationName() };
 					// }
 				}
 				if (!da.isBrandNew() && daValidity.isDeleted()) {
 					log.info("Tracking diary for Designated-Area: deleted designatedArea:saveDesignatedArea");
-					messageId = MessageConst.TD_80033;
+					messageId = MessageConst.TD_80215;
 					msgParam = new String[] { da.getvPmLocation()
 							.getLocationName() };
 				}
