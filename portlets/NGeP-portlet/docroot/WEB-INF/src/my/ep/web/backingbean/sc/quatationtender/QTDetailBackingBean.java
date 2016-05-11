@@ -2084,6 +2084,7 @@ public class QTDetailBackingBean extends
 														.getOrgProfileId(),
 												qtApproval)));
 							} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) ||
+									QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId) ||
 									isStatusOfBpkOrScheduleRevise(statusId)) {
 								this.getManagedBean().setPublicationApproval(qtApproval);
 							}
