@@ -3811,7 +3811,7 @@ public class SPDetailBackingBean extends
 				.getScQtDocReportAttachment();
 		if (scQtDocReportAttachment == null) {
 			scQtDocReportAttachment = qtDocumentsBackingBean
-					.generateDocumentAttachment(scQtDocReport);
+					.generateDocumentAttachment(scQtDocReport,null);
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		}
 		downloadFile(scQtDocReportAttachment);
@@ -3837,15 +3837,17 @@ public class SPDetailBackingBean extends
 
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
+			int increment = 1;
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
 				ScQtDocReportAttachment attachment = scQtDocReport
 						.getScQtDocReportAttachment();
 				if (attachment == null) {
 					attachment = qtDocumentsBackingBean
-							.generateDocumentAttachment(scQtDocReport);
+							.generateDocumentAttachment(scQtDocReport,getPrefixFileName(increment));
 					scQtDocReport.setScQtDocReportAttachment(attachment);
 				}
 				scAttachments.add(attachment);
+				increment++;
 			}
 			downloadAllFiles("NGeP-QT-Documents", scAttachments);
 		}
@@ -3858,4 +3860,9 @@ public class SPDetailBackingBean extends
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
 
+	private String getPrefixFileName(int increment) {
+
+		return (String) (increment <= 9 ? "0" + (increment) : Integer
+				.toString(increment));
+	}
 }
