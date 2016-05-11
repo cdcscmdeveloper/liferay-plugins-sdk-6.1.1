@@ -152,6 +152,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * This method will initialize the button and approver list.
 	 */
 	public AgreementBackingBean() {
+		if(ctBB == null){
+			ctBB = new ContractBackingBean();
+		}
+		
 		/* Initialization of button */
 		if (getManagedBean().getOutComes() == null) {
 			getManagedBean().setOutComes(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
@@ -1050,6 +1054,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		ctReqDTO.setContractVerId(contractVerId);
     	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
     	ctReqDTO.setViewOnly(true);
+    	ctBB.getManagedBean().setViewContract(true);
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
