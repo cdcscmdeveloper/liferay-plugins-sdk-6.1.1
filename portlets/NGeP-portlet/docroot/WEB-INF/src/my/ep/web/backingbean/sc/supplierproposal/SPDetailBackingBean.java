@@ -243,7 +243,7 @@ public class SPDetailBackingBean extends
 					long days = DateUtils.getDaysDifference(today,
 							getManagedBean().getQt().getClosingDate());
 					DecimalFormat df = new DecimalFormat("#00");
-					getManagedBean().setClosingTime(df.format(days) + " Days");
+					getManagedBean().setClosingTime(df.format(days)+" ");
 					if (days == 0) {
 						Long durationInMills = DateUtils.getDateDiffInMillis(
 								DateUtils.getCurrentDate(), getManagedBean()
