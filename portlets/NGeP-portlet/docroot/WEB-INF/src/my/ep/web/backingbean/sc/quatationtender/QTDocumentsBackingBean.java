@@ -967,7 +967,7 @@ public class QTDocumentsBackingBean extends
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
 				.getScQtDocReportAttachment();
 		if (!scQtDocReport.getDefinationType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
-			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
+			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport,null);
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		} 
 		downloadFile(scQtDocReportAttachment);
@@ -988,9 +988,10 @@ public class QTDocumentsBackingBean extends
 			ScQtDocReportAttachment attachment = scQtDocReports.get(i)
 					.getScQtDocReportAttachment();
 			if (attachment == null) {
-				attachment = generateDocumentAttachment(scQtDocReports.get(i));
+				attachment = generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i+1)));
 				scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
 			}
+			
 			scAttachments.add(attachment);
 		}
 		downloadAllFiles("NGeP-QT-Report", scAttachments);
@@ -1006,7 +1007,7 @@ public class QTDocumentsBackingBean extends
 	 *             the exception
 	 */
 	public ScQtDocReportAttachment generateDocumentAttachment(
-			ScQtDocReport scQtDocReport) throws Exception {
+			ScQtDocReport scQtDocReport,String prefixFileName) throws Exception {
 		String definitionType = scQtDocReport.getDefinationType()
 				.getParameterCode();
 		ScQtDocReportAttachment scQtDocReportAttachment = null;
@@ -1017,6 +1018,7 @@ public class QTDocumentsBackingBean extends
 			scQtDocReportAttachment = new ScQtDocReportAttachment();
 			scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
 			scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt().getQtNo());
+			scQtDocReportAttachment.setPrefixFileName(prefixFileName);
 			StringBuilder filename = new StringBuilder();
 			// replace white space due to firefox
 			filename.append(scQtDocReport.getTitle().replaceAll("\\s", "_"));
@@ -1132,7 +1134,7 @@ public class QTDocumentsBackingBean extends
 				scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
 				scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt()
 						.getQtNo());
-
+				scQtDocReportAttachment.setPrefixFileName(prefixFileName);
 				if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 						.equals(docDefinitionKey)) {
 					generateSyaratSyaratAmPdfFromVelocity(
@@ -2429,12 +2431,11 @@ public class QTDocumentsBackingBean extends
 		debugLogger("createDocumentAttachment");
 		List<ScQtDocReport> scQtDocReports = getManagedBean()
 				.getScQtDocReportList();
-
 		for (int i = 0; i < scQtDocReports.size(); i++) {
 			ScQtDocReportAttachment docReportAttachment = scQtDocReports.get(i)
 					.getScQtDocReportAttachment();
 			if (docReportAttachment == null) {
-				docReportAttachment = generateDocumentAttachment(scQtDocReports.get(i));
+				docReportAttachment = generateDocumentAttachment(scQtDocReports.get(i),getPrefixFileName((i+1)));
 				scQtDocReports.get(i).setScQtDocReportAttachment(docReportAttachment);
 			}
 		}
@@ -2465,7 +2466,7 @@ public class QTDocumentsBackingBean extends
 			try {
 				if (ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS
 						.equalsIgnoreCase(reports.get(i).getDocCategory())) {
-					generateDocumentAttachment((ScQtDocReport) reports.get(i));
+					generateDocumentAttachment((ScQtDocReport) reports.get(i),getPrefixFileName((i+1)));
 				} else if (ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER
 						.equalsIgnoreCase(reports.get(i).getDocCategory())) {
 					finalizationBackingBean
@@ -2480,6 +2481,12 @@ public class QTDocumentsBackingBean extends
 
 		}
 
+	}
+	
+	private String getPrefixFileName(int increment) {
+		
+		return (String) (increment <= 9 ? "0" + (increment) : Integer
+				.toString(increment));
 	}
 
 }
