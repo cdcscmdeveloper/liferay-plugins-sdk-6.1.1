@@ -692,9 +692,10 @@ public class NoticeBoardBackingBean extends
 	public void preRenderNBView() {
 		
 		super.renewSesionObject();
+		searchNoticeBoard();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NB_MAIN_PAGE);
+				.handleNavigation(fc, null, NB_MAIN_PAGE+"?faces-redirect=true");
 	}
 	
 	/**
