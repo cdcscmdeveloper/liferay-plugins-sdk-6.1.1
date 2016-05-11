@@ -1997,6 +1997,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			bizNatureUniqueMap.put(ssb.getPmBusinessNature().getBusinessNatureId(), ssb.getPmBusinessNature());
 		}
 		
+		String duplicateCode = null;
 		for(int i = 0; i < bisNatures.size(); i++) {
 			PmBusinessNature bn = (PmBusinessNature)bisNatures.get(i);
 			log.info("bn.getLevelName(): " + bn.getLevelName());
@@ -2013,8 +2014,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				suppBusiness.setPmBusinessNature(bn);
 				suppBusiness.setSmSupplier(this.getManagedBean().getSmSupp());
 				this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(suppBusiness);
+			} else {
+				if(duplicateCode == null) {
+					duplicateCode = bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";
+				} else {
+					duplicateCode = duplicateCode + "  " + bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";  
+				}
 			}
 		
+		}
+		if(duplicateCode != null) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721223,
+									new String[] { duplicateCode }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
 		}
 	}
 	
