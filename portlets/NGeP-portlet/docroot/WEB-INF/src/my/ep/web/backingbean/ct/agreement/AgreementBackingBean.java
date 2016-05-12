@@ -1162,6 +1162,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 	
 	/**
+	 * The method used to remove the attachment for agreement signed page.
+	 */
+	public void delUploadedStampedPage(){
+		getManagedBean().getCtAgreement().setStampedPageName(null);
+		getManagedBean().getCtAgreement().setStampedPagePath(null);
+	}
+	
+	/**
+	 * The method used to remove the attachment for agreement signed page.
+	 */
+	public void delUploadedSignedPage(){
+		getManagedBean().getCtAgreement().setSignedPageName(null);
+		getManagedBean().getCtAgreement().setSignedPagePath(null);
+	}
+	
+	/**
 	 * The method used to download the sample agreement file
 	 * base on the quotation tender ID.
 	 * 

@@ -20,35 +20,39 @@
 				<p:message for="popupButtonCal4" display="icon" />
 			</h:panelGrid>
 				<p:outputLabel value="#{lbl['lbl.ct.signed.page']}" styleClass="required" />
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="4">
 				<h:panelGroup id="upAgrSignedPagePg">
-					<p:commandButton
-						oncomplete="upAgrSignedPageDlg.show();return false;"
-						update="upAgrSignedPagePg, upAgrSignedPageDlg"
-						value="#{lbl['lbl.btn.upload.doc']}" />
-					<h:commandLink
-						value="#{agreementBackingBean.managedBean.ctAgreement.signedPageName}"
+					<p:commandButton oncomplete="upAgrSignedPageDlg.show();return false;"
+						update="upAgrSignedPagePg, upAgrSignedPageDlg"  icon="ui-icon-upload"
+						rendered="#{agreementBackingBean.managedBean.ctAgreement.signedPageName == null}" />	
+					<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.signedPageName}"
 						rendered="#{agreementBackingBean.managedBean.ctAgreement.signedPageName != null}"
-						styleClass="blue_font"
-						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.signedPagePath,
-							agreementBackingBean.managedBean.ctAgreement.signedPageName)}" />
+						styleClass="blue_font" action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.signedPagePath,
+							agreementBackingBean.managedBean.ctAgreement.signedPageName)}" />					
+					<p:spacer width="3"/>
+					<p:commandLink onclick="delSignedPageDlg.show();" 
+						rendered="#{agreementBackingBean.managedBean.ctAgreement.signedPageName != null}" >
+						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+					</p:commandLink>
 					<p:spacer width="1"/>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.page']}" />
 				</h:panelGroup>
 			</h:panelGrid>
 				<p:outputLabel value="#{lbl['lbl.ct.stamped.page']}" styleClass="required" />
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="4">
 				<h:panelGroup id="upStampedPagePg">
-					<p:commandButton
-						oncomplete="upStampedPageDlg.show();return false;"
-						update="upStampedPagePg, upStampedPageDlg"
-						value="#{lbl['lbl.btn.upload.doc']}" />
-					<h:commandLink
-						value="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName}"
+					<p:commandButton oncomplete="upStampedPageDlg.show();return false;"
+						update="upStampedPagePg, upStampedPageDlg"  icon="ui-icon-upload"
+						rendered="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName == null}" />	
+					<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName}"
 						rendered="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName != null}"
-						styleClass="blue_font"
-						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.stampedPagePath,
-							agreementBackingBean.managedBean.ctAgreement.stampedPageName)}" />
+						styleClass="blue_font" action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.stampedPagePath,
+							agreementBackingBean.managedBean.ctAgreement.stampedPageName)}" />					
+					<p:spacer width="3"/>
+					<p:commandLink onclick="delStampedPageDlg.show();" 
+						rendered="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName != null}">
+						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+					</p:commandLink>
 					<p:spacer width="1"/>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.stamped.page']}" />
 				</h:panelGroup>
@@ -64,8 +68,21 @@
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="upAgrSignedPagePg">
-		</p:fileUpload> 
+		</p:fileUpload>
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadUserDefineDlg.hide();" />
+   		</div> 
 	 </p:dialog>
+	 <p:confirmDialog id="delSignedPageDlg" widgetVar="delSignedPageDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+ 		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+       	<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		  		update=":form:upAgrSignedPagePg, :form:upAgrSignedPageDlg"
+		   		action="#{agreementBackingBean.delUploadedSignedPage()}" oncomplete="delSignedPageDlg.hide();"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delSignedPageDlg.hide();" type="button" />
+		</div>
+    </p:confirmDialog>
+	 
 	  <p:dialog id="upStampedPageDlg" widgetVar="upStampedPageDlg" modal="true"
 	    width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
@@ -75,7 +92,19 @@
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="upStampedPagePg">
-		</p:fileUpload> 
+		</p:fileUpload>
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadUserDefineDlg.hide();" />
+   		</div> 
 	 </p:dialog>
+	 <p:confirmDialog id="delStampedPageDlg" widgetVar="delStampedPageDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+ 		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+       	<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
+		  		update=":form:upStampedPagePg,, :form:upStampedPageDlg"
+		   		action="#{agreementBackingBean.delUploadedStampedPage()}" oncomplete="delStampedPageDlg.hide();"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delStampedPageDlg.hide();" type="button" />
+		</div>
+    </p:confirmDialog>
 </ui:composition>
                        
