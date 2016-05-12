@@ -101,7 +101,7 @@
 		           
 		                                 <p:selectBooleanCheckbox
 		                                      value="#{contactPersonsVar.selectedCheckBox}" styleClass="myCustomChekBox">
-		           		                         <p:ajax event="change" update=":form:delCtPerson,:form:contactPersonDt" 
+		           		                         <p:ajax event="change" update=":form:delCtPerson,:form:contactPersonDt" partialSubmit="true" process="@this"
 		           		                             listener="#{centralContractBackingBean.selectOnePersonCheckboxSelect}"></p:ajax>
 			                              </p:selectBooleanCheckbox>
 				                   </p:column>
