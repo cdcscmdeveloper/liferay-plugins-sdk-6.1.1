@@ -86,6 +86,7 @@
 						<table>
 							<tr>
 								<td><p:inputText size="25" styleClass="ppRightBtn"
+								        required="true"
 										disabled="#{isViewOnly}"
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
 										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
@@ -94,7 +95,7 @@
 										<ac:validateNumber
 											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 											maxIntegerDigits="10" />
-									</p:inputText></td>
+									</p:inputText><p:message id="qtyIdMsg" for="qtyId" display="icon" /></td>
 							</tr>
 						</table>
 					</td>

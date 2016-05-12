@@ -706,8 +706,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						throw new EpException(MessageConst.ERROR_760356, new String[]{requestNoteDtl.getRequestItem().getItemName()});
 					}
 
-					// validate price type
-					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
+					// quantity
+					if( null != requestNoteDtl.getRequestItem() || null == requestNoteDtl.getRequestItem().getQuantity() ){
 						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
 					}
 				}
