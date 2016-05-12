@@ -1056,9 +1056,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	    RequestContext.getCurrentInstance().execute("uploadFactoringDlg.hide()");
     }
     
-    public void deleteFactoringAttachement(){
-    	getManagedBean().getFactoring().setFileName(null);
-  	    getManagedBean().getFactoring().setFilePath(null);
+    public void deleteFactoringAttachement() {
+    	if (getManagedBean().isRemoveFactoring()) {
+    		getManagedBean().getFactoring().setRemoveFileName(null);
+	  	    getManagedBean().getFactoring().setRemoveFilePath(null);
+    	} else {
+	    	getManagedBean().getFactoring().setFileName(null);
+	  	    getManagedBean().getFactoring().setFilePath(null);
+    	}
     }
     
     /**
