@@ -82,6 +82,7 @@
 								</p:tree>
 							</p:column>
 							<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
+							<h:panelGroup rendered="#{simpleQuoteBackingBean.managedBean.supplierLocLevel ne null and  ((simpleQuoteBackingBean.managedBean.supplierLocLevel ne 'ST') or (simpleQuoteBackingBean.managedBean.supplierLocLevel eq 'ST' and index eq'0'))}">
 								<p:commandLink
 									actionListener="#{simpleQuoteBackingBean.editLocation(locationTree,index)}"
 									rendered="#{isEditable}" process="@this"
@@ -89,7 +90,7 @@
 									oncomplete="locationPopup.show();">
 									<p:graphicImage value="/css/images/design/edit.png" />
 								</p:commandLink>
-
+                             </h:panelGroup>
 							</p:column>
 						</p:dataTable>
 						
