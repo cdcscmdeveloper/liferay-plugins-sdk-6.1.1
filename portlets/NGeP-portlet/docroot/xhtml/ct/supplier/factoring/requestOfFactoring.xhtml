@@ -241,22 +241,21 @@
 						    <p:commandButton  oncomplete="uploadFactoringDlg.show();return false;"
 							  icon="ui-icon-upload"  immediate="true" update="factoringPanel" 
 							   actionListener="#{supplierBackingBean.setUploadIndexValue(2)}"
-							   rendered="#{supplierBackingBean.managedBean.factoring.filePath == null}"/>
-						      <p:spacer width="1" />
-				     	      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.agreement']}" />
-						      <p:spacer width="3" />
+							   rendered="#{supplierBackingBean.managedBean.factoring.filePath == null}"/>			 
 						     
 						      <h:commandLink title="#{supplierBackingBean.managedBean.factoring.fileName}"
 							     value="#{supplierBackingBean.getShortFileName(supplierBackingBean.managedBean.factoring.fileName)}"
 							     style="float:left;" styleClass="blue_font" rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
 							     action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
 					
-					         <p:commandLink onclick="deleteFactoringAttach.show();" action="#{supplierBackingBean.setUploadIndexValue(4)}"
+					         <p:commandLink onclick="deleteFactoringAttach.show();"
 						        rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
 						        disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()
 							       or supplierBackingBean.managedBean.viewOnly or supplierBackingBean.managedBean.ctContract.loa.loaNo == null}" >
 			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			        	     </p:commandLink>
+						      <p:spacer width="1" />
+				     	      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.agreement']}" />
 					  </h:panelGrid>
 				</h:panelGroup>
               
@@ -280,17 +279,22 @@
 					  styleClass="required" rendered="#{supplierBackingBean.managedBean.removeFactoring}"  />
 				     <h:panelGroup id="uploadRemoveFactoringPg" rendered="#{supplierBackingBean.managedBean.removeFactoring}">
 					     <h:panelGrid columns="3">
-						     <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" icon="ui-icon-upload"
-							      value="#{lbl['lbl.btn.upload']}" actionListener="#{supplierBackingBean.setUploadIndexValue(3)}"
-							      update="factoringPanel"
-							      disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() or supplierBackingBean.managedBean.viewOnly}" />
-						        <p:spacer width="1" />
-						
-						    <h:commandLink title="#{supplierBackingBean.managedBean.factoring.removeFileName}"
-							value="#{supplierBackingBean.getShortFileName(supplierBackingBean.managedBean.factoring.removeFileName)}"
-							style="float:left;" styleClass="blue_font"
-							rendered="#{supplierBackingBean.managedBean.factoring.removeFileName != null}"
-							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}" />
+					 		<p:commandButton  oncomplete="uploadFactoringDlg.show();return false;"
+							  icon="ui-icon-upload"  immediate="true" update="factoringPanel" 
+							   actionListener="#{supplierBackingBean.setUploadIndexValue(3)}"
+							   rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath == null}"/>			 
+						     
+						      <h:commandLink title="#{supplierBackingBean.managedBean.factoring.removeFileName}"
+							     value="#{supplierBackingBean.getShortFileName(supplierBackingBean.managedBean.factoring.removeFileName)}"
+							     style="float:left;" styleClass="blue_font" rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath != null}"
+							     action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}" />
+					
+					         <p:commandLink onclick="deleteFactoringAttach.show();"
+						        rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath!= null}"
+						        disabled="#{supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()
+							       or supplierBackingBean.managedBean.viewOnly or supplierBackingBean.managedBean.ctContract.loa.loaNo == null}" >
+			   					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			   				</p:commandLink>
 					</h:panelGrid>
 				</h:panelGroup>
 			</h:panelGrid>
