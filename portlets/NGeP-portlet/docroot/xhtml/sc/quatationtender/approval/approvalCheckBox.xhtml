@@ -37,8 +37,6 @@
 			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryBudget}">
 			<ui:param name="budgetList"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.budgetApprovalUsers}" />
-			<ui:param name="budgetApprovalRemarkList"
-				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 			<ui:include
 				src="/xhtml/sc/quatationtender/approval/approvalDetailBudget.xhtml" />
 			<ui:include
@@ -52,8 +50,6 @@
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval}" />
 			<ui:param name="approvalDtlsList"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval}" />
-			<ui:param name="bpkApprovalRemarkList"
-				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 			<ui:include
 				src="/xhtml/sc/quatationtender/approval/approvalDetailsBPK.xhtml" />
 			<ui:include
@@ -69,10 +65,6 @@
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.budgetApprovalUsers}" />
 			<ui:param name="commiteApproverCategory"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval}" />
-			<ui:param name="committeeApprovalRemarkList"
-				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
-			<ui:param name="committeeApprovalAttachment"
-				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}" />
 			<ui:include
 				src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
 			<ui:include
@@ -86,8 +78,6 @@
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalDtls}" />
 			<ui:param name="ptjList"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.budgetApprovalUsers}" />
-			<ui:param name="ptjApprovalRemarkList"
-				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 			<ui:include
 				src="/xhtml/sc/quatationtender/approval/approvalDetailsPTJ.xhtml" />
 			<ui:include
@@ -100,8 +90,6 @@
 				qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryProcurementBoard}">
 			<ui:param name="fcaApprovalTab"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean}" />
-			<ui:param name="fcaApprovalRemarkList"
-				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 			<ui:include
 				src="/xhtml/sc/quatationtender/approval/approvalDetailsFinalizationCommittee.xhtml" />
 			<ui:include

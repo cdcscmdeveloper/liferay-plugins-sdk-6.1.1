@@ -268,17 +268,6 @@ public class ApprovalBackingBean extends
 	}
 
 	/**
-	 * Delete Attachment.
-	 */
-	public void deleteFile(ScQtApprovalAttachment approvalAttachment) {
-		logger.info("deleteFile - START");
-		TabBean bean = this.getManagedBean().getSelectedApprovalTabBean();
-		bean.getScQtApproval().getScQtApprovalAttachments().remove(approvalAttachment);
-		this.getManagedBean().setScQtApproval(bean.getScQtApproval());
-		logger.info("deleteFile - END");
-	}
-
-	/**
 	 * Delete Attachment for other approvals.
 	 */
 	public void deleteOthersApprovalFile() {
