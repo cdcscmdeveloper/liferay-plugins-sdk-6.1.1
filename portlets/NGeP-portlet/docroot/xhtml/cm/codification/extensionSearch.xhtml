@@ -175,7 +175,7 @@
 
 					<ac:paginator for="itemTableID"></ac:paginator>
 
-					<p:column style="text-align: left;">
+					<p:column style="text-align: left;" rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
 						<f:facet name="header">
 							<p:selectBooleanCheckbox id="selectAllCheckBoxId" value="#{codificationBackingBean.managedBean.extensionSearchcheckBoxAll}">
 								<p:ajax event="change"
