@@ -61,7 +61,7 @@
 				<h:outputText style="float : right"
 					value="#{techgovt.contractDuration}">
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</h:outputText>
 			</p:column>
 
@@ -110,7 +110,7 @@
 						value="#{supplierProposalDetailBackingBean.managedBean.noOfYears /12}"
 						readonly="true" disabled="true" size="15">
 						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</p:inputText></td>
 				<td style="width: 120px;"><p:outputLabel
 						value="#{lbl['lbl.tpl.spec.content.system.score']}"
