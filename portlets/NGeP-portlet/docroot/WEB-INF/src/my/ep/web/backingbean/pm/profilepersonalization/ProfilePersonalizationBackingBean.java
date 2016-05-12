@@ -1217,7 +1217,7 @@ public class ProfilePersonalizationBackingBean extends
 				StatusResDTO statusResDTO = statusSO
 						.retrieveStatusByStatusId(statusReqDTO);
 				logger.info("Tracking diary for my profile: change challenge Questions :changeChallengeQuestions");
-				String messageId = MessageConst.TD_80024;
+				String messageId = MessageConst.TD_80016;
 				String[] msgParam = new String[] {user.getUserName()};
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
