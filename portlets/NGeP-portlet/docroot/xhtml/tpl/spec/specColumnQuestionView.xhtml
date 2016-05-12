@@ -7,12 +7,12 @@
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
 
-	<p:column style="white-space:normal;"
+	<p:column style="width: 15%;"
 		headerText="#{lbl['lbl.tpl.spec.content.item']}">
 		<h:outputText value="#{question.clItem}" escape="false"
 			rendered="#{!isRepeated}" />
 	</p:column>
-	<p:column style="white-space:normal;"
+	<p:column style="width: 22%;"
 		headerText="#{lbl['lbl.tpl.spec.content.specification']}"
 		rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<c:if test="#{isContentTypeUpdateSpec}">
@@ -39,7 +39,7 @@
 			value="#{templateSpecBackingBean.getParameterDesc(question.clFulfilmentTypeCode)}"
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
-	<p:column style="width:70px;white-space:normal;"
+	<p:column style="width:8%;white-space:normal;"
 		headerText="#{lbl['lbl.tpl.spec.content.uom']}">
 		<h:outputText value="#{question.clUom.uomName}"
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
@@ -70,7 +70,7 @@
 				<f:convertNumber pattern="0.0" />
 			</h:outputText>
 		</p:column>
-		<p:column style="width:63px;white-space:normal;text-align:right;"
+		<p:column style="width:2%;white-space:normal;text-align:right;"
 			headerText="#{lbl['lbl.tpl.spec.content.duration.month']}"
 			rendered="#{isDurationByItem}">
 			<h:outputText value="#{question.clDurationMonth}"
@@ -90,7 +90,7 @@
 	</p:column>
 
 	<ui:insert name="qtySection">
-		<p:column style="width:50px;text-align:right;"
+		<p:column style="width:4%;text-align:right;"
 			headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
 
 			<h:outputText value="#{question.clQuantity}"
