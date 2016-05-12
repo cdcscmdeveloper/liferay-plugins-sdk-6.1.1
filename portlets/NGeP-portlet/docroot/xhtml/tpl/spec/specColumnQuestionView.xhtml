@@ -7,12 +7,12 @@
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
 
-	<p:column style="width: 15%;"
+	<p:column style="width: 15%;white-space: normal;"
 		headerText="#{lbl['lbl.tpl.spec.content.item']}">
 		<h:outputText value="#{question.clItem}" escape="false"
 			rendered="#{!isRepeated}" />
 	</p:column>
-	<p:column style="width: 22%;"
+	<p:column style="width: 22%;white-space: normal;"
 		headerText="#{lbl['lbl.tpl.spec.content.specification']}"
 		rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<c:if test="#{isContentTypeUpdateSpec}">
