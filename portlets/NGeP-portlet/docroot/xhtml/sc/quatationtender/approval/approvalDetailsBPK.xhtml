@@ -3,8 +3,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	
+	<ui:param name="isBpkApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 	
 	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="reqdtlsid"
@@ -58,102 +60,10 @@
 		</p:dataTable>
 	</p:panel>
 	
-
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
-		id="bpkuploads">
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{bpkApprovalRemarkList}" var="remarkVar"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}"  disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" /> <h:outputText
-										value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" disabled="#{qTDetailBB.approvalDtlsEditable(approvalDtlsList)}" /></td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-
-				<td class="TableFieldLeft"><p:outputLabel
-						value="#{lbl['lbl.sc.supporting.document']}" /></td>
-				<td class="TableFieldRight">
-					<table style="width: 100%;">
-						<tr>
-							<td colspan="2"><p:commandButton
-									oncomplete="attachDlg.show();return false;"
-									update="bpkuploads" value="#{lbl['lbl.btn.attach.files']}" disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" >
-									<f:setPropertyActionListener value="#{bpkApproverCategory}"
-										target="#{approvalBackingBean.managedBean.scQtApproval}" />
-								</p:commandButton></td>
-						</tr>
-						<tr>
-							<td />
-							<td><p:dataGrid id="attachId"
-							        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									value="#{approvalBackingBean.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}"
-									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-									style="width:100%">
-									<table>
-										<tr>
-											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30"/>
-											</td>
-											<td><h:outputText
-													value="#{attachFile.createdUser.userName}" />, <h:outputText
-													value="#{attachFile.createdDate}">
-													<f:convertDateTime
-														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-												</h:outputText></td>
-										</tr>
-										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" immediate="true"
-													action="#{approvalBackingBean.downloadFile(attachFile)}" disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}"  />
-												<p:commandLink action="#{approvalBackingBean.deleteFile(attachFile)}"
-													immediate="true" update="attachId" disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" >
-													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/trash.png" styleClass="tasklist_title1" />
-												</p:commandLink></td>
-										</tr>
-									</table>
-								</p:dataGrid></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</p:panel>
-
-	<p:dialog id="attachedDlgids" widgetVar="attachDlg" modal="true"
-		dynamic="true" resizable="false" width="700px" height="200"
-		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
-			mode="advanced" id="dialogsuploadids"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="bpkuploads" oncomplete="attachDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
+	<ac:scRemarkAndAttachment
+		remarkList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}"
+		attachmentList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}"
+		readonly="#{!isBpkApprovalDtlsEditable}"
+		fileUploadListener="#{approvalBackingBean.handleFileUpload}" />
 
 </ui:composition>

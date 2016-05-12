@@ -1,0 +1,160 @@
+<ui:composition
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+<cc:interface>
+	<cc:attribute name="remarkList" />
+	<cc:attribute name="attachmentList" />
+	<cc:attribute name="readonly" default="false" />
+	<cc:attribute name="showRemark" default="true" />
+	<cc:attribute name="showAttachment" default="true" />
+	<cc:attribute name="fileUploadListener" method-signature="void action(org.primefaces.event.FileUploadEvent)" />
+</cc:interface>
+
+<cc:implementation>
+	<p:panel id="#{cc.id}Pnl" header="#{lbl['lbl.sc.remark']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<c:if test="#{cc.attrs.showRemark}">
+				<td class="TableFieldLeft" width="100px">
+					<p:outputLabel value="#{lbl['lbl.sc.remark']}" />
+				</td>
+				<td class="TableFieldRight" width="35%">
+					<p:dataGrid var="scRemark"
+						value="#{cc.attrs.remarkList}" 
+						rowIndexVar="index" 
+						columns="1"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top">
+									<h:graphicImage
+										value="#{scRemarkAndAttachmentBackingBean.userImagePath(scRemark.createdUser.loginId)}"
+										height="30" width="30" />
+								</td>
+								<td width="5"></td>
+								<td>
+									<h:outputText id="remarkCreator" value="#{scRemark.createdUser.userName}" />,
+									<h:outputText id="remarkDates" value="#{scRemark.changedDate}">
+										<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<p:inputTextarea cols="40" value="#{scRemark.remark}"
+										rendered="#{scRemark.brandNew or scRemark.editable}"
+										disabled="#{cc.attrs.readonly}" />
+									<h:outputText value="#{scRemark.remark}"
+										rendered="#{!scRemark.brandNew and !scRemark.editable}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+				</c:if>
+				<c:if test="#{cc.attrs.showAttachment}">
+				<td class="TableFieldLeft" width="100px">
+					<p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" />
+				</td>
+				<td class="TableFieldRight" width="35%">
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+						<tr>
+							<td colspan="2">
+								<c:if test="#{!cc.attrs.readonly}">
+									<p:commandButton value="#{lbl['lbl.txt.attach.files']}"
+										partialSubmit="true"
+										process="@this"
+										update="@([id$=uploadDlgId])"
+										oncomplete="uploadDlg.show()" />
+								</c:if>
+							</td>
+						</tr>
+						<tr>
+							<td />
+							<td>
+								<p:dataGrid id="attachmentTbId"
+									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+									value="#{cc.attrs.attachmentList}" var="scAttachment"
+									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+									<table>
+										<tr>
+											<td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage value="/css/images/design/#{scRemarkAndAttachmentBackingBean.determineIcon(scAttachment)}" height="30" width="30"/>
+											</td>
+											<td>
+												<h:outputText value="#{scAttachment.createdUser.userName}" />, 
+												<h:outputText value="#{scAttachment.createdDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<h:commandLink value="#{scAttachment.fileName}"
+													styleClass="blue_font" immediate="true"
+													action="#{scRemarkAndAttachmentBackingBean.downloadFile(scAttachment)}" />
+												<p:commandLink 
+													process="@this"
+													partialSubmit="true"
+													oncomplete="delAttPopup.show();"
+													update="@([id$=delAttPopupId])"
+													rendered="#{!cc.attrs.readonly and scRemarkAndAttachmentBackingBean.compareUserName(scAttachment.createdUser.loginId)}">
+													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png" styleClass="tasklist_title1" />
+													<f:setPropertyActionListener target="#{scRemarkAndAttachmentBackingBean.selectedAttachment}" value="#{scAttachment}" />
+													<f:setPropertyActionListener target="#{scRemarkAndAttachmentBackingBean.attachmentList}" value="#{cc.attrs.attachmentList}" />
+												</p:commandLink>
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>
+				</td>
+				</c:if>
+			</tr>
+		</table>
+		
+		<c:if test="#{cc.attrs.showAttachment and !cc.attrs.readonly}">
+			<ac:confirmationPopup id="delAttPopupId"
+				widget="delAttPopup"
+				okAction="scRemarkAndAttachmentBackingBean.deleteAttachmentAction"
+				width="33%" height="100" title="#{lbl['lbl.sc.supporting.document']}"
+				content="#{lbl['lbl.ct.dialog.delete.attachment.msg']}"
+				update="@([id$=attachmentTbId])" />
+		</c:if>
+	</p:panel>
+	
+	<c:if test="#{cc.attrs.showAttachment}">
+		<p:dialog id="#{cc.id}uploadDlgId" widgetVar="uploadDlg" 
+			modal="true" dynamic="true" 
+			resizable="false" width="700px" height="350px"
+			styleClass="pop_up_top" 
+			header="#{lbl['lbl.txt.choose.files']}">
+			<p:ajax event="close" />
+			<p:fileUpload id="fileUploadId" style="display:inline;"
+				fileUploadListener="#{cc.attrs.fileUploadListener}"
+				mode="advanced" 
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				label="#{lbl['lbl.btn.choose']}" 
+				uploadLabel="#{lbl['lbl.btn.upload.all']}" 
+				cancelLabel="#{lbl['lbl.btn.remove.all']}"
+				update="attachmentTbId">
+			</p:fileUpload>
+			<div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadDlg.hide();" />
+	   		</div>
+		</p:dialog>
+	</c:if>
+</cc:implementation>
+</ui:composition>
