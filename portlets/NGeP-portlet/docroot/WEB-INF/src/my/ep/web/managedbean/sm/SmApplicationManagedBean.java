@@ -424,6 +424,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String businessTypeParamCode;
 	private String physicalConsulting;
 	private String personType;
+	
+	private BigDecimal currBumiEquity;
+	private BigDecimal currNonBumiEquity;
+	private BigDecimal currForeignerEquity;
+	private BigDecimal currGovtUnitrustEquity;
+	private BigDecimal currGovtEquity;
+	private BigDecimal currForeignCompanyEquity;
+	private BigDecimal currLocalCompanyEquity;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -655,6 +663,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				"GLP");
 		certBodyLs = SmApplicationUtil.retrievePmCertBodyList(glp
 				.getPmParameter().getParameterCode());
+		currBumiEquity = BigDecimal.ZERO;
+		currNonBumiEquity = BigDecimal.ZERO;
+		currForeignerEquity = BigDecimal.ZERO;
+		currGovtUnitrustEquity = BigDecimal.ZERO;
+		currGovtEquity = BigDecimal.ZERO;
+		currForeignCompanyEquity = BigDecimal.ZERO;
+		currLocalCompanyEquity = BigDecimal.ZERO;
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -3284,5 +3299,61 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setGlp(PmParameterDesc glp) {
 		this.glp = glp;
+	}
+
+	public BigDecimal getCurrBumiEquity() {
+		return currBumiEquity;
+	}
+
+	public void setCurrBumiEquity(BigDecimal currBumiEquity) {
+		this.currBumiEquity = currBumiEquity;
+	}
+
+	public BigDecimal getCurrNonBumiEquity() {
+		return currNonBumiEquity;
+	}
+
+	public void setCurrNonBumiEquity(BigDecimal currNonBumiEquity) {
+		this.currNonBumiEquity = currNonBumiEquity;
+	}
+
+	public BigDecimal getCurrForeignerEquity() {
+		return currForeignerEquity;
+	}
+
+	public void setCurrForeignerEquity(BigDecimal currForeignerEquity) {
+		this.currForeignerEquity = currForeignerEquity;
+	}
+
+	public BigDecimal getCurrGovtUnitrustEquity() {
+		return currGovtUnitrustEquity;
+	}
+
+	public void setCurrGovtUnitrustEquity(BigDecimal currGovtUnitrustEquity) {
+		this.currGovtUnitrustEquity = currGovtUnitrustEquity;
+	}
+
+	public BigDecimal getCurrGovtEquity() {
+		return currGovtEquity;
+	}
+
+	public void setCurrGovtEquity(BigDecimal currGovtEquity) {
+		this.currGovtEquity = currGovtEquity;
+	}
+
+	public BigDecimal getCurrForeignCompanyEquity() {
+		return currForeignCompanyEquity;
+	}
+
+	public void setCurrForeignCompanyEquity(BigDecimal currForeignCompanyEquity) {
+		this.currForeignCompanyEquity = currForeignCompanyEquity;
+	}
+
+	public BigDecimal getCurrLocalCompanyEquity() {
+		return currLocalCompanyEquity;
+	}
+
+	public void setCurrLocalCompanyEquity(BigDecimal currLocalCompanyEquity) {
+		this.currLocalCompanyEquity = currLocalCompanyEquity;
 	}
 }
