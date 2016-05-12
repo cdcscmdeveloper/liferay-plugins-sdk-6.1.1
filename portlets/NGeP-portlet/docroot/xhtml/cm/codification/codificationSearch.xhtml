@@ -57,11 +57,21 @@
 							title="#{lbl['lbl.cm.eight.digits']}" maxlength="8"
 							value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode.unspscCode}"
 							completeMethod="#{codificationBackingBean.autoCompleteUnspsc}"
-							maxResults="15" dropdown="false" forceSelection="true" /></td>
+							maxResults="15" dropdown="false" forceSelection="true" /><p:graphicImage id="itemNameID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="itemNameID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.product.service']}" />
+									</p:tooltip></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
 					<td><p:inputText title="#{lbl['lbl.cm.title.english']}"
 							value="#{codificationBackingBean.managedBean.titleFilterBean.searchValue}"
-							size="40" /></td>
+							size="40" /><p:graphicImage id="itemCodeID"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										for="itemCodeID">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.tooltip.item.code']}" />
+									</p:tooltip></td>
 				</tr>
 			</table>
 
