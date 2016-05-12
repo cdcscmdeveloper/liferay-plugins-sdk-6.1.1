@@ -6868,16 +6868,17 @@ public class SmApplicationBackingBean extends
 			WorklistItemVO item = SmCommonUtil
 					.getBpmAssignedTaskByDocNo(getManagedBean().getSmAppl()
 							.getApplNo());
-			if (item != null) {
+			if (item != null && !StringUtils.isBlank(item.getTaskId())) {
 				String parameter = "taskId=" + item.getTaskId()
 						+ "&claim=false";
 				urlParam = SmCommonUtil.getBasePortalUrl()
 						+ "/web/epapp/mof-application?" + parameter;
-				log.info(">>>>>>>>>>>>>>>>>>>>>URL PAYMENT:" + urlParam
-						+ "<<<<<<<<<<<<<<<<<<<<");
 			} else {
-				log.info(">>>>>>>>>>>>>>>>>>>>>TASK ITEM IS NULL<<<<<<<<<<<<<<<<<<<<");
+				urlParam = SmCommonUtil.getBasePortalUrl()
+						+ "/web/epapp/task-list";
 			}
+			log.info(">>>>>>>>>>>>>>>>>>>>>URL PAYMENT:" + urlParam
+					+ "<<<<<<<<<<<<<<<<<<<<");
 		} else {
 			msgConst = MessageConst.INFO_700005;
 		}
