@@ -243,7 +243,7 @@ public class SPDetailBackingBean extends
 					long days = DateUtils.getDaysDifference(today,
 							getManagedBean().getQt().getClosingDate());
 					DecimalFormat dF = new DecimalFormat("#00");
-					if(getDisplayLanguage().equalsIgnoreCase("en")){
+					if(getDisplayLanguage().equalsIgnoreCase("english")){
 						getManagedBean().setClosingTime(dF.format(days)+" Days");
 					}else{
 						getManagedBean().setClosingTime(dF.format(days)+" Hari");
@@ -287,7 +287,7 @@ public class SPDetailBackingBean extends
 		String duration = "";
 		if (diffHours <= 24 && diffHours >= 2) {
 			
-			if(displayLanguage.equalsIgnoreCase("en")){
+			if(displayLanguage.equalsIgnoreCase("english")){
 				duration = durationFormat.format(diffHours) + " Hours  "
 						+ durationFormat.format(diffMinutes) + " Minutes";
 			}
@@ -299,7 +299,7 @@ public class SPDetailBackingBean extends
 
 		if (diffHours < 2 && diffHours >= 1) {
 			
-			if(displayLanguage.equalsIgnoreCase("en")){
+			if(displayLanguage.equalsIgnoreCase("english")){
 				duration = durationFormat.format(diffHours) + " Hour  "
 						+ durationFormat.format(diffMinutes) + " Minutes";
 			}else{
@@ -308,7 +308,7 @@ public class SPDetailBackingBean extends
 			}
 		}
 		if (diffHours < 1) {
-			if(displayLanguage.equalsIgnoreCase("en")){
+			if(displayLanguage.equalsIgnoreCase("english")){
 				duration = durationFormat.format(diffMinutes) + " Minutes";
 			}
 			else{
