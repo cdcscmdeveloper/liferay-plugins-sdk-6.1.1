@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:param name="isOtherApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 	
 	<p:panel>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.instruction']}" escape="false" />
@@ -41,7 +42,7 @@
 				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
 					value="#{lbl['lbl.btn.attach.files']}" 
 					partialSubmit="true" process="otherreqdtlsid"
-					disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}"
+					rendered="#{isOtherApprovalDtlsEditable}"
 					update="otherreqdtlsid">
 					<f:setPropertyActionListener
 						value="#{otherrequestdetails}"
@@ -53,13 +54,11 @@
 							<td style="border: none !important;"><h:commandLink
 									value="#{otherrequestdetails.approvalRequestAttachement.fileName}"
 									styleClass="blue_font" immediate="true"
-									action="#{approvalBackingBean.downloadFile(otherrequestdetails.approvalRequestAttachement)}"
-									disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
+									action="#{approvalBackingBean.downloadFile(otherrequestdetails.approvalRequestAttachement)}" />
 								<p:commandLink
-									rendered="#{otherrequestdetails.approvalRequestAttachement ne null}"
 									action="#{approvalBackingBean.deleteOthersApprovalFile}"
 									immediate="true" update="otheruploadId"
-									disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}">
+									rendered="#{isOtherApprovalDtlsEditable and otherrequestdetails.approvalRequestAttachement ne null}">
 									<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/trash.png" styleClass="tasklist_title1" />
 								</p:commandLink></td>
 						</tr>
