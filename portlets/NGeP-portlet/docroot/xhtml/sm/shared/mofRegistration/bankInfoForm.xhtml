@@ -44,7 +44,9 @@
 			<p:blockUI block=":form:tt:bankInfPan" widgetVar="buiPoBank"
 				id="poBankBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.bankVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.bankVerified : false)}" />
-
+			
+			<h:outputText styleClass="instruction" value="#{lbl[lbl.sm.bankDtls.instruction]}" escape="false" /><br />
+			
 			<p:dataTable var="bankBean" widgetVar="suppBankInfoDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierBanks}"
 				selection="#{backingBean.managedBean.selectedBanks}"
