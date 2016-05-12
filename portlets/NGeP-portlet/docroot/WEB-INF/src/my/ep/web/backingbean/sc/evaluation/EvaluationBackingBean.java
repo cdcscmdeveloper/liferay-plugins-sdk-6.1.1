@@ -999,14 +999,16 @@ public class EvaluationBackingBean extends
 				complianceChangeScQtStatusUpdate();
 			}
 
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									"Evaluation Compliance saved successfully.",
-									"Evaluation Sample Compliance saved successfully."));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.INFO_700004, new String[] {
+											getMessageCommon("lbl.sc.prepare.evaluation.compliance")," "},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
+		
 
 		} finally {
 			evaluationSo = null;
@@ -1139,11 +1141,16 @@ public class EvaluationBackingBean extends
 				complianceChangeScQtStatusUpdate();
 			}
 
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation Compliance saved successfully.",
-							"Evaluation Compliance saved successfully."));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.INFO_700004, new String[] {
+											getMessageCommon("lbl.sc.prepare.evaluation.compliance")," "},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
 
 		} finally {
 
@@ -7276,9 +7283,13 @@ public class EvaluationBackingBean extends
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation Preperation Scores Saved Successfully",
-							"Evaluation Proposal Scores Saved Successfully"));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.INFO_700004, new String[] {
+											getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores")," "},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
 		} finally {
 
 		}
@@ -7675,9 +7686,13 @@ public class EvaluationBackingBean extends
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation Preperation Saved Successfully",
-							"Evaluation TemplateSpec Saved Successfully."));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.INFO_700004, new String[] {
+											getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores")," "},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		
 		} finally {
 			evaluationSO = null;
 		}
@@ -10088,14 +10103,15 @@ public class EvaluationBackingBean extends
 				updateSummaryGeneratedStatus();
 			}
 
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									"Evaluation Uploaded Checklist saved successfully.",
-									"Evaluation Uploaded Checklist saved successfully."));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.INFO_700004, new String[] {
+											getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores")," "},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
 
 		} finally {
 
