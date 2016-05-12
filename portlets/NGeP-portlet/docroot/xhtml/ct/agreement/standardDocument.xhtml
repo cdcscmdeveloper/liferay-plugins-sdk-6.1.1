@@ -95,6 +95,9 @@
 					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" 
 					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update=":form:contentTable">
 				</p:fileUpload>
+				<div class="ppRightBtn">
+				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadUserDefineDlg.hide();" />
+		   		</div>
 			</p:dialog>
 			
 			   <p:confirmDialog id="deleteContentId" widgetVar="deleteContentId" message="#{lbl['lbl.msg.confirm.delete']}" 	

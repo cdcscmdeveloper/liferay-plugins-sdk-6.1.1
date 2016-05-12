@@ -69,9 +69,12 @@
 			  <p:ajax event="close" />
 			  <p:fileUpload mode="advanced" fileUploadListener="#{amendmentBackingBean.contentLetterUpload}"
 			      sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" dragDropSupport="false"
-				 allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"  style="display:inline;" multiple="false" showButtons="false"
+				 allowTypes="/(\.|\/)(pdf)$/"  style="display:inline;" multiple="false" showButtons="false"
 				 invalidFileMessage="#{lbl['lbl.txt.upload.pdf.only']}"   update=":form:loaContentDt">
 			 </p:fileUpload>
+			 <div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadLetterDlg.hide();" />
+	   		</div> 
 		 </p:dialog>
 		 <p:confirmDialog id="dlgDocumentDel" widgetVar="dlgDocumentDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
