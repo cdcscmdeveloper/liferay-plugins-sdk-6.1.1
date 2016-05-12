@@ -112,6 +112,8 @@
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}" />
+			<ac:iconTooltip id="itemTotalIntendedPrice#{row}TP"
+				value="#{lbl['lbl.tpl.spec.total.intended.price.tooltip']}" />
 		</f:facet>
 		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}"
 			style="white-space:nowrap;">
