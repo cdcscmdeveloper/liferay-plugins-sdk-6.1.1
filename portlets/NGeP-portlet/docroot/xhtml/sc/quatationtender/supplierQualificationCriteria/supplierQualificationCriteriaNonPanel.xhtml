@@ -177,6 +177,7 @@
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%"
 						rendered="#{!locCoverageReadonly}">
 						<p:commandLink
+						rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel ne null and  ((qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterCode ne 'ST') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterCode eq 'ST' and index eq'0'))}"
 							actionListener="#{qTSupplierQulCriteriaBackingBean.editZoneLocation(zoneTree,index)}"
 							process="@this" update="@([id$=zonePopupPanel])"
 							oncomplete="ZoneLocation.show();">
@@ -184,6 +185,8 @@
 								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 								styleClass="tasklist_title1" />
 						</p:commandLink>
+						
+					
 					</p:column>
 
 				</p:dataTable>
