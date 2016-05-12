@@ -13,11 +13,16 @@
 	<cc:attribute name="readonly" default="false" />
 	<cc:attribute name="showRemark" default="true" />
 	<cc:attribute name="showAttachment" default="true" />
-	<cc:attribute name="fileUploadListener" method-signature="void action(org.primefaces.event.FileUploadEvent)" />
+	<cc:attribute name="showInstruction" default="false" />
+	<cc:attribute name="fileUploadListener" method-signature="void action(org.primefaces.event.FileUploadEvent)" required="true" />
 </cc:interface>
 
 <cc:implementation>
 	<p:panel id="#{cc.id}Pnl" header="#{lbl['lbl.sc.remark']}" toggleable="true">
+		<c:if test="#{cc.attrs.showInstruction}">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.approval.remarks.instruction']}" />
+		</c:if>
+			
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<c:if test="#{cc.attrs.showRemark}">
@@ -48,7 +53,8 @@
 							<tr>
 								<td></td>
 								<td>
-									<p:inputTextarea cols="40" value="#{scRemark.remark}"
+									<p:inputTextarea cols="40" maxlength="1000" 
+										value="#{scRemark.remark}"
 										rendered="#{scRemark.brandNew or scRemark.editable}"
 										disabled="#{cc.attrs.readonly}" />
 									<h:outputText value="#{scRemark.remark}"
