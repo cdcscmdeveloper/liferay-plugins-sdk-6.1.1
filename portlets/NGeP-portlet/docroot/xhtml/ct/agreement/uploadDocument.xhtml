@@ -62,15 +62,15 @@
 	<p:dialog id="upAgrSignedPageDlg" widgetVar="upAgrSignedPageDlg" modal="true"
        width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced" 
-			fileUploadListener="#{agreementBackingBean.uploadSignedPage}" 
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+			fileUploadListener="#{agreementBackingBean.uploadSignedPage}" showButtons="false"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="upAgrSignedPagePg">
 		</p:fileUpload>
 		<div class="ppRightBtn">
-		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadUserDefineDlg.hide();" />
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="upAgrSignedPageDlg.hide();" />
    		</div> 
 	 </p:dialog>
 	 <p:confirmDialog id="delSignedPageDlg" widgetVar="delSignedPageDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
@@ -86,15 +86,15 @@
 	  <p:dialog id="upStampedPageDlg" widgetVar="upStampedPageDlg" modal="true"
 	    width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced" 
-		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			fileUploadListener="#{agreementBackingBean.uploadStampedPage}" 
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
+			fileUploadListener="#{agreementBackingBean.uploadStampedPage}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="upStampedPagePg">
 		</p:fileUpload>
 		<div class="ppRightBtn">
-		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadUserDefineDlg.hide();" />
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="upStampedPageDlg.hide();" />
    		</div> 
 	 </p:dialog>
 	 <p:confirmDialog id="delStampedPageDlg" widgetVar="delStampedPageDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
