@@ -4,6 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:param name="isBudApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 
 	<p:panel id="budgetapprovalid" header="#{lbl['lbl.sc.qt.approver.selection']}"
 		toggleable="true">
@@ -12,106 +14,18 @@
 			<p:pickList id="budgetapprover" value="#{budgetList}"
 				var="approverUser" showTargetControls="true"
 				itemLabel="#{approverUser.pmUser.userName}" itemValue="#{approverUser}"
-				converter="approverPickListConverter">
+				converter="approverPickListConverter"
+				disabled="#{!isBudApprovalDtlsEditable}">
 				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']} </f:facet>
 				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
 			</p:pickList>
 		</div>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true" id="budgetuploads">
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid
-				        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{budgetApprovalRemarkList}" var="remarkVar"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /></td>
-
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
-										value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-
-				<td class="TableFieldLeft"><p:outputLabel
-						value="Supporting Document" /></td>
-
-				<td class="TableFieldRight">
-					<table style="width: 150px;">
-						<tr>
-							<td colspan="2"><p:commandButton
-									oncomplete="budgetAttachDlg.show();return false;"
-									value="#{lbl['lbl.btn.attach.files']}"
-									update="budgetuploads">
-								</p:commandButton></td>
-						</tr>
-						<tr>
-							<td />
-							<td><p:dataGrid id="attachedIds"
-							        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									value="#{approvalBackingBean.managedBean.attachments}" var="attachFile"
-									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-									<table>
-										<tr>
-											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30"/>
-											</td>
-											<td><h:outputText value="#{attachFile.user.userName}" />,
-												<h:outputText value="#{attachFile.changedDate}">
-													<f:convertDateTime
-														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-												</h:outputText></td>
-										</tr>
-										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" /> <p:commandLink
-													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="attachedIds">
-													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png" styleClass="tasklist_title1" />
-												</p:commandLink></td>
-										</tr>
-									</table>
-								</p:dataGrid></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</p:panel>
-
-
-
-	<p:dialog id="budgetAttachDlgid" widgetVar="budgetAttachDlg"
-		width="750px" height="200" header="#{lbl['lbl.txt.choose.files']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
-			mode="advanced" id="budgetuploadlist"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="budgetuploads" oncomplete="budgetAttachDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
+	<ac:scRemarkAndAttachment
+		remarkList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}"
+		attachmentList="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachments}"
+		readonly="#{!isBudApprovalDtlsEditable}"
+		fileUploadListener="#{approvalBackingBean.handleFileUpload}" />
 
 </ui:composition>
