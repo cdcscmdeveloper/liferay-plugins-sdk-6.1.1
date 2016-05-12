@@ -133,7 +133,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	  				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
 	  				mindate="#{pPlanBackingBean.minDate}" 
 			  		required="#{!empty param['disableValidation']}" navigator="true" 
-			  		label="#{lbl['lbl.pp.invitation.date']}" readonlyInput="true" yearRange="#{pPlanBackingBean.managedBean.invitationYear}"
+			  		label="#{lbl['lbl.pp.invitation.date']}" readonlyInput="true" 
+			  		yearRange="#{pPlanBackingBean.managedBean.invitationYear}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />
 				</p:calendar>
