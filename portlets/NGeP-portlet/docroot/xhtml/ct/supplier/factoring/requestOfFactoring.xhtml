@@ -249,9 +249,11 @@
 							     action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
 					
 					         <p:commandLink onclick="deleteFactoringAttach.show();"
-						        rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
-						        disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()
-							       or supplierBackingBean.managedBean.viewOnly or supplierBackingBean.managedBean.ctContract.loa.loaNo == null}" >
+						        rendered="#{supplierBackingBean.managedBean.factoring.filePath != null
+									and !supplierBackingBean.managedBean.removeFactoring
+									and !supplierBackingBean.isContractAdmin()
+						        	and !supplierBackingBean.isApproverRole()
+							       	and !supplierBackingBean.managedBean.viewOnly}" >
 			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			        	     </p:commandLink>
 						      <p:spacer width="1" />
@@ -290,9 +292,10 @@
 							     action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}" />
 					
 					         <p:commandLink onclick="deleteFactoringAttach.show();"
-						        rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath!= null}"
-						        disabled="#{supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()
-							       or supplierBackingBean.managedBean.viewOnly or supplierBackingBean.managedBean.ctContract.loa.loaNo == null}" >
+						        rendered="#{supplierBackingBean.managedBean.factoring.removeFilePath!= null
+									and !supplierBackingBean.isContractAdmin()
+								    and !supplierBackingBean.isApproverRole()
+							       and !supplierBackingBean.managedBean.viewOnly}" >
 			   					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			   				</p:commandLink>
 					</h:panelGrid>
