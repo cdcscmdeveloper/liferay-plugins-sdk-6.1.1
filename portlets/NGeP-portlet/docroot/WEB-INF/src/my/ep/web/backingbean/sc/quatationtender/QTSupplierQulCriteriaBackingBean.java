@@ -653,6 +653,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 			this.getManagedBean().setSupplierLocationList(getManagedBean().getExistingSupplierLocationList());
 			getManagedBean().setZoneTrees(null);
 		}
+		if(null!=location){
+			ParameterReqDTO reqDTO=new ParameterReqDTO();
+		reqDTO.setParameterId(location);
+		ParameterResDTO resDTO = getParameterSO()
+				.retrieveParameterById(reqDTO);
+		this.getManagedBean().getQt().getScQtSupplierCriteria().setLocationLevel(resDTO.getPmParameter());
+		}
 	}
 
 	/**
@@ -1741,4 +1748,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 		debugLogger("validatePaidupcapital");
 		this.getManagedBean().setPaidupcapital(true);
 	}
+	/**
+	 * Gets the parameter so.
+	 * 
+	 * @return the parameter so
+	 */
+	private IParameterSO getParameterSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	}
+
 }
