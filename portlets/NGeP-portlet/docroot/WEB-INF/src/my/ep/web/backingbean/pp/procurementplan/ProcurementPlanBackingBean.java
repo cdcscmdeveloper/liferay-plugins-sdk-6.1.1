@@ -590,6 +590,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 						calculatePpGrandTotal();
 					}
+					updatePlanYearControl(getManagedBean().getSelectedPlan().getPlanYear());					
 					
 				}else{
 					throw new EpException(MessageConst.ERROR_730001);
@@ -2749,9 +2750,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public String getMinDate(){
 		log.info("getMinDate");
-		String dateStr = "";
 		Date today = new Date();
-		dateStr = DateUtils.dateToString("dd/MM/yyyy", today);
+		String dateStr = "";
+		dateStr = DateUtils.dateToString("dd/MM/yyyy", today);		
 		return dateStr;
 	}
 	
