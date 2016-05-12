@@ -338,10 +338,13 @@
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false" id="upload1"
 			fileUploadListener="#{ctBackingBean.agencyFileUpload}"  showButtons="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" 
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" multiple="false"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			update=":form:tableAgencyDetails" >
 		</p:fileUpload>
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadDlg1.hide();" />
+   		</div>
 	</p:dialog>
 	
     <p:confirmDialog id="deleteAttachmentDlg1" widgetVar="deleteAttachmentDlg1" message="#{lbl['lbl.msg.confirm.delete']}" 	

@@ -62,7 +62,7 @@
 						terminationBackingBean.managedBean.contractVer.ctTermination.fileName)}" />
 				<p:spacer width="3" />
 						 <p:commandLink onclick="dlgAttachAgrementDoc.show();" style="margin-bottom:-5px;"
-						        rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}">
+						        rendered="#{!terminationBackingBean.managedBean.viewContract and terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}">
 			   				    <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			        	     </p:commandLink>
 		</h:panelGroup>
@@ -249,11 +249,14 @@
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
-			fileUploadListener="#{terminationBackingBean.fileUpload}" 
+			fileUploadListener="#{terminationBackingBean.fileUpload}" multiple="false"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update=":form:uploadTerminationPg">
 		</p:fileUpload>
+		<div class="ppRightBtn">
+	    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadTerminatinDlg.hide();" />
+  		</div>
 	</p:dialog>
 	<p:dialog id="searchAgencyDlg"  header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.ct.recommended.agency']}" widgetVar="searchAgencyDlg" 
 		styleClass="pop_up_top" modal="true" width="700" height="500">
