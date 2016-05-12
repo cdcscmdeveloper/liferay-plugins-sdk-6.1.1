@@ -25,11 +25,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpmBaseClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpmRemoteClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bpm-schema"/>
-	<classpathentry kind="lib" path="/NGeP-ear/EarContent/lib/NGeP-ntf.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="/NGeP-ear/EarContent/APP-INF/lib/eclipselink.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>
