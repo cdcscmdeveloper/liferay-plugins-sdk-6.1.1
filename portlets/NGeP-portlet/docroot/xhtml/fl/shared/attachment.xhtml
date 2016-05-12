@@ -29,7 +29,7 @@
 							<td width="5"></td>
 							<td><h:outputText value=" #{attachFile.createdUsername}"></h:outputText>,
 								<h:outputText value="#{attachFile.createdDate}">
-									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 								</h:outputText></td>
 						</tr>
 						<tr>
