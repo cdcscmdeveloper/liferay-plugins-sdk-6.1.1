@@ -4748,7 +4748,7 @@ public class SmApplicationUtil {
 	 *            - List of sm personnels
 	 * @return SmPersonnel object
 	 */
-	private static SmPersonnel getAdminPersonnel(List<SmPersonnel> smPersonnels) {
+	public static SmPersonnel getAdminPersonnel(List<SmPersonnel> smPersonnels) {
 		SmPersonnel smPersonnelRetVal = null;
 		if (smPersonnels != null) {
 			for (SmPersonnel smPersonnel : smPersonnels) {
