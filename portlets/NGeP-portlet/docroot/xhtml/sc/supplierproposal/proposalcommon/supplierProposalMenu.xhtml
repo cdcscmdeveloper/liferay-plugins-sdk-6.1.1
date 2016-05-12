@@ -8,9 +8,10 @@
 
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%" class="sidemenutd"  valign="top"><p:tabMenu
+			<td width="20%" class="sidemenutd" valign="top">
+				<p:tabMenu id="proposalMenuId"
 					activeIndex="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex}"
-					styleClass="sidemenu" style="display : table-caption;">
+					styleClass="sidemenu">
 					<p:menuitem value="#{lbl['lbl.sc.quotation.tender.document']}"
 						action="#{supplierProposalDetailBackingBean.retrieveQTDocumentDetails}"
 						update="@form" />
@@ -23,23 +24,27 @@
 					<p:menuitem value="#{lbl['lbl.sc.declaration']}"
 						action="#{supplierProposalDetailBackingBean.retrieveDeclarationList}"
 						update="@form" />
-						<p:menuitem value="#{lbl['lbl.sc.integrity.pact']}"
+					<p:menuitem value="#{lbl['lbl.sc.integrity.pact']}"
 						action="#{supplierProposalDetailBackingBean.retrieveIntegrityDetails}"
 						update="@form" />
-				</p:tabMenu></td>
-			<td width="80%" style="vertical-align: top; overflow : auto"><h:panelGroup
-					id="menuSPContent">
+				</p:tabMenu>
+			</td>
+			<td width="80%" valign="top" >
+			<h:panelGroup
+					id="proposalMenuContent">
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '0'}">
 						<ui:include src="qutationTenderDocument.xhtml" />
 					</c:if>
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '1'}">
-						<ui:include src="/xhtml/sc/supplierproposal/technicalproposal/supplierProposalTechChecklist.xhtml" />
+						<ui:include
+							src="/xhtml/sc/supplierproposal/technicalproposal/supplierProposalTechChecklist.xhtml" />
 					</c:if>
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
-						<ui:include src="/xhtml/sc/supplierproposal/financialproposal/supplierProposalFinChecklist.xhtml" />
+						<ui:include
+							src="/xhtml/sc/supplierproposal/financialproposal/supplierProposalFinChecklist.xhtml" />
 					</c:if>
 					<h:panelGroup
 						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '3'}">
@@ -49,23 +54,25 @@
 						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '4'}">
 						<ui:include src="supplierProposalIntegrityPact.xhtml" />
 					</h:panelGroup>
-				</h:panelGroup></td>
+					</h:panelGroup>
+			</td>
 		</tr>
 	</table>
 
 	<p:dialog id="attachmentDlgid" widgetVar="attachmentDlg" modal="true"
 		resizable="false" width="900px" height="200" styleClass="pop_up_top"
 		header="#{lbl['lbl.txt.choose.files']}">
-		
+
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{supplierProposalDetailBackingBean.handleFileUpload}"
 			mode="advanced" id="uploadattachment"
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="menuSPContent" oncomplete="attachmentDlg.hide()">
+			label="#{lbl['lbl.btn.choose']}"
+			uploadLabel="#{lbl['lbl.btn.upload']}"
+			cancelLabel="#{lbl['lbl.btn.cancel']}" update="proposalMenuContent"
+			oncomplete="attachmentDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 </ui:composition>
