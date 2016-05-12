@@ -358,17 +358,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ext = fileName.substring(mid + 1, fileName.length());
 			}
 
-			if ("doc".equals(ext) || "docx".equals(ext)) {
+			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_doc.png";
-			} else if ("pdf".equals(ext)) {
+			} else if ("pdf".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_pdf.png";
-			} else if ("xls".equals(ext) || "xlsx".equals(ext)
-					|| "csv".equals(ext)) {
+			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)
+					|| "csv".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_exel.png";
-			} else if ("jpg".equals(ext) || "bmp".equals(ext)
-					|| "png".equals(ext) || "gif".equals(ext)) {
+			} else if ("jpg".equalsIgnoreCase(ext) || "bmp".equalsIgnoreCase(ext)
+					|| "png".equalsIgnoreCase(ext) || "gif".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_image.png";
-			} else if ("txt".equals(ext)) {
+			} else if ("txt".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_txt.png";
 			}
 		}
@@ -700,17 +700,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			REMARK_CLASS prevRemark = null;
 			if (scRemarks.size() > 0) {
 				prevRemark = scRemarks.get(0);
+				
+				for (int row = 0; row < scRemarks.size(); row++) {
+					ScRemark scRemark = scRemarks.get(row);
+					if (!isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark)) {
+						scRemark.setEditable(true);
+					}
+				}
 			}
 
 			FacesScopes facesScopes = new FacesScopes();
 			if (scRemarks.size() == 0
 					|| !compareUserName(prevRemark.getCreatedUser()
 							.getLoginId())
-					|| (workFlowStatus != null
-							&& prevRemark.getScWorkFlowStatus() != null &&
-							prevRemark.getScWorkFlowStatus().getWorkflowStatusId() != null && !prevRemark
-							.getScWorkFlowStatus().getWorkflowStatusId()
-							.equals(workFlowStatus.getWorkflowStatusId()))) {
+					|| isDiffWithPrevWorkFlowStatus(workFlowStatus, prevRemark)) {
 
 				REMARK_CLASS remark = clazz.newInstance();
 				remark.setCreatedBy(facesScopes.getUserSessionBean()
@@ -732,6 +735,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			ia.printStackTrace();
 			throw new EpException(ia.getMessage());
 		}
+	}
+	
+	private boolean isDiffWithPrevWorkFlowStatus(ScWorkFlowStatus workFlowStatus, ScRemark prevRemark) {
+		return workFlowStatus != null && 
+				(
+					prevRemark.getScWorkFlowStatus() == null || 
+					(
+						prevRemark.getScWorkFlowStatus() != null &&
+						prevRemark.getScWorkFlowStatus().getWorkflowStatusId() != null 
+						&& !prevRemark.getScWorkFlowStatus().getWorkflowStatusId().equals(workFlowStatus.getWorkflowStatusId())
+					)
+				);
 	}
 
 	/**
