@@ -170,8 +170,7 @@
 							                        <h:outputText value="#{lbl['lbl.ct.phase']}" styleClass="required"/>
 							                  </f:facet>
 					                          
-					                          <p:inputText value="#{progPaymentObj.phaseNo}" maxlength="4" style="width:25px;" styleClass="ppRightBtn" 
-					                                  disabled="#{progPaymentObj.useInFulfilment or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.disableAmendDetails}" label="#{lbl['lbl.ct.phase']}">
+					                          <p:inputText value="#{progPaymentObj.phaseNo}" maxlength="4" style="width:25px;" styleClass="ppRightBtn"  disabled="true">
 					                          </p:inputText>
 				                      </p:column>
 		      
