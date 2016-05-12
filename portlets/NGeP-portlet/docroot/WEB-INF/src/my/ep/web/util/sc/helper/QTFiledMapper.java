@@ -79,7 +79,6 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_QT_TYPE,
 						QTFieldConst.FILED_QT_OPEN_FOR,
 						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
-						QTFieldConst.FILED_QT_PROCUREMENT_CATEGORY,
 						QTFieldConst.FILED_QT_EXISTING_CONTRACT,
 						QTFieldConst.FILED_QT_ZONE_COVERAGE,
 						QTFieldConst.FILED_QT_EVALUATION_TYPE,
@@ -221,8 +220,6 @@ public class QTFiledMapper {
 
 				new String[] {
 						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID,
-						QTFieldConst.FILED_QT_CATEGORY_CODE,
-						QTFieldConst.FILED_QT_PROCUREMENT_CATEGORY,
 						QTFieldConst.FILED_QT_EVALUATION_TYPE,
 						QTFieldConst.FILED_QT_FULFILMENT_TYPE,
 						QTFieldConst.FILED_QT_ZONE_COVERAGE,
