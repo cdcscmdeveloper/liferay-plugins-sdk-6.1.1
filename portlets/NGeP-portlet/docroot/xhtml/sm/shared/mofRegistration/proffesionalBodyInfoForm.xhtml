@@ -65,14 +65,16 @@
 					<h:outputText value="#{profBean.regNo}" />
 				</p:column>
 				<p:column>
+					
 					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.profBody.expDate']}" />
+						#{lbl['lbl.sm.profBody.expDate']}
 						&#160;
 						<p:graphicImage id="expdateti" value="/css/images/design/tooltips.png" />
 						<p:tooltip id="expdatett" for="expdateti">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.prof.body.expdate']}" />
 						</p:tooltip>
 					</f:facet>
+					
 					<h:outputText value="#{profBean.expDate}">
 						<f:convertDateTime type="date"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
