@@ -242,17 +242,21 @@ public class SPDetailBackingBean extends
 					Date today = new Date();
 					long days = DateUtils.getDaysDifference(today,
 							getManagedBean().getQt().getClosingDate());
-					DecimalFormat df = new DecimalFormat("#00");
-					getManagedBean().setClosingTime(df.format(days)+" ");
+					DecimalFormat dF = new DecimalFormat("#00");
+					if(getDisplayLanguage().equalsIgnoreCase("en")){
+						getManagedBean().setClosingTime(dF.format(days)+" Days");
+					}else{
+						getManagedBean().setClosingTime(dF.format(days)+" Hari");
+					}
+					
 					if (days == 0) {
-						Long durationInMills = DateUtils.getDateDiffInMillis(
+						long durationInMills = DateUtils.getDateDiffInMillis(
 								DateUtils.getCurrentDate(), getManagedBean()
 										.getQt().getClosingDate());
 						if (durationInMills > 0) {
 							getManagedBean()
 									.setClosingTime(
-											DateUtils
-													.durationFormatter(durationInMills));
+											formattedDurationBasedOnLocale(durationInMills,getDisplayLanguage()));
 						} else {
 							getManagedBean().setClosingTime("0");
 						}
@@ -266,6 +270,53 @@ public class SPDetailBackingBean extends
 
 		} finally {
 		}
+	}
+	
+	private String getDisplayLanguage(){
+		Locale locale = new FacesScopes()
+		.getUserLocale();
+		String displayLanguage = locale.getDisplayLanguage();
+		return displayLanguage;
+	}
+	
+	private  String formattedDurationBasedOnLocale(long durationInMills,String displayLanguage) {
+
+		long diffMinutes = durationInMills / (60 * 1000) % 60;
+		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
+		DecimalFormat durationFormat = new DecimalFormat("#00");
+		String duration = "";
+		if (diffHours <= 24 && diffHours >= 2) {
+			
+			if(displayLanguage.equalsIgnoreCase("en")){
+				duration = durationFormat.format(diffHours) + " Hours  "
+						+ durationFormat.format(diffMinutes) + " Minutes";
+			}
+			else{
+				duration = durationFormat.format(diffHours) + " Jam  "
+						+ durationFormat.format(diffMinutes) + " Minit";
+			}
+		}
+
+		if (diffHours < 2 && diffHours >= 1) {
+			
+			if(displayLanguage.equalsIgnoreCase("en")){
+				duration = durationFormat.format(diffHours) + " Hour  "
+						+ durationFormat.format(diffMinutes) + " Minutes";
+			}else{
+				duration = durationFormat.format(diffHours) + " Jam  "
+						+ durationFormat.format(diffMinutes) + " Minit";
+			}
+		}
+		if (diffHours < 1) {
+			if(displayLanguage.equalsIgnoreCase("en")){
+				duration = durationFormat.format(diffMinutes) + " Minutes";
+			}
+			else{
+				duration = durationFormat.format(diffMinutes) + " Minit";
+			}
+		}
+
+		return duration;
 	}
 
 	/**
