@@ -7,31 +7,33 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.spec.supplier.info']}" toggleable="true">
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.supplier.info.instruction']}" escape="false" />
-		
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.supplier.info.instruction']}"
+			escape="false" />
+
 		<table style="width: 100%">
 			<tr style="width: 200px;">
 
-				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.registration.type']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smSupplier.companyName}" /></td>
+						value="#{supplierProposalDetailBackingBean.managedBean.businessType}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.registration.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.regNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.registration.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tax.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{supplierProposalDetailBackingBean.managedBean.businessType}" /></td>
+						value="#{smAppl.smCompanyBasic.incomeTaxNo}" /></td>
 
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.epNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tax.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smAppl.smCompanyBasic.incomeTaxNo}" /></td>
+						value="#{smSupplier.smMofAccounts[0].mofNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.date']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.establishDate}">
@@ -40,20 +42,21 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smSupplier.smMofAccounts[0].mofNo}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" /></td>
-				<td><p:inputText value="#{(smSupplier.bumi)? 'Yes' : 'No' }"
-						disabled="true" readonly="true" size="30" /></td>
-			</tr>
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.eff.date']}" /></td>
 				<td><p:inputText value="#{smSupplier.smMofAccounts[0].effDate}"
 						size="30" readonly="true" disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" /></td>
+				<td><p:inputText value="#{(smSupplier.bumi)? 'Yes' : 'No' }"
+						disabled="true" readonly="true" size="30" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.type']}" /></td>
+				<td><p:inputText
+						value="#{(smSupplier.manufacturer)? 'Manufacturer' : 'Distributor' }"
+						disabled="true" readonly="true" size="30" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expired.date']}" /></td>
 				<td><p:inputText value="#{smSupplier.smMofAccounts[0].expDate}"
 						size="30" readonly="true" disabled="true">
@@ -62,16 +65,9 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.type']}" /></td>
-				<td><p:inputText
-						value="#{(smSupplier.manufacturer)? 'Manufacturer' : 'Distributor' }"
-						disabled="true" readonly="true" size="30" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.address']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.address']}" /></td>
 				<td><p:inputTextarea disabled="true" readonly="true" rows="5"
-						cols="30" autoResize="flase" 
+						cols="30" autoResize="flase"
 						value="#{supplierProposalDetailBackingBean.getFullAddress(smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}"
 						style="width: 171px;margin-bottom: 5px;" /></td>
 			</tr>
@@ -84,7 +80,7 @@
 						value="#{smAppl.smCompanyBasic.faxNo}" /></td>
 			</tr>
 
-		<!--  	<tr>
+			<!--  	<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{'yet to map'}" /></td>
@@ -107,8 +103,8 @@
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.office.type']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{(supplierProposalDetailBackingBean.managedBean.smCompanyBasic.facilityType eq 'H') ? 'Home Office' : 'Business Office'}" disabled="true"
-						readonly="true" size="30" /></td>
+						value="#{(supplierProposalDetailBackingBean.managedBean.smCompanyBasic.facilityType eq 'H') ? 'Home Office' : 'Business Office'}"
+						disabled="true" readonly="true" size="30" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.ownership.type']}" /></td>
@@ -121,28 +117,39 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.factory.type']}" toggleable="true">
 		<p:dataTable id="facility" rowIndexVar="index" rows="10"
-		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{supplierProposalDetailBackingBean.managedBean.supplierFacilities}" var="facility">
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{supplierProposalDetailBackingBean.managedBean.supplierFacilities}"
+			var="facility">
 			<ac:paginator for="facility"></ac:paginator>
-			<p:column headerText=" #{lbl['lbl.sc.name']}" style="width : 25%; white-space : normal;">
+			<p:column headerText=" #{lbl['lbl.sc.name']}"
+				style="width : 25%; white-space : normal;">
 				<h:outputText value="#{facility.facilityName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.factory.facility.type']}" style="width : 15%;">
-				<h:outputText rendered="#{facility.facilityType eq 'F'}" value="FACTORY"></h:outputText>
-				<h:outputText rendered="#{facility.facilityType eq 'D'}" value="DOCKYARD"></h:outputText>
-				<h:outputText rendered="#{facility.facilityType eq 'w'}" value="WORKSHOP"></h:outputText>
-				<h:outputText rendered="#{facility.facilityType eq 's'}" value="STORE"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.spec.factory.facility.type']}"
+				style="width : 15%;">
+				<h:outputText rendered="#{facility.facilityType eq 'F'}"
+					value="FACTORY"></h:outputText>
+				<h:outputText rendered="#{facility.facilityType eq 'D'}"
+					value="DOCKYARD"></h:outputText>
+				<h:outputText rendered="#{facility.facilityType eq 'w'}"
+					value="WORKSHOP"></h:outputText>
+				<h:outputText rendered="#{facility.facilityType eq 's'}"
+					value="STORE"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.ownership.type']}" style="width : 15%;">
+			<p:column headerText="#{lbl['lbl.sc.spec.ownership.type']}"
+				style="width : 15%;">
 				<h:outputText
 					value="#{(facility.ownershipType eq 'O') ? 'Owned' : 'Rented'}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}" style="width : 15%;">
-				<h:outputText style="align : right" value="#{facility.areaSquareFeet}"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}"
+				style="width : 15%;">
+				<h:outputText style="align : right"
+					value="#{facility.areaSquareFeet}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.address']}" style="white-space : normal; width : 30%;">
+			<p:column headerText="#{lbl['lbl.sc.address']}"
+				style="white-space : normal; width : 30%;">
 				<h:outputText style="float : left;"
 					value="#{supplierProposalDetailBackingBean.getFullAddress(facility.smAddress)}"></h:outputText>
 			</p:column>
