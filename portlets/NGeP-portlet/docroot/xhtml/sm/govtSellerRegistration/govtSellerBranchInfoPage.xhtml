@@ -178,7 +178,7 @@
 							<f:selectItems var="branchCountry"
 								value="#{bb.managedBean.countryLs}" />
 							<p:ajax event="change" process="@this"
-								listener="#{bb.onChangeCountry(bb.managedBean.selectedBranch.smAddress.pmCountry,'BRANCH_ADDRESS')}"
+								listener="#{bb.countryOnChangeByType('BRANCH_ADDRESS')}"
 								update="supBrnCntry,branchState,branchDist,branchCity,postCodeBranchPanelId" />
 						</p:selectOneMenu> 
 						<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
@@ -195,9 +195,9 @@
 							id="branchState">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnState"
-								value="#{bb.managedBean.branchCompanyStates}" />
+								value="#{bb.getDropDownPmStateByCountry(bb.managedBean.selectedBranch.smAddress.pmCountry.countryId)}" />
 							<p:ajax event="change" process="@this"
-								listener="#{bb.onChangeState(bb.managedBean.selectedBranch.smAddress.pmState,'BRANCH_ADDRESS')}"
+								listener="#{bb.stateOnChangeByType('BRANCH_ADDRESS')}"
 								update="branchState,branchDist,branchCity" />
 						</p:selectOneMenu>
 						<p:message id="branchStateMsg" for="branchState" showSummary="true"
@@ -213,9 +213,9 @@
 							value="#{bb.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDist" 
-								value="#{bb.managedBean.branchCompanyDistricts}" />
+								value="#{bb.getDropDownPmDistrictByState(bb.managedBean.selectedBranch.smAddress.pmState.stateId)}" />
 							<p:ajax event="change" process="@this"
-								listener="#{bb.onChangeDistrict(bb.managedBean.selectedBranch.smAddress.pmDistrict,'BRANCH_ADDRESS')}"
+								listener="#{bb.districtOnChangeByType('BRANCH_ADDRESS')}"
 								update="branchDist,branchCity" />
 						</p:selectOneMenu>
 						<p:message id="branchDistMsg" for="branchDist" showSummary="true"
@@ -230,7 +230,7 @@
 							value="#{bb.managedBean.selectedBranch.smAddress.pmCity.cityId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="branchCity"
-								value="#{bb.managedBean.branchCompanyCities}" />
+								value="#{bb.getDropDownPmCityByDistrict(bb.managedBean.selectedBranch.smAddress.pmDistrict.districtId)}" />
 							<p:ajax event="change" process="@this" update="branchCity" />
 						</p:selectOneMenu>
 						<p:message id="branchCityMsg" for="branchCity" showSummary="true"
