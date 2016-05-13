@@ -5,13 +5,14 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<table style="width: 100%">
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.attachment']}" escape="false"/>
 		<tr>
 			<td class="TableFieldLeft" width="24%"><h:outputLabel
 					value="#{lbl['lbl.txt.attachment']}" /></td>
 			<td class="TableFieldRight"><p:commandButton
-					oncomplete="doUploadDlg.show();return false;" icon="iconAttachment"
-					disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks()}"
-					update="doMaintain" partialSubmit="true" value="#{lbl['lbl.fl.attach.files']}" /></td>
+					oncomplete="doUploadDlg.show();return false;" 
+					disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks() or !bpmTasklistBackingBean.managedBean.claim}"
+					update="doMaintain,doUploadDlg" partialSubmit="true" value="#{lbl['lbl.fl.attach.files']}" /></td>
 		</tr>
 		<tr>
 			<td />
@@ -27,7 +28,7 @@
 							<td width="5"></td>
 							<td><h:outputText value=" #{attachFile.createdUsername}"></h:outputText>,
 								<h:outputText value="#{attachFile.createdDate}">
-									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 								</h:outputText></td>
 						</tr>
 						<tr>
@@ -36,10 +37,12 @@
 									styleClass="blue_font"
 									action="#{fulfilmentBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink
-									oncomplete="maintainDelFileDlg.show()" 
+									oncomplete="delFileDlg.show()" 
 									action="#{fulfilmentBackingBean.confirmDeleteAttachment(attachFileIndex)}"
 									immediate="true"
-									rendered="#{fulfilmentBackingBean.compareAttachmentUserName(attachFile.createdUsername)}"
+									rendered="#{fulfilmentBackingBean.compareAttachmentUserName(attachFile.createdUsername)
+													and bpmTasklistBackingBean.managedBean.claim
+													and !fulfilmentBackingBean.managedBean.isHideRemarks()}"									
 									update="doMaintain">
 									<p:graphicImage value="/css/images/design/delete.png"
 										styleClass="tasklist_title1" />
@@ -50,43 +53,36 @@
 		</tr>
 	</table>
 
-	<p:dialog id="doUploadDlg" widgetVar="doUploadDlg" appendToBody="false"
-		hideEffect="explode" resizable="false" width="700px"
-		height="350" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+	<p:dialog id="doUploadDlg" widgetVar="doUploadDlg" appendToBody="false"	resizable="false" width="700px" height="350" 
+		styleClass="pop_up_top"	header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{fulfilmentBackingBean.handleFileUpload}"
-			mode="advanced" id="doupload" fileLimit="2"
+			mode="advanced" multiple="true" id="doupload" 
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" cancelLabel="#{lbl['lbl.btn.cancel']}" 
+			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
 			update="doMaintain">
 		</p:fileUpload>
-	</p:dialog>
-	
-	<p:dialog id="maintainDelFileDlg" widgetVar="maintainDelFileDlg"
-			header="Delete Confirmation" styleClass="screen-title"
-			style="z-index: 100 !important;"
-			appendToBody="true"
-			resizable="false" modal="true" width="325" height="90">
-			<h:panelGrid columns="3">
-				<p:graphicImage styleClass="ui-icon-complain" />
-				<p:spacer width="10" />
-				<p:inputTextarea disabled="true"
-					value="#{lbl['lbl.fl.dialog.delete.file.msg']}" rows="2"
-					cols="48" styleClass="ui-inputtextarea" />
-			</h:panelGrid>
+		<f:facet name="footer">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-					partialSubmit="true"
-					update="doMaintain"
-					action="#{fulfilmentBackingBean.deleteAttachmentAction()}"
-					 />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-					onclick="delFileDlg.hide();" type="button" />
-			</div>
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="doUploadDlg.hide();" />
+   			</div>
+   		</f:facet>			
 	</p:dialog>
+
+	<p:confirmDialog message="#{lbl['lbl.msg.confirm.delete']}"
+		severity="alert" widgetVar="delFileDlg" closable="true"
+		appendToBody="true" header="Delete Confirmation">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				partialSubmit="true" immediate="true"
+				update="doMaintain"
+				action="#{fulfilmentBackingBean.deleteAttachmentAction()}"/>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" 
+				onclick="delFileDlg.hide();" type="button" />
+		</div>
+	</p:confirmDialog>	
 
 </ui:composition>
