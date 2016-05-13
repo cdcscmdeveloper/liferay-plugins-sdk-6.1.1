@@ -46,10 +46,14 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 
 	public void retrieveNotifyList() {
+		
+		
 		debugLogger("retrieveNotifyList");
 
 		this.getManagedBean().setUnRead(false);
-
+		this.getManagedBean().setSearchItem("1");
+		this.getManagedBean().setSearchValue("");
+		
 		notifyDataModel.resetData();
 		notifyDataModel.reloadData();
 	}
@@ -235,14 +239,14 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("sender.userName",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										getManagedBean().getSearchValue(), true));
+										getManagedBean().getSearchValue().trim(), true));
 					}
 					
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("3")){
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("pmNotifyDashboard.subject",
 										SearchOperator.OPERATOR_LIKE.value(), 
-										getManagedBean().getSearchValue(), true));
+										getManagedBean().getSearchValue().trim(), true));
 					}
 					
 					
@@ -251,7 +255,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						searchBean.getDataFilterBeans().add(
 									new SearchFilterBean("pmNotifyDashboard.content",
 											SearchOperator.OPERATOR_LIKE.value(), 
-											getManagedBean().getSearchValue(), true));
+											getManagedBean().getSearchValue().trim(), true));
 					}
 						
 					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("5")){
@@ -270,6 +274,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 					NotifyReqDTO reqDTO = new NotifyReqDTO();
 					reqDTO.setSearchBean(searchBean);
 					NotifyResDTO resDTO = ntfSO.searchNotifyList(reqDTO);
+					
 					if (resDTO.isSuccessful()) {
 						return resDTO.getSearchResultBean();
 					}
