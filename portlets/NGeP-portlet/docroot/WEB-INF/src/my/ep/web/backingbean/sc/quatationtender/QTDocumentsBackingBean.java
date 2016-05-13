@@ -141,7 +141,7 @@ public class QTDocumentsBackingBean extends
 			.getLogger(QTDocumentsBackingBean.class);
 
 	/** The Constant DOCUMENT_PAGE. */
-	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
+	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 				  SourcingConstants.MALAYSIA_COUNTRY_CODE);
 
