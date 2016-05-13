@@ -44,17 +44,21 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	 * 		the FileUploadEvent instance
 	 */
 	public void handleFileUploadListener(FileUploadEvent event) {
-		String fileUploadListenerMethod = (String)event.getComponent().getAttributes().get("fileUploadListenerMethod");
-		
-		if (StringUtils.isNotBlank(fileUploadListenerMethod)) {
-			MethodExpression methodExp = FacesScopes
-	                .createMethodExpression(FacesContext.getCurrentInstance(),
-	                		fileUploadListenerMethod, null,
-	                        new Class[] { FileUploadEvent.class });
+		try {
+			String fileUploadListenerMethod = (String)event.getComponent().getAttributes().get("fileUploadListenerMethod");
 			
-			methodExp.invoke(
-					FacesContext.getCurrentInstance().getELContext(), 
-					new Object[]{event});
+			if (StringUtils.isNotBlank(fileUploadListenerMethod)) {
+				MethodExpression methodExp = FacesScopes
+		                .createMethodExpression(FacesContext.getCurrentInstance(),
+		                		fileUploadListenerMethod, null,
+		                        new Class[] { FileUploadEvent.class });
+				
+				methodExp.invoke(
+						FacesContext.getCurrentInstance().getELContext(), 
+						new Object[]{event});
+			}	
+		} catch (Exception e) {
+			handleException(e);
 		}
 	}
 	
