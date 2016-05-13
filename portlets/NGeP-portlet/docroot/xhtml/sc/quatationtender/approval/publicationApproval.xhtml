@@ -3,7 +3,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:param name="isPubApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.publicationApproval)}" />
 
 	<p:panel id="publicationapprovalTbl"
 		header="#{lbl['lbl.sc.qt.approver.selection']}"
@@ -13,7 +16,7 @@
 		<p:spacer height="3" />
 		<div style="width: 100%">
 			<p:pickList id="publicationapproverid"
-				disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.publicationApproval)}"
+				disabled="#{!isPubApprovalDtlsEditable}"
 				value="#{qTDetailBB.managedBean.publicationApprovals}"
 				var="publicationUser" showTargetControls="true"
 				itemLabel="#{publicationUser.pmUser.userName}"
@@ -23,41 +26,10 @@
 			</p:pickList>
 		</div>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{qTDetailBB.managedBean.publicationApproval.scQtApprovalRemarks}"
-						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{qTDetailBB.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}"
-										disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.publicationApproval)}" />
-									<h:outputText value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;"
-										disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.publicationApproval)}" /></td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel>
-
-
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{qTDetailBB.managedBean.publicationApproval.scQtApprovalRemarks}"
+		showAttachment="false"
+		readonly="#{!isPubApprovalDtlsEditable}" />
+		
 </ui:composition>
