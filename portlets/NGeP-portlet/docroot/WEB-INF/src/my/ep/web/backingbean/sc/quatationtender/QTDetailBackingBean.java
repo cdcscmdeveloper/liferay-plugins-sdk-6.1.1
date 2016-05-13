@@ -4158,33 +4158,22 @@ public class QTDetailBackingBean extends
 			} else {
 				quationTenderReqDTO.setQtId(this.getManagedBean().getQt()
 						.getQtId());
-				QuationTenderResDTO resDTO1 = detailSO
-						.retriveQtById(quationTenderReqDTO);
-				ScQt scQt = resDTO1.getQtDetail();
-				ScQtStatus qtStatus = new ScQtStatus();
-				qtStatus.setScQt(scQt);
-				qtStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.QT_CANCELLED));
-				qtStatus.setCurrent(Boolean.TRUE);
-				qtStatus.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-
-				for (ScQtStatus status : scQt.getScQtStatus()) {
-					status.setCurrent(Boolean.FALSE);
+				List<ScQtRemark> remarks = qt.getScQtRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { 
+										ResourceBundleUtils.getMessage(
+											"lbl.sc.remark", 
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) });
+						}
+					}
 				}
-				scQt.getScQtStatus().add(qtStatus);
 				finalizeRemarks(qt.getScQtRemarks());
-				if (CollectionUtils.isEmpty(qt.getScQtRemarks())) {
-					qt.setScQtRemarks(initializeRemarks(qt,
-							qt.getCurrentWorkFlowStatus(), qt.getScQtRemarks(),
-							ScQtRemark.class));
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { " Remark" });
-
-				}
-				/*
-				 * List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
-				 * qtStatuses.add(qtStatus);
-				 */
-				qt.setScQtStatus(scQt.getScQtStatus());
+				qt.setScQtStatus(null);
 				qt.setScQtCommittees(null);
 				qt.setScQtApprovals(null);
 				qt.setScQtBriefings(null);
