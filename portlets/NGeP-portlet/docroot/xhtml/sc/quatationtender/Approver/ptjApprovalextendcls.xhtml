@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Request Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="requestdtlid"
 			value="#{approvalBackingBean.managedBean.scQtApprovalRequestList}"
 			var="requestdetails" rowIndexVar="index" editable="true"
@@ -18,17 +18,24 @@
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.from.value']}">
-				<h:outputText value="#{requestdetails.originalValue}" />
+				<h:panelGroup
+					rendered="#{requestdetails.originalValue eq ParameterConst.openForBumi or requestdetails.originalValue eq ParameterConst.openForAll}">
+					<h:outputText
+						value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.originalValue)}" />
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{requestdetails.originalValue ne ParameterConst.openForBumi and requestdetails.originalValue ne ParameterConst.openForAll}">
+					<h:outputText value="#{requestdetails.originalValue}" />
+				</h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.to.value']}">
 				<h:panelGroup
-					rendered="#{requestdetails.changedValue eq 'B' or requestdetails.changedValue eq 'A'}">
+					rendered="#{requestdetails.changedValue eq ParameterConst.openForBumi or requestdetails.changedValue eq ParameterConst.openForAll}">
 					<h:outputText
 						value="#{approvalBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, requestdetails.changedValue)}" />
 				</h:panelGroup>
 				<h:panelGroup
-					rendered="#{requestdetails.changedValue ne 'B' and requestdetails.changedValue ne 'A'}">
-
+					rendered="#{requestdetails.changedValue ne ParameterConst.openForBumi and requestdetails.changedValue ne ParameterConst.openForAll}">
 					<h:outputText value="#{requestdetails.changedValue}" />
 				</h:panelGroup>
 			</p:column>
@@ -36,103 +43,4 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
-		id="ptjapprovalRemarks">
-		<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.approval.remarks.instruction']}"
-				rendered="#{approvalBackingBean.isReviceOrReject()}"></h:outputText>
-		
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage height="30"
-										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
-										<f:convertDateTime
-											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										maxlength="1000" rendered="#{remarkVar.remarkId eq null}" />
-									<h:outputText value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" />
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-				<td class="TableFieldLeft"><p:outputLabel
-						value="#{lbl['lbl.sc.supporting.document']}" /></td>
-				<td class="TableFieldRight">
-					<table style="width: 150px;">
-						<tr>
-							<td colspan="2"><p:commandButton
-									oncomplete="ptjapprovalAttachDlg.show();return false;"
-									icon="iconAttachment" update="ptjapprovalRemarks"
-									value="#{lbl['lbl.txt.attach.files']}">
-								</p:commandButton></td>
-						</tr>
-						<tr>
-							<td />
-							<td><p:dataGrid id="attaIds"
-									emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachments}"
-									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-									style="width:100%">
-									<table>
-										<tr>
-											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage
-													value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}"
-													height="30" width="30" />
-											</td>
-											<td><h:outputText
-													value="#{attachFile.createdUser.userName}" />, <h:outputText
-													value="#{attachFile.createdDate}">
-													<f:convertDateTime
-														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-												</h:outputText></td>
-										</tr>
-										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" immediate="true"
-													action="#{approvalBackingBean.downloadFile(attachFile)}" />
-											</td>
-										</tr>
-									</table>
-								</p:dataGrid></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</p:panel>
-	<p:dialog id="ptjapprovalAttachDlg" widgetVar="ptjapprovalAttachDlg"
-		modal="true" dynamic="true" resizable="false"
-		width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.txt.choose.files']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
-			mode="advanced" id="dlgsuploadsids"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload']}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			update="committeeremarksupDtls"
-			oncomplete="ptjapprovalAttachDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
 </ui:composition>
