@@ -4098,6 +4098,7 @@ public class QTDetailBackingBean extends
 
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt qt = this.getManagedBean().getQt();
+			String ackMsg = null;
 			if (isQTStatusPublished(getManagedBean().getCurrentStatusId())) {
 				qt.setScQtCommittees(null);
 				qt.setScQtBriefings(null);
@@ -4143,6 +4144,18 @@ public class QTDetailBackingBean extends
 				quationTenderReqDTO.setPmUser(new FacesScopes()
 						.getUserSessionBean());
 				quationTenderReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				
+				ackMsg = MessageUtils
+						.getMessage(
+								MessageConst.INFO_700052,
+								new String[] {
+										getParameterDesc(
+												ParameterTypeConst.DOCUMENT_TYPES,
+												ParameterConst.DOCTYPE_QUOTATION),
+										qt.getQtNo() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes()
+										.getUserLocale());
 			} else {
 				quationTenderReqDTO.setQtId(this.getManagedBean().getQt()
 						.getQtId());
@@ -4179,32 +4192,37 @@ public class QTDetailBackingBean extends
 				quationTenderReqDTO.setQtdetail(qt);
 				quationTenderReqDTO.setPmUser(new FacesScopes()
 						.getUserSessionBean());
+				
+				ackMsg = MessageUtils
+						.getMessage(
+								MessageConst.INFO_700031,
+								new String[] {
+										getParameterDesc(
+												ParameterTypeConst.DOCUMENT_TYPES,
+												ParameterConst.DOCTYPE_QUOTATION),
+										qt.getQtNo() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes()
+										.getUserLocale());
 
 			}
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.cancleQT(quationTenderReqDTO);
 
-			ScQt scQt = quationTenderResDTO.getQtDetail();
-
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.INFO_700031,
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															scQt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
+			if (quationTenderResDTO.isSuccessful()) {
+				FacesContext
+				.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								null,
+								ackMsg));
+				
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}
+			
+			return null;
 
 		} finally {
 			detailSO = null;
