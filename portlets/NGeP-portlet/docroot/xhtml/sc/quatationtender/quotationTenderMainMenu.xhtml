@@ -14,7 +14,7 @@
 	<ui:param name="statusId" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId}" />
 	<ui:param name="isQTStatusScheduleDocAndAfter" value="#{qTDetailBB.isQTStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
-	<ui:param name="isQTStatusBtwScheduleDocAndPendingPublication" value="#{qTDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_PUBLICATION)}" />
+	<ui:param name="isQTStatusBtwScheduleDocAndPendingPublication" value="#{qTDetailBB.isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)}" />
 	<ui:param name="isMaintancePendingChklistStatus" value="#{qTDetailBB.isMaintancePendingChklistStatus()}" />
 	<ui:param name="isQTStatusSCcommitteeApproval" value="#{statusId eq QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL}" />
 	
