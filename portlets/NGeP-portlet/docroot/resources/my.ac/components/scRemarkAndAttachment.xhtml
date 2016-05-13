@@ -67,7 +67,8 @@
 					</p:dataGrid>
 				</td>
 				</c:if>
-				<c:if test="#{cc.attrs.showAttachment}">
+				<c:choose>
+				<c:when test="#{cc.attrs.showAttachment}">
 				<td class="TableFieldLeft" width="100px">
 					<p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" />
 				</td>
@@ -126,7 +127,11 @@
 						</tr>
 					</table>
 				</td>
-				</c:if>
+				</c:when>
+				<c:otherwise>
+					<td width="auto" />
+				</c:otherwise>
+				</c:choose>
 			</tr>
 		</table>
 		
