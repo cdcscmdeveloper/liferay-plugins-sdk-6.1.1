@@ -312,9 +312,11 @@
 					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 					update="factoringPanel">
 				</p:fileUpload>
+				<f:facet name="footer">
 				<div class="ppRightBtn">
 			    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadFactoringDlg.hide();" />
 		  		</div>
+		  		</f:facet>
 			</p:dialog>
 		</p:panel>
 		

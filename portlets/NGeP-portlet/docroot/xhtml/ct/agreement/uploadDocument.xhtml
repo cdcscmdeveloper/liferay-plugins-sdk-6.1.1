@@ -69,9 +69,11 @@
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="upAgrSignedPagePg">
 		</p:fileUpload>
+		<f:facet name="footer">
 		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="upAgrSignedPageDlg.hide();" />
    		</div> 
+   		</f:facet>
 	 </p:dialog>
 	 <p:confirmDialog id="delSignedPageDlg" widgetVar="delSignedPageDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
  		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
@@ -93,15 +95,17 @@
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="upStampedPagePg">
 		</p:fileUpload>
+		<f:facet name="footer">
 		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="upStampedPageDlg.hide();" />
-   		</div> 
+   		</div>
+   		</f:facet> 
 	 </p:dialog>
 	 <p:confirmDialog id="delStampedPageDlg" widgetVar="delStampedPageDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
  		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
        	<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-		  		update=":form:upStampedPagePg,, :form:upStampedPageDlg"
+		  		update=":form:upStampedPagePg, :form:upStampedPageDlg"
 		   		action="#{agreementBackingBean.delUploadedStampedPage()}" oncomplete="delStampedPageDlg.hide();"/>
 			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delStampedPageDlg.hide();" type="button" />
 		</div>

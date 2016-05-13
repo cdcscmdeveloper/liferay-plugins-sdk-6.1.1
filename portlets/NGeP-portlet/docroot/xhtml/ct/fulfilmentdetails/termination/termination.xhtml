@@ -254,9 +254,11 @@
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update=":form:uploadTerminationPg">
 		</p:fileUpload>
+		<f:facet name="footer">
 		<div class="ppRightBtn">
 	    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadTerminatinDlg.hide();" />
   		</div>
+  		</f:facet>
 	</p:dialog>
 	<p:dialog id="searchAgencyDlg"  header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.ct.recommended.agency']}" widgetVar="searchAgencyDlg" 
 		styleClass="pop_up_top" modal="true" width="700" height="500">
