@@ -707,8 +707,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 
 					// quantity
-					if( null != requestNoteDtl.getRequestItem() || null == requestNoteDtl.getRequestItem().getQuantity() ){
-						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getItemName()});
+					if( null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity() ){
+						throw new EpException(
+								MessageConst.ERROR_760315,
+								new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}
 			}
