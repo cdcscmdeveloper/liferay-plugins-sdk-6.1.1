@@ -133,7 +133,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
-import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
@@ -159,6 +158,8 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -173,6 +174,7 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
+import org.quartz.SchedulerException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -3770,7 +3772,7 @@ public class QTDetailBackingBean extends
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
 		return isQTStatusInBetween(currentStatusId,
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-				QTStatusConst.QT_PENDING_PUBLICATION);
+				QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
 	}
 	
 	private boolean isQTStatusGreaterThanOrEqualsScheduleDoc(Long currentStatusId) {
@@ -3965,13 +3967,39 @@ public class QTDetailBackingBean extends
 					.getAmendMentBean());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
+			ScQt scQt = quationTenderResDTO.getQtDetail();
+			
+			if (QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION.equals(qtDetails.getQtStatus().getStatusId())) {
+				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+				if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getPublishDate()), todayDate)) {
+					try {
+						log.info("call simple scheduler if QT is publishing today.");
+						EpSchedulerHelper.scheduleSimplePublishingJob(scQt);
+					} catch (SchedulerException e) {
+						e.printStackTrace();
+						log.error(e.getMessage());
+					}
+				} 
+			} else if (QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE.equals(qtDetails.getQtStatus().getStatusId())) {
+				Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
+				if (!DateUtils.isDateGreater(DateUtils.setDefaultDateTime(scQt.getClosingDate()), todayDate)) {
+					try {
+						log.info("call simple scheduler if QT is closing today.");
+						EpSchedulerHelper.scheduleSimpleQTClosingJob(scQt);
+					} catch (SchedulerException e) {
+						e.printStackTrace();
+						log.error(e.getMessage());
+					}
+				} 
+			}
+			
 			String msgCode;
 			if (quationTenderResDTO.isSuccessful()) {
 				msgCode = MessageConst.INFO_700026;
 			} else {
 				msgCode = MessageConst.INFO_700004;
 			}
-			ScQt scQt = quationTenderResDTO.getQtDetail();
+			
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -4012,7 +4040,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			ScQt scQt = this.getManagedBean().getQt();
 
-			if (isQTStatusGreaterThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.QT_PENDING_PUBLICATION)) {
+			if (isQTStatusGreaterThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)) {
 				quationTenderReqDTO.setQtId(scQt.getQtId());
 				quationTenderReqDTO
 						.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
@@ -4300,7 +4328,7 @@ public class QTDetailBackingBean extends
 		PmStatus pmStatus = scQt.getQtStatus();
 		if (null != pmStatus) {
 			Long currentStatusId = pmStatus.getStatusId();
-			if (isQTStatusInBetween(currentStatusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_PUBLICATION)
+			if (isQTStatusInBetween(currentStatusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)
 					&& !this.getManagedBean().isMaintanceFlow()) {
 				return true;
 			}
