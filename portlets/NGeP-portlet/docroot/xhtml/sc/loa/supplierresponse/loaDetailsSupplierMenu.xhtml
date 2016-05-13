@@ -27,7 +27,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
-				<td><p:inputText size="40"
+				<td colspan="3"><p:inputText size="106"
 						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 						disabled="true" /> <p:spacer width="5" /> <p:commandLink
 						oncomplete="suppDetailsPopup.show();return false;" process="@this"
@@ -149,7 +149,7 @@
 				<td rowspan="3"><p:inputTextarea id="address"
 						readonly="#{lOADetailBackingBean.managedBean.readOnly}" rows="5"
 						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.address}"
-						style=" margin-bottom:5px; width: 309px;" required="true"
+						style=" margin-bottom:5px; width: 266px;" required="true"
 						maxlength="200" label="#{lbl['lbl.sc.address']}" /> <p:message
 						id="addressMsg" for="address" display="icon" /></td>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
