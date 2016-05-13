@@ -17,7 +17,7 @@
 				<c:if test="#{isSupplierAckStatus}">
 					<p:selectOneMenu id="accountNoId"
 						value="#{directLOABackingBean.managedBean.selectedBankId}"
-						style="width:319px;margin-bottom: 5px;"
+						style="width:277px;margin-bottom: 5px;"
 						disabled="#{directLOABackingBean.managedBean.readOnly}"
 						required="true"
 						label="#{lbl['lbl.sc.account.no']}">
@@ -59,7 +59,7 @@
 			<td>
 				<p:inputTextarea id="bankAddress" rows="5" 
 					value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.bankAddress)}"
-					style=" margin-bottom:5px; width: 309px;" disabled="true" />
+					style=" margin-bottom:5px; width: 266px;" disabled="true" />
 			</td>
 		</tr>
 		<tr>
