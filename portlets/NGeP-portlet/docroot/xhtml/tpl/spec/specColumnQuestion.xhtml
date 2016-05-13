@@ -66,7 +66,7 @@
 				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
 					headerText="#{lbl['lbl.sc.uom']}"
 					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
-					value="#{question.clUom.uomName}"
+					value="#{question.clUom.uomCode}"
 					conditionField="recordStatus^1"
 					rendered="#{isQuestionTypeItem}"
 					required="#{!question.selected}"
@@ -77,6 +77,7 @@
 					<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
 				</ac:lov>
 			</h:panelGroup>
+			<h:outputText value="#{question.clUom.uomName}" />
 		</c:if>
 		<c:if test="#{!newable}">
 			<h:outputText value="#{question.clUom.uomName}" rendered="#{isQuestionTypeItem}" />
