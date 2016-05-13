@@ -2500,6 +2500,8 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setQt(scQt);
 				// Set New publish date for update publish date. To solve issue on publish date reset back to original time during primefaces calender update phase.
 				scQt.setNewPublishDate(scQt.getPublishDate());
+				// Set New closing date for update closing date.
+				scQt.setNewClosingDate(scQt.getClosingDate());
 				ISearchResultBean<ScQtContactPerson> contactPersons = resDTO
 						.getContactPersons();
 				List<ScQtContactPerson> qtContactPerson = contactPersons
