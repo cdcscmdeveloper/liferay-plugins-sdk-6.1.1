@@ -54,6 +54,10 @@
 			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			   	</p:inputText>	 
 			   	
+			   	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null}" />
+		         <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+			    	styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />	
+			   	
 			 </h:panelGrid>
 			 <h:panelGrid  style="width:350px; margin-left:5px" columns="2" id="pmGridId">
 			 
