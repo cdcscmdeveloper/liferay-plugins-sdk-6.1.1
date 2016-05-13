@@ -14,11 +14,12 @@
 	<cc:attribute name="showRemark" default="true" />
 	<cc:attribute name="showAttachment" default="true" />
 	<cc:attribute name="instruction" default="" />
-	<cc:attribute name="fileUploadListener" required="true" />
+	<cc:attribute name="header" default="#{lbl['lbl.sc.remarks']}" />
+	<cc:attribute name="fileUploadListener" required="#{cc.attrs.showAttachment}" />
 </cc:interface>
 
 <cc:implementation>
-	<p:panel id="#{cc.id}Pnl" header="#{lbl['lbl.sc.remark']}" toggleable="true">
+	<p:panel id="#{cc.id}Pnl" header="#{cc.attrs.header}" toggleable="true">
 		<c:if test="#{!empty cc.attrs.instruction}">
 			<h:outputText styleClass="instruction" value="#{cc.attrs.instruction}" />
 		</c:if>
