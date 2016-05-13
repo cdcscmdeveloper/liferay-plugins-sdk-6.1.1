@@ -125,6 +125,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
+import com.liferay.portal.kernel.util.StringUtil;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class QTDocumentsBackingBean.
@@ -2170,7 +2172,7 @@ public class QTDocumentsBackingBean extends
 		if (title == null) {
 			title = "";
 		}
-		context.put("title", title.replaceAll("&", "&#38;"));
+		context.put("title", StringUtil.upperCase(title.replaceAll("&", "&#38;")));
 		context.put("qtNo", qt.getQtNo());
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
