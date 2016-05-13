@@ -34,17 +34,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private SmSupplier smSupp;
 
 	private List<SelectItem> countryLs;
-	private List<SelectItem> businessStateLs;
-	private List<SelectItem> residentialStateLs;
-	private List<SelectItem> permenantStateLs;
-
-	private List<SelectItem> businessDistrictLs;
-	private List<SelectItem> residentialDistrictLs;
-	private List<SelectItem> permenantDistrictLs;
-
-	private List<SelectItem> businessCityLs;
-	private List<SelectItem> residentialCityLs;
-	private List<SelectItem> permenantCityLs;
 
 	private List<SelectItem> salutationItems;
 	
@@ -124,78 +113,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setCountryLs(List<SelectItem> countryLs) {
 		this.countryLs = countryLs;
-	}
-
-	public List<SelectItem> getBusinessStateLs() {
-		return businessStateLs;
-	}
-
-	public void setBusinessStateLs(List<SelectItem> businessStateLs) {
-		this.businessStateLs = businessStateLs;
-	}
-
-	public List<SelectItem> getResidentialStateLs() {
-		return residentialStateLs;
-	}
-
-	public void setResidentialStateLs(List<SelectItem> residentialStateLs) {
-		this.residentialStateLs = residentialStateLs;
-	}
-
-	public List<SelectItem> getPermenantStateLs() {
-		return permenantStateLs;
-	}
-
-	public List<SelectItem> getBusinessDistrictLs() {
-		return businessDistrictLs;
-	}
-
-	public void setBusinessDistrictLs(List<SelectItem> businessDistrictLs) {
-		this.businessDistrictLs = businessDistrictLs;
-	}
-
-	public List<SelectItem> getResidentialDistrictLs() {
-		return residentialDistrictLs;
-	}
-
-	public void setResidentialDistrictLs(List<SelectItem> residentialDistrictLs) {
-		this.residentialDistrictLs = residentialDistrictLs;
-	}
-
-	public List<SelectItem> getPermenantDistrictLs() {
-		return permenantDistrictLs;
-	}
-
-	public void setPermenantDistrictLs(List<SelectItem> permenantDistrictLs) {
-		this.permenantDistrictLs = permenantDistrictLs;
-	}
-
-	public void setPermenantStateLs(List<SelectItem> permenantStateLs) {
-		this.permenantStateLs = permenantStateLs;
-	}
-
-	public List<SelectItem> getBusinessCityLs() {
-		return businessCityLs;
-	}
-
-	public void setBusinessCityLs(List<SelectItem> businessCityLs) {
-		this.businessCityLs = businessCityLs;
-	}
-
-	public List<SelectItem> getResidentialCityLs() {
-		return residentialCityLs;
-	}
-
-	public void setResidentialCityLs(List<SelectItem> residentialCityLs) {
-		this.residentialCityLs = residentialCityLs;
-	}
-
-	public List<SelectItem> getPermenantCityLs() {
-		return permenantCityLs;
-	}
-
-	public void setPermenantCityLs(List<SelectItem> permenantCityLs) {
-		this.permenantCityLs = permenantCityLs;
 	}
 
 	public SmPersonnel getSmPersonnel() {
