@@ -10,8 +10,6 @@
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +47,7 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -85,6 +84,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -110,7 +110,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -169,7 +169,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
@@ -1759,22 +1758,7 @@ public class QTDetailBackingBean extends
 				}
 				
 				if (isCommitteeAppointmentRemark) {
-					List<ScQtApproval> approvals = this.getManagedBean().getQt()
-							.getScQtApprovals();
-
-					for (ScQtApproval scQtApproval : approvals) {
-						if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
-								.equalsIgnoreCase(scQtApproval
-										.getApprovalCategory().getParameterCode())) {
-							initializeRemarks(scQtApproval, this.getManagedBean()
-									.getQt().getCurrentWorkFlowStatus(),
-									scQtApproval.getScQtApprovalRemarks(),
-									ScQtApprovalRemark.class);
-							this.getManagedBean().setScQtApproval(scQtApproval);
-
-							break;
-						}
-					}
+					initializeRemarksForCommitteeApproval();
 				}
 				
 				this.getManagedBean().setDeskOfficer(true);
@@ -1805,6 +1789,36 @@ public class QTDetailBackingBean extends
 			
 		} catch (Exception e) {
 			handleException(e);
+		}
+	}
+	
+	private void initializeRemarksForCommitteeApproval() {
+		ScQt scQt = this.getManagedBean().getQt();
+		List<ScQtApproval> approvals = scQt.getScQtApprovals();
+
+		for (ScQtApproval scQtApproval : approvals) {
+			if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
+					.equalsIgnoreCase(scQtApproval
+							.getApprovalCategory().getParameterCode())) {
+				IScWorkFlowStatusSO workFlowStatusSO;
+				try {
+					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+					ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+					reqDTO.setDocType(ParameterConst.DOCTYPE_COMMITTE_APROVAL);
+					reqDTO.setDocId(scQt.getQtId());
+					
+					ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+					initializeRemarks(scQtApproval, currentWorkFlowStatus,
+							scQtApproval.getScQtApprovalRemarks(),
+							ScQtApprovalRemark.class);
+					this.getManagedBean().setScQtApproval(scQtApproval);
+				} finally {
+					workFlowStatusSO = null;
+				}
+
+				break;
+			}
 		}
 	}
 
@@ -3495,22 +3509,7 @@ public class QTDetailBackingBean extends
 					committeeTabIndex);
 			retrieveCommitteeAppointmentTabDtl(false, false);
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
-				List<ScQtApproval> approvals = this.getManagedBean().getQt()
-						.getScQtApprovals();
-
-				for (ScQtApproval scQtApproval : approvals) {
-					if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
-							.equalsIgnoreCase(scQtApproval
-									.getApprovalCategory().getParameterCode())) {
-						initializeRemarks(scQtApproval, this.getManagedBean()
-								.getQt().getCurrentWorkFlowStatus(),
-								scQtApproval.getScQtApprovalRemarks(),
-								ScQtApprovalRemark.class);
-						this.getManagedBean().setScQtApproval(scQtApproval);
-
-						break;
-					}
-				}
+				initializeRemarksForCommitteeApproval();
 			}
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
@@ -4543,35 +4542,6 @@ public class QTDetailBackingBean extends
 			scQt.setScQtApprovals(approvalList);
 		}
 
-	}
-
-	public void handleFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
-		log.info("handleFileUpload - START");
-		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
-		if (event.getFile() != null) {
-			ScAttachment scAttachment = null;
-			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
-			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
-			if (scQtApproval.getScQt() == null) {
-				scQtApproval.setScQt(this.getManagedBean().getQt());
-			}
-			List<ScQtApprovalAttachment> approvalAttachments = scQtApproval
-					.getScQtApprovalAttachments();
-			if (null == approvalAttachments) {
-				approvalAttachments = new ArrayList<ScQtApprovalAttachment>();
-			}
-			attachment.setScQtApproval(scQtApproval);
-			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-			approvalAttachments.add(attachment);
-			scQtApproval.setScQtApprovalAttachments(approvalAttachments);
-			scAttachment = attachment;
-			uploadAttachment(event.getFile(), scAttachment);
-			getManagedBean().setScQtApproval(scQtApproval);
-			attachments.add(attachment);
-			getManagedBean().setAttachments(attachments);
-		}
-		log.info("handleFileUpload - END");
 	}
 
 	/**
