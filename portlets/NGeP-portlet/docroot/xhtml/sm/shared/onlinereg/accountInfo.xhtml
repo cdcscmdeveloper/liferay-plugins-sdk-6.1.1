@@ -66,7 +66,8 @@
 						rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 						style="width:310px">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-						<p:ajax event="change" update="outPnlRegForm" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" ></p:ajax>
+						<p:ajax event="change" update="outPnlRegForm" listener="#{registrationBackingBean.businessTypeOnChange}"
+						disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" ></p:ajax>
 					</p:selectOneMenu>
 					<p:outputLabel styleClass="outputLabel-view" 
 					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
