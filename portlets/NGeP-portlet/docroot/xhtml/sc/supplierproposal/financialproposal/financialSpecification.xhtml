@@ -5,17 +5,28 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-	<h:outputText  styleClass="instruction" value="1. #{lbl['lbl.sc.spec.financial.title.instruction']}" escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" /><br />
-	<h:outputText  styleClass="instruction" value="2. #{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+	<table>
+		<tr>
+			<TD><h:outputText styleClass="instruction"
+					value="1. #{lbl['lbl.sc.spec.financial.title.instruction']}"
+					escape="false"
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			</TD>
+		</tr>
+		<tr>
+			<TD><h:outputText styleClass="instruction"
+					value="2. #{lbl['lbl.sc.sp.btn.complete.instruction']}"
+					escape="false"
+					rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			</TD>
+		</tr>
+	</table>
 
 	<c:if test="#{supplierProposalDetailBackingBean.managedBean.qt.zonal}">
 		<ui:include src="financialSpecificationDtlbyzone.xhtml" />
 	</c:if>
-	
-	
+
+
 	<c:if test="#{!supplierProposalDetailBackingBean.managedBean.qt.zonal}">
 		<ac:templateSpec
 			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
