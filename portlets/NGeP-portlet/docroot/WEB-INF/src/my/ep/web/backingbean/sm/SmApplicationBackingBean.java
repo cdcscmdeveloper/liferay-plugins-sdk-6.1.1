@@ -1788,7 +1788,7 @@ public class SmApplicationBackingBean extends
 
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
-					&& !valid) {
+					&& valid) {
 				saveOrUpdateAppl();
 				calculateCapital();
 				SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
@@ -2128,12 +2128,20 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 			validSave = SmApplicationUtil.validateEquityOwnerCount(
 					getManagedBean(), currentTab, currentPageType);
-			validSave = SmApplicationUtil.validateEquityOwnerAmount(
-					getManagedBean(), currentTab, ruleHelper);
-			validSave = SmApplicationUtil.validateEquityCompanyAmount(
-					getManagedBean(), currentTab);
-			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			if (validSave) {
+				validSave = SmApplicationUtil.validateEquityOwnerAmount(
+						getManagedBean(), currentTab, ruleHelper);
+			}
+			else if (validSave) {
+				validSave = SmApplicationUtil.validateEquityCompanyAmount(
+						getManagedBean(), currentTab);
+			}
+			else if (validSave
+					&& getManagedBean()
+							.getSmAppl()
+							.getSupplierType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.STYPE_CONSULTANT)) {
 				validSave = SmApplicationUtil.validatePersonnelAcademics(
 						validSave, getManagedBean(), currentTab);
 			}
@@ -9316,9 +9324,41 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setBumiEquityPercentage(
 					getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getBumiPercent());
+			getManagedBean().setCurrBumiEquity(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getBumiEquity());
+			getManagedBean().setCurrNonBumiEquity(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getNonBumiEquity());
+			getManagedBean().setCurrForeignerEquity(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getForeignerEquity());
+			getManagedBean().setCurrGovtUnitrustEquity(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getGovtUnitrustEquity());
+			getManagedBean().setCurrGovtEquity(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getGovtEquity());
+			getManagedBean().setCurrForeignCompanyEquity(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getForeignCompanyEquity());
+			getManagedBean().setCurrLocalCompanyEquity(
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getLocalCompanyEquity());
 
 		} catch (NumberFormatException ne) {
 			throw new EpException(MessageConst.ERROR_722522);
+		}
+	}
+
+	public void onCallEquityChangeAlert(BigDecimal newVal,
+			BigDecimal existingVal) {
+		if (newVal != null && newVal.compareTo(BigDecimal.ZERO) != 0
+				&& newVal.compareTo(existingVal) != 0) {
+			RequestContext.getCurrentInstance().execute(
+					"equityChangeAlertDialog.show();");
+		} else {
+			calculateCapital();
 		}
 	}
 
