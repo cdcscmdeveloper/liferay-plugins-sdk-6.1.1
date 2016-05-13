@@ -78,11 +78,14 @@
 			           </p:selectBooleanCheckbox>
 			  	  
 			  	  <f:verbatim/>	  <f:verbatim/>
-				   
-				<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+				 
+				<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}"
+				  rendered="#{(centralContractBackingBean.managedBean.circularVer.circularFilePath == null and !centralContractBackingBean.managedBean.viewContract) 
+				  or (centralContractBackingBean.managedBean.circularVer.circularFilePath != null and !centralContractBackingBean.managedBean.viewContract)
+				  or (centralContractBackingBean.managedBean.circularVer.circularFilePath != null and centralContractBackingBean.managedBean.viewContract)}" />
 		 		<h:panelGroup id="uploadCircularPg">
 			  		<p:commandButton icon="ui-icon-upload" update="uploadCircularPg, uploadCircularDlg"
-			  		  rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath == null}"
+			  		  rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath == null and !centralContractBackingBean.managedBean.viewContract}"
 						action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
 				 
 				 	<h:commandLink action="#{centralContractBackingBean.downloadFile(1)}" 
@@ -91,8 +94,8 @@
 				 	
 					     	<p:commandLink 
 			   	                 onclick="deleteCircularFileDlg.show();"
-			   	                disabled="#{centralContractBackingBean.managedBean.viewContract}"
-						         rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}">
+						         rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null 
+						           and !centralContractBackingBean.managedBean.viewContract}">
 			   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	          </p:commandLink>		
 			  		</h:panelGroup>
