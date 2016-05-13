@@ -5,14 +5,19 @@ package my.ep.web.backingbean.sc.common;
 
 import java.util.List;
 
+import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.util.FacesScopes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  * Common Remark and Attachment Backing Bean
@@ -32,8 +37,36 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	public ScRemarkAndAttachmentBackingBean() {
 	}
 	
+	/**
+	 * Handle File Upload Listener to invoke backingbean method.
+	 * 
+	 * @param event
+	 * 		the FileUploadEvent instance
+	 */
+	public void handleFileUploadListener(FileUploadEvent event) {
+		String fileUploadListenerMethod = (String)event.getComponent().getAttributes().get("fileUploadListenerMethod");
+		
+		if (StringUtils.isNotBlank(fileUploadListenerMethod)) {
+			MethodExpression methodExp = FacesScopes
+	                .createMethodExpression(FacesContext.getCurrentInstance(),
+	                		fileUploadListenerMethod, null,
+	                        new Class[] { FileUploadEvent.class });
+			
+			methodExp.invoke(
+					FacesContext.getCurrentInstance().getELContext(), 
+					new Object[]{event});
+		}
+	}
+	
+	/**
+	 * Delete Attachment Action
+	 */
 	public void deleteAttachmentAction() {
 		super.deleteRowAction(attachmentList, selectedAttachment);
+		
+		// reset to null after delete.
+		this.attachmentList = null;
+		this.selectedAttachment = null;
 	}
 
 	/**
