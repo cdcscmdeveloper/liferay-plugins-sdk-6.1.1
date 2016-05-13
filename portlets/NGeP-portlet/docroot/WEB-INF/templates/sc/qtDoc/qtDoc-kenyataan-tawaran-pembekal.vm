@@ -149,10 +149,10 @@ th{
 						<table width='100%' class="table2">
 						<span class="headerfont">
 							<tr>
-								<td>Zone</td>
-								<td>State</td>
+								<td>Perincian Zon</td>
+								<td>Negeri</td>
 								#if ($locationLevel == "District")
-									<td>District</td>
+									<td>Daerah</td>
 								#end
 							</tr>
 						</span>
@@ -181,9 +181,9 @@ th{
 							<table width='100%' class="table2">
 							<span class="headerfont">
 								<tr>
-									<td>State</td>
+									<td>Negeri</td>
 									#if ($locationLevel == "District")
-										<td>District</td>
+										<td>Daerah</td>
 									#end
 								</tr>
 								</span>
@@ -272,9 +272,9 @@ th{
 							<span class="headerfont">
 								Wajib Hadir : 
 								#if ($zoneList.scQtBsv.allSiteVisitReq)
-									Yes
+									Ya
 								#else 
-									No 
+									Tiada 
 								#end
 							</span> <br/>
 						#end
