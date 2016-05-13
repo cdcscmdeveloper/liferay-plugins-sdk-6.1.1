@@ -191,7 +191,6 @@
 							<p:panelGrid styleClass="tablePanel" style="width : 100%">
 								<p:row>
 									<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.equiStatus.compTabHdr']}</p:column>
-									<!-- <p:column>NO. Of Members</p:column> -->
 									<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.equiStatus.valTabHdr']}</p:column>
 									<p:column styleClass="tableheaderrow">%</p:column>
 								</p:row>
@@ -207,9 +206,9 @@
 												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur"
+											<p:ajax event="blur" process="@this"
 												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
-												listener="#{backingBean.calculateCapital}" />
+												listener="#{backingBean.onCallEquityChangeAlert(backingBean.managedBean.smAppl.smCompanyBasic.bumiEquity,backingBean.managedBean.currBumiEquity)}" />
 										</p:inputText>
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -238,9 +237,9 @@
 												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur"
+											<p:ajax event="blur" process="@this"
 												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
-												listener="#{backingBean.calculateCapital}" />
+												listener="#{backingBean.onCallEquityChangeAlert(backingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity,backingBean.managedBean.currNonBumiEquity)}" />
 										</p:inputText>
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -269,9 +268,9 @@
 												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur"
+											<p:ajax event="blur" process="@this"
 												update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
-												listener="#{backingBean.calculateCapital}" />
+												listener="#{backingBean.onCallEquityChangeAlert(backingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity,backingBean.managedBean.currForeignerEquity)}" />
 										</p:inputText>
 										<ac:smFieldChangeAlert 
 											isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -300,9 +299,9 @@
 												validatorMessage="#{lbl['lbl.sm.equiStatus.utAgency']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}"
 												id="gvtUtAmt">
-												<p:ajax event="blur"
+												<p:ajax event="blur" process="@this"
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
-													listener="#{backingBean.calculateCapital}" />
+													listener="#{backingBean.onCallEquityChangeAlert(backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity,backingBean.managedBean.currGovtUnitrustEquity)}" />
 												<f:validateDoubleRange
 													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
@@ -336,9 +335,9 @@
 													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-												<p:ajax event="blur"
+												<p:ajax event="blur" process="@this"
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
-													listener="#{backingBean.calculateCapital}" />
+													listener="#{backingBean.onCallEquityChangeAlert(backingBean.managedBean.smAppl.smCompanyBasic.govtEquity,backingBean.managedBean.currGovtEquity)}"/>
 											</p:inputText>
 											<ac:smFieldChangeAlert 
 												isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -368,9 +367,9 @@
 													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-												<p:ajax event="blur"
+												<p:ajax event="blur" process="@this"
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
-													listener="#{backingBean.calculateCapital}" />
+													listener="#{backingBean.onCallEquityChangeAlert(backingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity,backingBean.managedBean.currForeignCompanyEquity)}" />
 											</p:inputText>
 											<ac:smFieldChangeAlert 
 												isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -400,9 +399,9 @@
 													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
 													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-												<p:ajax event="blur"
+												<p:ajax event="blur" process="@this"
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
-													listener="#{backingBean.calculateCapital}" />
+													listener="#{backingBean.onCallEquityChangeAlert(backingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity,backingBean.managedBean.currLocalCompanyEquity)}" />
 											</p:inputText>
 											<ac:smFieldChangeAlert 
 												isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -467,4 +466,24 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
+	
+	<p:confirmDialog id="equityChangeAlertDialog" closable="true"
+		header="#{lbl['lbl.sm.equity.change.alert.header']}" severity="alert"
+		widgetVar="equityChangeAlertDialog">
+		
+		<f:facet name="message">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.equity.change.alert.msg1']}"/>
+			&#160;&#160;
+			<p:graphicImage style="vertical-align:top"
+				value="/css/images/design/edit.png" />
+			&#160;&#160;
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.equity.change.alert.msg2']}"/>
+		</f:facet>
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="equityChangeAlertDialog.hide();" 
+				action="#{backingBean.calculateCapital}" update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+		</div>
+	</p:confirmDialog>
 </ui:composition>
