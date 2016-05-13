@@ -56,10 +56,10 @@
 		</div>				
 		</p:outputPanel>	
 		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" 
-			styleClass="pop_up_top" modal="true" width="700" height="350">
+			styleClass="pop_up_top" modal="true" width="700" height="350" resizable="false">
 				<p:dataTable id="circularVerDt" var="data" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
-					value="#{panelBackingBean.managedBean.circularVerList}" >
+					value="#{panelBackingBean.managedBean.circularVerList}" rows="10"  >
 					<ac:paginator for="circularVerDt" />
 					<p:column selectionMode="multiple" style="width:3%" />
 					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" 
