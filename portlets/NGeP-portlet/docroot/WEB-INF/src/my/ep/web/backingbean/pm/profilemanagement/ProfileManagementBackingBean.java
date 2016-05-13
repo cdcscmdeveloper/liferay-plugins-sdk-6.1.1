@@ -2912,6 +2912,15 @@ public class ProfileManagementBackingBean extends
 									.asList(DbValueConst.RECORD_STATUS_ACTIVE,
 											DbValueConst.RECORD_STATUS_SUSPENDED))));
 		}
+		
+		//Not Equals to Login User
+		Long loginSessionUserId = getFacesScopes().getUserSessionBean()
+				.getUserId();
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"pmUser.userId",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), loginSessionUserId));
 		//
 		// logger.info("+ status try only " + null);
 		// // base on the flag, default list is either select all or empty
