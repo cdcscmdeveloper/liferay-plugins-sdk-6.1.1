@@ -13,14 +13,14 @@
 	<cc:attribute name="readonly" default="false" />
 	<cc:attribute name="showRemark" default="true" />
 	<cc:attribute name="showAttachment" default="true" />
-	<cc:attribute name="showInstruction" default="false" />
-	<cc:attribute name="fileUploadListener" method-signature="void action(org.primefaces.event.FileUploadEvent)" required="true" />
+	<cc:attribute name="instruction" default="" />
+	<cc:attribute name="fileUploadListener" required="true" />
 </cc:interface>
 
 <cc:implementation>
 	<p:panel id="#{cc.id}Pnl" header="#{lbl['lbl.sc.remark']}" toggleable="true">
-		<c:if test="#{cc.attrs.showInstruction}">
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.approval.remarks.instruction']}" />
+		<c:if test="#{!empty cc.attrs.instruction}">
+			<h:outputText styleClass="instruction" value="#{cc.attrs.instruction}" />
 		</c:if>
 			
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -145,9 +145,10 @@
 			resizable="false" width="700px" height="350px"
 			styleClass="pop_up_top" 
 			header="#{lbl['lbl.txt.choose.files']}">
+			<p:messages id="specmessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 			<p:ajax event="close" />
 			<p:fileUpload id="fileUploadId" style="display:inline;"
-				fileUploadListener="#{cc.attrs.fileUploadListener}"
+				fileUploadListener="#{scRemarkAndAttachmentBackingBean.handleFileUploadListener}"
 				mode="advanced" 
 				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
@@ -156,6 +157,7 @@
 				uploadLabel="#{lbl['lbl.btn.upload.all']}" 
 				cancelLabel="#{lbl['lbl.btn.remove.all']}"
 				update="attachmentTbId">
+				<f:attribute name="fileUploadListenerMethod" value="#{cc.attrs.fileUploadListener}" />
 			</p:fileUpload>
 			<div class="ppRightBtn">
 			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadDlg.hide();" />
