@@ -15,6 +15,7 @@
 	<cc:attribute name="telcoId" />
 	<cc:attribute name="required" default="false" />
 	<cc:attribute name="isMobile" default="false" />
+	<cc:attribute name="hideTelco" default="false" />
 	<cc:attribute name="validatorMessage" default="#{lbl['lbl.txt.invalid.digit']}" />
 	<cc:attribute name="label" default="#{lbl['lbl.sm.phoneno']}" />
 	<cc:attribute name="disabled" default="false" />
@@ -42,12 +43,12 @@
 			<p:outputLabel escape="false" value="#{cc.attrs.isMobile ? lbl['tt.sm.registration.user.mobileno'] : lbl['tt.sm.registration.company.telephoneno']}"  />
 		</p:tooltip>
 		&#160;
-		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
+		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile and !cc.attrs.hideTelco}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
 			style="width: 100px" id="telcoCompId" disabled="#{cc.attrs.disabled}">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 		</p:selectOneMenu>
-		<p:graphicImage id="#{phonePanelId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile}" /> 
+		<p:graphicImage id="#{phonePanelId}telco"	value="/css/images/design/tooltips.png" rendered="#{cc.attrs.isMobile and !cc.attrs.hideTelco}" /> 
 		<p:tooltip	id="#{phonePanelId}tftelco" for="#{phonePanelId}telco">
 			<table><tr><td width="300px">
 			<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.company.telco']}" />
