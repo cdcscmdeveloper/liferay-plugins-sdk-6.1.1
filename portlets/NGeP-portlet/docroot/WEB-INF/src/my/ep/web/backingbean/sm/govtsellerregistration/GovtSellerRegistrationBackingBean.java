@@ -113,9 +113,6 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().getSelectedBranch().setSmAddress(
 				(SmAddress) SerializationUtils.clone(SmApplicationUtil
 						.setDefaultAddr(null)));
-		initCompanyAddressSelectItems(getManagedBean().getSmAppl()
-				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
-				.getSmAddress());
 		setHqGst(getManagedBean().getSmSupp());
 		if (getManagedBean().getSmGstSupplier() != null) {
 			SmApplicationUtil.initBranchGstInformation(getManagedBean()
@@ -341,7 +338,6 @@ public class GovtSellerRegistrationBackingBean extends
 	 *            - int
 	 */
 	public void assignSelBranch(SmSupplierBranch branchBean) {
-		initBranchAddressSelectItems(branchBean.getSmAddress());
 		if (branchBean.getSmPersonnel() == null
 				&& getManagedBean().isShowBranchPointOfContact()) {
 			branchBean.setSmPersonnel(new SmPersonnel());
@@ -539,190 +535,6 @@ public class GovtSellerRegistrationBackingBean extends
 	}
 
 	/**
-	 * Set state drop down list when on change country drop down based on
-	 * address type
-	 * 
-	 * @param PmCountry
-	 *            country
-	 * @param String
-	 *            addrType
-	 */
-	public void onChangeCountry(PmCountry country, String addrType) {
-		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
-			if (country != null) {
-				getManagedBean().setBusinessStateLs(
-						SmCommonUtil.getStateList(country.getCountryId()));
-				getManagedBean().setBusinessDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-			} else {
-				getManagedBean()
-						.setBusinessStateLs(new ArrayList<SelectItem>());
-				getManagedBean().setBusinessDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null
-				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
-			if (country != null) {
-				getManagedBean().setPermenantStateLs(
-						SmCommonUtil.getStateList(country.getCountryId()));
-				getManagedBean().setPermenantDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean()
-						.setPermenantCityLs(new ArrayList<SelectItem>());
-			} else {
-				getManagedBean().setPermenantStateLs(
-						new ArrayList<SelectItem>());
-				getManagedBean().setPermenantDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean()
-						.setPermenantCityLs(new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null
-				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
-			if (country != null) {
-				getManagedBean().setResidentialStateLs(
-						SmCommonUtil.getStateList(country.getCountryId()));
-				getManagedBean().setResidentialDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean().setResidentialCityLs(
-						new ArrayList<SelectItem>());
-			} else {
-				getManagedBean().setResidentialStateLs(
-						new ArrayList<SelectItem>());
-				getManagedBean().setResidentialDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean().setResidentialCityLs(
-						new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
-			if (country != null) {
-				getManagedBean().setBranchCompanyStates(
-						SmCommonUtil.getStateList(country.getCountryId()));
-				getManagedBean().setBranchCompanyDistricts(
-						new ArrayList<SelectItem>());
-				getManagedBean().setBranchCompanyCities(
-						new ArrayList<SelectItem>());
-			} else {
-				getManagedBean().setBranchCompanyStates(
-						new ArrayList<SelectItem>());
-				getManagedBean().setBranchCompanyDistricts(
-						new ArrayList<SelectItem>());
-				getManagedBean().setBranchCompanyCities(
-						new ArrayList<SelectItem>());
-			}
-		}
-	}
-
-	/**
-	 * Set district drop down list when on change state drop down based on
-	 * address type
-	 * 
-	 * @param PmState
-	 *            state
-	 * @param String
-	 *            addrType
-	 */
-	public void onChangeState(PmState state, String addrType) {
-		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
-			if (state != null) {
-				getManagedBean().setBusinessDistrictLs(
-						SmCommonUtil.getDistrictList(state.getStateId()));
-				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-			} else {
-				getManagedBean().setBusinessDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null
-				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
-			if (state != null) {
-				getManagedBean().setPermenantDistrictLs(
-						SmCommonUtil.getDistrictList(state.getStateId()));
-				getManagedBean()
-						.setPermenantCityLs(new ArrayList<SelectItem>());
-			} else {
-				getManagedBean().setPermenantDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean()
-						.setPermenantCityLs(new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null
-				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
-			if (state != null) {
-				getManagedBean().setResidentialDistrictLs(
-						SmCommonUtil.getDistrictList(state.getStateId()));
-				getManagedBean().setResidentialCityLs(
-						new ArrayList<SelectItem>());
-			} else {
-				getManagedBean().setResidentialDistrictLs(
-						new ArrayList<SelectItem>());
-				getManagedBean().setResidentialCityLs(
-						new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
-			if (state != null) {
-				getManagedBean().setBranchCompanyDistricts(
-						SmCommonUtil.getDistrictList(state.getStateId()));
-				getManagedBean().setBranchCompanyCities(
-						new ArrayList<SelectItem>());
-			} else {
-				getManagedBean().setBranchCompanyDistricts(
-						new ArrayList<SelectItem>());
-				getManagedBean().setBranchCompanyCities(
-						new ArrayList<SelectItem>());
-			}
-		}
-	}
-
-	/**
-	 * Set city drop down list when on change district drop down based on
-	 * address type
-	 * 
-	 * @param PmDistrict
-	 *            district
-	 * @param String
-	 *            addrType
-	 */
-	public void onChangeDistrict(PmDistrict district, String addrType) {
-		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
-			if (district != null) {
-				getManagedBean().setBusinessCityLs(
-						SmCommonUtil.getCityList(district.getDistrictId()));
-			} else {
-				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null
-				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
-			if (district != null) {
-				getManagedBean().setPermenantCityLs(
-						SmCommonUtil.getCityList(district.getDistrictId()));
-			} else {
-				getManagedBean()
-						.setPermenantCityLs(new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null
-				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
-			if (district != null) {
-				getManagedBean().setResidentialCityLs(
-						SmCommonUtil.getCityList(district.getDistrictId()));
-			} else {
-				getManagedBean().setResidentialCityLs(
-						new ArrayList<SelectItem>());
-			}
-		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
-			if (district != null) {
-				getManagedBean().setBranchCompanyCities(
-						SmCommonUtil.getCityList(district.getDistrictId()));
-			} else {
-				getManagedBean().setBranchCompanyCities(
-						new ArrayList<SelectItem>());
-			}
-		}
-	}
-
-	/**
 	 * Proceed to user registration
 	 */
 	public void proceedToFirstUserRegistration() {
@@ -763,9 +575,7 @@ public class GovtSellerRegistrationBackingBean extends
 			getManagedBean().setSmResAdd(
 					(SmAddress) SerializationUtils.clone(defaultAddr));
 		}
-		initUserPermanentAddressSelectItems(getManagedBean()
-				.getSmPermenantAdd());
-		initUserResidentialAddressSelectItems(getManagedBean().getSmResAdd());
+	
 		initIdentificationTypes();
 		navigateToPage(SupplierManagementConst.GOVT_SELLER_USER_INFO_PAGE);
 	}
@@ -926,18 +736,6 @@ public class GovtSellerRegistrationBackingBean extends
 	}
 
 	/**
-	 * Initialized branch address drop down values
-	 * 
-	 * @param SmAddress
-	 *            address
-	 */
-	private void initBranchAddressSelectItems(SmAddress address) {
-		onChangeCountry(address.getPmCountry(), "BRANCH_ADDRESS");
-		onChangeState(address.getPmState(), "BRANCH_ADDRESS");
-		onChangeDistrict(address.getPmDistrict(), "BRANCH_ADDRESS");
-	}
-
-	/**
 	 * Initialized agency type
 	 */
 	private void initAgencyTypes() {
@@ -1015,7 +813,6 @@ public class GovtSellerRegistrationBackingBean extends
 		compBasic.setSmCompanyAddresses(new ArrayList<SmCompanyAddress>());
 		compBasic.getSmCompanyAddresses().add(compAddr);
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
-		initCompanyAddressSelectItems(addr);
 
 		compBasic.setSmAppl(appl);
 		appl.setSmCompanyBasic(compBasic);
@@ -1060,43 +857,6 @@ public class GovtSellerRegistrationBackingBean extends
 			}
 		}
 		getManagedBean().setSmGstSupplier(gstSupplier);
-	}
-
-	/**
-	 * Initialized company address drop down values
-	 * 
-	 * @param SmAddress
-	 *            addr
-	 */
-	private void initCompanyAddressSelectItems(SmAddress addr) {
-		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
-		onChangeCountry(addr.getPmCountry(), "COMPANY_ADDRESS");
-		onChangeState(addr.getPmState(), "COMPANY_ADDRESS");
-		onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
-	}
-
-	/**
-	 * Initialized user permanent address drop down values
-	 * 
-	 * @param SmAddress
-	 *            addr
-	 */
-	private void initUserPermanentAddressSelectItems(SmAddress addr) {
-		onChangeCountry(addr.getPmCountry(), "USER_PERMANENT_ADDRESS");
-		onChangeState(addr.getPmState(), "USER_PERMANENT_ADDRESS");
-		onChangeDistrict(addr.getPmDistrict(), "USER_PERMANENT_ADDRESS");
-	}
-
-	/**
-	 * Initialized user residential address drop down values
-	 * 
-	 * @param SmAddress
-	 *            addr
-	 */
-	private void initUserResidentialAddressSelectItems(SmAddress addr) {
-		onChangeCountry(addr.getPmCountry(), "USER_RESIDENTIAL_ADDRESS");
-		onChangeState(addr.getPmState(), "USER_RESIDENTIAL_ADDRESS");
-		onChangeDistrict(addr.getPmDistrict(), "USER_RESIDENTIAL_ADDRESS");
 	}
 
 	/**
@@ -1306,5 +1066,82 @@ public class GovtSellerRegistrationBackingBean extends
 		}
 		return instance;
 
+	}
+	
+	public List<SelectItem> getDropDownPmStateByCountry(Long countryId){
+		List<SelectItem> itemLs = new ArrayList<SelectItem>();
+		//String countryId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("countryId");
+		
+		if(countryId != null){
+			itemLs = SmCommonUtil.getStateList(countryId);
+		}
+		return itemLs;
+	}
+	
+	public List<SelectItem> getDropDownPmDistrictByState(Long stateId){
+		System.out.println(">>>>state<<<<" + stateId);
+		List<SelectItem> itemLs = new ArrayList<SelectItem>();
+		//String stateId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("stateId");
+		
+		if(stateId != null){
+			itemLs = SmCommonUtil.getDistrictList(stateId);
+		}
+		return itemLs;
+	}
+	
+	public List<SelectItem> getDropDownPmCityByDistrict(Long districtId){
+		List<SelectItem> itemLs = new ArrayList<SelectItem>();
+		//String districtId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("districtId");
+		
+		if(districtId != null){
+			itemLs = SmCommonUtil.getCityList(districtId);
+		}
+		return itemLs;
+	}
+	
+	public void countryOnChangeByType(String type){
+		if(type != null){
+			SmAddress address = getSmAddressByAddType(type);
+			
+			if(address != null){
+				address.getPmState().setStateId(null);
+				address.getPmDistrict().setDistrictId(null);
+				address.getPmCity().setCityId(null);
+			}
+		}
+	}
+	
+	public void stateOnChangeByType(String type){
+		if(type != null){
+			SmAddress address = getSmAddressByAddType(type);
+			if(address != null){
+				address.getPmDistrict().setDistrictId(null);
+				address.getPmCity().setCityId(null);
+			}
+		}
+	}
+	
+	public void districtOnChangeByType(String type){
+		if(type != null){
+			SmAddress address = getSmAddressByAddType(type);
+			if(address != null){
+				address.getPmCity().setCityId(null);
+			}
+		}
+	}
+	
+	private SmAddress getSmAddressByAddType(String type){
+		SmAddress address = null;
+		
+		if(type.equalsIgnoreCase("COMPANY_ADDRESS")){
+			address = getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
+		}else if(type.equalsIgnoreCase("USER_PERMANENT_ADDRESS")){
+			address = getManagedBean().getSmPermenantAdd();
+		}else if(type.equalsIgnoreCase("USER_RESIDENTIAL_ADDRESS")){
+			address = getManagedBean().getSmResAdd();
+		}else if(type.equalsIgnoreCase("BRANCH_ADDRESS")){
+			address = getManagedBean().getSelectedBranch().getSmAddress();
+		}
+		return address;
 	}
 }
