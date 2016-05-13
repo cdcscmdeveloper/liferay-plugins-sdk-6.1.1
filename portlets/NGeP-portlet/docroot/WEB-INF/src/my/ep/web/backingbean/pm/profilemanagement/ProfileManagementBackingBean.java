@@ -775,7 +775,8 @@ public class ProfileManagementBackingBean extends
 		
 		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) || 
 				getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value()) ||
-				getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) ){
+				getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())|| 
+				getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) ){
 			if(getManagedBean().getCurrentActiveOrg() != null){
 				pmUserOrg.setPmOrgProfile(getManagedBean().getCurrentActiveOrg());
 			}
@@ -2838,7 +2839,6 @@ public class ProfileManagementBackingBean extends
 						"pmUserRoles.pmRole.roleCode",
 						SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.EP_ADMIN.value()));
 		
-		// EP_ADMIN_1 cannot see EP_ADMIN_1 or EP_ADMIN_2 
 		// EP_ADMIN_2 cannot see EP_ADMIN_1 or EP_ADMIN_2
 		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value()) || getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value())){
 			searchBean.getDataFilterBeans().add(
@@ -2849,6 +2849,48 @@ public class ProfileManagementBackingBean extends
 									.asList(RoleCode.EP_ADMIN_1.value(),
 											RoleCode.EP_ADMIN_2.value()))));
 		}
+		
+		// MINISTRY_ADMIN cannot see MINISTRY_ADMIN
+		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.MINISTRY_ADMIN.value()));
+		}
+
+		// PTJ_ADMIN cannot see PTJ_ADMIN
+		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.PTJ_ADMIN.value()));
+		}
+		
+		
+		// BPK_ADMIN cannot see BPK_ADMIN
+		if(getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.BPK_ADMIN.value()));
+		}
+		
+		// UPS_ADMIN cannot see UPS_ADMIN
+		if(getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.UPS_ADMIN.value()));
+		}
+		
+		// SUPPORT_ADMIN cannot see SUPPORT_ADMIN
+		if(getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.SUPPORT_ADMIN.value()));
+		}
+		
 		
 		// Status if non provided then select default (active)
 		if (upSearchBean.getUserOrgStatus() != null) {
@@ -5375,7 +5417,8 @@ public class ProfileManagementBackingBean extends
 	private void retrieveOrgTypeAndOrgName(){
 		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) || 
 				getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value()) ||
-				getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) ){
+				getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()) || 
+				getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) ){
 			if(getManagedBean().getCurrentActiveOrg() != null){
 				getManagedBean().setSelectedOrgType(getManagedBean().getCurrentActiveOrg().getOrgTypeCode());
 				getManagedBean().setSelectedOrgProfile(getManagedBean().getCurrentActiveOrg());
