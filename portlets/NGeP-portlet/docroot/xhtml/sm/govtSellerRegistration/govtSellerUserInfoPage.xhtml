@@ -282,7 +282,7 @@
 							<f:selectItems var="counLs"
 								value="#{bb.managedBean.countryLs}" />
 							<p:ajax event="change"
-								listener="#{bb.onChangeCountry(bb.managedBean.smPermenantAdd.pmCountry,'USER_PERMANENT_ADDRESS')}"
+								listener="#{bb.countryOnChangeByType('USER_PERMANENT_ADDRESS')}"
 								update="cmbPermState,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu> <p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
 							display="icon" /></td>
@@ -301,9 +301,9 @@
 							value="#{bb.managedBean.smPermenantAdd.pmState.stateId}" style="width:80%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="state"
-								value="#{bb.managedBean.permenantStateLs}" />
+								value="#{bb.getDropDownPmStateByCountry(bb.managedBean.smPermenantAdd.pmCountry.countryId)}" />
 							<p:ajax event="change"
-								listener="#{bb.onChangeState(bb.managedBean.smPermenantAdd.pmState,'USER_PERMANENT_ADDRESS')}"
+								listener="#{bb.stateOnChangeByType('USER_PERMANENT_ADDRESS')}"
 								update="cmbPermDistrict,cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
@@ -322,9 +322,9 @@
 							value="#{bb.managedBean.smPermenantAdd.pmDistrict.districtId}" style="width:80%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="dist"
-								value="#{bb.managedBean.permenantDistrictLs}" />
+								value="#{bb.getDropDownPmDistrictByState(bb.managedBean.smPermenantAdd.pmState.stateId)}" />
 							<p:ajax event="change"
-								listener="#{bb.onChangeDistrict(bb.managedBean.smPermenantAdd.pmDistrict,'USER_PERMANENT_ADDRESS')}"
+								listener="#{bb.districtOnChangeByType('USER_PERMANENT_ADDRESS')}"
 								update="cmbPermCity" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermDistrictMsg" for="cmbPermDistrict" display="icon" /></td>
@@ -342,7 +342,7 @@
 							value="#{bb.managedBean.smPermenantAdd.pmCity.cityId}" style="width:80%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="pcity"
-								value="#{bb.managedBean.permenantCityLs}"
+								value="#{bb.getDropDownPmCityByDistrict(bb.managedBean.smPermenantAdd.pmDistrict.districtId)}"
 								itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" />
@@ -478,9 +478,9 @@
 								disabled="#{bb.managedBean.sameAddress}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="resState"
-									value="#{bb.managedBean.residentialStateLs}" />
+									value="#{bb.getDropDownPmStateByCountry(bb.managedBean.smResAdd.pmCountry.countryId)}" />
 								<p:ajax event="change"
-									listener="#{bb.onChangeState(bb.managedBean.smResAdd.pmState,'USER_RESIDENTIAL_ADDRESS')}"
+									listener="#{bb.stateOnChangeByType('USER_RESIDENTIAL_ADDRESS')}"
 									update="cmbResDistrict cmbResCity" />
 							</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
 						</td>
@@ -504,9 +504,9 @@
 								value="#{bb.managedBean.smResAdd.pmDistrict.districtId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="dist"
-									value="#{bb.managedBean.residentialDistrictLs}" />
+									value="#{bb.getDropDownPmDistrictByState(bb.managedBean.smResAdd.pmState.stateId)}" />
 								<p:ajax event="change"
-									listener="#{bb.onChangeDistrict(bb.managedBean.smResAdd.pmDistrict,'USER_RESIDENTIAL_ADDRESS')}"
+									listener="#{bb.districtOnChangeByType('USER_RESIDENTIAL_ADDRESS')}"
 									update="cmbResCity" />
 							</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"
 								display="icon" /></td>
@@ -530,7 +530,7 @@
 								value="#{bb.managedBean.smResAdd.pmCity.cityId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="city"
-									value="#{bb.managedBean.residentialCityLs}" />
+									value="#{bb.getDropDownPmCityByDistrict(bb.managedBean.smResAdd.pmDistrict.districtId)}" />
 							</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
 					</tr>
 		

@@ -110,7 +110,7 @@
 						<f:selectItems var="counLs"
 							value="#{bb.managedBean.countryLs}" />
 						<p:ajax event="change"
-							listener="#{bb.onChangeCountry(registrationBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry,'COMPANY_ADDRESS')}"
+							listener="#{bb.countryOnChangeByType('COMPANY_ADDRESS')}"
 							update="busState,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 						display="icon" /></td>
@@ -133,9 +133,9 @@
 						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="state"
-							value="#{bb.managedBean.businessStateLs}" />
+							value="#{bb.getDropDownPmStateByCountry(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId)}" />
 						<p:ajax event="change" process="@this"
-							listener="#{bb.onChangeState(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,'COMPANY_ADDRESS')}"
+							listener="#{bb.stateOnChangeByType('COMPANY_ADDRESS')}"
 							update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
@@ -156,9 +156,9 @@
 						style="width:80%">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
-							value="#{bb.managedBean.businessDistrictLs}" />
+							value="#{bb.getDropDownPmDistrictByState(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId)}" />
 						<p:ajax event="change"
-							listener="#{bb.onChangeDistrict(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,'COMPANY_ADDRESS')}"
+							listener="#{bb.districtOnChangeByType('COMPANY_ADDRESS')}"
 							update="busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
 			</tr>
@@ -179,7 +179,7 @@
 						style="width:80%">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
-							value="#{bb.managedBean.businessCityLs}" />
+							value="#{bb.getDropDownPmCityByDistrict(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId)}" />
 						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"/>
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
 			</tr>
