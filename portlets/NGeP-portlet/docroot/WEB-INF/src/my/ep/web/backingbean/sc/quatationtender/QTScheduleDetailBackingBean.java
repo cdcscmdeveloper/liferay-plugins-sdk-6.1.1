@@ -24,6 +24,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -557,6 +558,14 @@ public class QTScheduleDetailBackingBean extends
 			}
 			
 			updateProposalValidityDate(scQt);
+			
+			QtAmendMentBean amendMentBean = this.getManagedBean()
+					.getAmendMentBean();
+			
+			if (null == amendMentBean) {
+				amendMentBean = new QtAmendMentBean();
+				this.getManagedBean().setAmendMentBean(amendMentBean);
+			}
 		}
 	}
 
