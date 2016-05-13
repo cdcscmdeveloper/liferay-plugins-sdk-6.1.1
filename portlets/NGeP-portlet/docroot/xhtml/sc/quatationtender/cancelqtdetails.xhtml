@@ -49,43 +49,10 @@
 			</c:when>
 	
 			<c:otherwise>
-				<p:panel id="beforePublished" header="#{lbl['lbl.sc.cancel.quatation.tender']}"
-					toggleable="true">
-					
-					<table style="width: 100%" id="remarkslist">
-				<tr>
-					<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-							value="#{lbl['lbl.sc.remark']}" /></td>
-					<td class="TableFieldRight"><p:dataGrid id="cancelRemarks"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							value="#{qTDetailBB.managedBean.qt.scQtRemarks}" var="remarkVar"
-							rowIndexVar="remarkIndex" columns="1">
-							<table>
-								<tr>
-									<td rowspan="2" valign="top"><h:graphicImage
-											value="#{qTDetailBB.userImagePath(remarkVar.createdUser.loginId)}"
-											height="30" width="30" /></td>
-									<td width="5"></td>
-									<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-										<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
-											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-										</h:outputText></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-											rendered="#{remarkVar.remarkId eq null}"
-											/>
-										<h:outputText value="#{remarkVar.remark}"
-											rendered="#{remarkVar.remarkId ne null}"
-											style="display: inline-block; width:220px;word-wrap: break-word;"
-											/></td>
-								</tr>
-							</table>
-						</p:dataGrid></td>
-						</tr>
-						</table>
-				</p:panel>
+				<ac:scRemarkAndAttachment
+					remarkList="#{qTDetailBB.managedBean.qt.scQtRemarks}"
+					showAttachment="false"
+					header="#{lbl['lbl.sc.cancel.quatation.tender']}" />
 			</c:otherwise>
 		</c:choose>
 	</ui:define>
