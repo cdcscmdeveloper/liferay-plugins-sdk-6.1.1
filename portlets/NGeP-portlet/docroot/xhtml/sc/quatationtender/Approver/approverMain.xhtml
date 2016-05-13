@@ -58,11 +58,13 @@
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryPtj}">
 			<ui:include src="requestPTJdetails.xhtml" />
 			<ui:include src="ptjApprovalextendcls.xhtml" />
+			<ui:include src="approveremarksdetails.xhtml" />
 		</c:if>
 		<c:if
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryCommitteeeApointment}">
 			<ui:include src="requestPTJdetails.xhtml" />
 			<ui:include src="approverCommittee.xhtml" />
+			<ui:include src="approveremarksdetails.xhtml" />
 		</c:if>
 		<c:if
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalRequestPublicationApproval}">
