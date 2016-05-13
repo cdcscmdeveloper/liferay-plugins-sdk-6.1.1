@@ -17,12 +17,12 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
-					<td><p:inputText disabled="true" size="46"
+					<td><p:inputText disabled="true" size="54"
 							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.cmItem.extensionCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
-					<td><p:inputText disabled="true" size="46"
+					<td><p:inputText disabled="true" size="54"
 							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName}" /></td>
 				</tr>
 				<tr>
@@ -34,7 +34,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
-					<td valign="bottom"><p:inputText disabled="true" size="25"
+					<td valign="bottom"><p:inputText disabled="true" size="30"
 							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.uom.uomName}" /></td>
 				</tr>
 				<ui:fragment
@@ -43,7 +43,7 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" /></td>
 						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
-								size="25"
+								size="30"
 								value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clUomFrequency}" />
 						</td>
 					</tr>
@@ -51,7 +51,7 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" /></td>
 						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
-								size="25"
+								size="30"
 								value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clUomPerDay}" />
 						</td>
 					</tr>
@@ -59,7 +59,7 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" /></td>
 						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
-								size="25"
+								size="30"
 								value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clUomFrequency}" />
 						</td>
 					</tr>
@@ -67,14 +67,14 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" /></td>
 						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
-								size="25"
+								size="30"
 								value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clUomPerMonth}" />
 						</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.duration.month']}" /></td>
 						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
-								size="25"
+								size="30"
 								value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clDurationMonth}" />
 						</td>
 					</tr>
@@ -85,7 +85,7 @@
 					<td>
 						<table>
 							<tr>
-								<td><p:inputText size="25" styleClass="ppRightBtn"
+								<td><p:inputText size="30" styleClass="ppRightBtn"
 								        required="true"
 										disabled="#{isViewOnly}"
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
@@ -104,7 +104,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.ceiling.price']}"
 							rendered="#{requestNoteBackingBean.managedBean.itemCheck}" /></td>
 					<td><p:inputText styleClass="ppRightBtn" disabled="true"
-							size="25"
+							size="30"
 							rendered="#{requestNoteBackingBean.managedBean.itemCheck}" /></td>
 				</tr>
 
@@ -136,7 +136,7 @@
 							value="#{lbl['lbl.sc.request.note.fulfill.type']}" /></td>
 					<td><p:inputText
 							value="#{requestNoteBackingBean.getParameterDesc(requestNoteBackingBean.managedBean.requestNoteDtl.fulfilmentType)}"
-							disabled="true" size="25" style="margin-top: 5px;" /> <ac:iconTooltip
+							disabled="true" size="30" style="margin-top: 5px;" /> <ac:iconTooltip
 							value="#{lbl['lbl.sc.fulfilment.tooltip']}" /></td>
 				</tr>
 			</table>

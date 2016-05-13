@@ -19,17 +19,17 @@
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
-					<td><p:inputText disabled="true" size="46"
+					<td><p:inputText disabled="true" size="54"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.smSupplier.companyName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
-					<td><p:inputText disabled="true" size="46"
+					<td><p:inputText disabled="true" size="54"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.extensionCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
-					<td><p:inputText disabled="true" size="46"
+					<td><p:inputText disabled="true" size="54"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}" /></td>
 				</tr>
 				<tr>
@@ -41,13 +41,13 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
-					<td><p:inputText disabled="true" size="25"
+					<td><p:inputText disabled="true" size="31"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName}" />
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.min.qty']}" /></td>
-					<td><p:inputText disabled="true" size="25"
+					<td><p:inputText disabled="true" size="31"
 							styleClass="ppRightBtn"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.minOrder}">
 							<f:convertNumber
@@ -56,7 +56,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
-					<td><p:inputText size="25" styleClass="ppRightBtn"
+					<td><p:inputText size="31" styleClass="ppRightBtn"
 					        required="true"
 							label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId"
 							validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
@@ -75,7 +75,7 @@
 						<table>
 							<tr>
 								<td><p:selectOneMenu id="priceType"
-										style="margin-bottom: 5px; width: 213px;"
+										style="margin-bottom: 5px; width: 225px;"
 										label="#{lbl['lbl.sc.price.type']}"
 										required="#{requestNoteBackingBean.managedBean.required}"
 										value="#{requestNoteBackingBean.managedBean.priceType}">
@@ -121,7 +121,7 @@
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
 						</h:panelGroup></td>
 					<td><h:panelGroup id="justValue">
-							<p:selectOneMenu style="margin-bottom: 5px; width: 213px;"
+							<p:selectOneMenu style="margin-bottom: 5px; width: 225px;"
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 								id="justificationId" label="#{lbl['lbl.sc.reason']}"
 								required="#{requestNoteBackingBean.managedBean.justRequired}"
