@@ -113,7 +113,7 @@
 			value="#{templateSpecBean.selectedSpecQuestion.tplSpecScorings}"
 			rowKey="#{tplSpecScoring}" scrollable="#{!isCompliance and !isSpecTypeFinancial}" scrollHeight="200"> 
 			
-			<p:column style="width:20px;" rendered="#{!isCompliance and !isSpecTypeFinancial and editable}">
+			<p:column style="width:25px;" rendered="#{!isCompliance and !isSpecTypeFinancial and editable}" styleClass="td-check-box-spacing">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="scoringTbl"  listener="#{templateSpecBackingBean.selectAll(templateSpecBean.selectAll, templateSpecBean.selectedSpecQuestion.tplSpecScorings)}" />
