@@ -153,11 +153,18 @@
 				</c:otherwise>
 			</c:choose>
 			<h:outputLabel value="" />
-
+			
+			<h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" styleClass="outputLabel-view-label" />
+			<h:outputText
+				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
+			</h:outputText>
+			<h:outputLabel value="" />
+			<h:outputLabel value="" />
+			
 			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label"/>
-			<h:outputText value="One Tier"
+			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.one.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
-			<h:outputText value="Two Tier"
+			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.two.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
 			<h:outputLabel value="" />
 		</h:panelGrid>
@@ -176,7 +183,7 @@
 
 			<h:outputLabel value="#{lbl['lbl.sc.ministry']}" styleClass="outputLabel-view-label"/>
 			<h:outputText
-				value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgName}" />
+				value="#{noticeBoardBackingBean.managedBean.ministryName}" />
 			<h:outputLabel value="" />
 
 			<h:outputLabel value="#{lbl['lbl.sc.ptj']}" styleClass="outputLabel-view-label"/>
@@ -226,10 +233,16 @@
 			</h:outputText>
 			<h:outputLabel value="" />
 
+			<h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" styleClass="outputLabel-view-label"/>
+			<h:outputText
+				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
+			</h:outputText>
+			<h:outputLabel value="" />
+			
 			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" />
-			<h:outputText value="One Tier"
+			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.one.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
-			<h:outputText value="Two Tier"
+			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.two.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
 			<h:outputLabel value="" />
 		</h:panelGrid>
