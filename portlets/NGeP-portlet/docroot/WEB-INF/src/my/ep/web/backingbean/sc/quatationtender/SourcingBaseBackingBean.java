@@ -248,20 +248,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
 
-		attachment.setFileName(fileName);
-		attachment.setFileDesc("File uploded");
+		if (fileBytes != null) {
+			attachment.setFileName(fileName);
+			attachment.setFileDesc("File uploded");
 
-		populateAttachmentDetails(attachment);
+			populateAttachmentDetails(attachment);
 
-		FileOutputStream fos;
-		fos = new FileOutputStream(getActualFilePath(attachment));
-		fos.write(fileBytes);
-		fos.close();
+			FileOutputStream fos;
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			fos.write(fileBytes);
+			fos.close();
 
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"The file was uploaded successfully.", null);
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"The file was uploaded successfully.", null);
 
-		FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesContext.getCurrentInstance().addMessage(null, message);	
+		}
 	}
 
 	/**
