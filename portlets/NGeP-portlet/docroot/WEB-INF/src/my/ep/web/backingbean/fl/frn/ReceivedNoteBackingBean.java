@@ -619,13 +619,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().getApproverList().addAll(orderApproverList);
 		}
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
-			PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
-			if(status==null || status.getStatusId().longValue()!=FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT) {
-				throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
-			}
+//			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+//			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+//			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+//			PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
+//			if(status==null || status.getStatusId().longValue()!=FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT) {
+//				throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
+//			}
 			checkLastTaxFRN();
 			IPersonnelSO personnelSO = (IPersonnelSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
@@ -699,6 +699,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @param outcome the outcome
 	 */
 	public String gpkiSignAction(String outcome){
+		IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+		PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
+		if(status==null || status.getStatusId().longValue()==FulfilmentStatusConst.DO_CLOSED_DUE_TO_AP59 ||
+				status.getStatusId().longValue()==FulfilmentStatusConst.DO_CANCELLED ||
+				status.getStatusId().longValue()==FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL ||
+				status.getStatusId().longValue()==FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL) {
+			throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
+		}
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {		
 			validateFulfilmentNote(outcome);
 			setTextBeforeSign(outcome);
