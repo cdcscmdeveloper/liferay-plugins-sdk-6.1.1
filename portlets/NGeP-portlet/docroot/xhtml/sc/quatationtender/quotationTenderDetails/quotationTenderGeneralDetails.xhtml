@@ -183,7 +183,7 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.spec.expected.intended.price']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText id="expIntendedPrice"
+						<td><table><tr><td><p:inputText id="expIntendedPrice"
 								style="text-align:right; width:195px;"
 								value="#{scQt.tmpExpectedIntendedPrice}" required="true"
 								label="#{lbl['lbl.sc.spec.expected.intended.price']}">
@@ -194,7 +194,16 @@
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText> <p:message id="expIntendedPriceMsg" for="expIntendedPrice"
-								display="icon" /></td>
+								display="icon" />
+								</td>
+								<td style="margin-top: -3px"> <ac:iconTooltip 
+									value="#{lbl['lbl.sc.spec.expected.intended.price.tooltip']}" /></td>
+								</tr>
+								</table>
+								</td>
+								
+								
+									
 						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 						<td><p:inputText
 								value="#{createQtBB.getParameterDesc(scQt.procurementMode)}"
@@ -212,12 +221,19 @@
 							</p:inputText></td>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.spec.expected.intended.price']}" /></td>
-						<td><p:inputText id="expIntendedPrice"
+						<td><table><tr><td><p:inputText id="expIntendedPrice"
 								style="text-align:right; width:200px;"
 								value="#{scQt.tmpExpectedIntendedPrice}" disabled="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
+							<td style="margin-top: -3px"><ac:iconTooltip 
+									value="#{lbl['lbl.sc.spec.expected.intended.price.tooltip']}" /></td>
+									</tr>
+									</table>
+									</td>
+									
+									
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
