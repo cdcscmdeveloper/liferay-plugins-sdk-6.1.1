@@ -543,12 +543,12 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		if(getManagedBean().getExternalPageUrl() == null) {
 			tempDocSearch();
 		}
-		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"?faces-rediret=true" : "templateDocSearch";
+		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"" : "templateDocSearch";
 	}
 
 	public String backAction() {
 		getManagedBean().setSelectedTemplate(null);
-		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"?faces-rediret=true" : "templateDocSearch?faces-redirect=true";
+		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"" : "templateDocSearch?faces-redirect=true";
 	}
 	
 	public static void getDocSectionList(int level, TreeNode node,
