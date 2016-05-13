@@ -297,9 +297,11 @@
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="uploadAp201Pg" >
 		</p:fileUpload>
+		<f:facet name="footer">
 		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadAp201Dlg.hide();" />
    		</div>
+   		</f:facet>
 	</p:dialog>
 	<p:outputPanel>
 	 <h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"
@@ -346,9 +348,11 @@
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="uploadBondExemptedPg" >
 		</p:fileUpload>
+		<f:facet name="footer">
 		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadBondExemptedDlg.hide();" />
    		</div> 
+   		</f:facet>
 	</p:dialog>
  </p:panel>
 </ui:composition>

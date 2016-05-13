@@ -155,9 +155,11 @@
 				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  
 				update=":form:tableBond">
 			</p:fileUpload>
+			<f:facet name="footer">
 			<div class="ppRightBtn">
 			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadBondDlg.hide();" />
 	   		</div>
+	   		</f:facet>
 		</p:dialog>
 		    <p:confirmDialog id="dlgPerformDel" widgetVar="dlgPerformDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
