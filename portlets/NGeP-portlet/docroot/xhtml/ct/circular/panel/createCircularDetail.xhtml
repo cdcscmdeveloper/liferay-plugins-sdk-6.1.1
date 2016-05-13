@@ -67,17 +67,22 @@
 		         	          <p:message for="popupButtonCal1" display="icon" />
 		         	       </h:panelGrid>	
 
-				          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-		                   <h:panelGroup id="uploadCircularPg">
+				          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" 
+				             rendered="#{(panelBackingBean.managedBean.circularVer.circularFilePath == null and !panelBackingBean.managedBean.viewContract) 
+				  or (panelBackingBean.managedBean.circularVer.circularFilePath != null and !panelBackingBean.managedBean.viewContract)
+				  or (panelBackingBean.managedBean.circularVer.circularFilePath != null and panelBackingBean.managedBean.viewContract)}" />
+		         <h:panelGroup id="uploadCircularPg">
 				   	            <p:commandButton icon="ui-icon-upload"
-				   	                   rendered="#{panelBackingBean.managedBean.circularVer.circularFileName == null}"
+				   	                   rendered="#{panelBackingBean.managedBean.circularVer.circularFileName == null
+				   	                   and !panelBackingBean.managedBean.viewContract}"
 						               update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
 						               disabled="#{panelBackingBean.managedBean.viewContract}"/>	
 					            <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+					                 rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null}"
 						               styleClass="blue_font truncate"  action="#{panelBackingBean.downloadFile()}" />
 						         <p:commandLink  onclick="deleteAttachFile.show();"
-						              disabled="#{panelBackingBean.managedBean.viewContract}"
-						              rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null}">
+						              rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null
+						              and !panelBackingBean.managedBean.viewContract}">
 			   				          <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	                 </p:commandLink>				
 			  	            </h:panelGroup>
