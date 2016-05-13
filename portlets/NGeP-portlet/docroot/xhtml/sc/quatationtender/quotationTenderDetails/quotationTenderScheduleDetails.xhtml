@@ -14,12 +14,22 @@
 				<td style="width: 235px;"><p:outputLabel
 						value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td><h:panelGroup id="publishId">
+				<td>
 						<table>
 							<tr>
 								<td>
+									<ui:param name="isPublishDateEnable" value="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}" />
 									<c:choose>
-										<c:when test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}">
+										<c:when test="#{isPublishDateEnable and qTDetailBB.managedBean.qt.qtStatus.statusId == QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION}">
+											<ac:dateTime id="resNoticePublish"
+												mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
+												label="#{lbl['lbl.sc.publish.date']}"
+												value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}"
+												update="@([id$=scheduleDetalsPublishingClosing])"
+												postUpdateListener="qTScheduleDetailBackingBean.handleReschedulePublishedDate">
+											</ac:dateTime>
+										</c:when>
+										<c:when test="#{isPublishDateEnable}">
 											<p:calendar label="#{lbl['lbl.sc.publish.date']}"
 												mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
 												value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}"
@@ -31,8 +41,12 @@
 												size="15">
 												<p:ajax event="dateSelect" process="@this"
 													listener="#{qTScheduleDetailBackingBean.handlePublishedDate()}"
-													update="proposalvalidityid, closingDate, publishId,scheduleDetalsPublishingClosing,publishTime, closingTime" />
+													update="scheduleDetalsPublishingClosing" />
 											</p:calendar>
+											<p:inputText id="publishTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" disabled="true" size="4"
+												style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+											</p:inputText>
 										</c:when>
 										<c:otherwise>
 											<p:inputText id="publishDate" 
@@ -40,22 +54,23 @@
 												 disabled="true" style="width: 120px;margin-top:5px;">
 												 <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 											</p:inputText>
+											<p:inputText id="publishTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" disabled="true" size="4"
+												style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+											</p:inputText>
 										</c:otherwise>
 									</c:choose> 
-									<p:inputText id="publishTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" disabled="true" size="4"
-										style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
-										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
-									</p:inputText>
+									
 								</td>
 								<td>
-									<c:if test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}">
+									<c:if test="#{isPublishDateEnable and qTDetailBB.managedBean.qt.qtStatus.statusId != QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION}">
 										<p:message id="noticePublishMsg" for="noticePublish"
 											display="icon" />
 									</c:if>
 								</td>
 							</tr>
 						</table>
-					</h:panelGroup></td>
+				</td>
 			</tr>
 			<c:if
 				test="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired eq 'true'}">
@@ -81,19 +96,41 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.closing.date']}" /></td>
-				<td><p:inputText id="closingDate"
-						value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
-						readonly="true" disabled="true"
-						style="width: 120px;margin-top:5px">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>
-					<p:inputText id="closingTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}" 
-						disabled="true" size="4"
-						style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
-						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
-					</p:inputText> 
-					<ac:iconTooltip value="#{lbl['lbl.sc.closing.date.tooltip']}" />
+				<td>
+					<table>
+					<tr>
+						<td>
+							<c:choose>
+								<c:when test="#{qTDetailBB.managedBean.qt.qtStatus.statusId == QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE}">
+									<ac:dateTime id="resClosingDate"
+										mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
+										label="#{lbl['lbl.sc.closing.date']}"
+										value="#{qTScheduleDetailBackingBean.managedBean.qt.newClosingDate}"
+										update="@([id$=scheduleDetalsPublishingClosing], .amendButton)"
+										postUpdateListener="qTScheduleDetailBackingBean.handleReschedulePublishClosingDate">
+									</ac:dateTime>
+								</c:when>
+								<c:otherwise>
+									<p:inputText id="closingDate"
+										value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
+										readonly="true" disabled="true"
+										style="width: 120px;margin-top:5px">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</p:inputText>
+									<p:inputText id="closingTime" value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}" 
+										disabled="true" size="4"
+										style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+									</p:inputText>
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<ac:iconTooltip value="#{lbl['lbl.sc.closing.date.tooltip']}" />
+						</td>
+					</tr>
+					</table>
 				</td>
 			</tr>
 
@@ -132,7 +169,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
-				<td><p:inputText
+				<td><p:inputText id="qtValidityPeriod"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
 						readonly="true" disabled="true"
 						style="width: 120px;margin-top:5px;text-align:right" /></td>
@@ -140,7 +177,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
-				<td><p:inputText id="proposalvalidityid"
+				<td><p:inputText id="proposalValidityEndDate"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalValidityEndDate}"
 						readonly="true" disabled="true"
 						style="width: 120px;margin-top:5px;">
