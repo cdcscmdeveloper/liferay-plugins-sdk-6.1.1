@@ -13,7 +13,7 @@
 	<ui:param name="qtStatusAfterChecklistScoring"
 		value="#{createQtBB.isQTStatusGreaterThan(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
 	<ui:param name="qtStatusChecklistScoring"
-		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.qtStatus.statusId == QT_PENDING_CHECKLIST_SCORING_REVISION}" />
+		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION}" />
 	<ui:param name="qtStatusChecklistScoringAndBefore"
 		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter"
