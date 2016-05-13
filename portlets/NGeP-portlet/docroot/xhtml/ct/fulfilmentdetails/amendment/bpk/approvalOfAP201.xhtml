@@ -144,7 +144,12 @@
 							invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 							label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
 							update="lampiran1" >
-						</p:fileUpload> 
+						</p:fileUpload>
+						<f:facet name="footer">
+						<div class="ppRightBtn">
+						    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadDlg2.hide();" />
+				  		</div>
+						</f:facet> 
 					</p:dialog>
 	
 					 <p:confirmDialog id="deleteAttachmentDlgObj" widgetVar="deleteAttachmentDlgObj" message="#{lbl['lbl.msg.confirm.delete']}" 	

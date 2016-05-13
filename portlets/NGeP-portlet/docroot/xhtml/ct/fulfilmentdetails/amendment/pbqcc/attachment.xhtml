@@ -57,9 +57,11 @@
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="lampiranComitte" >
 		</p:fileUpload>
+		<f:facet name="footer">
 		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadComitteDlg.hide();" />
    		</div> 
+   		</f:facet>
 	</p:dialog>
 	
 	  <p:confirmDialog id="deleteComitteDlg" widgetVar="deleteComitteDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	

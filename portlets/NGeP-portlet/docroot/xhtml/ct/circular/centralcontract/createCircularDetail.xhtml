@@ -118,8 +118,10 @@
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="uploadCircularPg" >
 		</p:fileUpload>
+		<f:facet name="footer">
 		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadCircularDlg.hide();" />
    		</div> 
+   		</f:facet>
 	</p:dialog>
 </ui:composition>
