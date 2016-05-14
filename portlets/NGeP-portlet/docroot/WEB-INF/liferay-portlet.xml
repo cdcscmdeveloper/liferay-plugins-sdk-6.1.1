@@ -2425,6 +2425,13 @@
 	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 	 	<css-class-wrapper>consolidationReport-portlet</css-class-wrapper>
 	 </portlet>	 
+	 <portlet>
+	 	<portlet-name>scQTRetry</portlet-name>
+	 	<icon>/icon.png</icon>
+	 	<instanceable>false</instanceable>
+	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+	 	<css-class-wrapper>scqtretry-portlet</css-class-wrapper>
+	 </portlet>
 	  <portlet>
 	 	<portlet-name>ptjGfmasInbound</portlet-name>
 	 	<icon>/icon.png</icon>

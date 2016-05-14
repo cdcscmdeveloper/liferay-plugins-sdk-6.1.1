@@ -7854,6 +7854,37 @@
 		</security-role-ref>
 	</portlet>	
 	<portlet>
+		<portlet-name>scQTRetry</portlet-name>
+		<display-name>Quotation / Tender Service Retry</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/qtretry/qtRetryMain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Quotation / Tender Service Retry</title>
+			<short-title>Quotation / Tender Service Retry</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
 		<portlet-name>resendAccountActivationEmail</portlet-name>
 		<display-name>Resend Account Activation Email</display-name>
 		<portlet-class>

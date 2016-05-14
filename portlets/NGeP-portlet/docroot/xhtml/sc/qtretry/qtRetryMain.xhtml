@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:define name="contentSection">
+		<p:messages id="qtRetryMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td style="text-align:right;">
+				<p:commandButton id="submitRetryBtn"
+					value="#{lbl['lbl.btn.submit']}"
+					action="#{qtRetryBackingBean.submitQTRetryAction}"
+					partialSubmit="true"
+					process="@this"
+					update="qtRetryTbl"
+					onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					disabled="#{empty qtRetryBackingBean.selectedRetryQTs}" /> 
+				<p:commandButton
+					value="#{lbl['lbl.sc.btn.refresh']}"
+					action="#{qtRetryBackingBean.reloadRetryQTAction}"
+					partialSubmit="true"
+					process="@this"
+					update="qtRetryTbl" />
+			</td>
+		</tr>
+		</table>
+
+		<p:dataTable id="qtRetryTbl" value="#{qtRetryBackingBean.retryQTDataModel}" 
+			var="scQt" rowIndexVar="index" 
+			lazy="true" rows="10"
+			selection="#{qtRetryBackingBean.selectedRetryQTs}">
+
+			<ac:paginator for="qtRetryTbl" />
+			
+			<p:ajax event="rowSelect" update="@([id$=submitRetryBtn])" />
+			<p:ajax event="rowUnselect" update="@([id$=submitRetryBtn])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=submitRetryBtn])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=submitRetryBtn])" />
+			<p:ajax event="toggleSelect" update="@([id$=submitRetryBtn])" />
+			
+			<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
+
+			<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
+				<h:outputText value="#{scQt.qtNo}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.title']}">
+				<h:outputText value="#{scQt.qtTitle}"
+					style="white-space: normal;word-wrap: break-word;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.published.date']}"
+				style="width:80px;">
+				<h:outputText value="#{scQt.publishDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.closing.date']}"
+				style="width:80px;">
+				<h:outputText value="#{scQt.closingDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.disruption.stage']}" style="width:200px;">
+				<h:outputText value="#{scQt.disruptionStage}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.disruption.date']}" style="width:80px;">
+				<h:outputText value="#{scQt.disruptionDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+		
+	</ui:define>
+</ui:composition>
