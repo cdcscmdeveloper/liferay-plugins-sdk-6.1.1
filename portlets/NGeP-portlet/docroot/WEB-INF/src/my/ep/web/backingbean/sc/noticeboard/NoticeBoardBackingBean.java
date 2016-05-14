@@ -1085,6 +1085,7 @@ public class NoticeBoardBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(), 1));
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
+					statusIds.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 					setDisplayImage(isUser());
 
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
@@ -1106,6 +1107,7 @@ public class NoticeBoardBackingBean extends
 					
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
+					statusIds.add(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
 					setDisplayImage(isUser());
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("IS_CHANGED",
