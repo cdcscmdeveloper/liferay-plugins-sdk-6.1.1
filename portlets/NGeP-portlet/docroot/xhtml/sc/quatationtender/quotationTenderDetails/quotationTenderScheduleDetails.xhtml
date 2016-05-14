@@ -23,6 +23,7 @@
 										<c:when test="#{isPublishDateEnable and qTDetailBB.managedBean.qt.qtStatus.statusId == QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION}">
 											<ac:dateTime id="resNoticePublish"
 												mindate="#{qTScheduleDetailBackingBean.managedBean.today}"
+												maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 												label="#{lbl['lbl.sc.publish.date']}"
 												value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}"
 												update="@([id$=scheduleDetalsPublishingClosing])"
