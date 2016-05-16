@@ -54,6 +54,14 @@
 									pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" /></h:outputText></td>
 
 						</tr>
+						<tr>
+							<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.sc.bsv.qtn.no']}:" /></td>
+							<td style="width: 40%" class="header-info-text">
+							<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}"/></td>
+							<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.sc.title']}:" /></td>
+							<td style="width: 40%" class="header-info-text">
+							<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQt.qtTitle}"/></td>
+						</tr>
 					</table>
 				</div>
 		<div class="header-spacing">
