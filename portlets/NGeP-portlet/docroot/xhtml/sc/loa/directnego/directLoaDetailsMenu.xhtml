@@ -296,6 +296,20 @@
 							update="@this,ContractAmtId"></p:ajax>
 					</p:inputText></td>
 			</tr>
+
+			<tr>
+				<td></td>
+				<td colspan="3">
+					<h:outputText styleClass="instruction"
+						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
+						escape="false" /> <br />
+					<h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
+						escape="false"
+						rendered="#{directLOABackingBean.managedBean.renderRemainder}" />
+				</td>
+			</tr>
+
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
@@ -485,18 +499,4 @@
 			</tr>
 		</table>
 	</p:panel>
-	
-	<br />
-	<div>
-		<h:outputText value="Reminder 1 :" style="font-weight:bold;"></h:outputText>
-		<h:outputText styleClass="instruction"
-			value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
-			escape="false" />
-		<br />
-		<h:outputText value="Reminder 2 :" style="font-weight:bold;"
-			rendered="#{directLOABackingBean.managedBean.renderRemainder}"></h:outputText>
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.gst.remainder.two.instruction']}" escape="false"
-			rendered="#{directLOABackingBean.managedBean.renderRemainder}" />
-	</div>
 </ui:composition>
