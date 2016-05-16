@@ -95,19 +95,6 @@
 		<ui:include src="invTaxScreen.xhtml"></ui:include>
 		<ui:include src="outOfScopeScreen.xhtml"></ui:include>
 		
-		<p:spacer height="5px"></p:spacer>
-		<table>	
-			<tr>
-				<td><p:selectBooleanCheckbox
-						disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
-						value="#{invoiceBackingBean.managedBean.reliefDeclarationCheck}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><h:outputText style="text-align:left"
-						value="#{lbl['lbl.fl.invoice.relief.declaration']}" /></td>
-			</tr>
-		</table>
-		
-		
 		<p:blockUI widgetVar="blockTreeTable" block="normalInvItemTbl" >
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
