@@ -557,16 +557,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (!selectedSupplierList.isEmpty()) {
 			for (SmSupplier smSupplier : selectedSupplierList) {
 				Date presentDate = new Date();
-				if (null != smSupplier.getSmMofAccount() && null != smSupplier.getSmMofAccount().getExpDate()) {
+				if (null != smSupplier.getSmMofAccount() && 
+						null != smSupplier.getSmMofAccount().getExpDate()) {
 					Date expDate = smSupplier.getSmMofAccount().getExpDate();
 					long days = DateUtils.getDaysDifference(presentDate, expDate);
 					int day = (int) days;
 					if (day > 0) {
 						ScQtSupplier scQtSupplier = new ScQtSupplier();
+						scQtSupplier = populateScQtSupplierDetails(scQtSupplier, smSupplier);
+						
 						scQtSupplier.setSmSupplier(smSupplier);
 						scQtSupplier.setScQt(scQt);
 						scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
-//						scQtSupplier = populateScQtSupplierDetails(scQtSupplier, smSupplier);
 						
 						if (qtSupplierList.isEmpty()) {
 							qtSupplierList.add(scQtSupplier);
@@ -1743,6 +1745,31 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		log.info("retrievLocationDtls - END");
 	}
+	
+	/**
+	 * Populate ScQtSupplier Details
+	 * 
+	 * @return ScQtSupplier
+	 */
+	public ScQtSupplier populateScQtSupplierDetails(ScQtSupplier scQtSupplier, 
+												    SmSupplier smSupplier) {
+		IQTSupplierSO qtSupplierSO;
+		try {
+			qtSupplierSO = (IQTSupplierSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
+		
+			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+			reqDTO.setScQtSupplier(scQtSupplier);
+			reqDTO.setSupplierId(smSupplier.getSupplierId());
+			
+			QTSupplierResDTO resDTO = qtSupplierSO.populateScQtSupplierDetails(reqDTO);
+			scQtSupplier = resDTO.getScQtSupplier();
+		} finally {
+			qtSupplierSO = null;
+		}
+		
+		return scQtSupplier;
+	}		
 
 	public void validatePaidupcapital() {
 		debugLogger("validatePaidupcapital");
