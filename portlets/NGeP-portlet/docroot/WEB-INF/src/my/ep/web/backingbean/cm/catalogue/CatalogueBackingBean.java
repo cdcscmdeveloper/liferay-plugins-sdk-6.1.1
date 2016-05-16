@@ -974,13 +974,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 
-			//FacesContext facesContext = FacesContext.getCurrentInstance();
+			FacesContext facesContext = FacesContext.getCurrentInstance();
 
 			// facesContext.addMessage(null, new
 			// FacesMessage(FacesMessage.SEVERITY_INFO," Records Added Successfully",
 			// ""));
 
-/*			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 				retrieveSupplierItemsBySupplierId(catalogueSO, smSupplier.getSupplierId(), null);
 			} else {
 				facesContext.addMessage(
@@ -991,11 +991,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										.size() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-			}*/
+			}
 			//		} catch (Exception e) {
 			//			e.printStackTrace();
 
-/*			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 
 
 
@@ -1023,7 +1023,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				return navigateToCatalogDetForTempSupp(0);
 			}
-*/
+
 
 		}finally {
 			catalogueSO = null;
@@ -9190,7 +9190,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
-				supplierReqDTO.setAllStatuses(true);
 				SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
 				this.getManagedBean().setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
