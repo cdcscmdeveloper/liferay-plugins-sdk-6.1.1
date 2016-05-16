@@ -18,8 +18,9 @@
 		<p:outputPanel id="opImageUpload">
 			<p:fileUpload id="fuPortrait" update=":form:giUserImage"
 				 	fileUploadListener="#{profilePersonalizationBackingBean.handlePortraitUpload}" mode="advance" 
-         					sizeLimit="1000000" allowTypes="/(\.|\/)(png)$/" multiple="false"
-         					invalidFileMessage="Only PNG file is accepted" 
+         					sizeLimit="1000000" allowTypes="/(\.|\/)(png|jpe?g)$/" multiple="false"
+         					invalidFileMessage="#{lbl['lbl.pm.profiles.authorisation.invalid.pictype']}" 
+	   						invalidSizeMessage="#{lbl['lbl.pm.profiles.authorisation.invalid.filesize']}"
          					fileLimit="1" dragDropSupport="false" 
          					uploadLabel="#{lbl['lbl.btn.upload.all']}" 
 		   					label="#{lbl['lbl.btn.choose']}" 
