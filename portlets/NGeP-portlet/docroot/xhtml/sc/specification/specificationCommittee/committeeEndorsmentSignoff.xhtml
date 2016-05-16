@@ -81,43 +81,11 @@
 		</div>
 		<ui:include src="committeeEndorsmentReminderpopup.xhtml" /> -->
 	</p:panel>
-
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
-		rendered="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL}">
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{specificationBackingBean.managedBean.specificationRemarks}"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage height="30"
-										value="#{specificationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
-										<f:convertDateTime
-											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										maxlength="1000"
-										readonly="#{specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT and specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_MSC_APPROVAL and specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION}"
-										rendered="#{remarkVar.remarkId eq null and (specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)}" />
-									<h:outputText value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null and (specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL)}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" />
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel>
+	
+	<c:if test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL}">
+		<ac:scRemarkAndAttachment
+			remarkList="#{specificationBackingBean.managedBean.specificationRemarks}"
+			showAttachment="false"
+			readonly="#{specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT and specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_MSC_APPROVAL and specificationBackingBean.managedBean.currentStatusId ne QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION}" />
+	</c:if>
 </ui:composition>
