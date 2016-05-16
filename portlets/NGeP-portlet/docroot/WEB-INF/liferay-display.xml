@@ -207,10 +207,7 @@
 			<portlet id="itemCodeSearchPortal"></portlet>
 			<portlet id="cmTrackingDiary"></portlet>
 			<portlet id="cdTrackingDiary"></portlet>
-			
-			
-			
-			
+			<portlet id="supplierDashboard"></portlet>
 		</category>
 		
 		
