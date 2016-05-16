@@ -3976,7 +3976,9 @@ public class ProfileManagementBackingBean extends
 								MessageUtils.getMessage(
 										MessageConst.INFO_770107,
 										new String[] { resDTO.getPmUser()
-												.getLoginId() },
+												.getLoginId(),
+												resDTO.getPmUser()
+												.getEmail()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
