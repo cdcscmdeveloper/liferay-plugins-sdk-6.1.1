@@ -90,9 +90,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	/** The price type. */
 	private String priceType;
 
-	/** The duration. */
-	private double duration;
-
 	/** The created by. */
 	private String createdBy;
 
@@ -403,6 +400,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	
 	/** The store location tree. */
 	private List<TreeNode> storeLocationTree;
+	
+	/** The days. */
+	private long days;
+	
+	/** The hours. */
+	private long hours;
 	
 	/**
 	 * Gets the spki backing bean.
@@ -1252,25 +1255,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	 */
 	public void setByBusinessNature(boolean byBusinessNature) {
 		this.byBusinessNature = byBusinessNature;
-	}
-
-	/**
-	 * Gets the duration.
-	 * 
-	 * @return the duration
-	 */
-	public double getDuration() {
-		return duration;
-	}
-
-	/**
-	 * Sets the duration.
-	 * 
-	 * @param duration
-	 *            the duration to set
-	 */
-	public void setDuration(double duration) {
-		this.duration = duration;
 	}
 
 	/**
@@ -2583,7 +2567,40 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.storeLocationTree = storeLocationTree;
 	}
 
+	/**
+	 * Gets the days.
+	 *
+	 * @return the days
+	 */
+	public long getDays() {
+		return days;
+	}
 
-	
+	/**
+	 * Sets the days.
+	 *
+	 * @param days the new days
+	 */
+	public void setDays(long days) {
+		this.days = days;
+	}
+
+	/**
+	 * Gets the hours.
+	 *
+	 * @return the hours
+	 */
+	public long getHours() {
+		return hours;
+	}
+
+	/**
+	 * Sets the hours.
+	 *
+	 * @param hours the new hours
+	 */
+	public void setHours(long hours) {
+		this.hours = hours;
+	}
 	
 }

@@ -3693,33 +3693,27 @@ public class SimpleQuoteBackingBean extends
 	 */
 	public void calculateDuration(ScQuote quote) {
 		if (quote.getStartDate() != null && quote.getEndDate() != null) {
-			getManagedBean().setDuration(
-					getTimeDiff(quote.getEndDate(), quote.getStartDate()));
+					getDaysAndHours(quote.getStartDate(), quote.getEndDate());
 		}
 	}
-
+	
+	
 	/**
-	 * Gets the time diff by passing start date and end date
-	 * 
-	 * @param dateOne
-	 *            the date one
-	 * @param dateTwo
-	 *            the date two
-	 * @return the time diff
+	 * Gets the days and hours.
+	 *
+	 * @param dateOne the date one
+	 * @param dateTwo the date two
+	 * @return the days and hours
 	 */
-	private static double getTimeDiff(Date dateOne, Date dateTwo) {
-		long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
-		String hours = String.format("%d",
-				TimeUnit.MILLISECONDS.toHours(timeDiff));
-		String mins = String.format("%d", (TimeUnit.MILLISECONDS
-				.toMinutes(timeDiff) - TimeUnit.HOURS
-				.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
-		double time = (double) Integer.valueOf(hours)
-				+ (double) (Integer.valueOf(mins)) / 60;
-
-		return time;
+	private  void getDaysAndHours(Date dateOne, Date dateTwo){
+		long diff = dateTwo.getTime() - dateOne.getTime();
+		long diffHours = diff / (60 * 60 * 1000) % 24;
+		long diffDays = diff / (24 * 60 * 60 * 1000);
+        getManagedBean().setDays(diffDays);
+        getManagedBean().setHours(diffHours);
 	}
 
+	
 	/**
 	 * Submit prompt action. before submit simple quote, it shows the
 	 * prompt(dialogue) that Total time Supplier responds for this Simple Quote
