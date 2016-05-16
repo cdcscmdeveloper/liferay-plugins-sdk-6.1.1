@@ -311,18 +311,20 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	protected void updateSupplierBranchAddress(SmSupplierBranch supplierBranch,FlSupplierDtl supplierDtl){
 		FlAddress flAddress = supplierDtl.getFlAddress();
 		SmAddress smAddress = supplierBranch.getSmAddress();
-		flAddress.setAddress1(smAddress.getAddress1());
-		flAddress.setAddress2(smAddress.getAddress2());
-		flAddress.setAddress3(smAddress.getAddress3());
-		flAddress.setAddress4(smAddress.getAddress4());
-		flAddress.setMapLatitude(smAddress.getMapLatitude());
-		flAddress.setMapLongitude(smAddress.getMapLongitude());
-		flAddress.setPmCity(smAddress.getPmCity());
-		flAddress.setPmCountry(smAddress.getPmCountry());
-		flAddress.setPmDistrict(smAddress.getPmDistrict());
-		flAddress.setPmDivision(smAddress.getPmDivision());
-		flAddress.setPmState(smAddress.getPmState());
-		flAddress.setPostcode(smAddress.getPostcode());
+		if(smAddress!=null) {
+			flAddress.setAddress1(smAddress.getAddress1());
+			flAddress.setAddress2(smAddress.getAddress2());
+			flAddress.setAddress3(smAddress.getAddress3());
+			flAddress.setAddress4(smAddress.getAddress4());
+			flAddress.setMapLatitude(smAddress.getMapLatitude());
+			flAddress.setMapLongitude(smAddress.getMapLongitude());
+			flAddress.setPmCity(smAddress.getPmCity());
+			flAddress.setPmCountry(smAddress.getPmCountry());
+			flAddress.setPmDistrict(smAddress.getPmDistrict());
+			flAddress.setPmDivision(smAddress.getPmDivision());
+			flAddress.setPmState(smAddress.getPmState());
+			flAddress.setPostcode(smAddress.getPostcode());
+		}
 		
 		flAddress.setFaxNo(supplierBranch.getFaxNo());
 		flAddress.setFaxArea(supplierBranch.getFaxArea());
