@@ -10,8 +10,7 @@
 			<tr>
 				<td width="15%"><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td class="header-info-text">
-					#{qTDetailBB.managedBean.qt.qtNo}</td>
-					
+				#{qTDetailBB.managedBean.qt.brandNew ? lbl['lbl.sc.system.generated'] : qTDetailBB.managedBean.qt.qtNo}</td>
 				<ui:fragment
 					rendered="#{qTDetailBB.managedBean.qt.ppPlan.planNo ne null}">
 					<td><h:outputLabel value="#{lbl['lbl.sc.planno']}" /></td>
