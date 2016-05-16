@@ -66,7 +66,7 @@
 			</p:selectBooleanCheckbox>
 		</p:column>
 
-		<p:column width="5%">
+		<p:column width="3%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.code']}
 			</f:facet>
@@ -74,14 +74,14 @@
 				style="white-space: normal" />
 		</p:column>
 
-		<p:column width="25%" style="white-space: normal;">
+		<p:column width="20%" style="white-space: normal;">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}     
 			</f:facet>
 			<h:outputText value="#{selectedSuppCat.cmItem.itemName}" />
 
 		</p:column>
-		<p:column width="5%">
+		<p:column width="2%">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.price']}" />
@@ -106,7 +106,7 @@
 				conditionField="recordStatus^1">
 			</ac:lov>
 		</p:column>
-		<p:column width="5%">
+		<p:column width="2%">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.start.date']}" />
@@ -117,7 +117,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
-		<p:column width="5%">
+		<p:column width="2%">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
