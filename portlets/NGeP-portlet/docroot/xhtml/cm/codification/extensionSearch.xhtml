@@ -175,7 +175,7 @@
 
 					<ac:paginator for="itemTableID"></ac:paginator>
 
-					<p:column style="text-align: left;" rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
+					<p:column width="3%" style="text-align: left;" rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
 						<f:facet name="header">
 							<p:selectBooleanCheckbox id="selectAllCheckBoxId" value="#{codificationBackingBean.managedBean.extensionSearchcheckBoxAll}">
 								<p:ajax event="change"
@@ -189,20 +189,20 @@
 					</p:column>
 
 
-					<p:column width="25%">
+					<p:column width="23%">
 						<f:facet name="header">
 							#{lbl['lbl.cm.type']}
 						</f:facet>
 						#{obj[4]}
 
 					</p:column>
-					<p:column width="25%">
+					<p:column width="23%">
 						<f:facet name="header">
 							#{lbl['lbl.cm.brand']}
 						</f:facet>
 						#{obj[5]}
 					</p:column>
-					<p:column width="25%">
+					<p:column width="23%">
 						<f:facet name="header">
 							#{lbl['lbl.cm.measurement']}
 						</f:facet>
