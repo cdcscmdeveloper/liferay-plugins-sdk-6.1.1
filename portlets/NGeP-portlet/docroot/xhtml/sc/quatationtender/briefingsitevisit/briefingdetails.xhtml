@@ -38,7 +38,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.date.time']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="3"><p:calendar id="briefdate"
-								mindate="#{qTBriefingSiteVisitBackingBean.managedBean.today}"
+								mindate="#{DateUtils.addDays(qTBriefingSiteVisitBackingBean.managedBean.today,1)}"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.sc.date.time']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
