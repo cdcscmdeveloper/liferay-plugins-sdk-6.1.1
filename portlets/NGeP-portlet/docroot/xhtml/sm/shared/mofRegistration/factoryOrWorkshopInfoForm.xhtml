@@ -189,7 +189,7 @@
 								<p:inputText id="smFacFactoryPrice"
 									disabled="#{!backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.cm.price']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
 									size="20"
 									required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
@@ -209,7 +209,7 @@
 								<p:inputText id="smFacFactoryRent"
 									disabled="#{!backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
 									size="20"
 									required="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">

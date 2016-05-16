@@ -180,7 +180,7 @@
 								<p:inputText id="smDocPrice"
 									disabled="#{!backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.cm.price']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedDockyardFacility.purchasePrice}"
 									size="20"
 									required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
@@ -200,7 +200,7 @@
 								<p:inputText id="smDocRent"
 									disabled="#{!backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
-									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.minAmt.validMsg']}"
+									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedDockyardFacility.rentalRate}"
 									size="20"
 									required="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
