@@ -16,7 +16,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<td>
 				<p:outputLabel value="#{lbl['lbl.pp.ministry']}" />
 			</td>
-			<td>
+			<td colspan ="3">
 				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrieveMinistry()}"></p:inputText>
 			</td>
 		</tr>
@@ -24,7 +24,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<td>
 				<p:outputLabel value="#{lbl['lbl.pp.pegawai.pengawal']}" />
 			</td>
-			<td>
+			<td colspan ="3">
 				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrievePegawaiPengawal()}"></p:inputText>
 			</td>
 		</tr>
@@ -32,7 +32,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<td>
 				<p:outputLabel value="#{lbl['lbl.pp.kumpulan.ptj']}" />
 			</td>
-			<td>
+			<td colspan ="3">
 				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrieveKumpulanPtj()}"></p:inputText>
 			</td>
 		</tr>
@@ -40,7 +40,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<td>
 				<p:outputLabel value="#{lbl['lbl.pp.ptj']}" />
 			</td>
-			<td>
+			<td colspan ="3">
 				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} / #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputText>
 			</td>
 		</tr>
