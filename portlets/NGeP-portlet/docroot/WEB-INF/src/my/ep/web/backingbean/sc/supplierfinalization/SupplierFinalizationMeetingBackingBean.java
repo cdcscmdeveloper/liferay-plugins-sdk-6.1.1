@@ -670,8 +670,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			CommitteResDTO resDTO = committeeSO.checkIfUserHasRoleByRoleCodeCommTypeAndOrgProfile(reqDTO);
 			if (resDTO.isSuccessful() && 
 					resDTO.isHasRequiredCommitteeRole()) {
-				PmParameter chairPersonRole = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, 
-						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+				PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 				pmUser.setMemberRoleId(chairPersonRole.getParameterId());
 				userRole = getParameterDesc(chairPersonRole);
 			}
@@ -832,7 +832,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 		setUserDetails(user);
 		
 		// Identification Code
-		PmParameter identificationCode = getPmParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+		PmParameter identificationCode = ParameterHelper.getInstance().getParameterByTypeAndCode(
+						ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 		user.setIdentificationCode(identificationCode);
 		user.setPmAddressTypes(null);
 		user.setPmCountry(getDefaultCountry());
@@ -976,8 +977,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			committeeMember.setPmUser(user);
 			committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
 			if (user.getMemberRoleId() == null) {
-				PmParameter memberRole = getPmParameterByTypeAndCode(
-						ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
+				PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
 				user.setMemberRoleId(memberRole.getParameterId());
 				committeeMember.setRepresentativeType(new PmParameter());
 				committeeMember.setRepresentativeTypeId(null);
@@ -1139,9 +1140,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			if (commMember.getMemberRole() == null || 
 					MemberRole.SECRETARY.getMemberRole()
 						.equals(commMember.getMemberRole().getParameterCode())) {
-				PmParameter memberRole = getPmParameterByTypeAndCode(
-											ParameterTypeConst.COMMITTEE_ROLE, 
-											ParameterConst.COMMITTEE_ROLE_MEMBER);
+				PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+							ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
 				commMember.setMemberRole(memberRole);
 				committeeMember.setRepresentativeType(new PmParameter());
 			}
@@ -1365,6 +1365,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			 
 			MeetingReqDTO reqDTO = meetingDtlsInfo();
 			reqDTO.setSubmit(true);
+			
+			validateCommitteeMembers();
 			boolean isValidationSuccessful = validateMeetingDtlsInfo(reqDTO);
 			if (!isValidationSuccessful) {
 				return;
@@ -1572,6 +1574,29 @@ public class SupplierFinalizationMeetingBackingBean extends
 				}
 			}
 		}
+		
+		ICommitteSO committeSO = null;
+		ScQtCommittee finalizationCommittee = this.getManagedBean().getScQtCommittee();
+		
+		try {
+			Long qtId = this.getManagedBean().getScQt().getQtId();
+			
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			ISearchBean<ScQtCommittee> searchBean = new SearchBean<ScQtCommittee>();
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("scQt.qtId",SearchOperator.OPERATOR_EQUALS.value(),qtId));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("scCommittee.approvalReq",
+							SearchOperator.OPERATOR_EQUALS.value(), true));
+			reqDTO.setCommSearchBean(searchBean);
+			
+			committeSO = (ICommitteSO) BusinessDelegate.getInstance().getServiceObject(
+									   ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			reqDTO.setScQtCommittee(finalizationCommittee);
+			committeSO.validateFcCommitteDetails(reqDTO);
+		} finally {
+			committeSO = null;
+		}
 	}	
 	
 	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){
@@ -1588,20 +1613,4 @@ public class SupplierFinalizationMeetingBackingBean extends
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 	
-	///to be removed
-	private PmParameter getPmParameterByTypeAndCode(String parameterType, String parameterCode) {
-		IParameterSO parameterSO = null;
-		try {
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterCode(parameterCode);
-			reqDTO.setParameterType(parameterType);
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			return resDTO.getPmParameter();
-		} finally {
-			parameterSO = null;
-		}
-	}
-
-
 }
