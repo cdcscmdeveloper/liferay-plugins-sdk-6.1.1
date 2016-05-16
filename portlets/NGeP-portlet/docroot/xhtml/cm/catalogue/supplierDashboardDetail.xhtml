@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:messages id="catalogTaskListMsgId" showDetail="true"
+		autoUpdate="true" closable="true" showSummary="true"></p:messages>
+
+
+
+
+
+
+	
+		<h:panelGroup id="catalogueTaskListId">
+			<div class="tabmenu-button-wrapper">
+				
+				<div
+					style="text-align: left; float: left; margin-top: 10px; margin-left: 8px;">
+					<p:outputLabel value="#{lbl['lbl.cm.supplier.dashboard.title']}" />
+				</div>
+			</div>
+			<div class="clear"></div>
+			<p:remoteCommand name="reviewCat"
+				action="#{reviewCatBackingBean.navigateToCatalogDetfromDashboard}" />
+
+			<p:dataTable rowKey="#{review.supplierItemId}" id="catalogueTableId"
+				lazy="true"
+				value="#{reviewCatBackingBean.managedBean.suppItemDashboardSearchDataModel}"
+				var="review" selectionMode="single"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				selection="#{reviewCatBackingBean.managedBean.selectedReviewCat}"
+				rows="10">
+
+				<ac:paginator for="catalogueTableId"></ac:paginator>
+
+				<p:ajax event="rowSelect" oncomplete="reviewCat();" />
+
+				<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.cm.unspsc.title']}
+					</f:facet>
+			
+			#{review.cmItem.itemName}
+
+		</p:column>
+		
+		<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.cm.item.status']}
+					</f:facet>
+					
+					#{reviewCatBackingBean.getStatusDesc(review.itemStatus)}
+			
+			
+		</p:column>
+				
+
+				<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.cm.submitted.date']}
+					</f:facet>
+			
+			#{review.changedDate}
+
+		</p:column>
+			</p:dataTable>
+		</h:panelGroup>
+
+</ui:composition>

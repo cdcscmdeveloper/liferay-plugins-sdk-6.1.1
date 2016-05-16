@@ -56,14 +56,27 @@
 				</p:commandButton>
 			</div>
 
+
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.catalogueAdmin and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus!='U'}">
-
 				<p:commandButton value="#{lbl['lbl.btn.approve']}"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.reject']}"
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
+
+			</h:panelGroup>
+
+
+			<h:panelGroup
+				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}">
+				<p:commandButton value="#{lbl['lbl.cm.publish']}"
+					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
+					action="#{catalogueBackingBean.singleSubmitToReviewItems}"
+					update="@form"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
+					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
+					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 
 			</h:panelGroup>
 		</div>
@@ -77,21 +90,17 @@
 							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
 							<div
 								style="display: block; max-width: 95%; width: 250px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
-						</h:panelGroup> 
-						
-						<h:panelGroup
+						</h:panelGroup> <h:panelGroup
 							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 1 }">
-							<div style="width: 250px;text-align:center;">	
+							<div style="width: 250px; text-align: center;">
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<p:graphicImage styleClass="catImageStyle" style="height:200px;"
+									<p:graphicImage styleClass="catImageStyle"
+										style="height:200px;"
 										value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
 								</ui:repeat>
-								</div>
-						</h:panelGroup>
-						
-						
-						<h:panelGroup
+							</div>
+						</h:panelGroup> <h:panelGroup
 							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 1 }">
 							<div id="slides" style="width: 250px;">
 								<ui:repeat var="cmImage"
