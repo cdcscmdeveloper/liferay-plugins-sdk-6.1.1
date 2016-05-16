@@ -2749,7 +2749,21 @@ public class ProfileManagementBackingBean extends
 									.getManagedBean().getSelectedOrgType()
 									.getParameterId()));			
 			isEmpty = false;
-		} 
+		}else{
+			if(getManagedBean().getSearchOrgCategory() != null){
+				SelectItem[] items =  getOrgTypeDropdownValues();
+				List<String> orgTypeIds = new ArrayList<>();
+				for(SelectItem item: items){
+					if(item.getValue() != null){
+						orgTypeIds.add(item.getValue().toString());
+					}
+				}
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmOrgProfile.orgTypeCode.parameterId",
+								SearchOperator.OPERATOR_IN.value(), orgTypeIds));		
+			}
+		}
 		
 //		else {
 //			throw new EpException(MessageConst.ERROR_770163);
