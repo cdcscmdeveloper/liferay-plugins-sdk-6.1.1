@@ -110,9 +110,7 @@ public interface QTConstants {
 	public static final String IDENTIFICATION_TYPE = "identificationCode";
 
 	// S2 bpm page redirect urls
-	public static final String BUSINESS_OWNER_SPEC_PREPARATION = "/xhtml/sc/specification/businessOwner/businessOwnerMain.xhtml";
 	public static final String SPECIFICICATON_COMM_PREPARATION = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml";
-	public static final String BO_SPEC_CREATION_PAGE = "/xhtml/sc/specification/businessOwner/businessOwnerTabMenu.xhtml";
 
 	// Constants for TreeNode construction..
 	public static final String NODE_ROOT = "root";
