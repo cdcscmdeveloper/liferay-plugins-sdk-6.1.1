@@ -58,41 +58,9 @@
 		</p:dataTable>
 
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.remark']}"
-		toggleable="true">
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{evaluationBackingBean.managedBean.qtCommitteeRemarks}"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage height="30"
-										value="#{evaluationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
-										<f:convertDateTime
-											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
-										value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" />
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel>
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{evaluationBackingBean.managedBean.qtCommitteeRemarks}"
+		showAttachment="false" />
 
 </ui:composition>
