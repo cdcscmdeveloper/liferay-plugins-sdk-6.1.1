@@ -21,7 +21,7 @@
 
 	</div>
 	<p:dataTable id="approvedSupplierItemID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-		value="#{catalogueBackingBean.managedBean.approvedSearchDataModel}"
+		value="#{catalogueBackingBean.managedBean.approvedSearchDataModel}" style="width:100%;"
 		rowIndexVar="rowIndex" var="approved"
 		rowKey="#{approved.supplierItemId}" rows="10"
 		selection="#{catalogueBackingBean.managedBean.selectedApprovedItems}">
@@ -37,14 +37,14 @@
 
 		<ac:paginator for="approvedSupplierItemID"></ac:paginator>
 
-		<p:column width="5%">
+		<p:column width="3%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.code']}
 			</f:facet>
 			<h:outputText value="#{approved.cmItem.extensionCode}"
 				style="white-space: normal" />
 		</p:column>
-		<p:column width="30%">
+		<p:column width="20%" style="white-space: normal;">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
 			</f:facet>

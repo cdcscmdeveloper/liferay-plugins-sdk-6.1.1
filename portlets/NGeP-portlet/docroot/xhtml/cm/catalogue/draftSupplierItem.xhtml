@@ -42,7 +42,7 @@
 		<p:remoteCommand name="refreshDraftSuppItem" id="refreshDraftSuppItem" action="#{catalogueBackingBean.checkingCheckAll}" update=":form:draftSupplierItemID:selectAllCheckBoxId"></p:remoteCommand>
 	
 
-	<p:dataTable id="draftSupplierItemID" lazy="true"
+	<p:dataTable id="draftSupplierItemID" lazy="true" style="width:100%;"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
