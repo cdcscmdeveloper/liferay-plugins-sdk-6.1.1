@@ -157,7 +157,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 * Method used to initialize approver list
 		 */
 	public CentralContractBackingBean(){
-	
+		
 			if(getManagedBean().getOutComes()==null) {
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			    /*Initialization of circular object*/
@@ -173,6 +173,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				}
 			    
 			}			
+		
 			if(getManagedBean().getUserMap().size()==0) {
 				 initializeApproverList();
 				 getManagedBean().getApproverModel().setSource(getAvailableApproverList());
@@ -412,13 +413,21 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 */
 		 public void addCancelledCircular() {
 			  try {	
-	        	        for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
-	        		             cancelCircular.setCancelCircularId(null);
-	        		             cancelCircular.setCtCancelCircularReq(null);
-	        	          }
+	        	        
+	        	        List<CtCancelCircular> cancelCirculars = new  ArrayList<CtCancelCircular>();
+	        	        Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCancelledCircularList().iterator();
+					     while(ctCancelCirculars.hasNext()){
+					    	CtCancelCircular  ctCancelCircular = ctCancelCirculars.next();
+						    if(ctCancelCircular.isSelectedCheckBox()){
+						    	ctCancelCircular.setCancelCircularId(null);
+						    	ctCancelCircular.setCtCancelCircularReq(null);
+						    	ctCancelCircular.setSelectedCheckBox(false);
+						    	cancelCirculars.add(ctCancelCircular);
+						    }
+					     }
 	        	
-	        	        getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
-	        	        getManagedBean().getCancelledCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
+	        	        getManagedBean().getCircularVer().getCtCancelCircularList().addAll(cancelCirculars);
+	        	        getManagedBean().getCancelledCircularList().removeAll(cancelCirculars);
 		     	} catch (Exception e) {
 				           e.printStackTrace();
 				          FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -430,9 +439,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 */
 	public void addSelectedContract() {
 		
-          if(getManagedBean().getSelectedContractList() == null || getManagedBean().getSelectedContractList().isEmpty()){
+         /* if(getManagedBean().getSelectedContractList() == null || getManagedBean().getSelectedContractList().isEmpty()){
         		throw new EpException(MessageConst.ERROR_755015);
-        	}
+        	}*/
           
            IContractSO contractSO = null;
            ContractReqDTO reqDTO  = null;
@@ -440,8 +449,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         	try {
         	          contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
         	          reqDTO = new ContractReqDTO();
-        	          for(CtContract contract : getManagedBean().getSelectedContractList()) {
-        		                circularContract = new CtCircularContract();
+        	          Iterator<CtContract> ctContracts = getManagedBean().getContractList().iterator();
+     			     while(ctContracts.hasNext()){
+     			    	CtContract  contract = ctContracts.next();
+                                circularContract = new CtCircularContract();
         		                reqDTO.setContractId(contract.getContractId());
         		                ContractResDTO resDTO = contractSO.retrieveSelectedContract(reqDTO);
         		                circularContract.setCtContract(resDTO.getContract());
@@ -1090,7 +1101,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setSearchContractNo(null);
 			getManagedBean().setSearchContractName(null);
 			getManagedBean().setContractList(new ArrayList<CtContract>());
-			getManagedBean().setSelectedContractList(new ArrayList<CtContract>());
+			//getManagedBean().setSelectedContractList(new ArrayList<CtContract>());
 			getManagedBean().setContractList(new ArrayList<CtContract>());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1712,7 +1723,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
   				    } 
   				     getManagedBean().setSelectedCancelledCircularList(null);
   				   getManagedBean().setSelectAll(false);
+  				  if(getManagedBean().getCancelledCircularList() != null && getManagedBean().getCancelledCircularList().size() == 0){
+  					    getManagedBean().setCancelledCircularList(null);
+  				    }
     			 } 
+    			 getManagedBean().setButtonHideActiveDel(true);
     		} catch (Exception e) {
     			e.printStackTrace();
     			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1784,6 +1799,70 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     		}	
         }
         
+ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
+    		
+    		for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()) {
+    			if (getManagedBean().isSelectAll()) {
+    				ctCancelCirculars.setSelectedCheckBox(true);
+    		       }else {
+    		    	   ctCancelCirculars.setSelectedCheckBox(false);
+    		       }
+    	}
+    	
+    	 if((boolean) e.getComponent().getAttributes().get("value")){
+    		 getManagedBean().setButtonHideActiveDel(false);
+    	 }else{
+    		 getManagedBean().setButtonHideActiveDel(true);
+    	 }		
+        }
+
+        public void selectCancelCheckboxSelectList(AjaxBehaviorEvent e){
+        	getManagedBean().setSelectAll(false);
+        	for (CtCancelCircular ctCancelCirculars : getManagedBean().getCancelledCircularList()){
+        		if(ctCancelCirculars.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+        }
+        
+ public void selectAllContractList(AjaxBehaviorEvent e) {
+    		
+    		for (CtContract ctContracts : getManagedBean().getContractList()) {
+    			if (getManagedBean().isSelectAll()) {
+    				ctContracts.setSelectedCheckBox(true);
+    		       }else {
+    		    	   ctContracts.setSelectedCheckBox(false);
+    		       }
+    	}
+    	
+    	 if((boolean) e.getComponent().getAttributes().get("value")){
+    		 getManagedBean().setButtonHideActiveDel(false);
+    	 }else{
+    		 getManagedBean().setButtonHideActiveDel(true);
+    	 }		
+        }
+
+        public void selectContractCheckboxSelectList(AjaxBehaviorEvent e){
+        	getManagedBean().setSelectAll(false);
+        	for (CtContract ctContracts : getManagedBean().getContractList()){
+        		if(ctContracts.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+        }
+        
         public void selectAllexemptedOrg(AjaxBehaviorEvent e){
         
         	for (CtExemptedOrg ctExemptedOrgs : getManagedBean().getCircularVer().getCtExemptedOrgs()){
@@ -1816,6 +1895,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     			getManagedBean().setButtonHideActiveDel(true);
     		}	
         }
+        
 		/**
 	     * Method to set boolean value for checkbox 
 	     * @param pass ajax event type
