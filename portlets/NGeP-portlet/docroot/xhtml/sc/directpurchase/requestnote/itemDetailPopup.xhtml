@@ -115,7 +115,7 @@
 							value="#{lbl['lbl.sc.request.note.price.type']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><h:selectOneMenu id="priceType" style="width:217px;"
-							disabled="#{isViewOnly}"
+							disabled="#{isViewOnly || requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}"
 							label="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
 							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.priceTypeId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
