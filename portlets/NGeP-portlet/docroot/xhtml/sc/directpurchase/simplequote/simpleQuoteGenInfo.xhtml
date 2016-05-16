@@ -225,15 +225,19 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.sq.duration']}" /></td>
 				<td colspan="3"><p:outputPanel autoUpdate="true"
 						id="durationId">
-						<p:inputText size="24" label="#{lbl['lbl.sc.sq.duration']}"
+						<p:inputText size="8"
 							maxlength="5"
-							value="#{simpleQuoteBackingBean.managedBean.duration}"
+							value="#{simpleQuoteBackingBean.managedBean.days}"
 							disabled="true" style="text-align:right; margin-top: 4px">
-							<f:convertNumber pattern="##0.0" />
 						</p:inputText>
-
-						<p:spacer width="5px" />
-						<h:outputText value="#{lbl['lbl.sc.simple.quote.hours']}"></h:outputText>
+						<h:outputText value="#{lbl['lbl.sc.days']}" style="font-weight:bold" />
+						
+						<p:inputText size="8"
+							maxlength="5"
+							value="#{simpleQuoteBackingBean.managedBean.hours}"
+							disabled="true" style="text-align:right; margin-top: 4px">
+						</p:inputText>
+						<h:outputText value="#{lbl['lbl.sc.simple.quote.hours']}" style="font-weight:bold" />
 					</p:outputPanel></td>
 			</tr>
 
