@@ -109,7 +109,7 @@
 						escape="false" style="float : left" />
 				</p:column>
 				
-				<p:column headerText="Site Visit Officer(s)">
+				<p:column headerText="#{lbl['lbl.sm.siteassign.site.visit.officer']}">
 					<h:outputText value="#{lbl['lbl.sm.siteassign.expected.visiting.date']}" />
 					<h:outputText value="*"
 						styleClass="mandatory" />&#160;&#160;
@@ -125,7 +125,7 @@
 							var="off" itemLabel="#{off.userName}" itemValue="#{off}"
 							converter="svoListConverter" />
 				</p:column>
-				<p:column width="30%">
+				<p:column width="30%" headerText="#{lbl['lbl.sm.remark']}">
 						<p:inputTextarea rows="8" style="width:75%;"
 										maxlength="500" autoResize="false" id="Remark" label="#{lbl['lbl.sm.svc.remark']}"
 										value="#{svc.smSvTask.smRemark.remark}">
