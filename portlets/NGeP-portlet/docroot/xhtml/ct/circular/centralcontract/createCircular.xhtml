@@ -245,7 +245,7 @@
 		                                   <p:selectOneMenu id="OrgTypeId"   label="#{lbl['lbl.ct.panel.exempted.type']}"  
 		                                         style="width:300px" value="#{centralContractBackingBean.managedBean.orgTypeCode}">
             	                               <f:selectItems value="#{centralContractBackingBean.retrieveParameterDescListByType()}"/>
-            	                                   <p:ajax event="change"  update=":form:exmptedMinistryId,:form:tablePtjCode"
+            	                                   <p:ajax event="change"  update=":form:exmptedMinistryId,:form:popUpExmptedTable"
             	                                         process="@this"  listener="#{centralContractBackingBean.resetMinistryDetails}" ></p:ajax>
             	                            </p:selectOneMenu>
             	                     </h:panelGrid>
@@ -328,7 +328,8 @@
 			           <p:spacer height="2"/>           
 			 
 			            <div class="ppRightBtn">
-				              <p:commandButton process="@form" update=":form:exemptedOrgDt,:form:exemptedMsgId" 
+				              <p:commandButton id="exmptedPopUpButton"  process="@form" update=":form:exemptedOrgDt,:form:exemptedMsgId" 
+				                     disabled="#{centralContractBackingBean.managedBean.orgTypeCode == null}"
 				                     value="#{lbl['lbl.btn.select']}"   action="#{centralContractBackingBean.addExemtedOrgDetails()}">
 				              </p:commandButton>
 				               <p:commandButton id="closeButId" value="#{lbl['lbl.btn.cancel']}"  onclick="dlgExemptedMinistry.hide();"  type="button" />
@@ -393,7 +394,20 @@
 				value="#{centralContractBackingBean.managedBean.cancelledCircularList}" 
 				selection="#{centralContractBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
-				<p:column selectionMode="multiple" style="width:3%" />
+				<p:column  style="width:3%">
+				                <f:facet name="header">
+							      <p:selectBooleanCheckbox value="#{centralContractBackingBean.managedBean.selectAll}">
+								     <p:ajax partialSubmit="true" process="@this"
+									      update=":form:cancelledCclDt, :form:popUpSlectButtonId" listener="#{centralContractBackingBean.selectAllCancelCircularList}" />
+							      </p:selectBooleanCheckbox>
+						       </f:facet>
+		           
+		                        <p:selectBooleanCheckbox 
+		                             value="#{cancelledCircularDlgVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		               <p:ajax event="change"
+		           		                  update=":form:cancelledCclDt,:form:popUpSlectButtonId" listener="#{centralContractBackingBean.selectCancelCheckboxSelectList}"></p:ajax>
+			                     </p:selectBooleanCheckbox>     
+				              </p:column>
 				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center">
 					<h:outputText value="#{cancelledCircularDlgVar.circularVer.circularNo}" style="float:left;" />
 				</p:column>
@@ -403,8 +417,9 @@
 			</p:dataTable>
 			<p:spacer height="5"></p:spacer>
 			<div class="ppRightBtn"> 
-				<p:commandButton value="#{lbl['lbl.btn.ok']}"  process="cancelCircularDlg" 
+				<p:commandButton id="popUpSlectButtonId" value="#{lbl['lbl.btn.ok']}"  process="cancelCircularDlg" 
 					action="#{centralContractBackingBean.addCancelledCircular}"
+					disabled="#{centralContractBackingBean.managedBean.buttonHideActiveDel}"
 					update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 				     type="button" ajax="false" onclick="cancelCircularDlg.hide();" />

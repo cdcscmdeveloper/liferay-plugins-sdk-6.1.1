@@ -1314,6 +1314,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setUpdateAction(true);	
 			trBB = new TerminationBackingBean();
 			trBB.getManagedBean().setViewContract(false);
+			trBB.getManagedBean().setButtonHideActive(true);
 			trBB.getManagedBean().setExternalPageUrl(null);
 			trBB.setTerminationContractVer(reqDTO);  
 		} finally{
