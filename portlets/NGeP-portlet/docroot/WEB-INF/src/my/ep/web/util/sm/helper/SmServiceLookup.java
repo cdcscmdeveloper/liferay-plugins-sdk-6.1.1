@@ -12,6 +12,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
@@ -512,7 +513,7 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IPersonnelAuthorizationSO.class);
 	}
-	
+
 	/**
 	 * Get IQuestionnaireSO
 	 * 
@@ -522,5 +523,15 @@ public class SmServiceLookup {
 		return (IQuestionnaireSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IQuestionnaireSO.class);
+	}
+
+	/**
+	 * Get IReasonSO
+	 * 
+	 * @return IReasonSO
+	 */
+	public static IReasonSO getReasonSO() {
+		return (IReasonSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 	}
 }
