@@ -181,7 +181,7 @@
 		           
 		                                 <p:selectBooleanCheckbox 
 		                                     value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
-		           		                    <p:ajax event="change" 
+		           		                    <p:ajax event="change" partialSubmit="true" process="@this"
 		           		                        update=":form:terminationReason,:form:terReasonDelBtn" listener="#{terminationBackingBean.selectOneTerminationCheckbox}"></p:ajax>
 			                             </p:selectBooleanCheckbox>
 			                      </p:column>
@@ -193,7 +193,7 @@
 				                  </f:facet>
 		                          <p:inputTextarea id="cluseId" value="#{data.clauseNo}"  rows="2" 
 		                                disabled="#{terminationBackingBean.managedBean.viewContract}" autoResize="false"
-		                                onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,500);" style="width:95%;" />
+		                                onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" style="width:95%;" />
                             </p:column>
 		     
 		                    <p:column  style="width:65%;">

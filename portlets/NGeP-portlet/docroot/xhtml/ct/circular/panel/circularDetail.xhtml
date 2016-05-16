@@ -176,7 +176,7 @@
 	      header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
 		    <p:dataTable id="cancelCircularDt" var="data" 
 			        value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}" rowKey="#{data}"
-			        selection="#{panelBackingBean.managedBean.selectedCancelCirculars}"  rowIndexVar="index" >
+			         rowIndexVar="index" >
 			               <ac:paginator for="cancelCircularDt" />		
 			                  <p:column  style="width:3%" 
 				                    rendered="#{!panelBackingBean.managedBean.viewContract}">
@@ -223,10 +223,22 @@
 	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
 		styleClass="pop_up_top" modal="true" width="550" height="350">
 			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" 
-			    rowIndexVar="index" value="#{panelBackingBean.managedBean.cancelledCircularList}" 
-				selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
+			    rowIndexVar="index" value="#{panelBackingBean.managedBean.cancelledCircularList}">
 				<ac:paginator for="cancelledCclDt" />
-				<p:column selectionMode="multiple" style="width:3%" />
+				 <p:column  style="width:3%">
+				                <f:facet name="header">
+							      <p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.selectAll}">
+								     <p:ajax partialSubmit="true" process="@this"
+									      update=":form:cancelledCclDt, :form:popUpSelectButtonId" listener="#{panelBackingBean.selectAllCancelCircularList}" />
+							      </p:selectBooleanCheckbox>
+						       </f:facet>
+		           
+		                        <p:selectBooleanCheckbox 
+		                             value="#{data.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		               <p:ajax event="change"
+		           		                  update=":form:cancelledCclDt,:form:popUpSelectButtonId" listener="#{panelBackingBean.selectCancelCheckboxSelectList}"></p:ajax>
+			                     </p:selectBooleanCheckbox>     
+				              </p:column>
 				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}" styleClass="column-align-center" >
 					<h:outputText value="#{data.circularVer.circularNo}" style="text-align:left;float:left;width:200px;" />
 				</p:column>
@@ -236,8 +248,8 @@
 			</p:dataTable>
 			<p:spacer height="5"/>
 			<div class="ppRightBtn"> 
-				<p:commandButton value="#{lbl['lbl.btn.select']}"  process="cancelCircularDlg" 
-					action="#{panelBackingBean.addCancelledCircular}"
+				<p:commandButton id="popUpSelectButtonId" value="#{lbl['lbl.btn.select']}"  process="cancelCircularDlg" 
+					action="#{panelBackingBean.addCancelledCircular}" disabled="#{panelBackingBean.managedBean.buttonHideActiveDel}"
 					update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"  type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
 			</div>			
