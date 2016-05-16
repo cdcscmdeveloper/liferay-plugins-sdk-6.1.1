@@ -697,9 +697,9 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 2:
-			ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
+			//ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
 			specSo.validateCheckList(constructSpecCommitteDtls());
-			checktemplateSpecStatus(scQtTechChecklist);
+			//checktemplateSpecStatus(scQtTechChecklist);
 			if (!this.getManagedBean().isReadOnly()) {
 				technicalOtherCheckList = validateTechnicalStandardCheckList();
 			}
@@ -708,10 +708,10 @@ public class SpecificationBackingBean extends
 
 			break;
 		case 3:
-			ScQt scQtFinChecklist = constructSpecCommitteDtls().getScQt();
+			//ScQt scQtFinChecklist = constructSpecCommitteDtls().getScQt();
 			specSo.validateCheckList(constructSpecCommitteDtls());
-			checktemplateSpecStatus(scQtFinChecklist);
-			checkFinancialSpecStatus(scQtFinChecklist);
+			//checktemplateSpecStatus(scQtFinChecklist);
+			//checkFinancialSpecStatus(scQtFinChecklist);
 			if (!this.getManagedBean().isReadOnly()) {
 				financialOtherCheckList = validateFinancialStandardCheckList();
 			}
@@ -792,8 +792,8 @@ public class SpecificationBackingBean extends
 
 		case 7:
 			ScQt deliveryAddress = constructSpecCommitteDtls().getScQt();
-			checktemplateSpecStatus(deliveryAddress);
-			checkFinancialSpecStatus(deliveryAddress);
+			//checktemplateSpecStatus(deliveryAddress);
+			//checkFinancialSpecStatus(deliveryAddress);
 
 			if (deliveryAddress.isZonal()) {
 				if (null == deliveryAddress.getScQtDeliveryLocs()) {
@@ -819,8 +819,8 @@ public class SpecificationBackingBean extends
 		case 8:
 
 			ScQt fulfilMentDtls = constructSpecCommitteDtls().getScQt();
-			checktemplateSpecStatus(fulfilMentDtls);
-			checkFinancialSpecStatus(fulfilMentDtls);
+			//checktemplateSpecStatus(fulfilMentDtls);
+			//checkFinancialSpecStatus(fulfilMentDtls);
 
 			if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())
@@ -835,8 +835,8 @@ public class SpecificationBackingBean extends
 
 		case 9:
 			ScQt committeeEndorsment = constructSpecCommitteDtls().getScQt();
-			checktemplateSpecStatus(committeeEndorsment);
-			checkFinancialSpecStatus(committeeEndorsment);
+			//checktemplateSpecStatus(committeeEndorsment);
+			//checkFinancialSpecStatus(committeeEndorsment);
 			break;
 
 		}
@@ -854,7 +854,7 @@ public class SpecificationBackingBean extends
 			break;
 		case 3:
 			retriveFinancialCheckList();
-			checktemplateSpecStatus(this.getManagedBean().getQt());
+			//checktemplateSpecStatus(this.getManagedBean().getQt());
 			break;
 
 		case 4:
@@ -877,8 +877,8 @@ public class SpecificationBackingBean extends
 
 		case 7:
 			retriveDeliveryDetails();
-			checktemplateSpecStatus(this.getManagedBean().getQt());
-			checkFinancialSpecStatus(this.getManagedBean().getQt());
+			//checktemplateSpecStatus(this.getManagedBean().getQt());
+			//checkFinancialSpecStatus(this.getManagedBean().getQt());
 			break;
 
 		case 8:
@@ -891,15 +891,15 @@ public class SpecificationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getFulfilmentType())) {
 				retriveFulfilmentDtls();
-				checktemplateSpecStatus(this.getManagedBean().getQt());
-				checkFinancialSpecStatus(this.getManagedBean().getQt());
+				//checktemplateSpecStatus(this.getManagedBean().getQt());
+				//checkFinancialSpecStatus(this.getManagedBean().getQt());
 			}
 			break;
 
 		case 9:
 			retriveCommitteeEndorsment();
-			checktemplateSpecStatus(this.getManagedBean().getQt());
-			checkFinancialSpecStatus(this.getManagedBean().getQt());
+			//checktemplateSpecStatus(this.getManagedBean().getQt());
+			//checkFinancialSpecStatus(this.getManagedBean().getQt());
 			break;
 
 		}
@@ -941,9 +941,13 @@ public class SpecificationBackingBean extends
 		retriveFulfilmentDtls();
 		retriveDeliveryDetails();
 		retriveCommitteeEndorsment();
-		if (!this.getManagedBean().isReadOnly()) {
+		if(isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision()){
 			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
+		}
+		if (!this.getManagedBean().isReadOnly()) {
+			//checktemplateSpecStatus(this.getManagedBean().getQt());
+			//checkFinancialSpecStatus(this.getManagedBean().getQt());
 			validateTechnicalPassingScoring(this.getManagedBean()
 					.getTechnicalScoreSetting());
 			validateTechnicalDemoPassingScoring(this.getManagedBean()
