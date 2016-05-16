@@ -13587,7 +13587,8 @@ public class SpecificationBackingBean extends
 	public void checkListYesConfirmation(String stage) {
 		this.getManagedBean().setStandardTemplate(
 				ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
-		if (this.getManagedBean().getCheckListYesIndex() > 3) {
+		if (this.getManagedBean().getCheckListYesIndex() ==4 || this.getManagedBean().getCheckListYesIndex() ==5 || this.getManagedBean().getCheckListYesIndex() ==6) {
+			checktemplateSpecStatus(this.getManagedBean().getQt());
 			checkFinancialSpecStatus(this.getManagedBean().getQt());
 		}
 		this.getManagedBean().setActiveIndex(
