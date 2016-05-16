@@ -220,6 +220,17 @@
 						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" label="#{lbl['lbl.fl.supp.inv.no']}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.inv.no']}"/><p:message for="supplierInvoiceRef" display="icon" /></td>		
 			</tr>			
 		</table>
+		<p:spacer height="5px"></p:spacer>
+		<table>	
+			<tr>
+				<td><p:selectBooleanCheckbox
+						disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
+						value="#{invoiceBackingBean.managedBean.reliefDeclarationCheck}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><h:outputText style="text-align:left"
+						value="#{lbl['lbl.fl.invoice.relief.declaration']}" /></td>
+			</tr>
+		</table>
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.fl.factoring.details']}"  toggleable="true"
