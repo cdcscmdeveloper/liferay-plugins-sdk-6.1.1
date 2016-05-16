@@ -77,7 +77,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.disruption.stage']}" style="width:200px;">
-				<h:outputText value="#{scQt.disruptionStage}" />
+				<h:outputText value="#{qtRetryBackingBean.getParameterDesc(ParameterTypeConst.qtDisruptionStage, scQt.disruptionStage.toString())}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.disruption.date']}" style="width:80px;">
