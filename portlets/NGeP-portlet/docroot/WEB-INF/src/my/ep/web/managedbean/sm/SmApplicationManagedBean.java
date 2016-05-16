@@ -13,10 +13,12 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.model.StreamedContent;
-
-import my.ep.constant.pm.ParameterConst;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -64,19 +66,25 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.model.Role;
 
@@ -424,7 +432,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String businessTypeParamCode;
 	private String physicalConsulting;
 	private String personType;
-	
+
 	private BigDecimal currBumiEquity;
 	private BigDecimal currNonBumiEquity;
 	private BigDecimal currForeignerEquity;
@@ -432,6 +440,57 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal currGovtEquity;
 	private BigDecimal currForeignCompanyEquity;
 	private BigDecimal currLocalCompanyEquity;
+	
+	private List<PmReasonDesc> selectedPmReasonDescs;
+	private String searchRejectReason;
+	private IPagingDataModel<PmReasonDesc> rejectReasonDataModel = new RejectReasonPagingDataModel();
+
+	private class RejectReasonPagingDataModel extends
+			PagingDataModel<PmReasonDesc> {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public RejectReasonPagingDataModel() {
+			super("rejectReasonDtId");
+		}
+
+		@Override
+		protected ISearchResultBean<PmReasonDesc> pageChangeListener(
+				ISearchBean<PmReasonDesc> searchBean) {
+			ReasonReqDTO reqDTO = new ReasonReqDTO();
+			reqDTO.setReasonDescSearchBean(searchBean);
+			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+			try {
+				return getRejectDescResultBean(reqDTO);
+			} catch (Exception ex) {
+				return new SearchResultBean();
+			} finally {
+				reqDTO = null;
+			}
+		}
+
+		private ISearchResultBean<PmReasonDesc> getRejectDescResultBean(
+				ReasonReqDTO reqDTO) {
+			reqDTO.getReasonDescSearchBean().getDataFilterBeans().clear();
+			if (!StringUtils.isNotBlank(getSearchRejectReason())) {
+				SearchFilterBean reasonDescFilterBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_LIKE.value());
+				reasonDescFilterBean.setSearchField("reasonDesc");
+				reasonDescFilterBean.setSearchValue(getSearchRejectReason());
+				reqDTO.getReasonDescSearchBean().getDataFilterBeans()
+						.add(reasonDescFilterBean);
+			}
+			return SmServiceLookup.getReasonSO()
+					.retrieveReasonDescBySearchBean(reqDTO)
+					.getReasonDescResultBean();
+		}
+	}
+
+	public void searchRejectReasonDesc() {
+		rejectReasonDataModel.reloadData();
+	}
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -670,6 +729,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		currGovtEquity = BigDecimal.ZERO;
 		currForeignCompanyEquity = BigDecimal.ZERO;
 		currLocalCompanyEquity = BigDecimal.ZERO;
+		selectedPmReasonDescs = new ArrayList<PmReasonDesc>();
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -3355,5 +3415,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCurrLocalCompanyEquity(BigDecimal currLocalCompanyEquity) {
 		this.currLocalCompanyEquity = currLocalCompanyEquity;
+	}
+
+	public String getSearchRejectReason() {
+		return searchRejectReason;
+	}
+
+	public void setSearchRejectReason(String searchRejectReason) {
+		this.searchRejectReason = searchRejectReason;
+	}
+
+	public IPagingDataModel<PmReasonDesc> getRejectReasonDataModel() {
+		return rejectReasonDataModel;
+	}
+
+	public void setRejectReasonDataModel(
+			IPagingDataModel<PmReasonDesc> rejectReasonDataModel) {
+		this.rejectReasonDataModel = rejectReasonDataModel;
+	}
+
+	public List<PmReasonDesc> getSelectedPmReasonDescs() {
+		return selectedPmReasonDescs;
+	}
+
+	public void setSelectedPmReasonDescs(List<PmReasonDesc> selectedPmReasonDescs) {
+		this.selectedPmReasonDescs = selectedPmReasonDescs;
 	}
 }
