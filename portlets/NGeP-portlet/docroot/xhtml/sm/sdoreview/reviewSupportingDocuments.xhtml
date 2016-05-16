@@ -302,6 +302,7 @@
 							value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							maxdate="#{CommonConstants.CURRENT_DATE}" display="inline"
+							mindate="#{sdoReviewBackingBean.managedBean.smAppl.applSubmitDate}"
 							size="30" showOn="button" /> <p:message id="receiveCalIdMsg"
 							for="receiveCalId" display="icon" /></td>
 					<td>
