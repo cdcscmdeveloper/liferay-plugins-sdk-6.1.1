@@ -198,19 +198,6 @@
 		</table>
 	</p:panel>
 
-	<br />
-	<div>
-		<h:outputText value="Reminder 1 :" style="font-weight:bold;"></h:outputText>
-		<h:outputText styleClass="instruction"
-			value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
-			escape="false" />
-		<br />
-		<h:outputText value="Remainder 2 :" style="font-weight:bold;"
-			rendered="#{lOADetailBackingBean.managedBean.renderRemainder}"></h:outputText>
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.gst.remainder.two.instruction']}" escape="false"
-			rendered="#{lOADetailBackingBean.managedBean.renderRemainder}" />
-	</div>
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 
 </ui:composition>
