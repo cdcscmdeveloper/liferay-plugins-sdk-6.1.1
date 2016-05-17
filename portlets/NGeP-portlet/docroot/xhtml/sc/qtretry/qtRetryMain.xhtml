@@ -77,7 +77,12 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.disruption.stage']}" style="width:200px;">
-				<h:outputText value="#{qtRetryBackingBean.getParameterDesc(ParameterTypeConst.qtDisruptionStage, scQtDisruptionLog.disruptionStage.toString())}" />
+				<p:commandLink 
+					partialSubmit="true" process="@this" update="@([id$=errMsgPopUp])"
+					oncomplete="errMsgPopUp.show()" >
+					<f:setPropertyActionListener target="#{qtRetryBackingBean.selectedRetryQT}" value="#{scQtDisruptionLog}" />
+					#{qtRetryBackingBean.getParameterDesc(ParameterTypeConst.qtDisruptionStage, scQtDisruptionLog.disruptionStage.toString())}	
+				</p:commandLink>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.disruption.date']}" style="width:80px;">
@@ -87,6 +92,12 @@
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
+		
+		<p:dialog id="errMsgPopUp" widgetVar="errMsgPopUp"
+			header="#{lbl['lbl.txt.error']}" styleClass="screen-title"
+			resizable="false" modal="true" width="800" height="700">
+			<h:outputText value="#{qtRetryBackingBean.selectedRetryQT.errorMsg}" escape="false" />
+		</p:dialog>
 		
 	</ui:define>
 </ui:composition>
