@@ -37,7 +37,7 @@
 		</table>
 
 		<p:dataTable id="qtRetryTbl" value="#{qtRetryBackingBean.retryQTDataModel}" 
-			var="scQt" rowIndexVar="index" 
+			var="scQtDisruptionLog" rowIndexVar="index" 
 			lazy="true" rows="10"
 			selection="#{qtRetryBackingBean.selectedRetryQTs}">
 
@@ -52,17 +52,17 @@
 			<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 
 			<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
-				<h:outputText value="#{scQt.qtNo}" />
+				<h:outputText value="#{scQtDisruptionLog.scQt.qtNo}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.title']}">
-				<h:outputText value="#{scQt.qtTitle}"
+				<h:outputText value="#{scQtDisruptionLog.scQt.qtTitle}"
 					style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.published.date']}"
 				style="width:80px;">
-				<h:outputText value="#{scQt.publishDate}">
+				<h:outputText value="#{scQtDisruptionLog.scQt.publishDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
@@ -70,18 +70,18 @@
 
 			<p:column headerText="#{lbl['lbl.sc.closing.date']}"
 				style="width:80px;">
-				<h:outputText value="#{scQt.closingDate}">
+				<h:outputText value="#{scQtDisruptionLog.scQt.closingDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.disruption.stage']}" style="width:200px;">
-				<h:outputText value="#{qtRetryBackingBean.getParameterDesc(ParameterTypeConst.qtDisruptionStage, scQt.disruptionStage.toString())}" />
+				<h:outputText value="#{qtRetryBackingBean.getParameterDesc(ParameterTypeConst.qtDisruptionStage, scQtDisruptionLog.disruptionStage.toString())}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.disruption.date']}" style="width:80px;">
-				<h:outputText value="#{scQt.disruptionDate}">
+				<h:outputText value="#{scQtDisruptionLog.changedDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 				</h:outputText>
