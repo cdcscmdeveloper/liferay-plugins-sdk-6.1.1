@@ -2325,6 +2325,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		getManagedBean().setOfficerProfileId(null);
 		getManagedBean().setJabatanProfileId(null);
 		getManagedBean().setPtjProfileId(null);
+		getManagedBean().setButtonHideActive(false);
 	}
 	
 	/**
@@ -2446,12 +2447,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				   agreementParty.setOfficer(new PmUser());
 				   getManagedBean().getCtAgencySigner().add(agreementParty);
 				   getManagedBean().setAgencySignerDropDown(false);
+				   getManagedBean().setButtonHideActive(true);
 				   
 		  } catch (Exception e) {
 				e.printStackTrace();
 		  }
 	 }
 	
+	public void closeAgencySignerDetails(){
+		getManagedBean().setButtonHideActive(true);
+		RequestContext.getCurrentInstance().execute("dlgAgencySigner.hide()");
+	}
 	/*
 	 * Fetch organization name using profile id
 	 * @Return type string orgName
