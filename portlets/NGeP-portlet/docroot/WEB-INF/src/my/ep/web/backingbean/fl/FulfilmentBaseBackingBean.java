@@ -633,4 +633,19 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return address.toString();
 	}
 	
+	/**
+	 * Get Document Transaction Date. To display Org Profile Name based on date.
+	 * @param flRequest
+	 * @return Date
+	 */
+	public Date getTransactionDate(FlFulfilmentRequest flRequest) {
+		if(flRequest!=null) {
+			if(flRequest.getAgApprovedDate()!=null) {
+				return flRequest.getAgApprovedDate();
+			} else {
+				return flRequest.getCreatedDate();
+			}
+		}
+		return null;
+	}
 }
