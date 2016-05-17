@@ -205,16 +205,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
               <p:outputLabel  value="#{lbl['lbl.ct.panel.coverage']}"/>
                  <p:selectOneMenu value="#{panelBackingBean.managedBean.panelCoverageId}" style="width:100px;margin-bottom: 5px;">
 			        <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/> 
+			        <p:ajax event="change" process="@this" update=":form:btnIdBulkUpdate"></p:ajax>
 			     </p:selectOneMenu>
 			     <f:verbatim></f:verbatim>
 			      <p:outputLabel  value="#{lbl['lbl.ct.item.category']}"/>
 			     <p:selectOneMenu value="#{panelBackingBean.managedBean.itemCategoryId}" style="width:100px;">
 			       <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
+			         <p:ajax event="change" process="@this" update=":form:btnIdBulkUpdate"></p:ajax>
 			     </p:selectOneMenu>
 			  </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=panelItemDt])"
-		       process="@all" actionListener="#{panelBackingBean.bulkUpdateRow()}" onclick="bulkUpdateDlg.hide();"/>
+		     <p:commandButton id="btnIdBulkUpdate" value="#{lbl['lbl.btn.yes']}"  update="@([id$=panelItemDt])"
+		       process="@all" actionListener="#{panelBackingBean.bulkUpdateRow()}" onclick="bulkUpdateDlg.hide();"
+		       disabled="#{panelBackingBean.managedBean.panelCoverageId == null and panelBackingBean.managedBean.itemCategoryId == null }"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="bulkUpdateDlg.hide();" type="button" />
 		   </div>
         </p:dialog>
