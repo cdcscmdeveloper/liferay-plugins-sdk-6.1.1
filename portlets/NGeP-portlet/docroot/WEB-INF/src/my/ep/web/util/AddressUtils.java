@@ -350,6 +350,7 @@ public class AddressUtils {
 				address.append(separator);
 			}
 			if (ctAddress.getPmState() != null && ctAddress.getPmState().getStateName() !=null && ctAddress.getPmState().getStateName().length() > 0) {
+				address.append(System.getProperty("line.separator"));
 				address.append(ctAddress.getPmState().getStateName());
 			}						
 		}
