@@ -21,8 +21,6 @@ import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -155,7 +153,7 @@ public class QTProposalCloseJob implements Job {
 		}
 	}
 
-	private void updateQtAsDisrupted(Long qtId, Long disruptionStage) {
+	private void updateQtAsDisrupted(Long qtId, int disruptionStage) {
 		try {
 			if (proposalSO == null) {
 				proposalSO = BusinessDelegate.getInstance()

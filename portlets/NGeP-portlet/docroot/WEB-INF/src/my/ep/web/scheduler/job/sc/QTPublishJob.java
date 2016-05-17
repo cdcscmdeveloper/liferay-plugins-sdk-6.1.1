@@ -147,8 +147,6 @@ public class QTPublishJob implements Job {
 			if (resDTO.isSuccessful()) {
 				log.info("$$$$$ BPM Update after Publish successful for the QT Id :"
 						+ qtId);
-				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_PUBLISH_SUCCESSFUL);
 			} else {
 				log.info("$$$$$ BPM Update after Publish unsuccessful for the QT Id :"
 						+ qtId);
@@ -163,7 +161,7 @@ public class QTPublishJob implements Job {
 		}
 	}
 
-	private void updateQtAsDisrupted(Long qtId, Long disruptionStage) {
+	private void updateQtAsDisrupted(Long qtId, int disruptionStage) {
 		try {
 			if(proposalSO == null){
 				proposalSO = BusinessDelegate.getInstance().getServiceObject(
