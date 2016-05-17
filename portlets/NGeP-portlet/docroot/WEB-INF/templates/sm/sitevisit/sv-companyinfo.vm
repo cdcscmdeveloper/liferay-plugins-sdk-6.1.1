@@ -9,17 +9,17 @@
 	
 	<table class="infoTable">
 		<tr>
-	        <td width="30%"><b>Accepted Application Date</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.compinfo.accept.appl.date')</b></td>
 	        <td>$accptDate</td>
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>Final Information Date</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.final.info.date')</b></td>
 	        <td></td>
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>Company Name</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.company.name')</b></td>
 	        <td>$companyName</td>
     	</tr>
     	
@@ -33,7 +33,7 @@
     	</tr>
     	
     	<tr>
-	        <td width="30%" valign="top"><b>Company Address</b></td>
+	        <td width="30%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.address')</b></td>
 	        <td>$addrLiines</td>
     	</tr>
     	
@@ -42,27 +42,27 @@
     	</tr>
     	
         <tr>
-	        <td width="30%"><b>Postal Code</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.postal.code')</b></td>
 	        <td>$postCode</td>
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>Town/City</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.town.city')</b></td>
 	        <td>$townDtls</td>
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>State</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.state')</b></td>
 	        <td>$stateDtls</td>
     	</tr>
     	
     	<tr>
-    		<td width="30%"><b>District</b></td>
+    		<td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
     		<td>$districtDtls</td>
     	</tr>
     	
    	    <tr>
-	        <td width="30%"><b>MOF Registration No.</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no').</b></td>
 	        <td>$mofNo</td>
     	</tr>
     	
@@ -82,25 +82,25 @@
     	</tr>*#
     	
     	<tr>
-    		<td width="30%" valign="top"><b>Visiting Officers</b></td>
+    		<td width="30%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.visiting.officer')</b></td>
     		<td>$svOfficers</td>
     	</tr>
     	
     	<tr>
-    		<td width="30%"><b>Assisting Officers</b></td>
+    		<td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.assisting.officer')</b></td>
     		<td></td>
     	</tr>
     	
     	<tr>
-    		<td width="30%" valign="top"><b>Interviewed Representatives</b></td>
+    		<td width="30%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.interview.representative')</b></td>
     		<td valign="top">
     			#if($intRepresentatives.size() != $null && $intRepresentatives.size() > 0)
     				<table>
     				#foreach($intRep in $intRepresentatives)
-    					<tr><td width="50%" class="txtBold">Name</td>
+    					<tr><td width="50%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.name')</td>
     						<td>$intRep.name</td>
     					</tr>
-	    				<tr><td class="txtBold">Designation</td>
+	    				<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.designation')</td>
 	    					<td>$intRep.designation</td>
 	    				</tr>
 	    				<tr><td><br /></td></tr>
