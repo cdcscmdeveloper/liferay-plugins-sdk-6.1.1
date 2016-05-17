@@ -11,19 +11,19 @@
 	
 <table  class="sTable">
 	<tr>
-		<td width="40%" class="txtBold"><u>Capital/Equity Details</u></td>
+		<td width="40%" class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.capital.equity.details')</u></td>
 		<td></td>
 		
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Authorized Capital (RM)</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.authorized.capital')</td>
 		<td class="sColTwentyPerc">$authorizedCapital</td>
 		<td class="sColTwentyPerc"><br /></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Paid-up Capital (RM)</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.paid.up.capital')</td>
 		<td class="sColTwentyPerc">$paidUpCapital</td>
 		<td class="sColTwentyPerc"><br /></td>
 	</tr>
@@ -32,60 +32,60 @@
 
 <table class="sTable">
 	<tr>
-		<td width="40%" class="txtBold"><u>Equity</u></td>
+		<td width="40%" class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.equity')</u></td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Total Owner</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.total.owner')</td>
 		<td class="sColTwentyPerc">$countOwner person(s)</td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Bumiputera</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.bumiputera')</td>
 		<td class="sColTwentyPerc">RM $bumiEquity</td>
 		<td class="sColTwentyPerc">$bumiEquityPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non-Bumiputera</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.bumiputera')</td>
 		<td class="sColTwentyPerc">RM $nonBumiEquity</td>
 		<td class="sColTwentyPerc">$nonBumiEquityPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non-Malaysian</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.malaysian')</td>
 		<td class="sColTwentyPerc">RM $nonMalaysianEquity</td>
 		<td class="sColTwentyPerc">$nonMalaysianEquityPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Gov Agency Equity/Unit Trust Agency</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.gov.unit.agency')</td>
 		<td class="sColTwentyPerc">RM $govtUnitrustEquity</td>
 		<td class="sColTwentyPerc">$govtUnitrustEquityPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Gov Equity</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.gov.equity')</td>
 		<td class="sColTwentyPerc">RM $govtEquity</td>
 		<td class="sColTwentyPerc">$govtEquityPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Local Company</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.local.company')</td>
 		<td class="sColTwentyPerc">RM $localCompanyEquity</td>
 		<td class="sColTwentyPerc">$localCompanyEquityPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Foreign Company</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.foreign.company')</td>
 		<td class="sColTwentyPerc">RM $foreignCompanyEquity</td>
 		<td class="sColTwentyPerc">$foreignCompanyEquityPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold" valign="top">Owner Name</td>
+		<td width="40%" class="txtBold" valign="top">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.owner.name')</td>
 		<td class="sColTwentyPerc">
 		#if($ownerList.size() > 0)
 			#foreach($owner in $ownerList)
@@ -97,7 +97,7 @@
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Company Name</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.company.name')</td>
 		<td class="sColTwentyPerc">
 			#if($!equityCompanies and $equityCompanies.size() > 0)
 				#foreach($equityCompany in $equityCompanies)
@@ -114,36 +114,36 @@
 
 <table class="sTable">
 	<tr>
-		<td width="40%" class="txtBold"><u>Board of Directors</u></td>
+		<td width="40%" class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.board.of.director')</u></td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Total</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.total')</td>
 		<td class="sColTwentyPerc">$totalBOD person(s)</td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Bumiputera</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.bumiputera')</td>
 		<td class="sColTwentyPerc">$dirBumi person(s)</td>
 		<td class="sColTwentyPerc">$dirBumiPct %</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non Bumiputera</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.bumiputera')</td>
 		<td class="sColTwentyPerc">$dirNonBumi person(s)</td>
 		<td class="sColTwentyPerc">$dirNonBumiPct %</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non Malaysian</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.malaysian')</td>
 		<td class="sColTwentyPerc">$dirNonMalaysian person(s)</td>
 		<td class="sColTwentyPerc">$dirNonMalaysianPct %</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold" valign="top">Director Name</td>
+		<td width="40%" class="txtBold" valign="top">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.director.name')</td>
 		<td class="sColTwentyPerc">
 		#if($bodLs.size() > 0)
 			#foreach($bod in $bodLs)
@@ -161,36 +161,36 @@
 
 <table class="sTable">
 	<tr>
-		<td width="40%" class="txtBold"><u>Management</u></td>
+		<td width="40%" class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.management')</u></td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Total</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.total')</td>
 		<td class="sColTwentyPerc">$totalMgmt person(s)</td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Bumiputera</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.bumiputera')</td>
 		<td class="sColTwentyPerc">$mgmtBumi person(s)</td>
 		<td class="sColTwentyPerc">$mgmtBumiPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non Bumiputera</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.bumiputera')</td>
 		<td class="sColTwentyPerc">$mgmtNonBumi person(s)</td>
 		<td class="sColTwentyPerc">$mgmtNonBumiPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non Malaysian</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.malaysian')</td>
 		<td class="sColTwentyPerc">$mgmtNonMalaysian person(s)</td>
 		<td class="sColTwentyPerc">$mgmtNonMalaysianPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Higher Management Name</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.ceo.name')</td>
 		<td class="sColTwentyPerc">
 			#if($higherManagementNames.size() > 0)
 				#foreach($name in $higherManagementNames)
@@ -205,7 +205,7 @@
 	</tr>
 	
 		<tr>
-		<td width="40%" class="txtBold">Manager Name</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.manager.name')</td>
 		<td class="sColTwentyPerc">
 			#if($managementNames.size() > 0)
 				#foreach($name in $managementNames)
@@ -223,30 +223,30 @@
 
 <table class="sTable">
 	<tr>
-		<td width="40%" class="txtBold"><u>Workers</u></td>
+		<td width="40%" class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.worker')</u></td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Total</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.total')</td>
 		<td class="sColTwentyPerc">$totalWorker person(s)</td>
 		<td class="sColTwentyPerc"></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Bumiputera</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.bumiputera')</td>
 		<td class="sColTwentyPerc">$workerBumi person(s)</td>
 		<td class="sColTwentyPerc">$workerBumiPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non Bumiputera</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.bumiputera')</td>
 		<td class="sColTwentyPerc">$workerNonBumi person(s)</td>
 		<td class="sColTwentyPerc">$workerNonBumiPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non Malaysian</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.malaysian')</td>
 		<td class="sColTwentyPerc">$workerNonMalaysian person(s)</td>
 		<td class="sColTwentyPerc">$workerNonMalaysianPct%</td>
 	</tr>
