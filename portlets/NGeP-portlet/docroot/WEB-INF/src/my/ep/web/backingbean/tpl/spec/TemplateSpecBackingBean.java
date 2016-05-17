@@ -11,6 +11,7 @@
 package my.ep.web.backingbean.tpl.spec;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,9 @@ import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -71,7 +74,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -348,6 +350,7 @@ public class TemplateSpecBackingBean extends
 		specMaster.setTemplateTypeCode(new PmParameter());
 		specMaster.setSpecTypeCode(new PmParameter());
 		specMaster.setOrgProfile(new PmOrgProfile());
+		setUserDetails(specMaster);
 		specMaster.setCreatedUser(facesScopes.getUserSessionBean());
 
 		IUserSO userSO = null;
@@ -2186,5 +2189,21 @@ public class TemplateSpecBackingBean extends
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * To set user Details.
+	 * 
+	 * @param baseObject
+	 */
+	private void setUserDetails(BaseEntity baseObject) {
+		PmUser user = new FacesScopes().getUserSessionBean();
+
+		if (baseObject.isBrandNew()) {
+			baseObject.setCreatedBy(user.getUserId());
+			baseObject
+					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}
+		baseObject.setChangedBy(user.getUserId());
 	}
 }
