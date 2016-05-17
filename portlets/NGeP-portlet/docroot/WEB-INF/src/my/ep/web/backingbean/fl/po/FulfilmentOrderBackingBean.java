@@ -266,6 +266,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 */
 	private void validateFulfillmentOrder(String action){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		if(getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			throw new EpException(MessageConst.ERROR_740046);
+		}
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
