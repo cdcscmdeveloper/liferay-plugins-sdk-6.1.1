@@ -316,11 +316,17 @@ public class AddressUtils {
 	public static String getFullAddress(CtAddress ctAddress) {
 		StringBuilder address = new StringBuilder();
 		if(ctAddress!=null) {
+			if (ctAddress.getAddressName() != null && ctAddress.getAddressName().length() > 0 && !ctAddress.getAddressName().equals("-")) {
+				address.append(ctAddress.getAddressName());
+				address.append(separator);
+			}
 			if (ctAddress.getAddress1() != null && ctAddress.getAddress1().length() > 0) {
+				address.append(address.length() > 0 ? System.getProperty("line.separator") : "");
 				address.append(ctAddress.getAddress1());
 				address.append(separator);
 			}
 			if (ctAddress.getAddress2() != null && ctAddress.getAddress2().length() > 0) {
+				address.append(System.getProperty("line.separator"));
 				address.append(ctAddress.getAddress2());
 				address.append(separator);
 			}
@@ -330,15 +336,10 @@ public class AddressUtils {
 				address.append(separator);
 			}
 			if (ctAddress.getAddress4() != null && ctAddress.getAddress4().length() > 0) {
+				address.append(System.getProperty("line.separator"));
 				address.append(ctAddress.getAddress4());
 				address.append(separator);
 			}
-			
-			if (ctAddress.getPmDistrict() != null && ctAddress.getPmDistrict().getDistrictName() !=null && ctAddress.getPmDistrict().getDistrictName().length() > 0) {
-				address.append(ctAddress.getPmDistrict().getDistrictName());
-				address.append(separator);
-			}
-			
 			if (ctAddress.getPostcode() != null && ctAddress.getPostcode().length() > 0) {
 				address.append(System.getProperty("line.separator"));
 				address.append(ctAddress.getPostcode());
@@ -348,11 +349,9 @@ public class AddressUtils {
 				address.append(ctAddress.getPmCity().getCityName());
 				address.append(separator);
 			}
-
 			if (ctAddress.getPmState() != null && ctAddress.getPmState().getStateName() !=null && ctAddress.getPmState().getStateName().length() > 0) {
-				address.append(System.getProperty("line.separator"));
 				address.append(ctAddress.getPmState().getStateName());
-			}			
+			}						
 		}
 		return address.toString();
 	}
