@@ -2331,17 +2331,49 @@ public class ProfileManagementBackingBean extends
 		logger.info("handleFileUpload - END");
 	}
 
+//	/**
+//	 * Delete attachment
+//	 * 
+//	 * @param attachment
+//	 * @throws FileNotFoundException
+//	 * @throws IOException
+//	 */
+//	public void deleteAttachment(PmUserAttachment attachment)
+//			throws FileNotFoundException, IOException {
+//		logger.info("deleteAttachment - START");
+//		try {
+//			if (attachment != null) {
+//				if (this.getManagedBean().getDeletePmUserAttachments() == null) {
+//					this.getManagedBean().setDeletePmUserAttachments(
+//							new ArrayList<PmUserAttachment>());
+//				}
+//				if (!attachment.isBrandNew()) {
+//					this.getManagedBean().getDeletePmUserAttachments()
+//							.add(attachment);
+//				}
+//				this.getManagedBean().getSelectedUser().getPmUserAttachments()
+//						.remove(attachment);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new EpException(MessageConst.ERROR_770054,
+//					new String[] { e.getMessage() });
+//
+//		}
+//		logger.info("deleteAttachment - END");
+//	}
+	
 	/**
 	 * Delete attachment
 	 * 
-	 * @param attachment
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void deleteAttachment(PmUserAttachment attachment)
+	public void deleteAttachment()
 			throws FileNotFoundException, IOException {
 		logger.info("deleteAttachment - START");
 		try {
+			PmUserAttachment attachment = getManagedBean().getSelectedDeleteAttachment();
 			if (attachment != null) {
 				if (this.getManagedBean().getDeletePmUserAttachments() == null) {
 					this.getManagedBean().setDeletePmUserAttachments(
@@ -2871,6 +2903,15 @@ public class ProfileManagementBackingBean extends
 							"pmUserRoles.pmRole.roleCode",
 							SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.MINISTRY_ADMIN.value()));
 		}
+		
+		// JABATAN_ADMIN cannot see JABATAN_ADMIN
+		if(getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), RoleCode.JABATAN_ADMIN.value()));
+		}		
+		
 
 		// PTJ_ADMIN cannot see PTJ_ADMIN
 		if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
@@ -5358,19 +5399,39 @@ public class ProfileManagementBackingBean extends
 		return orgName;
 	}
 	
-	public void deleteUserRole(int rowIndex) {
+//	public void deleteUserRole(int rowIndex) {
+//		List<PmUserRole> userRoles = getManagedBean().getSelectedUserOrg().getPmUserRoles();
+//		PmUserRole removeUserRole = userRoles.get(rowIndex);
+//		userRoles.remove(removeUserRole);
+//		getManagedBean().getSelectedUserOrg().setPmUserRoles(userRoles);
+//		updateReceivingAddressFlag();
+//		getManagedBean().setRoleTabActiveIndex(0);
+//	}
+	
+	public void deleteUserRole() {
 		List<PmUserRole> userRoles = getManagedBean().getSelectedUserOrg().getPmUserRoles();
-		PmUserRole removeUserRole = userRoles.get(rowIndex);
+		PmUserRole removeUserRole = getManagedBean().getSelectedDeleteUserRole();
 		userRoles.remove(removeUserRole);
 		getManagedBean().getSelectedUserOrg().setPmUserRoles(userRoles);
 		updateReceivingAddressFlag();
 		getManagedBean().setRoleTabActiveIndex(0);
 	}
 	
-	public void deleteUserReceivingAddr(int rowIndex){
+//	public void deleteUserReceivingAddr(int rowIndex){
+//		List<PmAddressType> addressTypes = getManagedBean().getSelectedReceivingAddrTypes();
+//		PmAddressType removeAddressType = addressTypes.get(rowIndex);
+//		addressTypes.remove(removeAddressType);
+//		getManagedBean().setSelectedReceivingAddrTypes(addressTypes);
+//		updateReceivingAddressFlag();
+//		getManagedBean().setRoleTabActiveIndex(1);
+//	}
+	
+	public void deleteUserReceivingAddr(){
 		List<PmAddressType> addressTypes = getManagedBean().getSelectedReceivingAddrTypes();
-		PmAddressType removeAddressType = addressTypes.get(rowIndex);
+		PmAddressType removeAddressType = getManagedBean().getSelectedDeleteReceivingAddr();
 		addressTypes.remove(removeAddressType);
+		this.getManagedBean().getSelectedUser()
+		.getPmAddressTypes().remove(removeAddressType);
 		getManagedBean().setSelectedReceivingAddrTypes(addressTypes);
 		updateReceivingAddressFlag();
 		getManagedBean().setRoleTabActiveIndex(1);

@@ -76,6 +76,9 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean isDisabledOrgFields = false;
 	private List<PmRoleDesc> roleDescResults;
 	private PmRoleDesc selectedRoleDesc;
+	private PmUserRole selectedDeleteUserRole;
+	private PmUserAttachment selectedDeleteAttachment;
+	private PmAddressType selectedDeleteReceivingAddr;
 	
 	public PmUser getPmUserOriginal() {
 		return pmUserOriginal;
@@ -538,6 +541,43 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedRoleDesc(PmRoleDesc selectedRoleDesc) {
 		this.selectedRoleDesc = selectedRoleDesc;
+	}
+	/**
+	 * @return the selectedDeleteUserRole
+	 */
+	public PmUserRole getSelectedDeleteUserRole() {
+		return selectedDeleteUserRole;
+	}
+	/**
+	 * @param selectedDeleteUserRole the selectedDeleteUserRole to set
+	 */
+	public void setSelectedDeleteUserRole(PmUserRole selectedDeleteUserRole) {
+		this.selectedDeleteUserRole = selectedDeleteUserRole;
+	}
+	/**
+	 * @return the selectedDeleteAttachment
+	 */
+	public PmUserAttachment getSelectedDeleteAttachment() {
+		return selectedDeleteAttachment;
+	}
+	/**
+	 * @param selectedDeleteAttachment the selectedDeleteAttachment to set
+	 */
+	public void setSelectedDeleteAttachment(PmUserAttachment selectedDeleteAttachment) {
+		this.selectedDeleteAttachment = selectedDeleteAttachment;
+	}
+	/**
+	 * @return the selectedDeleteReceivingAddr
+	 */
+	public PmAddressType getSelectedDeleteReceivingAddr() {
+		return selectedDeleteReceivingAddr;
+	}
+	/**
+	 * @param selectedDeleteReceivingAddr the selectedDeleteReceivingAddr to set
+	 */
+	public void setSelectedDeleteReceivingAddr(
+			PmAddressType selectedDeleteReceivingAddr) {
+		this.selectedDeleteReceivingAddr = selectedDeleteReceivingAddr;
 	}
 	
 

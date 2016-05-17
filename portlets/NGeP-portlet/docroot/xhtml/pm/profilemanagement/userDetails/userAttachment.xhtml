@@ -28,10 +28,14 @@
 	          		immediate="true" ajax="false" rendered="#{!attachment.brandNew}">
  					  <p:graphicImage value="/css/images/design/attach.png" />
  				</p:commandLink>
-				<p:commandLink action="#{profileManagementBackingBean.deleteAttachment(attachment)}" 
-	          		immediate="true" update="dtAttachment">
- 					  <p:graphicImage value="/css/images/design/icon_trash.png" />
- 				</p:commandLink>
+ 				<p:commandLink partialSubmit="true"
+						process="@this"
+						oncomplete="attachmentDeletePopUp.show();"
+						update="@([id$=#{attachmentDeleteId}])" >
+						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+						<f:setPropertyActionListener target="#{profileManagementBackingBean.managedBean.selectedDeleteAttachment}" 
+							value="#{attachment}" />
+				</p:commandLink>
 	        </p:column>
 	    </p:dataTable>
 		<div align="right">
@@ -56,6 +60,13 @@
 		   		multiple="true"/>	            	
 				
 		</p:dialog>	
+		<ac:confirmationPopup id="attachmentDeleteId"
+			widget="attachmentDeletePopUp"
+			okAction="profileManagementBackingBean.deleteAttachment()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":form:dtAttachment" />	
 		
 		
 	</p:panel>
