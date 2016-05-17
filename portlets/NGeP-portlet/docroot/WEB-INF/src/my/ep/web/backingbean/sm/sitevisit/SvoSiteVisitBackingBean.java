@@ -1267,6 +1267,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("mofNo",StringUtils.isNotBlank(mofAccount.getMofNo())?mofAccount.getMofNo() : "");
 		context.put("applNo",svTask.getSmAppl().getApplNo());
 		context.put("templateType",templateDesc);
+		context.put("smVmUtil", VmUtil.getInstance());
 		
 		if(review){
 			//context.put("", value)
@@ -1342,6 +1343,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("workerNonMalaysianPct", calculateWorkerPercentage(this.getManagedBean().getWrkNonMalaysian()));
 		
 		context.put("templateType",templateDesc);
+		context.put("smVmUtil", VmUtil.getInstance());
 
 		// SIR #3108
 		context.put("higherManagementNames", this.getManagedBean().getHigherManagementNames());
