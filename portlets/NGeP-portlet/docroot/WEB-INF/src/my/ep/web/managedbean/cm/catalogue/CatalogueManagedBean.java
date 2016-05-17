@@ -877,6 +877,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
+				supplierReqDTO.setAllStatuses(true);
 
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
