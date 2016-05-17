@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -139,4 +140,15 @@ public class BPMAssignedTaskSearchBackingBean extends BaseBackingBean<BPMAssigne
 			throw new EpException(e.getMessage());
 		}
 	}
+	
+	
+	public void preRenderTask(){
+		
+		this.reset();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "assignedTaskSearch");
+	
+	}
+	
 }
