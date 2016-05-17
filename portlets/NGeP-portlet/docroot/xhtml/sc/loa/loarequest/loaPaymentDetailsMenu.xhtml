@@ -98,6 +98,16 @@
 					</p:inputText>
 				</td>
 		</tr>
+		<tr>
+			<td></td>
+			<td colspan="3"><h:outputText styleClass="instruction"
+					value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
+					escape="false" /> <br /> <h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
+					escape="false"
+					rendered="#{lOADetailBackingBean.managedBean.renderRemainder}" />
+			</td>
+		</tr>
 		
 		<tr>
 			<td>
