@@ -63,7 +63,7 @@
 					rendered="#{tech.definationType.parameterCode eq 'TS' or tech.definationType.parameterCode eq 'SD' or tech.definationType.parameterCode eq 'WF'}" />
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-					id="techScoreWeight" required="true" maxlength="18"
+					id="techScoreWeight" required="true" maxlength="14"
 					label="#{lbl['lbl.sc.score']}" style="text-align:right"
 					rendered="#{((tech.definationType.parameterCode eq 'UP' or tech.definationType.parameterCode eq 'SP' or tech.definationType.parameterCode eq 'PD' or tech.definationType.parameterCode eq 'NA') and tech.scoringReq)}">
 					<ac:validateNumber integerOnly="
@@ -85,7 +85,7 @@
 				</f:facet>
 				<p:inputText value="#{tech.qtScoreWeightage.weightage}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
-					maxlength="5" style="text-align:right"
+					maxlength="3" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 
 					<p:ajax event="blur" process="@this"
@@ -148,7 +148,7 @@
 					<td style="width: 200px;"><p:outputLabel
 							value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText style="text-align:right" maxlength="5"
+					<td><p:inputText style="text-align:right" maxlength="3"
 							disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 							value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
@@ -164,7 +164,7 @@
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.technical']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="text-align:right" maxlength="5"
+				<td><p:inputText style="text-align:right" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
 						<p:ajax event="blur" process="@all" partialSubmit="true"
