@@ -204,7 +204,8 @@
                       value="#{agreementBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
             	   <p:ajax event="change"  process="@this" 
-            	       listener="#{agreementBackingBean.settingMinistryListener}" update=":form:controllingOfficer,:form:jabatan,:form:ptjId" />
+            	       listener="#{agreementBackingBean.settingMinistryListener}"
+            	       update=":form:controllingOfficer,:form:jabatan,:form:ptjId, :form:selectAgencyWitnesId" />
                  </p:selectOneMenu>
                
                   <p:selectOneMenu for="controllingOfficer"  style="width:140px" disabled="true" >
@@ -240,8 +241,9 @@
                  </p:selectOneMenu>
                 </h:panelGrid>
                  <div class="ppRightBtn">
-       		        <p:commandButton value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" update=":form:AgSignerTable" 
-				    action="#{agreementBackingBean.addAgencySignerDetails}"  onclick="tableAgencySigner.hide();"/>
+       		        <p:commandButton id="selectAgencyWitnesId"  value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" update=":form:AgSignerTable" 
+				    action="#{agreementBackingBean.addAgencySignerDetails}"  onclick="dialogAgencySigner.hide();"
+				     disabled="#{agreementBackingBean.managedBean.buttonHideActive}" />
 		       </div>
              </h:panelGroup>
 	      </p:dialog>  

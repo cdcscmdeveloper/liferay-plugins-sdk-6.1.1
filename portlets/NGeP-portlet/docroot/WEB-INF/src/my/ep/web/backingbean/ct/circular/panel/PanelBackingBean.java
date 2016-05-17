@@ -1486,19 +1486,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
         try {	
         	CtCancelCircular cancelCircular = null;
         	List<CtCancelCircular> cancelCircularList = new ArrayList<CtCancelCircular>();
-        	for(CtCircularVer circularVer : getManagedBean().getSelectedCircularVerList()) {
+            Iterator<CtCircularVer> circularVerIterator  = getManagedBean().getCircularVerList().iterator();
+        	
+        	while(circularVerIterator.hasNext()) {
         		cancelCircular = new CtCancelCircular();
-        		cancelCircular.setCircularVer(circularVer);
+        		cancelCircular.setCircularVer(circularVerIterator.next());
+        		if(cancelCircular.getCircularVer().isSelectedCheckBox()) {
         		cancelCircularList.add(cancelCircular);
         		for(CtCancelCircular ctCancelCircular : getManagedBean().getCancelCircularReq().getCtCancelCircularList()) {
-        			if(ctCancelCircular.getCircularVer().getCircularVerId().equals(circularVer.getCircularVerId()))
+        			if(ctCancelCircular.getCircularVer().getCircularVerId().equals(cancelCircular.getCircularVer().getCircularVerId()))
         				cancelCircularList.remove(cancelCircular);
-        		}
+        		   }
+        	   }
         	}
         	if(getManagedBean().getCancelCircularReq()==null) {
         		getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
         	}
 			getManagedBean().getCancelCircularReq().getCtCancelCircularList().addAll(cancelCircularList);
+			getManagedBean().setButtonHideActiveDel(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2607,6 +2612,23 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
 			getManagedBean().setButtonHideActiveDel(true);
 		}	
     }
+    
+    public void selectAllDeleteDlgCircular(AjaxBehaviorEvent e) {
+    	
+	      for (CtCircularVer ctCircularVers : getManagedBean().getCircularVerList()) {
+		       if (getManagedBean().isSelectAll()) {
+		    	   ctCircularVers.setSelectedCheckBox(true);
+	           }else {
+	        	   ctCircularVers.setSelectedCheckBox(false);
+	           }
+         }
+
+        if((boolean) e.getComponent().getAttributes().get("value")){
+	           getManagedBean().setButtonHideActiveDel(false);
+        }else{
+	           getManagedBean().setButtonHideActiveDel(true);
+        }	
+   }
     	/**
     	 * The method used to delete the selected deduction clause.
     	 */
@@ -2736,6 +2758,22 @@ public void selectAllCancelCircularList(AjaxBehaviorEvent e) {
     			getManagedBean().setButtonHideActiveDel(true);
     		}	
     	}
+    	
+    	public void selectAllDltDlgChkBoxSelect(AjaxBehaviorEvent e){
+    		getManagedBean().setSelectAll(false);
+        	for (CtCircularVer ctCircularVers : getManagedBean().getCircularVerList()){
+        		if(ctCircularVers.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+    	}
+    	
 	public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActiveDel(false);
 	}
