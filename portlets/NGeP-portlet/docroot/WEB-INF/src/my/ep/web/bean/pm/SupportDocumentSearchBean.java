@@ -22,6 +22,7 @@ public class SupportDocumentSearchBean {
 	private String businessCategory;
 	private String certBodyName;
 	private String docStatus;
+	private Long glpCertBodyId;
 	
 	/**
 	 * @return the docCategoryParam
@@ -142,6 +143,18 @@ public class SupportDocumentSearchBean {
 	}
 	public void setCertBodyName(String certBodyName) {
 		this.certBodyName = certBodyName;
+	}
+	/**
+	 * @return the glpCertBodyId
+	 */
+	public Long getGlpCertBodyId() {
+		return glpCertBodyId;
+	}
+	/**
+	 * @param glpCertBodyId the glpCertBodyId to set
+	 */
+	public void setGlpCertBodyId(Long glpCertBodyId) {
+		this.glpCertBodyId = glpCertBodyId;
 	}
 	
 	
