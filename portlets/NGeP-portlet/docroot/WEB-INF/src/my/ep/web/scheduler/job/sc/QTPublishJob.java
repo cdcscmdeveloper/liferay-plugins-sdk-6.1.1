@@ -13,11 +13,15 @@ package my.ep.web.scheduler.job.sc;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.QTDisruptionConst;
+import my.ep.constant.sc.QTStatusConst;
+import my.ep.constants.BpmEndpointConst;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -37,6 +41,9 @@ public class QTPublishJob implements Job {
 
 	private static Logger log = EpLogger.getLogger(QTPublishJob.class);
 
+	private IQTProposalSO proposalSO;
+	private IQTNoticeBoardSO noticeBoardSO;
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -54,58 +61,134 @@ public class QTPublishJob implements Job {
 		debugLogger("Start execute ");
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap.getLong("qtId");
-		IQTProposalSO proposalSO;
 
 		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+			if (proposalSO == null) {
+				proposalSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTProposalSO.class);
+			}
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(qtId);
 			ProposalResDTO proposalResDTO = proposalSO
 					.updateProposalWorkFlowStatus(proposalReqDTO);
 			if (proposalResDTO.isSuccessful()) {
-				log.info("$$$$$ qt Work Flow status updated suceessfully from QTPublishJob job");
+				log.info("$$$$$ qt Work Flow status updated suceessfull for Publish");
+				insertSuppliersAndSendNotification(qtId);
 			} else {
-				log.info("$$$$$ qt Work Flow status updated failed from QTPublishJob job");
+				log.info("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
+				updateQtAsDisrupted(qtId,
+						QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION);
 			}
 
 		} catch (Exception e) {
-			log.info("$$$$$ qt Work Flow status updated failed from QTPublishJob job");
+			log.info("$$$$$ qt Work Flow status updated failed for Publish");
 			log.error(e.getLocalizedMessage());
-		} finally {
-			proposalSO = null;
+			reSchedulePublicationForPublishFailQt(qtId);
 		}
 
-		IQTNoticeBoardSO noticeBoardSO;
-		try {
-			// Publish QT's scheduled for today and by this hour
-			noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+		finally {
+			proposalSO = null;
+			noticeBoardSO = null;
+		}
 
+	}
+
+	private void insertSuppliersAndSendNotification(Long qtId) {
+		// Insert suppliers and send notification after work flow status update successful
+		try {
+			if (noticeBoardSO == null) {
+				noticeBoardSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTNoticeBoardSO.class);
+			}
+
+			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 			if (qtId != null) {
 				reqDTO.setQtId(qtId);
 				NoticeBoardResDTO resDTO = noticeBoardSO
 						.publishQtAndInsertSuppliers(reqDTO);
 
 				if (resDTO.isSuccessful()) {
-					log.info("$$$$$ Publishing Successful for the QT Id :"
+					log.info("$$$$$ Insert Supplier and send notification successful for the QT Id :"
 							+ qtId);
+					updateQtPublishBpmTask(qtId);
 				} else {
-					log.info("$$$$$ Publishing Failed for the QT Id :" + qtId);
+					log.info("$$$$$ Insert Supplier and send notification unsuccessful for the QT Id :"
+							+ qtId);
+					updateQtAsDisrupted(
+							qtId,
+							QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION);
 				}
-			} else {
-				log.info("$$$$$ QT Publish Job run failed at "
-						+ DateUtils.getCurrentDate());
 			}
-
 		} catch (Exception e) {
-			log.info("$$$$$ QT Publish Job run failed at "
+			log.info("$$$$$ Insert Supplier and send notification failed at"
 					+ DateUtils.getCurrentDate());
 			log.error(e.getLocalizedMessage());
-		} finally {
-			noticeBoardSO = null;
+			updateQtAsDisrupted(qtId,
+					QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION);
 		}
+	}
 
+	private void updateQtPublishBpmTask(Long qtId) {
+		// Update BPM after work flow status and supplier insertion successful
+		try {
+			if (noticeBoardSO == null) {
+				noticeBoardSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTNoticeBoardSO.class);
+			}
+			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+			reqDTO.setQtId(qtId);
+			reqDTO.setBpmEndpoint(BpmEndpointConst.SC_PUBLISH_QT_MESSAGEPOINT);
+			NoticeBoardResDTO resDTO = noticeBoardSO
+					.updateBpmForPublishAndProposalClose(reqDTO);
+			if (resDTO.isSuccessful()) {
+				log.info("$$$$$ BPM Update after Publish successful for the QT Id :"
+						+ qtId);
+				updateQtAsDisrupted(qtId,
+						QTDisruptionConst.QT_PUBLISH_SUCCESSFUL);
+			} else {
+				log.info("$$$$$ BPM Update after Publish unsuccessful for the QT Id :"
+						+ qtId);
+				updateQtAsDisrupted(qtId,
+						QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION);
+			}
+		} catch (Exception e) {
+			log.info("$$$$$ BPM Update after Publish failed for the QT Id :"
+					+ qtId);
+			updateQtAsDisrupted(qtId,
+					QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION);
+		}
+	}
+
+	private void updateQtAsDisrupted(Long qtId, Long disruptionStage) {
+		try {
+			if(proposalSO == null){
+				proposalSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			}
+			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
+			proposalReqDTO.setQtId(qtId);
+			proposalReqDTO.setDisruptionStage(disruptionStage);
+			proposalSO.updateDisruptedQtAndSendNotification(proposalReqDTO);
+		} finally {
+			proposalSO = null;
+		}
+	}
+	
+	private void reSchedulePublicationForPublishFailQt(Long qtId){
+		if(proposalSO == null){
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+		}
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setQtId(qtId);
+		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+		ProposalResDTO resDTO = proposalSO.updateRescheduleWorkFlowStatus(reqDTO);
+		if(resDTO.isSuccessful()){
+			log.info("Work flow status updated for publish failed QT with id"+qtId);
+		}
 	}
 }
