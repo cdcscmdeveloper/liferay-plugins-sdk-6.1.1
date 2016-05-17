@@ -67,7 +67,7 @@
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>Application Reference No.</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.appl.ref.no')</b></td>
 	        <td>$applNo</td>
     	</tr>
     	
