@@ -13,7 +13,7 @@
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="66" id="ministry"
-						value="#{purchaseRequestBackingBean.retrieveMinistryByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId)}"
+						value="#{purchaseRequestBackingBean.retrieveMinistryByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId, purchaseRequestBackingBean.getTransactionDate(purchaseRequestBackingBean.managedBean.fulfilmentRequest))}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -21,7 +21,7 @@
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td><p:inputTextarea id="controlOff" rows="2" cols="67"
 						disabled="true" autoResize="false" style="resize:none;"
-						value="#{purchaseRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}" />
+						value="#{purchaseRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, purchaseRequestBackingBean.getTransactionDate(purchaseRequestBackingBean.managedBean.fulfilmentRequest))}" />
 				</td>
 			</tr>
 			<tr>
@@ -29,7 +29,7 @@
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputTextarea id="ptjGroup" rows="2" cols="67"
 						disabled="true" autoResize="false" style="resize:none;"
-						value="#{purchaseRequestBackingBean.retrieveJabatanByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}" />
+						value="#{purchaseRequestBackingBean.retrieveJabatanByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, purchaseRequestBackingBean.getTransactionDate(purchaseRequestBackingBean.managedBean.fulfilmentRequest))}" />
 				</td>
 			</tr>
 			<tr>
@@ -38,7 +38,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 560px;">
 					<p:inputTextarea id="preparedOrgProfileId" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" />					
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" />					
 					<ac:lov id="preparedPtj" uiMode="link" 
 						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
@@ -54,7 +54,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
 				<td>	<p:inputTextarea id="issuedOrgProfile" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" />	
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" />	
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
 				</td>
 			</tr>										
@@ -64,7 +64,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputTextarea id="chargeOrgProfile" rows="2" cols="63"
 						readonly="true" autoResize="false" style="resize:none;"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" />
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" />
 					<p:commandLink oncomplete="dlgChargedPtj.show();"
 						action="#{purchaseRequestBackingBean.resetChargedPtjDetails}"
 						update=":form:chargeOrgProfile,chargeResultPanel,dialogChargedPtj"
