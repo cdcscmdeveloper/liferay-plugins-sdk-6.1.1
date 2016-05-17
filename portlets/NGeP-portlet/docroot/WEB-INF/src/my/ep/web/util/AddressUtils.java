@@ -6,7 +6,10 @@ package my.ep.web.util;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sm.SmAddress;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Kieyun
@@ -117,6 +120,67 @@ public class AddressUtils {
 		}
 		return address.toString();
 	}
+	
+	/**
+	 * Get Full Address based on SmAddress
+	 * @param smAddress
+	 * @return full address
+	 */
+	public static String getFullAddress(ScAddress scAddress) {
+		StringBuilder address = new StringBuilder();
+		if (scAddress != null) {
+			if (StringUtils.isNotBlank(
+					scAddress.getAddress1())) {
+				address.append(scAddress.getAddress1());
+				address.append(separator);
+			}
+			if (StringUtils.isNotBlank(
+					scAddress.getAddress2())) {
+				address.append(scAddress.getAddress2());
+				address.append(separator);
+			}
+			if (StringUtils.isNotBlank(
+					scAddress.getAddress3())) {
+				address.append(System.getProperty("line.separator"));
+				address.append(scAddress.getAddress3());
+				address.append(separator);
+			}
+			if (StringUtils.isNotBlank(
+					scAddress.getAddress4())) {
+				address.append(scAddress.getAddress4());
+				address.append(separator);
+			}
+			
+			if (scAddress.getPmDistrict() != null && 
+					StringUtils.isNotBlank(
+						scAddress.getPmDistrict().getDistrictName())) {
+				address.append(scAddress.getPmDistrict().getDistrictName());
+				address.append(separator);
+			}
+			
+			if (StringUtils.isNotBlank(
+					scAddress.getPostcode())) {
+				address.append(System.getProperty("line.separator"));
+				address.append(scAddress.getPostcode());
+				address.append(" ");
+			}
+			if (scAddress.getPmCity() != null && 
+					StringUtils.isNotBlank(
+						scAddress.getPmCity().getCityName())) {
+				address.append(scAddress.getPmCity().getCityName());
+				address.append(separator);
+			}
+
+			if (scAddress.getPmState() != null && 
+					StringUtils.isNotBlank(
+						scAddress.getPmState().getStateName())) {
+				address.append(System.getProperty("line.separator"));
+				address.append(scAddress.getPmState().getStateName());
+			}			
+		}
+		
+		return address.toString();
+	}	
 
 	/**
 	 * Get Full Address based on PmAddress
