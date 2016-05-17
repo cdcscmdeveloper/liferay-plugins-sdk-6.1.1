@@ -6,110 +6,107 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.payment.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.loiloa.payment.details']}"
+		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="18%">
-				<h:outputLabel value="#{lbl['lbl.sc.account.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
-			</td>
-			<td width="82%">
-				<c:if test="#{isSupplierAckStatus}">
-					<p:selectOneMenu id="accountNoId"
-						value="#{directLOABackingBean.managedBean.selectedBankId}"
-						style="width:277px;margin-bottom: 5px;"
-						disabled="#{directLOABackingBean.managedBean.readOnly}"
-						required="true"
-						label="#{lbl['lbl.sc.account.no']}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems
-							value="#{directLOABackingBean.managedBean.bankList}"
-							var="smSupplierBank" 
-							itemValue="#{smSupplierBank.supplierBankId}" itemLabel="#{smSupplierBank.accountNo}" />
-						<p:ajax event="change"
-							listener="#{directLOABackingBean.handleBankDetailsChanged}"
-							partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />
-					</p:selectOneMenu><p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
-				</c:if>
-				<c:if test="#{!isSupplierAckStatus}">
-					<p:inputText value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}" disabled="true" size="40" />
-				</c:if>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h:outputLabel value="#{lbl['lbl.sc.bank.name']}" />
-			</td>
-			<td>
-				<p:inputText id="bankName" value="#{directLOABackingBean.managedBean.scLoa.bankName}" disabled="true" size="40" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h:outputLabel value="#{lbl['lbl.sc.bank.branch']}" />
-			</td>
-			<td>
-				<p:inputText id="bankBranch" value="#{directLOABackingBean.managedBean.scLoa.bankBranch}" disabled="true" size="40" />
-			</td>
-		</tr>
-		<tr>
-			<td valign="top">
-				<h:outputLabel value="#{lbl['lbl.sc.bank.address']}" />
-			</td>
-			<td>
-				<p:inputTextarea id="bankAddress" rows="5" 
-					value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.bankAddress)}"
-					style=" margin-bottom:5px; width: 266px;" disabled="true" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.procurment.type.category']}" />
-			</td>
-				<td><p:inputText 
+			<tr>
+				<td width="18%"><h:outputLabel
+						value="#{lbl['lbl.sc.account.no']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
+				<td width="82%"><c:if test="#{isSupplierAckStatus}">
+						<p:selectOneMenu id="accountNoId"
+							value="#{directLOABackingBean.managedBean.selectedBankId}"
+							style="width:277px;margin-bottom: 5px;"
+							disabled="#{directLOABackingBean.managedBean.readOnly}"
+							required="true" label="#{lbl['lbl.sc.account.no']}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems
+								value="#{directLOABackingBean.managedBean.bankList}"
+								var="smSupplierBank"
+								itemValue="#{smSupplierBank.supplierBankId}"
+								itemLabel="#{smSupplierBank.accountNo}" />
+							<p:ajax event="change"
+								listener="#{directLOABackingBean.handleBankDetailsChanged}"
+								partialSubmit="true" process="@this"
+								update="bankName, bankBranch, bankAddress" />
+						</p:selectOneMenu>
+						<p:message id="accountNoIdMsg" for="accountNoId" display="icon" />
+					</c:if> <c:if test="#{!isSupplierAckStatus}">
+						<p:inputText
+							value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}"
+							disabled="true" size="40" />
+					</c:if></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.bank.name']}" /></td>
+				<td><p:inputText id="bankName"
+						value="#{directLOABackingBean.managedBean.scLoa.bankName}"
+						disabled="true" size="40" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.bank.branch']}" /></td>
+				<td><p:inputText id="bankBranch"
+						value="#{directLOABackingBean.managedBean.scLoa.bankBranch}"
+						disabled="true" size="40" /></td>
+			</tr>
+			<tr>
+				<td valign="top"><h:outputLabel
+						value="#{lbl['lbl.sc.bank.address']}" /></td>
+				<td><p:inputTextarea id="bankAddress" rows="5"
+						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.bankAddress)}"
+						style=" margin-bottom:5px; width: 266px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}" /></td>
+				<td><p:inputText
 						value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.procurementTypeCatId)}"
 						size="40" label="#{lbl['lbl.sc.procurment.type.category']}"
 						disabled="true" /></td>
 			</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.off.price']}" />
-			</td>
-			<td>
-				<p:inputText styleClass="ppNumericAlign"
-					value="#{directLOABackingBean.managedBean.scLoa.loaAmt}"
-					disabled="true" size="40">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" />
-			</td>
-			<td>
-				<p:inputText styleClass="ppNumericAlign"
-						value="#{directLOABackingBean.managedBean.scLoa.gstAmt}" disabled="true" size="40">
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.off.price']}" /></td>
+				<td><p:inputText styleClass="ppNumericAlign"
+						value="#{directLOABackingBean.managedBean.scLoa.loaAmt}"
+						disabled="true" size="40">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
+					</p:inputText></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.gst.amount']}" /></td>
+				<td><p:inputText styleClass="ppNumericAlign"
+						value="#{directLOABackingBean.managedBean.scLoa.gstAmt}"
+						disabled="true" size="40">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td colspan="3"><h:outputText styleClass="instruction"
+						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
+						escape="false" /> <br /> <h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
+						escape="false"
+						rendered="#{directLOABackingBean.managedBean.renderRemainder}" />
 				</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.gst.overall.contract.amount']}" />
-			</td>
-			<td>
-				<p:inputText styleClass="ppNumericAlign"
-					value="#{directLOABackingBean.managedBean.overallContractAmt}"
-					 size="40" disabled="true">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</td>
-		</tr>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.gst.overall.contract.amount']}" /></td>
+				<td><p:inputText styleClass="ppNumericAlign"
+						value="#{directLOABackingBean.managedBean.overallContractAmt}"
+						size="40" disabled="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
 		</table>
 	</p:panel>
 </ui:composition>
