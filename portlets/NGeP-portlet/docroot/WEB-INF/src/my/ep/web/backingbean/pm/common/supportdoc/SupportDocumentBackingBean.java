@@ -10,6 +10,7 @@
 */
 package my.ep.web.backingbean.pm.common.supportdoc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -40,6 +42,7 @@ import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -58,10 +61,12 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -73,6 +78,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * Backing Bean for Support Document
@@ -2453,8 +2459,10 @@ public class SupportDocumentBackingBean extends
 						.getSupportDocSearchBean().getProcureCatParam());
 				reqDTO.setDocStatus(getManagedBean().getSupportDocSearchBean()
 						.getDocStatus());
-				reqDTO.setCertBodyName(getManagedBean()
-						.getSupportDocSearchBean().getCertBodyName());
+//				reqDTO.setCertBodyName(getManagedBean()
+//						.getSupportDocSearchBean().getCertBodyName());
+				reqDTO.setCertBodyId(getManagedBean()
+						.getSupportDocSearchBean().getGlpCertBodyId());
 				IDocumentSO reqSO = (IDocumentSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2676,5 +2684,46 @@ public class SupportDocumentBackingBean extends
 			parameterDescs.add(pmParameterDesc);
 		}
 		return parameterDescs;
+	}
+	
+	
+	public void selectCategoryAction(PmCategoryL3 pmCategoryL3) {
+		log.info("*****selectCategoryAction*******");
+		this.getManagedBean().getSupportDocSearchBean().setBusinessCategory(pmCategoryL3.getCategoryName());
+	}
+	
+	public List<PmCertBody> retrieveGlpList(){
+		ICertBodySO bodySO = null;
+		List<PmCertBody> certBodyList = new ArrayList<>();
+		try{
+			ISearchBean<PmCertBody> searchBean = new SearchBean<PmCertBody>();
+			
+			List<String> activeAndInActiveStatus = new ArrayList<String>();
+			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_IN.value(), 
+							activeAndInActiveStatus));
+				
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("isGlp", SearchOperator.OPERATOR_EQUALS
+							.value(), true));
+			
+			bodySO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICertBodySO.class);
+			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
+			certBodyReqDTO.setCertBodySearchBean(searchBean);
+			ISearchResultBean<PmCertBody> certBodyResultBean = 
+					bodySO.retrieveBodyList(certBodyReqDTO).getCertBodyResultBean();
+			if(certBodyResultBean != null && certBodyResultBean.getResultList() != null 
+					&& !certBodyResultBean.getResultList().isEmpty()){
+				certBodyList.addAll(certBodyResultBean.getResultList());
+			}
+		}finally{
+			bodySO = null;
+		}
+		return certBodyList;
 	}
 }
