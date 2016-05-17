@@ -83,7 +83,7 @@
 						<tr>
 							<td align="left" colspan="2"><h:outputText
 									value="#{backingBean.managedBean.catTypeConfirm}"
-									rendered="#{backingBean.managedBean.smAppl.applCategoryType != null}"
+									rendered="#{not empty backingBean.managedBean.smAppl.applCategoryType}"
 									style="color: blue; font-weight: bold;" /></td>
 
 						</tr>
