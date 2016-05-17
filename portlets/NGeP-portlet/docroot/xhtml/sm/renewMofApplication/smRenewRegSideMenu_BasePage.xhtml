@@ -11,14 +11,23 @@
 		<h:panelGroup
 			rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.renew.mof.account']}";
+				
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.renew.mof.account']}");
+						"#{lbl['lbl.sm.renew.mof.account']}");				
+				
 			</script>
 		</h:panelGroup>
 		<h:panelGroup
 			rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.appli.new.categories']}";
+			
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
 						"#{lbl['lbl.sm.appli.new.categories']}");
@@ -27,6 +36,10 @@
 		<h:panelGroup
 			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and backingBean.managedBean.smAppl.resubmit}">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.review.resubmitApplication']}";
+				
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
 						"#{lbl['lbl.sm.review.resubmitApplication']}");
@@ -35,6 +48,10 @@
 		<h:panelGroup
 			rendered="#{(backingBean.managedBean.approverUser or backingBean.managedBean.poUser) and !backingBean.managedBean.smAppl.resubmit}">
 			<script>
+				var emptyText = document.createTextNode("");
+				$('#breadcrumbs').find('.last').append(emptyText);
+				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.review.application']}";		
+			
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
 						"#{lbl['lbl.sm.review.application']}");
