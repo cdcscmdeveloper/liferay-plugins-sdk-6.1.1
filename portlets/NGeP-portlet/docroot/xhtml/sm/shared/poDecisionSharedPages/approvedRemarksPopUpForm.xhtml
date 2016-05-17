@@ -8,74 +8,98 @@
 	<br />
 	<p:messages id="applicationApprovedRemarksMsg" showSummary="false"
 		showDetail="true" autoUpdate="true" closable="true" />
-	<table style="width: 100%">
-		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-			<p:outputPanel rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
+		
+	<p:outputPanel id="approvedApplOutPanelId">
+		<table style="width: 100%">
+			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+				<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType ne 'N'}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+						<td>
+							<h:outputText value="#{backingBean.managedBean.currRegStatus}"/>
+						</td>
+					</tr>
+				</p:outputPanel>
 				<tr>
-					<td style="border-style: none !important;float: right !important;">
-						<p:selectBooleanCheckbox value="#{backingBean.managedBean.smAppl.bumi}" 
-							disabled="#{backingBean.managedBean.smAppl.applType eq 'B'}"/>
-					</td>
-					<td valign="top" style="border-style: none !important;white-space: normal;">
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.bumi.tick.msg']}" />
+					<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
+					<td>
+						<h:outputText value="#{lbl['lbl.sm.facility.facilityType.home.office']}" 
+							rendered="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
+						<h:outputText value="#{lbl['lbl.sm.facility.facilityType.business.office']}" 
+							rendered="#{backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
 					</td>
 				</tr>
-			</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType ne 'N' and backingBean.managedBean.smAppl.applType ne 'B'}">
+					<tr>
+						<td style="border-style: none !important;float: right !important;">
+							<p:selectBooleanCheckbox value="#{backingBean.managedBean.changeCurrRegStatus}">
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									update="approvedApplOutPanelId" />
+							</p:selectBooleanCheckbox>
+						</td>
+						<td valign="top" style="border-style: none !important;">
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.curr.regstatus.change.msg']}" />
+						</td>
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'B'
+						or backingBean.managedBean.changeCurrRegStatus}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+		
+						<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+								id="approveSelBox" required="#{backingBean.managedBean.valueReqd}"
+								value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
+								style="width: 207px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems
+									value="#{backingBean.managedBean.regStatusDescList}" var="reg"
+									itemLabel="#{reg.statusName}"
+									itemValue="#{reg.pmStatus.statusId}" />
+		
+							</p:selectOneMenu> <p:message id="approveSelBoxMsg" for="approveSelBox"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+				</p:outputPanel>
+			</c:if>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-
-				<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-						id="approveSelBox" required="#{backingBean.managedBean.valueReqd}"
-						value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems
-							value="#{backingBean.managedBean.regStatusDescList}" var="reg"
-							itemLabel="#{reg.statusName}"
-							itemValue="#{reg.pmStatus.statusId}" />
-
-					</p:selectOneMenu> <p:message id="approveSelBoxMsg" for="approveSelBox"
+				<td style="vertical-align: top"><p:outputLabel
+						value="#{lbl['lbl.sm.remarks.approval']}" /></td>
+				<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+						style="width : auto;" rows="10"
+						value="#{backingBean.managedBean.applnApprovalRemarks}"
+						id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
+						validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+						maxlength="2500">
+						<f:validateLength maximum="2500" />
+					</p:inputTextarea> <p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
-		</c:if>
-		<tr>
-			<td style="vertical-align: top"><p:outputLabel
-					value="#{lbl['lbl.sm.remarks.approval']}" /></td>
-			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-					style="width : auto;" rows="10"
-					value="#{backingBean.managedBean.applnApprovalRemarks}"
-					id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
-					validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
-					maxlength="2500">
-					<f:validateLength maximum="2500" />
-				</p:inputTextarea> <p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
-					showSummary="true" showDetail="false" display="icon" /></td>
-		</tr>
-		<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
-			<tr>
-				<td colspan="2"><p:outputLabel
-						value="#{lbl['lbl.sm.remarks.overLap.note1']}" escape="false" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-						style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
-						maxlength="2500"
-						value="#{backingBean.managedBean.applnOverLapRemarks}"
-						label="#{lbl['lbl.sm.remarks.overLapping']}"
-						validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
-						required="#{backingBean.managedBean.valueReqd}">
-						<f:validateLength maximum="2500" />
-					</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
-						for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td colspan="2"><p:outputLabel
-						value="#{lbl['lbl.sm.remarks.overLap.note2']}" escape="false" /></td>
-			</tr>
-		</c:if>
-	</table>
-
+			<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
+				<tr>
+					<td colspan="2"><p:outputLabel
+							value="#{lbl['lbl.sm.remarks.overLap.note1']}" escape="false" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+							style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
+							maxlength="2500"
+							value="#{backingBean.managedBean.applnOverLapRemarks}"
+							label="#{lbl['lbl.sm.remarks.overLapping']}"
+							validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+							required="#{backingBean.managedBean.valueReqd}">
+							<f:validateLength maximum="2500" />
+						</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
+							for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><p:outputLabel
+							value="#{lbl['lbl.sm.remarks.overLap.note2']}" escape="false" /></td>
+				</tr>
+			</c:if>
+		</table>
+	</p:outputPanel>
 </ui:composition>

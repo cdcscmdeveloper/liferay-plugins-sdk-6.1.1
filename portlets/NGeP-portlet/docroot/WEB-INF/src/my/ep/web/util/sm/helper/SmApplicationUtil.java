@@ -3701,8 +3701,13 @@ public class SmApplicationUtil {
 		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO)
-				.getStatusDescList();
+		if (applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			descList = SmServiceLookup.getStatusSO()
+					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
+		} else {
+			descList = SmServiceLookup.getStatusSO()
+					.retrieveRegStatusList(reqDTO).getStatusDescList();
+		}
 		return descList;
 	}
 
@@ -7762,6 +7767,33 @@ public class SmApplicationUtil {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Get current registration status description by smAppl
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @return String
+	 */
+	public static String getCurrRegStatusDescBySmAppl(SmAppl appl) {
+		String retVal = StringUtils.EMPTY;
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		if (appl.getSmSupplier().getSmAppl().getPmRegStatus() != null
+				&& appl.getSmSupplier().getSmAppl().getPmRegStatus()
+						.getPmStatus() != null
+				&& !EntityHelper.isCollectionEmpty(appl.getSmSupplier()
+						.getSmAppl().getPmRegStatus().getPmStatus()
+						.getPmStatusDescs())) {
+			for (PmStatusDesc sd : appl.getSmSupplier().getSmAppl()
+					.getPmRegStatus().getPmStatus().getPmStatusDescs()) {
+				if (language.equals(sd.getLanguageCode())) {
+					retVal = sd.getStatusName();
+					break;
+				}
+			}
+		}
+		return retVal;
 	}
 
 	public static CategoryCodeSearchBackingBean getCatCodeBbInstance() {
