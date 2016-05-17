@@ -58,6 +58,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	public static Logger log = EpLogger.getLogger(QTRetryBackingBean.class);
 	
 	private IPagingDataModel<ScQtDisruptionLog> retryQTDataModel = new RetryQTPagingDataModel();
+	private ScQtDisruptionLog selectedRetryQT;
 	private List<ScQtDisruptionLog> selectedRetryQTs;
 	
 	public QTRetryBackingBean() {
@@ -116,7 +117,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 					successful = getQTProposalSO().updateRescheduleWorkFlowStatus(proposalReqDTO)
 						.isSuccessful();
 					if (successful) {
-						updateDisruptionSuccess(qtDisruptionLog);
+						updateQTDisruptionSuccess(qtDisruptionLog);
 					}
 					break;
 				
@@ -136,7 +137,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 					successful = getQTNoticeBoardSO().updateBpmForPublishAndProposalClose(noticeBoardReqDTO)
 							.isSuccessful();
 					if (successful) {
-						updateDisruptionSuccess(qtDisruptionLog);
+						updateQTDisruptionSuccess(qtDisruptionLog);
 					}
 					break;
 				case QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION :
@@ -146,7 +147,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 					successful = getQTProposalSO().updateRescheduleWorkFlowStatus(proposalReqDTO)
 						.isSuccessful();
 					if (successful) {
-						updateDisruptionSuccess(qtDisruptionLog);
+						updateQTDisruptionSuccess(qtDisruptionLog);
 					}
 					break;
 				case QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION :
@@ -165,25 +166,35 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 					successful = getQTNoticeBoardSO().updateBpmForPublishAndProposalClose(noticeBoardReqDTO)
 							.isSuccessful();
 					if (successful) {
-						updateDisruptionSuccess(qtDisruptionLog);
+						updateQTDisruptionSuccess(qtDisruptionLog);
 					}
 					break;
 			}
 			
 			if (!successful) {
-				saveQTDisruption(scQt, disruptionStage);
+				if (qtDisruptionLog.getDisruptionStage() != null && 
+						!qtDisruptionLog.getDisruptionStage().equals(disruptionStage)) {
+					insertQTDisruption(scQt, disruptionStage);
+				} else {
+					qtDisruptionLog.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+					updateQTDisruption(qtDisruptionLog);
+				}
 			}
 		}
 	}
 	
-	private void updateDisruptionSuccess(ScQtDisruptionLog qtDisruptionLog) {
+	private void updateQTDisruptionSuccess(ScQtDisruptionLog qtDisruptionLog) {
+		qtDisruptionLog.setSuccess(true);
+		updateQTDisruption(qtDisruptionLog);
+	}
+	
+	private void updateQTDisruption(ScQtDisruptionLog qtDisruptionLog) {
 		IQTRetrySO qtRetrySO;
 		try {
 			qtRetrySO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
 			
 			QTRetryReqDTO reqDTO = new QTRetryReqDTO();
-			qtDisruptionLog.setSuccess(true);
 			reqDTO.setScQtDisruptionLog(qtDisruptionLog);
 			
 			qtRetrySO.saveQTDisruption(reqDTO);
@@ -192,26 +203,16 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 		}
 	}
 	
-	private void saveQTDisruption(ScQt scQt, Integer disruptionStage) {
-		IQTRetrySO qtRetrySO;
-		try {
-			qtRetrySO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTRetrySO.class);
-			
-			QTRetryReqDTO reqDTO = new QTRetryReqDTO();
-			ScQtDisruptionLog disruptionLog = new ScQtDisruptionLog();
-			disruptionLog.setScQt(scQt);
-			disruptionLog.setDisruptionStage(disruptionStage);
-			disruptionLog.setErrorMsg(getParameterDesc(
-					ParameterTypeConst.QT_DISRUPTION_STAGE, 
-					disruptionLog.getDisruptionStage()+""));
-			super.setUserDetails(disruptionLog);
-			reqDTO.setScQtDisruptionLog(disruptionLog);
-			
-			qtRetrySO.saveQTDisruption(reqDTO);
-		} finally {
-			qtRetrySO = null;
-		}		
+	private void insertQTDisruption(ScQt scQt, Integer disruptionStage) {
+		ScQtDisruptionLog disruptionLog = new ScQtDisruptionLog();
+		disruptionLog.setScQt(scQt);
+		disruptionLog.setDisruptionStage(disruptionStage);
+		disruptionLog.setErrorMsg(getParameterDesc(
+				ParameterTypeConst.QT_DISRUPTION_STAGE, 
+				disruptionLog.getDisruptionStage()+""));
+		super.setUserDetails(disruptionLog);
+		
+		updateQTDisruption(disruptionLog);	
 	}
 	
 	private IQTNoticeBoardSO getQTNoticeBoardSO() {
@@ -238,6 +239,20 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	 */
 	public void setRetryQTDataModel(IPagingDataModel<ScQtDisruptionLog> retryQTDataModel) {
 		this.retryQTDataModel = retryQTDataModel;
+	}
+
+	/**
+	 * @return the selectedRetryQT
+	 */
+	public ScQtDisruptionLog getSelectedRetryQT() {
+		return selectedRetryQT;
+	}
+
+	/**
+	 * @param selectedRetryQT the selectedRetryQT to set
+	 */
+	public void setSelectedRetryQT(ScQtDisruptionLog selectedRetryQT) {
+		this.selectedRetryQT = selectedRetryQT;
 	}
 
 	/**
