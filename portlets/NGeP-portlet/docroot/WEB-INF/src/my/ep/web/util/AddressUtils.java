@@ -315,44 +315,55 @@ public class AddressUtils {
 	 */
 	public static String getFullAddress(CtAddress ctAddress) {
 		StringBuilder address = new StringBuilder();
-		if(ctAddress!=null) {
-			if (ctAddress.getAddressName() != null && ctAddress.getAddressName().length() > 0 && !ctAddress.getAddressName().equals("-")) {
-				address.append(ctAddress.getAddressName());
-				address.append(separator);
-			}
-			if (ctAddress.getAddress1() != null && ctAddress.getAddress1().length() > 0) {
-				address.append(address.length() > 0 ? System.getProperty("line.separator") : "");
+		if (ctAddress != null) {
+			if (StringUtils.isNotBlank(
+					ctAddress.getAddress1())) {
 				address.append(ctAddress.getAddress1());
 				address.append(separator);
 			}
-			if (ctAddress.getAddress2() != null && ctAddress.getAddress2().length() > 0) {
-				address.append(System.getProperty("line.separator"));
+			if (StringUtils.isNotBlank(
+					ctAddress.getAddress2())) {
 				address.append(ctAddress.getAddress2());
 				address.append(separator);
 			}
-			if (ctAddress.getAddress3() != null && ctAddress.getAddress3().length() > 0) {
+			if (StringUtils.isNotBlank(
+					ctAddress.getAddress3())) {
 				address.append(System.getProperty("line.separator"));
 				address.append(ctAddress.getAddress3());
 				address.append(separator);
 			}
-			if (ctAddress.getAddress4() != null && ctAddress.getAddress4().length() > 0) {
-				address.append(System.getProperty("line.separator"));
+			if (StringUtils.isNotBlank(
+					ctAddress.getAddress4())) {
 				address.append(ctAddress.getAddress4());
 				address.append(separator);
 			}
-			if (ctAddress.getPostcode() != null && ctAddress.getPostcode().length() > 0) {
+			
+			if (ctAddress.getPmDistrict() != null && 
+					StringUtils.isNotBlank(
+							ctAddress.getPmDistrict().getDistrictName())) {
+				address.append(ctAddress.getPmDistrict().getDistrictName());
+				address.append(separator);
+			}
+			
+			if (StringUtils.isNotBlank(
+					ctAddress.getPostcode())) {
 				address.append(System.getProperty("line.separator"));
 				address.append(ctAddress.getPostcode());
 				address.append(" ");
 			}
-			if (ctAddress.getPmCity() != null && ctAddress.getPmCity().getCityName() !=null && ctAddress.getPmCity().getCityName().length() > 0) {
+			if (ctAddress.getPmCity() != null && 
+					StringUtils.isNotBlank(
+							ctAddress.getPmCity().getCityName())) {
 				address.append(ctAddress.getPmCity().getCityName());
 				address.append(separator);
 			}
-			if (ctAddress.getPmState() != null && ctAddress.getPmState().getStateName() !=null && ctAddress.getPmState().getStateName().length() > 0) {
+
+			if (ctAddress.getPmState() != null && 
+					StringUtils.isNotBlank(
+							ctAddress.getPmState().getStateName())) {
 				address.append(System.getProperty("line.separator"));
 				address.append(ctAddress.getPmState().getStateName());
-			}						
+			}			
 		}
 		return address.toString();
 	}
