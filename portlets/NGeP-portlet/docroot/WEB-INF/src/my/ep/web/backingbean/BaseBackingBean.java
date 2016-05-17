@@ -89,6 +89,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -1078,6 +1079,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	
 	public String getFullAddress(CtAddress ctAddress) {
 		return AddressUtils.getFullAddress(ctAddress);
+	}
+	
+	public String getFullAddress(ScAddress scAddress) {
+		return AddressUtils.getFullAddress(scAddress);
 	}
 
 	public void handleException(Exception exception) {
