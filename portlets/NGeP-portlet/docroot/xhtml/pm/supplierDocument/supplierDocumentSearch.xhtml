@@ -32,7 +32,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}" required="true"
+					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}" 
+						required="#{!empty param['disableValidation']}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.pmZone}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"  
@@ -80,8 +81,20 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.business.category']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" maxlength="255" label="#{lbl['lbl.pm.business.category']}"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.businessCategory}" />
+					<p:inputText id="itBusinessCategory" styleClass="ppDisplayTextM" maxlength="255"
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.businessCategory}"
+						disabled="true" />
+					&#160;
+					<p:commandLink
+						id="categoryCodeAddBtn"
+						process="@this" partialSubmit="true"
+						update="@([id$=catCodePopup])"
+						oncomplete="catCodePopup.show();"
+						action="#{categoryCodeSearchBackingBean.renewSesionObject}">
+						<p:graphicImage value="/css/images/design/search.png" 
+							style="background:transparent;"></p:graphicImage>								
+					</p:commandLink>
+					
 				</td>
 			</tr>
 			<tr>
@@ -98,8 +111,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.suppdoc.certified.body']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" maxlength="255" label="#{lbl['lbl.pm.suppdoc.certified.body']}"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.certBodyName}" />
+					<p:selectOneMenu id="somGlp" styleClass="ppDropDownWidthM" 
+						label="#{lbl['lbl.pm.suppdoc.certified.body']}" 
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.glpCertBodyId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
+						<f:selectItems  value="#{supportDocBackingBean.retrieveGlpList()}"  
+							var="certBody" itemValue="#{certBody.certBodyId}" itemLabel="#{certBody.bodyName}" />
+					</p:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
@@ -108,15 +126,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:commandButton value="#{lbl['lbl.btn.search']}" 
 							process="pSupportDocSearch"
 							update="dtSupportDocResult" 
-							action="#{supportDocBackingBean.searchDocumentForSup}"
-							/>
+							action="#{supportDocBackingBean.searchDocumentForSup}">
+							<f:param name="disableValidation" value="true" />
+							</p:commandButton>
 						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{supportDocBackingBean.resetSupportDocSearchBean}"
-							update="pSupportDocSearch, dtSupportDocResult" 
-							/> 
+							update="pSupportDocSearch, dtSupportDocResult" /> 
 					</div>
 				</td>
 			</tr>
 		</table>
 	</p:panel>
+	
+	<ac:categoryCodePopup
+			okAction="supportDocBackingBean.selectCategoryAction"
+			update=":form:itBusinessCategory" />
 
 </ui:composition>
