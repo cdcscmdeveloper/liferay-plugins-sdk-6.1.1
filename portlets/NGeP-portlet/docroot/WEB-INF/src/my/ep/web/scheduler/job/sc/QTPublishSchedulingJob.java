@@ -14,10 +14,15 @@ import java.util.Date;
 import java.util.List;
 
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.QTStatusConst;
+import my.ep.dto.sc.quationtender.ProposalReqDTO;
+import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -34,6 +39,7 @@ import org.quartz.JobExecutionException;
 public class QTPublishSchedulingJob implements Job {
 
 	private static Logger log = EpLogger.getLogger(QTPublishSchedulingJob.class);
+	private IQTProposalSO proposalSO;
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -49,7 +55,6 @@ public class QTPublishSchedulingJob implements Job {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		debugLogger("Start execute ");
-
 		IQTNoticeBoardSO noticeBoardSO;
 		try {
 			// Publish QT's scheduled for today and by this hour
@@ -59,7 +64,11 @@ public class QTPublishSchedulingJob implements Job {
 					.retriveQuotationTendersScheduledToPublish().getQtlist();
 			if (!publisingQts.isEmpty()) {
 				for (ScQt qtToPublish : publisingQts) {
+					if(qtToPublish.getPublishDate().before(DateUtils.getCurrentDate())){
+						reSchedulePublicationForPublishFailQt(qtToPublish);
+					}else{
 						EpSchedulerHelper.scheduleSimplePublishingJob(qtToPublish);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -69,5 +78,19 @@ public class QTPublishSchedulingJob implements Job {
 			noticeBoardSO = null;
 		}
 
+	}
+	
+	private void reSchedulePublicationForPublishFailQt(ScQt qt){
+		if(proposalSO == null){
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+		}
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setQtId(qt.getQtId());
+		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+		ProposalResDTO resDTO = proposalSO.updateRescheduleWorkFlowStatus(reqDTO);
+		if(resDTO.isSuccessful()){
+			log.info("Work flow status updated for publish failed QT with id"+qt.getQtId());
+		}
 	}
 }
