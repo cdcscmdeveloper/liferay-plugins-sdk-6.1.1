@@ -78,7 +78,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String TASK_LIST_PATH = "task-list";
 	//private static final String DASHBOARD = "dashboard";
 	//private static final String DASHBOARD_PATH = "welcome";
-	private static final String SUPPLIER_TYPE_SELECTION_XHTML = "/xhtml/sm/supplierregistrationcont/supplierTypeSelection.xhtml";
 	private static final String CONTENT_PAGE = "/xhtml/sm/postsupplierregistration/msgContent.xhtml";
 	private static final String PROMO_PAGE = "/xhtml/sm/postsupplierregistration/supplierPromo.xhtml";
 	private static final String ACKNOWLEDGEMENT_PAGE = "/xhtml/sm/postsupplierregistration/postRegCompleteAcknowlegement.xhtml";
@@ -353,32 +352,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return label;
 	}
 	
-	/**
-	 * proceed To Supplier Selection
-	 * @throws PortalException
-	 * @throws SystemException
-	 * @throws IOException
-	 */
-	public void proceedToSupplierSelection() throws PortalException, SystemException, IOException{
-		SmSupplier supplier = getSupplierProfileByUserId();
-		if(supplier != null){
-			this.getManagedBean().setSmSupplier(supplier);
-			if(!supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
-					!supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE)){
-				//pageRedirect(DASHBOARD_PATH);
-				/*FacesScopes facesScope = new FacesScopes();
-				hemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope().WebKeys.THEME_DISPLAY);
-				PortletURL url = PortletURLFactoryUtil.create(request, this.getPortletName(), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);*/
-				//BridgeContextImpl.getCurrentInstance().redirect(DASHBOARD_PATH);
-				
-				//FacesContext fc = FacesContext.getCurrentInstance();
-				//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SUPPLIER_TYPE_SELECTION_XHTML);
-			}else{
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SUPPLIER_TYPE_SELECTION_XHTML);
-			}
-		}
-	}
 	
 	/**
 	 * show/ Hide the hyperlink based on statusCode
