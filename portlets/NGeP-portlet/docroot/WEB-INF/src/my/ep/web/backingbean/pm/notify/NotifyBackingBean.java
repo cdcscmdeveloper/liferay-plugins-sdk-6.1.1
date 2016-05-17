@@ -30,6 +30,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 @ManagedBean(name = "notifyBackingBean")
 @ViewScoped
@@ -56,6 +58,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		notifyDataModel.resetData();
 		notifyDataModel.reloadData();
+		resetSelectedNotify();
 	}
 
 	public void retrieveUnreadNotifyList() {
@@ -63,6 +66,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 
 		this.getManagedBean().setUnRead(true);
 		notifyDataModel.reloadData();
+		resetSelectedNotify();
 	}
 
 	public void removeNotifys() {
@@ -123,6 +127,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				notifyDataModel.reloadData();
 			}
 		}
+		
+		resetSelectedNotify();
 	}
 
 	public void selectedNotify() {
@@ -158,8 +164,11 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			PmNotifyUser[] pmNotifyUserArr = this.getManagedBean().getSelectedNotifys();
 			
 			if(pmNotifyUserArr != null && pmNotifyUserArr.length > 0){
+
 				this.getManagedBean().setDeleteButtonHide(false);
+			
 			} else {
+			
 				this.getManagedBean().setDeleteButtonHide(true);
 			}
 			
@@ -311,6 +320,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		notifyDataModel.resetData();
 		notifyDataModel.reloadData();
+		resetSelectedNotify();
 	}
 	
 	public void searchItem(AjaxBehaviorEvent event) {
