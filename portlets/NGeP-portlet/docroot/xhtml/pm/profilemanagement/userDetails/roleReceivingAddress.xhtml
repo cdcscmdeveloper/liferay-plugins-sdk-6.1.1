@@ -76,10 +76,13 @@
 						<p:commandLink partialSubmit="true"
 							process="@this"
 							disabled="#{!(role.brandNew)}"
-							action="#{profileManagementBackingBean.deleteUserRole(index)}"
-							update=":form:tvRoleReceivingAddr">
+							oncomplete="roleDeletePopUp.show();"
+							update="@([id$=#{roleDeleteId}])" >
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-						</p:commandLink>			
+							<f:setPropertyActionListener target="#{profileManagementBackingBean.managedBean.selectedDeleteUserRole}" 
+								value="#{role}" />
+						</p:commandLink>	
+									
 					</p:column>
 				</p:dataTable>				
 				<div class="ppRightBtn">
@@ -125,10 +128,12 @@
 						<p:commandLink partialSubmit="true"
 							process="@this"
 							disabled="#{!(receivAddrType.brandNew)}"
-							action="#{profileManagementBackingBean.deleteUserReceivingAddr(rAindex)}"
-							update=":form:tvRoleReceivingAddr">
+							oncomplete="receivingAddrPopUp.show();"
+							update="@([id$=#{receivingAddrDeleteId}])">
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-						</p:commandLink>			
+							<f:setPropertyActionListener target="#{profileManagementBackingBean.managedBean.selectedDeleteReceivingAddr}" 
+								value="#{receivAddrType}" />
+						</p:commandLink>
 					</p:column>
 					
 				</p:dataTable>
@@ -152,6 +157,21 @@
 			</p:tab>
 		</p:tabView>
 		<ac:lovPopup />
+		<ac:confirmationPopup id="receivingAddrDeleteId"
+			widget="receivingAddrPopUp"
+			okAction="profileManagementBackingBean.deleteUserReceivingAddr()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":form:tvRoleReceivingAddr" />	
+		
+		<ac:confirmationPopup id="roleDeleteId"
+			widget="roleDeletePopUp"
+			okAction="profileManagementBackingBean.deleteUserRole()"
+			width="400" height="100"
+			title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" 
+			update=":form:tvRoleReceivingAddr" />	
 	</p:outputPanel>
 
 	<!-- Role Selection Popup -->
