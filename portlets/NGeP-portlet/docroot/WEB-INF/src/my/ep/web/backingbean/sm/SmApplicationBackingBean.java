@@ -981,10 +981,23 @@ public class SmApplicationBackingBean extends
 				SmCommonUtil.getInstance().getMachineItemsByCatTypeCode(
 						ParameterConst.CATEGORY_TYPE_TRAVEL));
 
+		// set registration status list exclude current registration status
 		getManagedBean().setRegStatusDescList(
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
+		if (getManagedBean().getSmAppl().getSmSupplier().getSmAppl()
+				.getPmRegStatus() != null
+				&& getManagedBean().getSmAppl().getSmSupplier().getSmAppl()
+						.getPmRegStatus().getPmStatus() != null) {
+			PmStatusDesc regStatusToExclude = (PmStatusDesc) EntityHelper
+					.getEntityBySinglePropertyFromList(getManagedBean()
+							.getSmAppl().getSmSupplier().getSmAppl()
+							.getPmRegStatus().getPmStatus().getStatusId(),
+							getManagedBean().getRegStatusDescList(),
+							"pmStatus");
+			getManagedBean().getRegStatusDescList().remove(regStatusToExclude);
+		}
 
 		getManagedBean()
 				.setSupplierParentCatList(
@@ -1024,6 +1037,11 @@ public class SmApplicationBackingBean extends
 		// check whether its site visit after approval
 		getManagedBean().setSiteVisitAfterApproval(
 				SmCommonUtil.isSiteVisitAfterApproved(getManagedBean()
+						.getSmAppl()));
+
+		// init current regsitration status description
+		getManagedBean().setCurrRegStatus(
+				SmApplicationUtil.getCurrRegStatusDescBySmAppl(getManagedBean()
 						.getSmAppl()));
 
 		// set business type parameter type
@@ -2131,12 +2149,10 @@ public class SmApplicationBackingBean extends
 			if (validSave) {
 				validSave = SmApplicationUtil.validateEquityOwnerAmount(
 						getManagedBean(), currentTab, ruleHelper);
-			}
-			else if (validSave) {
+			} else if (validSave) {
 				validSave = SmApplicationUtil.validateEquityCompanyAmount(
 						getManagedBean(), currentTab);
-			}
-			else if (validSave
+			} else if (validSave
 					&& getManagedBean()
 							.getSmAppl()
 							.getSupplierType()
@@ -7579,6 +7595,7 @@ public class SmApplicationBackingBean extends
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 			getManagedBean().getSmAppl().setBumi(true);
 		}
+		getManagedBean().setChangeCurrRegStatus(false);
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
@@ -7827,7 +7844,7 @@ public class SmApplicationBackingBean extends
 	public String submitPOorApproverReviewToBPM(String res) {
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
-		boolean isBumi = getManagedBean().getSmAppl().isBumi();
+
 		try {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
@@ -7967,8 +7984,6 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil
 							.setSmeStatus(getManagedBean().getSmAppl());
 
-					getManagedBean().getSmAppl().setBumi(isBumi);
-
 					if (pmStatId != null) {
 						for (PmStatusDesc desc : getManagedBean()
 								.getRegStatusDescList()) {
@@ -7984,6 +7999,9 @@ public class SmApplicationBackingBean extends
 									getManagedBean().getSmSupplier().setBumi(
 											desc.getPmStatus().getPmRegStatus()
 													.isBumiAppl());
+									getManagedBean().getSmAppl().setBumi(
+											getManagedBean().getSmSupplier()
+													.isBumi());
 									break;
 								}
 							}

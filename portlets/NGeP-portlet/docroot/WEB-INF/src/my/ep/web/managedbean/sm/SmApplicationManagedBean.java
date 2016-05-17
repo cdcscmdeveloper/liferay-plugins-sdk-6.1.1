@@ -426,12 +426,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disableRoleSelection;
 	private boolean siteVisitAfterApproval;
 	private boolean poInquiryRespond;
+	private boolean changeCurrRegStatus;
 
 	private boolean showNewChanges;
 
 	private String businessTypeParamCode;
 	private String physicalConsulting;
 	private String personType;
+	private String currRegStatus;
 
 	private BigDecimal currBumiEquity;
 	private BigDecimal currNonBumiEquity;
@@ -440,7 +442,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal currGovtEquity;
 	private BigDecimal currForeignCompanyEquity;
 	private BigDecimal currLocalCompanyEquity;
-	
+
 	private List<PmReasonDesc> selectedPmReasonDescs;
 	private String searchRejectReason;
 	private IPagingDataModel<PmReasonDesc> rejectReasonDataModel = new RejectReasonPagingDataModel();
@@ -3438,7 +3440,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return selectedPmReasonDescs;
 	}
 
-	public void setSelectedPmReasonDescs(List<PmReasonDesc> selectedPmReasonDescs) {
+	public void setSelectedPmReasonDescs(
+			List<PmReasonDesc> selectedPmReasonDescs) {
 		this.selectedPmReasonDescs = selectedPmReasonDescs;
+	}
+
+	public boolean isChangeCurrRegStatus() {
+		return changeCurrRegStatus;
+	}
+
+	public void setChangeCurrRegStatus(boolean changeCurrRegStatus) {
+		this.changeCurrRegStatus = changeCurrRegStatus;
+	}
+
+	public String getCurrRegStatus() {
+		return currRegStatus;
+	}
+
+	public void setCurrRegStatus(String currRegStatus) {
+		this.currRegStatus = currRegStatus;
 	}
 }

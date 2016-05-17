@@ -16,7 +16,7 @@
 					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
 					and backingBean.managedBean.smSupplier.businessType ne 'P'}"/>
 			
-			<table style="width: 350px">
+			<table style="width: 100%">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<tr>
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
@@ -47,8 +47,7 @@
 					</tr>
 				</p:outputPanel>
 			</table>
-			<p:outputPanel id="shrInfPan" styleClass="shareHolderInfPanelClass"
-				layout="block">
+			<p:outputPanel id="shrInfPan" layout="block">
 				<p:blockUI block=":form:tt:shrInfPan" widgetVar="buiPoShr"
 					id="poShrBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.shareholderVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.shareholderVerifed : false)}" />
