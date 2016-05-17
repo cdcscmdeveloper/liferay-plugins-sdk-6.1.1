@@ -1122,10 +1122,38 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return jabatan;
 	}
 	
+	public String retrieveJabatanByOrgProfileId(Long orgProfileId, Date tranDate){
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
+		String jabatan = "";
+		if(resDTO.getPmOrgProfile() != null){
+			jabatan = resDTO.getPmOrgProfile().getOrgName();
+		}
+		return jabatan;
+	}
+	
 	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId){
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO);
+		String pagawaiPengawal = "";
+		if(resDTO.getPmOrgProfile() != null){
+			pagawaiPengawal = resDTO.getPmOrgProfile().getOrgName();
+		}
+		return pagawaiPengawal;
+	}
+	
+	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId, Date tranDate){
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
 		OrgProfileResDTO resDTO = new OrgProfileResDTO();
 		resDTO = profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO);
 		String pagawaiPengawal = "";
@@ -1146,6 +1174,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
+		if(orgProfile!=null) {
+			return orgProfile.getOrgName();
+		} else {
+			log.info("Ministry not found : "+orgProfileId);
+			return "";
+		}
+	}
+	
+	public String retrieveMinistryByOrgProfileId(Long orgProfileId, Date tranDate){
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
 		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
 		if(orgProfile!=null) {
 			return orgProfile.getOrgName();
