@@ -1798,7 +1798,7 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().getTechnicalScoring().add(list);
 					}
 					if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
-					list.getQtScoreWeightage().setScore(new BigDecimal(list.getQtScoreWeightage().getScore().intValueExact()));
+					list.getQtScoreWeightage().setScore(new BigDecimal(list.getQtScoreWeightage().getScore().longValueExact()));
 					}
 					
 				}
@@ -1999,7 +1999,7 @@ public class SpecificationBackingBean extends
 					int local = (int) addScore;
 					this.getManagedBean().setFinPoints(local);
 					if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
-						list.getQtScoreWeightage().setScore(new BigDecimal(list.getQtScoreWeightage().getScore().intValueExact()));
+						list.getQtScoreWeightage().setScore(new BigDecimal(list.getQtScoreWeightage().getScore().longValueExact()));
 						}
 				} //
 					// ScQtCheckList schecklist = specChecklist.get(0);
