@@ -304,10 +304,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						//messagePrefix = "Update for ";
 						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
-					} else {
-						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && (resDTO.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_INVOICE) || resDTO.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_INVOICE))) {
+						messageId = MessageConst.INFO_745016;
+						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
+					}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && (!resDTO.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_INVOICE) || !resDTO.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_INVOICE))) {
+						messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+						messageId = MessageConst.INFO_700005;
+						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
+					}
+					else {	
+						/*if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 							messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
-						}
+						}*/
 						messageId = MessageConst.INFO_700005;
 						docNo = getManagedBean().getFlDeliveryOrder().getSupplierDoRef();
 					}
@@ -324,6 +332,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), supplierDORef}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message));
+						//FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message+"View "+"<a href='"+generateReportURL(ReportConst.FL_NGEP_DELIVERY,paramMap)+ "'>"+"Delivery Order"+"</a>"));
 					}
 					
 				}
