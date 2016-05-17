@@ -13,11 +13,15 @@ package my.ep.web.scheduler.job.sc;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.QTDisruptionConst;
+import my.ep.constant.sc.QTStatusConst;
+import my.ep.constants.BpmEndpointConst;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -36,6 +40,9 @@ import org.quartz.JobExecutionException;
 public class QTProposalCloseJob implements Job {
 
 	private static Logger log = EpLogger.getLogger(QTProposalCloseJob.class);
+
+	private IQTProposalSO proposalSO;
+	private IQTNoticeBoardSO noticeBoardSO;
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -56,56 +63,125 @@ public class QTProposalCloseJob implements Job {
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		Long qtId = dataMap.getLong("qtId");
 
-		IQTProposalSO proposalSO;
-
 		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			if (proposalSO == null) {
+				proposalSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTProposalSO.class);
+			}
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(qtId);
 			ProposalResDTO proposalResDTO = proposalSO
 					.updateProposalWorkFlowStatus(proposalReqDTO);
 			if (proposalResDTO.isSuccessful()) {
-				log.info("$$$$$ qt Work Flow status updated suceessfully from QTProposalCloseJob job");
+				log.info("$$$$$ qt Work Flow status update suceessful from QTProposalCloseJob job");
+				insertProposalAmount(qtId);
 			} else {
-				log.info("$$$$$ qt Work Flow status updated failed from QTProposalCloseJob job");
+				log.info("$$$$$ qt Work Flow status update unsuceessful from QTProposalCloseJob job");
+				updateQtAsDisrupted(qtId,
+						QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION);
 			}
 
 		} catch (Exception e) {
 			log.info("$$$$$ qt Work Flow status updated failed from QTProposalCloseJob job");
 			log.error(e.getLocalizedMessage());
+			reSchedulePublicationForPublishFailQt(qtId);
 		} finally {
+			noticeBoardSO = null;
 			proposalSO = null;
 		}
+		debugLogger("End execute ");
 
-		IQTNoticeBoardSO noticeBoardSO;
+	}
 
+	private void insertProposalAmount(Long qtId) {
 		try {
-			// Close QT's Which are scheduled today for Proposal Close
+
 			noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 
 			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+			// Close QT's Which are scheduled today for Proposal Close
 			reqDTO.setQtId(qtId);
 			NoticeBoardResDTO resDTO = noticeBoardSO
 					.closeQtAndSaveProposalAmount(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				log.info("$$$$$ Closing Successful for the QT No :" + qtId);
+				log.info("$$$$$ Insert Proposal amount Successful for the QT No :"
+						+ qtId);
+				updateBPMPostProposalClose(reqDTO);
 			} else {
-				log.info("$$$$$ Closing Failed for the QT No :" + qtId);
+				log.info("$$$$$ Insert Proposal amount unSuccessful for the QT No :"
+						+ qtId);
+				updateQtAsDisrupted(
+						qtId,
+						QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION);
 			}
 
-			log.info("$$$$$ QT Close Job run sucessfully at "
-					+ DateUtils.getCurrentDate());
-		} catch (Exception closeJobException) {
-			log.info("$$$$$ QT Closure Job run failed at "
-					+ DateUtils.getCurrentDate());
-			log.error(closeJobException.getLocalizedMessage());
-		} finally {
-			noticeBoardSO = null;
+		} catch (Exception e) {
+			log.info("$$$$$ Insert Proposal amount unSuccessful for the QT No :"
+					+ qtId);
+			log.error(e.getLocalizedMessage());
+			updateQtAsDisrupted(
+					qtId,
+					QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION);
 		}
-		debugLogger("End execute ");
+	}
 
+	private void updateBPMPostProposalClose(NoticeBoardReqDTO reqDTO) {
+		Long qtId = reqDTO.getQtId();
+
+		try {
+			noticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+
+			reqDTO.setBpmEndpoint(BpmEndpointConst.SC_CLOSE_PROPOSAL_MESSAGEPOINT);
+			NoticeBoardResDTO resDTO = noticeBoardSO
+					.updateBpmForPublishAndProposalClose(reqDTO);
+			if (resDTO.isSuccessful()) {
+				log.info("$$$$$ BPM Update after Proposal Close successful for the QT Id :"
+						+ qtId);
+			} else {
+				log.info("$$$$$ BPM Update after Proposal Close unsuccessful for the QT Id :"
+						+ qtId);
+				updateQtAsDisrupted(qtId,
+						QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION);
+			}
+		} catch (Exception e) {
+			log.info("$$$$$ BPM Update after Proposal Close failed for the QT Id :"
+					+ qtId);
+			log.error(e.getLocalizedMessage());
+			updateQtAsDisrupted(qtId, QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION);
+		}
+	}
+
+	private void updateQtAsDisrupted(Long qtId, Long disruptionStage) {
+		try {
+			if (proposalSO == null) {
+				proposalSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTProposalSO.class);
+			}
+			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
+			proposalReqDTO.setQtId(qtId);
+			proposalReqDTO.setDisruptionStage(disruptionStage);
+			proposalSO.updateDisruptedQtAndSendNotification(proposalReqDTO);
+		} catch (Exception e) {
+			log.error(e.getLocalizedMessage());
+		}
+	}
+	
+	private void reSchedulePublicationForPublishFailQt(Long qtId){
+		if(proposalSO == null){
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+		}
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setQtId(qtId);
+		reqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
+		ProposalResDTO resDTO = proposalSO.updateRescheduleWorkFlowStatus(reqDTO);
+		if(resDTO.isSuccessful()){
+			log.info("Work flow status updated for proposal close failed QT with id"+qtId);
+		}
 	}
 }
