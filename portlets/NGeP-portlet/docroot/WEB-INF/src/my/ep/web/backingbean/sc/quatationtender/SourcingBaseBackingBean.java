@@ -91,6 +91,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -113,7 +114,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -2502,4 +2505,44 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return null;
 	}
+	
+	protected ScAddress populateSmAddressToScAddress(SmAddress smAddress, 
+							SmPersonnel smPersonnel, SmCompanyBasic smCompanyBasic) {
+		ScAddress scAddress = null;
+		
+		if (smAddress != null) {
+			scAddress = new ScAddress();
+			scAddress.setAddress1(smAddress.getAddress1());
+			scAddress.setAddress2(smAddress.getAddress2());
+			scAddress.setAddress3(smAddress.getAddress3());
+			scAddress.setAddress4(smAddress.getAddress4());
+			scAddress.setPostcode(smAddress.getPostcode());
+			scAddress.setPmCountry(smAddress.getPmCountry());
+			scAddress.setPmState(smAddress.getPmState());
+			scAddress.setPmDivision(smAddress.getPmDivision());
+			scAddress.setPmDistrict(smAddress.getPmDistrict());
+			scAddress.setPmCity(smAddress.getPmCity());
+			scAddress.setMapLatitude(smAddress.getMapLatitude());
+			scAddress.setMapLongitude(smAddress.getMapLongitude());
+			
+			if (smPersonnel != null) {
+				scAddress.setContactEmail(smPersonnel.getEmail());
+				scAddress.setContactFaxArea(smPersonnel.getFaxArea());
+				scAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
+				scAddress.setContactMobileArea(smPersonnel.getMobileArea());
+				scAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
+				scAddress.setContactMobileNo(smPersonnel.getMobileNo());
+				scAddress.setContactPerson(smPersonnel.getName());
+				scAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
+				scAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
+			}
+			if (smCompanyBasic != null) {
+				scAddress.setContactFaxNo(smCompanyBasic.getFaxNo());
+				scAddress.setContactPhoneNo(smCompanyBasic.getPhoneNo());	
+			}
+		}
+		
+		return scAddress;
+	}
+	
 }
