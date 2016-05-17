@@ -9,7 +9,7 @@
 	
 	<p:panel header="#{lbl['lbl.sm.natureofbusiness']}" id="natureBusinessId" toggleable="true">
 	
-		<p:messages id="bnMsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
+		<p:messages id="bnmsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
 		
 		<p:dataTable var="suppBizNature" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{registrationBackingBean.managedBean.smSupp.smSupplierBusinesses}"
@@ -76,7 +76,7 @@
 			    selectionMode="multiple"
 				saveObject="registrationBackingBean.managedBean.bizNatures"
 				conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
-				update=":form:suppBizNatureId :form:bnMsg" />
+				update=":form:suppBizNatureId :form:bnmsg" />
 
 			<p:commandButton id="btnRemove" update="natureBusinessId" partialSubmit="true" process="@this,suppBizNatureId"
 				value="#{lbl['lbl.btn.delete']}"
