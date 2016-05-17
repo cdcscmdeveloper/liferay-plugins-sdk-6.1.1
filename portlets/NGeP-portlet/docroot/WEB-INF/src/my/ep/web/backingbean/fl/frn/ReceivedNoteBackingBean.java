@@ -227,7 +227,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 						messageId = MessageConst.INFO_745002;
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-						messageId = MessageConst.INFO_745003;
+						messageId = MessageConst.INFO_745016;
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 						messageId = MessageConst.INFO_700009;
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -243,6 +243,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 								MessageUtils.getMessage(messageId, 
 										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), 
 										" "+ resDTO.getFlDeliveryOrder().getSupplierDoRef()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), 
+										resDTO.getFulfilmentNoteNo()}, 
 										MessageUtils.BUNDLE_COMMON_MESSAGES, 
 										new FacesScopes().getUserLocale())));
 					}else{
