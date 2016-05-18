@@ -246,7 +246,7 @@
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.overallFin}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="5" integerOnly="true" />
+							maxIntegerDigits="3" integerOnly="true" />
 						<f:attribute name="min" value="0"></f:attribute>
 						<p:ajax event="blur" update="financialScoringItemScore"
 							process="@this,financialScoringItemPanle" partialSubmit="true"
@@ -261,7 +261,7 @@
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.overallOtherFin}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="5" integerOnly="true" />
+							maxIntegerDigits="3" integerOnly="true" />
 						<f:attribute name="min" value="0"></f:attribute>
 						<p:ajax event="blur" update="financialScoringItemScore"
 							process="@this,financialScoringItemPanle" partialSubmit="true"
