@@ -21,10 +21,10 @@ import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -79,7 +79,8 @@ public class QTPublishJob implements Job {
 			} else {
 				log.info("$$$$$ qt Work Flow status updated unsuceessfull for Publish");
 				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION);
+						QTDisruptionConst.QT_PUBLISH_WORK_FLOW_DISRUPTION,
+						proposalResDTO.getErrorMessage());
 			}
 
 		} catch (Exception e) {
@@ -119,15 +120,25 @@ public class QTPublishJob implements Job {
 							+ qtId);
 					updateQtAsDisrupted(
 							qtId,
-							QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION);
+							QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION,
+							resDTO.getErrorMessage());
 				}
 			}
 		} catch (Exception e) {
 			log.info("$$$$$ Insert Supplier and send notification failed at"
 					+ DateUtils.getCurrentDate());
 			log.error(e.getLocalizedMessage());
+			String errorMessage = null;
+			Throwable rootCause = ExceptionUtils.getRootCause(e);
+    		if (rootCause != null) {
+    			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
+    		} else {
+    			errorMessage = ExceptionUtils.getStackTrace(e);
+    			
+    		}
 			updateQtAsDisrupted(qtId,
-					QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION);
+					QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION,
+					errorMessage);
 		}
 	}
 
@@ -151,17 +162,27 @@ public class QTPublishJob implements Job {
 				log.info("$$$$$ BPM Update after Publish unsuccessful for the QT Id :"
 						+ qtId);
 				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION);
+						QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION,
+						resDTO.getErrorMessage());
 			}
 		} catch (Exception e) {
 			log.info("$$$$$ BPM Update after Publish failed for the QT Id :"
 					+ qtId);
+			String errorMessage = null;
+			Throwable rootCause = ExceptionUtils.getRootCause(e);
+    		if (rootCause != null) {
+    			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
+    		} else {
+    			errorMessage = ExceptionUtils.getStackTrace(e);
+    			
+    		}
 			updateQtAsDisrupted(qtId,
-					QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION);
+					QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION,
+					errorMessage);
 		}
 	}
 
-	private void updateQtAsDisrupted(Long qtId, int disruptionStage) {
+	private void updateQtAsDisrupted(Long qtId, int disruptionStage, String errorMessage) {
 		try {
 			if(proposalSO == null){
 				proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -170,6 +191,7 @@ public class QTPublishJob implements Job {
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(qtId);
 			proposalReqDTO.setDisruptionStage(disruptionStage);
+			proposalReqDTO.setErrorMessage(errorMessage);
 			proposalSO.updateDisruptedQtAndSendNotification(proposalReqDTO);
 		} finally {
 			proposalSO = null;
