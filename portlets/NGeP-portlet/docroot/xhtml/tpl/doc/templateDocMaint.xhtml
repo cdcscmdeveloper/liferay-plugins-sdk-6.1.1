@@ -22,7 +22,7 @@
 			</tr>
 		</table>
 		<p:panel id="panel1" header="#{lbl['lbl.tpl.doc.header']}" toggleable="true">
-			<table width="100%">
+			<table style="width:100%" >
 				<tr>
 					<td class="TableFieldLeft" style="width: 120px">
 						<h:outputLabel value="#{lbl['lbl.sc.procurement.category']}" />
@@ -88,7 +88,7 @@
 		<p:panel id="panel2" header="#{lbl['lbl.tpl.doc.section.contents']}" toggleable="true">
 			
 			<h:panelGrid width="100%">
-				<p:treeTable id="sampleTT" var="document" 
+				<p:treeTable id="sampleTT" var="document" selection="#{templateDocBackingBean.managedBean.treenodeObject}" selectionMode="single"
 					value="#{templateDocBackingBean.managedBean.docSectionTN}" >
 					<p:column style="width:200px">
 						<f:facet name="header">#{lbl['lbl.tpl.doc.section']}</f:facet>
