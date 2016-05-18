@@ -87,146 +87,26 @@
 		<ui:include src="evaluationreminderpopup.xhtml" />
 		<ui:include src="chairPersonSignOff.xhtml" />
 	</p:panel>
+	
+	<c:choose>
+		<c:when test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeOpeningCommittee}">
+			<ui:param name="committeeRemarkList" value="#{evaluationBackingBean.managedBean.scQt.scQtOpeningCommitteeRemarks}" />
+		</c:when>
+		<c:when test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee}">
+			<ui:param name="committeeRemarkList" value="#{evaluationBackingBean.managedBean.scQt.scQtTechnicalCommitteeRemarks}" />
+		</c:when>
+		<c:when test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeFinancialEvaluationCommittee}">
+			<ui:param name="committeeRemarkList" value="#{evaluationBackingBean.managedBean.scQt.scQtFinancialCommitteeRemarks}" />
+		</c:when>
+		<c:otherwise>
+			<ui:param name="committeeRemarkList" value="#{evaluationBackingBean.managedBean.scQt.scQtEvaluationCommitteeRemarks}" />
+		</c:otherwise>
+	</c:choose>
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{committeeRemarkList}"
+		showAttachment="false" />
 
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
-
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
-
-						<p:dataGrid var="remarkVar"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							value="#{evaluationBackingBean.managedBean.scQt.scQtEvaluationCommitteeRemarks}"
-							rowIndexVar="remarkIndex" columns="1">
-							<table>
-								<tr>
-									<td rowspan="2" valign="top"><h:graphicImage height="30"
-											value="#{evaluationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-											width="30" /></td>
-									<td width="5"></td>
-									<td><h:outputText
-											value="#{remarkVar.createdUser.userName}" />, <h:outputText
-											id="remarkDate" value="#{remarkVar.changedDate}">
-											<f:convertDateTime
-												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-										</h:outputText></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-											style="width:75%;" maxlength="1000"
-											rendered="#{remarkVar.remarkId eq null}">
-											<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
-										</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
-											rendered="#{remarkVar.remarkId ne null}"
-											style="display: inline-block; width:220px;word-wrap: break-word;" />
-									</td>
-								</tr>
-							</table>
-						</p:dataGrid>
-					</ui:fragment> <ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'OC'}">
-						<p:dataGrid var="remarkVar"
-						    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							value="#{evaluationBackingBean.managedBean.scQt.scQtOpeningCommitteeRemarks}"
-							rowIndexVar="remarkIndex" columns="1">
-							<table>
-								<tr>
-									<td rowspan="2" valign="top"><h:graphicImage height="30"
-											value="#{evaluationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-											width="30" /></td>
-									<td width="5"></td>
-									<td><h:outputText
-											value="#{remarkVar.createdUser.userName}" />, <h:outputText
-											id="remarkDate" value="#{remarkVar.changedDate}">
-											<f:convertDateTime
-												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-										</h:outputText></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-											style="width:75%;" maxlength="1000"
-											rendered="#{remarkVar.remarkId eq null}">
-											<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
-										</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
-											rendered="#{remarkVar.remarkId ne null}"
-											style="display: inline-block; width:220px;word-wrap: break-word;" />
-									</td>
-								</tr>
-							</table>
-						</p:dataGrid>
-					</ui:fragment> <ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
-						<p:dataGrid var="remarkVar"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							value="#{evaluationBackingBean.managedBean.scQt.scQtTechnicalCommitteeRemarks}"
-							rowIndexVar="remarkIndex" columns="1">
-							<table>
-								<tr>
-									<td rowspan="2" valign="top"><h:graphicImage height="30"
-											value="#{evaluationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-											width="30" /></td>
-									<td width="5"></td>
-									<td><h:outputText
-											value="#{remarkVar.createdUser.userName}" />, <h:outputText
-											id="remarkDate" value="#{remarkVar.changedDate}">
-											<f:convertDateTime
-												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-										</h:outputText></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-											style="width:75%;" maxlength="1000"
-											rendered="#{remarkVar.remarkId eq null}">
-											<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
-										</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
-											rendered="#{remarkVar.remarkId ne null}"
-											style="display: inline-block; width:220px;word-wrap: break-word;" />
-									</td>
-								</tr>
-							</table>
-						</p:dataGrid>
-					</ui:fragment> <ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
-						<p:dataGrid var="remarkVar"
-						    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							value="#{evaluationBackingBean.managedBean.scQt.scQtFinancialCommitteeRemarks}"
-							rowIndexVar="remarkIndex" columns="1">
-							<table>
-								<tr>
-									<td rowspan="2" valign="top"><h:graphicImage height="30"
-											value="#{evaluationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-											width="30" /></td>
-									<td width="5"></td>
-									<td><h:outputText
-											value="#{remarkVar.createdUser.userName}" />, <h:outputText
-											id="remarkDate" value="#{remarkVar.changedDate}">
-											<f:convertDateTime
-												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-										</h:outputText></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-											style="width:75%;" maxlength="1000"
-											rendered="#{remarkVar.remarkId eq null}">
-											<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
-										</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
-											rendered="#{remarkVar.remarkId ne null}"
-											style="display: inline-block; width:220px;word-wrap: break-word;" />
-									</td>
-								</tr>
-							</table>
-						</p:dataGrid>
-					</ui:fragment></td>
-			</tr>
-		</table>
-	</p:panel>
 	<table style="width: 100%">
 		<tr>
 			<td><p:commandButton value="#{lbl['lbl.btn.prev']}"
