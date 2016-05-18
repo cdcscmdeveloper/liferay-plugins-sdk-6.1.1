@@ -617,6 +617,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 		       if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
 			        if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
+			        	if(getManagedBean().getAgreementContractVer().getSignedDate() == null){
+			        		 throw new EpException(MessageConst.ERROR_100022, 
+								        new String[]{ResourceBundleUtils.getMessage("lbl.ct.signed.date", 
+										     ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			        	}
 			        	if (getManagedBean().getCtAgreement().getSignedPageName() == null) {
 				             throw new EpException(MessageConst.ERROR_100022, 
 						        new String[]{ResourceBundleUtils.getMessage("lbl.ct.attachment.signed.page", 
