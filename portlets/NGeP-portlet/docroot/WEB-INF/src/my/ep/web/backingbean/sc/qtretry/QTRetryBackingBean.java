@@ -32,7 +32,9 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmEndpointConst;
 import my.ep.dto.sc.qtretry.QTRetryReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
+import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.qtretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -106,6 +108,7 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 	private void retryQTService(ScQtDisruptionLog qtDisruptionLog, Integer disruptionStage) {		
 		if (disruptionStage != null) {
 			boolean successful = false;
+			String errorMessage = null;
 			ScQt scQt = qtDisruptionLog.getScQt();
 			Long qtId = scQt.getQtId();
 			
@@ -114,59 +117,77 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 					ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 					proposalReqDTO.setQtId(qtId);
 					proposalReqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-					successful = getQTProposalSO().updateRescheduleWorkFlowStatus(proposalReqDTO)
-						.isSuccessful();
+					ProposalResDTO proposalResDTO = getQTProposalSO()
+							.updateRescheduleWorkFlowStatus(proposalReqDTO);
+					successful = proposalResDTO.isSuccessful();
 					if (successful) {
 						updateQTDisruptionSuccess(qtDisruptionLog);
+					} else {
+						errorMessage = proposalResDTO.getErrorMessage();
 					}
 					break;
 				
 				case QTDisruptionConst.QT_PUBLISH_SUPPLIER_INSERT_DISRUPTION :
 					NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
 					noticeBoardReqDTO.setQtId(qtId);
-					successful = getQTNoticeBoardSO().publishQtAndInsertSuppliers(noticeBoardReqDTO)
-						.isSuccessful();
+					NoticeBoardResDTO noticeBoardResDTO = getQTNoticeBoardSO()
+							.publishQtAndInsertSuppliers(noticeBoardReqDTO);
+					successful = noticeBoardResDTO.isSuccessful();
 					if (successful) {
 						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION);
+					} else {
+						errorMessage = noticeBoardResDTO.getErrorMessage();
 					}
 					break;
 				case QTDisruptionConst.QT_PUBLISH_BPM_DISRUPTION :
 					noticeBoardReqDTO = new NoticeBoardReqDTO();
 					noticeBoardReqDTO.setQtId(qtId);
 					noticeBoardReqDTO.setBpmEndpoint(BpmEndpointConst.SC_PUBLISH_QT_MESSAGEPOINT);
-					successful = getQTNoticeBoardSO().updateBpmForPublishAndProposalClose(noticeBoardReqDTO)
-							.isSuccessful();
+					noticeBoardResDTO = getQTNoticeBoardSO()
+							.updateBpmForPublishAndProposalClose(noticeBoardReqDTO);
+					successful = noticeBoardResDTO.isSuccessful();
 					if (successful) {
 						updateQTDisruptionSuccess(qtDisruptionLog);
+					} else {
+						errorMessage = noticeBoardResDTO.getErrorMessage();
 					}
 					break;
 				case QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION :
 					proposalReqDTO = new ProposalReqDTO();
 					proposalReqDTO.setQtId(qtId);
 					proposalReqDTO.setWorkFlowStatusConstant(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE);
-					successful = getQTProposalSO().updateRescheduleWorkFlowStatus(proposalReqDTO)
-						.isSuccessful();
+					proposalResDTO = getQTProposalSO()
+							.updateRescheduleWorkFlowStatus(proposalReqDTO);
+					successful = proposalResDTO.isSuccessful();
 					if (successful) {
 						updateQTDisruptionSuccess(qtDisruptionLog);
+					} else {
+						errorMessage = proposalResDTO.getErrorMessage();
 					}
 					break;
 				case QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION :
 					noticeBoardReqDTO = new NoticeBoardReqDTO();
 					noticeBoardReqDTO.setQtId(qtId);
-					successful = getQTNoticeBoardSO().closeQtAndSaveProposalAmount(noticeBoardReqDTO)
-							.isSuccessful();
+					noticeBoardResDTO = getQTNoticeBoardSO()
+							.closeQtAndSaveProposalAmount(noticeBoardReqDTO);
+					successful = noticeBoardResDTO.isSuccessful();
 					if (successful) {
 						retryQTService(qtDisruptionLog, QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION);
+					} else {
+						errorMessage = noticeBoardResDTO.getErrorMessage();
 					}
 					break;
 				case QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION :
 					noticeBoardReqDTO = new NoticeBoardReqDTO();
 					noticeBoardReqDTO.setQtId(qtId);
 					noticeBoardReqDTO.setBpmEndpoint(BpmEndpointConst.SC_CLOSE_PROPOSAL_MESSAGEPOINT);
-					successful = getQTNoticeBoardSO().updateBpmForPublishAndProposalClose(noticeBoardReqDTO)
-							.isSuccessful();
+					noticeBoardResDTO = getQTNoticeBoardSO()
+							.updateBpmForPublishAndProposalClose(noticeBoardReqDTO);
+					successful = noticeBoardResDTO.isSuccessful();
 					if (successful) {
 						updateQTDisruptionSuccess(qtDisruptionLog);
+					} else {
+						errorMessage = noticeBoardResDTO.getErrorMessage();
 					}
 					break;
 			}
@@ -174,8 +195,9 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 			if (!successful) {
 				if (qtDisruptionLog.getDisruptionStage() != null && 
 						!qtDisruptionLog.getDisruptionStage().equals(disruptionStage)) {
-					insertQTDisruption(scQt, disruptionStage);
+					insertQTDisruption(scQt, disruptionStage, errorMessage);
 				} else {
+					qtDisruptionLog.setErrorMsg(errorMessage);
 					qtDisruptionLog.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 					updateQTDisruption(qtDisruptionLog);
 				}
@@ -203,13 +225,11 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 		}
 	}
 	
-	private void insertQTDisruption(ScQt scQt, Integer disruptionStage) {
+	private void insertQTDisruption(ScQt scQt, Integer disruptionStage, String errorMsg) {
 		ScQtDisruptionLog disruptionLog = new ScQtDisruptionLog();
 		disruptionLog.setScQt(scQt);
 		disruptionLog.setDisruptionStage(disruptionStage);
-		disruptionLog.setErrorMsg(getParameterDesc(
-				ParameterTypeConst.QT_DISRUPTION_STAGE, 
-				disruptionLog.getDisruptionStage()+""));
+		disruptionLog.setErrorMsg(errorMsg);
 		super.setUserDetails(disruptionLog);
 		
 		updateQTDisruption(disruptionLog);	
