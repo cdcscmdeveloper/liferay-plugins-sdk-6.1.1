@@ -874,7 +874,9 @@ public class ConsolidationReportBackingBean extends
 
 		// Retrieve finalization remarks
 		List<ScQtFinalizationRemarks> remarks = initializeRemarks(scQtFinalization,
-				null, scQtFinalization.getScQtFinalizationRemarks(), ScQtFinalizationRemarks.class);
+				getManagedBean().getScQt().getCurrentWorkFlowStatus(), 
+				scQtFinalization.getScQtFinalizationRemarks(), 
+				ScQtFinalizationRemarks.class);
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
 
 		// Finalization Remarks list
