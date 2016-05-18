@@ -1223,6 +1223,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO).getPmOrgProfile();
 	}
 	
+	public String retrievePTJByOrgProfileId(Long orgProfileId, Date tranDate){
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(reqDTO).getPmOrgProfile();
+		if(orgProfile!=null) {
+			return orgProfile.getOrgName();
+		} else {
+			log.info("PTJ not found : "+orgProfileId);
+			return "";
+		}
+	}
+	
 	/**
 	 * Get eP Role description by role code
 	 * 
