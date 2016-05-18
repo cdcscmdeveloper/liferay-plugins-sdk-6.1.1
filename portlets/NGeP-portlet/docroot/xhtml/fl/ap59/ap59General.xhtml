@@ -12,7 +12,7 @@
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="50"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractType.parameterCode==ParameterConst.contractTypeMinistry?
-								invoiceBackingBean.retrieveMinistryByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.orgProfileId):''}"
+								invoiceBackingBean.retrieveMinistryByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.changedDate):''}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
 				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loa.loaNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/></td>
@@ -21,7 +21,7 @@
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ptj.name']}" /></td>
-				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}"/></td>
+				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.retrievePTJByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.changedDate)}"/></td>
 			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" /></td>
 				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loaPhysicalNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}"/></td>
 			</tr>
@@ -47,7 +47,7 @@
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.retrieveMinistryByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.orgProfileId)}"/></td>
+				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.retrieveMinistryByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.agApprovedDate)}"/></td>
 				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.ap59.order.date']}" /></td>
 				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.createdDate}">
 				<f:convertDateTime
@@ -56,7 +56,7 @@
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ptj.name']}" /></td>
-				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.pmOrgValidity.orgName}"/></td>
+				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.orgName}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.order.amt']}" /></td>
 				<td>
 					<p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.sumOrderedAmt}" style="text-align:right">
