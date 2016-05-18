@@ -11,21 +11,21 @@
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="66" id="ministry"
-						value="#{flOrderBB.retrieveMinistryByOrgProfileId(flOrderBB.managedBean.flRequest.issuedOrgProfile.orgProfileId)}"
+						value="#{flOrderBB.retrieveMinistryByOrgProfileId(flOrderBB.managedBean.flRequest.issuedOrgProfile.orgProfileId, flOrderBB.managedBean.flRequest.agApprovedDate)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 142px;"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td>
 					<p:inputTextarea rows="2" cols="67" readonly="true" autoResize="false" style="resize:none;" 
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}" />
+						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}" />
 				</td>				
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td>
 					<p:inputTextarea rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}" />
+						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}" />
 				</td>
 			</tr>
 			<tr>
@@ -33,7 +33,7 @@
 				<td>
 					<p:inputTextarea rows="2" cols="67"
 						readonly="true" autoResize="false" style="resize:none;"
-						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}" />
+						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgCode} #{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}" />
 				</td>
 			</tr>
 			<tr>
