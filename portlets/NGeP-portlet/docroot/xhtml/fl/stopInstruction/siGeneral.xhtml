@@ -12,21 +12,21 @@
 				<td style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td>
 					<p:inputText size="59" id="ministry" disabled="true" 
-						value="#{stopInstrBB.retrieveMinistryByOrgProfileId(stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgProfileId)}"/>
+						value="#{stopInstrBB.retrieveMinistryByOrgProfileId(stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgProfileId, stopInstrBB.managedBean.stopInstr.flRequest.agApprovedDate)}"/>
 				</td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td><p:inputText size="59" id="controlOff"
-						value="#{stopInstrBB.retrievePegawaiPengawalByOrgProfileId(stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{stopInstrBB.retrievePegawaiPengawalByOrgProfileId(stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgProfileId, stopInstrBB.managedBean.stopInstr.flRequest.agApprovedDate)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputText size="59" id="ptjGroup"
-						value="#{stopInstrBB.retrieveJabatanByOrgProfileId(stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{stopInstrBB.retrieveJabatanByOrgProfileId(stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgProfileId, stopInstrBB.managedBean.stopInstr.flRequest.agApprovedDate)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -39,14 +39,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:442px;"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgName}"/>
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:442px;" 
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.chargeOrgProfile.orgName}"/>
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.chargeOrgProfile.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.chargeOrgProfile.orgName}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
 			<tr>
