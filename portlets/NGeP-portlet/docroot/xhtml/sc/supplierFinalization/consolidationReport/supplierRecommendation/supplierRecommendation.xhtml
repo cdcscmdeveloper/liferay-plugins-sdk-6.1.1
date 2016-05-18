@@ -54,46 +54,8 @@
 		</table>	
 	</p:outputPanel>
 	
-	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true" styleClass="header-spacing">
-		<table style="width: 100%" id="remarksList">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;">
-					<p:outputLabel value="#{lbl['lbl.sc.remark']}" />
-				</td>
-				<td class="TableFieldRight">
-					<p:dataGrid var="remarkVar"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{consolidationReportBackingBean.managedBean.finalizationRemars}"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top">
-									<h:graphicImage
-										height="30"
-										value="#{consolidationReportBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										width="30" />
-								</td>
-								<td width="5"></td>
-								<td>
-									<h:outputText value="#{remarkVar.createdUser.userName}" />, 
-									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText>
-								</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>
-									<p:inputTextarea cols="40" value="#{remarkVar.remark}">
-										<p:ajax partialSubmit="true" process="@this" update="@this"/>
-									</p:inputTextarea> 
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid>
-				</td>
-			</tr>
-		</table>
-	</p:panel>
+	<ac:scRemarkAndAttachment
+		remarkList="#{consolidationReportBackingBean.managedBean.finalizationRemars}"
+		showAttachment="false" />
 	
 </ui:composition>
