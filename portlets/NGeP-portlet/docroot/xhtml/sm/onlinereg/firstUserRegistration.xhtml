@@ -274,8 +274,7 @@
 										label="#{lbl['lbl.sm.identificationno']}" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
 										value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 										size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}">
-										<f:validateRegex pattern="[0-9]+" />
-										<f:validateLength minimum="12"></f:validateLength>
+										<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
 									</p:inputText>
 								</c:when>
 								
