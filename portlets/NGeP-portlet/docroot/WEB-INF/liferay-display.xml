@@ -71,6 +71,7 @@
             <portlet id="accessApplicationActivation"></portlet>
            	<portlet id="pmAccessApplicationSearch"></portlet>
            	<portlet id="pmUserCommonDetails"></portlet>
+           	<portlet id="pmUserCommonDetailsR"></portlet>
 		</category>
 		<!-- Profile Management - END -->		
 
