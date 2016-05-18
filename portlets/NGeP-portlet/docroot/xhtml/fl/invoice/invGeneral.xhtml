@@ -11,7 +11,7 @@
 				<td style="width: 154px"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="59"
-						value="#{invoiceBackingBean.retrieveMinistryByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{invoiceBackingBean.retrieveMinistryByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.agApprovedDate)}"
 						disabled="true" /></td>
 				<td rowspan="2" valign="top" style="width: 160px;"><p:outputLabel
 						value="#{lbl['lbl.fl.do.title']}" /></td>
@@ -25,14 +25,14 @@
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td><p:inputText size="59" id="controlOff"
-						value="#{invoiceBackingBean.retrievePegawaiPengawalByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{invoiceBackingBean.retrievePegawaiPengawalByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.agApprovedDate)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputText size="59" id="ptjGroup"
-						value="#{invoiceBackingBean.retrieveJabatanByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{invoiceBackingBean.retrieveJabatanByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId, invoiceBackingBean.managedBean.invoice.flRequest.agApprovedDate)}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
 				<td><p:inputText size="30" disabled="true"
@@ -41,7 +41,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td colspan="3"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:440px;" 
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}"/>
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgCode} #{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
 			<tr>

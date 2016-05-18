@@ -16,7 +16,7 @@
 					<td style="width: 139px"><p:outputLabel
 							value="#{lbl['lbl.fl.ministry']}" /></td>
 					<td style="width: 389px;"><p:inputText size="66"
-							value="#{danBackingBean.retrieveMinistryByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgProfileId)}"
+							value="#{danBackingBean.retrieveMinistryByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgProfileId, danBackingBean.managedBean.adjustment.flRequest.agApprovedDate)}"
 							disabled="true" /></td>
 					<td rowspan="3" valign="top" style="width: 140px;"><p:outputLabel
 							value="#{lbl['lbl.fl.title']}" /></td>
@@ -29,20 +29,20 @@
 					<td style="width: 106px;"><p:outputLabel
 							value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 					<td><p:inputText size="66" id="controlOff"
-							value="#{danBackingBean.retrievePegawaiPengawalByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgProfileId)}"
+							value="#{danBackingBean.retrievePegawaiPengawalByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgProfileId, danBackingBean.managedBean.adjustment.flRequest.agApprovedDate)}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td style="width: 106px;"><p:outputLabel
 							value="#{lbl['lbl.fl.jabatan']}" /></td>
 					<td><p:inputText size="66" id="ptjGroup"
-							value="#{danBackingBean.retrieveJabatanByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgProfileId)}"
+							value="#{danBackingBean.retrieveJabatanByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgProfileId, danBackingBean.managedBean.adjustment.flRequest.agApprovedDate)}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
-						value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"/>
+						value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"/>
 					<ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
@@ -52,7 +52,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
-						value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"/>
+						value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}" /></td>
 					<td style="width: 320px;"><p:inputText size="36"
@@ -64,7 +64,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
-						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
+						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}" /></td>
 					<td><p:commandLink value="#{danBackingBean.managedBean.adjustment.flInvoice.invoiceNo}" immediate="true"
