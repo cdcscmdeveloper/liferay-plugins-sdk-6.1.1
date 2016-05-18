@@ -1485,50 +1485,23 @@ public class EvaluationMeetingBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(),
 								DbValueConst.RECORD_STATUS_ACTIVE));
 
-				/*
-				 * if (null != getManagedBean().getQt().getPmOrgProfile()
-				 * .getParentOrgProfile()) { searchBean .getDataFilterBeans()
-				 * .add(new SearchFilterBean(
-				 * "pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
-				 * SearchOperator.OPERATOR_EQUALS.value(),
-				 * getManagedBean().getQt().getPmOrgProfile()
-				 * .getParentOrgProfile() .getOrgProfileId())); }
-				 */
-
-				/*
-				 * Long ministryId = retriveMinistryIdByPTJ(); if (null !=
-				 * ministryId) { String parentString = OrgProfileUtil
-				 * .getSearchBeanParentString(OrganizationType.MINISTRY
-				 * .value()); searchBean.getDataFilterBeans().add( new
-				 * SearchFilterBean("pmUserOrgs.pmOrgProfile." + parentString,
-				 * SearchOperator.OPERATOR_EQUALS.value(), ministryId)); }
-				 */
-
-				if (null != getManagedBean().getQt().getPmOrgProfile()) {
+				
+					List<String> paramcodes=new ArrayList<String>();
+					paramcodes.add(ParameterConst.ORG_TYPE_OTHERS);
+					paramcodes.add(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
+					paramcodes.add(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
+					paramcodes.add(ParameterConst.ORG_TYPE_STATUTORY_BODY);
+					paramcodes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
+					paramcodes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
+					paramcodes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
 					searchBean
 							.getDataFilterBeans()
-							.add(new SearchMultiFilterBean(
-									new SearchFilterBean(
-											"pmUserOrgs.pmOrgProfile."
-													+ OrgProfileUtil
-															.getSearchBeanParentString(OrganizationType.MINISTRY
-																	.value()),
-											SearchOperator.OPERATOR_EQUALS
-													.value(),
-											retrieveMinistryOrgProfile(
-													getManagedBean().getQt()
-															.getPmOrgProfile()
-															.getOrgProfileId())
-													.getOrgProfileId()),
-
-									new SearchFilterBean(
+							.add(new SearchFilterBean(
 											"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-											SearchOperator.OPERATOR_EQUALS
+											SearchOperator.OPERATOR_IN
 													.value(),
-											ParameterConst.ORG_TYPE_OTHERS,
-											SearchCondition.CONDITION_OR
-													.value())));
-				}
+													paramcodes));
+				
 				userReqDTO.setUserSearchBean(searchBean);
 
 				IUserSO userSO = BusinessDelegate.getInstance()
