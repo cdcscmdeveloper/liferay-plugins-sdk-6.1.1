@@ -11,10 +11,12 @@
 		<tr>
 			<td
 				style="vertical-align: top;padding-top: 84px;">
-                <p:selectBooleanCheckbox value="#{directLOABackingBean.managedBean.agreeWithTermsConditions}" disabled="#{directLOABackingBean.managedBean.readOnly}" />
+                <p:selectBooleanCheckbox value="#{directLOABackingBean.managedBean.agreeWithTermsConditions}" disabled="#{directLOABackingBean.managedBean.readOnly}" >
+                   <p:ajax update="@form" />
+                </p:selectBooleanCheckbox>
 			</td>
 			<td class="TableFieldRight">
-			   <p:editor controls="" id="loaEditor" value="#{directLOABackingBean.managedBean.termsConditions}" disabled="true" width="815" height="400" />
+			   <p:editor controls="" id="loaEditor" value="#{directLOABackingBean.managedBean.termsConditions}" disabled="true" width="870" height="400" />
 			</td>
 		</tr>
 	</table>
