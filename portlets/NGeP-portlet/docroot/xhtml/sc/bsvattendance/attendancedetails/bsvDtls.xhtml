@@ -195,41 +195,9 @@
 
 		</p:panel>
 	</ui:fragment>
-
-	<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td class="TableFieldLeft" width="24%"><h:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid
-				        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{bsvDetails.scQtBsv.bsvRemarks}" var="remarkVar"
-						rowIndexVar="remarkIndex" columns="1">
-
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{bsvAttendanceBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
-									<h:outputText value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
-										value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" />
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel>
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{bsvDetails.scQtBsv.bsvRemarks}"
+		showAttachment="false" />
 
 </ui:composition>
