@@ -634,7 +634,7 @@ public class SmFieldChangeUtil {
 							&& latestAcad.getStaffAcademicId() != null) {
 						if (isHasDifferences(latestAcad, currAcad,
 								new String[] { "staffAcademicId",
-										"qualificationLevelId", "smPersonnel",
+										"smPersonnel",
 										"pmEduField", "pmEduLevel" })) {
 							if (StringUtils.isBlank(currPersonnel
 									.getChangedFieldStatus())) {
