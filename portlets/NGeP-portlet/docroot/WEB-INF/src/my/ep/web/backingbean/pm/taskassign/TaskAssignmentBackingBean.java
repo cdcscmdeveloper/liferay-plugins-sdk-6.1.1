@@ -561,9 +561,11 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 //				}else 
 //					
 					
-					if(ModuleCodeConst.CONTRACT_MANAGEMENT.equalsIgnoreCase(moduleCode)){
+				if(ModuleCodeConst.CONTRACT_MANAGEMENT.equalsIgnoreCase(moduleCode)){
 					statusRoles = retrieveCtRoles(task);
-				}				
+				}else if(ModuleCodeConst.SUPPLIER_SELECTION.equalsIgnoreCase(moduleCode)){
+					statusRoles = retrieveSourcingRoles(task);
+				}			
 				if(statusRoles.isEmpty()){
 					statusRoles = retrieveAvailableRoles(this.getManagedBean().getSelectedTask().getDocStatus().longValue());
 				}				
