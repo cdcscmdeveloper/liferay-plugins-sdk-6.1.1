@@ -2729,6 +2729,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		log.info(".................redirectToRequestUnspscCodeII................");
 		// renewSesionObject();
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+		
 		if (bb.getManagedBean().getRequestExtCodeList() != null) {
 			bb.getManagedBean().getRequestExtCodeList().clear();
 
@@ -2741,7 +2742,9 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		} else {
 			bb.getManagedBean().getRequestCode().setItemType("P");
 		}
-		return "unspscRequestFormII.xhtml";
+		
+		bb.getManagedBean().getRequestCode().setItemName(this.getManagedBean().getSelectedRequestItem().getItemName());
+		return "unspscRequestFormII.xhtml?faces-redirect=true";
 	}
 
 	public void preRenderCodificationView() {
