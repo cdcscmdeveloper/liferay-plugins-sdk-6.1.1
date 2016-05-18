@@ -31,7 +31,7 @@
 				</p:commandLink>				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.ptj.name']}" style="white-space:normal;text-align:center">
-				<h:outputText value="#{pending.flFulfilmentRequest.preparedOrgProfile.orgName}" style="text-align:left;float:left;"/>
+				<h:outputText value="#{flOrderBB.retrievePTJByOrgProfileId(pending.flFulfilmentRequest.preparedOrgProfile.orgProfileId, pending.flFulfilmentRequest.agApprovedDate)}" style="text-align:left;float:left;"/>
 			</p:column>			
 			<p:column headerText="#{lbl['lbl.fl.created.date']}" style="text-align:center">
 				<h:outputText value="#{pending.createdDate}" style="float:left;">
