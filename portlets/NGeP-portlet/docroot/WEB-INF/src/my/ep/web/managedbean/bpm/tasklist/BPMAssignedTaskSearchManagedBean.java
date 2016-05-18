@@ -100,7 +100,6 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 				
 			} else if (getDocType() != null) {
 				reqDTO.setDocType(getDocType());
-//				reqDTO.setStatus(20100);
 				if (getDocStatus() != 0) {
 					reqDTO.setStatus(getDocStatus());
 				}
@@ -141,6 +140,20 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 			log.info("*********************************************************");
 
 			SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
+			
+			
+				
+			for(int i =0; i<resDTO.getWorklistVO().getWorklistItem().size(); i++){
+				
+				WorklistItemVO vo = (WorklistItemVO)resDTO.getWorklistVO().getWorklistItem().get(i);
+				System.out.println("*********vo.getAssignees()***********"+vo.getAssignees().size());
+					if(vo.getAssignees().size()==0){
+						resDTO.getWorklistVO().getWorklistItem().remove(i);
+					}
+			}
+				
+			log.info("****after***" + "resDTO.getWorklistVO().getWorklistItem().size(): "+ resDTO.getWorklistVO().getWorklistItem().size() + " *******");	
+			
 
 			resultBean.setTotalRecord(resDTO.getWorklistVO().getTotal());
 			resultBean.setResultList(resDTO.getWorklistVO().getWorklistItem());
