@@ -198,7 +198,6 @@ html{
 	z-index:1;
 }
 
-/*
 .last{
 	background:#fffe9d;
 	border-radius:0px 8px 8px 0px;
@@ -207,12 +206,13 @@ html{
 	border-bottom : 1px solid #a7a9ac;
 	border-right: 1px solid #a7a9ac;
 	border-left: 1px solid #a7a9ac;
+	height: 50px;
 }
 
 .last p{
-	padding:0px 0px 0px 10px;	
+	padding:0px 0px 0px 20px;	
 }
-*/
+
 
 .dlast{
 	background:#f0f0f0;
