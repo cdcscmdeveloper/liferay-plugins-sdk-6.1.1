@@ -56,7 +56,6 @@ import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -84,7 +83,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
-import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -6800,22 +6798,6 @@ public class EvaluationBackingBean extends
 		} finally {
 			committeSO = null;
 
-		}
-	}
-	
-	private ScWorkFlowStatus getCurrentStatusByTypeAndId(String docType, Long docId) {
-		IScWorkFlowStatusSO workFlowStatusSO;
-		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatusReqDTO workFlowStatusReqDTO = new ScWorkFlowStatusReqDTO();
-			workFlowStatusReqDTO.setDocType(docType);
-			workFlowStatusReqDTO.setDocId(docId);
-			
-			return workFlowStatusSO
-					.retrieveStatusByTypeAndId(workFlowStatusReqDTO).getWorkFlowStatus();
-		} finally {
-			workFlowStatusSO = null;
 		}
 	}
 
