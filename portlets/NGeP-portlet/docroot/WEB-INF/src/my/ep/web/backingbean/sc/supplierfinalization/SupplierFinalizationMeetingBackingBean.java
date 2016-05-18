@@ -28,7 +28,6 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -44,8 +43,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -65,6 +62,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -270,8 +268,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 				}
 			}
 			
+			ScWorkFlowStatus currentWorkFlowStatus = getCurrentStatusByTypeAndId(
+					ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION,
+					qtId);
 			List<ScQtCommitteRemarks> remarks = initializeRemarks(
-					committee, null, committee.getQtCommitteRemarks(), ScQtCommitteRemarks.class);
+					committee, 
+					currentWorkFlowStatus, 
+					committee.getQtCommitteRemarks(), 
+					ScQtCommitteRemarks.class);
 			
 			committee.setQtCommitteRemarks(remarks);
 			this.getManagedBean().setQtCommitteeRemarks(remarks);
@@ -1259,7 +1263,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 			
 			String status = qtnTenderSearchBean.getQtStatus();
-			if (!StringUtils.isBlank(status) && !status.equals("60000")) {
+			if (!StringUtils.isBlank(status)) {
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.pmStatus.statusId", SearchOperator.OPERATOR_EQUALS.value(), status));
 				qtSearchBean.getDataFilterBeans().add(
