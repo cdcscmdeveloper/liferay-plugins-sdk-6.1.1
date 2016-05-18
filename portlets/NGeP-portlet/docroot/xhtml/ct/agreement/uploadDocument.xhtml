@@ -12,7 +12,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.signed.date']}"  styleClass="required"/>
 			<h:panelGrid columns="5" styleClass="top-aligned-columns">
 				<p:calendar	value="#{agreementBackingBean.managedBean.agreementContractVer.signedDate}" id="popupButtonCal4" 
-					showOn="button" size="17" required="true" label="#{lbl['lbl.ct.signed.date']}" readonlyInput="true"
+					showOn="button" size="17"   readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				<p:spacer width="2"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.dated']}" style="margin-top:6px;" />
