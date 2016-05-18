@@ -23,6 +23,7 @@ import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -77,7 +78,8 @@ public class QTProposalCloseJob implements Job {
 			} else {
 				log.info("$$$$$ qt Work Flow status update unsuceessful from QTProposalCloseJob job");
 				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION);
+						QTDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION, 
+						proposalResDTO.getErrorMessage());
 			}
 
 		} catch (Exception e) {
@@ -113,16 +115,26 @@ public class QTProposalCloseJob implements Job {
 						+ qtId);
 				updateQtAsDisrupted(
 						qtId,
-						QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION);
+						QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION, 
+						resDTO.getErrorMessage());
 			}
 
 		} catch (Exception e) {
 			log.info("$$$$$ Insert Proposal amount unSuccessful for the QT No :"
 					+ qtId);
 			log.error(e.getLocalizedMessage());
+			String errorMessage = null;
+			Throwable rootCause = ExceptionUtils.getRootCause(e);
+    		if (rootCause != null) {
+    			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
+    		} else {
+    			errorMessage = ExceptionUtils.getStackTrace(e);
+    			
+    		}
 			updateQtAsDisrupted(
 					qtId,
-					QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION);
+					QTDisruptionConst.QT_CLOSE_PROPOSAL_AMOUNT_INSERT_DISRUPTION,
+					errorMessage);
 		}
 	}
 
@@ -143,17 +155,28 @@ public class QTProposalCloseJob implements Job {
 				log.info("$$$$$ BPM Update after Proposal Close unsuccessful for the QT Id :"
 						+ qtId);
 				updateQtAsDisrupted(qtId,
-						QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION);
+						QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION, 
+						resDTO.getErrorMessage());
 			}
 		} catch (Exception e) {
 			log.info("$$$$$ BPM Update after Proposal Close failed for the QT Id :"
 					+ qtId);
 			log.error(e.getLocalizedMessage());
-			updateQtAsDisrupted(qtId, QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION);
+			String errorMessage = null;
+			Throwable rootCause = ExceptionUtils.getRootCause(e);
+    		if (rootCause != null) {
+    			errorMessage = ExceptionUtils.getStackTrace(rootCause);	
+    		} else {
+    			errorMessage = ExceptionUtils.getStackTrace(e);
+    			
+    		}
+			updateQtAsDisrupted(qtId, 
+					QTDisruptionConst.QT_CLOSE_BPM_DISRUPTION,
+					errorMessage);
 		}
 	}
 
-	private void updateQtAsDisrupted(Long qtId, int disruptionStage) {
+	private void updateQtAsDisrupted(Long qtId, int disruptionStage, String errorMessage) {
 		try {
 			if (proposalSO == null) {
 				proposalSO = BusinessDelegate.getInstance()
@@ -163,6 +186,7 @@ public class QTProposalCloseJob implements Job {
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(qtId);
 			proposalReqDTO.setDisruptionStage(disruptionStage);
+			proposalReqDTO.setErrorMessage(errorMessage);
 			proposalSO.updateDisruptedQtAndSendNotification(proposalReqDTO);
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
