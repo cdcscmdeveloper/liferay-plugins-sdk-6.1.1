@@ -57,6 +57,10 @@
 	padding-right: 5px;
 	padding-bottom: 5px;
 }
+
+.div-content-break-word{
+	word-wrap: break-word;
+}
 </style>
 		<c:if test="#{not profilePersonalizationBackingBean.tempSupplierRole}">
 			<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -88,11 +92,14 @@
 									title="#{lbl['lbl.pm.address.email']}" />
 							</div>
 							<div class="rTableCell">
-								<h:outputText
+								<div class="div-content-break-word">
+									<h:outputText
 									value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" />
 								&#160;
 								<h:graphicImage value="/css/images/design/tick.png"
 									rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" />
+								</div>
+								
 							</div>
 						</div>
 
