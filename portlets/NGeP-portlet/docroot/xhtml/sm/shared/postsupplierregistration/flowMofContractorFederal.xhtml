@@ -44,17 +44,10 @@
 			</p>
 		</div>
 		
-		<div class="flow-chart-left dmid">
+		<div class="flow-chart-left dlast">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.completed']}
 			</p>
 		</div>
 	</c:if>
@@ -96,17 +89,10 @@
 			</p>
 		</div>
 		
-		<div class="flow-chart-left dmid">
+		<div class="flow-chart-left dlast">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.completed']}
 			</p>
 		</div>
 	</c:if>
@@ -148,17 +134,10 @@
 			</p>
 		</div>
 
-		<div class="flow-chart-left dmid">
+		<div class="flow-chart-left dlast">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.completed']}
 			</p>
 		</div>
 	</c:if>
@@ -203,17 +182,10 @@
 			</p>
 		</div>
 
-		<div class="flow-chart-left dmid">
+		<div class="flow-chart-left dlast">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.completed']}
 			</p>
 		</div>
 	</c:if>
@@ -258,17 +230,10 @@
 			</p>
 		</div>
 		
-		<div class="flow-chart-left dmid">
+		<div class="flow-chart-left dlast">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				#{lbl['lbl.sm.basic.softcert.request']}
-			</p>
-		</div>
-
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7 </strong><br />
-				#{lbl['lbl.sm.basic.completed']}
 			</p>
 		</div>
 	</c:if>
@@ -311,7 +276,7 @@
 			</p>
 		</div>
 
-		<div class="flow-chart-left mid">
+		<div class="flow-chart-left last">
 			<p>
 				<strong>#{lbl['lbl.sm.basic.step']} 6</strong><br />
 				<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
@@ -323,13 +288,6 @@
 						(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus())}">
 					<p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.softcert.request']}" action="#{postSupplierRegBB.pageNavigate}" />
 				</c:if>
-			</p>
-		</div>
-
-		<div class="flow-chart-left dlast">
-			<p>
-				<strong>#{lbl['lbl.sm.basic.step']} 7</strong><br />
-				#{lbl['lbl.sm.basic.completed']}
 			</p>
 		</div>
 	</c:if>
