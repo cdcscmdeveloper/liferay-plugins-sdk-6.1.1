@@ -1683,13 +1683,13 @@ public class SpecificationBackingBean extends
 	 */
 	private ScQtScoreSetting constructScoreSetting(int settingType) {
 		ScQtScoreSetting scQtScoreSetting = new ScQtScoreSetting();
-		if (settingType == 3 || settingType == 4 || settingType == 5) {
+		/*if (settingType == 3 || settingType == 4 || settingType == 5) {
 			scQtScoreSetting.setPassingScore(new BigDecimal(0));
 		}
 		scQtScoreSetting.setOverallFin(new BigDecimal(0));
 		scQtScoreSetting.setOverallOtherFin(new BigDecimal(0));
 		scQtScoreSetting.setOverallTechnical(new BigDecimal(0));
-		scQtScoreSetting.setOverallOtherTechnical(new BigDecimal(0));
+		scQtScoreSetting.setOverallOtherTechnical(new BigDecimal(0));*/
 		scQtScoreSetting.setSettingType(settingType);
 		scQtScoreSetting.setScQt(this.getManagedBean().getQt());
 		setUserDetails(scQtScoreSetting);
@@ -7276,19 +7276,12 @@ public class SpecificationBackingBean extends
 	 */
 	public void calculateRecommendtechnicalScore(ScQtScoreSetting technical) {
 		try {
-			if (null == technical.getOverallTechnical()) {
-				technical.setOverallTechnical(new BigDecimal(0));
-			}
-			if (null == technical.getOverallOtherTechnical()) {
-				technical.setOverallOtherTechnical(new BigDecimal(0));
-			}
-			int local = technical.getOverallTechnical().intValue()
-					+ technical.getOverallOtherTechnical().intValue();
+			int value1=technical.getOverallTechnical()!=null?technical.getOverallTechnical().intValue():0;
+			int value2=technical.getOverallOtherTechnical()!=null?technical.getOverallOtherTechnical().intValue():0;
+			int local = value1
+					+ value2;
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
-			/*if (local < 50 && !this.getManagedBean().isReadOnly()) {
-				//throw new EpException(MessageConst.ERROR_760366);
-			}*/
 			int financialScore = 0;
 			if (null != getManagedBean().getRecommendfinancialScore()) {
 				financialScore = getManagedBean().getRecommendfinancialScore()
@@ -7296,6 +7289,12 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setTotalScore(
 					new BigDecimal(local + financialScore));
+			if ((null != this.getManagedBean().getTotalScore())
+					&& this.getManagedBean().getTotalScore()
+							.intValue() > 100) {
+				throw new EpException(MessageConst.ERROR_760257);
+
+			}
 
 		} finally {
 
@@ -7311,14 +7310,10 @@ public class SpecificationBackingBean extends
 	 */
 	public void calculateRecommendFinancialScore(ScQtScoreSetting financial) {
 		try {
-			if (null == financial.getOverallFin()) {
-				financial.setOverallFin(new BigDecimal(0));
-			}
-			if (null == financial.getOverallOtherFin()) {
-				financial.setOverallOtherFin(new BigDecimal(0));
-			}
-			int local = financial.getOverallFin().intValue()
-					+ financial.getOverallOtherFin().intValue();
+			int value1=financial.getOverallFin()!=null?financial.getOverallFin().intValue():0;
+			int value2=financial.getOverallOtherFin()!=null?financial.getOverallOtherFin().intValue():0;
+			int local = value1
+					+ value2;
 			this.getManagedBean().setRecommendfinancialScore(
 					new BigDecimal(local));
 
@@ -7329,6 +7324,12 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setTotalScore(
 					new BigDecimal(local + technicalScore));
+			if ((null != this.getManagedBean().getTotalScore())
+					&& this.getManagedBean().getTotalScore()
+							.intValue() > 100) {
+				throw new EpException(MessageConst.ERROR_760257);
+
+			}
 
 		} finally {
 
@@ -7345,14 +7346,10 @@ public class SpecificationBackingBean extends
 	public void calculateFinancialItemScore(ScQtScoreSetting financialItem) {
 		try {
 			if (null != financialItem) {
-				if (null == financialItem.getOverallFin()) {
-					financialItem.setOverallFin(new BigDecimal(0));
-				}
-				if (null == financialItem.getOverallOtherFin()) {
-					financialItem.setOverallOtherFin(new BigDecimal(0));
-				}
-				int local = financialItem.getOverallFin().intValue()
-						+ financialItem.getOverallOtherFin().intValue();
+				int value1=	financialItem.getOverallFin()!=null? financialItem.getOverallFin().intValue():0;
+				int value2=	financialItem.getOverallOtherFin()!=null?financialItem.getOverallOtherFin().intValue():0;
+				int local = value1
+						+ value2;
 				this.getManagedBean().setFinancialItemScore(
 						new BigDecimal(local));
 				if ((null != this.getManagedBean().getFinancialItemScore())
@@ -7379,22 +7376,20 @@ public class SpecificationBackingBean extends
 		try {
 			if (null != financialItem) {
 				if (null == financialItem.getOverallFin()) {
-					financialItem.setOverallFin(new BigDecimal(0));
+					throw new EpException(MessageConst.ERROR_760256);
 				}
-				if (null == financialItem.getOverallOtherFin()) {
-					financialItem.setOverallOtherFin(new BigDecimal(0));
-				}
-
 				if (financialItem.getOverallFin().intValue() <= 0) {
 					throw new EpException(MessageConst.ERROR_760269);
 				}
-				int local = financialItem.getOverallFin().intValue()
-						+ financialItem.getOverallOtherFin().intValue();
-				this.getManagedBean().setFinancialItemScore(
-						new BigDecimal(local));
-				if (null == this.getManagedBean().getFinancialItemScore()) {
+				if (null == financialItem.getOverallOtherFin()) {
 					throw new EpException(MessageConst.ERROR_760256);
 				}
+			int value1=	financialItem.getOverallFin()!=null? financialItem.getOverallFin().intValue():0;
+			int value2=	financialItem.getOverallOtherFin()!=null?financialItem.getOverallOtherFin().intValue():0;
+				int local = value1
+						+ value2;
+				this.getManagedBean().setFinancialItemScore(
+						new BigDecimal(local));
 				if ((null != this.getManagedBean().getFinancialItemScore())
 						&& (this.getManagedBean().getFinancialItemScore()
 								.intValue() < 100 || this.getManagedBean()
@@ -13332,7 +13327,9 @@ public class SpecificationBackingBean extends
 								.equalsIgnoreCase(
 										ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
 					if (null == demoScoreSetting.getPassingScore()) {
-						demoScoreSetting.setPassingScore(new BigDecimal(0));
+						//demoScoreSetting.setPassingScore(new BigDecimal(0));
+						this.getManagedBean().setActiveIndex(4);
+						throw new EpException(MessageConst.ERROR_760173);
 					}
 					if (demoScoreSetting.getPassingScore().intValue() < 0) {
 						this.getManagedBean().setActiveIndex(4);
@@ -14004,13 +14001,11 @@ public class SpecificationBackingBean extends
 		}
 		if (null != recommendationItem) {
 			int itemPassingScore = 0;
-			if (null != recommendationItem.getOverallTechnical()
-					&& null != recommendationItem.getOverallOtherTechnical()) {
-				itemPassingScore = recommendationItem.getOverallTechnical()
-						.intValue()
-						+ recommendationItem.getOverallOtherTechnical()
-								.intValue();
-			}
+			int value1=recommendationItem.getOverallTechnical()!=null?recommendationItem.getOverallTechnical().intValue():0;
+			int value2= recommendationItem.getOverallOtherTechnical()!=null? recommendationItem.getOverallOtherTechnical().intValue():0;
+				itemPassingScore = value1
+						+ value2;
+			
 			if (itemPassingScore < 50) {
 				this.getManagedBean().setActiveIndex(6);
 				throw new EpException(MessageConst.ERROR_760366);
