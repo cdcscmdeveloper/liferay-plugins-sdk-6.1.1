@@ -11,7 +11,7 @@
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="60" id="doministry"
-						value="#{createDOBackingBean.retrieveMinistryByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId)}"
+						value="#{createDOBackingBean.retrieveMinistryByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId, createDOBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"
 						disabled="true" /></td>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /></td>
@@ -24,20 +24,20 @@
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td><p:inputText size="60" id="controlOffMaint"
-						value="#{createDOBackingBean.retrievePegawaiPengawalByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{createDOBackingBean.retrievePegawaiPengawalByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, createDOBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputText size="60" id="ptjGroupMaint"
-						value="#{createDOBackingBean.retrieveJabatanByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{createDOBackingBean.retrieveJabatanByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId, createDOBackingBean.managedBean.fulfilmentRequest.agApprovedDate)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:421px;" 
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
 				<td><p:inputText size="30" disabled="true"
@@ -46,13 +46,13 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:421px;" 
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"/>
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:421px;" 
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"/>
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
 			<tr>
