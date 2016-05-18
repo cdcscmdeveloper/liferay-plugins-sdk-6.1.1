@@ -56,6 +56,7 @@ import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -83,6 +84,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -98,6 +100,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAttachment;
@@ -6606,6 +6609,10 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			resDto = qtDetailSO.retriveQtRemarks(qtReqDTO);
+			ScQt scQt = this.getManagedBean().getScQt();
+			ScWorkFlowStatus currentWorkFlowStatus = getCurrentStatusByTypeAndId(
+					this.getManagedBean().getCommitteeType(),
+					scQt.getQtId());
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				if (resDto.getRemarks() == null) {
@@ -6614,15 +6621,13 @@ public class EvaluationBackingBean extends
 							.getEvaluationCommitteeRemark()) {
 						this.getManagedBean().setEvaluationCommitteeRemark(
 								new ArrayList<ScQtEvaluationCommitteeRemark>());
-						initializeRemarks(this.getManagedBean().getScQt(),
-								null, this.getManagedBean()
-										.getEvaluationCommitteeRemark(),
+						initializeRemarks(scQt,
+								currentWorkFlowStatus, 
+								this.getManagedBean().getEvaluationCommitteeRemark(),
 								ScQtEvaluationCommitteeRemark.class);
 
 					}
-					this.getManagedBean()
-							.getScQt()
-							.setScQtEvaluationCommitteeRemarks(
+					scQt.setScQtEvaluationCommitteeRemarks(
 									this.getManagedBean()
 											.getEvaluationCommitteeRemark());
 				}
@@ -6641,14 +6646,12 @@ public class EvaluationBackingBean extends
 									.getEvaluationCommitteeRemark().isEmpty()) {
 						this.getManagedBean().setEvaluationCommitteeRemark(
 								remarkList);
-						initializeRemarks(this.getManagedBean().getScQt(),
-								null, this.getManagedBean()
-										.getEvaluationCommitteeRemark(),
+						initializeRemarks(scQt,
+								currentWorkFlowStatus, 
+								this.getManagedBean().getEvaluationCommitteeRemark(),
 								ScQtEvaluationCommitteeRemark.class);
 					}
-					this.getManagedBean()
-							.getScQt()
-							.setScQtEvaluationCommitteeRemarks(
+					scQt.setScQtEvaluationCommitteeRemarks(
 									this.getManagedBean()
 											.getEvaluationCommitteeRemark());
 				}
@@ -6661,15 +6664,13 @@ public class EvaluationBackingBean extends
 						this.getManagedBean()
 								.setEvaluationOpeningCommitteeRemark(
 										new ArrayList<ScQtOpeningCommitteeRemark>());
-						initializeRemarks(this.getManagedBean().getScQt(),
-								null, this.getManagedBean()
-										.getEvaluationOpeningCommitteeRemark(),
+						initializeRemarks(scQt,
+								currentWorkFlowStatus, 
+								this.getManagedBean().getEvaluationOpeningCommitteeRemark(),
 								ScQtOpeningCommitteeRemark.class);
 
 					}
-					this.getManagedBean()
-							.getScQt()
-							.setScQtOpeningCommitteeRemarks(
+					scQt.setScQtOpeningCommitteeRemarks(
 									this.getManagedBean()
 											.getEvaluationOpeningCommitteeRemark());
 				}
@@ -6689,14 +6690,12 @@ public class EvaluationBackingBean extends
 									.isEmpty()) {
 						this.getManagedBean()
 								.setEvaluationOpeningCommitteeRemark(remarkList);
-						initializeRemarks(this.getManagedBean().getScQt(),
-								null, this.getManagedBean()
-										.getEvaluationOpeningCommitteeRemark(),
+						initializeRemarks(scQt,
+								currentWorkFlowStatus, 
+								this.getManagedBean().getEvaluationOpeningCommitteeRemark(),
 								ScQtOpeningCommitteeRemark.class);
 					}
-					this.getManagedBean()
-							.getScQt()
-							.setScQtOpeningCommitteeRemarks(
+					scQt.setScQtOpeningCommitteeRemarks(
 									this.getManagedBean()
 											.getEvaluationOpeningCommitteeRemark());
 				}
@@ -6710,16 +6709,13 @@ public class EvaluationBackingBean extends
 								.setEvaluationTechnicalCommitteeRemark(
 										new ArrayList<ScQtTechnicalCommitteeRemark>());
 						initializeRemarks(
-								this.getManagedBean().getScQt(),
-								null,
-								this.getManagedBean()
-										.getEvaluationTechnicalCommitteeRemark(),
+								scQt,
+								currentWorkFlowStatus,
+								this.getManagedBean().getEvaluationTechnicalCommitteeRemark(),
 								ScQtTechnicalCommitteeRemark.class);
 
 					}
-					this.getManagedBean()
-							.getScQt()
-							.setScQtTechnicalCommitteeRemarks(
+					scQt.setScQtTechnicalCommitteeRemarks(
 									this.getManagedBean()
 											.getEvaluationTechnicalCommitteeRemark());
 
@@ -6742,15 +6738,12 @@ public class EvaluationBackingBean extends
 								.setEvaluationTechnicalCommitteeRemark(
 										remarkList);
 						initializeRemarks(
-								this.getManagedBean().getScQt(),
-								null,
-								this.getManagedBean()
-										.getEvaluationTechnicalCommitteeRemark(),
+								scQt,
+								currentWorkFlowStatus,
+								this.getManagedBean().getEvaluationTechnicalCommitteeRemark(),
 								ScQtTechnicalCommitteeRemark.class);
 					}
-					this.getManagedBean()
-							.getScQt()
-							.setScQtTechnicalCommitteeRemarks(
+					scQt.setScQtTechnicalCommitteeRemarks(
 									this.getManagedBean()
 											.getEvaluationTechnicalCommitteeRemark());
 				}
@@ -6765,16 +6758,13 @@ public class EvaluationBackingBean extends
 								.setEvaluationFinancialCommitteeRemark(
 										new ArrayList<ScQtFinancialCommitteeRemark>());
 						initializeRemarks(
-								this.getManagedBean().getScQt(),
-								null,
-								this.getManagedBean()
-										.getEvaluationFinancialCommitteeRemark(),
+								scQt,
+								currentWorkFlowStatus,
+								this.getManagedBean().getEvaluationFinancialCommitteeRemark(),
 								ScQtFinancialCommitteeRemark.class);
 
 					}
-					this.getManagedBean()
-							.getScQt()
-							.setScQtFinancialCommitteeRemarks(
+					scQt.setScQtFinancialCommitteeRemarks(
 									this.getManagedBean()
 											.getEvaluationFinancialCommitteeRemark());
 				}
@@ -6796,15 +6786,12 @@ public class EvaluationBackingBean extends
 								.setEvaluationFinancialCommitteeRemark(
 										remarkList);
 						initializeRemarks(
-								this.getManagedBean().getScQt(),
-								null,
-								this.getManagedBean()
-										.getEvaluationFinancialCommitteeRemark(),
+								scQt,
+								currentWorkFlowStatus,
+								this.getManagedBean().getEvaluationFinancialCommitteeRemark(),
 								ScQtFinancialCommitteeRemark.class);
 					}
-					this.getManagedBean()
-							.getScQt()
-							.setScQtFinancialCommitteeRemarks(
+					scQt.setScQtFinancialCommitteeRemarks(
 									this.getManagedBean()
 											.getEvaluationFinancialCommitteeRemark());
 				}
@@ -6813,6 +6800,22 @@ public class EvaluationBackingBean extends
 		} finally {
 			committeSO = null;
 
+		}
+	}
+	
+	private ScWorkFlowStatus getCurrentStatusByTypeAndId(String docType, Long docId) {
+		IScWorkFlowStatusSO workFlowStatusSO;
+		try {
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO workFlowStatusReqDTO = new ScWorkFlowStatusReqDTO();
+			workFlowStatusReqDTO.setDocType(docType);
+			workFlowStatusReqDTO.setDocId(docId);
+			
+			return workFlowStatusSO
+					.retrieveStatusByTypeAndId(workFlowStatusReqDTO).getWorkFlowStatus();
+		} finally {
+			workFlowStatusSO = null;
 		}
 	}
 
