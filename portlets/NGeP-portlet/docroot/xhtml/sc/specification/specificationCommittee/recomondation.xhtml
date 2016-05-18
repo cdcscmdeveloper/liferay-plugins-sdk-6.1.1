@@ -55,7 +55,7 @@
 						<td><p:inputText style="text-align:right" maxlength="3"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}">
-
+                              <p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 							</p:inputText> <ac:iconTooltip
 								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
 						</td>
@@ -95,7 +95,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallTechnical}">
 
-								<p:ajax event="blur" update="@([id$=itemPanel])"
+								<p:ajax event="change" update="@([id$=technicalrecommendation],[id$=recommendationTotalscoresIds])"
 									process="@this,item" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendtechnicalScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
 							</p:inputText>
@@ -106,7 +106,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherTechnical}">
 
-								<p:ajax event="blur" update="@([id$=itemPanel])"
+								<p:ajax event="change" update="@([id$=technicalrecommendation],[id$=recommendationTotalscoresIds])"
 									process="@this,item" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendtechnicalScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
 							</p:inputText>
@@ -123,7 +123,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
 
-								<p:ajax event="blur" update="@([id$=itemPanel])"
+								<p:ajax event="change" update="@([id$=financialrecommendation],[id$=recommendationTotalscoresIds])"
 									process="@this,item" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
 							</p:inputText>
@@ -134,7 +134,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
 
-								<p:ajax event="blur" update="@([id$=itemPanel])"
+								<p:ajax event="change" update="@([id$=financialrecommendation],[id$=recommendationTotalscoresIds])"
 									process="@this,item" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
 							</p:inputText>
@@ -150,7 +150,7 @@
 							#{lbl['lbl.sc.total.score']}
 						</p:column>
 						<p:column colspan="1" style="text-align:right">
-							<h:outputText
+							<h:outputText id="recommendationTotalscoresIds"
 								value="#{specificationBackingBean.managedBean.totalScore}" />
 						</p:column>
 					</p:row>
@@ -164,7 +164,7 @@
 						<td><p:inputText style="text-align:right" maxlength="3"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
-
+                               <p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 							</p:inputText> <ac:iconTooltip
 								value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
 						</td>
