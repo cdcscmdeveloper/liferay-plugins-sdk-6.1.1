@@ -240,7 +240,21 @@ public class QTCommitteBackingBean extends
 							SearchOperator.OPERATOR_EQUALS.value(),
 							DbValueConst.RECORD_STATUS_ACTIVE)					
 					);			
-			
+			List<String> paramcodes=new ArrayList<String>();
+			paramcodes.add(ParameterConst.ORG_TYPE_OTHERS);
+			paramcodes.add(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
+			paramcodes.add(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
+			paramcodes.add(ParameterConst.ORG_TYPE_STATUTORY_BODY);
+			paramcodes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
+			paramcodes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
+			paramcodes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
+			userSearchBean
+					.getDataFilterBeans()
+					.add(new SearchFilterBean(
+									"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+									SearchOperator.OPERATOR_IN
+											.value(),
+											paramcodes));
 			/*Removed based on Ministry search for Add Users
 			 * if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
 				userSearchBean
