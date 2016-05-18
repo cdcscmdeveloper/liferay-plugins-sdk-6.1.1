@@ -83,7 +83,9 @@
 									title="#{lbl['lbl.pm.access.app.org']}" />
 							</div>
 							<div class="rTableCell">
-								<h:outputText style="white-space:normal;" value="#{orgName}" />
+								<div class="div-content-break-word">
+									<h:outputText style="white-space:normal;" value="#{orgName}" />
+								</div>
 							</div>
 						</div>
 
@@ -110,12 +112,14 @@
 									title="#{lbl['lbl.pm.profiles.preferences.sms']}" />
 							</div>
 							<div class="rTableCell">
+								<div class="div-content-break-word">
 								<h:outputText style="white-space:normal;"
 									value="#{not empty profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull 
                   ? profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull : '-'}" />
 								&#160;
 								<h:graphicImage value="/css/images/design/tick.png"
 									rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" />
+								</div>
 							</div>
 						</div>
 
@@ -133,7 +137,9 @@
 										value="#{profilePersonalizationBackingBean.managedBean.rolesList}"
 										varStatus="status">
 										<div class="#{status.odd ? 'role-odd' : 'role-even'}">
-											<h:outputText value="#{role}" />
+											<div class="div-content-break-word">
+												<h:outputText value="#{role}" />
+											</div>
 										</div>
 
 									</ui:repeat>
