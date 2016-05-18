@@ -16,11 +16,8 @@
 			<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.catalogue.upload']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 		</div>
 		</c:if>
-		<div class="flow-chart-left dmid">
-			<p><strong>#{lbl['lbl.sm.basic.step']} #{step2}</strong><br />#{lbl['lbl.sm.basic.softcert.request']}</p>
-		</div>
 		<div class="flow-chart-left dlast">
-			<p><strong>#{lbl['lbl.sm.basic.step']} #{step3}</strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
+			<p><strong>#{lbl['lbl.sm.basic.step']} #{step2}</strong><br />#{lbl['lbl.sm.basic.softcert.request']}</p>
 		</div>
 	</c:if>
 	
@@ -30,7 +27,7 @@
 			<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br />#{lbl['lbl.sm.basic.catalogue.upload']}</p>
 		</div>
 		</c:if>
-		<div class="flow-chart-left mid">
+		<div class="flow-chart-left last">
 			<p><strong>#{lbl['lbl.sm.basic.step']} #{step2}</strong><br />
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
 			(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
@@ -42,9 +39,6 @@
 				<p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.softcert.request']}" action="#{postSupplierRegBB.pageNavigate}" />
 			</c:if>
 			</p>
-		</div>
-		<div class="flow-chart-left dlast">
-			<p><strong>#{lbl['lbl.sm.basic.step']} #{step3}</strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
 		</div>
 	</c:if>
 	
