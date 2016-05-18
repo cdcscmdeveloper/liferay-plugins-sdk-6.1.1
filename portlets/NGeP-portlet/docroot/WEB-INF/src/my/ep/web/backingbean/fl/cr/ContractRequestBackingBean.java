@@ -283,19 +283,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if (isApprover()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setApprover(facesScopes.getUserSessionBean().getLoginId());
-		}
-		if(getManagedBean().getFlRequest().getPreparedOrgProfile()!=null && getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity() == null){
-			getManagedBean().getFlRequest().getPreparedOrgProfile().setPmOrgValidity(new PmOrgValidity());
-			
-		}
-		if(getManagedBean().getFlRequest().getIssuedOrgProfile()!=null && getManagedBean().getFlRequest().getIssuedOrgProfile().getPmOrgValidity() == null){
-			getManagedBean().getFlRequest().getIssuedOrgProfile().setPmOrgValidity(new PmOrgValidity());
-			
-		}
-		if(getManagedBean().getFlRequest().getChargeOrgProfile()!=null && getManagedBean().getFlRequest().getChargeOrgProfile().getPmOrgValidity() == null){
-			getManagedBean().getFlRequest().getChargeOrgProfile().setPmOrgValidity(new PmOrgValidity());
-			
-		}
+		}	
 		getManagedBean().setDeleteButtonHide(true);
 		getManagedBean().setItemDeleteButtonShow(true);
 		

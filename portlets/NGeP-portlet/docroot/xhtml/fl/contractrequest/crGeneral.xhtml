@@ -12,7 +12,7 @@
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="65" id="ministry"
-						value="#{contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId)}"
+						value="#{contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId, contractRequestBackingBean.getTransactionDate(contractRequestBackingBean.managedBean.flRequest))}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -20,7 +20,7 @@
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td>
 					<p:inputTextarea id="controlOff" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
-						value="#{contractRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}" />
+						value="#{contractRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId, contractRequestBackingBean.getTransactionDate(contractRequestBackingBean.managedBean.flRequest))}" />
 				</td>
 			</tr>
 			<tr>
@@ -28,7 +28,7 @@
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td>
 					<p:inputTextarea id="ptjGroup" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
-						value="#{contractRequestBackingBean.retrieveJabatanByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}" />
+						value="#{contractRequestBackingBean.retrieveJabatanByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId, contractRequestBackingBean.getTransactionDate(contractRequestBackingBean.managedBean.flRequest))}" />
 				</td>
 			</tr>
 			<tr>
@@ -36,7 +36,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 560px;">
 					<p:inputTextarea id="preparedOrgProfileId" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
-						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}" />					
+						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgCode} #{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}" />					
 					<ac:lov id="preparedPtj" uiMode="link" 
 						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
@@ -53,7 +53,7 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
 				<td>
 					<p:inputTextarea id="issuedOrgProfile" rows="2" cols="67" disabled="true" autoResize="false" style="resize:none;" 
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}" />										
+						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgCode} #{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}" />										
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
 				</td>
 			</tr>
@@ -62,7 +62,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td>
 					<p:inputTextarea id="chargeOrgProfile" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
-						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" />										
+						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgCode} #{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" />										
 					<p:commandLink
 						oncomplete="dlgChargedPtj.show();"
 						action="#{contractRequestBackingBean.resetChargedPtjDetails}"
