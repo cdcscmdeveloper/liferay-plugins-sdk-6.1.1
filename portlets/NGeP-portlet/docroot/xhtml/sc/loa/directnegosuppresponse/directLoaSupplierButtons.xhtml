@@ -39,6 +39,7 @@
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" update="spkiOutputPanel"
 									partialSubmit="true" process="@form"
+									disabled="#{!directLOABackingBean.managedBean.agreeWithTermsConditions}"
 									action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
 									actionListener="#{directLOABackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
