@@ -101,14 +101,14 @@
 				<h:outputText value="#{taskList.docNumber}"></h:outputText>
 			</p:column>
 
-			<p:column  width="18%;">
+			<p:column  width="20%" style="white-space: normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.docStatus']}"/>
 				</f:facet>
 				<h:outputText value="#{bpmAssignedTaskSearchBackingBean.getDocStatus(taskList.docStatus)}"></h:outputText>
 			</p:column>
 
-			<p:column width="10%;">
+			<p:column width="5%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.assignedDate']}"/>
 				</f:facet>
@@ -117,20 +117,22 @@
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
-<!--
-			<p:column>
-				<f:facet name="header">
-					Assignees
-				</f:facet>
-				<h:outputText value="#{taskList.assignees}"></h:outputText>
-			</p:column>
--->
-			<p:column>
+			<p:column width="40%" style="white-space: normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.assigneeName']}"/>
 				</f:facet>
 				<h:outputText value="#{bpmAssignedTaskSearchBackingBean.getAssigneeNamesString(taskList.assignees)}"></h:outputText>
 			</p:column>
+			
+			<p:column width="30%" style="white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.txt.ptj.supplier']}"/>
+				</f:facet>
+				<h:outputText value="#{bpmAssignedTaskSearchBackingBean.getPtjString(taskList.assignees)}"></h:outputText>
+			</p:column>
+			
+			
+			
 
 		</p:dataTable>
 	

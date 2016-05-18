@@ -17,6 +17,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -128,6 +129,41 @@ public class BPMAssignedTaskSearchBackingBean extends BaseBackingBean<BPMAssigne
 //					assigneeNamesString.append("[");
 					assigneeNamesString.append(userName);
 //					assigneeNamesString.append("]");
+					if (i+1 < assignees.size()) {
+						assigneeNamesString.append(", ");
+					}
+				}
+			}
+			log.info("AssigneeNamesString: " + assigneeNamesString.toString());
+			return assigneeNamesString.toString();
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw new EpException(e.getMessage());
+		}
+	}
+	
+	public String getPtjString(List<String> assignees) {
+		StringBuilder assigneeNamesString = new StringBuilder();
+
+		log.info("No of Assignees: " + assignees.size());
+		try {
+			for (int i = 0; i < assignees.size(); i++) {			
+				PmUser pmUser = PmCommonUtil.retrieveUserByLoginId(assignees.get(i));
+				if (pmUser != null) {
+					
+
+					List<PmUserOrg> userOrgLs =PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
+					
+					if(userOrgLs.get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase("SUP")){
+						assigneeNamesString.append(userOrgLs.get(0).getPmOrgProfile().getSmSupplier().getCompanyName());
+					}else if(userOrgLs.get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase("FFC")){
+						assigneeNamesString.append(userOrgLs.get(0).getPmOrgProfile().getPmFinancialOrg().getFinOrgName());
+					}else{
+						assigneeNamesString.append(userOrgLs.get(0).getPmOrgProfile().getPmOrgValidity().getOrgName());
+					}
+				
+					
+
 					if (i+1 < assignees.size()) {
 						assigneeNamesString.append(", ");
 					}
