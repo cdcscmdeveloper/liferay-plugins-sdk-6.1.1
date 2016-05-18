@@ -41,7 +41,7 @@
 						<p:inputTextarea id="title" rows="3" style="width:280px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specName}"
 							required="true" maxlength="200"
-							label="#{lbl['lbl.tpl.spec.title']}" />
+							label="#{lbl['lbl.tpl.spec.title']}" ><p:ajax partialSubmit="true" process="@this" /></p:inputTextarea>
 						<p:message id="titleMsg" for="title" display="icon" />
 					</td>
 					<td class="TableFieldLeft">
@@ -51,7 +51,8 @@
 						<p:inputTextarea id="descr" rows="3" style="width:280px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.specDesc}"
 							maxlength="500"
-							label="#{lbl['lbl.tpl.spec.description']}" />
+							label="#{lbl['lbl.tpl.spec.description']}" ><p:ajax partialSubmit="true" process="@this" />
+							</p:inputTextarea>
 					</td>
 				</tr>	
 				<tr>
@@ -65,6 +66,7 @@
 							required="true"
 							label="#{lbl['lbl.sc.procurement.category']}">
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+							<p:ajax partialSubmit="true" process="@this" />
 						</p:selectOneMenu>
 						<p:message id="procCatMsg" for="procCat" display="icon" />
 					</td>
