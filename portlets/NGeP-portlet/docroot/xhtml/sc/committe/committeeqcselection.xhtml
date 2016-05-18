@@ -95,40 +95,11 @@
 			</div>
 		</h:panelGroup>
 	</p:panel>
-
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
-		rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{committeBackingBean.managedBean.scCommitteeRemarksList}"
-						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{committeBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
-										value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel>
+	
+	<c:if test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
+		<ac:scRemarkAndAttachment
+			remarkList="#{committeBackingBean.managedBean.scCommitteeRemarksList}"
+			showAttachment="false" />
+	</c:if>
 
 </ui:composition>
