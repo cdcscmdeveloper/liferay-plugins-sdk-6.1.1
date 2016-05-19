@@ -222,7 +222,7 @@
                    
 	   </p:panel>  
 		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" 
-			styleClass="pop_up_top" modal="true" width="700" height="500px" resizable="false">
+			styleClass="pop_up_top" modal="true" width="700" height="525px" resizable="false">
 			<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
 		   <h:panelGroup  id="agencyies">
@@ -235,7 +235,7 @@
                  <p:selectOneMenu id="ministry" style="width:300px"
                       value="#{ctBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{ctBackingBean.getMinistryDropdown()}"/>
-            	   <p:ajax event="change" update=":form:jabatan" />
+            	   <p:ajax event="change" update=":form:jabatan, :form:agencySearchId" />
                  </p:selectOneMenu>
                  <p:selectOneMenu for="jabatan"  style="width:150px" disabled="true" >
             	    <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
@@ -259,7 +259,8 @@
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
-       		            action="#{ctBackingBean.searchAgencyDetails}" process="@this" /> 
+       		            action="#{ctBackingBean.searchAgencyDetails}" process="@this" 
+       		            disabled="#{ctBackingBean.managedBean.ministryProfileId == null}"/> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
 			            action="#{ctBackingBean.resetAgencyDetails}" update=":form:agencyies"   />
 		       </div>
@@ -267,13 +268,25 @@
 			   <p:spacer height="2"/>
 			        <p:panel id="agencyTablePopUpId" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500" >
               <p:dataTable id="tableAgency" var="pmVar" value="#{ctBackingBean.agencyDataModel}" 
-                 rowIndexVar="rowIndex" selection="#{ctBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
+                 rowIndexVar="rowIndex"  rowKey="#{pmVar}" lazy="true">
                   <ac:paginator for="tableAgency"/>
-                    <p:column selectionMode="multiple" style="width:18px;"> 
-                         <f:facet name="header">
-                             <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
-		               </f:facet>
-                    </p:column>       
+                   <p:column style="width:3%;text-align:left;white-space:normal;"
+				           rendered="#{!ctBackingBean.managedBean.viewContract}">
+				           <f:facet name="header">
+							   <p:selectBooleanCheckbox id="checkBoxAll" value="#{ctBackingBean.managedBean.selectAll}">
+							         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
+								     <p:ajax partialSubmit="true" process="@this"
+									       update=":form:tableAgency,:form:agySlectBtnId" listener="#{ctBackingBean.selectAllMinstryAgency}" />
+							         </p:selectBooleanCheckbox>
+						     </f:facet>
+		           
+		                     <p:selectBooleanCheckbox 
+		                           value="#{pmVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		           <p:ajax event="change" 
+		           		                update=":form:tableAgency,:form:agySlectBtnId" listener="#{ctBackingBean.selectOneAgyCheckboxSelect}"></p:ajax>
+			                 </p:selectBooleanCheckbox>
+				      </p:column>
+                  
                     <p:column headerText="#{lbl['lbl.ct.ptj.code']}" >
                        	#{pmVar.orgCode}
 					</p:column>
@@ -282,9 +295,10 @@
 					</p:column>
 			 </p:dataTable>           
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" 
+				<p:commandButton id="agySlectBtnId"  value="#{lbl['lbl.btn.select']}" process="@form" 
 				update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
-				    action="#{ctBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"/>
+				    action="#{ctBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"
+				    disabled="#{ctBackingBean.managedBean.buttonHideActive}"/>
 				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgAgency.hide();" />
            </div>
           </p:panel>
