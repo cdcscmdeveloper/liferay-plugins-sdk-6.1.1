@@ -156,13 +156,13 @@
 	</div>
 
 
-	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
+	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true" width="500px"
 		resizable="false" styleClass="pop_up_top">
 
 
 		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
 			cancelLabel="#{lbl['lbl.btn.cancel']}"
-			uploadLabel="#{lbl['lbl.btn.upload']}"
+			uploadLabel="#{lbl['lbl.btn.upload']}" showButtons="false"
 			label="#{lbl['lbl.btn.choose']}" widgetVar="fileUploadWidget"
 			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
 			update="@form" invalidFileMessage="#{lbl['lbl.cm.only.xls']}">
