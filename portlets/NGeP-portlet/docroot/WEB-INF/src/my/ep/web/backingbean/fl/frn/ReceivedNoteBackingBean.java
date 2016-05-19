@@ -221,7 +221,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			log.info("######## FRN SLA end : "+System.currentTimeMillis()+" : "+new Date());
 			if (resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745014;
-				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 						messageId = MessageConst.INFO_700004;
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
@@ -625,7 +625,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			orderApproverList.addAll(pendingApproverList);
 			getManagedBean().getApproverList().addAll(orderApproverList);
 		}
-		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
 //			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 //			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 //			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
@@ -716,7 +716,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				status.getStatusId().longValue()==FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL) {
 			throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
 		}
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {		
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {		
 			validateFulfilmentNote(outcome);
 			setTextBeforeSign(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
