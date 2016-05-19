@@ -560,57 +560,73 @@ public class SupplierFinalizationMeetingBackingBean extends
 							DbValueConst.RECORD_STATUS_ACTIVE)					
 					);
 			
+			List<String> orgTypes = new ArrayList<String>();
+			orgTypes.add(ParameterConst.ORG_TYPE_PTJ);
+			orgTypes.add(ParameterConst.ORG_TYPE_OTHERS);
+			orgTypes.add(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
+			orgTypes.add(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
+			orgTypes.add(ParameterConst.ORG_TYPE_STATUTORY_BODY);
+			orgTypes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
+			orgTypes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
+			orgTypes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
 			
-			ScQt scQt = this.getManagedBean().getScQt();
-			if (null != scQt.getPmOrgProfile()) {
-				Long ministryOrgProfile = retrieveMinistryOrgProfile(
-						scQt.getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
-				String committeeType = getManagedBean().getCommitteeType();
-				
-				SearchFilterBean ptjOrgProfileFB = new SearchFilterBean(
-						"pmUserOrgs.pmOrgProfile."
-								+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-						SearchOperator.OPERATOR_EQUALS.value(),
-						ministryOrgProfile,
-						JoinType.LEFT);
-				
-				if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType) ||
-						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
-					List<String> orgTypes = new ArrayList<String>();
-					orgTypes.add(ParameterConst.ORG_TYPE_SM_PMS_SABAH);
-					orgTypes.add(ParameterConst.ORG_TYPE_SM_PMS_SARAWAK);
-					orgTypes.add(ParameterConst.ORG_TYPE_OTHERS);
-					
-					SearchFilterBean otherOrgFB = new SearchFilterBean(
-							"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-							SearchOperator.OPERATOR_IN.value(),
-							orgTypes,
-							SearchCondition.CONDITION_OR.value());
-					searchBean.getDataFilterBeans().add(
-							new SearchMultiFilterBean(ptjOrgProfileFB, otherOrgFB));
-					
-				} else {
-					SearchFilterBean otherOrgFB = new SearchFilterBean(
-							"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							ParameterConst.ORG_TYPE_OTHERS,
-							SearchCondition.CONDITION_OR.value());
-					
-					if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equals(committeeType) ||
-							ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equals(committeeType)) {
-						SearchFilterBean ministryOrgProfileFB = new SearchFilterBean(
-								"pmUserOrgs.pmOrgProfile.orgProfileId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								ministryOrgProfile);
-						searchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(ptjOrgProfileFB, 
-										new SearchMultiFilterBean(ministryOrgProfileFB, SearchCondition.CONDITION_OR.value(), otherOrgFB)));
-					} else {
-						searchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(ptjOrgProfileFB, otherOrgFB));
-					}
-				} 
-			}
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+						 "pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+					  	 SearchOperator.OPERATOR_IN.value(), orgTypes)
+					);			
+			
+//			ScQt scQt = this.getManagedBean().getScQt();
+//			if (null != scQt.getPmOrgProfile()) {
+//				Long ministryOrgProfile = retrieveMinistryOrgProfile(
+//						scQt.getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
+//				String committeeType = getManagedBean().getCommitteeType();
+//				
+//				SearchFilterBean ptjOrgProfileFB = new SearchFilterBean(
+//						"pmUserOrgs.pmOrgProfile."
+//								+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+//						SearchOperator.OPERATOR_EQUALS.value(),
+//						ministryOrgProfile,
+//						JoinType.LEFT);
+//				
+//				if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType) ||
+//						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
+//					List<String> orgTypes = new ArrayList<String>();
+//					orgTypes.add(ParameterConst.ORG_TYPE_SM_PMS_SABAH);
+//					orgTypes.add(ParameterConst.ORG_TYPE_SM_PMS_SARAWAK);
+//					orgTypes.add(ParameterConst.ORG_TYPE_OTHERS);
+//					
+//					SearchFilterBean otherOrgFB = new SearchFilterBean(
+//							"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+//							SearchOperator.OPERATOR_IN.value(),
+//							orgTypes,
+//							SearchCondition.CONDITION_OR.value());
+//					searchBean.getDataFilterBeans().add(
+//							new SearchMultiFilterBean(ptjOrgProfileFB, otherOrgFB));
+//					
+//				} else {
+//					SearchFilterBean otherOrgFB = new SearchFilterBean(
+//							"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+//							SearchOperator.OPERATOR_EQUALS.value(),
+//							ParameterConst.ORG_TYPE_OTHERS,
+//							SearchCondition.CONDITION_OR.value());
+//					
+//					if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equals(committeeType) ||
+//							ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equals(committeeType)) {
+//						SearchFilterBean ministryOrgProfileFB = new SearchFilterBean(
+//								"pmUserOrgs.pmOrgProfile.orgProfileId",
+//								SearchOperator.OPERATOR_EQUALS.value(),
+//								ministryOrgProfile);
+//						searchBean.getDataFilterBeans().add(
+//								new SearchMultiFilterBean(ptjOrgProfileFB, 
+//										new SearchMultiFilterBean(ministryOrgProfileFB, SearchCondition.CONDITION_OR.value(), otherOrgFB)));
+//					} else {
+//						searchBean.getDataFilterBeans().add(
+//								new SearchMultiFilterBean(ptjOrgProfileFB, otherOrgFB));
+//					}
+//				} 
+//			}
+			
 		}
 	}	
 	
@@ -938,7 +954,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		 */
 		public UserQCPagingDataModel(String componentId,
 				UserCommitteeSearchBean userQCSearchBean) {
-			super(componentId);
+			super(componentId,false);
 			this.userSearchBean = userQCSearchBean;
 		}
 

@@ -253,6 +253,22 @@ public class CommitteBackingBean extends
 					new SearchFilterBean("pmUserOrgs.recordStatusFlg", 
 							SearchOperator.OPERATOR_EQUALS.value(),
 							DbValueConst.RECORD_STATUS_ACTIVE)					
+					);	
+			
+			List<String> orgTypes = new ArrayList<String>();
+			orgTypes.add(ParameterConst.ORG_TYPE_PTJ);
+			orgTypes.add(ParameterConst.ORG_TYPE_OTHERS);
+			orgTypes.add(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
+			orgTypes.add(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
+			orgTypes.add(ParameterConst.ORG_TYPE_STATUTORY_BODY);
+			orgTypes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
+			orgTypes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
+			orgTypes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
+			
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+						 "pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+					  	 SearchOperator.OPERATOR_IN.value(), orgTypes)
 					);				
 			
 			/* Commented as part of CR change to fetch irrespective of Ministry.
