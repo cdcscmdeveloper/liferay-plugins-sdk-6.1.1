@@ -8,7 +8,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name = "schedulerManagerManagedBean")
+@ManagedBean(name = "qtTechSupportManagedBean")
 @SessionScoped
 public class QtTechSupportManagedBean extends BaseManagedBean {
 
