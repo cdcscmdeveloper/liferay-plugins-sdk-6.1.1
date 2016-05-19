@@ -9,7 +9,6 @@
 	<p:dataTable var="catBeanR" widgetVar="smCatCodesRenewApplDtWidVar"
 		value="#{backingBean.managedBean.activeCategoryList}"
 		rowKey="#{catBeanR}" rowIndexVar="index" id="catDtR"
-		rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}"
 		selection="#{backingBean.managedBean.deleteCategoryList}">
 		<ac:paginator for="catDtR" />
 		<p:columnGroup type="header">
