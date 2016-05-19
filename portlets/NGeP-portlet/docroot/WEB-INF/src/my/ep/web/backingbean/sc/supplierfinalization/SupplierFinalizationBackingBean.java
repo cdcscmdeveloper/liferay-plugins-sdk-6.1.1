@@ -2027,7 +2027,8 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
-			reqDTO.setRoleCode(getManagedBean().isInitialDecisionFwdToBPK() ? 
+			reqDTO.setRoleCode(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
+				       .equals(getManagedBean().getCurrentStatusId()) ? 
 										StringUtils.EMPTY : getCommitteeRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setCurrentFinalizationStatus(
@@ -8124,6 +8125,46 @@ public class SupplierFinalizationBackingBean extends
 							committeeType.equals(
 								ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 				committeeRoleCode = RoleCode.FPB_SECRETARY.value();
+			}
+		} 
+		else if (roleCodeChar.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+			if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+				committeeRoleCode = RoleCode.QCA_MEMBER.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				committeeRoleCode = RoleCode.QCB_MEMBER.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+				committeeRoleCode = RoleCode.PBA_MEMBER.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+				committeeRoleCode = RoleCode.PBB_MEMBER.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
+							committeeType.equals(
+								ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+				committeeRoleCode = RoleCode.FPB_MEMBER.value();
+			}
+		} 
+		else if (roleCodeChar.equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+			if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+				committeeRoleCode = RoleCode.QCA_CHAIRPERSON.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				committeeRoleCode = RoleCode.QCB_CHAIRPERSON.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+				committeeRoleCode = RoleCode.PBA_CHAIRPERSON.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+				committeeRoleCode = RoleCode.PBB_CHAIRPERSON.value();
+			} else if (committeeType.equals(
+						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
+							committeeType.equals(
+								ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+				committeeRoleCode = RoleCode.FPB_CHAIRPERSON.value();
 			}
 		} 
 		
