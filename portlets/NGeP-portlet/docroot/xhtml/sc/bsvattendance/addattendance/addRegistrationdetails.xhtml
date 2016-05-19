@@ -6,7 +6,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+    
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true" id="attRegPnl">
 		<ac:lovPopup />
 		<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
@@ -30,13 +30,31 @@
 		<table style="width: 100%">
 			<tr>
 				<td class="TableFieldLeft" width="90%"></td>
-				<td class="TableFieldLeft"><ac:lov id="supplier"
-						lovId="SM_SUPPLIER_MOFNO"
-						postUpdateListener="bsvAttendanceBackingBean.bsvRegistationListner(bsvAttendanceBackingBean.managedBean.mofAccounts)"
-						headerText="#{lbl['lbl.sc.supp.mof.no']}" buttonLabel="#{lbl['lbl.btn.add']}"
-						selectionMode="multiple"
-						saveObject="bsvAttendanceBackingBean.managedBean.mofAccounts"
-						update="@form" /> <p:commandButton id="regDelteBtn"
+				<td class="TableFieldLeft">
+				<c:if
+						test="#{scQt.qtType == ParameterTypeConst.quotationTenderTypeOpen and scQt.panel == 'No'}">
+						<ac:lov id="supplier" lovId="SM_SUPPLIER_MOFNO"
+							postUpdateListener="bsvAttendanceBackingBean.bsvRegistationListner(bsvAttendanceBackingBean.managedBean.mofAccounts)"
+							headerText="#{lbl['lbl.sc.supp.mof.no']}"
+							buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
+							saveObject="bsvAttendanceBackingBean.managedBean.mofAccounts"
+							update="@form" />
+					</c:if> <c:if test="#{scQt.panel ne 'No'}">
+						<ac:lov id="panelSupplier" lovId="PANEL_SUPPLIER_MOFNO"
+							postUpdateListener="bsvAttendanceBackingBean.bsvPanelSupplierRegistationListner(bsvAttendanceBackingBean.managedBean.ctZoneSupplierList)"
+							headerText="#{lbl['lbl.sc.supp.mof.no']}"
+							buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
+							saveObject="bsvAttendanceBackingBean.managedBean.ctZoneSupplierList"
+							update="@form" conditionField="#{bsvAttendanceBackingBean.constuctConditionFields()}" />
+					</c:if> <c:if
+						test="#{scQt.qtType == ParameterTypeConst.quotationTenderTypeRestrictedTender}">
+						<ac:lov id="restrSupplier" lovId="RESTR_SUPPLIER_MOFNO"
+							postUpdateListener="bsvAttendanceBackingBean.bsvRestrictedSuppRegistationListner(bsvAttendanceBackingBean.managedBean.restrictedSupplierList)"
+							headerText="#{lbl['lbl.sc.supp.mof.no']}"
+							buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
+							saveObject="bsvAttendanceBackingBean.managedBean.restrictedSupplierList"
+							update="@form" conditionField="#{bsvAttendanceBackingBean.constuctConditionFields()}"/>
+					</c:if> <p:commandButton id="regDelteBtn"
 						value="#{lbl['lbl.btn.delete']}"
 						disabled="#{bsvAttendanceBackingBean.managedBean.maintanceFlow and !bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew}"
 						process="@this,complisttbl" partialSubmit="true"
