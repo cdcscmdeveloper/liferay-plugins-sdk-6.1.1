@@ -93,6 +93,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScActor;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
@@ -2158,6 +2159,10 @@ public class LOADetailBackingBean extends
 
 					scLoa.setSupplierBranch(supplierBranchAsHQ);
 					scLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
+					
+					ScAddress supplierAddress = createScAddress(smCompanyAddress.getSmAddress(), 
+																supplierHQPersonnel, smCompanyBasic);
+					scLoa.setScSupplierAddress(supplierAddress);
 					scLoa.setSupplierContact(supplierHQPersonnel.getName());
 					scLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
 					scLoa.setSupplierFaxNo(smCompanyBasic.getFaxFull());
@@ -2183,14 +2188,23 @@ public class LOADetailBackingBean extends
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
 					scLoa.setSupplierAddress(supplierBranch.getSmAddress());
 					
+					SmCompanyBasic smCompanyBasic = null;
+					SmPersonnel smPersonnel = supplierBranch.getSmPersonnel();
+					if (smPersonnel != null) {
+						scLoa.setSupplierContact(smPersonnel.getName());
+						scLoa.setSupplierMobNo(smPersonnel.getMobileFull());
+						scLoa.setSupplierEmail(smPersonnel.getEmail());
+						
+						if (smPersonnel.getSmAppl() != null) {
+							smCompanyBasic = smPersonnel.getSmAppl()
+												.getSmCompanyBasic();
+						}
+					}					
+					ScAddress supplierAddress = createScAddress(supplierBranch.getSmAddress(), 
+																smPersonnel, smCompanyBasic);
+					scLoa.setScSupplierAddress(supplierAddress);					
 					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneFull());
 					scLoa.setSupplierFaxNo(supplierBranch.getFaxFull());
-					SmPersonnel personnel = supplierBranch.getSmPersonnel();
-					if(personnel != null){
-						scLoa.setSupplierContact(personnel.getName());
-						scLoa.setSupplierMobNo(personnel.getMobileFull());
-						scLoa.setSupplierEmail(personnel.getEmail());
-					}
 					
 					// Get Gst info based on branch
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
@@ -2224,7 +2238,9 @@ public class LOADetailBackingBean extends
 							.getFinOrgName());
 					scLoa.setBankBranch(supplierBank.getBankBranch());
 					scLoa.setBankAddress(supplierBank.getSmAddress());
-
+					scLoa.setScBankAddress(createScAddress(
+								supplierBank.getSmAddress(), null, null));					
+					
 					break;
 				}
 			}

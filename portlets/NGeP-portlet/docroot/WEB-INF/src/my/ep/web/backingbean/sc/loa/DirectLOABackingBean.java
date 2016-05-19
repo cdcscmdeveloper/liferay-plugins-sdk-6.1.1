@@ -88,6 +88,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
@@ -1009,6 +1010,10 @@ public class DirectLOABackingBean extends
 
 					scLoa.setSupplierBranch("HQ");
 					scLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
+					
+					ScAddress supplierAddress = createScAddress(smCompanyAddress.getSmAddress(), 
+																supplierHQPersonnel, smCompanyBasic);
+					scLoa.setScSupplierAddress(supplierAddress);					
 					scLoa.setSupplierContact(supplierHQPersonnel.getName());
 					scLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
 					scLoa.setSupplierFaxNo(smCompanyBasic.getFaxFull());
@@ -1031,14 +1036,25 @@ public class DirectLOABackingBean extends
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
 					scLoa.setSupplierAddress(supplierBranch.getSmAddress());
-					scLoa.setSupplierContact(supplierBranch.getSmPersonnel()
-							.getName());
+					
+					SmCompanyBasic smCompanyBasic = null;
+					SmPersonnel smPersonnel = supplierBranch.getSmPersonnel();
+					if (smPersonnel != null) {
+						scLoa.setSupplierContact(smPersonnel.getName());
+						scLoa.setSupplierMobNo(smPersonnel.getMobileFull());
+						scLoa.setSupplierEmail(smPersonnel.getEmail());
+						
+						if (smPersonnel.getSmAppl() != null) {
+							smCompanyBasic = smPersonnel.getSmAppl()
+												.getSmCompanyBasic();
+						}
+					}
+					ScAddress supplierAddress = createScAddress(supplierBranch.getSmAddress(), 
+													supplierBranch.getSmPersonnel(), smCompanyBasic);
+					scLoa.setScSupplierAddress(supplierAddress);					
 					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneFull());
 					scLoa.setSupplierFaxNo(supplierBranch.getFaxFull());
-					scLoa.setSupplierMobNo(supplierBranch.getSmPersonnel()
-							.getMobileFull());
-					scLoa.setSupplierEmail(supplierBranch.getSmPersonnel()
-							.getEmail());
+					
 					// Get gst info
 					SupplierGstResDTO resDTO = getGSTInfo(supplierId,
 							supplierBranch.getSupplierBranchId());
@@ -1071,6 +1087,10 @@ public class DirectLOABackingBean extends
 							.getFinOrgName());
 					scLoa.setBankBranch(supplierBank.getBankBranch());
 					scLoa.setBankAddress(supplierBank.getSmAddress());
+					scLoa.setScBankAddress(createScAddress(
+								supplierBank.getSmAddress(), null, null));
+					
+					scLoa.getScLoiLoa().getSmSupplier();
 
 					break;
 				}
