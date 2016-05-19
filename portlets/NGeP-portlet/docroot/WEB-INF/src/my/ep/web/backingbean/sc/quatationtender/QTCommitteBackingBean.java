@@ -248,6 +248,7 @@ public class QTCommitteBackingBean extends
 			paramcodes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
 			paramcodes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
 			paramcodes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
+			paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
 			userSearchBean
 					.getDataFilterBeans()
 					.add(new SearchFilterBean(
