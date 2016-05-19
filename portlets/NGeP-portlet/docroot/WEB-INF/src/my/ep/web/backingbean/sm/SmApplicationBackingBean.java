@@ -994,8 +994,7 @@ public class SmApplicationBackingBean extends
 					.getEntityBySinglePropertyFromList(getManagedBean()
 							.getSmAppl().getSmSupplier().getSmAppl()
 							.getPmRegStatus().getPmStatus().getStatusId(),
-							getManagedBean().getRegStatusDescList(),
-							"pmStatus");
+							getManagedBean().getRegStatusDescList(), "pmStatus");
 			getManagedBean().getRegStatusDescList().remove(regStatusToExclude);
 		}
 
@@ -3750,6 +3749,23 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	public void deleteSelectedExistingCatCodes() {
+		if (EntityHelper.isCollectionEmpty(getManagedBean()
+				.getDeleteExistingCategoryList())) {
+			throw new EpException(MessageConst.ERROR_722534,
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.catCodes.catcode", null) });
+		} else {
+			getManagedBean().setDeleteCategoryList(
+					new ArrayList<SmSupplierCategory>());
+			for (SmSupplierCategory cat : getManagedBean()
+					.getDeleteExistingCategoryList()) {
+				getManagedBean().getDeleteCategoryList().add(cat);
+			}
+			deleteSelectedCategoryCodes();
+		}
+	}
+
 	/**
 	 * Delete selected category codes from the SmSupplierCategory list of the
 	 * application.
@@ -3758,8 +3774,8 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.checkCategoryPendingTransaction(getManagedBean()
 				.getDeleteCategoryList(), getManagedBean().getSmAppl()
 				.getSmSupplier().getSupplierId());
-		if (getManagedBean().getDeleteCategoryList() != null
-				&& getManagedBean().getDeleteCategoryList().size() > 0) {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getDeleteCategoryList())) {
 			List<SmSupplierCategory> categories = getManagedBean()
 					.getDeleteCategoryList();
 			deleteCatCodes(categories);
@@ -3767,7 +3783,8 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Category Code" });
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.catCodes.catcode", null) });
 		}
 	}
 
@@ -3784,7 +3801,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmSupplierCategories()
 						.remove(category);
 			} else if (category.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0
+					|| category.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL) {
 				category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
 			}
 		}

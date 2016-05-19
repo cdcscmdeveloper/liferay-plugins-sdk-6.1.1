@@ -134,6 +134,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> selectedCategories;
 	private List<SmSupplierCategory> deleteCategoryList;
 	private List<SmSupplierCategory> deleteNewApplCategoryList;
+	private List<SmSupplierCategory> deleteExistingCategoryList;
 	private List<SmSupplierCategory> activeCategoryList;
 	private List<SmSupplierCategory> approvedCategoryList;
 	private List<SmSupplierCategory> splCategoryList;
@@ -3459,5 +3460,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCurrRegStatus(String currRegStatus) {
 		this.currRegStatus = currRegStatus;
+	}
+
+	public List<SmSupplierCategory> getDeleteExistingCategoryList() {
+		return deleteExistingCategoryList;
+	}
+
+	public void setDeleteExistingCategoryList(
+			List<SmSupplierCategory> deleteExistingCategoryList) {
+		this.deleteExistingCategoryList = deleteExistingCategoryList;
 	}
 }
