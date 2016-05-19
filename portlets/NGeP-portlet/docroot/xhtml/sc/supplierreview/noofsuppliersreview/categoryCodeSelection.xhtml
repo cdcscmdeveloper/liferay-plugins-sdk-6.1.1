@@ -59,12 +59,12 @@
 				  <p:spacer width="12px"></p:spacer>
 				<h:panelGroup>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.add']}" style="width: 5%"
+					<p:commandButton value="#{lbl['lbl.btn.add']}" 
 						process="@this, openPnlId" partialSubmit="true"
 						update="@([id$=catCodePopup])" oncomplete="catCodePopup.show();"
 						action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
 						&#160;
-					<p:commandButton value="#{lbl['lbl.btn.delete']}" style="width: 5%"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" 
 						process="@this, openPnlId" partialSubmit="true"
 						oncomplete="supplierOpencategoryDeletePopUp.show();"
 						update="@([id$=#{supplierOpencategoryDeleteId}])" />
@@ -91,11 +91,11 @@
     <p:spacer width="12px"></p:spacer>
     <h:panelGroup>
 	<div class="ppRightBtn" style="width: 100%">
-		<p:commandButton value="#{lbl['lbl.btn.search']}" style="width: 5%"
+		<p:commandButton value="#{lbl['lbl.btn.search']}" 
 			action="#{suppliersReviewBackingBean.searchSuppliersReviewDetails}"
 			update="suppliersReviewPanel,noOfsuppliersReviewPanel" />
 		&#160;
-		<p:commandButton value="#{lbl['lbl.btn.reset']}" style="width: 5%"
+		<p:commandButton value="#{lbl['lbl.btn.reset']}" 
 			action="#{suppliersReviewBackingBean.resetSuppliersReviewSearchBean}"
 			process="@this" partialSubmit="true"
 			update=":form:suppliersReviewPanel,:form:noOfsuppliersReviewPanel" />	
