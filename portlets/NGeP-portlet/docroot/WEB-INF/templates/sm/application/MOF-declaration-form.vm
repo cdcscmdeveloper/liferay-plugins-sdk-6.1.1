@@ -75,6 +75,7 @@ body {margin-top: 0px;margin-left: 0px;}
 .td6{padding: 0px;margin: 0px;width: 139px;vertical-align: bottom;}
 .td7{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 2px;vertical-align: bottom;}
 .td8{border-bottom: #000000 1px solid;padding: 0px;margin: 0px;width: 350px;vertical-align: bottom;}
+.td9{padding: 0px;margin: 0px;width: 70px;vertical-align: bottom;text-align: left !important;}
 
 .tr0{height: 18px;}
 .tr1{height: 19px;}
@@ -95,7 +96,7 @@ body {margin-top: 0px;margin-left: 0px;}
 .tr16{height: 13px;}
 .tr17{height: 32px;}
 
-.t0{width: 169px;margin-left: 71px;margin-top: 10px;font: 11px 'Arial';}
+.t0{width: 266px;margin-left: 71px;margin-top: 10px;font: 11px 'Arial';}
 .t1{width: 661px;margin-left: 61px;margin-top: 54px;font: 11px 'Arial';}
 
 </style>
@@ -116,10 +117,14 @@ body {margin-top: 0px;margin-left: 0px;}
 <tr>
 	<td class="tr0 td0"><p class="p3 ft0">Application Reference No</p></td>
 	<td class="tr0 td1"><p class="p4 ft0">:</p></td>
+	<td class="tr1 td1"><p class="p4 ft0">&#160;</p></td>
+	<td class="tr0 td9"><p class="p3 ft0">&#160;&#160;$applNo</p></td>
 </tr>
 <tr>
 	<td class="tr1 td0"><p class="p5 ft0">Application Type</p></td>
 	<td class="tr1 td1"><p class="p4 ft0">:</p></td>
+	<td class="tr1 td1"><p class="p4 ft0">&#160;</p></td>
+	<td class="tr1 td9"><p class="p3 ft0">&#160;&#160;$applType</p></td>
 </tr>
 </table>
 <p class="p6 ft2">Declaration For Application To Register With The Ministry Of Finance Malaysia</p>
@@ -209,7 +214,7 @@ body {margin-top: 0px;margin-left: 0px;}
 	<td class="tr16 td2"><p class="p3 ft17">Firm</p></td>
 	<td class="tr16 td3"><p class="p17 ft17">:</p></td>
 	<td class="tr16 td4"><p class="p3 ft18">&#160;</p></td>
-	<td class="tr16 td5"><p class="p3 ft18">&#160;</p></td>
+	<td class="tr16 td5"><p class="p3 ft18">&#160;</p>$companyName</td>
 	<td class="tr16 td4"><p class="p3 ft18">&#160;</p></td>
 	<td class="tr16 td6"><p class="p3 ft18">&#160;</p></td>
 </tr>
