@@ -11,9 +11,6 @@
 		<h:panelGroup
 			rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
 			<script>
-				var emptyText = document.createTextNode("");
-				$('#breadcrumbs').find('.last').append(emptyText);
-				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.renew.mof.account']}";
 				
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
@@ -24,10 +21,7 @@
 		<h:panelGroup
 			rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
 			<script>
-				var emptyText = document.createTextNode("");
-				$('#breadcrumbs').find('.last').append(emptyText);
-				emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.appli.new.categories']}";
-			
+				
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
 						"#{lbl['lbl.sm.appli.new.categories']}");

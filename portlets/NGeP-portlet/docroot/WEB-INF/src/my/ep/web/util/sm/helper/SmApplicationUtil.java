@@ -2720,19 +2720,71 @@ public class SmApplicationUtil {
 	 */
 	public static void assignActiveAndApprovedCategoryList(
 			SmApplicationManagedBean managedBean) {
-		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
-		List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
+
+		if (managedBean.getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			assignExistingAndAdditionalCategoryList(managedBean);
+		} else {
+			List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
+			List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
+			for (SmSupplierCategory cat : managedBean.getSmAppl()
+					.getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						|| cat.getRecordStatusFlg()
+								.compareTo(
+										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+					catList.add(cat);
+				} else if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+					apprvList.add(cat);
+
+				}
+			}
+			if (managedBean.getActiveCategoryList() != null
+					&& !managedBean.getActiveCategoryList().isEmpty()) {
+				managedBean.getActiveCategoryList().clear();
+			}
+			if (managedBean.getApprovedCategoryList() != null
+					&& !managedBean.getApprovedCategoryList().isEmpty()) {
+				managedBean.getApprovedCategoryList().clear();
+			}
+			sortSupplierCategory(apprvList);
+			managedBean.setActiveCategoryList(catList);
+			managedBean.setApprovedCategoryList(apprvList);
+		}
+	}
+
+	private static void assignExistingAndAdditionalCategoryList(
+			SmApplicationManagedBean managedBean) {
+		List<SmSupplierCategory> addtnlList = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> existingList = new ArrayList<SmSupplierCategory>();
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.PENDING_ACT_STATUS) == 0
 					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-				catList.add(cat);
-			} else if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				apprvList.add(cat);
+							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0
+					&& cat.getPmCategoryL3() != null) {
 
+				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
+						.getEntityBySinglePropertyFromList(cat
+								.getPmCategoryL3().getCategoryL3Id(),
+								managedBean.getSmAppl().getSmSupplier()
+										.getSmAppl().getSmSupplierCategories(),
+								"pmCategoryL3");
+				if (tmp != null
+						&& (tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+								|| tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL || tmp
+								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+					existingList.add(cat);
+				} else if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0
+						|| cat.getRecordStatusFlg()
+								.compareTo(
+										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+					addtnlList.add(cat);
+				}
 			}
 		}
 		if (managedBean.getActiveCategoryList() != null
@@ -2743,9 +2795,9 @@ public class SmApplicationUtil {
 				&& !managedBean.getApprovedCategoryList().isEmpty()) {
 			managedBean.getApprovedCategoryList().clear();
 		}
-		sortSupplierCategory(apprvList);
-		managedBean.setActiveCategoryList(catList);
-		managedBean.setApprovedCategoryList(apprvList);
+		sortSupplierCategory(existingList);
+		managedBean.setActiveCategoryList(addtnlList);
+		managedBean.setApprovedCategoryList(existingList);
 	}
 
 	/**

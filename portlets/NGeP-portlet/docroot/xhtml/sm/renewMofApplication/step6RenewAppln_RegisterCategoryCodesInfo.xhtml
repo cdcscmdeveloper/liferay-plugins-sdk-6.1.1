@@ -21,8 +21,13 @@
 							action="#{backingBean.saveApplicationAsDraft(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
 					</div>
-				</p:outputPanel> <ui:include
-					src="/xhtml/sm/shared/mofRegistration/regCatCodesForm.xhtml" />
+				</p:outputPanel> 
+					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'R'}">
+						<ui:include src="/xhtml/sm/shared/mofRegistration/regCatCodesForm.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'R'}">
+						<ui:include src="/xhtml/sm/shared/mofRegistration/regCatcodesExistingRenewalInfoForm.xhtml" />
+					</c:if>
 				<div class="nav-wrapper">
 					<c:choose>
 						<c:when

@@ -148,14 +148,7 @@
 			<br />
 			<h:inputHidden
 				value="#{backingBean.managedBean.smAppl.supportingDocMode}" />
-			<c:choose>
-				<c:when test="#{backingBean.managedBean.smAppl.applType ne 'R'}">
-					<ui:include src="regCatCodesApprovedAndPendingCodesTable.xhtml" />
-				</c:when>
-				<c:otherwise>
-					<ui:include src="regCatCodesFoRenewalApplicationTable.xhtml" />
-				</c:otherwise>
-			</c:choose>
+			<ui:include src="regCatCodesApprovedAndPendingCodesTable.xhtml" />
 		</p:panel>
 		
 		<br />
