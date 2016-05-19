@@ -31,7 +31,7 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
-					</p:inputText> To <p:inputText maxlength="17" style="text-align:left;" id="toId"
+					</p:inputText> #{lbl['lbl.sc.sr.paid.up.capital.to']} <p:inputText maxlength="17" style="text-align:left;" id="toId"
 						label="#{lbl['lbl.sc.sr.paid.up.capital']}"
 						validatorMessage="#{lbl['lbl.sc.paid.up.capital.validator.msg']}"
 						converterMessage="#{lbl['lbl.sc.paid.up.capital.num.msg']}"
