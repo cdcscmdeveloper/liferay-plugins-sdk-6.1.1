@@ -222,6 +222,7 @@ th{
 			            	#end
 						</span> <br/>
 						#if($zoneList.briefingList && $zoneList.briefingList.size() > 0)
+						<span class="headerfont">Perincian Taklimat</span>
 							<table width='100%' class="table2">
 								<span class="headerfont">
 								<tr>
@@ -247,6 +248,7 @@ th{
 							<br />
 						#end
 						#if($zoneList.sitevisitList && $zoneList.sitevisitList.size() > 0)
+						<span class="headerfont">Perincian Lawatan Tapak</span>
 							<table width='100%' class="table2">
 								<span class="headerfont">
 			            		<tr>
