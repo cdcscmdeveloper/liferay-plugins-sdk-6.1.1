@@ -25,7 +25,7 @@ public class MasterDataDeliveryAddressJob implements Job {
 		IPHISServiceSO  phisServiceSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.INTEGRATION,
 						IPHISServiceSO.class);
-//		phisServiceSO.deliveryAddress();
+		phisServiceSO.deliveryAddress();
 		log.info("MasterDataDeliveryAddressJob end");
 
 	}
