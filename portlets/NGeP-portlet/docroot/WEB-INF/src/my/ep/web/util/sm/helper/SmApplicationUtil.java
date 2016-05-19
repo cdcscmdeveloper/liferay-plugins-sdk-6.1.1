@@ -7781,6 +7781,33 @@ public class SmApplicationUtil {
 		}
 	}
 
+	public static void generateDeclarationFormPdf(SmAppl smAppl) {
+		try {
+			String tmpPath = null;
+			String tmpFolder = SmCommonUtil
+					.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH);
+			tmpPath = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+			tmpPath = tmpPath + File.separator + tmpFolder;
+			File dir = new File(tmpPath);
+			if (!dir.exists())
+				dir.mkdirs();
+			String fileName = smAppl.getApplNo()
+					+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX;
+			String fileNameAndPath = tmpPath + fileName;
+			String vm = "/sm/application/MOF-declaration-form.vm";
+			VelocityContext context = new VelocityContext();
+			FacesScopes fs = new FacesScopes();
+			context.put("hostUrl", fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort());
+			context.put("applNo", smAppl.getApplNo());
+			context.put("applType", smAppl.getApplType());
+			context.put("companyName", smAppl.getSmSupplier().getCompanyName());
+			SmCommonUtil.generateToPdf(vm, context, fileNameAndPath);
+		} catch (Exception e) {
+			throw new EpException(e.getMessage());
+		}
+	}
+	
 	public static SmAppl deleteApplChildEntities(SmAppl appl) {
 		appl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 		appl.setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
