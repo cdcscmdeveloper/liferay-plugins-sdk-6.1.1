@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -9800,6 +9801,19 @@ public class SmApplicationBackingBean extends
 		finalFilePath = null;
 	}
 
+	/**
+	 * download the generated MOF declaratiion form.
+	 * @throws Exception
+	 */
+	public void printDeclarationForm() throws Exception {
+		SmApplicationUtil.generateDeclarationFormPdf(getManagedBean().getSmAppl());
+		
+		String fileName = SmCommonUtil
+				.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH) + File.separator + getManagedBean().getSmAppl().getApplNo()
+				+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX;
+		commonDownload(fileName,  getManagedBean().getSmAppl().getApplNo() + SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX); 
+	}
+	
 	/**
 	 * Print Supplier Profile
 	 * 
