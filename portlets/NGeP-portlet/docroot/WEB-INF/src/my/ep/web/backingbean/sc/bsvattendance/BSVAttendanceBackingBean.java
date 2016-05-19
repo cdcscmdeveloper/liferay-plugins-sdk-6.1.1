@@ -14,24 +14,33 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -1127,5 +1136,131 @@ public class BSVAttendanceBackingBean extends
 		int i=listAttendance.indexOf(bsvAttendance);
 		bsvAttendance.setAttended(attendance);
 		listAttendance.set(i, bsvAttendance);
+	}
+	
+	
+	
+	/**
+	 * Return queryString to fetch Panel Or Restricted Supplier's MoF number
+	 * 
+	 * @return queryString
+	 */
+	public String constuctConditionFields() {
+		
+		ScQt scqt = this.getManagedBean().getScQt();
+		String queryString = null;
+		if(scqt.isPanel()){
+			ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
+			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+			specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			TemplateSpecResDTO templateSpecResDTO = templateSpecSO.retrievePanelItemsByQtId(specReqDTO);
+			List<CtPanelItem> panelItems = templateSpecResDTO.getCtPanelItems();
+			if (CollectionUtils.isNotEmpty(panelItems)) {
+				queryString = "ctPanelItem.panelItemId^"+panelItems.get(0).getPanelItemId();
+				if (scqt.isZonal()) {
+					TplSpecZoneDtl tplspecZoneDtl = this.getManagedBean()
+							.getScQtBriefing().getScQtBsv().getTplSpecZoneDtl();
+					if (tplspecZoneDtl != null) {
+						List<CtPanelZone> panelZones = panelItems.get(0).getCtPanelZones();
+						if (panelZones != null && !panelZones.isEmpty()) {
+							for (CtPanelZone panelZone : panelZones) {
+								if (tplspecZoneDtl.getZoneName().equals(panelZone.getName())) {
+									queryString = queryString
+											+ "|ctPanelZone.panelZoneId^"+ panelZone.getPanelZoneId();
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		} else if (ParameterTypeConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER
+				.equalsIgnoreCase(scqt.getQtType())) {
+			queryString = "scQt.qtId^" + scqt.getQtId();
+		}
+		return queryString;
+	}
+	
+	/**
+	 * Register the Panel Supplier for BSV
+	 * 
+	 * @param panelSuppliers
+	 */
+	public void bsvPanelSupplierRegistationListner(List<CtPanelSupplier> panelSuppliers) {
+
+		log.debug("bsvPanelSupplierRegistationListner");
+		if (getManagedBean().getBriefingRegistrationList() == null
+				|| getManagedBean().getBriefingRegistrationList().isEmpty()) {
+			getManagedBean().setBriefingRegistrationList(
+					new ArrayList<ScQtBsvRegistration>());
+		}
+		List<SmMofAccount> mofAccounts = null;
+		if (panelSuppliers != null) {
+			mofAccounts = new ArrayList<SmMofAccount>();
+			for (CtPanelSupplier panelSupplier : panelSuppliers) {
+				mofAccounts.add(panelSupplier.getSupplier().getSmMofAccounts()
+						.get(0));
+			}
+		}
+		if (mofAccounts != null&& !mofAccounts.isEmpty()) {
+			registerMofAccount(mofAccounts);
+		}
+	}
+	
+	/**
+	 * Register Restricted Tender suppliers for BSV
+	 * 
+	 * @param restrictedSuppliers
+	 */
+	public void bsvRestrictedSuppRegistationListner(List<ScQtSupplier> restrictedSuppliers) {
+
+		log.debug("bsvRestrictedSuppRegistationListner");
+		if (getManagedBean().getBriefingRegistrationList() == null
+				|| getManagedBean().getBriefingRegistrationList().isEmpty()) {
+			getManagedBean().setBriefingRegistrationList(
+					new ArrayList<ScQtBsvRegistration>());
+		}
+		List<SmMofAccount> mofAccounts = null;
+		if (restrictedSuppliers != null) {
+			mofAccounts = new ArrayList<SmMofAccount>();
+			for (ScQtSupplier restrictedSupplier : restrictedSuppliers) {
+				mofAccounts.add(restrictedSupplier.getSmSupplier().getSmMofAccounts()
+						.get(0));
+			}
+		}
+		
+		if (mofAccounts != null && !mofAccounts.isEmpty()) {
+			registerMofAccount(mofAccounts);
+		}
+	}
+	
+	private void registerMofAccount(List<SmMofAccount> mofAccounts){
+		
+		for (int i = 0; i < mofAccounts.size(); i++) {
+			SmMofAccount mofAccount = mofAccounts.get(i);
+			ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
+			bsvRegistration.setSupplier(mofAccount.getSmSupplier());
+			bsvRegistration.setBsvDtl(this.getManagedBean()
+					.getScQtBriefing());
+			if (getManagedBean().getBriefingRegistrationList().contains(
+					bsvRegistration)) {
+				throw new EpException(MessageConst.ERROR_760186);
+			}
+			getManagedBean().getBriefingRegistrationList().add(
+					bsvRegistration);
+			if (i == mofAccounts.size() - 1) {
+				this.getManagedBean().setSelectedbriefRegistration(
+						bsvRegistration);
+				getAttandanceDtlsBySelectedRegistartion(bsvRegistration);
+			}
+			setSlectedHeaderName(bsvRegistration.getSupplier()
+					.getCompanyName().concat("  ").concat(">"));
+		}
+
+	}
+	public String mofAccountNumber(SmSupplier supplier){
+		return retriveMofAccountBySupplier(supplier).getMofNo();
 	}
 }
