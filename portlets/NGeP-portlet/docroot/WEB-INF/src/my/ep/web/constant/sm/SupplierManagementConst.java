@@ -561,6 +561,7 @@ public class SupplierManagementConst {
 	public static final String GST_FILE_PATH = "/SM/GST/";
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 	public static final String OFFLINE_DOC_CHECKLIST_PATH = "/SM/OFFLINE_DOC/CHECKLIST/";
+	public static final String SUPPORTING_DOC_TEMP_PATH = "/SM/SUPPORTING_TEMP_DOWNLOAD/";
 
 	// SME STATUS
 	public static final String SME_STATUS_SERVICES = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_SERVICES;
@@ -579,6 +580,7 @@ public class SupplierManagementConst {
 	public static final String SITE_VISIT_ASSIGNMENT_TYPE_AFTER = "A";
 	
 	public static final String OFFLINE_SUPP_DOC_CHECKLIST_PREFIX = "_SUPP_DOC_CHECKLIST.pdf";
+	public static final String DECLARE_SUPP_DOC_PREFIX = "_DECLARATION.pdf";
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
