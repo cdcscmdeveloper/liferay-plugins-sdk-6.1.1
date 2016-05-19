@@ -1860,5 +1860,51 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="PANEL_SUPPLIER_MOFNO" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="panelSupplierId" />
+		<property name="daoClass" value="my.ep.persistence.dao.ct.circular.panel.CtPanelSupplierDAO" />
+	 	<property name="searchMethod" value="getSupplierByItemId" /> 
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="bsvAttendanceBackingBean.mofAccountNumber(entity.supplier)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.mof.no" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="supplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="RESTR_SUPPLIER_MOFNO" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="qtSupplierId" />
+		<property name="daoClass" value="my.ep.persistence.dao.sc.quationtender.QtSupplierDAO" />
+		<property name="searchMethod" value="retrieveQtsuppliersByQtId" /> 
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="methodName"
+						value="bsvAttendanceBackingBean.mofAccountNumber(entity.smSupplier)" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sc.mof.no" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.companyname" />
+				</bean>
+			</list>
+		</property>
+	</bean>
 
 </beans>
