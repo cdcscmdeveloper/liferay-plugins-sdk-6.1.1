@@ -16,10 +16,10 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<c:if test="#{!isDocTypeQuotation}">
 		<tr>
-			<td>
+			<td style="width:21%;">
 				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
 			</td>
-			<td width="35%">
+			<td>
 				<p:inputText size="35"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.epNo}"
 					disabled="true" />
@@ -27,10 +27,10 @@
 		</tr>
 		</c:if>
 		<tr>
-			<td>
+			<td style="width:21%;">
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 			</td>
-		   <td width="35%">
+		   <td>
 				<p:inputText size="35"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
@@ -120,7 +120,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" valign="top" width="21%">
+			<td rowspan="3" valign="top">
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 			</td>
 			<td rowspan="3">
@@ -181,31 +181,43 @@
 	
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.details.section']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<c:if test="#{!isDocTypeQuotation}">
-		<tr>
-			<td width="21%">
-				<p:outputLabel value="#{lbl['lbl.sc.title']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-			</td>
-			<td colspan="3">
-				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="106"
-					required="true"
-					label="#{lbl['lbl.sc.title']}"
-					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
-					maxlength="100" />
-				<p:message id="titleMsg" for="title" display="icon" />
-			</td>
-		</tr>
-		</c:if>
-		
-		<tr>
-			<td width="21%">
-				<p:outputLabel value="#{lbl['lbl.sc.procurment.type.category']}" rendered="#{!isDocTypeQuotation}"/>
-			</td>
+			<tr>
+				<td style="width:21%;"><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
+
+				<td colspan="3"><p:inputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}"
+						size="35" disabled="true" rendered="#{isDocTypeQuotation}" /> <p:inputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
+						size="35" disabled="true" rendered="#{!isDocTypeQuotation}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" />
+					<p:outputLabel value="*" styleClass="mandatory"
+						rendered="#{isEditableStatus}" /></td>
+				<td colspan="3"><p:inputText id="sqTitle"
+						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}"
+						rendered="#{!isDocTypeQuotation}" size="106" required="true"
+						label="#{lbl['lbl.sc.title']}"
+						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
+						maxlength="100" /> <p:message id="sqTitleMsg" for="sqTitle"
+						display="icon" /> <p:inputText id="qtTitle"
+						value="#{lOADetailBackingBean.managedBean.scLoa.scQt.qtTitle}"
+						rendered="#{isDocTypeQuotation}" size="106" required="true"
+						label="#{lbl['lbl.sc.title']}"
+						disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}"
+						maxlength="100" /> <p:message id="qtTitleMsg" for="qtTitle"
+						display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td width="21%"><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}"
+						rendered="#{!isDocTypeQuotation}" /></td>
 				<td colspan="3"><p:inputText id="procurmentTypeCatId"
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId)}"
 						size="35" label="#{lbl['lbl.sc.procurment.type.category']}"
-						disabled="true" rendered="#{!isDocTypeQuotation}"/></td>
+						disabled="true" rendered="#{!isDocTypeQuotation}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -328,7 +340,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="27%">
+			<td>
 				<table>
 					<tr>
 						<td>
