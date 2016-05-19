@@ -6,11 +6,13 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -53,7 +55,10 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private boolean maintanceFlow;
 	
 	private List<ScQtBsvRegistration> toBeDeletedRegistartions;
-
+	private List<CtPanelSupplier> ctZoneSupplierList;
+	private List<SmMofAccount> mofAccountsList;
+	private List<ScQtSupplier> restrictedSupplierList;
+	
 	/**
 	 * @return the briefingRegistrationList
 	 */
@@ -289,6 +294,48 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 
 	public void setMaintanceFlow(boolean maintanceFlow) {
 		this.maintanceFlow = maintanceFlow;
+	}
+
+	/**
+	 * @return the ctZoneSupplierList
+	 */
+	public List<CtPanelSupplier> getCtZoneSupplierList() {
+		return ctZoneSupplierList;
+	}
+
+	/**
+	 * @param ctZoneSupplierList the ctZoneSupplierList to set
+	 */
+	public void setCtZoneSupplierList(List<CtPanelSupplier> ctZoneSupplierList) {
+		this.ctZoneSupplierList = ctZoneSupplierList;
+	}
+
+	/**
+	 * @return the mofAccountsList
+	 */
+	public List<SmMofAccount> getMofAccountsList() {
+		return mofAccountsList;
+	}
+
+	/**
+	 * @param mofAccountsList the mofAccountsList to set
+	 */
+	public void setMofAccountsList(List<SmMofAccount> mofAccountsList) {
+		this.mofAccountsList = mofAccountsList;
+	}
+
+	/**
+	 * @return the restrictedSupplierList
+	 */
+	public List<ScQtSupplier> getRestrictedSupplierList() {
+		return restrictedSupplierList;
+	}
+
+	/**
+	 * @param restrictedSupplierList the restrictedSupplierList to set
+	 */
+	public void setRestrictedSupplierList(List<ScQtSupplier> restrictedSupplierList) {
+		this.restrictedSupplierList = restrictedSupplierList;
 	}
 	
 }
