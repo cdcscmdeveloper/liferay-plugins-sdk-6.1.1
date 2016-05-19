@@ -40,7 +40,7 @@
 				</p:column>
 				</p:row>
 				</h:panelGrid>
-				
+				<ui:param name="scQt" value="#{bsvAttendanceBackingBean.managedBean.scQt}"></ui:param>
 				<div align="left" class="header-info header-spacing">
 					<table style="width: 100%">
 						<tr>
@@ -57,10 +57,10 @@
 						<tr>
 							<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.sc.bsv.qtn.no']}:" /></td>
 							<td style="width: 40%" class="header-info-text">
-							<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}"/></td>
+							<h:outputText value="#{scQt.qtNo}"/></td>
 							<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.sc.title']}:" /></td>
 							<td style="width: 40%" class="header-info-text">
-							<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQt.qtTitle}"/></td>
+							<h:outputText value="#{scQt.qtTitle}"/></td>
 						</tr>
 					</table>
 				</div>
