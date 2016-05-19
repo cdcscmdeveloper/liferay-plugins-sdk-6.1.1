@@ -162,7 +162,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private BigDecimal paidPercentage = new BigDecimal(0);	
 	private BigDecimal paidAdvancePercentage = new BigDecimal(0);
 	private BigDecimal balanceToPaid = new BigDecimal(0);
-	private PmOrgProfile[] selectedPmOrgProfile;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
@@ -1644,19 +1643,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
-	/**
-	 * @return the selectedPmOrgProfile
-	 */
-	public PmOrgProfile[] getSelectedPmOrgProfile() {
-		return selectedPmOrgProfile;
-	}
-
-	/**
-	 * @param selectedPmOrgProfile the selectedPmOrgProfile to set
-	 */
-	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
-		this.selectedPmOrgProfile = selectedPmOrgProfile;
-	 }
 		
 	/**
 	 * The method used to add a new agency record.
@@ -1665,10 +1651,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void addAgencyDetails() {
 		List<CtAgency> ctAgencyList = new ArrayList<CtAgency>();		
-		for (int i = 0; i < selectedPmOrgProfile.length; i++) {
+		Iterator<PmOrgProfile> pmOrgProfiles = getAgencyDataModel().getList().iterator();
+		while(pmOrgProfiles.hasNext()) {
+			PmOrgProfile pmOrgProfileItr = pmOrgProfiles.next();
+			if(pmOrgProfileItr.isSelectedCheckBox()){
 			//Remove if already exist, avoid duplicate
+			
 		  	for (CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
-		  		if (agency.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
+		  		if (agency.getOrgProfile().getOrgProfileId().equals(pmOrgProfileItr.getOrgProfileId())) {
 		  			throw new EpException(MessageConst.INFO_758000, new String[]{agency.getOrgProfile().getOrgName()}); 
 		  		}
 		  	}
@@ -1686,7 +1676,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgProfileId(selectedPmOrgProfile[i].getOrgProfileId());
+			reqDTO.setOrgProfileId(pmOrgProfileItr.getOrgProfileId());
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
 			ctAgency.setOrgProfile(resDTO.getPmOrgProfile());
 			 
@@ -1709,10 +1699,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 		}
-		if (selectedPmOrgProfile.length>0) {
+	}
+		if (ctAgencyList.size()>0) {
 			this.getManagedBean().getContractVer().getCtAgencies().addAll(ctAgencyList);
 		}
-		selectedPmOrgProfile = null;
 	}
 	
 	/**
@@ -2924,4 +2914,39 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
 			}
 		}*/
+		
+		
+public void selectAllMinstryAgency(AjaxBehaviorEvent e) {
+			
+			for (PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()) {
+				if (getManagedBean().isSelectAll()) {
+					pmOrgProfiles.setSelectedCheckBox(true);
+			       }else {
+			    	   pmOrgProfiles.setSelectedCheckBox(false);
+			       }
+		}
+		
+		 if((boolean) e.getComponent().getAttributes().get("value")){
+			 getManagedBean().setButtonHideActive(false);
+		 }else{
+			 getManagedBean().setButtonHideActive(true);
+		 }	
+	   }
+
+public void selectOneAgyCheckboxSelect(AjaxBehaviorEvent e){
+	
+	getManagedBean().setSelectAll(false);
+	for (PmOrgProfile pmOrgProfiles : getAgencyDataModel().getList()){
+		if(pmOrgProfiles.isSelectedCheckBox()){
+			getManagedBean().setButtonHideActive(false);
+			return;
+		}
+	}
+	
+	if((boolean) e.getComponent().getAttributes().get("value")){
+		getManagedBean().setButtonHideActive(false);
+	}else{
+		getManagedBean().setButtonHideActive(true);
+	}	
+}
 }
