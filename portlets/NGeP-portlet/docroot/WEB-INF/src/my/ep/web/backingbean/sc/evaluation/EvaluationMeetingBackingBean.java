@@ -1494,6 +1494,7 @@ public class EvaluationMeetingBackingBean extends
 					paramcodes.add(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
 					paramcodes.add(ParameterConst.ORG_TYPE_STATE_GOVT);
 					paramcodes.add(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
+					paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
 					searchBean
 							.getDataFilterBeans()
 							.add(new SearchFilterBean(
