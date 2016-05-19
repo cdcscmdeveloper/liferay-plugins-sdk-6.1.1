@@ -113,6 +113,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -125,6 +126,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
@@ -6530,19 +6532,10 @@ public class SpecificationBackingBean extends
 						}
 						for (PmAddressType addressType : deliveryList) {
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
-							// loc.setPmAddress(addressType.getPmAddress());
-							String address1 = addressType.getPmAddress()
-									.getAddress1();
-							String address2 = addressType.getPmAddress()
-									.getAddress2();
-							String address3 = addressType.getPmAddress()
-									.getAddress3();
-							String address4 = addressType.getPmAddress()
-									.getAddress4();
-							String address = address1 + "," + address2 + ","
-									+ address3 + "," + address4;
-							loc.setDeliveryAddress(address);
-							// loc.setPmOrgProfile(addressType.getPmOrgProfile());
+							ScAddress deliveryAddress = populateDeliveryAddress(addressType);
+							loc.setScDeliveryAddress(deliveryAddress);
+							loc.setDeliveryAddress(
+									getDeliveryAddressString(deliveryAddress));
 							loc.setPmAddressType(addressType);
 							loc.setTplSpecZoneDtl(this.getManagedBean()
 									.getTplSpecZoneDtl());
@@ -6584,19 +6577,10 @@ public class SpecificationBackingBean extends
 						}
 						for (PmAddressType addressType : deliveryList) {
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
-							// loc.setPmAddress(addressType.getPmAddress());
-							String address1 = addressType.getPmAddress()
-									.getAddress1();
-							String address2 = addressType.getPmAddress()
-									.getAddress2();
-							String address3 = addressType.getPmAddress()
-									.getAddress3();
-							String address4 = addressType.getPmAddress()
-									.getAddress4();
-							String address = address1 + "," + address2 + ","
-									+ address3 + "," + address4;
-							loc.setDeliveryAddress(address);
-							// loc.setPmOrgProfile(addressType.getPmOrgProfile());
+							ScAddress deliveryAddress = populateDeliveryAddress(addressType);
+							loc.setScDeliveryAddress(deliveryAddress);
+							loc.setDeliveryAddress(
+									getDeliveryAddressString(deliveryAddress));
 							loc.setPmAddressType(addressType);
 							loc.setTplSpecZoneDtl(this.getManagedBean()
 									.getTplSpecZoneDtl());
@@ -6629,18 +6613,13 @@ public class SpecificationBackingBean extends
 					nonZone = new ArrayList<ScQtDeliveryLoc>();
 				}
 				for (PmAddressType addressType : deliveryList) {
-
 					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
+					ScAddress deliveryAddress = populateDeliveryAddress(addressType);
+					loc.setScDeliveryAddress(deliveryAddress);
+					loc.setDeliveryAddress(
+							getDeliveryAddressString(deliveryAddress));
+					
 					loc.setPmAddressType(addressType);
-					String address1 = addressType.getPmAddress().getAddress1();
-					String address2 = addressType.getPmAddress().getAddress2();
-					String address3 = addressType.getPmAddress().getAddress3();
-					String address4 = addressType.getPmAddress().getAddress4();
-					String address = address1 + "," + address2 + "," + address3
-							+ "," + address4;
-					loc.setDeliveryAddress(address);
-					loc.setPmAddressType(addressType);
-					// loc.setPmOrgProfile(addressType.getPmOrgProfile());
 					loc.setTplSpecZoneDtl(null);
 					loc.setScQt(this.getManagedBean().getQt());
 
@@ -6655,6 +6634,52 @@ public class SpecificationBackingBean extends
 		}
 
 		RequestContext.getCurrentInstance().execute("deliveryAddress.hide();");
+	}
+	
+	private ScAddress populateDeliveryAddress(PmAddressType addressType) {
+		PmAddress pmAddress = addressType.getPmAddress();
+		ScAddress scAddress = new ScAddress();
+		scAddress.setAddress1(pmAddress.getAddress1());
+		scAddress.setAddress2(pmAddress.getAddress2());
+		scAddress.setAddress3(pmAddress.getAddress3());
+		scAddress.setAddress4(pmAddress.getAddress4());
+		scAddress.setPostcode(pmAddress.getPostcode());
+		scAddress.setPmCountry(pmAddress.getPmCountry());
+		scAddress.setPmState(pmAddress.getPmState());
+		scAddress.setPmDivision(pmAddress.getPmDivision());
+		scAddress.setPmDistrict(pmAddress.getPmDistrict());
+		scAddress.setPmCity(pmAddress.getPmCity());
+		scAddress.setMapLatitude(pmAddress.getMapLatitude());
+		scAddress.setMapLongitude(pmAddress.getMapLongitude());
+		
+		scAddress.setContactFaxArea(pmAddress.getFaxArea());
+		scAddress.setContactFaxCountry(pmAddress.getFaxCountry());
+		scAddress.setContactPhoneArea(pmAddress.getPhoneArea());
+		scAddress.setContactPhoneCountry(pmAddress.getPhoneCountry());
+		scAddress.setContactFaxNo(pmAddress.getFaxNo());
+		scAddress.setContactPhoneNo(pmAddress.getPhoneNo());
+		
+		return scAddress;
+	}
+	
+	private String getDeliveryAddressString(ScAddress scAddress) {
+		String COMMA = ",";
+		StringBuilder address = new StringBuilder(scAddress.getAddress1());
+		
+		if (StringUtils.isNotBlank(
+				scAddress.getAddress2())) {
+			address.append(COMMA).append(scAddress.getAddress2());
+		}
+		if (StringUtils.isNotBlank(
+				scAddress.getAddress3())) {
+			address.append(COMMA).append(scAddress.getAddress3());
+		}
+		if (StringUtils.isNotBlank(
+				scAddress.getAddress4())) {
+			address.append(COMMA).append(scAddress.getAddress4());
+		}
+		
+		return address.toString();
 	}
 
 	/**

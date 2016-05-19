@@ -2508,7 +2508,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return null;
 	}
 	
-	protected ScAddress populateSmAddressToScAddress(SmAddress smAddress, 
+	protected ScAddress createScAddress(SmAddress smAddress, 
 							SmPersonnel smPersonnel, SmCompanyBasic smCompanyBasic) {
 		ScAddress scAddress = null;
 		

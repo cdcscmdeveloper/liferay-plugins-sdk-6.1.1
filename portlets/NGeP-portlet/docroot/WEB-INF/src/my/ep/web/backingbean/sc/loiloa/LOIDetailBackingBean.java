@@ -73,6 +73,7 @@ import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -1813,11 +1814,14 @@ public class LOIDetailBackingBean extends
 						scLoi.setSupplierBranch(supplierBranchAsHQ);
 						scLoi.setSupplierAddress(smCompanyAddress
 								.getSmAddress());
+						
+						ScAddress supplierAddress = createScAddress(smCompanyAddress.getSmAddress(), 
+																	supplierHQPersonnel, smCompanyBasic);
+						scLoi.setScSupplierAddress(supplierAddress);
 						scLoi.setSupplierContact(supplierHQPersonnel.getName());
 						scLoi.setSupplierPhoneNo(smCompanyBasic.getPhoneFull());
 						scLoi.setSupplierFaxNo(smCompanyBasic.getFaxFull());
-						scLoi.setSupplierMobNo(supplierHQPersonnel
-								.getMobileFull());
+						scLoi.setSupplierMobNo(supplierHQPersonnel.getMobileFull());
 						scLoi.setSupplierEmail(supplierHQPersonnel.getEmail());
 
 						break;
@@ -1835,15 +1839,22 @@ public class LOIDetailBackingBean extends
 
 					scLoi.setSupplierBranch(supplierBranch.getBranchName());
 					scLoi.setSupplierAddress(supplierBranch.getSmAddress());
-					if(supplierBranch.getSmPersonnel() != null){
-						scLoi.setSupplierContact(supplierBranch.getSmPersonnel()
-								.getName());	
-						scLoi.setSupplierMobNo(supplierBranch.getSmPersonnel()
-								.getMobileFull());
-						scLoi.setSupplierEmail(supplierBranch.getSmPersonnel()
-								.getEmail());
-					}
-
+					
+					SmCompanyBasic smCompanyBasic = null;
+					SmPersonnel smPersonnel = supplierBranch.getSmPersonnel();
+					if (smPersonnel != null) {
+						scLoi.setSupplierContact(smPersonnel.getName());
+						scLoi.setSupplierMobNo(smPersonnel.getMobileFull());
+						scLoi.setSupplierEmail(smPersonnel.getEmail());
+						
+						if (smPersonnel.getSmAppl() != null) {
+							smCompanyBasic = smPersonnel.getSmAppl()
+												.getSmCompanyBasic();
+						}
+					}					
+					ScAddress supplierAddress = createScAddress(supplierBranch.getSmAddress(), 
+																smPersonnel, smCompanyBasic);
+					scLoi.setScSupplierAddress(supplierAddress);
 					scLoi.setSupplierPhoneNo(supplierBranch.getPhoneFull());
 					scLoi.setSupplierFaxNo(supplierBranch.getFaxFull());
 
