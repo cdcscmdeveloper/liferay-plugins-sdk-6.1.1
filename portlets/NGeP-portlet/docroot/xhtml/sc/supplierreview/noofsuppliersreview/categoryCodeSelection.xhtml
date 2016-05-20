@@ -29,28 +29,28 @@
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{cateGory}">
 
-					<p:column selectionMode="multiple" style="width:1%" />
+					<p:column selectionMode="multiple" style="width:5%" />
 
 					<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
 			</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.main.category']}"
-						style="white-space: normal;">
+						style="width:25%;white-space: normal;">
 						<h:outputText value="#{cateGory.pmCategoryL1.categoryName}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sub.category']}"
-						style="white-space: normal;">
+						style="width:25%;white-space: normal;">
 						<h:outputText value="#{cateGory.pmCategoryL2.categoryName}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
-						style="white-space: normal;">
+						style="width:25%;white-space: normal;">
 						<h:outputText value="#{cateGory.pmCategoryL3.categoryName}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.category.type']}">
+					<p:column headerText="#{lbl['lbl.sc.category.type']}" style="width:10%;white-space:normal;">
 						<h:outputText
 							value="#{suppliersReviewBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 					</p:column>
