@@ -581,6 +581,7 @@ public class SupplierManagementConst {
 	
 	public static final String OFFLINE_SUPP_DOC_CHECKLIST_PREFIX = "_SUPP_DOC_CHECKLIST.pdf";
 	public static final String DECLARE_SUPP_DOC_PREFIX = "_DECLARATION.pdf";
+	public static final String BANK_VERIFICATION_FORM_PREFIX = "_PENANDATANGAN_CEK.pdf";
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
