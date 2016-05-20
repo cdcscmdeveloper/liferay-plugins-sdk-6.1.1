@@ -12,8 +12,7 @@
 #opUserCommonMainDiv {
 	background-color: #f4f4f4;
 	border: 1px solid #d3d3d3;
-	border-radius: 5px;
-	padding: 10px 15px;
+	padding: 10px 8px;
 }
 
 #_pmUserCommonDetailsR_WAR_NGePportlet_\:form {
@@ -30,38 +29,15 @@
 	background: #F2F5F9;
 }
 
-.rTable {
-	display: table;
-	width: 100%;
-}
-
-.rTableRow {
-	display: table-row;
-	padding-bottom: 2px;
-}
-
-.rTableHeading {
-	display: table-header-group;
-}
-
-.rTableBody {
-	display: table-row-group;
-}
-
-.rTableFoot {
-	display: table-footer-group;
-}
-
-.rTableCell,.rTableHead {
-	display: table-cell;
-	padding-right: 5px;
-	padding-bottom: 5px;
-}
-
 .div-content-break-word{
 	word-wrap: break-word;
-	max-width:178px;
 }
+
+div#opUserCommonDetDiv div{
+margin-left:0px;}
+
+div#opUserCommonDetSuppDiv div{
+margin-left:0px;}
 </style>
 		<c:if test="#{not profilePersonalizationBackingBean.tempSupplierRole}">
 			<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -76,25 +52,22 @@
 
 			<div id="opUserCommonMainDiv" class="span12">
 				<div id="opUserCommonDetDiv" class="span12">
-					<div class="rTable">
-						<div class="rTableRow">
-							<div class="rTableCell" style="width: 10%; max-width: 35px;">
+					
+							<div class="span2">
 								<p:graphicImage value="/css/images/design/icon-organization.png"
 									title="#{lbl['lbl.pm.access.app.org']}" />
 							</div>
-							<div class="rTableCell">
+							<div class="span10">
 								<div class="div-content-break-word">
 									<h:outputText style="white-space:normal;" value="#{orgName}" />
 								</div>
 							</div>
-						</div>
-
-						<div class="rTableRow">
-							<div class="rTableCell">
+					
+							<div class="span2">
 								<p:graphicImage value="/css/images/design/icon-email.png"
 									title="#{lbl['lbl.pm.address.email']}" />
 							</div>
-							<div class="rTableCell">
+							<div class="span10">
 								<div class="div-content-break-word">
 									<h:outputText
 									value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" />
@@ -104,14 +77,11 @@
 								</div>
 								
 							</div>
-						</div>
-
-						<div class="rTableRow">
-							<div class="rTableCell">
+							<div class="span2">
 								<p:graphicImage value="/css/images/design/icon-sms.png"
 									title="#{lbl['lbl.pm.profiles.preferences.sms']}" />
 							</div>
-							<div class="rTableCell">
+							<div class="span10">
 								<div class="div-content-break-word">
 								<h:outputText style="white-space:normal;"
 									value="#{not empty profilePersonalizationBackingBean.managedBean.selectedUser.mobileFull 
@@ -121,14 +91,12 @@
 									rendered="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyBySms}" />
 								</div>
 							</div>
-						</div>
-
-						<div class="rTableRow">
-							<div class="rTableCell">
+					
+							<div class="span2">
 								<p:graphicImage value="/css/images/design/icon-account-info.png"
 									title="#{lbl['lbl.pm.profiles.authorisation.roles']}" />
 							</div>
-							<div class="rTableCell">
+							<div class="span10">
 								<p:scrollPanel
 									style="max-height: 60px; min-height:20px;max-width:210px;padding: 0px !important;margin-top: 0px !important;"
 									mode="native">
@@ -146,34 +114,27 @@
 
 								</p:scrollPanel>
 							</div>
-						</div>
-
-					</div>
-
 				</div>
 				<c:if test="#{showExpSection}">
-					<div class="span12" style="margin: 10px 0px 5px 0px">
-
-						<div class="rTable">
+					<div id="opUserCommonDetSuppDiv" class="span12" style="margin: 10px 0px 5px 0px">
+						<div class="span12">
 							<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">
-								<div class="rTableRow">
-									<div class="rTableCell" style="font-weight: bold;">
-										<h:outputText value="#{lbl['lbl.pm.ucd.mof.exp']}" />
-										<h:outputText
-											value="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null ? ' : ' : ' : - '}" />
-										<h:outputText
-											value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
-											rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}">
-											<f:convertDateTime
-												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-										</h:outputText>
-									</div>
+								<div class="span12" style="font-weight: bold;">
+									<h:outputText value="#{lbl['lbl.pm.ucd.mof.exp']}" />
+								    <h:outputText
+										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null ? ' : ' : ' : - '}" />
+									<h:outputText
+										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
+										rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</h:outputText>
 								</div>
 							</c:if>
 							<c:if
 								test="#{profilePersonalizationBackingBean.virtualCertShown}">
-								<div class="rTableRow">
-									<div class="rTableCell">
+								<div>
+									<div class="span12">
 										<p:graphicImage value="/css/images/design/icon-view.png" />
 										&#160;
 										<p:commandLink
@@ -184,8 +145,7 @@
 							</c:if>
 							<c:if
 								test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
-								<div class="rTableRow">
-									<div class="rTableCell" style="font-weight: bold;">
+									<div class="span12" style="font-weight: bold;">
 										<h:outputText value="#{lbl['lbl.pm.ucd.softcert.exp']}" />
 										<h:outputText
 											value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null ? ' : ' : ' : - '}" />
@@ -196,11 +156,11 @@
 												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 										</h:outputText>
 									</div>
-								</div>
+								
 							</c:if>
 							<c:if
 								test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
-								<div class="rTableCell">
+								<div class="span12">
 									<p:graphicImage value="/css/images/design/icon-view.png" />
 									&#160;
 									<p:commandLink
