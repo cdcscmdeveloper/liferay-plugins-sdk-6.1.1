@@ -2213,22 +2213,6 @@ public class SupplierFinalizationBackingBean extends
 		 */
 	}
 
-	private void submitRePublishQT(ScQtFinalization scQtFinalization) {
-		// TODO - BPM
-		boolean specChanges = scQtFinalization.isSpecChangeReq();
-
-		if (specChanges) {
-			// BPM send task to whole SC
-			// BPM notify DO, and publication approver.
-		} else {
-			// BPM send task to DO which before publication stage and required
-			// to re-schedule.
-			// (not required to obtained like budget, bpk approval)
-			// (not allow change info which related all approval - budget, bpk
-			// etc)
-		}
-	}
-
 	/**
 	 * To retrieve the document list in PMDocument for Briefing Paper/Kertas
 	 * Taklimat
@@ -3580,7 +3564,23 @@ public class SupplierFinalizationBackingBean extends
 		} else if (ParameterConst.DECISION_RE_PUBLISH
 						.equals(decisionTypeCode)) {
 			isRepublish = true;
-			context.put("requireSpecChanges", scQtFinalization.isSpecChangeReq());
+			
+			boolean specChanges = false;
+			PmParameter rePublishQt=scQtFinalization.getRePublishOption();
+			if (null != rePublishQt
+					&& ParameterConst.WITH_OUT_SPEC_CHANGES
+							.equalsIgnoreCase(rePublishQt.getParameterCode())) {
+				specChanges = false;
+			} else if (null != rePublishQt
+					&& ParameterConst.WITH__SPEC_CHANGES
+							.equalsIgnoreCase(rePublishQt.getParameterCode())) {
+				specChanges = true;
+			} else if (null != rePublishQt
+					&& ParameterConst.SPEC_AND_COMMITTEE_CHANGES
+							.equalsIgnoreCase(rePublishQt.getParameterCode())) {
+				specChanges = true;
+			}		
+			context.put("requireSpecChanges", specChanges);
 		} else if (ParameterConst.DECISION_RE_EVALUATION
 						.equals(decisionTypeCode)) {
 			isReEvaluate = true;
@@ -5966,7 +5966,6 @@ public class SupplierFinalizationBackingBean extends
 
 	private void resetRepublish(ScQtFinalization scQtFinalization) {
 		scQtFinalization.setRePublishOption(null);
-		scQtFinalization.setSpecChangeReq(false);
 	}
 
 	private void resetCancel(ScQtFinalization scQtFinalization) {
