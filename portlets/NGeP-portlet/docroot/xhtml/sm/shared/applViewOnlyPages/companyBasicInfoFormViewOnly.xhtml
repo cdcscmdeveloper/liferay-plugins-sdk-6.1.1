@@ -67,12 +67,18 @@
 				</tr>
 				<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.original}">
 					<tr>
+						<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.curr.regstatus']}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.currRegStatus}" /></td>
+						</p:outputPanel>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.isbumi']}" /></td>
 						<td>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 						</td>
-						<td colspan="2"></td>
+						<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.viewSupplierProfile}">
+							<td colspan="2"></td>
+						</p:outputPanel>
 					</tr>
 				</p:outputPanel>
 				
