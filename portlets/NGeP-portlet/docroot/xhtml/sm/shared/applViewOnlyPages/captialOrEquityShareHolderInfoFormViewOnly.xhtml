@@ -28,8 +28,11 @@
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}">
 						<ac:labelAmount value="#{shareBean.shareAmt}" styleClass="outputLabel-view"/>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.equiOwnr']}">
-						<h:outputText value="#{lbl['lbl.txt.yes']}" />
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}" >
+						<h:outputText value="#{lbl['lbl.txt.yes']}"
+							rendered="#{shareBean.bumiFlg eq 1}" />
+						<h:outputText value="#{lbl['lbl.txt.no']}"
+							rendered="#{shareBean.bumiFlg eq 0}" />
 					</p:column>
 				</p:dataTable>
 				
