@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.qtretry.IQTRetrySO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
@@ -30,6 +31,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTDisruptionConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmEndpointConst;
+import my.ep.dto.sc.bidding.BiddingReqDTO;
+import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.qtretry.QTRetryReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
@@ -190,6 +193,18 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 						errorMessage = noticeBoardResDTO.getErrorMessage();
 					}
 					break;
+				case QTDisruptionConst.BIDDING_CLOSE_BPM_DISRUPTION :
+					BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
+					biddingReqDTO.setQtId(qtId);
+					BiddingResDTO biddingResDTO = getBiddingSO()
+							.updateBpmForBiddingClosed(biddingReqDTO);
+					successful = biddingResDTO.isSuccessful();
+					if (successful) {
+						updateQTDisruptionSuccess(qtDisruptionLog);
+					} else {
+						errorMessage = biddingResDTO.getErrorMessage();
+					}
+					break;
 			}
 			
 			if (!successful) {
@@ -245,6 +260,12 @@ public class QTRetryBackingBean extends SourcingBaseBackingBean {
 		return BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTProposalSO.class);
+	}
+	
+	private IBiddingSO getBiddingSO() {
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IBiddingSO.class);
 	}
 
 	/**
