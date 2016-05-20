@@ -12,14 +12,14 @@
 		<script>
 			$('#portlet_smUpdateMofDetails_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
-					"#{lbl['lbl.sm.update.mof.details']}");
+					"#{lbl['lbl.sm.update.mof.details']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 		</script>
 		
 		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
 			<script>
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.update.mof.details']}");
+						"#{lbl['lbl.sm.update.mof.details']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 
@@ -28,7 +28,7 @@
 			<script>
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.review.resubmitApplication']}");
+						"#{lbl['lbl.sm.review.resubmitApplication']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 
@@ -37,7 +37,7 @@
 			<script>
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.review.application']}");
+						"#{lbl['lbl.sm.review.application']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 
