@@ -20,7 +20,7 @@
 				
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.renew.mof.account']}");				
+						"#{lbl['lbl.sm.renew.mof.account']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");				
 				
 			</script>
 		</h:panelGroup>
@@ -34,7 +34,7 @@
 				}
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.appli.new.categories']}");
+						"#{lbl['lbl.sm.appli.new.categories']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 		<h:panelGroup
@@ -48,7 +48,7 @@
 				
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.review.resubmitApplication']}");
+						"#{lbl['lbl.sm.review.resubmitApplication']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 		<h:panelGroup
@@ -62,7 +62,7 @@
 			
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.review.application']}");
+						"#{lbl['lbl.sm.review.application']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 	</ui:define>

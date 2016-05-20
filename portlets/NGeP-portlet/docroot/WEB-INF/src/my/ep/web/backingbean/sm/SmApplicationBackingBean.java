@@ -42,7 +42,6 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -1056,6 +1055,18 @@ public class SmApplicationBackingBean extends
 				.getSupportingDocMode())) {
 			getManagedBean().getSmAppl().setSupportingDocMode(
 					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		}
+
+		// set latest mofAccount
+		if(getManagedBean().getSmAppl().getSmSupplier()!=null){
+			getManagedBean().setExpiryDate(StringUtils.EMPTY);
+			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
+					getManagedBean().getSmAppl().getSmSupplier().getSupplierId(),
+					getManagedBean().getSmAppl().getSupplierType());
+			if (acc != null) {
+				getManagedBean().setExpiryDate(
+						SmCommonUtil.getDisplayDateFormat(acc.getExpDate()));
+			}
 		}
 
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
@@ -9803,17 +9814,22 @@ public class SmApplicationBackingBean extends
 
 	/**
 	 * download the generated MOF declaratiion form.
+	 * 
 	 * @throws Exception
 	 */
 	public void printDeclarationForm() throws Exception {
-		SmApplicationUtil.generateDeclarationFormPdf(getManagedBean().getSmAppl());
-		
+		SmApplicationUtil.generateDeclarationFormPdf(getManagedBean()
+				.getSmAppl());
+
 		String fileName = SmCommonUtil
-				.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH) + File.separator + getManagedBean().getSmAppl().getApplNo()
+				.getUploadFilePath(SupplierManagementConst.SUPPORTING_DOC_TEMP_PATH)
+				+ File.separator
+				+ getManagedBean().getSmAppl().getApplNo()
 				+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX;
-		commonDownload(fileName,  getManagedBean().getSmAppl().getApplNo() + SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX); 
+		commonDownload(fileName, getManagedBean().getSmAppl().getApplNo()
+				+ SupplierManagementConst.DECLARE_SUPP_DOC_PREFIX);
 	}
-	
+
 	/**
 	 * Print Supplier Profile
 	 * 

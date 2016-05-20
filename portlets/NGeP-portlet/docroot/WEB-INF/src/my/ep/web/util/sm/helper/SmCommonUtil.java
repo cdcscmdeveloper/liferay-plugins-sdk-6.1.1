@@ -3078,7 +3078,7 @@ public class SmCommonUtil {
 	}
 
 	public static String getDisplayDateFormat(Date date) {
-		String retVal = "";
+		String retVal = StringUtils.EMPTY;
 		if (date != null) {
 			retVal = DateUtils.dateToString("dd/MM/yyyy", date);
 		}
