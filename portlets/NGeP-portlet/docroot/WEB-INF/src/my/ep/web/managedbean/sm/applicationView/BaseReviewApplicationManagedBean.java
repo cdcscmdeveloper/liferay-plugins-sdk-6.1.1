@@ -137,6 +137,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String regCatCodeConfirmMsg;
 	private String resubmitUrl;
 	private String localAuthority;
+	private String currRegStatus;
 
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -1218,6 +1219,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setSmMofCert(SmMofCert smMofCert) {
 		this.smMofCert = smMofCert;
+	}
+
+	public String getCurrRegStatus() {
+		return currRegStatus;
+	}
+
+	public void setCurrRegStatus(String currRegStatus) {
+		this.currRegStatus = currRegStatus;
 	}
 
 }
