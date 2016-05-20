@@ -179,6 +179,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
+	private static final BigDecimal percent = new BigDecimal(100);
 
 	/**
 	 * Hash string.
@@ -274,7 +275,6 @@ public class SmCommonUtil {
 		}
 		return retVal;
 	}
-	
 
 	/**
 	 * Retrieve country by country code.
@@ -702,6 +702,146 @@ public class SmCommonUtil {
 		persCalcVo.setProfTotalCnt(persCalcVo.getProfBumiEnterCnt()
 				+ persCalcVo.getProfNonBumiEnterCnt()
 				+ persCalcVo.getProfFrgEnterCnt());
+		calculateStaffCompositionPercentage(persCalcVo);
+	}
+
+	private static void calculateStaffCompositionPercentage(
+			SmPersonnleCalcVO personVO) {
+
+		// bumi owner
+		personVO.setEquiOwnrBumiPerc(getPercentage(
+				personVO.getEquiOwnrBumiCnt(),
+				personVO.getEquityOwnerTotalCnt()));
+
+		// non-bumi owner
+		personVO.setEquiOwnrNonBumiPerc(getPercentage(
+				personVO.getEquiOwnrNonBumiCnt(),
+				personVO.getEquityOwnerTotalCnt()));
+
+		// foreign owner
+		personVO.setEquiOwnrFrgPerc(getPercentage(personVO.getEquiOwnrFrgCnt(),
+				personVO.getEquityOwnerTotalCnt()));
+
+		// bumi director
+		personVO.setBodBumiPerc(getPercentage(personVO.getBodBumiCnt(),
+				personVO.getBodTotalCnt()));
+
+		// non-bumi director
+		personVO.setBodNonBumiPerc(getPercentage(personVO.getBodNonBumiCnt(),
+				personVO.getBodTotalCnt()));
+
+		// foreign director
+		personVO.setBodFrgPerc(getPercentage(personVO.getBodFrgCnt(),
+				personVO.getBodTotalCnt()));
+
+		// bumi higher management
+		personVO.setHghMngBumiPerc(getPercentage(personVO.getHghMngBumiCnt(),
+				personVO.getHghrMngmtTotalCnt()));
+
+		// non bumi higher management
+		personVO.setHghMngNonBumiPerc(getPercentage(
+				personVO.getHghMngNonBumiCnt(), personVO.getHghrMngmtTotalCnt()));
+
+		// foreign higher management
+		personVO.setHghMngFrgPerc(getPercentage(personVO.getHghMngFrgCnt(),
+				personVO.getHghrMngmtTotalCnt()));
+
+		// bumi management
+		personVO.setMngtBumiPerc(getPercentage(personVO.getMngtBumiCnt(),
+				personVO.getMngmtTotalCnt()));
+
+		// non bumi management
+		personVO.setMngtNonBumiPerc(getPercentage(personVO.getMngtNonBumiCnt(),
+				personVO.getMngmtTotalCnt()));
+
+		// foreign management
+		personVO.setMngtFrgPerc(getPercentage(personVO.getMngtFrgCnt(),
+				personVO.getMngmtTotalCnt()));
+
+		// bumi staff
+		personVO.setStfBumiEnterPerc(getPercentage(
+				personVO.getStfBumiEnterCnt(), personVO.getStfTotalCnt()));
+
+		// non-bumi staff
+		personVO.setStfNonBumiEnterPerc(getPercentage(
+				personVO.getStfNonBumiEnterCnt(), personVO.getStfTotalCnt()));
+
+		// foreign staff
+		personVO.setStfFrgEnterPerc(getPercentage(personVO.getStfFrgEnterCnt(),
+				personVO.getStfTotalCnt()));
+
+		// bumi actual staff
+		personVO.setStfBumiActPerc(getPercentage(personVO.getStfBumiActCnt(),
+				personVO.getStfActualTotalCnt()));
+
+		// non bumi actual staff
+		personVO.setStfNonBumiActPerc(getPercentage(
+				personVO.getStfNonBumiActCnt(), personVO.getStfActualTotalCnt()));
+
+		// foreign actual staff
+		personVO.setStfFrgActPerc(getPercentage(personVO.getStfFrgActCnt(),
+				personVO.getStfActualTotalCnt()));
+
+		// prof bumi
+		personVO.setProfBumiEnterPerc(getPercentage(
+				personVO.getProfBumiEnterCnt(), personVO.getProfTotalCnt()));
+
+		// prof non bumi
+		personVO.setProfNonBumiEnterPerc(getPercentage(
+				personVO.getProfNonBumiEnterCnt(), personVO.getProfTotalCnt()));
+
+		// prof foreign
+		personVO.setProfFrgEnterPerc(getPercentage(
+				personVO.getProfFrgEnterCnt(), personVO.getProfTotalCnt()));
+
+		// prof actual bumi
+		personVO.setProfBumiActPerc(getPercentage(personVO.getProfBumiActCnt(),
+				personVO.getProfActualTotalCnt()));
+
+		// prof actual non bumi
+		personVO.setProfNonBumiActPerc(getPercentage(
+				personVO.getProfNonBumiActCnt(),
+				personVO.getProfActualTotalCnt()));
+
+		// prof actual foreign
+		personVO.setProfFrgActPerc(getPercentage(personVO.getProfFrgActCnt(),
+				personVO.getProfActualTotalCnt()));
+
+		// semi prof bumi
+		personVO.setSemiBumiEnterPerc(getPercentage(
+				personVO.getSemiBumiEnterCnt(), personVO.getSemiTotalCnt()));
+
+		// semi prof non bumi
+		personVO.setSemiNonBumiEnterPerc(getPercentage(
+				personVO.getSemiNonBumiEnterCnt(), personVO.getSemiTotalCnt()));
+
+		// semi prof foreign
+		personVO.setSemiFrgEnterPerc(getPercentage(
+				personVO.getSemiFrgEnterCnt(), personVO.getSemiTotalCnt()));
+
+		// semi prof actual bumi
+		personVO.setSemiBumiActPerc(getPercentage(personVO.getSemiBumiActCnt(),
+				personVO.getSemiActualTotalCnt()));
+
+		// semi prof actual non bumi
+		personVO.setSemiNonBumiActPerc(getPercentage(
+				personVO.getSemiNonBumiActCnt(),
+				personVO.getSemiActualTotalCnt()));
+
+		// semi prof actual foreign
+		personVO.setSemiFrgActPerc(getPercentage(personVO.getSemiFrgActCnt(),
+				personVO.getSemiActualTotalCnt()));
+
+	}
+
+	private static BigDecimal getPercentage(int param, int total) {
+		BigDecimal retVal = BigDecimal.ZERO;
+		if (total != 0) {
+			retVal = new BigDecimal(param).divide(new BigDecimal(total))
+					.multiply(percent);
+			retVal = retVal.setScale(2, RoundingMode.CEILING);
+		}
+		return retVal;
 	}
 
 	/**
