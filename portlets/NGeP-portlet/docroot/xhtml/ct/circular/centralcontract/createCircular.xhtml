@@ -209,7 +209,8 @@
 	     
 	       <div class="ppRightBtn">
 	                <p:commandButton id="addExemptedBtn" value="#{lbl['lbl.btn.add']}" rendered="#{!centralContractBackingBean.managedBean.viewContract}"  
-                          partialSubmit="true" process="@form" action="#{centralContractBackingBean.clickExemptedOrgBtn}" >
+                          partialSubmit="true" process="@form" update=":form:popUpExmptedDlg" action="#{centralContractBackingBean.clickExemptedOrgBtn}" 
+                          oncomplete="dlgExemptedMinistry.show()">
        	            </p:commandButton>
        	            <p:commandButton id="delExemptedBtn" process="@form" 
        	            rendered="#{!centralContractBackingBean.managedBean.viewContract}"  
@@ -311,13 +312,23 @@
 			          <p:spacer height="2"/>
                       <p:panel id="popUpExmptedTable" header="Result" toggleable="true" toggleSpeed="500">
                       <p:dataTable id="tablePtjCode" var="pmVar" value="#{centralContractBackingBean.exemptedOrgDataModel}" 
-                              rowIndexVar="rowIndex" selection="#{centralContractBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
+                              rowIndexVar="rowIndex"  rowKey="#{pmVar}" lazy="true">
                               <ac:paginator for="tablePtjCode"/>
-                              <p:column selectionMode="multiple" style="width:28px; text-align:center;"> 
-                                   <f:facet name="header">
-                                       <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
-		                           </f:facet>
-                              </p:column>       
+                               <p:column  style="width:5%; text-align:center;white-space:normal;">
+				                           <f:facet name="header">
+				                                 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.popup.chkBox']}"/>
+							                     <p:selectBooleanCheckbox value="#{centralContractBackingBean.managedBean.selectAll}">
+								                     <p:ajax partialSubmit="true" process="@this"
+									                      update=":form:tablePtjCode,:form:exmptedPopUpButton" listener="#{centralContractBackingBean.selectExmptedSearchOrg}" />
+							                    </p:selectBooleanCheckbox>
+						                </f:facet>
+		           
+		                                 <p:selectBooleanCheckbox
+		                                      value="#{pmVar.selectedCheckBox}" styleClass="myCustomChekBox">
+		           		                         <p:ajax event="change" update=":form:tablePtjCode,:form:exmptedPopUpButton" 
+		           		                             listener="#{centralContractBackingBean.selectSearchOrgCheckboxSelect}"></p:ajax>
+			                              </p:selectBooleanCheckbox>
+				             </p:column>
                              <p:column headerText="#{lbl['lbl.ct.org.code']}" >
                                 	#{pmVar.orgCode}
 					         </p:column>
@@ -329,7 +340,7 @@
 			 
 			            <div class="ppRightBtn">
 				              <p:commandButton id="exmptedPopUpButton"  process="@form" update=":form:exemptedOrgDt,:form:exemptedMsgId" 
-				                     disabled="#{centralContractBackingBean.managedBean.orgTypeCode == null}"
+				                      disabled="#{centralContractBackingBean.managedBean.buttonHideActiveDel}"
 				                     value="#{lbl['lbl.btn.select']}"   action="#{centralContractBackingBean.addExemtedOrgDetails()}">
 				              </p:commandButton>
 				               <p:commandButton id="closeButId" value="#{lbl['lbl.btn.cancel']}"  onclick="dlgExemptedMinistry.hide();"  type="button" />

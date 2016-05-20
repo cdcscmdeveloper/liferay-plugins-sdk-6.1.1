@@ -34,6 +34,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -171,7 +172,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private String editorValue;
 	private ContractBackingBean ctBackingBean = null;
-	private PmUser[] selectedPmUser;
 	private CtMeeting[] selectedMeetingUser;
 	private CtPerformanceBond[] selectedBondList;
 	private List<SelectItem> populateBankAccountList;
@@ -216,20 +216,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void setEditorValue(String editorValue) {
 		this.editorValue = editorValue;
-	}
-
-	/**
-	 * @return the selectedPmUser
-	 */
-	public PmUser[] getSelectedPmUser() {
-		return selectedPmUser;
-	}
-
-	/**
-	 * @param selectedPmUser the selectedPmUser to set
-	 */
-	public void setSelectedPmUser(PmUser[] selectedPmUser) {
-		this.selectedPmUser = selectedPmUser;
 	}
 
 	/**
@@ -2899,26 +2885,29 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void addSelectedCommitteMembers() {			
 		Map<Long, CtCommitteeMember> duplicatePmUserMap = new HashMap<Long, CtCommitteeMember>();
 		List<CtCommitteeMember> memberList = new ArrayList<CtCommitteeMember>();
-	
-		for (int i = 0; i < selectedPmUser.length; i++) {
-			PmUser user = selectedPmUser[i];
-			CtCommitteeMember committeeMember = new CtCommitteeMember();
-			committeeMember.setCtAmendment(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
-			committeeMember.setPmUser(user);
-			committeeMember.setMemberRole(new PmParameter());
-			committeeMember.setExternalUser(false);
-			committeeMember.setMemberName(user.getUserName());
-			committeeMember.setIcPassport(user.getIdentificationNo());
-			committeeMember.setGrade(user.getGrade());
-			committeeMember.setPnp(user.isPMP());
-			committeeMember.setDesignation(user.getDesignation());
-			committeeMember.setEmail(user.getEmail());
-		   
-		    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0) {
-		    	memberList.add(committeeMember);
-		    } else {
-		    	 duplicatePmUserMap.put(user.getUserId(), committeeMember);
-		    }
+	    
+		Iterator<PmUser> pmUserItr = getCommitteDataModel().getList().iterator();
+		while(pmUserItr.hasNext()) {
+			PmUser users = pmUserItr.next();
+			if(users.isSelectedCheckBox()) {
+					CtCommitteeMember committeeMember = new CtCommitteeMember();
+					committeeMember.setCtAmendment(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
+					committeeMember.setPmUser(users);
+					committeeMember.setMemberRole(new PmParameter());
+					committeeMember.setExternalUser(false);
+					committeeMember.setMemberName(users.getUserName());
+					committeeMember.setIcPassport(users.getIdentificationNo());
+					committeeMember.setGrade(users.getGrade());
+					committeeMember.setPnp(users.isPMP());
+					committeeMember.setDesignation(users.getDesignation());
+					committeeMember.setEmail(users.getEmail());
+				   
+				    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0) {
+				    	memberList.add(committeeMember);
+				    } else {
+				    	 duplicatePmUserMap.put(users.getUserId(), committeeMember);
+				    }
+		     }
 		}
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(memberList);
@@ -5225,4 +5214,36 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		      }
 		return days;
 	}
+	
+	public void selectAllComitMem(AjaxBehaviorEvent e){
+		getManagedBean().setSelectAll(false);
+		for (PmUser pmUsers : getCommitteDataModel().getList()){
+			if(pmUsers.isSelectedCheckBox()){
+				 ctBackingBean.getManagedBean().setButtonHideActive(false);
+				return;
+			}
+		}
+		if((boolean) e.getComponent().getAttributes().get("value")){
+			 ctBackingBean.getManagedBean().setButtonHideActive(false);
+		}else{
+			 ctBackingBean.getManagedBean().setButtonHideActive(true);
+		}	
+	}
+
+	public void selectAllComitMemCheckBox(AjaxBehaviorEvent e){
+	    
+		for (PmUser pmUsers : getCommitteDataModel().getList()){
+			if (getManagedBean().isSelectAll()) {
+				pmUsers.setSelectedCheckBox(true);
+		       }else {
+		    	   pmUsers.setSelectedCheckBox(false);
+		       }
+	      }
+		
+		 if((boolean) e.getComponent().getAttributes().get("value")){
+			 ctBackingBean.getManagedBean().setButtonHideActive(false);
+		 }else{
+			 ctBackingBean.getManagedBean().setButtonHideActive(true);
+		 }		
+	    }
 }
