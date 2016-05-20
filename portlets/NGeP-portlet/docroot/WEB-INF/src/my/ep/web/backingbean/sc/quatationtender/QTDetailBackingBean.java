@@ -1621,19 +1621,6 @@ public class QTDetailBackingBean extends
 				committeItem.setIcon("ui-icon-endorse");
 			}
 
-			if (!ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER.equals(tabBean
-					.getTabType())
-					&& !SourcingConstants.COMMITTE_TYPE_FINALIZATION
-							.equals(tabBean.getTabType())) {
-
-				committeItem.setTitle(ResourceBundleUtils.getMessage(
-						"lbl.sc.qt.committee.appointment."
-								+ tabBean.getTabType().toLowerCase()
-								+ ".tooltip",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
-			}
-
 			committeItem
 					.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : "
 							+ zoneTabIndex + "}]);");
