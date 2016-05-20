@@ -54,6 +54,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -186,6 +187,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmPersonnelAddress shareHolderMailAddr;
 	private SmPersonnelAddress shareHolderResdAddr;
 	private SmPersonnelAddress shareHolderOffAddr;
+	private String expiryDate;
 	private List<SmPersonnel> selectedPersonnels;
 	private SmPersonnel selectedPersonnel;
 	private SmPersonnel addrUpdatePersonnel;
@@ -3469,5 +3471,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setDeleteExistingCategoryList(
 			List<SmSupplierCategory> deleteExistingCategoryList) {
 		this.deleteExistingCategoryList = deleteExistingCategoryList;
+	}
+
+	public String getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(String expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 }

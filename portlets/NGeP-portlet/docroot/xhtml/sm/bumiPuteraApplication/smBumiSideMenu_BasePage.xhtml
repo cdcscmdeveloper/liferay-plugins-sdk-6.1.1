@@ -12,7 +12,7 @@
 			<script>
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.apply.bumi.status']}");
+						"#{lbl['lbl.sm.apply.bumi.status']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 
@@ -21,7 +21,7 @@
 			<script>
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.review.resubmitApplication']}");
+						"#{lbl['lbl.sm.review.resubmitApplication']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 
@@ -30,7 +30,7 @@
 			<script>
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
-						"#{lbl['lbl.sm.review.application']}");
+						"#{lbl['lbl.sm.review.application']} (#{lbl['lbl.sm.mofacc.expiry.date']}: #{backingBean.managedBean.expiryDate})");
 			</script>
 		</h:panelGroup>
 	</ui:define>
