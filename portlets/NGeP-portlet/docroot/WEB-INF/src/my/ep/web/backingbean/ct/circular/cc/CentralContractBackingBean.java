@@ -146,7 +146,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private ContractBackingBean ctBB = null;
-	private PmOrgProfile[] selectedPmOrgProfile;
+	//private PmOrgProfile[] selectedPmOrgProfile;
 	private CtExemptedOrg[] selectedExemptedOrgs;
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private IPagingDataModel<PmOrgProfile> exemptedOrgDataModel = new ExemptedOrgDataModel();	
@@ -1369,14 +1369,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return getManagedBean().getGotoPreviewPage();
 	}
 	
-	public PmOrgProfile[] getSelectedPmOrgProfile() {
-		return selectedPmOrgProfile;
-	}
-
-	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
-		this.selectedPmOrgProfile = selectedPmOrgProfile;
-	}
-	
 	/**
 	 * The method used for
 	 * searching organization details
@@ -1504,40 +1496,37 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 */
 		public void addExemtedOrgDetails() {
 			
-			   if(selectedPmOrgProfile.length == 0){
-				    throw new EpException(MessageConst.ERROR_755019);
-			   }
-			 
 			   getManagedBean().setAutoUpdate(true);
 			  List<CtExemptedOrg>  orgList = new ArrayList<CtExemptedOrg>();
-		      for (int i = 0; i < selectedPmOrgProfile.length; i++) {
-				
-					//Remove if already exist, avoid duplicate
-				  	for (CtExemptedOrg exmptOrg : this.getManagedBean().getCircularVer().getCtExemptedOrgs()) {
-				  		if (exmptOrg.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
-				  			throw new EpException(MessageConst.INFO_758000, new String[]{exmptOrg.getOrgProfile().getOrgName()}); 
-				  		}
-				  	}
+			  Iterator<PmOrgProfile> itrPmOrgProfile = getExemptedOrgDataModel().getList().iterator();
+			  while(itrPmOrgProfile.hasNext()){
+					PmOrgProfile pmObj = itrPmOrgProfile.next();
+					if(pmObj.isSelectedCheckBox()){
+						 	//Remove if already exist, avoid duplicate
+						  	for (CtExemptedOrg exmptOrg : this.getManagedBean().getCircularVer().getCtExemptedOrgs()) {
+						  		if (exmptOrg.getOrgProfile().getOrgProfileId().equals(pmObj.getOrgProfileId())) {
+						  			throw new EpException(MessageConst.INFO_758000, new String[]{exmptOrg.getOrgProfile().getOrgName()}); 
+						  		}
+						  	}
 			  	
-				  	CtExemptedOrg org = new CtExemptedOrg();
-			    	org.setOrgProfile(selectedPmOrgProfile[i]);
-					org.setOrgTypeCode(selectedPmOrgProfile[i].getOrgTypeCode().getParameterCode());
-					getManagedBean().setExmptedMinistryDD(false);
-					orgList.add(org);
-		      }
-			 
-		      if (selectedPmOrgProfile.length>0) {
+						  	CtExemptedOrg org = new CtExemptedOrg();
+					    	org.setOrgProfile(pmObj);
+							org.setOrgTypeCode(pmObj.getOrgTypeCode().getParameterCode());
+							getManagedBean().setExmptedMinistryDD(false);
+							orgList.add(org);
+		            }
+			  }
+		      if (orgList.size()>0) {
 				this.getManagedBean().getCircularVer().getCtExemptedOrgs().addAll(orgList);
 			 }
 		
-		      selectedPmOrgProfile = null;
 			  getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 			  getManagedBean().setPtjCodeNameSearchValues(null);
 			  RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.hide()");
 		}
 	
 		public void clickExemptedOrgBtn() {
-			RequestContext.getCurrentInstance().execute("dlgExemptedMinistry.show()");
+			  getExemptedOrgDataModel().resetData();
 		}
 
 		public CtExemptedOrg[] getSelectedExemptedOrgs() {
@@ -1885,6 +1874,39 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         	getManagedBean().setSelectAll(false);
         	for (CtExemptedOrg ctExemptedOrgs : getManagedBean().getCircularVer().getCtExemptedOrgs()){
         		if(ctExemptedOrgs.isSelectedCheckBox()){
+        			getManagedBean().setButtonHideActiveDel(false);
+        			return;
+        		}
+        	}
+    		if((boolean) e.getComponent().getAttributes().get("value")){
+    			getManagedBean().setButtonHideActiveDel(false);
+    		}else{
+    			getManagedBean().setButtonHideActiveDel(true);
+    		}	
+        }
+        
+        public void selectExmptedSearchOrg(AjaxBehaviorEvent e){
+            
+        	for (PmOrgProfile pmOrgProfiles : getExemptedOrgDataModel().getList()){
+        		if (getManagedBean().isSelectAll()) {
+        			pmOrgProfiles.setSelectedCheckBox(true);
+    		       }else {
+    		    	   pmOrgProfiles.setSelectedCheckBox(false);
+    		       }
+    	      }
+        	
+        	 if((boolean) e.getComponent().getAttributes().get("value")){
+        		 getManagedBean().setButtonHideActiveDel(false);
+        	 }else{
+        		 getManagedBean().setButtonHideActiveDel(true);
+        	 }		
+            }
+        
+        
+        public void selectSearchOrgCheckboxSelect(AjaxBehaviorEvent e){
+        	getManagedBean().setSelectAll(false);
+        	for (PmOrgProfile pmOrgProfiles : getExemptedOrgDataModel().getList()){
+        		if(pmOrgProfiles.isSelectedCheckBox()){
         			getManagedBean().setButtonHideActiveDel(false);
         			return;
         		}
