@@ -9,6 +9,26 @@
 
 
 	<ui:define name="contentSection">
+		<div align="left" class="header-info">
+			<table class="customTbl">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
+						<td class="header-info-text">
+							#{postSupplierRegBB.managedBean.smAppl.smSupplier.epNo}
+						</td>
+					
+						<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
+						<td class="header-info-text">
+							#{postSupplierRegBB.managedBean.smAppl.smSupplier.companyName}
+						</td>
+						
+						<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']} :" /></td>
+						<td class="header-info-text">
+							#{postSupplierRegBB.managedBean.smAppl.smSupplier.regNo}
+						</td>
+					</tr>
+			</table>
+		</div>
 		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">
 			<c:if test="#{postSupplierRegBB.managedBean.flowStatus > 0}">
 			<h:outputStylesheet library="ep/css" name="tab.css"  />
