@@ -126,6 +126,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<br/>
 			<br/>
 	 	</p:outputPanel>
+	 	<ui:remove>
 	 		<p:panel id="pProMngSearch" header="#{lbl['lbl.pm.search.user']}" toggleable="true">
 			<br/>
 			<!-- User Search -->
@@ -134,6 +135,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			</p:panel>
 			<!-- User Result -->
 			<ui:include src="/xhtml/pm/searchAllUser/tempUserResult.xhtml" />
-	 	
+		</ui:remove>
 	</ui:define>
 </ui:composition>
