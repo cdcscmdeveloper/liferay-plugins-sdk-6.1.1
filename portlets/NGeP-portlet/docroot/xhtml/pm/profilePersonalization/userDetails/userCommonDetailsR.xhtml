@@ -112,7 +112,7 @@ textarea {
 							<c:if test="#{profilePersonalizationBackingBean.mofExpiryShown}">
 								<div class="myProfile-title">#{lbl['lbl.pm.ucd.mof.exp']}</div>
   								<div class="myProfile-text"><h:outputText
-										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null ? ' : ' : ' : - '}" />
+										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null ? '' : '-'}" />
 									<h:outputText
 										value="#{profilePersonalizationBackingBean.managedBean.mofExpDate}"
 										rendered="#{profilePersonalizationBackingBean.managedBean.mofExpDate != null}">
@@ -132,7 +132,7 @@ textarea {
 								test="#{profilePersonalizationBackingBean.softCertExpiryShown}">
 								  <div class="myProfile-title">#{lbl['lbl.pm.ucd.softcert.exp']}</div>
   								  <div class="myProfile-text"><h:outputText
-										value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null ? ' : ' : ' : - '}" />
+										value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null ? '' : '-'}" />
 									<h:outputText
 										value="#{profilePersonalizationBackingBean.managedBean.softCertExpDate}"
 										rendered="#{profilePersonalizationBackingBean.managedBean.softCertExpDate != null}">
