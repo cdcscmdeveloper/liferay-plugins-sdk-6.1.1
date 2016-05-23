@@ -270,10 +270,10 @@ public class SupplierManagementConst {
 	public static final String ONLINE_PAYMENT = "OL";
 	public static final String OFFLINE_PAYMENT = "OF";
 
-	public static final String MOL_SUCCESS = "00";
-	public static final String MOL_FAIL = "11";
-	public static final String MOL_PENDING = "22";
-	public static final String PAYMENT_INVALID_RES = "55";
+	public static final String MOL_SUCCESS = my.ep.constant.sm.SupplierManagementConst.MOL_SUCCESS;
+	public static final String MOL_FAIL = my.ep.constant.sm.SupplierManagementConst.MOL_FAIL;
+	public static final String MOL_PENDING = my.ep.constant.sm.SupplierManagementConst.MOL_PENDING;
+	public static final String PAYMENT_INVALID_RES = my.ep.constant.sm.SupplierManagementConst.PAYMENT_INVALID_RES;
 
 	public static final String PM_STATUS_PAYMENT = "SPY";
 	public static final String PM_PAYMENT_MODE = "SPM";
