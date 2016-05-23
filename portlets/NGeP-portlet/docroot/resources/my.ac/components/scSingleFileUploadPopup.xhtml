@@ -9,35 +9,38 @@
 
 <cc:interface>
 	<cc:attribute name="widgetVar" default="singleUploadDlg" />
+	<cc:attribute name="readonly" default="false" />
 	<cc:attribute name="update" default="@form" />
 	<cc:attribute name="fileUploadListener" required="true" />
 </cc:interface>
 
 <cc:implementation>
-	<p:dialog id="#{cc.attrs.widgetVar}Id" widgetVar="#{cc.attrs.widgetVar}" 
-		modal="true" dynamic="true"
-		resizable="false" width="700px" height="350px"
-		styleClass="pop_up_top" 
-		header="#{lbl['lbl.txt.choose.files']}">
-		<p:messages id="#{cc.id}Msg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
-		<p:ajax event="close" />
-		<p:fileUpload id="#{cc.id}FU" style="display:inline;"
-			fileUploadListener="#{scRemarkAndAttachmentBackingBean.handleFileUploadListener}"
-			mode="advanced" 
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}" 
-			showButtons="false"
-			oncomplete="#{cc.attrs.widgetVar}reRender(); #{cc.attrs.widgetVar}.hide();">
-			<f:attribute name="fileUploadListenerMethod" value="#{cc.attrs.fileUploadListener}" />
-		</p:fileUpload>
-		<div class="ppRightBtn">
-		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="#{cc.attrs.widgetVar}.hide();" />
-		</div>
-	</p:dialog>
-	
-	<p:remoteCommand name="#{cc.attrs.widgetVar}reRender"
-		partialSubmit="true" process="@this" update="#{cc.attrs.update}" />
+	<c:if test="#{!cc.attrs.readonly}">
+		<p:dialog id="#{cc.attrs.widgetVar}Id" widgetVar="#{cc.attrs.widgetVar}" 
+			modal="true" dynamic="true"
+			resizable="false" width="700px" height="350px"
+			styleClass="pop_up_top" 
+			header="#{lbl['lbl.txt.choose.files']}">
+			<p:messages id="#{cc.id}Msg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+			<p:ajax event="close" />
+			<p:fileUpload id="#{cc.id}FU" style="display:inline;"
+				fileUploadListener="#{scRemarkAndAttachmentBackingBean.handleFileUploadListener}"
+				mode="advanced" 
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				label="#{lbl['lbl.btn.choose']}" 
+				showButtons="false"
+				oncomplete="#{cc.attrs.widgetVar}reRender(); #{cc.attrs.widgetVar}.hide();">
+				<f:attribute name="fileUploadListenerMethod" value="#{cc.attrs.fileUploadListener}" />
+			</p:fileUpload>
+			<div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="#{cc.attrs.widgetVar}.hide();" />
+			</div>
+		</p:dialog>
+		
+		<p:remoteCommand name="#{cc.attrs.widgetVar}reRender"
+			partialSubmit="true" process="@this" update="#{cc.attrs.update}" />
+	</c:if>
 </cc:implementation>
 </ui:composition>
