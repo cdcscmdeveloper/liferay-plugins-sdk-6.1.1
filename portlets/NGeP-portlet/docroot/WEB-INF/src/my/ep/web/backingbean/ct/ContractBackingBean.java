@@ -103,6 +103,7 @@ import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
+import my.ep.persistence.entity.ct.dtl.VCtAgencyDeliveryAddress;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -1501,15 +1502,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * This method will generate new record in delivery address
 	 * list. 
 	 */	
-	public void addDeliveryAddress(List<PmAddressType> addressTypeList) {
+	public void addDeliveryAddress(List<VCtAgencyDeliveryAddress> addressAddressList) {
 		
 		try {
-			if (addressTypeList != null) {
+			if (addressAddressList != null) {
 				List<CtAgencyAddress> ctAgencyAddress = new ArrayList<CtAgencyAddress>();
 				List<CtAgencyAddress> agencyAddressList = new ArrayList<CtAgencyAddress>();				
 				ctAgencyAddress = getManagedBean().getSelectedAgency().getCtAgencyAddresses();
 				
-				for (PmAddressType addressType : addressTypeList) {
+				for (VCtAgencyDeliveryAddress deliveryAddress : addressAddressList) {
+					PmAddressType addressType = deliveryAddress.getPmAddressType();
 					boolean isAddressExist = false;
 					// if already exist, skip to avoid duplicate
 					for (CtAgencyAddress address : ctAgencyAddress) {
@@ -1550,8 +1552,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the condition
 	 */
 	public String getDeliveryAddressCondition() {
-		String condition = "recordStatus^1|addressType^" + AddressType.DELIVERY_ADDRESS.value()
-				+ "|pmOrgProfile.orgProfileId^" + this.getManagedBean().getSelectedAgency().getOrgProfile().getOrgProfileId();
+		String condition = "ORG_PROFILE_ID^" + this.getManagedBean().getSelectedAgency().getOrgProfile().getOrgProfileId();
 		
 		PmParameter locationLevel = getManagedBean().getContractVer().getCtContract().getLocationLevel();
 		if (locationLevel != null) {
@@ -1575,10 +1576,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			if (!stateList.isEmpty()) {
-				condition += "|pmAddress.pmState.stateId^" + stateList + "^" + SearchOperator.OPERATOR_IN.value();
+				condition += "|STATUS_ID^" + stateList + "^" + SearchOperator.OPERATOR_IN.value();
 			}
 			if (!districtList.isEmpty()) {
-				condition += "|pmAddress.pmDistrict.districtId^" + districtList + "^" + SearchOperator.OPERATOR_IN.value();
+				condition += "|DISTRICT_ID^" + districtList + "^" + SearchOperator.OPERATOR_IN.value();
 			}
 		}
 		return condition;
@@ -1749,7 +1750,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		    agency.setFileName(item.getFileName());
 		    agency.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 		    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
-		 
+		    
+		    RequestContext.getCurrentInstance().execute("uploadDlg1.hide()");		 
 		}
 		
 		/**
