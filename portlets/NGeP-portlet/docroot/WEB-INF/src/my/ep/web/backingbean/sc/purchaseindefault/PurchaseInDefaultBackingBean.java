@@ -1069,14 +1069,6 @@ public class PurchaseInDefaultBackingBean extends
 	}
 
 	/**
-	 * delete uploaded file in purchase in default
-	 */
-	public void deleteUploadFile() {
-		debugLogger("deleteUploadFile");
-		getManagedBean().getPurchaseInDefault().setScPurchaseInDefaultAttachment(null);
-	}
-
-	/**
 	 * Page navigation to catalogue search page in Purchase in default.
 	 */
 	public void backToPrevious() {
