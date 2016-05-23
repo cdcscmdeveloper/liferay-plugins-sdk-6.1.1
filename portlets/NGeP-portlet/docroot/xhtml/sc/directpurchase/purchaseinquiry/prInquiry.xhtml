@@ -326,42 +326,8 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
-		<table>
-			<tr>
-				<td class="TableFieldLeft" style="width: 165px;"></td>
-
-				<td class="TableFieldRight"><p:dataGrid id="catatan"
-				        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.remarks}"
-						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" style="vertical-align: top;" align="left">
-									<h:graphicImage
-										value="#{purchaseInquiryBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" />
-								</td>
-								<td width="6"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
-									<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
-										<f:convertDateTime
-											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea style="width:325px;" maxlength="1000"
-										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
-										id="remark" /> <h:outputText value="#{remarkVar.remark}"
-										rendered="#{remarkIndex>0}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" />
-								</td>
-
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel>
+	<ac:scRemarkAndAttachment
+		remarkList="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.remarks}"
+		showAttachment="false" />
+	
 </ui:composition>
