@@ -1,0 +1,57 @@
+<ui:composition
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+<cc:interface>
+	<cc:attribute name="attachment" />
+	<cc:attribute name="readonly" default="false" />
+	<cc:attribute name="popupWidgetVar" default="singleUploadDlg" />
+</cc:interface>
+
+<cc:implementation>
+	<h:panelGroup id="#{cc.id}">
+		<c:choose>
+			<c:when test="#{empty cc.attrs.attachment}">
+				<p:commandButton id="#{cc.id}Btn"
+					value="#{lbl['lbl.txt.attach.file']}"
+					icon="iconAttachment" 
+					partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.popupWidgetVar}Id])"
+					oncomplete="#{cc.attrs.popupWidgetVar}.show();return false;"
+					disabled="#{readonly}" />
+			</c:when>
+			<c:otherwise>
+				<h:commandLink value="#{cc.attrs.attachment.fileName}" styleClass="blue_font"
+					immediate="true"
+					action="#{scRemarkAndAttachmentBackingBean.downloadFile(cc.attrs.attachment)}" />
+				<p:commandLink 
+					process="@this" partialSubmit="true" update="@([id$=#{cc.id}delAttPopupId])"
+					oncomplete="#{cc.id}delAttPopup.show();" 
+					rendered="#{!cc.attrs.readonly and scRemarkAndAttachmentBackingBean.compareUserName(cc.attrs.attachment.createdUser.loginId)}">
+					<h:graphicImage
+						value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
+						styleClass="tasklist_title1" />
+				</p:commandLink>
+			</c:otherwise>
+		</c:choose>
+	</h:panelGroup>
+		
+	<c:if test="#{!cc.attrs.readonly}">
+		<ac:confirmationPopup id="#{cc.id}delAttPopupId"
+			widget="#{cc.id}delAttPopup"
+			okAction="scRemarkAndAttachmentBackingBean.deleteSingleAttachmentAction"
+			width="33%" height="100" title="#{lbl['lbl.sc.supporting.document']}"
+			content="#{lbl['lbl.ct.dialog.delete.attachment.msg']}"
+			update="@this" />
+		
+		<p:remoteCommand name="deleteSelAttachment"
+			partialSubmit="true" process="@this" update="@([id$=#{cc.attrs.id}])">
+			<f:setPropertyActionListener target="#{cc.attrs.attachment}" value="#{null}" />
+		</p:remoteCommand>
+	</c:if>
+</cc:implementation>
+</ui:composition>
