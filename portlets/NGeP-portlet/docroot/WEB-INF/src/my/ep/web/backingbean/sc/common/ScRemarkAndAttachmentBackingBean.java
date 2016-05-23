@@ -17,6 +17,7 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -63,7 +64,7 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 	}
 	
 	/**
-	 * Delete Attachment Action
+	 * Delete Multiple Attachment Action
 	 */
 	public void deleteAttachmentAction() {
 		super.deleteRowAction(attachmentList, selectedAttachment);
@@ -71,6 +72,13 @@ public class ScRemarkAndAttachmentBackingBean extends SourcingBaseBackingBean {
 		// reset to null after delete.
 		this.attachmentList = null;
 		this.selectedAttachment = null;
+	}
+	
+	/**
+	 * Delete Single Attachment Action
+	 */
+	public void deleteSingleAttachmentAction() {
+		RequestContext.getCurrentInstance().execute("deleteSelAttachment()");
 	}
 
 	/**
