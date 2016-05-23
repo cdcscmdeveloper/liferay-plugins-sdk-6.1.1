@@ -1907,4 +1907,20 @@
 		</property>
 	</bean>
 
+	<bean id="DELIVERY_FULL_ADDRESS" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="rowNum" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.ct.dtl.VCtAgencyDeliveryAddDAO" />
+		<property name="searchMethod" value="retrieveDeliveryAddressList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="fullAddress" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.address" />
+				</bean>				
+			</list>
+		</property>
+	</bean>
 </beans>
