@@ -179,42 +179,9 @@
 			</h:panelGroup>
 		</p:outputPanel>
 	</p:panel>
+	
+	<ac:scRemarkAndAttachment
+		remarkList="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}"
+		showAttachment="false" />
 
-	<p:panel label="#{lbl['lbl.sc.simple.quote.remark']}"
-		header="#{lbl['lbl.sc.simple.quote.remark']}" id="suppRmkId"
-		toggleable="true" toggleSpeed="500">
-		<table style="width: 100%">
-			<tr>
-				<td class="TableFieldLeft" width="16%"></td>
-				<td class="TableFieldRight"><p:dataGrid id="catatan"
-				        emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}"
-						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" style="vertical-align: top;" align="left">
-									<h:graphicImage
-										value="#{simpleQuoteBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" />
-								</td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
-										<f:convertDateTime
-											pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><p:inputTextarea style="width:350px;"
-										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> <h:outputText
-										value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" />
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel>
 </ui:composition>
