@@ -118,9 +118,11 @@ public class BPMAssignedTaskSearchBackingBean extends BaseBackingBean<BPMAssigne
 
 		log.info("No of Assignees: " + assignees.size());
 		try {
+			this.getManagedBean().setPmUserLs(new ArrayList<PmUser>());
 			for (int i = 0; i < assignees.size(); i++) {			
 				PmUser pmUser = PmCommonUtil.retrieveUserByLoginId(assignees.get(i));
 				if (pmUser != null) {
+					this.getManagedBean().getPmUserLs().add(pmUser);
 					String userName = pmUser.getUserName();
 
 //					log.info("AssigneeLoginId: " + assignees.get(i));
@@ -145,10 +147,10 @@ public class BPMAssignedTaskSearchBackingBean extends BaseBackingBean<BPMAssigne
 	public String getPtjString(List<String> assignees) {
 		StringBuilder assigneeNamesString = new StringBuilder();
 
-		log.info("No of Assignees: " + assignees.size());
+		log.info("this.getManagedBean().getPmUserLs(): " + this.getManagedBean().getPmUserLs().size());
 		try {
-			for (int i = 0; i < assignees.size(); i++) {			
-				PmUser pmUser = PmCommonUtil.retrieveUserByLoginId(assignees.get(i));
+			for (int i = 0; i < this.getManagedBean().getPmUserLs().size(); i++) {			
+				PmUser pmUser = (PmUser)this.getManagedBean().getPmUserLs().get(i);
 				if (pmUser != null) {
 					
 
