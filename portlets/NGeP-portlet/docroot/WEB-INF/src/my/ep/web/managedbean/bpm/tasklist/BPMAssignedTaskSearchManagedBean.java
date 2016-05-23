@@ -16,6 +16,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasksearch.BPMAssignedTaskSearchBackingBean;
@@ -23,6 +24,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -44,6 +46,7 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 	private List<SelectItem> docStatusList;
 
 	private IPagingDataModel<WorklistItemVO> taskListDataModel = new TaskListPagingDataModel();
+	private List<PmUser> pmUserLs;
 
 	private class TaskListPagingDataModel extends	PagingDataModel<WorklistItemVO> {
 
@@ -143,17 +146,19 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 			
 			
 				
-			for(int i =0; i<resDTO.getWorklistVO().getWorklistItem().size(); i++){
+	/*		for(int i =0; i<resDTO.getWorklistVO().getWorklistItem().size(); i++){
 				
 				WorklistItemVO vo = (WorklistItemVO)resDTO.getWorklistVO().getWorklistItem().get(i);
 				System.out.println("*********vo.getAssignees()***********"+vo.getAssignees().size());
-					if(vo.getAssignees().size()==0){
-						resDTO.getWorklistVO().getWorklistItem().remove(i);
-					}
-			}
 				
-			log.info("****after***" + "resDTO.getWorklistVO().getWorklistItem().size(): "+ resDTO.getWorklistVO().getWorklistItem().size() + " *******");	
-			
+				for(int j=0; j <vo.getAssignees().size(); j++){
+					PmUser pmUser = PmCommonUtil.retrieveUserByLoginId(vo.getAssignees().get(j));
+					
+				}
+				
+			}*/
+				
+		
 
 			resultBean.setTotalRecord(resDTO.getWorklistVO().getTotal());
 			resultBean.setResultList(resDTO.getWorklistVO().getWorklistItem());
@@ -225,4 +230,20 @@ public class BPMAssignedTaskSearchManagedBean extends BaseManagedBean {
 	public void resetTaskListDataModel() {
 		this.taskListDataModel = new TaskListPagingDataModel();
 	}
+	/**
+	 * @return the pmUserLs
+	 */
+	public List<PmUser> getPmUserLs() {
+		if(pmUserLs==null)
+			pmUserLs = new ArrayList<PmUser>();
+		return pmUserLs;
+	}
+	/**
+	 * @param pmUserLs the pmUserLs to set
+	 */
+	public void setPmUserLs(List<PmUser> pmUserLs) {
+		this.pmUserLs = pmUserLs;
+	}
+	
+	
 }
