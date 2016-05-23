@@ -410,83 +410,42 @@
 				</tr>
 			</table>
 		</h:panelGroup>
-		<h:panelGroup id="rmkId">
+		
 			<table style="width: 100%">
 				<tr>
 					<td width="218px"
-						style="vertical-align: top; padding-right: 1px; text-align: right;"><h:outputLabel
-							value="#{lbl['lbl.sc.purchase.in.default.remark']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td class="TableFieldRight"><p:dataGrid id="catatan"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}"
-							var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-							<table>
-								<tr>
-									<td rowspan="2" style="vertical-align: top;" align="left">
-										<h:graphicImage
-											value="#{purchaseInDefaultBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-											height="30" width="30" />
-									</td>
-									<td width="6"></td>
-									<td><h:outputText
-											value="#{remarkVar.createdUser.userName}" />, <h:outputText
-											id="remarkDate" value="#{remarkVar.createdDate}">
-											<f:convertDateTime
-												pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-										</h:outputText></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td><p:inputTextarea style="width:297px;"
-											value="#{remarkVar.remark}" maxlength="1000" label="Remarks"
-											rendered="#{remarkIndex==0}" id="remark"
-											disabled="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-											required="true" /> <h:outputText value="#{remarkVar.remark}"
-											rendered="#{remarkIndex>0}"
-											style="display: inline-block; width:220px;word-wrap: break-word;" />
-									</td>
-									<td
-										style="vertical-align: top; padding-right: 1px; text-align: right;">
-										<p:message id="remarkMsg" for="remark" display="icon" />
-									</td>
-								</tr>
-							</table>
-						</p:dataGrid></td>
+						style="vertical-align: top; padding-right: 1px; text-align: right;">
+						<h:outputLabel value="#{lbl['lbl.sc.remark']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td class="TableFieldRight">
+						<ac:scRemarkAndAttachment header=""
+							remarkList="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}"
+							showRemarkLabel="false"
+							showAttachment="false"
+							readonly="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
+					</td>
 				</tr>
 			</table>
-		</h:panelGroup>
-
-		<h:panelGroup id="attachmentId">
-			<ui:param name="attachFile"
-				value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}" />
 
 			<table style="width: 100%">
 				<tr>
 					<td width="218px" style="padding-right: 0px; text-align: right;">
 						<p:outputLabel
-							value="#{lbl['lbl.sc.purchase.in.default.attachment']}" /> <p:outputLabel
+							value="#{lbl['lbl.txt.attachment']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" />
 					</td>
-					<td class="TableFieldRight"><p:commandButton
-							oncomplete="uploadDlg.show();return false;" icon="iconAttachment"
-							update="attachmentId" disabled="#{!isPendingSubmissionStatus}"
-							value="#{lbl['lbl.sc.purchase.in.default.choose.file']}" /> <c:if
-							test="#{!empty attachFile}">
-							<h:commandLink value="#{attachFile.fileName}"
-								styleClass="blue_font" immediate="true"
-								action="#{purchaseInDefaultBackingBean.downloadFile(attachFile)}" />
-							<p:commandLink
-								action="#{purchaseInDefaultBackingBean.deleteUploadFile}"
-								immediate="true" update="attachmentId"
-								disabled="#{!isPendingSubmissionStatus}">
-								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-							</p:commandLink>
-
-						</c:if></td>
+					<td class="TableFieldRight">
+						<ac:scSingleFileUploadButton id="pidUploadBtn" 
+							attachment="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}"
+							readonly="#{!isPendingSubmissionStatus}" />
+						<ac:scSingleFileUploadPopup fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
+							update="@([id$=pidUploadBtn])"
+							readonly="#{!isPendingSubmissionStatus}" />
+						
+					</td>
 				</tr>
 			</table>
-		</h:panelGroup>
 	</p:panel>
 	<p:panel id="approversId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
@@ -531,22 +490,4 @@
 			</tr>
 		</table>
 	</p:panel>
-
-	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.sc.purchase.in.default.choose.file']}">
-		<p:ajax event="close" oncomplete="uploadDlg.hide()" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{purchaseInDefaultBackingBean.handleFileUpload}"
-			mode="advanced" id="upload"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			label="#{lbl['lbl.btn.choose']}"
-			uploadLabel="#{lbl['lbl.btn.upload']}"
-			cancelLabel="#{lbl['lbl.btn.cancel']}" update="@form"
-			oncomplete="uploadDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
 </ui:composition>
